@@ -215,7 +215,7 @@ namespace vg::core
     bool Factory::SaveProperties(core::IObject * _object)
     {
         auto it = m_initValues.find(_object);
-        VG_ASSERT((it == m_initValues.end()));  
+        VG_ASSERT((it == m_initValues.end()), "Object \"%s\" is already present in hash", _object->getName().c_str());
         if (it == m_initValues.end())
         {
             io::Buffer * buffer = new io::Buffer();

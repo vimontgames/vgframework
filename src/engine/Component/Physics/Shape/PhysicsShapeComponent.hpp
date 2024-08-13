@@ -29,6 +29,8 @@ namespace vg::engine
     PhysicsShapeComponent::PhysicsShapeComponent(const core::string & _name, IObject * _parent) :
         super(_name, _parent)
     {
+        SetUpdateFlags(UpdateFlags::Update, false);
+
         if (_parent)
         {
             if (m_shapeDesc == nullptr)

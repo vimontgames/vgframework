@@ -102,15 +102,32 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::OnPlay()
     {
-        super::OnPlay();
+        if (isEnabled())
+        {
+            super::OnPlay();
 
-        for (uint i = 0; i < m_children.size(); ++i)
-            m_children[i]->OnPlay();
+            for (uint i = 0; i < m_components.size(); ++i)
+            {
+                auto * component = m_components[i];
+                if (component->isEnabled())
+                    component->OnPlay();
+            }
+
+            for (uint i = 0; i < m_children.size(); ++i)
+                m_children[i]->OnPlay();
+        }
     }
 
     //--------------------------------------------------------------------------------------
     void GameObject::OnStop()
     {
+        for (uint i = 0; i < m_components.size(); ++i)
+        {
+            auto * component = m_components[i];
+            if (component->isEnabled())
+                component->OnStop();
+        }
+
         for (uint i = 0; i < m_children.size(); ++i)
             m_children[i]->OnStop();
 

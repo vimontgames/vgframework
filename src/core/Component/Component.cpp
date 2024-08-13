@@ -29,6 +29,18 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Component::OnPlay()
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Component::OnStop()
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
     void Component::FixedUpdate(float _dt)
     {
         VG_ASSERT(false, "Component '%s' does not implement 'FixedUpdate'", GetClassName());

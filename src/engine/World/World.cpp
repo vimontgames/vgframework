@@ -247,8 +247,8 @@ namespace vg::engine
                 IObject * root = scene->GetRoot();
                 if (nullptr != root)
                 {
-                    root->OnPlay();
                     root->OnEnable();
+                    root->OnPlay();
                 }
             }
         }

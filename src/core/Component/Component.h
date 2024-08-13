@@ -14,6 +14,9 @@ namespace vg::core
                                     Component               (const core::string & _name, IObject * _parent);
                                     ~Component              ();
 
+        void                        OnPlay                  () override;
+        void                        OnStop                  () override;
+
         void                        FixedUpdate             (float _dt) override;
         void                        Update                  (float _dt) override;
         void                        LateUpdate              (float _dt) override;

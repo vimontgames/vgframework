@@ -53,16 +53,16 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void PhysicsBodyComponent::Update(float _dt)
     {
-        if (nullptr == m_bodyDesc)
-            return;
-        
-        IGameObject * go = GetGameObject(); 
-        auto * world = go->GetWorld();
-        if (nullptr == world)
-            return;        
-
         if (physics::MotionType::Static != m_bodyDesc->GetMotion())
         {
+            if (nullptr == m_bodyDesc)
+                return;
+
+            IGameObject * go = GetGameObject();
+            auto * world = go->GetWorld();
+            if (nullptr == world)
+                return;
+
             if (world->IsPlaying() && !world->IsPaused())
             {
                 if (m_body)
@@ -91,7 +91,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void PhysicsBodyComponent::OnEnable()
+    void PhysicsBodyComponent::OnPlay()
     {
         if (!m_body)
             createBody();
@@ -100,15 +100,24 @@ namespace vg::engine
             m_body->Activate(GetGameObject()->GetGlobalMatrix());
 
         if (m_bodyDesc)
-            m_bodyDesc->OnEnable();
+            m_bodyDesc->OnPlay();
 
-        super::OnEnable();
+        // Static do not need runtime update
+        if (physics::MotionType::Static != m_bodyDesc->GetMotion())
+            SetUpdateFlags(UpdateFlags::Update, true);
+        else
+            SetUpdateFlags(UpdateFlags::Update, false);
+
+        super::OnLoad();
     }
 
     //--------------------------------------------------------------------------------------
-    void PhysicsBodyComponent::OnDisable()
+    void PhysicsBodyComponent::OnStop()
     {
-        super::OnDisable();
+        super::OnStop();
+
+        // Restore
+        SetUpdateFlags(UpdateFlags::Update, true);
 
         VG_SAFE_RELEASE(m_body);
 

@@ -71,6 +71,8 @@ namespace vg::renderer
 
                 for (uint i = 0; i < instances.size(); ++i)
                 {
+                    VG_PROFILE_CPU("GPUInstanceData");
+
                     GraphicInstance * instance = instances[i];
                     const auto & materials = instance->getMaterials();
                     const uint materialCount = (uint)materials.size();
@@ -84,18 +86,22 @@ namespace vg::renderer
                     }
                     offset += sizeof(GPUInstanceData);
                     
-                    for (uint m = 0; m < materialCount; ++m)
+                    // Materials
                     {
-                        GPUMaterialData * matData = (GPUMaterialData *)(data + offset);
-                        const MaterialModel * matModel = materials[m];
-                        if (nullptr == matModel)
-                            matModel = defaultMaterial;
+                        VG_PROFILE_CPU("GPUMaterialData");
+                        for (uint m = 0; m < materialCount; ++m)
+                        {
+                            GPUMaterialData * matData = (GPUMaterialData *)(data + offset);
+                            const MaterialModel * matModel = materials[m];
+                            if (nullptr == matModel)
+                                matModel = defaultMaterial;
 
-                        if (matModel)
-                            matModel->FillGPUMaterialData(matData);
+                            if (matModel)
+                                matModel->FillGPUMaterialData(matData);
 
-                        offset += sizeof(GPUMaterialData);
-                    }                    
+                            offset += sizeof(GPUMaterialData);
+                        }
+                    }
                 }
             }
             _cmdList->unmap(m_InstanceDataConstantsBuffer);
