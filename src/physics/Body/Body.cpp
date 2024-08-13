@@ -85,6 +85,8 @@ namespace vg::physics
             bodySettings.mMassPropertiesOverride.mMass = _bodyDesc->m_mass;
         }
 
+        bodySettings.mMotionQuality = getJoltMotionQuality(_bodyDesc->m_motionQuality);
+
         m_bodyID = m_physicsWorld->getBodyInterface().CreateAndAddBody(bodySettings, JPH::EActivation::DontActivate);
 
         m_physicsWorld->getBodyInterface().SetFriction(m_bodyID, _bodyDesc->m_friction);

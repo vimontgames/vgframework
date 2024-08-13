@@ -48,6 +48,12 @@ namespace vg::physics
         Dynamic,    // Responds to forces as a normal physics object
     };
 
+    enum class MotionQuality : core::u8 
+    {
+        Discrete = 0,   // Update the body in discrete steps
+        Continuous      // Update the body using linear casting
+    };
+
     enum class ShapeType : core::u8
     {
         Sphere = 0,

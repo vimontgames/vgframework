@@ -63,6 +63,14 @@ namespace vg::core
         virtual void                            OverrideGameObjectProperties    (IGameObject * _gameObject, const IDynamicProperty * _dynProp) = 0;
         virtual bool                            ToggleOverride                  (const IObject * _object, const IProperty * _prop, bool _override) = 0;
 
+        virtual void                            OnCollisionEnter                (IGameObject * _other) = 0;
+        virtual void                            OnCollisionStay                 (IGameObject * _other) = 0;
+        virtual void                            OnCollisionExit                 (IGameObject * _other) = 0;
+                                                                                       
+        virtual void                            OnTriggerEnter                  (IGameObject * _other) = 0;
+        virtual void                            OnTriggerStay                   (IGameObject * _other) = 0;
+        virtual void                            OnTriggerExit                   (IGameObject * _other) = 0;
+
         template <class T> T *                  AddComponentByType              (const string & _name);
         template <class T> T *                  GetComponentByType              () const;
         template <class T> core::vector<T *>    GetComponentsByType             () const;

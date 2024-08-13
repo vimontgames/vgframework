@@ -7,6 +7,7 @@ namespace vg::core
     class Component;
     class IFactory;
     class IClassDesc;
+    class IBehaviour;
 
     class GameObject : public IGameObject
     {
@@ -53,6 +54,8 @@ namespace vg::core
         void                                            Update                      (float _dt);
         void                                            LateUpdate                  (float _dt);
 
+        const core::vector<IBehaviour*> /*&*/           getBehaviours               () const;
+
         void                                            AddComponent                (IComponent * _component, uint _index = -1) final override;
         IComponent *                                    AddComponent                (const char * _className, const string & _name) final override;
         bool                                            RemoveComponent             (IComponent * _component) final override;
@@ -61,6 +64,13 @@ namespace vg::core
 
         IComponent *                                    GetComponentByType          (const char * _className, bool _searchInParent = false, bool _searchInChildren = false) const final override;
         vector<IComponent *>                            GetComponentsByType         (const char * _className, bool _searchInParent = false, bool _searchInChildren = false) const final override;
+
+        // rem: have to forward them for C++ template name lookup to work, otherwise from GameObject we would have to use super:: or IGameObject:: to access these funcs
+        template <class T> inline T *                   AddComponentByType          (const string & _name)  { return super::AddComponentByType<T>(_name); }
+        template <class T> inline T *                   GetComponentByType          () const                { return super::GetComponentByType<T>(); }
+        template <class T> inline core::vector<T *>     GetComponentsByType         () const                { return super::GetComponentsByType<T>(); }
+        template <class T> inline T *                   GetComponentInParents       () const                { return super::GetComponentInParents<T>(); }
+        template <class T> inline T *                   GetComponentInChildren      () const                { return super::GetComponentInChildren<T>(); }
 
         void                                            AddChild                    (IGameObject * _gameObject, uint _index = -1) final override;
         bool                                            RemoveChild                 (IGameObject * _gameObject, bool _recomputeFlags = true) final override;
@@ -76,6 +86,14 @@ namespace vg::core
         bool                                            TryGetAABB                  (AABB & _aabb) const override;
 
         void                                            OnPropertyChanged           (IObject * _object, const IProperty & _prop, bool _notifyParent) override;
+
+        void                                            OnCollisionEnter            (IGameObject * _other) final override;
+        void                                            OnCollisionStay             (IGameObject * _other) final override;
+        void                                            OnCollisionExit             (IGameObject * _other) final override;
+                                                                                                                
+        void                                            OnTriggerEnter              (IGameObject * _other) final override;
+        void                                            OnTriggerStay               (IGameObject * _other) final override;
+        void                                            OnTriggerExit               (IGameObject * _other) final override;
 
         void                                            addComponent                (Component * _component, uint _index = -1);
         const vector<Component*> &                      getComponents               () const;

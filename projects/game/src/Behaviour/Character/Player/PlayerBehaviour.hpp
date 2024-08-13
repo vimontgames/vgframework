@@ -197,7 +197,7 @@ void PlayerBehaviour::Update(float _dt)
                 if (IGameObject * scoreGO = uiGO->GetChildGameObject("Score"))
                 {
                     if (IUITextComponent * scoreComp = scoreGO->GetComponentByType<IUITextComponent>())
-                        scoreComp->SetText(fmt::sprintf("Score %.0f", m_hp));
+                        scoreComp->SetText(fmt::sprintf("Score %i", m_score));
                 }
             }
         }

@@ -1,5 +1,6 @@
 #include "core/Precomp.h"
 #include "GameObject.h"
+#include "core/IBehaviour.h"
 #include "core/ISelection.h"
 #include "core/IProfiler.h"
 #include "core/IBaseScene.h"
@@ -452,6 +453,31 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    bool IsA(IObject * _object, const char * _className)
+    {
+        const char * objectClassName = _object->GetClassName();
+        if (!strcmp(objectClassName, _className))
+            return true;
+
+        const auto * classDesc = Kernel::getFactory()->getClassDescriptor(objectClassName);
+        if (nullptr != classDesc)
+        {
+            const char * parentClassName = nullptr;
+            do
+            {
+                parentClassName = classDesc->GetParentClassName();
+
+                if (!strcmp(parentClassName, _className))
+                    return true;
+
+                classDesc = Kernel::getFactory()->getClassDescriptor(parentClassName, false);
+            } while (nullptr != classDesc);
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     vector<IComponent *> GameObject::GetComponentsByType(const char * _className, bool _searchInParent, bool _searchInChildren) const
     {
         if (_searchInParent || _searchInChildren)
@@ -465,25 +491,8 @@ namespace vg::core
             auto * component = components[i];
             if (nullptr != component)
             {
-                if (!strcmp(component->GetClassName(), _className))
-                {
-                    found.push_back(component);
-                }
-                else
-                {
-                    const auto * classDesc = Kernel::getFactory()->getClassDescriptor(component->GetClassName());
-                    if (nullptr != classDesc)
-                    {
-                        const char * interfaceName = classDesc->GetParentClassName();
-                        if (nullptr != interfaceName)
-                        {
-                            if (!strcmp(interfaceName, _className))
-                            {
-                                found.push_back(component);
-                            }
-                        }
-                    }
-                }
+                if (IsA(component, _className))
+                    found.push_back(component);                
             }
         }
 
@@ -744,5 +753,91 @@ namespace vg::core
         GameObject * parent = dynamic_cast<GameObject *>(getParent());
         if (parent)
             parent->recomputeUpdateFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    // TODO: keep list of GameObject behaviours to avoid lookup
+    //--------------------------------------------------------------------------------------
+    const core::vector<IBehaviour *> /*&*/ GameObject::getBehaviours() const
+    {
+        return GetComponentsByType<IBehaviour>();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::OnCollisionEnter(IGameObject * _other)
+    {
+        VG_INFO("[Physics] OnCollisionEnter \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+
+        const auto & behaviours = getBehaviours();
+        for (uint i = 0; i < behaviours.size(); ++i)
+        {
+            IBehaviour * behaviour = behaviours[i];
+            behaviour->OnCollisionEnter(_other);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::OnCollisionStay(IGameObject * _other)
+    {
+        VG_INFO("[Physics] OnCollisionStay \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+
+        const auto & behaviours = getBehaviours();
+        for (uint i = 0; i < behaviours.size(); ++i)
+        {
+            IBehaviour * behaviour = behaviours[i];
+            behaviour->OnCollisionStay(_other);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::OnCollisionExit(IGameObject * _other)
+    {
+        VG_INFO("[Physics] OnCollisionExit \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+
+        const auto & behaviours = getBehaviours();
+        for (uint i = 0; i < behaviours.size(); ++i)
+        {
+            IBehaviour * behaviour = behaviours[i];
+            behaviour->OnCollisionExit(_other);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::OnTriggerEnter(IGameObject * _other)
+    {
+        //VG_INFO("[Physics] OnTriggerEnter \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+
+        const auto & behaviours = getBehaviours();
+        for (uint i = 0; i < behaviours.size(); ++i)
+        {
+            IBehaviour * behaviour = behaviours[i];
+            behaviour->OnTriggerEnter(_other);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::OnTriggerStay(IGameObject * _other)
+    {
+        //VG_INFO("[Physics] OnTriggerStay \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+
+        const auto & behaviours = getBehaviours();
+        for (uint i = 0; i < behaviours.size(); ++i)
+        {
+            IBehaviour * behaviour = behaviours[i];
+            behaviour->OnTriggerStay(_other);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::OnTriggerExit(IGameObject * _other)
+    {
+        //VG_INFO("[Physics] OnTriggerExit \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+
+        const auto & behaviours = getBehaviours();
+        for (uint i = 0; i < behaviours.size(); ++i)
+        {
+            IBehaviour * behaviour = behaviours[i];
+            behaviour->OnTriggerExit(_other);
+        }
     }
 }

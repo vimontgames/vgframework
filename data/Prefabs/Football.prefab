@@ -37,13 +37,14 @@
                                         <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyDesc #4"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="Bool" name="m_trigger" value="false"/>
-                                        <Property type="Bool" name="m_softBody" flags="SameLine" value="false"/>
-                                        <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
-                                        <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
+                                        <Property type="Bool" name="m_softBody" value="false"/>
+                                        <Property type="EnumU16" name="m_layer" value="Moving"/>
+                                        <Property type="EnumU8" name="m_motion" value="Dynamic"/>
+                                        <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
                                         <Property type="Bool" name="m_overrideMass" flags="NotVisible" value="true"/>
                                         <Property type="Float" name="m_mass" flags="Optional" value="0.80000001"/>
                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.15000001"/>
-                                        <Property type="Float" name="m_restitution" flags="HasRange" value="0.5"/>
+                                        <Property type="Float" name="m_restitution" flags="HasRange" value="0.75"/>
                                     </Object>
                                 </Property>
                             </Object>
@@ -60,6 +61,7 @@
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="SphereShapeDesc #1"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                        <Property type="Float3" name="m_rotation" flags="EulerAngle" x="0" y="0" z="0"/>
                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
                                         <Property type="Float" name="m_radius" flags="HasRange" value="0.25"/>
                                     </Object>

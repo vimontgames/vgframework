@@ -18,6 +18,8 @@ public:
 
     bool                isActive() const { return m_isActive; }
 
+    void                addScore(vg::core::i32 _points);
+
 protected:
     void                PlayAnim(CharacterState _state, bool _loop = false);
 
@@ -26,7 +28,7 @@ protected:
 
     vg::core::uint      m_life = 1;
     float               m_hp = 100.0f;
-    vg::core::uint      m_score = 0;
+    vg::core::i32       m_score = 0;
 
     float               m_walkSpeed = 1.5f;
     float               m_runSpeed = 3.0f;

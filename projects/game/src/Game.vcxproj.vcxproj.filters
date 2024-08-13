@@ -9,6 +9,9 @@
     <ClCompile Include="Behaviour\Character\CharacterBehaviour.cpp">
       <Filter>Behaviour\Character</Filter>
     </ClCompile>
+    <ClCompile Include="Behaviour\Goal\GoalBehaviour.cpp">
+      <Filter>Behaviour\Goal</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -32,6 +35,9 @@
       <Filter>Behaviour\Character\Player</Filter>
     </ClInclude>
     <ClInclude Include="Game_consts.h" />
+    <ClInclude Include="Behaviour\Goal\GoalBehaviour.h">
+      <Filter>Behaviour\Goal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviour">
@@ -48,6 +54,12 @@
     </Filter>
     <Filter Include="Behaviour\Character\Enemy">
       <UniqueIdentifier>{3ae2e852-7d3f-4079-86ec-96a29ab4708e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Goal">
+      <UniqueIdentifier>{ca4b3ef2-69b6-4062-bac1-08197050ee8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Ball">
+      <UniqueIdentifier>{b39b140f-ec00-4c86-ab6f-3aed3a13966c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

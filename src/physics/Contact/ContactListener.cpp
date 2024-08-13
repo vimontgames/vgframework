@@ -4,11 +4,20 @@
 #include "physics/World/PhysicsWorld.h"
 #include "Jolt/Physics/Body/Body.h"
 
+using namespace vg::core;
+
 namespace vg::physics
 {
+    static const uint maxTriggerContactPerFrame = 1024;
+    static const uint maxCollisionContactPerFrame = 1024;
+
     //--------------------------------------------------------------------------------------
     ContactListener::ContactListener(PhysicsWorld * _physicsWorld) :
-        m_physicsWorld(_physicsWorld)
+        m_physicsWorld(_physicsWorld),
+        m_triggerEnter(maxTriggerContactPerFrame),
+        m_triggerStay(maxTriggerContactPerFrame),
+        m_collisionEnter(maxCollisionContactPerFrame),
+        m_collisionStay(maxCollisionContactPerFrame)
     {
 
     }
@@ -24,13 +33,21 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void ContactListener::OnContactAdded(const JPH::Body & _inBody1, const JPH::Body & _inBody2, const JPH::ContactManifold & _inManifold, JPH::ContactSettings & _ioSettings)
     {
+        auto * obj1 = (core::IObject *)_inBody1.GetUserData();
+        auto * obj2 = (core::IObject *)_inBody2.GetUserData();
+
         if (_ioSettings.mIsSensor)
         {
-            const auto * obj1 = (const core::IObject *)_inBody1.GetUserData();
-            const auto * obj2 = (const core::IObject *)_inBody2.GetUserData();
+            if (_inBody1.IsSensor())
+                m_triggerEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent())));
 
-            VG_INFO("[Physics] Trigger contact added between \"%s\" and \"%s\"", obj1->GetParentGameObject()->getName().c_str(), obj2->GetParentGameObject()->getName().c_str());
+            if (_inBody2.IsSensor())
+                m_triggerEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent())));
         }
+        //else
+        //{
+        //    m_collisionEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent())));
+        //}
     }
 
     //--------------------------------------------------------------------------------------
@@ -38,12 +55,16 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void ContactListener::OnContactPersisted(const JPH::Body & _inBody1, const JPH::Body & _inBody2, const JPH::ContactManifold & _inManifold, JPH::ContactSettings & _ioSettings)
     {
-        //if (_inBody1.IsSensor() || _inBody2.IsSensor())
+        auto * obj1 = (core::IObject *)_inBody1.GetUserData();
+        auto * obj2 = (core::IObject *)_inBody2.GetUserData();
+
+        if (_ioSettings.mIsSensor)
+        {
+            m_triggerStay.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent())));
+        }
+        //else
         //{
-        //    const auto * obj1 = (const core::IObject *)_inBody1.GetUserData();
-        //    const auto * obj2 = (const core::IObject *)_inBody2.GetUserData();
-        //
-        //    VG_INFO("[Physics] Trigger contact persisted between \"%s\" and \"%s\"", obj1->GetParentGameObject()->getName().c_str(), obj2->GetParentGameObject()->getName().c_str());
+        //    m_collisionStay.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent())));
         //}
     }
 
@@ -74,5 +95,44 @@ namespace vg::physics
         //
         //    VG_INFO("[Physics] Trigger contact removed between \"%s\" and \"%s\"", obj1->GetParentGameObject()->getName().c_str(), obj2->GetParentGameObject()->getName().c_str());
         //}
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ContactListener::clear()
+    {
+        m_triggerEnter.clear();
+        m_triggerStay.clear();
+        m_collisionEnter.clear();
+        m_collisionStay.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ContactListener::update()
+    {
+        VG_PROFILE_CPU("ContactListener");
+
+        for (uint i = 0; i < m_triggerEnter.size(); ++i)
+        {
+            const auto & contact = m_triggerEnter[i];
+            contact.m_obj1->OnTriggerEnter(contact.m_obj2);
+        }
+
+        for (uint i = 0; i < m_triggerStay.size(); ++i)
+        {
+            const auto & contact = m_triggerStay[i];
+            contact.m_obj1->OnTriggerStay(contact.m_obj2);
+        }
+
+        for (uint i = 0; i < m_collisionEnter.size(); ++i)
+        {
+            const auto & contact = m_collisionEnter[i];
+            contact.m_obj1->OnCollisionEnter(contact.m_obj2);
+        }
+
+        for (uint i = 0; i < m_collisionStay.size(); ++i)
+        {
+            const auto & contact = m_collisionStay[i];
+            contact.m_obj1->OnCollisionStay(contact.m_obj2);
+        }
     }
 }

@@ -43,6 +43,7 @@
     <ClInclude Include="Character\Character.h" />
     <ClInclude Include="Character\CharacterDesc.h" />
     <ClInclude Include="Character\CharacterDesc.hpp" />
+    <ClInclude Include="Contact\Contact.h" />
     <ClInclude Include="Contact\ContactListener.h" />
     <ClInclude Include="Helper.h" />
     <ClInclude Include="IBody.h" />

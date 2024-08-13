@@ -126,6 +126,9 @@
     <ClInclude Include="World\PhysicsWorld.h">
       <Filter>World</Filter>
     </ClInclude>
+    <ClInclude Include="Contact\Contact.h">
+      <Filter>Contact</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="JobSystem">

@@ -63,8 +63,12 @@ namespace vg::physics
         auto * world = getWorld();
         if (world->IsPlaying() && !world->IsPaused())
         {
+            m_contactListener->clear();
+
             auto * physicsSystem = getPhysicsSystem();
             physicsSystem->Update((float)(_dt), 1, &_tempAllocator, _jobSystem);
+
+            m_contactListener->update();
         }
     }
 }

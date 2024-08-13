@@ -55,19 +55,27 @@ void GameCameraBehaviour::Update(float _dt)
         if (player->isActive())
             activePlayers.push_back(player);
     }
-    
-    if (activePlayers.size() > 0)
+
+    auto averagePosition = [=](vg::core::vector<CharacterBehaviour *> _players)
     {
-        auto matrix = getGameObject()->getGlobalMatrix();         
+        if (players.size() > 0)
+        {
+            auto matrix = getGameObject()->getGlobalMatrix();
 
-        float3 avgPos = (float3)0.0f;
-        for (uint i = 0; i < activePlayers.size(); ++i)
-            avgPos.xyz += activePlayers[i]->getGameObject()->getGlobalMatrix()[3].xyz;
+            float3 avgPos = (float3)0.0f;
+            for (uint i = 0; i < _players.size(); ++i)
+                avgPos.xyz += _players[i]->getGameObject()->getGlobalMatrix()[3].xyz;
 
-        m_target.xy = avgPos.xy / (float)activePlayers.size() + m_offset.xy;
+            m_target.xy = avgPos.xy / (float)_players.size() + m_offset.xy;
 
-        matrix[3].xy = smoothdamp(matrix[3].xy, m_target.xy, (float2&)m_targetVelocity.xy, m_delay, _dt);
+            matrix[3].xy = smoothdamp(matrix[3].xy, m_target.xy, (float2 &)m_targetVelocity.xy, m_delay, _dt);
 
-        getGameObject()->setGlobalMatrix(matrix);
-    }
+            getGameObject()->setGlobalMatrix(matrix);
+        }
+    };
+
+    if (activePlayers.size() == 0)
+        averagePosition(players);
+    else if (activePlayers.size() > 0)
+        averagePosition(activePlayers);
 }

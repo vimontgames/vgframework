@@ -115,3 +115,9 @@ void CharacterBehaviour::Update(float _dt)
         }
     }
 }
+
+//--------------------------------------------------------------------------------------
+void CharacterBehaviour::addScore(vg::core::i32 _points)
+{
+    m_score += _points;
+}
