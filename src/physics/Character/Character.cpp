@@ -97,28 +97,31 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void RigidCharacter::Activate(const float4x4 & _world)
     {
-        resetCharacter(_world);
         if (m_character)
+        {
             getPhysicsWorld()->getBodyInterface().ActivateBody(m_character->GetBodyID());
+            resetCharacter(_world);
+        }
     }
 
     //--------------------------------------------------------------------------------------
     void RigidCharacter::Deactivate(const float4x4 & _world)
     {
         if (m_character)
+        {
+            resetCharacter(_world);
             getPhysicsWorld()->getBodyInterface().DeactivateBody(m_character->GetBodyID());
-        resetCharacter(_world);
+        }
     }
 
     //--------------------------------------------------------------------------------------
     void RigidCharacter::resetCharacter(const core::float4x4 & _world)
     {
-        if (m_character)
-        {
-            float3x3 rot = extractRotation(_world);
-            quaternion quat = quaternion(rot);
-            getPhysicsWorld()->getBodyInterface().SetPositionRotationAndVelocity(m_character->GetBodyID(), getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), getJoltVec3(float3(0, 0, 0)), getJoltVec3(float3(0, 0, 0)));
-        }
+        VG_ASSERT(m_character);
+
+        float3x3 rot = extractRotation(_world);
+        quaternion quat = quaternion(rot);
+        getPhysicsWorld()->getBodyInterface().SetPositionRotationAndVelocity(m_character->GetBodyID(), getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), getJoltVec3(float3(0, 0, 0)), getJoltVec3(float3(0, 0, 0)));
     }
 
     //--------------------------------------------------------------------------------------

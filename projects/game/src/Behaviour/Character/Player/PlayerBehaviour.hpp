@@ -46,17 +46,21 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 }
 
 //--------------------------------------------------------------------------------------
-void PlayerBehaviour::OnEnable()
+void PlayerBehaviour::OnPlay()
 {
-    super::OnEnable();
+    super::OnPlay();
     Game::get()->addCharacter(CharacterType::Player, this);
+
+    // Compute initial rotation around Z axis
+    const auto global = GetGameObject()->GetGlobalMatrix();
+    m_currentRotation = -atan2(global[1].x, global[0].x) * 180.0f / PI;
 }
 
 //--------------------------------------------------------------------------------------
-void PlayerBehaviour::OnDisable()
+void PlayerBehaviour::OnStop()
 {
     Game::get()->removeCharacter(CharacterType::Player, this);
-    super::OnDisable();
+    super::OnStop();
 }
 
 //--------------------------------------------------------------------------------------
