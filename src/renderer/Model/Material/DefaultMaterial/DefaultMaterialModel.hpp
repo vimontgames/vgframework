@@ -158,7 +158,7 @@ namespace vg::renderer
                 break;
 
         }
-        rs = RasterizerState(FillMode::Solid, cullMode);
+        rs = RasterizerState(rs.getFillMode(), cullMode);
 
         _cmdList->setRasterizerState(rs);
 
