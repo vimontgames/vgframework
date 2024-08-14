@@ -783,7 +783,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::OnCollisionEnter(IGameObject * _other)
     {
-        VG_INFO("[Physics] OnCollisionEnter \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+        //VG_INFO("[Physics] OnCollisionEnter \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
 
         const auto & behaviours = getBehaviours();
         for (uint i = 0; i < behaviours.size(); ++i)
@@ -796,7 +796,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::OnCollisionStay(IGameObject * _other)
     {
-        VG_INFO("[Physics] OnCollisionStay \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+        //VG_INFO("[Physics] OnCollisionStay \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
 
         const auto & behaviours = getBehaviours();
         for (uint i = 0; i < behaviours.size(); ++i)
@@ -809,7 +809,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::OnCollisionExit(IGameObject * _other)
     {
-        VG_INFO("[Physics] OnCollisionExit \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+        //VG_INFO("[Physics] OnCollisionExit \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
 
         const auto & behaviours = getBehaviours();
         for (uint i = 0; i < behaviours.size(); ++i)

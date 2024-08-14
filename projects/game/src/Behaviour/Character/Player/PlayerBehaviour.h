@@ -7,17 +7,20 @@ class PlayerBehaviour final : public CharacterBehaviour
 public:
     VG_CLASS_DECL(PlayerBehaviour, CharacterBehaviour);
 
-    PlayerBehaviour         (const vg::core::string & _name, vg::core::IObject * _parent);
-    ~PlayerBehaviour        ();
+    PlayerBehaviour             (const vg::core::string & _name, vg::core::IObject * _parent);
+    ~PlayerBehaviour            ();
 
-    void                    OnPlay              () final override;
-    void                    OnStop              () final override;
+    void                        OnPlay              () final override;
+    void                        OnStop              () final override;
 
-    void                    FixedUpdate         (float _dt) override;
-    void                    Update              (float _dt) override;
+    void                        FixedUpdate         (float _dt) override;
+    void                        Update              (float _dt) override;
+
+    const vg::core::float4 &    getCustomColor      () const { return m_customColor; }
 
 private:
-    vg::core::InputType     m_controllerType    = vg::core::InputType::Joypad;
-    vg::core::u8            m_controllerIndex   = 0;
-    vg::core::ObjectHandle  m_UI;
+    vg::core::InputType         m_controllerType    = vg::core::InputType::Joypad;
+    vg::core::u8                m_controllerIndex   = 0;
+    vg::core::float4            m_customColor       = vg::core::float4(1, 1, 1, 1);
+    vg::core::ObjectHandle      m_UI;
 };

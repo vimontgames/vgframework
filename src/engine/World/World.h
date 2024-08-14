@@ -21,10 +21,10 @@ namespace vg::engine
         bool                                IsPlaying               () const final override;
         bool                                IsPaused                () const final override;
 
-        void                                Play                    () final override;
-        void                                Stop                    () final override;
-        void                                Pause                   () final override;
-        void                                Resume                  () final override;
+        void                                OnPlay                  () final override;
+        void                                OnStop                  () final override;
+        void                                OnPause                 () final override;
+        void                                OnResume                () final override;
 
         bool                                SetActiveScene          (core::IBaseScene * _scene, core::BaseSceneType _sceneType) final override;
         core::IBaseScene *                  GetActiveScene          (core::BaseSceneType _sceneType) const final override;
@@ -46,21 +46,7 @@ namespace vg::engine
 
         bool                                IsPrefabWorld           () const final override;
 
-    protected:
-        VG_INLINE bool                      isPlaying               () const;
-        VG_INLINE void                      setTimeScale            (float _timeScale);
-        VG_INLINE float                     getTimeScale            (bool _ignorePause = false) const;
-        void                                play                    ();
-        void                                stop                    ();
-
-        VG_INLINE bool                      isPaused                () const;
-        void                                pause                   ();
-        void                                resume                  ();
-
     private:
-        bool                                m_isPlaying     : 1;
-        bool                                m_isPaused      : 1;
-
         core::IBaseScene *                  m_activeScene[core::enumCount<core::BaseSceneType>()];
         core::vector<core::IBaseScene *>    m_scenes[core::enumCount<core::BaseSceneType>()];
         core::IDebugDrawData *              m_debugDrawData = nullptr;

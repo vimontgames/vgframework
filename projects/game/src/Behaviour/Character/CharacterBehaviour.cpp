@@ -18,6 +18,9 @@ CharacterBehaviour::CharacterBehaviour(const string& _name, IObject* _parent) :
     super(_name, _parent)
 {
     SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
+
+    for (uint i = 0; i < vg::core::countof(m_anim); ++i)
+        m_anim[i] = -1;
 }
 
 //--------------------------------------------------------------------------------------
@@ -61,9 +64,6 @@ void CharacterBehaviour::OnEnable()
 {
     super::OnEnable();
 
-    for (uint i = 0; i < vg::core::countof(m_anim); ++i)
-        m_anim[i] = -1;
-
     IAnimationComponent* animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
 
     if (nullptr != animationComponent)
@@ -72,15 +72,27 @@ void CharacterBehaviour::OnEnable()
         m_anim[CharacterState::Walking] = animationComponent->GetAnimationIndex("Walking");
         m_anim[CharacterState::Running] = animationComponent->GetAnimationIndex("Running");
         m_anim[CharacterState::Jumping] = animationComponent->GetAnimationIndex("Jump");
-    }
-
-    m_startPos = GetGameObject()->getGlobalMatrix()[3].xyz;    
+    }   
 }
 
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::OnDisable()
 {
     super::OnDisable();
+}
+
+//--------------------------------------------------------------------------------------
+void CharacterBehaviour::OnPlay()
+{
+    super::OnPlay();
+
+    m_startPos = GetGameObject()->getGlobalMatrix()[3].xyz;
+}
+
+//--------------------------------------------------------------------------------------
+void CharacterBehaviour::OnStop()
+{
+    super::OnStop();
 }
 
 //--------------------------------------------------------------------------------------

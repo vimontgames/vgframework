@@ -41,17 +41,17 @@ bool EnemyBehaviour::registerProperties(IClassDesc & _desc)
 }
 
 //--------------------------------------------------------------------------------------
-void EnemyBehaviour::OnEnable()
+void EnemyBehaviour::OnPlay()
 {
-    super::OnEnable();
+    super::OnPlay();
     Game::get()->addCharacter(CharacterType::Enemy, this);
 }
 
 //--------------------------------------------------------------------------------------
-void EnemyBehaviour::OnDisable()
+void EnemyBehaviour::OnStop()
 {
     Game::get()->removeCharacter(CharacterType::Enemy, this);
-    super::OnDisable();
+    super::OnStop();
 }
 
 struct ActivePlayerInfo

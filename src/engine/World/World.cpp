@@ -21,9 +21,7 @@ namespace vg::engine
 
     //--------------------------------------------------------------------------------------
     World::World(const string & _name, IObject * _parent) :
-        IWorld(_name, _parent),
-        m_isPlaying(false),
-        m_isPaused(false)
+        IWorld(_name, _parent)
     {
         for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
             m_activeScene[j] = nullptr;
@@ -196,49 +194,18 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool World::IsPlaying() const
     {
-        return isPlaying();
+        return /*!IsPrefabWorld() &&*/ Engine::get()->IsPlaying(); // TODO: world should be part of the context update
     }
 
     //--------------------------------------------------------------------------------------
     bool World::IsPaused() const
     {
-        return isPaused();
+        return Engine::get()->IsPaused();
     }
 
     //--------------------------------------------------------------------------------------
-    void World::Play()
+    void World::OnPlay()
     {
-        play();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void World::Stop()
-    {
-        stop();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void World::Pause()
-    {
-        pause();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void World::Resume()
-    {
-        resume();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void World::play()
-    {
-        VG_INFO("[World] Play world \"%s\"", getName().c_str());
-        m_isPlaying = true;
-        m_isPaused = false;
-
-        // Detect joypads
-        Kernel::getInput()->OnPlay();
-
         for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
         {
             const IBaseScene * scene = GetScene(i, BaseSceneType::Scene);
@@ -259,28 +226,20 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void World::pause()
+    void World::OnPause()
     {
-        VG_INFO("[World] Pause world \"%s\"", getName().c_str());
-        VG_ASSERT(m_isPlaying);
-        m_isPaused = true;
+
     }
 
     //--------------------------------------------------------------------------------------
-    void World::resume()
+    void World::OnResume()
     {
-        VG_INFO("[World] Resume world \"%s\"", getName().c_str());
-        VG_ASSERT(m_isPlaying && m_isPaused);
-        m_isPaused = false;
+
     }
 
     //--------------------------------------------------------------------------------------
-    void World::stop()
+    void World::OnStop()
     {
-        VG_INFO("[World] Stop world \"%s\"", getName().c_str());
-        m_isPlaying = false;
-        m_isPaused = false;
-
         for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
         {
             const IBaseScene * scene = GetScene(i, BaseSceneType::Scene);

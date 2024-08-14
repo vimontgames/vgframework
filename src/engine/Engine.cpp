@@ -102,11 +102,10 @@ namespace vg::engine
 
                     case VK_ESCAPE:
                     {
-                        auto * mainWorld = GetMainWorld();
-                        if (mainWorld)
+                        if (IEngine * engine = Engine::get())
                         {
-                            if (mainWorld->IsPlaying())
-                                mainWorld->Stop();
+                            if (engine->IsPlaying())
+                                engine->Stop();
 
                             if (m_renderer && m_renderer->IsFullscreen())
                                 m_renderer->SetFullscreen(false);
@@ -116,21 +115,20 @@ namespace vg::engine
 
                     case VK_F5:
                     {
-                        auto * mainWorld = GetMainWorld();
-                        if (mainWorld)
+                        if (IEngine * engine = Engine::get())
                         {
                             if (GetKeyState(VK_SHIFT) & 0x8000)
                             {
-                                if (mainWorld->IsPlaying())
+                                if (engine->IsPlaying())
                                 {
-                                    mainWorld->Stop();
-                                    mainWorld->Play();
+                                    engine->Stop();
+                                    engine->Play();
                                 }
                             }
                             else
                             {
-                                if (!mainWorld->IsPlaying())
-                                    mainWorld->Play();
+                                if (!engine->IsPlaying())
+                                    engine->Play();
                             }
                         }
                     }
@@ -152,13 +150,12 @@ namespace vg::engine
 
                     case VK_PAUSE:
                     {
-                        auto * mainWorld = GetMainWorld();
-                        if (mainWorld)
+                        if (IEngine * engine = Engine::get())
                         {
-                            if (mainWorld->IsPaused())
-                                mainWorld->Resume();
+                            if (engine->IsPaused())
+                                engine->Resume();
                             else
-                                mainWorld->Pause();
+                                engine->Pause();
                         }
                     }
                     break;
@@ -177,6 +174,8 @@ namespace vg::engine
 	//--------------------------------------------------------------------------------------
 	Engine::Engine(const core::string & _name, core::IObject * _parent) :
         IEngine(_name, _parent),
+        m_isPlaying(false),
+        m_isPaused(false),
         m_startInPlayMode(false),
         m_quit(false)
 	{
@@ -421,7 +420,7 @@ namespace vg::engine
             }
 
             if (m_startInPlayMode)
-                world->Play();
+                Play();
         }
     }
 
@@ -640,6 +639,9 @@ namespace vg::engine
 
             previous = current;
         }
+
+        m_time.m_enlapsedTimeSinceStartReal += m_time.m_realDeltaTime;
+        m_time.m_enlapsedTimeSinceStartScaled += m_time.m_scaledDeltaTime;
     }
 
     //--------------------------------------------------------------------------------------
@@ -799,5 +801,85 @@ namespace vg::engine
     const Time & Engine::GetTime() const
     {
         return getTime();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::IsPlaying() const
+    {
+        return isPlaying();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::IsPaused() const
+    {
+        return isPaused();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::Play()
+    {
+        play();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::Stop()
+    {
+        stop();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::Pause()
+    {
+        pause();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::Resume()
+    {
+        resume();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::play()
+    {
+        VG_INFO("[Engine] Play");
+        m_isPlaying = true;
+        m_isPaused = false;
+
+        m_time.m_enlapsedTimeSinceStartReal = 0.0f;
+        m_time.m_enlapsedTimeSinceStartScaled = 0.0f;
+
+        // Detect joypads
+        Kernel::getInput()->OnPlay();
+
+        if (auto * mainWorld = GetMainWorld())
+            mainWorld->OnPlay();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::pause()
+    {
+        VG_INFO("[Engine] Pause");
+        VG_ASSERT(m_isPlaying);
+        m_isPaused = true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::resume()
+    {
+        VG_INFO("[Engine] Resume");
+        VG_ASSERT(m_isPlaying && m_isPaused);
+        m_isPaused = false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Engine::stop()
+    {
+        VG_INFO("[Engine] Stop");
+        m_isPlaying = false;
+        m_isPaused = false;
+
+        if (auto * mainWorld = GetMainWorld())
+            mainWorld->OnStop();
     }
 }

@@ -74,6 +74,14 @@ namespace vg::engine
 		void							        init		        (const EngineCreationParams & _params, core::Singletons & _singletons) final;
 		void							        deinit		        () override;
 
+        bool                                    IsPlaying           () const final override;
+        bool                                    IsPaused            () const final override;
+
+        void                                    Play                () final override;
+        void                                    Stop                () final override;
+        void                                    Pause               () final override;
+        void                                    Resume              () final override;
+
         void                                    StartInPlayMode     (bool _enable) final override;
 
         void                                    Quit                () final override;
@@ -125,7 +133,17 @@ namespace vg::engine
         void                                    updateDt            ();
         void                                    toggleFullscreen    ();
 
+        VG_INLINE bool                          isPlaying           () const;
+        VG_INLINE bool                          isPaused            () const;
+
+        void                                    play                ();
+        void                                    stop                ();
+        void                                    pause               ();
+        void                                    resume              ();
+
 	private:
+        bool                                    m_isPlaying         : 1;
+        bool                                    m_isPaused          : 1;
         bool                                    m_startInPlayMode   : 1;
         bool                                    m_quit              : 1;
         IProject *                              m_project           = nullptr;

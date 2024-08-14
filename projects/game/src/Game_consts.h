@@ -4,7 +4,8 @@
 
 enum CharacterType : vg::core::u8
 {
-    Player = 0,
+    Neutral = 0,
+    Player,
     Enemy
 };
 

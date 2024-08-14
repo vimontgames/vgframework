@@ -67,6 +67,13 @@
                                     </Object>
                                 </Property>
                             </Object>
+                            <Object class="BallBehaviour">
+                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                <Property type="String" name="m_name" flags="NotVisible" value="New BallBehaviour"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                            </Object>
                             <Object class="MeshComponent">
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2017723977"/>
                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>

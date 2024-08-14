@@ -12,6 +12,9 @@
     <ClCompile Include="Behaviour\Goal\GoalBehaviour.cpp">
       <Filter>Behaviour\Goal</Filter>
     </ClCompile>
+    <ClCompile Include="Behaviour\Ball\BallBehaviour.cpp">
+      <Filter>Behaviour\Ball</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -37,6 +40,9 @@
     <ClInclude Include="Game_consts.h" />
     <ClInclude Include="Behaviour\Goal\GoalBehaviour.h">
       <Filter>Behaviour\Goal</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Ball\BallBehaviour.h">
+      <Filter>Behaviour\Ball</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

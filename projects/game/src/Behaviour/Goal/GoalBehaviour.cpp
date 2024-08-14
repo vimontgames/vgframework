@@ -2,6 +2,7 @@
 #include "GoalBehaviour.h"
 #include "editor/Editor_Consts.h"
 #include "Game.h"
+#include "Behaviour/Ball/BallBehaviour.h"
 #include "Behaviour/Character/Player/PlayerBehaviour.h"
 
 using namespace vg::core;
@@ -27,7 +28,7 @@ bool GoalBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
-    registerPropertyEnum(GoalBehaviour, Team, m_team, "Team");
+    registerPropertyEnum(GoalBehaviour, CharacterType, m_team, "Team");
     setPropertyDescription(GoalBehaviour, m_team, "The team this goal belongs to");
 
     return true;
@@ -48,31 +49,6 @@ void GoalBehaviour::Update(float _dt)
 //--------------------------------------------------------------------------------------
 void GoalBehaviour::OnTriggerEnter(IGameObject * _other)
 {
-    if (_other->getName()._Starts_with("Football"))
-    {
-        const auto & players = Game::get()->getPlayers();
-
-        switch (m_team)
-        {
-            case Team::Humans:
-            for (uint i = 0; i < players.size(); ++i)
-            {
-                auto * player = players[i];
-                if (player->isActive())
-                    player->addScore(-1);
-            }
-            _other->SetColor(float4(1, 0, 0, 1));
-            break;
-
-            case Team::Zombies:
-            for (uint i = 0; i < players.size(); ++i)
-            {
-                auto * player = players[i];
-                if (player->isActive())
-                    player->addScore(+1);
-            }
-            _other->SetColor(float4(0, 1, 0, 1));
-            break;
-        }
-    }
+    if (auto * ball = _other->GetComponentByType<BallBehaviour>())
+        ball->onGoalScored(m_team);
 }

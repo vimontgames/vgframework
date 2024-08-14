@@ -10,3 +10,5 @@
 #include "engine/IEngine.h"
 #include "engine/IAnimationComponent.h"
 #include "engine/IAnimationResource.h"
+
+#include "Game_consts.h"

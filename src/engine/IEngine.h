@@ -39,6 +39,8 @@ namespace vg
         {
             float m_realDeltaTime = 0.0f;
             float m_scaledDeltaTime = 0.0f;
+            float m_enlapsedTimeSinceStartReal = 0.0f;
+            float m_enlapsedTimeSinceStartScaled = 0.0f;
         };
 
 	    class IEngine : public core::IPlugin
@@ -52,6 +54,14 @@ namespace vg
 
 		    virtual void						        init		        (const EngineCreationParams & _params, core::Singletons & _singletons) = 0;
 		    virtual void						        deinit		        () = 0;
+
+            virtual bool                                IsPlaying           () const = 0;
+            virtual bool                                IsPaused            () const = 0;
+
+            virtual void                                Play                () = 0;
+            virtual void                                Stop                () = 0;
+            virtual void                                Pause               () = 0;
+            virtual void                                Resume              () = 0;
 
             virtual void                                StartInPlayMode     (bool _enable) = 0;
 

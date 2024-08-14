@@ -23,18 +23,6 @@ namespace vg::editor
             m_addComponent = false;
         }
 
-        //ImGui::PushID("ImGuiGameObjectInspectorMenu");
-        //
-        //if (ImGui::BeginPopupContextWindow())
-        //{
-        //    if (ImGui::MenuItem("Add Component"))
-        //        addComponent = true;
-        //
-        //    ImGui::EndPopup();
-        //}
-        //
-        //ImGui::PopID();
-
         if (addComponent)
         {
             m_selected = MenuOption::AddComponent;
@@ -42,6 +30,7 @@ namespace vg::editor
             m_popupIcon = style::icon::Plus;
             openPopup = true;
             ImGui::OpenPopup(m_popup.c_str());
+            ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
         }
 
         if (openPopup)
@@ -124,31 +113,60 @@ namespace vg::editor
                         );
                     }
 
-                    for (uint i = 0; i < m_categories.size(); ++i)
+                    string preview = "";
+                    bool first = true;
+                    for (int i = 0; i < m_categories.size(); i++)
                     {
                         auto & cat = m_categories[i];
-                        if (i > 0)
-                            ImGui::SameLine();
-                        ImGui::Checkbox(cat.name.c_str(), &cat.show);
-
-                        // Default select first visible, unselected if hidden
-                        if (m_selectedClass == nullptr)
+                        if (cat.show)
                         {
-                            if (cat.show)
+                            if (!first)
+                                preview += " | ";
+                            preview += cat.name;
+                            first = false;
+                        }
+                    }
+
+                    if (ImGui::BeginCombo("Categories", preview.c_str()))
+                    {
+                        for (int i = 0; i < m_categories.size(); i++)
+                        {
+                            auto & cat = m_categories[i];
+                            bool selected = cat.show;
+                            if (ImGui::Selectable(cat.name.c_str(), &selected))
                             {
-                                if (cat.classes.size() > 0)
-                                    m_selectedClass = cat.classes[0];
+                                cat.show = selected;
+
+                                if (!ImGui::IsKeyPressed(ImGuiKey_LeftCtrl) && !ImGui::IsKeyPressed(ImGuiKey_RightCtrl))
+                                {
+                                    // Unselect others unless ctrl is pressed
+                                    for (int j = 0; j < m_categories.size(); j++)
+                                    {
+                                        if (j != i)
+                                            m_categories[j].show = false;
+                                    }
+                                }
+                            }
+
+                            // Default select first visible, unselected if hidden
+                            if (m_selectedClass == nullptr)
+                            {
+                                if (cat.show)
+                                {
+                                    if (cat.classes.size() > 0)
+                                        m_selectedClass = cat.classes[0];
+                                }
+                            }
+                            else if (!cat.show && cat.classes.exists((IClassDesc *)m_selectedClass))
+                            {
+                                m_selectedClass = nullptr;
                             }
                         }
-                        else if (!cat.show && cat.classes.exists((IClassDesc *)m_selectedClass))
-                        {
-                            m_selectedClass = nullptr;
-                        }
-                    }    
+                        ImGui::EndCombo();
+                    }
 
                     bool doCreate = false;
 
-                    //if (ImGui::BeginCombo("Component", m_selectedClass->GetClassDisplayName(), ImGuiComboFlags_HeightLarge))
                     if (ImGui::BeginListBox("###Component", ImVec2(512, 4+core::clamp((uint)componentClassDescs.size(), (uint)4, (uint)16) * ImGui::GetTextLineHeightWithSpacing())))
                     {
                         for (uint i = 0; i < m_categories.size(); ++i)

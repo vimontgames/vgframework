@@ -9,8 +9,8 @@ public:
     EnemyBehaviour(const vg::core::string & _name, vg::core::IObject * _parent);
     ~EnemyBehaviour();
 
-    void                OnEnable() final override;
-    void                OnDisable() final override;
+    void                OnPlay() final override;
+    void                OnStop() final override;
 
     void                FixedUpdate(float _dt) override;
     void                Update(float _dt) override;

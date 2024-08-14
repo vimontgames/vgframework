@@ -44,10 +44,11 @@ namespace vg::physics
             if (_inBody2.IsSensor())
                 m_triggerEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent())));
         }
-        //else
-        //{
-        //    m_collisionEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent())));
-        //}
+        else
+        {
+            m_collisionEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent())));
+            m_collisionEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent())));
+        }
     }
 
     //--------------------------------------------------------------------------------------

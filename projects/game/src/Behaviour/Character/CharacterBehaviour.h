@@ -13,6 +13,9 @@ public:
     void                OnEnable() override;
     void                OnDisable() override;
 
+    void                OnPlay() override;
+    void                OnStop() override;
+
     void                FixedUpdate(float _dt) override;
     void                Update(float _dt) override;
 

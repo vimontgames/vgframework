@@ -36,10 +36,10 @@ namespace vg::core
         virtual bool                IsPlaying               () const = 0;
         virtual bool                IsPaused                () const = 0;
 
-        virtual void                Play                    () = 0;
-        virtual void                Stop                    () = 0;
-        virtual void                Pause                   () = 0;
-        virtual void                Resume                  () = 0;
+        virtual void                OnPlay                  () = 0;
+        virtual void                OnStop                  () = 0;
+        virtual void                OnPause                 () = 0;
+        virtual void                OnResume                () = 0;
 
         virtual bool                SetActiveScene          (IBaseScene * _scene, BaseSceneType _sceneType) = 0;
         virtual core::IBaseScene *  GetActiveScene          (BaseSceneType _sceneType) const = 0;

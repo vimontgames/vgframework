@@ -37,8 +37,17 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
     registerPropertyGroupBegin(PlayerBehaviour, "Player");
     {
         registerPropertyEnum(PlayerBehaviour, vg::core::InputType, m_controllerType, "Input");
+        setPropertyDescription(PlayerBehaviour, m_controllerType, "Input type used by player");
+
         registerProperty(PlayerBehaviour, m_controllerIndex, "Index");
+        setPropertyDescription(PlayerBehaviour, m_controllerIndex, "Input index used to differenciate different inputs (e.g. Joypads)");
+
+        registerPropertyEx(PlayerBehaviour, m_customColor, "Custom Color", vg::core::IProperty::Flags::Color);
+        setPropertyDescription(PlayerBehaviour, m_customColor, "Custom color used for elements controller by this player");
+
         registerProperty(PlayerBehaviour, m_UI, "UI");
+        setPropertyDescription(PlayerBehaviour, m_UI, "Player UI Prefab instance linked");
+
     }
     registerPropertyGroupEnd(PlayerBehaviour);
     

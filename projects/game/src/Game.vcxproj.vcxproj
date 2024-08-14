@@ -11,7 +11,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Behaviour\Ball\BallBehaviour.cpp" />
     <ClCompile Include="Behaviour\Character\CharacterBehaviour.cpp" />
+    <ClInclude Include="Behaviour\Ball\BallBehaviour.h" />
     <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.hpp" />
     <ClCompile Include="Behaviour\GameCamera\GameCameraBehaviour.cpp" />
     <ClCompile Include="Behaviour\Goal\GoalBehaviour.cpp" />

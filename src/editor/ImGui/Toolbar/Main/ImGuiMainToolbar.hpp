@@ -102,36 +102,34 @@ namespace vg::editor
 
             case Align::Center:
             {
-                auto * world = engine->GetMainWorld();
+                const bool playing = engine && engine->IsPlaying();
+                const bool paused = engine && engine->IsPaused();
 
-                const bool playing = world && world->IsPlaying();
-                const bool paused = world && world->IsPaused();
-
-                if (ImGui::TooltipButton(style::icon::Restart, playing, playing, "Restart (Shift-F5)", style::button::SizeSmall) && world)
+                if (ImGui::TooltipButton(style::icon::Restart, playing, playing, "Restart (Shift-F5)", style::button::SizeSmall) && engine)
                 {
-                    world->Stop();
-                    world->Play();
+                    engine->Stop();
+                    engine->Play();
                 }
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Play, !playing, !playing, "Play (F5)", style::button::SizeSmall) && world)
+                if (ImGui::TooltipButton(style::icon::Play, !playing, !playing, "Play (F5)", style::button::SizeSmall) && engine)
                 {
-                    world->Play();
+                    engine->Play();
                 }
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Pause, playing && !paused, playing, "Pause (PAUSE)", style::button::SizeSmall) && world)
+                if (ImGui::TooltipButton(style::icon::Pause, playing && !paused, playing, "Pause (PAUSE)", style::button::SizeSmall) && engine)
                 {
-                    if (world->IsPaused())
-                        world->Resume();
+                    if (engine->IsPaused())
+                        engine->Resume();
                     else
-                        world->Pause();
+                        engine->Pause();
                 }
                 nextItem();
 
-                if (ImGui::TooltipButton(style::icon::Stop, playing, playing, "Stop (ESC)", style::button::SizeSmall) && world)
+                if (ImGui::TooltipButton(style::icon::Stop, playing, playing, "Stop (ESC)", style::button::SizeSmall) && engine)
                 {
-                    world->Stop();
+                    engine->Stop();
                 }
                 nextItem();
 
