@@ -17,9 +17,9 @@ namespace vg::core
         void                        OnPlay                  () override;
         void                        OnStop                  () override;
 
-        void                        FixedUpdate             (float _dt) override;
-        void                        Update                  (float _dt) override;
-        void                        LateUpdate              (float _dt) override;
+        void                        FixedUpdate             (const Context & _context) override;
+        void                        Update                  (const Context & _context) override;
+        void                        LateUpdate              (const Context & _context) override;
 
         const IGameObject *         GetGameObject           () const final override;
         IGameObject *               GetGameObject           () final override;

@@ -294,6 +294,8 @@ namespace vg::physics
         VG_ASSERT(_physicsWorld);
 
         const BodyType bodyType = _bodyDesc->GetBodyType();
+        VG_INFO("[Physics] Create %s body \"%s\"", asString(bodyType).c_str(), _name.c_str());
+
         switch (bodyType)
         {
             default:
@@ -311,6 +313,8 @@ namespace vg::physics
         VG_ASSERT(_physicsWorld);
 
         const BodyType bodyType = _bodyDesc->GetBodyType();
+        VG_INFO("[Physics] Create %s body \"%s\"", asString(bodyType).c_str(), _name.c_str());
+
         switch (bodyType)
         {
             default:
@@ -335,6 +339,8 @@ namespace vg::physics
         VG_ASSERT(_world);
 
         const CharacterType characterType = _characterDesc->GetCharacterType();
+        VG_INFO("[Physics] Create %s character \"%s\"", asString(characterType).c_str(), _name.c_str());
+
         switch (characterType)
         {
             default:

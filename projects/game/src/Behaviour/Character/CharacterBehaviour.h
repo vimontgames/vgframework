@@ -16,8 +16,8 @@ public:
     void                OnPlay() override;
     void                OnStop() override;
 
-    void                FixedUpdate(float _dt) override;
-    void                Update(float _dt) override;
+    void                FixedUpdate(const Context & _context) override;
+    void                Update(const Context & _context) override;
 
     bool                isActive() const { return m_isActive; }
 

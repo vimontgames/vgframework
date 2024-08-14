@@ -210,7 +210,7 @@
       <Filter>Logger</Filter>
     </ClInclude>
     <ClInclude Include="ISelection.h" />
-    <ClInclude Include="Object\UpdateFlags.h">
+    <ClInclude Include="Object\Update.h">
       <Filter>Object</Filter>
     </ClInclude>
     <ClInclude Include="IOptions.h" />

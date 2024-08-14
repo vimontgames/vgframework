@@ -1,10 +1,11 @@
 #pragma once
 
 #include "core/Object/Object.h"
-#include "core/Object/UpdateFlags.h"
+#include "core/Object/Update.h"
 
 namespace vg::core
 {
+    class IWorld;
     class IGameObject;
     class AABB;
 
@@ -19,9 +20,11 @@ namespace vg::core
     public:
         VG_CLASS_DECL_ABSTRACT(IComponent, core::Object);
 
-        virtual void                FixedUpdate         (float _dt) = 0;
-        virtual void                Update              (float _dt) = 0;
-        virtual void                LateUpdate          (float _dt) = 0;
+        using Context = ComponentUpdateContext;
+
+        virtual void                FixedUpdate         (const Context & _context) = 0;
+        virtual void                Update              (const Context & _context) = 0;
+        virtual void                LateUpdate          (const Context & _context) = 0;
 
         virtual const IGameObject * GetGameObject       () const = 0;
         virtual IGameObject *       GetGameObject       () = 0;

@@ -302,12 +302,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::FixedUpdate(float _dt)
+    void GameObject::FixedUpdate(const Context & _context)
     {
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
             VG_PROFILE_CPU(getName().c_str());
             VG_ASSERT(asBool(UpdateFlags::FixedUpdate & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", getName().c_str(), asString(UpdateFlags::FixedUpdate).c_str());
+
+            ComponentUpdateContext componentUpdateContext(_context, this);
 
             for (uint i = 0; i < m_components.size(); ++i)
             {
@@ -315,7 +317,7 @@ namespace vg::core
                 if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::FixedUpdate & component->getUpdateFlags()))
                 {
                     VG_PROFILE_CPU(component->GetClassName());
-                    component->FixedUpdate(_dt);
+                    component->FixedUpdate(componentUpdateContext);
                 }
             }
 
@@ -324,18 +326,20 @@ namespace vg::core
             {
                 auto* child = children[e];
                 if (asBool(InstanceFlags::Enabled & child->getInstanceFlags()) && asBool(UpdateFlags::FixedUpdate & child->getUpdateFlags()))
-                    child->FixedUpdate(_dt);
+                    child->FixedUpdate(componentUpdateContext);
             }
         }
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::Update(float _dt)
+    void GameObject::Update(const Context & _context)
     {
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
             VG_PROFILE_CPU(getName().c_str());
             VG_ASSERT(asBool(UpdateFlags::Update & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", getName().c_str(), asString(UpdateFlags::Update).c_str());
+
+            ComponentUpdateContext componentUpdateContext(_context, this);
 
             for (uint i = 0; i < m_components.size(); ++i)
             {
@@ -343,7 +347,7 @@ namespace vg::core
                 if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::Update & component->getUpdateFlags()))
                 {
                     VG_PROFILE_CPU(component->GetClassName());
-                    component->Update(_dt);
+                    component->Update(componentUpdateContext);
                 }
             }
 
@@ -352,18 +356,20 @@ namespace vg::core
             {
                 auto* child = children[e];
                 if (asBool(InstanceFlags::Enabled & child->getInstanceFlags()) && asBool(UpdateFlags::Update & child->getUpdateFlags()))
-                    child->Update(_dt);
+                    child->Update(componentUpdateContext);
             }
         }
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::LateUpdate(float _dt)
+    void GameObject::LateUpdate(const Context & _context)
     {
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
             VG_PROFILE_CPU(getName().c_str());
             VG_ASSERT(asBool(UpdateFlags::LateUpdate & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", getName().c_str(), asString(UpdateFlags::LateUpdate).c_str());
+
+            ComponentUpdateContext componentUpdateContext(_context, this);
 
             for (uint i = 0; i < m_components.size(); ++i)
             {
@@ -371,7 +377,7 @@ namespace vg::core
                 if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::LateUpdate & component->getUpdateFlags()))
                 {
                     VG_PROFILE_CPU(component->GetClassName());
-                    component->LateUpdate(_dt);
+                    component->LateUpdate(componentUpdateContext);
                 }
             }
 
@@ -380,7 +386,7 @@ namespace vg::core
             {
                 auto* child = children[e];
                 if (asBool(InstanceFlags::Enabled & child->getInstanceFlags()) && asBool(UpdateFlags::LateUpdate & child->getUpdateFlags()))
-                    child->LateUpdate(_dt);
+                    child->LateUpdate(componentUpdateContext);
             }
         }
     }

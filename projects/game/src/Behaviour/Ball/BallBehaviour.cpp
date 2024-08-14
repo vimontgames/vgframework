@@ -53,7 +53,7 @@ void BallBehaviour::OnCollisionEnter(vg::core::IGameObject * _other)
 }
 
 //--------------------------------------------------------------------------------------
-void BallBehaviour::Update(float _dt)
+void BallBehaviour::Update(const Context & _context)
 {
     if (m_scored)
     {
@@ -65,7 +65,7 @@ void BallBehaviour::Update(float _dt)
             VG_INFO("[Ball] Goal was scored %.0f seconds ago", delay);
             m_scored = false;
             m_scoredTime = -1.0f;
-            GetGameObject()->SetColor(float4(1, 1, 1, 1));
+            _context.m_gameObject->SetColor(float4(1, 1, 1, 1));
         }
     }
 }
@@ -86,12 +86,12 @@ void BallBehaviour::onGoalScored(CharacterType _team)
 
         case CharacterType::Player:
             if (m_lastOwnerCharacter)
-                m_lastOwnerCharacter->addScore(1);
+                m_lastOwnerCharacter->addScore(-1); // CSC
             break;
 
         case CharacterType::Enemy:
             if (m_lastOwnerCharacter)
-                m_lastOwnerCharacter->addScore(-1);
+                m_lastOwnerCharacter->addScore(+1);
             break;
         }
 

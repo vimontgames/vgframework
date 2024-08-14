@@ -10,8 +10,8 @@ namespace vg::engine
         UITextComponent(const core::string & _name, core::IObject * _parent);
         ~UITextComponent();
 
-        void    SetText    (const core::string & _text) final override;
-        void    Update      (float _dt) final override;
+        void    SetText     (const core::string & _text) final override;
+        void    Update      (const Context & _context) final override;
 
     private:
         core::string m_text;

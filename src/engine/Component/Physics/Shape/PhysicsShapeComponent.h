@@ -22,20 +22,20 @@ namespace vg::engine
         PhysicsShapeComponent(const core::string & _name, IObject * _parent);
         ~PhysicsShapeComponent();
 
-        void                        OnLoad() final override;
-        void                        Update(float _dt) final override;
-        void                        OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
-        bool                        TryGetAABB(core::AABB & _aabb) const final override;
+        void                        OnLoad              () final override;
+        void                        Update              (const Context & _context) final override;
+        void                        OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+        bool                        TryGetAABB          (core::AABB & _aabb) const final override;
 
-        physics::IShape *           getPhysicsShape() const { return m_shape; }
+        physics::IShape *           getPhysicsShape     () const { return m_shape; }
     
     private:
-        PhysicsBodyComponent *      getBodyComponent();
+        PhysicsBodyComponent *      getBodyComponent    ();
 
-        bool                        createShapeDesc();
-        bool                        createShape();
+        bool                        createShapeDesc     ();
+        bool                        createShape         ();
 
-        static physics::IPhysics *  getPhysics();
+        static physics::IPhysics *  getPhysics          ();
 
     private:
         physics::ShapeType          m_shapeType = physics::ShapeType::Box;

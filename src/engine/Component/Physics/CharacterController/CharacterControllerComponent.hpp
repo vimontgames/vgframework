@@ -118,10 +118,14 @@ namespace vg::engine
     bool CharacterControllerComponent::createCharacter()
     {
         VG_SAFE_RELEASE(m_character);
-        VG_ASSERT(m_characterDesc && m_shape);
-        if (m_characterDesc && m_shape)
+
+        if (auto * world = GetGameObject()->GetWorld())
         {
-            if (auto * world = GetGameObject()->GetWorld())
+            if (nullptr == world || false == world->IsPlaying())
+                return false;
+
+            VG_ASSERT(m_characterDesc && m_shape);
+            if (m_characterDesc && m_shape)
                 m_character = getPhysics()->CreateCharacter(world->GetPhysicsWorld(), m_characterDesc, m_shape, GetGameObject()->GetGlobalMatrix(), GetGameObject()->getName() + "_CharacterController", this);
         }
         return nullptr != m_character;
@@ -201,15 +205,14 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void CharacterControllerComponent::FixedUpdate(float _dt)
+    void CharacterControllerComponent::FixedUpdate(const Context & _context)
     {
         const auto * engine = Engine::get();
-        IGameObject * go = GetGameObject();
 
         if (engine->getPhysicsOptions()->IsBodyVisible(m_shape->GetShapeType()))
         {
             if (m_shape)
-                m_shape->Draw(go->GetWorld(), go->getGlobalMatrix());
+                m_shape->Draw(_context.m_world, _context.m_gameObject->getGlobalMatrix());
         }
     }
 
@@ -220,16 +223,13 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void CharacterControllerComponent::Update(float _dt)
+    void CharacterControllerComponent::Update(const Context & _context)
     {
         const auto * engine = Engine::get();
-        IGameObject * go = GetGameObject();
 
         if (m_character)
         {
-            auto * world = GetGameObject()->GetWorld();
-
-            if (world->IsPlaying() && !world->IsPaused())
+            if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused())
             {
                 m_character->Update();
 
@@ -265,7 +265,7 @@ namespace vg::engine
                 }
 
                 float4x4 matrix = m_character->GetMatrix();
-                go->setGlobalMatrix(matrix);
+                _context.m_gameObject->setGlobalMatrix(matrix);
             }
         }  
     } 

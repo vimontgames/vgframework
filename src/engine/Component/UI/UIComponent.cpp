@@ -58,14 +58,14 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IViewGUI * UIComponent::getViewGUI() const
+    gfx::IViewGUI * UIComponent::getViewGUI(const core::IWorld * _world) const
     {
-        if (IWorld * world = GetGameObject()->GetWorld())
+        if (_world)
         {
             auto * renderer = Engine::get()->GetRenderer();
-            if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Game, world))
+            if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Game, _world))
                 return view->GetViewGUI();
-            else if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Editor, world))
+            else if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Editor, _world))
                 return view->GetViewGUI();
         }
 

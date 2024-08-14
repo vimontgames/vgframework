@@ -22,7 +22,7 @@ namespace vg::engine
         PhysicsBodyComponent(const core::string & _name, IObject * _parent);
         ~PhysicsBodyComponent();
 
-        void                                    Update              (float _dt) final override;
+        void                                    Update              (const Context & _context) final override;
         void                                    OnLoad              () final override;
         void                                    OnPlay              () final override;
         void                                    OnStop              () final override;

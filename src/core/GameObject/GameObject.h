@@ -50,9 +50,11 @@ namespace vg::core
         void                                            OverrideGameObjectProperties(IGameObject * _gameObject, const IDynamicProperty * _dynProp) override;
         bool                                            ToggleOverride              (const IObject * _object, const IProperty * _prop, bool _override) override;
 
-        void                                            FixedUpdate                 (float _dt);
-        void                                            Update                      (float _dt);
-        void                                            LateUpdate                  (float _dt);
+        using Context = GameObjectUpdateContext;
+
+        void                                            FixedUpdate                 (const Context & _context);
+        void                                            Update                      (const Context & _context);
+        void                                            LateUpdate                  (const Context & _context);
 
         const core::vector<IBehaviour*> /*&*/           getBehaviours               () const;
 

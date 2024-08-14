@@ -13,8 +13,8 @@ public:
     void                        OnPlay              () final override;
     void                        OnStop              () final override;
 
-    void                        FixedUpdate         (float _dt) override;
-    void                        Update              (float _dt) override;
+    void                        FixedUpdate         (const Context & _context) override;
+    void                        Update              (const Context & _context) override;
 
     const vg::core::float4 &    getCustomColor      () const { return m_customColor; }
 

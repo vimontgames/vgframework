@@ -55,7 +55,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void CameraComponent::Update(float _dt)
+    void CameraComponent::Update(const Context & _context)
     {
         auto * view = Engine::get()->GetRenderer()->GetView(gfx::ViewID(m_target, m_index));
         if (nullptr != view)

@@ -73,11 +73,9 @@ void PlayerBehaviour::OnStop()
 }
 
 //--------------------------------------------------------------------------------------
-void PlayerBehaviour::FixedUpdate(float _dt)
+void PlayerBehaviour::FixedUpdate(const Context & _context)
 {
-    auto * world = GetGameObject()->GetWorld();
-
-    if (world->IsPlaying() && !world->IsPaused())
+    if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused()) // TODO: Use context intead?
     {
         IInput & input = Game::Input();
         IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
@@ -182,14 +180,11 @@ void PlayerBehaviour::FixedUpdate(float _dt)
 }
 
 //--------------------------------------------------------------------------------------
-void PlayerBehaviour::Update(float _dt)
+void PlayerBehaviour::Update(const Context & _context)
 {
-    super::Update(_dt);
+    super::Update(_context);
 
-    // TODO: pass world->IsPlaying and world->IsPaused as 'Update' parameters, or World directly?
-    auto * world = GetGameObject()->GetWorld();
-
-    if (world->IsPlaying() && !world->IsPaused())
+    if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused())   // TODO: pass world->IsPlaying and world->IsPaused as 'Update' parameters, or World directly? Use Context?
     {
         // Update UI
         {

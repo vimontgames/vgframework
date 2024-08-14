@@ -41,19 +41,18 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void AnimationComponent::Update(float _dt)
+    void AnimationComponent::Update(const Context & _context)
     {
         auto & animResources = m_animations.getAnimationResources();
 
-        const auto * world = GetGameObject()->GetWorld();
-        if (world->IsPlaying() && !world->IsPaused())
+        if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused()) // TODO: check if running from prefab world using context instead? Or include play/stop/paused state in context maybe?
         {
             if (-1 != m_currentIndex)
             {
                 auto & currentAnim = animResources[m_currentIndex];
                 float currentWeight = currentAnim.getWeight();
 
-                float amount = _dt * 8.0f;
+                float amount = _context.m_dt * 8.0f;
 
                 if (currentWeight < 1.0f)
                 {
@@ -106,7 +105,7 @@ namespace vg::engine
                     const float framerate = anim->GetFramerate();
                     
                     float t = animRes.getTime();
-                    animRes.setTime(t + _dt);
+                    animRes.setTime(t + _context.m_dt);
                 }
             }
         }

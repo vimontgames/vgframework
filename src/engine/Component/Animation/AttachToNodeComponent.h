@@ -23,7 +23,7 @@ namespace vg::engine
         void                            OnLoad              () final override;
         void                            OnEnable            () final override;
         void                            OnDisable           () final override;
-        void                            Update              (float _dt) final override;
+        void                            Update              (const Context & _context) final override;
         void                            SetPropertyValue    (const core::IProperty & _prop, void * _previousValue, void * _newValue) final override;
 
         bool                            updateCache         ();

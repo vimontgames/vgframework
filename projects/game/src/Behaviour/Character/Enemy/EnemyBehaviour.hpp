@@ -62,13 +62,11 @@ struct ActivePlayerInfo
 };
 
 //--------------------------------------------------------------------------------------
-void EnemyBehaviour::FixedUpdate(float _dt)
+void EnemyBehaviour::FixedUpdate(const Context & _context)
 {
-    auto * world = GetGameObject()->GetWorld();
-
-    if (world->IsPlaying() && !world->IsPaused())
+    if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused())   // TODO: use Context
     {
-        const float3 pos = this->GetGameObject()->GetGlobalMatrix()[3].xyz;
+        const float3 pos = _context.m_gameObject->GetGlobalMatrix()[3].xyz;
 
         // Find nearest player (TODO: game->getActivePlayersInfos()?)
         Game * game = Game::get();
@@ -93,9 +91,9 @@ void EnemyBehaviour::FixedUpdate(float _dt)
         {
             // sort categories in alphabetical order
             sort(activePlayersInfos.begin(), activePlayersInfos.end(), [](ActivePlayerInfo & a, ActivePlayerInfo & b)
-                {
-                    return a.distance < b.distance;
-                }
+            {
+                return a.distance < b.distance;
+            }
             );
 
             closestPlayerInfo = activePlayersInfos[0];
@@ -118,10 +116,10 @@ void EnemyBehaviour::FixedUpdate(float _dt)
                 }
 
                 m_targetPosNew = closestPlayerInfo.position;
-                m_targetPosSmooth = smoothdamp(m_targetPosSmooth, m_targetPosNew, m_targetPosSmoothdamp, 0.1f, _dt);
+                m_targetPosSmooth = smoothdamp(m_targetPosSmooth, m_targetPosNew, m_targetPosSmoothdamp, 0.1f, _context.m_dt);
 
-                dbgDraw->AddLine(world, pos, m_targetPosSmooth, 0xFFFFFFFF);
-                dbgDraw->AddLine(world, pos, m_targetPosNew, 0xFF0000FF);
+                dbgDraw->AddLine(_context.m_world, pos, m_targetPosSmooth, 0xFFFFFFFF);
+                dbgDraw->AddLine(_context.m_world, pos, m_targetPosNew, 0xFF0000FF);
             }
             else
             {
@@ -147,24 +145,24 @@ void EnemyBehaviour::FixedUpdate(float _dt)
                 m_currentRotation = radiansToDegrees(atan2((float)dir.x, (float)-dir.y));
             }
 
-            vg::engine::ICharacterControllerComponent * charaController = GetGameObject()->GetComponentByType<vg::engine::ICharacterControllerComponent>();
+            vg::engine::ICharacterControllerComponent * charaController = _context.m_gameObject->GetComponentByType<vg::engine::ICharacterControllerComponent>();
 
             if (m_isActive && charaController)
             {
                 float3 currentVelocity = charaController->GetVelocity();
                 float3 targetVelocity = translation.xyz;
                 float3 updatedVelocity;
-                updatedVelocity.xy = smoothdamp(currentVelocity.xy, targetVelocity.xy, m_velocitySmoothdamp, 0.01f, _dt);
+                updatedVelocity.xy = smoothdamp(currentVelocity.xy, targetVelocity.xy, m_velocitySmoothdamp, 0.01f, _context.m_dt);
                 updatedVelocity.z = currentVelocity.z;
 
                 charaController->SetVelocity(updatedVelocity);
                 charaController->SetRotation(quaternion::rotation_z(degreesToRadians(m_currentRotation)));
 
-                dbgDraw->AddLine(world, pos, pos + normalize(updatedVelocity), 0xFF00FF00);
+                dbgDraw->AddLine(_context.m_world, pos, pos + normalize(updatedVelocity), 0xFF00FF00);
             }
         }
 
-        IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
+        IAnimationComponent * animationComponent = _context.m_gameObject->GetComponentByType<IAnimationComponent>();
 
         switch (m_state)
         {
@@ -188,7 +186,7 @@ void EnemyBehaviour::FixedUpdate(float _dt)
 }
 
 //--------------------------------------------------------------------------------------
-void EnemyBehaviour::Update(float _dt)
+void EnemyBehaviour::Update(const Context & _context)
 {
-    super::Update(_dt);
+    super::Update(_context);
 }

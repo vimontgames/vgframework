@@ -54,7 +54,7 @@ namespace vg::physics
         auto * physicsSystem = getPhysicsSystem();
         const auto startOptimizeBroadphase = Timer::getTick();
         physicsSystem->OptimizeBroadPhase();
-        VG_INFO("[PhysicsWorld] Optimize BroadPhase in %.2f ms", Timer::getEnlapsedTime(startOptimizeBroadphase, Timer::getTick()));
+        VG_INFO("[Physics] Optimize BroadPhase in %.2f ms", Timer::getEnlapsedTime(startOptimizeBroadphase, Timer::getTick()));
     }
 
     //--------------------------------------------------------------------------------------
@@ -63,6 +63,8 @@ namespace vg::physics
         auto * world = getWorld();
         if (world->IsPlaying() && !world->IsPaused())
         {
+            VG_PROFILE_CPU("World");
+
             m_contactListener->clear();
 
             auto * physicsSystem = getPhysicsSystem();

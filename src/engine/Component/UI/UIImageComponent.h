@@ -14,7 +14,7 @@ namespace vg::engine
         void    onResourceLoaded    (IResource * _resource) final override;
         void    onResourceUnloaded  (IResource * _resource) final override;
 
-        void    Update              (float _dt) final override;
+        void    Update              (const Context & _context) final override;
 
     private:
         TextureResource m_image;

@@ -604,7 +604,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IView * Renderer::GetView(gfx::ViewTarget _target, core::IWorld * _world) const
+    gfx::IView * Renderer::GetView(gfx::ViewTarget _target, const core::IWorld * _world) const
     {
         VG_ASSERT(_world);
         if (nullptr == _world)

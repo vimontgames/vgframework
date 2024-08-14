@@ -57,7 +57,7 @@ namespace vg::renderer
         gfx::ViewID                             AddView                     (gfx::IView * _view) final override;
         void                                    RemoveView                  (gfx::ViewID _viewID) final override;
         gfx::IView *                            GetView                     (gfx::ViewID _viewID) const final override;
-        gfx::IView *                            GetView                     (gfx::ViewTarget _target, core::IWorld * _world) const final override;
+        gfx::IView *                            GetView                     (gfx::ViewTarget _target, const core::IWorld * _world) const final override;
         const core::vector <gfx::IView *>       GetViews                    (gfx::ViewTarget _target) const final override;
 
         void                                    SetResized                  () final override;

@@ -11,7 +11,7 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-//VG_REGISTER_COMPONENT_CLASS(CharacterBehaviour, "Character", "Game", "Base Character Behaviour", vg::editor::style::icon::Script);
+VG_REGISTER_ABSTRACT_CLASS(CharacterBehaviour, "CharacterBehaviour");
 
 //--------------------------------------------------------------------------------------
 CharacterBehaviour::CharacterBehaviour(const string& _name, IObject* _parent) :
@@ -103,16 +103,15 @@ void CharacterBehaviour::PlayAnim(CharacterState _state, bool _loop)
 }
 
 //--------------------------------------------------------------------------------------
-void CharacterBehaviour::FixedUpdate(float _dt)
+void CharacterBehaviour::FixedUpdate(const Context & _context)
 {
-    super::FixedUpdate(_dt);
+    super::FixedUpdate(_context);
 }
 
 //--------------------------------------------------------------------------------------
-void CharacterBehaviour::Update(float _dt)
+void CharacterBehaviour::Update(const Context & _context)
 {
-    auto * go = GetGameObject();
-    auto world = go->getGlobalMatrix();
+    auto world = _context.m_gameObject->getGlobalMatrix();
     if (world[3].z < -32.0f)
     {
         if (m_life > 0)
@@ -121,7 +120,7 @@ void CharacterBehaviour::Update(float _dt)
 
             if (m_life > 0)
             {
-                if (auto * charaController = go->GetComponentByType<vg::engine::ICharacterControllerComponent>())
+                if (auto * charaController = _context.m_gameObject->GetComponentByType<vg::engine::ICharacterControllerComponent>())
                     charaController->SetPosition(m_startPos + float3(0, 0, 16));
             }
         }

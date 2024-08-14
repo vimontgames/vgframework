@@ -68,15 +68,12 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshComponent::Update(float _dt)
+    void MeshComponent::Update(const Context & _context)
     {
-        // TODO: could be done only when GameObject's matrix changes?
-        GameObject * go = getGameObject();
-
         if (nullptr != m_meshInstance)
         {
-            m_meshInstance->setGlobalMatrix(go->getGlobalMatrix());
-            m_meshInstance->setColor(go->getColor());
+            m_meshInstance->setGlobalMatrix(_context.m_gameObject->getGlobalMatrix());
+            m_meshInstance->setColor(_context.m_gameObject->getColor());
 
             if (asBool(ComponentFlags::NoCulling & getComponentFlags()))
                 m_meshInstance->setRuntimeFlags(IInstance::RuntimeFlags::NoCulling, true);
@@ -114,7 +111,7 @@ namespace vg::engine
                 m_meshInstance->UpdateSkeleton();
 
                 if (m_displayBones)
-                    m_meshInstance->DrawSkeleton(getGameObject()->GetWorld());
+                    m_meshInstance->DrawSkeleton(_context.m_world);
             }
         }
     }

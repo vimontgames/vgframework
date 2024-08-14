@@ -59,7 +59,7 @@ namespace vg::engine
     }  
 
     //--------------------------------------------------------------------------------------
-    void AttachToNodeComponent::Update(float _dt)
+    void AttachToNodeComponent::Update(const Context & _context)
     {
         // TODO: this might be slow if the node is never found but need it because MeshInstance might not be immediately available
         if (!m_skeleton)

@@ -10,7 +10,7 @@ public:
     ~GameCameraBehaviour();
 
     void                OnEnable    () final override;
-    void                Update      (float _dt) override;
+    void                Update      (const Context & _context) override;
 
 private:
     float               m_delay             = 0.1f;

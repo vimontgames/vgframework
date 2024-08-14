@@ -37,13 +37,10 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void UICanvasComponent::Update(float _dt)
+    void UICanvasComponent::Update(const Context & _context)
     {
-        //auto * dbgDraw = Engine::get()->GetRenderer()->GetDebugDraw();
-        //dbgDraw->add
-
         m_canvas.m_pickingID = m_pickingID;
-        m_canvas.m_matrix = GetGameObject()->GetGlobalMatrix();
+        m_canvas.m_matrix = _context.m_gameObject->GetGlobalMatrix();
         m_canvas.m_size = m_size;
         m_canvas.m_alignX = m_horizontal;
         m_canvas.m_alignY = m_vertical;
@@ -52,7 +49,7 @@ namespace vg::engine
 
         m_canvas.m_resolution = m_canvas.m_resolution;
 
-        if (auto * gui = getViewGUI())
+        if (auto * gui = getViewGUI(_context.m_world))
         {
             auto desc = gfx::UIItem(m_pickingID, getMatrix(), m_size, m_horizontal, m_vertical, getColor(), m_UIFlags);
             gui->AddCanvas(&m_canvas, desc);

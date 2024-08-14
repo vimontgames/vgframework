@@ -12,7 +12,7 @@ namespace vg::engine
         TestComponent(const core::string & _name, core::IObject * _parent);
         ~TestComponent();
 
-        void            Update              (float _dt) final override;
+        void            Update              (const Context & _context) final override;
 
     protected:
         core::u8        m_u8 = 0;

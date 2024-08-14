@@ -10,7 +10,7 @@ public:
     ~GoalBehaviour();
 
     void                OnEnable() final override;
-    void                Update(float _dt) override;
+    void                Update(const Context & _context) override;
     void                OnTriggerEnter(vg::core::IGameObject * _other);
 
 private:

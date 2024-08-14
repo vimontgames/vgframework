@@ -123,10 +123,10 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void LightComponent::Update(float _dt)
+    void LightComponent::Update(const Context & _context)
     {
         if (m_light)
-            m_light->setGlobalMatrix(getGameObject()->getGlobalMatrix());
+            m_light->setGlobalMatrix(_context.m_gameObject->getGlobalMatrix());
     }
 
     //--------------------------------------------------------------------------------------

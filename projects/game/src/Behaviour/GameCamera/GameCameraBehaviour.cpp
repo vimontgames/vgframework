@@ -44,7 +44,7 @@ void GameCameraBehaviour::OnEnable()
 //--------------------------------------------------------------------------------------
 // Camera position is the average of player positions + original camera offset
 //--------------------------------------------------------------------------------------
-void GameCameraBehaviour::Update(float _dt)
+void GameCameraBehaviour::Update(const Context & _context)
 {
     const auto players = Game::get()->getCharacters(CharacterType::Player); 
 
@@ -60,7 +60,7 @@ void GameCameraBehaviour::Update(float _dt)
     {
         if (players.size() > 0)
         {
-            auto matrix = getGameObject()->getGlobalMatrix();
+            auto matrix = _context.m_gameObject->getGlobalMatrix();
 
             float3 avgPos = (float3)0.0f;
             for (uint i = 0; i < _players.size(); ++i)
@@ -68,9 +68,9 @@ void GameCameraBehaviour::Update(float _dt)
 
             m_target.xy = avgPos.xy / (float)_players.size() + m_offset.xy;
 
-            matrix[3].xy = smoothdamp(matrix[3].xy, m_target.xy, (float2 &)m_targetVelocity.xy, m_delay, _dt);
+            matrix[3].xy = smoothdamp(matrix[3].xy, m_target.xy, (float2 &)m_targetVelocity.xy, m_delay, _context.m_dt);
 
-            getGameObject()->setGlobalMatrix(matrix);
+            _context.m_gameObject->setGlobalMatrix(matrix);
         }
     };
 

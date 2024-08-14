@@ -11,7 +11,7 @@ namespace vg::engine
         UICanvasComponent(const core::string & _name, core::IObject * _parent);
         ~UICanvasComponent();
 
-        void    Update(float _dt) final override;
+        void    Update(const Context & _context) final override;
 
         VG_INLINE const gfx::UICanvas & getGfxCanvas() const { return m_canvas; }
 

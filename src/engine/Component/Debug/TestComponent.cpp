@@ -79,7 +79,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void TestComponent::Update(float _dt)
+    void TestComponent::Update(const Context & _context)
     {
         //super::Update(_dt);
     }

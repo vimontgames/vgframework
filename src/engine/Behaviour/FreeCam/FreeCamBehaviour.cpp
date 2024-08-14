@@ -57,7 +57,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void FreeCamBehaviour::Update(float _dt)
+    void FreeCamBehaviour::Update(const Context & _context)
     {
         bool update = false;
 
@@ -73,9 +73,7 @@ namespace vg::engine
             }
         }
 
-        IGameObject * go = GetGameObject();
-
-        const float4x4 & world = go->getGlobalMatrix();
+        const float4x4 & world = _context.m_gameObject->getGlobalMatrix();
 
         float4 I = world[0];
         float4 J = world[1];
@@ -87,7 +85,7 @@ namespace vg::engine
         {
             float mouseSpeedX = m_rotSpeed * 0.001f * PI;
             float mouseSpeedY = m_rotSpeed * 0.001f * PI;
-            float moveSpeed = m_moveSpeed * _dt * 8.0f;
+            float moveSpeed = m_moveSpeed * _context.m_dt * 8.0f;
 
             if (input->IsMouseButtonPressed(MouseButton::Middle))
             {
@@ -137,7 +135,7 @@ namespace vg::engine
 
         float4x4 mViewI = float4x4(-I, -J, K, T);
 
-        go->setGlobalMatrix(mViewI);
+        _context.m_gameObject->setGlobalMatrix(mViewI);
     }
 
     //--------------------------------------------------------------------------------------
@@ -150,7 +148,7 @@ namespace vg::engine
         (
             1, 0, 0, 0,
             0, c, s, 0,
-            0, -s, c, 0,
+            0,-s, c, 0,
             0, 0, 0, 1
         );
     }
@@ -163,7 +161,7 @@ namespace vg::engine
 
         return float4x4
         (
-            c, 0, -s, 0,
+            c, 0,-s, 0,
             0, 1, 0, 0,
             s, 0, c, 0,
             0, 0, 0, 1
@@ -179,7 +177,7 @@ namespace vg::engine
         return float4x4
         (
             c, s, 0, 0,
-            -s, c, 0, 0,
+           -s, c, 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1
         );

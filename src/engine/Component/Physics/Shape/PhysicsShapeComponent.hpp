@@ -29,7 +29,7 @@ namespace vg::engine
     PhysicsShapeComponent::PhysicsShapeComponent(const core::string & _name, IObject * _parent) :
         super(_name, _parent)
     {
-        SetUpdateFlags(UpdateFlags::Update, false);
+        //SetUpdateFlags(UpdateFlags::Update, false);
 
         if (_parent)
         {
@@ -64,26 +64,24 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void PhysicsShapeComponent::Update(float _dt)
+    void PhysicsShapeComponent::Update(const Context & _context)
     {
         if (isEnabled())
         {
-            auto shape = getPhysicsShape();
-
-            IGameObject * go = GetGameObject();
-            auto * world = go->GetWorld();
-            if (nullptr == world)
+            if (nullptr == _context.m_world)
                 return;
+
+            auto shape = getPhysicsShape();            
 
             if (shape)
             {
                 const auto & physicsOptions = Engine::get()->getPhysicsOptions();
                 if (physicsOptions->IsBodyVisible(shape->GetShapeType()))
-                    shape->Draw(world, go->getGlobalMatrix());
+                    shape->Draw(_context.m_world, _context.m_gameObject->getGlobalMatrix());
             }
             else
             {
-                VG_WARNING("[Physics] PhysicsShapeComponent in GameObject \"%s\" has no physics shape", go->getName().c_str());
+                VG_WARNING("[Physics] PhysicsShapeComponent in GameObject \"%s\" has no physics shape", _context.m_gameObject->getName().c_str());
             }
         }
     }

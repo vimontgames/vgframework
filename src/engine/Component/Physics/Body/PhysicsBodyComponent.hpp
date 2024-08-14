@@ -51,30 +51,28 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void PhysicsBodyComponent::Update(float _dt)
+    void PhysicsBodyComponent::Update(const Context & _context)
     {
         if (physics::MotionType::Static != m_bodyDesc->GetMotion())
         {
+            if (nullptr == _context.m_world)
+                return;
+
             if (nullptr == m_bodyDesc)
                 return;
 
-            IGameObject * go = GetGameObject();
-            auto * world = go->GetWorld();
-            if (nullptr == world)
-                return;
-
-            if (world->IsPlaying() && !world->IsPaused())
+            if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused())   // TODO: use context?
             {
                 if (m_body)
                 {
                     if (m_bodyDesc->IsTrigger())
                     {
-                        m_body->SetMatrix(go->getGlobalMatrix());
+                        m_body->SetMatrix(_context.m_gameObject->getGlobalMatrix());
                     }
                     else
                     {
                         auto matrix = m_body->GetMatrix();
-                        go->setGlobalMatrix(matrix);
+                        _context.m_gameObject->setGlobalMatrix(matrix);
                     }
                 }
             }
@@ -103,10 +101,10 @@ namespace vg::engine
             m_bodyDesc->OnPlay();
 
         // Static do not need runtime update
-        if (physics::MotionType::Static != m_bodyDesc->GetMotion())
-            SetUpdateFlags(UpdateFlags::Update, true);
-        else
-            SetUpdateFlags(UpdateFlags::Update, false);
+        //if (physics::MotionType::Static != m_bodyDesc->GetMotion())
+        //    SetUpdateFlags(UpdateFlags::Update, true);
+        //else
+        //    SetUpdateFlags(UpdateFlags::Update, false);
 
         super::OnLoad();
     }
@@ -117,7 +115,7 @@ namespace vg::engine
         super::OnStop();
 
         // Restore
-        SetUpdateFlags(UpdateFlags::Update, true);
+        //SetUpdateFlags(UpdateFlags::Update, true);
 
         VG_SAFE_RELEASE(m_body);
 

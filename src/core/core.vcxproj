@@ -117,7 +117,7 @@
     <ClInclude Include="Object\Property.hpp" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="Object\Factory.h" />
-    <ClInclude Include="Object\UpdateFlags.h" />
+    <ClInclude Include="Object\Update.h" />
     <ClInclude Include="Options\Options.h" />
     <ClInclude Include="Plugin\Plugin.h" />
     <ClInclude Include="Pool\IndexPool.h" />

@@ -13,7 +13,7 @@ public:
 
     void                    OnPlay              () final override;
     void                    OnCollisionEnter    (vg::core::IGameObject * _other) override;
-    void                    Update              (float _dt) override;
+    void                    Update              (const Context & _context) override;
 
     void                    onGoalScored        (CharacterType _team);
 

@@ -694,14 +694,14 @@ namespace vg::engine
             VG_PROFILE_CPU("FixedUpdate");
             for (IWorld * world : GetWorlds())
             {
-                const float dt = getWorldDeltaTime(world);
+                GameObject::Context gameObjectUpdateContext(getWorldDeltaTime(world), world);
 
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
                     const Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
                     GameObject * root = scene->getRoot();
                     if (root && asBool(UpdateFlags::FixedUpdate & root->getUpdateFlags()))
-                        root->FixedUpdate(dt);
+                        root->FixedUpdate(gameObjectUpdateContext);
                 }
             }
         }
@@ -715,14 +715,14 @@ namespace vg::engine
             VG_PROFILE_CPU("Update");
             for (IWorld * world : GetWorlds())
             {
-                const float dt = getWorldDeltaTime(world);
+                GameObject::Context gameObjectUpdateContext(getWorldDeltaTime(world), world);
 
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
                     const Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
                     GameObject * root = scene->getRoot();
                     if (root && asBool(UpdateFlags::Update & root->getUpdateFlags()))
-                        root->Update(dt);
+                        root->Update(gameObjectUpdateContext);
                 }
             }
         }
@@ -739,14 +739,14 @@ namespace vg::engine
             VG_PROFILE_CPU("LateUpdate");
             for (IWorld * world : GetWorlds())
             {
-                const float dt = getWorldDeltaTime(world);
+                GameObject::Context gameObjectUpdateContext(getWorldDeltaTime(world), world);
 
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
                     const Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
                     GameObject * root = scene->getRoot();
                     if (root && asBool(UpdateFlags::LateUpdate & root->getUpdateFlags()))
-                        root->LateUpdate(dt);
+                        root->LateUpdate(gameObjectUpdateContext);
                 }
             }
         }

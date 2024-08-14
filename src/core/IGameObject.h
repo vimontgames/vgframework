@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Instance/Instance.h"
-#include "core/Object/UpdateFlags.h"
+#include "core/Object/Update.h"
 
 namespace vg::renderer
 {

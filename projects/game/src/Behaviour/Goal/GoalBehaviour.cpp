@@ -41,7 +41,7 @@ void GoalBehaviour::OnEnable()
 }
 
 //--------------------------------------------------------------------------------------
-void GoalBehaviour::Update(float _dt)
+void GoalBehaviour::Update(const Context & _context)
 {
     
 }

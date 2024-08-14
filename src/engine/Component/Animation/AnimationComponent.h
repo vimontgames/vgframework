@@ -15,7 +15,7 @@ namespace vg::engine
         AnimationComponent(const core::string & _name, IObject * _parent);
         ~AnimationComponent();
 
-        void                    Update              (float _dt) final override;
+        void                    Update              (const Context & _context) final override;
 
         void                    OnEnable            () final override;
         void                    OnDisable           () final override;

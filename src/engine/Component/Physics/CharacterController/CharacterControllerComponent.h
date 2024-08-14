@@ -19,8 +19,8 @@ namespace vg::engine
         void                        SetPosition         (const core::float3 & _position) final override;
         void                        SetRotation         (const core::quaternion & _rotation) final override;
 
-        void                        FixedUpdate         (float _dt) final override;
-        void                        Update              (float _dt) final override;
+        void                        FixedUpdate         (const Context & _context) final override;
+        void                        Update              (const Context & _context) final override;
 
         void                        OnLoad              () final override;
 

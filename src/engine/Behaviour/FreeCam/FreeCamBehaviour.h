@@ -19,7 +19,7 @@ namespace vg::engine
         FreeCamBehaviour        (const core::string & _name, core::IObject * _parent);
         ~FreeCamBehaviour       ();
 
-        void                    Update(float _dt) override;
+        void                    Update(const Context & _context) override;
 
     private:
         static core::float4x4   getRotX(float _alpha);
