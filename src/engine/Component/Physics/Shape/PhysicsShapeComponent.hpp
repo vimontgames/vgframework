@@ -2,7 +2,7 @@
 #include "core/IGameObject.h"
 #include "core/IWorld.h"
 #include "engine/Engine.h"
-#include "physics/IPhysicsOptions.h"
+#include "engine/EngineOptions.h"
 #include "physics/IShape.h"
 #include "editor/Editor_Consts.h"
 
@@ -29,8 +29,6 @@ namespace vg::engine
     PhysicsShapeComponent::PhysicsShapeComponent(const core::string & _name, IObject * _parent) :
         super(_name, _parent)
     {
-        //SetUpdateFlags(UpdateFlags::Update, false);
-
         if (_parent)
         {
             if (m_shapeDesc == nullptr)
@@ -75,8 +73,7 @@ namespace vg::engine
 
             if (shape)
             {
-                const auto & physicsOptions = Engine::get()->getPhysicsOptions();
-                if (physicsOptions->IsBodyVisible(shape->GetShapeType()))
+                if (EngineOptions::get()->isBodyVisible(shape->GetShapeType()))
                     shape->Draw(_context.m_world, _context.m_gameObject->getGlobalMatrix());
             }
             else

@@ -14,6 +14,12 @@ namespace vg::gfx
             {
             }
 
+            VG_INLINE FillMode    getFillMode       () const { return fillMode; }
+            VG_INLINE CullMode    getCullMode       () const { return cullMode; }
+            VG_INLINE Orientation getOrientation    () const { return orientation; }
+            VG_INLINE DepthClip   getDepthClip      () const { return depthClip; }
+            VG_INLINE DepthBias   getDepthBias      () const { return depthBias; }
+
         protected:
             union
             {

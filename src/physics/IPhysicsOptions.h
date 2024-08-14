@@ -8,7 +8,5 @@ namespace vg::physics
     {
     public:
         VG_CLASS_DECL_ABSTRACT(IPhysicsOptions, core::Options);
-
-        virtual bool    IsBodyVisible(ShapeType _shape) const = 0;
     };
 }

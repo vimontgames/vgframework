@@ -13,7 +13,6 @@ namespace vg::physics
     {
         super::registerProperties(_desc);
 
-        registerOptionalPropertyEnumBitfield(PhysicsOptions, m_showRigidBodies, ShapeTypeFlags, m_showRigidBodiesMask, "RigidBody")
         registerProperty(PhysicsOptions, m_gravity, "Gravity");
 
         return true;
@@ -47,11 +46,5 @@ namespace vg::physics
     void PhysicsOptions::applyGravity(const core::float3 & _gravity)
     {
         Physics::get()->SetGravity(_gravity);
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool PhysicsOptions::IsBodyVisible(ShapeType _shape) const
-    {
-        return m_showRigidBodies && asBool(ShapeTypeFlags(1 << (u32)_shape) & m_showRigidBodiesMask);
     }
 }

@@ -1,5 +1,6 @@
 #include "engine/Precomp.h"
 #include "EngineOptions.h"
+#include "physics/Physics_Consts.h"
 
 using namespace vg::core;
 
@@ -20,6 +21,16 @@ namespace vg::engine
             registerPropertyEx(EngineOptions, m_startWorld, "Start World", IProperty::Flags::IsFile);
             setPropertyDescription(EngineOptions, m_startWorld, "Default world to load at startup");
             setPropertyDefaultFolder(EngineOptions, m_startWorld, "data/Worlds")
+        }
+        registerPropertyGroupEnd(EngineOptions);
+
+        registerPropertyGroupBegin(EngineOptions, "Physics");
+        {
+            registerOptionalPropertyEnumBitfield(EngineOptions, m_showRigidBodies, physics::ShapeTypeFlags, m_showRigidBodiesMask, "Show bodies")
+            setPropertyDescription(EngineOptions, m_showRigidBodiesMask, "Show physics bodies of type");
+
+            registerProperty(EngineOptions, m_mergeStaticBodies, "Merge static");
+            setPropertyDescription(EngineOptions, m_mergeStaticBodies, "Merge static bodies at init");
         }
         registerPropertyGroupEnd(EngineOptions);
 

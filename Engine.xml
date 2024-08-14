@@ -6,6 +6,9 @@
         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
         <Property type="String" name="m_projectPath" flags="IsFolder" value="projects/game"/>
         <Property type="String" name="m_startWorld" flags="IsFile" value="data/Worlds/Game.world"/>
+        <Property type="Bool" name="m_mergeStaticBodies" value="false"/>
+        <Property type="Bool" name="m_showRigidBodies" flags="NotVisible" value="true"/>
+        <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" flags="Bitfield|Optional" value="Sphere|Box|Capsule|Cylinder"/>
         <Property type="Bool" name="m_useTimeScale" flags="NotVisible" value="false"/>
         <Property type="Float" name="m_timeScale" flags="HasRange|Optional" value="1"/>
         <Property type="Bool" name="m_useMaxDT" flags="NotVisible" value="true"/>
