@@ -36,7 +36,7 @@ namespace vg::editor
         virtual bool                    UpdateScene         () { return true; };
 
         const gfx::ViewTarget &         GetViewTarget       () const { return m_target;}
-        core::uint                      GetViewIndex        () const { return m_index; }
+        gfx::ViewIndex                  GetViewIndex        () const { return m_index; }
 
         void                            setWindowFocus      ();
 
@@ -49,7 +49,7 @@ namespace vg::editor
 
     protected:
         gfx::ViewTarget                 m_target            = gfx::ViewTarget::Game;
-        core::uint                      m_index             = -1;
+        gfx::ViewIndex                  m_index             = gfx::ViewIndexInvalid;
         core::uint2                     m_size              = core::uint2(0, 0);
         gfx::IView *                    m_view              = nullptr;
         gfx::ITexture *                 m_texture           = nullptr;

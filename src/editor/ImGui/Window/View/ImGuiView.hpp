@@ -372,17 +372,7 @@ namespace vg::editor
             {
                 // get free index
                 if (m_index == -1)
-                {
-                    auto * renderer = Editor::get()->getRenderer();
-                    auto views = renderer->GetViews(m_target);
-                    for (uint i = 0; i < views.size(); ++i)
-                    {
-                        if (!views[i])
-                            m_index = i;
-                    }
-                    if (m_index == -1)
-                        m_index = (uint)views.size();
-                }
+                    m_index = renderer->GetFreeViewIndex(m_target);
 
                 if (gfx::IView * view = renderer->GetView(gfx::ViewID(m_target, m_index)))
                 {

@@ -63,6 +63,7 @@ namespace vg
             virtual gfx::IView *                        CreateView              (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags = (gfx::IView::Flags)0) = 0;
             virtual gfx::ViewID                         AddView                 (gfx::IView * _view) = 0;
             virtual void                                RemoveView              (gfx::ViewID _viewID) = 0;
+            virtual gfx::ViewIndex                      GetFreeViewIndex        (gfx::ViewTarget _target) const = 0;
             virtual gfx::IView *                        GetView                 (gfx::ViewID _viewID) const = 0;
             virtual gfx::IView *                        GetView                 (gfx::ViewTarget _target, const core::IWorld * _world) const = 0;
             virtual const core::vector<gfx::IView *>    GetViews                (gfx::ViewTarget _target) const = 0;

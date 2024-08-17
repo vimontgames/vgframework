@@ -485,12 +485,6 @@ namespace vg::renderer
         }
     }
 
-    //--------------------------------------------------------------------------------------
-    View * Renderer::getMainView() const
-    {
-        return m_mainView;
-    }
-
 	//--------------------------------------------------------------------------------------
 	Texture * Renderer::getBackbuffer() const
 	{
@@ -591,6 +585,18 @@ namespace vg::renderer
                     VG_SAFE_RELEASE(views[i]);
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::ViewIndex Renderer::GetFreeViewIndex(gfx::ViewTarget _target) const
+    {
+        const auto & views = GetViews(_target);
+        for (uint i = 0; i < views.size(); ++i)
+        {
+            if (!views[i])
+                return i;
+        }
+        return (gfx::ViewIndex)views.size();
     }
 
     //--------------------------------------------------------------------------------------

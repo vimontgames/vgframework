@@ -56,6 +56,7 @@ namespace vg::renderer
         gfx::IView *                            CreateView                  (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags = (gfx::IView::Flags)0) final override;
         gfx::ViewID                             AddView                     (gfx::IView * _view) final override;
         void                                    RemoveView                  (gfx::ViewID _viewID) final override;
+        gfx::ViewIndex                          GetFreeViewIndex            (gfx::ViewTarget _target) const final override;
         gfx::IView *                            GetView                     (gfx::ViewID _viewID) const final override;
         gfx::IView *                            GetView                     (gfx::ViewTarget _target, const core::IWorld * _world) const final override;
         const core::vector <gfx::IView *>       GetViews                    (gfx::ViewTarget _target) const final override;
@@ -103,8 +104,7 @@ namespace vg::renderer
         ILightInstance *                        CreateLightInstance         (const ILightDesc * _lightDesc) final override;
 
     public: // internal
-        View *                                  getMainView                 () const;
-        gfx::Texture *		                    getBackbuffer               () const;
+        gfx::Texture *                          getBackbuffer               () const;
         ImGuiAdapter *                          getImGuiAdapter             () const { return m_imgui; }
         SharedCullingJobOutput *                getSharedCullingJobOutput   () const { return m_sharedCullingJobOutput; }
 
