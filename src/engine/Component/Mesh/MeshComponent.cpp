@@ -208,7 +208,7 @@ namespace vg::engine
             }
 
             // In case Animations were loaded before Mesh we need to rebind them
-            if (auto * animComponent = GetGameObject()->GetComponentByType<AnimationComponent>())
+            if (auto * animComponent = GetGameObject()->GetComponentT<AnimationComponent>())
                 animComponent->bindAnimations();
 
         }

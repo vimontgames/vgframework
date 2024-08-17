@@ -68,11 +68,13 @@ namespace vg::core
         vector<IComponent *>                            GetComponentsByType         (const char * _className, bool _searchInParent = false, bool _searchInChildren = false) const final override;
 
         // rem: have to forward them for C++ template name lookup to work, otherwise from GameObject we would have to use super:: or IGameObject:: to access these funcs
-        template <class T> inline T *                   AddComponentByType          (const string & _name)  { return super::AddComponentByType<T>(_name); }
-        template <class T> inline T *                   GetComponentByType          () const                { return super::GetComponentByType<T>(); }
-        template <class T> inline core::vector<T *>     GetComponentsByType         () const                { return super::GetComponentsByType<T>(); }
-        template <class T> inline T *                   GetComponentInParents       () const                { return super::GetComponentInParents<T>(); }
-        template <class T> inline T *                   GetComponentInChildren      () const                { return super::GetComponentInChildren<T>(); }
+        template <class T> inline T *                   AddComponentT               (const string & _name)  { return super::AddComponentT<T>(_name); }
+        template <class T> inline T *                   GetComponentT               () const                { return super::GetComponentT<T>(); }
+        template <class T> inline T *                   GetComponentInParentsT      () const                { return super::GetComponentInParentsT<T>(); }
+        template <class T> inline T *                   GetComponentInChildrenT     () const                { return super::GetComponentInChildrenT<T>(); }
+
+        template <class T> inline core::vector<T *>     GetComponentsByTypeT        () const { return super::GetComponentsT<T>(); }
+        template <class T> inline core::vector<T *>     GetComponentsInChildrenT    () const { return super::GetComponentsT<T>(); }
 
         void                                            AddChild                    (IGameObject * _gameObject, uint _index = -1) final override;
         bool                                            RemoveChild                 (IGameObject * _gameObject, bool _recomputeFlags = true) final override;

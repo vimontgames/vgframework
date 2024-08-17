@@ -49,7 +49,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     PhysicsBodyComponent * PhysicsShapeComponent::getBodyComponent()
     {
-        return GetGameObject()->GetComponentByType<PhysicsBodyComponent>();
+        return GetGameObject()->GetComponentT<PhysicsBodyComponent>();
     }
 
     //--------------------------------------------------------------------------------------

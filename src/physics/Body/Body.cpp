@@ -35,7 +35,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    Body::Body(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, const core::vector<Shape *> & _shapes, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent) :
+    Body::Body(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, const core::vector<ShapeInfo> & _shapes, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent) :
         super(_name, _parent),
         m_physicsWorld(_physicsWorld),
         m_bodyDesc(_bodyDesc)
@@ -46,7 +46,10 @@ namespace vg::physics
             JPH::StaticCompoundShapeSettings compoundShapeSettings;
 
             for (uint i = 0; i < _shapes.size(); ++i)
-                compoundShapeSettings.AddShape(getJoltVec3(float3(0, 0, 0)), getJoltQuaternion(quaternion::identity()), _shapes[i]->getJoltShape());
+            {
+                auto * shape = (Shape *)_shapes[i].m_shape;
+                compoundShapeSettings.AddShape(getJoltVec3(_shapes[i].m_translation), getJoltQuaternion(_shapes[i].m_rotation), shape->getJoltShape());
+            }
 
             JPH::Ref<JPH::Shape> compoundShape = compoundShapeSettings.Create().Get();
 
@@ -55,7 +58,7 @@ namespace vg::physics
         else if (_shapes.size() == 1)
         {
             // Create body from shape directly if there's only one shape
-            JPH::Shape * joltShape = _shapes[0]->getJoltShape();
+            JPH::Shape * joltShape = ((Shape*)_shapes[0].m_shape)->getJoltShape();
             VG_ASSERT(joltShape);
 
             // Create body from shape directly

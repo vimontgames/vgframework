@@ -569,7 +569,7 @@ namespace vg::editor
         {
             const IGameObject * go = dynamic_cast<const IGameObject*>(_objects[i]);
 
-            if (const auto * snap = go->GetComponentByType<engine::ISnapComponent>())
+            if (const auto * snap = go->GetComponentT<engine::ISnapComponent>())
             {
                 float3 trans;
                 if (snap->TryGetSnapTranslate(trans))

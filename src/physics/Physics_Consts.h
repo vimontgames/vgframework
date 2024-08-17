@@ -95,4 +95,13 @@ namespace vg::physics
         Touching,   // Character is touching an object, but is not supported and should fall
         InAir,      // Character is in the air not touching anything.
     };
+
+    class IShape;
+
+    struct ShapeInfo
+    {
+        IShape *            m_shape = nullptr;
+        core::float3        m_translation = core::float3(0, 0, 0);
+        core::quaternion    m_rotation = core::quaternion(0, 0, 0, 1);
+    };
 }

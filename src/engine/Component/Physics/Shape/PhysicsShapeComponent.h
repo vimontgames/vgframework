@@ -28,6 +28,7 @@ namespace vg::engine
         bool                        TryGetAABB          (core::AABB & _aabb) const final override;
 
         physics::IShape *           getPhysicsShape     () const { return m_shape; }
+        physics::IShapeDesc *       getShapeDesc        () const { return m_shapeDesc; }
     
     private:
         PhysicsBodyComponent *      getBodyComponent    ();

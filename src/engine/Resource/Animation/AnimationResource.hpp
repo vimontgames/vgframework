@@ -216,7 +216,7 @@ namespace vg::engine
         VG_ASSERT(animComponent);
         IGameObject * go = animComponent->GetGameObject();
         VG_ASSERT(go);
-        MeshComponent * meshComponent = go->GetComponentByType<MeshComponent>();
+        MeshComponent * meshComponent = go->GetComponentT<MeshComponent>();
         VG_ASSERT(meshComponent);
         IMeshInstance * meshInstance = meshComponent->getMeshInstance();
         VG_ASSERT(meshInstance);

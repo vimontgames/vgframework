@@ -64,7 +64,7 @@ void CharacterBehaviour::OnEnable()
 {
     super::OnEnable();
 
-    IAnimationComponent* animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
+    IAnimationComponent* animationComponent = GetGameObject()->GetComponentT<IAnimationComponent>();
 
     if (nullptr != animationComponent)
     {
@@ -98,7 +98,7 @@ void CharacterBehaviour::OnStop()
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::PlayAnim(CharacterState _state, bool _loop)
 {
-    if (IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>())
+    if (IAnimationComponent * animationComponent = GetGameObject()->GetComponentT<IAnimationComponent>())
         animationComponent->PlayAnimation(m_anim[_state], _loop, 1.0f);
 }
 
@@ -120,7 +120,7 @@ void CharacterBehaviour::Update(const Context & _context)
 
             if (m_life > 0)
             {
-                if (auto * charaController = _context.m_gameObject->GetComponentByType<vg::engine::ICharacterControllerComponent>())
+                if (auto * charaController = _context.m_gameObject->GetComponentT<vg::engine::ICharacterControllerComponent>())
                     charaController->SetPosition(m_startPos + float3(0, 0, 16));
             }
         }

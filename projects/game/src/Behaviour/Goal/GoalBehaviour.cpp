@@ -49,6 +49,6 @@ void GoalBehaviour::Update(const Context & _context)
 //--------------------------------------------------------------------------------------
 void GoalBehaviour::OnTriggerEnter(IGameObject * _other)
 {
-    if (auto * ball = _other->GetComponentByType<BallBehaviour>())
+    if (auto * ball = _other->GetComponentT<BallBehaviour>())
         ball->onGoalScored(m_team);
 }

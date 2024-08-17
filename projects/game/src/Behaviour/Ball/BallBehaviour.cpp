@@ -42,7 +42,7 @@ void BallBehaviour::OnPlay()
 //--------------------------------------------------------------------------------------
 void BallBehaviour::OnCollisionEnter(vg::core::IGameObject * _other)
 {
-    if (auto * player = _other->GetComponentByType<PlayerBehaviour>())
+    if (auto * player = _other->GetComponentT<PlayerBehaviour>())
     {
         if (player->isActive())
         {

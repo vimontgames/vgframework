@@ -503,7 +503,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     vector<IComponent *> GameObject::GetComponentsByType(const char * _className, bool _searchInParent, bool _searchInChildren) const
     {
-        if (_searchInParent || _searchInChildren)
+        if (_searchInParent)
             VG_ASSERT_NOT_IMPLEMENTED();
 
         vector<IComponent *> found;
@@ -516,6 +516,19 @@ namespace vg::core
             {
                 if (IsA(component, _className))
                     found.push_back(component);                
+            }
+        }
+
+        if (_searchInChildren)
+        {
+            auto & children = getChildren();
+            for (uint i = 0; i < children.count(); ++i)
+            {
+                // TODO: do this more efficiently using a separate method that takes R/W vector ref as paremeters
+                auto others = children[i]->GetComponentsByType(_className, _searchInParent, _searchInChildren);
+
+                if (others.size() > 0)
+                    found.insert(found.end(), others.begin(), others.end());
             }
         }
 
@@ -783,7 +796,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     const core::vector<IBehaviour *> /*&*/ GameObject::getBehaviours() const
     {
-        return GetComponentsByType<IBehaviour>();
+        return GetComponentsT<IBehaviour>();
     }
 
     //--------------------------------------------------------------------------------------

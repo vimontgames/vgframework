@@ -91,7 +91,7 @@ namespace vg::engine
 
         if (const GameObject * go = getGameObject())
         {
-            if (const MeshComponent * mc = go->GetComponentInParents<MeshComponent>())
+            if (const MeshComponent * mc = go->GetComponentInParentsT<MeshComponent>())
             {
                 if (const renderer::IMeshInstance * mi = mc->getMeshInstance())
                 {

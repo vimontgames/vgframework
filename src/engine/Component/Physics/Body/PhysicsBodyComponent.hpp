@@ -1,5 +1,6 @@
 #include "PhysicsBodyComponent.h"
 #include "engine/Component/Physics/Shape/PhysicsShapeComponent.h"
+#include "engine/EngineOptions.h"
 #include "core/IGameObject.h"
 #include "core/IWorld.h"
 #include "core/Misc/AABB/AABB.h"
@@ -193,8 +194,8 @@ namespace vg::engine
  
         VG_SAFE_RELEASE(m_body);
 
-        const auto shapes = GetGameObject()->GetComponentsByType<PhysicsShapeComponent>();
-        vector<physics::IShape *> physicsShapes;
+        const auto shapes = GetGameObject()->GetComponentsT<PhysicsShapeComponent>();
+        vector<physics::ShapeInfo> physicsShapes;
         float totalMass = 0.0f;
         for (uint i = 0; i < shapes.size(); ++i)
         {
@@ -203,7 +204,8 @@ namespace vg::engine
             {
                 if (physics::IShape * physicsShape = shape->getPhysicsShape())
                 {
-                    physicsShapes.push_back(physicsShape);
+                    physics::ShapeInfo & info = physicsShapes.push_empty();
+                    info.m_shape = physicsShape;
                     totalMass += physicsShape->GetMass();
                 }
             }
@@ -212,7 +214,9 @@ namespace vg::engine
         if (physicsShapes.size() > 0)
         {
             m_bodyDesc->SetMass(totalMass);
-            m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, physicsShapes, GetGameObject()->GetGlobalMatrix(), GetGameObject()->getName() + "_PhysicsBody", this);
+
+            if (m_bodyDesc->GetMotion() != physics::MotionType::Static || !EngineOptions::get()->mergeStaticBodies())
+                m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, physicsShapes, GetGameObject()->GetGlobalMatrix(), GetGameObject()->getName() + "_PhysicsBody", this);
         }
         else
         {
@@ -310,7 +314,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     vector<PhysicsShapeComponent *> PhysicsBodyComponent::getShapes() const
     {
-        return GetGameObject()->GetComponentsByType<PhysicsShapeComponent>();
+        return GetGameObject()->GetComponentsT<PhysicsShapeComponent>();
     }
 
     //--------------------------------------------------------------------------------------

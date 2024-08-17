@@ -25,7 +25,7 @@ namespace vg::physics
         VG_CLASS_CTOR_HEADER_IMPL(Body, IBody);
 
         Body(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, Shape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent);
-        Body(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, const core::vector<Shape *> & _shapes, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent);
+        Body(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, const core::vector<ShapeInfo> & _shapes, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent);
         ~Body();
 
         void Activate(const core::float4x4 & _world) final override;

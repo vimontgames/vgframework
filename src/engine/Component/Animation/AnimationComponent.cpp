@@ -128,7 +128,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MeshComponent * AnimationComponent::getMeshComponent() const
     {
-        MeshComponent * meshComponent = GetGameObject()->GetComponentByType<MeshComponent>();
+        MeshComponent * meshComponent = GetGameObject()->GetComponentT<MeshComponent>();
         return meshComponent;
     }
 
@@ -162,7 +162,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void AnimationComponent::onResourceUnloaded(core::IResource * _resource)
     {
-        MeshComponent * meshComponents = GetGameObject()->GetComponentByType<MeshComponent>();
+        MeshComponent * meshComponents = GetGameObject()->GetComponentT<MeshComponent>();
         if (meshComponents)
         {
             renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->getObject();

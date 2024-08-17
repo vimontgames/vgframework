@@ -71,40 +71,49 @@ namespace vg::core
         virtual void                            OnTriggerStay                   (IGameObject * _other) = 0;
         virtual void                            OnTriggerExit                   (IGameObject * _other) = 0;
 
-        template <class T> T *                  AddComponentByType              (const string & _name);
-        template <class T> T *                  GetComponentByType              () const;
-        template <class T> core::vector<T *>    GetComponentsByType             () const;
-        template <class T> T *                  GetComponentInParents           () const;
-        template <class T> T *                  GetComponentInChildren          () const;
+        template <class T> T *                  AddComponentT                   (const string & _name);
+        template <class T> T *                  GetComponentT                   () const;
+        template <class T> T *                  GetComponentInParentsT          () const;
+        template <class T> T *                  GetComponentInChildrenT         () const;
+
+        template <class T> core::vector<T *>    GetComponentsT                  () const;
+        template <class T> core::vector<T *>    GetComponentsInChildrenT        () const;
     };
 
     //--------------------------------------------------------------------------------------
-    template <class T> T * IGameObject::AddComponentByType(const core::string & _name)
+    template <class T> T * IGameObject::AddComponentT(const core::string & _name)
     {
         return static_cast<T *>(AddComponent(T::getStaticClassName(), _name));
     }
 
     //--------------------------------------------------------------------------------------
-    template <class T> T * IGameObject::GetComponentByType() const
+    template <class T> T * IGameObject::GetComponentT() const
     {
         return static_cast<T *>(GetComponentByType(T::getStaticClassName(), false, false));
     }
 
     //--------------------------------------------------------------------------------------
-    template <class T> core::vector<T*> IGameObject::GetComponentsByType() const
-    {
-        return (core::vector<T*>&)(GetComponentsByType(T::getStaticClassName(), false, false));
-    }
-
-    //--------------------------------------------------------------------------------------
-    template <class T> T * IGameObject::GetComponentInParents() const
+    template <class T> T * IGameObject::GetComponentInParentsT() const
     {
         return static_cast<T *>(GetComponentByType(T::getStaticClassName(), true, false));
     }
 
     //--------------------------------------------------------------------------------------
-    template <class T> T * IGameObject::GetComponentInChildren() const
+    template <class T> T * IGameObject::GetComponentInChildrenT() const
     {
         return static_cast<T *>(GetComponentByType(T::getStaticClassName(), false, true));
     }
+
+    //--------------------------------------------------------------------------------------
+    template <class T> core::vector<T *> IGameObject::GetComponentsT() const
+    {
+        return (core::vector<T *>&)(GetComponentsByType(T::getStaticClassName(), false, false));
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <class T> core::vector<T *> IGameObject::GetComponentsInChildrenT() const
+    {
+        return (core::vector<T *>&)(GetComponentsByType(T::getStaticClassName(), false, true));
+    }
+
 }

@@ -47,7 +47,7 @@ namespace vg::engine
         m_moveSpeed(1.0f),
         m_rotSpeed(1.0f)
     {
-        m_camera = GetGameObject()->GetComponentByType<CameraComponent>();
+        m_camera = GetGameObject()->GetComponentT<CameraComponent>();
     }
 
     //--------------------------------------------------------------------------------------

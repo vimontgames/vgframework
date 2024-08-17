@@ -28,6 +28,7 @@ namespace vg::engine
 
         VG_INLINE bool          useAnimationJobs    () const { return m_animationJobs;}
         VG_INLINE bool          isBodyVisible       (physics::ShapeType _shape) const { return m_showRigidBodies && ((1 << (core::u32)_shape) & (core::u32)m_showRigidBodiesMask); }
+        VG_INLINE bool          mergeStaticBodies   () const { return m_mergeStaticBodies; }
 
     private:
         // Project

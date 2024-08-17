@@ -289,12 +289,12 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    IBody * Physics::CreateBody(core::IPhysicsWorld * _physicsWorld, const IBodyDesc * _bodyDesc, const core::vector<IShape *> & _shapes, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent)
+    IBody * Physics::CreateBody(core::IPhysicsWorld * _physicsWorld, const IBodyDesc * _bodyDesc, const core::vector<ShapeInfo> & _shapes, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent)
     {
         VG_ASSERT(_physicsWorld);
 
         const BodyType bodyType = _bodyDesc->GetBodyType();
-        VG_INFO("[Physics] Create %s body \"%s\"", asString(bodyType).c_str(), _name.c_str());
+        //VG_INFO("[Physics] Create %s body \"%s\"", asString(bodyType).c_str(), _name.c_str());
 
         switch (bodyType)
         {
@@ -303,7 +303,7 @@ namespace vg::physics
                 return nullptr;
 
             case BodyType::Rigid:
-                return new physics::Body((PhysicsWorld *)_physicsWorld, (PhysicsBodyDesc *)_bodyDesc, (core::vector<Shape *> &)_shapes, _matrix, _name, _parent);
+                return new physics::Body((PhysicsWorld *)_physicsWorld, (PhysicsBodyDesc *)_bodyDesc, _shapes, _matrix, _name, _parent);
         }
     }
 
@@ -313,7 +313,7 @@ namespace vg::physics
         VG_ASSERT(_physicsWorld);
 
         const BodyType bodyType = _bodyDesc->GetBodyType();
-        VG_INFO("[Physics] Create %s body \"%s\"", asString(bodyType).c_str(), _name.c_str());
+        //VG_INFO("[Physics] Create %s body \"%s\"", asString(bodyType).c_str(), _name.c_str());
 
         switch (bodyType)
         {

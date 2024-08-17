@@ -58,7 +58,7 @@ namespace vg::gfx
             pso = GraphicPipelineState::createGraphicPipelineState(_key);
             m_graphicPipelineStateHash[_key] = pso;
 
-            VG_INFO("[Device] Created Graphics PipelineStateObject 0x%016X in %.2f ms", pso, Timer::getEnlapsedTime(startCreateGraphicsPSO, Timer::getTick()));
+            //VG_INFO("[Device] Created Graphics PipelineStateObject 0x%016X in %.2f ms", pso, Timer::getEnlapsedTime(startCreateGraphicsPSO, Timer::getTick()));
         }
 
         _graphicPipelineState = pso;

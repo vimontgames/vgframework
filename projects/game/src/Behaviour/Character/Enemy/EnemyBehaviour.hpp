@@ -145,7 +145,7 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                 m_currentRotation = radiansToDegrees(atan2((float)dir.x, (float)-dir.y));
             }
 
-            vg::engine::ICharacterControllerComponent * charaController = _context.m_gameObject->GetComponentByType<vg::engine::ICharacterControllerComponent>();
+            vg::engine::ICharacterControllerComponent * charaController = _context.m_gameObject->GetComponentT<vg::engine::ICharacterControllerComponent>();
 
             if (m_isActive && charaController)
             {
@@ -162,7 +162,7 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
             }
         }
 
-        IAnimationComponent * animationComponent = _context.m_gameObject->GetComponentByType<IAnimationComponent>();
+        IAnimationComponent * animationComponent = _context.m_gameObject->GetComponentT<IAnimationComponent>();
 
         switch (m_state)
         {

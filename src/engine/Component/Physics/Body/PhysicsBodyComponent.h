@@ -33,10 +33,11 @@ namespace vg::engine
         void                                    onShapeUpdated      ();
         void                                    updateShapesColor   ();
 
+        core::vector<PhysicsShapeComponent *>   getShapes           () const;
+        const physics::IBodyDesc *              getBodyDesc         () const { return m_bodyDesc; }
+
     private:
         bool                                    updateFlagsFromGameObject();
-
-        core::vector<PhysicsShapeComponent *>   getShapes() const;
 
         bool                                    createBodyDesc();
         bool                                    createBody();
@@ -44,7 +45,7 @@ namespace vg::engine
         static physics::IPhysics *              getPhysics();
 
     private:
-        physics::IBodyDesc *        m_bodyDesc  = nullptr;
-        physics::IBody *            m_body      = nullptr;
+        physics::IBodyDesc *                    m_bodyDesc  = nullptr;
+        physics::IBody *                        m_body      = nullptr;
     };
 }

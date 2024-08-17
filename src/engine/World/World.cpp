@@ -2,8 +2,15 @@
 #include "engine/World/Scene/Scene.h"
 #include "World.h"
 #include "engine/Engine.h"
+#include "engine/EngineOptions.h"
+#include "engine/Component/Physics/Body/PhysicsBodyComponent.h"
+#include "engine/Component/Physics/Shape/PhysicsShapeComponent.h"
 #include "physics/IPhysics.h"
+#include "physics/IBody.h"
+#include "physics/IShape.h"
 #include "core/IInput.h"
+#include "core/Timer/Timer.h"
+#include "core/Math/Math.h"
 
 #if !VG_ENABLE_INLINE
 #include "World.inl"
@@ -222,7 +229,99 @@ namespace vg::engine
 
         // Warmup physics
         if (auto * physicsWorld = GetPhysicsWorld())
+        {
+            // Merge physics colliders
+            if (EngineOptions::get()->mergeStaticBodies())
+                mergeStaticBodies();
+
             physicsWorld->OnPlay();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::mergeStaticBodies()
+    {
+        const auto startMergeStaticBodies = Timer::getTick();
+
+        // For each scene, gather static colliders
+        size_t totalMergedCount = 0;
+
+        for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
+        {
+            const IBaseScene * scene = GetScene(i, BaseSceneType::Scene);
+            if (nullptr != scene)
+            {
+                IGameObject * root = VG_SAFE_STATIC_CAST(IGameObject, scene->GetRoot());
+                if (nullptr != root)
+                {
+                    auto bodies = root->GetComponentsInChildrenT<PhysicsBodyComponent>();
+
+                    // Add "_Temp" folder
+                    auto * tempGO = root->GetChildGameObject("_Temp");
+                    if (nullptr == tempGO)
+                    {
+                        tempGO = new GameObject("_Temp", root);
+                        root->AddChild(tempGO);
+                        tempGO->release();
+                    }
+
+                    // Add "_Static" GameObject
+                    GameObject * staticCollidersGO = new GameObject("_Static", tempGO);
+                    tempGO->AddChild(staticCollidersGO);
+                    staticCollidersGO->release();
+
+                    IFactory * factory = Kernel::getFactory();
+                    physics::IBodyDesc * bodyDesc = (physics::IBodyDesc *)factory->createObject("PhysicsBodyDesc", "", this);
+                    
+                    vector<physics::ShapeInfo> allSceneShapes;
+                    
+                    float mass = 0.0f;
+
+                    for (uint j = 0; j < bodies.size(); ++j)
+                    {
+                        PhysicsBodyComponent * bodyComponent = bodies[j];
+
+                        if (bodyComponent->getBodyDesc()->GetMotion() != physics::MotionType::Static)
+                            continue;
+
+                        auto componentShapes = bodyComponent->getShapes();
+                        for (uint k = 0; k < componentShapes.size(); ++k)
+                        {
+                            const auto * bodyShape = componentShapes[k];
+                            physics::ShapeInfo & info = allSceneShapes.push_empty();
+                            info.m_shape = bodyShape->getPhysicsShape();
+
+                            float4x4 matrix = bodyComponent->GetGameObject()->GetGlobalMatrix();
+
+                            float3x3 rot = extractRotation(matrix);
+                            quaternion quat = quaternion(rot);
+
+                            info.m_rotation = quat;
+                            info.m_translation = matrix[3].xyz;
+
+                            mass += info.m_shape->GetMass();
+                        }
+
+                        totalMergedCount += componentShapes.size();
+                    }
+
+                    bodyDesc->SetMass(mass);
+                    
+                    physics::IBody * body = Engine::get()->GetPhysics()->CreateBody(GetPhysicsWorld(), bodyDesc, allSceneShapes, staticCollidersGO->GetGlobalMatrix(), staticCollidersGO->getName(), staticCollidersGO);
+                    body->Activate(staticCollidersGO->GetGlobalMatrix());
+
+                    m_staticColliders.push_back(body);
+                    
+                    VG_SAFE_RELEASE(bodyDesc);
+
+                    //for (uint j = 0; j < allSceneShapes.size(); ++j)
+                    //    VG_SAFE_RELEASE(allSceneShapes[j]);
+                    allSceneShapes.clear();
+                }
+            }
+        }
+        
+        VG_INFO("[Physics] Merge %u static bodies in %.2f ms", totalMergedCount, Timer::getEnlapsedTime(startMergeStaticBodies, Timer::getTick()));
     }
 
     //--------------------------------------------------------------------------------------
@@ -250,6 +349,25 @@ namespace vg::engine
                 {
                     root->OnDisable();
                     root->OnStop();
+                }
+            }
+        }
+
+        for (uint i = 0; i < m_staticColliders.size(); ++i)
+            VG_SAFE_RELEASE(m_staticColliders[i]);
+        m_staticColliders.clear();
+
+        // Destroy "_Temp"
+        for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
+        {
+            const IBaseScene * scene = GetScene(i, BaseSceneType::Scene);
+            if (nullptr != scene)
+            {
+                IGameObject * root = VG_SAFE_STATIC_CAST(IGameObject, scene->GetRoot());
+                if (nullptr != root)
+                {
+                    if (auto * tempGO = root->GetChildGameObject("_Temp"))
+                        root->RemoveChild(tempGO);
                 }
             }
         }

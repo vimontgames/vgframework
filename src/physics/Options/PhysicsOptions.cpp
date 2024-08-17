@@ -14,6 +14,7 @@ namespace vg::physics
         super::registerProperties(_desc);
 
         registerProperty(PhysicsOptions, m_gravity, "Gravity");
+        setPropertyDescription(PhysicsOptions, m_gravity, "Gravity force applied to physic objects");
 
         return true;
     }

@@ -3,6 +3,11 @@
 #include "core/IWorld.h"
 #include "core/IBaseScene.h"
 
+namespace vg::physics
+{
+    class IBody;
+}
+
 namespace vg::engine
 {
     class Scene;
@@ -46,11 +51,15 @@ namespace vg::engine
 
         bool                                IsPrefabWorld           () const final override;
 
+    protected:
+        void                                mergeStaticBodies       ();
+
     private:
         core::IBaseScene *                  m_activeScene[core::enumCount<core::BaseSceneType>()];
         core::vector<core::IBaseScene *>    m_scenes[core::enumCount<core::BaseSceneType>()];
         core::IDebugDrawData *              m_debugDrawData = nullptr;
         core::IPhysicsWorld *               m_physicsWorld = nullptr;
+        core::vector<physics::IBody *>      m_staticColliders;
     };
 }
 

@@ -78,7 +78,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
     if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused()) // TODO: Use context intead?
     {
         IInput & input = Game::Input();
-        IAnimationComponent * animationComponent = GetGameObject()->GetComponentByType<IAnimationComponent>();
+        IAnimationComponent * animationComponent = GetGameObject()->GetComponentT<IAnimationComponent>();
        
         switch (m_state)
         {
@@ -134,7 +134,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     m_state = CharacterState::Idle;
             }
 
-            vg::engine::ICharacterControllerComponent * charaController = GetGameObject()->GetComponentByType<vg::engine::ICharacterControllerComponent>();
+            vg::engine::ICharacterControllerComponent * charaController = GetGameObject()->GetComponentT<vg::engine::ICharacterControllerComponent>();
 
             bool jump = false;
             if (input.IsJoyButtonJustPressed(joyID, JoyButton::A))
@@ -192,19 +192,19 @@ void PlayerBehaviour::Update(const Context & _context)
             {
                 if (IGameObject * lifeGO = uiGO->GetChildGameObject("Life"))
                 {
-                    if (IUITextComponent * lifeComp = lifeGO->GetComponentByType<IUITextComponent>())
+                    if (IUITextComponent * lifeComp = lifeGO->GetComponentT<IUITextComponent>())
                         lifeComp->SetText(fmt::sprintf("Life  %u", m_life));
                 }
 
                 if (IGameObject * hpGO = uiGO->GetChildGameObject("HP"))
                 {
-                    if (IUITextComponent * textComp = hpGO->GetComponentByType<IUITextComponent>())
+                    if (IUITextComponent * textComp = hpGO->GetComponentT<IUITextComponent>())
                         textComp->SetText(fmt::sprintf("HP    %.0f%%", m_hp));
                 }
 
                 if (IGameObject * scoreGO = uiGO->GetChildGameObject("Score"))
                 {
-                    if (IUITextComponent * scoreComp = scoreGO->GetComponentByType<IUITextComponent>())
+                    if (IUITextComponent * scoreComp = scoreGO->GetComponentT<IUITextComponent>())
                         scoreComp->SetText(fmt::sprintf("Score %i", m_score));
                 }
             }
