@@ -586,6 +586,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void Engine::Quit()
     {
+        if (IsPlaying())
+            Stop();
+
         m_quit = true;
     }
 

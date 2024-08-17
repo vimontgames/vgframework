@@ -109,6 +109,8 @@ bool processSystemMessage()
 	{
 		if (msg.message == WM_QUIT)
 		{
+			if (g_engine)
+				g_engine->Quit();
 			quit = true;
 		}
 		else
