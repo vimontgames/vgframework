@@ -1,5 +1,6 @@
 #include "ImGuiConsole.h"
 #include "editor/ImGui/Toolbar/ImGuiToolbar.h"
+#include "ImGuiConsoleOptions.h"
 
 namespace vg::editor
 {
@@ -15,6 +16,12 @@ namespace vg::editor
     ImGuiConsole::~ImGuiConsole()
     {
         deinit();
+    }
+
+    //--------------------------------------------------------------------------------------
+    ImGuiConsoleOptions & ImGuiConsole::getConsoleOptions()
+    {
+        return EditorOptions::get()->getConsoleOptions();
     }
 
     //--------------------------------------------------------------------------------------
@@ -110,19 +117,39 @@ namespace vg::editor
 
                 float offset = size.x - infoLabelWidth - warningLabelWidth - errorLabelWidth - style.FramePadding.x;
 
+                auto & options = getConsoleOptions();
+
+                bool showInfos, showWarnings, showErrors;
+
                 PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0, 0.5f));
                 {
                     ImGui::SetCursorPosX(offset);
-    
-                    if (ImGui::TooltipButton(infoLabel, m_showInfo, true, "Show Infos"))
-                        m_showInfo = !m_showInfo;
+
+                    showInfos = asBool(LevelFlags::Info & options.m_levels);
+                    if (ImGui::TooltipButton(infoLabel, showInfos, true, "Show Infos"))
+                    {
+                        showInfos = !showInfos;
+
+                        if (showInfos)
+                            options.m_levels |= LevelFlags::Info;
+                        else
+                            options.m_levels &= ~LevelFlags::Info;                        
+                    }
 
                     ImGui::SameLine();
     
                     if (warningCount > 0)
                         ImGui::PushStyleColor(ImGuiCol_Text, warningColor);
-                    if (ImGui::TooltipButton(warningLabel, m_showWarnings, true, "Show Warnings"))
-                        m_showWarnings = !m_showWarnings;
+                    showWarnings = asBool(LevelFlags::Warning & options.m_levels);
+                    if (ImGui::TooltipButton(warningLabel, showWarnings, true, "Show Warnings"))
+                    {
+                        showWarnings = !showWarnings;
+
+                        if (showWarnings)
+                            options.m_levels |= LevelFlags::Warning;
+                        else
+                            options.m_levels &= ~LevelFlags::Warning;
+                    }
                     if (warningCount > 0)
                         ImGui::PopStyleColor();
 
@@ -130,8 +157,16 @@ namespace vg::editor
                   
                     if (errorCount > 0)
                         ImGui::PushStyleColor(ImGuiCol_Text, errorColor);
-                    if (ImGui::TooltipButton(errorLabel, m_showErrors, true, "Show Errors"))
-                        m_showErrors = !m_showErrors;
+                    showErrors = asBool(LevelFlags::Error & options.m_levels);
+                    if (ImGui::TooltipButton(errorLabel, showErrors, true, "Show Errors"))
+                    {
+                        showErrors = !showErrors;
+
+                        if (showErrors)
+                            options.m_levels |= LevelFlags::Error;
+                        else
+                            options.m_levels &= ~LevelFlags::Error;
+                    }
                     if (errorCount > 0)
                         ImGui::PopStyleColor();
                 }
@@ -202,17 +237,17 @@ namespace vg::editor
                     switch (item.level)
                     {
                         case Level::Info:
-                            if (!m_showInfo)
+                            if (!showInfos)
                                 continue;
                             break;
 
                         case Level::Warning:
-                            if (!m_showWarnings)
+                            if (!showWarnings)
                                 continue;
                             break;
 
                         case Level::Error:
-                            if (!m_showErrors)
+                            if (!showErrors)
                                 continue;
                             break;
                     }

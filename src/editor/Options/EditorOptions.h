@@ -1,6 +1,7 @@
 #pragma once
 #include "core/Singleton/Singleton.h"
 #include "editor/IEditorOptions.h"
+#include "editor/ImGui/Window/Console/ImGuiConsoleOptions.h"
 #include "renderer/IImGuiAdapter.h"
 
 namespace vg::editor
@@ -48,28 +49,32 @@ namespace vg::editor
 
         EditorOptions(const core::string & _name, core::IObject * _parent = nullptr);
 
-        void                    SetPropertyValue        (const core::IProperty & _prop, void * _previousValue, void * _newValue) final override;
+        void                            SetPropertyValue        (const core::IProperty & _prop, void * _previousValue, void * _newValue) final override;
 
-        bool                    setGizmoType            (GizmoType _gizmoType);
-        void                    setNextGizmo            ();
-        void                    setPreviousGizmo        ();
+        bool                            setGizmoType            (GizmoType _gizmoType);
+        void                            setNextGizmo            ();
+        void                            setPreviousGizmo        ();
 
-        bool                    setSnap                 (bool _enable);
-        bool                    getSnap                 () const;
+        bool                            setSnap                 (bool _enable);
+        bool                            getSnap                 () const;
 
 
-        const GizmoOptions &    getGizmoOptions         () const { return m_gizmo; }
-        GizmoOptions &          getGizmoOptions         () { return m_gizmo; }
+        const GizmoOptions &            getGizmoOptions         () const { return m_gizmo; }
+        GizmoOptions &                  getGizmoOptions         () { return m_gizmo; }
 
         
-        bool                    IsDebugCulling          () const;
-        bool                    IsDebugInspector        () const;
-        bool                    IsDebugPicking          () const;
-        bool                    IsDebugPropertyVisible  () const;
+        bool                            IsDebugCulling          () const;
+        bool                            IsDebugInspector        () const;
+        bool                            IsDebugPicking          () const;
+        bool                            IsDebugPropertyVisible  () const;
+
+        const ImGuiConsoleOptions &     getConsoleOptions       () const { return m_consoleOptions; }
+        ImGuiConsoleOptions &           getConsoleOptions       () { return m_consoleOptions; }
 
     private:
-        ImGui::Theme            m_theme = ImGui::Theme::ImGui_Dark;
-        GizmoOptions            m_gizmo;
-        EditorDebugFlags        m_debugFlags = (EditorDebugFlags)0x0;
+        ImGui::Theme                    m_theme = ImGui::Theme::ImGui_Dark;
+        GizmoOptions                    m_gizmo;
+        EditorDebugFlags                m_debugFlags = (EditorDebugFlags)0x0;
+        ImGuiConsoleOptions             m_consoleOptions;
     };
 }

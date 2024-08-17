@@ -31,9 +31,17 @@ namespace vg::editor
         }
         registerPropertyGroupEnd(EditorOptions);
 
+        registerPropertyGroupBegin(EditorOptions, "Console");
+        {
+            registerPropertyEnumBitfield(EditorOptions, core::LevelFlags, m_consoleOptions.m_levels, "Levels");
+            setPropertyDescription(EditorOptions, m_consoleOptions.m_levels, "Select the VG_DEBUG/VG_WARNING/VG_ERROR messages visible in IDE output and console");
+        }
+        registerPropertyGroupEnd(EditorOptions);
+
         registerPropertyGroupBegin(EditorOptions, "Debug");
         {
             registerPropertyEnumBitfield(EditorOptions, EditorDebugFlags, m_debugFlags, "Flags");
+            setPropertyDescription(EditorOptions, m_debugFlags, "Enable some editor debug features");
         }
         registerPropertyGroupEnd(EditorOptions);
 

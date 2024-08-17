@@ -39,6 +39,13 @@ namespace vg::core
         Error
     };
 
+    enum class LevelFlags : core::u32
+    {
+        Info    = 1 << (u32)Level::Info,
+        Warning = 1 << (u32)Level::Warning,
+        Error   = 1 << (u32)Level::Error,
+    };
+
     struct LogEntry
     {
         u64 crc;

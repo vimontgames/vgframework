@@ -4,6 +4,8 @@
 
 namespace vg::editor
 {
+    struct ImGuiConsoleOptions;
+
     class ImGuiConsole : public ImGuiWindow
     {
     public:
@@ -29,6 +31,8 @@ namespace vg::editor
         static char * Strdup(const char * s) { IM_ASSERT(s); size_t len = strlen(s) + 1; void * buf = malloc(len); IM_ASSERT(buf); return (char *)memcpy(buf, (const void *)s, len); }
         static void  Strtrim(char * s) { char * str_end = s + strlen(s); while (str_end > s && str_end[-1] == ' ') str_end--; *str_end = 0; }
 
+        static ImGuiConsoleOptions & getConsoleOptions();
+
     private:
         char                    m_inputBuffer[256];
         ImVector<const char *>  m_commands;
@@ -37,9 +41,5 @@ namespace vg::editor
         ImGuiTextFilter         m_filter;
         bool                    m_autoscroll;
         bool                    m_scrollToBottom;
-
-        bool                    m_showInfo = true;
-        bool                    m_showWarnings = true;
-        bool                    m_showErrors = true;
     };
 }

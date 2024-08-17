@@ -277,6 +277,9 @@
     <ClInclude Include="ImGui\Window\ImGuiObjectPropertyContext.hpp">
       <Filter>ImGui\Window</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Window\Console\ImGuiConsoleOptions.h">
+      <Filter>ImGui\Window\Console</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
