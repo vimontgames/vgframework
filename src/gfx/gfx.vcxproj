@@ -71,6 +71,7 @@
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="IView.h" />
     <ClInclude Include="IViewGUI.h" />
+    <ClInclude Include="IViewport.h" />
     <ClInclude Include="PipelineState\Compute\ComputePipelineState.h" />
     <ClInclude Include="PipelineState\Compute\ComputePipelineStateCache.h" />
     <ClInclude Include="PipelineState\Compute\ComputePipelineStateCache.hpp" />

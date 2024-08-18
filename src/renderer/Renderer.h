@@ -127,7 +127,6 @@ namespace vg::renderer
         gfx::FrameGraph &                       m_frameGraph;
         ImGuiAdapter *                          m_imgui                     = nullptr;
         FBXImporter *                           m_fbxImporter               = nullptr;
-        View *                                  m_mainView                  = nullptr;
         GPUDebugUpdatePass *                    m_gpuDebugUpdatePass        = nullptr;
         InstanceDataUpdatePass *                m_instanceDataUpdatePass    = nullptr;
         ComputeSkinningPass *                   m_computeSkinningPass       = nullptr;

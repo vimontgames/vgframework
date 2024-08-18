@@ -19,10 +19,9 @@ namespace vg::gfx
 
     enum class ViewTarget : core::u8
     {
-        Backbuffer  = 0,
-        Game        = 1,
-        Editor      = 2,
-        Shadow      = 3
+        Game        = 0,
+        Editor      = 1,
+        Shadow      = 2
     };
     static inline const ViewTarget ViewTargetInvalid = (ViewTarget)-1;
 

@@ -217,15 +217,14 @@ namespace vg::renderer
         // Shared job output (must be created before views because it's needed to init View culling jobs
         m_sharedCullingJobOutput = new SharedCullingJobOutput();
 
-        // Create main view
-        auto mainViewParams = gfx::CreateViewParams(gfx::ViewTarget::Backbuffer, getBackbufferSize());
-        m_mainView = (View*)CreateView(mainViewParams, "MainView");
-
+        // Create default "Game" view
         auto gameView0Params = gfx::CreateViewParams(gfx::ViewTarget::Game, getBackbufferSize());
-        auto gameView = (View *)CreateView(gameView0Params, "GameView");
-        AddView(gameView);
-        gameView->setName("Game");
-        VG_SAFE_RELEASE(gameView);
+        if (auto gameView = (View *)CreateView(gameView0Params, "GameView"))
+        {
+            AddView(gameView);
+            gameView->setName("Game");
+            VG_SAFE_RELEASE(gameView);
+        }
 	}
 
     //--------------------------------------------------------------------------------------
@@ -264,7 +263,6 @@ namespace vg::renderer
         RayTracingManager * rtManager = RayTracingManager::get();
         VG_SAFE_RELEASE(rtManager);
 
-        VG_SAFE_RELEASE(m_mainView);
         for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
         {
             auto & views = m_views[j];
@@ -298,7 +296,6 @@ namespace vg::renderer
     {
         m_device.waitGPUIdle();
         m_device.resize(_width, _height);
-        m_mainView->setSize(uint2(_width, _height));
 
         if (IsFullscreen())
         {
@@ -308,7 +305,7 @@ namespace vg::renderer
                 auto * view = views[i];
                 if (nullptr != view)
                 {
-                    view->setSize(m_mainView->getSize());
+                    view->setSize(getBackbufferSize());
                     view->SetActive(true);
                     view->SetVisible(true);
                 }
@@ -387,7 +384,7 @@ namespace vg::renderer
 
                 // Register passes not linked to views (e.g. skinning, or BLAS updates)
                 RenderPassContext mainViewRenderPassContext;
-                                  mainViewRenderPassContext.m_view = m_mainView;
+                                  mainViewRenderPassContext.m_view = nullptr;
 
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_gpuDebugUpdatePass, "GPU Debug");
 
@@ -521,16 +518,13 @@ namespace vg::renderer
             default:
                 view = new LitView(_params);
                 break;
-
-            case ViewTarget::Backbuffer:
-                view = new View(_params);
-                VG_ASSERT(m_mainView == nullptr, "Only one \"Main\" backbuffer view is supported");
-                m_mainView = static_cast<View *>(view); // This is required for FrameGraph construction
-                break;
         }
         
-        view->setName(_name);
-        view->setFlags(_flags);
+        if (view)
+        {
+            view->setName(_name);
+            view->setFlags(_flags);
+        }
         return view;
     }
 
@@ -797,9 +791,6 @@ namespace vg::renderer
         {
             m_fullscreen = _fullscreen;
             VG_INFO("[Renderer] Set Fullscreen to '%s'", _fullscreen ? "true" : "false");
-            //m_device.waitGPUIdle();
-            //m_frameGraph.destroyTransientResources();
-            //DebugDraw::get()->reset();
 
             if (_fullscreen)
             {
@@ -810,7 +801,7 @@ namespace vg::renderer
                     auto * view = views[i];
                     if (nullptr != view)
                     {
-                        view->setSize(m_mainView->getSize());
+                        view->setSize(getBackbufferSize());
                         view->SetActive(true);
                         view->SetVisible(true);
                     }

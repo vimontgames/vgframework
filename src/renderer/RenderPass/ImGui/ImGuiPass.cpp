@@ -51,8 +51,6 @@ namespace vg::renderer
         for (uint j = 0; j < enumCount<gfx::ViewTarget>(); ++j)
         {
             gfx::ViewTarget target = (gfx::ViewTarget)j;
-            if (gfx::ViewTarget::Backbuffer == target)
-                continue;
 
             if (renderer->IsFullscreen())
                 continue;

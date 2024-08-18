@@ -48,6 +48,9 @@
     <ClCompile Include="RayTracing\RayTracingManager.cpp">
       <Filter>RayTracing</Filter>
     </ClCompile>
+    <ClCompile Include="Viewport\Viewport.cpp">
+      <Filter>Viewport</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -414,6 +417,9 @@
     <ClInclude Include="View\ViewGUI.hpp">
       <Filter>View</Filter>
     </ClInclude>
+    <ClInclude Include="Viewport\Viewport.h">
+      <Filter>Viewport</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -568,6 +574,9 @@
     </Filter>
     <Filter Include="Pass\Update\GPUDebug">
       <UniqueIdentifier>{be642f13-6ed2-4fe1-9191-c12275f3b6bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewport">
+      <UniqueIdentifier>{bcdff0f9-cbc8-44f0-96cc-a09755769b53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -393,20 +393,23 @@ namespace vg::editor
                     // Create a view with picking for editor views
                     gfx::IView::Flags viewFlags = GetViewFlags();
 
-                    m_view = renderer->CreateView(params, viewName, viewFlags);
-                    renderer->AddView(m_view);
-                    m_view->setName(getName());
+                    if (m_view = renderer->CreateView(params, viewName, viewFlags))
+                    {
+                        renderer->AddView(m_view);
+                        m_view->setName(getName());
+                    }
                 }
             }  
 
             if (!UpdateScene())
                 m_closeNextFrame = true;
 
-            m_view->SetSize(m_size);
+            if (m_view)
+                m_view->SetSize(m_size);
 
             auto texture = m_texture;
 
-            if (!m_texture || m_texture->GetWidth() != m_size.x || m_texture->GetHeight() != m_size.y)
+            if (m_view && (!m_texture || m_texture->GetWidth() != m_size.x || m_texture->GetHeight() != m_size.y))
             {
                 // As we're executing framegraph we can't fully release the texture right now because it may be still in use
                 if (m_texture)
@@ -424,11 +427,14 @@ namespace vg::editor
             }
 
             // Set mouse offset
-            ImVec2 mouseOffset = ImGui::GetCursorScreenPos();
-            m_view->SetMouseOffset(uint2(mouseOffset.x, mouseOffset.y));
+            if (m_view)
+            {
+                ImVec2 mouseOffset = ImGui::GetCursorScreenPos();
+                m_view->SetMouseOffset(uint2(mouseOffset.x, mouseOffset.y));
+            }
 
             auto pos = ImGui::GetCursorPos();
-            if (texture)
+            if (m_view && texture)
             {
                 auto * imGuiAdapter = renderer->GetImGuiAdapter();
                 ImTextureID texID = imGuiAdapter->GetTextureID(texture);
@@ -452,10 +458,13 @@ namespace vg::editor
                 imGuiAdapter->ReleaseTextureID(texture);
             }   
 
-            if (auto * viewGUI = m_view->GetViewGUI())
+            if (m_view)
             {
-                ImGui::SetCursorPos(ImVec2(0, titleBarHeight + toolbarHeight));
-                viewGUI->RenderWindowed();
+                if (auto * viewGUI = m_view->GetViewGUI())
+                {
+                    ImGui::SetCursorPos(ImVec2(0, titleBarHeight + toolbarHeight));
+                    viewGUI->RenderWindowed();
+                }
             }
 
             const auto options = EditorOptions::get();
@@ -516,9 +525,9 @@ namespace vg::editor
                     if (!tooltip.empty())
                         ImGui::SetTooltip(tooltip.c_str());
                 }
-            }
 
-            m_view->SetVisible(true);
+                m_view->SetVisible(true);
+            }            
         }
         else
         {

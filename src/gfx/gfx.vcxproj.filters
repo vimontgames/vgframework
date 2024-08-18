@@ -631,6 +631,7 @@
     <ClInclude Include="PipelineState\Graphic\RasterizerState_consts.h">
       <Filter>PipelineState\Graphic</Filter>
     </ClInclude>
+    <ClInclude Include="IViewport.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

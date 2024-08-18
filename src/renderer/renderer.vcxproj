@@ -40,6 +40,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderPass\ImGui\ImGuiPass.cpp" />
     <ClCompile Include="RenderPass\RenderPass.cpp" />
+    <ClCompile Include="Viewport\Viewport.cpp" />
     <ClCompile Include="View\View.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -170,6 +171,7 @@
     <ClInclude Include="RenderPass\Update\UpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.h" />
     <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.hpp" />
+    <ClInclude Include="Viewport\Viewport.h" />
     <ClInclude Include="View\Frustum.h" />
     <ClInclude Include="View\Frustum.hpp" />
     <ClInclude Include="View\Lit\LitView.h" />
