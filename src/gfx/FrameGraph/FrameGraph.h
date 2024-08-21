@@ -4,6 +4,7 @@
 #include "FrameGraph_consts.h"
 #include "FrameGraphResource.h"
 #include "gfx/IView.h"
+#include "gfx/IViewport.h"
 #include "core/string/string.h"
 
 namespace vg::gfx
@@ -42,6 +43,11 @@ namespace vg::gfx
         static const core::string MakeFrameGraphIDEx(const core::string & _name, ViewID _viewID, ViewID _parentViewID)
         {
             return fmt::sprintf("%s %u - %s %u", _name, _viewID.index, core::asString(_parentViewID.target), _parentViewID.index);
+        }
+
+        static const core::string MakeFrameGraphID(const core::string & _name, ViewportID _viewportID)
+        {
+            return fmt::sprintf("%s - %s %u", _name, core::asString(_viewportID.target), _viewportID.index);
         }
     };
 

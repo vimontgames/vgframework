@@ -30,6 +30,7 @@
 #include "renderer/Options/RendererOptions.h"
 #include "renderer/IGraphicInstance.h"
 #include "renderer/Importer/TextureImporterData.h"
+#include "renderer/Viewport/Viewport.h"
 #include "renderer/View/View.h"
 #include "renderer/View/Lit/LitView.h"
 #include "renderer/Model/Material/DefaultMaterial/DefaultMaterialModel.h"
@@ -217,14 +218,33 @@ namespace vg::renderer
         // Shared job output (must be created before views because it's needed to init View culling jobs
         m_sharedCullingJobOutput = new SharedCullingJobOutput();
 
-        // Create default "Game" view
-        auto gameView0Params = gfx::CreateViewParams(gfx::ViewTarget::Game, getBackbufferSize());
-        if (auto gameView = (View *)CreateView(gameView0Params, "GameView"))
+        // Create "Game" viewport for "Game" views
+        auto gameViewportParams = gfx::CreateViewportParams(ViewportTarget::Game, getBackbufferSize());
+        if (auto gameViewport = (Viewport *)CreateViewport(gameViewportParams, "Game"))
         {
-            AddView(gameView);
-            gameView->setName("Game");
-            VG_SAFE_RELEASE(gameView);
+            AddViewport(gameViewport);
+
+            // Add one "Game" view the size of the viewport by default
+            auto gameView0Params = gfx::CreateViewParams(gfx::ViewTarget::Game, getBackbufferSize());
+            if (auto gameView = (View *)CreateView(gameView0Params, "GameView"))
+            {   
+                AddView(gameView);
+                gameViewport->AddView(gameView->GetViewID());
+                gameView->setName("Game View #0");
+                VG_SAFE_RELEASE(gameView);
+            }
+
+            VG_SAFE_RELEASE(gameViewport);
         }
+
+        // Create default "Game" view
+        //auto gameView0Params = gfx::CreateViewParams(gfx::ViewTarget::Game, getBackbufferSize());
+        //if (auto gameView = (View *)CreateView(gameView0Params, "GameView"))
+        //{
+        //    AddView(gameView);
+        //    gameView->setName("Game");
+        //    VG_SAFE_RELEASE(gameView);
+        //}
 	}
 
     //--------------------------------------------------------------------------------------
@@ -263,6 +283,16 @@ namespace vg::renderer
         RayTracingManager * rtManager = RayTracingManager::get();
         VG_SAFE_RELEASE(rtManager);
 
+        // Clear viewports
+        for (uint j = 0; j < core::enumCount<gfx::ViewportTarget>(); ++j)
+        {
+            auto & viewports = m_viewports[j];
+            for (uint i = 0; i < viewports.size(); ++i)
+                VG_SAFE_RELEASE(viewports[i]);
+            viewports.clear();
+        }
+
+        // Clear remaining views
         for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
         {
             auto & views = m_views[j];
@@ -299,13 +329,25 @@ namespace vg::renderer
 
         if (IsFullscreen())
         {
+            auto & viewports = m_viewports[(int)ViewportTarget::Game];
+            for (uint i = 0; i < viewports.count(); ++i)
+            {
+                auto * viewport = viewports[i];
+                if (nullptr != viewport)
+                {
+                    viewport->SetRenderTargetSize(getBackbufferSize());
+                    viewport->SetActive(true);
+                    viewport->SetVisible(true);
+                }
+            }
+
             auto & views = m_views[(int)ViewTarget::Game];
             for (uint i = 0; i < views.count(); ++i)
             {
                 auto * view = views[i];
                 if (nullptr != view)
                 {
-                    view->setSize(getBackbufferSize());
+                    view->SetRenderTargetSize(getBackbufferSize());
                     view->SetActive(true);
                     view->SetVisible(true);
                 }
@@ -379,7 +421,7 @@ namespace vg::renderer
             {
                 VG_PROFILE_CPU("Framegraph");
 
-                m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(0,0,0,0), FrameGraphResource::InitState::Clear);
+                m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(0,0,0,1), FrameGraphResource::InitState::Clear);
                 m_frameGraph.setGraphOutput("Backbuffer");
 
                 // Register passes not linked to views (e.g. skinning, or BLAS updates)
@@ -509,6 +551,72 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    gfx::IViewport * Renderer::CreateViewport(const gfx::CreateViewportParams & _params, const core::string & _name, gfx::ViewportFlags _flags)
+    {
+        if (auto * viewport = new Viewport(_params))
+        {
+            viewport->setName(_name);
+            viewport->SetFlags(_flags);
+
+            return viewport;
+        }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::ViewportID Renderer::AddViewport(gfx::IViewport * _viewport)
+    {
+        auto target = _viewport->GetViewportID().target;
+        auto & viewports = m_viewports[(uint)target];
+
+        // Find hole or push_back
+        VG_ASSERT(viewports.size() < (ViewIndex)-1);
+        VG_SAFE_INCREASE_REFCOUNT(_viewport);
+
+        for (uint i = 0; i < viewports.size(); ++i)
+        {
+            if (!viewports[i])
+            {
+                viewports[i] = (Viewport *)_viewport;
+                auto id = ViewportID(target, i);
+                _viewport->SetViewportID(id);
+                return id;
+            }
+        }
+
+        auto index = (ViewportIndex)viewports.count();
+        ViewportID id = ViewportID(target, index);
+        viewports.push_back((Viewport *)_viewport);
+        _viewport->SetViewportID(id);
+        _viewport->setName(fmt::sprintf("%s Viewport #%u", asString(id.target), id.index));
+
+        return id;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::ViewportIndex Renderer::GetFreeViewportIndex(gfx::ViewportTarget _target)
+    {
+        auto & viewports = m_viewports[(uint)_target];
+        for (uint i = 0; i < viewports.size(); ++i)
+        {
+            if (!viewports[i])
+                return i;
+        }
+        return (gfx::ViewportIndex)viewports.size();
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::IViewport * Renderer::GetViewport(gfx::ViewportID _viewportID)
+    {
+        const auto & viewports = m_viewports[(uint)_viewportID.target];
+        if (_viewportID.index < viewports.size())
+            return viewports[_viewportID.index];
+        else
+            return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
     gfx::IView * Renderer::CreateView(gfx::CreateViewParams _params, const core::string & _name, IView::Flags _flags)
     {
         View * view = nullptr;
@@ -553,7 +661,7 @@ namespace vg::renderer
         ViewID id = ViewID(target, index);
         views.push_back((View *)_view);
         _view->SetViewID(id);
-        _view->setName(fmt::sprintf("%s #%u", asString(id.target), id.index));
+        _view->setName(fmt::sprintf("%s View #%u", asString(id.target), id.index));
 
         return id;
     }
@@ -801,7 +909,7 @@ namespace vg::renderer
                     auto * view = views[i];
                     if (nullptr != view)
                     {
-                        view->setSize(getBackbufferSize());
+                        view->SetRenderTargetSize(getBackbufferSize());
                         view->SetActive(true);
                         view->SetVisible(true);
                     }

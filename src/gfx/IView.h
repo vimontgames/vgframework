@@ -64,10 +64,9 @@ namespace vg::gfx
         {
         }
 
-        CreateViewParams(ViewTarget _target, core::uint2 _size, core::int2 _offset = core::int2(0, 0), core::IWorld * _world = nullptr, gfx::ITexture * _dest = nullptr) :
+        CreateViewParams(ViewTarget _target, core::uint2 _size, core::IWorld * _world = nullptr, gfx::ITexture * _dest = nullptr) :
             target(_target),
             size(_size),
-            offset(_offset),
             world(_world),
             dest(_dest)
         {
@@ -76,7 +75,6 @@ namespace vg::gfx
 
         ViewTarget          target = ViewTarget::Game;
         core::uint2         size = core::uint2(0, 0);
-        core::int2          offset = core::int2(0, 0);
         core::IWorld *      world = nullptr;
         gfx::ITexture *     dest = nullptr;
     };
@@ -102,7 +100,7 @@ namespace vg::gfx
         IView() {};
         virtual ~IView() = default;
 
-        virtual void                    SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY) = 0;
+        virtual void                    SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale) = 0;
         virtual void                    SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) = 0;
 
         virtual void                    SetFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0) = 0;
@@ -116,11 +114,14 @@ namespace vg::gfx
         virtual void                    SetWorld                    (core::IWorld * _world) = 0;
         virtual core::IWorld *          GetWorld                    () const = 0;
 
-        virtual void                    SetSize                     (core::uint2 _size) = 0;
-        virtual core::uint2             GetSize                     () const = 0;
+        virtual void                    SetRenderTargetSize         (core::uint2 _size) = 0;
+        virtual core::uint2             GetRenderTargetSize         () const = 0;
 
-        virtual void                    SetOffset                   (core::int2) = 0;
+        virtual core::uint2             GetSize                     () const = 0;
         virtual core::int2              GetOffset                   () const = 0;
+
+        virtual core::float2            GetViewportOffset           () const = 0;
+        virtual core::float2            GetViewportScale            () const = 0;
 
         virtual void                    SetRenderTarget             (gfx::ITexture * _renderTarget) = 0;
         virtual gfx::ITexture *         GetRenderTarget             () const = 0;

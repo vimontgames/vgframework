@@ -10,7 +10,7 @@ namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
     ShadowView::ShadowView(LightInstance * _light, core::IWorld * _world, core::uint2 _resolution) :
-        View(CreateViewParams(ViewTarget::Shadow, _resolution, core::int2(0,0), _world)),
+        View(CreateViewParams(ViewTarget::Shadow, _resolution, _world)),
         m_light(_light)
     {
         setIsAdditionalView(true);

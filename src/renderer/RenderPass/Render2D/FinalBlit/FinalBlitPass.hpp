@@ -67,7 +67,7 @@ namespace vg::renderer
 
         RootConstants2D root2D;
 
-        root2D.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+        root2D.quad.posOffsetScale = float4(_renderPassContext.m_view->GetViewportOffset(), _renderPassContext.m_view->GetViewportScale());
         root2D.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
 
         // When Compute post-process is enabled then we blit from the PostProcessUAV read as Shader Resource

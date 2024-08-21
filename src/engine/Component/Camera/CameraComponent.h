@@ -39,6 +39,10 @@ namespace vg::engine
         float                                   m_fovY;
         float                                   m_near;
         float                                   m_far;
+        core::float2                            m_viewportOffset;
+        core::float2                            m_viewportScale;
+
+        core::float2                            m_previousViewportScale = core::float2(0, 0);
     };
 }
 

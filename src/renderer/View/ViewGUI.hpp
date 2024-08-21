@@ -73,15 +73,16 @@ namespace vg::renderer
         auto * imGuiAdapter = Renderer::get()->GetImGuiAdapter();
         const RendererOptions * options = RendererOptions::get();
         const bool debugUI = options->isDebugUIEnabled();
-        float2 windowOffset = ImVec2ToFloat2(ImGui::GetCursorPos());
+
+        float2 screenSizeInPixels = ImVec2ToFloat2(ImGui::GetWindowContentRegionMax() - ImGui::GetWindowContentRegionMin());
+        float2 viewSizeInPixels = screenSizeInPixels * m_view->GetViewportScale();
+        float2 windowOffset = ImVec2ToFloat2(ImGui::GetCursorPos()) + screenSizeInPixels * m_view->GetViewportOffset();
 
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0, 0, 0, 0));
   
         for (uint i = 0; i < m_uiElements.size(); ++i)
         {
-            const auto elem = m_uiElements[i];
-
-            float2 screenSizeInPixels = ImVec2ToFloat2(ImGui::GetWindowContentRegionMax() - ImGui::GetWindowContentRegionMin());
+            const auto elem = m_uiElements[i];            
 
             UICanvas canvas;
             if (elem.m_canvas)
@@ -91,7 +92,7 @@ namespace vg::renderer
             else
             {
                 // Default canvas
-                canvas.m_size = screenSizeInPixels;
+                canvas.m_size = viewSizeInPixels;
                 canvas.m_alignX = HorizontalAligment::Center;
                 canvas.m_alignY = VerticalAligment::Center;
             }
@@ -100,7 +101,7 @@ namespace vg::renderer
             float2 canvasSizeInPixel = (float2)canvas.m_size;
             if (asBool(canvas.m_flags & UIItemFlags::AutoResize))
             {
-                canvasSizeInPixel = (float2)canvas.m_size * screenSizeInPixels / (float2)canvas.m_resolution;
+                canvasSizeInPixel = (float2)canvas.m_size * viewSizeInPixels / (float2)canvas.m_resolution;
             }                
 
             float2 winOffset = ImVec2ToFloat2(GImGui->CurrentWindow->Pos) + windowOffset;
@@ -118,11 +119,11 @@ namespace vg::renderer
                     break;
                 
                 case HorizontalAligment::Center:
-                    offset.x += screenSizeInPixels.x * 0.5f - canvasSizeInPixel.x * 0.5f;
+                    offset.x += viewSizeInPixels.x * 0.5f - canvasSizeInPixel.x * 0.5f;
                     break;
                 
                 case HorizontalAligment::Right:
-                    offset.x += screenSizeInPixels.x * (1.0f - (float)canvas.m_size.x * 0.01f);
+                    offset.x += viewSizeInPixels.x * (1.0f - (float)canvas.m_size.x * 0.01f);
                     break;
             }
                 
@@ -137,11 +138,11 @@ namespace vg::renderer
                     break;
 
                 case VerticalAligment::Center:
-                    offset.y += screenSizeInPixels.y * 0.5f - canvasSizeInPixel.y * 0.5f;
+                    offset.y += viewSizeInPixels.y * 0.5f - canvasSizeInPixel.y * 0.5f;
                     break;
 
                 case VerticalAligment::Bottom:
-                    offset.y += screenSizeInPixels.y * (1.0f - (float)canvas.m_size.y * 0.01f);
+                    offset.y += viewSizeInPixels.y * (1.0f - (float)canvas.m_size.y * 0.01f);
                     break;
             }
 

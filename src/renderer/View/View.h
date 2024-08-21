@@ -44,7 +44,7 @@ namespace vg::renderer
                                             View                        (const gfx::CreateViewParams & _params);
                                             ~View                       ();
 
-        void                                SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY) override;
+        void                                SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale) override;
         void                                SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) override;
 
         void                                SetFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0) override;
@@ -58,11 +58,14 @@ namespace vg::renderer
         void                                SetWorld                    (core::IWorld * _world) override;
         core::IWorld *                      GetWorld                    () const override;
 
-        void                                SetSize                     (core::uint2 _size) override;
-        core::uint2                         GetSize                     () const override;
+        void                                SetRenderTargetSize         (core::uint2 _size) override;
+        core::uint2                         GetRenderTargetSize         () const override;
 
-        void                                SetOffset                   (core::int2) override;
-        core::int2                          GetOffset                   () const override;
+        core::uint2                         GetSize                     () const final override;
+        core::int2                          GetOffset                   () const final override;
+
+        core::float2                        GetViewportOffset           () const final override;
+        core::float2                        GetViewportScale            () const final override;
 
         void                                SetRenderTarget             (gfx::ITexture * _renderTarget) override;
         gfx::ITexture *                     GetRenderTarget             () const override;
@@ -113,12 +116,6 @@ namespace vg::renderer
 
         VG_INLINE core::IWorld *            getWorld                    () const;
 
-        VG_INLINE void                      setSize                     (core::uint2 _size);
-        VG_INLINE core::uint2               getSize                     () const;
-
-        VG_INLINE void                      setOffset                   (core::int2 _offset);
-        VG_INLINE core::int2                getOffset                   () const;
-
         VG_INLINE const core::float4x4 &    getViewProjMatrix           () const;
 
         VG_INLINE const core::float4x4 &    getViewMatrix               () const;
@@ -162,6 +159,7 @@ namespace vg::renderer
         gfx::ViewID                         m_viewID;
         Flags                               m_flags                     = (Flags)0;
         gfx::Texture *                      m_renderTarget              = nullptr;   // Assume backbuffer if nullptr
+        core::uint2                         m_renderTargetSize          = core::uint2(0, 0);
         core::uint2                         m_size                      = core::uint2(0, 0);
         core::int2                          m_offset                    = core::int2(0, 0);
         core::float4x4                      m_view                      = core::float4x4::identity();
@@ -172,6 +170,8 @@ namespace vg::renderer
         core::IWorld *                      m_camWorld                  = nullptr;
         core::float2                        m_cameraNearFar;
         float                               m_cameraFovY;
+        core::float2                        m_viewportOffset            = core::float2(0,0);
+        core::float2                        m_viewportScale             = core::float2(1,1);
         bool                                m_active                    = false;
         bool                                m_visible                   = false;
         bool                                m_ortho                     = false;

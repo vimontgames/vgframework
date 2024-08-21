@@ -423,27 +423,49 @@ namespace vg::gfx::dx12
 
 	//--------------------------------------------------------------------------------------
 	void CommandList::clear(const core::float4 & _color)
-	{
-		//const gfx::RenderPass * renderPass = getRenderPass();
-		//const uint subPassIndex = getSubPassIndex();
-		//
-		//const auto & subPasses = renderPass->getSubPasses();
-		//const UserPass * subPass = subPasses[subPassIndex];
-		//
-		//const auto & renderTargets = subPass->getRenderTargets();
-		//for (const auto & renderTarget : renderTargets)
-		//{
-		//	const gfx::Texture * tex = renderTarget->getTexture();
-		//
-		//	const auto handle = tex->getd3d12RTVHandle();
-		//
-		//	const FLOAT clearColor[] =
-		//	{
-		//		_color.r, _color.g, _color.b, _color.a
-		//	};
-		//
-		//	m_d3d12graphicsCmdList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
-		//}
+	{		
+		//const auto & subPasses = getRenderPass()->getSubPasses();
+        //auto * _subPass = subPasses[getSubPassIndex()];
+        //
+        //const RenderPass * renderPass = getRenderPass();
+        //const RenderPassKey & renderPasskey = renderPass->getRenderPassKey();
+        //const auto index = getSubPassIndex();
+        //const SubPassKey & subPassKey = renderPasskey.m_subPassKeys[index];
+        //const auto & attachments = renderPass->m_colorAttachments;
+        //
+        //auto passInfo = _subPass->getUserPassesInfos()[0];
+        //auto userPass = passInfo.m_userPass;
+        //
+        //for (uint i = 0; i < _subPass->m_renderTargetCount; ++i)
+        //{
+        //    const ResourceTransitionDesc & info = subPassKey.getColorAttachmentInfo(i);
+        //    if (asBool(ResourceTransitionFlags::RenderTarget & info.flags))
+        //    {
+        //        const FrameGraphTextureResource * res = userPass->getRenderTargets()[i];
+        //        const Texture * tex = res->getTexture();
+        //        const auto handle = tex->getd3d12RTVHandle();
+        //            
+        //        const FLOAT clearColor[] =
+        //        {
+        //            _color.r, _color.g, _color.b, _color.a
+        //        };
+        //            
+        //        m_d3d12graphicsCmdList->ClearRenderTargetView(handle, clearColor, 0, nullptr);
+        //    }
+        //}
+            
+        //if (_subPass->m_depthStencilCount > 0)
+        //{
+        //    const ResourceTransitionDesc & info = subPassKey.getDepthStencilAttachmentInfo();
+        //    if (asBool(ResourceTransitionFlags::RenderTarget & info.flags))
+        //    {
+        //        const FrameGraphTextureResource * res = userPass->getDepthStencil();
+        //        const FrameGraphTextureResourceDesc & resourceDesc = res->getTextureResourceDesc();
+        //        D3D12_RENDER_PASS_DEPTH_STENCIL_DESC & depthStencilDesc = _subPass->m_d3d12renderPassDepthStencilDesc;
+        //        const Texture * tex = res->getTexture();
+        //        _subPass->m_d3d12renderPassDepthStencilDesc.cpuDescriptor = tex->getd3d12DSVHandle();
+        //    }
+        //}
 	}
 
     //--------------------------------------------------------------------------------------

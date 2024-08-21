@@ -55,30 +55,6 @@ namespace vg::renderer
     };
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void View::setSize(core::uint2 _size)
-    {
-        m_size = _size;
-    }
-
-    //--------------------------------------------------------------------------------------
-    VG_INLINE core::uint2 View::getSize() const
-    {
-        return m_size;
-    }
-
-    //--------------------------------------------------------------------------------------
-    VG_INLINE void View::setOffset(core::int2 _offset)
-    {
-        m_offset = _offset;
-    }
-
-    //--------------------------------------------------------------------------------------
-    VG_INLINE core::int2 View::getOffset() const
-    {
-        return m_offset;
-    }
-
-    //--------------------------------------------------------------------------------------
     VG_INLINE void View::setViewID(gfx::ViewID _viewID)
     {
         VG_ASSERT(_viewID.index < 63);

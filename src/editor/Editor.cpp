@@ -735,7 +735,7 @@ namespace vg::editor
 
                 case BaseSceneType::Scene:
                 {
-                    if (view->GetViewTarget() == gfx::ViewTarget::Editor && view->GetViewIndex() == 0)
+                    if (view->getViewportTarget() == gfx::ViewportTarget::Editor && view->getViewportIndex() == 0)  // TODO: ImGuiView::isMainEditorViewport()
                         view->focus(_gameObjects);
                 }
                 break;

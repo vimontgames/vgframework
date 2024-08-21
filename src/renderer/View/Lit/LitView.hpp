@@ -62,7 +62,7 @@ namespace vg::renderer
 
         auto * target = getRenderTarget();
         if (target)
-            _frameGraph.importRenderTarget(target->getName(), target, float4(0, 0, 0, 0), FrameGraphResource::InitState::Clear);
+            _frameGraph.importRenderTarget(target->getName(), target, float4(0, 0, 0, 1), FrameGraphResource::InitState::Clear);
 
         const RendererOptions * options = RendererOptions::get();
 

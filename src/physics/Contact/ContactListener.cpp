@@ -50,7 +50,7 @@ namespace vg::physics
             m_collisionEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent())));
         }
 
-        VG_INFO("[Physics] Contact between \"%s\" and \"%s\"", obj1->GetParentGameObject()->getName().c_str(), obj2->GetParentGameObject()->getName().c_str());
+        //VG_INFO("[Physics] Contact between \"%s\" and \"%s\"", obj1->GetParentGameObject()->getName().c_str(), obj2->GetParentGameObject()->getName().c_str());
     }
 
     //--------------------------------------------------------------------------------------

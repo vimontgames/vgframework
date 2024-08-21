@@ -1,14 +1,14 @@
 #pragma once
 
 #include "core/Object/Object.h"
+#include "gfx/IView.h"
 
 namespace vg::gfx
 {
     enum class ViewportTarget : core::u8
     {
-        Backbuffer  = 0,
-        Game        = 1,
-        Editor      = 2
+        Game        = 0,
+        Editor      = 1
     };
     static inline const ViewportTarget ViewportTargetInvalid = (ViewportTarget)-1;
 
@@ -51,23 +51,55 @@ namespace vg::gfx
         {
         }
 
-        CreateViewportParams(ViewportTarget _target, core::uint2 _size) :
+        CreateViewportParams(ViewportTarget _target, core::uint2 _size, gfx::ITexture * _dest = nullptr) :
             target(_target),
-            size(_size)
+            size(_size),
+            dest(_dest)
         {
 
         }
         ViewportTarget  target = ViewportTarget::Game;
         core::uint2     size = core::uint2(0, 0);
+        gfx::ITexture * dest = nullptr;
     };
+
+    enum class ViewportFlags : core::u32
+    {
+
+    };
+
+    class IView;
 
     class IViewport : public core::Object
     {
     public:
+
         IViewport() {};
         virtual ~IViewport() = default;
 
-        virtual void            SetSize(core::uint2 _size) = 0;
-        virtual core::uint2     GetSize() const = 0;        
+        virtual void                            SetRenderTargetSize     (core::uint2 _size) = 0;
+        virtual core::uint2                     GetRenderTargetSize     () const = 0;   
+
+        virtual void                            SetRenderTarget         (gfx::ITexture * _renderTarget) = 0;
+        virtual gfx::ITexture *                 GetRenderTarget         () const = 0;
+
+        virtual void                            SetFlags                (ViewportFlags _flagsToSet, ViewportFlags _flagsToRemove = (ViewportFlags)0x0) = 0;
+        virtual ViewportFlags                   GetFlags                () const = 0;
+
+        virtual void                            SetViewportID           (ViewportID _viewportID) = 0;
+        virtual gfx::ViewportID                 GetViewportID           () const = 0;
+
+        virtual void                            SetActive               (bool _active) = 0;
+        virtual bool                            AnyActive               () const = 0;
+
+        virtual void                            SetVisible              (bool _visible) = 0;
+        virtual bool                            AnyVisible              () const = 0;
+
+        virtual void                            AddView                 (ViewID _viewID) = 0;
+        virtual void                            RemoveView              (ViewID _viewID) = 0;
+
+        virtual const core::vector<ViewID> &    GetViewIDs              () const = 0;
+
+        virtual const core::string              GetFrameGraphID         (const core::string & _name) const = 0;
     };
 }

@@ -29,8 +29,7 @@ namespace vg::renderer
     {
         m_viewID.target = _params.target;
 
-        m_size = _params.size;
-        m_offset = _params.offset;
+        SetRenderTargetSize(_params.size);
 
         SetWorld(_params.world);
 
@@ -46,8 +45,7 @@ namespace vg::renderer
 
         memset(&m_rawPickingData, 0x0, sizeof(m_rawPickingData));
 
-        //if (m_viewID.target == ViewTarget::Game)
-            m_viewGUI = new ViewGUI(this);
+        m_viewGUI = new ViewGUI(this);
     }
 
     //--------------------------------------------------------------------------------------
@@ -102,7 +100,8 @@ namespace vg::renderer
     bool View::isToolmode() const
     {
         const auto options = RendererOptions::get();
-        return getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
+        const auto target = getViewID().target;
+        return  gfx::ViewTarget::Editor == target || (gfx::ViewTarget::Game == target && options->isToolModeEnabled());
     }
 
     //--------------------------------------------------------------------------------------
@@ -157,15 +156,18 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetupPerspectiveCamera(const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY)
+    void View::SetupPerspectiveCamera(const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale)
     {
+        m_viewportOffset = _viewportOffset;
+        m_viewportScale = _viewportScale;
+
         m_viewInv = _cameraWorldMatrix;
         m_view = inverse(_cameraWorldMatrix);
         m_cameraNearFar = _nearFar;
 
         m_cameraFovY = _fovY;
 
-        const auto size = getSize();
+        const auto size = GetSize();
         const float ar = float(size.x) / float(size.y);
 
         m_proj = setPerspectiveProjectionRH(_fovY, ar, _nearFar.x, _nearFar.y);
@@ -295,27 +297,41 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetSize(core::uint2 _size)
+    void View::SetRenderTargetSize(core::uint2 _size)
     {
-        setSize(_size);
+        m_renderTargetSize = _size;
+        m_size = max(uint2(1, 1), (uint2)((float2)m_renderTargetSize * m_viewportScale));
+        m_offset = (int2)((float2)m_renderTargetSize * m_viewportOffset);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint2 View::GetRenderTargetSize() const
+    {
+        return m_renderTargetSize;
     }
 
     //--------------------------------------------------------------------------------------
     core::uint2 View::GetSize() const
     {
-        return getSize();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void View::SetOffset(core::int2 _offset)
-    {
-        setOffset(_offset);
+        return m_size;
     }
 
     //--------------------------------------------------------------------------------------
     core::int2 View::GetOffset() const
     {
-        return getOffset();
+        return m_offset;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float2 View::GetViewportOffset() const
+    {
+        return m_viewportOffset;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float2 View::GetViewportScale() const
+    {
+        return m_viewportScale;
     }
 
     //--------------------------------------------------------------------------------------
@@ -381,12 +397,13 @@ namespace vg::renderer
     {
         auto input = Kernel::getInput();
         uint2 mousePos = input->GetMousePos();
+        int2 offset = (int2)((float2)GetSize() / GetViewportScale() * GetViewportOffset());  // WTF access viewport instead to get fullsize! or store RT size !
 
         const auto renderer = Renderer::get();
         if (renderer->IsFullscreen())
-            return (int2)mousePos;
+            return ((int2)mousePos)- offset;
         else
-            return int2((int)mousePos.x - (int)m_mouseOffset.x, (int)mousePos.y - (int)m_mouseOffset.y);
+            return (int2((int)mousePos.x - (int)m_mouseOffset.x, (int)mousePos.y - (int)m_mouseOffset.y))- offset;
     }
 
     //--------------------------------------------------------------------------------------

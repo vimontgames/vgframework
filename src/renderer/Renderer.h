@@ -24,6 +24,7 @@ namespace vg::renderer
     class MeshModel;
     class MaterialModel;
     class View;
+    class Viewport;
     class DebugDraw;
 
     struct SharedCullingJobOutput;
@@ -53,6 +54,12 @@ namespace vg::renderer
 
         gfx::ITexture *                         CreateTexture               (const gfx::TextureDesc & _texDesc, const core::string & _name) final override;
 
+        gfx::IViewport *                        CreateViewport              (const gfx::CreateViewportParams & _params, const core::string & _name, gfx::ViewportFlags _flags = (gfx::ViewportFlags)0x0) final override;
+        gfx::ViewportID                         AddViewport                 (gfx::IViewport * _viewport) final override;
+        gfx::ViewportIndex                      GetFreeViewportIndex        (gfx::ViewportTarget _target) final override;
+        gfx::IViewport *                        GetViewport                 (gfx::ViewportID _viewportID) final override;
+
+        // TODO: remove
         gfx::IView *                            CreateView                  (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags = (gfx::IView::Flags)0) final override;
         gfx::ViewID                             AddView                     (gfx::IView * _view) final override;
         void                                    RemoveView                  (gfx::ViewID _viewID) final override;
@@ -132,14 +139,17 @@ namespace vg::renderer
         ComputeSkinningPass *                   m_computeSkinningPass       = nullptr;
         BLASUpdatePass *                        m_BLASUpdatePass            = nullptr;
         ImGuiPass *                             m_imguiPass                 = nullptr; 
-        core::vector<View *>                    m_views[core::enumCount<gfx::ViewTarget>()];
         IPicking *                              m_picking                   = nullptr;
         core::vector<gfx::Texture *>            m_defaultTextures;
         MaterialModel *                         m_defaultMaterial           = nullptr;
         bool                                    m_fullscreen                = false;
         SharedCullingJobOutput *                m_sharedCullingJobOutput    = nullptr;
 
+        core::vector<Viewport *>                m_viewports[core::enumCount<gfx::ViewportTarget>()];
         core::JobSync                           m_jobSync[core::enumCount<JobSync>()];
+
+        // TODO : remove
+        core::vector<View *>                    m_views[core::enumCount<gfx::ViewTarget>()];
 	};
 }
 

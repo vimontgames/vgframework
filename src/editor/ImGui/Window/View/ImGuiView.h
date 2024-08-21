@@ -1,11 +1,17 @@
 #pragma once
 
 #include "editor/ImGui/Window/ImGuiWindow.h"
-#include "gfx/IView.h"
+#include "gfx/IViewport.h"
 
 namespace vg::core
 {
     class IWorld;
+}
+
+namespace vg::gfx
+{
+    class IViewport;
+    class IView;
 }
 
 namespace vg::editor
@@ -13,7 +19,7 @@ namespace vg::editor
     class ImGuiView : public ImGuiWindow
     {
     public:
-                                        ImGuiView           (const char * _icon, const core::string & _path, const core::string & _name, Flags _flags, gfx::ViewTarget _target, core::uint _index = -1);
+                                        ImGuiView           (const char * _icon, const core::string & _path, const core::string & _name, Flags _flags, gfx::ViewportTarget _target, core::uint _viewportIndex = -1);
                                         ~ImGuiView          ();
 
         void                            updateEditorCamera  (float _dt);
@@ -35,8 +41,8 @@ namespace vg::editor
         virtual void                    OnCloseWindow       ();
         virtual bool                    UpdateScene         () { return true; };
 
-        const gfx::ViewTarget &         GetViewTarget       () const { return m_target;}
-        gfx::ViewIndex                  GetViewIndex        () const { return m_index; }
+        gfx::ViewportTarget             getViewportTarget   () const;
+        gfx::ViewportIndex              getViewportIndex    () const;
 
         void                            setWindowFocus      ();
 
@@ -44,14 +50,14 @@ namespace vg::editor
         void                            focus               (const core::vector<core::IGameObject * > & _gameObjects);
 
     protected:
-        bool                            drawGizmo           ();
+        bool                            drawGizmo           (const gfx::IView * _view);
         void                            updatePicking       (bool & _showTooltip, core::string & _tooltipMsg);
 
     protected:
-        gfx::ViewTarget                 m_target            = gfx::ViewTarget::Game;
-        gfx::ViewIndex                  m_index             = gfx::ViewIndexInvalid;
+        gfx::ViewportTarget             m_target            = gfx::ViewportTarget::Game;
         core::uint2                     m_size              = core::uint2(0, 0);
-        gfx::IView *                    m_view              = nullptr;
+        gfx::IViewport *                m_viewport          = nullptr;
+        gfx::ViewportIndex              m_viewportIndex     = (gfx::ViewportIndex)-1;
         gfx::ITexture *                 m_texture           = nullptr;
         bool                            m_manipulating      = false;
         bool                            m_closeNextFrame    = false;

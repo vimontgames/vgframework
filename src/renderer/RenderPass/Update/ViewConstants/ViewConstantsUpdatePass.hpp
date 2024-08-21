@@ -78,23 +78,26 @@ namespace vg::renderer
         }
 
         View * view = (View *)_renderPassContext.m_view;
-        const uint2 screenSize = view->getSize();
+        const uint2 viewSize = view->GetSize();
 
         ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer, sizeof(ViewConstants)).data;
         {
-            constants->setScreenSize(screenSize);
+            constants->setScreenSize(viewSize);
             constants->setMousePos((uint2)view->GetRelativeMousePos());
             constants->setDisplayMode(options->getDisplayMode());
             constants->setDisplayFlags(options->getDisplayFlags());
             constants->setToolmodeRWBufferID(toolmodeRWBufferID);
             constants->setCameraNearFar(view->getCameraNearFar());
             constants->setCameraFieldOfView(view->getCameraFovY());
-            constants->setCameraAspectRatio((float)screenSize.x / (float)screenSize.y);
+            constants->setCameraAspectRatio((float)viewSize.x / (float)viewSize.y);
             constants->setView(view->getViewMatrix());
             constants->setViewInv(view->getViewInvMatrix());
             constants->setProj(view->getProjMatrix());
             constants->setProjInv(view->getProjInvMatrix());
             constants->setTLASHandle(view->getTLASHandle());
+
+            //if (_renderPassContext.m_view->IsToolmode())
+            //    VG_INFO("[Picking %s] RelativeMousePos = %i %i OVER = %s", _renderPassContext.m_view->getName().c_str(), (uint)constants->getMousePos().x, (uint)constants->getMousePos().y, _renderPassContext.m_view->IsMouseOverView() ? "true" : "false");
         }
         _cmdList->unmap(s_ViewConstantsBuffer);
 

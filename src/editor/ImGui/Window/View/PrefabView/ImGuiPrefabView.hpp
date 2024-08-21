@@ -4,7 +4,7 @@ namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
     ImGuiPrefabView::ImGuiPrefabView(const core::IResource * _prefabRes) :
-        ImGuiView(style::icon::Prefab, "View/Prefabs", "Prefabs", ImGuiWindow::StartVisible, gfx::ViewTarget::Editor),
+        ImGuiView(style::icon::Prefab, "View/Prefabs", "Prefabs", ImGuiWindow::StartVisible, gfx::ViewportTarget::Editor),
         m_prefabRes((core::IResource*)_prefabRes)
     {
         IFactory * factory = Kernel::getFactory();
@@ -199,6 +199,8 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiPrefabView::OnCloseWindow()
     {
+        auto * renderer = Editor::get()->getRenderer();
+
         // Unselect objects in prefab
         ISelection * selection = Editor::get()->getSelection();
         if (selection)
@@ -214,8 +216,15 @@ namespace vg::editor
             selection->SetSelectedObjects(selected);
         }
 
-        if (m_view)
-            m_view->SetWorld(nullptr);
+        if (m_viewport)
+        {
+            auto & viewIDs = m_viewport->GetViewIDs();
+            for (uint i = 0; i < viewIDs.size(); ++i)
+            {
+                if (auto * view = renderer->GetView(viewIDs[i]))
+                    view->SetWorld(nullptr);
+            }
+        }
 
         Editor::get()->destroyWindow(this);
         m_prefabWorld->RemoveAllScenes(BaseSceneType::Scene);

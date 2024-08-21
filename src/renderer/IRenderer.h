@@ -2,7 +2,8 @@
 
 #include "core/IPlugin.h"
 #include "Renderer_consts.h"
-#include "gfx/IView.h"
+#include "gfx/IView.h"      // TODO: remove
+#include "gfx/IViewport.h"
 
 namespace vg
 {
@@ -20,6 +21,10 @@ namespace vg
         class IView;
         class IShaderManager;
         struct CreateViewParams;
+
+        struct CreateViewportParams;
+        enum class ViewportFlags : core::u32;
+        class IViewport;
     }
 
     namespace renderer
@@ -60,6 +65,12 @@ namespace vg
 
             virtual gfx::ITexture *                     CreateTexture           (const gfx::TextureDesc & _texDesc, const core::string & _name) = 0;
 
+            virtual gfx::IViewport *                    CreateViewport          (const gfx::CreateViewportParams & _params, const core::string & _name, gfx::ViewportFlags _flags = (gfx::ViewportFlags)0x0) = 0;
+            virtual gfx::ViewportID                     AddViewport             (gfx::IViewport * _viewport) = 0;
+            virtual gfx::ViewportIndex                  GetFreeViewportIndex    (gfx::ViewportTarget _target) = 0;
+            virtual gfx::IViewport *                    GetViewport             (gfx::ViewportID _viewportID) = 0;
+
+            // TODO: remove or move to IViewport (?)
             virtual gfx::IView *                        CreateView              (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags = (gfx::IView::Flags)0) = 0;
             virtual gfx::ViewID                         AddView                 (gfx::IView * _view) = 0;
             virtual void                                RemoveView              (gfx::ViewID _viewID) = 0;
