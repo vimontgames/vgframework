@@ -15,7 +15,7 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerPropertyResource(PrefabGameObject, m_prefabResource, "File");
-        registerPropertyObjectPtrVectorEx(PrefabGameObject, m_dynamicProperties, "Dynamic Properties", IProperty::Flags::Debug);
+        registerPropertyObjectPtrVector(PrefabGameObject, m_dynamicProperties, "Property Overrides");
         
         return true;
     }
@@ -580,7 +580,7 @@ namespace vg::engine
             }
             else
             {
-                VG_WARNING("[Prefab] Could not find GUID 0x%08X in Prefab \"%s\"", propList->GetUID(), m_prefabResource.GetResourcePath().c_str());
+                VG_WARNING("[Prefab] Could not find GUID %u (0x%08X) in Prefab \"%s\"", propList->GetUID(), propList->GetUID(), m_prefabResource.GetResourcePath().c_str());
             }
         }
     }

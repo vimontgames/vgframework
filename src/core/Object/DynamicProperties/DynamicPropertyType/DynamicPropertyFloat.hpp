@@ -8,8 +8,8 @@ namespace vg::core
     bool DynamicPropertyFloat::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-
-        registerProperty(DynamicPropertyFloat, m_value, "Value");
+          
+        registerOptionalProperty(DynamicPropertyFloat,  m_enable, m_value, "Value");
 
         return true;
     }

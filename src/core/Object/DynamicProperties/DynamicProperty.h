@@ -51,13 +51,6 @@ namespace vg::core
 
         }
 
-        bool registerProperties(IClassDesc & _desc)
-        {
-            super::registerProperties(_desc);
-            setPropertyFlag(DynamicPropertyUInt2, m_name, IProperty::Flags::NotVisible, false);
-            return true;
-        }
-
         void SetValue(T _value)
         {
             m_value = _value;

@@ -9,7 +9,7 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        registerProperty(DynamicPropertyUInt4, m_value, "Value");
+        registerOptionalProperty(DynamicPropertyUInt4, m_enable, m_value, "Value");
 
         return true;
     }

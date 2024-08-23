@@ -6,7 +6,12 @@ namespace vg::core
     bool DynamicProperty::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);  
-        registerProperty(DynamicProperty, m_enable, "Enable");
+        setPropertyFlag(DynamicProperty, m_name, IProperty::Flags::NotVisible, true);
+        setPropertyFlag(DynamicProperty, m_originalUID, IProperty::Flags::NotVisible, true);
+        setPropertyFlag(DynamicProperty, m_objectFlags, IProperty::Flags::NotVisible, true);
+        
+        //registerProperty(DynamicProperty, m_enable, "Enable");
+        
         return true;
     }
     
