@@ -368,18 +368,21 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    bool CollapsingHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, IObject * _object, const char * _icon, const string & _tooltip, vg::core::uint _index)
+    bool CollapsingHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, IObject * _object, const char * _icon, const string & _tooltip, vg::core::uint _index, ImVec4 * _buttonColor)
     {
         auto collapsedButtonSize = style::button::SizeSmall;
-        if (ImGui::GetStyle().FramePadding.y == 3)
+        const ImGuiStyle & style = ImGui::GetStyle();
+        if (style.FramePadding.y == 3)
             collapsedButtonSize.y -= 1;
 
         ImGui::SameLine();
 
-        ImGui::SetCursorPos(ImVec2(_availableWidth - (_index+1)*style::button::SizeSmall.x + ImGui::GetStyle().WindowPadding.x + 4, _headerPos.y));
+        ImGui::SetCursorPos(ImVec2(_availableWidth - (_index+1)*style::button::SizeSmall.x + style.FramePadding.x + 4, _headerPos.y));
 
-        ImGuiStyle & style = ImGui::GetStyle();
         auto bgColor = style.Colors[ImGuiCol_Header];
+
+        if (_buttonColor)
+            ImGui::PushStyleColor(ImGuiCol_Text, *_buttonColor);
 
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(bgColor.x, bgColor.y, bgColor.z, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.5f, 0.5f));
@@ -387,6 +390,9 @@ namespace ImGui
         ImGui::ButtonEx(ImGui::getObjectLabel(fmt::sprintf("%s", _icon).c_str(), _object).c_str(), collapsedButtonSize, ImGuiItemFlags_AllowOverlap);
         ImGui::PopStyleVar(2);
         ImGui::PopStyleColor();
+
+        if (_buttonColor)
+            ImGui::PopStyleColor();
 
         if (ImGui::IsItemHovered())
         {

@@ -11,6 +11,7 @@ namespace vg::core
 
         //registerPropertyObjectPtrVectorEx(DynamicPropertyList, m_properties, "Properties", IProperty::Flags::Flatten); // "Flatten" is not implemented for ObjectPtrVector
         registerPropertyObjectPtrVector(DynamicPropertyList, m_properties, "Properties");
+        setPropertyFlag(DynamicPropertyList, m_uid, IProperty::Flags::NotVisible | IProperty::Flags::Debug, false);
 
         return true;
     }

@@ -66,6 +66,7 @@ namespace vg::editor
             inline static const char * Checked              = ICON_FA_SQUARE_CHECK;
             inline static const char * Console              = ICON_FA_TABLE_LIST;
             inline static const char * Clock                = ICON_FA_CLOCK;
+            inline static const char * Destroy              = ICON_FA_CIRCLE_XMARK;
             inline static const char * Edit                 = ICON_FA_PEN_TO_SQUARE;
             inline static const char * Editor               = ICON_FA_SCREWDRIVER_WRENCH;
             inline static const char * EditorView           = ICON_FA_DESKTOP;

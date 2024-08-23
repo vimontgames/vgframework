@@ -1530,7 +1530,7 @@ namespace vg::editor
                         }
                         else
                         {
-                            auto availableWidth = ImGui::GetContentRegionAvail().x;
+                            auto availableWidth = ImGui::GetContentRegionAvail().x + GetCursorPosX() - style.FramePadding.x;
                             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
                             ImGui::PushStyleColor(ImGuiCol_Header, style.Colors[ImGuiCol_WindowBg]);
@@ -1545,6 +1545,7 @@ namespace vg::editor
                             ImGui::PopStyleColor(6);
 
                             bool add = false, remove = false;
+                            int removeAt = -1;
 
                             const char * interfaceName = _prop->getInterface();
                             const auto * factory = Kernel::getFactory();
@@ -1569,10 +1570,10 @@ namespace vg::editor
                                         add = true;
                                     ImGui::EndDisabled();
 
-                                    ImGui::BeginDisabled(vec->size() <= 0);
-                                    if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Minus, fmt::sprintf("Remove %s", elemDesc->GetClassName()), 1))
-                                        remove = true;
-                                    ImGui::EndDisabled();
+                                    //ImGui::BeginDisabled(vec->size() <= 0);
+                                    //if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Minus, fmt::sprintf("Remove %s", elemDesc->GetClassName()), 1))
+                                    //    remove = true;
+                                    //ImGui::EndDisabled();
                                 }
                             }
 
@@ -1580,8 +1581,24 @@ namespace vg::editor
                             {
                                 for (uint i = 0; i < count; ++i)
                                 {
+                                    collapsingHeaderPos.y = ImGui::GetCursorPos().y;
+                                    availableWidth = ImGui::GetContentRegionAvail().x + GetCursorPosX() - style.FramePadding.x;
+
                                     IObject * pObject = (*vec)[i];
                                     displayArrayObject(pObject, i, nullptr);
+
+                                    auto y = GetCursorPosY();
+
+                                    auto buttonColor = GetStyleColorVec4(ImGuiCol_PlotLinesHovered);
+
+                                    ImGui::PushID(i);
+
+                                    if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos - ImVec2(0,4), availableWidth - 1, _object, style::icon::Destroy, fmt::sprintf("Remove element %u", i), 0, &buttonColor))
+                                        removeAt = i;
+
+                                    ImGui::PopID();
+
+                                    SetCursorPosY(y);
                                 }
                                 //ImGui::TreePop();
                             }
@@ -1590,6 +1607,13 @@ namespace vg::editor
                             {
                                 auto * obj = factory->createObject(elemDesc->GetClassName(), fmt::sprintf("[%u]", vec->size()));
                                 vec->push_back(obj);
+                            }
+
+                            if (removeAt >= 0)
+                            {
+                                auto * elem = (*vec)[removeAt];
+                                VG_SAFE_RELEASE(elem);
+                                vec->erase(vec->begin() + removeAt);
                             }
 
                             if (remove && vec->size() > 0)

@@ -163,7 +163,7 @@
                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1177627180"/>
                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                         <Property type="String" name="m_name" value="UI"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -188,68 +188,36 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/PlayerUI.prefab"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug">
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="431654339"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="431654339"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New UITextComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyString">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1502769601"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="1502769601"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_text"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="String" name="m_value" value="Pablo"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="String" name="m_value" flags="Optional" value="Pablo"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3463423290"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New UITextComponent"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                        <Property type="ObjectPtrVector" name="m_properties">
-                                            <Object class="DynamicPropertyString">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_text"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="String" name="m_value" value="PABLO"/>
-                                            </Object>
-                                        </Property>
-                                    </Object>
-                                    <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1247048370"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="1247048370"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New UIImageComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
-                                            <Object class="DynamicPropertyBool">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_useColor"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="false"/>
-                                                <Property type="Bool" name="m_value" value="true"/>
-                                            </Object>
-                                            <Object class="DynamicPropertyFloat4">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_color"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="false"/>
-                                                <Property type="Float4" name="m_value" x="0.83536708" y="0.92887032" z="0.034978379" w="1"/>
-                                            </Object>
                                             <Object class="DynamicPropertyResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_image"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="String" name="m_value" value="data/Textures/Pablo/Pablo_Logo.png"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="String" name="m_value" flags="Optional" value="data/Textures/Pablo/Pablo_Logo.png"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -274,108 +242,60 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/PlayerUI.prefab"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug">
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="431654339"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="431654339"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New UITextComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyString">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1502769601"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="1502769601"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_text"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="String" name="m_value" value="Roméo"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="String" name="m_value" flags="Optional" value="Roméo"/>
                                             </Object>
                                             <Object class="DynamicPropertyFloat3">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3818514852"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="3818514852"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_offset"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="false"/>
-                                                <Property type="Float3" name="m_value" x="148" y="16" z="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="false"/>
+                                                <Property type="Float3" name="m_value" flags="Optional" x="148" y="16" z="0"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1247048370"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="1247048370"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New UIImageComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
-                                            <Object class="DynamicPropertyBool">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="76535515"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_useColor"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Bool" name="m_value" value="false"/>
-                                            </Object>
-                                            <Object class="DynamicPropertyFloat4">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1794663292"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_color"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Float4" name="m_value" x="0.15362126" y="0.25892082" z="0.81589961" w="1"/>
-                                            </Object>
-                                            <Object class="DynamicPropertyU8">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="965861577"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_horizontal"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="false"/>
-                                                <Property type="Uint8" name="m_value" value="0"/>
-                                            </Object>
-                                            <Object class="DynamicPropertyFloat3">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2320256377"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_offset"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="false"/>
-                                                <Property type="Float3" name="m_value" x="116" y="16" z="0"/>
-                                            </Object>
                                             <Object class="DynamicPropertyResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_image"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="String" name="m_value" value="data/Textures/Romeo/Romeo_Logo.png"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="String" name="m_value" flags="Optional" value="data/Textures/Romeo/Romeo_Logo.png"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3463423290"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New UITextComponent"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                        <Property type="ObjectPtrVector" name="m_properties">
-                                            <Object class="DynamicPropertyString">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_text"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="String" name="m_value" value="ROMEO"/>
-                                            </Object>
-                                        </Property>
-                                    </Object>
-                                    <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2069112256"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="2069112256"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New UICanvasComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyU8">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_canvas.m_viewIndex"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Uint8" name="m_value" value="1"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="Uint8" name="m_value" flags="Optional" value="1"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -400,108 +320,52 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/PlayerUI.prefab"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug">
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="431654339"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="431654339"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New UITextComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyString">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1502769601"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="1502769601"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_text"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="String" name="m_value" value="Benualdo"/>
-                                            </Object>
-                                            <Object class="DynamicPropertyFloat3">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3818514852"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_offset"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="false"/>
-                                                <Property type="Float3" name="m_value" x="148" y="16" z="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="String" name="m_value" flags="Optional" value="Benualdo"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1247048370"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="1247048370"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New UIImageComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
-                                            <Object class="DynamicPropertyBool">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="76535515"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_useColor"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Bool" name="m_value" value="false"/>
-                                            </Object>
-                                            <Object class="DynamicPropertyFloat4">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1794663292"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_color"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Float4" name="m_value" x="0.018031908" y="0.43096232" z="0.02148732" w="1"/>
-                                            </Object>
-                                            <Object class="DynamicPropertyU8">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="965861577"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_horizontal"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="false"/>
-                                                <Property type="Uint8" name="m_value" value="0"/>
-                                            </Object>
-                                            <Object class="DynamicPropertyFloat3">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2320256377"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_offset"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="false"/>
-                                                <Property type="Float3" name="m_value" x="116" y="16" z="0"/>
-                                            </Object>
                                             <Object class="DynamicPropertyResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_image"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="String" name="m_value" value="data/Textures/Benualdo/Benualdo_Logo.png"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="String" name="m_value" flags="Optional" value="data/Textures/Benualdo/Benualdo_Logo.png"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3463423290"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New UITextComponent"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                        <Property type="ObjectPtrVector" name="m_properties">
-                                            <Object class="DynamicPropertyString">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_text"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="String" name="m_value" value="BEN"/>
-                                            </Object>
-                                        </Property>
-                                    </Object>
-                                    <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2069112256"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="2069112256"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New UICanvasComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyU8">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_canvas.m_viewIndex"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Uint8" name="m_value" value="2"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="Uint8" name="m_value" flags="Optional" value="2"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -523,7 +387,7 @@
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="914119281"/>
                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                 <Property type="String" name="m_name" value="Floor"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -548,20 +412,20 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug">
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                             <Object class="DynamicPropertyList">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="298093515"/>
+                                                <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="298093515"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="Root"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="ObjectPtrVector" name="m_properties">
                                                     <Object class="DynamicPropertyFloat4">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value="m_color"/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="Bool" name="m_enable" value="true"/>
-                                                        <Property type="Float4" name="m_value" x="1" y="0" z="0" w="0"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                        <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                        <Property type="Float4" name="m_value" flags="Optional" x="1" y="0" z="0" w="0"/>
                                                     </Object>
                                                 </Property>
                                             </Object>
@@ -586,7 +450,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1647032"/>
@@ -607,7 +471,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3642770928"/>
@@ -628,7 +492,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2102450754"/>
@@ -649,7 +513,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1811296055"/>
@@ -670,7 +534,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2551369987"/>
@@ -691,7 +555,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2958824228"/>
@@ -712,7 +576,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2364043854"/>
@@ -733,7 +597,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1181390005"/>
@@ -754,7 +618,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="234302787"/>
@@ -775,7 +639,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="283661869"/>
@@ -796,7 +660,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="687598496"/>
@@ -817,7 +681,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3451782499"/>
@@ -838,7 +702,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2563664038"/>
@@ -859,7 +723,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1488939672"/>
@@ -880,7 +744,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2597833900"/>
@@ -901,7 +765,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2699975894"/>
@@ -922,7 +786,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3518472411"/>
@@ -943,7 +807,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1842256327"/>
@@ -964,7 +828,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1614796495"/>
@@ -985,7 +849,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4203076492"/>
@@ -1006,7 +870,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4209664983"/>
@@ -1027,7 +891,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3382424240"/>
@@ -1048,7 +912,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="388988313"/>
@@ -1069,7 +933,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="292642195"/>
@@ -1090,7 +954,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="745310191"/>
@@ -1111,7 +975,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="159079348"/>
@@ -1132,7 +996,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2649802235"/>
@@ -1153,7 +1017,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4195773174"/>
@@ -1174,7 +1038,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="80378100"/>
@@ -1195,7 +1059,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="626514815"/>
@@ -1216,7 +1080,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3061662451"/>
@@ -1237,7 +1101,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="165552314"/>
@@ -1258,7 +1122,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3121064223"/>
@@ -1279,7 +1143,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2339835992"/>
@@ -1300,7 +1164,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="628595456"/>
@@ -1321,7 +1185,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1732202304"/>
@@ -1342,7 +1206,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2178796863"/>
@@ -1363,7 +1227,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3419428257"/>
@@ -1384,7 +1248,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1844374988"/>
@@ -1405,7 +1269,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1141864272"/>
@@ -1426,7 +1290,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2637679074"/>
@@ -1447,7 +1311,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1391996444"/>
@@ -1468,7 +1332,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1395866659"/>
@@ -1489,232 +1353,220 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Floor/Grass_3x3.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                 </Property>
                             </Object>
                             <Object class="GameObject">
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2127815640"/>
+                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1793450953"/>
                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                <Property type="String" name="m_name" value="Objects"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="String" name="m_name" value="Cones"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
-                                    <Object class="GameObject">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3776822647"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                        <Property type="String" name="m_name" value="Balls"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3760754290"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1206092944"/>
+                                        <Property type="String" name="m_name" value="Cone_05"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-1" Tz="7" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="7" Ty="13" Tz="0.25" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components"/>
-                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
-                                            <Object class="PrefabGameObject">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2211072321"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="888567144"/>
-                                                <Property type="String" name="m_name" value="Football_01"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
-                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="8" Tz="-6.5" Tw="1"/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
-                                                <Property type="Resource" name="m_prefabResource" flags="Resource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="436288768"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="31221567"/>
-                                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
-                                            </Object>
-                                            <Object class="PrefabGameObject">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3125460856"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="2211072321"/>
-                                                <Property type="String" name="m_name" value="Football_02"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
-                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-5.0268079e-07" Ty="-3.5" Tz="-6.5000219" Tw="1"/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
-                                                <Property type="Resource" name="m_prefabResource" flags="Resource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1032108722"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="436288768"/>
-                                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
-                                            </Object>
-                                            <Object class="PrefabGameObject">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1218223429"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3125460856"/>
-                                                <Property type="String" name="m_name" value="Football_03"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
-                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="3.9999979" Ty="5.5" Tz="-6.5000248" Tw="1"/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
-                                                <Property type="Resource" name="m_prefabResource" flags="Resource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2423309271"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1032108722"/>
-                                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
-                                            </Object>
-                                            <Object class="PrefabGameObject">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3652902746"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3125460856"/>
-                                                <Property type="String" name="m_name" value="Football_04"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
-                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-5.5000014" Ty="-10" Tz="-6.5000439" Tw="1"/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
-                                                <Property type="Resource" name="m_prefabResource" flags="Resource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="518649491"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1032108722"/>
-                                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
-                                            </Object>
-                                            <Object class="PrefabGameObject">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4242756574"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3652902746"/>
-                                                <Property type="String" name="m_name" value="Football_05"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
-                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="1.499999" Ty="-9" Tz="-6.5000367" Tw="1"/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
-                                                <Property type="Resource" name="m_prefabResource" flags="Resource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4182563488"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="518649491"/>
-                                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="715815347"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3283338948"/>
+                                                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
                                             </Object>
                                         </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
-                                    <Object class="GameObject">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1793450953"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                        <Property type="String" name="m_name" value="Cones"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3272850991"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3760754290"/>
+                                        <Property type="String" name="m_name" value="Cone_06"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-7" Ty="13" Tz="0.25" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components"/>
-                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
-                                            <Object class="PrefabGameObject">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3760754290"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1206092944"/>
-                                                <Property type="String" name="m_name" value="Cone_05"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
-                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="7" Ty="13" Tz="0.25" Tw="1"/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
-                                                <Property type="Resource" name="m_prefabResource" flags="Resource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="715815347"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3283338948"/>
-                                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
-                                            </Object>
-                                            <Object class="PrefabGameObject">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3272850991"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3760754290"/>
-                                                <Property type="String" name="m_name" value="Cone_06"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
-                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-7" Ty="13" Tz="0.25" Tw="1"/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
-                                                <Property type="Resource" name="m_prefabResource" flags="Resource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="980693466"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="715815347"/>
-                                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
-                                            </Object>
-                                            <Object class="PrefabGameObject">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1454799606"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3272850991"/>
-                                                <Property type="String" name="m_name" value="Cone_07"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
-                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-7" Ty="-13" Tz="0.25" Tw="1"/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
-                                                <Property type="Resource" name="m_prefabResource" flags="Resource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2318471757"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="980693466"/>
-                                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
-                                            </Object>
-                                            <Object class="PrefabGameObject">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4106842253"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3760754290"/>
-                                                <Property type="String" name="m_name" value="Cone_08"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
-                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="7" Ty="-13" Tz="0.25" Tw="1"/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
-                                                <Property type="Resource" name="m_prefabResource" flags="Resource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3404118001"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="715815347"/>
-                                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="980693466"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="715815347"/>
+                                                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
                                             </Object>
                                         </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1454799606"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3272850991"/>
+                                        <Property type="String" name="m_name" value="Cone_07"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-7" Ty="-13" Tz="0.25" Tw="1"/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2318471757"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="980693466"/>
+                                                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4106842253"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3760754290"/>
+                                        <Property type="String" name="m_name" value="Cone_08"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="7" Ty="-13" Tz="0.25" Tw="1"/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3404118001"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="715815347"/>
+                                                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3776822647"/>
+                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                <Property type="String" name="m_name" value="Balls"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-1" Tz="7" Tw="1"/>
+                                <Property type="ObjectPtrVector" name="m_components"/>
+                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
+                                    <Object class="PrefabGameObject">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2211072321"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="888567144"/>
+                                        <Property type="String" name="m_name" value="Football_01"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="8" Tz="-6.5" Tw="1"/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="436288768"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="31221567"/>
+                                                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3125460856"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="2211072321"/>
+                                        <Property type="String" name="m_name" value="Football_02"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-5.0268079e-07" Ty="-3.5" Tz="-6.5000219" Tw="1"/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1032108722"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="436288768"/>
+                                                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1218223429"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3125460856"/>
+                                        <Property type="String" name="m_name" value="Football_03"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="3.9999979" Ty="5.5" Tz="-6.5000248" Tw="1"/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2423309271"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1032108722"/>
+                                                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3652902746"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3125460856"/>
+                                        <Property type="String" name="m_name" value="Football_04"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-5.5000014" Ty="-10" Tz="-6.5000439" Tw="1"/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="518649491"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1032108722"/>
+                                                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4242756574"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3652902746"/>
+                                        <Property type="String" name="m_name" value="Football_05"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="1.499999" Ty="-9" Tz="-6.5000367" Tw="1"/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4182563488"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="518649491"/>
+                                                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                 </Property>
                             </Object>
@@ -1913,36 +1765,20 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Goal.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug">
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                             <Object class="DynamicPropertyList">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="670939745"/>
+                                                <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="746910707"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="New GoalBehaviour"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="ObjectPtrVector" name="m_properties">
                                                     <Object class="DynamicPropertyU8">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value="m_team"/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="Bool" name="m_enable" value="true"/>
-                                                        <Property type="Uint8" name="m_value" value="1"/>
-                                                    </Object>
-                                                </Property>
-                                            </Object>
-                                            <Object class="DynamicPropertyList">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="746910707"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="New GoalBehaviour"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="ObjectPtrVector" name="m_properties">
-                                                    <Object class="DynamicPropertyU8">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                        <Property type="String" name="m_name" flags="NotVisible" value="m_team"/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="Bool" name="m_enable" value="true"/>
-                                                        <Property type="Uint8" name="m_value" value="1"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                        <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                        <Property type="Uint8" name="m_value" flags="Optional" value="1"/>
                                                     </Object>
                                                 </Property>
                                             </Object>
@@ -1967,36 +1803,20 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Goal.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug">
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                             <Object class="DynamicPropertyList">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="670939745"/>
+                                                <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="746910707"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="New GoalBehaviour"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="ObjectPtrVector" name="m_properties">
                                                     <Object class="DynamicPropertyU8">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                         <Property type="String" name="m_name" flags="NotVisible" value="m_team"/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="Bool" name="m_enable" value="true"/>
-                                                        <Property type="Uint8" name="m_value" value="2"/>
-                                                    </Object>
-                                                </Property>
-                                            </Object>
-                                            <Object class="DynamicPropertyList">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="746910707"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="String" name="m_name" flags="NotVisible" value="New GoalBehaviour"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="ObjectPtrVector" name="m_properties">
-                                                    <Object class="DynamicPropertyU8">
-                                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                                        <Property type="String" name="m_name" flags="NotVisible" value="m_team"/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                        <Property type="Bool" name="m_enable" value="true"/>
-                                                        <Property type="Uint8" name="m_value" value="2"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                        <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                        <Property type="Uint8" name="m_value" flags="Optional" value="2"/>
                                                     </Object>
                                                 </Property>
                                             </Object>
@@ -2033,7 +1853,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1687051274"/>
@@ -2054,7 +1874,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="485366274"/>
@@ -2075,7 +1895,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2678965629"/>
@@ -2096,7 +1916,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4008152876"/>
@@ -2117,7 +1937,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1785525641"/>
@@ -2138,7 +1958,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2069868402"/>
@@ -2159,7 +1979,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2820362990"/>
@@ -2180,7 +2000,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="997900624"/>
@@ -2201,7 +2021,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3790769567"/>
@@ -2222,7 +2042,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1434187609"/>
@@ -2243,7 +2063,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1461916274"/>
@@ -2264,7 +2084,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4073244379"/>
@@ -2285,7 +2105,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2439748343"/>
@@ -2306,7 +2126,7 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                     </Object>
                                 </Property>
                             </Object>
@@ -2341,60 +2161,60 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Pablo.prefab"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug">
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1100432886"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="1100432886"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="Pablo"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyFloat4">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3112699615"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="3112699615"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_color"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="false"/>
-                                                <Property type="Float4" name="m_value" x="1" y="0.9539749" z="0" w="1"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="false"/>
+                                                <Property type="Float4" name="m_value" flags="Optional" x="1" y="0.9539749" z="0" w="1"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="280790806"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="280790806"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="PlayerBehaviour #0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyObjectHandle">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_UI"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="ObjectHandle" name="m_value" value="1287416559"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="ObjectHandle" name="m_value" flags="Optional" value="1287416559"/>
                                             </Object>
                                             <Object class="DynamicPropertyFloat4">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_customColor"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Float4" name="m_value" x="0.9604395" y="0.97489542" z="0.48132914" w="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="Float4" name="m_value" flags="Optional" x="0.9604395" y="0.97489542" z="0.48132914" w="0"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3115324648"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="3115324648"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #25"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyBool">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_displayBones"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Bool" name="m_value" value="false"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="Bool" name="m_value" flags="Optional" value="false"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -2419,44 +2239,44 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Romeo.prefab"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug">
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2953660847"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="2953660847"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="PlayerBehaviour #2"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyObjectHandle">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_UI"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="ObjectHandle" name="m_value" value="1602511834"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="ObjectHandle" name="m_value" flags="Optional" value="1602511834"/>
                                             </Object>
                                             <Object class="DynamicPropertyFloat4">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_customColor"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Float4" name="m_value" x="0.48953974" y="0.53225613" z="1" w="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="Float4" name="m_value" flags="Optional" x="0.48953974" y="0.53225613" z="1" w="0"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="575467318"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="575467318"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #34"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyBool">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_displayBones"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Bool" name="m_value" value="false"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="Bool" name="m_value" flags="Optional" value="false"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -2481,44 +2301,44 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Benualdo.prefab"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug">
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2695112421"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="2695112421"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="PlayerBehaviour #4"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyObjectHandle">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_UI"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="ObjectHandle" name="m_value" value="2851015787"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="ObjectHandle" name="m_value" flags="Optional" value="2851015787"/>
                                             </Object>
                                             <Object class="DynamicPropertyFloat4">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_customColor"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Float4" name="m_value" x="0.46349484" y="0.97907948" z="0.45471895" w="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="Float4" name="m_value" flags="Optional" x="0.46349484" y="0.97907948" z="0.45471895" w="0"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4273130038"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="4273130038"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #36"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyBool">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_displayBones"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Bool" name="m_value" value="false"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="Bool" name="m_value" flags="Optional" value="false"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -2555,20 +2375,20 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/GJ.prefab"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug">
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3525072167"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="3525072167"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="GJ"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyFloat4">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="977322677"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="977322677"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_color"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Float4" name="m_value" x="0.97071129" y="0.056861762" z="0.24039628" w="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="Float4" name="m_value" flags="Optional" x="0.97071129" y="0.056861762" z="0.24039628" w="0"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -2593,20 +2413,20 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/GJ.prefab"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug">
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                     <Object class="DynamicPropertyList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3525072167"/>
+                                        <Property type="Uint32" name="m_uid" flags="Hexadecimal" value="3525072167"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="GJ"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyFloat4">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="977322677"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|NotVisible|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="Debug|NotVisible|Hexadecimal" value="977322677"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_color"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="Float4" name="m_value" x="0" y="0.058577538" z="1" w="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield|NotVisible" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="Float4" name="m_value" flags="Optional" x="0" y="0.058577538" z="1" w="0"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -2643,7 +2463,7 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/TestComponent.prefab"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties" flags="Debug"/>
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                             </Object>
                         </Property>
                     </Object>
