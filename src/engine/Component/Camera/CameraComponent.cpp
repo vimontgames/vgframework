@@ -2,6 +2,7 @@
 #include "CameraComponent.h"
 #include "core/GameObject/GameObject.h"
 #include "core/Math/Math.h"
+#include "core/string/string.h"
 #include "gfx/IView.h"
 #include "renderer/IRenderer.h"
 #include "engine/Engine.h"
@@ -22,12 +23,16 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnum(CameraComponent, gfx::ViewTarget, m_target, "Target");
+        registerPropertyEnumEx(CameraComponent, gfx::ViewportTarget, m_target, "Target", IProperty::Flags::ReadOnly);
         setPropertyDescription(CameraComponent, m_target, "Camera target");
 
-        registerProperty(CameraComponent, m_index, "Index");
-        setPropertyRange(CameraComponent, m_index, float2(0, 15));
-        setPropertyDescription(CameraComponent, m_index, "Camera target index");
+        registerPropertyEx(CameraComponent, m_viewportIndex, "Viewport", IProperty::Flags::ReadOnly);
+        setPropertyRange(CameraComponent, m_viewportIndex, float2(0, 15));
+        setPropertyDescription(CameraComponent, m_viewportIndex, "Viewport index");
+
+        registerProperty(CameraComponent, m_viewIndex, "View");
+        setPropertyRange(CameraComponent, m_viewIndex, float2(0, 15));
+        setPropertyDescription(CameraComponent, m_viewIndex, "View index in current viewport");
 
         registerProperty(CameraComponent, m_fovY, "FOV");
         setPropertyRange(CameraComponent, m_fovY, float2(PI / 8.0f, PI / 2.0f));
@@ -55,6 +60,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     CameraComponent::CameraComponent(const core::string & _name, core::IObject * _parent) :
         core::Component(_name, _parent),
+        m_target(gfx::ViewportTarget::Game),
+        m_viewportIndex((gfx::ViewportIndex)0),
+        m_viewIndex((gfx::ViewIndex)0),
         m_viewportOffset(float2(0, 0)),
         m_viewportScale(float2(1, 1)),
         m_fovY(PI / 4.0f),
@@ -71,6 +79,21 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    gfx::ViewID CameraComponent::getViewID() const
+    {
+        if (auto * viewport = Engine::get()->GetRenderer()->GetViewport(gfx::ViewportID(m_target, m_viewportIndex)))
+        {
+            const auto & views = viewport->GetViewIDs();
+            auto it = views.find(m_viewIndex);
+            if (it != views.end())
+                return it->second;
+        }
+
+        VG_WARNING("[Camera] Camera \"%s\" could not get ViewID for %s target at index %u", getName().c_str(), asString(m_target).c_str(), m_viewportIndex);
+        return {};
+    }
+
+    //--------------------------------------------------------------------------------------
     void CameraComponent::Update(const Context & _context)
     {
         if (any(m_previousViewportScale != m_viewportScale))
@@ -79,11 +102,37 @@ namespace vg::engine
             m_previousViewportScale = m_viewportScale;
         }
 
-        auto * view = Engine::get()->GetRenderer()->GetView(gfx::ViewID(m_target, m_index));
+        // Create or get the view
+        if (auto * viewport = Engine::get()->GetRenderer()->GetViewport(gfx::ViewportID(m_target, m_viewportIndex)))
+        {
+            const auto & views = viewport->GetViewIDs();
+            auto it = views.find(m_viewIndex);
+            if (it == views.end())
+            {
+                gfx::CreateViewParams viewParams;
+                                      viewParams.size = viewport->GetRenderTargetSize();
+                                      viewParams.world = GetGameObject()->GetWorld();
+                                      viewParams.target = (gfx::ViewTarget)m_target;  // TODO: hazardous cast between ViewTarget and ViewportTarget? Create single enum?
+                                      viewParams.viewport = viewport;
+
+                string viewName = fmt::sprintf("%s View #%u", asString(viewParams.target).c_str(), m_viewIndex);
+
+                // Create a view
+                auto renderer = Engine::get()->GetRenderer();
+                if (auto * view = renderer->CreateView(viewParams, viewName, gfx::IView::Flags::Picking))
+                {
+                    renderer->AddView(view);
+                    viewport->AddView(m_viewIndex, view->GetViewID());
+                    VG_SAFE_RELEASE(view);
+                }
+            }
+        }
+
+        auto * view = Engine::get()->GetRenderer()->GetView(getViewID());
         if (nullptr != view)
         {
             const float4x4 & matrix = getGameObject()->GetGlobalMatrix();
             view->SetupPerspectiveCamera(matrix, float2(m_near, m_far), m_fovY, m_viewportOffset, m_viewportScale);
-        }
+        }      
     }
 }

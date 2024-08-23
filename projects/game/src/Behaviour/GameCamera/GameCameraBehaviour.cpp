@@ -28,6 +28,9 @@ bool GameCameraBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
+    registerProperty(GameCameraBehaviour, m_target, "Target");
+    setPropertyDescription(GameCameraBehaviour, m_target, "Camera target");
+
     registerProperty(GameCameraBehaviour, m_delay, "Delay");
     setPropertyDescription(GameCameraBehaviour, m_delay, "Time to smooth camera position (s)");
 
@@ -48,12 +51,23 @@ void GameCameraBehaviour::Update(const Context & _context)
 {
     const auto players = Game::get()->getCharacters(CharacterType::Player); 
 
+    auto * target = (IGameObject *)m_target.getObject();
+
     vg::core::vector<CharacterBehaviour *> activePlayers;
-    for (uint i = 0; i < players.size(); ++i)
+
+    if (target)
     {
-        auto * player = players[i];
-        if (player->isActive())
-            activePlayers.push_back(player);
+        if (auto * player = target->GetComponentInChildrenT<CharacterBehaviour>())
+                activePlayers.push_back(player);
+    }
+    else
+    {
+        for (uint i = 0; i < players.size(); ++i)
+        {
+            auto * player = players[i];
+            if (player->isActive())
+                activePlayers.push_back(player);
+        }
     }
 
     auto averagePosition = [=](vg::core::vector<CharacterBehaviour *> _players)
@@ -66,9 +80,9 @@ void GameCameraBehaviour::Update(const Context & _context)
             for (uint i = 0; i < _players.size(); ++i)
                 avgPos.xyz += _players[i]->getGameObject()->getGlobalMatrix()[3].xyz;
 
-            m_target.xy = avgPos.xy / (float)_players.size() + m_offset.xy;
+            m_targetPosition.xy = avgPos.xy / (float)_players.size() + m_offset.xy;
 
-            matrix[3].xy = smoothdamp(matrix[3].xy, m_target.xy, (float2 &)m_targetVelocity.xy, m_delay, _context.m_dt);
+            matrix[3].xy = smoothdamp(matrix[3].xy, m_targetPosition.xy, (float2 &)m_targetVelocity.xy, m_delay, _context.m_dt);
 
             _context.m_gameObject->setGlobalMatrix(matrix);
         }

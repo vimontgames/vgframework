@@ -58,6 +58,7 @@ namespace vg::renderer
         gfx::ViewportID                         AddViewport                 (gfx::IViewport * _viewport) final override;
         gfx::ViewportIndex                      GetFreeViewportIndex        (gfx::ViewportTarget _target) final override;
         gfx::IViewport *                        GetViewport                 (gfx::ViewportID _viewportID) final override;
+        const core::vector<gfx::IViewport *> &  GetViewports                (gfx::ViewportTarget _target) const final override;
 
         // TODO: remove
         gfx::IView *                            CreateView                  (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags = (gfx::IView::Flags)0) final override;

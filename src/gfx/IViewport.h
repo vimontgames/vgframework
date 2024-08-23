@@ -5,6 +5,8 @@
 
 namespace vg::gfx
 {
+    class ITexture;
+
     enum class ViewportTarget : core::u8
     {
         Game        = 0,
@@ -77,29 +79,29 @@ namespace vg::gfx
         IViewport() {};
         virtual ~IViewport() = default;
 
-        virtual void                            SetRenderTargetSize     (core::uint2 _size) = 0;
-        virtual core::uint2                     GetRenderTargetSize     () const = 0;   
+        virtual void                                SetRenderTargetSize (core::uint2 _size) = 0;
+        virtual core::uint2                         GetRenderTargetSize () const = 0;   
 
-        virtual void                            SetRenderTarget         (gfx::ITexture * _renderTarget) = 0;
-        virtual gfx::ITexture *                 GetRenderTarget         () const = 0;
+        virtual void                                SetRenderTarget     (gfx::ITexture * _renderTarget) = 0;
+        virtual gfx::ITexture *                     GetRenderTarget     () const = 0;
 
-        virtual void                            SetFlags                (ViewportFlags _flagsToSet, ViewportFlags _flagsToRemove = (ViewportFlags)0x0) = 0;
-        virtual ViewportFlags                   GetFlags                () const = 0;
+        virtual void                                SetFlags            (ViewportFlags _flagsToSet, ViewportFlags _flagsToRemove = (ViewportFlags)0x0) = 0;
+        virtual ViewportFlags                       GetFlags            () const = 0;
 
-        virtual void                            SetViewportID           (ViewportID _viewportID) = 0;
-        virtual gfx::ViewportID                 GetViewportID           () const = 0;
+        virtual void                                SetViewportID       (ViewportID _viewportID) = 0;
+        virtual gfx::ViewportID                     GetViewportID       () const = 0;
 
-        virtual void                            SetActive               (bool _active) = 0;
-        virtual bool                            AnyActive               () const = 0;
+        virtual void                                SetActive           (bool _active) = 0;
+        virtual bool                                AnyActive           () const = 0;
 
-        virtual void                            SetVisible              (bool _visible) = 0;
-        virtual bool                            AnyVisible              () const = 0;
+        virtual void                                SetVisible          (bool _visible) = 0;
+        virtual bool                                AnyVisible          () const = 0;
 
-        virtual void                            AddView                 (ViewID _viewID) = 0;
-        virtual void                            RemoveView              (ViewID _viewID) = 0;
+        virtual void                                AddView             (core::u8 _index, ViewID _viewID) = 0;
+        virtual void                                RemoveView          (core::u8 _index, ViewID _viewID) = 0;
 
-        virtual const core::vector<ViewID> &    GetViewIDs              () const = 0;
+        virtual const core::map<core::u8, ViewID> & GetViewIDs          () const = 0;
 
-        virtual const core::string              GetFrameGraphID         (const core::string & _name) const = 0;
+        virtual const core::string                  GetFrameGraphID     (const core::string & _name) const = 0;
     };
 }

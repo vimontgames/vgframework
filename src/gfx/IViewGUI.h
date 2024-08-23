@@ -1,5 +1,7 @@
 #pragma once
 
+#include "gfx/IViewport.h"
+
 namespace vg::renderer
 {
     using PickingID = core::uint;
@@ -47,13 +49,13 @@ namespace vg::gfx
 
         }
 
-        renderer::PickingID     m_pickingID     = (renderer::PickingID)0;
-        core::float4x4          m_matrix        = core::float4x4::identity();
-        core::uint2             m_size          = core::uint2(16, 16);
-        HorizontalAligment      m_alignX        = HorizontalAligment::Left;
-        VerticalAligment        m_alignY        = VerticalAligment::Top;
-        core::float4            m_color         = core::float4(1,1,1,1);
-        UIItemFlags             m_flags         = (UIItemFlags)0x0;
+        renderer::PickingID     m_pickingID         = (renderer::PickingID)0;
+        core::float4x4          m_matrix            = core::float4x4::identity();
+        core::uint2             m_size              = core::uint2(16, 16);
+        HorizontalAligment      m_alignX            = HorizontalAligment::Left;
+        VerticalAligment        m_alignY            = VerticalAligment::Top;
+        core::float4            m_color             = core::float4(1,1,1,1);
+        UIItemFlags             m_flags             = (UIItemFlags)0x0;
     };
 
     struct UICanvas : public UIItem
@@ -62,7 +64,10 @@ namespace vg::gfx
         {
         }
 
-        core::uint2 m_resolution = core::uint2(1280, 720);
+        ViewportTarget          m_viewportTarget    = ViewportTarget::Game;
+        ViewportIndex           m_viewportIndex     = (ViewportIndex)0;
+        core::u8                m_viewIndex         = 0;
+        core::uint2             m_resolution        = core::uint2(1280, 720);
     };
 
     class IViewGUI

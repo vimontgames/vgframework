@@ -69,6 +69,7 @@ namespace vg
             virtual gfx::ViewportID                     AddViewport             (gfx::IViewport * _viewport) = 0;
             virtual gfx::ViewportIndex                  GetFreeViewportIndex    (gfx::ViewportTarget _target) = 0;
             virtual gfx::IViewport *                    GetViewport             (gfx::ViewportID _viewportID) = 0;
+            virtual const core::vector<gfx::IViewport*>&GetViewports            (gfx::ViewportTarget _target) const = 0;
 
             // TODO: remove or move to IViewport (?)
             virtual gfx::IView *                        CreateView              (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags = (gfx::IView::Flags)0) = 0;

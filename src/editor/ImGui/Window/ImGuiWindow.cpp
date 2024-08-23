@@ -364,7 +364,6 @@ namespace vg::editor
         const auto flags = _prop->getFlags();
 
         const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
-        ImGui::BeginDisabled(readonly);
 
         T * pEnum = (T*)(uint_ptr(_object) + offset);
         int enumVal = (int)*pEnum;
@@ -397,8 +396,11 @@ namespace vg::editor
                 const string enumName = _prop->getEnumName(e);
                 if (displayEnumRecur(enumName, e, &temp, readonly))
                 {
-                    if (storeProperty<T>((T *)pEnum, temp, _object, _prop, _propContext))
-                        changed = true;
+                    if (!readonly)
+                    {
+                        if (storeProperty<T>((T *)pEnum, temp, _object, _prop, _propContext))
+                            changed = true;
+                    }
                 }
             }
             ImGui::EndCombo();
@@ -406,7 +408,6 @@ namespace vg::editor
 
         drawPropertyLabel(_propContext, _prop);
 
-        ImGui::EndDisabled();
         return changed;
     }
 

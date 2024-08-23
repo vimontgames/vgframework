@@ -1,21 +1,15 @@
 namespace vg::engine
 {
     //--------------------------------------------------------------------------------------
-    VG_INLINE void CameraComponent::setViewTarget(gfx::ViewTarget _target)
+    VG_INLINE void CameraComponent::setViewportTarget(gfx::ViewportTarget _target)
     {
         m_target = _target;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE gfx::ViewTarget CameraComponent::getViewTarget() const
+    VG_INLINE gfx::ViewportTarget CameraComponent::getViewportTarget() const
     {
         return m_target;
-    }
-
-    //--------------------------------------------------------------------------------------
-    VG_INLINE gfx::ViewID CameraComponent::getViewID() const
-    {
-        return gfx::ViewID(m_target, m_index);
     }
 
     //--------------------------------------------------------------------------------------

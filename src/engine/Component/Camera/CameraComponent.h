@@ -8,6 +8,13 @@ namespace vg::core
     class IGameObject;
 }
 
+namespace vg::gfx
+{
+    enum class ViewportTarget : core::u8;
+    using ViewportIndex = core::u8;
+    using ViewIndex = core::u8;
+}
+
 namespace vg::renderer
 {
     class IView;
@@ -25,23 +32,23 @@ namespace vg::engine
 
         void                                    Update              (const Context & _context) override;
 
-        VG_INLINE void                          setViewTarget       (gfx::ViewTarget _target);
-        VG_INLINE gfx::ViewTarget               getViewTarget       () const;
-        VG_INLINE gfx::ViewID                   getViewID           () const;
+        VG_INLINE void                          setViewportTarget   (gfx::ViewportTarget _target);
+        VG_INLINE gfx::ViewportTarget           getViewportTarget   () const;
+        gfx::ViewID                             getViewID           () const;
 
         VG_INLINE float                         getFovY             () const;
         VG_INLINE float                         getNear             () const;
         VG_INLINE float                         getFar              () const;
 
     protected:
-        gfx::ViewTarget                         m_target = gfx::ViewTarget::Game;
-        core::u8                                m_index = 0;
+        gfx::ViewportTarget                     m_target;
+        gfx::ViewportIndex                      m_viewportIndex;
+        gfx::ViewIndex                          m_viewIndex;
         float                                   m_fovY;
         float                                   m_near;
         float                                   m_far;
         core::float2                            m_viewportOffset;
         core::float2                            m_viewportScale;
-
         core::float2                            m_previousViewportScale = core::float2(0, 0);
     };
 }

@@ -55,12 +55,12 @@ namespace vg::editor
             return;
 
         const auto & viewIDs = m_viewport->GetViewIDs();
-        if (viewIDs.size() < 1)
+       
+        auto it = viewIDs.find(0);
+        if (it == viewIDs.end())
             return;
 
-        VG_ASSERT(viewIDs.size() == 1);
-
-        auto view = renderer->GetView(viewIDs[0]);
+        auto view = renderer->GetView(it->second);
         if (view)
         {
             auto & editorCam = m_editorCam;
@@ -259,9 +259,9 @@ namespace vg::editor
 
         const string & name = getIconizedName();
 
-        if (all(m_size > 0))
-            title = fmt::sprintf("%s %ux%u###%s", name, (uint)m_size.x, (uint)m_size.y, name);
-        else
+        //if (all(m_size > 0))
+        //    title = fmt::sprintf("%s %ux%u###%s", name, (uint)m_size.x, (uint)m_size.y, name);
+        //else
             title = fmt::sprintf("%s###%s", name, name);
 
         return title;
@@ -364,12 +364,15 @@ namespace vg::editor
             float toolbarHeight = ImGui::GetCursorPosY() - posY;
 
             // Compute Window content size
-            ImVec2 vMin = ImGui::GetWindowContentRegionMin();
-            ImVec2 vMax = ImGui::GetWindowContentRegionMax();
-            vMin.x += ImGui::GetWindowPos().x;
-            vMin.y += ImGui::GetWindowPos().y;
-            vMax.x += ImGui::GetWindowPos().x;
-            vMax.y += ImGui::GetWindowPos().y;
+            const auto windowPos = ImGui::GetWindowPos();
+            const auto windowRegionMin = ImGui::GetWindowContentRegionMin();
+            const auto windowRegionMax = ImGui::GetWindowContentRegionMax();
+            ImVec2 vMin = windowRegionMin;
+            ImVec2 vMax = windowRegionMax;
+            vMin.x += windowPos.x;
+            vMin.y += windowPos.y;
+            vMax.x += windowPos.x;
+            vMax.y += windowPos.y;
 
             //VG_ASSERT(vMax.x > vMin.x && vMax.y > vMin.y, "vMin = (%f,%f) vMax = (%f, %f)", vMin.x, vMin.y, vMax.x, vMax.y);
 
@@ -396,33 +399,38 @@ namespace vg::editor
                     string vpName = asString(viewportParams.target) + "Viewport";
                     m_viewport = renderer->CreateViewport(viewportParams, vpName);
                     renderer->AddViewport(m_viewport);
-
-                    // Add default view for newly created viewport
-                    gfx::CreateViewParams viewParams;
-                                          viewParams.size = m_size;
-                                          viewParams.world = GetWorld();
-                                          viewParams.target = (gfx::ViewTarget)m_target;  // TODO: hazardous cast between ViewTarget and ViewportTarget? Create single enum?
-                                          viewParams.dest = nullptr;                      // No RenderTarget yet
-                    
-                    string viewName = asString(viewParams.target) + "View";
-                    
-                    // Create a view with picking for editor views
-                    gfx::IView::Flags viewFlags = GetViewFlags();
-                    
-                    if (auto * view = renderer->CreateView(viewParams, viewName, viewFlags))
-                    {
-                        renderer->AddView(view);
-                        m_viewport->AddView(view->GetViewID());
-                        VG_SAFE_RELEASE(view);
-                    }
                 }
             }
 
             auto & viewIDs = m_viewport->GetViewIDs();
-            auto * world = GetWorld();
-            for (uint i = 0; i < viewIDs.size(); ++i)
+
+            // Add default view if needed but for editor view only ('Game' views needs to be created explicitely)
+            if (m_target == ViewportTarget::Editor && viewIDs.size() == 0)
             {
-                if (auto * view = renderer->GetView(viewIDs[i]))
+                gfx::CreateViewParams viewParams;
+                                      viewParams.size = m_size;
+                                      viewParams.world = GetWorld();
+                                      viewParams.target = (gfx::ViewTarget)m_target;  // TODO: hazardous cast between ViewTarget and ViewportTarget? Create single enum?
+                                      viewParams.dest = nullptr;                      // No RenderTarget yet
+                                      viewParams.viewport = m_viewport;
+            
+                string viewName = asString(viewParams.target) + "View";
+            
+                // Create a view
+                gfx::IView::Flags viewFlags = GetViewFlags();
+            
+                if (auto * view = renderer->CreateView(viewParams, viewName, viewFlags))
+                {
+                    renderer->AddView(view);
+                    m_viewport->AddView(0, view->GetViewID());
+                    VG_SAFE_RELEASE(view);
+                }
+            }
+
+            auto * world = GetWorld();
+            for (const auto & pair : viewIDs)
+            {
+                if (auto * view = renderer->GetView(pair.second))
                     view->SetWorld(world);
             }
 
@@ -433,10 +441,11 @@ namespace vg::editor
             if (m_viewport)
                 m_viewport->SetRenderTargetSize(m_size);
 
-            auto texture = m_texture;
+            // Hack: Do not use texture on first frame because it may have just become visible but the view not yet renderer (alt fix: last rendered frame counter in View?)
+            auto texture = ImGui::IsWindowAppearing() ? nullptr :  m_texture;
 
             // Create destination texture if it does not exist or is not matching
-            if (m_viewport && (!m_texture || m_texture->GetWidth() != m_size.x || m_texture->GetHeight() != m_size.y))
+            if (m_viewport && m_viewport->GetViewIDs().size() > 0 && (!m_texture || m_texture->GetWidth() != m_size.x || m_texture->GetHeight() != m_size.y))
             {
                 // As we're executing framegraph we can't fully release the texture right now because it may be still in use
                 if (m_texture)
@@ -458,47 +467,49 @@ namespace vg::editor
             {
                 ImVec2 mouseOffset = ImGui::GetCursorScreenPos();
 
-                for (uint i = 0; i < viewIDs.size(); ++i)
+                for (const auto & pair : viewIDs)
                 {
-                    if (auto * view = renderer->GetView(viewIDs[i]))
-                    {
+                    if (auto * view = renderer->GetView(pair.second))
                         view->SetMouseOffset(uint2(mouseOffset.x, mouseOffset.y));
-                    }
                 }
             }
             
             auto pos = ImGui::GetCursorPos();
-            if (m_viewport && texture)
+            auto * window = ImGui::FindWindowByName(title.c_str());
+            ImGuiDockNode * node = window->DockNode;
+            const bool is_drag_docking = GImGui->MovingWindow == window;
+            const float alpha = is_drag_docking ? 0.5f : 1.0f;
+            auto * imGuiAdapter = renderer->GetImGuiAdapter();
+
+            if (texture)
             {
-                auto * imGuiAdapter = renderer->GetImGuiAdapter();
                 ImTextureID texID = imGuiAdapter->GetTextureID(texture);
+                ImGui::Image(texID, ImVec2((float)m_size.x, (float)m_size.y), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, alpha));
+            }
+            else
+            {
+                ImDrawList * draw_list = ImGui::GetWindowDrawList();
+                draw_list->AddRectFilled(windowPos + windowRegionMin, windowPos + windowRegionMin + ImVec2((float)m_size.x, (float)m_size.y), 0xFF000000);
+            }
+
+            if (ShowContextMenu())
+                DrawContextMenu();              
             
-                auto * window = ImGui::FindWindowByName(title.c_str());
-            
-                ImGuiDockNode * node = window->DockNode;
-                const bool is_drag_docking = GImGui->MovingWindow == window;
-                const float alpha = is_drag_docking ? 0.5f : 1.0f;
-            
-                ImGui::Image(texID, ImVec2((float)m_size.x, (float)m_size.y), ImVec2(0,0), ImVec2(1,1), ImVec4(1,1,1, alpha));
-            
-                if (ShowContextMenu())
-                    DrawContextMenu();              
-            
-                if (ImGui::IsWindowFocused())
-                    m_viewport->SetActive(true);
-                else
-                    m_viewport->SetActive(false);
-            
+            if (ImGui::IsWindowFocused())
+                m_viewport->SetActive(true);
+            else
+                m_viewport->SetActive(false);
+
+            if (texture)
                 imGuiAdapter->ReleaseTextureID(texture);
-            }   
 
             if (m_viewport)
             {
                 ImVec2 mouseOffset = ImGui::GetCursorScreenPos();
 
-                for (uint i = 0; i < viewIDs.size(); ++i)
+                for (const auto & pair : viewIDs)
                 {
-                    if (auto * view = renderer->GetView(viewIDs[i]))
+                    if (auto * view = renderer->GetView(pair.second))
                     {
                         if (auto * viewGUI = view->GetViewGUI())
                         {
@@ -553,9 +564,9 @@ namespace vg::editor
             {
                 ImVec2 mouseOffset = ImGui::GetCursorScreenPos();
 
-                for (uint i = 0; i < viewIDs.size(); ++i)
+                for (const auto & pair : viewIDs)
                 {
-                    if (auto * view = renderer->GetView(viewIDs[i]))
+                    if (auto * view = renderer->GetView(pair.second))
                     {
                         if (!drawGizmo(view) && view->IsActive())
                         {
@@ -578,7 +589,6 @@ namespace vg::editor
 
                 m_viewport->SetVisible(true);
             }
-
         }
         else
         {
@@ -597,7 +607,6 @@ namespace vg::editor
                 m_viewport->SetVisible(false);
             }
         }
-
 
         if (active)
             ImGui::PopStyleColor();

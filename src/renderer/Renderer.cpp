@@ -225,26 +225,18 @@ namespace vg::renderer
             AddViewport(gameViewport);
 
             // Add one "Game" view the size of the viewport by default
-            auto gameView0Params = gfx::CreateViewParams(gfx::ViewTarget::Game, getBackbufferSize());
-            if (auto gameView = (View *)CreateView(gameView0Params, "GameView"))
-            {   
-                AddView(gameView);
-                gameViewport->AddView(gameView->GetViewID());
-                gameView->setName("Game View #0");
-                VG_SAFE_RELEASE(gameView);
-            }
+            //auto gameView0Params = gfx::CreateViewParams(gfx::ViewTarget::Game, getBackbufferSize());
+            //gameView0Params.viewport = m_viewport;
+            //if (auto gameView = (View *)CreateView(gameView0Params, "GameView"))
+            //{   
+            //    AddView(gameView);
+            //    gameViewport->AddView(0, gameView->GetViewID());
+            //    gameView->setName("Game View #0");
+            //    VG_SAFE_RELEASE(gameView);
+            //}
 
             VG_SAFE_RELEASE(gameViewport);
         }
-
-        // Create default "Game" view
-        //auto gameView0Params = gfx::CreateViewParams(gfx::ViewTarget::Game, getBackbufferSize());
-        //if (auto gameView = (View *)CreateView(gameView0Params, "GameView"))
-        //{
-        //    AddView(gameView);
-        //    gameView->setName("Game");
-        //    VG_SAFE_RELEASE(gameView);
-        //}
 	}
 
     //--------------------------------------------------------------------------------------
@@ -436,6 +428,29 @@ namespace vg::renderer
                 if (options->isRayTracingEnabled())
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_BLASUpdatePass, "BLAS Update");
 
+                // Register viewports 
+                for (uint j = 0; j < core::enumCount<gfx::ViewportTarget>(); ++j)
+                {
+                    auto target = gfx::ViewportTarget(j);
+
+                    if (m_fullscreen)
+                    {
+                        if (gfx::ViewportTarget::Editor == target)
+                            continue;
+                    }
+
+                    for (uint i = 0; i < m_viewports[j].size(); ++i)
+                    {
+                        auto * viewport = m_viewports[j][i];
+                        if (viewport->AnyVisible())
+                        {
+                            auto * rt = (Texture *)viewport->GetRenderTarget();
+                            if (rt)
+                                m_frameGraph.importRenderTarget(rt->getName(), rt, float4(0, 0, 0, 1), FrameGraphResource::InitState::Clear);
+                        }
+                    }
+                }
+
                 // Register view passes
                 for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
                 {
@@ -609,11 +624,17 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     gfx::IViewport * Renderer::GetViewport(gfx::ViewportID _viewportID)
     {
-        const auto & viewports = m_viewports[(uint)_viewportID.target];
+        const auto & viewports = m_viewports[asInteger(_viewportID.target)];
         if (_viewportID.index < viewports.size())
             return viewports[_viewportID.index];
         else
             return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::vector<gfx::IViewport *> & Renderer::GetViewports(gfx::ViewportTarget _target) const
+    {
+        return (core::vector<gfx::IViewport *> &)m_viewports[asInteger(_target)];
     }
 
     //--------------------------------------------------------------------------------------
@@ -704,11 +725,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     gfx::IView * Renderer::GetView(gfx::ViewID _viewID) const
     {
-        const auto & views = m_views[(uint)_viewID.target];
-        if (_viewID.index < views.size())
-            return views[_viewID.index];
-        else
-            return nullptr;
+        if (gfx::ViewTargetInvalid != _viewID.target && gfx::ViewIndexInvalid != _viewID.index)
+        {
+            const auto & views = m_views[(uint)_viewID.target];
+            if (_viewID.index < views.size())
+                return views[_viewID.index];
+        }
+
+        return nullptr;
     }
 
     //--------------------------------------------------------------------------------------

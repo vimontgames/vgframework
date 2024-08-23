@@ -60,13 +60,28 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     gfx::IViewGUI * UIComponent::getViewGUI(const core::IWorld * _world) const
     {
-        if (_world)
+        auto * renderer = Engine::get()->GetRenderer();
+        auto * canvas = getCanvas();
+
+        if (canvas)
         {
-            auto * renderer = Engine::get()->GetRenderer();
-            if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Game, _world))
-                return view->GetViewGUI();
-            else if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Editor, _world))
-                return view->GetViewGUI();
+            if (auto * viewport = renderer->GetViewport(gfx::ViewportID(canvas->m_viewportTarget, canvas->m_viewportIndex)))
+            {
+                const auto & views = viewport->GetViewIDs();
+                auto it = views.find(canvas->m_viewIndex);
+                if (views.end() != it)
+                {
+                    if (auto * view = renderer->GetView(it->second))
+                    {
+                        if (view->GetWorld() == _world)
+                            return view->GetViewGUI();
+                    }
+                }
+
+                // Prefab preview mode
+                if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Editor, _world))
+                    return view->GetViewGUI();
+            }            
         }
 
         return nullptr;

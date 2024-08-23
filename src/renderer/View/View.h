@@ -21,6 +21,7 @@ namespace vg::gfx
     class Buffer;
     class TLAS;
     class IViewGUI;
+    class IViewport;
 }
 
 namespace vg::renderer
@@ -66,6 +67,7 @@ namespace vg::renderer
 
         core::float2                        GetViewportOffset           () const final override;
         core::float2                        GetViewportScale            () const final override;
+        gfx::IViewport *                    GetViewport                 () const final override;
 
         void                                SetRenderTarget             (gfx::ITexture * _renderTarget) override;
         gfx::ITexture *                     GetRenderTarget             () const override;
@@ -133,6 +135,9 @@ namespace vg::renderer
         VG_INLINE void                      setRenderTarget             (gfx::Texture * _renderTarget);
         VG_INLINE gfx::Texture *            getRenderTarget             () const;
 
+        VG_INLINE core::float2              getViewportOffset           () const;
+        VG_INLINE core::float2              getViewportScale            () const;
+
         VG_INLINE ViewCullingJob *          getCullingJob               () const;
 
         void                                setFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0);
@@ -156,6 +161,7 @@ namespace vg::renderer
         static core::float4x4               setOrthoProjectionRH        (float _w, float _h, float _near, float _far);
 
     private:
+        gfx::IViewport *                    m_viewport                  = nullptr;
         gfx::ViewID                         m_viewID;
         Flags                               m_flags                     = (Flags)0;
         gfx::Texture *                      m_renderTarget              = nullptr;   // Assume backbuffer if nullptr

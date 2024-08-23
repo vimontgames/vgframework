@@ -46,7 +46,7 @@ namespace vg::renderer
         if (!_renderPassContext.m_view->GetRenderTarget() || renderer->IsFullscreen())
             writeRenderTarget(0, "Backbuffer");
         else
-            writeRenderTarget(0, _renderPassContext.getFrameGraphID("Dest")); 
+            writeRenderTarget(0, _renderPassContext.MakeFrameGraphID("Dest", _renderPassContext.m_view->GetViewport()->GetViewportID())); 
     }
 
     //--------------------------------------------------------------------------------------

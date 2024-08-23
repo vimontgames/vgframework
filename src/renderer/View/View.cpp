@@ -27,6 +27,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     View::View(const CreateViewParams & _params)
     {
+        m_viewport = _params.viewport;
         m_viewID.target = _params.target;
 
         SetRenderTargetSize(_params.size);
@@ -300,8 +301,8 @@ namespace vg::renderer
     void View::SetRenderTargetSize(core::uint2 _size)
     {
         m_renderTargetSize = _size;
-        m_size = max(uint2(1, 1), (uint2)((float2)m_renderTargetSize * m_viewportScale));
-        m_offset = (int2)((float2)m_renderTargetSize * m_viewportOffset);
+        m_size = max(uint2(1, 1), (uint2)((float2)m_renderTargetSize * getViewportScale()));   // TODO: handle view being resize to 0 during rendering
+        m_offset = (int2)((float2)m_renderTargetSize * getViewportOffset());
     }
 
     //--------------------------------------------------------------------------------------
@@ -325,13 +326,19 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     core::float2 View::GetViewportOffset() const
     {
-        return m_viewportOffset;
+        return getViewportOffset();
     }
 
     //--------------------------------------------------------------------------------------
     core::float2 View::GetViewportScale() const
     {
-        return m_viewportScale;
+        return getViewportScale();
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::IViewport * View::GetViewport() const 
+    {
+        return m_viewport;
     }
 
     //--------------------------------------------------------------------------------------
@@ -383,7 +390,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool View::IsVisible() const
     {
-        return m_visible;
+        return m_visible && all(GetRenderTargetSize() > 1) && GetRenderTarget() != nullptr;
     }
 
     //--------------------------------------------------------------------------------------
@@ -397,7 +404,7 @@ namespace vg::renderer
     {
         auto input = Kernel::getInput();
         uint2 mousePos = input->GetMousePos();
-        int2 offset = (int2)((float2)GetSize() / GetViewportScale() * GetViewportOffset());  // WTF access viewport instead to get fullsize! or store RT size !
+        int2 offset = (int2)((float2)GetRenderTargetSize() * GetViewportOffset());  // WTF access viewport instead to get fullsize! or store RT size !
 
         const auto renderer = Renderer::get();
         if (renderer->IsFullscreen())

@@ -85,6 +85,18 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE core::float2 View::getViewportOffset() const
+    {
+        return saturate(m_viewportOffset);
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::float2 View::getViewportScale() const
+    {
+        return saturate(m_viewportScale);
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE ViewCullingJob * View::getCullingJob() const
     {
         return m_cullingJob;

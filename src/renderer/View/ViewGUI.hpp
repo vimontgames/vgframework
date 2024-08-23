@@ -48,6 +48,7 @@ namespace vg::renderer
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
         ImGui::Begin("ViewGUI", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize); // create a window
         {
+            ImGui::SetCursorScreenPos(ImVec2(0, 0));
             render();
         }
         ImGui::End();
@@ -78,6 +79,10 @@ namespace vg::renderer
         float2 viewSizeInPixels = screenSizeInPixels * m_view->GetViewportScale();
         float2 windowOffset = ImVec2ToFloat2(ImGui::GetCursorPos()) + screenSizeInPixels * m_view->GetViewportOffset();
 
+        ImVec2 clipOffset = ImGui::GetWindowPos() + ImVec2(windowOffset.x, windowOffset.y);
+        ImVec2 viewSize = ImVec2((float)m_view->GetSize().x+1.0f, (float)m_view->GetSize().y+ 1.0f);
+
+        ImGui::PushClipRect(clipOffset, clipOffset + viewSize, true);
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0, 0, 0, 0));
   
         for (uint i = 0; i < m_uiElements.size(); ++i)
@@ -272,6 +277,7 @@ namespace vg::renderer
         }
 
         ImGui::PopStyleColor();
+        ImGui::PopClipRect();
         m_uiElements.clear();
     }
 }

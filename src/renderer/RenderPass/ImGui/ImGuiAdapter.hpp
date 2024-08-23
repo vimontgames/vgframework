@@ -11,6 +11,7 @@
 #include "ImGuiFileDialog/ImGuiFileDialog.cpp"
 #include "IconFont/IconsFontAwesome6.h"
 #include "editor/Editor_Consts.h"
+#include "renderer/Model/Material/Material_Consts.h"
 
 using namespace vg::core;
 using namespace vg::gfx;

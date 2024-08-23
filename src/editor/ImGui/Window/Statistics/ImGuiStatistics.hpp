@@ -22,6 +22,38 @@ namespace vg::editor
 
                 if (ImGui::TreeNodeEx("Renderer", ImGuiTreeNodeFlags_DefaultOpen))
                 {
+                    if (ImGui::TreeNodeEx("Viewports", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        for (uint i = 0; i < enumCount<gfx::ViewportTarget>(); ++i)
+                        {
+                            const auto target = (gfx::ViewportTarget)i;
+                            const auto & viewports = renderer->GetViewports(target);
+                        
+                            for (uint j = 0; j < viewports.size(); ++j)
+                            {
+                                const auto viewport = viewports[j];
+                                if (ImGui::TreeNodeEx(viewport->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                                {
+                                    for (auto & pair : viewport->GetViewIDs())
+                                    {
+                                        if (auto * view = renderer->GetView(pair.second))
+                                        {
+                                            if (ImGui::TreeNodeEx(view->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                                            {
+                                                ImGui::TreePop();
+                                            }
+                                        }
+                                    }
+
+                                    ImGui::TreePop();
+                                }
+                            }
+                        }
+
+                        ImGui::TreePop();
+                    }
+                    
+
                     if (ImGui::TreeNodeEx("Views", ImGuiTreeNodeFlags_DefaultOpen))
                     {
                         for (uint i = 0; i < enumCount<gfx::ViewTarget>(); ++i)

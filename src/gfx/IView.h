@@ -16,6 +16,8 @@ namespace vg::gfx
     class ITexture;
     class IViewGUI;
     class UserPass;
+    class IViewport;
+    struct ViewportID;
 
     enum class ViewTarget : core::u8
     {
@@ -23,10 +25,10 @@ namespace vg::gfx
         Editor      = 1,
         Shadow      = 2
     };
-    static inline const ViewTarget ViewTargetInvalid = (ViewTarget)-1;
+    static inline const ViewTarget ViewTargetInvalid = (ViewTarget)0x03;
 
     using ViewIndex = core::u8;
-    static inline const ViewIndex ViewIndexInvalid = (ViewIndex)-1;
+    static inline const ViewIndex ViewIndexInvalid = (ViewIndex)0x3F;
 
     struct ViewID
     {
@@ -64,7 +66,8 @@ namespace vg::gfx
         {
         }
 
-        CreateViewParams(ViewTarget _target, core::uint2 _size, core::IWorld * _world = nullptr, gfx::ITexture * _dest = nullptr) :
+        CreateViewParams(ViewTarget _target, core::uint2 _size, IViewport * _viewport, core::IWorld * _world = nullptr, gfx::ITexture * _dest = nullptr) :
+            viewport(_viewport),
             target(_target),
             size(_size),
             world(_world),
@@ -73,6 +76,7 @@ namespace vg::gfx
          
         }
 
+        IViewport *         viewport = nullptr;
         ViewTarget          target = ViewTarget::Game;
         core::uint2         size = core::uint2(0, 0);
         core::IWorld *      world = nullptr;
@@ -122,9 +126,10 @@ namespace vg::gfx
 
         virtual core::float2            GetViewportOffset           () const = 0;
         virtual core::float2            GetViewportScale            () const = 0;
+        virtual IViewport *             GetViewport                 () const = 0;
 
         virtual void                    SetRenderTarget             (gfx::ITexture * _renderTarget) = 0;
-        virtual gfx::ITexture *         GetRenderTarget             () const = 0;
+        virtual ITexture *              GetRenderTarget             () const = 0;
 
         virtual void                    SetViewID                   (ViewID _viewID) = 0;
         virtual ViewID                  GetViewID                   () const = 0;

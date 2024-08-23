@@ -75,9 +75,10 @@ namespace vg::renderer
     void Viewport::SetActive(bool _active)
     {
         auto * renderer = Renderer::get();
-        for (uint i = 0; i < m_viewIDs.size(); ++i)
+
+        for (const auto & pair : m_viewIDs)
         {
-            if (auto * view = renderer->GetView(m_viewIDs[i]))
+            if (auto * view = renderer->GetView(pair.second))
             {
                 view->SetActive(_active);
             }
@@ -88,14 +89,16 @@ namespace vg::renderer
     bool Viewport::AnyActive() const
     {
         auto * renderer = Renderer::get();
-        for (uint i = 0; i < m_viewIDs.size(); ++i)
+
+        for (const auto & pair : m_viewIDs)
         {
-            if (auto * view = renderer->GetView(m_viewIDs[i]))
+            if (auto * view = renderer->GetView(pair.second))
             {
                 if (view->IsActive())
                     return true;
             }
         }
+
         return false;
     }
 
@@ -103,9 +106,10 @@ namespace vg::renderer
     void Viewport::SetVisible(bool _visible)
     {
         auto * renderer = Renderer::get();
-        for (uint i = 0; i < m_viewIDs.size(); ++i)
+
+        for (const auto & pair : m_viewIDs)
         {
-            if (auto * view = renderer->GetView(m_viewIDs[i]))
+            if (auto * view = renderer->GetView(pair.second))
             {
                 view->SetVisible(_visible);
             }
@@ -116,51 +120,33 @@ namespace vg::renderer
     bool Viewport::AnyVisible() const
     {
         auto * renderer = Renderer::get();
-        for (uint i = 0; i < m_viewIDs.size(); ++i)
+
+        for (const auto & pair : m_viewIDs)
         {
-            if (auto * view = renderer->GetView(m_viewIDs[i]))
+            if (auto * view = renderer->GetView(pair.second))
             {
                 if (view->IsVisible())
                     return true;
             }
         }
+
         return false;
     }
 
     //--------------------------------------------------------------------------------------
-    void Viewport::AddView(gfx::ViewID _viewID)
+    void Viewport::AddView(core::u8 _index, gfx::ViewID _viewID)
     {
-        m_viewIDs.push_back(_viewID);
-
-        //if (auto * view = renderer->GetView(_view->GetViewID()))
-        //{
-        //    m_views.push_back((View *)_view);
-        //    return _view->GetViewID();
-        //    
-        //}
-        //else
-        //{
-        //    auto id = Renderer::get()->AddView(_view);
-        //    m_views.push_back((View *)_view);
-        //    return id;
-        //}
+        m_viewIDs.insert({ _index, _viewID });
     }
 
     //--------------------------------------------------------------------------------------
-    void Viewport::RemoveView(gfx::ViewID _viewID)
+    void Viewport::RemoveView(core::u8 _index, gfx::ViewID _viewID)
     {
-        m_viewIDs.remove(_viewID);
-
-        //auto * renderer = Renderer::get();
-        //if (auto * view = renderer->GetView(_viewID))
-        //{
-        //    m_viewIDs.remove((View *)view);
-        //    //renderer->RemoveView(_viewID);
-        //}
+        m_viewIDs.erase(_index);
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<gfx::ViewID> & Viewport::GetViewIDs() const
+    const core::map<gfx::ViewIndex, gfx::ViewID> & Viewport::GetViewIDs() const
     {
         return m_viewIDs;
     }

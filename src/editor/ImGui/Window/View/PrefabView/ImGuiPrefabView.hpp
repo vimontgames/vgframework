@@ -219,9 +219,9 @@ namespace vg::editor
         if (m_viewport)
         {
             auto & viewIDs = m_viewport->GetViewIDs();
-            for (uint i = 0; i < viewIDs.size(); ++i)
+            for (const auto & pair : viewIDs)
             {
-                if (auto * view = renderer->GetView(viewIDs[i]))
+                if (auto * view = renderer->GetView(pair.second))
                     view->SetWorld(nullptr);
             }
         }
