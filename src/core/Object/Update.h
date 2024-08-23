@@ -17,24 +17,28 @@ namespace vg::core
 
     struct GameObjectUpdateContext
     {
-        GameObjectUpdateContext(float _dt = 0.0f, IWorld * _world = nullptr) :
+        GameObjectUpdateContext(bool _playing, bool _paused, float _dt, IWorld * _world) :
+            m_playing(_playing),
+            m_paused(_paused),
             m_dt(_dt),
             m_world(_world)
         {
 
         }
 
+        bool            m_playing : 1;
+        bool            m_paused : 1;
         float           m_dt;
         IWorld *        m_world;
     };
 
     struct ComponentUpdateContext : public GameObjectUpdateContext
     {
-        ComponentUpdateContext(const GameObjectUpdateContext & _context, IGameObject * _gameObject = nullptr) :
+        ComponentUpdateContext(const GameObjectUpdateContext & _context, IGameObject * _gameObject) :
+            GameObjectUpdateContext(_context),
             m_gameObject(_gameObject)
         {
-            m_dt = _context.m_dt;
-            m_world = _context.m_world;
+   
         }
 
         IGameObject *   m_gameObject;

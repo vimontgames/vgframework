@@ -38,10 +38,17 @@ bool GameCameraBehaviour::registerProperties(IClassDesc & _desc)
 }
 
 //--------------------------------------------------------------------------------------
-void GameCameraBehaviour::OnEnable()
+void GameCameraBehaviour::OnPlay()
 {
-    super::OnEnable();
+    super::OnPlay();
     m_offset = getGameObject()->getGlobalMatrix()[3].xyz;
+
+    auto * target = m_target.get<IGameObject>();
+    if (target)
+    {
+        if (auto * player = target->GetComponentInChildrenT<CharacterBehaviour>())
+            m_offset -= player->getGameObject()->GetGlobalMatrix()[3].xyz;
+    }
 }
 
 //--------------------------------------------------------------------------------------
@@ -49,47 +56,21 @@ void GameCameraBehaviour::OnEnable()
 //--------------------------------------------------------------------------------------
 void GameCameraBehaviour::Update(const Context & _context)
 {
-    const auto players = Game::get()->getCharacters(CharacterType::Player); 
-
-    auto * target = (IGameObject *)m_target.getObject();
-
-    vg::core::vector<CharacterBehaviour *> activePlayers;
-
-    if (target)
+    if (_context.m_playing && !_context.m_paused)
     {
-        if (auto * player = target->GetComponentInChildrenT<CharacterBehaviour>())
-                activePlayers.push_back(player);
-    }
-    else
-    {
-        for (uint i = 0; i < players.size(); ++i)
+        auto * target = m_target.get<IGameObject>();
+        vg::core::vector<CharacterBehaviour *> activePlayers;
+
+        if (target)
         {
-            auto * player = players[i];
-            if (player->isActive())
-                activePlayers.push_back(player);
+            if (auto * player = target->GetComponentInChildrenT<CharacterBehaviour>())
+            {
+                auto matrix = _context.m_gameObject->getGlobalMatrix();
+                float3 pos = player->getGameObject()->getGlobalMatrix()[3].xyz;
+                m_targetPosition.xy = pos.xy + m_offset.xy;
+                matrix[3].xy = smoothdamp(matrix[3].xy, m_targetPosition.xy, (float2 &)m_targetVelocity.xy, m_delay, _context.m_dt);
+                _context.m_gameObject->setGlobalMatrix(matrix);
+            }
         }
     }
-
-    auto averagePosition = [=](vg::core::vector<CharacterBehaviour *> _players)
-    {
-        if (players.size() > 0)
-        {
-            auto matrix = _context.m_gameObject->getGlobalMatrix();
-
-            float3 avgPos = (float3)0.0f;
-            for (uint i = 0; i < _players.size(); ++i)
-                avgPos.xyz += _players[i]->getGameObject()->getGlobalMatrix()[3].xyz;
-
-            m_targetPosition.xy = avgPos.xy / (float)_players.size() + m_offset.xy;
-
-            matrix[3].xy = smoothdamp(matrix[3].xy, m_targetPosition.xy, (float2 &)m_targetVelocity.xy, m_delay, _context.m_dt);
-
-            _context.m_gameObject->setGlobalMatrix(matrix);
-        }
-    };
-
-    if (activePlayers.size() == 0)
-        averagePosition(players);
-    else if (activePlayers.size() > 0)
-        averagePosition(activePlayers);
 }

@@ -80,7 +80,10 @@ namespace vg::engine
 
                 // Prefab preview mode
                 if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Editor, _world))
-                    return view->GetViewGUI();
+                {
+                    if (view->GetWorld() == _world && asBool(gfx::IView::Flags::Prefab & view->GetFlags()))
+                        return view->GetViewGUI();
+                }
             }            
         }
 

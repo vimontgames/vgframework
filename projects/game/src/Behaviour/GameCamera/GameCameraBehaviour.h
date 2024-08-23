@@ -10,7 +10,7 @@ public:
     GameCameraBehaviour(const vg::core::string & _name, vg::core::IObject * _parent);
     ~GameCameraBehaviour();
 
-    void                    OnEnable    () final override;
+    void                    OnPlay      () final override;
     void                    Update      (const Context & _context) override;
 
 private:

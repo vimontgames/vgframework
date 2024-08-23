@@ -32,7 +32,7 @@
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Uint32" name="m_life" value="1"/>
                                 <Property type="Float" name="m_hp" value="100"/>
-                                <Property type="Uint32" name="m_score" value="0"/>
+                                <Property type="Int32" name="m_score" value="0"/>
                                 <Property type="Float" name="m_walkSpeed" value="0.5"/>
                                 <Property type="Float" name="m_runSpeed" value="1.5"/>
                                 <Property type="Float" name="m_jumpSpeed" value="5.5"/>
@@ -194,8 +194,9 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="Bool" name="m_trigger" value="true"/>
                                                 <Property type="Bool" name="m_softBody" value="false"/>
-                                                <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
-                                                <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
+                                                <Property type="EnumU16" name="m_layer" value="Moving"/>
+                                                <Property type="EnumU8" name="m_motion" value="Dynamic"/>
+                                                <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
                                                 <Property type="Bool" name="m_overrideMass" flags="NotVisible" value="false"/>
                                                 <Property type="Float" name="m_mass" flags="Optional" value="0"/>
                                                 <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -204,7 +205,7 @@
                                         </Property>
                                     </Object>
                                     <Object class="PhysicsShapeComponent">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3245892966"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
@@ -212,7 +213,7 @@
                                         <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
                                         <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
                                             <Object class="SphereShapeDesc">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3510451234"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="SphereShapeDesc #2"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
@@ -256,8 +257,9 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                                 <Property type="Bool" name="m_trigger" value="true"/>
                                                 <Property type="Bool" name="m_softBody" value="false"/>
-                                                <Property type="EnumU16" name="m_layer" flags="ReadOnly" value="Moving"/>
-                                                <Property type="EnumU8" name="m_motion" flags="ReadOnly" value="Dynamic"/>
+                                                <Property type="EnumU16" name="m_layer" value="Moving"/>
+                                                <Property type="EnumU8" name="m_motion" value="Dynamic"/>
+                                                <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
                                                 <Property type="Bool" name="m_overrideMass" flags="NotVisible" value="false"/>
                                                 <Property type="Float" name="m_mass" flags="Optional" value="0"/>
                                                 <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
@@ -266,7 +268,7 @@
                                         </Property>
                                     </Object>
                                     <Object class="PhysicsShapeComponent">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2131414610"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
@@ -274,7 +276,7 @@
                                         <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
                                         <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
                                             <Object class="SphereShapeDesc">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1429600130"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="SphereShapeDesc #3"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>

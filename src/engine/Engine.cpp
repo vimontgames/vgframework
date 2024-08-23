@@ -692,12 +692,15 @@ namespace vg::engine
             }
         };
 
+        const bool playing = isPlaying();
+        const bool paused = playing && isPaused();
+
         // FixedUpdate all GameObjects and components
         {
             VG_PROFILE_CPU("FixedUpdate");
             for (IWorld * world : GetWorlds())
             {
-                GameObject::Context gameObjectUpdateContext(getWorldDeltaTime(world), world);
+                GameObject::Context gameObjectUpdateContext(playing, paused, getWorldDeltaTime(world), world);
 
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
@@ -718,7 +721,7 @@ namespace vg::engine
             VG_PROFILE_CPU("Update");
             for (IWorld * world : GetWorlds())
             {
-                GameObject::Context gameObjectUpdateContext(getWorldDeltaTime(world), world);
+                GameObject::Context gameObjectUpdateContext(playing, paused, getWorldDeltaTime(world), world);
 
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
@@ -742,7 +745,7 @@ namespace vg::engine
             VG_PROFILE_CPU("LateUpdate");
             for (IWorld * world : GetWorlds())
             {
-                GameObject::Context gameObjectUpdateContext(getWorldDeltaTime(world), world);
+                GameObject::Context gameObjectUpdateContext(playing, paused, getWorldDeltaTime(world), world);
 
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
