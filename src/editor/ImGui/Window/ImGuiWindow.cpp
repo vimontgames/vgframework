@@ -670,6 +670,8 @@ namespace vg::editor
     {
         VG_ASSERT(nullptr != _prop);
 
+        const ImGuiStyle & style = ImGui::GetStyle();
+
         const auto * factory = Kernel::getFactory();
         const auto cursorPosY = GetCursorPosY();
         const auto availableWidth = GetContentRegionAvail().x;
@@ -936,7 +938,8 @@ namespace vg::editor
                     else
                     {
                         // The only checkbox in the line => align right
-                        ImGui::SetCursorPosX(availableWidth - style::label::PixelWidth - ImGui::GetFrameHeight() + ImGui::GetStyle().ItemSpacing.y + 0*GetTreeNodeToLabelSpacing());
+                        auto cursorPosX = GetCursorPosX();
+                        ImGui::SetCursorPosX(availableWidth - style::label::PixelWidth - ImGui::GetFrameHeight() + ImGui::GetStyle().ItemSpacing.y + cursorPosX - style.FramePadding.x - style.ItemSpacing.x);
                         edited = ImGui::Checkbox(getPropertyLabel(label).c_str(), &temp);
                     }
 
@@ -1148,7 +1151,7 @@ namespace vg::editor
                     }
                     else
                     {
-                        changed = editScalarProperty<float3>(propContext, label, _object, _prop, _prop->GetPropertyFloatN(_object, 3));
+                        changed = editScalarProperty<float4>(propContext, label, _object, _prop, _prop->GetPropertyFloatN(_object, 3));
                     }
                 };
                 break;
@@ -1529,8 +1532,6 @@ namespace vg::editor
                         {
                             auto availableWidth = ImGui::GetContentRegionAvail().x;
                             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
-
-                            ImGuiStyle & style = ImGui::GetStyle();
 
                             ImGui::PushStyleColor(ImGuiCol_Header, style.Colors[ImGuiCol_WindowBg]);
                             ImGui::PushStyleColor(ImGuiCol_HeaderActive, style.Colors[ImGuiCol_ButtonActive]);
@@ -1966,8 +1967,10 @@ namespace vg::editor
             _resource->SetResourcePath(relativePath);
         };
 
+        const ImGuiStyle & style = ImGui::GetStyle();
+
         auto availableWidth = GetContentRegionAvail().x;
-        ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - buttonWidth);
+        ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - buttonWidth - style.ItemSpacing.x);
         if (ImGui::InputText(label.c_str(), buffer, countof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
             storePath(buffer);
 
@@ -1992,14 +1995,14 @@ namespace vg::editor
 
         ImGui::SameLine();
         auto x = ImGui::GetCursorPosX();
-        ImGui::SetCursorPosX(x + buttonWidth);
+        ImGui::SetCursorPosX(x + buttonWidth + style.ItemSpacing.x);
 
         drawPropertyLabel(_propContext, _prop);
 
         auto x2 = ImGui::GetCursorPosX();
         ImGui::SameLine();
-     
-        ImGui::SetCursorPosX(x-4);        
+
+        ImGui::SetCursorPosX(x - style.ItemSpacing.x*0);        
 
         if (_propContext.m_readOnly)
             ImGui::BeginDisabled();
