@@ -18,11 +18,17 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Object::registerProperties(IClassDesc & _desc)
     {
-        registerPropertyEx(Object, m_uid, "UID", IProperty::Flags::Debug | IProperty::Flags::Hexadecimal);
-        registerPropertyEx(Object, m_originalUID, "Original UID", IProperty::Flags::Debug | IProperty::Flags::Hexadecimal);
-
         registerPropertyEx(Object, m_name, "Name", IProperty::Flags::NotVisible);
-        registerPropertyEnumBitfieldEx(Object, ObjectFlags,m_objectFlags, "Object Flags", IProperty::Flags::Debug);
+        setPropertyDescription(Object, m_name, "User-friendly name");
+
+        registerPropertyEx(Object, m_uid, "UID", IProperty::Flags::Debug | IProperty::Flags::Hexadecimal);
+        setPropertyDescription(Object, m_uid, "Unique ID");
+
+        registerPropertyEx(Object, m_originalUID, "UID (Source)", IProperty::Flags::Debug | IProperty::Flags::Hexadecimal);
+        setPropertyDescription(Object, m_originalUID, "Source object's unique ID");
+
+        registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectFlags, "Flags", IProperty::Flags::Debug);
+        setPropertyDescription(Object, m_objectFlags, "Object flags");
 
         return true;
     }

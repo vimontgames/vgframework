@@ -70,27 +70,12 @@ namespace vg::core
         if (_enabled)
             m_flags |= _flags;
         else
-            (std::underlying_type<InstanceFlags>::type &)m_flags &= ~(std::underlying_type<InstanceFlags>::type)_flags;
+            m_flags &= ~_flags;
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE InstanceFlags Instance::getInstanceFlags() const
     {
         return m_flags;
-    }
-
-    //--------------------------------------------------------------------------------------
-    VG_INLINE void Instance::setRuntimeFlags(RuntimeFlags _flags, bool _enabled)
-    {
-        if (_enabled)
-            m_runtimeFlags |= _flags;
-        else
-            (std::underlying_type<RuntimeFlags>::type&)m_runtimeFlags &= ~(std::underlying_type<RuntimeFlags>::type)_flags;
-    }
-
-    //--------------------------------------------------------------------------------------
-    VG_INLINE IInstance::RuntimeFlags Instance::getRuntimeFlags() const
-    {
-        return m_runtimeFlags;
     }
 }

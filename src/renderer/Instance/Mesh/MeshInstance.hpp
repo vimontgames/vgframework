@@ -89,7 +89,7 @@ namespace vg::renderer
         {
             const core::AABB & aabb = meshModel->getGeometry()->getAABB();
 
-            bool visible = _view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside || asBool(IInstance::RuntimeFlags::NoCulling & getRuntimeFlags());
+            bool visible = _view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside || asBool(ObjectFlags::NoCulling & getObjectFlags());
 
             if (visible)
             {

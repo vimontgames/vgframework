@@ -99,12 +99,10 @@ namespace vg::core
 
         VG_INLINE void				setParent			(IObject * _parent);
 		VG_INLINE IObject *			getParent			() const;
-
-		static bool					resizeVector		(core::IObject * _parent, core::uint _offset, core::uint _count, void ** _data);
-
-	protected:
         VG_INLINE ObjectFlags       getObjectFlags		() const;
         VG_INLINE void              setObjectFlags		(ObjectFlags _flags, bool _enabled);
+
+		static bool					resizeVector		(core::IObject * _parent, core::uint _offset, core::uint _count, void ** _data);
 
 	private:
         atomic<u32>				    m_refCount;
@@ -112,9 +110,9 @@ namespace vg::core
 		UID							m_originalUID = (UID)0;
 		ObjectFlags					m_objectFlags = (ObjectFlags)0x0;
         Object *					m_parent = nullptr;
-		mutable const IClassDesc *	m_classDesc = nullptr;
 		string					    m_name;
         string                      m_file;
+		mutable const IClassDesc * m_classDesc = nullptr;
 	};
 }
 

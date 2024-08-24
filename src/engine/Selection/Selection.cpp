@@ -46,46 +46,13 @@ namespace vg::engine
         updateSelectionMatrix();
     }
 
-    //#define TEST_SELECTION_HASH 1
-    //#define TEST_SELECTION_INSTANCE_FLAGS 1
-
     //--------------------------------------------------------------------------------------
     bool Selection::IsSelectedObject(const core::IObject * _object) const
     {
         bool selected = false;
         if (const core::Instance * instance = dynamic_cast<const core::Instance *>(_object))
-            selected = asBool(core::IInstance::RuntimeFlags::Selected & instance->getRuntimeFlags());
+            selected = asBool(core::ObjectFlags::Selected & instance->getObjectFlags());
 
-        #if !TEST_SELECTION_INSTANCE_FLAGS
-        return selected;
-        #endif
-
-        if (nullptr != _object)
-        {
-            #if TEST_SELECTION_HASH
-            for (int i = 0; i < m_selectionArray.size(); ++i)
-            {
-                if (_object == m_selectionArray[i])
-                {
-                    selected = true;
-                    break;
-                }
-            }
-            #endif
-
-            if (m_selectionSet.end() != m_selectionSet.find((core::IObject *)_object))
-            {
-                #if TEST_SELECTION_HASH
-                VG_ASSERT(selected == true);
-                #endif
-
-                #if TEST_SELECTION_INSTANCE_FLAGS
-                VG_ASSERT(selected = true);
-                #endif
-
-                selected = true;
-            }
-        }
         return selected;
     }
 
@@ -172,13 +139,13 @@ namespace vg::engine
         GameObject * go = dynamic_cast<GameObject *>(_object);
         if (nullptr != go)
         {
-            go->setRuntimeFlags(IInstance::RuntimeFlags::Selected, _selected);
+            go->setObjectFlags(ObjectFlags::Selected, _selected);
 
             auto graphicInstances = go->getGraphicInstances();
             for (uint i = 0; i < graphicInstances.size(); ++i)
             {
                 auto instance = graphicInstances[i];
-                instance->setRuntimeFlags(IInstance::RuntimeFlags::Selected, _selected);
+                instance->setObjectFlags(ObjectFlags::Selected, _selected);
             }
         }
     }

@@ -33,9 +33,6 @@ namespace vg::core
         InstanceFlags               GetInstanceFlags    () const final override;
         void                        SetInstanceFlags    (InstanceFlags _flags, bool _enabled) override;
 
-        RuntimeFlags                GetRuntimeFlags     () const final override;
-        void                        SetRuntimeFlags     (RuntimeFlags _flags, bool _enabled) final override;
-
     public:
         VG_INLINE void              setLocalMatrix      (const float4x4 & _local);
         VG_INLINE const float4x4 &  getLocalMatrix      () const;
@@ -52,16 +49,12 @@ namespace vg::core
         VG_INLINE InstanceFlags     getInstanceFlags    () const;
         VG_INLINE void              setInstanceFlags    (InstanceFlags _flags, bool _enabled);
 
-        VG_INLINE RuntimeFlags      getRuntimeFlags     () const;
-        VG_INLINE void              setRuntimeFlags     (RuntimeFlags _flags, bool _enabled);
-
         VG_INLINE bool              isEnabled           () const;
         VG_INLINE bool              isStatic            () const;
       
     private:
-        InstanceFlags               m_flags;
-        RuntimeFlags                m_runtimeFlags;
-        float4                      m_color = { 1.0f, 1.0f, 1.0f, 1.0f };
+        InstanceFlags               m_flags;   
+        float4                      m_color = core::float4(1.0f, 1.0f, 1.0f, 1.0f);
         float4x4                    m_local = float4x4::identity();
         vector<Model *>             m_models;
     };

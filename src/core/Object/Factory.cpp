@@ -1054,9 +1054,13 @@ namespace vg::core
                                     name = it->second.c_str();
                                     prop = classDesc->GetPropertyByName(name);
                                 }
-                                VG_WARNING("[Factory] Class \"%s\" has no property \"%s\" of type '%s' in \"%s\"", className, name, typeName, _object->GetShortName().c_str());
+                                else
+                                {
+                                    VG_WARNING("[Factory] Class \"%s\" has no property \"%s\" of type '%s' in \"%s\"", className, name, typeName, _object->GetShortName().c_str());
+                                }
                             }
-                            else if (asBool(IProperty::Flags::NotSaved & prop->getFlags()))
+                            
+                            if (asBool(IProperty::Flags::NotSaved & prop->getFlags()))
                             {
 
                             }

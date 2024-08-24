@@ -14,8 +14,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Instance::Instance(const string & _name, IObject * _parent) :
         IInstance(_name, _parent),
-        m_flags(InstanceFlags::Enabled),
-        m_runtimeFlags((RuntimeFlags)0x0)
+        m_flags(InstanceFlags::Enabled)
     {
     }
 
@@ -32,6 +31,8 @@ namespace vg::core
         super::registerProperties(_desc);
 
         registerPropertyEnumBitfield(Instance, InstanceFlags, m_flags, "Flags");
+        setPropertyDescription(Instance, m_flags, "Instance Flags");
+
         registerPropertyEx(Instance, m_color, "Color", IProperty::Flags::Color);
         registerProperty(Instance, m_local, "Transform");
 
@@ -110,18 +111,6 @@ namespace vg::core
             else
                 OnDisable();
         }
-    }
-
-    //--------------------------------------------------------------------------------------
-    IInstance::RuntimeFlags Instance::GetRuntimeFlags() const
-    {
-        return getRuntimeFlags();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void Instance::SetRuntimeFlags(RuntimeFlags _flags, bool _enabled)
-    {
-        setRuntimeFlags(_flags, _enabled);
     }
 
     //--------------------------------------------------------------------------------------

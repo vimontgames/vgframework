@@ -24,12 +24,6 @@ namespace vg::core
     class IInstance : public Object
     {
     public:
-        enum class RuntimeFlags : u32
-        {
-            Selected    = 0x00000001,
-            NoCulling   = 0x00000002
-        };
-
         IInstance(const string & _name, IObject * _parent) :
             Object(_name, _parent)
         {
@@ -50,9 +44,6 @@ namespace vg::core
 
         virtual InstanceFlags       GetInstanceFlags    () const = 0;
         virtual void                SetInstanceFlags    (InstanceFlags _flags, bool _enabled) = 0;
-
-        virtual RuntimeFlags        GetRuntimeFlags     () const = 0;
-        virtual void                SetRuntimeFlags     (RuntimeFlags _flags, bool _enabled) = 0;
 
         virtual bool                TryGetAABB          (AABB & _aabb) const = 0;
     };

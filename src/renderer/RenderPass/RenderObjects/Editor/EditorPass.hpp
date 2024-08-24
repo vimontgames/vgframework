@@ -92,7 +92,7 @@ namespace vg::renderer
                 {
                     auto * instance = (GraphicInstance*)allInstances.m_instances[i];
 
-                    if (boudingBoxSelection && !asBool(IInstance::RuntimeFlags::Selected & instance->getRuntimeFlags()))
+                    if (boudingBoxSelection && !asBool(ObjectFlags::Selected & instance->getObjectFlags()))
                         continue;
 
                     AABB aabb;

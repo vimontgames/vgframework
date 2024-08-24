@@ -47,15 +47,15 @@ namespace vg::editor
 
             if (isPrefab)
                 ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive));
-            else if (isPrefabInstanced)
-                ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+            //else if (isPrefabInstanced)
+            //    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 
             bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", gameObjectLabel, go).c_str(), ImGuiTreeNodeFlags_InvisibleArrow | ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
 
             if (isPrefab)
                 ImGui::PopStyleColor(1);
-            else if (isPrefabInstanced)
-                ImGui::PopStyleColor(1);
+            //else if (isPrefabInstanced)
+            //    ImGui::PopStyleColor(1);
 
             m_gameObjectInspectorMenu.Display(go);
 
@@ -67,15 +67,15 @@ namespace vg::editor
 
             if (isPrefab)
                 ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive));
-            else if (isPrefabInstanced)
-                ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+            //else if (isPrefabInstanced)
+            //    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 
             ImGui::CollapsingHeaderLabel(collapsingHeaderPos, gameObjectLabel.c_str(), isGameobjectEnabled);
 
             if (isPrefab)
                 ImGui::PopStyleColor(1);
-            else if (isPrefabInstanced)
-                ImGui::PopStyleColor(1);
+            //else if (isPrefabInstanced)
+            //    ImGui::PopStyleColor(1);
 
             if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s \"%s\"", isGameobjectEnabled? "Disable" : "Enable", goTypeName, go->getName().c_str())))
                 go->SetInstanceFlags(InstanceFlags::Enabled, !isGameobjectEnabled);
