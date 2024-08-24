@@ -219,7 +219,7 @@ namespace vg::renderer
         m_sharedCullingJobOutput = new SharedCullingJobOutput();
 
         // Create "Game" viewport for "Game" views
-        auto gameViewportParams = gfx::CreateViewportParams(ViewportTarget::Game, getBackbufferSize());
+        auto gameViewportParams = gfx::CreateViewportParams(ViewportTarget::Game, GetBackbufferSize());
         if (auto gameViewport = (Viewport *)CreateViewport(gameViewportParams, "Game"))
         {
             AddViewport(gameViewport);
@@ -314,7 +314,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void Renderer::resize(core::uint _width, core::uint _height)
+    void Renderer::Resize(core::uint _width, core::uint _height)
     {
         m_device.waitGPUIdle();
         m_device.resize(_width, _height);
@@ -327,7 +327,7 @@ namespace vg::renderer
                 auto * viewport = viewports[i];
                 if (nullptr != viewport)
                 {
-                    viewport->SetRenderTargetSize(getBackbufferSize());
+                    viewport->SetRenderTargetSize(GetBackbufferSize());
                     viewport->SetActive(true);
                     viewport->SetVisible(true);
                 }
@@ -339,7 +339,7 @@ namespace vg::renderer
                 auto * view = views[i];
                 if (nullptr != view)
                 {
-                    view->SetRenderTargetSize(getBackbufferSize());
+                    view->SetRenderTargetSize(GetBackbufferSize());
                     view->SetActive(true);
                     view->SetVisible(true);
                 }
@@ -351,20 +351,20 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint2 Renderer::getBackbufferSize() const
+    core::uint2 Renderer::GetBackbufferSize() const
     {
         const auto & desc = getBackbuffer()->getTexDesc();
         return { desc.width, desc.height };
     }
 
     //--------------------------------------------------------------------------------------
-    void Renderer::updateShaders()
+    void Renderer::UpdateShaders()
     {
         m_device.getShaderManager()->update();
     }
 
     //--------------------------------------------------------------------------------------
-    void Renderer::waitGPUIdle()
+    void Renderer::WaitGPUIdle()
     {
         m_device.waitGPUIdle();
     }
@@ -382,7 +382,7 @@ namespace vg::renderer
     }
 
 	//--------------------------------------------------------------------------------------
-	void Renderer::runOneFrame()
+	void Renderer::RunOneFrame()
 	{
         if (m_device.isMinimized())
         {
@@ -933,7 +933,7 @@ namespace vg::renderer
                     auto * view = views[i];
                     if (nullptr != view)
                     {
-                        view->SetRenderTargetSize(getBackbufferSize());
+                        view->SetRenderTargetSize(GetBackbufferSize());
                         view->SetActive(true);
                         view->SetVisible(true);
                     }

@@ -34,7 +34,7 @@
 
 #include "editor/IEditor.h"
 
-#include "application/IProject.h"
+#include "application/IGame.h"
 
 #if !VG_ENABLE_INLINE
 #include "Engine.inl"
@@ -83,7 +83,7 @@ namespace vg::engine
                 {
                     const uint width = uint(lParam & 0xFFFF);
                     const uint height = uint(lParam >> 16);
-                    m_renderer->resize(width, height);
+                    m_renderer->Resize(width, height);
                 }
                 break;
 
@@ -137,7 +137,7 @@ namespace vg::engine
                     case VK_F6:
                     {
                         if (m_renderer)
-                            m_renderer->updateShaders();
+                            m_renderer->UpdateShaders();
                     }
                     break;
 
@@ -230,29 +230,29 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool Engine::loadProject(const string & _path)
+    bool Engine::LoadGame(const string & _path)
     {
         if (_path.length() > 0)
         {
             auto folderNameBegin = _path.find_last_of('/');
-            string projectDllName = _path + _path.substr(folderNameBegin);
+            string gameDLLPath = _path + _path.substr(folderNameBegin);
 
-            m_project = Plugin::create<IProject>(projectDllName);
+            m_game = Plugin::create<IGame>(gameDLLPath);
 
-            if (nullptr != m_project)
-                m_project->init(*this, Kernel::getSingletons());
+            if (nullptr != m_game)
+                m_game->Init(*this, Kernel::getSingletons());
         }
-        return nullptr != m_project;
+        return nullptr != m_game;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Engine::unloadProject()
+    bool Engine::UnloadGame()
     {
-        if (m_project)
+        if (m_game)
         {
-            m_project->deinit();
-            VG_SAFE_RELEASE(m_project);
-            m_project = nullptr;
+            m_game->Deinit();
+            VG_SAFE_RELEASE(m_game);
+            m_game = nullptr;
             return true;
         }
 
@@ -274,9 +274,9 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    IProject * Engine::getProject() const
+    IGame * Engine::GetProject() const
     {
-        return m_project;
+        return m_game;
     }
 
     //--------------------------------------------------------------------------------------
@@ -300,7 +300,7 @@ namespace vg::engine
     }
 
 	//--------------------------------------------------------------------------------------
-	void Engine::init(const EngineCreationParams & _params, Singletons & _singletons)
+	void Engine::Init(const EngineCreationParams & _params, Singletons & _singletons)
 	{
         Timer::init();
 
@@ -366,7 +366,7 @@ namespace vg::engine
         EngineOptions * engineOptions = new EngineOptions("EngineOptions", this);  
 
         // Load project DLL
-        loadProject(engineOptions->GetProjectPath());
+        LoadGame(engineOptions->GetProjectPath());
 
         // Load Editor DLL
         m_editor = Plugin::create<editor::IEditor>("editor");
@@ -527,12 +527,12 @@ namespace vg::engine
     }
 
 	//--------------------------------------------------------------------------------------
-	void Engine::deinit()
+	void Engine::Deinit()
 	{
-        m_renderer->waitGPUIdle();
+        m_renderer->WaitGPUIdle();
         m_resourceManager->flushPendingLoading();
 
-        unloadProject();
+        UnloadGame();
 
         EngineOptions * engineOptions = EngineOptions::get();
         VG_SAFE_DELETE(engineOptions);
@@ -714,7 +714,10 @@ namespace vg::engine
 
         // This will use all available threads for physics
         if (m_physics)
-            m_physics->RunOneFrame(scaledDeltaTime);
+            m_physics->Update(scaledDeltaTime);
+
+        if (m_game)
+            m_game->Update(scaledDeltaTime);
 
         // Update
         {
@@ -758,11 +761,11 @@ namespace vg::engine
         }
 
         if (m_editor)
-            m_editor->RunOneFrame(-1);
+            m_editor->RunOneFrame();
 
         // This will use all available threads for culling then rendering scene
         if (m_renderer)
-            m_renderer->runOneFrame();
+            m_renderer->RunOneFrame();
 
         g_RunningOneFrame = false;
 	}
@@ -798,9 +801,9 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint2 Engine::getScreenSize() const
+    core::uint2 Engine::GetScreenSize() const
     {
-        return GetRenderer()->getBackbufferSize();
+        return GetRenderer()->GetBackbufferSize();
     }
 
     //--------------------------------------------------------------------------------------

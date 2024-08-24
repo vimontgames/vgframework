@@ -40,7 +40,7 @@ namespace vg::physics
         void							    Init                        (const PhysicsCreationParams & _params, core::Singletons & _singletons) final override;
         void							    Deinit                      () final override;
 
-        void                                RunOneFrame                 (float _dt) final override;
+        void                                Update                      (float _dt) final override;
 
         IPhysicsOptions *                   GetOptions                  () const final override;
         void                                SetGravity                  (const core::float3 _gravity) final override;

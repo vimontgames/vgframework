@@ -60,6 +60,8 @@ namespace vg
             virtual void	                            init                    (const RendererCreationParams & _params, core::Singletons & _singletons) = 0;
             virtual void	                            deinit                  () = 0;
 
+            virtual void	                            RunOneFrame             () = 0;
+
             virtual const gfx::DeviceParams &           GetDeviceCreationParams () const = 0;
             virtual renderer::IRendererOptions *        GetOptions              () = 0;
 
@@ -81,11 +83,10 @@ namespace vg
             virtual const core::vector<gfx::IView *>    GetViews                (gfx::ViewTarget _target) const = 0;
 
             virtual void                                SetResized              () = 0;
-            virtual void                                resize                  (core::uint _width, core::uint _height) = 0;
-            virtual core::uint2                         getBackbufferSize       () const = 0;
-            virtual void	                            runOneFrame             () = 0;
-            virtual void                                updateShaders           () = 0;
-            virtual void                                waitGPUIdle             () = 0;
+            virtual void                                Resize                  (core::uint _width, core::uint _height) = 0;
+            virtual core::uint2                         GetBackbufferSize       () const = 0;
+            virtual void                                UpdateShaders           () = 0;
+            virtual void                                WaitGPUIdle             () = 0;
 
             virtual void                                SetVSync                (gfx::VSync mode) = 0;
             virtual gfx::VSync                          GetVSync                () const = 0;

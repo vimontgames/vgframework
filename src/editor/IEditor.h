@@ -26,7 +26,7 @@ namespace vg
 		    virtual void						Init		        (const core::Singletons & _singletons) = 0;
 		    virtual void						Deinit		        () = 0;
 
-            virtual void                        RunOneFrame         (float _dt) = 0;
+            virtual void                        RunOneFrame         () = 0;
                                                 
             #ifdef _WIN32                       
             virtual LRESULT CALLBACK            WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;

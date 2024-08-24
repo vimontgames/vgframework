@@ -32,7 +32,7 @@ namespace vg::engine
 
     private:
         // Project
-        core::string            m_projectPath;
+        core::string            m_gamePath;
         core::string            m_startWorld;
 
         // Physics

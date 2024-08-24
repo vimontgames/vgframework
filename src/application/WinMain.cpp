@@ -231,7 +231,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         vg::core::messageBox(vg::core::MessageBoxIcon::Info, vg::core::MessageBoxType::OK, "attach=true", "You can attach debugger now");
 
     core::Singletons singletons;
-    g_engine->init(engineParams, singletons);
+    g_engine->Init(engineParams, singletons);
 
     Application * app = new Application(*g_engine);
 	const auto version = app->GetVersion();
@@ -263,7 +263,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		app->Update();
 
     VG_SAFE_DELETE(app);
-    g_engine->deinit();
+    g_engine->Deinit();
     VG_SAFE_RELEASE(g_engine);
 
     core::AutoRegisterClassInfo::unregisterClasses();

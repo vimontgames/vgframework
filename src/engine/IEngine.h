@@ -5,7 +5,7 @@
 
 namespace vg
 {
-    class IProject;
+    class IGame;
 
     namespace core
     {
@@ -52,8 +52,8 @@ namespace vg
 
             }
 
-		    virtual void						        init		        (const EngineCreationParams & _params, core::Singletons & _singletons) = 0;
-		    virtual void						        deinit		        () = 0;
+		    virtual void						        Init		        (const EngineCreationParams & _params, core::Singletons & _singletons) = 0;
+		    virtual void						        Deinit		        () = 0;
 
             virtual bool                                IsPlaying           () const = 0;
             virtual bool                                IsPaused            () const = 0;
@@ -70,14 +70,14 @@ namespace vg
 
             virtual const Time &                        GetTime             () const = 0;
 
-            virtual bool                                loadProject         (const core::string & _path) = 0;
-            virtual bool                                unloadProject       () = 0;
-            virtual IProject *                          getProject          () const = 0;
+            virtual bool                                LoadGame            (const core::string & _path) = 0;
+            virtual bool                                UnloadGame          () = 0;
+            virtual IGame *                             GetProject          () const = 0;
 
             virtual core::IWorld *                      GetMainWorld        () const = 0;
             virtual const core::vector<core::IWorld*> & GetWorlds           () const = 0;
 
-            virtual core::uint2                         getScreenSize       () const = 0;
+            virtual core::uint2                         GetScreenSize       () const = 0;
                                                         
             #ifdef _WIN32                               
             virtual LRESULT CALLBACK                    WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;

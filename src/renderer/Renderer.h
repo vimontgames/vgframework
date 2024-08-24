@@ -49,6 +49,8 @@ namespace vg::renderer
 		void					                init				        (const RendererCreationParams & _params, core::Singletons & _singletons) override;
 		void					                deinit				        () override;
 
+        void					                RunOneFrame			        () override;
+
         const gfx::DeviceParams &               GetDeviceCreationParams     () const final override;
         renderer::IRendererOptions *            GetOptions                  () final override;
 
@@ -70,13 +72,10 @@ namespace vg::renderer
         const core::vector <gfx::IView *>       GetViews                    (gfx::ViewTarget _target) const final override;
 
         void                                    SetResized                  () final override;
-        void                                    resize                      (core::uint _width, core::uint _height) override;
-        core::uint2                             getBackbufferSize           () const override;
-
-		void					                runOneFrame			        () override;
-
-        void                                    updateShaders               () override;
-        void                                    waitGPUIdle                 () override;
+        void                                    Resize                      (core::uint _width, core::uint _height) override;
+        core::uint2                             GetBackbufferSize           () const override;
+        void                                    UpdateShaders               () override;
+        void                                    WaitGPUIdle                 () override;
 
         void                                    SetVSync                    (gfx::VSync mode) final override;
         gfx::VSync                              GetVSync                    () const final override;

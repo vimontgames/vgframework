@@ -15,8 +15,8 @@ namespace vg::engine
 
         registerPropertyGroupBegin(EngineOptions, "Project");
         {
-            registerPropertyEx(EngineOptions, m_projectPath, "Project Path", IProperty::Flags::IsFolder);
-            setPropertyDescription(EngineOptions, m_projectPath, "Project root folder is used to load game library");
+            registerPropertyEx(EngineOptions, m_gamePath, "Game Path", IProperty::Flags::IsFolder);
+            setPropertyDescription(EngineOptions, m_gamePath, "Game root folder (used to load game library)");
 
             registerPropertyEx(EngineOptions, m_startWorld, "Start World", IProperty::Flags::IsFile);
             setPropertyDescription(EngineOptions, m_startWorld, "Default world to load at startup");
@@ -77,7 +77,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     const core::string & EngineOptions::GetProjectPath() const
     {
-        return m_projectPath;
+        return m_gamePath;
     }
 
     //--------------------------------------------------------------------------------------

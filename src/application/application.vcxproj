@@ -20,7 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
-    <ClInclude Include="IProject.h" />
+    <ClInclude Include="IGame.h" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>

@@ -3,9 +3,6 @@
   <ItemGroup>
     <ClCompile Include="Precomp.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Behaviour\GameCamera\GameCameraBehaviour.cpp">
-      <Filter>Behaviour\GameCamera</Filter>
-    </ClCompile>
     <ClCompile Include="Behaviour\Character\CharacterBehaviour.cpp">
       <Filter>Behaviour\Character</Filter>
     </ClCompile>
@@ -15,13 +12,13 @@
     <ClCompile Include="Behaviour\Ball\BallBehaviour.cpp">
       <Filter>Behaviour\Ball</Filter>
     </ClCompile>
+    <ClCompile Include="Behaviour\Camera\GameCameraBehaviour.cpp">
+      <Filter>Behaviour\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Behaviour\GameCamera\GameCameraBehaviour.h">
-      <Filter>Behaviour\GameCamera</Filter>
-    </ClInclude>
     <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.h">
       <Filter>Behaviour\Character\Player</Filter>
     </ClInclude>
@@ -44,13 +41,13 @@
     <ClInclude Include="Behaviour\Ball\BallBehaviour.h">
       <Filter>Behaviour\Ball</Filter>
     </ClInclude>
+    <ClInclude Include="Behaviour\Camera\GameCameraBehaviour.h">
+      <Filter>Behaviour\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviour">
       <UniqueIdentifier>{f22a42c3-1de4-4af1-a237-fd64e93380cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Behaviour\GameCamera">
-      <UniqueIdentifier>{65575239-8c55-4d8c-a157-46a06c63512c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Behaviour\Character">
       <UniqueIdentifier>{6defa4dd-0664-4639-b079-02eb2647fade}</UniqueIdentifier>
@@ -66,6 +63,9 @@
     </Filter>
     <Filter Include="Behaviour\Ball">
       <UniqueIdentifier>{b39b140f-ec00-4c86-ab6f-3aed3a13966c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Camera">
+      <UniqueIdentifier>{73afb719-c434-407f-bbb2-9d58c1588663}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

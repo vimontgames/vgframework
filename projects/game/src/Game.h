@@ -1,6 +1,6 @@
 #pragma once
 
-#include "application/IProject.h"
+#include "application/IGame.h"
 #include "core/Singleton/Singleton.h"
 #include "game_consts.h"
 
@@ -18,10 +18,10 @@ class CharacterBehaviour;
 class PlayerBehaviour;
 class EnemyBehaviour;
 
-class Game : public vg::IProject, public vg::core::Singleton<Game>
+class Game : public vg::IGame, public vg::core::Singleton<Game>
 {
     public:
-        VG_CLASS_DECL(Game, vg::IProject);
+        VG_CLASS_DECL(Game, vg::IGame);
          Game        ();
          ~Game       ();
 
@@ -31,10 +31,10 @@ class Game : public vg::IProject, public vg::core::Singleton<Game>
         bool                                            UnregisterClasses       ();
 
         // vg::core::IProject overrides
-        bool                                            init                    (vg::engine::IEngine & _engine, vg::core::Singletons & _singletons) final;
-        bool                                            deinit                  () final;
+        bool                                            Init                    (vg::engine::IEngine & _engine, vg::core::Singletons & _singletons) final override;
+        bool                                            Deinit                  () final;
 
-        bool                                            update                  () final;
+        void                                            Update                  (float _dt) final override;
 
         static vg::engine::IEngine &                    Engine                  ();
         static vg::core::IInput &                       Input                   ();

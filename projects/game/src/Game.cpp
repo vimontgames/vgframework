@@ -19,7 +19,7 @@ Game * CreateNew()
 
 //--------------------------------------------------------------------------------------
 Game::Game() :
-    IProject("", nullptr)
+    IGame("", nullptr)
 {
 
 }
@@ -76,7 +76,7 @@ bool Game::UnregisterClasses()
 //--------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------
-bool Game::init(vg::engine::IEngine & _engine, Singletons & _singletons)
+bool Game::Init(vg::engine::IEngine & _engine, Singletons & _singletons)
 {
     s_engine = &_engine;
 
@@ -88,7 +88,7 @@ bool Game::init(vg::engine::IEngine & _engine, Singletons & _singletons)
 }
 
 //--------------------------------------------------------------------------------------
-bool Game::deinit()
+bool Game::Deinit()
 {
     UnregisterClasses();
 
@@ -96,9 +96,9 @@ bool Game::deinit()
 }
 
 //--------------------------------------------------------------------------------------
-bool Game::update()
+void Game::Update(float _dt)
 {
-    return true;
+    
 }
 
 //--------------------------------------------------------------------------------------

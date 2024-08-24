@@ -36,7 +36,7 @@ namespace vg
             virtual void                    Init                (const PhysicsCreationParams & _params, core::Singletons & _singletons) = 0;
             virtual void                    Deinit              () = 0;
 
-            virtual void                    RunOneFrame         (float _dt) = 0;
+            virtual void                    Update              (float _dt) = 0;
 
             virtual IPhysicsOptions *       GetOptions          () const = 0;
             virtual void                    SetGravity          (const core::float3 _gravity) = 0;

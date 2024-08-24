@@ -19,7 +19,7 @@ namespace vg::editor
             renderer::IRenderer * renderer = Editor::get()->getRenderer();
 
             if (ImGui::TooltipButton(fmt::sprintf("%s Reload Shaders", style::icon::Reload).c_str(), renderer != nullptr, renderer != nullptr, "Reload Shaders (F6)", style::button::SizeLarge))
-                renderer->updateShaders();
+                renderer->UpdateShaders();
 
             ImGui::Separator();   
 

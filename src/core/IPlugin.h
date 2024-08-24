@@ -24,5 +24,7 @@ namespace vg::core
 
         virtual bool    RegisterClasses		() = 0;
 		virtual bool    UnregisterClasses	() = 0;
+
+		virtual void	Update				(float _dt) {};
 	};
 }

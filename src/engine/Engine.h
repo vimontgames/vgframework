@@ -64,15 +64,15 @@ namespace vg::engine
         void                                    OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
         static bool                             createProject       (core::IObject * _engine);
-        static bool                             loadProject         (core::IObject * _engine);
+        static bool                             LoadGame         (core::IObject * _engine);
         static bool                             saveProject         (core::IObject * _engine);
 
         #ifdef _WIN32
         LRESULT CALLBACK                        WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) final;
         #endif
 
-		void							        init		        (const EngineCreationParams & _params, core::Singletons & _singletons) final;
-		void							        deinit		        () override;
+		void							        Init		        (const EngineCreationParams & _params, core::Singletons & _singletons) final;
+		void							        Deinit		        () override;
 
         bool                                    IsPlaying           () const final override;
         bool                                    IsPaused            () const final override;
@@ -87,17 +87,17 @@ namespace vg::engine
         void                                    Quit                () final override;
         bool                                    IsQuitting          () const final override;
 
-        bool                                    loadProject         (const core::string & _path) final;
-        bool                                    unloadProject       () final;
-        IProject *                              getProject          () const final;
+        bool                                    LoadGame         (const core::string & _path) final;
+        bool                                    UnloadGame       () final;
+        IGame *                              GetProject          () const final;
 
-        core::IWorld *                          GetMainWorld     () const final override;
+        core::IWorld *                          GetMainWorld        () const final override;
         const core::vector<core::IWorld *> &    GetWorlds           () const final override;
 
 		void							        RunOneFrame	        () final override;
         void                                    FlushLoading        () final override;
 
-        core::uint2                             getScreenSize       () const final;
+        core::uint2                             GetScreenSize       () const final;
 
         editor::IEditor *                       GetEditor           () const final override;
 		renderer::IRenderer *	                GetRenderer	        () const final override;
@@ -146,7 +146,7 @@ namespace vg::engine
         bool                                    m_isPaused          : 1;
         bool                                    m_startInPlayMode   : 1;
         bool                                    m_quit              : 1;
-        IProject *                              m_project           = nullptr;
+        IGame *                              m_game              = nullptr;
         WorldResource *                         m_worldResource     = nullptr;
         editor::IEditor *                       m_editor            = nullptr;
 		renderer::IRenderer *	                m_renderer          = nullptr;

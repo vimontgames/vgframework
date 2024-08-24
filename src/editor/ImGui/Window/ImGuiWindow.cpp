@@ -1232,14 +1232,14 @@ namespace vg::editor
                         auto availableWidth = GetContentRegionAvail().x;
                         ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - style::button::SizeSmall.x);
                         sprintf_s(buffer, pString->c_str());
-                        if (ImGui::InputText(getObjectLabel("", displayName, _object).c_str(), buffer, countof(buffer), imguiInputTextflags))
+                        if (ImGui::InputText(getPropertyLabel(displayName).c_str(), buffer, countof(buffer), imguiInputTextflags))
                             *pString = buffer;
                         ImGui::PopItemWidth();
 
                         ImGui::SameLine();
                         auto x = ImGui::GetCursorPosX();
                         ImGui::SetCursorPosX(x + style::button::SizeSmall.x);
-                        ImGui::Text(_prop->getDisplayName());
+                        drawPropertyLabel(propContext, _prop);
                         auto x2 = ImGui::GetCursorPosX();
                         ImGui::SameLine();
                         ImGui::SetCursorPosX(x - 4);

@@ -244,7 +244,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void Editor::RunOneFrame(float _dt)
+    void Editor::RunOneFrame()
     {
         VG_PROFILE_CPU("Editor");
 
@@ -253,18 +253,6 @@ namespace vg::editor
 
         const bool shift = input->IsKeyPressed(Key::LSHIFT) || input->IsKeyPressed(Key::RSHIFT);
         const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::RCONTROL);
-
-        //if (!ctrl && !shift)
-        //{
-        //    if (input->IsKeyJustPressed(Key::T))
-        //        options->setGizmoType(GizmoType::Translate);
-        //    else if (input->IsKeyJustPressed(Key::R))
-        //        options->setGizmoType(GizmoType::Rotate);
-        //    else if (input->IsKeyJustPressed(Key::S))
-        //        options->setGizmoType(GizmoType::Scale);
-        //    else if (input->IsKeyJustPressed(Key::A))
-        //        options->setSnap(options->getSnap());
-        //}
 
         auto wheel = input->GetMouseDelta().z;
         if (ctrl && wheel != 0)
@@ -282,16 +270,6 @@ namespace vg::editor
                 lastGizmoChangedTick = core::Timer::getTick();
             }
         }
-
-        // Update Editor views cameras
-        //auto * renderer = Editor::get()->getRenderer();
-        //auto views = renderer->GetViews(gfx::ViewTarget::Editor);
-        //for (uint i = 0; i < views.size(); ++i)
-        //{
-        //    auto view = views[i];
-        //    if (view)
-        //        view->updateEditorCamera();
-        //}
     }
 
     //--------------------------------------------------------------------------------------
