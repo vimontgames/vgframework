@@ -20,7 +20,7 @@ namespace vg::core
     DynamicProperty::DynamicProperty(const core::string & _name, core::IObject * _parent)
     {
         setName(_name);
-        setParent(_parent);
+        SetParent(_parent);
     }
     
     //--------------------------------------------------------------------------------------

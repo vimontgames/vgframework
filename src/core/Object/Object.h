@@ -71,8 +71,8 @@ namespace vg::core
 		void                        OnEnable			() override;
 		void                        OnDisable			() override;
 
-        void                        setParent           (IObject * _parent) override;
-        IObject *                   getParent           () const final override;
+        void                        SetParent           (IObject * _parent) override;
+        IObject *                   GetParent           () const final override;
 		IGameObject *				GetParentGameObject	() const final override;
 
         void                        OnPropertyChanged   (IObject * _object, const IProperty & _prop, bool _notifyParent) override;
@@ -96,6 +96,9 @@ namespace vg::core
 
 		// Added so that we can use the same 'VG_SAFE_RELEASE' macro everywhere
 		u32						    Release		        () final;
+
+        VG_INLINE void				setParent			(IObject * _parent);
+		VG_INLINE IObject *			getParent			() const;
 
 		static bool					resizeVector		(core::IObject * _parent, core::uint _offset, core::uint _count, void ** _data);
 

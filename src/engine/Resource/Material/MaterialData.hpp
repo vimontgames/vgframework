@@ -39,7 +39,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     renderer::IMaterialModel * MaterialData::getMaterialModel() const
     {
-        MaterialResourceData * parent = dynamic_cast<MaterialResourceData *>(getParent());
+        MaterialResourceData * parent = dynamic_cast<MaterialResourceData *>(GetParent());
         VG_ASSERT(parent);
         renderer::IMaterialModel * materialModel = parent->m_materialModel;
         VG_ASSERT(materialModel);

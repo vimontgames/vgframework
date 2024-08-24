@@ -84,7 +84,7 @@ namespace vg::engine
         MaterialResourceData * object = (MaterialResourceData*)factory->createObject("MaterialResourceData");
         if (nullptr != object)
         {
-            object->setParent(this);
+            object->SetParent(this);
             object->setName(io::getFileName(_path));
 
             if (factory->loadFromXML(object, _path))

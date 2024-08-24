@@ -44,7 +44,7 @@ namespace vg::core
     {
         // Remove GameObject from selection when deleted
         ISelection * selection = Kernel::getSelection(false);
-        if (nullptr != selection)
+        if (nullptr != selection && selection->IsSelectedObject(this))
             selection->Remove(this);
 
         for (uint i = 0; i < m_children.size(); ++i)
@@ -166,9 +166,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::setParent(IObject * _parent)
+    void GameObject::SetParent(IObject * _parent)
     {
-        super::setParent(_parent);
+        super::SetParent(_parent);
         recomputeUpdateFlags();
     }
 
@@ -193,7 +193,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IBaseScene * GameObject::GetScene() const
     {
-        auto parent = getParent();
+        auto parent = GetParent();
         if (IBaseScene * scene = dynamic_cast<IBaseScene *>(parent))
             return scene;
         else if (IGameObject * go = dynamic_cast<IGameObject *>(parent))
@@ -227,7 +227,7 @@ namespace vg::core
         //        return parentScene->GetRoot();
         //}
 
-        IGameObject * parent = dynamic_cast<IGameObject *>(getParent());
+        IGameObject * parent = dynamic_cast<IGameObject *>(GetParent());
         while (nullptr != parent)
         {
             if (parent->IsPrefab())
@@ -239,7 +239,7 @@ namespace vg::core
             //        return parentScene->GetRoot();
             //}
             
-            if (auto * parentGO = dynamic_cast<IGameObject *>(parent->getParent()))
+            if (auto * parentGO = dynamic_cast<IGameObject *>(parent->GetParent()))
                 parent = parentGO;
             else
                 parent = nullptr;
@@ -447,7 +447,7 @@ namespace vg::core
             else
                 m_components.insert(m_components.begin() + _index, _component);
 
-            _component->setParent(this); 
+            _component->SetParent(this); 
             recomputeUpdateFlags();
             sortComponents();
         }
@@ -577,7 +577,7 @@ namespace vg::core
         }
         else if (_searchInParent)
         {
-            if (auto * parent = dynamic_cast<IGameObject *>(getParent()))
+            if (auto * parent = dynamic_cast<IGameObject *>(GetParent()))
                 return parent->GetComponentByType(_className, _searchInParent, _searchInChildren);
         }
 
@@ -610,7 +610,7 @@ namespace vg::core
             else
                 m_children.insert(m_children.begin() + _index, (GameObject *)_gameObject);
 
-            _gameObject->setParent(this); // will recomputeUpdateFlags
+            _gameObject->SetParent(this); // will recomputeUpdateFlags
         }
     }
 
@@ -677,7 +677,7 @@ namespace vg::core
         {
             if (!asBool(instance->GetInstanceFlags()))
                 return false;
-            instance = dynamic_cast<Instance *>(instance->getParent());
+            instance = dynamic_cast<Instance *>(instance->GetParent());
         }
 
         return true;      
@@ -719,20 +719,19 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool GameObject::IsRoot() const
     {
-        const auto parent = getParent();
-        return nullptr == parent || nullptr == dynamic_cast<const GameObject *>(parent);
+        return isRoot();
     }
 
     //--------------------------------------------------------------------------------------
     bool GameObject::HasAncestor(const IGameObject * _ancestor) const
     {
-        GameObject * parent = dynamic_cast<GameObject*>(getParent());
+        GameObject * parent = dynamic_cast<GameObject*>(GetParent());
         while (nullptr != parent)
         {
             if (parent == _ancestor)
                 return true;
             if (nullptr != parent)
-                parent = dynamic_cast<GameObject *>(parent->getParent());
+                parent = dynamic_cast<GameObject *>(parent->GetParent());
         }
         return false;
     }
@@ -786,7 +785,7 @@ namespace vg::core
         
         m_update = update;
 
-        GameObject * parent = dynamic_cast<GameObject *>(getParent());
+        GameObject * parent = dynamic_cast<GameObject *>(GetParent());
         if (parent)
             parent->recomputeUpdateFlags();
     }

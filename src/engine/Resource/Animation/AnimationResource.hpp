@@ -212,7 +212,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     IMeshInstance * AnimationResource::getMeshInstance()
     {
-        AnimationComponent * animComponent = dynamic_cast<AnimationComponent *>(getParent()->getParent());
+        AnimationComponent * animComponent = dynamic_cast<AnimationComponent *>(GetParent()->GetParent());
         VG_ASSERT(animComponent);
         IGameObject * go = animComponent->GetGameObject();
         VG_ASSERT(go);

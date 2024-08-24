@@ -52,7 +52,7 @@ namespace vg::editor
                     {
                         ImGui::OnMsgBoxClickedFunc deleteComponent = [=]() mutable
                             {
-                                IGameObject * go = dynamic_cast<IGameObject *>(component->getParent());
+                                IGameObject * go = dynamic_cast<IGameObject *>(component->GetParent());
                                 if (nullptr != go)
                                 {
                                     go->RemoveComponent(component);
@@ -62,7 +62,7 @@ namespace vg::editor
                                 return true;
                             };
 
-                        string msg = fmt::sprintf("Are you sure you want to delete %s component from \"%s\"?", component->GetClassName(), component->getParent()->getName());
+                        string msg = fmt::sprintf("Are you sure you want to delete %s component from \"%s\"?", component->GetClassName(), component->GetParent()->getName());
                         ImGui::MessageBox(MessageBoxType::YesNo, "Delete Component", msg.c_str(), deleteComponent);
 
                         ImGui::EndPopup();

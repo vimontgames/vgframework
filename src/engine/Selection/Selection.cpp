@@ -4,16 +4,19 @@
 #include "core/GameObject/GameObject.h"
 #include "core/Math/Math.h"
 #include "core/string/string.h"
+#include "core/Instance/Instance.h"
 
 using namespace vg::core;
 
 namespace vg::engine
 {
     //--------------------------------------------------------------------------------------
+    // TODO: shall return the last object added to selection instead?
+    //--------------------------------------------------------------------------------------
     IObject * Selection::GetSelectedObject()
     {
-        if (m_selection.count() > 0)
-            return m_selection[0];
+        if (m_selectionArray.count() > 0)
+            return m_selectionArray[0];
         else
             return nullptr;
     }
@@ -29,7 +32,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     core::vector<core::IObject *> & Selection::GetSelectedObjects()
     {
-        return m_selection;
+        return m_selectionArray;
     }
 
     //--------------------------------------------------------------------------------------
@@ -43,15 +46,47 @@ namespace vg::engine
         updateSelectionMatrix();
     }
 
+    //#define TEST_SELECTION_HASH 1
+    //#define TEST_SELECTION_INSTANCE_FLAGS 1
+
     //--------------------------------------------------------------------------------------
-    bool Selection::IsSelectedObject(core::IObject * _object)
+    bool Selection::IsSelectedObject(const core::IObject * _object) const
     {
-        for (int i = 0; i < m_selection.size(); ++i)
+        bool selected = false;
+        if (const core::Instance * instance = dynamic_cast<const core::Instance *>(_object))
+            selected = asBool(core::IInstance::RuntimeFlags::Selected & instance->getRuntimeFlags());
+
+        #if !TEST_SELECTION_INSTANCE_FLAGS
+        return selected;
+        #endif
+
+        if (nullptr != _object)
         {
-            if (_object == m_selection[i])
-                return nullptr != m_selection[i];
+            #if TEST_SELECTION_HASH
+            for (int i = 0; i < m_selectionArray.size(); ++i)
+            {
+                if (_object == m_selectionArray[i])
+                {
+                    selected = true;
+                    break;
+                }
+            }
+            #endif
+
+            if (m_selectionSet.end() != m_selectionSet.find((core::IObject *)_object))
+            {
+                #if TEST_SELECTION_HASH
+                VG_ASSERT(selected == true);
+                #endif
+
+                #if TEST_SELECTION_INSTANCE_FLAGS
+                VG_ASSERT(selected = true);
+                #endif
+
+                selected = true;
+            }
         }
-        return false;
+        return selected;
     }
 
     //--------------------------------------------------------------------------------------
@@ -87,10 +122,11 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Selection::add(core::IObject * _object)
     {
-        if (!m_selection.exists(_object))
+        if (m_selectionSet.end() == m_selectionSet.find(_object))
         {
             setSelected(_object, true);
-            m_selection.push_back(_object);
+            m_selectionArray.push_back(_object);
+            m_selectionSet.insert(_object);
 
             GameObject * go = dynamic_cast<GameObject *>(_object);
             if (nullptr != go)
@@ -108,6 +144,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Selection::remove(core::IObject * _object)
     {
+        VG_ASSERT(m_selectionSet.size() == m_selectionArray.size());
+
         bool removed = false;
         GameObject * go = dynamic_cast<GameObject *>(_object);
         if (nullptr != go)
@@ -118,7 +156,12 @@ namespace vg::engine
         }
 
         setSelected(_object, false);
-        removed |= m_selection.remove(_object);
+
+        bool removedFromArray = m_selectionArray.remove(_object);
+        bool removedFromHash = m_selectionSet.erase(_object) > 0;
+
+        VG_ASSERT(removedFromArray == removedFromHash);
+        removed |= (removedFromArray | removedFromHash);
 
         return removed;
     }
@@ -143,9 +186,10 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void Selection::clear()
     {
-        for (uint i = 0; i < m_selection.size(); ++i)
-            setSelected(m_selection[i], false);
-        m_selection.clear();
+        for (uint i = 0; i < m_selectionArray.size(); ++i)
+            setSelected(m_selectionArray[i], false);
+        m_selectionArray.clear();
+        m_selectionSet.clear();
     }
 
     //--------------------------------------------------------------------------------------
@@ -153,7 +197,7 @@ namespace vg::engine
     {
         m_matrix = float4x4::identity();
 
-        auto objects = RemoveChildGameObjectsWithParents(m_selection);
+        auto objects = RemoveChildGameObjectsWithParents(m_selectionArray);
 
         float3 T = float3(0, 0, 0);
 
@@ -182,46 +226,40 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    bool Selection::hasAnySelectedAncestor(const core::IObject * _object) const
+    {
+        IObject * parent = _object->GetParent();
+
+        while (nullptr != parent)
+        {
+            if (IsSelectedObject(parent))
+                return true;
+
+            parent = parent->GetParent();
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     // Remove objects with parents already in the list
     // This is useful e.g. when deleting or moving several objects
     //--------------------------------------------------------------------------------------
     core::vector<core::IGameObject *> Selection::RemoveChildGameObjectsWithParents(const core::vector<core::IObject *> & _objects) const
     {
-        core::vector<core::IGameObject *> gameObjectsWithoutChildrenWithParents;
-
+        core::vector<core::IGameObject *> objectsWithoutParents;
+        objectsWithoutParents.reserve(_objects.size());
         for (uint i = 0; i < _objects.size(); ++i)
         {
-            IObject * obj = _objects[i];
-            IGameObject * go = dynamic_cast<IGameObject *>(obj);
+            IGameObject * go = dynamic_cast<IGameObject *>(_objects[i]);
             if (go && !go->IsRoot())
-                gameObjectsWithoutChildrenWithParents.push_back(go);
-        }
-
-        // Remove objects with parents already in the list
-    RESTART:
-        for (uint i = 0; i < gameObjectsWithoutChildrenWithParents.size(); ++i)
-        {
-            IGameObject * goi = dynamic_cast<GameObject*>(gameObjectsWithoutChildrenWithParents[i]);
-
-            if (goi)
             {
-                for (uint j = 0; j < gameObjectsWithoutChildrenWithParents.size(); ++j)
-                {
-                    IGameObject * goj = dynamic_cast<GameObject *>(gameObjectsWithoutChildrenWithParents[j]);
-
-                    if (goj && i != j)
-                    {
-                        if (goj->HasAncestor(goi))
-                        {
-                            gameObjectsWithoutChildrenWithParents.remove(goj);
-                            goto RESTART;
-                        }
-                    }
-                }
+                if (!hasAnySelectedAncestor(go))
+                    objectsWithoutParents.push_back(go);
             }
         }
 
-        return gameObjectsWithoutChildrenWithParents;
+        return objectsWithoutParents;
     }
 
     static bool ends_with(const core::string & str, const core::string & suffix)
@@ -279,7 +317,7 @@ namespace vg::engine
         for (uint i = 0; i < _selectedGameObjects.size(); ++i)
         {
             IGameObject * go = _selectedGameObjects[i];
-            IGameObject * parentGameObject = dynamic_cast<IGameObject *>(go->getParent());
+            IGameObject * parentGameObject = dynamic_cast<IGameObject *>(go->GetParent());
             if (nullptr != parentGameObject)
             {
                 IGameObject * newGO = (IGameObject *)go->Instanciate();

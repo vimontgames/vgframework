@@ -68,7 +68,7 @@ namespace vg::renderer
     {
         m_result.m_output->clear();
 
-        View * view = (View *)getParent();
+        View * view = (View *)GetParent();
         gfx::ViewID viewID = view->getViewID();
 
         if (Renderer::get()->IsFullscreen() && viewID.target == gfx::ViewTarget::Editor)

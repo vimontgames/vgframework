@@ -56,7 +56,7 @@ namespace vg::engine
 		IBaseScene * scene = dynamic_cast<IBaseScene*>(factory->createObject("Scene"));
 		if (nullptr != scene)
 		{
-			scene->setParent(this);
+			scene->SetParent(this);
 			if (factory->loadFromXML(scene, _path))
 			{
 				//fixMissingUIDs(scene->GetRoot());

@@ -737,7 +737,7 @@ namespace vg::editor
                 for (uint i = 0; i < _gameObjects.size(); ++i)
                 {
                     IGameObject * gameObjectToDelete = _gameObjects[i];
-                    IGameObject * parentGameObject = dynamic_cast<IGameObject *>(gameObjectToDelete->getParent());
+                    IGameObject * parentGameObject = dynamic_cast<IGameObject *>(gameObjectToDelete->GetParent());
                     if (nullptr != parentGameObject)
                         parentGameObject->RemoveChild(gameObjectToDelete);
                 }

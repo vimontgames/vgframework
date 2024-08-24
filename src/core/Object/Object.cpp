@@ -32,7 +32,7 @@ namespace vg::core
 		m_refCount(1)
 	{
 		setName(_name);
-        setParent(_parent);
+        SetParent(_parent);
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -172,15 +172,15 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Object::setParent(IObject * _parent)
+    void Object::SetParent(IObject * _parent)
     {
-        m_parent = (Object*)_parent;
+        setParent(_parent);
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * Object::getParent() const
+    IObject * Object::GetParent() const
     {
-        return (IObject*)m_parent;
+        return getParent();
     }
 
     //--------------------------------------------------------------------------------------
@@ -364,14 +364,14 @@ namespace vg::core
     const string Object::GetFullName() const
     {
         string name = getName();
-        IObject * parent = getParent();
+        IObject * parent = GetParent();
         while (parent)
         {
             // TODO: each class should override GetFullName and stop when != Scene or GameObject
             if (strcmp("Scene", parent->GetClassDesc()->GetClassName()))
             {
                 name = parent->getName() + ">" + name;
-                parent = parent->getParent();
+                parent = parent->GetParent();
             }
             else
             {
@@ -393,7 +393,7 @@ namespace vg::core
                     return (IGameObject*)obj;
             }
 
-            obj = obj->getParent();
+            obj = obj->GetParent();
         }
         return nullptr;
     }
@@ -415,7 +415,7 @@ namespace vg::core
                 }
             }
 
-            obj = obj->getParent();
+            obj = obj->GetParent();
         }
         return name;
     }

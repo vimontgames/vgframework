@@ -25,12 +25,10 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
          Game        ();
          ~Game       ();
 
-        // vg::core::IPlugin overrides
         vg::core::IPlugin::Version                      GetVersion              () const final override;
         bool                                            RegisterClasses         () final override;
         bool                                            UnregisterClasses       ();
 
-        // vg::core::IProject overrides
         bool                                            Init                    (vg::engine::IEngine & _engine, vg::core::Singletons & _singletons) final override;
         bool                                            Deinit                  () final;
 

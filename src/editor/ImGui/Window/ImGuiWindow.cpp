@@ -837,7 +837,7 @@ namespace vg::editor
                             }
                             else
                             {
-                                if (_objectContext.m_treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->getParent()))
+                                if (_objectContext.m_treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->GetParent()))
                                 {
                                     auto & newInfo = _objectContext.m_treeNodes.push_empty();
 
@@ -1424,8 +1424,8 @@ namespace vg::editor
                                             {
                                                 VG_INFO("[Inspector] Drag and drop component \"%s\" %s component \"%s\"", from->getName().c_str(), asString(type).c_str(), to->getName().c_str());
 
-                                                IGameObject * toParent = dynamic_cast<IGameObject *>(to->getParent());
-                                                IGameObject * fromParent = dynamic_cast<IGameObject *>(from->getParent());
+                                                IGameObject * toParent = dynamic_cast<IGameObject *>(to->GetParent());
+                                                IGameObject * fromParent = dynamic_cast<IGameObject *>(from->GetParent());
                                                 IGameObject * parent = nullptr;
                                                 if (fromParent == toParent)
                                                     parent = fromParent;
@@ -1501,7 +1501,7 @@ namespace vg::editor
                                 static ImGuiComponentInspectorMenu componentInspectorMenu;
                                 componentInspectorMenu.Display(pComponent);
 
-                                IGameObject * parent = dynamic_cast<IGameObject *>(pComponent->getParent());
+                                IGameObject * parent = dynamic_cast<IGameObject *>(pComponent->GetParent());
                                 bool isParentGameObjectEnabled = parent && asBool(InstanceFlags::Enabled & parent->GetInstanceFlags());
                                 bool isComponentEnabled = asBool(ComponentFlags::Enabled & pComponent->GetComponentFlags());
 

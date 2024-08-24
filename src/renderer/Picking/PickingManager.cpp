@@ -85,7 +85,7 @@ namespace vg::renderer
 
                         if (nullptr != component)
                         {
-                            IObject * parent = component->getParent();
+                            IObject * parent = component->GetParent();
                             IGameObject * go = dynamic_cast<IGameObject *>(parent);
                             if (nullptr != go)
                             {
@@ -156,11 +156,11 @@ namespace vg::renderer
                     if (obj)
                     {
                         // Open all parents but not the object itself
-                        obj = dynamic_cast<IGameObject *>(obj->getParent());
+                        obj = dynamic_cast<IGameObject *>(obj->GetParent());
                         while (nullptr != obj)
                         {
                             obj->SetObjectFlags(ObjectFlags::Opened, true);
-                            obj = dynamic_cast<IGameObject *>(obj->getParent());
+                            obj = dynamic_cast<IGameObject *>(obj->GetParent());
                         }
                     }
                 }

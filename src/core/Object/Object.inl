@@ -14,4 +14,16 @@ namespace vg::core
         else
             (std::underlying_type<ObjectFlags>::type&)m_objectFlags &= ~(std::underlying_type<ObjectFlags>::type)_flags;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void Object::setParent(IObject * _parent)
+    {
+        m_parent = (Object *)_parent;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE IObject * Object::getParent() const
+    {
+        return (IObject *)m_parent;
+    }
 }

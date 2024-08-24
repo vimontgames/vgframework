@@ -76,7 +76,7 @@ namespace vg::engine
         IFactory * factory = Kernel::getFactory();
         VG_SAFE_RELEASE(m_shapeDesc);
         m_shapeDesc = (physics::IShapeDesc *)factory->createObject("CapsuleShapeDesc", "", this);
-        m_shapeDesc->setParent(this);
+        m_shapeDesc->SetParent(this);
 
         return nullptr != m_shapeDesc;
     }
@@ -106,7 +106,7 @@ namespace vg::engine
 
             if (m_characterDesc)
             {
-                m_characterDesc->setParent(this);
+                m_characterDesc->SetParent(this);
                 m_characterDesc->RegisterUID();
             }
         }

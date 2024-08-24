@@ -48,7 +48,7 @@ namespace vg::engine
         VG_SAFE_RELEASE(m_world);
         IFactory * factory = Kernel::getFactory();
         m_world = (IWorld *)factory->createObject("World");
-        m_world->setParent((IObject *)this);
+        m_world->SetParent((IObject *)this);
     }
 
     //--------------------------------------------------------------------------------------

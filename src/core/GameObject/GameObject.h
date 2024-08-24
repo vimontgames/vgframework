@@ -27,7 +27,7 @@ namespace vg::core
         void                                            OnEnable                    () override;
         void                                            OnDisable                   () override;
 
-        void                                            setParent                   (IObject * _parent) final override;
+        void                                            SetParent                   (IObject * _parent) final override;
 
         void                                            SetInstanceFlags            (InstanceFlags _flags, bool _enabled) final override;
 
@@ -105,15 +105,13 @@ namespace vg::core
         void                                            addGraphicInstance          (renderer::IGraphicInstance * _graphicInstance);
         void                                            removeGraphicInstance       (renderer::IGraphicInstance * _graphicInstance);
         const vector<renderer::IGraphicInstance*> &     getGraphicInstances         () const;
-
-        VG_INLINE const vector<GameObject*> &           getChildren                 () const;
-
         void                                            recomputeUpdateFlags        ();
+        void                                            sortComponents              (); 
 
+        VG_INLINE const vector<GameObject *> &          getChildren                 () const;
         VG_INLINE UpdateFlags                           getUpdateFlags              () const;
         VG_INLINE void                                  setUpdateFlags              (UpdateFlags _flags, bool _enabled);
-
-        void                                            sortComponents              ();      
+        VG_INLINE bool                                  isRoot                      () const;
 
     private:
         UpdateFlags                                     m_update = (UpdateFlags)0x0;

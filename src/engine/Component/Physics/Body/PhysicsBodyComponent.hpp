@@ -168,7 +168,7 @@ namespace vg::engine
 
             if (m_bodyDesc)
             {
-                m_bodyDesc->setParent(this);
+                m_bodyDesc->SetParent(this);
                 m_bodyDesc->RegisterUID();
                 if (originalUID)
                     m_bodyDesc->SetOriginalUID(originalUID);

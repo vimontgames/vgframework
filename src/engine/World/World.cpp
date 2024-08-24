@@ -139,7 +139,7 @@ namespace vg::engine
         const auto typeIndex = asInteger(_sceneType);
         if (nullptr != _scene && !m_scenes[typeIndex].exists((Scene *)_scene))
         {
-            _scene->setParent(this);
+            _scene->SetParent(this);
             _scene->addRef();
             m_scenes[typeIndex].push_back((Scene*)_scene);
 
@@ -162,7 +162,7 @@ namespace vg::engine
             if (m_activeScene[typeIndex] == _scene)
                 SetActiveScene(nullptr, _sceneType);
 
-            _scene->setParent(nullptr);
+            _scene->SetParent(nullptr);
             _scene->release();
         }
         return false;
@@ -176,7 +176,7 @@ namespace vg::engine
         for (uint i = 0; i < sceneCount; ++i)
         {
             auto & scene = m_scenes[typeIndex][i];
-            scene->setParent(nullptr);
+            scene->SetParent(nullptr);
             VG_SAFE_RELEASE(scene);
         }
         m_scenes[typeIndex].clear();

@@ -13,7 +13,7 @@ namespace vg::engine
         void                                SetSelectedObject                   (core::IObject * _object) final override;
         void                                SetSelectedObjects                  (const core::vector<core::IObject *> & _objects) final override;
 
-        bool                                IsSelectedObject                    (core::IObject * _object) final override;
+        bool                                IsSelectedObject                    (const core::IObject * _object) const final override;
 
         bool                                Add                                 (core::IObject * _object) final override;
         bool                                Remove                              (core::IObject * _object) final override;
@@ -30,9 +30,11 @@ namespace vg::engine
         void                                setSelected                         (core::IObject * _object, bool _selected);
         void                                clear                               ();
         void                                updateSelectionMatrix               ();
+        bool                                hasAnySelectedAncestor              (const core::IObject * _object) const;
 
     private:
-        core::vector<core::IObject *>   m_selection;
-        core::float4x4                  m_matrix = core::float4x4::identity();
+        core::vector<core::IObject *>       m_selectionArray;
+        core::set<core::IObject *>          m_selectionSet;
+        core::float4x4                      m_matrix = core::float4x4::identity();
     };
 }

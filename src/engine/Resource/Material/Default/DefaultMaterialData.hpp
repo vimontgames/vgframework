@@ -51,9 +51,9 @@ namespace vg::engine
     DefaultMaterialData::DefaultMaterialData(const core::string & _name, IObject * _parent) :
         super(_name, _parent)
     {
-        m_albedoMap.setParent(this);
-        m_normalMap.setParent(this);
-        m_pbrMap.setParent(this);
+        m_albedoMap.SetParent(this);
+        m_normalMap.SetParent(this);
+        m_pbrMap.SetParent(this);
     }
 
     //--------------------------------------------------------------------------------------

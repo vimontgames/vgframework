@@ -24,7 +24,7 @@ namespace vg::engine
     PrefabGameObject::PrefabGameObject(const core::string & _name, IObject * _parent) :
         GameObject(_name, _parent)
     {
-        m_prefabResource.setParent(this);
+        m_prefabResource.SetParent(this);
         setObjectFlags(ObjectFlags::Prefab, true);
     }
 
@@ -463,7 +463,7 @@ namespace vg::engine
                 {
                     IGameObject * instance = VG_SAFE_STATIC_CAST(IGameObject, prefabRoot->Instanciate());
                     instance->SetObjectFlags(ObjectFlags::NotSerialized, true);
-                    instance->setParent(this);
+                    instance->SetParent(this);
 
                     OverrideGameObjectProperties((GameObject*)instance, nullptr);
 
@@ -632,7 +632,7 @@ namespace vg::engine
             if (prefabChildren.size() > 0)
             {
                 auto * prefabChild = prefabChildren[0];
-                prefabChild->setParent(nullptr);
+                prefabChild->SetParent(nullptr);
                 RemoveChild(prefabChild, false);
             }
         }

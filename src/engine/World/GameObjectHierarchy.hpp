@@ -71,13 +71,13 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     core::IWorld * GameObjectHierarchy::GetWorld() const
     {
-        auto parent = getParent();
+        auto parent = GetParent();
         while (parent)
         {
             if (auto world = dynamic_cast<IWorld *>(parent))
                 return world;
 
-            parent = parent->getParent();
+            parent = parent->GetParent();
         }
 
         return nullptr;

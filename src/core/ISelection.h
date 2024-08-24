@@ -15,7 +15,7 @@ namespace vg::core
         virtual void                                SetSelectedObject                   (core::IObject * _object) = 0;
 
         virtual void                                SetSelectedObjects                  (const core::vector<core::IObject *> & _objects) = 0;
-        virtual bool                                IsSelectedObject                    (core::IObject * _object) = 0;
+        virtual bool                                IsSelectedObject                    (const core::IObject * _object) const = 0;
         
         virtual bool                                Add                                 (core::IObject * _object) = 0;
         virtual bool                                Remove                              (core::IObject * _object) = 0;

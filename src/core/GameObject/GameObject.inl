@@ -20,4 +20,11 @@ namespace vg::core
         else
             (std::underlying_type<UpdateFlags>::type &)m_update &= ~(std::underlying_type<UpdateFlags>::type &)_flags;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE bool GameObject::isRoot() const
+    {
+        const auto parent = GetParent();
+        return nullptr == parent || nullptr == dynamic_cast<const GameObject *>(parent);
+    }
 }

@@ -102,7 +102,7 @@ namespace vg::editor
                                         // for textures, display the material if found
                                         if (resInfo->GetResourceType() == "TextureResource")
                                         {
-                                            IObject * parent = client->getParent();
+                                            IObject * parent = client->GetParent();
                                             IObject * material = nullptr;
                                             while (parent)
                                             {
@@ -112,7 +112,7 @@ namespace vg::editor
                                                     break;
                                                 }
 
-                                                parent = parent->getParent();
+                                                parent = parent->GetParent();
                                             }
 
                                             if (nullptr != material)
@@ -133,14 +133,14 @@ namespace vg::editor
                                         }
 
                                         // Find parent IComponent
-                                        IObject * parent = client->getParent();
+                                        IObject * parent = client->GetParent();
                                         IComponent * component = nullptr;
                                         while (parent)
                                         {
                                             component = dynamic_cast<IComponent *>(parent);
                                             if (component)
                                                 break;
-                                            parent = parent->getParent();
+                                            parent = parent->GetParent();
                                         }
 
                                         //VG_ASSERT(component);
@@ -153,7 +153,7 @@ namespace vg::editor
                                                 gameobject = dynamic_cast<IGameObject *>(parent);
                                                 if (gameobject)
                                                     break;
-                                                parent = parent->getParent();
+                                                parent = parent->GetParent();
                                             }
                                             VG_ASSERT(gameobject);
 

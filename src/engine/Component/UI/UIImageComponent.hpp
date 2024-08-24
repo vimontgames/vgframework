@@ -26,7 +26,7 @@ namespace vg::engine
     UIImageComponent::UIImageComponent(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
-        m_image.setParent(this);
+        m_image.SetParent(this);
     }
 
     //--------------------------------------------------------------------------------------

@@ -321,7 +321,7 @@ namespace vg::editor
                 ImGui::OnMsgBoxClickedFunc unpackPrefab = [=]() mutable
                 {
                     auto * prefabRes = prefabGO->GetPrefabResource();
-                    IGameObject * prefabParent = VG_SAFE_STATIC_CAST(IGameObject, prefabGO->getParent());
+                    IGameObject * prefabParent = VG_SAFE_STATIC_CAST(IGameObject, prefabGO->GetParent());
                     
                     auto srcChildren = prefabGO->GetChildren();
 
@@ -329,7 +329,7 @@ namespace vg::editor
                     {
                         IGameObject * root = srcChildren[0];
                         VG_SAFE_INCREASE_REFCOUNT(root);
-                        root->setParent(nullptr);
+                        root->SetParent(nullptr);
                         root->setName(prefabGO->getName());
                         root->SetLocalMatrix(prefabGO->GetLocalMatrix());
                         prefabParent->AddChild(root);
@@ -466,7 +466,7 @@ namespace vg::editor
                             case MenuOption::ReplaceByPrefab:
                             {
                                 prefabRes->SetResourcePath(prefabPath);
-                                auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                                auto parent = dynamic_cast<IGameObject *>(gameObject->GetParent());
                                 VG_ASSERT(parent);
                                 if (parent)
                                 {
@@ -481,7 +481,7 @@ namespace vg::editor
                             case MenuOption::AddPrefab:
                             {
                                 prefabRes->SetResourcePath(prefabPath);
-                                auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                                auto parent = dynamic_cast<IGameObject *>(gameObject->GetParent());
                                 VG_ASSERT(parent);
                                 if (parent)
                                     parent->AddChild(newPrefabObject);
@@ -498,7 +498,7 @@ namespace vg::editor
 
                             case MenuOption::CreatePrefab:
                             {
-                                auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                                auto parent = dynamic_cast<IGameObject *>(gameObject->GetParent());
                                 VG_ASSERT(parent);
                                 if (parent)
                                 {
@@ -562,7 +562,7 @@ namespace vg::editor
 
                         case MenuOption::AddGameObject:
                         {
-                            auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                            auto parent = dynamic_cast<IGameObject *>(gameObject->GetParent());
                             if (parent)
                                 parent->AddChild(newGameObject);
                         }
@@ -574,7 +574,7 @@ namespace vg::editor
                             break;
 
                         case MenuOption::AddParentGameObject:
-                            auto parent = dynamic_cast<IGameObject *>(gameObject->getParent());
+                            auto parent = dynamic_cast<IGameObject *>(gameObject->GetParent());
                             if (parent)
                             {
                                 parent->AddChild(newGameObject);
@@ -583,11 +583,11 @@ namespace vg::editor
                                 newGameObject->AddChild(gameObject);
                                 VG_SAFE_RELEASE(gameObject);
                             }
-                            else if (core::IBaseScene * scene = dynamic_cast<core::IBaseScene *>(gameObject->getParent()))
+                            else if (core::IBaseScene * scene = dynamic_cast<core::IBaseScene *>(gameObject->GetParent()))
                             {
                                 // Object is root node, create a new root node and add this a its child
                                 VG_SAFE_INCREASE_REFCOUNT(gameObject);
-                                newGameObject->setParent(scene);
+                                newGameObject->SetParent(scene);
                                 scene->SetRoot(newGameObject);
                                 newGameObject->AddChild(gameObject);
                                 VG_SAFE_RELEASE(gameObject);

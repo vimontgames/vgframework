@@ -35,7 +35,7 @@ namespace vg::editor
         case style::draganddrop::Type::Node:
         {
             // '_to' is the new parent of '_from'
-            IGameObject* fromParent = dynamic_cast<IGameObject*>(_from->getParent());
+            IGameObject* fromParent = dynamic_cast<IGameObject*>(_from->GetParent());
             if (fromParent)
             {
                 VG_SAFE_INCREASE_REFCOUNT(_from);
@@ -50,10 +50,10 @@ namespace vg::editor
         case style::draganddrop::Type::AfterNode:
         {
             // '_from' is not the next following brother of '_to'
-            IGameObject* fromParent = dynamic_cast<IGameObject*>(_from->getParent());
+            IGameObject* fromParent = dynamic_cast<IGameObject*>(_from->GetParent());
             if (fromParent)
             {
-                IGameObject* toParent = dynamic_cast<IGameObject*>(_to->getParent());
+                IGameObject* toParent = dynamic_cast<IGameObject*>(_to->GetParent());
                 if (toParent)
                 {
                     VG_SAFE_INCREASE_REFCOUNT(_from);

@@ -39,15 +39,15 @@ namespace vg::physics
         if (_ioSettings.mIsSensor)
         {
             if (_inBody1.IsSensor())
-                m_triggerEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent())));
+                m_triggerEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj1->GetParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj2->GetParent())));
 
             if (_inBody2.IsSensor())
-                m_triggerEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent())));
+                m_triggerEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj2->GetParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj1->GetParent())));
         }
         else
         {
-            m_collisionEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent())));
-            m_collisionEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent())));
+            m_collisionEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj1->GetParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj2->GetParent())));
+            m_collisionEnter.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj2->GetParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj1->GetParent())));
         }
 
         //VG_INFO("[Physics] Contact between \"%s\" and \"%s\"", obj1->GetParentGameObject()->getName().c_str(), obj2->GetParentGameObject()->getName().c_str());
@@ -63,7 +63,7 @@ namespace vg::physics
 
         if (_ioSettings.mIsSensor)
         {
-            m_triggerStay.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj1->getParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj2->getParent())));
+            m_triggerStay.push_back_atomic(Contact(VG_SAFE_STATIC_CAST(core::IGameObject, obj1->GetParent()), VG_SAFE_STATIC_CAST(core::IGameObject, obj2->GetParent())));
         }
         //else
         //{

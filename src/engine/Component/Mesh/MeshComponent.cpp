@@ -144,9 +144,9 @@ namespace vg::engine
         }
         else if (!strcmp(_prop.getName(), "m_shader"))
         {
-            MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(_object->getParent());
+            MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(_object->GetParent());
             VG_ASSERT(matResData);
-            MaterialResource * matRes = dynamic_cast<MaterialResource *>(matResData->getParent());
+            MaterialResource * matRes = dynamic_cast<MaterialResource *>(matResData->GetParent());
             VG_ASSERT(matRes);
             const auto & matResources = m_meshMaterials.getMaterialResources();
             for (uint i = 0; i < matResources.size(); ++i)
@@ -162,9 +162,9 @@ namespace vg::engine
         }
         else if (!strcmp(_prop.getName(), "m_surfaceType") || !strcmp(_prop.getName(), "m_cullMode"))
         {
-            MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(_object->getParent());
+            MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(_object->GetParent());
             VG_ASSERT(matResData);
-            MaterialResource * matRes = dynamic_cast<MaterialResource *>(matResData->getParent());
+            MaterialResource * matRes = dynamic_cast<MaterialResource *>(matResData->GetParent());
             VG_ASSERT(matRes);
             const auto & matResources = m_meshMaterials.getMaterialResources();
             for (uint i = 0; i < matResources.size(); ++i)

@@ -82,7 +82,7 @@ namespace vg::engine
         WorldResourceData * worldData = dynamic_cast<WorldResourceData *>(factory->createObject("WorldResourceData"));
         if (nullptr != worldData)
         {
-            worldData->setParent(this);
+            worldData->SetParent(this);
             if (factory->loadFromXML(worldData, _path))
             {
                 worldData->createWorld();
@@ -153,7 +153,7 @@ namespace vg::engine
 
                     if (sceneRes->CreateFile(_file))
                     {
-                        sceneRes->setParent(this);
+                        sceneRes->SetParent(this);
                         sceneRes->SetResourcePath(_file);
                         worldResData->m_sceneResources.push_back(sceneRes);
                     }
@@ -167,7 +167,7 @@ namespace vg::engine
 
                     if (prefabRes->CreateFile(_file))
                     {
-                        prefabRes->setParent(this);
+                        prefabRes->SetParent(this);
                         prefabRes->SetResourcePath(_file);
                         worldResData->m_prefabsResources.push_back(prefabRes);
                     }
@@ -192,7 +192,7 @@ namespace vg::engine
                 case core::Scene:
                 {
                     SceneResource * sceneRes = new SceneResource();
-                    sceneRes->setParent(worldResData);
+                    sceneRes->SetParent(worldResData);
                     sceneRes->SetResourcePath(_file);
                     worldResData->m_sceneResources.push_back(sceneRes);
                 }
@@ -201,7 +201,7 @@ namespace vg::engine
                 case core::Prefab:
                 {
                     PrefabResource * prefabRes = new PrefabResource();
-                    prefabRes->setParent(worldResData);
+                    prefabRes->SetParent(worldResData);
                     prefabRes->SetResourcePath(_file);
                     worldResData->m_prefabsResources.push_back(prefabRes);
                 }

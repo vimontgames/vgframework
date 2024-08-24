@@ -55,8 +55,8 @@ namespace vg::core
         virtual void                        OnEnable            () = 0;
         virtual void                        OnDisable           () = 0;
 
-        virtual void                        setParent           (IObject * _parent) = 0;
-        virtual IObject *                   getParent           () const = 0;
+        virtual void                        SetParent           (IObject * _parent) = 0;
+        virtual IObject *                   GetParent           () const = 0;
         virtual IGameObject *               GetParentGameObject () const = 0;
 
         virtual void                        OnPropertyChanged   (IObject * _object, const IProperty & _prop, bool _notifyParent = true) = 0;

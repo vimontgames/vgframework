@@ -53,7 +53,7 @@ namespace vg::engine
         
         // Update resource owners
         for (auto & animRes : m_animationResources)
-            animRes.setParent(this);
+            animRes.SetParent(this);
         
         return true;
     }
@@ -67,7 +67,7 @@ namespace vg::engine
         
             // Update resource owners
             for (auto & animRes : m_animationResources)
-                animRes.setParent(this);
+                animRes.SetParent(this);
         
             return true;
         }

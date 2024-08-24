@@ -38,7 +38,7 @@ namespace vg::engine
 
         // Update resource owners
         for (auto & matRes : m_materialResources)
-            matRes.setParent(this);
+            matRes.SetParent(this);
 
         return true;
     }
@@ -52,7 +52,7 @@ namespace vg::engine
 
             // Update resource owners
             for (auto & matRes : m_materialResources)
-                matRes.setParent(this);
+                matRes.SetParent(this);
 
             return true;
         }

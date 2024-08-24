@@ -623,7 +623,7 @@ namespace vg::core
                 IObject * srcChild = (*srcVec)[i];
                 IObject * newChild = createObject(srcChild->GetClassName(), srcChild->getName(), _dstObj);
                 CopyProperties((IObject *)srcChild, newChild);
-                newChild->setParent(_dstObj);
+                newChild->SetParent(_dstObj);
                 dstVec->push_back(newChild);
             }
         }
@@ -636,7 +636,7 @@ namespace vg::core
             IResource * dstRes = _dstProp->GetPropertyResource(_dstObj);
             CopyProperties(srcRes, dstRes);
 
-            dstRes->setParent(_dstObj);
+            dstRes->SetParent(_dstObj);
             dstRes->onResourcePathChanged("", dstRes->GetResourcePath());
         }
         break;
@@ -663,7 +663,7 @@ namespace vg::core
                         IResource * dstRes = _dstProp->GetPropertyResourceVectorElement(_dstObj, i);
                         CopyProperties(srcRes, dstRes);
 
-                        dstRes->setParent(_dstObj);
+                        dstRes->SetParent(_dstObj);
                         dstRes->onResourcePathChanged("", dstRes->GetResourcePath());
                     }
                 }
@@ -1144,7 +1144,7 @@ namespace vg::core
                                                     {
                                                         // TODO: clear contents?
                                                         VG_VERIFY(serializeFromXML(pObjectRef, xmlObjectRef));
-                                                        pObjectRef->setParent(_object);
+                                                        pObjectRef->SetParent(_object);
                                                     }
                                                 }
                                             }
@@ -1171,7 +1171,7 @@ namespace vg::core
                                                         {
                                                             if (serializeFromXML(_resource, xmlObjectRef))
                                                             {
-                                                                _resource->setParent(_object);
+                                                                _resource->SetParent(_object);
                                                                 _resource->onResourcePathChanged("", _resource->GetResourcePath());
                                                             }
                                                         }
@@ -1235,7 +1235,7 @@ namespace vg::core
                                                                 IResource * resource = (IResource*)createObject(classNameRef, "", _object);
                                                                 if (serializeFromXML(resource, xmlObjectRef))
                                                                 {
-                                                                    resource->setParent(_object);
+                                                                    resource->SetParent(_object);
                                                                     resource->onResourcePathChanged("", resource->GetResourcePath());
                                                                     vector->push_back(resource);
                                                                 }
@@ -1301,7 +1301,7 @@ namespace vg::core
                                                                 IResource * pResource = (IResource *)(uint_ptr(data) + index * elemSize);
                                                                 if (serializeFromXML(pResource, xmlObjectRef))
                                                                 {
-                                                                    pResource->setParent(_object);
+                                                                    pResource->SetParent(_object);
                                                                     pResource->onResourcePathChanged("", pResource->GetResourcePath());
                                                                 }
                                                                 index++;

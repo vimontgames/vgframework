@@ -44,7 +44,7 @@ namespace vg::core
     {
         setName(_from.getName());
 
-        setParent(_from.getParent());
+        SetParent(_from.GetParent());
         SetResourcePath(_from.GetResourcePath());
         
         return *this;
@@ -74,7 +74,7 @@ namespace vg::core
     void Resource::setup(IObject * _owner, const string & _path, UserData _userData)
     {
         setObject(nullptr);
-        setParent(_owner);
+        SetParent(_owner);
         setUserData(_userData);
         SetResourcePath(_path);
     }
@@ -124,7 +124,7 @@ namespace vg::core
         if (m_resourcePath == _path)
             return false;
 
-        IObject * parent = getParent();
+        IObject * parent = GetParent();
         
         if (nullptr != parent)
         {
