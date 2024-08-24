@@ -16,8 +16,9 @@ namespace vg::gfx
 			Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData);
 			~Texture();
 
-            virtual core::u16								GetWidth				() const final override;
-            virtual core::u16								GetHeight				() const final override;
+			core::u16										GetWidth				() const final override;
+			core::u16										GetHeight				() const final override;
+			gfx::PixelFormat								GetPixelFormat			() const final override;
 
 			VG_INLINE const TextureDesc &					getTexDesc				() const;
 			VG_INLINE const gfx::Resource &					getResource				() const;

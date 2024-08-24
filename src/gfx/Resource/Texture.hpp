@@ -24,6 +24,12 @@ namespace vg::gfx
         }
 
         //--------------------------------------------------------------------------------------
+        gfx::PixelFormat Texture::GetPixelFormat() const
+        {
+            return m_texDesc.format;
+        }
+
+        //--------------------------------------------------------------------------------------
         core::u16 computeMaxMip(core::uint _dim)
         {
             auto count = log2((float)_dim)+1;
