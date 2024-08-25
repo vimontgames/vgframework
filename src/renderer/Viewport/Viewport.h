@@ -34,11 +34,14 @@ namespace vg::renderer
        void                                     SetViewportID       (gfx::ViewportID _viewportID) final override;
        gfx::ViewportID                          GetViewportID       () const final override;
 
-       void                                     SetActive           (bool _active) final override;
-       bool                                     AnyActive           () const final override;
+       void                                     SetFocused          (bool _active) final override;
+       bool                                     AnyFocused          () const final override;
 
        void                                     SetVisible          (bool _visible) final override;
        bool                                     AnyVisible          () const final override;
+
+       void                                     SetRender           (bool _visible) final override;
+       bool                                     AnyRender           () const final override;
 
        void                                     AddView             (core::u8 _index, gfx::ViewID _viewID) final override;
        void                                     RemoveView          (core::u8 _index, gfx::ViewID _viewID) final override;

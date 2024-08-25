@@ -328,7 +328,7 @@ namespace vg::renderer
                 if (nullptr != viewport)
                 {
                     viewport->SetRenderTargetSize(GetBackbufferSize());
-                    viewport->SetActive(true);
+                    viewport->SetFocused(true);
                     viewport->SetVisible(true);
                 }
             }
@@ -340,7 +340,7 @@ namespace vg::renderer
                 if (nullptr != view)
                 {
                     view->SetRenderTargetSize(GetBackbufferSize());
-                    view->SetActive(true);
+                    view->SetFocused(true);
                     view->SetVisible(true);
                 }
             }
@@ -442,7 +442,7 @@ namespace vg::renderer
                     for (uint i = 0; i < m_viewports[j].size(); ++i)
                     {
                         auto * viewport = m_viewports[j][i];
-                        if (viewport->AnyVisible())
+                        if (viewport->AnyRender())
                         {
                             auto * rt = (Texture *)viewport->GetRenderTarget();
                             if (rt)
@@ -468,7 +468,7 @@ namespace vg::renderer
                         auto * view = (View*)views[i];
                         if (nullptr != view)
                         {
-                            if (!view->IsVisible())
+                            if (!view->IsRender())
                                 continue;
 
                             gfx::RenderPassContext rc;
@@ -502,6 +502,23 @@ namespace vg::renderer
             }
 		}
 		m_device.endFrame();
+
+        for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
+        {
+            auto target = gfx::ViewTarget(j);
+
+            // TODO: ShadowMaps too?
+            if (target == ViewTarget::Game)
+            {
+                auto & views = m_views[j];
+                for (uint i = 0; i < views.count(); ++i)
+                {
+                    auto * view = (View *)views[i];
+                    if (nullptr != view)
+                        view->SetRender(false);
+                }
+            }
+        }
 	}
 
     //--------------------------------------------------------------------------------------
@@ -934,7 +951,7 @@ namespace vg::renderer
                     if (nullptr != view)
                     {
                         view->SetRenderTargetSize(GetBackbufferSize());
-                        view->SetActive(true);
+                        view->SetFocused(true);
                         view->SetVisible(true);
                     }
                 }

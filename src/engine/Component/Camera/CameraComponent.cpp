@@ -119,8 +119,10 @@ namespace vg::engine
 
                 // Create a view
                 auto renderer = Engine::get()->GetRenderer();
-                if (auto * view = renderer->CreateView(viewParams, viewName, gfx::IView::Flags::Picking))
+                if (auto * view = renderer->CreateView(viewParams, viewName))
                 {
+                    view->SetRenderTarget(viewport->GetRenderTarget());
+                    view->SetRenderTargetSize(viewport->GetRenderTargetSize());
                     renderer->AddView(view);
                     viewport->AddView(m_viewIndex, view->GetViewID());
                     VG_SAFE_RELEASE(view);
@@ -131,6 +133,7 @@ namespace vg::engine
         auto * view = Engine::get()->GetRenderer()->GetView(getViewID());
         if (nullptr != view)
         {
+            view->SetRender(true);
             const float4x4 & matrix = getGameObject()->GetGlobalMatrix();
             view->SetupPerspectiveCamera(matrix, float2(m_near, m_far), m_fovY, m_viewportOffset, m_viewportScale);
         }      

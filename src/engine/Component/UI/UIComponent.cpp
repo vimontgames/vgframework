@@ -73,7 +73,7 @@ namespace vg::engine
                 {
                     if (auto * view = renderer->GetView(it->second))
                     {
-                        if (view->GetWorld() == _world)
+                        if (view->IsRender() && view->GetWorld() == _world)
                             return view->GetViewGUI();
                     }
                 }
@@ -81,7 +81,7 @@ namespace vg::engine
                 // Prefab preview mode
                 if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Editor, _world))
                 {
-                    if (view->GetWorld() == _world && asBool(gfx::IView::Flags::Prefab & view->GetFlags()))
+                    if (view->IsRender() && view->GetWorld() == _world && asBool(gfx::IView::Flags::Prefab & view->GetFlags()))
                         return view->GetViewGUI();
                 }
             }            

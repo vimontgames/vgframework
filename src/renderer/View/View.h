@@ -75,11 +75,14 @@ namespace vg::renderer
         void                                SetViewID                   (gfx::ViewID _viewID) override;
         gfx::ViewID                         GetViewID                   () const override;
 
-        void                                SetActive                   (bool _active) override;
-        bool                                IsActive                    () const override;
+        void                                SetFocused                   (bool _active) override;
+        bool                                IsFocused                    () const override;
 
         void                                SetVisible                  (bool _visible) override;
         bool                                IsVisible                   () const override;
+
+        void                                SetRender                   (bool _render) override;
+        bool                                IsRender                    () const override;
 
         void                                SetMouseOffset              (const core::uint2 & _mouseOffset) override;
         core::int2                          GetRelativeMousePos         () const override;
@@ -140,15 +143,17 @@ namespace vg::renderer
 
         VG_INLINE ViewCullingJob *          getCullingJob               () const;
 
-        void                                setFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0);
-        Flags                               getFlags                    () const;
+        VG_INLINE void                      setFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0);
+        VG_INLINE void                      setFlag                     (Flags _flag, bool _value);
+        VG_INLINE Flags                     getFlags                    () const;
+        VG_INLINE bool                      testFlag                    (Flags _flag) const;
 
         bool                                isToolmode                  () const;
 
         void                                addShadowView               (ShadowView * _shadowView);
         const core::vector<ShadowView *> &  getShadowViews              () const { return m_shadowViews; }
-        void                                setIsAdditionalView         (bool _isAdditionalView) { m_additionalView = _isAdditionalView; }
-        bool                                isAdditionalView            () const { return m_additionalView;}
+        VG_INLINE void                      setIsAdditionalView         (bool _isAdditionalView);
+        VG_INLINE bool                      isAdditionalView            () const;
         void                                clearShadowViews            ();
         const ShadowView *                  findShadowView              (const LightInstance * _light) const;
         core::string                        findShadowMapID             (const LightInstance * _light) const;
@@ -178,10 +183,6 @@ namespace vg::renderer
         float                               m_cameraFovY;
         core::float2                        m_viewportOffset            = core::float2(0,0);
         core::float2                        m_viewportScale             = core::float2(1,1);
-        bool                                m_active                    = false;
-        bool                                m_visible                   = false;
-        bool                                m_ortho                     = false;
-        bool                                m_additionalView            = false;
         ViewCullingJob *                    m_cullingJob                = nullptr;
         ViewConstantsUpdatePass *           m_viewConstantsUpdatePass   = nullptr;
         core::uint2                         m_mouseOffset;

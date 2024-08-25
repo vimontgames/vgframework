@@ -249,18 +249,6 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::setFlags(Flags _flagsToSet, Flags _flagsToRemove)
-    {
-        m_flags = (Flags)((std::underlying_type<Flags>::type(m_flags) & ~std::underlying_type<Flags>::type(_flagsToRemove)) | (std::underlying_type<Flags>::type(_flagsToSet)));
-    }
-
-    //--------------------------------------------------------------------------------------
-    View::Flags View::getFlags() const
-    {
-        return m_flags;
-    }
-
-    //--------------------------------------------------------------------------------------
     const core::float4x4 & View::GetViewInvMatrix() const
     {
         return getViewMatrix();
@@ -354,44 +342,43 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetActive(bool _active)
+    void View::SetFocused(bool _active)
     {
-        if (m_active != _active)
-        {
-            m_active = _active;
-
-            //if (m_active)
-            //    VG_INFO("[View] View \"%s\" is now active", getName().c_str());
-            //else
-            //    VG_INFO("[View] View \"%s\" is no more active", getName().c_str());
-        }
+        if (testFlag(IView::Flags::Focus) != _active)
+            setFlag(IView::Flags::Focus, _active);
     }
     
     //--------------------------------------------------------------------------------------
-    bool View::IsActive() const
+    bool View::IsFocused() const
     {
-        return m_active;
+        return testFlag(IView::Flags::Focus);
     }
 
     //--------------------------------------------------------------------------------------
     void View::SetVisible(bool _visible)
     {
-        if (m_visible != _visible)
-        {
-            m_visible = _visible;
-
-            //if (m_visible)
-            //    VG_INFO("[View] View \"%s\" is now visible", getName().c_str());
-            //else
-            //    VG_INFO("[View] View \"%s\" is no more visible", getName().c_str());
-        }
+        if (testFlag(IView::Flags::Visible) != _visible)
+            setFlag(IView::Flags::Visible, _visible);
     }
 
     //--------------------------------------------------------------------------------------
     bool View::IsVisible() const
     {
-        return m_visible && all(GetRenderTargetSize() > 1) && GetRenderTarget() != nullptr;
+        return testFlag(IView::Flags::Visible) && all(GetRenderTargetSize() > 1) && GetRenderTarget() != nullptr;
     }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetRender(bool _render)
+    {
+        if (testFlag(IView::Flags::Render) != _render)
+            setFlag(IView::Flags::Render, _render);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool View::IsRender() const
+    {
+        return IsVisible() && testFlag(IView::Flags::Render);
+    }     
 
     //--------------------------------------------------------------------------------------
     void View::SetMouseOffset(const core::uint2 & _mouseOffset)
@@ -404,7 +391,7 @@ namespace vg::renderer
     {
         auto input = Kernel::getInput();
         uint2 mousePos = input->GetMousePos();
-        int2 offset = (int2)((float2)GetRenderTargetSize() * GetViewportOffset());  // WTF access viewport instead to get fullsize! or store RT size !
+        int2 offset = (int2)((float2)GetRenderTargetSize() * GetViewportOffset());  
 
         const auto renderer = Renderer::get();
         if (renderer->IsFullscreen())
@@ -436,13 +423,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool View::IsOrtho() const 
     {
-        return m_ortho;
+        return testFlag(IView::Flags::Ortho);
     }
 
     //--------------------------------------------------------------------------------------
     void View::setOrtho(bool _ortho)
     {
-        m_ortho = _ortho;
+        if (testFlag(IView::Flags::Ortho) != _ortho)
+            setFlag(IView::Flags::Ortho, _ortho);
     }
 
     //--------------------------------------------------------------------------------------

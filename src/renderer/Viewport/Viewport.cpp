@@ -72,21 +72,19 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void Viewport::SetActive(bool _active)
+    void Viewport::SetFocused(bool _active)
     {
         auto * renderer = Renderer::get();
 
         for (const auto & pair : m_viewIDs)
         {
             if (auto * view = renderer->GetView(pair.second))
-            {
-                view->SetActive(_active);
-            }
+                view->SetFocused(_active);
         }
     }
 
     //--------------------------------------------------------------------------------------
-    bool Viewport::AnyActive() const
+    bool Viewport::AnyFocused() const
     {
         auto * renderer = Renderer::get();
 
@@ -94,7 +92,7 @@ namespace vg::renderer
         {
             if (auto * view = renderer->GetView(pair.second))
             {
-                if (view->IsActive())
+                if (view->IsFocused())
                     return true;
             }
         }
@@ -110,9 +108,7 @@ namespace vg::renderer
         for (const auto & pair : m_viewIDs)
         {
             if (auto * view = renderer->GetView(pair.second))
-            {
                 view->SetVisible(_visible);
-            }
         }
     }
 
@@ -126,6 +122,35 @@ namespace vg::renderer
             if (auto * view = renderer->GetView(pair.second))
             {
                 if (view->IsVisible())
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Viewport::SetRender(bool _render)
+    {
+        auto * renderer = Renderer::get();
+
+        for (const auto & pair : m_viewIDs)
+        {
+            if (auto * view = renderer->GetView(pair.second))
+                view->SetRender(_render);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Viewport::AnyRender() const
+    {
+        auto * renderer = Renderer::get();
+
+        for (const auto & pair : m_viewIDs)
+        {
+            if (auto * view = renderer->GetView(pair.second))
+            {
+                if (/*view->IsVisible() &&*/ view->IsRender())
                     return true;
             }
         }

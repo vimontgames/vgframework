@@ -16,6 +16,12 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    gfx::IView::Flags ImGuiEditorView::GetViewFlags() const
+    {
+        return gfx::IView::Flags::Render;  // Editor views don't need a gameplay camera update to render
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ImGuiEditorView::ShowToolbar() const
     {
         return false;

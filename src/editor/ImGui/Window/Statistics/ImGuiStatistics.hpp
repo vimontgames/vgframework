@@ -12,43 +12,193 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiStatistics::DrawGUI()
     {
+        auto renderer = Editor::get()->getRenderer();
+
         auto drawViewDetail = [=](IView * _view)
         {
             if (ImGui::TreeNodeEx(_view->getName().c_str(), ImGuiTreeNodeFlags_None))
             {
-                if (auto * rt = _view->GetRenderTarget())
+                ImGui::Columns(2, "mycolumns2", false);
+                {
+                    //ImGui::BeginDisabled(!_view->IsActive());
+                    //ImGui::Text("Active");
+                    //ImGui::EndDisabled();
+                    //
+                    //ImGui::BeginDisabled(!_view->IsVisible());
+                    //ImGui::Text("Visible");
+                    //ImGui::EndDisabled();
+
+                    ImGui::BeginDisabled(!_view->IsRender());
+                    ImGui::Text("Render");
+                    ImGui::EndDisabled();
+
+                    ImGui::BeginDisabled(!_view->GetRenderTarget());
+                    ImGui::Text("Size");
+                    ImGui::Text("Offset");
+                    //ImGui::Text("Format"); 
+                    ImGui::EndDisabled();
+                }
+                ImGui::NextColumn();
+                {
+                    //ImGui::BeginDisabled(!_view->IsActive());
+                    //ImGui::Text("%s", _view->IsActive() ? "True" : "False");
+                    //ImGui::EndDisabled();
+                    //
+                    //ImGui::BeginDisabled(!_view->IsVisible());
+                    //ImGui::Text("%s", _view->IsVisible() ? "True" : "False");
+                    //ImGui::EndDisabled();
+
+                    ImGui::BeginDisabled(!_view->IsRender());
+                    ImGui::Text("%s", _view->IsRender() ? "True" : "False");
+                    ImGui::EndDisabled();
+
+                    if (auto * rt = _view->GetRenderTarget())
+                    {
+                        ImGui::Text("%u x %u", (uint)_view->GetSize().x, (uint)_view->GetSize().y);
+                        ImGui::Text("%u, %u", (uint)_view->GetOffset().x, (uint)_view->GetOffset().y);
+                        //ImGui::Text("%s", asString(rt->GetPixelFormat()).c_str());
+                    }
+                    else
+                    {
+                        ImGui::Text("");
+                        ImGui::Text("");
+                        //ImGui::Text("");
+                    }
+                }
+                ImGui::Columns(1);
+
+                if (ImGui::TreeNodeEx(getObjectLabel("Instance", _view).c_str(), ImGuiTreeNodeFlags_None))
                 {
                     ImGui::Columns(2, "mycolumns2", false);
                     {
-                        ImGui::BeginDisabled(!_view->IsActive());
-                        ImGui::Text("Active");
+                        const auto & stats = _view->GetViewCullingStats();
+                        ImGui::BeginDisabled(!stats.opaque);
+                        ImGui::Text("Opaque");
                         ImGui::EndDisabled();
 
-                        ImGui::BeginDisabled(!_view->IsVisible());
-                        ImGui::Text("Visible");
+                        ImGui::BeginDisabled(!stats.transparent);
+                        ImGui::Text("Transparent");
                         ImGui::EndDisabled();
-
-                        ImGui::Text("Size");
-                        ImGui::Text("Format");
                     }
                     ImGui::NextColumn();
                     {
-                        ImGui::BeginDisabled(!_view->IsActive());
-                        ImGui::Text("%s", _view->IsActive() ? "True" : "False");
+                        const auto & stats = _view->GetViewCullingStats();
+
+                        ImGui::BeginDisabled(!stats.opaque);
+                        ImGui::Text("%u", stats.opaque);
                         ImGui::EndDisabled();
 
-                        ImGui::BeginDisabled(!_view->IsVisible());
-                        ImGui::Text("%s", _view->IsVisible() ? "True" : "False");
+                        ImGui::BeginDisabled(!stats.transparent);
+                        ImGui::Text("%u", stats.transparent);
                         ImGui::EndDisabled();
-
-                        ImGui::Text("%u x %u", rt->GetWidth(), rt->GetHeight());
-                        ImGui::Text("%s", asString(rt->GetPixelFormat()).c_str());
                     }
                     ImGui::Columns(1);
+                    ImGui::TreePop();
+                }
+
+                if (ImGui::TreeNodeEx(getObjectLabel("Lights", _view).c_str(), ImGuiTreeNodeFlags_None))
+                {
+                    ImGui::Columns(2, "mycolumns2", false);
+                    {
+                        const auto & stats = _view->GetViewCullingStats();
+
+                        ImGui::BeginDisabled(!stats.directional);
+                        ImGui::Text("Directional");
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!stats.omni);
+                        ImGui::Text("Omni");
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!stats.spot);
+                        ImGui::Text("Spot");
+                        ImGui::EndDisabled();
+                    }
+                    ImGui::NextColumn();
+                    {
+                        const auto & stats = _view->GetViewCullingStats();
+
+                        ImGui::BeginDisabled(!stats.directional);
+                        ImGui::Text("%u", stats.directional);
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!stats.omni);
+                        ImGui::Text("%u", stats.omni);
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!stats.spot);
+                        ImGui::Text("%u", stats.spot);
+                        ImGui::EndDisabled();
+                    }
+                    ImGui::Columns(1);
+                    ImGui::TreePop();
                 }
 
                 ImGui::TreePop();
             }            
+        };
+
+        auto drawViewportDetails = [=](IViewport * _viewport)
+        {
+            if (ImGui::TreeNodeEx(_viewport->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+            {
+                ImGui::Columns(2, "mycolumns2", false);
+                {
+                    ImGui::BeginDisabled(!_viewport->AnyFocused());
+                    ImGui::Text("Focus");
+                    ImGui::EndDisabled();
+
+                    ImGui::BeginDisabled(!_viewport->AnyVisible());
+                    ImGui::Text("Visible");
+                    ImGui::EndDisabled();
+
+                    //ImGui::BeginDisabled(!_viewport->AnyRender());
+                    //ImGui::Text("Render");
+                    //ImGui::EndDisabled();
+
+                    ImGui::BeginDisabled(!_viewport->GetRenderTarget());
+                    ImGui::Text("Size");
+                    ImGui::Text("Format");
+                    ImGui::EndDisabled();
+                }
+                ImGui::NextColumn();
+                {
+                    ImGui::BeginDisabled(!_viewport->AnyFocused());
+                    ImGui::Text("%s", _viewport->AnyFocused() ? "True" : "False");
+                    ImGui::EndDisabled();
+
+                    ImGui::BeginDisabled(!_viewport->AnyVisible());
+                    ImGui::Text("%s", _viewport->AnyVisible() ? "True" : "False");
+                    ImGui::EndDisabled();
+
+                    //ImGui::BeginDisabled(!_viewport->AnyRender());
+                    //ImGui::Text("%s", _viewport->AnyRender() ? "True" : "False");
+                    //ImGui::EndDisabled();
+
+                    if (auto * rt = _viewport->GetRenderTarget())
+                    {
+                        ImGui::Text("%u x %u", rt->GetWidth(), rt->GetHeight());
+                        ImGui::Text("%s", asString(rt->GetPixelFormat()).c_str());
+                    }
+                    else
+                    {
+                        ImGui::Text("");
+                        ImGui::Text("");
+                    }
+                }
+                ImGui::Columns(1);
+
+                for (auto & pair : _viewport->GetViewIDs())
+                {
+                    if (auto * view = renderer->GetView(pair.second))
+                    {
+                        if (view)
+                            drawViewDetail(view);
+                    }
+                }
+
+                ImGui::TreePop();
+            }
         };
 
         if (ImGui::IconBegin(getIcon().c_str(), "Statistics", &m_isVisible))
@@ -57,8 +207,6 @@ namespace vg::editor
 
             ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
             {
-                auto renderer = Editor::get()->getRenderer();
-
                 if (ImGui::TreeNodeEx("Renderer", ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     if (ImGui::TreeNodeEx("Viewports", ImGuiTreeNodeFlags_DefaultOpen))
@@ -71,19 +219,9 @@ namespace vg::editor
                             for (uint j = 0; j < viewports.size(); ++j)
                             {
                                 const auto viewport = viewports[j];
-                                if (ImGui::TreeNodeEx(viewport->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-                                {
-                                    for (auto & pair : viewport->GetViewIDs())
-                                    {
-                                        if (auto * view = renderer->GetView(pair.second))
-                                        {
-                                            if (view)
-                                                drawViewDetail(view);
-                                        }
-                                    }
 
-                                    ImGui::TreePop();
-                                }
+                                if (viewport)
+                                    drawViewportDetails(viewport);
                             }
                         }
 

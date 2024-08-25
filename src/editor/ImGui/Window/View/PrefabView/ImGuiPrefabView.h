@@ -18,6 +18,8 @@ namespace vg::editor
         ImGuiPrefabView(const core::IResource * _prefabRes);
         ~ImGuiPrefabView();
 
+        gfx::IView::Flags           GetViewFlags        () const final override;
+
         bool                        ShowToolbar         () const final override;
         void                        DrawToolbar         () final override;
 
@@ -27,7 +29,6 @@ namespace vg::editor
         bool                        ShowContextMenu     () const final override { return false;}
         ImGuiMenu::Status           DrawContextMenu     () final override;
 
-        gfx::IView::Flags           GetViewFlags        () const final override;
         core::IWorld *              GetWorld            () const final override;
         void                        OnCloseWindow       () final override;
         bool                        UpdateScene         () final override;

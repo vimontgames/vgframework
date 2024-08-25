@@ -70,7 +70,7 @@ namespace vg::engine
         {
             const auto & imGuiAdapter = renderer->GetImGuiAdapter();
 
-            bool anyViewActive = false;
+            bool anyViewFocused = false;
 
             for (uint j = 0; j < enumCount<gfx::ViewTarget>(); ++j)
             {
@@ -78,20 +78,20 @@ namespace vg::engine
                 for (uint i = 0; i < views.size(); ++i)
                 {
                     const auto * view = views[i];
-                    if (view && view->IsActive())
+                    if (view && view->IsFocused())
                     {
-                        anyViewActive = true;
+                        anyViewFocused = true;
                         break;
                     }
                 }
             }            
 
-            if (imGuiAdapter->IsKeyboardFocused() && !anyViewActive && mainWorld && !mainWorld->IsPlaying())
+            if (imGuiAdapter->IsKeyboardFocused() && !anyViewFocused && mainWorld && !mainWorld->IsPlaying())
                 EnableInput(InputType::Keyboard, false);
             else
                 EnableInput(InputType::Keyboard, true);
 
-            if (imGuiAdapter->IsMouseFocused() && !anyViewActive && mainWorld && !mainWorld->IsPlaying())
+            if (imGuiAdapter->IsMouseFocused() && !anyViewFocused && mainWorld && !mainWorld->IsPlaying())
                 EnableInput(InputType::Mouse, false);
             else
                 EnableInput(InputType::Mouse, true);

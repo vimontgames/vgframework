@@ -302,7 +302,7 @@ namespace ImGui
     //--------------------------------------------------------------------------------------
     string getObjectLabel(const string & _label, const void * _object)
     {
-        return fmt::sprintf("%s###%p", _label.c_str(), _object);
+        return fmt::sprintf("%s###%s%p", _label.c_str(), _label.c_str(), _object);
     }
 
     //--------------------------------------------------------------------------------------

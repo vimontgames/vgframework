@@ -61,14 +61,8 @@ namespace vg::renderer
                 const auto * view = views[i];
                 if (view)
                 {
-                    if (!view->IsVisible())
+                    if (!view->IsRender())
                         continue;
-
-                    //if (renderer->IsFullscreen()) // TODO: should be done in View::IsVisible?
-                    //{
-                    //    if (gfx::ViewTarget::Editor == target)
-                    //        continue;
-                    //}
 
                     ITexture * dest = view->GetRenderTarget();
                     if(dest)

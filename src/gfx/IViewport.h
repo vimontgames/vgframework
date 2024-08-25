@@ -91,11 +91,14 @@ namespace vg::gfx
         virtual void                                SetViewportID       (ViewportID _viewportID) = 0;
         virtual gfx::ViewportID                     GetViewportID       () const = 0;
 
-        virtual void                                SetActive           (bool _active) = 0;
-        virtual bool                                AnyActive           () const = 0;
+        virtual void                                SetFocused          (bool _active) = 0;
+        virtual bool                                AnyFocused          () const = 0;
 
         virtual void                                SetVisible          (bool _visible) = 0;
         virtual bool                                AnyVisible          () const = 0;
+
+        virtual void                                SetRender           (bool _visible) = 0;
+        virtual bool                                AnyRender           () const = 0;
 
         virtual void                                AddView             (core::u8 _index, ViewID _viewID) = 0;
         virtual void                                RemoveView          (core::u8 _index, ViewID _viewID) = 0;

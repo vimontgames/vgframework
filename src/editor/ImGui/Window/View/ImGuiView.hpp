@@ -78,7 +78,7 @@ namespace vg::editor
 
             float3 zoomDir = normalize(K.xyz);
 
-            if (view->IsActive() && view->IsMouseOverView())
+            if (view->IsFocused() && view->IsMouseOverView())
             {
                 IInput * input = Kernel::getInput();
                 
@@ -237,7 +237,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     gfx::IView::Flags ImGuiView::GetViewFlags() const
     {
-        return gfx::IView::Flags::Picking;
+        return (gfx::IView::Flags)0x0;
     }
 
     //--------------------------------------------------------------------------------------
@@ -334,7 +334,7 @@ namespace vg::editor
             m_closeNextFrame = false;
         }
 
-        const bool active = m_viewport && m_viewport->AnyActive();
+        const bool active = m_viewport && m_viewport->AnyFocused();
         if (active)
             ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGui::GetStyleColorVec4(ImGuiCol_TabActive));
 
@@ -442,7 +442,7 @@ namespace vg::editor
                 m_viewport->SetRenderTargetSize(m_size);
 
             // Hack: Do not use texture on first frame because it may have just become visible but the view not yet renderer (alt fix: last rendered frame counter in View?)
-            auto texture = ImGui::IsWindowAppearing() ? nullptr :  m_texture;
+            auto texture = (ImGui::IsWindowAppearing() || !m_viewport->AnyRender()) ? nullptr :  m_texture;
 
             // Create destination texture if it does not exist or is not matching
             if (m_viewport && m_viewport->GetViewIDs().size() > 0 && (!m_texture || m_texture->GetWidth() != m_size.x || m_texture->GetHeight() != m_size.y))
@@ -483,6 +483,7 @@ namespace vg::editor
 
             if (texture)
             {
+                // TODO: Vulkan we have to hide the texture for one frame when view is closed/reopened? because it happens during ImGui render? SetVisibleAsync?
                 ImTextureID texID = imGuiAdapter->GetTextureID(texture);
                 ImGui::Image(texID, ImVec2((float)m_size.x, (float)m_size.y), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, alpha));
             }
@@ -496,9 +497,9 @@ namespace vg::editor
                 DrawContextMenu();              
             
             if (ImGui::IsWindowFocused())
-                m_viewport->SetActive(true);
+                m_viewport->SetFocused(true);
             else
-                m_viewport->SetActive(false);
+                m_viewport->SetFocused(false);
 
             if (texture)
                 imGuiAdapter->ReleaseTextureID(texture);
@@ -515,38 +516,49 @@ namespace vg::editor
                         {
                             ImGui::SetCursorPos(ImVec2(0, titleBarHeight + toolbarHeight));
                             viewGUI->RenderWindowed();
+
+                            const auto options = EditorOptions::get();
+                            bool debugCulling = options->IsDebugCulling();
+
+                            if (view && debugCulling)
+                            {
+                                const auto & stats = view->GetViewCullingStats();
+                                uint line = 0;
+
+                                ImVec2 pos = ImVec2((float)view->GetOffset().x, (float)view->GetOffset().y);
+
+                                ImGui::SameLine();
+                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                string text = fmt::sprintf("Opaque %u", stats.opaque);
+                                ImVec2 textSize = ImGui::CalcTextSize(text.c_str());
+                                ImGui::GetWindowDrawList()->AddRect(pos, vMax, 0x7F7F7F7F);
+                                pos.y += style::font::Height;
+                                ImGui::Text(text.c_str(), stats.opaque);
+
+                                ImGui::SameLine();
+                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                pos.y += style::font::Height;
+                                ImGui::Text("Transparent %u", stats.transparent);
+
+                                ImGui::SameLine();
+                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                pos.y += style::font::Height;
+                                ImGui::Text("Directional %u", stats.directional);
+
+                                ImGui::SameLine();
+                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                pos.y += style::font::Height;
+                                ImGui::Text("Omni %u", stats.omni);
+
+                                ImGui::SameLine();
+                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                pos.y += style::font::Height;
+                                ImGui::Text("Spot %u", stats.spot);
+                            }
                         }
                     }
                 }
             }
-
-            //const auto options = EditorOptions::get();
-            //bool debugCulling = options->IsDebugCulling();
-            //if (m_view && debugCulling)
-            //{
-            //    const auto & stats = m_view->GetViewCullingStats();
-            //    uint line = 0;
-            //
-            //    ImGui::SameLine();
-            //    ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + style::font::Height * line++));
-            //    ImGui::Text("Opaque %u", stats.opaque);
-            //
-            //    ImGui::SameLine();
-            //    ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + style::font::Height * line++) );
-            //    ImGui::Text("Transparent %u", stats.transparent);
-            //
-            //    ImGui::SameLine();
-            //    ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + style::font::Height * line++) );
-            //    ImGui::Text("Directional %u", stats.directional);
-            //
-            //    ImGui::SameLine();
-            //    ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + style::font::Height * line++));
-            //    ImGui::Text("Omni %u", stats.omni);
-            //
-            //    ImGui::SameLine();
-            //    ImGui::SetCursorPos(ImVec2(0.0f, ImGui::GetWindowContentRegionMin().y + style::font::Height * line++));
-            //    ImGui::Text("Spot %u", stats.spot);
-            //}
 
             // Draw Border
             //auto * window = ImGui::FindWindowByName(name.c_str());
@@ -568,7 +580,7 @@ namespace vg::editor
                 {
                     if (auto * view = renderer->GetView(pair.second))
                     {
-                        if (!drawGizmo(view) && view->IsActive())
+                        if (!drawGizmo(view) && view->IsFocused())
                         {
                             // Update picking if not currently manipulating gizmos
                             auto * renderer = Editor::get()->getRenderer();
@@ -594,7 +606,7 @@ namespace vg::editor
         {
             if (m_viewport)
             {
-                m_viewport->SetActive(false);
+                m_viewport->SetFocused(false);
                 m_viewport->SetVisible(false);
             }
         }
@@ -603,7 +615,7 @@ namespace vg::editor
         {
             if (m_viewport)
             {
-                m_viewport->SetActive(false);
+                m_viewport->SetFocused(false);
                 m_viewport->SetVisible(false);
             }
         }

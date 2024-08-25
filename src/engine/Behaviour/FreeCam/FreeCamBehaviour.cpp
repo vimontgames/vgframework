@@ -66,7 +66,7 @@ namespace vg::engine
             auto cameraViewID = m_camera->getViewID();
             auto * view = Engine::get()->GetRenderer()->GetView(cameraViewID);
 
-            if (view && view->IsActive())
+            if (view && view->IsFocused())
             {
                 if (view->GetViewID() == cameraViewID)
                     update = true;

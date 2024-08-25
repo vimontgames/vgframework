@@ -76,7 +76,7 @@ namespace vg::renderer
 
         if (viewID.target == gfx::ViewTarget::Game || viewID.target == gfx::ViewTarget::Editor)
         {
-            if (!view->IsVisible())
+            if (!view->IsRender())
                 return;
         }
        

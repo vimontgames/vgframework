@@ -1,6 +1,42 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
+    VG_INLINE void View::setFlags(Flags _flagsToSet, Flags _flagsToRemove)
+    {
+        m_flags = (Flags)((std::underlying_type<Flags>::type(m_flags) & ~std::underlying_type<Flags>::type(_flagsToRemove)) | (std::underlying_type<Flags>::type(_flagsToSet)));
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void View::setFlag(Flags _flag, bool _value)
+    {
+        setFlags(_value ? _flag : (Flags)0x0, !_value ? _flag : (Flags)0x0);
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE View::Flags View::getFlags() const
+    {
+        return m_flags;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE bool View::testFlag(Flags _flag) const
+    {
+        return asBool(_flag & getFlags());
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void View::setIsAdditionalView(bool _isAdditionalView) 
+    { 
+        setFlag(Flags::Additional, _isAdditionalView);
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE bool View::isAdditionalView() const 
+    { 
+        return testFlag(Flags::Additional);
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE const core::float4x4 & View::getViewProjMatrix() const
     {
         return m_viewProj;

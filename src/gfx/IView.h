@@ -97,8 +97,12 @@ namespace vg::gfx
     public:
         enum class Flags : core::u32
         {
-            Picking = 0x00000001,
-            Prefab  = 0x00000002
+            Visible     = 0x00000001,
+            Render      = 0x00000002,
+            Focus       = 0x00000004,
+            Ortho       = 0x00000008,
+            Prefab      = 0x00000010,
+            Additional  = 0x00000020
         };
 
         IView() {};
@@ -134,11 +138,17 @@ namespace vg::gfx
         virtual void                    SetViewID                   (ViewID _viewID) = 0;
         virtual ViewID                  GetViewID                   () const = 0;
 
-        virtual void                    SetActive                   (bool _active) = 0;
-        virtual bool                    IsActive                    () const = 0;
+        // "Focused" means this is the view the user is interacting with in Editor
+        virtual void                    SetFocused                  (bool _active) = 0;
+        virtual bool                    IsFocused                   () const = 0;
 
+        // "Visible" means the view is visible on screen
         virtual void                    SetVisible                  (bool _visible) = 0;
         virtual bool                    IsVisible                   () const = 0;
+
+        // "Render" means the view was updated by an active camera this frame and thus should render this frame
+        virtual void                    SetRender                   (bool _render) = 0;
+        virtual bool                    IsRender                    () const = 0;
 
         virtual void                    SetMouseOffset              (const core::uint2 & _mouseOffset) = 0;
         virtual core::int2              GetRelativeMousePos         () const = 0;

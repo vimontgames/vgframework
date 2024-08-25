@@ -82,7 +82,13 @@ namespace vg::renderer
 
             auto shadowViews = getShadowViews();
             for (uint i = 0; i < shadowViews.size(); ++i)
-                shadowViews[i]->RegisterFrameGraph(_renderPassContext, _frameGraph);
+            {
+                auto * shadowView = shadowViews[i];
+
+                // TODO: render only shadows updated this frame?
+                //if (shadowView->IsRender())
+                    shadowView->RegisterFrameGraph(_renderPassContext, _frameGraph);
+            }
 
             _frameGraph.popPassGroup();
         }
