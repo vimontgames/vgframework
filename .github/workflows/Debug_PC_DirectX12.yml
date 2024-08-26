@@ -1,3 +1,8 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
 name: "Debug PC DirectX12"
 
 on:
@@ -7,8 +12,15 @@ on:
     branches: [ "master" ]
 
 env:
+  # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: vgframework.sln
+
+  # Configuration type to build.
+  # You can convert this to a build matrix if you need coverage of multiple configuration types.
+  # https://docs.github.com/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
   BUILD_CONFIGURATION: Debug
+
+  # Platform to build.
   BUILD_PLATFORM: '"PC DirectX12"'
 
 permissions:
@@ -21,29 +33,17 @@ jobs:
     steps:
     - uses: actions/checkout@v4
   
-    - name: Find and set specific MSBuild version
-      id: msbuild-path
-      run: |
-        # Locate MSBuild version 17.10.4+10fbfbf2e using vswhere
-        $msbuildPath = &"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -version "[17.10.4,17.10.5)" -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
-        if (-not $msbuildPath) {
-          Write-Error "MSBuild executable not found."
-          exit 1
-        }
-        echo "MSBuild path: $msbuildPath"
-        echo "::set-output name=msbuild::$msbuildPath"
-        echo "$msbuildPath" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
+      with:
+        msbuild-version: '17.10.4+10fbfbf2e'
 
     - name: Restore NuGet packages
-      working-directory: ${{ env.GITHUB_WORKSPACE }}
-      run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
 
     - name: Build
-      working-directory: ${{ env.GITHUB_WORKSPACE }}
-      run: |
-        $msbuild = "${{ steps.msbuild-path.outputs.msbuild }}"
-        if (-not $msbuild) {
-          Write-Error "MSBuild path not set correctly."
-          exit 1
-        }
-        & "$msbuild" /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      # Add additional options to the MSBuild command line here (like platform or verbosity level).
+      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:Platform=${{env.BUILD_PLATFORM}} ${{env.SOLUTION_FILE_PATH}}
