@@ -91,7 +91,7 @@ namespace vg::renderer
             guiContext.imgui = ImGui::GetCurrentContext();
             guiContext.filedialog = ImGuiFileDialog::Instance();
 
-            if (!Renderer::get()->IsFullscreen())
+            //if (!Renderer::get()->IsFullscreen())
                 editor->DrawGUI(guiContext);
         }
 

@@ -364,7 +364,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool View::IsVisible() const
     {
-        return testFlag(IView::Flags::Visible) && all(GetRenderTargetSize() > 1) && GetRenderTarget() != nullptr;
+        return testFlag(IView::Flags::Visible) && all(GetRenderTargetSize() > 1);
     }
 
     //--------------------------------------------------------------------------------------

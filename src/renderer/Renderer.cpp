@@ -332,18 +332,6 @@ namespace vg::renderer
                     viewport->SetVisible(true);
                 }
             }
-
-            auto & views = m_views[(int)ViewTarget::Game];
-            for (uint i = 0; i < views.count(); ++i)
-            {
-                auto * view = views[i];
-                if (nullptr != view)
-                {
-                    view->SetRenderTargetSize(GetBackbufferSize());
-                    view->SetFocused(true);
-                    view->SetVisible(true);
-                }
-            }
         }
 
         m_frameGraph.destroyTransientResources();
@@ -943,16 +931,17 @@ namespace vg::renderer
 
             if (_fullscreen)
             {
-                // Resize view to fit backbuffer
-                auto & views = m_views[(int)ViewTarget::Game];
-                for (uint i = 0; i < views.count(); ++i)
+                // Resize viewports to fit backbuffer
+                auto & viewports = m_viewports[(int)ViewportTarget::Game];
+                for (uint i = 0; i < viewports.count(); ++i)
                 {
-                    auto * view = views[i];
-                    if (nullptr != view)
+                    auto * viewport = viewports[i];
+                    if (nullptr != viewport)
                     {
-                        view->SetRenderTargetSize(GetBackbufferSize());
-                        view->SetFocused(true);
-                        view->SetVisible(true);
+                        viewport->SetRenderTarget(nullptr);
+                        viewport->SetRenderTargetSize(GetBackbufferSize());
+                        viewport->SetFocused(true);
+                        viewport->SetVisible(true);
                     }
                 }
             }

@@ -582,14 +582,14 @@ namespace vg::renderer
         style.TabBorderSize = 0;
         style.TabRounding = rounding;
         style.TabBarBorderSize = 0;
-        #endif
+        #endif 
 
         colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 0.75f);
         colors[ImGuiCol_TextDisabled] = ImVec4(1.00f, 1.00f, 1.00f, 0.50f);
         colors[ImGuiCol_WindowBg] = ImVec4(0.14f, 0.16f, 0.18f, 1.00f);
         colors[ImGuiCol_ChildBg] = ImVec4(0.14f, 0.16f, 0.18f, 1.00f);
         colors[ImGuiCol_PopupBg] = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
-        colors[ImGuiCol_Border] = ImVec4(0.13f, 0.13f, 0.14f, 1.00f);
+        colors[ImGuiCol_Border] =  ImVec4(0.13f, 0.13f, 0.14f, 1.00f);
         colors[ImGuiCol_BorderShadow] = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
         colors[ImGuiCol_FrameBg] = ImVec4(0.18f, 0.21f, 0.24f, 1.00f);
         colors[ImGuiCol_FrameBgHovered] = ImVec4(0.42f, 0.42f, 0.42f, 1.00f);

@@ -20,50 +20,31 @@ namespace vg::editor
             {
                 ImGui::Columns(2, "mycolumns2", false);
                 {
-                    //ImGui::BeginDisabled(!_view->IsActive());
-                    //ImGui::Text("Active");
-                    //ImGui::EndDisabled();
-                    //
-                    //ImGui::BeginDisabled(!_view->IsVisible());
-                    //ImGui::Text("Visible");
-                    //ImGui::EndDisabled();
-
                     ImGui::BeginDisabled(!_view->IsRender());
                     ImGui::Text("Render");
                     ImGui::EndDisabled();
 
-                    ImGui::BeginDisabled(!_view->GetRenderTarget());
+                    ImGui::BeginDisabled(all(_view->GetSize() == 0));
                     ImGui::Text("Size");
+                    ImGui::EndDisabled();
+
+                    ImGui::BeginDisabled(all(_view->GetOffset() == 0));
                     ImGui::Text("Offset");
-                    //ImGui::Text("Format"); 
                     ImGui::EndDisabled();
                 }
                 ImGui::NextColumn();
                 {
-                    //ImGui::BeginDisabled(!_view->IsActive());
-                    //ImGui::Text("%s", _view->IsActive() ? "True" : "False");
-                    //ImGui::EndDisabled();
-                    //
-                    //ImGui::BeginDisabled(!_view->IsVisible());
-                    //ImGui::Text("%s", _view->IsVisible() ? "True" : "False");
-                    //ImGui::EndDisabled();
-
                     ImGui::BeginDisabled(!_view->IsRender());
                     ImGui::Text("%s", _view->IsRender() ? "True" : "False");
                     ImGui::EndDisabled();
 
-                    if (auto * rt = _view->GetRenderTarget())
-                    {
-                        ImGui::Text("%u x %u", (uint)_view->GetSize().x, (uint)_view->GetSize().y);
-                        ImGui::Text("%u, %u", (uint)_view->GetOffset().x, (uint)_view->GetOffset().y);
-                        //ImGui::Text("%s", asString(rt->GetPixelFormat()).c_str());
-                    }
-                    else
-                    {
-                        ImGui::Text("");
-                        ImGui::Text("");
-                        //ImGui::Text("");
-                    }
+                    ImGui::BeginDisabled(all(_view->GetSize() == 0));
+                    ImGui::Text("%u x %u", (uint)_view->GetSize().x, (uint)_view->GetSize().y);
+                    ImGui::EndDisabled();
+
+                    ImGui::BeginDisabled(all(_view->GetOffset() == 0));
+                    ImGui::Text("%u, %u", (uint)_view->GetOffset().x, (uint)_view->GetOffset().y);
+                    ImGui::EndDisabled();
                 }
                 ImGui::Columns(1);
 
@@ -156,8 +137,11 @@ namespace vg::editor
                     //ImGui::Text("Render");
                     //ImGui::EndDisabled();
 
-                    ImGui::BeginDisabled(!_viewport->GetRenderTarget());
+                    ImGui::BeginDisabled(all(_viewport->GetRenderTargetSize() == 0));
                     ImGui::Text("Size");
+                    ImGui::EndDisabled();
+
+                    ImGui::BeginDisabled(!_viewport->GetRenderTarget());
                     ImGui::Text("Format");
                     ImGui::EndDisabled();
                 }
@@ -175,16 +159,14 @@ namespace vg::editor
                     //ImGui::Text("%s", _viewport->AnyRender() ? "True" : "False");
                     //ImGui::EndDisabled();
 
+                    ImGui::BeginDisabled(all(_viewport->GetRenderTargetSize() == 0));
+                    ImGui::Text("%u x %u", _viewport->GetRenderTargetSize().x, _viewport->GetRenderTargetSize().y);
+                    ImGui::EndDisabled();
+
                     if (auto * rt = _viewport->GetRenderTarget())
-                    {
-                        ImGui::Text("%u x %u", rt->GetWidth(), rt->GetHeight());
                         ImGui::Text("%s", asString(rt->GetPixelFormat()).c_str());
-                    }
                     else
-                    {
                         ImGui::Text("");
-                        ImGui::Text("");
-                    }
                 }
                 ImGui::Columns(1);
 
@@ -203,8 +185,6 @@ namespace vg::editor
 
         if (ImGui::IconBegin(getIcon().c_str(), "Statistics", &m_isVisible))
         {
-            ImGui::Separator();
-
             ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
             {
                 if (ImGui::TreeNodeEx("Renderer", ImGuiTreeNodeFlags_DefaultOpen))

@@ -5,6 +5,7 @@
 #include "core/IGameObject.h"
 #include "core/File/File.h"
 #include "core/Timer/Timer.h"
+#include "gfx/IViewGUI.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IImGuiAdapter.h"
 #include "engine/IEngine.h"
@@ -303,16 +304,23 @@ namespace vg::editor
         ImGui::SetNextWindowPos(viewport->WorkPos, ImGuiCond_Appearing, ImVec2(0.0f, 0.0f));
         ImGui::SetNextWindowSize(viewport->WorkSize, ImGuiCond_None);
         ImGui::SetNextWindowViewport(viewport->ID);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.5f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-        ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar;
+        const auto * renderer = getRenderer();
+        const bool fullscreen = renderer->IsFullscreen();
+
+        ImGuiWindowFlags windowFlags = 0x0;
+        
+        if (!fullscreen)
+            windowFlags |= ImGuiWindowFlags_MenuBar;
+
         windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
         windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
         windowFlags |= ImGuiWindowFlags_NoBackground;
 
         ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
+
+        if (fullscreen)
+            dockspaceFlags |= ImGuiDockNodeFlags_NoDockingOverCentralNode;
 
         bool showUI = true;
         static bool showImGuiDemo = false;
@@ -321,234 +329,216 @@ namespace vg::editor
 
         bool createNewWorld = false, loadWorld = false, saveWorld = false, saveWorldAs = false, closeWorld = false;
 
-        ImGui::Begin("EditorDockSpace", &showUI, windowFlags);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.5f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+
+        const char * EditorDockSpace = "Game";
+
+        ImGui::Begin(EditorDockSpace, &showUI, windowFlags);
         {
             ImGui::PopStyleVar(3);
 
-            ImGuiID dockspaceId = ImGui::GetID("EditorDockSpace");
-            ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockspaceFlags);
-
-            if (ImGui::BeginMenuBar())
+            // Render game UI to backbuffer inside dockspace
+            if (fullscreen)
             {
-                if (ImGui::BeginMenu("File"))
+                auto viewports = renderer->GetViewports(gfx::ViewportTarget::Game);
+                for (auto & viewport : viewports)
                 {
-                    if (ImGui::BeginMenu("World"))
+                    for (auto & pair : viewport->GetViewIDs())
                     {
-                        if (ImGui::MenuItem("New"))
-                            createNewWorld = true;
-
-                        if (ImGui::MenuItem("Open"))
-                            loadWorld = true;
-
-                        ImGui::BeginDisabled(!worldRes || !worldRes->getObject());
+                        if (auto * view = renderer->GetView(pair.second))
                         {
-                            if (ImGui::MenuItem("Save"))
-                                saveWorld = true;
+                            if (auto * viewGUI = view->GetViewGUI())
+                                viewGUI->RenderFullscreen();
                         }
-                        ImGui::EndDisabled();
+                    }
+                }
+            }
+            else
+            {
+                ImGuiID dockspaceId = ImGui::GetID(EditorDockSpace);
+                ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockspaceFlags);
 
-                        ImGui::BeginDisabled(!worldRes || !worldRes->getObject());
+                if (ImGui::BeginMenuBar())
+                {
+                    if (ImGui::BeginMenu("File"))
+                    {
+                        if (ImGui::BeginMenu("World"))
                         {
-                            if (ImGui::MenuItem("Save As"))
-                                saveWorldAs = true;
+                            if (ImGui::MenuItem("New"))
+                                createNewWorld = true;
+
+                            if (ImGui::MenuItem("Open"))
+                                loadWorld = true;
+
+                            ImGui::BeginDisabled(!worldRes || !worldRes->getObject());
+                            {
+                                if (ImGui::MenuItem("Save"))
+                                    saveWorld = true;
+                            }
+                            ImGui::EndDisabled();
+
+                            ImGui::BeginDisabled(!worldRes || !worldRes->getObject());
+                            {
+                                if (ImGui::MenuItem("Save As"))
+                                    saveWorldAs = true;
+                            }
+                            ImGui::EndDisabled();
+
+                            ImGui::Separator();
+
+                            ImGui::BeginDisabled(!worldRes || !worldRes->getObject());
+                            {
+                                if (ImGui::MenuItem("Close"))
+                                    closeWorld = true;
+                            }
+                            ImGui::EndDisabled();
+
+                            ImGui::EndMenu();
                         }
-                        ImGui::EndDisabled();
+
+                        if (ImGui::MenuItem("Quit"))
+                            ImGui::MessageBox(MessageBoxType::YesNo, "Quit", "Are you sure you want to quit program?", []() { Editor::get()->getEngine()->Quit(); return true; });
+
+                        ImGui::EndMenu();
+                    }
+
+                    if (ImGui::BeginMenu("Window"))
+                    {
+                        auto sortedWindows = m_imGuiWindows;
+
+                        sort(sortedWindows.begin(), sortedWindows.end(), [](ImGuiWindow * a, ImGuiWindow * b)
+                            {
+                                if (a->getPath().empty() == b->getPath().empty())
+                                    return a->getName() < b->getName();
+                                else if (a->getPath().empty())
+                                    return true;
+                                else
+                                    return false;
+                            }
+                        );
+
+                        for (uint i = 0; i < sortedWindows.count(); ++i)
+                        {
+                            auto window = sortedWindows[i];
+                            if (asBool(window->getFlags() & ImGuiWindow::Flags::AddMenuEntry))
+                            {
+                                string folder = window->getPath();
+                                if (!folder.empty())
+                                {
+                                    vector<string> folders;
+
+                                    auto dirPos = folder.find_first_of("/");
+                                    if (string::npos != dirPos)
+                                    {
+                                        auto temp = folder.substr(0, dirPos);
+                                        folders.push_back(temp);
+                                        folder = folder.substr(dirPos + 1);
+                                    }
+
+                                    folders.push_back(folder);
+                                    drawMenuItemRecur(window, folders);
+                                }
+                                else
+                                {
+                                    if (ImGui::MenuItem(window->getIconizedName().c_str()))
+                                        window->setVisible(true);
+                                }
+                            }
+                        }
+
+                        if (ImGui::BeginMenu("View"))
+                        {
+                            engine::IWorldResource * worldRes = getEngine()->GetWorldResource();
+
+                            uint prefabCount = 0;
+                            if (worldRes)
+                                prefabCount = worldRes->GetSceneResourceCount(BaseSceneType::Prefab);
+
+                            ImGui::BeginDisabled(prefabCount == 0);
+                            {
+                                if (ImGui::BeginMenu("Prefabs"))
+                                {
+                                    for (uint p = 0; p < prefabCount; ++p)
+                                    {
+                                        auto prefabRes = worldRes->GetSceneResource(p, BaseSceneType::Prefab);
+
+                                        if (ImGui::MenuItem(io::getFileNameWithoutExt(prefabRes->GetResourcePath()).c_str()))
+                                            openPrefabView(prefabRes);
+                                    }
+                                    ImGui::EndMenu();
+                                }
+                            }
+
+                            ImGui::EndDisabled();
+                            ImGui::EndMenu();
+                        }
+
+                        ImGui::EndMenu();
+                    }
+
+                    if (ImGui::BeginMenu("Options"))
+                    {
+                        if (ImGui::IconMenuItem(style::icon::Editor, "Editor"))
+                        {
+                            ImGuiEditorOptions * options = getWindow<ImGuiEditorOptions>();
+                            if (nullptr != options)
+                                options->setVisible(true);
+                        }
+
+                        if (ImGui::IconMenuItem(style::icon::Engine, "Engine"))
+                        {
+                            ImGuiEngineOptions * options = getWindow<ImGuiEngineOptions>();
+                            if (nullptr != options)
+                                options->setVisible(true);
+                        }
+
+                        if (ImGui::IconMenuItem(style::icon::Renderer, "Renderer"))
+                        {
+                            ImGuiRendererOptions * options = getWindow<ImGuiRendererOptions>();
+                            if (nullptr != options)
+                                options->setVisible(true);
+                        }
+
+                        if (ImGui::IconMenuItem(style::icon::Physics, "Physics"))
+                        {
+                            ImGuiPhysicsOptions * options = getWindow<ImGuiPhysicsOptions>();
+                            if (nullptr != options)
+                                options->setVisible(true);
+                        }
+
+                        ImGui::EndMenu();
+                    }
+
+                    if (ImGui::BeginMenu("Help"))
+                    {
+                        if (ImGui::IconMenuItem(style::icon::Plugin, "Plugins"))
+                        {
+                            auto plugins = getWindow<ImGuiPlugin>();
+                            if (nullptr != plugins)
+                                plugins->setVisible(true);
+                        }
 
                         ImGui::Separator();
 
-                        ImGui::BeginDisabled(!worldRes || !worldRes->getObject());
+                        if (ImGui::IconMenuItem(style::icon::Sliders, "ImGui demo"))
+                            showImGuiDemo = true;
+
+                        ImGui::Separator();
+
+                        if (ImGui::IconMenuItem(style::icon::About, "About"))
                         {
-                            if (ImGui::MenuItem("Close"))
-                                closeWorld = true;
+                            ImGuiAbout * about = getWindow<ImGuiAbout>();
+                            if (nullptr != about)
+                                about->setVisible(true);
                         }
-                        ImGui::EndDisabled();
 
                         ImGui::EndMenu();
                     }
 
-                    if (ImGui::MenuItem("Quit"))
-                        ImGui::MessageBox(MessageBoxType::YesNo, "Quit", "Are you sure you want to quit program?", []() { Editor::get()->getEngine()->Quit(); return true; });
-
-                    ImGui::EndMenu();
+                    ImGui::EndMenuBar();
                 }
-
-                if (ImGui::BeginMenu("Window"))
-                {
-                    auto sortedWindows = m_imGuiWindows;
-
-                    sort(sortedWindows.begin(), sortedWindows.end(), [](ImGuiWindow * a, ImGuiWindow * b) 
-                    {
-                            if (a->getPath().empty() == b->getPath().empty())
-                                return a->getName() < b->getName();
-                            else if (a->getPath().empty())
-                                return true;
-                            else
-                                return false;
-                    }
-                    );
-
-                    for (uint i = 0; i < sortedWindows.count(); ++i)
-                    {
-                        auto window = sortedWindows[i];
-                        if (asBool(window->getFlags() & ImGuiWindow::Flags::AddMenuEntry))
-                        {
-                            string folder = window->getPath();
-                            if (!folder.empty())
-                            {
-                                vector<string> folders;
-
-                                auto dirPos = folder.find_first_of("/");
-                                if (string::npos != dirPos)
-                                {
-                                    auto temp = folder.substr(0, dirPos);
-                                    folders.push_back(temp);
-                                    folder = folder.substr(dirPos+1);
-                                }
-
-                                folders.push_back(folder);
-                                drawMenuItemRecur(window, folders);                               
-                            }
-                            else
-                            {
-                                if (ImGui::MenuItem(window->getIconizedName().c_str()))
-                                    window->setVisible(true);
-                            }
-                        }
-                    }
-
-                    if (ImGui::BeginMenu("View"))
-                    {
-                        // Get Prefab views
-                        //vector<ImGuiPrefabView*> prefabWindows;
-                        //for (uint i = 0; i < m_imGuiWindows.size(); ++i)
-                        //{
-                        //    if (auto * prefabView = dynamic_cast<ImGuiPrefabView *>(m_imGuiWindows[i]))
-                        //        prefabWindows.push_back(prefabView);
-                        //}
-                        //
-                        //ImGui::BeginDisabled(prefabWindows.size() == 0);
-                        //{
-                        //    if (ImGui::BeginMenu("Prefabs"))
-                        //    {
-                        //        for (uint p = 0; p < prefabWindows.size(); ++p)
-                        //        {
-                        //            auto window = prefabWindows[p];
-                        //            if (ImGui::MenuItem(window->getName().c_str()))
-                        //                window->setVisible(true);
-                        //        }
-                        //        ImGui::EndMenu();
-                        //    }
-                        //}
-                        //ImGui::EndDisabled();
-                        //ImGui::EndMenu();
-
-                        //auto world = getEngine()->GetMainWorld();
-                        //uint prefabCount = 0;
-                        //if (world)
-                        //    prefabCount = world->GetSceneCount(BaseSceneType::Prefab);
-
-                        //ImGui::BeginDisabled(prefabCount == 0);
-                        //{
-                        //    if (ImGui::BeginMenu("Prefabs"))
-                        //    {
-                        //        for (uint p = 0; p < prefabCount; ++p)
-                        //        {
-                        //            auto prefab = world->GetScene(p, BaseSceneType::Prefab);
-                        //            if (ImGui::MenuItem(prefab->getName().c_str()))
-                        //                openPrefabView(prefab);
-                        //        }
-                        //        ImGui::EndMenu();
-                        //    }
-                        //}
-
-                        engine::IWorldResource * worldRes = getEngine()->GetWorldResource();
-
-                        uint prefabCount = 0;
-                        if (worldRes)
-                            prefabCount = worldRes->GetSceneResourceCount(BaseSceneType::Prefab);
-
-                        ImGui::BeginDisabled(prefabCount == 0);
-                        {
-                            if (ImGui::BeginMenu("Prefabs"))
-                            {
-                                for (uint p = 0; p < prefabCount; ++p)
-                                {
-                                    auto prefabRes = worldRes->GetSceneResource(p, BaseSceneType::Prefab);
-
-                                    if (ImGui::MenuItem(io::getFileNameWithoutExt(prefabRes->GetResourcePath()).c_str()))
-                                        openPrefabView(prefabRes);
-                                }
-                                ImGui::EndMenu();
-                            }
-                        }
-                        
-                        ImGui::EndDisabled();
-                        ImGui::EndMenu();
-                    }
-
-                    ImGui::EndMenu();
-                }
-
-                if (ImGui::BeginMenu("Options"))
-                {
-                    if (ImGui::IconMenuItem(style::icon::Editor, "Editor"))
-                    {
-                        ImGuiEditorOptions * options = getWindow<ImGuiEditorOptions>();
-                        if (nullptr != options)
-                            options->setVisible(true);
-                    }
-
-                    if (ImGui::IconMenuItem(style::icon::Engine, "Engine"))
-                    {
-                        ImGuiEngineOptions * options = getWindow<ImGuiEngineOptions>();
-                        if (nullptr != options)
-                            options->setVisible(true);
-                    }
-
-                    if (ImGui::IconMenuItem(style::icon::Renderer, "Renderer"))
-                    {
-                        ImGuiRendererOptions * options = getWindow<ImGuiRendererOptions>();
-                        if (nullptr != options)
-                            options->setVisible(true);
-                    }
-
-                    if (ImGui::IconMenuItem(style::icon::Physics, "Physics"))
-                    {
-                        ImGuiPhysicsOptions * options = getWindow<ImGuiPhysicsOptions>();
-                        if (nullptr != options)
-                            options->setVisible(true);
-                    }
-
-                    ImGui::EndMenu();
-                }
-
-                if (ImGui::BeginMenu("Help"))
-                {
-                    if (ImGui::IconMenuItem(style::icon::Plugin, "Plugins"))
-                    {
-                        auto plugins = getWindow<ImGuiPlugin>();
-                        if (nullptr != plugins)
-                            plugins->setVisible(true);
-                    }
-
-                    ImGui::Separator();
-
-                    if (ImGui::IconMenuItem(style::icon::Sliders, "ImGui demo"))
-                        showImGuiDemo = true;
-
-                    ImGui::Separator();
-
-                    if (ImGui::IconMenuItem(style::icon::About, "About"))
-                    {
-                        ImGuiAbout * about = getWindow<ImGuiAbout>();
-                        if (nullptr != about)
-                            about->setVisible(true);
-                    }
-
-                    ImGui::EndMenu();
-                }
-
-                ImGui::EndMenuBar();
             }
 
             ProcessMessageBox();
@@ -559,7 +549,7 @@ namespace vg::editor
         for (auto & window : m_imGuiWindowsToDestroy)
         {
             m_imGuiWindows.remove(window);
-            VG_SAFE_RELEASE_ASYNC(window);            
+            VG_SAFE_RELEASE_ASYNC(window);
         }
         m_imGuiWindowsToDestroy.clear();
 
@@ -595,25 +585,28 @@ namespace vg::editor
                 worldRes->ClearResourcePath();
         }
 
-        for (uint i = 0; i < m_imGuiWindows.size(); ++i)
+        if (!fullscreen)
         {
-            if (m_imGuiWindows[i]->isVisible())
+            for (uint i = 0; i < m_imGuiWindows.size(); ++i)
             {
-                VG_PROFILE_CPU(m_imGuiWindows[i]->getName().c_str());
-                m_imGuiWindows[i]->DrawGUI();
+                if (m_imGuiWindows[i]->isVisible())
+                {
+                    VG_PROFILE_CPU(m_imGuiWindows[i]->getName().c_str());
+                    m_imGuiWindows[i]->DrawGUI();
+                }
             }
         }
-        
+
         // Create new ".world" file
         if (DisplayFileDialog(newWorldPopupName))
         {
             if (ImGui::IsFileDialogOK())
-            {                 
+            {
                 // Close all prefab views when creating new world
                 auto prefabViews = getWindows<ImGuiPrefabView>();
                 for (auto * prefabView : prefabViews)
                     prefabView->setVisible(false);
-                
+
                 engine->CreateWorld(io::addExtensionIfNotPresent(GetFileDialogSelectedFile(), ext));
             }
 
@@ -650,7 +643,7 @@ namespace vg::editor
             }
 
             ImGui::CloseFileDialog();
-        }            
+        }
 
         if (showImGuiDemo)
             ImGui::ShowDemoWindow(&showImGuiDemo);

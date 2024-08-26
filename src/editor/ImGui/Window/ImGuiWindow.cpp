@@ -832,7 +832,6 @@ namespace vg::editor
                             {
                                 // optional group
                                 VG_ASSERT(_prop->getOffset() != 0);
-                                //_context.hide = !*_prop->GetPropertyBool(_object);
                                 ImGui::BeginDisabled(!*_prop->GetPropertyBool(_object));
                             }
                             else

@@ -32,8 +32,8 @@ namespace vg::engine
         }
 
         // Lock during editing
-        virtual void Lock() = 0;
-        virtual void Unlock() = 0;
+        virtual void Lock() const = 0;
+        virtual void Unlock() const = 0;
 
         // Return 'true' if any resource is currently loading 
         virtual bool HasResourceLoading() const = 0;

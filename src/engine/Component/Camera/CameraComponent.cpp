@@ -96,6 +96,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void CameraComponent::Update(const Context & _context)
     {
+        auto renderer = Engine::get()->GetRenderer();
+
         if (any(m_previousViewportScale != m_viewportScale))
         {
             Engine::get()->GetRenderer()->SetResized();
@@ -103,7 +105,8 @@ namespace vg::engine
         }
 
         // Create or get the view
-        if (auto * viewport = Engine::get()->GetRenderer()->GetViewport(gfx::ViewportID(m_target, m_viewportIndex)))
+        gfx::IViewport * viewport = Engine::get()->GetRenderer()->GetViewport(gfx::ViewportID(m_target, m_viewportIndex));
+        if (viewport)
         {
             const auto & views = viewport->GetViewIDs();
             auto it = views.find(m_viewIndex);
@@ -117,12 +120,11 @@ namespace vg::engine
 
                 string viewName = fmt::sprintf("%s View #%u", asString(viewParams.target).c_str(), m_viewIndex);
 
-                // Create a view
-                auto renderer = Engine::get()->GetRenderer();
                 if (auto * view = renderer->CreateView(viewParams, viewName))
                 {
                     view->SetRenderTarget(viewport->GetRenderTarget());
                     view->SetRenderTargetSize(viewport->GetRenderTargetSize());
+                    view->SetVisible(true);
                     renderer->AddView(view);
                     viewport->AddView(m_viewIndex, view->GetViewID());
                     VG_SAFE_RELEASE(view);
@@ -130,9 +132,16 @@ namespace vg::engine
             }
         }
 
-        auto * view = Engine::get()->GetRenderer()->GetView(getViewID());
+        auto * view = renderer->GetView(getViewID());
         if (nullptr != view)
         {
+            if (renderer->IsFullscreen())
+            {
+                view->SetRenderTarget(nullptr);
+                view->SetRenderTargetSize(viewport->GetRenderTargetSize());
+                view->SetVisible(true);
+            }
+
             view->SetRender(true);
             const float4x4 & matrix = getGameObject()->GetGlobalMatrix();
             view->SetupPerspectiveCamera(matrix, float2(m_near, m_far), m_fovY, m_viewportOffset, m_viewportScale);

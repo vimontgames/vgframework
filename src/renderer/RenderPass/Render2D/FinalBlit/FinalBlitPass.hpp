@@ -80,10 +80,10 @@ namespace vg::renderer
         _cmdList->draw(4);
 
         // Render game UI to backbuffer
-        if (Renderer::get()->IsFullscreen())
-        {
-            if (auto * viewGUI = VG_SAFE_STATIC_CAST(ViewGUI, _renderPassContext.m_view->GetViewGUI()))
-                viewGUI->RenderFullscreen();
-        }
+        //if (Renderer::get()->IsFullscreen())
+        //{
+        //    if (auto * viewGUI = VG_SAFE_STATIC_CAST(ViewGUI, _renderPassContext.m_view->GetViewGUI()))
+        //        viewGUI->RenderFullscreen();
+        //}
     }
 }
