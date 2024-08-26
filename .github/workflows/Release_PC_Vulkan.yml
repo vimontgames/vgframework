@@ -36,7 +36,7 @@ jobs:
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@v2
       with:
-        msbuild-version: '17.10.4+10fbfbf2e'
+        vs-version: '[17.10.4, 17.11.0)'
 
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
