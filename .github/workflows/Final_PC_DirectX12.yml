@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: "Release PC DirectX12"
+name: "Final PC DirectX12"
 
 on:
   push:
