@@ -34,11 +34,12 @@ jobs:
     - uses: actions/checkout@v4
   
     - name: Find and set specific MSBuild version
+      id: msbuild-path
       run: |
         # Locate MSBuild version 17.10.4+10fbfbf2e using vswhere
         $msbuildPath = &"C:\Program Files (x86)\Microsoft Visual Studio\Installer\vswhere.exe" -version "[17.10.4,17.10.5)" -products * -requires Microsoft.Component.MSBuild -find MSBuild\**\Bin\MSBuild.exe
         echo "MSBuild path: $msbuildPath"
-        echo "::add-path::$($msbuildPath | Split-Path)"
+        echo "$msbuildPath" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
