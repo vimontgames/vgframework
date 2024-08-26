@@ -39,7 +39,11 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool ResourceManager::HasResourceLoading() const
     {
-        return m_resourcesToLoad.size() != 0;
+        Lock();
+        bool hasResourceLoading = m_resourcesToLoad.size() != 0 || m_resourcesLoadedAsync.size() != 0;
+        Unlock();
+
+        return hasResourceLoading;
     }
 
     //--------------------------------------------------------------------------------------
@@ -52,15 +56,6 @@ namespace vg::engine
     const IResourceInfo & ResourceManager::GetResourceInfo(core::uint _index) const
     {
         return *std::next(m_resourceInfosMap.begin(), _index)->second;
-
-        //auto it = m_resourceInfosMap.begin();
-        //uint i = 0;
-        //while (i < _index && it != m_resourceInfosMap.end())
-        //{
-        //    it = std::next(it);
-        //    i++;
-        //}
-        //return *it->second;
     }
 
     //--------------------------------------------------------------------------------------
@@ -456,14 +451,14 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void ResourceManager::Lock()
+    void ResourceManager::Lock() const
     {
         m_addResourceToLoadRecursiveMutex.lock();
         m_resourceLoadedAsyncMutex.lock();
     }
 
     //--------------------------------------------------------------------------------------
-    void ResourceManager::Unlock()
+    void ResourceManager::Unlock() const
     {
         m_addResourceToLoadRecursiveMutex.unlock();
         m_resourceLoadedAsyncMutex.unlock();

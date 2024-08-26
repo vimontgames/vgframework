@@ -418,9 +418,6 @@ namespace vg::engine
                         view->SetWorld(world);
                 }
             }
-
-            if (m_startInPlayMode)
-                Play();
         }
     }
 
@@ -766,6 +763,16 @@ namespace vg::engine
         // This will use all available threads for culling then rendering scene
         if (m_renderer)
             m_renderer->RunOneFrame();
+
+        if (m_startInPlayMode)
+        {
+            engine::IResourceManager * rm = GetResourceManager();
+            if (!rm->HasResourceLoading())
+            {
+                Play();
+                m_startInPlayMode = false;
+            }
+        }
 
         g_RunningOneFrame = false;
 	}

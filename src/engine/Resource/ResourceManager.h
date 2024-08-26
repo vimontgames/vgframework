@@ -26,8 +26,8 @@ namespace vg::engine
         ~ResourceManager();
 
         // Lock during editing
-        void                    Lock                        () final override;
-        void                    Unlock                      () final override;
+        void                    Lock                        () const final override;
+        void                    Unlock                      () const final override;
 
         bool                    HasResourceLoading          () const final override;
         core::uint              GetResourceCount            () const final override;
@@ -61,8 +61,8 @@ namespace vg::engine
         core::vector<core::IResource*>                      m_resourcesLoaded;
         core::vector<core::IResource *>                     m_resourcesLoadedAsync;
 
-        core::recursive_mutex                               m_addResourceToLoadRecursiveMutex;
-        core::mutex                                         m_resourceLoadedAsyncMutex;
+        mutable core::recursive_mutex                       m_addResourceToLoadRecursiveMutex;
+        mutable core::mutex                                 m_resourceLoadedAsyncMutex;
         
     };
 }
