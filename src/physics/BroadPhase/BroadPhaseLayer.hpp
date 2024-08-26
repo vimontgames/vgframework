@@ -23,8 +23,10 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
+    #if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
     const char * BroadPhaseLayer::GetBroadPhaseLayerName(JPH::BroadPhaseLayer _layer) const
     {
         return core::asString((physics::BPLayer)(JPH::BroadPhaseLayer::Type)_layer).c_str();
     }
+    #endif
 }

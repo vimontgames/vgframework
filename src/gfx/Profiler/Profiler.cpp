@@ -136,7 +136,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void Profiler::startGpuEvent(const char * _name)
     {
-        #ifdef VG_ENABLE_GPU_MARKER
+        #if VG_ENABLE_GPU_MARKER
         getCommandList()->beginGPUEvent(_name, 0xFFFFFFFF);
         #endif
     }
@@ -144,7 +144,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void Profiler::stopGpuEvent()
     {
-        #ifdef VG_ENABLE_GPU_MARKER
+        #if VG_ENABLE_GPU_MARKER
         getCommandList()->endGPUEvent();
         #endif
     }

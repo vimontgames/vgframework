@@ -633,7 +633,7 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::beginGPUEvent(const char * _name, core::u32 _color)
     {
-        #ifdef VG_ENABLE_GPU_MARKER 
+        #if VG_ENABLE_GPU_MARKER 
         VkDebugUtilsLabelEXT markerInfo = {};
         markerInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
         float4 color = asFloat4(_color);
@@ -651,7 +651,7 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::endGPUEvent()
     {
-        #ifdef VG_ENABLE_GPU_MARKER 
+        #if VG_ENABLE_GPU_MARKER 
         auto * device = gfx::Device::get();
         device->m_EXT_DebugUtils.m_pfnCmdEndDebugUtilsLabelEXT(getVulkanCommandBuffer());
         #endif

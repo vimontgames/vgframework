@@ -54,8 +54,12 @@ namespace vg::core
 	{
 		#ifdef VG_DEBUG
 		return "Debug";
-		#else
+		#elif defined(VG_RELEASE)
 		return "Release";
+		#elif defined(VG_FINAL)
+		return "Final";
+		#else
+		#error No configuration defined
 		#endif
 	}
 

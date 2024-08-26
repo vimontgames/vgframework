@@ -730,7 +730,7 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void CommandList::beginGPUEvent(const char * _name, core::u32 _color)
     {
-        #ifdef VG_ENABLE_GPU_MARKER
+        #if VG_ENABLE_GPU_MARKER
         PIXBeginEvent(getd3d12GraphicsCommandList(), _color, _name);
         #endif
     }
@@ -738,7 +738,7 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void CommandList::endGPUEvent()
     {
-        #ifdef VG_ENABLE_GPU_MARKER
+        #if VG_ENABLE_GPU_MARKER
         PIXEndEvent(getd3d12GraphicsCommandList());
         #endif
     }

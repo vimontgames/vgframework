@@ -277,7 +277,7 @@ namespace vg::gfx::vulkan
 	//--------------------------------------------------------------------------------------
 	void Device::registerExtensions(const DeviceParams & _params)
 	{
-        #ifdef VG_ENABLE_GPU_MARKER
+        #if VG_ENABLE_GPU_MARKER
         m_instanceExtensionList.registerExtension(m_EXT_DebugUtils);
         #endif
 
@@ -336,7 +336,7 @@ namespace vg::gfx::vulkan
 		bool validationLayer = _params.debugDevice;
         const char * validationLayerName = "VK_LAYER_KHRONOS_validation";
 
-        #ifdef VG_ENABLE_GPU_MARKER
+        #if VG_ENABLE_GPU_MARKER
         if (_params.debugDevice)
             validationLayer = enableInstanceLayer(validationLayerName);
         #endif
@@ -412,7 +412,7 @@ namespace vg::gfx::vulkan
 		if (m_KHR_Buffer_Device_Address.isEnabled())
 			m_caps.supportDeviceAddress = true;
 
-        #ifdef VG_ENABLE_GPU_MARKER
+        #if VG_ENABLE_GPU_MARKER
         VG_VERIFY_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &m_vkDebugMessenger));
         #endif
 

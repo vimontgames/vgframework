@@ -401,7 +401,7 @@ namespace vg::core
 
             obj = obj->GetParent();
         }
-        return nullptr;
+        return nullptr; 
     }
 
     //--------------------------------------------------------------------------------------

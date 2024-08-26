@@ -12,11 +12,14 @@
 // Debug macros
 //--------------------------------------------------------------------------------------
 #ifdef VG_DEBUG
-#define VG_ENABLE_GPU_MARKER 1
-#define VG_ENABLE_SHADER_COMPILATION 1
+    #define VG_ENABLE_GPU_MARKER 1
+    #define VG_ENABLE_SHADER_COMPILATION 1
 #elif defined(VG_RELEASE)
-#define VG_ENABLE_GPU_MARKER 1
-#define VG_ENABLE_SHADER_COMPILATION 1
+    #define VG_ENABLE_GPU_MARKER 1
+    #define VG_ENABLE_SHADER_COMPILATION 1
+#elif defined(VG_FINAL)
+    #define VG_ENABLE_GPU_MARKER 0
+    #define VG_ENABLE_SHADER_COMPILATION 1  // TODO: Runtime shader compilation should be disabled in VG_FINAL 
 #endif
 
 #ifdef _WIN32

@@ -4,8 +4,12 @@ namespace vg::physics
 {
     //--------------------------------------------------------------------------------------
     PhysicsJob::PhysicsJob(JobSystemAdapter::Job * _jphJob) :
-        Job(_jphJob->GetName(), nullptr)
+        Job("PhysicsJob", nullptr)
     {
+        #if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
+        setName(_jphJob->GetName());
+        #endif
+
         _jphJob->AddRef();
         m_jphJob = _jphJob;
     }

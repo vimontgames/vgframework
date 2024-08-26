@@ -160,7 +160,7 @@ namespace vg::editor
                     //ImGui::EndDisabled();
 
                     ImGui::BeginDisabled(all(_viewport->GetRenderTargetSize() == 0));
-                    ImGui::Text("%u x %u", _viewport->GetRenderTargetSize().x, _viewport->GetRenderTargetSize().y);
+                    ImGui::Text("%u x %u", (uint)_viewport->GetRenderTargetSize().x, (uint)_viewport->GetRenderTargetSize().y);
                     ImGui::EndDisabled();
 
                     if (auto * rt = _viewport->GetRenderTarget())

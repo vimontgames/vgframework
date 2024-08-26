@@ -2,7 +2,9 @@
 
 #include "core/Types/Types.h"
 
+#ifndef VG_FINAL
 #define VG_ENABLE_LOGGER 1
+#endif
 
 #if VG_ENABLE_LOGGER
 #define VG_LOG(level, ...)    vg::core::Kernel::getLogger()->Log(level, __VA_ARGS__)

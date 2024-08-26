@@ -439,7 +439,11 @@ namespace vg::editor
 
             // Recompute texture size from viewport offset & scale
             if (m_viewport)
+            {
                 m_viewport->SetRenderTargetSize(m_size);
+                if (m_texture)
+                    m_viewport->SetRenderTarget(m_texture);
+            }
 
             // Hack: Do not use texture on first frame because it may have just become visible but the view not yet renderer (alt fix: last rendered frame counter in View?)
             auto texture = (ImGui::IsWindowAppearing() || !m_viewport->AnyRender()) ? nullptr :  m_texture;

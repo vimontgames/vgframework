@@ -9,12 +9,10 @@ Yes, yet another work-in-progress game and graphic engine project :)
 [disclaimer](#disclaimer)
 
 # build
-| Configuration	  | Platform  | API       | Status 												
-| --------------  | --------- | --------- | ------ 
-| Debug           | PC        | DirectX12 | ![Debug_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_PC_DirectX12.yml/badge.svg?label="test")
-| Release         | PC        | DirectX12 | ![Release_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_PC_DirectX12.yml/badge.svg)
-| Debug           | PC        | Vulkan    | ![Debug_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_PC_Vulkan.yml/badge.svg)
-| Release         | PC        | Vulkan    | ![Release_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_PC_Vulkan.yml/badge.svg)
+| Platform | API       | Debug                                                                                                                    | Release                                                                                                                      | Final 												
+| -------- | --------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
+| PC       | DirectX12 | ![Debug_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_PC_DirectX12.yml/badge.svg) | ![Release_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_PC_DirectX12.yml/badge.svg) | ![Final_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Final_PC_DirectX12.yml/badge.svg)
+| PC       | Vulkan    | ![Debug_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_PC_Vulkan.yml/badge.svg)       | ![Release_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_PC_Vulkan.yml/badge.svg)       | ![Final_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Final_PC_Vulkan.yml/badge.svg)
 
 # description
 
@@ -25,6 +23,27 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 * Apart from the number of root constants, all shaders are sharing the same root signatures.
 
 # changelog
+
+## 0.31
+
+### Editor
+Fix Float4 color edit without alpha\
+Optimize selection \
+Better UI for DynamicProperty debug\
+
+### Physics
+Merge static colliders at init\
+Fix RigidCharacter initial matrix\
+
+### Render
+Control views using Camera component\
+Viewport stats\
+Split-screen\
+Per-view UI\
+Fix wireframe
+
+### Misc
+Add **Final** target
 
 ## 0.30 
 

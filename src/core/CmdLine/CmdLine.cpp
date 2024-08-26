@@ -68,7 +68,6 @@ namespace vg::core
 		}
 		else
 		{
-			_value = "";
 			VG_INFO("[CmdLine] Could not find \"%s\" in command-line", _key.c_str());
 			return false;
 		}
@@ -89,7 +88,6 @@ namespace vg::core
 			return true;
 		}
 
-		_value = false;
 		return false;
 	}
 }

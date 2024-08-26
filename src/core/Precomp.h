@@ -13,7 +13,7 @@
 //--------------------------------------------------------------------------------------
 // Configuration
 //--------------------------------------------------------------------------------------
-#ifndef VG_DEBUG
+#if !defined(VG_DEBUG) && !defined(VG_FINAL)
 #define VG_RELEASE
 #endif
 
@@ -46,6 +46,11 @@
 	#define VG_ENABLE_ASSERT		1
 	#define VG_ENABLE_DEBUGPRINT	1
     #define VG_ENABLE_INLINE        1
+	#define VG_GLOBAL_NEW_DELETE	0
+#elif defined(VG_FINAL)
+	#define VG_ENABLE_ASSERT		0
+	#define VG_ENABLE_DEBUGPRINT	0
+	#define VG_ENABLE_INLINE        1
 	#define VG_GLOBAL_NEW_DELETE	0
 #endif
 

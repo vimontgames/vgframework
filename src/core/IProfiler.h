@@ -2,7 +2,9 @@
 
 #include "Kernel.h"
 
+#ifndef VG_FINAL
 #define VG_ENABLE_PROFILER 1
+#endif
 
 #if VG_ENABLE_PROFILER
 
