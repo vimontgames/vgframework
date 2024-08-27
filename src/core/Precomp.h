@@ -38,16 +38,19 @@
 // Debug macros
 //--------------------------------------------------------------------------------------
 #ifdef VG_DEBUG
+	#define VG_ENABLE_EDITOR		1
 	#define VG_ENABLE_ASSERT		1
 	#define VG_ENABLE_DEBUGPRINT	1
     #define VG_ENABLE_INLINE        0
 	#define VG_GLOBAL_NEW_DELETE	1
 #elif defined(VG_RELEASE)
+	#define VG_ENABLE_EDITOR		1
 	#define VG_ENABLE_ASSERT		1
 	#define VG_ENABLE_DEBUGPRINT	1
     #define VG_ENABLE_INLINE        1
 	#define VG_GLOBAL_NEW_DELETE	0
 #elif defined(VG_FINAL)
+	#define VG_ENABLE_EDITOR		0
 	#define VG_ENABLE_ASSERT		0
 	#define VG_ENABLE_DEBUGPRINT	0
 	#define VG_ENABLE_INLINE        1

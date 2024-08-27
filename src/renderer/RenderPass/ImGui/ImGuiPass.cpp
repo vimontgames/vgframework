@@ -84,6 +84,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiPass::Render(const RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const
     {
+        #if VG_ENABLE_EDITOR
         editor::IEditor * editor = getEngine()->GetEditor();
         if (editor)
         {
@@ -91,9 +92,9 @@ namespace vg::renderer
             guiContext.imgui = ImGui::GetCurrentContext();
             guiContext.filedialog = ImGuiFileDialog::Instance();
 
-            //if (!Renderer::get()->IsFullscreen())
-                editor->DrawGUI(guiContext);
+            editor->DrawGUI(guiContext);
         }
+        #endif
 
         Renderer::get()->getImGuiAdapter()->render(_cmdList);
     }

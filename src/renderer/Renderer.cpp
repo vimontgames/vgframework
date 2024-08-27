@@ -924,6 +924,10 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void Renderer::SetFullscreen(bool _fullscreen)
     {
+        #if !VG_ENABLE_EDITOR
+        _fullscreen = true;
+        #endif
+
         if (_fullscreen != m_fullscreen)
         {
             m_fullscreen = _fullscreen;
@@ -951,7 +955,11 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool Renderer::IsFullscreen() const
     {
+        #if !VG_ENABLE_EDITOR
+        return true;
+        #else
         return m_fullscreen;
+        #endif
     }
 
     //--------------------------------------------------------------------------------------

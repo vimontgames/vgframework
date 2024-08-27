@@ -38,7 +38,6 @@ namespace vg::renderer
 
     //--------------------------------------------------------------------------------------
     // Create transparent window to render game UI
-    // rem: if not rendered from inside dock the ImGui::Begin part is needed!
     //--------------------------------------------------------------------------------------
     void ViewGUI::RenderFullscreen()
     {
@@ -47,12 +46,18 @@ namespace vg::renderer
 
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-        //ImGui::Begin("ViewGUI", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+
+        #if !VG_ENABLE_EDITOR
+        // if not rendered from inside dock the ImGui::Begin part is needed!
+        ImGui::Begin("ViewGUI", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+        #endif
         {
             ImGui::SetCursorScreenPos(ImVec2(0, 0));
             render();
         }
-        //ImGui::End();
+        #if !VG_ENABLE_EDITOR
+        ImGui::End();
+        #endif
         ImGui::PopStyleColor();
         ImGui::PopStyleVar();
     }

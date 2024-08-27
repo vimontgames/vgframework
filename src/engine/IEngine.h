@@ -24,10 +24,12 @@ namespace vg
         class IPhysics;
     }
 
+    #if VG_ENABLE_EDITOR
     namespace editor
     {
         class IEditor;
     }
+    #endif
 
     namespace engine
     {
@@ -72,7 +74,7 @@ namespace vg
 
             virtual bool                                LoadGame            (const core::string & _path) = 0;
             virtual bool                                UnloadGame          () = 0;
-            virtual IGame *                             GetProject          () const = 0;
+            virtual IGame *                             GetGame             () const = 0;
 
             virtual core::IWorld *                      GetMainWorld        () const = 0;
             virtual const core::vector<core::IWorld*> & GetWorlds           () const = 0;
@@ -86,7 +88,10 @@ namespace vg
 		    virtual void						        RunOneFrame	        () = 0;
             virtual void                                FlushLoading        () = 0;
 
+            #if VG_ENABLE_EDITOR
             virtual editor::IEditor *                   GetEditor           () const = 0;
+            #endif
+
 		    virtual renderer::IRenderer *	            GetRenderer	        () const = 0;
             virtual physics::IPhysics *                 GetPhysics          () const = 0;
             virtual engine::IResourceManager *          GetResourceManager  () const = 0;

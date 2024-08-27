@@ -15,11 +15,6 @@ namespace vg::gfx
     class IView;
 }
 
-namespace vg::editor
-{
-    class IEditor;
-}
-
 namespace vg::renderer
 {
     class IRendererOptions;
@@ -87,9 +82,9 @@ namespace vg::engine
         void                                    Quit                () final override;
         bool                                    IsQuitting          () const final override;
 
-        bool                                    LoadGame         (const core::string & _path) final;
-        bool                                    UnloadGame       () final;
-        IGame *                              GetProject          () const final;
+        bool                                    LoadGame            (const core::string & _path) final;
+        bool                                    UnloadGame          () final;
+        IGame *                                 GetGame             () const final;
 
         core::IWorld *                          GetMainWorld        () const final override;
         const core::vector<core::IWorld *> &    GetWorlds           () const final override;
@@ -99,7 +94,10 @@ namespace vg::engine
 
         core::uint2                             GetScreenSize       () const final;
 
+        #if VG_ENABLE_EDITOR
         editor::IEditor *                       GetEditor           () const final override;
+        #endif
+
 		renderer::IRenderer *	                GetRenderer	        () const final override;
         physics::IPhysics *                     GetPhysics          () const final override;
         engine::IResourceManager *              GetResourceManager  () const final override;
@@ -146,9 +144,13 @@ namespace vg::engine
         bool                                    m_isPaused          : 1;
         bool                                    m_startInPlayMode   : 1;
         bool                                    m_quit              : 1;
-        IGame *                              m_game              = nullptr;
+        IGame *                                 m_game              = nullptr;
         WorldResource *                         m_worldResource     = nullptr;
+
+        #if VG_ENABLE_EDITOR
         editor::IEditor *                       m_editor            = nullptr;
+        #endif
+
 		renderer::IRenderer *	                m_renderer          = nullptr;
         physics::IPhysics *                     m_physics           = nullptr;
         ResourceManager *                       m_resourceManager   = nullptr;

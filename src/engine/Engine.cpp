@@ -127,7 +127,9 @@ namespace vg::engine
                             }
                             else
                             {
-                                if (!engine->IsPlaying())
+                                if (engine->IsPlaying())
+                                    engine->Stop();
+                                else
                                     engine->Play();
                             }
                         }
@@ -274,7 +276,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    IGame * Engine::GetProject() const
+    IGame * Engine::GetGame() const
     {
         return m_game;
     }
@@ -369,8 +371,10 @@ namespace vg::engine
         LoadGame(engineOptions->GetProjectPath());
 
         // Load Editor DLL
+        #if VG_ENABLE_EDITOR
         m_editor = Plugin::create<editor::IEditor>("editor");
         m_editor->Init(_singletons);
+        #endif
 
         // Create default world resource or load world path from commandline (TODO)
         VG_ASSERT(m_worldResource == nullptr);
@@ -548,8 +552,10 @@ namespace vg::engine
 
         IFactory * factory = Kernel::getFactory();
 
+        #if VG_ENABLE_EDITOR
         m_editor->Deinit();
         m_editor->Release();
+        #endif
 
         // ~dtor time is too late to unload world resource we have to use ptr so as to do it manually before the ResourceMananger shutdowns
         VG_SAFE_RELEASE(m_worldResource);
@@ -757,8 +763,10 @@ namespace vg::engine
             }
         }
 
+        #if VG_ENABLE_EDITOR
         if (m_editor)
             m_editor->RunOneFrame();
+        #endif
 
         // This will use all available threads for culling then rendering scene
         if (m_renderer)
@@ -778,10 +786,12 @@ namespace vg::engine
 	}
 
     //--------------------------------------------------------------------------------------
+    #if VG_ENABLE_EDITOR
     editor::IEditor * Engine::GetEditor() const
     {
         return m_editor;
     }
+    #endif
 
 	//--------------------------------------------------------------------------------------
 	renderer::IRenderer * Engine::GetRenderer() const
