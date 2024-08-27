@@ -210,9 +210,12 @@ namespace vg::renderer
         sampler_info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         sampler_info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
         sampler_info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        sampler_info.minLod = -1000;
-        sampler_info.maxLod = 1000;
-        sampler_info.maxAnisotropy = 1.0f;
+        sampler_info.minLod = 0;
+        sampler_info.maxLod = 0;
+        sampler_info.maxAnisotropy = 0.0f;
+        sampler_info.borderColor = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
+        sampler_info.compareEnable = false;
+        sampler_info.compareOp = VK_COMPARE_OP_ALWAYS;
         VG_VERIFY_VULKAN(vkCreateSampler(device->getVulkanDevice(), &sampler_info, nullptr, &m_vkSampler));
     }
     #endif
