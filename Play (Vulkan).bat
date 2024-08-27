@@ -1,1 +1,0 @@
-start application_x64_Release_Vulkan.exe play=true fullscreen=true
