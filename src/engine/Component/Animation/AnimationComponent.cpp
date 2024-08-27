@@ -98,7 +98,7 @@ namespace vg::engine
 
             if (animRes.isPlaying())
             {
-                if (IAnimation * anim = (IAnimation *)animRes.getObject())
+                if (IAnimation * anim = (IAnimation *)animRes.GetObject())
                 {
                     const float speed = animRes.getSpeed();
                     const float duration = anim->GetLength();
@@ -142,7 +142,7 @@ namespace vg::engine
             for (uint i = 0; i < animResources.size(); ++i)
             {
                 AnimationResource & animRes = animResources[i];
-                if (renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)animRes.getObject())
+                if (renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)animRes.GetObject())
                     meshComponent->getMeshInstance()->AddAnimation(anim);
             }
         }
@@ -154,7 +154,7 @@ namespace vg::engine
         MeshComponent * meshComponent = getMeshComponent();
         if (meshComponent)
         {
-            renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->getObject();
+            renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->GetObject();
             meshComponent->getMeshInstance()->AddAnimation(anim);
         }
     }
@@ -165,7 +165,7 @@ namespace vg::engine
         MeshComponent * meshComponents = GetGameObject()->GetComponentT<MeshComponent>();
         if (meshComponents)
         {
-            renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->getObject();
+            renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->GetObject();
             meshComponents->getMeshInstance()->RemoveAnimation(anim);
         }
     }

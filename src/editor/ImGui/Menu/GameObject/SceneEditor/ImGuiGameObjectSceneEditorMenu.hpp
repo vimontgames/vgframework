@@ -154,7 +154,7 @@ namespace vg::editor
 
                     if (prefabGameObject && prefabGameObject->GetPrefabResource())
                     {
-                        auto scene = VG_SAFE_STATIC_CAST(IBaseScene, prefabGameObject->GetPrefabResource()->getObject());
+                        auto scene = VG_SAFE_STATIC_CAST(IBaseScene, prefabGameObject->GetPrefabResource()->GetObject());
 
                         IResource * sceneRes = worldRes->FindSceneResource(scene, BaseSceneType::Prefab);
 

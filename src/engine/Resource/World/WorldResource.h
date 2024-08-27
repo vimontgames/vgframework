@@ -24,14 +24,14 @@ namespace vg::engine
         core::uint                          GetSceneResourceCount   (core::BaseSceneType _sceneType) const final override;
         core::IResource *                   GetSceneResource        (core::uint _index, core::BaseSceneType _sceneType) const final override;
 
-        const core::vector<core::string>    getExtensions           () const final;
-        void                                onResourcePathChanged   (const core::string & _oldPath, const core::string & _newPath) final override;
+        const core::vector<core::string>    GetExtensions           () const final;
+        void                                OnResourcePathChanged   (const core::string & _oldPath, const core::string & _newPath) final override;
 
         void                                onResourceLoaded        (core::IResource * _resource) final override;
         void                                onResourceUnloaded      (core::IResource * _resource) final override;
 
-        bool                                cook                    (const core::string & _file) const final override;
-        core::IObject *                     load                    (const core::string & _path) final override;
+        bool                                Cook                    (const core::string & _file) const final override;
+        core::IObject *                     Load                    (const core::string & _path) final override;
 
         bool                                CreateFile              (const core::string & _path, core::IObject * _data = nullptr) final override;
         bool                                SaveFile                (const core::string & _path) const override;

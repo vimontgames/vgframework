@@ -418,7 +418,7 @@ namespace vg::editor
         ImGui::PushID(sceneTypeName.c_str());
 
         auto worldRes = getEngine()->GetWorldResource();
-        string label = worldRes && worldRes->getObject() ? worldRes->getObject()->getName() : "<No World loaded>";
+        string label = worldRes && worldRes->GetObject() ? worldRes->GetObject()->getName() : "<No World loaded>";
 
         if (ImGui::IconBegin(typeInfo.icon.c_str(), fmt::sprintf("%s###%s", typeInfo.windowName, sceneTypeName).c_str(), &m_isVisible))
         {
@@ -516,7 +516,7 @@ namespace vg::editor
                     for (uint i = 0; i < sceneResourceCount; ++i)
                     {
                         const core::IResource* sceneRes = worldRes->GetSceneResource(i, _sceneType);
-                        const IBaseScene* scene = (IBaseScene*)sceneRes->getObject();
+                        const IBaseScene* scene = (IBaseScene*)sceneRes->GetObject();
                         if (nullptr != scene)
                         {
                             ImGui::PushID("SceneTree");
@@ -544,7 +544,7 @@ namespace vg::editor
                             else
                             {
                                 // Check in case menu just unloaded the scene (e.g. "Save & Update")
-                                if (nullptr != sceneRes->getObject())
+                                if (nullptr != sceneRes->GetObject())
                                 {
                                     string sceneLabel = fmt::sprintf("%s %s", typeInfo.icon, scene->getName());
 

@@ -63,7 +63,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<core::string> AnimationResource::getExtensions() const
+    const core::vector<core::string> AnimationResource::GetExtensions() const
     {
         vector<string> ext;
         ext.push_back(".fbx");
@@ -71,20 +71,20 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void AnimationResource::onResourcePathChanged(const string & _oldPath, const string & _newPath)
+    void AnimationResource::OnResourcePathChanged(const string & _oldPath, const string & _newPath)
     {
         if (_oldPath != _newPath)
             ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
     }
 
     //--------------------------------------------------------------------------------------
-    bool AnimationResource::cook(const string & _file) const
+    bool AnimationResource::Cook(const string & _file) const
     {
         return Engine::get()->GetRenderer()->cookAnimation(_file);
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject * AnimationResource::load(const string & _file)
+    core::IObject * AnimationResource::Load(const string & _file)
     {
         IAnimation * anim = Engine::get()->GetRenderer()->loadAnimation(_file);
         return anim;
@@ -120,7 +120,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool AnimationResource::IsPlaying() const
     {
-        if (IAnimation * anim = (IAnimation *)getObject())
+        if (IAnimation * anim = (IAnimation *)GetObject())
             return m_play;
         else
             return false;
@@ -129,7 +129,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool AnimationResource::IsFinished() const
     {
-        if (IAnimation * anim = (IAnimation *)getObject())
+        if (IAnimation * anim = (IAnimation *)GetObject())
             return !m_loop && m_time >= anim->GetLength();
         else
             return true;
@@ -138,7 +138,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool AnimationResource::PlayLoop()
     {
-        if (!getObject())
+        if (!GetObject())
             return false;
 
         if (!m_play)
@@ -226,7 +226,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void AnimationResource::setTime(float _time)
     {
-        if (IAnimation * anim = (IAnimation *)getObject())
+        if (IAnimation * anim = (IAnimation *)GetObject())
         {
             const float animLength = anim->GetLength();
 
@@ -248,7 +248,7 @@ namespace vg::engine
         if (m_weight == 0.0f)
             m_play = false;
 
-        if (IAnimation * anim = (IAnimation *)getObject())
+        if (IAnimation * anim = (IAnimation *)GetObject())
         {
             if (IMeshInstance * meshInstance = getMeshInstance())
                 meshInstance->SetAnimationWeight((ISkeletalAnimation *)anim, m_weight);

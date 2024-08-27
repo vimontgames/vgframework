@@ -42,7 +42,7 @@ namespace vg::engine
 	}
 
 	//--------------------------------------------------------------------------------------
-	const core::vector<core::string> SceneResource::getExtensions() const
+	const core::vector<core::string> SceneResource::GetExtensions() const
 	{
 		vector<string> ext;
 		ext.push_back(".scene");
@@ -50,7 +50,7 @@ namespace vg::engine
 	}
 
 	//--------------------------------------------------------------------------------------
-	core::IObject * SceneResource::load(const string & _path)
+	core::IObject * SceneResource::Load(const string & _path)
 	{
 		IFactory * factory = Kernel::getFactory();
 		IBaseScene * scene = dynamic_cast<IBaseScene*>(factory->createObject("Scene"));
@@ -96,7 +96,7 @@ namespace vg::engine
 	//--------------------------------------------------------------------------------------
 	bool SceneResource::SaveFile(const string & _path) const
 	{
-		IBaseScene * scene = dynamic_cast<IBaseScene*>(getObject());
+		IBaseScene * scene = dynamic_cast<IBaseScene*>(GetObject());
 		if (nullptr != scene)
 		{
 			const auto * factory = Kernel::getFactory();

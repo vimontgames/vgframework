@@ -71,16 +71,16 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::setup(IObject * _owner, const string & _path, UserData _userData)
+    void Resource::Setup(IObject * _owner, const string & _path, UserData _userData)
     {
-        setObject(nullptr);
+        SetObject(nullptr);
         SetParent(_owner);
-        setUserData(_userData);
+        SetUserData(_userData);
         SetResourcePath(_path);
     }
 
     //--------------------------------------------------------------------------------------
-    bool Resource::setObject(core::IObject * _object)
+    bool Resource::SetObject(core::IObject * _object)
     {
         if (m_object != _object)
         {
@@ -95,19 +95,19 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * Resource::getObject() const
+    IObject * Resource::GetObject() const
     {
         return m_object;
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::setUserData(UserData _userData)
+    void Resource::SetUserData(UserData _userData)
     {
         m_userData = _userData;
     }
 
     //--------------------------------------------------------------------------------------
-    IResource::UserData Resource::getUserData() const
+    IResource::UserData Resource::GetUserData() const
     {
         return m_userData;
     }    
@@ -130,7 +130,7 @@ namespace vg::core
         {
             string oldPath = m_resourcePath;
             m_resourcePath = io::getRelativePath(_path);
-            onResourcePathChanged(oldPath, m_resourcePath);
+            OnResourcePathChanged(oldPath, m_resourcePath);
 
             return true;
         }
@@ -146,7 +146,25 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::unload(const core::string & _file)
+    const vector<string> Resource::GetExtensions() const 
+    { 
+        vector<string> ext; return ext; 
+    };
+
+    //--------------------------------------------------------------------------------------
+    bool Resource::Cook(const core::string & _file) const
+    { 
+        return false; 
+    };
+
+    //--------------------------------------------------------------------------------------
+    core::IObject * Resource::Load(const core::string & _file)
+    {
+        return nullptr;
+    };
+
+    //--------------------------------------------------------------------------------------
+    void Resource::Unload(const core::string & _file)
     {
         //VG_INFO("[Resource] Unload %s \"%s\"", GetClassName(), _file.c_str());
     }

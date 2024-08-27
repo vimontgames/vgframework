@@ -79,7 +79,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void WorldResourceData::RemoveScene(BaseSceneResource * _sceneRes, BaseSceneType _sceneType)
     {
-        IBaseScene * scene = dynamic_cast<IBaseScene *>(_sceneRes->getObject());
+        IBaseScene * scene = dynamic_cast<IBaseScene *>(_sceneRes->GetObject());
         switch (_sceneType)
         {
             default:

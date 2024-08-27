@@ -21,11 +21,11 @@ namespace vg::engine
                                             TextureResource         (const core::string & _name = "", core::IObject * _parent = nullptr);
                                             ~TextureResource        ();
 
-        const core::vector<core::string>    getExtensions           () const final;
-        void                                onResourcePathChanged   (const core::string & _oldPath, const core::string & _newPath) final;
+        const core::vector<core::string>    GetExtensions           () const final;
+        void                                OnResourcePathChanged   (const core::string & _oldPath, const core::string & _newPath) final;
 
-        bool                                cook                    (const core::string & _file) const final override;
-        core::IObject *                     load                    (const core::string & _file) final override;
+        bool                                Cook                    (const core::string & _file) const final override;
+        core::IObject *                     Load                    (const core::string & _file) final override;
 
         gfx::ITexture *                     getTexture              () const { return (gfx::ITexture*)m_object; }
     };

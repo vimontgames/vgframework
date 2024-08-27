@@ -22,25 +22,25 @@ namespace vg::core
         bool                        CreateFile              (const string & _path, IObject * _data) override;
         bool                        SaveFile                (const string & _path) const override;
 
-        void                        setup                   (IObject * _owner, const string & _path, UserData _userData = 0x0) final;
+        void                        Setup                   (IObject * _owner, const string & _path, UserData _userData = 0x0) final override;
 
-        bool                        setObject               (core::IObject * _object) final;
-        IObject *                   getObject               () const final;
+        bool                        SetObject               (core::IObject * _object) final override;
+        IObject *                   GetObject               () const final override;
     
-        void                        setUserData             (UserData _userData) final;
-        UserData                    getUserData             () const final;
+        void                        SetUserData             (UserData _userData) final override;
+        UserData                    GetUserData             () const final override;
 
-        bool                        ClearResourcePath       () final;
-        bool                        SetResourcePath         (const string & _path) final;
-        const string &              GetResourcePath         () const final;
+        bool                        ClearResourcePath       () final override;
+        bool                        SetResourcePath         (const string & _path) final override;
+        const string &              GetResourcePath         () const final override;
 
-        const vector<string>        getExtensions           () const override { vector<string> ext; return ext; };
-        void                        onResourcePathChanged   (const string & _oldPath, const string & _newPath) override { };
+        const vector<string>        GetExtensions           () const override;;
+        void                        OnResourcePathChanged   (const string & _oldPath, const string & _newPath) override { };
 
-        bool                        cook                    (const core::string & _file) const { return false;};
+        bool                        Cook                    (const core::string & _file) const;
 
-        core::IObject *             load                    (const core::string & _file) { return nullptr; };
-        void                        unload                  (const core::string & _file);
+        core::IObject *             Load                    (const core::string & _file);
+        void                        Unload                  (const core::string & _file);
 
         void                        loadSubResources        () override;
         void                        unloadSubResources      () override;

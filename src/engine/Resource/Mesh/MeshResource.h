@@ -18,13 +18,13 @@ namespace vg::engine
                                             MeshResource            (const core::string & _name, IObject * _parent);
                                             ~MeshResource           ();
 
-        const core::vector<core::string>    getExtensions           () const final;
-        void                                onResourcePathChanged   (const core::string & _oldPath, const core::string & _newPath) final;
+        const core::vector<core::string>    GetExtensions           () const final;
+        void                                OnResourcePathChanged   (const core::string & _oldPath, const core::string & _newPath) final;
 
-        bool                                cook                    (const core::string & _file) const final override;
+        bool                                Cook                    (const core::string & _file) const final override;
 
-        core::IObject *                     load                    (const core::string & _path) override;
-        void                                unload                  (const core::string & _path) override;
+        core::IObject *                     Load                    (const core::string & _path) override;
+        void                                Unload                  (const core::string & _path) override;
 
         void                                loadSubResources        () override;
         void                                unloadSubResources      () override;

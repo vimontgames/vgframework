@@ -16,148 +16,160 @@
                 <Property type="ObjectPtrVector" name="m_components"/>
                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
                     <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Camera_Pablo"/>
-                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1065651505"/>
+                        <Property type="String" name="m_name" value="Cameras"/>
+                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00037621649" Iz="0.00015561881" Iw="0" Jx="0.00024372329" Jy="0.85935485" Jz="0.51137912" Jw="0" Kx="-0.00032612117" Ky="-0.51137912" Kz="0.85935485" Kw="0" Tx="-11" Ty="-11" Tz="14.5" Tw="1"/>
-                        <Property type="ObjectPtrVector" name="m_components">
-                            <Object class="GameCameraBehaviour">
-                                <Property type="String" name="m_name" flags="NotVisible" value="GameCameraBehaviour #0"/>
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1740531556"/>
+                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="ObjectPtrVector" name="m_components"/>
+                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Camera_Pablo"/>
+                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1065651505"/>
                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Selected"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="ObjectHandle" name="m_target" value="3910194299"/>
-                                <Property type="Float" name="m_delay" value="0.1"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00037621649" Iz="0.00015561881" Iw="0" Jx="0.00024372329" Jy="0.85935485" Jz="0.51137912" Jw="0" Kx="-0.00032612117" Ky="-0.51137912" Kz="0.85935485" Kw="0" Tx="-11" Ty="-11" Tz="14.5" Tw="1"/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="GameCameraBehaviour">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="GameCameraBehaviour #0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1740531556"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="ObjectHandle" name="m_target" value="3910194299"/>
+                                        <Property type="Float" name="m_delay" value="0.1"/>
+                                    </Object>
+                                    <Object class="CameraComponent">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="CameraComponent #0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1553686324"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_target" flags="ReadOnly" value="Game"/>
+                                        <Property type="Uint8" name="m_viewportIndex" flags="ReadOnly|HasRange" value="0"/>
+                                        <Property type="Uint8" name="m_viewIndex" flags="HasRange" value="0"/>
+                                        <Property type="Float" name="m_fovY" flags="HasRange" value="0.69999999"/>
+                                        <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
+                                        <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
+                                        <Property type="Float2" name="m_viewportOffset" flags="HasRange" x="0" y="0"/>
+                                        <Property type="Float2" name="m_viewportScale" flags="HasRange" x="0.5" y="1"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                             </Object>
-                            <Object class="CameraComponent">
-                                <Property type="String" name="m_name" flags="NotVisible" value="CameraComponent #0"/>
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1553686324"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Camera_Romeo"/>
+                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4215555846"/>
+                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1065651505"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="EnumU8" name="m_target" flags="ReadOnly" value="Game"/>
-                                <Property type="Uint8" name="m_viewportIndex" flags="ReadOnly|HasRange" value="0"/>
-                                <Property type="Uint8" name="m_viewIndex" flags="HasRange" value="0"/>
-                                <Property type="Float" name="m_fovY" flags="HasRange" value="0.69999999"/>
-                                <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
-                                <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
-                                <Property type="Float2" name="m_viewportOffset" flags="HasRange" x="0" y="0"/>
-                                <Property type="Float2" name="m_viewportScale" flags="HasRange" x="0.5" y="1"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00037621649" Iz="0.00015561881" Iw="0" Jx="0.00024372329" Jy="0.85935485" Jz="0.51137912" Jw="0" Kx="-0.00032612117" Ky="-0.51137912" Kz="0.85935485" Kw="0" Tx="-11" Ty="-9" Tz="14.5" Tw="1"/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="GameCameraBehaviour">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="GameCameraBehaviour #0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1384955130"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1740531556"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="ObjectHandle" name="m_target" value="481891842"/>
+                                        <Property type="Float" name="m_delay" value="0.1"/>
+                                    </Object>
+                                    <Object class="CameraComponent">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="CameraComponent #0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1657065111"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1553686324"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_target" flags="ReadOnly" value="Game"/>
+                                        <Property type="Uint8" name="m_viewportIndex" flags="ReadOnly|HasRange" value="0"/>
+                                        <Property type="Uint8" name="m_viewIndex" flags="HasRange" value="1"/>
+                                        <Property type="Float" name="m_fovY" flags="HasRange" value="0.69999999"/>
+                                        <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
+                                        <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
+                                        <Property type="Float2" name="m_viewportOffset" flags="HasRange" x="0.5" y="0"/>
+                                        <Property type="Float2" name="m_viewportScale" flags="HasRange" x="0.5" y="1"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Camera_Benualdo"/>
+                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4177609574"/>
+                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1065651505"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
+                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00037621649" Iz="0.00015561881" Iw="0" Jx="0.00024372329" Jy="0.85935485" Jz="0.51137912" Jw="0" Kx="-0.00032612117" Ky="-0.51137912" Kz="0.85935485" Kw="0" Tx="-11" Ty="-7" Tz="14.5" Tw="1"/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="GameCameraBehaviour">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="GameCameraBehaviour #0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1433575978"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1740531556"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="ObjectHandle" name="m_target" value="3145165694"/>
+                                        <Property type="Float" name="m_delay" value="0.1"/>
+                                    </Object>
+                                    <Object class="CameraComponent">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="CameraComponent #0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="573728226"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1553686324"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_target" flags="ReadOnly" value="Game"/>
+                                        <Property type="Uint8" name="m_viewportIndex" flags="ReadOnly|HasRange" value="0"/>
+                                        <Property type="Uint8" name="m_viewIndex" flags="HasRange" value="2"/>
+                                        <Property type="Float" name="m_fovY" flags="HasRange" value="0.69999999"/>
+                                        <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
+                                        <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
+                                        <Property type="Float2" name="m_viewportOffset" flags="HasRange" x="0" y="0.5"/>
+                                        <Property type="Float2" name="m_viewportScale" flags="HasRange" x="0.5" y="0.5"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Camera_Level"/>
+                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="99501873"/>
+                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1065651505"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
+                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00037621649" Iz="0.00015561881" Iw="0" Jx="0.00024372329" Jy="0.85935485" Jz="0.51137912" Jw="0" Kx="-0.00032612117" Ky="-0.51137912" Kz="0.85935485" Kw="0" Tx="0" Ty="-16.234671" Tz="25" Tw="1"/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="GameCameraBehaviour">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="GameCameraBehaviour #0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1985014434"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1740531556"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="ObjectHandle" name="m_target" value="0"/>
+                                        <Property type="Float" name="m_delay" value="0.1"/>
+                                    </Object>
+                                    <Object class="CameraComponent">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="CameraComponent #0"/>
+                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1873182595"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1553686324"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_target" flags="ReadOnly" value="Game"/>
+                                        <Property type="Uint8" name="m_viewportIndex" flags="ReadOnly|HasRange" value="0"/>
+                                        <Property type="Uint8" name="m_viewIndex" flags="HasRange" value="3"/>
+                                        <Property type="Float" name="m_fovY" flags="HasRange" value="0.60000002"/>
+                                        <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
+                                        <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
+                                        <Property type="Float2" name="m_viewportOffset" flags="HasRange" x="0.5" y="0.5"/>
+                                        <Property type="Float2" name="m_viewportScale" flags="HasRange" x="0.5" y="0.5"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                             </Object>
                         </Property>
-                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
-                    </Object>
-                    <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Camera_Romeo"/>
-                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4215555846"/>
-                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1065651505"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00037621649" Iz="0.00015561881" Iw="0" Jx="0.00024372329" Jy="0.85935485" Jz="0.51137912" Jw="0" Kx="-0.00032612117" Ky="-0.51137912" Kz="0.85935485" Kw="0" Tx="-11" Ty="-9" Tz="14.5" Tw="1"/>
-                        <Property type="ObjectPtrVector" name="m_components">
-                            <Object class="GameCameraBehaviour">
-                                <Property type="String" name="m_name" flags="NotVisible" value="GameCameraBehaviour #0"/>
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1384955130"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1740531556"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="ObjectHandle" name="m_target" value="481891842"/>
-                                <Property type="Float" name="m_delay" value="0.1"/>
-                            </Object>
-                            <Object class="CameraComponent">
-                                <Property type="String" name="m_name" flags="NotVisible" value="CameraComponent #0"/>
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1657065111"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1553686324"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="EnumU8" name="m_target" flags="ReadOnly" value="Game"/>
-                                <Property type="Uint8" name="m_viewportIndex" flags="ReadOnly|HasRange" value="0"/>
-                                <Property type="Uint8" name="m_viewIndex" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_fovY" flags="HasRange" value="0.69999999"/>
-                                <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
-                                <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
-                                <Property type="Float2" name="m_viewportOffset" flags="HasRange" x="0.5" y="0"/>
-                                <Property type="Float2" name="m_viewportScale" flags="HasRange" x="0.5" y="1"/>
-                            </Object>
-                        </Property>
-                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
-                    </Object>
-                    <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Camera_Benualdo"/>
-                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4177609574"/>
-                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1065651505"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Selected"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
-                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00037621649" Iz="0.00015561881" Iw="0" Jx="0.00024372329" Jy="0.85935485" Jz="0.51137912" Jw="0" Kx="-0.00032612117" Ky="-0.51137912" Kz="0.85935485" Kw="0" Tx="-11" Ty="-7" Tz="14.5" Tw="1"/>
-                        <Property type="ObjectPtrVector" name="m_components">
-                            <Object class="GameCameraBehaviour">
-                                <Property type="String" name="m_name" flags="NotVisible" value="GameCameraBehaviour #0"/>
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1433575978"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1740531556"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="ObjectHandle" name="m_target" value="3145165694"/>
-                                <Property type="Float" name="m_delay" value="0.1"/>
-                            </Object>
-                            <Object class="CameraComponent">
-                                <Property type="String" name="m_name" flags="NotVisible" value="CameraComponent #0"/>
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="573728226"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1553686324"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="EnumU8" name="m_target" flags="ReadOnly" value="Game"/>
-                                <Property type="Uint8" name="m_viewportIndex" flags="ReadOnly|HasRange" value="0"/>
-                                <Property type="Uint8" name="m_viewIndex" flags="HasRange" value="2"/>
-                                <Property type="Float" name="m_fovY" flags="HasRange" value="0.69999999"/>
-                                <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
-                                <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
-                                <Property type="Float2" name="m_viewportOffset" flags="HasRange" x="0" y="0.5"/>
-                                <Property type="Float2" name="m_viewportScale" flags="HasRange" x="0.5" y="0.5"/>
-                            </Object>
-                        </Property>
-                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
-                    </Object>
-                    <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Camera_Level"/>
-                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="99501873"/>
-                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1065651505"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
-                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00037621649" Iz="0.00015561881" Iw="0" Jx="0.00024372329" Jy="0.85935485" Jz="0.51137912" Jw="0" Kx="-0.00032612117" Ky="-0.51137912" Kz="0.85935485" Kw="0" Tx="0" Ty="-16.234671" Tz="25" Tw="1"/>
-                        <Property type="ObjectPtrVector" name="m_components">
-                            <Object class="GameCameraBehaviour">
-                                <Property type="String" name="m_name" flags="NotVisible" value="GameCameraBehaviour #0"/>
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1985014434"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1740531556"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="ObjectHandle" name="m_target" value="0"/>
-                                <Property type="Float" name="m_delay" value="0.1"/>
-                            </Object>
-                            <Object class="CameraComponent">
-                                <Property type="String" name="m_name" flags="NotVisible" value="CameraComponent #0"/>
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1873182595"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1553686324"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="EnumU8" name="m_target" flags="ReadOnly" value="Game"/>
-                                <Property type="Uint8" name="m_viewportIndex" flags="ReadOnly|HasRange" value="0"/>
-                                <Property type="Uint8" name="m_viewIndex" flags="HasRange" value="3"/>
-                                <Property type="Float" name="m_fovY" flags="HasRange" value="0.60000002"/>
-                                <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
-                                <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
-                                <Property type="Float2" name="m_viewportOffset" flags="HasRange" x="0.5" y="0.5"/>
-                                <Property type="Float2" name="m_viewportScale" flags="HasRange" x="0.5" y="0.5"/>
-                            </Object>
-                        </Property>
-                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                     </Object>
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="UI"/>
@@ -387,7 +399,7 @@
                                 <Property type="String" name="m_name" value="Floor"/>
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="914119281"/>
                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -397,7 +409,7 @@
                                         <Property type="String" name="m_name" value="Grass_3x3"/>
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1902818351"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -435,7 +447,7 @@
                                         <Property type="String" name="m_name" value="Grass_3x3_01"/>
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2978431931"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1902818351"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-3" Ty="0" Tz="0" Tw="1"/>
@@ -456,7 +468,7 @@
                                         <Property type="String" name="m_name" value="Grass_3x3_02"/>
                                         <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1647032"/>
                                         <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1902818351"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="3" Ty="0" Tz="0" Tw="1"/>
@@ -1740,7 +1752,7 @@
                                 <Property type="String" name="m_name" value="Goals"/>
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2413496201"/>
                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -1828,7 +1840,7 @@
                                 <Property type="String" name="m_name" value="Billboards"/>
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2532357560"/>
                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -2146,7 +2158,7 @@
                                 <Property type="String" name="m_name" value="Pablo"/>
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3910194299"/>
                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="-1.1920929e-07" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-1.1920929e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-11" Ty="-2.0000005" Tz="0.5" Tw="1"/>
@@ -2224,7 +2236,7 @@
                                 <Property type="String" name="m_name" value="Romeo"/>
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="481891842"/>
                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="-1.1920929e-07" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-1.1920929e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-11" Ty="0" Tz="0.5" Tw="1"/>
@@ -2286,7 +2298,7 @@
                                 <Property type="String" name="m_name" value="Benualdo"/>
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3145165694"/>
                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="-1.1920929e-07" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-1.1920929e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-11" Ty="2.0000005" Tz="0.5" Tw="1"/>
@@ -2360,7 +2372,7 @@
                                 <Property type="String" name="m_name" value="GJ_Red_Prefab"/>
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1553459387"/>
                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="0.0003451705" Iy="-0.99999994" Iz="0" Iw="0" Jx="0.99999994" Jy="0.0003451705" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="11" Ty="1.5" Tz="0" Tw="1"/>
@@ -2398,7 +2410,7 @@
                                 <Property type="String" name="m_name" value="GJ_Blue_Prefab"/>
                                 <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3094291699"/>
                                 <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1553459387"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened|Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="0.0008334259" Iy="-0.99999958" Iz="0" Iw="0" Jx="0.99999958" Jy="0.0008334259" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="11" Ty="-1.5" Tz="0" Tw="1"/>

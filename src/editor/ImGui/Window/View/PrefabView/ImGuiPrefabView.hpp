@@ -34,7 +34,7 @@ namespace vg::editor
 
         IBaseScene * scene = nullptr;
         if (m_prefabRes)
-            scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->getObject());
+            scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->GetObject());
 
         ImGui::BeginDisabled(!scene || !scene->hasFile());
         if (ImGui::TooltipButton(fmt::sprintf("%s", editor::style::icon::Save).c_str(), true, true, "Save Prefab", style::button::SizeSmall))
@@ -74,7 +74,7 @@ namespace vg::editor
         if (nullptr == m_prefabRes || nullptr == m_prefabWorld)
             return;
         
-        IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->getObject());
+        IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->GetObject());
         
         // scene can be null during hot-reload
         if (nullptr == scene)
@@ -182,7 +182,7 @@ namespace vg::editor
         }
 
         auto cur = m_prefabWorld->GetActiveScene(BaseSceneType::Scene);
-        auto scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->getObject());
+        auto scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->GetObject());
 
         if (cur == nullptr || nullptr == scene)
             m_prefabWorld->RemoveAllScenes(BaseSceneType::Scene);

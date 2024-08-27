@@ -35,7 +35,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<core::string> MeshResource::getExtensions() const
+    const core::vector<core::string> MeshResource::GetExtensions() const
     {
         vector<string> ext;
                        ext.push_back(".fbx");
@@ -43,21 +43,21 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshResource::onResourcePathChanged(const string & _oldPath, const string & _newPath)
+    void MeshResource::OnResourcePathChanged(const string & _oldPath, const string & _newPath)
     {
         if (_oldPath != _newPath)
             ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshResource::cook(const string & _file) const
+    bool MeshResource::Cook(const string & _file) const
     {
         auto * renderer = Engine::get()->GetRenderer();
         return renderer->cookMeshModel(_file);
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject * MeshResource::load(const string & _path)
+    core::IObject * MeshResource::Load(const string & _path)
     {
         auto * renderer = Engine::get()->GetRenderer();
         auto * meshModel = renderer->loadMeshModel(_path);    
@@ -65,15 +65,15 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshResource::unload(const core::string & _path)
+    void MeshResource::Unload(const core::string & _path)
     {
-        super::unload(_path);
+        super::Unload(_path);
     }
 
     //--------------------------------------------------------------------------------------
     void MeshResource::onResourceLoaded(core::IResource * _resource)
     {
-        const auto userData = _resource->getUserData();
+        const auto userData = _resource->GetUserData();
         const uint matID = (userData >> 16) & 0xFFFF;
         const auto texSlot = (renderer::MaterialTextureType)(userData & 0xFFFF);
     }
@@ -81,7 +81,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MeshResource::onResourceUnloaded(core::IResource * _resource)
     {
-        const auto userData = _resource->getUserData();
+        const auto userData = _resource->GetUserData();
         const uint matID = (userData >> 16) & 0xFFFF;
         const auto texSlot = (renderer::MaterialTextureType)(userData & 0xFFFF);
     }
@@ -89,7 +89,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MeshResource::loadSubResources()
     {
-        auto * meshModel = dynamic_cast<renderer::IMeshModel *>(getObject());
+        auto * meshModel = dynamic_cast<renderer::IMeshModel *>(GetObject());
         VG_ASSERT(nullptr != meshModel);
     }
 
@@ -99,7 +99,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MeshResource::unloadSubResources()
     {
-        auto * meshModel = dynamic_cast<renderer::IMeshModel *>(getObject());
+        auto * meshModel = dynamic_cast<renderer::IMeshModel *>(GetObject());
         VG_ASSERT(nullptr != meshModel);
     }
 }

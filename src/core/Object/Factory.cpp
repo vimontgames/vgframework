@@ -637,7 +637,7 @@ namespace vg::core
             CopyProperties(srcRes, dstRes);
 
             dstRes->SetParent(_dstObj);
-            dstRes->onResourcePathChanged("", dstRes->GetResourcePath());
+            dstRes->OnResourcePathChanged("", dstRes->GetResourcePath());
         }
         break;
 
@@ -664,7 +664,7 @@ namespace vg::core
                         CopyProperties(srcRes, dstRes);
 
                         dstRes->SetParent(_dstObj);
-                        dstRes->onResourcePathChanged("", dstRes->GetResourcePath());
+                        dstRes->OnResourcePathChanged("", dstRes->GetResourcePath());
                     }
                 }
             }
@@ -1176,7 +1176,7 @@ namespace vg::core
                                                             if (serializeFromXML(_resource, xmlObjectRef))
                                                             {
                                                                 _resource->SetParent(_object);
-                                                                _resource->onResourcePathChanged("", _resource->GetResourcePath());
+                                                                _resource->OnResourcePathChanged("", _resource->GetResourcePath());
                                                             }
                                                         }
                                                     }
@@ -1240,7 +1240,7 @@ namespace vg::core
                                                                 if (serializeFromXML(resource, xmlObjectRef))
                                                                 {
                                                                     resource->SetParent(_object);
-                                                                    resource->onResourcePathChanged("", resource->GetResourcePath());
+                                                                    resource->OnResourcePathChanged("", resource->GetResourcePath());
                                                                     vector->push_back(resource);
                                                                 }
                                                                 else
@@ -1306,7 +1306,7 @@ namespace vg::core
                                                                 if (serializeFromXML(pResource, xmlObjectRef))
                                                                 {
                                                                     pResource->SetParent(_object);
-                                                                    pResource->onResourcePathChanged("", pResource->GetResourcePath());
+                                                                    pResource->OnResourcePathChanged("", pResource->GetResourcePath());
                                                                 }
                                                                 index++;
                                                             }

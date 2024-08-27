@@ -35,7 +35,7 @@ namespace vg::editor
         
         auto * worldRes = engine->GetWorldResource();
         
-        ImGui::BeginDisabled(nullptr == worldRes->getObject());
+        ImGui::BeginDisabled(nullptr == worldRes->GetObject());
         if (ImGui::TooltipButton(fmt::sprintf("%s", editor::style::icon::Save).c_str(), true, true, "Save World & Scenes", style::button::SizeSmall))
         {
             const uint sceneCount = worldRes->GetSceneResourceCount(BaseSceneType::Scene);
@@ -65,7 +65,7 @@ namespace vg::editor
             ImGui::PopStyle();
             ImGui::Spacing();
         
-            ImGui::BeginDisabled(nullptr == worldRes->getObject());
+            ImGui::BeginDisabled(nullptr == worldRes->GetObject());
 
             if (ImGui::MenuItem(fmt::sprintf("%s Save World", style::icon::World).c_str()))
             {

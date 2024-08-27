@@ -32,7 +32,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<core::string> TextureResource::getExtensions() const
+    const core::vector<core::string> TextureResource::GetExtensions() const
     {
         vector<string> ext;
                        ext.push_back(".psd");
@@ -43,20 +43,20 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void TextureResource::onResourcePathChanged(const string & _oldPath, const string & _newPath)
+    void TextureResource::OnResourcePathChanged(const string & _oldPath, const string & _newPath)
     {
         if (_oldPath != _newPath)
             ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
     }
 
     //--------------------------------------------------------------------------------------
-    bool TextureResource::cook(const string & _file) const
+    bool TextureResource::Cook(const string & _file) const
     {
         return Engine::get()->GetRenderer()->cookTexture(_file);
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject * TextureResource::load(const string & _file)
+    core::IObject * TextureResource::Load(const string & _file)
     {
         gfx::ITexture * texture = Engine::get()->GetRenderer()->loadTexture(_file);
         return texture;

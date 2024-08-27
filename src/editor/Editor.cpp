@@ -372,14 +372,14 @@ namespace vg::editor
                             if (ImGui::MenuItem("Open"))
                                 loadWorld = true;
 
-                            ImGui::BeginDisabled(!worldRes || !worldRes->getObject());
+                            ImGui::BeginDisabled(!worldRes || !worldRes->GetObject());
                             {
                                 if (ImGui::MenuItem("Save"))
                                     saveWorld = true;
                             }
                             ImGui::EndDisabled();
 
-                            ImGui::BeginDisabled(!worldRes || !worldRes->getObject());
+                            ImGui::BeginDisabled(!worldRes || !worldRes->GetObject());
                             {
                                 if (ImGui::MenuItem("Save As"))
                                     saveWorldAs = true;
@@ -388,7 +388,7 @@ namespace vg::editor
 
                             ImGui::Separator();
 
-                            ImGui::BeginDisabled(!worldRes || !worldRes->getObject());
+                            ImGui::BeginDisabled(!worldRes || !worldRes->GetObject());
                             {
                                 if (ImGui::MenuItem("Close"))
                                     closeWorld = true;

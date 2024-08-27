@@ -454,7 +454,7 @@ namespace vg::engine
         if (_resource == &m_prefabResource)
         {
             // Instanciate the Prefab
-            if (PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, _resource->getObject()))
+            if (PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, _resource->GetObject()))
             {
                 IGameObject * prefabRoot = prefabScene->GetRoot();
 

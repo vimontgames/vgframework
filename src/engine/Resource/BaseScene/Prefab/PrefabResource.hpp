@@ -43,7 +43,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<core::string> PrefabResource::getExtensions() const
+    const core::vector<core::string> PrefabResource::GetExtensions() const
     {
         vector<string> ext;
         ext.push_back(".prefab");
@@ -51,7 +51,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject* PrefabResource::load(const string& _path)
+    core::IObject* PrefabResource::Load(const string& _path)
     {
         IFactory* factory = Kernel::getFactory();
         PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->createObject("PrefabScene"));
@@ -105,7 +105,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool PrefabResource::SaveFile(const string& _path) const
     {
-        IBaseScene* scene = dynamic_cast<IBaseScene*>(getObject());
+        IBaseScene* scene = dynamic_cast<IBaseScene*>(GetObject());
         if (nullptr != scene)
         {
             const auto* factory = Kernel::getFactory();

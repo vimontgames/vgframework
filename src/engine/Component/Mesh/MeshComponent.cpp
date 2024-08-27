@@ -150,7 +150,7 @@ namespace vg::engine
                 if (&matResources[i] == matRes)
                 {
                     VG_INFO("[MeshComponent] Material %u shader changed", i);
-                    MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(matRes->getObject());
+                    MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(matRes->GetObject());
                     m_meshInstance->SetMaterial(i, matResData ? matResData->m_materialModel : nullptr);
                     break;
                 }
@@ -217,7 +217,7 @@ namespace vg::engine
                 if (&matResources[i] == matRes)
                 {
                     //VG_INFO("[MeshComponent] Material %u loaded", i);
-                    MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(matRes->getObject());
+                    MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(matRes->GetObject());
                     m_meshInstance->SetMaterial(i, matResData ? matResData->m_materialModel : nullptr);
                     break;
                 }

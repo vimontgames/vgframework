@@ -25,7 +25,7 @@ namespace vg::editor
     {
         auto status = Status::None;
         core::IResource * sceneRes = VG_SAFE_STATIC_CAST(core::IResource, _object);
-        IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, sceneRes->getObject());
+        IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, sceneRes->GetObject());
         
         // scene can be null during hot-reload
         if (nullptr == scene)

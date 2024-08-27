@@ -40,7 +40,7 @@ namespace vg::engine
     {
         if (_resource == &m_image)
         {
-            auto * tex = VG_SAFE_STATIC_CAST(gfx::ITexture, _resource->getObject());
+            auto * tex = VG_SAFE_STATIC_CAST(gfx::ITexture, _resource->GetObject());
             if (tex != m_texture)
             {
                 m_texture = tex;

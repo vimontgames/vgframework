@@ -45,7 +45,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<core::string> MaterialResource::getExtensions() const
+    const core::vector<core::string> MaterialResource::GetExtensions() const
     {
         vector<string> ext;
         ext.push_back(".mat");
@@ -53,14 +53,14 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialResource::onResourcePathChanged(const string & _oldPath, const string & _newPath)
+    void MaterialResource::OnResourcePathChanged(const string & _oldPath, const string & _newPath)
     {
         if (_oldPath != _newPath)
             ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
     }
 
     //--------------------------------------------------------------------------------------
-    bool MaterialResource::cook(const string & _file) const
+    bool MaterialResource::Cook(const string & _file) const
     {
         // Cooked file is same format as source file for now
         const string cookedPath = io::getCookedPath(_file);
@@ -78,7 +78,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject * MaterialResource::load(const string & _path)
+    core::IObject * MaterialResource::Load(const string & _path)
     {
         IFactory * factory = Kernel::getFactory();
         MaterialResourceData * object = (MaterialResourceData*)factory->createObject("MaterialResourceData");
@@ -119,7 +119,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool MaterialResource::SaveFile(const string & _path) const
     {
-        IObject * object = getObject();
+        IObject * object = GetObject();
         if (nullptr != object)
         {
             const auto * factory = Kernel::getFactory();

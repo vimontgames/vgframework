@@ -12,8 +12,8 @@ namespace vg::engine
         PrefabResource(const core::string& _name = "", IObject* _parent = nullptr);
         ~PrefabResource();
 
-        const core::vector<core::string>    getExtensions               () const final;
-        core::IObject*                      load                        (const core::string & _path) final override;
+        const core::vector<core::string>    GetExtensions               () const final;
+        core::IObject*                      Load                        (const core::string & _path) final override;
         bool                                CreateFile                  (const core::string & _path, core::IObject * _data = nullptr) override;
         bool                                SaveFile                    (const core::string & _path) const override;
 

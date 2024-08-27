@@ -72,7 +72,7 @@ namespace vg::editor
     {
         VG_ASSERT(_resource);
         
-        const auto & extensions = _resource->getExtensions();
+        const auto & extensions = _resource->GetExtensions();
         string ext;
 
         if (extensions.size() == 0)
@@ -97,7 +97,7 @@ namespace vg::editor
             ext += "){";
 
             first = true;
-            const auto & extensions = _resource->getExtensions();
+            const auto & extensions = _resource->GetExtensions();
             for (uint e = 0; e < extensions.size(); ++e)
             {
                 if (!first)
@@ -2068,7 +2068,7 @@ namespace vg::editor
 
             if (_resource->CanSaveFile())
             {
-                ImGui::BeginDisabled(nullptr == _resource->getObject());
+                ImGui::BeginDisabled(nullptr == _resource->GetObject());
                 {
                     if (ImGui::MenuItem(saveFileButtonName.c_str()))
                     {
@@ -2124,7 +2124,7 @@ namespace vg::editor
         {
             if (ImGui::IsFileDialogOK())
             {
-                const string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), _resource->getExtensions());
+                const string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), _resource->GetExtensions());
                 if (_resource->CreateFile(newFilePath))
                 {
                     storePath(newFilePath.c_str());
@@ -2156,7 +2156,7 @@ namespace vg::editor
         {
             if (ImGui::IsFileDialogOK())
             {
-                const string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), _resource->getExtensions());
+                const string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), _resource->GetExtensions());
                 if (_resource->SaveFile(newFilePath))
                 {
                     _resource->SetResourcePath(newFilePath);
@@ -2168,7 +2168,7 @@ namespace vg::editor
         }
 
         // Display all properties of the resource object
-        IObject * resourceObject = _resource->getObject();
+        IObject * resourceObject = _resource->GetObject();
         if (resourceObject)
         {
             bool anyVisibleProperty = false;

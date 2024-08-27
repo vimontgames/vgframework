@@ -43,7 +43,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<core::string> WorldResource::getExtensions() const
+    const core::vector<core::string> WorldResource::GetExtensions() const
     {
         vector<string> ext;
         ext.push_back(".world");
@@ -51,14 +51,14 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void WorldResource::onResourcePathChanged(const string & _oldPath, const string & _newPath)
+    void WorldResource::OnResourcePathChanged(const string & _oldPath, const string & _newPath)
     {
         if (_oldPath != _newPath)
             ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
     }
 
     //--------------------------------------------------------------------------------------
-    bool WorldResource::cook(const string & _file) const
+    bool WorldResource::Cook(const string & _file) const
     {
         // Cooked file is same format as source file for now (TODO : serializeFrom/ToBinary)
         const string cookedPath = io::getCookedPath(_file);
@@ -76,7 +76,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject * WorldResource::load(const string & _path)
+    core::IObject * WorldResource::Load(const string & _path)
     {
         IFactory * factory = Kernel::getFactory();
         WorldResourceData * worldData = dynamic_cast<WorldResourceData *>(factory->createObject("WorldResourceData"));
@@ -115,7 +115,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool WorldResource::SaveFile(const string & _path) const
     {
-        WorldResourceData * worldData = dynamic_cast<WorldResourceData *>(getObject());
+        WorldResourceData * worldData = dynamic_cast<WorldResourceData *>(GetObject());
         if (nullptr != worldData)
         {
             const auto * factory = Kernel::getFactory();
@@ -127,7 +127,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     core::IWorld * WorldResource::GetWorld() const
     {
-        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
+        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(GetObject());
         if (worldResData)
             return dynamic_cast<IWorld *>(worldResData->getWorld());
         
@@ -137,7 +137,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void WorldResource::CreateSceneResource(const core::string & _file, core::BaseSceneType _sceneType)
     {
-        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
+        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(GetObject());
         if (worldResData)
         {
             switch (_sceneType)
@@ -180,7 +180,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void WorldResource::LoadSceneResource(const core::string & _file, core::BaseSceneType _sceneType)
     {
-        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
+        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(GetObject());
         if (worldResData)
         {
             switch (_sceneType)
@@ -213,14 +213,14 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     IResource * WorldResource::FindSceneResource(core::IBaseScene * _scene, core::BaseSceneType _sceneType)
     {
-        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
+        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(GetObject());
         if (worldResData)
         {
             auto * sceneResources = worldResData->getScenes(_sceneType);
 
             for (uint i = 0; i < sceneResources->size(); ++i)
             {
-                if ((*sceneResources)[i]->getObject() == _scene)
+                if ((*sceneResources)[i]->GetObject() == _scene)
                     return (*sceneResources)[i];
             }
         }
@@ -239,7 +239,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void WorldResource::RemoveSceneResource(core::IResource * _resource, core::BaseSceneType _sceneType)
     {
-        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
+        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(GetObject());
         if (worldResData)
         {
             worldResData->RemoveScene(VG_SAFE_STATIC_CAST(BaseSceneResource,_resource), _sceneType);
@@ -250,7 +250,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     core::uint WorldResource::GetSceneResourceCount(BaseSceneType _sceneType) const
     {
-        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
+        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(GetObject());
         if (worldResData)
         {
             auto * sceneResources = worldResData->getScenes(_sceneType);
@@ -263,7 +263,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     core::IResource * WorldResource::GetSceneResource(core::uint _index, BaseSceneType _sceneType) const
     {
-        IObject * obj = getObject();
+        IObject * obj = GetObject();
         VG_ASSERT(nullptr == obj || dynamic_cast<WorldResourceData*>(obj));
         WorldResourceData * worldResData = (WorldResourceData *)obj;
         if (worldResData)
@@ -284,7 +284,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void WorldResource::onResourceLoaded(core::IResource * _resource)
     {
-        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
+        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(GetObject());
         VG_ASSERT(worldResData);
 
         for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
@@ -296,7 +296,7 @@ namespace vg::engine
             {
                 if (_resource == (*sceneResources)[i])
                 {
-                    IBaseScene * scene = dynamic_cast<IBaseScene *>(_resource->getObject());
+                    IBaseScene * scene = dynamic_cast<IBaseScene *>(_resource->GetObject());
                     if (scene)
                     {
                         if (worldResData->m_world)
@@ -341,7 +341,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void WorldResource::onResourceUnloaded(core::IResource * _resource)
     {
-        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(getObject());
+        WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(GetObject());
         VG_ASSERT(worldResData);
 
         for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
@@ -353,7 +353,7 @@ namespace vg::engine
             {
                 if (_resource == (*sceneResources)[i])
                 {
-                    IBaseScene * scene = dynamic_cast<IBaseScene *>(_resource->getObject());
+                    IBaseScene * scene = dynamic_cast<IBaseScene *>(_resource->GetObject());
                     BaseSceneResource * sceneRes = VG_SAFE_STATIC_CAST(BaseSceneResource, _resource);
                     
                     if (worldResData->m_world)

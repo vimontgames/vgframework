@@ -286,7 +286,7 @@ namespace vg::engine
     {
         if (m_worldResource)
         {
-            core::IObject * obj = m_worldResource->getObject();
+            core::IObject * obj = m_worldResource->GetObject();
             VG_ASSERT(obj == nullptr || dynamic_cast<WorldResourceData *>(obj));
             if (obj)
                 return ((WorldResourceData *)obj)->getWorld();
@@ -463,7 +463,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Engine::SaveWorld()
     {
-        IObject * world = m_worldResource->getObject();
+        IObject * world = m_worldResource->GetObject();
         if (world)
         {
             const auto filename = m_worldResource->GetResourcePath();
@@ -477,7 +477,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Engine::SaveWorldAs(const core::string & _filename)
     {
-        IObject * world = m_worldResource->getObject();
+        IObject * world = m_worldResource->GetObject();
         if (world)
         {
             world->setName(core::io::getFileNameWithoutExt(_filename));
@@ -508,7 +508,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Engine::SaveScene(core::IResource * _sceneRes)
     {
-        IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, _sceneRes->getObject());
+        IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, _sceneRes->GetObject());
         if (nullptr != scene)
         {
             if (scene->hasFile())

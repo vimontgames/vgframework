@@ -32,14 +32,14 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void BaseSceneResource::onResourcePathChanged(const string & _oldPath, const string & _newPath)
+    void BaseSceneResource::OnResourcePathChanged(const string & _oldPath, const string & _newPath)
     {
         if (_oldPath != _newPath)
             ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
     }
 
     //--------------------------------------------------------------------------------------
-    bool BaseSceneResource::cook(const string & _file) const
+    bool BaseSceneResource::Cook(const string & _file) const
     {
         // Cooked file is same format as source file for now (TODO : serializeFrom/ToBinary)
         const string cookedPath = io::getCookedPath(_file);

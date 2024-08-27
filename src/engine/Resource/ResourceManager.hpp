@@ -271,12 +271,12 @@ namespace vg::engine
                 VG_SAFE_RELEASE(info->m_object);
                 m_resourceInfosMap.erase(it);
                 VG_SAFE_RELEASE(info);
-                _resource->unload(_path);
+                _resource->Unload(_path);
             }
             
             _resource->unloadSubResources();
             _resource->GetParent()->onResourceUnloaded(_resource);  
-            _resource->setObject(nullptr);
+            _resource->SetObject(nullptr);
         }
     }
 
@@ -328,7 +328,7 @@ namespace vg::engine
                 VG_INFO("[Resource] File \"%s\" needs cook", path.c_str());
 
                 // HACK: use 1st client to cook
-                bool isFileCooked = clients[0]->cook(path);
+                bool isFileCooked = clients[0]->Cook(path);
 
                 VG_ASSERT(isFileCooked, "Could not cook file \"%s\"", path.c_str());
 
@@ -353,7 +353,7 @@ namespace vg::engine
             VG_ASSERT(!path.empty());
 
             // Cooked file may seem up to date but format version actually changed
-            _info.m_object = client0->load(path);
+            _info.m_object = client0->Load(path);
 
             if (nullptr != _info.m_object)
             {
@@ -415,7 +415,7 @@ namespace vg::engine
             auto & info = it->second;
 
             // Set Shared Resource Object and Notify owner
-            res->setObject(info->m_object);
+            res->SetObject(info->m_object);
             //res->setName(info->m_object->getName());
             res->loadSubResources();
             IObject * resOwner = res->GetParent();
@@ -433,11 +433,11 @@ namespace vg::engine
             for (uint i = 0; i < clients.size(); ++i)
             {
                 auto & res = clients[i];
-                if (res->getObject() == nullptr)
+                if (res->GetObject() == nullptr)
                 {
                     if (nullptr != info->m_object)
                     {
-                        res->setObject(info->m_object);
+                        res->SetObject(info->m_object);
                         res->loadSubResources();
                         res->GetParent()->onResourceLoaded(res);
                     }
