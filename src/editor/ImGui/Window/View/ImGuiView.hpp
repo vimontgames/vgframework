@@ -757,7 +757,8 @@ namespace vg::editor
                 const float * viewMatrix = (float *)&_view->GetViewInvMatrix();
                 const float * projMatrix = (float *)&_view->GetProjectionMatrix();
                 
-                float4x4 & matrix = selection->GetSelectionMatrix();
+                float4x4 & selectionMatrix = selection->GetSelectionMatrix();
+                float4x4 matrix = selectionMatrix;
                 float4x4 delta = float4x4::identity();
 
                 ImGuizmo::SetID((int)_view->GetViewID().id);
@@ -792,6 +793,8 @@ namespace vg::editor
                             mat = mul(mat, delta);
                             go->SetGlobalMatrix(mat);
                         }
+
+                        selectionMatrix = matrix;
                     }
                 }
 
