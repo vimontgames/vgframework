@@ -71,4 +71,10 @@ namespace vg::core
 
         return lines;
     }
+
+    //--------------------------------------------------------------------------------------
+    bool endsWith(const core::string & _str, const core::string & _suffix)
+    {
+        return _str.size() >= _suffix.size() && _str.compare(_str.size() - _suffix.size(), _suffix.size(), _suffix) == 0;
+    }
 }

@@ -229,11 +229,6 @@ namespace vg::engine
         return objectsWithoutParents;
     }
 
-    static bool ends_with(const core::string & str, const core::string & suffix)
-    {
-        return str.size() >= suffix.size() && str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
-    }
-
     //--------------------------------------------------------------------------------------
     uint extractIndex(const string & _text)
     {

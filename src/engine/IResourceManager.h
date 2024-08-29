@@ -5,6 +5,7 @@
 namespace vg::core
 {
     class IResource;
+    class IResourceMeta;
 }
 
 namespace vg::engine
@@ -43,6 +44,21 @@ namespace vg::engine
 
         // Get infos about a loaded (or requested resource)
         virtual const IResourceInfo & GetResourceInfo(core::uint _index) const = 0;
+
+        // Get or create ResourceMeta and update Timestamps
+        virtual core::IResourceMeta * GetOrCreateResourceMeta(const core::IResource * _resource) const = 0;
+
+        // Get ResourceMeta from path if it already exists
+        virtual core::IResourceMeta * GetResourceMeta(const core::string & _resourcePath) const = 0;
+
+        // Add or update ResourceMeta
+        virtual void SetResourceMeta(const core::string & _resourcePath, core::IResourceMeta * _meta) = 0;
+
+        // Register extension for resource type
+        //virtual void RegisterExtension(const core::string & _className, const core::string & _extension) = 0;
+
+        // Reimport resource meta
+        virtual core::uint UpdateMeta() = 0;
 
         // Reimport modified resources
         virtual core::uint UpdateResources() = 0;

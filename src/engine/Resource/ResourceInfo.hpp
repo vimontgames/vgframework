@@ -2,19 +2,19 @@
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS(ResourceInfo, "Shared Resource");
+    //VG_REGISTER_OBJECT_CLASS(ResourceInfo, "Shared Resource");
 
     //--------------------------------------------------------------------------------------
-    bool ResourceInfo::registerProperties(vg::core::IClassDesc & _desc)
-    {
-        super::registerProperties(_desc);
-
-        //registerPropertyEx(SharedResource, m_path, "Path", IProperty::Flags::ReadOnly);
-        registerPropertyObjectPtrVectorEx(ResourceInfo, m_clients, "Clients", IProperty::Flags::ReadOnly);
-        //registerPropertyObjectPtrEx(SharedResource, m_object, "Shared Object", IProperty::Flags::ReadOnly | IProperty::Flags::Resource);
-
-        return true;
-    }
+    //bool ResourceInfo::registerProperties(vg::core::IClassDesc & _desc)
+    //{
+    //    super::registerProperties(_desc);
+    //
+    //    //registerPropertyEx(SharedResource, m_path, "Path", IProperty::Flags::ReadOnly);
+    //    registerPropertyObjectPtrVectorEx(ResourceInfo, m_clients, "Clients", IProperty::Flags::ReadOnly);
+    //    //registerPropertyObjectPtrEx(SharedResource, m_object, "Shared Object", IProperty::Flags::ReadOnly | IProperty::Flags::Resource);
+    //
+    //    return true;
+    //}
 
     //--------------------------------------------------------------------------------------
     ResourceInfo::ResourceInfo(const string & _name, IObject * _parent) :

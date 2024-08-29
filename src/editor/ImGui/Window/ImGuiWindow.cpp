@@ -4,6 +4,7 @@
 #include "core/File/File.h"
 #include "core/IFactory.h"
 #include "core/IResource.h"
+#include "core/IResourceMeta.h"
 #include "core/IWorld.h"
 #include "core/IBaseScene.h"
 #include "core/IGameObject.h"
@@ -483,20 +484,22 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::displayObject(core::IObject * _object)
+    bool ImGuiWindow::displayObject(core::IObject * _object)
     {
         ObjectContext objectContext;
-        displayObject(_object, objectContext);
+        return displayObject(_object, objectContext);
     }
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::displayProperty(core::IObject * _object, const core::IProperty * _prop)
+    bool ImGuiWindow::displayProperty(core::IObject * _object, const core::IProperty * _prop)
     {
         ObjectContext objectContext;
-        displayProperty(_object, _prop, objectContext);
+        return displayProperty(_object, _prop, objectContext);
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::displayObject(core::IObject * _object, ObjectContext & _objectContext)
+    // Returns 'true' if any object property has changed
+    //--------------------------------------------------------------------------------------
+    bool ImGuiWindow::displayObject(core::IObject * _object, ObjectContext & _objectContext)
     {
         const char * className = _object->GetClassName();
 
@@ -504,32 +507,41 @@ namespace vg::editor
         const auto * classDesc = factory->getClassDescriptor(className);
 
         if (!classDesc)
-            return;
+            return false;
 
         if (_objectContext.m_treeNodes.size() > 0)
         {
             auto & nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
             if (!nodeInfo.treeNodeOpen)
-                return;
+                return false;
         }
         auto availableWidth = GetContentRegionAvail().x;
         ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
         // TODO: Custom Object edit
         ImGui::PushID(_object);
-        if (!ImGuiObjectHandler::display(_object, _objectContext))
+        bool changed = false;
+
+        auto customDisplayHandler = ImGuiObjectHandler::Find(_object->GetClassName());
+        if (nullptr != customDisplayHandler)
+        {
+            changed = customDisplayHandler->displayObject(_object, _objectContext);
+        }
+        else
         {
             const char * classDisplayName = classDesc->GetClassDisplayName();
         
             for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
             {
                 const IProperty * prop = classDesc->GetPropertyByIndex(i);
-                ImGuiWindow::displayProperty(_object, prop, _objectContext);
+                changed |= ImGuiWindow::displayProperty(_object, prop, _objectContext);
             }
         }
         ImGui::PopID();
 
         ImGui::PopItemWidth();
+
+        return changed;
     }
 
     //--------------------------------------------------------------------------------------
@@ -666,7 +678,10 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::displayProperty(core::IObject * _object, const IProperty * _prop, ObjectContext & _objectContext)
+    // Returns 'true' if property has changed
+    // rem: In the case of optional properties, the function will also return 'true' if optional has changed
+    //--------------------------------------------------------------------------------------
+    bool ImGuiWindow::displayProperty(core::IObject * _object, const IProperty * _prop, ObjectContext & _objectContext)
     {
         VG_ASSERT(nullptr != _prop);
 
@@ -696,15 +711,15 @@ namespace vg::editor
             if (!nodeInfo.treeNodeOpen)
             {
                 if (IProperty::Type::LayoutElement != type)
-                    return;
+                    return false;
             }
         }
 
         if (_objectContext.m_hide && (type != IProperty::Type::LayoutElement || !(asBool(flags & IProperty::Flags::Optional))))
-            return;
+            return false;
 
         if (!isPropertyVisible(flags))
-            return;
+            return false;
         
         const IClassDesc * classDesc = propContext.m_originalObject->GetClassDesc();
         auto * previousProp = classDesc->GetPreviousProperty(propContext.m_originalProp->getName());
@@ -1906,6 +1921,8 @@ namespace vg::editor
 
         //if (readOnly /* || isPrefabOverride*/)
         //    ImGui::PopStyleColor();
+
+        return changed | optionalChanged;
     }
 
     //--------------------------------------------------------------------------------------
@@ -1947,26 +1964,33 @@ namespace vg::editor
 
         ObjectContext objectContext;
 
+        bool changed = false;
+
         // Display all properties of the resource component
         {
             auto availableWidth = GetContentRegionAvail().x;
             ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
-            if (!ImGuiObjectHandler::display(_resource, objectContext))
+            auto customDisplayHandler = ImGuiObjectHandler::Find(_resource->GetClassName());
+            if (nullptr != customDisplayHandler)
+            {
+                changed = customDisplayHandler->displayObject(_resource, objectContext);
+            }
+            else
             {
                 const char * classDisplayName = classDesc->GetClassDisplayName();
 
                 for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
                 {
                     const IProperty * prop = classDesc->GetPropertyByIndex(i);
-                    if (strcmp(prop->getName(), "m_object"))
-                        ImGuiWindow::displayProperty(_resource, prop);
+                    if (!strcmp(prop->getName(), "m_object"))
+                        continue;
+
+                    changed |= ImGuiWindow::displayProperty(_resource, prop);
                 }
             }
             ImGui::PopItemWidth();
         }
-
-        bool changed = false;
 
         string resPath = _resource->GetResourcePath();
 
@@ -2015,6 +2039,8 @@ namespace vg::editor
         bool openExistingFile = false;
         bool saveAsFile = false;
         bool saveFile = false;
+
+        auto rm = getEngine()->GetResourceManager();
 
         ImGui::SameLine();
         auto x = ImGui::GetCursorPosX();
@@ -2090,10 +2116,7 @@ namespace vg::editor
                     _resource->ClearResourcePath();
 
                 if (ImGui::MenuItem(reimportFileButtonName.c_str()))
-                {
-                    auto rm = getEngine()->GetResourceManager();
                     rm->Reimport(_resource);
-                }
             }
             ImGui::EndDisabled();
 
@@ -2165,6 +2188,19 @@ namespace vg::editor
             }
 
             ImGui::CloseFileDialog();
+        }
+
+        // Display meta
+        if (!_resource->GetResourcePath().empty())
+        {
+            if (auto * meta = rm->GetOrCreateResourceMeta(_resource))
+            {
+                if (ImGuiWindow::displayObject(meta))
+                {
+                    meta->Save(_resource->GetResourcePath());
+                    rm->UpdateResources();
+                }
+            }
         }
 
         // Display all properties of the resource object
@@ -2341,21 +2377,28 @@ namespace vg::editor
         for (uint i = 0; i < countof(temp); ++i)
             temp[i] = pFloat[i];
 
-        if (ImGui::TreeNode(getObjectLabel(displayName, _propContext.m_originalProp).c_str()))
+        const bool flatten = asBool(IProperty::Flags::Flatten & _prop->getFlags());
+
+        const string LabelI = flatten ? fmt::sprintf("%s.I", displayName) : "I";
+        const string LabelJ = flatten ? fmt::sprintf("%s.J", displayName) : "J";
+        const string LabelK = flatten ? fmt::sprintf("%s.K", displayName) : "K";
+        const string LabelT = flatten ? fmt::sprintf("%s.T", displayName) : "T";
+
+        if (flatten || ImGui::TreeNode(getObjectLabel(displayName, _propContext.m_originalProp).c_str()))
         {
             bool edited = false;
 
             edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
-            drawPropertyLabel(_propContext, "I", "Represents the x-axis in the transformed space");
+            drawPropertyLabel(_propContext, LabelI.c_str(), "Represents the x-axis in the transformed space");
 
             edited |= ImGui::DragFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
-            drawPropertyLabel(_propContext, "J", "Represents the y-axis in the transformed space");
+            drawPropertyLabel(_propContext, LabelJ.c_str(), "Represents the y-axis in the transformed space");
 
             edited |= ImGui::DragFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
-            drawPropertyLabel(_propContext, "K", "Represents the z-axis in the transformed space");
+            drawPropertyLabel(_propContext, LabelK.c_str(), "Represents the z-axis in the transformed space");
 
             edited |= ImGui::DragFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
-            drawPropertyLabel(_propContext, "T", "Represents the translation component");
+            drawPropertyLabel(_propContext, LabelT.c_str(), "Represents the translation component");
 
             if (edited)
             {
@@ -2363,7 +2406,8 @@ namespace vg::editor
                     changed = true;
             }
 
-            ImGui::TreePop();
+            if (!flatten)
+                ImGui::TreePop();
         }
 
         return changed;

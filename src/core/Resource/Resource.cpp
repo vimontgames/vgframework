@@ -4,6 +4,8 @@
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Kernel.h"
 
+#include "ResourceMeta.hpp"
+
 namespace vg::core
 {
     VG_REGISTER_OBJECT_CLASS(Resource, "Resource");
@@ -18,6 +20,7 @@ namespace vg::core
 
         // This is used for the inspector but not serialized
         registerPropertyObjectPtrEx(Resource, m_object, "Object", IProperty::Flags::NotSaved);
+        //registerPropertyObjectPtrEx(Resource, m_meta, "Metadata", IProperty::Flags::NotVisible);
 
         return true;
     }
@@ -179,5 +182,11 @@ namespace vg::core
     void Resource::unloadSubResources()
     {
         
+    }
+
+    //--------------------------------------------------------------------------------------
+    IResourceMeta * Resource::CreateResourceMeta() const
+    {
+        return nullptr;
     }
 }

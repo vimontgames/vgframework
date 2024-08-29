@@ -420,6 +420,7 @@
     <ClInclude Include="Viewport\Viewport.h">
       <Filter>Viewport</Filter>
     </ClInclude>
+    <ClInclude Include="TextureImportSettings.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

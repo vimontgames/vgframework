@@ -38,8 +38,9 @@ namespace vg
         class IRendererOptions;
         class ILightInstance;
         class ILightDesc;
-
+        
         struct RendererCreationParams;
+        struct TextureImportSettings;
 
         class IRenderer : public core::IPlugin
         {
@@ -104,7 +105,7 @@ namespace vg
             virtual bool                                cookMeshModel           (const core::string & _file) = 0;
             virtual IMeshModel *                        loadMeshModel           (const core::string & _file) = 0;
 
-            virtual bool                                cookTexture             (const core::string & _file) = 0;
+            virtual bool                                cookTexture             (const core::string & _file, const TextureImportSettings * _importSettings) = 0;
             virtual gfx::ITexture *                     loadTexture             (const core::string & _file) = 0;
 
             virtual bool                                cookAnimation           (const core::string & _file) = 0;

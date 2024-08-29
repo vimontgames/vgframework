@@ -181,6 +181,7 @@
     <ClInclude Include="RenderPass\Update\UpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.h" />
     <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.hpp" />
+    <ClInclude Include="TextureImportSettings.h" />
     <ClInclude Include="Viewport\Viewport.h" />
     <ClInclude Include="View\Frustum.h" />
     <ClInclude Include="View\Frustum.hpp" />

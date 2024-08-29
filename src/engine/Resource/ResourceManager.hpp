@@ -3,6 +3,8 @@
 #include "core/Timer/Timer.h"
 #include "core/File/File.h"
 #include "core/Scheduler/Scheduler.h"
+#include "core/string/string.h"
+#include "core/IResourceMeta.h"
 
 using namespace vg::core;
 
@@ -27,13 +29,17 @@ namespace vg::engine
         super(_name, _parent),
         m_loadingThread(loading, this)
     {
-
+        UpdateMeta();
     }
 
     //--------------------------------------------------------------------------------------
     ResourceManager::~ResourceManager()
     {
         flushPendingLoading();
+
+        for (auto & pair : m_resourceMeta)
+            VG_SAFE_RELEASE(pair.second);
+        m_resourceMeta.clear();
     }
 
     //--------------------------------------------------------------------------------------
@@ -59,8 +65,114 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    core::IResourceMeta * ResourceManager::GetOrCreateResourceMeta(const IResource * _resource) const
+    {
+        auto rm = ResourceManager::get();
+        auto path = _resource->GetResourcePath();
+        
+        if (IResourceMeta * meta = rm->GetResourceMeta(path))
+        {
+            io::FileAccessTime metaLastWrite;
+            if (io::getLastWriteTime(io::getMetaPath(path), &metaLastWrite))
+            {
+                if (metaLastWrite <= meta->GetLastWriteTime())
+                    return meta;
+            }
+        }
+        
+        IResourceMeta * meta = _resource->CreateResourceMeta();
+
+        if (meta)
+        {
+            // Load if exists
+            if (meta->Load(path))
+            {
+                rm->SetResourceMeta(path, meta);
+            }
+            else
+            {
+                // Or create
+                rm->SetResourceMeta(path, meta);
+                meta->Save(path);
+            }
+
+            // Save timestamp in meta
+            io::FileAccessTime metaLastWrite;
+            if (io::getLastWriteTime(io::getMetaPath(path), &metaLastWrite))
+                meta->SetLastWriteTime(metaLastWrite);
+        }
+            
+        return meta;      
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IResourceMeta * ResourceManager::GetResourceMeta(const core::string & _resourcePath) const
+    {
+        auto it = m_resourceMeta.find(_resourcePath);
+        if (m_resourceMeta.end() != it)
+            return it->second;
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceManager::SetResourceMeta(const core::string & _resourcePath, core::IResourceMeta * _meta)
+    {
+        auto it = m_resourceMeta.find(_resourcePath);
+        if (m_resourceMeta.end() != it)
+        {
+            if (_meta != it->second)
+            {
+                //VG_SAFE_INCREASE_REFCOUNT(_meta);
+                VG_SAFE_RELEASE(it->second);
+                it->second = _meta;
+            }
+        }
+        else
+        {
+            m_resourceMeta.emplace(_resourcePath, _meta);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    uint ResourceManager::UpdateMeta()
+    {
+        //uint count = 0;
+        //
+        //updateMeta("data", count);
+        //
+        //VG_INFO("[Resource] %u Resource meta have been modified", count);
+
+        return 0;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceManager::updateMeta(const core::string & _folder, core::uint & _counter)
+    {
+        //auto files = io::getFilesInFolder(_folder);
+        //for (auto & info : files)
+        //{
+        //    if (info.name == "." || info.name == "..")
+        //        continue;
+        //
+        //    if (info.isFolder)
+        //    {
+        //        string childFolder = _folder + "/" + info.name;
+        //        updateMeta(childFolder, _counter);
+        //        continue;
+        //    }
+        //
+        //    if (endsWith(info.name, ".meta"))
+        //    {
+        //        _counter++;
+        //    }
+        //}
+    }
+
+    //--------------------------------------------------------------------------------------
     uint ResourceManager::UpdateResources()
     {
+        UpdateMeta();
+
         uint count = 0;
 
         // Unloading resources will remove entries in the resourceMap so we need to copy the existing resources to iterate over
@@ -71,9 +183,9 @@ namespace vg::engine
             allResourceInfos.push_back(pair.second);
         }
 
-        for (auto info : allResourceInfos)
+        for (const auto & info : allResourceInfos)
         {
-            if (needsCook(info->m_path))
+            if (CookedStatus::UP_TO_DATE != needsCook(*info))
             {
                 // Setting resource path to null will remove clients so we need to copy
                 vector<core::IResource *> clients = info->m_clients;
@@ -81,10 +193,10 @@ namespace vg::engine
                     VG_SAFE_INCREASE_REFCOUNT(client);
 
                 for (uint i = 0; i < clients.size(); ++i)
-                    clients[i]->SetResourcePath("");
-                
-                for (uint i = 0; i < clients.size(); ++i)
+                {
+                    clients[i]->ClearResourcePath();
                     clients[i]->SetResourcePath(info->m_path);
+                }
 
                 for (auto client : clients)
                     VG_SAFE_RELEASE(client);
@@ -281,28 +393,37 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool ResourceManager::needsCook(const core::string & _resourcePath)
+    CookedStatus ResourceManager::needsCook(const ResourceInfo & _info)
     {
-        const string cookedPath = io::getCookedPath(_resourcePath);
+        const auto & resourcePath = _info.GetResourcePath();
+        const string cookedPath = io::getCookedPath(resourcePath);
 
         io::FileAccessTime rawDataLastWrite;
-        if (io::getLastWriteTime(_resourcePath, &rawDataLastWrite))
+        if (io::getLastWriteTime(resourcePath, &rawDataLastWrite))
         {
             if (io::exists(cookedPath))
             {
                 io::FileAccessTime cookedFilelastWrite;
                 if (io::getLastWriteTime(cookedPath, &cookedFilelastWrite))
                 {
-                    if (cookedFilelastWrite != rawDataLastWrite)
-                        return true;
+                    if (cookedFilelastWrite < rawDataLastWrite)
+                        return CookedStatus::RAWDATA_FILE_UPDATED;
+
+                    io::FileAccessTime metaFilelastWrite;
+                    const string metaPath = io::getMetaPath(resourcePath);
+                    if (io::getLastWriteTime(metaPath, &metaFilelastWrite))
+                    {
+                        if (cookedFilelastWrite < metaFilelastWrite)
+                            return CookedStatus::META_FILE_UPDATED;
+                    }
                 }
             }
             else
             {
-                return true;
+                return CookedStatus::NO_COOKED_FILE;
             }
         }
-        return false;
+        return CookedStatus::UP_TO_DATE;
     }
 
     //--------------------------------------------------------------------------------------
@@ -313,7 +434,13 @@ namespace vg::engine
         const string path = _info.m_path;
 
         // check for an up-to-date cooked version of the resource
-        bool needCook = _info.m_forceReimport || needsCook(_info.m_path);
+        auto needCook = needsCook(_info);
+
+        if (CookedStatus::UP_TO_DATE == needCook)
+        {
+            if (_info.m_forceReimport)
+                needCook = CookedStatus::FORCE_REIMPORT;
+        }
 
         // Reimport is forced only once
         _info.m_forceReimport = false;
@@ -323,12 +450,14 @@ namespace vg::engine
         while (!done)
         {
             const auto startCook = Timer::getTick();
-            if (needCook)
+            if (CookedStatus::UP_TO_DATE != needCook)
             {
-                VG_INFO("[Resource] File \"%s\" needs cook", path.c_str());
+                VG_INFO("[Resource] File \"%s\" needs cook because %s", path.c_str(), asString(needCook).c_str());
 
-                // HACK: use 1st client to cook
-                bool isFileCooked = clients[0]->Cook(path);
+                // HACK: use 1st client
+                auto * cooker = clients[0];
+
+                bool isFileCooked = cooker->Cook(path);
 
                 VG_ASSERT(isFileCooked, "Could not cook file \"%s\"", path.c_str());
 
@@ -336,10 +465,7 @@ namespace vg::engine
                 {
                     const string cookFile = io::getCookedPath(path);
 
-                    io::FileAccessTime rawDataLastWrite;
-                    VG_VERIFY(io::getLastWriteTime(path, &rawDataLastWrite));
-
-                    if (io::setLastWriteTime(cookFile, rawDataLastWrite))
+                    if (io::setLastWriteTime(cookFile, io::getCurrentFileTime()))
                         VG_INFO("[Resource] File \"%s\" cooked in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
                 }
             }
@@ -362,9 +488,9 @@ namespace vg::engine
             }
             else
             {
-                if (!needCook)
+                if (CookedStatus::UP_TO_DATE == needCook)
                 {
-                    needCook = true;
+                    needCook = CookedStatus::COOK_VERSION_DEPRECATED;
                 }
                 else
                 {

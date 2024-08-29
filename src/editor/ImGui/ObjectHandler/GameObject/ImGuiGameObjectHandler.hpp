@@ -16,8 +16,10 @@ namespace vg::editor
     {
     public:
         //--------------------------------------------------------------------------------------
-        void displayObject(IObject * _object, ObjectContext & _objectContext) final
+        bool displayObject(IObject * _object, ObjectContext & _objectContext) final
         {
+            bool changed = false;
+
             auto * go = dynamic_cast<core::IGameObject*>(_object);
 
             const auto * factory = Kernel::getFactory();
@@ -95,7 +97,7 @@ namespace vg::editor
                         }
                 
                         if (visible)
-                            ImGuiWindow::displayProperty(go, prop);
+                            changed |= ImGuiWindow::displayProperty(go, prop);
                     }
                 }
             }
@@ -105,7 +107,7 @@ namespace vg::editor
                 const IProperty * prop = classDesc->GetPropertyByIndex(i);
             
                 if (!strcmp(prop->getName(), "m_components"))
-                    ImGuiWindow::displayProperty(go, prop);
+                    changed |= ImGuiWindow::displayProperty(go, prop);
             }    
 
             // "Add Component" button
@@ -149,6 +151,8 @@ namespace vg::editor
             }
 
             ImGui::PopID();
+
+            return changed;
         }
 
     private:

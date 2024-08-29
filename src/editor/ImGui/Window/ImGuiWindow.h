@@ -59,11 +59,11 @@ namespace vg::editor
 
         VG_INLINE const core::string            getIconizedName     () const;
 
-        static void                             displayObject       (core::IObject * _object);
-        static void                             displayObject       (core::IObject * _object, ObjectContext & _objectContext);
+        static bool                             displayObject       (core::IObject * _object);
+        static bool                             displayObject       (core::IObject * _object, ObjectContext & _objectContext);
 
-        static void                             displayProperty     (core::IObject * _object, const core::IProperty * _prop);
-        static void                             displayProperty     (core::IObject * _object, const core::IProperty * _prop, ObjectContext & _objectContext);
+        static bool                             displayProperty     (core::IObject * _object, const core::IProperty * _prop);
+        static bool                             displayProperty     (core::IObject * _object, const core::IProperty * _prop, ObjectContext & _objectContext);
 
         static bool                             displayResource     (core::IResource * _resource, const core::IProperty * _prop, core::uint _index, PropertyContext & _propContext);
 

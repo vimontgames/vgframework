@@ -12,8 +12,10 @@ namespace vg::editor
     {
     public:
         //--------------------------------------------------------------------------------------
-        void displayObject(IObject * _object, ObjectContext & _objectContext) final
+        bool displayObject(IObject * _object, ObjectContext & _objectContext) final
         {
+            bool changed = false;
+
             auto availableWidth = ImGui::GetContentRegionAvail().x;
             ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
@@ -27,7 +29,7 @@ namespace vg::editor
                 for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
                 {
                     const IProperty * prop = classDesc->GetPropertyByIndex(i);
-                    ImGuiWindow::displayProperty(_object, prop);
+                    changed |= ImGuiWindow::displayProperty(_object, prop);
                 }
 
                 const uint nodeCount = skeleton->GetNodeCount();
@@ -53,13 +55,6 @@ namespace vg::editor
                             sprintf_s(nodeLabel, "[%u] %s", i, nodeName.c_str());
                     
                         bool isNodeSelected = skeleton->IsNodeSelected(i);
-                        //ImGui::CollapsingHeaderLabel(collapsingHeaderPos, nodeLabel, isNodeSelected);
-                        //
-                        //if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isNodeSelected, skeleton, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s", isNodeSelected ? "Disable Node" : "Enable Node").c_str()))
-                        //{
-                        //    //pComponent->SetComponentFlags(ComponentFlags::Enabled, !isComponentEnabled);
-                        //    //changed = true;
-                        //}
 
                         if (ImGui::TreeNode(nodeLabel))
                         {
@@ -73,12 +68,14 @@ namespace vg::editor
 
                             bool b = skeleton->IsNodeSelected(i);
                             if (ImGui::Checkbox("Selected", &b))
+                            {
                                 skeleton->SelectNode(i, b);
-
+                                changed = true;
+                            }
                             ImGui::BeginDisabled(true);
                             {
                                 int parent = skeleton->GetParentIndex(i);
-                                ImGui::InputInt("ParentIndex", &parent);
+                                changed |= ImGui::InputInt("ParentIndex", &parent);
                             }
                             ImGui::EndDisabled();
 
@@ -93,6 +90,8 @@ namespace vg::editor
             }
 
             ImGui::PopItemWidth();
+
+            return changed;
         }
     };
 

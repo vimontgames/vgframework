@@ -10,8 +10,10 @@ namespace vg::editor
     {
     public:
         //--------------------------------------------------------------------------------------
-        void displayObject(IObject * _object, ObjectContext & _objectContext) final
+        bool displayObject(IObject * _object, ObjectContext & _objectContext) final
         {
+            bool changed = false;
+
             if (auto * matModel = dynamic_cast<engine::MaterialModelType *>(_object))
             {
                 auto models = getMaterialModels();
@@ -20,7 +22,7 @@ namespace vg::editor
                 const auto * prop = _object->GetClassDesc()->GetPropertyByName("m_shader");
                 VG_ASSERT(prop);
                 if (nullptr == prop)
-                    return;
+                    return false;
 
                 if (ImGui::BeginCombo(ImGuiWindow::getPropertyLabel("Shader").c_str(), matModel->m_shader.c_str(), ImGuiComboFlags_HeightLarge))
                 {
@@ -33,12 +35,15 @@ namespace vg::editor
                             _object->OnPropertyChanged(_object, *prop);
                         }
                     }
+                    changed = true;
                     ImGui::EndCombo();
                 }
 
                 PropertyContext propContext(_object, prop);
                 ImGuiWindow::drawPropertyLabel(propContext, prop);
             }
+
+            return changed;
         }
 
         //--------------------------------------------------------------------------------------

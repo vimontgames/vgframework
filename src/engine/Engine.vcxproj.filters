@@ -310,6 +310,12 @@
       <Filter>Component\Physics\Shape</Filter>
     </ClInclude>
     <ClInclude Include="IPhysicsShapeComponent.h" />
+    <ClInclude Include="Resource\Texture\TextureResourceMeta.h">
+      <Filter>Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Texture\TextureResourceMeta.hpp">
+      <Filter>Resource\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

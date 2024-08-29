@@ -10,11 +10,13 @@ namespace vg::editor
     class ImGuiResourceListHandler : public ImGuiObjectHandler
     {
     public:
-        void displayObject(IObject * _object, ObjectContext & _objectContext) = 0;
+        bool displayObject(IObject * _object, ObjectContext & _objectContext) = 0;
 
         //--------------------------------------------------------------------------------------
-        void displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName)
+        bool displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName)
         {
+            bool changed = false;
+
             const auto * factory = Kernel::getFactory();
             const auto * classDesc = factory->getClassDescriptor(_object->GetClassName());
             auto list = dynamic_cast<engine::IResourceList *>(_object);
@@ -31,12 +33,6 @@ namespace vg::editor
             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
             string label = fmt::sprintf("%s[%u])", _label.c_str(), resourceCount);
-
-            //ImGui::BeginTable(ImGui::getObjectLabel(label.c_str(), _object).c_str(), 1, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner);
-
-            // The first column will use the default _WidthStretch when ScrollX is Off and _WidthFixed when ScrollX is On
-            //ImGui::TableSetupColumn(label.c_str(), ImGuiTableColumnFlags_NoHeaderLabel);
-            //ImGui::TableHeadersRow();
 
             ImGuiStyle & style = ImGui::GetStyle();
 
@@ -91,7 +87,7 @@ namespace vg::editor
 
                             if (ImGui::TreeNodeEx(itemLabel.c_str(), ImGuiTreeNodeFlags_None))
                             {
-                                ImGuiWindow::displayResource(obj, prop, i, propContext);
+                                changed |= ImGuiWindow::displayResource(obj, prop, i, propContext);
                                 ImGui::TreePop();
                             }
 
@@ -100,42 +96,11 @@ namespace vg::editor
                     }
                     else
                     {
-                        ImGuiWindow::displayProperty(_object, prop);
+                        changed |= ImGuiWindow::displayProperty(_object, prop);
                     }
                 }
 
                 ImGui::Spacing();
-
-                //ImGuiStyle & style = ImGui::GetStyle();
-
-                //string addLabel = fmt::sprintf(" %s Add %s ", style::icon::Plus, _label);
-                //string removeLabel = fmt::sprintf(" %s Remove %s ", style::icon::Minus, _label);
-                //
-                //float size = ImGui::CalcTextSize(addLabel.c_str()).x + ImGui::CalcTextSize(removeLabel.c_str()).x + style.FramePadding.x * 3.0f;
-                //float avail = ImGui::GetContentRegionAvail().x;
-                //
-                //float off = (avail - size) * 0.5f;
-                //if (off > 0.0f)
-                //    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
-
-                //string addSubResourceLabel = "Add###" + to_string((uint_ptr)_object);
-                //string removeSubResourceLabel = "Remove###" + to_string((uint_ptr)_object);
-                //if (ImGui::Button(addLabel.c_str()))
-                //    list->Add();
-                //
-                //ImGui::SameLine();
-                //
-                //ImGui::BeginDisabled(resourceCount == 0);
-                //{
-                //    if (ImGui::Button(removeLabel.c_str()))
-                //    {
-                //        // Can't remove while iterating the list ;)
-                //        remove = true;
-                //    }
-                //}
-                //ImGui::EndDisabled();
-
-                //ImGui::TreePop();
 
                 ImGui::Unindent();
             }
@@ -143,7 +108,7 @@ namespace vg::editor
             if (remove)
                 list->Remove();
 
-            //ImGui::EndTable();
+            return changed;
         }        
     };
 }

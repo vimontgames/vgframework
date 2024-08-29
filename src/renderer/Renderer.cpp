@@ -793,7 +793,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool Renderer::cookTexture(const core::string & _file)
+    bool Renderer::cookTexture(const core::string & _file, const TextureImportSettings * _importSettings)
     {
         TextureImporterData imported;
         imported.name = _file;

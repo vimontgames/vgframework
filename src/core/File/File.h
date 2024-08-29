@@ -12,6 +12,7 @@ namespace vg::core::io
     using FileHandle = u64;
     const FileHandle invalidFileHandle = (FileHandle)0;
 
+    FileAccessTime getCurrentFileTime();
     bool getLastWriteTime(const string _file, FileAccessTime * _lastWrite);
     bool setLastWriteTime(const string & _file, FileAccessTime _filetime);
 
@@ -34,6 +35,7 @@ namespace vg::core::io
     bool write(FileHandle _fileHandle, const void * _data, size_t _bytes);
 
     string getCookedPath(const string & _file);
+    string getMetaPath(const string & _file);
     string getFileDir(const string & _file);
     string getFileName(const string & _file);
     string getFileNameWithoutExt(const string & _file);

@@ -89,7 +89,7 @@ namespace vg::renderer
         bool                                    cookMeshModel               (const core::string & _file) final override;
         IMeshModel *                            loadMeshModel               (const core::string & _file) final override;
 
-        bool                                    cookTexture                 (const core::string & _file) final override;
+        bool                                    cookTexture                 (const core::string & _file, const TextureImportSettings * _importSettings) final override;
         gfx::ITexture *                         loadTexture                 (const core::string & _file) final override;
 
         bool                                    cookAnimation               (const core::string & _file) final override;

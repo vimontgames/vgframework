@@ -11,9 +11,9 @@ namespace vg::editor
     {
     public:
         //--------------------------------------------------------------------------------------
-        void displayObject(IObject * _object, ObjectContext & _objectContext) final
+        bool displayObject(IObject * _object, ObjectContext & _objectContext) final
         {
-            displayResourceList(_object, "Material", "m_materialResources");
+            return displayResourceList(_object, "Material", "m_materialResources");
         }
     };
 

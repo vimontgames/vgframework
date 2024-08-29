@@ -10,8 +10,9 @@ namespace vg::editor
     {
     public:
         virtual ~ImGuiObjectHandler() = default;
-        static bool display(core::IObject * _object, ObjectContext & _objectContext);
-        virtual void displayObject(core::IObject * _object, ObjectContext & _objectContext) = 0;
+
+        // Return 'true' if object is edited
+        virtual bool displayObject(core::IObject * _object, ObjectContext & _objectContext) = 0;
     };
 
     #define VG_AUTO_REGISTER_IMGUI_OBJECT_HANDLER(className, handler) VG_AUTO_REGISTER_IMGUI_CUSTOM_HANDLER(className, handler, core::string, ImGuiObjectHandler)

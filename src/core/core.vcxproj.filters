@@ -399,6 +399,13 @@
     <ClInclude Include="Types\Traits.h">
       <Filter>Types</Filter>
     </ClInclude>
+    <ClInclude Include="IResourceMeta.h" />
+    <ClInclude Include="Resource\ResourceMeta.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\ResourceMeta.hpp">
+      <Filter>Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

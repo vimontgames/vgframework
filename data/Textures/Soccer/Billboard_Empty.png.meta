@@ -1,0 +1,9 @@
+<Root>
+    <Object class="TextureResourceMeta">
+        <Property type="String" name="m_name" flags="NotVisible" value="Billboard_Empty.png.meta"/>
+        <Property type="Bool" name="m_importSettings.m_overridePixelFormat" flags="NotVisible" value="false"/>
+        <Property type="EnumU8" name="m_importSettings.m_pixelFormat" flags="Optional" value="R8G8B8A8_unorm_sRGB"/>
+        <Property type="Bool" name="m_importSettings.m_overrideDownscale" flags="NotVisible" value="false"/>
+        <Property type="EnumU8" name="m_importSettings.m_downscale" flags="Optional" value="None"/>
+    </Object>
+</Root>

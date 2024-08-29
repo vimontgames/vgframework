@@ -5,9 +5,11 @@
 namespace vg::core
 {
     class IObject;
+    class IResourceMeta;
 
     //--------------------------------------------------------------------------------------
-    // An IResource is an object that will from an external file with dependencies, e.g. a TextureResource will be used to reference a Texture in a MaterialResource used to reference a MaterialModel
+    // An IResource is an object that will from an external file with dependencies. 
+    // e.g. a TextureResource used to reference a Texture in a MaterialResource used to reference a MaterialModel
     //--------------------------------------------------------------------------------------
     class IResource : public Object
     {
@@ -47,5 +49,7 @@ namespace vg::core
 
         virtual bool                    CanCreateFile           () const = 0;
         virtual bool                    CanSaveFile             () const = 0;
+
+        virtual IResourceMeta *         CreateResourceMeta      () const = 0;
     };
 }

@@ -1,5 +1,8 @@
 #include "TextureResource.h"
 #include "gfx/ITexture.h"
+#include "core/File/File.h"
+
+#include "TextureResourceMeta.hpp"
 
 using namespace vg::core;
 
@@ -12,14 +15,18 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        // Display texture
-        //registerProperty("Resource", "m_object", (IObject **)offsetof(TextureResource, m_object), "Object", IProperty::Flags::NotSaved);
+        //auto * rm = ResourceManager::get();
+        //
+        //rm->RegisterExtension("TextureResource", ".psd");
+        //rm->RegisterExtension("TextureResource", ".tga");
+        //rm->RegisterExtension("TextureResource", ".jpg");
+        //rm->RegisterExtension("TextureResource", ".png");
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    TextureResource::TextureResource(const core::string & _name, core::IObject * _parent) :
+    TextureResource::TextureResource(const string & _name, IObject * _parent) :
         Resource(_name, _parent)
     {
 
@@ -32,7 +39,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<core::string> TextureResource::GetExtensions() const
+    const vector<string> TextureResource::GetExtensions() const
     {
         vector<string> ext;
                        ext.push_back(".psd");
@@ -52,13 +59,23 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool TextureResource::Cook(const string & _file) const
     {
-        return Engine::get()->GetRenderer()->cookTexture(_file);
+        // Get meta if it exists
+        auto * meta = (TextureResourceMeta*)ResourceManager::get()->GetOrCreateResourceMeta(this);
+
+        // Import texture using meta
+        return Engine::get()->GetRenderer()->cookTexture(_file, &meta->getTextureImportSettings());
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject * TextureResource::Load(const string & _file)
+    IObject * TextureResource::Load(const string & _file)
     {
         gfx::ITexture * texture = Engine::get()->GetRenderer()->loadTexture(_file);
         return texture;
     }
+
+    //--------------------------------------------------------------------------------------
+    core::IResourceMeta * TextureResource::CreateResourceMeta() const
+    {
+        return new TextureResourceMeta();
+    }   
 }

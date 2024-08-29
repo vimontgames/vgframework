@@ -173,7 +173,6 @@ namespace vg::core
     bool Factory::loadFromXML(IObject * _object, const string & _XMLfilename) const
     {
         const auto startLoad = Timer::getTick();
-        const auto * factory = Kernel::getFactory();
         string relativePath = io::getRelativePath(_XMLfilename);
 
         XMLDoc xmlDoc;
@@ -183,7 +182,7 @@ namespace vg::core
             if (xmlRoot != nullptr)
             {
                 //VG_INFO("[Factory] Load \"%s\"", relativePath.c_str());
-                if (factory->serializeFromXML(_object, xmlDoc))
+                if (serializeFromXML(_object, xmlDoc))
                 {
                     VG_INFO("[Factory] \"%s\" loaded from XML in %.2f ms", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                     _object->setFile(relativePath.c_str());
@@ -198,13 +197,11 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Factory::saveToXML(const IObject * _object, const string & _xmlFile) const
     {
-        const auto * factory = Kernel::getFactory();
-
         XMLDoc xmlDoc;
         XMLNode * xmlRoot = xmlDoc.NewElement("Root");
         xmlDoc.InsertFirstChild(xmlRoot);
 
-        if (factory->serializeToXML(_object, xmlDoc))
+        if (serializeToXML(_object, xmlDoc))
             if (XMLError::XML_SUCCESS == xmlDoc.SaveFile(_xmlFile.c_str()))
                 return true;
 
@@ -376,7 +373,7 @@ namespace vg::core
         const auto dstClassName = _dstObj->GetClassName();
         VG_ASSERT(dstClassName == srcClassName, "[Factory] Cannot assign object of type \"%s\" to another object of type \"%s\"", srcClassName, dstClassName);
 
-        const auto * classDesc = Kernel::getFactory()->getClassDescriptor(srcClassName);
+        const auto * classDesc = getClassDescriptor(srcClassName);
 
         VG_ASSERT(nullptr != classDesc);
         if (nullptr == classDesc)
@@ -1060,7 +1057,7 @@ namespace vg::core
                                 }
                             }
                             
-                            if (asBool(IProperty::Flags::NotSaved & prop->getFlags()))
+                            if (nullptr == prop || asBool(IProperty::Flags::NotSaved & prop->getFlags()))
                             {
 
                             }

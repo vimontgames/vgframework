@@ -48,9 +48,7 @@ namespace vg::engine
         if (io::readFile(_file, data))
         {
             if (io::writeFile(cookedPath, data))
-            {
                 return true;
-            }
         }
 
         return false;

@@ -13,9 +13,11 @@ namespace vg::editor
     {
     public:
         //--------------------------------------------------------------------------------------
-        void displayObject(IObject * _object, ObjectContext & _objectContext) final
+        // Texture preview
+        //--------------------------------------------------------------------------------------
+        bool displayObject(IObject * _object, ObjectContext & _objectContext) final
         {
-            // Texture preview
+            bool changed = false;
             auto * tex = dynamic_cast<gfx::ITexture*>(_object);
             if (tex)
             {
@@ -37,6 +39,8 @@ namespace vg::editor
                 }
                 imGuiAdapter->ReleaseTextureID(tex);
             }
+
+            return changed;
         }
     };
 

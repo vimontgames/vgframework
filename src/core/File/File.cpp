@@ -12,6 +12,18 @@ using namespace std;
 namespace vg::core::io
 {
     //--------------------------------------------------------------------------------------
+    FileAccessTime getCurrentFileTime()
+    {
+        #if VG_WINDOWS
+        FILETIME fileTime;
+        GetSystemTimeAsFileTime(&fileTime);
+        return ((FileAccessTime)(fileTime.dwHighDateTime) << 32) | fileTime.dwLowDateTime;
+        #elif
+        VG_STATIC_ASSERT_NOT_IMPLEMENTED();
+        #endif
+    }
+
+    //--------------------------------------------------------------------------------------
     bool getLastWriteTime(const string _file, FileAccessTime * _lastWrite)
     {
         bool succeeded = false;
@@ -277,6 +289,12 @@ namespace vg::core::io
     string getCookedPath(const string & _file)
     {
         return "cache/" + _file + ".bin";
+    }
+
+    //--------------------------------------------------------------------------------------
+    string getMetaPath(const string & _file)
+    {
+        return _file + ".meta";
     }
 
     //--------------------------------------------------------------------------------------

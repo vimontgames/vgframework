@@ -11,9 +11,9 @@ namespace vg::editor
     {
     public:
         //--------------------------------------------------------------------------------------
-        void displayObject(IObject * _object, ObjectContext & _objectContext) final
+        bool displayObject(IObject * _object, ObjectContext & _objectContext) final
         {
-            displayResourceList(_object, "Animation", "m_animationResources");
+            return displayResourceList(_object, "Animation", "m_animationResources");
         }
     };
 

@@ -12,11 +12,8 @@ namespace vg::engine
     class TextureResource : public core::Resource
     {
     public:
+        VG_CLASS_DECL(TextureResource, core::Resource);
         using super = core::Resource;
-
-        const char *                        GetClassName            () const override { return "TextureResource"; }
-        static bool                         registerClass           (core::IFactory & _factory);
-        static bool                         registerProperties      (core::IClassDesc & _desc);
 
                                             TextureResource         (const core::string & _name = "", core::IObject * _parent = nullptr);
                                             ~TextureResource        ();
@@ -27,6 +24,9 @@ namespace vg::engine
         bool                                Cook                    (const core::string & _file) const final override;
         core::IObject *                     Load                    (const core::string & _file) final override;
 
+        core::IResourceMeta *               CreateResourceMeta      () const final override;
+
+    private:
         gfx::ITexture *                     getTexture              () const { return (gfx::ITexture*)m_object; }
     };
 }
