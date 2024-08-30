@@ -11,8 +11,8 @@ namespace vg::renderer
         bool load(const core::string & _file);
         bool save(const core::string & _file) const;
 
-        core::string                    name;
-        gfx::TextureDesc             desc;
-        core::vector<core::u8>          texels;
+        core::string            name;
+        gfx::TextureDesc        desc;
+        core::vector<core::u8>  texels;
     };
 }

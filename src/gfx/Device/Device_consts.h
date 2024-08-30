@@ -23,10 +23,10 @@ namespace vg::gfx
     enum class VSync : core::u8
     {
         None = 0,
-        VBL_1,
-        VBL_2,
-        VBL_3,
-        VBL_4
+        VSync_1,
+        VSync_2,
+        VSync_3,
+        VSync_4
     };
 
     struct DeviceParams

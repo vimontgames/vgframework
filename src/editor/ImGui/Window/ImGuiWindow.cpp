@@ -221,7 +221,7 @@ namespace vg::editor
                 } 
                 else
                 {
-                    VG_ASSERT(false, "[Factory] Could not create DynamicProperty \"%s\" for class \"%s\"", _prop->getName(), _object->GetClassName());
+                    VG_ASSERT(false, "[Factory] Could not create DynamicProperty \"%s\" for class \"%s\"", _prop->GetName(), _object->GetClassName());
 
                     return false;
                 }
@@ -265,14 +265,14 @@ namespace vg::editor
         for (int i = 0; i < count; ++i)
             temp[i] = _ptr[i];
 
-        const S minRange = (S)_prop->getRange().x;
-        const S maxRange = (S)_prop->getRange().y;
+        const S minRange = (S)_prop->GetRange().x;
+        const S maxRange = (S)_prop->GetRange().y;
 
         bool edited = false;
 
         const auto dragSpeed = scalarTraits<S>::is_integer ? ImGuiWindow::getDragSpeedInt(_prop) : ImGuiWindow::getDragSpeedFloat(_prop);
         const auto editFormat = scalarTraits<S>::is_integer ? (scalarTraits<S>::is_signed ? g_editIntFormat : g_editUIntFormat ) : g_editFloatFormat;
-        const auto flags = _prop->getFlags();
+        const auto flags = _prop->GetFlags();
 
         VG_ASSERT(!asBool(IProperty::Flags::Color & flags) || (count == 3 || count == 4));
 
@@ -326,43 +326,29 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool displayEnumRecur(string _enumName, uint _e, T * _pEnum, bool _readonly)
+    template <typename T> core::string getEnumDisplayName(const core::IProperty * _prop, uint _index)
     {
-        bool changed = false;
-
-        auto it = _enumName.find_first_of("_");
+        const string enumTypeName = _prop->GetEnumTypeName();
+        const string enumName = _prop->GetEnumName(_index);
+        const string pattern = enumTypeName + "_";
+        auto it = enumName.find(pattern);
         if (it != string::npos)
         {
-            string category = _enumName.substr(0, it);
-            if (ImGui::BeginMenu(category.c_str()))
-            {
-                string name = _enumName.substr(it + 1);
-                bool res = displayEnumRecur(name, _e, _pEnum, _readonly);
-                ImGui::EndMenu();
-                return res;
-            }
-        }
-        else
-        {
-            if (ImGui::Selectable(_enumName.c_str()))
-            {
-                if (!_readonly)
-                {
-                    *_pEnum = _e;
-                    changed = true;
-                }
-            }
+            const string shortName = enumName.substr(it + pattern.length());
+            return shortName;
         }
 
-        return changed;
-    };
+        return enumName;
+    }
+
+    
 
     //--------------------------------------------------------------------------------------
     template <typename T> bool ImGuiWindow::displayEnum(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
     {
-        const auto displayName = _prop->getDisplayName();
-        const auto offset = _prop->getOffset();
-        const auto flags = _prop->getFlags();
+        const auto displayName = _prop->GetDisplayName();
+        const auto offset = _prop->GetOffset();
+        const auto flags = _prop->GetFlags();
 
         const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
 
@@ -370,36 +356,32 @@ namespace vg::editor
         int enumVal = (int)*pEnum;
         T temp = *pEnum;
 
-        string preview = "<Invalid>";
-        for (uint e = 0; e < _prop->getEnumCount(); ++e)
+        string preview = "";
+        for (uint e = 0; e < _prop->GetEnumCount(); ++e)
         {
-            if (enumVal == _prop->getEnumValue(e))
+            if (enumVal == _prop->GetEnumValue(e))
             {
-                preview = _prop->getEnumName(e);
-
-                auto it = preview.find_first_of("_");
-                while (string::npos != it)
-                {
-                    preview = preview.replace(it, 1, "/");
-                    it = preview.find_first_of("_");
-                }
+                preview = getEnumDisplayName<T>(_prop, e);
                 break;
             }
         }
 
         bool changed = false;
 
-        string enumLabel = ImGui::getObjectLabel(_prop->getDisplayName(), _prop);
+        string enumLabel = ImGui::getObjectLabel(_prop->GetDisplayName(), _prop);
         if (ImGui::BeginCombo(getPropertyLabel(enumLabel).c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
         {
-            for (uint e = 0; e < _prop->getEnumCount(); ++e)
+            for (uint e = 0; e < _prop->GetEnumCount(); ++e)
             {
-                const string enumName = _prop->getEnumName(e);
-                if (displayEnumRecur(enumName, e, &temp, readonly))
+                const string enumName = getEnumDisplayName<T>(_prop, e);
+
+                if (ImGui::Selectable(enumName.c_str()))
                 {
+                    temp = (T)_prop->GetEnumValue(e); // TODO: GetEnumValue should be typed, storing Type+union with check on data type e.g. GetEnumValueU8 etc..
+
                     if (!readonly)
                     {
-                        if (storeProperty<T>((T *)pEnum, temp, _object, _prop, _propContext))
+                        if (storeProperty<T>((T *)pEnum, temp, _object, _prop, _propContext)) 
                             changed = true;
                     }
                 }
@@ -415,9 +397,9 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     template <typename T> bool ImGuiWindow::displayEnumFlags(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
     {
-        const auto displayName = _prop->getDisplayName();
-        const auto offset = _prop->getOffset();
-        const auto flags = _prop->getFlags();
+        const auto displayName = _prop->GetDisplayName();
+        const auto offset = _prop->GetOffset();
+        const auto flags = _prop->GetFlags();
 
         const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
         ImGui::BeginDisabled(readonly);
@@ -429,7 +411,7 @@ namespace vg::editor
         string preview;
 
         bool first = true, found = false;
-        for (uint e = 0; e < _prop->getEnumCount(); ++e)
+        for (uint e = 0; e < _prop->GetEnumCount(); ++e)
         {
             if (enumVal & (1 << e))
             {
@@ -440,19 +422,19 @@ namespace vg::editor
                 else
                     preview += "|";
 
-                preview += _prop->getEnumName(e);
+                preview += _prop->GetEnumName(e);
             }
         }
         if (!found)
             preview = "<None>";
 
-        string enumLabel = ImGui::getObjectLabel(_prop->getDisplayName(), _prop);
+        string enumLabel = ImGui::getObjectLabel(_prop->GetDisplayName(), _prop);
         if (ImGui::BeginCombo(getPropertyLabel(enumLabel).c_str(), preview.c_str(), ImGuiComboFlags_None))
         {
-            for (uint e = 0; e < _prop->getEnumCount(); ++e)
+            for (uint e = 0; e < _prop->GetEnumCount(); ++e)
             {
                 bool value = ((enumVal >> e) & 1) ? true : false;
-                const char * name = _prop->getEnumName(e);
+                const char * name = _prop->GetEnumName(e);
                 if (ImGui::Checkbox(name, &value))
                 {
                     if (!readonly)
@@ -630,7 +612,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiWindow::drawPropertyLabel(const PropertyContext & _propContext, const core::IProperty * _prop)
     {
-        drawPropertyLabel(_propContext, _prop->getDisplayName(), _prop->GetDescription());
+        drawPropertyLabel(_propContext, _prop->GetDisplayName(), _prop->GetDescription());
     }
 
     //--------------------------------------------------------------------------------------
@@ -657,7 +639,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     float ImGuiWindow::getDragSpeedFloat(const IProperty * _prop) 
     {
-        const auto flags = _prop->getFlags();
+        const auto flags = _prop->GetFlags();
 
         if (asBool(IProperty::Flags::EulerAngle & flags))
             return 5.0f;
@@ -698,12 +680,12 @@ namespace vg::editor
 
         PropertyContext propContext(_object, _prop);        
 
-        const auto type = _prop->getType();
-        const auto name = _prop->getName();
-        const auto displayName = _prop->getDisplayName();
+        const auto type = _prop->GetType();
+        const auto name = _prop->GetName();
+        const auto displayName = _prop->GetDisplayName();
         const auto label = ImGui::getObjectLabel(displayName, propContext.m_originalProp);
-        const auto offset = _prop->getOffset();
-        const auto flags = _prop->getFlags();
+        const auto offset = _prop->GetOffset();
+        const auto flags = _prop->GetFlags();
 
         if (_objectContext.m_treeNodes.size() > 0)
         {
@@ -722,10 +704,10 @@ namespace vg::editor
             return false;
         
         const IClassDesc * classDesc = propContext.m_originalObject->GetClassDesc();
-        auto * previousProp = classDesc->GetPreviousProperty(propContext.m_originalProp->getName());
+        auto * previousProp = classDesc->GetPreviousProperty(propContext.m_originalProp->GetName());
         const bool singleLine = asBool(IProperty::Flags::SingleLine & flags);
         // Render property next to the previous one
-        if (singleLine && (previousProp && asBool(IProperty::Flags::SingleLine & previousProp->getFlags())))
+        if (singleLine && (previousProp && asBool(IProperty::Flags::SingleLine & previousProp->GetFlags())))
             ImGui::SameLine();
 
         const bool hexa = asBool(IProperty::Flags::Hexadecimal & flags);
@@ -755,14 +737,14 @@ namespace vg::editor
 
             if (propContext.m_optionalProp)
             {
-                VG_ASSERT(asBool(IProperty::Flags::NotVisible & propContext.m_optionalProp->getFlags()) || _prop->getType() == IProperty::Type::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be %s", _prop->getName(), asString(IProperty::Flags::NotVisible).c_str());
+                VG_ASSERT(asBool(IProperty::Flags::NotVisible & propContext.m_optionalProp->GetFlags()) || _prop->GetType() == IProperty::Type::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be %s", _prop->GetName(), asString(IProperty::Flags::NotVisible).c_str());
                 
-                if (propContext.m_optionalProp->getType() == IProperty::Type::Bool)
+                if (propContext.m_optionalProp->GetType() == IProperty::Type::Bool)
                 {
                     bool * b = propContext.m_optionalProp->GetPropertyBool(propContext.m_optionalObject);
                     bool temp = *b;
 
-                    if (_prop->getType() != IProperty::Type::LayoutElement)
+                    if (_prop->GetType() != IProperty::Type::LayoutElement)
                     {
                         if (ImGui::Checkbox(ImGui::getObjectLabel("", propContext.m_optionalProp).c_str(), &temp))
                         {
@@ -772,7 +754,7 @@ namespace vg::editor
                             {
                                 // Create prop override for bool 
                                 const IClassDesc * classDesc = propContext.m_originalObject->GetClassDesc();
-                                IProperty * originalOptionalProp = classDesc->GetPreviousProperty(propContext.m_originalProp->getName());
+                                IProperty * originalOptionalProp = classDesc->GetPreviousProperty(propContext.m_originalProp->GetName());
                             
                                 // Create if needed
                                 if (propContext.m_optionalPropOverride = propContext.m_prefab->CreateDynamicProperty(propContext.m_originalObject, originalOptionalProp))
@@ -838,7 +820,7 @@ namespace vg::editor
                             break;
 
                         case IProperty::LayoutElementType::Separator:
-                            ImGui::SeparatorText(_prop->getDisplayName());
+                            ImGui::SeparatorText(_prop->GetDisplayName());
                             break;
 
                         case IProperty::LayoutElementType::GroupBegin:
@@ -846,7 +828,7 @@ namespace vg::editor
                             if (asBool(IProperty::Flags::Optional & flags))
                             {
                                 // optional group
-                                VG_ASSERT(_prop->getOffset() != 0);
+                                VG_ASSERT(_prop->GetOffset() != 0);
                                 ImGui::BeginDisabled(!*_prop->GetPropertyBool(_object));
                             }
                             else
@@ -855,14 +837,14 @@ namespace vg::editor
                                 {
                                     auto & newInfo = _objectContext.m_treeNodes.push_empty();
 
-                                    newInfo.treeNodeOpen = ImGui::TreeNodeEx(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+                                    newInfo.treeNodeOpen = ImGui::TreeNodeEx(ImGui::getObjectLabel(_prop->GetDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
                                     newInfo.treeNodeIsCollapsingHeader = false;
                                 }
                                 else
                                 {
                                     auto & newInfo = _objectContext.m_treeNodes.push_empty();
 
-                                    newInfo.treeNodeOpen = ImGui::CollapsingHeader(ImGui::getObjectLabel(_prop->getDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+                                    newInfo.treeNodeOpen = ImGui::CollapsingHeader(ImGui::getObjectLabel(_prop->GetDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
                                     newInfo.treeNodeIsCollapsingHeader = true;
                                 }
                             }
@@ -901,7 +883,7 @@ namespace vg::editor
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     BitMask * pBitMask = _prop->GetPropertyBitMask(_object);
 
-                    string enumLabel = ImGui::getObjectLabel(_prop->getDisplayName(), _prop);
+                    string enumLabel = ImGui::getObjectLabel(_prop->GetDisplayName(), _prop);
                     string preview = pBitMask->toString();
 
                     if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
@@ -971,6 +953,11 @@ namespace vg::editor
                     changed |= displayEnum<u8>(_object, _prop, propContext);
                     break;
 
+                //case IProperty::Type::EnumI8:
+                //    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                //    changed |= displayEnum<i8>(_object, _prop, propContext);
+                //    break;
+
                 case IProperty::Type::EnumU16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnum<u16>(_object, _prop, propContext);
@@ -1006,16 +993,16 @@ namespace vg::editor
                     if (isEnumArray)
                     {
                         char temp[1024];
-                        sprintf_s(temp, "%s (%u)", label.c_str(), _prop->getEnumCount());
+                        sprintf_s(temp, "%s (%u)", label.c_str(), _prop->GetEnumCount());
                         if (ImGui::TreeNodeEx(temp, enumArrayTreeNodeFlags))
                         {
-                            for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                            for (uint e = 0; e < _prop->GetEnumCount(); ++e)
                             {
-                                const string enumLabel = ImGui::getObjectLabel(_prop->getEnumName(e), _prop + e);
+                                const string enumLabel = ImGui::getObjectLabel(_prop->GetEnumName(e), _prop + e);
                                 u8 * pU8 = _prop->GetPropertyUint8(_object, e);
                                 i32 temp = (u8)*pU8;
                                 if (asBool(IProperty::Flags::HasRange & flags))
-                                    changed |= ImGui::SliderInt(enumLabel.c_str(), &temp, max((int)0, (int)_prop->getRange().x), min((int)255, (int)_prop->getRange().y), "%d", imguiInputTextflags);
+                                    changed |= ImGui::SliderInt(enumLabel.c_str(), &temp, max((int)0, (int)_prop->GetRange().x), min((int)255, (int)_prop->GetRange().y), "%d", imguiInputTextflags);
                                 else
                                     changed |= ImGui::InputInt(enumLabel.c_str(), &temp, 1, 16, imguiInputTextflags);
                                 if (changed)
@@ -1150,15 +1137,15 @@ namespace vg::editor
                     if (isEnumArray)
                     {
                         char temp[1024];
-                        sprintf_s(temp, "%s (%u)", label.c_str(), _prop->getEnumCount());
+                        sprintf_s(temp, "%s (%u)", label.c_str(), _prop->GetEnumCount());
                         if (ImGui::TreeNodeEx(temp, enumArrayTreeNodeFlags))
                         {
-                            for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                            for (uint e = 0; e < _prop->GetEnumCount(); ++e)
                             {
                                 if (asBool(IProperty::Flags::Color & flags))
-                                    changed |= ImGui::ColorEdit4(_prop->getEnumName(e), pFloat4 + e * 4);
+                                    changed |= ImGui::ColorEdit4(_prop->GetEnumName(e), pFloat4 + e * 4);
                                 else
-                                    changed |= ImGui::InputFloat4(_prop->getEnumName(e), pFloat4 + e * 4, g_editFloatFormat, imguiInputTextflags);
+                                    changed |= ImGui::InputFloat4(_prop->GetEnumName(e), pFloat4 + e * 4, g_editFloatFormat, imguiInputTextflags);
                             }
                             ImGui::TreePop();
                         }
@@ -1288,7 +1275,7 @@ namespace vg::editor
 
                             if (ImGui::Button(style::icon::File, style::button::SizeSmall))
                             {
-                                const auto defaultFolder = _prop->getDefaultFolder();
+                                const auto defaultFolder = _prop->GetDefaultFolder();
 
                                 // TODO: other extensions deduced from default folder?
                                 string ext = ".*";
@@ -1349,7 +1336,7 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                    const uint sizeOf = _prop->getSizeOf();
+                    const uint sizeOf = _prop->GetSizeOf();
                     const size_t count = _prop->GetPropertyObjectVectorCount(_object);
                     const byte * data = _prop->GetPropertyObjectVectorData(_object);
 
@@ -1561,7 +1548,7 @@ namespace vg::editor
                             bool add = false, remove = false;
                             int removeAt = -1;
 
-                            const char * interfaceName = _prop->getInterface();
+                            const char * interfaceName = _prop->GetInterface();
                             const auto * factory = Kernel::getFactory();
                             const vector<IClassDesc *> elemClassDescs = factory->getClassDescriptors();
                             vector<IClassDesc*> compatibleElemDescs;
@@ -1678,14 +1665,14 @@ namespace vg::editor
                     if (isEnumArray)
                     {
                         char label[1024];
-                        sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
+                        sprintf_s(label, "%s (%u)", displayName, _prop->GetEnumCount());
                         if (ImGui::TreeNodeEx(label, enumArrayTreeNodeFlags))
                         {
-                            for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                            for (uint e = 0; e < _prop->GetEnumCount(); ++e)
                             {
                                 pObject = ref ? *_prop->GetPropertyObjectPtr(_object, e) : _prop->GetPropertyObject(_object, e);
 
-                                if (ImGui::TreeNodeEx(_prop->getEnumName(e), ImGuiTreeNodeFlags_DefaultOpen))
+                                if (ImGui::TreeNodeEx(_prop->GetEnumName(e), ImGuiTreeNodeFlags_DefaultOpen))
                                 {
                                     if (nullptr != pObject)
                                         displayObject(pObject);
@@ -1712,7 +1699,7 @@ namespace vg::editor
 
                         ImGui::BeginDisabled(pObject == nullptr);
                         {
-                            bool needTreeNode = strcmp(_prop->getName(), "m_object") && ref && !flatten;
+                            bool needTreeNode = strcmp(_prop->GetName(), "m_object") && ref && !flatten;
                             bool treenNodeOpen = !needTreeNode || ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
 
                             static int ObjectRightClicMenuIndex = -1;
@@ -1738,7 +1725,7 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                    const uint sizeOf = _prop->getSizeOf();
+                    const uint sizeOf = _prop->GetSizeOf();
                     const size_t count = _prop->GetPropertyResourceVectorCount(_object);
                     const byte * data = _prop->GetPropertyResourceVectorData(_object);
 
@@ -1773,14 +1760,14 @@ namespace vg::editor
                     if (isEnumArray)
                     {
                         char label[1024];
-                        sprintf_s(label, "%s (%u)", displayName, _prop->getEnumCount());
+                        sprintf_s(label, "%s (%u)", displayName, _prop->GetEnumCount());
                         if (ImGui::TreeNodeEx(label, enumArrayTreeNodeFlags))
                         {
-                            for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                            for (uint e = 0; e < _prop->GetEnumCount(); ++e)
                             {
                                 auto pResource = ref ? *_prop->GetPropertyResourcePtr(_object, e) : _prop->GetPropertyResource(_object, e);
 
-                                if (ImGui::TreeNodeEx(_prop->getEnumName(e), /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen))
+                                if (ImGui::TreeNodeEx(_prop->GetEnumName(e), /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen))
                                 {
                                     if (nullptr != pResource)
                                         changed |= displayResource(pResource, _prop, e, propContext);
@@ -1835,7 +1822,7 @@ namespace vg::editor
 
         if (optional)
         {
-            if (_prop->getType() != IProperty::Type::LayoutElement)
+            if (_prop->GetType() != IProperty::Type::LayoutElement)
             {
                 ImGui::PopItemWidth();
                 bool * b = propContext.m_optionalProp->GetPropertyBool(propContext.m_optionalObject);
@@ -1983,7 +1970,7 @@ namespace vg::editor
                 for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
                 {
                     const IProperty * prop = classDesc->GetPropertyByIndex(i);
-                    if (!strcmp(prop->getName(), "m_object"))
+                    if (!strcmp(prop->GetName(), "m_object"))
                         continue;
 
                     changed |= ImGuiWindow::displayProperty(_resource, prop);
@@ -2214,7 +2201,7 @@ namespace vg::editor
             {
                 const IProperty * prop = objectClassDesc->GetPropertyByIndex(i);
 
-                if (isPropertyVisible(prop->getFlags()) && strcmp(prop->getName(), "m_object"))
+                if (isPropertyVisible(prop->GetFlags()) && strcmp(prop->GetName(), "m_object"))
                 {
                     anyVisibleProperty = true;
                     break;
@@ -2227,7 +2214,7 @@ namespace vg::editor
             if (anyVisibleProperty)
             {
                 char label[256];
-                sprintf(label, "%s", _prop->getDisplayName());
+                sprintf(label, "%s", _prop->GetDisplayName());
                 if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     ImGuiWindow::displayObject(resourceObject);
@@ -2369,7 +2356,7 @@ namespace vg::editor
     {
         bool changed = false;
 
-        const auto displayName = _prop->getDisplayName();
+        const auto displayName = _prop->GetDisplayName();
         float4x4 * pFloat4x4 = _prop->GetPropertyFloat4x4(_object);
         float * pFloat = (float *)pFloat4x4;
 
@@ -2377,7 +2364,7 @@ namespace vg::editor
         for (uint i = 0; i < countof(temp); ++i)
             temp[i] = pFloat[i];
 
-        const bool flatten = asBool(IProperty::Flags::Flatten & _prop->getFlags());
+        const bool flatten = asBool(IProperty::Flags::Flatten & _prop->GetFlags());
 
         const string LabelI = flatten ? fmt::sprintf("%s.I", displayName) : "I";
         const string LabelJ = flatten ? fmt::sprintf("%s.J", displayName) : "J";

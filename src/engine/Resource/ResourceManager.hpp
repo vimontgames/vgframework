@@ -80,7 +80,7 @@ namespace vg::engine
             }
         }
         
-        IResourceMeta * meta = _resource->CreateResourceMeta();
+        IResourceMeta * meta = _resource->CreateResourceMeta(path);
 
         if (meta)
         {

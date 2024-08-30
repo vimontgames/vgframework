@@ -86,7 +86,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void PhysicsShapeComponent::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
-        if (!strcmp(_prop.getName(), "m_shapeType") || strstr(_prop.GetClassName(), "ShapeDesc"))
+        if (!strcmp(_prop.GetName(), "m_shapeType") || strstr(_prop.GetClassName(), "ShapeDesc"))
         {
             createShapeDesc();
             createShape();

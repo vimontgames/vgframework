@@ -793,12 +793,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool Renderer::cookTexture(const core::string & _file, const TextureImportSettings * _importSettings)
+    bool Renderer::cookTexture(const core::string & _file, const gfx::TextureImporterSettings * _importSettings)
     {
         TextureImporterData imported;
         imported.name = _file;
 
-        if (TextureImporter::get()->importTextureData(_file, imported.desc, imported.texels))
+        if (TextureImporter::get()->importTextureData(_file, imported.desc, imported.texels, _importSettings))
         {
             imported.save(io::getCookedPath(_file));
 

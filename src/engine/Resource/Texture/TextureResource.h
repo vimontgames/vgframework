@@ -24,7 +24,7 @@ namespace vg::engine
         bool                                Cook                    (const core::string & _file) const final override;
         core::IObject *                     Load                    (const core::string & _file) final override;
 
-        core::IResourceMeta *               CreateResourceMeta      () const final override;
+        core::IResourceMeta *               CreateResourceMeta      (const core::string & _path) const final override;
 
     private:
         gfx::ITexture *                     getTexture              () const { return (gfx::ITexture*)m_object; }

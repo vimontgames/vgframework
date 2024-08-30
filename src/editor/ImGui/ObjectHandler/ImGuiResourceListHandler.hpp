@@ -26,7 +26,7 @@ namespace vg::editor
             for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
             {
                 const IProperty * prop = classDesc->GetPropertyByIndex(i);
-                if (!strcmp(prop->getName(), _vectorPropName.c_str()))
+                if (!strcmp(prop->GetName(), _vectorPropName.c_str()))
                     resourceCount = prop->GetPropertyResourceVectorCount(_object);
             }
 
@@ -71,7 +71,7 @@ namespace vg::editor
                 {
                     const IProperty * prop = classDesc->GetPropertyByIndex(i);
 
-                    if (!strcmp(prop->getName(), _vectorPropName.c_str()))
+                    if (!strcmp(prop->GetName(), _vectorPropName.c_str()))
                     {
                         PropertyContext propContext(_object, prop);
 

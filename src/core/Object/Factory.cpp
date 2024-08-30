@@ -383,7 +383,7 @@ namespace vg::core
         for (uint i = 0; i < propCount; ++i)
         {
             const IProperty * prop = classDesc->GetPropertyByIndex(i);
-            const IProperty::Flags propFlags = prop->getFlags();
+            const IProperty::Flags propFlags = prop->GetFlags();
 
             if (asBool(IProperty::Flags::NotSaved & propFlags))
                 continue;
@@ -397,14 +397,14 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Factory::CanCopyProperty(const core::IProperty * _srcProp, const core::IProperty * _dstProp) const
     {
-        const IProperty::Type srcPropType = _srcProp->getType();
-        const IProperty::Type dstPropType = _dstProp->getType();
+        const IProperty::Type srcPropType = _srcProp->GetType();
+        const IProperty::Type dstPropType = _dstProp->GetType();
 
         if (srcPropType != dstPropType)
             return false;
 
-        const bool srcIsEnumArray = asBool(IProperty::Flags::EnumArray & _srcProp->getFlags());
-        const bool dstIsEnumArray = asBool(IProperty::Flags::EnumArray & _dstProp->getFlags());
+        const bool srcIsEnumArray = asBool(IProperty::Flags::EnumArray & _srcProp->GetFlags());
+        const bool dstIsEnumArray = asBool(IProperty::Flags::EnumArray & _dstProp->GetFlags());
 
         if (srcIsEnumArray != dstIsEnumArray)
             return false;
@@ -415,28 +415,28 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Factory::CopyProperty(const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj)
     {
-        const IProperty::Type srcPropType = _srcProp->getType();
-        const IProperty::Type dstPropType = _dstProp->getType();
+        const IProperty::Type srcPropType = _srcProp->GetType();
+        const IProperty::Type dstPropType = _dstProp->GetType();
 
         if (srcPropType != dstPropType)
         {
-            VG_WARNING("[Factory] Property \"%s::%s\" have type '%s' but Property \"%s::%s\" have different type '%s'", _srcObj->GetClassName(), _srcProp->getName(), asString(srcPropType).c_str(), _dstObj->GetClassName(), _dstProp->getName(), asString(dstPropType).c_str());
+            VG_WARNING("[Factory] Property \"%s::%s\" have type '%s' but Property \"%s::%s\" have different type '%s'", _srcObj->GetClassName(), _srcProp->GetName(), asString(srcPropType).c_str(), _dstObj->GetClassName(), _dstProp->GetName(), asString(dstPropType).c_str());
             return false;
         }
 
-        const bool srcIsEnumArray = asBool(IProperty::Flags::EnumArray & _srcProp->getFlags());
-        const bool dstIsEnumArray = asBool(IProperty::Flags::EnumArray & _dstProp->getFlags());
+        const bool srcIsEnumArray = asBool(IProperty::Flags::EnumArray & _srcProp->GetFlags());
+        const bool dstIsEnumArray = asBool(IProperty::Flags::EnumArray & _dstProp->GetFlags());
 
         if (srcIsEnumArray != dstIsEnumArray)
         {
-            VG_WARNING("[Factory] Property \"%s::%s\" have enum count of %u but Property \"%s::%s\" have different enum sizes of %u", _srcObj->GetClassName(), _srcProp->getName(), _srcProp->getEnumCount(), _dstObj->GetClassName(), _dstProp->getName(), _dstProp->getEnumCount());
+            VG_WARNING("[Factory] Property \"%s::%s\" have enum count of %u but Property \"%s::%s\" have different enum sizes of %u", _srcObj->GetClassName(), _srcProp->GetName(), _srcProp->GetEnumCount(), _dstObj->GetClassName(), _dstProp->GetName(), _dstProp->GetEnumCount());
             return false;
         }
 
-        if (asBool(_srcProp->getFlags() & IProperty::Flags::NotSaved))
+        if (asBool(_srcProp->GetFlags() & IProperty::Flags::NotSaved))
             return false;
 
-        if (!strcmp(_srcProp->getName(), "m_uid"))
+        if (!strcmp(_srcProp->GetName(), "m_uid"))
         {
             // In case of DynamicPropertyList the UID must be copied (TODO: use explicit member for different usage?)
             const bool canCopyUID = _srcObj->CanCopyUID();
@@ -457,7 +457,7 @@ namespace vg::core
             if (!canCopyUID)
                 return true;
         }
-        else if(!strcmp(_srcProp->getName(), "m_originalUID"))
+        else if(!strcmp(_srcProp->GetName(), "m_originalUID"))
         {
             return false;
         } 
@@ -495,7 +495,7 @@ namespace vg::core
 
         case IProperty::Type::Uint8:
             if (srcIsEnumArray)
-                memcpy(_dstProp->GetPropertyUint8(_dstObj), _srcProp->GetPropertyUint8(_srcObj), _srcProp->getSizeOf() * _srcProp->getEnumCount());
+                memcpy(_dstProp->GetPropertyUint8(_dstObj), _srcProp->GetPropertyUint8(_srcObj), _srcProp->GetSizeOf() * _srcProp->GetEnumCount());
             else
                 *_dstProp->GetPropertyUint8(_dstObj) = *_srcProp->GetPropertyUint8(_srcObj);
             break;
@@ -652,7 +652,7 @@ namespace vg::core
                 if (elemClassDesc)
                 {
                     uint elementSize;
-                    void * data = elemClassDesc->ResizeVector(_dstObj, (uint)_srcProp->getOffset(), (uint)srcCount, elementSize);
+                    void * data = elemClassDesc->ResizeVector(_dstObj, (uint)_srcProp->GetOffset(), (uint)srcCount, elementSize);
 
                     for (uint i = 0; i < srcCount; ++i)
                     {
@@ -730,12 +730,12 @@ namespace vg::core
         {
             const auto & prop = classDesc->GetPropertyByIndex(p);
 
-            const auto name = prop->getName();
-            const auto type = prop->getType();
-            const auto size = prop->getSizeOf();
-            const auto offset = prop->getOffset();
-            const auto flags = prop->getFlags();
-            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->getFlags());
+            const auto name = prop->GetName();
+            const auto type = prop->GetType();
+            const auto size = prop->GetSizeOf();
+            const auto offset = prop->GetOffset();
+            const auto flags = prop->GetFlags();
+            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->GetFlags());
 
             switch (type)
             {
@@ -748,7 +748,7 @@ namespace vg::core
 
                 case IProperty::Type::ObjectPtrVector:
                 {
-                    if (strcmp(prop->getName(), "m_children"))
+                    if (strcmp(prop->GetName(), "m_children"))
                     {
                         auto * vector = prop->GetPropertyObjectPtrVector(_object);
                         for (uint i = 0; i < vector->size(); ++i)
@@ -784,7 +784,7 @@ namespace vg::core
 
                     if (isEnumArray)
                     {
-                        const auto totalSize = prop->getEnumCount() * size;
+                        const auto totalSize = prop->GetEnumCount() * size;
                         VG_VERIFY(_buffer.write(src, totalSize));
                     }
                     else
@@ -825,12 +825,12 @@ namespace vg::core
         {
             const auto & prop = classDesc->GetPropertyByIndex(p);
 
-            const char * name = prop->getName();
-            const auto type = prop->getType();
-            const auto size = prop->getSizeOf();
-            const auto offset = prop->getOffset();
-            const auto flags = prop->getFlags();
-            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->getFlags());
+            const char * name = prop->GetName();
+            const auto type = prop->GetType();
+            const auto size = prop->GetSizeOf();
+            const auto offset = prop->GetOffset();
+            const auto flags = prop->GetFlags();
+            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->GetFlags());
 
             switch (type)
             {
@@ -843,7 +843,7 @@ namespace vg::core
 
                 case IProperty::Type::ObjectPtrVector:
                 {
-                    if (strcmp(prop->getName(), "m_children"))
+                    if (strcmp(prop->GetName(), "m_children"))
                     {
                         auto * vector = prop->GetPropertyObjectPtrVector(_object);
                         for (uint i = 0; i < vector->size(); ++i)
@@ -880,7 +880,7 @@ namespace vg::core
 
                     if (isEnumArray)
                     {
-                        const auto totalSize = prop->getEnumCount() * size;
+                        const auto totalSize = prop->GetEnumCount() * size;
                         VG_VERIFY(_buffer.restore(dst, totalSize, changed));
                     }
                     else
@@ -1057,17 +1057,17 @@ namespace vg::core
                                 }
                             }
                             
-                            if (nullptr == prop || asBool(IProperty::Flags::NotSaved & prop->getFlags()))
+                            if (nullptr == prop || asBool(IProperty::Flags::NotSaved & prop->GetFlags()))
                             {
 
                             }
                             else
                             {
-                                const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->getFlags());
+                                const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->GetFlags());
 
-                                if (prop->getType() == type)
+                                if (prop->GetType() == type)
                                 {
-                                    const auto offset = prop->getOffset();
+                                    const auto offset = prop->GetOffset();
 
                                     switch (type)
                                     {
@@ -1190,9 +1190,9 @@ namespace vg::core
                                                         const XMLAttribute * xmlValueName = xmlPropElemValue->FindAttribute("name");
                                                         if (nullptr != xmlValueName)
                                                         {
-                                                            for (uint i = 0; i < prop->getEnumCount(); ++i)
+                                                            for (uint i = 0; i < prop->GetEnumCount(); ++i)
                                                             {
-                                                                if (!strcmp(xmlValueName->Value(), prop->getEnumName(i)))
+                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i)))
                                                                 {
                                                                     IResource * pResource = ref ? *prop->GetPropertyResourcePtr(_object, i) : prop->GetPropertyResource(_object, i);
                                                                     serializeResourceFromXML(pResource, xmlPropElemValue);
@@ -1457,9 +1457,9 @@ namespace vg::core
                                                         const XMLAttribute * xmlValueName = xmlPropElemValue->FindAttribute("name");
                                                         if (nullptr != xmlValueName)
                                                         {
-                                                            for (uint i = 0; i < prop->getEnumCount(); ++i)
+                                                            for (uint i = 0; i < prop->GetEnumCount(); ++i)
                                                             {
-                                                                if (!strcmp(xmlValueName->Value(), prop->getEnumName(i)))
+                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i)))
                                                                 {
                                                                     u32 * pUint = prop->GetPropertyUintN(_object, componentCount, i);
                                                                     serializeUintNFromXML(pUint, xmlPropElemValue, componentCount);
@@ -1508,9 +1508,9 @@ namespace vg::core
                                                         const XMLAttribute * xmlValueName = xmlPropElemValue->FindAttribute("name");
                                                         if (nullptr != xmlValueName)
                                                         {
-                                                            for (uint i = 0; i < prop->getEnumCount(); ++i)
+                                                            for (uint i = 0; i < prop->GetEnumCount(); ++i)
                                                             {
-                                                                if (!strcmp(xmlValueName->Value(), prop->getEnumName(i)))
+                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i)))
                                                                 {
                                                                     i32 * pInt = prop->GetPropertyIntN(_object, componentCount, i);
                                                                     serializeIntNFromXML(pInt, xmlPropElemValue, componentCount);
@@ -1559,9 +1559,9 @@ namespace vg::core
                                                         const XMLAttribute * xmlValueName = xmlPropElemValue->FindAttribute("name");
                                                         if (nullptr != xmlValueName)
                                                         {
-                                                            for (uint i = 0; i < prop->getEnumCount(); ++i)
+                                                            for (uint i = 0; i < prop->GetEnumCount(); ++i)
                                                             {
-                                                                if (!strcmp(xmlValueName->Value(), prop->getEnumName(i)))
+                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i)))
                                                                 {
                                                                     float * pFloat = prop->GetPropertyFloatN(_object, componentCount, i);
                                                                     serializeFloatNFromXML(pFloat, xmlPropElemValue, componentCount);
@@ -1608,9 +1608,9 @@ namespace vg::core
                                                         const XMLAttribute * xmlValueName = xmlPropElemValue->FindAttribute("name");
                                                         if (nullptr != xmlValueName)
                                                         {
-                                                            for (uint i = 0; i < prop->getEnumCount(); ++i)
+                                                            for (uint i = 0; i < prop->GetEnumCount(); ++i)
                                                             {
-                                                                if (!strcmp(xmlValueName->Value(), prop->getEnumName(i)))
+                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i)))
                                                                 {
                                                                     serializeIntegerPropertyFromXML<u8>(_object, prop, xmlPropElemValue, i);
                                                                     break;
@@ -1679,7 +1679,7 @@ namespace vg::core
                                 }
                                 else
                                 {
-                                    VG_WARNING("[Factory] Serialized Object type \"%s\" for Property \"%s\" from class \"%s\" does not match type \"%s\" declared in ClassDesc\n", typeName, name, className, asString(prop->getType()).c_str());
+                                    VG_WARNING("[Factory] Serialized Object type \"%s\" for Property \"%s\" from class \"%s\" does not match type \"%s\" declared in ClassDesc\n", typeName, name, className, asString(prop->GetType()).c_str());
                                 }
                             }
                         }
@@ -1715,10 +1715,10 @@ namespace vg::core
         {
             const auto & prop = classDesc->GetPropertyByIndex(p);
 
-            const auto name = prop->getName();
-            const auto type = prop->getType();
-            const auto offset = prop->getOffset();
-            const auto flags = prop->getFlags();
+            const auto name = prop->GetName();
+            const auto type = prop->GetType();
+            const auto offset = prop->GetOffset();
+            const auto flags = prop->GetFlags();
 
             if (asBool(IProperty::Flags::NotSaved & flags) || type == IProperty::Type::LayoutElement)
                 continue;
@@ -1736,7 +1736,7 @@ namespace vg::core
 
             bool skipAttribute = false;
 
-            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->getFlags());
+            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->GetFlags());
 
             switch (type)
             {
@@ -1789,12 +1789,12 @@ namespace vg::core
                 case IProperty::Type::Uint8:
                     if (isEnumArray)
                     {
-                        const uint count = prop->getEnumCount();
+                        const uint count = prop->GetEnumCount();
                         for (uint i = 0; i < count; ++i)
                         {
                             XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
                             {
-                                auto enumValueName = prop->getEnumName(i);
+                                auto enumValueName = prop->GetEnumName(i);
                                 xmlPropElemChild->SetAttribute("name", enumValueName);
                                 serializeIntegerPropertyToXML<u8>(_object, prop, xmlPropElemChild, i);
                             }
@@ -1837,12 +1837,12 @@ namespace vg::core
 
                     if (isEnumArray)
                     {
-                        const uint count = prop->getEnumCount();
+                        const uint count = prop->GetEnumCount();
                         for (uint i = 0; i < count; ++i)
                         {
                             XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
                             {
-                                auto enumValueName = prop->getEnumName(i);
+                                auto enumValueName = prop->GetEnumName(i);
                                 xmlPropElemChild->SetAttribute("name", enumValueName);
                                 const IObject * pResource = ref ? *prop->GetPropertyResourcePtr(_object, i) : prop->GetPropertyResource(_object, i);
                                 serializeToXML(pResource, _xmlDoc, xmlPropElemChild);
@@ -1861,7 +1861,7 @@ namespace vg::core
                 case IProperty::Type::ResourceVector:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
-                    const uint sizeOf = prop->getSizeOf();
+                    const uint sizeOf = prop->GetSizeOf();
                     const size_t count = prop->GetPropertyResourceVectorCount(_object);
                     const byte * data = prop->GetPropertyResourceVectorData(_object);
 
@@ -1893,7 +1893,7 @@ namespace vg::core
                 case IProperty::Type::ObjectVector:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
-                    const uint sizeOf = prop->getSizeOf();
+                    const uint sizeOf = prop->GetSizeOf();
                     const size_t count = prop->GetPropertyObjectVectorCount(_object);
                     const byte * data = prop->GetPropertyObjectVectorData(_object);
 
@@ -1975,12 +1975,12 @@ namespace vg::core
 
                     if (isEnumArray)
                     {
-                        const uint count = prop->getEnumCount();
+                        const uint count = prop->GetEnumCount();
                         for (uint i = 0; i < count; ++i)
                         {
                             XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
                             {
-                                auto enumValueName = prop->getEnumName(i);
+                                auto enumValueName = prop->GetEnumName(i);
                                 xmlPropElemChild->SetAttribute("name", enumValueName);
                                 const uint * value = prop->GetPropertyUintN(_object, componentCount, i);
                                 serializeUintNToXML(xmlPropElemChild, value, componentCount);
@@ -2022,12 +2022,12 @@ namespace vg::core
 
                     if (isEnumArray)
                     {
-                        const uint count = prop->getEnumCount();
+                        const uint count = prop->GetEnumCount();
                         for (uint i = 0; i < count; ++i)
                         {
                             XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
                             {
-                                auto enumValueName = prop->getEnumName(i);
+                                auto enumValueName = prop->GetEnumName(i);
                                 xmlPropElemChild->SetAttribute("name", enumValueName);
                                 const i32 * value = prop->GetPropertyIntN(_object, componentCount, i);
                                 serializeIntNToXML(xmlPropElemChild, value, componentCount);
@@ -2069,12 +2069,12 @@ namespace vg::core
 
                     if (isEnumArray)
                     {
-                        const uint count = prop->getEnumCount();
+                        const uint count = prop->GetEnumCount();
                         for (uint i = 0; i < count; ++i)
                         {
                             XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
                             {
-                                auto enumValueName = prop->getEnumName(i);
+                                auto enumValueName = prop->GetEnumName(i);
                                 xmlPropElemChild->SetAttribute("name", enumValueName);
                                 const float * value = prop->GetPropertyFloatN(_object, componentCount, i);
                                 serializeFloatNToXML(xmlPropElemChild, value, componentCount);
@@ -2211,7 +2211,7 @@ namespace vg::core
         const XMLAttribute * xmlValue = _xmlElem->FindAttribute("value");
         if (nullptr != xmlValue)
         {
-            T * p = (T *)(uint_ptr(_object) + _prop->getOffset() + _index * _prop->getSizeOf());
+            T * p = (T *)(uint_ptr(_object) + _prop->GetOffset() + _index * _prop->GetSizeOf());
             *p = GetValue<T>(xmlValue);
         }
     }
@@ -2219,22 +2219,22 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     template <typename T> void Factory::serializeIntegerPropertyToXML(const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem, core::uint _index) const
     {
-        const T * p = (T *)(uint_ptr(_object) + _prop->getOffset() + _index * _prop->getSizeOf());
+        const T * p = (T *)(uint_ptr(_object) + _prop->GetOffset() + _index * _prop->GetSizeOf());
         _xmlElem->SetAttribute("value", *p);
     }
 
     //--------------------------------------------------------------------------------------
     template <typename T> void Factory::serializeEnumPropertyFromXML(IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem) const
     {
-        T * pEnum = (T *)(uint_ptr(_object) + _prop->getOffset());
+        T * pEnum = (T *)(uint_ptr(_object) + _prop->GetOffset());
         const XMLAttribute * xmlValue = _xmlElem->FindAttribute("value");
         if (nullptr != xmlValue)
         {
             const auto val = xmlValue->Value();
-            for (uint i = 0; i < _prop->getEnumCount(); ++i)
+            for (uint i = 0; i < _prop->GetEnumCount(); ++i)
             {
-                if (!strcmp(val, _prop->getEnumName(i)))
-                    *pEnum = (T)_prop->getEnumValue(i); 
+                if (!strcmp(val, _prop->GetEnumName(i)))
+                    *pEnum = (T)_prop->GetEnumValue(i); 
             }
         }
     }
@@ -2242,12 +2242,12 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     template<typename T> void Factory::serializeEnumPropertyToXML(const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const
     {
-        const T * pEnum = (const T *)(uint_ptr(_object) + _prop->getOffset());
-        for (uint i = 0; i < _prop->getEnumCount(); ++i)
+        const T * pEnum = (const T *)(uint_ptr(_object) + _prop->GetOffset());
+        for (uint i = 0; i < _prop->GetEnumCount(); ++i)
         {
-            if (*pEnum == _prop->getEnumValue(i))
+            if (*pEnum == _prop->GetEnumValue(i))
             {
-                _xmlElem->SetAttribute("value", _prop->getEnumName(i));
+                _xmlElem->SetAttribute("value", _prop->GetEnumName(i));
                 break;
             }
         }
@@ -2256,7 +2256,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     template <typename T> void Factory::serializeEnumFlagsPropertyFromXML(IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem) const
     {
-        T * pEnum = (T *)(uint_ptr(_object) + _prop->getOffset());
+        T * pEnum = (T *)(uint_ptr(_object) + _prop->GetOffset());
         T enumVal = 0;
 
         const XMLAttribute * xmlValue = _xmlElem->FindAttribute("value");
@@ -2278,10 +2278,10 @@ namespace vg::core
                 temp[index] = '\0';
 
                 auto xmlEnumString = xmlValue->Value();
-                for (uint e = 0; e < _prop->getEnumCount(); ++e)
+                for (uint e = 0; e < _prop->GetEnumCount(); ++e)
                 {
-                    auto name = _prop->getEnumName(e);
-                    auto value = _prop->getEnumValue(e);
+                    auto name = _prop->GetEnumName(e);
+                    auto value = _prop->GetEnumValue(e);
 
                     if (!strcmp(name, temp))
                     {
@@ -2297,18 +2297,18 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     template <typename T> void Factory::serializeEnumFlagsPropertyToXML(const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const
     {
-        const u32 * pEnum = (const u32 *)(uint_ptr(_object) + _prop->getOffset());
+        const u32 * pEnum = (const u32 *)(uint_ptr(_object) + _prop->GetOffset());
         string flags;
         bool first = true;
-        for (uint i = 0; i < _prop->getEnumCount(); ++i)
+        for (uint i = 0; i < _prop->GetEnumCount(); ++i)
         {
-            if (0 != (*pEnum & _prop->getEnumValue(i)))
+            if (0 != (*pEnum & _prop->GetEnumValue(i)))
             {
                 if (!first)
                     flags += "|";
                 else
                     first = false;
-                flags += (string)_prop->getEnumName(i);
+                flags += (string)_prop->GetEnumName(i);
             }
         }
         _xmlElem->SetAttribute("value", flags.c_str());

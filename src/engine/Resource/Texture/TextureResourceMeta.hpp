@@ -1,5 +1,6 @@
 #include "TextureResourceMeta.h"
-#include "gfx/Resource/Texture_consts.h"
+#include "gfx/Importer/TextureImporterSettings.h"
+#include "core/string/string.h"
 
 using namespace vg::core;
 
@@ -12,8 +13,10 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerOptionalPropertyEnum(TextureResourceMeta, m_importSettings.m_overridePixelFormat, gfx::PixelFormat, m_importSettings.m_pixelFormat, "Format");
-        registerOptionalPropertyEnum(TextureResourceMeta, m_importSettings.m_overrideDownscale, renderer::Downscale, m_importSettings.m_downscale, "Downscale");
+        registerPropertyEnum(TextureResourceMeta, gfx::TextureImporterFormat, m_importSettings.m_importerFormat, "Format");
+        registerProperty(TextureResourceMeta, m_importSettings.m_sRGB, "sRGB");
+        registerPropertyEnum(TextureResourceMeta, gfx::MipLevelCount, m_importSettings.m_mipLevelCount, "Mipmaps");
+        registerPropertyEnum(TextureResourceMeta, gfx::Downscale, m_importSettings.m_downscale, "Downscale");
 
         return true;
     }
@@ -22,7 +25,11 @@ namespace vg::engine
     TextureResourceMeta::TextureResourceMeta(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
-
+        string lowerName = tolower(_name);
+        if (string::npos != lowerName.find("_albedo") || string::npos != lowerName.find("_diffuse"))
+            this->m_importSettings.m_sRGB = true;
+        else
+            this->m_importSettings.m_sRGB = false;
     }
 
     //--------------------------------------------------------------------------------------

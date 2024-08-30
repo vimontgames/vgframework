@@ -133,12 +133,12 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MeshComponent::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
-        if (!strcmp(_prop.getName(), "m_batchMask"))
+        if (!strcmp(_prop.GetName(), "m_batchMask"))
         {
             if (nullptr != m_meshInstance)
                 m_meshInstance->SetBatchMask(m_batchMask);
         }
-        else if (!strcmp(_prop.getName(), "m_shader"))
+        else if (!strcmp(_prop.GetName(), "m_shader"))
         {
             MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(_object->GetParent());
             VG_ASSERT(matResData);
@@ -156,7 +156,7 @@ namespace vg::engine
                 }
             }
         }
-        else if (!strcmp(_prop.getName(), "m_surfaceType") || !strcmp(_prop.getName(), "m_cullMode"))
+        else if (!strcmp(_prop.GetName(), "m_surfaceType") || !strcmp(_prop.GetName(), "m_cullMode"))
         {
             MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(_object->GetParent());
             VG_ASSERT(matResData);

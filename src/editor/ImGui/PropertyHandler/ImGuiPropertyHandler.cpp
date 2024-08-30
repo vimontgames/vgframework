@@ -9,7 +9,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     bool ImGuiPropertyHandler::display(const core::IProperty * _prop, core::IObject * _object)
     {
-        auto handler = Find(_prop->getType());
+        auto handler = Find(_prop->GetType());
         if (nullptr != handler)
         {
             handler->displayProperty(_prop, _object);

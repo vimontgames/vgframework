@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Resource/ResourceMeta.h"
-#include "renderer/TextureImportSettings.h"
+#include "gfx/Importer/TextureImporterSettings.h"
 
 namespace vg::engine
 {
@@ -13,9 +13,9 @@ namespace vg::engine
         TextureResourceMeta(const core::string & _name = "", core::IObject * _parent = nullptr);
         ~TextureResourceMeta();
 
-        const renderer::TextureImportSettings & getTextureImportSettings() const { return m_importSettings; }
+        const gfx::TextureImporterSettings & getTextureImportSettings() const { return m_importSettings; }
 
     private:
-        renderer::TextureImportSettings m_importSettings;
+        gfx::TextureImporterSettings m_importSettings;
     };
 }

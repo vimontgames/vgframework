@@ -199,7 +199,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Object::SetPropertyValue(const IProperty & _prop, void * _previousValue, void * _newValue)
     {
-        const auto propType = _prop.getType();
+        const auto propType = _prop.GetType();
         switch (propType)
         {
             default:

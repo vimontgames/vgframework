@@ -17,27 +17,29 @@ namespace vg::core
                                         Property                        (const Property & _other);
                                         ~Property                       ();
 
-        void                            setInterface                    (const char * _interface) final override;
-        void                            setRange                        (float2 _range) final override;
-        void                            setDefaultFolder                (const char * _path) final override;
-        void                            setFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) final override;
-        void                            setOffset                       (uint_ptr _offset) final override;
+        void                            SetInterface                    (const char * _interface) final override;
+        void                            SetRange                        (float2 _range) final override;
+        void                            SetDefaultFolder                (const char * _path) final override;
+        void                            SetFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) final override;
+        void                            SetOffset                       (uint_ptr _offset) final override;
         void                            SetDescription                  (const char * _description) final override;
+        void                            SetEnumTypeName                 (const char * _enumTypeName) final override;
 
-        const char *                    getInterface                    () const final override;
-        const char *                    getName                         () const final override;
+        const char *                    GetInterface                    () const final override;
+        const char *                    GetName                         () const final override;
         const char *                    GetClassName                    () const final override;
-        const char *                    getDefaultFolder                () const final override;
+        const char *                    GetDefaultFolder                () const final override;
         const char *                    GetDescription                  () const final override;
-        Type                            getType                         () const final override;
-        uint_ptr                        getOffset                       () const final override;
-		core::u32		                getSizeOf		                () const final override;
-        const char *                    getDisplayName                  () const final override;
-        Flags                           getFlags                        () const final override; 
-        float2                          getRange                        () const final override;
-        u32                             getEnumCount                    () const final override;
-        const char *                    getEnumName                     (uint index) const final override;
-        u64                             getEnumValue                    (uint index) const final override;
+        Type                            GetType                         () const final override;
+        uint_ptr                        GetOffset                       () const final override;
+		core::u32		                GetSizeOf		                () const final override;
+        const char *                    GetDisplayName                  () const final override;
+        Flags                           GetFlags                        () const final override; 
+        float2                          GetRange                        () const final override;
+        const char *                    GetEnumTypeName                 () const final override;
+        u32                             GetEnumCount                    () const final override;
+        const char *                    GetEnumName                     (uint index) const final override;
+        u64                             GetEnumValue                    (uint index) const final override;
 
         bool *                          GetPropertyBool                 (const IObject * _object) const final override;
 
@@ -98,6 +100,7 @@ namespace vg::core
         const char *                    defaultFolder   = nullptr;
         const char *                    interfaceType   = nullptr;
         const char *                    description     = nullptr;
+        const char *                    enumTypeName    = nullptr;
         Type		                    type			= Type::Undefined;
         uint_ptr	                    offset			= (uint_ptr)-1;
 		core::u32	                    sizeOf			= 0x0;

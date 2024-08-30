@@ -74,8 +74,8 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IResourceMeta * TextureResource::CreateResourceMeta() const
+    core::IResourceMeta * TextureResource::CreateResourceMeta(const core::string & _path) const
     {
-        return new TextureResourceMeta();
+        return new TextureResourceMeta(_path);
     }   
 }

@@ -37,7 +37,7 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void PhysicsOptions::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
-        const char * name = _prop.getName();
+        const char * name = _prop.GetName();
 
         if (!strcmp(name, "m_gravity"))
             applyGravity(*_prop.GetPropertyFloat3(_object));

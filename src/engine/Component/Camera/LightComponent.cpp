@@ -132,7 +132,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void LightComponent::OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
-        if (!strcmp(_prop.getName(), "m_lightType"))
+        if (!strcmp(_prop.GetName(), "m_lightType"))
         {
             createLightDesc();
             createLight();

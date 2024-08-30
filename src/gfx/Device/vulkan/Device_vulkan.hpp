@@ -677,10 +677,10 @@ namespace vg::gfx::vulkan
 				return VK_PRESENT_MODE_IMMEDIATE_KHR;
 				break;
 
-			case VSync::VBL_1:
-			case VSync::VBL_2:
-			case VSync::VBL_3:
-			case VSync::VBL_4:
+			case VSync::VSync_1:
+			case VSync::VSync_2:
+			case VSync::VSync_3:
+			case VSync::VSync_4:
 				return VK_PRESENT_MODE_FIFO_KHR;
 		}
 	}

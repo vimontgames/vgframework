@@ -50,6 +50,6 @@ namespace vg::core
         virtual bool                    CanCreateFile           () const = 0;
         virtual bool                    CanSaveFile             () const = 0;
 
-        virtual IResourceMeta *         CreateResourceMeta      () const = 0;
+        virtual IResourceMeta *         CreateResourceMeta      (const core::string & _path) const = 0;
     };
 }

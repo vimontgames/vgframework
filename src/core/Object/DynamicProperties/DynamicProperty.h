@@ -102,7 +102,7 @@ namespace vg::core
         void CopyProperty(const IProperty * _prop) override
         {
             m_prop = *(Property *)_prop;
-            m_prop.setOffset(offsetof(DynamicPropertyT, m_value));
+            m_prop.SetOffset(offsetof(DynamicPropertyT, m_value));
         }
 
     protected:

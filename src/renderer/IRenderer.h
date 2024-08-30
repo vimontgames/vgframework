@@ -18,13 +18,15 @@ namespace vg
     {
         class ITexture;
         class TextureDesc;
+        class IViewport;
         class IView;
         class IShaderManager;
-        struct CreateViewParams;
 
+        struct CreateViewParams;
         struct CreateViewportParams;
+        struct TextureImporterSettings;
+
         enum class ViewportFlags : core::u32;
-        class IViewport;
     }
 
     namespace renderer
@@ -40,7 +42,6 @@ namespace vg
         class ILightDesc;
         
         struct RendererCreationParams;
-        struct TextureImportSettings;
 
         class IRenderer : public core::IPlugin
         {
@@ -105,7 +106,7 @@ namespace vg
             virtual bool                                cookMeshModel           (const core::string & _file) = 0;
             virtual IMeshModel *                        loadMeshModel           (const core::string & _file) = 0;
 
-            virtual bool                                cookTexture             (const core::string & _file, const TextureImportSettings * _importSettings) = 0;
+            virtual bool                                cookTexture             (const core::string & _file, const gfx::TextureImporterSettings * _importSettings) = 0;
             virtual gfx::ITexture *                     loadTexture             (const core::string & _file) = 0;
 
             virtual bool                                cookAnimation           (const core::string & _file) = 0;

@@ -56,7 +56,7 @@ namespace vg::engine
 
         IFactory * factory = Kernel::getFactory();
 
-        if (auto * dstProp = dstClassDesc->GetPropertyByName(_prop.getName()))
+        if (auto * dstProp = dstClassDesc->GetPropertyByName(_prop.GetName()))
         {
             if (factory->CanCopyProperty(&_prop, dstProp))
                 factory->CopyProperty(&_prop, this, dstProp, material);
@@ -82,12 +82,12 @@ namespace vg::engine
             {
                 if (!strcmp(resourceClassDesc->GetClassName(), "TextureResource")) // dynamic_cast<TextureResource*>(dataProp->GetPropertyResource(this)) ?
                 {
-                    VG_ASSERT(IProperty::Type::Resource == dataProp->getType());
+                    VG_ASSERT(IProperty::Type::Resource == dataProp->GetType());
 
                     if (_resource == dataProp->GetPropertyResource(this))
                     {
                         // Bind 'TextureResource' Object to 'Texture' slot with the same name
-                        if (const auto * matProp = matClassDesc->GetPropertyByName(dataProp->getName()))
+                        if (const auto * matProp = matClassDesc->GetPropertyByName(dataProp->GetName()))
                             return matProp;
                     }
                 }
@@ -103,7 +103,7 @@ namespace vg::engine
         auto material = getMaterialModel();
 
         if (auto * matProp = findTextureResourceProperty(_resource))
-            material->SetTexture(matProp->getName(), (gfx::ITexture *)_resource->GetObject());        
+            material->SetTexture(matProp->GetName(), (gfx::ITexture *)_resource->GetObject());        
     }
 
     //--------------------------------------------------------------------------------------
@@ -112,6 +112,6 @@ namespace vg::engine
         auto material = getMaterialModel();
 
         if (auto * matProp = findTextureResourceProperty(_resource))
-            material->SetTexture(matProp->getName(), nullptr);
+            material->SetTexture(matProp->GetName(), nullptr);
     }
 }

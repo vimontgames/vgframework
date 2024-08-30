@@ -130,11 +130,11 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void PhysicsBodyComponent::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
-        if (!strcmp(_prop.getName(), "m_trigger"))
+        if (!strcmp(_prop.GetName(), "m_trigger"))
         {
             createBody();
         }
-        else if (!strcmp(_prop.getName(), "m_flags"))
+        else if (!strcmp(_prop.GetName(), "m_flags"))
         {
             auto * go = dynamic_cast<IGameObject *>(_object);
             if (go)

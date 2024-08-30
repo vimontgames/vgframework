@@ -2,13 +2,14 @@
 #define STBI_ASSERT(x) VG_ASSERT(x)
 #include "stb/stb_image.h"
 #include "gfx/Resource/Texture.h"
+#include "gfx/Importer/TextureImporterSettings.h"
 
 using namespace vg::core;
 
 namespace vg::gfx
 {
     //--------------------------------------------------------------------------------------
-    bool TextureImporter::importTextureData(const core::string & _path, TextureDesc & _desc, vector<u8> & _buffer)
+    bool TextureImporter::importTextureData(const core::string & _path, TextureDesc & _desc, vector<u8> & _buffer, const TextureImporterSettings * _importSettings)
     {
         int width, height, channels;
         stbi_uc * data = stbi_load(_path.c_str(), &width, &height, &channels, 4);
@@ -17,12 +18,23 @@ namespace vg::gfx
         {
             _desc.format = PixelFormat::R8G8B8A8_unorm;
 
-            if (string::npos != _path.find("_albedo"))
-                _desc.format = PixelFormat::R8G8B8A8_unorm_sRGB;
+            if (_importSettings)
+            {
+                if (TextureImporterFormat::Automatic != _importSettings->m_importerFormat)
+                    _desc.format = (PixelFormat)_importSettings->m_importerFormat;
+
+                if (_importSettings->m_sRGB)
+                    _desc.format = PixelFormat::R8G8B8A8_unorm_sRGB;
+            }
+            //else
+            //{
+            //    if (string::npos != _path.find("_albedo"))
+            //        _desc.format = PixelFormat::R8G8B8A8_unorm_sRGB;
+            //}
 
             _desc.width = width;
             _desc.height = height;
-            _desc.mipmaps = generateMipmaps(data, _desc, _buffer);
+            _desc.mipmaps = generateMipmaps(data, _desc, _buffer, _importSettings);
 
             VG_SAFE_FREE(data);
 
@@ -43,9 +55,15 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint TextureImporter::generateMipmaps(const core::u8 * _src, const TextureDesc & _desc, vector<u8> & _buffer)
+    core::uint TextureImporter::generateMipmaps(const core::u8 * _src, const TextureDesc & _desc, vector<u8> & _buffer, const TextureImporterSettings * _importSettings)
     {
-        const uint maxMipCount = Texture::computeMaxMipmapCount(_desc);
+        uint maxMipCount = Texture::computeMaxMipmapCount(_desc);
+
+        if (_importSettings)
+        {
+            if (_importSettings->m_mipLevelCount != MipLevelCount::Automatic)
+                maxMipCount = min((uint)_importSettings->m_mipLevelCount, maxMipCount);
+        }
 
         uint w = _desc.width;
         uint h = _desc.height;

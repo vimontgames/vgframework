@@ -70,7 +70,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void RendererOptions::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
-        const char * name = _prop.getName();
+        const char * name = _prop.GetName();
         if (!strcmp(name, "m_VSync"))
         {
             ApplyVsync(&_prop);

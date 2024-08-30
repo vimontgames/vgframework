@@ -632,6 +632,9 @@
       <Filter>PipelineState\Graphic</Filter>
     </ClInclude>
     <ClInclude Include="IViewport.h" />
+    <ClInclude Include="Importer\TextureImporterSettings.h">
+      <Filter>Importer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

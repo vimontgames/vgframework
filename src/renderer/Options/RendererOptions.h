@@ -78,7 +78,7 @@ namespace vg::renderer
         bool                    m_debugUI                   = false;
         bool                    m_postProcess               = true;
         bool                    m_rayTracing                = false;
-        gfx::VSync              m_VSync                     = gfx::VSync::VBL_1;
+        gfx::VSync              m_VSync                     = gfx::VSync::VSync_1;
         LightingMode            m_lightingMode              = LightingMode::Forward;
         DisplayMode	            m_debugDisplayMode          = DisplayMode::None;
         DisplayFlags            m_displayFlags              = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap;

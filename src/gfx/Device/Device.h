@@ -102,7 +102,7 @@ namespace vg::gfx
             ShaderManager *                                 m_shaderManager = nullptr;
             RootSignatureTable                              m_rootSignaturesTable;
             gfx::BindlessTable *                            m_bindlessTable = nullptr;
-            VSync                                           m_VSync = VSync::VBL_1;
+            VSync                                           m_VSync = VSync::VSync_1;
             core::u8                                        m_currentFrameIndex;        // current frame being rendered
             core::u8                                        m_nextFrameIndex;
             core::u8                                        m_currentBackbufferIndex;   // current backbuffer being used
@@ -134,7 +134,7 @@ namespace vg::gfx
 		void		        endFrame		    ();
 
 		Texture *	        createTexture	    (const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
-        Texture *	        createTexture       (const core::string & _path, ReservedSlot _reservedSlot = ReservedSlot::None);
+        //Texture *	        createTexture       (const core::string & _path, ReservedSlot _reservedSlot = ReservedSlot::None);
         Buffer *            createBuffer        (const BufferDesc & _bufDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
 
         RootSignatureHandle addRootSignature    (const RootSignatureDesc & _desc);

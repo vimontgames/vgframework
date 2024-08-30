@@ -48,7 +48,7 @@ namespace vg::engine
     void MaterialResourceData::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
         // When shader template changes, alloc the new structure
-        if (!strcmp(_prop.getName(), "m_shader"))
+        if (!strcmp(_prop.GetName(), "m_shader"))
         {
             VG_SAFE_RELEASE(m_data);
 

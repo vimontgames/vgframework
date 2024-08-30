@@ -185,7 +185,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IResourceMeta * Resource::CreateResourceMeta() const
+    IResourceMeta * Resource::CreateResourceMeta(const core::string & _path) const
     {
         return nullptr;
     }

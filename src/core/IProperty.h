@@ -45,10 +45,18 @@ namespace vg::core
             EnumU16,
             EnumU32,
             EnumU64,
+            //EnumI8,
+            //EnumI16,
+            //EnumI32,
+            //EnumI64,
             EnumFlagsU8,
             EnumFlagsU16,
             EnumFlagsU32,
             EnumFlagsU64,
+            //EnumFlagsI8,
+            //EnumFlagsI16,
+            //EnumFlagsI32,
+            //EnumFlagsI64,
             BitMask,
             Resource,
             ResourcePtr,
@@ -101,27 +109,29 @@ namespace vg::core
             EulerAngle      = 0x0000000000020000,   // Edited value is Euler angle
         };
 
-        virtual void                            setInterface                    (const char * _interface) = 0;
-        virtual void                            setRange                        (float2 _range) = 0;
-        virtual void                            setDefaultFolder                (const char * _path) = 0;
-        virtual void                            setFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) = 0;
-        virtual void                            setOffset                       (uint_ptr _offset) = 0;
+        virtual void                            SetInterface                    (const char * _interface) = 0;
+        virtual void                            SetRange                        (float2 _range) = 0;
+        virtual void                            SetDefaultFolder                (const char * _path) = 0;
+        virtual void                            SetFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) = 0;
+        virtual void                            SetOffset                       (uint_ptr _offset) = 0;
         virtual void                            SetDescription                  (const char * _description) = 0;
+        virtual void                            SetEnumTypeName                 (const char * _enumTypeName) = 0;
 
-        virtual const char *                    getInterface                    () const = 0;
-        virtual const char *                    getName                         () const = 0;
+        virtual const char *                    GetInterface                    () const = 0;
+        virtual const char *                    GetName                         () const = 0;
         virtual const char *                    GetClassName                    () const = 0;
-        virtual const char *                    getDisplayName                  () const = 0;
-        virtual const char *                    getDefaultFolder                () const = 0;
+        virtual const char *                    GetDisplayName                  () const = 0;
+        virtual const char *                    GetDefaultFolder                () const = 0;
         virtual const char *                    GetDescription                  () const = 0;
-        virtual Type                            getType                         () const = 0;
-        virtual Flags                           getFlags                        () const = 0;
-        virtual uint_ptr                        getOffset                       () const = 0;
-		virtual u32					            getSizeOf				        () const = 0;
-        virtual float2                          getRange                        () const = 0;
-        virtual u32                             getEnumCount                    () const = 0;
-        virtual const char *                    getEnumName                     (uint index) const = 0;
-        virtual u64                             getEnumValue                    (uint index) const = 0;
+        virtual Type                            GetType                         () const = 0;
+        virtual Flags                           GetFlags                        () const = 0;
+        virtual uint_ptr                        GetOffset                       () const = 0;
+		virtual u32					            GetSizeOf				        () const = 0;
+        virtual float2                          GetRange                        () const = 0;
+        virtual const char *                    GetEnumTypeName                 () const = 0;
+        virtual u32                             GetEnumCount                    () const = 0;
+        virtual const char *                    GetEnumName                     (uint index) const = 0;
+        virtual u64                             GetEnumValue                    (uint index) const = 0;
 
         virtual bool *                          GetPropertyBool                 (const IObject * _object) const = 0;
 
@@ -232,7 +242,7 @@ namespace vg::core
 #define registerPropertyCallback(className, funcName, displayName)	                                        registerPropertyCallbackEx(className, funcName, displayName, vg::core::IProperty::Flags::None)
 
 // Register property for an enum
-#define registerPropertyEnumEx(className, enumClassName, propertyName, displayName, flags)                  _desc.RegisterEnum(#className, #propertyName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), displayName, vg::core::EnumHelper<enumClassName>::getStaticCount(), vg::core::EnumHelper<enumClassName>::getStaticNames().c_str(), vg::core::EnumHelper<enumClassName>::getStaticValues().data(), flags);
+#define registerPropertyEnumEx(className, enumClassName, propertyName, displayName, flags)                  _desc.RegisterEnum(#className, #propertyName, #enumClassName, (std::underlying_type_t<enumClassName>*)(&((className*)(nullptr))->propertyName), displayName, vg::core::EnumHelper<enumClassName>::getStaticCount(), vg::core::EnumHelper<enumClassName>::getStaticNames().c_str(), vg::core::EnumHelper<enumClassName>::getStaticValues().data(), flags);
 #define registerPropertyEnum(className, enumClassName, propertyName, displayName)                           registerPropertyEnumEx(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::None)
 
 #define registerPropertyEnumBitfieldEx(className, enumClassName, propertyName, displayName, flags)          registerPropertyEnumEx(className, enumClassName, propertyName, displayName, vg::core::IProperty::Flags::Bitfield | flags)
@@ -258,9 +268,9 @@ namespace vg::core
 //--------------------------------------------------------------------------------------
 // Modify existing class properties macros
 //--------------------------------------------------------------------------------------
-#define setPropertyFlag(className, propertyName, flags, value)												{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->setFlags(value ? flags : (vg::core::IProperty::Flags)0, value ? (vg::core::IProperty::Flags)0 : flags); } else { VG_WARNING("[Factory] Could not set \"Flags\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
-#define setPropertyRange(className, propertyName, range)												    { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->setRange(range);                                                                                        } else { VG_WARNING("[Factory] Could not set \"Range\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
-#define setPropertyDefaultFolder(className, propertyName, defaultFolder)									{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->setDefaultFolder(defaultFolder);                                                                        } else { VG_WARNING("[Factory] Could not set \"Default Folder\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyFlag(className, propertyName, flags, value)												{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetFlags(value ? flags : (vg::core::IProperty::Flags)0, value ? (vg::core::IProperty::Flags)0 : flags); } else { VG_WARNING("[Factory] Could not set \"Flags\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyRange(className, propertyName, range)												    { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetRange(range);                                                                                        } else { VG_WARNING("[Factory] Could not set \"Range\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyDefaultFolder(className, propertyName, defaultFolder)									{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetDefaultFolder(defaultFolder);                                                                        } else { VG_WARNING("[Factory] Could not set \"Default Folder\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 #define setPropertyDescription(className, propertyName, description)                                        { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetDescription(description);                                                                            } else { VG_WARNING("[Factory] Could not set \"Description\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 
 //--------------------------------------------------------------------------------------

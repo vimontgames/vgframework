@@ -88,7 +88,7 @@ namespace vg::editor
                 {
                     const IProperty * prop = classDesc->GetPropertyByIndex(i);
                 
-                    if (strcmp(prop->getName(), "m_components"))
+                    if (strcmp(prop->GetName(), "m_components"))
                     {
                         if (curClassName != prop->GetClassName())
                         {
@@ -106,7 +106,7 @@ namespace vg::editor
             {
                 const IProperty * prop = classDesc->GetPropertyByIndex(i);
             
-                if (!strcmp(prop->getName(), "m_components"))
+                if (!strcmp(prop->GetName(), "m_components"))
                     changed |= ImGuiWindow::displayProperty(go, prop);
             }    
 

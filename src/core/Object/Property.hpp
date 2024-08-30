@@ -37,6 +37,23 @@ namespace vg::core
                     initEnum<u64>(_enumCount, _enumNames, _enumValues);
                     break;
 
+                //case Type::EnumI8:
+                //case Type::EnumFlagsI8:
+                //    initEnum<i8>(_enumCount, _enumNames, _enumValues);
+                //    break;
+                //case Type::EnumI16:
+                //case Type::EnumFlagsI16:
+                //    initEnum<i16>(_enumCount, _enumNames, _enumValues);
+                //    break;
+                //case Type::EnumI32:
+                //case Type::EnumFlagsI32:
+                //    initEnum<i32>(_enumCount, _enumNames, _enumValues);
+                //    break;
+                //case Type::EnumI64:
+                //case Type::EnumFlagsI64:
+                //    initEnum<i64>(_enumCount, _enumNames, _enumValues);
+                //    break;
+
                 // Types that support enumArray
                 case Type::Resource:
                 case Type::Uint8:
@@ -91,20 +108,22 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    Property::Property(const Property & _other)
+    Property::Property(const Property & _other) :
+        name(_other.name),
+        className(_other.className),
+        displayName(_other.displayName),
+        defaultFolder(_other.defaultFolder),
+        interfaceType(_other.interfaceType),
+        description(_other.description),
+        enumTypeName(_other.enumTypeName),
+        type(_other.type),
+        offset(_other.offset),
+        sizeOf(_other.sizeOf),
+        flags(_other.flags),
+        range(_other.range),
+        enums(_other.enums)
     {
-        name = _other.name;
-        className = _other.className;
-        displayName = _other.displayName;
-        defaultFolder = _other.defaultFolder;
-        interfaceType = _other.interfaceType;
-        description = _other.description;
-        type = _other.type;
-        offset = _other.offset;
-        sizeOf = _other.sizeOf;
-        flags = _other.flags;
-        range = _other.range;
-        enums = _other.enums;
+        
     }
 
     //--------------------------------------------------------------------------------------
@@ -114,19 +133,19 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Property::setInterface(const char * _interface)
+    void Property::SetInterface(const char * _interface)
     {
         interfaceType = _interface;
     }
 
     //--------------------------------------------------------------------------------------
-    const char * Property::getInterface() const
+    const char * Property::GetInterface() const
     {
         return interfaceType;
     }
 
     //--------------------------------------------------------------------------------------
-    void Property::setRange(float2 _range)
+    void Property::SetRange(float2 _range)
     {
         if ((float)_range.x != (float)_range.y)
             flags |= IProperty::Flags::HasRange;
@@ -135,25 +154,25 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Property::setDefaultFolder(const char * _path)
+    void Property::SetDefaultFolder(const char * _path)
     {
         defaultFolder = _path;
     }
 
     //--------------------------------------------------------------------------------------
-    const char * Property::getDefaultFolder() const
+    const char * Property::GetDefaultFolder() const
     {
         return defaultFolder;
     }
 
     //--------------------------------------------------------------------------------------
-    void Property::setFlags(Flags _flagsToSet, Flags _flagsToRemove)
+    void Property::SetFlags(Flags _flagsToSet, Flags _flagsToRemove)
     {
         flags = (Flags)((std::underlying_type<Flags>::type(flags) & ~std::underlying_type<Flags>::type(_flagsToRemove)) | (std::underlying_type<Flags>::type(_flagsToSet)));
     }
 
     //--------------------------------------------------------------------------------------
-    void Property::setOffset(uint_ptr _offset)
+    void Property::SetOffset(uint_ptr _offset)
     {
         offset = _offset;
     }
@@ -171,31 +190,47 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    u32 Property::getEnumCount() const
+    void Property::SetEnumTypeName(const char * _enumTypeName)
+    {
+        // Skip namespaces if any
+        if (char * last = strrchr((char *)_enumTypeName, ':'))
+            enumTypeName = last + 1;
+        else
+            enumTypeName = _enumTypeName;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const char * Property::GetEnumTypeName() const 
+    {
+        return enumTypeName;
+    }
+
+    //--------------------------------------------------------------------------------------
+    u32 Property::GetEnumCount() const
     {
         return enums.count();
     }
 
     //--------------------------------------------------------------------------------------
-    const char * Property::getEnumName(uint index) const
+    const char * Property::GetEnumName(uint index) const
     {
         return enums[index].name.c_str();
     }
 
     //--------------------------------------------------------------------------------------
-    u64 Property::getEnumValue(uint index) const
+    u64 Property::GetEnumValue(uint index) const
     {
         return enums[index].value;
     }
 
     //--------------------------------------------------------------------------------------
-    float2 Property::getRange() const
+    float2 Property::GetRange() const
     {
         return range;
     }
 
     //--------------------------------------------------------------------------------------
-    const char * Property::getName() const
+    const char * Property::GetName() const
     {
         return name;
     }
@@ -207,7 +242,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const char * Property::getDisplayName() const
+    const char * Property::GetDisplayName() const
     {
         if (displayName)
             return displayName;
@@ -216,25 +251,25 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IProperty::Type Property::getType() const
+    IProperty::Type Property::GetType() const
     {
         return type;
     }
 
     //--------------------------------------------------------------------------------------
-    IProperty::Flags Property::getFlags() const
+    IProperty::Flags Property::GetFlags() const
     {
         return flags;
     }
 
     //--------------------------------------------------------------------------------------
-    uint_ptr Property::getOffset() const
+    uint_ptr Property::GetOffset() const
     {
         return offset;
     }
 
     //--------------------------------------------------------------------------------------
-    core::u32 Property::getSizeOf() const
+    core::u32 Property::GetSizeOf() const
     {
         return sizeOf;
     }
@@ -252,7 +287,7 @@ namespace vg::core
     bool * Property::GetPropertyBool(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Bool == getType() || (Type::LayoutElement == getType() && asBool(IProperty::Flags::Optional & getFlags())));
+        VG_ASSERT(Type::Bool == GetType() || (Type::LayoutElement == GetType() && asBool(IProperty::Flags::Optional & GetFlags())));
         return (bool*)(uint_ptr(_object) + offset);
     }
 
@@ -260,7 +295,7 @@ namespace vg::core
     core::i8 * Property::GetPropertyInt8(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Int8 == getType() /* || Type::EnumI8 == getType() || Type::EnumFlagsI8 == getType()*/);
+        VG_ASSERT(Type::Int8 == GetType() /* || Type::EnumI8 == getType() || Type::EnumFlagsI8 == getType()*/);
         return (i8 *)(uint_ptr(_object) + offset);
     }
 
@@ -268,7 +303,7 @@ namespace vg::core
     core::i16 * Property::GetPropertyInt16(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Int16 == getType() /* || Type::EnumI16 == getType() || Type::EnumFlagsI16 == getType()*/);
+        VG_ASSERT(Type::Int16 == GetType() /* || Type::EnumI16 == getType() || Type::EnumFlagsI16 == getType()*/);
         return (i16 *)(uint_ptr(_object) + offset);
     }
 
@@ -276,7 +311,7 @@ namespace vg::core
     core::i32 * Property::GetPropertyInt32(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Int32 == getType() /* || Type::EnumI32 == getType() || Type::EnumFlagsI32 == getType()*/);
+        VG_ASSERT(Type::Int32 == GetType() /* || Type::EnumI32 == getType() || Type::EnumFlagsI32 == getType()*/);
         return (i32 *)(uint_ptr(_object) + offset);
     }
 
@@ -284,7 +319,7 @@ namespace vg::core
     core::i64 * Property::GetPropertyInt64(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Int64 == getType() /* || Type::EnumI64 == getType() || Type::EnumFlagsI64 == getType()*/);
+        VG_ASSERT(Type::Int64 == GetType() /* || Type::EnumI64 == getType() || Type::EnumFlagsI64 == getType()*/);
         return (i64 *)(uint_ptr(_object) + offset);
     }
 
@@ -292,7 +327,7 @@ namespace vg::core
     core::u8 * Property::GetPropertyUint8(const IObject * _object, uint _index) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Uint8 == getType() || Type::EnumU8 == getType() || Type::EnumFlagsU8 == getType());
+        VG_ASSERT(Type::Uint8 == GetType() || Type::EnumU8 == GetType() || Type::EnumFlagsU8 == GetType());
         return (u8*)(uint_ptr(_object) + offset + _index * sizeof(u8));
     }
 
@@ -300,7 +335,7 @@ namespace vg::core
     core::u16 * Property::GetPropertyUint16(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Uint16 == getType() || Type::EnumU16 == getType() || Type::EnumFlagsU16 == getType());
+        VG_ASSERT(Type::Uint16 == GetType() || Type::EnumU16 == GetType() || Type::EnumFlagsU16 == GetType());
         return (u16*)(uint_ptr(_object) + offset);
     }
 
@@ -308,7 +343,7 @@ namespace vg::core
     core::u32 * Property::GetPropertyUint32(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Uint32 == getType() || Type::EnumU32 == getType() || Type::EnumFlagsU32 == getType());
+        VG_ASSERT(Type::Uint32 == GetType() || Type::EnumU32 == GetType() || Type::EnumFlagsU32 == GetType());
         return (u32*)(uint_ptr(_object) + offset);
     }
 
@@ -316,7 +351,7 @@ namespace vg::core
     core::u64 * Property::GetPropertyUint64(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Uint64 == getType() || Type::EnumU64 == getType() || Type::EnumFlagsU64 == getType());
+        VG_ASSERT(Type::Uint64 == GetType() || Type::EnumU64 == GetType() || Type::EnumFlagsU64 == GetType());
         return (u64 *)(uint_ptr(_object) + offset);
     }
 
@@ -373,7 +408,7 @@ namespace vg::core
     i32 * Property::GetPropertyIntN(const IObject * _object, uint _componentCount, uint _index) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Int2 == getType() || Type::Int3 == getType() || Type::Int4 == getType());
+        VG_ASSERT(Type::Int2 == GetType() || Type::Int3 == GetType() || Type::Int4 == GetType());
         VG_ASSERT(0 == _index || asBool(Flags::EnumArray & flags));
         return (i32 *)(uint_ptr(_object) + offset + _index * sizeof(float) * _componentCount);
     }
@@ -382,7 +417,7 @@ namespace vg::core
     u32 * Property::GetPropertyUintN(const IObject * _object, uint _componentCount, uint _index) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Uint2 == getType() || Type::Uint3 == getType() || Type::Uint4 == getType());
+        VG_ASSERT(Type::Uint2 == GetType() || Type::Uint3 == GetType() || Type::Uint4 == GetType());
         VG_ASSERT(0 == _index || asBool(Flags::EnumArray & flags));
         return (u32 *)(uint_ptr(_object) + offset + _index * sizeof(float) * _componentCount);
     }
@@ -391,7 +426,7 @@ namespace vg::core
     float * Property::GetPropertyFloatN(const IObject * _object, uint _componentCount, uint _index) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Float2 == getType() || Type::Float3 == getType() || Type::Float4 == getType());
+        VG_ASSERT(Type::Float2 == GetType() || Type::Float3 == GetType() || Type::Float4 == GetType());
         VG_ASSERT(0 == _index || asBool(Flags::EnumArray & flags));
         return (float *)(uint_ptr(_object) + offset + _index * sizeof(float) * _componentCount);
     }
@@ -418,7 +453,7 @@ namespace vg::core
         VG_ASSERT(nullptr != _object);
         checkPropertyType(Type::Resource);
         VG_ASSERT(0 == _index || asBool(Flags::EnumArray & flags));
-        return (IResource*)(uint_ptr(_object) + offset + _index * this->getSizeOf());
+        return (IResource*)(uint_ptr(_object) + offset + _index * this->GetSizeOf());
     }
 
     //--------------------------------------------------------------------------------------
@@ -433,7 +468,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Property::checkPropertyType(Type _type) const
     {
-        VG_ASSERT(_type == getType(), "The type of property \"%s\" is \"%s\" but its value of type \"%s\" is requested", getName(), asString(getType()).c_str(), asString(_type).c_str());
+        VG_ASSERT(_type == GetType(), "The type of property \"%s\" is \"%s\" but its value of type \"%s\" is requested", GetName(), asString(GetType()).c_str(), asString(_type).c_str());
     }
 
     //--------------------------------------------------------------------------------------
@@ -442,7 +477,7 @@ namespace vg::core
         VG_ASSERT(nullptr != _object);
         checkPropertyType(Type::Object);
         VG_ASSERT(0 == _index || asBool(Flags::EnumArray & flags));
-        return (IObject *)(uint_ptr(_object) + offset + _index * this->getSizeOf());
+        return (IObject *)(uint_ptr(_object) + offset + _index * this->GetSizeOf());
     }
 
     //--------------------------------------------------------------------------------------
@@ -483,7 +518,7 @@ namespace vg::core
     {
         VG_ASSERT(nullptr != _object);
         checkPropertyType(Type::ObjectVector);
-        return (uint)(((vector<u8>*)(uint_ptr(_object) + offset))->end() - ((vector<u8>*)(uint_ptr(_object) + offset))->begin()) / getSizeOf();
+        return (uint)(((vector<u8>*)(uint_ptr(_object) + offset))->end() - ((vector<u8>*)(uint_ptr(_object) + offset))->begin()) / GetSizeOf();
     }
 
     //--------------------------------------------------------------------------------------
@@ -498,7 +533,7 @@ namespace vg::core
     IObject * Property::GetPropertyObjectVectorElement(const IObject * _object, uint _index) const
     {
         VG_ASSERT(_index<GetPropertyObjectVectorCount(_object)); 
-        return (IObject *)(GetPropertyObjectVectorData(_object) + sizeOf * _index * getSizeOf());
+        return (IObject *)(GetPropertyObjectVectorData(_object) + sizeOf * _index * GetSizeOf());
     }
 
     //--------------------------------------------------------------------------------------
@@ -506,7 +541,7 @@ namespace vg::core
     {
         VG_ASSERT(nullptr != _object);
         checkPropertyType(Type::ResourceVector);
-        return (uint)(((vector<u8>*)(uint_ptr(_object) + offset))->end() - ((vector<u8>*)(uint_ptr(_object) + offset))->begin()) / getSizeOf();
+        return (uint)(((vector<u8>*)(uint_ptr(_object) + offset))->end() - ((vector<u8>*)(uint_ptr(_object) + offset))->begin()) / GetSizeOf();
     }
 
     //--------------------------------------------------------------------------------------
@@ -521,7 +556,7 @@ namespace vg::core
     IResource * Property::GetPropertyResourceVectorElement(const IObject * _object, uint _index) const
     {
         VG_ASSERT(_index < GetPropertyResourceVectorCount(_object));
-        return (IResource *)(GetPropertyResourceVectorData(_object) + _index * getSizeOf());
+        return (IResource *)(GetPropertyResourceVectorData(_object) + _index * GetSizeOf());
     }
 
     //--------------------------------------------------------------------------------------

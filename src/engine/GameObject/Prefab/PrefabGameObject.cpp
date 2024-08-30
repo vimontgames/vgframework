@@ -119,7 +119,7 @@ namespace vg::engine
             for (uint i = 0; i < propList->m_properties.size(); ++i)
             {
                 auto & prop = propList->m_properties[i];
-                if (prop->getName() == _prop->getName())
+                if (prop->getName() == _prop->GetName())
                     return prop;
             }
         }
@@ -130,7 +130,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool PrefabGameObject::canOverrideProperty(const core::IObject * _object, const core::IProperty * _prop) const
     {
-        const auto flags = _prop->getFlags();
+        const auto flags = _prop->GetFlags();
 
         const bool isFolder = asBool(IProperty::Flags::IsFolder & flags);
         const bool isFile = asBool(IProperty::Flags::IsFile & flags);
@@ -140,7 +140,7 @@ namespace vg::engine
 
         const bool optional = asBool(IProperty::Flags::Optional & flags); // TODO: temp
 
-        switch (_prop->getType())
+        switch (_prop->GetType())
         {
             default:
                 return false;
@@ -339,100 +339,100 @@ namespace vg::engine
            
             auto & newDynProp = propList->m_properties.push_empty();
 
-            switch (_prop->getType())
+            switch (_prop->GetType())
             {
                 default:
-                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_prop->getType());
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_prop->GetType());
                     return nullptr;
 
                 case IProperty::Type::ObjectHandle:
-                    newDynProp = new DynamicPropertyObjectHandle(_prop->getName());
+                    newDynProp = new DynamicPropertyObjectHandle(_prop->GetName());
                     break;
 
                 case IProperty::Type::Resource:
-                    newDynProp = new DynamicPropertyResource(_prop->getName());
+                    newDynProp = new DynamicPropertyResource(_prop->GetName());
                     break;
 
                 case IProperty::Type::Bool:
-                    newDynProp = new DynamicPropertyBool(_prop->getName());
+                    newDynProp = new DynamicPropertyBool(_prop->GetName());
                     break;
 
                 case IProperty::Type::String:
-                    newDynProp = new DynamicPropertyString(_prop->getName());
+                    newDynProp = new DynamicPropertyString(_prop->GetName());
                     break;
 
                 case IProperty::Type::Float:
-                    newDynProp = new DynamicPropertyFloat(_prop->getName());
+                    newDynProp = new DynamicPropertyFloat(_prop->GetName());
                     break;
 
                 case IProperty::Type::Float2:
-                    newDynProp = new DynamicPropertyFloat2(_prop->getName());
+                    newDynProp = new DynamicPropertyFloat2(_prop->GetName());
                     break;
 
                 case IProperty::Type::Float3:
-                    newDynProp = new DynamicPropertyFloat3(_prop->getName());
+                    newDynProp = new DynamicPropertyFloat3(_prop->GetName());
                     break;
 
                 case IProperty::Type::Float4:
-                    newDynProp = new DynamicPropertyFloat4(_prop->getName());
+                    newDynProp = new DynamicPropertyFloat4(_prop->GetName());
                     break;  
 
                 case IProperty::Type::Float4x4:
-                    newDynProp = new DynamicPropertyFloat4x4(_prop->getName());
+                    newDynProp = new DynamicPropertyFloat4x4(_prop->GetName());
                     break;
 
                 case IProperty::Type::Uint8:
                 case IProperty::Type::EnumU8:
                 case IProperty::Type::EnumFlagsU8:
-                    newDynProp = new DynamicPropertyU8(_prop->getName());
+                    newDynProp = new DynamicPropertyU8(_prop->GetName());
                     break;
 
                 case IProperty::Type::Uint16:
                 case IProperty::Type::EnumU16:
                 case IProperty::Type::EnumFlagsU16:
-                    newDynProp = new DynamicPropertyU16(_prop->getName());
+                    newDynProp = new DynamicPropertyU16(_prop->GetName());
                     break;
 
                 case IProperty::Type::Uint32:
                 case IProperty::Type::EnumU32:
                 case IProperty::Type::EnumFlagsU32:
-                    newDynProp = new DynamicPropertyU32(_prop->getName());
+                    newDynProp = new DynamicPropertyU32(_prop->GetName());
                     break;
 
                 case IProperty::Type::Uint2:
-                    newDynProp = new DynamicPropertyUInt2(_prop->getName());
+                    newDynProp = new DynamicPropertyUInt2(_prop->GetName());
                     break;
 
                 case IProperty::Type::Uint3:
-                    newDynProp = new DynamicPropertyUInt3(_prop->getName());
+                    newDynProp = new DynamicPropertyUInt3(_prop->GetName());
                     break;
 
                 case IProperty::Type::Uint4:
-                    newDynProp = new DynamicPropertyUInt4(_prop->getName());
+                    newDynProp = new DynamicPropertyUInt4(_prop->GetName());
                     break;
 
                 case IProperty::Type::Int2:
-                    newDynProp = new DynamicPropertyInt2(_prop->getName());
+                    newDynProp = new DynamicPropertyInt2(_prop->GetName());
                     break;
 
                 case IProperty::Type::Int3:
-                    newDynProp = new DynamicPropertyInt3(_prop->getName());
+                    newDynProp = new DynamicPropertyInt3(_prop->GetName());
                     break;
 
                 case IProperty::Type::Int4:
-                    newDynProp = new DynamicPropertyInt4(_prop->getName());
+                    newDynProp = new DynamicPropertyInt4(_prop->GetName());
                     break;
 
                 case IProperty::Type::Int8:
-                    newDynProp = new DynamicPropertyI8(_prop->getName());
+                    newDynProp = new DynamicPropertyI8(_prop->GetName());
                     break;
 
                 case IProperty::Type::Int16:
-                    newDynProp = new DynamicPropertyI16(_prop->getName());
+                    newDynProp = new DynamicPropertyI16(_prop->GetName());
                     break;
 
                 case IProperty::Type::Int32:
-                    newDynProp = new DynamicPropertyI32(_prop->getName());
+                    newDynProp = new DynamicPropertyI32(_prop->GetName());
                     break;
             }
 
@@ -497,7 +497,7 @@ namespace vg::engine
                     for (uint i = 0; i < propCount; ++i)
                     {
                         const auto * prop = classDesc->GetPropertyByIndex(i);
-                        const auto propType = prop->getType();
+                        const auto propType = prop->GetType();
 
                         switch (propType)
                         {

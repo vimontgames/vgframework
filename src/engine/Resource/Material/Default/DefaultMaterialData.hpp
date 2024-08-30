@@ -76,7 +76,7 @@ namespace vg::engine
             for (uint i = 0; i < srcClassDesc->GetPropertyCount(); ++i)
             {
                 const auto & srcProp = srcClassDesc->GetPropertyByIndex(i);
-                if (auto * dstProp = dstClassDesc->GetPropertyByName(srcProp->getName()))
+                if (auto * dstProp = dstClassDesc->GetPropertyByName(srcProp->GetName()))
                 {
                     if (factory->CanCopyProperty(srcProp, dstProp))
                         factory->CopyProperty(srcProp, this, dstProp, material);

@@ -203,9 +203,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void AnimationResource::OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
-        if (!strcmp(_prop.getName(), "m_time"))
+        if (!strcmp(_prop.GetName(), "m_time"))
             setTime(m_time);
-        else if (!strcmp(_prop.getName(), "m_weight"))
+        else if (!strcmp(_prop.GetName(), "m_weight"))
             setWeight(m_weight);
     }
 
