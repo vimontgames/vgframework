@@ -24,16 +24,20 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 
 # changelog
 
+## 0.32
+### Build
+Update to Visual Studio 2022 17.11.2
+
 ## 0.31
 
 ### Editor
 Fix Float4 color edit without alpha\
 Optimize selection \
-Better UI for DynamicProperty debug\
+Better UI for DynamicProperty debug
 
 ### Physics
 Merge static colliders at init\
-Fix RigidCharacter initial matrix\
+Fix RigidCharacter initial matrix
 
 ### Render
 Control views using Camera component\

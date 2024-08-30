@@ -149,7 +149,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>Physics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;$(SolutionDir)\extern\JoltPhysics\Lib\Debug\Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;$(SolutionDir)\extern\JoltPhysics\Lib\$(Platform)\Debug\Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -171,7 +171,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>Physics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;$(SolutionDir)\extern\JoltPhysics\Lib\Release\Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;$(SolutionDir)\extern\JoltPhysics\Lib\$(Platform)\Release\Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Final|x64'">
@@ -194,7 +194,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>Physics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;$(SolutionDir)\extern\JoltPhysics\Lib\Distribution\Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;$(SolutionDir)\extern\JoltPhysics\Lib\$(Platform)\Distribution\Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
