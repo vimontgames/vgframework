@@ -77,8 +77,11 @@ namespace vg::renderer
         void                                    UpdateShaders               () override;
         void                                    WaitGPUIdle                 () override;
 
-        void                                    SetVSync                    (gfx::VSync mode) final override;
+        void                                    SetVSync                    (gfx::VSync _mode) final override;
         gfx::VSync                              GetVSync                    () const final override;
+
+        void                                    SetHDR                      (gfx::HDR _mode) final override;
+        gfx::HDR                                GetHDR                      () const final override;
 
         core::IProfiler *                       GetProfiler                 () const final override;
         IImGuiAdapter *                         GetImGuiAdapter             () const final override;

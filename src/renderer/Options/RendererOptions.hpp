@@ -44,6 +44,9 @@ namespace vg::renderer
             registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
             setPropertyDescription(LightDesc, m_VSync, "Sync display frequency with monitor refresh rate");
 
+            registerPropertyEnum(RendererOptions, gfx::HDR, m_HDRmode, "HDR");
+            setPropertyDescription(LightDesc, m_HDRmode, "High-dynamic range display mode");
+
             registerPropertyEx(RendererOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
             setPropertyDescription(LightDesc, m_backgroundColor, "Scene background color");
 
@@ -64,6 +67,7 @@ namespace vg::renderer
 
         auto * renderer = Renderer::get();
         renderer->SetVSync(m_VSync);
+        renderer->SetHDR(m_HDRmode);
         RayTracingManager::get()->enableRayTracing(m_rayTracing);
     }
 
@@ -74,6 +78,10 @@ namespace vg::renderer
         if (!strcmp(name, "m_VSync"))
         {
             ApplyVsync(&_prop);
+        }
+        if (!strcmp(name, "m_HDRmode"))
+        {
+            ApplyHDR(&_prop);
         }
         else if (!strcmp(name, "m_backgroundColor"))
         {
@@ -107,6 +115,16 @@ namespace vg::renderer
         {
             auto value = *_prop->GetPropertyEnum<gfx::VSync>(this);
             Renderer::get()->SetVSync(value);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RendererOptions::ApplyHDR(const core::IProperty * _prop)
+    {
+        if (nullptr != _prop)
+        {
+            auto value = *_prop->GetPropertyEnum<gfx::HDR>(this);
+            Renderer::get()->SetHDR(value);
         }
     }
 

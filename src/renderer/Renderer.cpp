@@ -369,6 +369,18 @@ namespace vg::renderer
         return m_device.getVSync();
     }
 
+    //--------------------------------------------------------------------------------------
+    void Renderer::SetHDR(gfx::HDR _mode)
+    {
+        m_device.setHDR(_mode);
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::HDR Renderer::GetHDR() const
+    {
+        return m_device.getHDR();
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Renderer::RunOneFrame()
 	{

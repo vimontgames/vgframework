@@ -68,6 +68,7 @@ namespace vg::renderer
 
     protected:
         void                    ApplyVsync                  (const core::IProperty * _prop);
+        void                    ApplyHDR                    (const core::IProperty * _prop);
 
     private:
         core::float4		    m_backgroundColor           = core::float4(0, 0, 0, 0);
@@ -78,13 +79,11 @@ namespace vg::renderer
         bool                    m_debugUI                   = false;
         bool                    m_postProcess               = true;
         bool                    m_rayTracing                = false;
+        gfx::HDR                m_HDRmode                   = gfx::HDR::None;
         gfx::VSync              m_VSync                     = gfx::VSync::VSync_1;
         LightingMode            m_lightingMode              = LightingMode::Forward;
         DisplayMode	            m_debugDisplayMode          = DisplayMode::None;
         DisplayFlags            m_displayFlags              = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap;
-
-
-
         RenderPassFlags         m_renderPassFlags;
     };
 }

@@ -351,6 +351,19 @@ namespace vg::renderer
         ImGui::Render();
 
         #ifdef VG_DX12
+
+        // update backbuffer format
+        ImGui_ImplDX12_Data * bd = ImGui_ImplDX12_GetBackendData();
+        auto device = gfx::Device::get();
+        auto backbufferFormat = Texture::getd3d12ResourceFormat(device->getBackbufferFormat());
+
+        if (bd->RTVFormat != backbufferFormat)
+        {
+            ImGui_ImplDX12_InvalidateDeviceObjects();
+            bd->RTVFormat = backbufferFormat;
+            ImGui_ImplDX12_CreateDeviceObjects();
+        }
+
         ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), _cmdList->getd3d12GraphicsCommandList());
         #elif defined(VG_VULKAN)
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), _cmdList->getVulkanCommandBuffer(), nullptr);

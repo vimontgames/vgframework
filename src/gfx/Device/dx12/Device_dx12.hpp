@@ -1,3 +1,7 @@
+#ifdef VG_DEBUG
+//#define GPU_FENCE_DEBUG 1
+#endif
+
 namespace vg::gfx::dx12
 {
 	//--------------------------------------------------------------------------------------
@@ -37,29 +41,38 @@ namespace vg::gfx::dx12
         char description[256];
         size_t s;
 
-		for (uint l = 0; l < countof(levels); ++l)
-		{
-			for (u32 a = 0; !m_d3d12device && DXGI_ERROR_NOT_FOUND != m_dxgiFactory->EnumAdapters1(a, &adapter); ++a)
-			{
-				DXGI_ADAPTER_DESC1 desc;
-				adapter->GetDesc1(&desc);
+        D3D12DXGIFactory * factory6 = nullptr;
+        VG_ASSERT(SUCCEEDED(m_dxgiFactory->QueryInterface(IID_PPV_ARGS(&factory6))));
 
-				HRESULT hr = D3D12CreateDevice(adapter, levels[l], IID_PPV_ARGS(&device));
-				if (SUCCEEDED(hr))
-				{
-					adapter->GetDesc1(&desc);
+        for (uint l = 0; l < countof(levels); ++l)
+        {
+            for (uint a = 0; !m_d3d12device && SUCCEEDED(factory6->EnumAdapterByGpuPreference(a, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&adapter))); ++a)
+            {
+                DXGI_ADAPTER_DESC1 desc;
+                adapter->GetDesc1(&desc);
 
-					m_d3d12device = device;
+                // Don't select the Basic Render Driver adapter.
+                if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
+                    continue;
+
+                if (SUCCEEDED(D3D12CreateDevice(adapter, levels[l], IID_PPV_ARGS(&device))))
+                {
+                    adapter->GetDesc1(&desc);
+
+                    m_d3d12device = device;
                     m_dxgiAdapter = adapter;
                     m_caps.d3d12.featureLevel = levels[l];
-					wcstombs_s(&s, description, countof(description), desc.Description, wcslen(desc.Description));
+                    wcstombs_s(&s, description, countof(description), desc.Description, wcslen(desc.Description));
                 }
                 else
                 {
                     adapter->Release();
                 }
-			}
-		}
+            }
+        }
+
+        factory6->Release();
+     
 		VG_ASSERT(device, "[Device] Could not create DirectX device\n");
 
 		if (_params.debugDevice)
@@ -136,6 +149,8 @@ namespace vg::gfx::dx12
 			m_caps.d3d12.raytracier_tier = options5.RaytracingTier;
 		}
 
+        checkHDRSupport();
+
         uint major = (m_caps.d3d12.featureLevel & 0xF000) >> 12;
         uint minor = (m_caps.d3d12.featureLevel & 0x0F00) >> 8;
         VG_INFO("[Device] DirectX %u.%u %s- %s - %s", major, minor, m_d3d12debug ? "debug " : "", asString(m_caps.shaderModel).c_str(), description);
@@ -185,6 +200,105 @@ namespace vg::gfx::dx12
 	}
 
     //--------------------------------------------------------------------------------------
+    // To detect HDR support, we will need to check the color space in the primary DXGI output associated with the app at
+    // this point in time (using window/display intersection). 
+    // Compute the overlay area of two rectangles, A and B.
+    // (ax1, ay1) = left-top coordinates of A; (ax2, ay2) = right-bottom coordinates of A
+    // (bx1, by1) = left-top coordinates of B; (bx2, by2) = right-bottom coordinates of B
+    //--------------------------------------------------------------------------------------
+    inline int computeIntersectionArea(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2)
+    {
+        return max(0, min(ax2, bx2) - max(ax1, bx1)) * max(0, min(ay2, by2) - max(ay1, by1));
+    }
+
+    //--------------------------------------------------------------------------------------
+    // https://learn.microsoft.com/en-us/samples/microsoft/directx-graphics-samples/d3d12-hdr-sample-win32/
+    //--------------------------------------------------------------------------------------
+    void Device::checkHDRSupport()
+    {
+        if (!m_dxgiFactory->IsCurrent())
+            VG_VERIFY_SUCCEEDED(CreateDXGIFactory2(0, IID_PPV_ARGS(&m_dxgiFactory)));
+
+        IDXGIAdapter1 * adapter;
+        VG_VERIFY_SUCCEEDED(m_dxgiFactory->EnumAdapters1(0, &adapter));
+        
+        UINT i = 0;
+        IDXGIOutput * currentOutput;
+        IDXGIOutput * bestOutput = nullptr;
+        float bestIntersectArea = -1;
+        
+        RECT bounds = {};
+        GetWindowRect((HWND)m_deviceParams.window, &bounds);
+        
+        while (adapter->EnumOutputs(i, &currentOutput) != DXGI_ERROR_NOT_FOUND)
+        {
+            // Get the rectangle bounds of the window
+            int ax1 = bounds.left;
+            int ay1 = bounds.top;
+            int ax2 = bounds.right;
+            int ay2 = bounds.bottom;
+        
+            // Get the rectangle bounds of current output
+            DXGI_OUTPUT_DESC desc;
+            VG_VERIFY_SUCCEEDED(currentOutput->GetDesc(&desc));
+            RECT r = desc.DesktopCoordinates;
+            int bx1 = r.left;
+            int by1 = r.top;
+            int bx2 = r.right;
+            int by2 = r.bottom;
+        
+            // Compute the intersection
+            int intersectArea = computeIntersectionArea(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2);
+            if (intersectArea > bestIntersectArea)
+            {
+                bestOutput = currentOutput;
+                bestIntersectArea = static_cast<float>(intersectArea);
+            }
+            else
+                currentOutput->Release();
+        
+            i++;
+        }
+        
+        bool hdrSupport = false;
+        
+        // Having determined the output (display) upon which the app is primarily being 
+        // rendered, retrieve the HDR capabilities of that display by checking the color space.
+        if (bestOutput)
+        {
+            IDXGIOutput6 * output6 = nullptr;
+            HRESULT hr = bestOutput->QueryInterface(__uuidof(IDXGIOutput6), reinterpret_cast<void **>(&output6));
+            if (SUCCEEDED(hr)) 
+            {
+                // Successfully obtained IDXGIOutput6
+                
+                DXGI_OUTPUT_DESC1 desc1 = {};
+                VG_VERIFY_SUCCEEDED(output6->GetDesc1(&desc1));
+        
+                hdrSupport = (desc1.ColorSpace == DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020);
+        
+                // Don't forget to release when done
+                output6->Release();
+            }
+            else 
+            {
+                // Handle the error, IDXGIOutput6 may not be supported
+            }
+
+            bestOutput->Release();
+        }
+        
+        m_caps.hdrSupport = hdrSupport;
+        
+        if (m_caps.hdrSupport)
+            VG_INFO("[Device] HDR is supported");
+        else
+            VG_WARNING("[Device] HDR is not supported");
+        
+        adapter->Release();
+    }
+
+    //--------------------------------------------------------------------------------------
     // Look in the Windows Registry to determine if Developer Mode is enabled
     //--------------------------------------------------------------------------------------
     bool Device::isDeveloperModeEnabled() const
@@ -216,13 +330,14 @@ namespace vg::gfx::dx12
     }
 
 	//--------------------------------------------------------------------------------------
-	IDXGISwapChain3 * Device::created3d12SwapChain(HWND _winHandle, core::uint _width, core::uint _height)
+    D3D12DXGISwapChain * Device::created3d12SwapChain(HWND _winHandle, core::uint _width, core::uint _height)
 	{
 		VG_ASSERT(core::invalidWindowHandle != _winHandle);
 
 		::ZeroMemory(&m_dxgiSwapChainDesc, sizeof(m_dxgiSwapChainDesc));
 
-        m_backbufferFormat = PixelFormat::R8G8B8A8_unorm;
+        m_backbufferFormat = getHDRBackbufferFormat(m_HDRMode);
+        m_ColorSpace = getHDRColorSpace(m_HDRMode);
 
 		const bool fullScreen = false; // TODO
 
@@ -250,10 +365,9 @@ namespace vg::gfx::dx12
         m_currentBackbufferIndex = m_dxgiSwapChain->GetCurrentBackBufferIndex();
 
         if (m_dxgiSwapChainDesc.Flags & DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT)
-        {
             VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->SetMaximumFrameLatency(max_frame_latency));
-            //mSwapEvent = m_dxgiSwapChain->GetFrameLatencyWaitableObject();
-        }
+
+        applyColorSpace(m_ColorSpace);
 
 		return m_dxgiSwapChain;
 	}
@@ -331,19 +445,73 @@ namespace vg::gfx::dx12
             {
                 auto * d3d12queue = queue->getd3d12CommandQueue();
 
-                u64 exit_fence = m_nextFrameFence+1;
+                u64 exit_fence = m_nextFrameFence++;
+
+                #if DEBUG_GPU_CPU_SYNC
+                VG_DEBUGPRINT("[Device::waitGPUIdle %u] Signal(%u)\n", m_frameCounter & 0xFF, exit_fence);
+                #endif
+                
                 d3d12queue->Signal(m_d3d12fence, exit_fence);
                 m_d3d12fence->SetEventOnCompletion(exit_fence, m_d3d12fenceEvent);
-                WaitForSingleObject(m_d3d12fenceEvent, INFINITE);
+                
+                #if DEBUG_GPU_CPU_SYNC
+                VG_DEBUGPRINT("[Device::waitGPUIdle %u] Signal(%u)\n", m_frameCounter & 0xFF, exit_fence);
+                #endif
+
+                WaitForFence(m_d3d12fence, m_d3d12fenceEvent, exit_fence);
             }
         }
     }
 
     //--------------------------------------------------------------------------------------
-    void Device::setVSync(VSync mode)
+    void Device::applyVSync(VSync mode)
     {
         // Nothing to do, DirectX12 is convenient API and it will be handled gracefully by 'Present'
     }
+
+    //--------------------------------------------------------------------------------------
+    void Device::applyHDR(HDR _mode)
+    {
+        m_HDRMode = _mode;
+        m_dirtySwapchain = true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    DXGI_COLOR_SPACE_TYPE getd3d12ColorSpace(ColorSpace _mode)
+    {
+        switch (_mode)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_mode);
+
+            case ColorSpace::Rec709:
+                return DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709;
+
+            case ColorSpace::ST2084:
+                return DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020;
+
+            case ColorSpace::Rec2020:
+                return DXGI_COLOR_SPACE_RGB_FULL_G10_NONE_P709;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Device::applyColorSpace(ColorSpace _mode)
+    {
+        const auto d3d12ColorSpace = getd3d12ColorSpace(_mode);
+
+        UINT colorSpaceSupport = 0;
+        VG_ASSERT(SUCCEEDED(m_dxgiSwapChain->CheckColorSpaceSupport(d3d12ColorSpace, &colorSpaceSupport)));
+        if (colorSpaceSupport && ((colorSpaceSupport & DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG_PRESENT) == DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG_PRESENT))
+        {
+            VG_ASSERT(SUCCEEDED(m_dxgiSwapChain->SetColorSpace1(d3d12ColorSpace)));
+            VG_INFO("[Device] Use %s ColorSpace", asString(_mode).c_str());
+        }
+        else
+        {
+            VG_ERROR("[Device] %s ColorSpace is not supported", asString(_mode).c_str());
+        }
+    }    
 
 	//--------------------------------------------------------------------------------------
 	void Device::deinit()
@@ -448,6 +616,11 @@ namespace vg::gfx::dx12
         {
             VG_PROFILE_CPU("Wait Fence");
             FrameContext * Frame = &m_frameContext[FrameIndex];
+
+            #if DEBUG_GPU_CPU_SYNC
+            VG_DEBUGPRINT("[Device::beginFrame %u] WaitForFence(%u)\n", m_frameCounter & 0xFF, Frame->mFrameFenceId);
+            #endif
+
             WaitForFence(m_d3d12fence, m_d3d12fenceEvent, Frame->mFrameFenceId);
             Frame->mFrameFenceId = FrameFence;
         }
@@ -538,6 +711,9 @@ namespace vg::gfx::dx12
 
                 // Signal that the frame is complete
                 auto & Frame = getCurrentFrameContext();
+                #if GPU_FENCE_DEBUG
+                VG_DEBUGPRINT("[Device::endFrame %u] Signal(%u)\n", m_frameCounter & 0xFF, Frame.mFrameFenceId);
+                #endif
                 VG_VERIFY_SUCCEEDED(m_d3d12fence->SetEventOnCompletion(Frame.mFrameFenceId, m_d3d12fenceEvent));
                 VG_VERIFY_SUCCEEDED(d3d12queue->Signal(m_d3d12fence, Frame.mFrameFenceId));
             }
@@ -547,6 +723,23 @@ namespace vg::gfx::dx12
             VG_PROFILE_CPU("Present");
             VG_PROFILE_GPU_SWAP(this);
             VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->Present((uint)m_VSync, 0));
+        }
+
+        if (m_dirtySwapchain)
+        {
+            waitGPUIdle(); // Does not work :(
+            destroyd3d12Backbuffers();
+
+            m_backbufferFormat = getHDRBackbufferFormat(m_HDRMode);
+            m_ColorSpace = getHDRColorSpace(m_HDRMode);
+
+            VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->ResizeBuffers(max_backbuffer_count, m_dxgiSwapChainDesc.Width, m_dxgiSwapChainDesc.Height, Texture::getd3d12ResourceFormat(m_backbufferFormat), m_dxgiSwapChainDesc.Flags));
+            
+            applyColorSpace(m_ColorSpace);
+
+            created3d12Backbuffers();
+
+            m_dirtySwapchain = false;
         }
 
 		super::endFrame();

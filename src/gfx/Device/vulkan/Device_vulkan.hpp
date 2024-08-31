@@ -686,15 +686,25 @@ namespace vg::gfx::vulkan
 	}
 
     //--------------------------------------------------------------------------------------
-    void Device::setVSync(VSync mode)
+    void Device::applyVSync(VSync mode)
     {
 		auto vkPresentMode = VSyncToVkPresentModeKHR(m_VSync);
 		if (vkPresentMode != m_vkPresentMode)
 		{
 			m_vkPresentMode = vkPresentMode;
-			m_vkDirtySwapchain = true;
+			m_dirtySwapchain = true;
 		}
     }
+
+    //--------------------------------------------------------------------------------------
+	void Device::applyHDR(HDR _mode)
+	{
+	}
+
+    //--------------------------------------------------------------------------------------
+	void Device::applyColorSpace(ColorSpace _mode)
+	{
+	}
 
 	//--------------------------------------------------------------------------------------
 	void Device::createSwapchain()
@@ -1282,12 +1292,12 @@ namespace vg::gfx::vulkan
 
         VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue(), &present));
 
-		if (m_vkDirtySwapchain)
+		if (m_dirtySwapchain)
 		{
 			waitGPUIdle();
             createSwapchain();
             createVulkanBackbuffers();
-			m_vkDirtySwapchain = false;
+			m_dirtySwapchain = false;
 		}
 
 		super::endFrame();

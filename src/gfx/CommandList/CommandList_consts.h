@@ -45,6 +45,8 @@ namespace vg::gfx
     {
         using D3D12Device = ID3D12Device5;
         using D3D12GraphicsCommandList = ID3D12GraphicsCommandList4;
+        using D3D12DXGISwapChain = IDXGISwapChain4;
+        using D3D12DXGIFactory = IDXGIFactory6;
     }
     #endif
 }

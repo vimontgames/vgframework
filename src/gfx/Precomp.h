@@ -36,7 +36,7 @@
 #endif
 
 #include <d3d12.h>
-#include <DXGI1_5.h>
+#include <DXGI1_6.h>
 #include <dxgidebug.h>
 
 #if VG_ENABLE_GPU_MARKER 

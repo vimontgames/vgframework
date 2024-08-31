@@ -15,6 +15,9 @@ namespace vg::gfx::dx12
             case PixelFormat::R8G8B8A8_unorm_sRGB:
                 return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
+            case PixelFormat::R10G10B10A2_unorm:
+                return DXGI_FORMAT_R10G10B10A2_UNORM;
+
             case PixelFormat::R16G16B16A16_float:
                 return DXGI_FORMAT_R16G16B16A16_FLOAT;
 

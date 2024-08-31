@@ -29,6 +29,20 @@ namespace vg::gfx
         VSync_4
     };
 
+    enum class HDR : core::u8
+    {
+        None = 0,
+        HDR10,
+        HDR16
+    };
+
+    enum class ColorSpace : core::u8
+    {
+        Rec709 = 0,
+        ST2084,
+        Rec2020
+    };
+
     struct DeviceParams
     {
         core::WinHandle			window = core::invalidWindowHandle;

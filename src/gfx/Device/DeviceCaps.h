@@ -33,5 +33,9 @@ namespace vg::gfx
         ShaderModel     shaderModel = (ShaderModel)0;
         bool            supportRayTracing = false;
         core::uint      rayTracingAccelerationStructureScratchOffsetAlignment = 0;
+
+        bool            hdrSupport = false;
+        bool            enableST2084 = false;
+        float           referenceWhiteNits = 80.0f;    // The reference brightness level of the display.
     };
 }

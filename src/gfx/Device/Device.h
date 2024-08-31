@@ -89,6 +89,9 @@ namespace vg::gfx
 
             const DeviceCaps &                              getDeviceCaps               () const { return m_caps; }
 
+            PixelFormat                                     getHDRBackbufferFormat      (HDR _mode) const;
+            ColorSpace                                      getHDRColorSpace            (HDR _mode) const;
+
 		protected:
             DeviceCaps                                      m_caps;
 			gfx::CommandQueue*				                m_commandQueue[core::enumCount<CommandQueueType>()];
@@ -103,11 +106,12 @@ namespace vg::gfx
             RootSignatureTable                              m_rootSignaturesTable;
             gfx::BindlessTable *                            m_bindlessTable = nullptr;
             VSync                                           m_VSync = VSync::VSync_1;
+            HDR                                             m_HDRMode = HDR::None;
+            ColorSpace                                      m_ColorSpace = ColorSpace::Rec709;
+            bool						                    m_dirtySwapchain = false;
             core::u8                                        m_currentFrameIndex;        // current frame being rendered
             core::u8                                        m_nextFrameIndex;
             core::u8                                        m_currentBackbufferIndex;   // current backbuffer being used
-
-
 		};
 	}
 }
@@ -148,6 +152,9 @@ namespace vg::gfx
 
         void                setVSync            (VSync mode);
         VSync               getVSync            () const;
+
+        void                setHDR              (HDR _mode);
+        HDR                 getHDR              () const;
 
         void                waitGPUIdle         ();
 

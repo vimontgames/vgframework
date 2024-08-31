@@ -31,7 +31,10 @@ namespace vg::gfx::vulkan
 		void							endFrame							();
 
         void                            waitGPUIdle							();
-        void							setVSync							(VSync mode);
+
+        void							applyVSync							(VSync mode);
+        void                            applyHDR							(HDR _mode);
+        void							applyColorSpace						(ColorSpace _mode);
 
 		VkInstance &					getVulkanInstance					();
 		VkDevice &						getVulkanDevice						();
@@ -120,7 +123,6 @@ namespace vg::gfx::vulkan
 
 			uint32_t					m_vkSwapchainImageCount;
 			VkSwapchainKHR				m_vkSwapchain;
-			bool						m_vkDirtySwapchain = false;
 			VkPresentModeKHR			m_vkPresentMode;
 			VkFence						m_vkFences[max_frame_latency];
             VkSemaphore					m_vkImageAcquiredSemaphores[max_frame_latency];

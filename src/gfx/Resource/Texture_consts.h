@@ -27,6 +27,8 @@ namespace vg::gfx
         B8G8R8A8_unorm,
         B8G8R8A8_unorm_sRGB,
 
+		R10G10B10A2_unorm,
+
         R16G16B16A16_float,
 
         D32S8

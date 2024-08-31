@@ -90,8 +90,11 @@ namespace vg
             virtual void                                UpdateShaders           () = 0;
             virtual void                                WaitGPUIdle             () = 0;
 
-            virtual void                                SetVSync                (gfx::VSync mode) = 0;
+            virtual void                                SetVSync                (gfx::VSync _mode) = 0;
             virtual gfx::VSync                          GetVSync                () const = 0;
+
+            virtual void                                SetHDR                  (gfx::HDR _mode) = 0;
+            virtual gfx::HDR                            GetHDR                  () const = 0;
 
             #ifdef _WIN32
             virtual LRESULT CALLBACK                    WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;

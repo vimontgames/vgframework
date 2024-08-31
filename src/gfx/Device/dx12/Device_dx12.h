@@ -26,9 +26,12 @@ namespace vg::gfx::dx12
             void							freeDSVHandle               (D3D12_CPU_DESCRIPTOR_HANDLE & _hRTV);		
 
             void                            waitGPUIdle					();
-			void							setVSync					(VSync mode);
 
-            IDXGISwapChain3 *               getd3d12SwapChain           () const { return m_dxgiSwapChain; }
+			void							applyVSync					(VSync mode);
+            void                            applyHDR                    (HDR _mode);
+			void							applyColorSpace				(ColorSpace _mode);
+
+			D3D12DXGISwapChain *            getd3d12SwapChain           () const { return m_dxgiSwapChain; }
 
 		protected:
 			void							init						(const DeviceParams & _params);
@@ -40,21 +43,23 @@ namespace vg::gfx::dx12
 			void							endFrame					();
 			
 		private:
-			IDXGISwapChain3 *				created3d12SwapChain		(HWND _winHandle, core::uint _width, core::uint _height);
+			D3D12DXGISwapChain *			created3d12SwapChain		(HWND _winHandle, core::uint _width, core::uint _height);
             void                            created3d12Backbuffers      ();
             void                            destroyd3d12Backbuffers     ();
 
 			bool							isDeveloperModeEnabled		() const;
 			bool							setStablePowerState			();
 
+			void							checkHDRSupport				();
+
         private:
             D3D12Device *					m_d3d12device				= nullptr;
 			ID3D12Debug *					m_d3d12debug				= nullptr;
 			
-			IDXGISwapChain3 *               m_dxgiSwapChain				= nullptr;
+			D3D12DXGISwapChain *            m_dxgiSwapChain				= nullptr;
             DXGI_SWAP_CHAIN_DESC1           m_dxgiSwapChainDesc;
 			IDXGIAdapter1 *					m_dxgiAdapter				= nullptr;
-			IDXGIFactory5 *					m_dxgiFactory				= nullptr;
+			D3D12DXGIFactory *				m_dxgiFactory				= nullptr;
 			
 			ID3D12DescriptorHeap *			m_RTVDescriptorHeap = nullptr;
             core::IndexPool<core::u16,64>	m_RTVHandleIndexPool;

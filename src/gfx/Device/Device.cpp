@@ -248,6 +248,44 @@ namespace vg::gfx
             VG_ASSERT(m_bindlessTable);
             return m_bindlessTable;
         }
+
+        //--------------------------------------------------------------------------------------
+        PixelFormat Device::getHDRBackbufferFormat(HDR _mode) const
+        {
+            switch (_mode)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_mode);
+
+                case HDR::None:
+                    return PixelFormat::R8G8B8A8_unorm;
+
+                case HDR::HDR10:
+                    return PixelFormat::R10G10B10A2_unorm;
+
+                case HDR::HDR16:
+                    return PixelFormat::R16G16B16A16_float;
+            }
+        }
+
+        //--------------------------------------------------------------------------------------
+        ColorSpace Device::getHDRColorSpace(HDR _mode) const
+        {
+            switch (_mode)
+            {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_mode);
+
+            case HDR::None:
+                return ColorSpace::Rec709;
+
+            case HDR::HDR10:
+                return ColorSpace::ST2084;
+
+            case HDR::HDR16:
+                return ColorSpace::Rec2020;
+            }
+        }
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -409,7 +447,7 @@ namespace vg::gfx
         if (mode != m_VSync)
         {
             m_VSync = mode;
-            super::setVSync(mode);
+            super::applyVSync(mode);
         }
     }
 
@@ -417,6 +455,27 @@ namespace vg::gfx
     VSync Device::getVSync() const
     {
         return m_VSync;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Device::setHDR(HDR _mode)
+    {
+        if (!m_caps.hdrSupport)
+        {
+            _mode = HDR::None;
+            VG_WARNING("[Device] HDR is not supported");
+        }
+
+        if (_mode != m_HDRMode)
+        {
+            m_HDRMode = _mode;
+            super::applyHDR(_mode); 
+        }
+    }
+    //--------------------------------------------------------------------------------------
+    HDR Device::getHDR() const
+    {
+        return m_HDRMode;
     }
 
     //--------------------------------------------------------------------------------------
