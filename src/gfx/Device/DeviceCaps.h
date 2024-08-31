@@ -28,13 +28,20 @@ namespace vg::gfx
     class DeviceCaps : public VG_GFXAPI::DeviceCaps
     {
     public:
+        DeviceCaps();
+
 		void init();
 
         ShaderModel     shaderModel = (ShaderModel)0;
-        bool            supportRayTracing = false;
+
+        // RayTracing
+        bool            rayTracing = false;
         core::uint      rayTracingAccelerationStructureScratchOffsetAlignment = 0;
 
-        bool            hdrSupport = false;
+        // HDR
+        bool isHDRModeSupported(HDR _mode) { return hdr[core::asInteger(_mode)]; }
+
+        bool            hdr[core::enumCount<HDR>()];
         bool            enableST2084 = false;
         float           referenceWhiteNits = 80.0f;    // The reference brightness level of the display.
     };

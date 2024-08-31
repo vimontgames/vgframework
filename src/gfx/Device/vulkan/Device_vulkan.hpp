@@ -385,32 +385,110 @@ namespace vg::gfx::vulkan
 
 		m_instanceExtensionList.onInstanceCreated();
 
-		u32 gpu_count;
+		u32 deviceCount;
 		// Make initial call to query gpu_count, then second call for gpu info
-		VG_VERIFY_VULKAN(vkEnumeratePhysicalDevices(m_vkInstance, &gpu_count, nullptr));
-		VG_ASSERT(gpu_count > 0);
+		VG_VERIFY_VULKAN(vkEnumeratePhysicalDevices(m_vkInstance, &deviceCount, nullptr));
+		VG_ASSERT(deviceCount > 0);
 
-		if (gpu_count > 0) 
+		bool hdr10 = false;
+		bool hdr16 = false;
+		uint maxHDRModesSupported = 0;
+
+		if (deviceCount > 0) 
 		{
-			auto * physical_devices = (VkPhysicalDevice*)malloc(sizeof(VkPhysicalDevice) * gpu_count);
-			VG_VERIFY_VULKAN(vkEnumeratePhysicalDevices(m_vkInstance, &gpu_count, physical_devices));
-	
-			// just grab the first physical device
-			m_vkPhysicalDevice = physical_devices[0];
-			free(physical_devices);
-		}
+			VkPhysicalDevice * physicalDevices = (VkPhysicalDevice*)malloc(sizeof(VkPhysicalDevice) * deviceCount);
+			VG_VERIFY_VULKAN(vkEnumeratePhysicalDevices(m_vkInstance, &deviceCount, physicalDevices));
+
+			for (uint i = 0; i < deviceCount && !m_vkPhysicalDevice; ++i)
+			{
+				VkPhysicalDevice & currentDevice = physicalDevices[i];
+
+                // create fake surface
+                VkWin32SurfaceCreateInfoKHR createInfo;
+                createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+                createInfo.pNext = NULL;
+                createInfo.flags = 0;
+                createInfo.hinstance = static_cast<HINSTANCE>(_params.instance);
+                createInfo.hwnd = static_cast<HWND>(_params.window);
+
+				VkSurfaceKHR surface;
+                VG_VERIFY_VULKAN(vkCreateWin32SurfaceKHR(m_vkInstance, &createInfo, NULL, &surface));
+
+				// create fake queue families
+				createCommandQueues(currentDevice, surface);
+
+                VkBool32 surfaceSupported;
+                vkGetPhysicalDeviceSurfaceSupportKHR(currentDevice, m_vkCommandQueueFamilyIndex[asInteger(CommandQueueType::Graphics)], surface, &surfaceSupported);
+
+				if (surfaceSupported)
+				{
+					u32 formatCount;
+					vkGetPhysicalDeviceSurfaceFormatsKHR(currentDevice, surface, &formatCount, nullptr);
+
+					auto * surfaceFormats = (VkSurfaceFormatKHR *)malloc(sizeof(VkSurfaceFormatKHR) * formatCount);
+
+					vkGetPhysicalDeviceSurfaceFormatsKHR(currentDevice, surface, &formatCount, surfaceFormats);
+
+                    bool hdr10Supported = false;
+                    bool hdr16Supported = false;
+					uint HDRModesSupported = 0;
+
+                    for (uint j = 0; j < formatCount; ++j)
+					{
+						auto & format = surfaceFormats[j];
+                        if (format.format == VK_FORMAT_A2B10G10R10_UNORM_PACK32 && format.colorSpace == VK_COLOR_SPACE_HDR10_ST2084_EXT) 
+						{
+							hdr10Supported = true;
+							HDRModesSupported++;
+                        }
+                        else if (format.format == VK_FORMAT_R16G16B16A16_SFLOAT && format.colorSpace == VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT)
+						{
+							hdr16Supported = true;
+							HDRModesSupported++;
+                        }
+                    }
+
+                    if (HDRModesSupported > maxHDRModesSupported)
+                    {
+                        hdr10 = hdr10Supported;
+                        hdr16 = hdr16Supported;
+                        maxHDRModesSupported = HDRModesSupported;
+                        m_vkPhysicalDevice = currentDevice;
+                    }
+
+					free(surfaceFormats);
+				}
+			}
+
+			if (m_vkPhysicalDevice)
+			{
+				m_caps.hdr[asInteger(HDR::HDR10)] = hdr10;
+				m_caps.hdr[asInteger(HDR::HDR16)] = hdr16;
+			}
+			else
+			{
+				// If no HDR device found, pick the 1st one
+				m_vkPhysicalDevice = physicalDevices[0];
+				m_caps.hdr[asInteger(HDR::HDR10)] = false;
+				m_caps.hdr[asInteger(HDR::HDR16)] = false;
+			}
+
+			free(physicalDevices);
+		}		
+
+		VG_ASSERT(m_vkPhysicalDevice, "[Device] Could not create Vulkan device");
 
 		// Look for device extensions 	
 		m_deviceExtensionList.init();
 
 		// Update device caps according to extensions
         if (m_KHR_Ray_Tracing_Pipeline.isEnabled())
-            m_caps.supportRayTracing = true;
+            m_caps.rayTracing = true;
         else
-            m_caps.supportRayTracing = false;
+            m_caps.rayTracing = false;
 
 		if (m_KHR_Buffer_Device_Address.isEnabled())
-			m_caps.supportDeviceAddress = true;
+			m_caps.deviceAddress = true;
 
         #if VG_ENABLE_GPU_MARKER
         VG_VERIFY_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &m_vkDebugMessenger));
@@ -445,7 +523,7 @@ namespace vg::gfx::vulkan
 			// SM 6_4 : VK_KHR_fragment_shading_rate
 
 			// SM 6_5 : DXR1.1 (KHR ray tracing), Mesh and Amplification shaders, additional Wave intrinsics
-            if (m_caps.supportRayTracing)
+            if (m_caps.rayTracing)
                 m_caps.shaderModel = ShaderModel::SM_6_3;
 
 			// SM 6_6 : VK_NV_compute_shader_derivatives, VK_KHR_shader_atomic_int64
@@ -462,7 +540,7 @@ namespace vg::gfx::vulkan
 
 		VG_VERIFY_VULKAN(vkCreateWin32SurfaceKHR(m_vkInstance, &createInfo, NULL, &m_vkSurface));
 
-		createCommandQueues();
+		createCommandQueues(m_vkPhysicalDevice, m_vkSurface);
 		createVulkanDevice();
 
 		m_vkPresentMode = VSyncToVkPresentModeKHR(m_VSync);
@@ -601,19 +679,19 @@ namespace vg::gfx::vulkan
 	}
 
 	//--------------------------------------------------------------------------------------
-	void Device::createCommandQueues()
+	void Device::createCommandQueues(VkPhysicalDevice _physicalDevice, VkSurfaceKHR _vkSurface)
 	{
 		// Call with nullptr to get count
-		vkGetPhysicalDeviceQueueFamilyProperties(m_vkPhysicalDevice, &m_vkCommandQueueFamilyCount, nullptr);
+		vkGetPhysicalDeviceQueueFamilyProperties(_physicalDevice, &m_vkCommandQueueFamilyCount, nullptr);
 		VG_ASSERT(m_vkCommandQueueFamilyCount >= 1);
 
 		VkQueueFamilyProperties * queue_props = (VkQueueFamilyProperties *)malloc(m_vkCommandQueueFamilyCount * sizeof(VkQueueFamilyProperties));
-		vkGetPhysicalDeviceQueueFamilyProperties(m_vkPhysicalDevice, &m_vkCommandQueueFamilyCount, queue_props);
+		vkGetPhysicalDeviceQueueFamilyProperties(_physicalDevice, &m_vkCommandQueueFamilyCount, queue_props);
 
 		// Iterate over each queue to learn whether it supports presenting:
 		VkBool32 * supportsPresent = (VkBool32 *)malloc(m_vkCommandQueueFamilyCount * sizeof(VkBool32));
 		for (uint i = 0; i < m_vkCommandQueueFamilyCount; i++)
-			m_KHR_Surface.m_pfnGetPhysicalDeviceSurfaceSupportKHR(m_vkPhysicalDevice, i, m_vkSurface, &supportsPresent[i]);
+			m_KHR_Surface.m_pfnGetPhysicalDeviceSurfaceSupportKHR(_physicalDevice, i, _vkSurface, &supportsPresent[i]);
 
 		// Search for a graphics and a present queue in the array of queue families, try to find one that supports both
 		u32 graphicsQueueFamilyIndex = s_vkCommandQueueFamilyIndexInvalid;
@@ -699,6 +777,7 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
 	void Device::applyHDR(HDR _mode)
 	{
+		
 	}
 
     //--------------------------------------------------------------------------------------
@@ -967,7 +1046,7 @@ namespace vg::gfx::vulkan
 		vkGetPhysicalDeviceProperties2(m_vkPhysicalDevice, &physicalDeviceProps);
 
 		// Query RayTracing acceleration structure alignment
-        if (m_caps.supportRayTracing)
+        if (m_caps.rayTracing)
             m_caps.rayTracingAccelerationStructureScratchOffsetAlignment = accelerationStructureProps.minAccelerationStructureScratchOffsetAlignment;
 
         VkPhysicalDeviceRayQueryFeaturesKHR rayQueryFeatures = {};
@@ -1011,7 +1090,7 @@ namespace vg::gfx::vulkan
 
 		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, bufferDeviceAddress, true);
 
-		if (m_caps.supportRayTracing)
+		if (m_caps.rayTracing)
 		{
 			CheckVulkanFeature(accelerationStructureSupportedFeatures, accelerationStructureFeatures, accelerationStructure, true);
 			CheckVulkanFeature(accelerationStructureSupportedFeatures, accelerationStructureFeatures, descriptorBindingAccelerationStructureUpdateAfterBind, true);

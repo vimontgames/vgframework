@@ -140,12 +140,12 @@ namespace vg::gfx::dx12
 		D3D12_FEATURE_DATA_D3D12_OPTIONS5 options5 = {};
         if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &options5, sizeof(options5))))
         {
-            m_caps.supportRayTracing = false;
+            m_caps.rayTracing = false;
             m_caps.d3d12.raytracier_tier = D3D12_RAYTRACING_TIER_NOT_SUPPORTED;
         }
         else
 		{
-			m_caps.supportRayTracing = options5.RaytracingTier >= D3D12_RAYTRACING_TIER_1_0;
+			m_caps.rayTracing = options5.RaytracingTier >= D3D12_RAYTRACING_TIER_1_0;
 			m_caps.d3d12.raytracier_tier = options5.RaytracingTier;
 		}
 
@@ -260,7 +260,8 @@ namespace vg::gfx::dx12
             i++;
         }
         
-        bool hdrSupport = false;
+        bool hdr10Support = false;
+        bool hdr16Support = false;
         
         // Having determined the output (display) upon which the app is primarily being 
         // rendered, retrieve the HDR capabilities of that display by checking the color space.
@@ -269,32 +270,40 @@ namespace vg::gfx::dx12
             IDXGIOutput6 * output6 = nullptr;
             HRESULT hr = bestOutput->QueryInterface(__uuidof(IDXGIOutput6), reinterpret_cast<void **>(&output6));
             if (SUCCEEDED(hr)) 
-            {
-                // Successfully obtained IDXGIOutput6
-                
+            {                
                 DXGI_OUTPUT_DESC1 desc1 = {};
                 VG_VERIFY_SUCCEEDED(output6->GetDesc1(&desc1));
         
-                hdrSupport = (desc1.ColorSpace == DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020);
+                hdr10Support = (desc1.ColorSpace == DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020);
+
+                D3D12_FEATURE_DATA_FORMAT_SUPPORT Support =
+                {
+                    DXGI_FORMAT_R16G16B16A16_FLOAT
+                };
+
+                // ...
+                if (hdr10Support)
+                {
+                    if (SUCCEEDED(m_d3d12device->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &Support, sizeof(Support))))
+                    {
+                        if (D3D12_FORMAT_SUPPORT1_DISPLAY & Support.Support1)
+                            hdr16Support = true;
+                    }
+                }
         
-                // Don't forget to release when done
                 output6->Release();
             }
             else 
             {
-                // Handle the error, IDXGIOutput6 may not be supported
+                VG_ASSERT(false, "IDXGIOutput6 not be supported");
             }
 
             bestOutput->Release();
         }
         
-        m_caps.hdrSupport = hdrSupport;
-        
-        if (m_caps.hdrSupport)
-            VG_INFO("[Device] HDR is supported");
-        else
-            VG_WARNING("[Device] HDR is not supported");
-        
+        m_caps.hdr[asInteger(HDR::HDR10)] = hdr10Support;
+        m_caps.hdr[asInteger(HDR::HDR16)] = hdr16Support;
+                
         adapter->Release();
     }
 

@@ -460,10 +460,10 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void Device::setHDR(HDR _mode)
     {
-        if (!m_caps.hdrSupport)
+        if (!m_caps.isHDRModeSupported(_mode))
         {
+            VG_WARNING("[Device] %s is not supported", asString(_mode).c_str());
             _mode = HDR::None;
-            VG_WARNING("[Device] HDR is not supported");
         }
 
         if (_mode != m_HDRMode)

@@ -66,7 +66,7 @@ namespace vg::gfx::vulkan
 		void							createVulkanDevice					();
 		void							createSwapchain						();
         void							destroySwapchain					();
-		void							createCommandQueues					();
+		void							createCommandQueues					(VkPhysicalDevice _physicalDevice, VkSurfaceKHR _vkSurface);
 
         PixelFormat                     detectBackbufferFormat				();
 

@@ -8,6 +8,6 @@ namespace vg::gfx::vulkan
     class DeviceCaps
     {
     public:
-        bool supportDeviceAddress = false;
+        bool deviceAddress = false;
     };
 }

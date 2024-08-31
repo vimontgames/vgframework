@@ -86,15 +86,18 @@ namespace vg::engine
                 }
             }            
 
-            if (imGuiAdapter->IsKeyboardFocused() && !anyViewFocused && mainWorld && !mainWorld->IsPlaying())
-                EnableInput(InputType::Keyboard, false);
-            else
-                EnableInput(InputType::Keyboard, true);
+            if (nullptr != imGuiAdapter)
+            {
+                if (imGuiAdapter->IsKeyboardFocused() && !anyViewFocused && mainWorld && !mainWorld->IsPlaying())
+                    EnableInput(InputType::Keyboard, false);
+                else
+                    EnableInput(InputType::Keyboard, true);
 
-            if (imGuiAdapter->IsMouseFocused() && !anyViewFocused && mainWorld && !mainWorld->IsPlaying())
-                EnableInput(InputType::Mouse, false);
-            else
-                EnableInput(InputType::Mouse, true);
+                if (imGuiAdapter->IsMouseFocused() && !anyViewFocused && mainWorld && !mainWorld->IsPlaying())
+                    EnableInput(InputType::Mouse, false);
+                else
+                    EnableInput(InputType::Mouse, true);
+            }
         }
 
         if (mainWorld && mainWorld->IsPlaying())

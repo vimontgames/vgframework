@@ -51,10 +51,10 @@ namespace vg::gfx::vulkan
 
         if (_bufDesc.testBindFlags(BindFlags::RaytracingAccelerationStruct))
             vkBufferCreate.usage |= VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR;
-        else if (device->getDeviceCaps().supportRayTracing)
+        else if (device->getDeviceCaps().rayTracing)
             vkBufferCreate.usage |= VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
 
-        if (device->getDeviceCaps().supportDeviceAddress)
+        if (device->getDeviceCaps().deviceAddress)
             vkBufferCreate.usage |= VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT;
 
         VkBuffer vkBuffer;
