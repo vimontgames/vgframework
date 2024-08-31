@@ -332,53 +332,55 @@ namespace vg::gfx::dx12
             auto & context = device->getCurrentFrameContext();
 
             const auto fmtSize = getPixelFormatSize(_texDesc.format);
-
-            const u32 subResourceCount = _texDesc.mipmaps * _texDesc.depth;
-
-            vector<D3D12_SUBRESOURCE_DATA> subResource(subResourceCount);
-            vector<D3D12_PLACED_SUBRESOURCE_FOOTPRINT> footprint(subResourceCount);
-            vector<uint> rows(subResourceCount);
-            vector<u64> strides(subResourceCount);
-
-            u8 * mipInitData = (u8*)_initData;
-            u32 index = 0;
-
-            auto w = _texDesc.width;
-            auto h = _texDesc.height;
-
-            for (uint m = 0; m < _texDesc.mipmaps; ++m)
+            if (-1 != fmtSize)
             {
-                subResource[index].pData = mipInitData;
-                subResource[index].RowPitch = w * Texture::getPixelFormatSize(_texDesc.format);    // TODO: compute pitch in bits>>3 from format and width to handle compressed formats
-                subResource[index].SlicePitch = subResource[index].RowPitch * h;
+                const u32 subResourceCount = _texDesc.mipmaps * _texDesc.depth;
 
-                mipInitData += subResource[index].SlicePitch;
+                vector<D3D12_SUBRESOURCE_DATA> subResource(subResourceCount);
+                vector<D3D12_PLACED_SUBRESOURCE_FOOTPRINT> footprint(subResourceCount);
+                vector<uint> rows(subResourceCount);
+                vector<u64> strides(subResourceCount);
 
-                w >>= 1;
-                h >>= 1;
+                u8 * mipInitData = (u8 *)_initData;
+                u32 index = 0;
 
-                index++;
-            }
+                auto w = _texDesc.width;
+                auto h = _texDesc.height;
 
-            size_t d3d12TotalSizeInBytes = 0;
-            d3d12device->GetCopyableFootprints(&resourceDesc, 0, subResourceCount, 0, footprint.data(), rows.data(), strides.data(), &d3d12TotalSizeInBytes);
-
-            // Save offset to subresource for upload
-            for (uint i = 0; i < subResourceCount; ++i)
-                setSubResourceData(i, footprint[i].Offset);
-
-            // Copy to upload buffer line by line
-            auto * uploadBuffer = device->getUploadBuffer();
-            core::u8 * dst = uploadBuffer->map(d3d12TotalSizeInBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
-            if (nullptr != dst)
-            {
-                for (uint i = 0; i < subResourceCount; ++i)
+                for (uint m = 0; m < _texDesc.mipmaps; ++m)
                 {
-                    for (uint y = 0; y < rows[i]; ++y)
-                        memcpy(dst + footprint[i].Offset + footprint[i].Footprint.RowPitch * y, (u8*)subResource[i].pData + subResource[i].RowPitch * y, strides[i]);
+                    subResource[index].pData = mipInitData;
+                    subResource[index].RowPitch = w * Texture::getPixelFormatSize(_texDesc.format);    // TODO: compute pitch in bits>>3 from format and width to handle compressed formats
+                    subResource[index].SlicePitch = subResource[index].RowPitch * h;
+
+                    mipInitData += subResource[index].SlicePitch;
+
+                    w >>= 1;
+                    h >>= 1;
+
+                    index++;
                 }
+
+                size_t d3d12TotalSizeInBytes = 0;
+                d3d12device->GetCopyableFootprints(&resourceDesc, 0, subResourceCount, 0, footprint.data(), rows.data(), strides.data(), &d3d12TotalSizeInBytes);
+
+                // Save offset to subresource for upload
+                for (uint i = 0; i < subResourceCount; ++i)
+                    setSubResourceData(i, footprint[i].Offset);
+
+                // Copy to upload buffer line by line
+                auto * uploadBuffer = device->getUploadBuffer();
+                core::u8 * dst = uploadBuffer->map(d3d12TotalSizeInBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
+                if (nullptr != dst)
+                {
+                    for (uint i = 0; i < subResourceCount; ++i)
+                    {
+                        for (uint y = 0; y < rows[i]; ++y)
+                            memcpy(dst + footprint[i].Offset + footprint[i].Footprint.RowPitch * y, (u8 *)subResource[i].pData + subResource[i].RowPitch * y, strides[i]);
+                    }
+                }
+                uploadBuffer->unmap(static_cast<gfx::Texture *>(this), dst/*, d3d12TotalSizeInBytes*/);
             }
-            uploadBuffer->unmap(static_cast<gfx::Texture*>(this), dst/*, d3d12TotalSizeInBytes*/);
         }
 	}
 

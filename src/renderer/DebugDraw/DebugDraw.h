@@ -36,6 +36,8 @@ namespace vg::renderer
         DebugDraw();
         ~DebugDraw();
 
+        core::IDebugDrawData * CreateDebugDrawData() final override;
+
         void        AddLine                 (const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity()) final override;
         void        AddWireframeBox         (const core::IWorld * _world, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity()) final override;
         void        AddWireframeSphere      (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;

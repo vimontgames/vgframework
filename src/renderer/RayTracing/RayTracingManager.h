@@ -26,7 +26,6 @@ namespace vg::renderer
 
         void    addMeshModel            (MeshModel * _meshModel);
         void    removeMeshModel         (MeshModel * _meshModel);
-        //void    updateMeshModel         (MeshModel * _meshModel);
 
         void    addMeshInstance         (MeshInstance * _meshInstance);
         void    removeMeshInstance      (MeshInstance * _meshInstance);
@@ -35,7 +34,6 @@ namespace vg::renderer
     private:
         void    onEnableRayTracing      ();
         void    onDisableRayTracing     ();
-        //void    createMeshModelBLAS     (MeshModel * _meshModel);
 
     private:    
         bool    m_rayTracingEnabled = false;
@@ -43,6 +41,5 @@ namespace vg::renderer
         core::vector<MeshModel *>       m_meshModels;
         core::vector<MeshInstance *>    m_meshInstances;
         core::vector<MeshInstance *>    m_meshInstanceUpdateQueue;
-        //core::vector<MeshModel*>        m_meshModelUpdateQueue;
     };
 }

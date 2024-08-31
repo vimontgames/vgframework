@@ -5,7 +5,6 @@
 #include "renderer/IRenderer.h"
 #include "engine/Engine.h"
 #include "engine/EngineOptions.h"
-//#include "renderer/IDebugDraw.h"
 
 using namespace vg::core;
 

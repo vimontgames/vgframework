@@ -70,6 +70,7 @@ namespace vg::gfx
             {
                 default:
                     VG_ASSERT(false, "Unhandled PixelFormat \"%s\" (%u)", asString(_format).c_str(), _format);
+                    return -1;
                 case PixelFormat::R8G8B8A8_unorm:
                 case PixelFormat::R8G8B8A8_unorm_sRGB:
                     return 4;

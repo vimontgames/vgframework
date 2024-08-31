@@ -11,6 +11,8 @@
 #include "core/IInput.h"
 #include "core/Timer/Timer.h"
 #include "core/Math/Math.h"
+#include "renderer/IRenderer.h"
+#include "renderer/IDebugDraw.h"
 
 #if !VG_ENABLE_INLINE
 #include "World.inl"
@@ -35,6 +37,8 @@ namespace vg::engine
 
         SetPhysicsWorld(Engine::get()->GetPhysics()->CreatePhysicsWorld(this));
         Engine::get()->registerWorld(this);
+        ;
+        SetDebugDrawData(Engine::get()->GetRenderer()->GetDebugDraw()->CreateDebugDrawData());
     }
 
     //--------------------------------------------------------------------------------------

@@ -31,6 +31,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    core::IDebugDrawData * DebugDraw::CreateDebugDrawData()
+    {
+        return new DebugDraw::WorldData();
+    }
+
+    //--------------------------------------------------------------------------------------
     DebugDraw::DebugDraw() 
     {
         auto * device = Device::get();
@@ -69,28 +75,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DebugDraw::clearWorldData()
     {
-        //for (auto & pair : m_worldData)
-        //{
-        //    WorldData & worldData = pair.second;
-        //
-        //    // TODO
-        //}
-        //m_worldData.clear();
+   
     }
 
     //--------------------------------------------------------------------------------------
     DebugDraw::WorldData * DebugDraw::getWorldData(const core::IWorld * _world)
     {
-        if (IDebugDrawData * data = _world->GetDebugDrawData())
-        {
-            return (DebugDraw::WorldData *)data;
-        }
-        else
-        {
-            auto * newData = new DebugDraw::WorldData();
-            ((core::IWorld*)(_world))->SetDebugDrawData(newData);
-            return newData;
-        }
+        return (DebugDraw::WorldData *)_world->GetDebugDrawData();
     }
 
     //--------------------------------------------------------------------------------------

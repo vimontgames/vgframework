@@ -2177,19 +2177,6 @@ namespace vg::editor
             ImGui::CloseFileDialog();
         }
 
-        // Display meta
-        if (!_resource->GetResourcePath().empty())
-        {
-            if (auto * meta = rm->GetOrCreateResourceMeta(_resource))
-            {
-                if (ImGuiWindow::displayObject(meta))
-                {
-                    meta->Save(_resource->GetResourcePath());
-                    rm->UpdateResources();
-                }
-            }
-        }
-
         // Display all properties of the resource object
         IObject * resourceObject = _resource->GetObject();
         if (resourceObject)
@@ -2213,14 +2200,36 @@ namespace vg::editor
 
             if (anyVisibleProperty)
             {
-                char label[256];
-                sprintf(label, "%s", _prop->GetDisplayName());
-                if (ImGui::TreeNodeEx(label, ImGuiTreeNodeFlags_DefaultOpen))
+                const string resourceLabel = fmt::sprintf("%s###%s", _prop->GetDisplayName(), _resource->GetResourcePath());
+
+                if (ImGui::TreeNodeEx(resourceLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     ImGuiWindow::displayObject(resourceObject);
+
+                    // Display meta
+                    if (!_resource->GetResourcePath().empty())
+                    {
+                        if (auto * meta = rm->GetOrCreateResourceMeta(_resource))
+                        {
+                            const string metaLabel = fmt::sprintf("Metadata###%s", _resource->GetResourcePath());
+
+                            if (ImGui::TreeNodeEx(metaLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                            {
+                                if (ImGuiWindow::displayObject(meta))
+                                {
+                                    meta->Save(_resource->GetResourcePath());
+                                    rm->UpdateResources();
+                                }
+                                ImGui::TreePop();
+                            }
+                        }
+                    }
+
+                    ImGui::Spacing();
+
                     ImGui::TreePop();
                 }
-            }
+            }            
         }
         ImGui::PopItemWidth();
 

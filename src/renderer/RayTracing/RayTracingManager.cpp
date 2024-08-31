@@ -91,17 +91,7 @@ namespace vg::renderer
     {
         VG_ASSERT(!m_meshModels.exists(_meshModel));
         m_meshModels.push_back(_meshModel);
-    
-        //if (isRayTracingEnabled())
-        //    updateMeshModel(_meshModel);
     }
-    
-    //--------------------------------------------------------------------------------------
-    //void RayTracingManager::updateMeshModel(MeshModel * _meshModel)
-    //{
-    //    VG_ASSERT(!m_meshModelUpdateQueue.exists(_meshModel));
-    //    m_meshModelUpdateQueue.push_back(_meshModel);
-    //}
     
     //--------------------------------------------------------------------------------------
     void RayTracingManager::removeMeshModel(MeshModel * _meshModel)

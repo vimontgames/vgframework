@@ -27,7 +27,7 @@ namespace vg::renderer
         registerPropertyOptionalGroupBegin(LightDesc, m_shadow, "Shadow Settings");
         {
             registerProperty(LightDesc, m_shadowRange, "Range");
-            //setPropertyRange(LightDesc, m_shadowRange, float2(0.0f, 100.0f));
+            setPropertyRange(LightDesc, m_shadowRange, float2(0.0f, 256.0f));
 
             registerProperty(LightDesc, m_shadowBias, "Bias");
             setPropertyRange(LightDesc, m_shadowBias, float2(0.0001f, 0.01f));
@@ -35,7 +35,7 @@ namespace vg::renderer
             registerProperty(LightDesc, m_shadowSize, "Size");
             registerProperty(LightDesc, m_shadowResolution, "Resolution");
 
-            registerProperty(LightDesc, m_shadowIntensity, "Intensity");
+            registerProperty(LightDesc, m_shadowIntensity, "Shadow Intensity");
             setPropertyRange(LightDesc, m_shadowIntensity, float2(0.0f, 1.0f));
         }
         registerPropertyOptionalGroupEnd(LightDesc);
