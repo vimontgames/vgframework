@@ -446,7 +446,7 @@ namespace vg::editor
             }
 
             // Hack: Do not use texture on first frame because it may have just become visible but the view not yet renderer (alt fix: last rendered frame counter in View?)
-            auto texture = m_texture;// (ImGui::IsWindowAppearing() || !m_viewport->AnyRender()) ? nullptr : m_texture;
+            auto texture = (ImGui::IsWindowAppearing() || !m_viewport->AnyRender()) ? nullptr :  m_texture;
 
             // Create destination texture if it does not exist or is not matching
             if (m_viewport && m_viewport->GetViewIDs().size() > 0 && (!m_texture || m_texture->GetWidth() != m_size.x || m_texture->GetHeight() != m_size.y))
