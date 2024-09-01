@@ -635,6 +635,12 @@
     <ClInclude Include="Importer\TextureImporterSettings.h">
       <Filter>Importer</Filter>
     </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Device\EXT_HDR_Metadata.h">
+      <Filter>Device\vulkan\Extension\Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Instance\EXT_Swapchain_Colorspace.h">
+      <Filter>Device\vulkan\Extension\Instance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

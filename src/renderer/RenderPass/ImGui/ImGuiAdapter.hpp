@@ -147,10 +147,52 @@ namespace vg::renderer
 
         VG_VERIFY_VULKAN(vkCreateDescriptorPool(device->getVulkanDevice(), &imguiDescriptorDesc, nullptr, &m_vkImguiDescriptorPool));
 
+        createVulkanRenderPass();
+
+        ImGui_ImplVulkan_InitInfo init_info = {};
+        init_info.Instance = device->getVulkanInstance();
+        init_info.PhysicalDevice = device->getVulkanPhysicalDevice();
+        init_info.Device = device->getVulkanDevice();
+        init_info.QueueFamily = device->getVulkanCommandQueueFamilyIndex(CommandListType::Graphics);
+        init_info.Queue = device->getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue();
+        init_info.PipelineCache = VK_NULL_HANDLE;
+        init_info.DescriptorPool = m_vkImguiDescriptorPool;
+        init_info.Allocator = nullptr;
+        init_info.MinImageCount = max_frame_latency;
+        init_info.ImageCount = max_frame_latency;
+        init_info.CheckVkResultFn = nullptr;
+
+        ImGui_ImplVulkan_Init(&init_info, m_vkImguiRenderPass);
+
+        VkSamplerCreateInfo sampler_info = {};
+        sampler_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
+        sampler_info.magFilter = VK_FILTER_LINEAR;
+        sampler_info.minFilter = VK_FILTER_LINEAR;
+        sampler_info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+        sampler_info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        sampler_info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        sampler_info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        sampler_info.minLod = 0;
+        sampler_info.maxLod = 0;
+        sampler_info.maxAnisotropy = 0.0f;
+        sampler_info.borderColor = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
+        sampler_info.compareEnable = false;
+        sampler_info.compareOp = VK_COMPARE_OP_ALWAYS;
+        VG_VERIFY_VULKAN(vkCreateSampler(device->getVulkanDevice(), &sampler_info, nullptr, &m_vkSampler));
+    }
+    #endif
+
+#ifdef VG_VULKAN
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::createVulkanRenderPass()
+    {
+        gfx::Device * device = Device::get();
+
         const PixelFormat fmt = device->getBackbufferFormat();
+        m_vkRenderTargetFormat = Texture::getVulkanPixelFormat(fmt);
 
         VkAttachmentDescription attachment = {};
-        attachment.format = Texture::getVulkanPixelFormat(fmt);
+        attachment.format = m_vkRenderTargetFormat;
         attachment.samples = VK_SAMPLE_COUNT_1_BIT;
         attachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
         attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -186,39 +228,30 @@ namespace vg::renderer
         info.pDependencies = &dependency;
 
         VG_VERIFY_VULKAN(vkCreateRenderPass(device->getVulkanDevice(), &info, nullptr, &m_vkImguiRenderPass));
-
-        ImGui_ImplVulkan_InitInfo init_info = {};
-        init_info.Instance = device->getVulkanInstance();
-        init_info.PhysicalDevice = device->getVulkanPhysicalDevice();
-        init_info.Device = device->getVulkanDevice();
-        init_info.QueueFamily = device->getVulkanCommandQueueFamilyIndex(CommandListType::Graphics);
-        init_info.Queue = device->getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue();
-        init_info.PipelineCache = VK_NULL_HANDLE;
-        init_info.DescriptorPool = m_vkImguiDescriptorPool;
-        init_info.Allocator = nullptr;
-        init_info.MinImageCount = max_frame_latency;
-        init_info.ImageCount = max_frame_latency;
-        init_info.CheckVkResultFn = nullptr;
-
-        ImGui_ImplVulkan_Init(&init_info, m_vkImguiRenderPass);
-
-        VkSamplerCreateInfo sampler_info = {};
-        sampler_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        sampler_info.magFilter = VK_FILTER_LINEAR;
-        sampler_info.minFilter = VK_FILTER_LINEAR;
-        sampler_info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-        sampler_info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        sampler_info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        sampler_info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        sampler_info.minLod = 0;
-        sampler_info.maxLod = 0;
-        sampler_info.maxAnisotropy = 0.0f;
-        sampler_info.borderColor = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
-        sampler_info.compareEnable = false;
-        sampler_info.compareOp = VK_COMPARE_OP_ALWAYS;
-        VG_VERIFY_VULKAN(vkCreateSampler(device->getVulkanDevice(), &sampler_info, nullptr, &m_vkSampler));
     }
-    #endif
+#endif
+
+#ifdef VG_VULKAN
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::releaseVulkanDescriptors()
+    {
+        // Release user descriptors
+        DescriptorSetsFrameData & descriptorSetsFrameData = m_descriptorSetsFrameData[1];
+
+        for (const auto & data : descriptorSetsFrameData.m_descriptorSetAllocs)
+        {
+            VG_ASSERT(data.second.m_refCount == 0, "ImTextureID %u from Texture \"%s\" still has a RefCount of %u and was not released", data.second.m_id, data.first->getName().c_str(), data.second.m_refCount);
+
+            #ifdef VG_VULKAN
+            if (0 == data.second.m_refCount)
+                ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)data.second.m_id);
+            #endif
+        }
+
+        descriptorSetsFrameData.m_descriptorSetAllocs.clear();
+        m_descriptorSetsFrameData[1] = std::move(m_descriptorSetsFrameData[0]);
+    }
+#endif
 
     //--------------------------------------------------------------------------------------
     ImGuiAdapter::~ImGuiAdapter()
@@ -311,23 +344,9 @@ namespace vg::renderer
             firstFrame = false;
         }
 
+        releaseVulkanDescriptors();
+
         #endif
-
-        // Release user descriptors
-        DescriptorSetsFrameData & descriptorSetsFrameData = m_descriptorSetsFrameData[1];
-
-        for (const auto & data : descriptorSetsFrameData.m_descriptorSetAllocs)
-        {
-            VG_ASSERT(data.second.m_refCount == 0, "ImTextureID %u from Texture \"%s\" still has a RefCount of %u and was not released", data.second.m_id, data.first->getName().c_str(), data.second.m_refCount);
-
-            #ifdef VG_VULKAN
-            if (0 == data.second.m_refCount)
-                ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)data.second.m_id);
-            #endif
-        }
-
-        descriptorSetsFrameData.m_descriptorSetAllocs.clear();
-        m_descriptorSetsFrameData[1] = std::move(m_descriptorSetsFrameData[0]);
 
         #ifdef _WIN32
         ImGui_ImplWin32_NewFrame();
@@ -348,13 +367,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::render(gfx::CommandList * _cmdList)
     {
-        ImGui::Render();
+        auto device = gfx::Device::get();
 
         #ifdef VG_DX12
 
         // update backbuffer format
         ImGui_ImplDX12_Data * bd = ImGui_ImplDX12_GetBackendData();
-        auto device = gfx::Device::get();
+
         auto backbufferFormat = Texture::getd3d12ResourceFormat(device->getBackbufferFormat());
 
         if (bd->RTVFormat != backbufferFormat)
@@ -364,8 +383,40 @@ namespace vg::renderer
             ImGui_ImplDX12_CreateDeviceObjects();
         }
 
+        ImGui::Render();
         ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), _cmdList->getd3d12GraphicsCommandList());
+
         #elif defined(VG_VULKAN)
+
+        ImGui_ImplVulkan_Data * bd = ImGui_ImplVulkan_GetBackendData();
+
+        auto backbufferFormat = Texture::getVulkanPixelFormat(device->getBackbufferFormat());
+
+        if (m_vkRenderTargetFormat != backbufferFormat)
+        {
+            // Do not destroy all DeviceObjects, we just need to destroy PipelineLayout and Pipeline object and re-create RenderPass
+            //ImGui_ImplVulkan_DestroyDeviceObjects();
+
+            ImGui_ImplVulkan_InitInfo * v = &bd->VulkanInitInfo;
+            
+            vkDestroyPipelineLayout(device->getVulkanDevice(), bd->PipelineLayout, v->Allocator);
+            bd->PipelineLayout = nullptr;
+
+            vkDestroyPipeline(device->getVulkanDevice(), bd->Pipeline, v->Allocator);
+            bd->Pipeline = nullptr;
+
+            vkDestroyRenderPass(device->getVulkanDevice(), bd->RenderPass, nullptr);
+            bd->RenderPass = nullptr;
+
+            createVulkanRenderPass();
+            
+            bd->RenderPass = m_vkImguiRenderPass;
+            
+            ImGui_ImplVulkan_CreateDeviceObjects();
+            m_vkRenderTargetFormat = backbufferFormat;
+        }
+
+        ImGui::Render();
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), _cmdList->getVulkanCommandBuffer(), nullptr);
         #endif
     }

@@ -5,8 +5,9 @@ namespace vg::gfx::vulkan
 	//--------------------------------------------------------------------------------------
 	// Extension list
 	//--------------------------------------------------------------------------------------
-	template <class T> void ExtensionList<T>::init()
+	template <class T> void ExtensionList<T>::init(const char * _extensionTypeName)
 	{
+		m_extensionTypeName = _extensionTypeName;
 		memset(m_enabledExtensionNames, 0, sizeof(m_enabledExtensionNames));
 	}
 
@@ -36,7 +37,7 @@ namespace vg::gfx::vulkan
 				return true;
 			}
 		}
-		VG_WARNING("[Device] Extension \"%s\" cound not be enabled", _name);
+		VG_WARNING("[Device] Vulkan %s extension \"%s\" is not available", m_extensionTypeName, _name);
 		return false;
 	}
 
@@ -57,7 +58,7 @@ namespace vg::gfx::vulkan
 	//--------------------------------------------------------------------------------------
 	bool InstanceExtensionList::init()
 	{
-		super::init();
+		super::init("Instance");
 
 		VG_VERIFY_VULKAN(vkEnumerateInstanceExtensionProperties(nullptr, &m_availableExtensionCount, nullptr));
 
@@ -65,7 +66,14 @@ namespace vg::gfx::vulkan
 		{
 			m_availableExtensions = (VkExtensionProperties*)malloc(sizeof(VkExtensionProperties) * m_availableExtensionCount);
 			VG_VERIFY_VULKAN(vkEnumerateInstanceExtensionProperties(nullptr, &m_availableExtensionCount, m_availableExtensions));
-			
+
+            VG_INFO("[Device] Supported instance extensions:");
+			for (uint i = 0; i < m_availableExtensionCount; ++i)
+			{
+				auto & extension = m_availableExtensions[i];
+				VG_INFO("Extension name: %s version %u", extension.extensionName, extension.specVersion);
+			}
+
 			for (auto * ext : m_registered)
 				ext->init();
 			
@@ -91,7 +99,7 @@ namespace vg::gfx::vulkan
 	//--------------------------------------------------------------------------------------
 	bool DeviceExtensionList::init()
 	{
-		super::init();
+		super::init("Device");
 
 		auto * device = gfx::Device::get();
 

@@ -1,12 +1,11 @@
 #pragma once
 
-#include "gfx/Device/vulkan/Extension/ExtensionList_vulkan.h"
-
 namespace vg::gfx::vulkan
 {
     struct KHR_DeferredHostOperations : public DeviceExtension
     {
         using super = DeviceExtension;
+
     public:
         bool init() override
         {

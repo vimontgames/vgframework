@@ -2,27 +2,24 @@
 
 namespace vg::gfx::vulkan
 {
-    struct KHR_RayTracingPipeline : public DeviceExtension
+    struct EXT_Swapchain_Colorspace : public InstanceExtension
     {
-        using super = DeviceExtension;
+        using super = InstanceExtension;
 
     public:
         bool init() override
         {
-            return super::enable(VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME);
+            return super::enable(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME);
         }
 
         bool create() override
         {
             if (isEnabled())
             {
-
-
                 return true;
             }
 
             return false;
         }
-
     };
 }

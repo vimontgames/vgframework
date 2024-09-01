@@ -62,12 +62,18 @@ namespace vg
 
             void                onGUIThemeChanged           ();
 
+            #ifdef VG_VULKAN
+            void                createVulkanRenderPass      ();
+            void                releaseVulkanDescriptors    ();
+            #endif
+
         private:
             gfx::BindlessTextureHandle          m_fontTexHandle;
 
             core::vector<BeginFrameCallback>    m_beginFrameCallbacks;
 
             #ifdef VG_VULKAN
+            VkFormat                            m_vkRenderTargetFormat;
             VkDescriptorPool                    m_vkImguiDescriptorPool;
             VkRenderPass                        m_vkImguiRenderPass;
             VkSampler                           m_vkSampler;

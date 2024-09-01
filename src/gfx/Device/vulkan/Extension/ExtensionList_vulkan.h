@@ -41,7 +41,7 @@ namespace vg::gfx::vulkan
 	template <class T> class ExtensionList
 	{
 	public:
-		void					init();
+		void					init(const char * _extensionTypeName);
 		void					deinit();
 
 		void					registerExtension(T & _extension);
@@ -51,6 +51,7 @@ namespace vg::gfx::vulkan
 		const char * const *	getEnabledExtensionNames() const;
 
 	protected:
+		const char *			m_extensionTypeName = nullptr;
 		core::uint				m_enabledExtensionCount = 0;
 		const char *			m_enabledExtensionNames[64];
 		VkExtensionProperties *	m_availableExtensions = nullptr;

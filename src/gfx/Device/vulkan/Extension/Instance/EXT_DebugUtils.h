@@ -1,7 +1,5 @@
 #pragma once
 
-#include "gfx/Device/vulkan/Extension/ExtensionList_vulkan.h"
-
 namespace vg::gfx::vulkan
 {
 	struct EXT_DebugUtils : public InstanceExtension

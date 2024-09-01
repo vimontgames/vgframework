@@ -277,13 +277,6 @@ namespace vg::gfx::vulkan
 	//--------------------------------------------------------------------------------------
 	void Device::registerExtensions(const DeviceParams & _params)
 	{
-        #if VG_ENABLE_GPU_MARKER
-        m_instanceExtensionList.registerExtension(m_EXT_DebugUtils);
-        #endif
-
-		m_instanceExtensionList.registerExtension(m_KHR_Surface);
-		m_instanceExtensionList.registerExtension(m_KHR_Win32_Surface);
-
 		m_deviceExtensionList.registerExtension(m_KHR_Swapchain);    
 		m_deviceExtensionList.registerExtension(m_KHR_Deferred_Host_Operations);
 		m_deviceExtensionList.registerExtension(m_KHR_Buffer_Device_Address);
@@ -291,6 +284,16 @@ namespace vg::gfx::vulkan
 		m_deviceExtensionList.registerExtension(m_KHR_Ray_Tracing_Pipeline);
 		m_deviceExtensionList.registerExtension(m_KHR_Ray_Query);
 		m_deviceExtensionList.registerExtension(m_KHR_Multiview);
+		m_deviceExtensionList.registerExtension(m_KHR_Multiview);
+		m_deviceExtensionList.registerExtension(m_EXT_HDR_Metadata);
+
+		#if VG_ENABLE_GPU_MARKER
+		m_instanceExtensionList.registerExtension(m_EXT_DebugUtils);
+		#endif
+
+        m_instanceExtensionList.registerExtension(m_KHR_Surface);
+        m_instanceExtensionList.registerExtension(m_KHR_Win32_Surface);
+        m_instanceExtensionList.registerExtension(m_EXT_SwapChain_Colorspace);		
 	}
 
     //--------------------------------------------------------------------------------------
@@ -777,7 +780,7 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
 	void Device::applyHDR(HDR _mode)
 	{
-		
+		m_dirtySwapchain = true;
 	}
 
     //--------------------------------------------------------------------------------------
@@ -788,6 +791,8 @@ namespace vg::gfx::vulkan
 	//--------------------------------------------------------------------------------------
 	void Device::createSwapchain()
 	{
+		m_backbufferFormat = detectBackbufferFormat();
+
 		const DeviceParams & deviceParams = getDeviceParams();
 
 		VkSwapchainKHR oldSwapchain = m_vkSwapchain;
@@ -978,16 +983,46 @@ namespace vg::gfx::vulkan
 
         VkSurfaceFormatKHR selectedSurfaceFormat = { VK_FORMAT_UNDEFINED };
 
-        for (const VkSurfaceFormatKHR & curSurfaceFormat : availableSurfaceFormats)
-        {
-            const VkFormat format = curSurfaceFormat.format;
+		vector<PixelFormat> targetPixelFormats;
 
-            if (format == VK_FORMAT_R8G8B8A8_UNORM || format == VK_FORMAT_B8G8R8A8_UNORM)
-            {
-				VG_INFO("[Device] Backbuffer uses %s format", asString(Texture::getPixelFormat(format)).c_str());
-                selectedSurfaceFormat = curSurfaceFormat;
+		switch (m_HDRMode)
+		{
+			default:
+				VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_HDRMode);
+
+			case HDR::None:
+				targetPixelFormats.push_back(PixelFormat::R8G8B8A8_unorm);
+				targetPixelFormats.push_back(PixelFormat::B8G8R8A8_unorm);
+				break;
+
+			case HDR::HDR10:
+				targetPixelFormats.push_back(PixelFormat::R10G10B10A2_unorm);
+				break;
+
+            case HDR::HDR16:
+                targetPixelFormats.push_back(PixelFormat::R16G16B16A16_float);
                 break;
-            }
+		}
+
+		bool found = false;
+        for (uint i = 0; (i < availableSurfaceFormats.size()) && !found; ++i)
+        {
+			const VkSurfaceFormatKHR & curSurfaceFormat = availableSurfaceFormats[i];
+
+			const VkFormat vkSurfaceFmt = curSurfaceFormat.format;
+
+			for (uint j = 0; j < targetPixelFormats.size(); ++j)
+			{
+				VkFormat vkTargetFormat = Texture::getVulkanPixelFormat(targetPixelFormats[j]);
+
+				if (vkTargetFormat == vkSurfaceFmt)
+				{
+					VG_INFO("[Device] Backbuffer uses %s format", asString(Texture::getPixelFormat(vkSurfaceFmt)).c_str());
+                    selectedSurfaceFormat = curSurfaceFormat;
+					found = true;
+                    break;
+				}
+			}
         }
 
         VG_ASSERT(VK_FORMAT_UNDEFINED != selectedSurfaceFormat.format, "Could not find compatible backbuffer format");
@@ -1136,8 +1171,6 @@ namespace vg::gfx::vulkan
 		
 		if (m_useSeparatePresentCommandQueue)
 			auto * presentQueue = createCommandQueue(CommandQueueType::Present);
-
-        m_backbufferFormat = detectBackbufferFormat();
 
 		// Create semaphores to synchronize acquiring presentable buffers before rendering and waiting for drawing to be complete before presenting
 		VkSemaphoreCreateInfo semaphoreCreateInfo;

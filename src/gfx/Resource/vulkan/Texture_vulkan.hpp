@@ -21,6 +21,9 @@ namespace vg::gfx::vulkan
             case PixelFormat::B8G8R8A8_unorm_sRGB:
                 return VK_FORMAT_B8G8R8A8_SRGB;
 
+            case PixelFormat::R10G10B10A2_unorm:
+                return VK_FORMAT_A2B10G10R10_UNORM_PACK32;
+
             case PixelFormat::R16G16B16A16_float:
                 return VK_FORMAT_R16G16B16A16_SFLOAT;
 
@@ -41,8 +44,23 @@ namespace vg::gfx::vulkan
             case VK_FORMAT_R8G8B8A8_UNORM:
                 return PixelFormat::R8G8B8A8_unorm;
 
+            case VK_FORMAT_R8G8B8A8_SRGB:
+                return PixelFormat::R8G8B8A8_unorm_sRGB;
+
             case VK_FORMAT_B8G8R8A8_UNORM:
                 return PixelFormat::B8G8R8A8_unorm;
+
+            case VK_FORMAT_B8G8R8A8_SRGB :
+                return PixelFormat::B8G8R8A8_unorm_sRGB;
+
+            case VK_FORMAT_A2B10G10R10_UNORM_PACK32:
+                return PixelFormat::R10G10B10A2_unorm;
+
+            case VK_FORMAT_R16G16B16A16_SFLOAT:
+                return PixelFormat::R16G16B16A16_float;
+
+            case VK_FORMAT_D32_SFLOAT_S8_UINT:
+                return PixelFormat::D32S8;
         }
     }
 

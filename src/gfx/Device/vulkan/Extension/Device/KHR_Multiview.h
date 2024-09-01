@@ -1,11 +1,11 @@
 #pragma once
-#include "gfx/Device/vulkan/Extension/ExtensionList_vulkan.h"
 
 namespace vg::gfx::vulkan
 {
     struct KHR_Multiview : public DeviceExtension
     {
         using super = DeviceExtension;
+
     public:
         bool init() override
         {
