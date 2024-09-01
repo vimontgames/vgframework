@@ -34,11 +34,11 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Create main color and depth buffers and prepare for write
     //--------------------------------------------------------------------------------------
-    void BackgroundPass::Setup(const gfx::RenderPassContext & _renderContext)
+    void BackgroundPass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
         auto * device = Device::get();
 
-        auto size = _renderContext.m_view->GetSize();
+        const auto size = _renderPassContext.m_view->GetSize();
         const auto options = RendererOptions::get();
 
         auto clearColor = m_useFastClear ? pow(options->getBackgroundColor(), 2.2f) : defaultOptimizedClearColor;
@@ -53,7 +53,7 @@ namespace vg::renderer
         if (options->getLightingMode() == LightingMode::Deferred)
             colorDesc.uav = true;
 
-        const auto colorID = _renderContext.getFrameGraphID("Color");
+        const auto colorID = _renderPassContext.getFrameGraphID("Color");
         createRenderTarget(colorID, colorDesc);
         writeRenderTarget(0, colorID);
 
@@ -65,7 +65,7 @@ namespace vg::renderer
                                       depthStencilDesc.clearStencil = defaultOptimizedClearStencil;
                                       depthStencilDesc.initState = FrameGraphResource::InitState::Clear;
 
-        const auto depthStencilID = _renderContext.getFrameGraphID("DepthStencil");
+        const auto depthStencilID = _renderPassContext.getFrameGraphID("DepthStencil");
         createDepthStencil(depthStencilID, depthStencilDesc);
         writeDepthStencil(depthStencilID);
     }

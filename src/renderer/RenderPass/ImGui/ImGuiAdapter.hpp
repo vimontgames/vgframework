@@ -102,13 +102,30 @@ namespace vg::renderer
         #endif 
     }
 
+    //--------------------------------------------------------------------------------------
+    // Returns the pixel format used for ImGui rendering
+    //--------------------------------------------------------------------------------------
+    gfx::PixelFormat ImGuiAdapter::getOutputPixelFormat() const
+    {
+        gfx::Device * device = Device::get();
+        const PixelFormat backbufferFormat = device->getBackbufferFormat();
+        const PixelFormat hdrOutputFormat = gfx::PixelFormat::R16G16B16A16_float;
+
+        auto * renderer = Renderer::get();
+
+        if (HDR::None != renderer->GetHDR())
+            return hdrOutputFormat;
+        else
+            return backbufferFormat;
+    }
+
     #ifdef VG_DX12
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::d3d12Init()
     {
         gfx::Device * device = Device::get();
 
-        const PixelFormat fmt = device->getBackbufferFormat();
+        const PixelFormat fmt = getOutputPixelFormat();
         BindlessTable * bindlessTable = device->getBindlessTable();
 
         D3D12_CPU_DESCRIPTOR_HANDLE fontCpuHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_fontTexHandle);
@@ -188,7 +205,7 @@ namespace vg::renderer
     {
         gfx::Device * device = Device::get();
 
-        const PixelFormat fmt = device->getBackbufferFormat();
+        const PixelFormat fmt = getOutputPixelFormat();
         m_vkRenderTargetFormat = Texture::getVulkanPixelFormat(fmt);
 
         VkAttachmentDescription attachment = {};
@@ -374,12 +391,14 @@ namespace vg::renderer
         // update backbuffer format
         ImGui_ImplDX12_Data * bd = ImGui_ImplDX12_GetBackendData();
 
-        auto backbufferFormat = Texture::getd3d12ResourceFormat(device->getBackbufferFormat());
+        auto renderOutputFormat = Texture::getd3d12ResourceFormat(getOutputPixelFormat());
 
-        if (bd->RTVFormat != backbufferFormat)
+        if (bd->RTVFormat != renderOutputFormat)
         {
+            auto * renderer = Renderer::get();
+            renderer->WaitGPUIdle();
             ImGui_ImplDX12_InvalidateDeviceObjects();
-            bd->RTVFormat = backbufferFormat;
+            bd->RTVFormat = renderOutputFormat;
             ImGui_ImplDX12_CreateDeviceObjects();
         }
 
@@ -390,9 +409,9 @@ namespace vg::renderer
 
         ImGui_ImplVulkan_Data * bd = ImGui_ImplVulkan_GetBackendData();
 
-        auto backbufferFormat = Texture::getVulkanPixelFormat(device->getBackbufferFormat());
+        auto renderOutputFormat = Texture::getVulkanPixelFormat(getOutputPixelFormat());
 
-        if (m_vkRenderTargetFormat != backbufferFormat)
+        if (m_vkRenderTargetFormat != renderOutputFormat)
         {
             // Do not destroy all DeviceObjects, we just need to destroy PipelineLayout and Pipeline object and re-create RenderPass
             //ImGui_ImplVulkan_DestroyDeviceObjects();
@@ -413,7 +432,7 @@ namespace vg::renderer
             bd->RenderPass = m_vkImguiRenderPass;
             
             ImGui_ImplVulkan_CreateDeviceObjects();
-            m_vkRenderTargetFormat = backbufferFormat;
+            m_vkRenderTargetFormat = renderOutputFormat;
         }
 
         ImGui::Render();

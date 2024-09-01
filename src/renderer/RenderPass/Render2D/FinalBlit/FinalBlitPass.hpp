@@ -1,6 +1,7 @@
 #include "FinalBlitPass.h"
 #include "shaders/system/rootConstants2D.hlsli"
 #include "renderer/View/ViewGUI.h"
+#include "shaders/driver/driver.hlsl.h"
 
 namespace vg::renderer
 {
@@ -19,7 +20,8 @@ namespace vg::renderer
                           rsDesc.addTable(bindlessTable);
 
         m_postProcessRootSignature = device->addRootSignature(rsDesc);
-        m_postProcessShaderKey.init("driver/driver.hlsl", "Gamma");
+        m_postProcessShaderKeyCopy.init("driver/driver.hlsl", "Copy");
+        m_postProcessShaderKeyGamma.init("driver/driver.hlsl", "Gamma");
     }
 
     //--------------------------------------------------------------------------------------
@@ -34,19 +36,25 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void FinalBlitPass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
+        const auto * renderer = Renderer::get();
         const auto options = RendererOptions::get();
 
         if (_renderPassContext.m_view->IsComputePostProcessNeeded())
             readRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"));
         else
-            readRenderTarget(_renderPassContext.getFrameGraphID("Color"));
-
-        const auto * renderer = Renderer::get();
+            readRenderTarget(_renderPassContext.getFrameGraphID("Color"));        
 
         if (!_renderPassContext.m_view->GetRenderTarget() || renderer->IsFullscreen())
-            writeRenderTarget(0, "Backbuffer");
+        {
+            if (HDR::None != renderer->GetHDR())
+                writeRenderTarget(0, "HDROutput");
+            else
+                writeRenderTarget(0, "Backbuffer");
+        }
         else
-            writeRenderTarget(0, _renderPassContext.MakeFrameGraphID("Dest", _renderPassContext.m_view->GetViewport()->GetViewportID())); 
+        {
+            writeRenderTarget(0, _renderPassContext.MakeFrameGraphID("Dest", _renderPassContext.m_view->GetViewport()->GetViewportID()));
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -58,8 +66,15 @@ namespace vg::renderer
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
         DepthStencilState ds(false);
 
+        ShaderKey postProcessShaderKey;
+
+        if (HDR::None == Renderer::get()->GetHDR())
+            postProcessShaderKey = m_postProcessShaderKeyGamma;
+        else
+            postProcessShaderKey = m_postProcessShaderKeyCopy;
+
         _cmdList->setGraphicRootSignature(m_postProcessRootSignature);
-        _cmdList->setShader(m_postProcessShaderKey);
+        _cmdList->setShader(postProcessShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
         _cmdList->setBlendState(bs);

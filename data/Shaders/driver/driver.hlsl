@@ -53,21 +53,13 @@ PS_Output_Quad PS_Copy(VS_Output_Quad _input)
 
     output.color0.rgba = getTexture2D(rootConstants2D.texID).Sample(nearestRepeat, uv).rgba;
 
-    return output;
-}
-
-PS_Output_Quad PS_Gamma(VS_Output_Quad _input)
-{
-    PS_Output_Quad output;
-    float2 uv = _input.uv;
-    output.color0 = float4(uv, 0, 1);
-
-    output.color0.rgba = getTexture2D(rootConstants2D.texID).Sample(nearestRepeat, uv).rgba;
+    #if _GAMMA
     output.color0.rgb = Linear2sRGB(output.color0.rgb);
-    output.color0.a = 1; // Should be an option
+    #endif
+
+    output.color0.a = 1;
 
     return output;
 }
-
 
 

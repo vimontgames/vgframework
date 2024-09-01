@@ -43,7 +43,7 @@ namespace vg::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    void ImGuiPass::Setup(const gfx::RenderPassContext & _renderContext)
+    void ImGuiPass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
         // ImGui windows require to read the viewport render targets
         Renderer * renderer = Renderer::get();
@@ -70,8 +70,11 @@ namespace vg::renderer
                 }
             }
         }
-        
-        writeRenderTarget(0, "Backbuffer");       
+
+        if (HDR::None != renderer->GetHDR())
+            writeRenderTarget(0, "HDROutput");
+        else
+            writeRenderTarget(0, "Backbuffer");
     }
 
     //--------------------------------------------------------------------------------------

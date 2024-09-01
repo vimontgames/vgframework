@@ -21,6 +21,7 @@ namespace vg::renderer
     class ComputeSkinningPass;
     class BLASUpdatePass;
     class ImGuiPass;
+    class HDROutputPass;
     class MeshModel;
     class MaterialModel;
     class View;
@@ -135,6 +136,7 @@ namespace vg::renderer
     public:
 		gfx::Device &		                    m_device;
         gfx::FrameGraph &                       m_frameGraph;
+        gfx::Texture *                          m_hdrOutput                 = nullptr;
         ImGuiAdapter *                          m_imgui                     = nullptr;
         FBXImporter *                           m_fbxImporter               = nullptr;
         GPUDebugUpdatePass *                    m_gpuDebugUpdatePass        = nullptr;
@@ -142,6 +144,7 @@ namespace vg::renderer
         ComputeSkinningPass *                   m_computeSkinningPass       = nullptr;
         BLASUpdatePass *                        m_BLASUpdatePass            = nullptr;
         ImGuiPass *                             m_imguiPass                 = nullptr; 
+        HDROutputPass *                         m_hdrOutputPass             = nullptr;
         IPicking *                              m_picking                   = nullptr;
         core::vector<gfx::Texture *>            m_defaultTextures;
         MaterialModel *                         m_defaultMaterial           = nullptr;

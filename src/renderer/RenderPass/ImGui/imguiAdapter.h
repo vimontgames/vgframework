@@ -62,6 +62,8 @@ namespace vg
 
             void                onGUIThemeChanged           ();
 
+            gfx::PixelFormat    getOutputPixelFormat        () const;
+
             #ifdef VG_VULKAN
             void                createVulkanRenderPass      ();
             void                releaseVulkanDescriptors    ();

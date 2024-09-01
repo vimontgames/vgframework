@@ -1,5 +1,9 @@
 #include "ComputePass.h"
 
+#include "Compute/ComputePostProcess/ComputePostProcessPass.hpp"
+#include "Compute/ComputeSkinning/ComputeSkinningPass.hpp"
+#include "Compute/ComputeDeferredLighting/ComputeDeferredLightingPass.hpp"
+
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------

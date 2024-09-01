@@ -4,22 +4,21 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    // This pass copies the final image to its editor viewport or backbuffer in fullscreen mode
+    // This pass applies the HDROutput curve while copying the final image into backbuffer
     //--------------------------------------------------------------------------------------
-    class FinalBlitPass : public Render2DPass
+    class HDROutputPass : public Render2DPass
     {
     public:
-        const char * GetClassName() const final { return "FinalBlitPass"; }
+        const char * GetClassName() const final { return "HDROutputPass"; }
 
-        FinalBlitPass();
-        ~FinalBlitPass();
+        HDROutputPass();
+        ~HDROutputPass();
 
         void Setup(const gfx::RenderPassContext & _renderContext) override;
         void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:
-        gfx::RootSignatureHandle        m_postProcessRootSignature;
-        gfx::ShaderKey                  m_postProcessShaderKeyCopy;
-        gfx::ShaderKey                  m_postProcessShaderKeyGamma;
+        gfx::RootSignatureHandle        m_hdrOutputRootSignature;
+        gfx::ShaderKey                  m_hdrOutputShaderKey;
     };
 }

@@ -106,8 +106,10 @@ namespace vg::gfx
             RootSignatureTable                              m_rootSignaturesTable;
             gfx::BindlessTable *                            m_bindlessTable = nullptr;
             VSync                                           m_VSync = VSync::VSync_1;
-            HDR                                             m_HDRMode = HDR::None;
-            ColorSpace                                      m_ColorSpace = ColorSpace::Rec709;
+            HDR                                             m_HDRModeRequested = HDR::None;
+            HDR                                             m_HDRMode = m_HDRModeRequested;
+            ColorSpace                                      m_ColorSpaceRequested = ColorSpace::Rec709;
+            ColorSpace                                      m_ColorSpace = m_ColorSpaceRequested;
             bool						                    m_dirtySwapchain = false;
             core::u8                                        m_currentFrameIndex;        // current frame being rendered
             core::u8                                        m_nextFrameIndex;

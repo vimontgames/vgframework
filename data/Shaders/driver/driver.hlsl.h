@@ -11,10 +11,12 @@ namespace vg::gfx
         {
             enum Flags : ShaderKey::Flags
             {
-
+                Gamma = 0,
             };
 
             setFile("driver/driver.hlsl");
+
+            addFlag(Gamma, ShaderStageFlags::PS, "_GAMMA");
 
             auto vsQuad = addVS("VS_Quad");
             auto psQuad = addPS("PS_Quad");
@@ -35,13 +37,11 @@ namespace vg::gfx
                 copy.flags = (Flags)0;
             }
 
-            auto psGamma = addPS("PS_Gamma");
-
             auto & gamma = addTechnique("Gamma");
             {
                 gamma.vs = vsQuad;
-                gamma.ps = psGamma;
-                gamma.flags = (Flags)0;
+                gamma.ps = psCopy;
+                gamma.addFlag(Flags::Gamma);
             }
         }
     };

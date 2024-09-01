@@ -481,8 +481,7 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void Device::applyHDR(HDR _mode)
     {
-        m_HDRMode = _mode;
-        m_dirtySwapchain = true;
+        // Nothing to do, m_HDRModeRequested != m_HDRMode will trigger backbuffer update after swap
     }
 
     //--------------------------------------------------------------------------------------
@@ -734,21 +733,29 @@ namespace vg::gfx::dx12
             VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->Present((uint)m_VSync, 0));
         }
 
-        if (m_dirtySwapchain)
+        if (m_HDRMode != m_HDRModeRequested)
         {
-            waitGPUIdle(); // Does not work :(
+            waitGPUIdle(); 
             destroyd3d12Backbuffers();
 
-            m_backbufferFormat = getHDRBackbufferFormat(m_HDRMode);
-            m_ColorSpace = getHDRColorSpace(m_HDRMode);
+            m_backbufferFormat = getHDRBackbufferFormat(m_HDRModeRequested);
+            m_ColorSpace = getHDRColorSpace(m_HDRModeRequested);
 
             VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->ResizeBuffers(max_backbuffer_count, m_dxgiSwapChainDesc.Width, m_dxgiSwapChainDesc.Height, Texture::getd3d12ResourceFormat(m_backbufferFormat), m_dxgiSwapChainDesc.Flags));
-            
-            applyColorSpace(m_ColorSpace);
-
             created3d12Backbuffers();
 
-            m_dirtySwapchain = false;
+            m_HDRMode = m_HDRModeRequested;
+
+            if (HDR::None != m_HDRMode)
+                VG_INFO("[Device] Use %s backbuffer", asString(m_HDRMode).c_str());
+            else
+                VG_INFO("[Device] Disable HDR backbuffer");
+        }
+
+        if (m_ColorSpace != m_ColorSpaceRequested)
+        {
+            applyColorSpace(m_ColorSpaceRequested);
+            m_ColorSpace = m_ColorSpaceRequested;
         }
 
 		super::endFrame();

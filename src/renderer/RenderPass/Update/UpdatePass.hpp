@@ -1,5 +1,11 @@
 #include "UpdatePass.h"
 
+#include "Update/GPUDebug/GPUDebugUpdatePass.hpp"
+#include "Update/InstanceData/InstanceDataUpdatePass.hpp"
+#include "Update/TLAS/TLASUpdatePass.hpp"
+#include "Update/BLAS/BLASUpdatePass.hpp"
+#include "Update/ViewConstants/ViewConstantsUpdatePass.hpp"
+
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------

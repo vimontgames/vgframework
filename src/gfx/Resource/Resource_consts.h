@@ -52,6 +52,8 @@ namespace vg::gfx
         };
 
 		inline bool testBindFlags(BindFlags _flags) const	{ return std::underlying_type<BindFlags>::type(_flags) & std::underlying_type<BindFlags>::type(m_bindFlags); }
+
+        VG_INLINE bool operator != (const ResourceDesc & _other) const { return bits != _other.bits; }
     };
 
     struct Map

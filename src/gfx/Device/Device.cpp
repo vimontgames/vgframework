@@ -466,10 +466,10 @@ namespace vg::gfx
             _mode = HDR::None;
         }
 
-        if (_mode != m_HDRMode)
+        if (_mode != m_HDRModeRequested)
         {
-            m_HDRMode = _mode;
-            super::applyHDR(_mode); 
+            m_HDRModeRequested = _mode;
+            super::applyHDR(m_HDRModeRequested);
         }
     }
     //--------------------------------------------------------------------------------------

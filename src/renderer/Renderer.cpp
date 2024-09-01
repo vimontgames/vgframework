@@ -24,6 +24,7 @@
 #include "renderer/RenderPass/Update/InstanceData/InstanceDataUpdatePass.h"
 #include "renderer/RenderPass/Compute/ComputeSkinning/ComputeSkinningPass.h"
 #include "renderer/RenderPass/Update/BLAS/BLASUpdatePass.h"
+#include "renderer/RenderPass/Render2D/HDROutput/HDROutputPass.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Animation/SkeletalAnimation.h"
@@ -205,6 +206,7 @@ namespace vg::renderer
         m_computeSkinningPass = new ComputeSkinningPass();
         m_BLASUpdatePass = new BLASUpdatePass();
         m_imguiPass = new ImGuiPass();
+        m_hdrOutputPass = new HDROutputPass();
 
         RegisterClasses();
 
@@ -260,6 +262,7 @@ namespace vg::renderer
 	void Renderer::deinit()
 	{
         VG_SAFE_DELETE(m_sharedCullingJobOutput);
+        VG_SAFE_RELEASE(m_hdrOutput);
 
         UnregisterClasses();
 
@@ -299,6 +302,7 @@ namespace vg::renderer
         VG_SAFE_DELETE(m_BLASUpdatePass);
         VG_SAFE_DELETE(m_imguiPass);
         VG_SAFE_DELETE(m_imgui);
+        VG_SAFE_DELETE(m_hdrOutputPass);
 
         m_frameGraph.release();
 
@@ -413,8 +417,29 @@ namespace vg::renderer
             {
                 VG_PROFILE_CPU("Framegraph");
 
-                m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(0,0,0,1), FrameGraphResource::InitState::Clear);
+                m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(1,0,0,1), FrameGraphResource::InitState::Clear);
                 m_frameGraph.setGraphOutput("Backbuffer");
+
+                const bool hdrOutput = HDR::None != GetHDR();
+                if (hdrOutput)
+                {
+                    gfx::TextureDesc hdrOutputDesc( gfx::Usage::Default,
+                                                    gfx::BindFlags::ShaderResource,
+                                                    gfx::CPUAccessFlags::None,
+                                                    gfx::TextureType::Texture2D,
+                                                    gfx::PixelFormat::R16G16B16A16_float,
+                                                    gfx::TextureFlags::RenderTarget,
+                                                    GetBackbufferSize().x,
+                                                    GetBackbufferSize().y);
+
+                    if (nullptr == m_hdrOutput || m_hdrOutput->getTexDesc() != hdrOutputDesc)
+                    {
+                        VG_SAFE_RELEASE(m_hdrOutput);
+                        m_hdrOutput = (Texture*)CreateTexture(hdrOutputDesc, "HDROutput");
+                    }
+
+                    m_frameGraph.importRenderTarget("HDROutput", m_hdrOutput, float4(0, 0, 0, 1), FrameGraphResource::InitState::Clear);
+                }
 
                 // Register passes not linked to views (e.g. skinning, or BLAS updates)
                 RenderPassContext mainViewRenderPassContext;
@@ -481,6 +506,9 @@ namespace vg::renderer
 
                 //if (!m_fullscreen)
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_imguiPass, "ImGui");
+
+                if (hdrOutput)
+                    m_frameGraph.addUserPass(mainViewRenderPassContext, m_hdrOutputPass, "HDROutput");
 
                 m_frameGraph.setup();
                 m_frameGraph.build();

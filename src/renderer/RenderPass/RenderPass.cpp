@@ -21,30 +21,9 @@ using namespace vg::core;
 using namespace vg::gfx;
 
 #include "Render2D/Render2DPass.hpp"
-#include "Render2D/Background/BackgroundPass.hpp"
-#include "Render2D/FinalBlit/FinalBlitPass.hpp"
-
 #include "RenderObjects/RenderObjectsPass.hpp"
-#include "RenderObjects/DepthOnly/DepthOnlyPass.hpp"
-#include "RenderObjects/DepthOnly/DepthPrepass/DepthPrePass.hpp"
-#include "RenderObjects/DepthOnly/ShadowMap/ShadowMapPass.hpp"
-#include "RenderObjects/Forward/ForwardOpaquePass.hpp"
-#include "RenderObjects/Forward/ForwardTransparentPass.hpp"
-#include "RenderObjects/Deferred/DeferredOpaquePass.hpp"
-#include "RenderObjects/Editor/EditorPass.hpp"
-
 #include "Compute/ComputePass.hpp"
-#include "Compute/ComputePostProcess/ComputePostProcessPass.hpp"
-#include "Compute/ComputeSkinning/ComputeSkinningPass.hpp"
-#include "Compute/ComputeDeferredLighting/ComputeDeferredLightingPass.hpp"
-
 #include "Update/UpdatePass.hpp"
-#include "Update/GPUDebug/GPUDebugUpdatePass.hpp"
-#include "Update/InstanceData/InstanceDataUpdatePass.hpp"
-
-#include "Update/TLAS/TLASUpdatePass.hpp"
-#include "Update/BLAS/BLASUpdatePass.hpp"
-#include "Update/ViewConstants/ViewConstantsUpdatePass.hpp"
 
 namespace vg::renderer
 {

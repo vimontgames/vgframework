@@ -10,7 +10,7 @@
 #include "renderer/RenderPass/Compute/ComputeDeferredLighting/ComputeDeferredLightingPass.h"
 #include "renderer/RenderPass/Render2D/FinalBlit/FinalBlitPass.h"
 #include "renderer/RenderPass/Update/TLAS/TLASUpdatePass.h"
-
+#include "renderer/Renderer.h"
 #include "renderer/Options/RendererOptions.h"
 
 using namespace vg::core;
@@ -130,6 +130,13 @@ namespace vg::renderer
 
         // Read from "Color" (postprocess OFF) or "PostProcessUAV" (postprocess ON) to final dest
         _frameGraph.addUserPass(_renderPassContext, m_finalBlitPass, "Final Blit");
+
+        // When HDR is enabled, previous passes are rendering to the HDROutput buffer instead of backbuffer and we need to apply HDR curve when copying to backbuffer
+        auto renderer = Renderer::get();
+        if (gfx::HDR::None != renderer->GetHDR())
+        {
+
+        }
 
         _frameGraph.popPassGroup();
     }

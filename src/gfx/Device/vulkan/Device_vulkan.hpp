@@ -786,6 +786,8 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
 	void Device::applyColorSpace(ColorSpace _mode)
 	{
+		
+		m_dirtySwapchain = true;
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -1407,8 +1409,13 @@ namespace vg::gfx::vulkan
 		if (m_dirtySwapchain)
 		{
 			waitGPUIdle();
+
+            m_HDRMode = m_HDRModeRequested;
+            m_ColorSpace = m_ColorSpaceRequested;
+
             createSwapchain();
-            createVulkanBackbuffers();
+            createVulkanBackbuffers();	
+
 			m_dirtySwapchain = false;
 		}
 
