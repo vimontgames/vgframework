@@ -52,6 +52,8 @@ namespace vg
             ImTextureID         getTextureID                (const gfx::Texture * _texture);
             void                releaseTextureID            (const gfx::Texture * _texture);
 
+            void                releaseUserDescriptors      ();
+
             void                resetGUITheme               ();
 
             void                setGUITheme_ImGui_Classic   ();
@@ -66,7 +68,6 @@ namespace vg
 
             #ifdef VG_VULKAN
             void                createVulkanRenderPass      ();
-            void                releaseVulkanDescriptors    ();
             #endif
 
         private:

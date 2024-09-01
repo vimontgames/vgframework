@@ -248,28 +248,6 @@ namespace vg::renderer
     }
 #endif
 
-#ifdef VG_VULKAN
-    //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::releaseVulkanDescriptors()
-    {
-        // Release user descriptors
-        DescriptorSetsFrameData & descriptorSetsFrameData = m_descriptorSetsFrameData[1];
-
-        for (const auto & data : descriptorSetsFrameData.m_descriptorSetAllocs)
-        {
-            VG_ASSERT(data.second.m_refCount == 0, "ImTextureID %u from Texture \"%s\" still has a RefCount of %u and was not released", data.second.m_id, data.first->getName().c_str(), data.second.m_refCount);
-
-            #ifdef VG_VULKAN
-            if (0 == data.second.m_refCount)
-                ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)data.second.m_id);
-            #endif
-        }
-
-        descriptorSetsFrameData.m_descriptorSetAllocs.clear();
-        m_descriptorSetsFrameData[1] = std::move(m_descriptorSetsFrameData[0]);
-    }
-#endif
-
     //--------------------------------------------------------------------------------------
     ImGuiAdapter::~ImGuiAdapter()
     {
@@ -339,19 +317,16 @@ namespace vg::renderer
         #ifdef VG_DX12
 
         ImGui_ImplDX12_NewFrame();
-
         if (firstFrame)
         {
             BindlessTable * bindlessTable = device->getBindlessTable();
             bindlessTable->updated3d12descriptor(m_fontTexHandle);
-
             firstFrame = false;
         }
 
         #elif defined(VG_VULKAN)
 
         ImGui_ImplVulkan_NewFrame();
-
         if (firstFrame)
         {
 
@@ -361,9 +336,9 @@ namespace vg::renderer
             firstFrame = false;
         }
 
-        releaseVulkanDescriptors();
-
         #endif
+
+        releaseUserDescriptors();
 
         #ifdef _WIN32
         ImGui_ImplWin32_NewFrame();
@@ -373,6 +348,25 @@ namespace vg::renderer
 
         for (auto & cb : m_beginFrameCallbacks)
             cb();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::releaseUserDescriptors()
+    {
+        DescriptorSetsFrameData & descriptorSetsFrameData = m_descriptorSetsFrameData[1];
+
+        for (const auto & data : descriptorSetsFrameData.m_descriptorSetAllocs)
+        {
+            VG_ASSERT(data.second.m_refCount == 0, "ImTextureID %u from Texture \"%s\" still has a RefCount of %u and was not released", data.second.m_id, data.first->getName().c_str(), data.second.m_refCount);
+
+            #ifdef VG_VULKAN
+            if (0 == data.second.m_refCount)
+                ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)data.second.m_id);
+            #endif
+        }
+
+        descriptorSetsFrameData.m_descriptorSetAllocs.clear();
+        m_descriptorSetsFrameData[1] = std::move(m_descriptorSetsFrameData[0]);
     }
 
     //--------------------------------------------------------------------------------------
