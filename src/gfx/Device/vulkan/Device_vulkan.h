@@ -14,6 +14,7 @@
 #include "gfx/Device/vulkan/Extension/Instance/EXT_swapchain_colorspace.h"
 #include "gfx/Device/vulkan/Extension/Instance/KHR_Surface.h"
 #include "gfx/Device/vulkan/Extension/Instance/KHR_Win32_Surface.h"
+#include "gfx/Device/vulkan/Extension/Instance/KHR_Get_Surface_Capabilities2.h"
 
 #include "gfx/PipelineState/Graphic/SamplerState_consts.h"
 #include "gfx/FrameGraph/RenderPassKey.h"
@@ -113,6 +114,7 @@ namespace vg::gfx::vulkan
             EXT_Swapchain_Colorspace	m_EXT_SwapChain_Colorspace;
             KHR_Surface					m_KHR_Surface;
             KHR_Win32_Surface			m_KHR_Win32_Surface;
+			KHR_Get_Surface_Capabilities2 m_KHR_Get_Surface_Capabilities2;
 
             VkDescriptorSet             m_vkBindlessDescriptors;
             VkDescriptorPool            m_vkBindlessDescriptorPool;

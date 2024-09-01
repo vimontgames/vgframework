@@ -6,6 +6,12 @@
 
 struct RootConstants2D
 {
+    void reset()
+    {
+        quad.reset();
+        texID = -1;
+    }    
+
     QuadConstants quad;
     uint texID;
 };

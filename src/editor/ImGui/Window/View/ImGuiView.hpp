@@ -448,14 +448,16 @@ namespace vg::editor
             // Hack: Do not use texture on first frame because it may have just become visible but the view not yet renderer (alt fix: last rendered frame counter in View?)
             auto texture = (ImGui::IsWindowAppearing() || !m_viewport->AnyRender()) ? nullptr :  m_texture;
 
+            auto fmt = HDR::None != renderer->GetHDR() ? PixelFormat::R16G16B16A16_float : PixelFormat::R8G8B8A8_unorm_sRGB;
+
             // Create destination texture if it does not exist or is not matching
-            if (m_viewport && m_viewport->GetViewIDs().size() > 0 && (!m_texture || m_texture->GetWidth() != m_size.x || m_texture->GetHeight() != m_size.y))
+            if (m_viewport && m_viewport->GetViewIDs().size() > 0 && (!m_texture || m_texture->GetWidth() != m_size.x || m_texture->GetHeight() != m_size.y || fmt != m_texture->GetPixelFormat()))
             {
                 // As we're executing framegraph we can't fully release the texture right now because it may be still in use
                 if (m_texture)
                     renderer->ReleaseAsync(m_texture);
             
-                gfx::TextureDesc texDesc = gfx::TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm_sRGB, TextureFlags::RenderTarget, m_size.x, m_size.y);
+                gfx::TextureDesc texDesc = gfx::TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, fmt, TextureFlags::RenderTarget, m_size.x, m_size.y);
                 const auto & viewportID = m_viewport->GetViewportID();
                 string texName = m_viewport->GetFrameGraphID("Dest");
                 m_texture = renderer->CreateTexture(texDesc, texName);

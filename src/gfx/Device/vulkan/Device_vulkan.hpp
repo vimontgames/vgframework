@@ -4,6 +4,10 @@
 #include "Device_Vulkan.inl"
 #endif
 
+//#ifdef VG_WINDOWS
+//#include "dxgi1_6.h"
+//#endif
+
 namespace vg::gfx::vulkan
 {
 	using namespace vg::core;
@@ -283,17 +287,17 @@ namespace vg::gfx::vulkan
 		m_deviceExtensionList.registerExtension(m_KHR_Acceleration_Structure);
 		m_deviceExtensionList.registerExtension(m_KHR_Ray_Tracing_Pipeline);
 		m_deviceExtensionList.registerExtension(m_KHR_Ray_Query);
-		m_deviceExtensionList.registerExtension(m_KHR_Multiview);
-		m_deviceExtensionList.registerExtension(m_KHR_Multiview);
-		m_deviceExtensionList.registerExtension(m_EXT_HDR_Metadata);
+		//m_deviceExtensionList.registerExtension(m_KHR_Multiview);		// This is not useful
+		m_deviceExtensionList.registerExtension(m_EXT_HDR_Metadata);	// Unused for now
 
 		#if VG_ENABLE_GPU_MARKER
 		m_instanceExtensionList.registerExtension(m_EXT_DebugUtils);
 		#endif
 
+		m_instanceExtensionList.registerExtension(m_EXT_SwapChain_Colorspace);
+		//m_instanceExtensionList.registerExtension(m_KHR_Get_Surface_Capabilities2);	// Unused
         m_instanceExtensionList.registerExtension(m_KHR_Surface);
-        m_instanceExtensionList.registerExtension(m_KHR_Win32_Surface);
-        m_instanceExtensionList.registerExtension(m_EXT_SwapChain_Colorspace);		
+        m_instanceExtensionList.registerExtension(m_KHR_Win32_Surface);      
 	}
 
     //--------------------------------------------------------------------------------------
@@ -330,6 +334,11 @@ namespace vg::gfx::vulkan
 	void Device::init(const DeviceParams & _params)
 	{
 		base::Device::init(_params);
+
+		//#ifdef VG_WINDOWS
+		//IDXGIFactory6 * dxgiFactory = nullptr;
+		//VG_VERIFY_SUCCEEDED(CreateDXGIFactory2(0, IID_PPV_ARGS(&dxgiFactory)));
+		//#endif
 
 		registerExtensions(_params);
 
@@ -425,6 +434,16 @@ namespace vg::gfx::vulkan
 
 				if (surfaceSupported)
 				{
+					// This is useless, it does not provide max screen luminance for HDR
+					//VkPhysicalDeviceSurfaceInfo2KHR surfaceInfo = {};
+					//surfaceInfo.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR;
+					//surfaceInfo.surface = surface;
+					//
+					//VkSurfaceCapabilities2KHR surfaceCapabilities = {};
+					//surfaceCapabilities.sType = VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR;
+					//
+					//vkGetPhysicalDeviceSurfaceCapabilities2KHR(currentDevice, &surfaceInfo, &surfaceCapabilities);
+					
 					u32 formatCount;
 					vkGetPhysicalDeviceSurfaceFormatsKHR(currentDevice, surface, &formatCount, nullptr);
 
@@ -436,28 +455,34 @@ namespace vg::gfx::vulkan
                     bool hdr16Supported = false;
 					uint HDRModesSupported = 0;
 
-                    for (uint j = 0; j < formatCount; ++j)
+					if (m_EXT_SwapChain_Colorspace.isEnabled())
 					{
-						auto & format = surfaceFormats[j];
-                        if (format.format == VK_FORMAT_A2B10G10R10_UNORM_PACK32 && format.colorSpace == VK_COLOR_SPACE_HDR10_ST2084_EXT) 
+						for (uint j = 0; j < formatCount; ++j)
 						{
-							hdr10Supported = true;
-							HDRModesSupported++;
-                        }
-                        else if (format.format == VK_FORMAT_R16G16B16A16_SFLOAT && format.colorSpace == VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT)
-						{
-							hdr16Supported = true;
-							HDRModesSupported++;
-                        }
-                    }
+							auto & format = surfaceFormats[j];
 
-                    if (HDRModesSupported > maxHDRModesSupported)
-                    {
-                        hdr10 = hdr10Supported;
-                        hdr16 = hdr16Supported;
-                        maxHDRModesSupported = HDRModesSupported;
-                        m_vkPhysicalDevice = currentDevice;
-                    }
+							if (format.format == VK_FORMAT_A2B10G10R10_UNORM_PACK32 && format.colorSpace == VK_COLOR_SPACE_HDR10_ST2084_EXT)
+							{
+								hdr10Supported = true;
+								HDRModesSupported++;
+							}
+
+							if (format.format == VK_FORMAT_R16G16B16A16_SFLOAT && format.colorSpace == VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT)
+							{
+								hdr16Supported = true;
+								HDRModesSupported++;
+							}
+
+						}
+
+						if (HDRModesSupported > maxHDRModesSupported)
+						{
+							hdr10 = hdr10Supported;
+							hdr16 = hdr16Supported;
+							maxHDRModesSupported = HDRModesSupported;
+							m_vkPhysicalDevice = currentDevice;
+						}
+					}
 
 					free(surfaceFormats);
 				}
@@ -482,7 +507,7 @@ namespace vg::gfx::vulkan
 		VG_ASSERT(m_vkPhysicalDevice, "[Device] Could not create Vulkan device");
 
 		// Look for device extensions 	
-		m_deviceExtensionList.init();
+		m_deviceExtensionList.init(m_vkPhysicalDevice);
 
 		// Update device caps according to extensions
         if (m_KHR_Ray_Tracing_Pipeline.isEnabled())

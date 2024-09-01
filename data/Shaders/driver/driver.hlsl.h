@@ -12,37 +12,25 @@ namespace vg::gfx
             enum Flags : ShaderKey::Flags
             {
                 Gamma = 0,
+                HDR10,
+                HDR16
             };
 
             setFile("driver/driver.hlsl");
 
             addFlag(Gamma, ShaderStageFlags::PS, "_GAMMA");
+            addFlag(HDR10, ShaderStageFlags::PS, "_HDR10");
+            addFlag(HDR16, ShaderStageFlags::PS, "_HDR16");
 
             auto vsQuad = addVS("VS_Quad");
             auto psQuad = addPS("PS_Quad");
-
-            auto & quad = addTechnique("Quad");
-            {
-                quad.vs = vsQuad;
-                quad.ps = psQuad;
-                quad.flags = (Flags)0;
-            }
-
             auto psCopy = addPS("PS_Copy");
 
-            auto & copy = addTechnique("Copy");
-            {
-                copy.vs = vsQuad;
-                copy.ps = psCopy;
-                copy.flags = (Flags)0;
-            }
-
-            auto & gamma = addTechnique("Gamma");
-            {
-                gamma.vs = vsQuad;
-                gamma.ps = psCopy;
-                gamma.addFlag(Flags::Gamma);
-            }
+            auto & quad = addTechnique("Quad", vsQuad, psQuad);
+            auto & copy = addTechnique("Copy", vsQuad, psCopy);
+            auto & gamma = addTechnique("Gamma", vsQuad, psCopy, Flags::Gamma);
+            auto & hdr10 = addTechnique("HDR10", vsQuad, psCopy, Flags::HDR10);
+            auto & hdr16 = addTechnique("HDR16", vsQuad, psCopy, Flags::HDR16);
         }
     };
 }

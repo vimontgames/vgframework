@@ -329,12 +329,16 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void CommandList::reset()
     {
-        m_currentRenderPassType = (RenderPassType)-1;
+        clearStateCache();
+        super::reset();
+    }
 
+    //--------------------------------------------------------------------------------------
+    void CommandList::clearStateCache()
+    {
+        m_currentRenderPassType = (RenderPassType)-1;
         m_graphicStateCache.reset();
         m_computeStateCache.reset();
-
-        super::reset();
     }
 
     //--------------------------------------------------------------------------------------

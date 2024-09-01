@@ -87,9 +87,7 @@ namespace vg::renderer
             _cmdList->setDepthStencilState(ds);
 
             BackgroundRootConstants root;
-
-            root.quad.posOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
-            root.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
+            root.reset();
             root.color = pow(RendererOptions::get()->getBackgroundColor(), 2.2f);
 
             _cmdList->setGraphicRootConstants(0, (u32 *)&root, sizeof(BackgroundRootConstants) / sizeof(u32));

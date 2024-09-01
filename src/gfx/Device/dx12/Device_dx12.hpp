@@ -503,6 +503,31 @@ namespace vg::gfx::dx12
         }
     }
 
+    // MaxOutputNits, MinOutputNits, MaxCLL, MaxFALL
+    //struct HDRMetadata
+    //{
+    //    float MaxOutputNits;
+    //    float MinOutputNits;
+    //    float MaxCLL; 
+    //    float MaxFALL;
+    //};
+    //static const HDRMetadata hdrMetadata = { 20.0f, 1.000f, 2000.0f, 1000.0f };// { 1000.0f, 0.001f, 2000.0f, 500.0f };
+    //
+    //struct DisplayChroma
+    //{
+    //    float RedX;
+    //    float RedY;
+    //    float GreenX;
+    //    float GreenY;
+    //    float BlueX;
+    //    float BlueY;
+    //    float WhiteX;
+    //    float WhiteY;
+    //};
+    //
+    //static const DisplayChroma displayChromaRec2020 = { 0.64000f, 0.33000f, 0.30000f, 0.60000f, 0.15000f, 0.06000f, 0.31270f, 0.32900f }; 
+    //static const DisplayChroma displayChromaST2084 = { 0.70800f, 0.29200f, 0.17000f, 0.79700f, 0.13100f, 0.04600f, 0.31270f, 0.32900f };
+
     //--------------------------------------------------------------------------------------
     void Device::applyColorSpace(ColorSpace _mode)
     {
@@ -514,6 +539,31 @@ namespace vg::gfx::dx12
         {
             VG_ASSERT(SUCCEEDED(m_dxgiSwapChain->SetColorSpace1(d3d12ColorSpace)));
             VG_INFO("[Device] Use %s ColorSpace", asString(_mode).c_str());
+
+            //if (ColorSpace::Rec709 == _mode)
+            //{
+            //    VG_ASSERT(SUCCEEDED(m_dxgiSwapChain->SetHDRMetaData(DXGI_HDR_METADATA_TYPE_NONE, 0, nullptr)));
+            //}
+            //else
+            //{
+            //    const DisplayChroma & chroma = (ColorSpace::ST2084 == _mode) ? displayChromaST2084 : displayChromaRec2020;
+            //
+            //    // Set HDR meta data
+            //    DXGI_HDR_METADATA_HDR10 HDR10MetaData = {};
+            //    HDR10MetaData.RedPrimary[0] = static_cast<UINT16>(chroma.RedX * 50000.0f);
+            //    HDR10MetaData.RedPrimary[1] = static_cast<UINT16>(chroma.RedY * 50000.0f);
+            //    HDR10MetaData.GreenPrimary[0] = static_cast<UINT16>(chroma.GreenX * 50000.0f);
+            //    HDR10MetaData.GreenPrimary[1] = static_cast<UINT16>(chroma.GreenY * 50000.0f);
+            //    HDR10MetaData.BluePrimary[0] = static_cast<UINT16>(chroma.BlueX * 50000.0f);
+            //    HDR10MetaData.BluePrimary[1] = static_cast<UINT16>(chroma.BlueY * 50000.0f);
+            //    HDR10MetaData.WhitePoint[0] = static_cast<UINT16>(chroma.WhiteX * 50000.0f);
+            //    HDR10MetaData.WhitePoint[1] = static_cast<UINT16>(chroma.WhiteY * 50000.0f);
+            //    HDR10MetaData.MaxMasteringLuminance = static_cast<UINT>(hdrMetadata.MaxOutputNits * 10000.0f);
+            //    HDR10MetaData.MinMasteringLuminance = static_cast<UINT>(hdrMetadata.MinOutputNits * 10000.0f);
+            //    HDR10MetaData.MaxContentLightLevel = static_cast<UINT16>(hdrMetadata.MaxCLL);
+            //    HDR10MetaData.MaxFrameAverageLightLevel = static_cast<UINT16>(hdrMetadata.MaxFALL);
+            //    VG_ASSERT(SUCCEEDED(m_dxgiSwapChain->SetHDRMetaData(DXGI_HDR_METADATA_TYPE_HDR10, sizeof(DXGI_HDR_METADATA_HDR10), &HDR10MetaData)));
+            //}
         }
         else
         {
@@ -739,7 +789,7 @@ namespace vg::gfx::dx12
             destroyd3d12Backbuffers();
 
             m_backbufferFormat = getHDRBackbufferFormat(m_HDRModeRequested);
-            m_ColorSpace = getHDRColorSpace(m_HDRModeRequested);
+            m_ColorSpaceRequested = getHDRColorSpace(m_HDRModeRequested);
 
             VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->ResizeBuffers(max_backbuffer_count, m_dxgiSwapChainDesc.Width, m_dxgiSwapChainDesc.Height, Texture::getd3d12ResourceFormat(m_backbufferFormat), m_dxgiSwapChainDesc.Flags));
             created3d12Backbuffers();

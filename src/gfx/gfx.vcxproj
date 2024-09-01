@@ -61,6 +61,7 @@
     <ClInclude Include="Device\vulkan\Extension\ExtensionList_vulkan.hpp" />
     <ClInclude Include="Device\vulkan\Extension\Instance\EXT_DebugUtils.h" />
     <ClInclude Include="Device\vulkan\Extension\Instance\EXT_Swapchain_Colorspace.h" />
+    <ClInclude Include="Device\vulkan\Extension\Instance\KHR_Get_Surface_Capabilities2.h" />
     <ClInclude Include="Device\vulkan\Extension\Instance\KHR_Surface.h" />
     <ClInclude Include="Device\vulkan\Extension\Instance\KHR_Win32_Surface.h" />
     <ClInclude Include="FrameGraph\FrameGraphResource.h" />

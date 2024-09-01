@@ -96,6 +96,8 @@ namespace vg::gfx
         void                            reset();
         void                            close();
 
+        void                            clearStateCache             ();
+
         // Graphic
         void					        beginRenderPass             (gfx::RenderPass * _renderPass);
         void					        endRenderPass               ();

@@ -641,6 +641,9 @@
     <ClInclude Include="Device\vulkan\Extension\Instance\EXT_Swapchain_Colorspace.h">
       <Filter>Device\vulkan\Extension\Instance</Filter>
     </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Instance\KHR_Get_Surface_Capabilities2.h">
+      <Filter>Device\vulkan\Extension\Instance</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

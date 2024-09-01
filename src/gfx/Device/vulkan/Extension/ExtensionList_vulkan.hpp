@@ -33,7 +33,7 @@ namespace vg::gfx::vulkan
 			{
 				m_enabledExtensionNames[m_enabledExtensionCount++] = _name;
 				VG_ASSERT(m_enabledExtensionCount < countof(m_enabledExtensionNames));
-				VG_INFO("[Device] Extension \"%s\" is enabled", _name);
+				VG_INFO("[Device] %s extension \"%s\" is enabled", m_extensionTypeName, _name);
 				return true;
 			}
 		}
@@ -67,12 +67,12 @@ namespace vg::gfx::vulkan
 			m_availableExtensions = (VkExtensionProperties*)malloc(sizeof(VkExtensionProperties) * m_availableExtensionCount);
 			VG_VERIFY_VULKAN(vkEnumerateInstanceExtensionProperties(nullptr, &m_availableExtensionCount, m_availableExtensions));
 
-            VG_INFO("[Device] Supported instance extensions:");
-			for (uint i = 0; i < m_availableExtensionCount; ++i)
-			{
-				auto & extension = m_availableExtensions[i];
-				VG_INFO("Extension name: %s version %u", extension.extensionName, extension.specVersion);
-			}
+            //VG_INFO("[Device] Supported instance extensions:");
+			//for (uint i = 0; i < m_availableExtensionCount; ++i)
+			//{
+			//	auto & extension = m_availableExtensions[i];
+			//	VG_INFO("[Device] Extension name: %s version %u is available", extension.extensionName, extension.specVersion);
+			//}
 
 			for (auto * ext : m_registered)
 				ext->init();
@@ -97,18 +97,16 @@ namespace vg::gfx::vulkan
 	//--------------------------------------------------------------------------------------
 	// Device extension list
 	//--------------------------------------------------------------------------------------
-	bool DeviceExtensionList::init()
+	bool DeviceExtensionList::init(VkPhysicalDevice & _vkPhysicalDevice)
 	{
 		super::init("Device");
 
-		auto * device = gfx::Device::get();
-
-		VG_VERIFY_VULKAN(vkEnumerateDeviceExtensionProperties(device->getVulkanPhysicalDevice(), nullptr, &m_availableExtensionCount, nullptr));
+		VG_VERIFY_VULKAN(vkEnumerateDeviceExtensionProperties(_vkPhysicalDevice, nullptr, &m_availableExtensionCount, nullptr));
 
 		if (m_availableExtensionCount > 0)
 		{
 			m_availableExtensions = (VkExtensionProperties*)malloc(sizeof(VkExtensionProperties) * m_availableExtensionCount);
-			VG_VERIFY_VULKAN(vkEnumerateDeviceExtensionProperties(device->getVulkanPhysicalDevice(), nullptr, &m_availableExtensionCount, m_availableExtensions));
+			VG_VERIFY_VULKAN(vkEnumerateDeviceExtensionProperties(_vkPhysicalDevice, nullptr, &m_availableExtensionCount, m_availableExtensions));
 			
 			for (auto * ext : m_registered)
 				ext->init();

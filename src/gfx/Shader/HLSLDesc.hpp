@@ -164,6 +164,18 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    HLSLDesc::Technique & HLSLDesc::addTechnique(const core::string & _name, ShaderKey::VS _vs, ShaderKey::PS _ps, ShaderKey::Flags _flag)
+    {
+        auto & technique = addTechnique(_name);
+        {
+            technique.vs = _vs;
+            technique.ps = _ps;
+            technique.addFlag(_flag);
+        }
+        return technique;
+    }
+
+    //--------------------------------------------------------------------------------------
     const core::vector<HLSLDesc::Technique> & HLSLDesc::getTechniques() const
     {
         return m_techniques;

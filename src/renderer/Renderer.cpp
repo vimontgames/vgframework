@@ -417,7 +417,7 @@ namespace vg::renderer
             {
                 VG_PROFILE_CPU("Framegraph");
 
-                m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(1,0,0,1), FrameGraphResource::InitState::Clear);
+                m_frameGraph.importRenderTarget("Backbuffer", m_device.getBackbuffer(), float4(0,0,0,1), FrameGraphResource::InitState::Clear);
                 m_frameGraph.setGraphOutput("Backbuffer");
 
                 const bool hdrOutput = HDR::None != GetHDR();

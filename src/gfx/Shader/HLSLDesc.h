@@ -68,6 +68,7 @@ namespace vg::gfx
         Shader * getShader(API _api, ShaderStage _stage, ShaderKey::EntryPoint _index, ShaderKey::Flags _flags);
 
         Technique & addTechnique(const core::string & _name);
+        Technique & addTechnique(const core::string & _name, ShaderKey::VS _vs, ShaderKey::PS _ps, ShaderKey::Flags _flag = (ShaderKey::Flags)0x0);
         const core::vector<Technique> & getTechniques() const;
 
         core::u64 getCRC() const { return m_crc; }

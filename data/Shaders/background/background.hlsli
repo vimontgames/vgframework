@@ -6,6 +6,12 @@
 
 struct BackgroundRootConstants
 {
+    void reset()
+    {
+        quad.reset();
+        color = float4(1,1,1,1);
+    }  
+
     QuadConstants   quad;
     float4          color;
 };

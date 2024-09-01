@@ -19,6 +19,8 @@ namespace vg::renderer
 
     private:
         gfx::RootSignatureHandle        m_hdrOutputRootSignature;
-        gfx::ShaderKey                  m_hdrOutputShaderKey;
+        gfx::ShaderKey                  m_hdrOutputCopyShaderKey;
+        gfx::ShaderKey                  m_hdrOutputHDR10ShaderKey;
+        gfx::ShaderKey                  m_hdrOutputHDR16ShaderKey;
     };
 }

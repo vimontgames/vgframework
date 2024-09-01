@@ -71,7 +71,7 @@ namespace vg::gfx::vulkan
 	{
 		using super = ExtensionList;
 	public:
-		bool init();
+		bool init(VkPhysicalDevice & _vkPhysicalDevice);
 		bool onDeviceCreated();
 	};
 

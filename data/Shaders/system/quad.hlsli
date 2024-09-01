@@ -6,6 +6,12 @@ struct QuadConstants
     float4 posOffsetScale;
     float4 uvOffsetScale;
 
+    void reset()
+    {
+        posOffsetScale = float4(0,0,1,1);
+        uvOffsetScale = float4(0,0,1,1);
+    }  
+
     float2 getUV0(uint _vertexID)
     {
         float2 tmp = float2(_vertexID & 1, (_vertexID & 2) >> 1);
