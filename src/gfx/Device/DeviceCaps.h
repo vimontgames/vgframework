@@ -42,6 +42,8 @@ namespace vg::gfx
         bool isHDRModeSupported(HDR _mode) { return hdr[core::asInteger(_mode)]; }
 
         bool            hdr[core::enumCount<HDR>()];
+        float           minLuminance = 0.0f;
+        float           maxLuminance = 400.0f;
         bool            enableST2084 = false;
         float           referenceWhiteNits = 80.0f;    // The reference brightness level of the display.
     };

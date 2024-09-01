@@ -273,7 +273,7 @@ namespace vg::gfx::dx12
             {                
                 DXGI_OUTPUT_DESC1 desc1 = {};
                 VG_VERIFY_SUCCEEDED(output6->GetDesc1(&desc1));
-        
+
                 hdr10Support = (desc1.ColorSpace == DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020);
 
                 D3D12_FEATURE_DATA_FORMAT_SUPPORT Support =
@@ -284,6 +284,9 @@ namespace vg::gfx::dx12
                 // ...
                 if (hdr10Support)
                 {
+                    m_caps.minLuminance = desc1.MinLuminance;
+                    m_caps.maxLuminance = desc1.MaxLuminance;
+
                     if (SUCCEEDED(m_d3d12device->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &Support, sizeof(Support))))
                     {
                         if (D3D12_FORMAT_SUPPORT1_DISPLAY & Support.Support1)

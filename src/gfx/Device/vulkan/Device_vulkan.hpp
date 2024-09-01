@@ -4,9 +4,9 @@
 #include "Device_Vulkan.inl"
 #endif
 
-//#ifdef VG_WINDOWS
-//#include "dxgi1_6.h"
-//#endif
+#ifdef VG_WINDOWS
+#include "dxgi1_6.h"
+#endif
 
 namespace vg::gfx::vulkan
 {
@@ -335,10 +335,50 @@ namespace vg::gfx::vulkan
 	{
 		base::Device::init(_params);
 
-		//#ifdef VG_WINDOWS
-		//IDXGIFactory6 * dxgiFactory = nullptr;
-		//VG_VERIFY_SUCCEEDED(CreateDXGIFactory2(0, IID_PPV_ARGS(&dxgiFactory)));
-		//#endif
+		#ifdef VG_WINDOWS
+		{
+            uint dxgiFactoryFlags = 0; // DXGI_CREATE_FACTORY_DEBUG
+			IDXGIFactory6 * dxgiFactory = nullptr;
+            VG_VERIFY_SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&dxgiFactory)));
+			{
+				IDXGIFactory6 * dxgiFactory6 = nullptr;
+				VG_ASSERT(SUCCEEDED(dxgiFactory->QueryInterface(IID_PPV_ARGS(&dxgiFactory6))));
+				IDXGIAdapter1 * dxgiAdapter = nullptr;
+				for (uint a = 0; SUCCEEDED(dxgiFactory6->EnumAdapterByGpuPreference(a, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&dxgiAdapter))); ++a)
+				{
+					DXGI_ADAPTER_DESC1 desc;
+					dxgiAdapter->GetDesc1(&desc);
+
+					IDXGIOutput * dxgiOutput;
+					int i = 0;
+					while (DXGI_ERROR_NOT_FOUND != dxgiAdapter->EnumOutputs(i, &dxgiOutput))
+					{
+                        IDXGIOutput6 * output6 = nullptr;
+                        HRESULT hr = dxgiOutput->QueryInterface(__uuidof(IDXGIOutput6), reinterpret_cast<void **>(&output6));
+                        if (SUCCEEDED(hr))
+                        {
+                            DXGI_OUTPUT_DESC1 desc1 = {};
+                            VG_VERIFY_SUCCEEDED(output6->GetDesc1(&desc1));
+
+							// Test only the main monitor
+							if (desc1.AttachedToDesktop)
+							{
+								bool hdrSupport = (desc1.ColorSpace == DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020);
+
+								if (hdrSupport)
+								{
+                                    m_caps.minLuminance = desc1.MinLuminance;
+                                    m_caps.maxLuminance = desc1.MaxLuminance;
+								}
+							}
+                        }
+						i++;
+					}                   
+				}
+			}
+			dxgiFactory->Release();
+		}
+		#endif
 
 		registerExtensions(_params);
 
