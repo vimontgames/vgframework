@@ -219,18 +219,26 @@ namespace vg::core
                 break;
 
             case IProperty::Type::Int8:
+            case IProperty::Type::EnumI8:
+            case IProperty::Type::EnumFlagsI8:
                 *(i8 *)_previousValue = *(i8 *)_newValue;
                 break;
 
             case IProperty::Type::Int16:
+            case IProperty::Type::EnumI16:
+            case IProperty::Type::EnumFlagsI16:
                 *(i16 *)_previousValue = *(i16 *)_newValue;
                 break;
 
             case IProperty::Type::Int32:
+            case IProperty::Type::EnumI32:
+            case IProperty::Type::EnumFlagsI32:
                 *(i32 *)_previousValue = *(i32 *)_newValue;
                 break;
 
             case IProperty::Type::Int64:
+            case IProperty::Type::EnumI64:
+            case IProperty::Type::EnumFlagsI64:
                 *(i64 *)_previousValue = *(i64 *)_newValue;
                 break;
 

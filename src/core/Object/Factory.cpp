@@ -10,6 +10,7 @@
 #include "core/Misc/BitMask/BitMask.h"
 #include "core/IInstance.h"
 #include "core/Object/ObjectHandle.h"
+#include "core/Types/Traits.h"
 
 #include <random>
 
@@ -474,21 +475,29 @@ namespace vg::core
             break;
 
         case IProperty::Type::Int8:
+        case IProperty::Type::EnumI8:
+        case IProperty::Type::EnumFlagsI8:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyInt8(_dstObj) = *_srcProp->GetPropertyInt8(_srcObj);
             break;
 
         case IProperty::Type::Int16:
+        case IProperty::Type::EnumI16:
+        case IProperty::Type::EnumFlagsI16:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyInt16(_dstObj) = *_srcProp->GetPropertyInt16(_srcObj);
             break;
 
         case IProperty::Type::Int32:
+        case IProperty::Type::EnumI32:
+        case IProperty::Type::EnumFlagsI32:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyInt32(_dstObj) = *_srcProp->GetPropertyInt32(_srcObj);
             break;
 
         case IProperty::Type::Int64:
+        case IProperty::Type::EnumI64:
+        case IProperty::Type::EnumFlagsI64:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyInt64(_dstObj) = *_srcProp->GetPropertyInt64(_srcObj);
             break;
@@ -2234,7 +2243,7 @@ namespace vg::core
             for (uint i = 0; i < _prop->GetEnumCount(); ++i)
             {
                 if (!strcmp(val, _prop->GetEnumName(i)))
-                    *pEnum = (T)_prop->GetEnumValue(i); 
+                    *pEnum = (T) (scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(i) : _prop->GetUnsignedEnumValue(i));
             }
         }
     }
@@ -2245,7 +2254,8 @@ namespace vg::core
         const T * pEnum = (const T *)(uint_ptr(_object) + _prop->GetOffset());
         for (uint i = 0; i < _prop->GetEnumCount(); ++i)
         {
-            if (*pEnum == _prop->GetEnumValue(i))
+            T temp = (T)(scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(i) : _prop->GetUnsignedEnumValue(i));
+            if (*pEnum == temp)
             {
                 _xmlElem->SetAttribute("value", _prop->GetEnumName(i));
                 break;
@@ -2281,7 +2291,7 @@ namespace vg::core
                 for (uint e = 0; e < _prop->GetEnumCount(); ++e)
                 {
                     auto name = _prop->GetEnumName(e);
-                    auto value = _prop->GetEnumValue(e);
+                    auto value = scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(e) : _prop->GetUnsignedEnumValue(e);
 
                     if (!strcmp(name, temp))
                     {
@@ -2297,12 +2307,13 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     template <typename T> void Factory::serializeEnumFlagsPropertyToXML(const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const
     {
-        const u32 * pEnum = (const u32 *)(uint_ptr(_object) + _prop->GetOffset());
+        const T * pEnum = (const T *)(uint_ptr(_object) + _prop->GetOffset());
         string flags;
         bool first = true;
         for (uint i = 0; i < _prop->GetEnumCount(); ++i)
         {
-            if (0 != (*pEnum & _prop->GetEnumValue(i)))
+            T temp = (T)(scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(i) : _prop->GetUnsignedEnumValue(i));
+            if (0 != (*pEnum & temp))
             {
                 if (!first)
                     flags += "|";

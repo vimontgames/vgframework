@@ -62,6 +62,20 @@ namespace vg::engine
         }
         registerPropertyGroupEnd(TestComponent);
 
+        registerPropertyGroupBegin(TestComponent, "Enums");
+        {
+            registerPropertyEnum(TestComponent, EnumU8, m_enumU8, "EnumU8");
+            registerPropertyEnum(TestComponent, EnumI32, m_enumI32, "EnumI32");
+        }
+        registerPropertyGroupEnd(TestComponent);
+
+        registerPropertyGroupBegin(TestComponent, "EnumFlags");
+        {
+            registerPropertyEnumBitfield(TestComponent, EnumFlagsU16, m_enumFlagsU16, "EnumU16");
+        }
+        registerPropertyGroupEnd(TestComponent);
+        
+
         return true;
     }
 

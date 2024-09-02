@@ -7,7 +7,13 @@ namespace vg::core
     struct EnumDesc 
     {
         string name;
-        u64 value = 0x0;
+
+        union MyUnion
+        {
+            u64 u = 0;
+            i64 s;
+        } value;
+
         EnumValueFlags flags = (EnumValueFlags)0x0;
     };
 
@@ -42,7 +48,8 @@ namespace vg::core
         const char *                    GetEnumTypeName                 () const final override;
         u32                             GetEnumCount                    () const final override;
         const char *                    GetEnumName                     (uint index) const final override;
-        u64                             GetEnumValue                    (uint index) const final override;
+        u64                             GetUnsignedEnumValue            (uint index) const final override;
+        i64                             GetSignedEnumValue              (uint index) const final override;
 
         bool *                          GetPropertyBool                 (const IObject * _object) const final override;
 

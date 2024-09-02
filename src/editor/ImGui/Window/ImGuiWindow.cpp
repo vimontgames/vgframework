@@ -341,8 +341,6 @@ namespace vg::editor
         return enumName;
     }
 
-    
-
     //--------------------------------------------------------------------------------------
     template <typename T> bool ImGuiWindow::displayEnum(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
     {
@@ -350,22 +348,25 @@ namespace vg::editor
         const auto offset = _prop->GetOffset();
         const auto flags = _prop->GetFlags();
 
+        using TEMP = typename scalarTraits<T>::larger_type;
+
         const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
 
         T * pEnum = (T*)(uint_ptr(_object) + offset);
-        int enumVal = (int)*pEnum;
+        TEMP enumVal = (TEMP)*pEnum;
         T temp = *pEnum;
 
         string preview = "";
         bool previewDisabled = false;
         for (uint e = 0; e < _prop->GetEnumCount(); ++e)
         {
-            auto value = _prop->GetEnumValue(e);
+            TEMP value = scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(e) : _prop->GetUnsignedEnumValue(e);
+
             if (enumVal == value)
             {
-                const auto enumValueFlags = _prop->GetEnumValueFlags(value);
-                if (asBool(enumValueFlags & core::EnumValueFlags::Disabled))
-                    previewDisabled = true;
+                //const auto enumValueFlags = _prop->GetEnumValueFlags(value);
+                //if (asBool(enumValueFlags & core::EnumValueFlags::Disabled))
+                //    previewDisabled = true;
 
                 preview = getEnumDisplayName<T>(_prop, e);
                 break;
@@ -387,12 +388,12 @@ namespace vg::editor
             for (uint e = 0; e < _prop->GetEnumCount(); ++e)
             {
                 const string enumName = getEnumDisplayName<T>(_prop, e);
-                auto value = _prop->GetEnumValue(e);
+                TEMP value = scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(e) : _prop->GetUnsignedEnumValue(e);
 
                 bool selectableDisabled = false;
-                const auto enumValueFlags = _prop->GetEnumValueFlags(value);
-                if (asBool(enumValueFlags & core::EnumValueFlags::Disabled))
-                    selectableDisabled = true;
+                //const auto enumValueFlags = _prop->GetEnumValueFlags(value);
+                //if (asBool(enumValueFlags & core::EnumValueFlags::Disabled))
+                //    selectableDisabled = true;
 
                 if (selectableDisabled)
                     PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
@@ -984,14 +985,19 @@ namespace vg::editor
                     changed |= displayEnum<u8>(_object, _prop, propContext);
                     break;
 
-                //case IProperty::Type::EnumI8:
-                //    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                //    changed |= displayEnum<i8>(_object, _prop, propContext);
-                //    break;
+                case IProperty::Type::EnumI8:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnum<i8>(_object, _prop, propContext);
+                    break;
 
                 case IProperty::Type::EnumU16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnum<u16>(_object, _prop, propContext);
+                    break;
+
+                case IProperty::Type::EnumI16:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnum<i16>(_object, _prop, propContext);
                     break;
 
                 case IProperty::Type::EnumU32:
@@ -999,9 +1005,19 @@ namespace vg::editor
                     changed |= displayEnum<u32>(_object, _prop, propContext);
                     break;
 
+                case IProperty::Type::EnumI32:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnum<i32>(_object, _prop, propContext);
+                    break;
+
                 case IProperty::Type::EnumFlagsU8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnumFlags<u8>(_object, _prop, propContext);
+                    break;
+
+                case IProperty::Type::EnumFlagsI8:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnumFlags<i8>(_object, _prop, propContext);
                     break;
 
                 case IProperty::Type::EnumFlagsU16:
@@ -1009,14 +1025,29 @@ namespace vg::editor
                     changed |= displayEnumFlags<u16>(_object, _prop, propContext);
                     break;
 
+                case IProperty::Type::EnumFlagsI16:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnumFlags<i16>(_object, _prop, propContext);
+                    break;
+
                 case IProperty::Type::EnumFlagsU32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnumFlags<u32>(_object, _prop, propContext);
                     break;
 
+                case IProperty::Type::EnumFlagsI32:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnumFlags<i32>(_object, _prop, propContext);
+                    break;
+
                 case IProperty::Type::EnumFlagsU64:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnumFlags<u64>(_object, _prop, propContext);
+                    break;
+
+                case IProperty::Type::EnumFlagsI64:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= displayEnumFlags<i64>(_object, _prop, propContext);
                     break;
 
                 case IProperty::Type::Uint8:

@@ -1,4 +1,5 @@
 #include "Property.h"
+#include "core/Types/Traits.h"
 
 namespace vg::core
 {
@@ -37,22 +38,22 @@ namespace vg::core
                     initEnum<u64>(_enumCount, _enumNames, _enumValues);
                     break;
 
-                //case Type::EnumI8:
-                //case Type::EnumFlagsI8:
-                //    initEnum<i8>(_enumCount, _enumNames, _enumValues);
-                //    break;
-                //case Type::EnumI16:
-                //case Type::EnumFlagsI16:
-                //    initEnum<i16>(_enumCount, _enumNames, _enumValues);
-                //    break;
-                //case Type::EnumI32:
-                //case Type::EnumFlagsI32:
-                //    initEnum<i32>(_enumCount, _enumNames, _enumValues);
-                //    break;
-                //case Type::EnumI64:
-                //case Type::EnumFlagsI64:
-                //    initEnum<i64>(_enumCount, _enumNames, _enumValues);
-                //    break;
+                case Type::EnumI8:
+                case Type::EnumFlagsI8:
+                    initEnum<i8>(_enumCount, _enumNames, _enumValues);
+                    break;
+                case Type::EnumI16:
+                case Type::EnumFlagsI16:
+                    initEnum<i16>(_enumCount, _enumNames, _enumValues);
+                    break;
+                case Type::EnumI32:
+                case Type::EnumFlagsI32:
+                    initEnum<i32>(_enumCount, _enumNames, _enumValues);
+                    break;
+                case Type::EnumI64:
+                case Type::EnumFlagsI64:
+                    initEnum<i64>(_enumCount, _enumNames, _enumValues);
+                    break;
 
                 // Types that support enumArray
                 case Type::Resource:
@@ -103,7 +104,11 @@ namespace vg::core
             *dst = '\0';
             ++name;
             enums[e].name = temp;
-            enums[e].value = ((T*)_enumValues)[e];
+
+            if (scalarTraits<T>::is_signed)
+                enums[e].value.s = ((T*)_enumValues)[e];
+            else
+                enums[e].value.u = ((T*)_enumValues)[e];
         }
     }
 
@@ -112,7 +117,7 @@ namespace vg::core
     {
         for (uint i = 0; i < GetEnumCount(); ++i)
         {
-            if (_value == GetEnumValue(i))
+            if (_value == GetUnsignedEnumValue(i))
             {
                 EnumDesc & desc = enums[i];
                 auto current = desc.flags;
@@ -138,7 +143,7 @@ namespace vg::core
     {
         for (uint i = 0; i < GetEnumCount(); ++i)
         {
-            if (_value == GetEnumValue(i))
+            if (_value == GetUnsignedEnumValue(i))
             {
                 const EnumDesc & desc = enums[i];
                 return desc.flags;
@@ -259,9 +264,17 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    u64 Property::GetEnumValue(uint index) const
+    u64 Property::GetUnsignedEnumValue(uint index) const
     {
-        return enums[index].value;
+        VG_ASSERT(IProperty::Type::EnumU8 == GetType() || IProperty::Type::EnumU16 == GetType() || IProperty::Type::EnumU32 == GetType() || IProperty::Type::EnumU64 == GetType() || IProperty::Type::EnumFlagsU8 == GetType() || IProperty::Type::EnumFlagsU16 == GetType() || IProperty::Type::EnumFlagsU32 == GetType() || IProperty::Type::EnumFlagsU64 == GetType());
+        return enums[index].value.u;
+    }
+
+    //--------------------------------------------------------------------------------------
+    i64 Property::GetSignedEnumValue(uint index) const
+    {
+        VG_ASSERT(IProperty::Type::EnumI8 == GetType() || IProperty::Type::EnumI16 == GetType() || IProperty::Type::EnumI32 == GetType() || IProperty::Type::EnumI64 == GetType() || IProperty::Type::EnumFlagsI8 == GetType() || IProperty::Type::EnumFlagsI16 == GetType() || IProperty::Type::EnumFlagsI32 == GetType() || IProperty::Type::EnumFlagsI64 == GetType());
+        return enums[index].value.s;
     }
 
     //--------------------------------------------------------------------------------------
@@ -336,7 +349,7 @@ namespace vg::core
     core::i8 * Property::GetPropertyInt8(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Int8 == GetType() /* || Type::EnumI8 == getType() || Type::EnumFlagsI8 == getType()*/);
+        VG_ASSERT(Type::Int8 == GetType() || Type::EnumI8 == GetType() || Type::EnumFlagsI8 == GetType());
         return (i8 *)(uint_ptr(_object) + offset);
     }
 
@@ -344,7 +357,7 @@ namespace vg::core
     core::i16 * Property::GetPropertyInt16(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Int16 == GetType() /* || Type::EnumI16 == getType() || Type::EnumFlagsI16 == getType()*/);
+        VG_ASSERT(Type::Int16 == GetType()  || Type::EnumI16 == GetType() || Type::EnumFlagsI16 == GetType());
         return (i16 *)(uint_ptr(_object) + offset);
     }
 
@@ -352,7 +365,7 @@ namespace vg::core
     core::i32 * Property::GetPropertyInt32(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Int32 == GetType() /* || Type::EnumI32 == getType() || Type::EnumFlagsI32 == getType()*/);
+        VG_ASSERT(Type::Int32 == GetType()  || Type::EnumI32 == GetType() || Type::EnumFlagsI32 == GetType());
         return (i32 *)(uint_ptr(_object) + offset);
     }
 
@@ -360,7 +373,7 @@ namespace vg::core
     core::i64 * Property::GetPropertyInt64(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);
-        VG_ASSERT(Type::Int64 == GetType() /* || Type::EnumI64 == getType() || Type::EnumFlagsI64 == getType()*/);
+        VG_ASSERT(Type::Int64 == GetType()  || Type::EnumI64 == GetType() || Type::EnumFlagsI64 == GetType());
         return (i64 *)(uint_ptr(_object) + offset);
     }
 

@@ -22,7 +22,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    u32 * DynamicPropertyU64::GetPropertyPtr(const IObject * _object, const IProperty * _prop) const
+    u64 * DynamicPropertyU64::GetPropertyPtr(const IObject * _object, const IProperty * _prop) const
     {
         return _prop->GetPropertyUint64(_object);
     }

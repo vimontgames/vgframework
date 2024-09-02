@@ -150,7 +150,7 @@ namespace vg::renderer
                 auto mode = (gfx::HDR)i;
                 bool supported = renderer->IsHDRSupported(mode);
 
-                if (m_hdrProp->SetEnumValueFlags(m_hdrProp->GetEnumValue(i), EnumValueFlags::Disabled, !supported))
+                if (m_hdrProp->SetEnumValueFlags(m_hdrProp->GetUnsignedEnumValue(i), EnumValueFlags::Disabled, !supported))
                 {
                     // changed
                 }
@@ -164,7 +164,7 @@ namespace vg::renderer
                 auto mode = (gfx::VSync)i;
                 bool supported = renderer->IsVSyncSupported(mode);
 
-                if (m_vsyncProp->SetEnumValueFlags(m_vsyncProp->GetEnumValue(i), EnumValueFlags::Disabled, !supported))
+                if (m_vsyncProp->SetEnumValueFlags(m_vsyncProp->GetUnsignedEnumValue(i), EnumValueFlags::Disabled, !supported))
                 {
                     // changed
                 }

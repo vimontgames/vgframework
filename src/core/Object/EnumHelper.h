@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/Types/Traits.h"
+
 namespace vg::core
 {
     template <typename E> class EnumHelper
@@ -54,7 +56,13 @@ namespace vg::core
             const auto entries = magic_enum::enum_entries<E>();
             uint count = (uint)entries.size();
             for (uint e = 0; e < count; ++e)
-                values.push_back((T)entries[e].first);
+            {
+                auto value = (T)entries[e].first;
+                if (scalarTraits<T>::is_signed)
+                    values.push_back(-(~(typename scalarTraits<T>::signed_type)value)-1);   
+                else
+                    values.push_back(value);
+            }
 
             return values;
         }

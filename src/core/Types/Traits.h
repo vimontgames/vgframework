@@ -33,15 +33,15 @@ namespace vg::core
     template <> struct vectorTraits<float4> { using type = float; static const uint count = 4; static float4 makeVector(float * _values)    { return float4(_values[0], _values[1], _values[2], _values[3]); } };
 
     template <typename T> struct scalarTraits;
-    template <> struct scalarTraits<u8>     { static const bool is_signed = false; static const bool is_integer = true; };
-    template <> struct scalarTraits<u16>    { static const bool is_signed = false; static const bool is_integer = true; };
-    template <> struct scalarTraits<u32>    { static const bool is_signed = false; static const bool is_integer = true; };
-    template <> struct scalarTraits<u64>    { static const bool is_signed = false; static const bool is_integer = true; };
-
-    template <> struct scalarTraits<i8>     { static const bool is_signed = true;  static const bool is_integer = true; };
-    template <> struct scalarTraits<i16>    { static const bool is_signed = true;  static const bool is_integer = true; };
-    template <> struct scalarTraits<i32>    { static const bool is_signed = true;  static const bool is_integer = true; };
-    template <> struct scalarTraits<i64>    { static const bool is_signed = true;  static const bool is_integer = true; };
+    template <> struct scalarTraits<u8>     { using larger_type = u64; using signed_type = i8;  using unsigned_type = u8;  static const bool is_signed = false; static const bool is_integer = true; };
+    template <> struct scalarTraits<u16>    { using larger_type = u64; using signed_type = i16; using unsigned_type = u16; static const bool is_signed = false; static const bool is_integer = true; };
+    template <> struct scalarTraits<u32>    { using larger_type = u64; using signed_type = i32; using unsigned_type = u32; static const bool is_signed = false; static const bool is_integer = true; };
+    template <> struct scalarTraits<u64>    { using larger_type = u64; using signed_type = i64; using unsigned_type = u64; static const bool is_signed = false; static const bool is_integer = true; };
+                                                                                                      
+    template <> struct scalarTraits<i8>     { using larger_type = i64; using signed_type = i8;  using unsigned_type = u8;  static const bool is_signed = true;  static const bool is_integer = true; };
+    template <> struct scalarTraits<i16>    { using larger_type = i64; using signed_type = i16; using unsigned_type = u16; static const bool is_signed = true;  static const bool is_integer = true; };
+    template <> struct scalarTraits<i32>    { using larger_type = i64; using signed_type = i32; using unsigned_type = u32; static const bool is_signed = true;  static const bool is_integer = true; };
+    template <> struct scalarTraits<i64>    { using larger_type = i64; using signed_type = i64; using unsigned_type = u64; static const bool is_signed = true;  static const bool is_integer = true; };
 
     template <> struct scalarTraits<float>  { static const bool is_signed = true;  static const bool is_integer = false; };
     template <> struct scalarTraits<double> { static const bool is_signed = true;  static const bool is_integer = false; };

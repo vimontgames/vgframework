@@ -219,6 +219,8 @@ namespace vg::engine
             break;
 
             case IProperty::Type::Int8:
+            case IProperty::Type::EnumI8:
+            case IProperty::Type::EnumFlagsI8:
             {
                 if (isEnumArray)
                     return false;
@@ -228,6 +230,8 @@ namespace vg::engine
             break;
 
             case IProperty::Type::Int16:
+            case IProperty::Type::EnumI16:
+            case IProperty::Type::EnumFlagsI16:
             {
                 if (isEnumArray)
                     return false;
@@ -237,6 +241,8 @@ namespace vg::engine
             break;
 
             case IProperty::Type::Int32:
+            case IProperty::Type::EnumI32:
+            case IProperty::Type::EnumFlagsI32:
             {
                 if (isEnumArray)
                     return false;
@@ -246,6 +252,8 @@ namespace vg::engine
             break;
 
             case IProperty::Type::Int64:
+            case IProperty::Type::EnumI64:
+            case IProperty::Type::EnumFlagsI64:
             {
                 if (isEnumArray)
                     return false;
@@ -393,6 +401,12 @@ namespace vg::engine
                     newDynProp = new DynamicPropertyU16(_prop->GetName());
                     break;
 
+                case IProperty::Type::Uint64:
+                case IProperty::Type::EnumU64:
+                case IProperty::Type::EnumFlagsU64:
+                    newDynProp = new DynamicPropertyU64(_prop->GetName());
+                    break;
+
                 case IProperty::Type::Uint32:
                 case IProperty::Type::EnumU32:
                 case IProperty::Type::EnumFlagsU32:
@@ -424,15 +438,27 @@ namespace vg::engine
                     break;
 
                 case IProperty::Type::Int8:
+                case IProperty::Type::EnumI8:
+                case IProperty::Type::EnumFlagsI8:
                     newDynProp = new DynamicPropertyI8(_prop->GetName());
                     break;
 
                 case IProperty::Type::Int16:
+                case IProperty::Type::EnumI16:
+                case IProperty::Type::EnumFlagsI16:
                     newDynProp = new DynamicPropertyI16(_prop->GetName());
                     break;
 
                 case IProperty::Type::Int32:
+                case IProperty::Type::EnumI32:
+                case IProperty::Type::EnumFlagsI32:
                     newDynProp = new DynamicPropertyI32(_prop->GetName());
+                    break;
+
+                case IProperty::Type::Int64:
+                case IProperty::Type::EnumI64:
+                case IProperty::Type::EnumFlagsI64:
+                    newDynProp = new DynamicPropertyI64(_prop->GetName());
                     break;
             }
 

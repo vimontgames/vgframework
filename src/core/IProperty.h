@@ -51,18 +51,18 @@ namespace vg::core
             EnumU16,
             EnumU32,
             EnumU64,
-            //EnumI8,
-            //EnumI16,
-            //EnumI32,
-            //EnumI64,
+            EnumI8,
+            EnumI16,
+            EnumI32,
+            EnumI64,
             EnumFlagsU8,
             EnumFlagsU16,
             EnumFlagsU32,
             EnumFlagsU64,
-            //EnumFlagsI8,
-            //EnumFlagsI16,
-            //EnumFlagsI32,
-            //EnumFlagsI64,
+            EnumFlagsI8,
+            EnumFlagsI16,
+            EnumFlagsI32,
+            EnumFlagsI64,
             BitMask,
             Resource,
             ResourcePtr,
@@ -139,7 +139,8 @@ namespace vg::core
         virtual const char *                    GetEnumTypeName                 () const = 0;
         virtual u32                             GetEnumCount                    () const = 0;
         virtual const char *                    GetEnumName                     (uint index) const = 0;
-        virtual u64                             GetEnumValue                    (uint index) const = 0;
+        virtual u64                             GetUnsignedEnumValue            (uint index) const = 0;
+        virtual i64                             GetSignedEnumValue              (uint index) const = 0;
 
         virtual bool *                          GetPropertyBool                 (const IObject * _object) const = 0;
 

@@ -4,6 +4,40 @@
 
 namespace vg::engine
 {
+    enum class EnumU8 : core::u8
+    {
+        Zero = 0,
+        One = 1,
+    };
+
+    enum class EnumFlagsU16 : core::u16
+    {
+        Zero    = 0x0001,
+        One     = 0x0002,
+        Two     = 0x0004,
+        Three   = 0x0008,
+        Four    = 0x0010,
+        Five    = 0x0020,
+        Six     = 0x0040,
+        Seven   = 0x0080,
+        Eight   = 0x0100,   // 256 is the current limit
+        Nine    = 0x0200,
+        Ten     = 0x0400,
+        Eleven  = 0x0800,
+        Twelve  = 0x1000,
+        Thirteen= 0x2000,
+        Fourteen= 0x4000,
+        Fifteen = 0x8000
+    };
+
+    enum class EnumI32 : core::i32
+    {
+        NegativeTwo = -2,
+        NegativeOne = -1,
+        Zero = 0,
+        One = 1
+    };
+
     class TestComponent : public core::Component
     {
     public:
@@ -38,5 +72,10 @@ namespace vg::engine
         core::int2      m_int2 = core::int2(1, 2);
         core::int3      m_int3 = core::int3(1, 2, 3);
         core::int4      m_int4 = core::int4(1, 2, 3, 4);
+
+        EnumU8          m_enumU8 = EnumU8::Zero;
+        EnumI32         m_enumI32 = EnumI32::Zero;
+
+        EnumFlagsU16    m_enumFlagsU16 = EnumFlagsU16::One;
     };
 }
