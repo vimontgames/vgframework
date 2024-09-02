@@ -6,11 +6,9 @@
 #include "gfx/CommandQueue/CommandQueue.h"
 #include "gfx/Resource/Texture.h"
 #include "gfx/BindlessTable/BindlessTable.h"
-#include "gfx/Device/Device.h"
 #include "editor/Editor_Consts.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.cpp"
 #include "IconFont/IconsFontAwesome6.h"
-#include "editor/Editor_Consts.h"
 #include "renderer/Model/Material/Material_Consts.h"
 
 using namespace vg::core;
@@ -252,7 +250,6 @@ namespace vg::renderer
     ImGuiAdapter::~ImGuiAdapter()
     {
         gfx::Device * device = Device::get();
-
         device->waitGPUIdle();
 
         BindlessTable * bindlessTable = device->getBindlessTable();
@@ -313,6 +310,8 @@ namespace vg::renderer
 
         gfx::Device * device = Device::get();
         static bool firstFrame = true;
+
+        updateBackbufferFormat();
 
         #ifdef VG_DX12
 
@@ -376,7 +375,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::render(gfx::CommandList * _cmdList)
+    void ImGuiAdapter::updateBackbufferFormat()
     {
         auto device = gfx::Device::get();
 
@@ -385,7 +384,8 @@ namespace vg::renderer
         // update backbuffer format
         ImGui_ImplDX12_Data * bd = ImGui_ImplDX12_GetBackendData();
 
-        auto renderOutputFormat = Texture::getd3d12ResourceFormat(getOutputPixelFormat());
+        auto fmt = getOutputPixelFormat();
+        auto renderOutputFormat = Texture::getd3d12ResourceFormat(fmt);
 
         if (bd->RTVFormat != renderOutputFormat)
         {
@@ -395,9 +395,6 @@ namespace vg::renderer
             bd->RTVFormat = renderOutputFormat;
             ImGui_ImplDX12_CreateDeviceObjects();
         }
-
-        ImGui::Render();
-        ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), _cmdList->getd3d12GraphicsCommandList());
 
         #elif defined(VG_VULKAN)
 
@@ -411,7 +408,7 @@ namespace vg::renderer
             //ImGui_ImplVulkan_DestroyDeviceObjects();
 
             ImGui_ImplVulkan_InitInfo * v = &bd->VulkanInitInfo;
-            
+
             vkDestroyPipelineLayout(device->getVulkanDevice(), bd->PipelineLayout, v->Allocator);
             bd->PipelineLayout = nullptr;
 
@@ -422,16 +419,26 @@ namespace vg::renderer
             bd->RenderPass = nullptr;
 
             createVulkanRenderPass();
-            
+
             bd->RenderPass = m_vkImguiRenderPass;
-            
+
             ImGui_ImplVulkan_CreateDeviceObjects();
             m_vkRenderTargetFormat = renderOutputFormat;
         }
+        #endif
+    }
 
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::render(gfx::CommandList * _cmdList)
+    {
+        #ifdef VG_DX12
+        ImGui::Render();
+        ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), _cmdList->getd3d12GraphicsCommandList());
+
+        #elif defined(VG_VULKAN)
         ImGui::Render();
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), _cmdList->getVulkanCommandBuffer(), nullptr);
-        #endif
+        #endif        
     }
 
     //--------------------------------------------------------------------------------------

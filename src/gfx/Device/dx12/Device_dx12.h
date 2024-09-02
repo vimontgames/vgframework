@@ -27,11 +27,15 @@ namespace vg::gfx::dx12
 
             void                            waitGPUIdle					();
 
-			void							applyVSync					(VSync mode);
+			void							applyVSync					(VSync _mode);
+			bool							isVSyncSupported			(VSync _mode) const;
+
             void                            applyHDR                    (HDR _mode);
 			void							applyColorSpace				(ColorSpace _mode);
 
 			D3D12DXGISwapChain *            getd3d12SwapChain           () const { return m_dxgiSwapChain; }
+
+            bool							updateHDR					();
 
 		protected:
 			void							init						(const DeviceParams & _params);
@@ -41,7 +45,7 @@ namespace vg::gfx::dx12
 
 			void							beginFrame					();
 			void							endFrame					();
-			
+
 		private:
 			D3D12DXGISwapChain *			created3d12SwapChain		(HWND _winHandle, core::uint _width, core::uint _height);
             void                            created3d12Backbuffers      ();
@@ -49,8 +53,6 @@ namespace vg::gfx::dx12
 
 			bool							isDeveloperModeEnabled		() const;
 			bool							setStablePowerState			();
-
-			void							checkHDRSupport				();
 
         private:
             D3D12Device *					m_d3d12device				= nullptr;

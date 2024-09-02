@@ -372,40 +372,42 @@ namespace vg::gfx
         if (RenderPassType::Graphic != m_currentRenderPassType)
             setCurrentRenderPassType(RenderPassType::Graphic);
 
-        if (asBool(m_graphicStateCache.m_dirtyFlags))
+        //if (asBool(m_graphicStateCache.m_dirtyFlags))
         {
             auto * device = Device::get();
 
-            if (asBool(GraphicPipelineStateCache::DirtyFlags::StencilRefValue & m_graphicStateCache.m_dirtyFlags))
+            //if (asBool(GraphicPipelineStateCache::DirtyFlags::StencilRefValue & m_graphicStateCache.m_dirtyFlags))
                 super::bindStencilRefValue(m_graphicStateCache.m_stencilRef);
 
-            if (asBool(GraphicPipelineStateCache::DirtyFlags::RootSignature & m_graphicStateCache.m_dirtyFlags))
+            //if (asBool(GraphicPipelineStateCache::DirtyFlags::RootSignature & m_graphicStateCache.m_dirtyFlags))
             {
                 VG_ASSERT(m_graphicStateCache.m_graphicPipelineKey.m_rootSignature.isValid(), "Invalid Graphics Root Signature");
                 super::bindGraphicRootSignature(device->getRootSignature(m_graphicStateCache.m_graphicPipelineKey.m_rootSignature));
             }
 
-            if (asBool(GraphicPipelineStateCache::DirtyFlags::IndexBuffer & m_graphicStateCache.m_dirtyFlags))
+            //if (asBool(GraphicPipelineStateCache::DirtyFlags::IndexBuffer & m_graphicStateCache.m_dirtyFlags))
                 super::bindIndexBuffer(m_graphicStateCache.m_indexBuffer);
 
-            if (asBool(GraphicPipelineStateCache::DirtyFlags::PipelineState & m_graphicStateCache.m_dirtyFlags))
+            //if (asBool(GraphicPipelineStateCache::DirtyFlags::PipelineState & m_graphicStateCache.m_dirtyFlags))
             {
                 const auto & key = m_graphicStateCache.m_graphicPipelineKey;
             
                 GraphicPipelineState * pso = nullptr;
                 if (!m_graphicStateCache.getGraphicPipelineState(key, pso))
                     return false;
-            
+                
+                VG_ASSERT(pso->getGraphicPipelineStateKey() == m_graphicStateCache.m_graphicPipelineKey);
+
                 super::bindGraphicPipelineState(pso);
             }
 
-            if (asBool(GraphicPipelineStateCache::DirtyFlags::Viewport & m_graphicStateCache.m_dirtyFlags))
+            //if (asBool(GraphicPipelineStateCache::DirtyFlags::Viewport & m_graphicStateCache.m_dirtyFlags))
                 super::bindViewport(m_graphicStateCache.m_viewport);
 
-            if (asBool(GraphicPipelineStateCache::DirtyFlags::Scissor & m_graphicStateCache.m_dirtyFlags))
+            //if (asBool(GraphicPipelineStateCache::DirtyFlags::Scissor & m_graphicStateCache.m_dirtyFlags))
                 super::bindScissor(m_graphicStateCache.m_scissor);
 
-            if (asBool(GraphicPipelineStateCache::DirtyFlags::RootConstants & m_graphicStateCache.m_dirtyFlags))
+            //if (asBool(GraphicPipelineStateCache::DirtyFlags::RootConstants & m_graphicStateCache.m_dirtyFlags))
                 super::bindGraphicRootConstants(m_graphicStateCache.m_rootConstants);
 
             m_graphicStateCache.m_dirtyFlags = (GraphicPipelineStateCache::DirtyFlags)0;

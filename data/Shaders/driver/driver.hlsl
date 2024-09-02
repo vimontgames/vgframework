@@ -88,8 +88,6 @@ PS_Output_Quad PS_Copy(VS_Output_Quad _input)
     // Apply the ST.2084 curve to the scene.
     output.color0.rgb = LinearToST2084(output.color0.rgb * hdrScalar);    
 
-    //output.color0.rgb = output.color0.a;
-
     #endif
 
     #if _HDR16

@@ -66,6 +66,8 @@ namespace vg::renderer
         void                    setBackgroundColor          (const core::float4 & _backgroundColor);
         core::float4		    getBackgroundColor		    () const { return m_backgroundColor; }
 
+        void                    update                      () const;
+
     protected:
         void                    ApplyVsync                  (const core::IProperty * _prop);
         void                    ApplyHDR                    (const core::IProperty * _prop);
@@ -85,5 +87,8 @@ namespace vg::renderer
         DisplayMode	            m_debugDisplayMode          = DisplayMode::None;
         DisplayFlags            m_displayFlags              = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap;
         RenderPassFlags         m_renderPassFlags;
+
+        core::IProperty *       m_hdrProp                   = nullptr;
+        core::IProperty *       m_vsyncProp                 = nullptr;
     };
 }

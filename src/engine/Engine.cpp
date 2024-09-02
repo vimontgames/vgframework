@@ -87,6 +87,11 @@ namespace vg::engine
                 }
                 break;
 
+            case WM_MOVE:
+                if (m_renderer)
+                    m_renderer->Move();
+                break;
+
             case WM_PAINT:
                 RunOneFrame();
                 break;

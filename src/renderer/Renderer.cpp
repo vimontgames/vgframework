@@ -321,6 +321,7 @@ namespace vg::renderer
     void Renderer::Resize(core::uint _width, core::uint _height)
     {
         m_device.waitGPUIdle();
+        m_device.updateHDR();
         m_device.resize(_width, _height);
 
         if (IsFullscreen())
@@ -340,6 +341,17 @@ namespace vg::renderer
 
         m_frameGraph.destroyTransientResources();
         DebugDraw::get()->reset();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::Move() 
+    {
+        m_device.waitGPUIdle();
+        if (m_device.updateHDR())
+        {
+            m_frameGraph.destroyTransientResources();
+            DebugDraw::get()->reset();
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -400,6 +412,8 @@ namespace vg::renderer
         const RendererOptions * options = RendererOptions::get(false);
         if (!options)
             return;
+        
+        options->update();
 
 		m_device.beginFrame();
 		{
@@ -1043,5 +1057,17 @@ namespace vg::renderer
         }
 
         return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Renderer::IsHDRSupported(gfx::HDR _mode) const
+    {
+        return m_device.getDeviceCaps().hdr.isSupported(_mode);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Renderer::IsVSyncSupported(gfx::VSync _mode) const
+    {
+        return m_device.isVSyncSupported(_mode);
     }
 }

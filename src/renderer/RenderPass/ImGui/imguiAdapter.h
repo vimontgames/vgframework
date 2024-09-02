@@ -66,6 +66,8 @@ namespace vg
 
             gfx::PixelFormat    getOutputPixelFormat        () const;
 
+            void                updateBackbufferFormat      ();
+
             #ifdef VG_VULKAN
             void                createVulkanRenderPass      ();
             #endif

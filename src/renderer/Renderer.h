@@ -73,7 +73,8 @@ namespace vg::renderer
         const core::vector <gfx::IView *>       GetViews                    (gfx::ViewTarget _target) const final override;
 
         void                                    SetResized                  () final override;
-        void                                    Resize                      (core::uint _width, core::uint _height) override;
+        void                                    Resize                      (core::uint _width, core::uint _height) final override;
+        void                                    Move                        () final override;
         core::uint2                             GetBackbufferSize           () const override;
         void                                    UpdateShaders               () override;
         void                                    WaitGPUIdle                 () override;
@@ -113,6 +114,9 @@ namespace vg::renderer
         bool                                    IsFullscreen                () const final override;
 
         ILightInstance *                        CreateLightInstance         (const ILightDesc * _lightDesc) final override;
+
+        bool                                    IsVSyncSupported            (gfx::VSync _mode) const final override;
+        bool                                    IsHDRSupported              (gfx::HDR _mode) const final override;
 
     public: // internal
         gfx::Texture *                          getBackbuffer               () const;

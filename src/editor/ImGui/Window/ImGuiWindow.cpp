@@ -357,10 +357,16 @@ namespace vg::editor
         T temp = *pEnum;
 
         string preview = "";
+        bool previewDisabled = false;
         for (uint e = 0; e < _prop->GetEnumCount(); ++e)
         {
-            if (enumVal == _prop->GetEnumValue(e))
+            auto value = _prop->GetEnumValue(e);
+            if (enumVal == value)
             {
+                const auto enumValueFlags = _prop->GetEnumValueFlags(value);
+                if (asBool(enumValueFlags & core::EnumValueFlags::Disabled))
+                    previewDisabled = true;
+
                 preview = getEnumDisplayName<T>(_prop, e);
                 break;
             }
@@ -369,15 +375,31 @@ namespace vg::editor
         bool changed = false;
 
         string enumLabel = ImGui::getObjectLabel(_prop->GetDisplayName(), _prop);
+
+        if (previewDisabled)
+            PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+
         if (ImGui::BeginCombo(getPropertyLabel(enumLabel).c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
         {
+            if (previewDisabled)
+                PopStyleColor();
+
             for (uint e = 0; e < _prop->GetEnumCount(); ++e)
             {
                 const string enumName = getEnumDisplayName<T>(_prop, e);
+                auto value = _prop->GetEnumValue(e);
+
+                bool selectableDisabled = false;
+                const auto enumValueFlags = _prop->GetEnumValueFlags(value);
+                if (asBool(enumValueFlags & core::EnumValueFlags::Disabled))
+                    selectableDisabled = true;
+
+                if (selectableDisabled)
+                    PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 
                 if (ImGui::Selectable(enumName.c_str()))
                 {
-                    temp = (T)_prop->GetEnumValue(e); // TODO: GetEnumValue should be typed, storing Type+union with check on data type e.g. GetEnumValueU8 etc..
+                    temp = (T)value; // TODO: GetEnumValue should be typed, storing Type+union with check on data type e.g. GetEnumValueU8 etc..
 
                     if (!readonly)
                     {
@@ -385,8 +407,17 @@ namespace vg::editor
                             changed = true;
                     }
                 }
+
+                if (selectableDisabled)
+                    PopStyleColor();
+
             }
             ImGui::EndCombo();
+        }
+        else
+        {
+            if (previewDisabled)
+                PopStyleColor();
         }
 
         drawPropertyLabel(_propContext, _prop);

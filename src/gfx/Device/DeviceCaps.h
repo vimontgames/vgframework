@@ -39,12 +39,34 @@ namespace vg::gfx
         core::uint      rayTracingAccelerationStructureScratchOffsetAlignment = 0;
 
         // HDR
-        bool isHDRModeSupported(HDR _mode) { return hdr[core::asInteger(_mode)]; }
+        struct HDRCaps
+        {
+            HDRCaps()
+            {
+                for (auto i = 0; i < core::enumCount<HDR>(); ++i)
+                    mode[i] = false;
+                mode[core::asInteger(HDR::None)] = true;
+            }
 
-        bool            hdr[core::enumCount<HDR>()];
-        float           minLuminance = 0.0f;
-        float           maxLuminance = 400.0f;
-        bool            enableST2084 = false;
-        float           referenceWhiteNits = 80.0f;    // The reference brightness level of the display.
+            bool operator != (const HDRCaps & _other)
+            {
+                for (auto i = 0; i < core::enumCount<HDR>(); ++i)
+                {
+                    if (mode[i] != _other.mode[i])
+                        return true;
+                }
+
+                return minLuminance != _other.minLuminance || maxLuminance != _other.maxLuminance || enableST2084 != _other.enableST2084 || referenceWhiteNits != _other.referenceWhiteNits;
+            }
+
+            bool isSupported(HDR _mode) const { return mode[core::asInteger(_mode)]; }
+
+            bool            mode[core::enumCount<HDR>()];
+            float           minLuminance = 0.0f;
+            float           maxLuminance = 400.0f;
+            bool            enableST2084 = false;
+            float           referenceWhiteNits = 80.0f;    // The reference brightness level of the display.
+        };
+        HDRCaps         hdr;       
     };
 }

@@ -149,7 +149,7 @@ namespace vg::gfx::dx12
 			m_caps.d3d12.raytracier_tier = options5.RaytracingTier;
 		}
 
-        checkHDRSupport();
+        m_caps.hdr = DXGIHelper::getHDRCaps((HWND)m_deviceParams.window, m_dxgiFactory);
 
         uint major = (m_caps.d3d12.featureLevel & 0xF000) >> 12;
         uint minor = (m_caps.d3d12.featureLevel & 0x0F00) >> 8;
@@ -160,7 +160,7 @@ namespace vg::gfx::dx12
         setStablePowerState();
 
 		auto * graphicsQueue = createCommandQueue(CommandQueueType::Graphics);
-		auto * swapChain = created3d12SwapChain((HWND)_params.window, _params.resolution.x, _params.resolution.y);
+		created3d12SwapChain((HWND)_params.window, _params.resolution.x, _params.resolution.y);
 
 		// Create fences for each frame so we can protect resources and wait for any given frame
         m_nextFrameFence = 1;
@@ -200,114 +200,19 @@ namespace vg::gfx::dx12
 	}
 
     //--------------------------------------------------------------------------------------
-    // To detect HDR support, we will need to check the color space in the primary DXGI output associated with the app at
-    // this point in time (using window/display intersection). 
-    // Compute the overlay area of two rectangles, A and B.
-    // (ax1, ay1) = left-top coordinates of A; (ax2, ay2) = right-bottom coordinates of A
-    // (bx1, by1) = left-top coordinates of B; (bx2, by2) = right-bottom coordinates of B
-    //--------------------------------------------------------------------------------------
-    inline int computeIntersectionArea(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2)
-    {
-        return max(0, min(ax2, bx2) - max(ax1, bx1)) * max(0, min(ay2, by2) - max(ay1, by1));
-    }
-
-    //--------------------------------------------------------------------------------------
     // https://learn.microsoft.com/en-us/samples/microsoft/directx-graphics-samples/d3d12-hdr-sample-win32/
     //--------------------------------------------------------------------------------------
-    void Device::checkHDRSupport()
+    bool Device::updateHDR()
     {
-        if (!m_dxgiFactory->IsCurrent())
-            VG_VERIFY_SUCCEEDED(CreateDXGIFactory2(0, IID_PPV_ARGS(&m_dxgiFactory)));
+        auto hdrCaps = DXGIHelper::getHDRCaps((HWND)m_deviceParams.window, m_dxgiFactory);
 
-        IDXGIAdapter1 * adapter;
-        VG_VERIFY_SUCCEEDED(m_dxgiFactory->EnumAdapters1(0, &adapter));
-        
-        UINT i = 0;
-        IDXGIOutput * currentOutput;
-        IDXGIOutput * bestOutput = nullptr;
-        float bestIntersectArea = -1;
-        
-        RECT bounds = {};
-        GetWindowRect((HWND)m_deviceParams.window, &bounds);
-        
-        while (adapter->EnumOutputs(i, &currentOutput) != DXGI_ERROR_NOT_FOUND)
+        if (hdrCaps != m_caps.hdr)
         {
-            // Get the rectangle bounds of the window
-            int ax1 = bounds.left;
-            int ay1 = bounds.top;
-            int ax2 = bounds.right;
-            int ay2 = bounds.bottom;
-        
-            // Get the rectangle bounds of current output
-            DXGI_OUTPUT_DESC desc;
-            VG_VERIFY_SUCCEEDED(currentOutput->GetDesc(&desc));
-            RECT r = desc.DesktopCoordinates;
-            int bx1 = r.left;
-            int by1 = r.top;
-            int bx2 = r.right;
-            int by2 = r.bottom;
-        
-            // Compute the intersection
-            int intersectArea = computeIntersectionArea(ax1, ay1, ax2, ay2, bx1, by1, bx2, by2);
-            if (intersectArea > bestIntersectArea)
-            {
-                bestOutput = currentOutput;
-                bestIntersectArea = static_cast<float>(intersectArea);
-            }
-            else
-                currentOutput->Release();
-        
-            i++;
+            m_caps.hdr = hdrCaps;
+            return true;
         }
-        
-        bool hdr10Support = false;
-        bool hdr16Support = false;
-        
-        // Having determined the output (display) upon which the app is primarily being 
-        // rendered, retrieve the HDR capabilities of that display by checking the color space.
-        if (bestOutput)
-        {
-            IDXGIOutput6 * output6 = nullptr;
-            HRESULT hr = bestOutput->QueryInterface(__uuidof(IDXGIOutput6), reinterpret_cast<void **>(&output6));
-            if (SUCCEEDED(hr)) 
-            {                
-                DXGI_OUTPUT_DESC1 desc1 = {};
-                VG_VERIFY_SUCCEEDED(output6->GetDesc1(&desc1));
 
-                hdr10Support = (desc1.ColorSpace == DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020);
-
-                D3D12_FEATURE_DATA_FORMAT_SUPPORT Support =
-                {
-                    DXGI_FORMAT_R16G16B16A16_FLOAT
-                };
-
-                // ...
-                if (hdr10Support)
-                {
-                    m_caps.minLuminance = desc1.MinLuminance;
-                    m_caps.maxLuminance = desc1.MaxLuminance;
-
-                    if (SUCCEEDED(m_d3d12device->CheckFeatureSupport(D3D12_FEATURE_FORMAT_SUPPORT, &Support, sizeof(Support))))
-                    {
-                        if (D3D12_FORMAT_SUPPORT1_DISPLAY & Support.Support1)
-                            hdr16Support = true;
-                    }
-                }
-        
-                output6->Release();
-            }
-            else 
-            {
-                VG_ASSERT(false, "IDXGIOutput6 not be supported");
-            }
-
-            bestOutput->Release();
-        }
-        
-        m_caps.hdr[asInteger(HDR::HDR10)] = hdr10Support;
-        m_caps.hdr[asInteger(HDR::HDR16)] = hdr16Support;
-                
-        adapter->Release();
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -476,9 +381,15 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void Device::applyVSync(VSync mode)
+    void Device::applyVSync(VSync _mode)
     {
         // Nothing to do, DirectX12 is convenient API and it will be handled gracefully by 'Present'
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Device::isVSyncSupported(VSync _mode) const
+    {
+        return true;
     }
 
     //--------------------------------------------------------------------------------------
@@ -506,31 +417,6 @@ namespace vg::gfx::dx12
         }
     }
 
-    // MaxOutputNits, MinOutputNits, MaxCLL, MaxFALL
-    //struct HDRMetadata
-    //{
-    //    float MaxOutputNits;
-    //    float MinOutputNits;
-    //    float MaxCLL; 
-    //    float MaxFALL;
-    //};
-    //static const HDRMetadata hdrMetadata = { 20.0f, 1.000f, 2000.0f, 1000.0f };// { 1000.0f, 0.001f, 2000.0f, 500.0f };
-    //
-    //struct DisplayChroma
-    //{
-    //    float RedX;
-    //    float RedY;
-    //    float GreenX;
-    //    float GreenY;
-    //    float BlueX;
-    //    float BlueY;
-    //    float WhiteX;
-    //    float WhiteY;
-    //};
-    //
-    //static const DisplayChroma displayChromaRec2020 = { 0.64000f, 0.33000f, 0.30000f, 0.60000f, 0.15000f, 0.06000f, 0.31270f, 0.32900f }; 
-    //static const DisplayChroma displayChromaST2084 = { 0.70800f, 0.29200f, 0.17000f, 0.79700f, 0.13100f, 0.04600f, 0.31270f, 0.32900f };
-
     //--------------------------------------------------------------------------------------
     void Device::applyColorSpace(ColorSpace _mode)
     {
@@ -542,31 +428,6 @@ namespace vg::gfx::dx12
         {
             VG_ASSERT(SUCCEEDED(m_dxgiSwapChain->SetColorSpace1(d3d12ColorSpace)));
             VG_INFO("[Device] Use %s ColorSpace", asString(_mode).c_str());
-
-            //if (ColorSpace::Rec709 == _mode)
-            //{
-            //    VG_ASSERT(SUCCEEDED(m_dxgiSwapChain->SetHDRMetaData(DXGI_HDR_METADATA_TYPE_NONE, 0, nullptr)));
-            //}
-            //else
-            //{
-            //    const DisplayChroma & chroma = (ColorSpace::ST2084 == _mode) ? displayChromaST2084 : displayChromaRec2020;
-            //
-            //    // Set HDR meta data
-            //    DXGI_HDR_METADATA_HDR10 HDR10MetaData = {};
-            //    HDR10MetaData.RedPrimary[0] = static_cast<UINT16>(chroma.RedX * 50000.0f);
-            //    HDR10MetaData.RedPrimary[1] = static_cast<UINT16>(chroma.RedY * 50000.0f);
-            //    HDR10MetaData.GreenPrimary[0] = static_cast<UINT16>(chroma.GreenX * 50000.0f);
-            //    HDR10MetaData.GreenPrimary[1] = static_cast<UINT16>(chroma.GreenY * 50000.0f);
-            //    HDR10MetaData.BluePrimary[0] = static_cast<UINT16>(chroma.BlueX * 50000.0f);
-            //    HDR10MetaData.BluePrimary[1] = static_cast<UINT16>(chroma.BlueY * 50000.0f);
-            //    HDR10MetaData.WhitePoint[0] = static_cast<UINT16>(chroma.WhiteX * 50000.0f);
-            //    HDR10MetaData.WhitePoint[1] = static_cast<UINT16>(chroma.WhiteY * 50000.0f);
-            //    HDR10MetaData.MaxMasteringLuminance = static_cast<UINT>(hdrMetadata.MaxOutputNits * 10000.0f);
-            //    HDR10MetaData.MinMasteringLuminance = static_cast<UINT>(hdrMetadata.MinOutputNits * 10000.0f);
-            //    HDR10MetaData.MaxContentLightLevel = static_cast<UINT16>(hdrMetadata.MaxCLL);
-            //    HDR10MetaData.MaxFrameAverageLightLevel = static_cast<UINT16>(hdrMetadata.MaxFALL);
-            //    VG_ASSERT(SUCCEEDED(m_dxgiSwapChain->SetHDRMetaData(DXGI_HDR_METADATA_TYPE_HDR10, sizeof(DXGI_HDR_METADATA_HDR10), &HDR10MetaData)));
-            //}
         }
         else
         {
@@ -786,29 +647,30 @@ namespace vg::gfx::dx12
             VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->Present((uint)m_VSync, 0));
         }
 
-        if (m_HDRMode != m_HDRModeRequested)
+        auto requestedHDRMode = m_HDRModeRequested;
+        if (!m_caps.hdr.isSupported(requestedHDRMode))
+            requestedHDRMode = HDR::None;
+
+        if (m_HDRMode != requestedHDRMode)
         {
             waitGPUIdle(); 
             destroyd3d12Backbuffers();
 
-            m_backbufferFormat = getHDRBackbufferFormat(m_HDRModeRequested);
-            m_ColorSpaceRequested = getHDRColorSpace(m_HDRModeRequested);
+            m_backbufferFormat = getHDRBackbufferFormat(requestedHDRMode);
 
-            VG_VERIFY_SUCCEEDED(m_dxgiSwapChain->ResizeBuffers(max_backbuffer_count, m_dxgiSwapChainDesc.Width, m_dxgiSwapChainDesc.Height, Texture::getd3d12ResourceFormat(m_backbufferFormat), m_dxgiSwapChainDesc.Flags));
+            m_ColorSpace = getHDRColorSpace(requestedHDRMode);
+            m_HDRMode = requestedHDRMode;
+ 
+            VG_SAFE_RELEASE(m_dxgiSwapChain);
+            created3d12SwapChain((HWND)m_deviceParams.window, m_deviceParams.resolution.x, m_deviceParams.resolution.y);
             created3d12Backbuffers();
 
-            m_HDRMode = m_HDRModeRequested;
-
             if (HDR::None != m_HDRMode)
-                VG_INFO("[Device] Use %s backbuffer", asString(m_HDRMode).c_str());
+                VG_INFO("[Device] %s is enabled (%s)", asString(m_HDRMode).c_str(), asString(m_ColorSpace).c_str());
             else
-                VG_INFO("[Device] Disable HDR backbuffer");
-        }
+                VG_INFO("[Device] HDR is disabled");
 
-        if (m_ColorSpace != m_ColorSpaceRequested)
-        {
-            applyColorSpace(m_ColorSpaceRequested);
-            m_ColorSpace = m_ColorSpaceRequested;
+            waitGPUIdle();
         }
 
 		super::endFrame();

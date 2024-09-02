@@ -86,6 +86,7 @@ namespace vg
 
             virtual void                                SetResized              () = 0;
             virtual void                                Resize                  (core::uint _width, core::uint _height) = 0;
+            virtual void                                Move                    () = 0;
             virtual core::uint2                         GetBackbufferSize       () const = 0;
             virtual void                                UpdateShaders           () = 0;
             virtual void                                WaitGPUIdle             () = 0;
@@ -121,6 +122,9 @@ namespace vg
             virtual bool                                IsFullscreen            () const = 0;
 
             virtual ILightInstance *                    CreateLightInstance     (const ILightDesc * _lightDesc) = 0;
+
+            virtual bool                                IsHDRSupported          (gfx::HDR _mode) const = 0;
+            virtual bool                                IsVSyncSupported        (gfx::VSync _mode) const = 0;
 
             virtual core::JobSync *                     GetJobSync              (JobSync _jobSync) = 0;
         };

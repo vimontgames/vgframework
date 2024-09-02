@@ -100,8 +100,5 @@ namespace vg::renderer
         #endif
 
         Renderer::get()->getImGuiAdapter()->render(_cmdList);
-
-        // Reset states after ImGui
-        _cmdList->clearStateCache();
     }
 }

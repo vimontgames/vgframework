@@ -644,6 +644,12 @@
     <ClInclude Include="Device\vulkan\Extension\Instance\KHR_Get_Surface_Capabilities2.h">
       <Filter>Device\vulkan\Extension\Instance</Filter>
     </ClInclude>
+    <ClInclude Include="Device\DXGIHelper.h">
+      <Filter>Device</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\DXGIHelper.hpp">
+      <Filter>Device</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

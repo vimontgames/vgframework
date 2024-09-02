@@ -20,6 +20,7 @@ using namespace vg::core;
 using namespace vg::gfx;
 
 #include "gfx/Device/DeviceCaps.hpp"
+#include "DXGIHelper.hpp"
 
 #include VG_GFXAPI_IMPL(Device)
 
@@ -460,7 +461,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void Device::setHDR(HDR _mode)
     {
-        if (!m_caps.isHDRModeSupported(_mode))
+        if (!m_caps.hdr.isSupported(_mode))
         {
             VG_WARNING("[Device] %s is not supported", asString(_mode).c_str());
             _mode = HDR::None;

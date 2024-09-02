@@ -37,6 +37,8 @@ namespace vg::gfx::vulkan
         void                            waitGPUIdle							();
 
         void							applyVSync							(VSync mode);
+        bool							isVSyncSupported					(VSync _mode) const;
+
         void                            applyHDR							(HDR _mode);
         void							applyColorSpace						(ColorSpace _mode);
 
@@ -63,6 +65,8 @@ namespace vg::gfx::vulkan
 		VkDeviceAddress					getBufferDeviceAddress				(const VkBufferDeviceAddressInfo * _info);
 
         static const char *             getVulkanErrorString				(VkResult _vkResult);
+
+		 bool							updateHDR							();
 
 	private:
 		void							registerExtensions					(const DeviceParams & _params);

@@ -48,6 +48,8 @@
     <ClInclude Include="Device\DeviceCaps.h" />
     <ClInclude Include="Device\DeviceCaps.hpp" />
     <ClInclude Include="Device\dx12\DeviceCaps_dx12.h" />
+    <ClInclude Include="Device\DXGIHelper.h" />
+    <ClInclude Include="Device\DXGIHelper.hpp" />
     <ClInclude Include="Device\vulkan\DeviceCaps_vulkan.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\EXT_HDR_Metadata.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Acceleration_Structure.h" />

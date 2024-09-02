@@ -8,6 +8,7 @@ namespace vg::core
     {
         string name;
         u64 value = 0x0;
+        EnumValueFlags flags = (EnumValueFlags)0x0;
     };
 
     class Property final : public IProperty
@@ -24,6 +25,8 @@ namespace vg::core
         void                            SetOffset                       (uint_ptr _offset) final override;
         void                            SetDescription                  (const char * _description) final override;
         void                            SetEnumTypeName                 (const char * _enumTypeName) final override;
+        bool                            SetEnumValueFlags               (u64 _value, EnumValueFlags _flags, bool _enabled) final override;
+        EnumValueFlags                  GetEnumValueFlags               (u64 _value) const final override;
 
         const char *                    GetInterface                    () const final override;
         const char *                    GetName                         () const final override;

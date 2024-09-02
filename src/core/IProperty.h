@@ -11,6 +11,12 @@ namespace vg::core
     class BitMask;
     class ObjectHandle;
 
+    enum class EnumValueFlags : core::u32
+    {
+        Disabled    = 0x00000001,
+        Hidden      = 0x00000002
+    };
+
     class IProperty
     {
     public:
@@ -116,6 +122,8 @@ namespace vg::core
         virtual void                            SetOffset                       (uint_ptr _offset) = 0;
         virtual void                            SetDescription                  (const char * _description) = 0;
         virtual void                            SetEnumTypeName                 (const char * _enumTypeName) = 0;
+        virtual bool                            SetEnumValueFlags               (u64 _value, EnumValueFlags _flags, bool _enabled) = 0;
+        virtual EnumValueFlags                  GetEnumValueFlags               (u64 _value) const = 0;
 
         virtual const char *                    GetInterface                    () const = 0;
         virtual const char *                    GetName                         () const = 0;

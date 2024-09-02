@@ -108,6 +108,47 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    bool Property::SetEnumValueFlags(u64 _value, EnumValueFlags _flags, bool _enabled)
+    {
+        for (uint i = 0; i < GetEnumCount(); ++i)
+        {
+            if (_value == GetEnumValue(i))
+            {
+                EnumDesc & desc = enums[i];
+                auto current = desc.flags;
+
+                if (_enabled)
+                    current |= _flags;
+                else
+                    current &= ~_flags;
+                    
+                if (current != desc.flags)
+                {
+                    desc.flags = current;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    EnumValueFlags Property::GetEnumValueFlags(u64 _value) const
+    {
+        for (uint i = 0; i < GetEnumCount(); ++i)
+        {
+            if (_value == GetEnumValue(i))
+            {
+                const EnumDesc & desc = enums[i];
+                return desc.flags;
+            }
+        }
+
+        return (EnumValueFlags)0x0;
+    }
+
+    //--------------------------------------------------------------------------------------
     Property::Property(const Property & _other) :
         name(_other.name),
         className(_other.className),

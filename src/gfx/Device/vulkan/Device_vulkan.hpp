@@ -4,10 +4,6 @@
 #include "Device_Vulkan.inl"
 #endif
 
-#ifdef VG_WINDOWS
-#include "dxgi1_6.h"
-#endif
-
 namespace vg::gfx::vulkan
 {
 	using namespace vg::core;
@@ -336,48 +332,7 @@ namespace vg::gfx::vulkan
 		base::Device::init(_params);
 
 		#ifdef VG_WINDOWS
-		{
-            uint dxgiFactoryFlags = 0; // DXGI_CREATE_FACTORY_DEBUG
-			IDXGIFactory6 * dxgiFactory = nullptr;
-            VG_VERIFY_SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&dxgiFactory)));
-			{
-				IDXGIFactory6 * dxgiFactory6 = nullptr;
-				VG_ASSERT(SUCCEEDED(dxgiFactory->QueryInterface(IID_PPV_ARGS(&dxgiFactory6))));
-				IDXGIAdapter1 * dxgiAdapter = nullptr;
-				for (uint a = 0; SUCCEEDED(dxgiFactory6->EnumAdapterByGpuPreference(a, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&dxgiAdapter))); ++a)
-				{
-					DXGI_ADAPTER_DESC1 desc;
-					dxgiAdapter->GetDesc1(&desc);
-
-					IDXGIOutput * dxgiOutput;
-					int i = 0;
-					while (DXGI_ERROR_NOT_FOUND != dxgiAdapter->EnumOutputs(i, &dxgiOutput))
-					{
-                        IDXGIOutput6 * output6 = nullptr;
-                        HRESULT hr = dxgiOutput->QueryInterface(__uuidof(IDXGIOutput6), reinterpret_cast<void **>(&output6));
-                        if (SUCCEEDED(hr))
-                        {
-                            DXGI_OUTPUT_DESC1 desc1 = {};
-                            VG_VERIFY_SUCCEEDED(output6->GetDesc1(&desc1));
-
-							// Test only the main monitor
-							if (desc1.AttachedToDesktop)
-							{
-								bool hdrSupport = (desc1.ColorSpace == DXGI_COLOR_SPACE_RGB_FULL_G2084_NONE_P2020);
-
-								if (hdrSupport)
-								{
-                                    m_caps.minLuminance = desc1.MinLuminance;
-                                    m_caps.maxLuminance = desc1.MaxLuminance;
-								}
-							}
-                        }
-						i++;
-					}                   
-				}
-			}
-			dxgiFactory->Release();
-		}
+		m_caps.hdr = DXGIHelper::getHDRCaps((HWND)m_deviceParams.window);
 		#endif
 
 		registerExtensions(_params);
@@ -530,15 +485,15 @@ namespace vg::gfx::vulkan
 
 			if (m_vkPhysicalDevice)
 			{
-				m_caps.hdr[asInteger(HDR::HDR10)] = hdr10;
-				m_caps.hdr[asInteger(HDR::HDR16)] = hdr16;
+				m_caps.hdr.mode[asInteger(HDR::HDR10)] = hdr10;
+				m_caps.hdr.mode[asInteger(HDR::HDR16)] = hdr16;
 			}
 			else
 			{
 				// If no HDR device found, pick the 1st one
 				m_vkPhysicalDevice = physicalDevices[0];
-				m_caps.hdr[asInteger(HDR::HDR10)] = false;
-				m_caps.hdr[asInteger(HDR::HDR16)] = false;
+				m_caps.hdr.mode[asInteger(HDR::HDR10)] = false;
+				m_caps.hdr.mode[asInteger(HDR::HDR16)] = false;
 			}
 
 			free(physicalDevices);
@@ -843,6 +798,26 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
+    bool Device::isVSyncSupported(VSync _mode) const
+    {
+		switch (_mode)
+		{
+			case VSync::None:
+			case VSync::VSync_1:
+				return true;
+
+			default:
+				VG_ASSERT_ENUM_NOT_IMPLEMENTED(_mode);
+			case VSync::VSync_2:
+			case VSync::VSync_3:
+			case VSync::VSync_4:
+				return false;
+
+		}
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
 	void Device::applyHDR(HDR _mode)
 	{
 		m_dirtySwapchain = true;
@@ -854,6 +829,23 @@ namespace vg::gfx::vulkan
 		
 		m_dirtySwapchain = true;
 	}
+
+    //--------------------------------------------------------------------------------------
+    bool Device::updateHDR()
+    {
+		#if VG_WINDOWS
+		auto hdrCaps = DXGIHelper::getHDRCaps((HWND)m_deviceParams.window);
+
+		if (hdrCaps != m_caps.hdr)
+		{
+			m_caps.hdr = hdrCaps;
+			m_dirtySwapchain = true;
+			return true;
+		}
+		#endif
+
+        return false;
+    }
 
 	//--------------------------------------------------------------------------------------
 	void Device::createSwapchain()
@@ -1084,7 +1076,7 @@ namespace vg::gfx::vulkan
 
 				if (vkTargetFormat == vkSurfaceFmt)
 				{
-					VG_INFO("[Device] Backbuffer uses %s format", asString(Texture::getPixelFormat(vkSurfaceFmt)).c_str());
+					//VG_INFO("[Device] Backbuffer uses %s format", asString(Texture::getPixelFormat(vkSurfaceFmt)).c_str());
                     selectedSurfaceFormat = curSurfaceFormat;
 					found = true;
                     break;
@@ -1471,12 +1463,27 @@ namespace vg::gfx::vulkan
 
         VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue(), &present));
 
+        auto requestedHDRMode = m_HDRModeRequested;
+        if (!m_caps.hdr.isSupported(requestedHDRMode))
+            requestedHDRMode = HDR::None;
+
 		if (m_dirtySwapchain)
 		{
 			waitGPUIdle();
 
-            m_HDRMode = m_HDRModeRequested;
-            m_ColorSpace = m_ColorSpaceRequested;
+			if (m_HDRMode != requestedHDRMode)
+			{
+                m_backbufferFormat = getHDRBackbufferFormat(requestedHDRMode);
+
+                m_ColorSpace = getHDRColorSpace(requestedHDRMode);
+                m_HDRMode = requestedHDRMode;
+                m_ColorSpace = m_ColorSpaceRequested;
+			
+                if (HDR::None != m_HDRMode)
+                    VG_INFO("[Device] %s is enabled (%s)", asString(m_HDRMode).c_str(), asString(m_ColorSpace).c_str());
+                else
+                    VG_INFO("[Device] HDR is disabled");
+			}
 
             createSwapchain();
             createVulkanBackbuffers();	

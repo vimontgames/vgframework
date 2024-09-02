@@ -69,6 +69,9 @@ namespace vg::renderer
         renderer->SetVSync(m_VSync);
         renderer->SetHDR(m_HDRmode);
         RayTracingManager::get()->enableRayTracing(m_rayTracing);
+
+        m_hdrProp = GetClassDesc()->GetPropertyByName("m_HDRmode");
+        m_vsyncProp = GetClassDesc()->GetPropertyByName("m_VSync"); 
     }
 
     //--------------------------------------------------------------------------------------
@@ -132,5 +135,40 @@ namespace vg::renderer
     bool RendererOptions::anyRayTracingDebugDisplay() const
     {
         return asInteger(m_debugDisplayMode) >= asInteger(DisplayMode::RayTracing_Hit) && asInteger(m_debugDisplayMode) < asInteger(DisplayMode::PostProcess_Depth);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RendererOptions::update() const
+    {
+        auto * renderer = Renderer::get();
+
+        if (m_hdrProp)
+        {
+            // Update HDR
+            for (uint i = 0; i < enumCount<gfx::HDR>(); ++i)
+            {
+                auto mode = (gfx::HDR)i;
+                bool supported = renderer->IsHDRSupported(mode);
+
+                if (m_hdrProp->SetEnumValueFlags(m_hdrProp->GetEnumValue(i), EnumValueFlags::Disabled, !supported))
+                {
+                    // changed
+                }
+            }
+        }
+
+        if (m_vsyncProp)
+        {
+            for (uint i = 0; i < enumCount<gfx::VSync>(); ++i)
+            {
+                auto mode = (gfx::VSync)i;
+                bool supported = renderer->IsVSyncSupported(mode);
+
+                if (m_vsyncProp->SetEnumValueFlags(m_vsyncProp->GetEnumValue(i), EnumValueFlags::Disabled, !supported))
+                {
+                    // changed
+                }
+            }
+        }
     }
 }
