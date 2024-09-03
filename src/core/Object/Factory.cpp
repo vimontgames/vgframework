@@ -984,7 +984,7 @@ namespace vg::core
         for (uint e = 0; e < enumCount<ENUM_TYPE>(); ++e)
         {
             ENUM_TYPE enumVal = (ENUM_TYPE)e;
-            const std::string_view & str = asString(enumVal);
+            const std::string & str = asString(enumVal);
             if (!strcmp(str.data(), _value))
                 return enumVal;
         }
