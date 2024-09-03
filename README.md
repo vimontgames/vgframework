@@ -26,7 +26,8 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 
 ## 0.32
 ### Build
-Update to Visual Studio 2022 17.11.2
+Use C\+\+20 *(previously C\+\+17)*\
+Update to Visual Studio 2022 17.11.2\
 HDR output (wip)
 
 ## 0.31

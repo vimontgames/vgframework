@@ -124,6 +124,29 @@ namespace Optick
 				initThread();
 		}
 
+		#if __cplusplus >= 202002L
+        template<typename T> 
+		struct Allocator : public std::allocator<T>
+        {
+            Allocator() = default;
+
+            template<class U>
+            Allocator(const Allocator<U> &) {}
+
+            template<typename U> struct rebind { using other = Allocator<U>; };
+
+            typename std::allocator_traits<std::allocator<T>>::pointer allocate(typename std::allocator_traits<std::allocator<T>>::size_type n, const void * hint = nullptr)
+            {
+                (void)hint; // Suppress unused parameter warning
+                return reinterpret_cast<typename std::allocator_traits<std::allocator<T>>::pointer>(Memory::Alloc(n * sizeof(T)));
+            }
+
+            void deallocate(typename std::allocator_traits<std::allocator<T>>::pointer p, typename std::allocator_traits<std::allocator<T>>::size_type)
+            {
+                Memory::Free(static_cast<void *>(p));
+            }
+        };
+		#else
 		template<typename T> 
 		struct Allocator : public std::allocator<T> 
 		{
@@ -132,16 +155,17 @@ namespace Optick
 			Allocator(const Allocator<U>&) {}
 			template<typename U> struct rebind { typedef Allocator<U> other; };
 
-			typename std::allocator<T>::pointer allocate(typename std::allocator<T>::size_type n, typename std::allocator<void>::const_pointer = 0)
-			{
-				return reinterpret_cast<typename std::allocator<T>::pointer>(Memory::Alloc(n * sizeof(T)));
-			}
+            typename std::allocator<T>::pointer allocate(typename std::allocator<T>::size_type n, typename std::allocator<void>::const_pointer = 0)
+            {
+                return reinterpret_cast<typename std::allocator<T>::pointer>(Memory::Alloc(n * sizeof(T)));
+            }
 
-			void deallocate(typename std::allocator<T>::pointer p, typename std::allocator<T>::size_type)
-			{
-				Memory::Free(p);
-			}
+            void deallocate(typename std::allocator<T>::pointer p, typename std::allocator<T>::size_type)
+            {
+                Memory::Free(p);
+            }
 		};
+	#endif
 	};
 
 	// std::* section
