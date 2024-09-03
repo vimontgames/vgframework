@@ -137,6 +137,7 @@
     <ClInclude Include="Singleton\Singleton.h" />
     <ClInclude Include="string\string.h" />
     <ClInclude Include="Timer\Timer.h" />
+    <ClInclude Include="Types\Enum.h" />
     <ClInclude Include="Types\Types.h" />
     <ClInclude Include="Types\Traits.h" />
     <ClInclude Include="XML\XML.h" />

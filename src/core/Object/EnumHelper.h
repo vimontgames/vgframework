@@ -6,12 +6,12 @@ namespace vg::core
 {
     template <typename E> class EnumHelper
     {
-        using T = magic_enum::underlying_type_t<E>;
+        using T = typename std::underlying_type<E>::type;
 
     public:
         EnumHelper()
         {
-            const auto entries = magic_enum::enum_entries<E>();
+            const auto entries = enumPairs<E>();
             m_count = (uint)entries.size();
             m_values = (T*)malloc(sizeof(T)*m_count);
             for (uint e = 0; e < m_count; ++e)
@@ -29,18 +29,18 @@ namespace vg::core
 
         static const uint getStaticCount()
         {
-            return (uint)magic_enum::enum_entries<E>().size();
+            return (uint)enumPairs<E>().size();
         }
 
         static const uint getSizeOfUnderlyingType()
         {
-            return sizeof(std::underlying_type_t<E>);
+            return sizeof(T);
         }
 
         static const string getStaticNames()
         {
             string names;
-            const auto entries = magic_enum::enum_entries<E>();
+            const auto entries = enumPairs<E>();
             uint count = (uint)entries.size();
             for (uint e = 0; e < count; ++e)
                 names += (string)entries[e].second + '\0';
@@ -53,7 +53,7 @@ namespace vg::core
         static const vector<T> getStaticValues()
         {
             vector<T> values;
-            const auto entries = magic_enum::enum_entries<E>();
+            const auto entries = enumPairs<E>();;
             uint count = (uint)entries.size();
             for (uint e = 0; e < count; ++e)
             {

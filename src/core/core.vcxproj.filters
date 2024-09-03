@@ -406,6 +406,9 @@
     <ClInclude Include="Resource\ResourceMeta.hpp">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Types\Enum.h">
+      <Filter>Types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
