@@ -1,0 +1,90 @@
+name: C++ CI
+
+on:
+  push:
+    branches: [ "master" ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+      
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+
+jobs:
+  build-and-test-gcc:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: |
+        sudo apt-get update && sudo apt-get install -y cmake ninja-build gcc-14 g++-14
+
+    - name: Configure gcc with glaze 2 support
+      run: cmake -B ${{github.workspace}}/build/gcc_glz_2 -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_CXX_COMPILER=g++-14 -DSIMPLE_ENUM_USE_GLAZE_2=ON -DSIMPLE_ENUM_USE_GLAZE_3_1=OFF
+    - name: Build gcc with glaze 2 support
+      run: cmake --build ${{github.workspace}}/build/gcc_glz_2
+    - name: Test gcc with glaze 2 support
+      working-directory: ${{github.workspace}}/build/gcc_glz_2
+      run: ctest
+
+    - name: Configure gcc with glaze 3.1 support
+      run: cmake -B ${{github.workspace}}/build/gcc_glz_3 -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_CXX_COMPILER=g++-14 -DSIMPLE_ENUM_USE_GLAZE_2=OFF -DSIMPLE_ENUM_USE_GLAZE_3_1=ON
+    - name: Build gcc with glaze 3.1 support
+      run: cmake --build ${{github.workspace}}/build/gcc_glz_3
+    - name: Test gcc with glaze 3.1 support
+      working-directory: ${{github.workspace}}/build/gcc_glz_3
+      run: ctest
+      
+  build-and-test-clang:
+    runs-on: ubuntu-24.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Add LLVM Repository
+      run: |
+        wget https://apt.llvm.org/llvm.sh
+        chmod +x llvm.sh
+        sudo ./llvm.sh 18
+        
+    - name: Install dependencies
+      run: |
+           sudo apt-get update
+           sudo apt-get install -y cmake g++-14 ninja-build clang-18 libfmt-dev libc++-18-dev libc++abi-18-dev
+
+    - name: Configure clang++-18 llvm libc++ with glaze 3.1 support
+      run: cmake -B ${{github.workspace}}/build/clang-18-libcxx_glz_3 -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_CXX_COMPILER=clang++-18 -DCMAKE_CXX_FLAGS="-stdlib=libc++" -DSIMPLE_ENUM_USE_GLAZE_2=OFF -DSIMPLE_ENUM_USE_GLAZE_3_1=ON
+    - name: Build clang++-18 llvm libc++ with glaze 3.1 support
+      run: cmake --build ${{github.workspace}}/build/clang-18-libcxx_glz_3
+    - name: Test clang++-18 llvm libc++ with glaze 3.1 support
+      working-directory: ${{github.workspace}}/build/clang-18-libcxx_glz_3
+      run: ctest
+
+    - name: Configure clang++-18 gnu libstdc++ with glaze 3.1 support
+      run: cmake -B ${{github.workspace}}/build/clang-18_glz_3 -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_CXX_COMPILER=clang++-18 -DSIMPLE_ENUM_USE_GLAZE_2=OFF -DSIMPLE_ENUM_USE_GLAZE_3_1=ON
+    - name: Build clang++-18 with glaze 3.1 support
+      run: cmake --build ${{github.workspace}}/build/clang-18_glz_3
+    - name: Test clang++-18 with glaze 3.1 support
+      working-directory: ${{github.workspace}}/build/clang-18_glz_3
+      run: ctest
+      
+    - name: Configure clang++-18 gnu libstdc++ with glaze 2 support
+      run: cmake -B ${{github.workspace}}/build/clang-18_glz_2 -DCMAKE_BUILD_TYPE=Release -G "Ninja" -DCMAKE_CXX_COMPILER=clang++-18 -DSIMPLE_ENUM_USE_GLAZE_2=ON -DSIMPLE_ENUM_USE_GLAZE_3_1=OFF
+    - name: Build clang++-18 with glaze 2 support
+      run: cmake --build ${{github.workspace}}/build/clang-18_glz_2
+    - name: Test clang++-18 with glaze 2 support
+      working-directory: ${{github.workspace}}/build/clang-18_glz_2
+      run: ctest
+      
+  build-and-test-msvc:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Configure MSVC with glaze 3.1 support
+      run: cmake -B ${{github.workspace}}/build/msvc -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_COMPILER=clang++-18 -DSIMPLE_ENUM_USE_GLAZE_2=OFF -DSIMPLE_ENUM_USE_GLAZE_3_1=ON
+    - name: Build MSVC with glaze 3.1 support
+      run: cmake --build ${{github.workspace}}/build/msvc
+    - name: Test MSVC with glaze 3.1 support
+      working-directory: ${{github.workspace}}/build/msvc
+      run: ctest -C Debug
+

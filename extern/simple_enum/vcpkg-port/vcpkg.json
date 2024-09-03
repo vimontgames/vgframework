@@ -1,0 +1,10 @@
+{
+  "name": "simple_enum",
+  "version-string": "0.5.7",
+  "description": "A header-only library for better enum management in C++.",
+  "homepage": "https://github.com/arturbac/simple_enum",
+  "documentation": "https://arturbac.github.io/simple_enum",
+  "license": "BSL1.0",
+  "features": {}
+}
+

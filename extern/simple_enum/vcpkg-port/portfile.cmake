@@ -1,0 +1,4 @@
+file(INSTALL
+    ${SOURCE_PATH}/include/
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include
+)

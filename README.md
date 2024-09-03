@@ -267,7 +267,8 @@ The external libraries are included with the sources for convenience.
 | JoltPhysics                | 5.0.0         | https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0                 
 | magic_enum                 | 0.9.4         | https://github.com/Neargye/magic_enum                                     
 | optick (*)                 | 1.3.1         | https://github.com/bombomby/optick                                        
-| px_sched                   |               | https://github.com/pplux/px                                               
+| px_sched                   |               | https://github.com/pplux/px   
+| simple_enum                | 0.8.0         | https://github.com/arturbac/simple_enum/releases/tag/v0.8.0
 | stb                        |               | https://github.com/nothings/stb                                           
 | tinyXML2                   | 10.0.0        | https://github.com/leethomason/tinyxml2/releases/tag/10.0.0               
 | UFBX                       |               | https://github.com/ufbx/ufbx                                              

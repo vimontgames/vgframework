@@ -100,6 +100,7 @@ namespace vg::editor
                 { "magic_enum",             "0.9.4",            "https://github.com/Neargye/magic_enum/releases/tag/v0.9.4" },
                 { "optick",                 "1.3.1",            "https://github.com/bombomby/optick" },
                 { "px_sched",               "",                 "https://github.com/pplux/px" },
+                { "simple_enum",            "0.8.0",            "https://github.com/arturbac/simple_enum/releases/tag/v0.8.0" },
                 { "stb_image",              "",                 "https://github.com/nothings/stb" },
                 { "tinyXML2",               "10.0.0",           "https://github.com/leethomason/tinyxml2" },
                 { "UFBX",                   "0.5.0-30f035b",    "https://github.com/ufbx/ufbx" },
