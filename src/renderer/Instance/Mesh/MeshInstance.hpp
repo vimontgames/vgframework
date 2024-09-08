@@ -274,7 +274,7 @@ namespace vg::renderer
             root3D.setPickingID(pickingID);
 
             _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
-            const BitMask batchMask = getBatchMask();
+            const BitMask & batchMask = getBatchMask();
 
             const auto & batches = geo->batches();
             for (uint i = 0; i < batches.size(); ++i)
