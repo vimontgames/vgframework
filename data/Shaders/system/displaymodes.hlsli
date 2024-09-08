@@ -7,9 +7,7 @@
 // All shader-only code should be added to displaymode.hlsl instead
 //--------------------------------------------------------------------------------------
 
-enum
-class DisplayMode : uint
-{
+vg_enum_class(DisplayMode, uint,
 	None = 0,
 
     Forward_SurfaceType,
@@ -48,11 +46,10 @@ class DisplayMode : uint
     PostProcess_Depth,
     PostProcess_Stencil,
     PostProcess_LinearDepth,
-    PostProcess_WorldPos,
-};
+    PostProcess_WorldPos
+);
 
-enum DisplayFlags : uint
-{
+vg_enum(DisplayFlags, uint,
     AlbedoMap = 0x00000001,
     NormalMap = 0x00000002
-};
+);

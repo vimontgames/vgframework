@@ -19,10 +19,10 @@ namespace vg::core
                                                     Factory                         ();
                                                     ~Factory                        ();
 
-        IClassDesc *                                registerClass                   (const char * _parentClassName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc) final;
-        IClassDesc *                                registerSingletonClass          (const char * _parentClassName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) final;
+        IClassDesc *                                registerClass                   (const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::Func _createFunc) final;
+        IClassDesc *                                registerSingletonClass          (const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) final;
         const IClassDesc *                          getClassDescriptor              (const char * _className, bool _mustExist = true) const final;
-        const vector<IClassDesc *>                  getClassDescriptors             (IClassDesc::Flags _required = (IClassDesc::Flags)-1, IClassDesc::Flags _excluded = (IClassDesc::Flags)0) const final;
+        const vector<IClassDesc *>                  getClassDescriptors             (ClassDescFlags _required = (ClassDescFlags)-1, ClassDescFlags _excluded = (ClassDescFlags)0) const final;
         bool                                        isRegisteredClass               (const char * _className) const final;
         IObject *                                   getSingleton                    (const char * _className) const final;
         IObject *                                   createObject                    (const char * _className, const string & _name, IObject * _parent = nullptr) const final;
@@ -73,7 +73,7 @@ namespace vg::core
 
     private:
         core::vector<ClassDesc>                     m_classes;
-        core::dictionary<IProperty::Type>           m_oldTypeNames;
+        core::dictionary<PropertyType>              m_oldTypeNames;
         core::dictionary<string>                    m_oldPropertyNames;
         core::dictionary<const char *>              m_oldClassNames;
         mutex                                       m_objectsToReleaseMutex;

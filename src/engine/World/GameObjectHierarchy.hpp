@@ -8,7 +8,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    //VG_REGISTER_OBJECT_CLASS_EX(GameObjectTree, "GameObjectTree", IClassDesc::Flags::SceneNode);
+    //VG_REGISTER_OBJECT_CLASS_EX(GameObjectTree, "GameObjectTree", ClassDescFlags::SceneNode);
 
     //--------------------------------------------------------------------------------------
     GameObjectHierarchy::GameObjectHierarchy(const string & _name, IObject * _parent) :

@@ -80,7 +80,7 @@ namespace vg::gfx
 
         bool addUserPass(const RenderPassContext & _renderContext, UserPass * _userPass, const FrameGraphUserPassID & _renderPassID);
 
-        template <class T> T * getResource(FrameGraphResource::Type _type, const FrameGraphResourceID & _resID, bool _mustExist);
+        template <class T> T * getResource(FrameGraphResourceType _type, const FrameGraphResourceID & _resID, bool _mustExist);
 
         FrameGraphTextureResource *   getTextureResource  (const FrameGraphResourceID & _resID) const;
         FrameGraphBufferResource *    getBufferResource   (const FrameGraphResourceID & _resID) const;

@@ -4,15 +4,14 @@
 
 namespace vg::editor
 {
+    vg_enum_class(InspectorMenuOption, core::u8,
+        None = 0,
+        RemoveComponent
+    );
+
     class ImGuiComponentInspectorMenu : public ImGuiMenu
     {
     public:
-        enum MenuOption
-        {
-            None = 0,
-            RemoveComponent
-        };
-
         Status Display(core::IObject * _object);
         void removeComponent(IComponent * _component)
         {

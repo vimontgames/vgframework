@@ -274,13 +274,13 @@ namespace vg::editor
         const auto editFormat = scalarTraits<S>::is_integer ? (scalarTraits<S>::is_signed ? g_editIntFormat : g_editUIntFormat ) : g_editFloatFormat;
         const auto flags = _prop->GetFlags();
 
-        VG_ASSERT(!asBool(IProperty::Flags::Color & flags) || (count == 3 || count == 4));
+        VG_ASSERT(!asBool(PropertyFlags::Color & flags) || (count == 3 || count == 4));
 
-        if (asBool(IProperty::Flags::Color & flags) && (count == 3 || count == 4))
+        if (asBool(PropertyFlags::Color & flags) && (count == 3 || count == 4))
         {
             ImGuiColorEditFlags colorEditFlags = 0;
 
-            if (asBool(IProperty::Flags::HDR & flags))
+            if (asBool(PropertyFlags::HDR & flags))
                 colorEditFlags |= ImGuiColorEditFlags_HDR | ImGuiColorEditFlags_Float;
 
             switch (count)
@@ -296,7 +296,7 @@ namespace vg::editor
         }
         else
         {
-            if (asBool(IProperty::Flags::HasRange & flags))
+            if (asBool(PropertyFlags::HasRange & flags))
                 edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, &minRange, &maxRange, editFormat);
             else
                 edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, nullptr, nullptr, editFormat);
@@ -306,7 +306,7 @@ namespace vg::editor
 
         if (edited)
         {
-            if (asBool(IProperty::Flags::EulerAngle & flags))
+            if (asBool(PropertyFlags::EulerAngle & flags))
             {
                 for (uint i = 0; i < count; ++i)
                 {
@@ -350,7 +350,7 @@ namespace vg::editor
 
         using TEMP = typename scalarTraits<T>::larger_type;
 
-        const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
+        const bool readonly = asBool(PropertyFlags::ReadOnly & flags);
 
         T * pEnum = (T*)(uint_ptr(_object) + offset);
         TEMP enumVal = (TEMP)*pEnum;
@@ -433,7 +433,7 @@ namespace vg::editor
         const auto offset = _prop->GetOffset();
         const auto flags = _prop->GetFlags();
 
-        const bool readonly = asBool(IProperty::Flags::ReadOnly & flags);
+        const bool readonly = asBool(PropertyFlags::ReadOnly & flags);
         ImGui::BeginDisabled(readonly);
 
         T * pEnum = (T*)(uint_ptr(_object) + offset);
@@ -574,7 +574,7 @@ namespace vg::editor
 
         auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
-        const bool isComponent = nullptr != _object && _object->GetClassDesc() && asBool(IClassDesc::Flags::Component & _object->GetClassDesc()->GetFlags());
+        const bool isComponent = nullptr != _object && _object->GetClassDesc() && asBool(ClassDescFlags::Component & _object->GetClassDesc()->GetFlags());
         if (isComponent)
         {
             displayObject(_object);
@@ -603,10 +603,10 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::isPropertyVisible(IProperty::Flags _flags)
+    bool ImGuiWindow::isPropertyVisible(PropertyFlags _flags)
     {
-        const bool invisible = asBool(IProperty::Flags::NotVisible & _flags);
-        const bool debug = asBool(IProperty::Flags::Debug & _flags);
+        const bool invisible = asBool(PropertyFlags::NotVisible & _flags);
+        const bool debug = asBool(PropertyFlags::Debug & _flags);
         const bool showDebug = EditorOptions::get()->IsDebugPropertyVisible();
 
         return !invisible && (!debug || showDebug);
@@ -673,10 +673,10 @@ namespace vg::editor
     {
         const auto flags = _prop->GetFlags();
 
-        if (asBool(IProperty::Flags::EulerAngle & flags))
+        if (asBool(PropertyFlags::EulerAngle & flags))
             return 5.0f;
 
-        //if (asBool(IProperty::Flags::HasRange & _prop->getFlags()))
+        //if (asBool(PropertyFlags::HasRange & _prop->getFlags()))
         //    return (_prop->getRange().y - _prop->getRange().x) / 1000.0f;
         //else
             return 0.05f;
@@ -685,7 +685,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     float ImGuiWindow::getDragSpeedInt(const IProperty * _prop)
     {
-        //if (asBool(IProperty::Flags::HasRange & _prop->getFlags()))
+        //if (asBool(PropertyFlags::HasRange & _prop->getFlags()))
         //    return (_prop->getRange().y - _prop->getRange().x) / 1000.0f;
         //else
             return 1.0f;
@@ -724,12 +724,12 @@ namespace vg::editor
             auto nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
             if (!nodeInfo.treeNodeOpen)
             {
-                if (IProperty::Type::LayoutElement != type)
+                if (PropertyType::LayoutElement != type)
                     return false;
             }
         }
 
-        if (_objectContext.m_hide && (type != IProperty::Type::LayoutElement || !(asBool(flags & IProperty::Flags::Optional))))
+        if (_objectContext.m_hide && (type != PropertyType::LayoutElement || !(asBool(flags & PropertyFlags::Optional))))
             return false;
 
         if (!isPropertyVisible(flags))
@@ -737,12 +737,12 @@ namespace vg::editor
         
         const IClassDesc * classDesc = propContext.m_originalObject->GetClassDesc();
         auto * previousProp = classDesc->GetPreviousProperty(propContext.m_originalProp->GetName());
-        const bool singleLine = asBool(IProperty::Flags::SingleLine & flags);
+        const bool singleLine = asBool(PropertyFlags::SingleLine & flags);
         // Render property next to the previous one
-        if (singleLine && (previousProp && asBool(IProperty::Flags::SingleLine & previousProp->GetFlags())))
+        if (singleLine && (previousProp && asBool(PropertyFlags::SingleLine & previousProp->GetFlags())))
             ImGui::SameLine();
 
-        const bool hexa = asBool(IProperty::Flags::Hexadecimal & flags);
+        const bool hexa = asBool(PropertyFlags::Hexadecimal & flags);
 
         bool optional = false, optionalChanged = false;
 
@@ -750,7 +750,7 @@ namespace vg::editor
         propContext.m_optionalProp = nullptr;
         propContext.m_optionalPropOverride = nullptr;
 
-        if (asBool(IProperty::Flags::Optional & flags))
+        if (asBool(PropertyFlags::Optional & flags))
         {
             // check previous property is bool
             
@@ -769,14 +769,14 @@ namespace vg::editor
 
             if (propContext.m_optionalProp)
             {
-                VG_ASSERT(asBool(IProperty::Flags::NotVisible & propContext.m_optionalProp->GetFlags()) || _prop->GetType() == IProperty::Type::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be %s", _prop->GetName(), asString(IProperty::Flags::NotVisible).c_str());
+                VG_ASSERT(asBool(PropertyFlags::NotVisible & propContext.m_optionalProp->GetFlags()) || _prop->GetType() == PropertyType::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be %s", _prop->GetName(), asString(PropertyFlags::NotVisible).c_str());
                 
-                if (propContext.m_optionalProp->GetType() == IProperty::Type::Bool)
+                if (propContext.m_optionalProp->GetType() == PropertyType::Bool)
                 {
                     bool * b = propContext.m_optionalProp->GetPropertyBool(propContext.m_optionalObject);
                     bool temp = *b;
 
-                    if (_prop->GetType() != IProperty::Type::LayoutElement)
+                    if (_prop->GetType() != PropertyType::LayoutElement)
                     {
                         if (ImGui::Checkbox(ImGui::getObjectLabel("", propContext.m_optionalProp).c_str(), &temp))
                         {
@@ -820,7 +820,7 @@ namespace vg::editor
 
         bool changed = false;
 
-        propContext.m_readOnly = asBool(IProperty::Flags::ReadOnly & flags) || (propContext.m_isPrefabInstance && !propContext.m_isPrefabOverride && !propContext.m_canPrefabOverride);
+        propContext.m_readOnly = asBool(PropertyFlags::ReadOnly & flags) || (propContext.m_isPrefabInstance && !propContext.m_isPrefabOverride && !propContext.m_canPrefabOverride);
 
         ImGuiInputTextFlags imguiInputTextflags = ImGuiInputTextFlags_EnterReturnsTrue;
         if (propContext.m_readOnly)
@@ -830,8 +830,8 @@ namespace vg::editor
         if (hexa)
             imguiNumberTextInputFlag |= ImGuiInputTextFlags_CharsHexadecimal;
 
-        const bool flatten = asBool(IProperty::Flags::Flatten & flags);
-        const bool isEnumArray = asBool(IProperty::Flags::EnumArray & flags);
+        const bool flatten = asBool(PropertyFlags::Flatten & flags);
+        const bool isEnumArray = asBool(PropertyFlags::EnumArray & flags);
         const auto enumArrayTreeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
 
         //ImGui::BeginDisabled(readOnly);
@@ -842,7 +842,7 @@ namespace vg::editor
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                     break;
 
-                case IProperty::Type::LayoutElement:
+                case PropertyType::LayoutElement:
                 {
                     auto type = _prop->GetLayoutElementType();
                     switch (type)
@@ -851,13 +851,13 @@ namespace vg::editor
                             VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                             break;
 
-                        case IProperty::LayoutElementType::Separator:
+                        case PropertyLayoutElement::Separator:
                             ImGui::SeparatorText(_prop->GetDisplayName());
                             break;
 
-                        case IProperty::LayoutElementType::GroupBegin:
+                        case PropertyLayoutElement::GroupBegin:
                         {
-                            if (asBool(IProperty::Flags::Optional & flags))
+                            if (asBool(PropertyFlags::Optional & flags))
                             {
                                 // optional group
                                 VG_ASSERT(_prop->GetOffset() != 0);
@@ -883,9 +883,9 @@ namespace vg::editor
                         }
                         break;
 
-                        case IProperty::LayoutElementType::GroupEnd:
+                        case PropertyLayoutElement::GroupEnd:
                         {
-                            if (asBool(IProperty::Flags::Optional & flags))
+                            if (asBool(PropertyFlags::Optional & flags))
                             {
                                 ImGui::EndDisabled();
                             }
@@ -910,7 +910,7 @@ namespace vg::editor
                 }
                 break;
 
-                case IProperty::Type::BitMask:
+                case PropertyType::BitMask:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     BitMask * pBitMask = _prop->GetPropertyBitMask(_object);
@@ -950,7 +950,7 @@ namespace vg::editor
                 }
                 break;
 
-                case IProperty::Type::Bool:
+                case PropertyType::Bool:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     bool * pBool = _prop->GetPropertyBool(_object);
@@ -980,77 +980,77 @@ namespace vg::editor
                 };
                 break;
 
-                case IProperty::Type::EnumU8:
+                case PropertyType::EnumU8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnum<u8>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumI8:
+                case PropertyType::EnumI8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnum<i8>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumU16:
+                case PropertyType::EnumU16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnum<u16>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumI16:
+                case PropertyType::EnumI16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnum<i16>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumU32:
+                case PropertyType::EnumU32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnum<u32>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumI32:
+                case PropertyType::EnumI32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnum<i32>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumFlagsU8:
+                case PropertyType::EnumFlagsU8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnumFlags<u8>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumFlagsI8:
+                case PropertyType::EnumFlagsI8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnumFlags<i8>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumFlagsU16:
+                case PropertyType::EnumFlagsU16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnumFlags<u16>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumFlagsI16:
+                case PropertyType::EnumFlagsI16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnumFlags<i16>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumFlagsU32:
+                case PropertyType::EnumFlagsU32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnumFlags<u32>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumFlagsI32:
+                case PropertyType::EnumFlagsI32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnumFlags<i32>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumFlagsU64:
+                case PropertyType::EnumFlagsU64:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnumFlags<u64>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::EnumFlagsI64:
+                case PropertyType::EnumFlagsI64:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= displayEnumFlags<i64>(_object, _prop, propContext);
                     break;
 
-                case IProperty::Type::Uint8:
+                case PropertyType::Uint8:
                 {
                     if (isEnumArray)
                     {
@@ -1063,7 +1063,7 @@ namespace vg::editor
                                 const string enumLabel = ImGui::getObjectLabel(_prop->GetEnumName(e), _prop + e);
                                 u8 * pU8 = _prop->GetPropertyUint8(_object, e);
                                 i32 temp = (u8)*pU8;
-                                if (asBool(IProperty::Flags::HasRange & flags))
+                                if (asBool(PropertyFlags::HasRange & flags))
                                     changed |= ImGui::SliderInt(enumLabel.c_str(), &temp, max((int)0, (int)_prop->GetRange().x), min((int)255, (int)_prop->GetRange().y), "%d", imguiInputTextflags);
                                 else
                                     changed |= ImGui::InputInt(enumLabel.c_str(), &temp, 1, 16, imguiInputTextflags);
@@ -1080,119 +1080,119 @@ namespace vg::editor
                 };
                 break;
 
-                case IProperty::Type::Int8:
+                case PropertyType::Int8:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<i8>(propContext, label, _object, _prop, _prop->GetPropertyInt8(_object));
                 };
                 break;
 
-                case IProperty::Type::Uint16:
+                case PropertyType::Uint16:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<u16>(propContext, label, _object, _prop, _prop->GetPropertyUint16(_object));
                 };
                 break;
 
-                case IProperty::Type::Int16:
+                case PropertyType::Int16:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<i16>(propContext, label, _object, _prop, _prop->GetPropertyInt16(_object));
                 };
                 break;
 
-                case IProperty::Type::Int32:
+                case PropertyType::Int32:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<i32>(propContext, label, _object, _prop, _prop->GetPropertyInt32(_object));
                 };
                 break;
 
-                case IProperty::Type::Int64:
+                case PropertyType::Int64:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<i64>(propContext, label, _object, _prop, _prop->GetPropertyInt64(_object));
                 };
                 break;
 
-                case IProperty::Type::Int2:
+                case PropertyType::Int2:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<int2>(propContext, label, _object, _prop, _prop->GetPropertyIntN(_object, 2));
                 };
                 break;
 
-                case IProperty::Type::Int3:
+                case PropertyType::Int3:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<int3>(propContext, label, _object, _prop, _prop->GetPropertyIntN(_object, 3));
                 };
                 break;
 
-                case IProperty::Type::Int4:
+                case PropertyType::Int4:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<int4>(propContext, label, _object, _prop, _prop->GetPropertyIntN(_object, 4));
                 };
                 break;
 
-                case IProperty::Type::Uint32:
+                case PropertyType::Uint32:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<u32>(propContext, label, _object, _prop, _prop->GetPropertyUint32(_object));
                 };
                 break;
 
-                case IProperty::Type::Uint64:
+                case PropertyType::Uint64:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<u64>(propContext, label, _object, _prop, _prop->GetPropertyUint64(_object));
                 };
                 break;
 
-                case IProperty::Type::Uint2:
+                case PropertyType::Uint2:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<uint2>(propContext, label, _object, _prop, _prop->GetPropertyUintN(_object, 2));
                 };
                 break;
 
-                case IProperty::Type::Uint3:
+                case PropertyType::Uint3:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<uint3>(propContext, label, _object, _prop, _prop->GetPropertyUintN(_object, 3));
                 };
                 break;
 
-                case IProperty::Type::Uint4:
+                case PropertyType::Uint4:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<uint4>(propContext, label, _object, _prop, _prop->GetPropertyUintN(_object, 4));
                 };
                 break;
 
-                case IProperty::Type::Float:
+                case PropertyType::Float:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<float>(propContext, label, _object, _prop, _prop->GetPropertyFloat(_object));
                 };
                 break;
 
-                case IProperty::Type::Float2:
+                case PropertyType::Float2:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<float2>(propContext, label, _object, _prop, _prop->GetPropertyFloatN(_object, 2));
                 };
                 break;
 
-                case IProperty::Type::Float3:
+                case PropertyType::Float3:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed = editScalarProperty<float3>(propContext, label, _object, _prop, _prop->GetPropertyFloatN(_object, 3));
                 };
                 break;
 
-                case IProperty::Type::Float4:
+                case PropertyType::Float4:
                 {
                     float * pFloat4 = (float *)_prop->GetPropertyFloat4(_object);
 
@@ -1204,7 +1204,7 @@ namespace vg::editor
                         {
                             for (uint e = 0; e < _prop->GetEnumCount(); ++e)
                             {
-                                if (asBool(IProperty::Flags::Color & flags))
+                                if (asBool(PropertyFlags::Color & flags))
                                     changed |= ImGui::ColorEdit4(_prop->GetEnumName(e), pFloat4 + e * 4);
                                 else
                                     changed |= ImGui::InputFloat4(_prop->GetEnumName(e), pFloat4 + e * 4, g_editFloatFormat, imguiInputTextflags);
@@ -1219,14 +1219,14 @@ namespace vg::editor
                 };
                 break;
 
-                case IProperty::Type::Float4x4:
+                case PropertyType::Float4x4:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= editFloat4x4(_object, _prop, propContext); 
                 }
                 break;
 
-                case IProperty::Type::ObjectHandle:
+                case PropertyType::ObjectHandle:
                 {
                     ObjectHandle * pObjHandle = _prop->GetPropertyObjectHandle(_object);
 
@@ -1278,7 +1278,7 @@ namespace vg::editor
                 }
                 break;
 
-                case IProperty::Type::String:
+                case PropertyType::String:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
@@ -1287,8 +1287,8 @@ namespace vg::editor
                     string * pString = _prop->GetPropertyString(_object);
                     char buffer[1024];
 
-                    const bool isFolder = asBool(IProperty::Flags::IsFolder & flags);
-                    const bool isFile = asBool(IProperty::Flags::IsFile & flags);
+                    const bool isFolder = asBool(PropertyFlags::IsFolder & flags);
+                    const bool isFile = asBool(PropertyFlags::IsFile & flags);
 
                     if (isFolder || isFile)
                     {
@@ -1383,7 +1383,7 @@ namespace vg::editor
                 }
                 break;
 
-                case IProperty::Type::Callback:
+                case PropertyType::Callback:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
@@ -1394,7 +1394,7 @@ namespace vg::editor
                 }
                 break;
 
-                case IProperty::Type::ObjectVector:
+                case PropertyType::ObjectVector:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
@@ -1418,7 +1418,7 @@ namespace vg::editor
                 }
                 break;
 
-                case IProperty::Type::ObjectPtrVector:
+                case PropertyType::ObjectPtrVector:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
@@ -1690,7 +1690,7 @@ namespace vg::editor
                 }
                 break;
 
-                case IProperty::Type::ObjectPtrDictionary:
+                case PropertyType::ObjectPtrDictionary:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
@@ -1716,10 +1716,10 @@ namespace vg::editor
                 }
                 break;
 
-                case IProperty::Type::Object:
-                case IProperty::Type::ObjectPtr:
+                case PropertyType::Object:
+                case PropertyType::ObjectPtr:
                 {
-                    bool ref = (type == IProperty::Type::ObjectPtr);
+                    bool ref = (type == PropertyType::ObjectPtr);
                     IObject * pObject = ref ? *_prop->GetPropertyObjectPtr(_object) : _prop->GetPropertyObject(_object);
 
                     string treeNodeName = displayName;
@@ -1755,7 +1755,7 @@ namespace vg::editor
                         {
                             auto classDesc = pObject->GetClassDesc();
                             VG_ASSERT(classDesc);
-                            if (classDesc && asBool(IClassDesc::Flags::Component & classDesc->GetFlags()))
+                            if (classDesc && asBool(ClassDescFlags::Component & classDesc->GetFlags()))
                                 treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
                         }
 
@@ -1783,7 +1783,7 @@ namespace vg::editor
                 }
                 break;
 
-                case IProperty::Type::ResourceVector:
+                case PropertyType::ResourceVector:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
@@ -1814,10 +1814,10 @@ namespace vg::editor
                 }
                 break;
 
-                case IProperty::Type::Resource:
-                case IProperty::Type::ResourcePtr:
+                case PropertyType::Resource:
+                case PropertyType::ResourcePtr:
                 {
-                    const bool ref = type == IProperty::Type::ResourcePtr;
+                    const bool ref = type == PropertyType::ResourcePtr;
 
                     if (isEnumArray)
                     {
@@ -1884,7 +1884,7 @@ namespace vg::editor
 
         if (optional)
         {
-            if (_prop->GetType() != IProperty::Type::LayoutElement)
+            if (_prop->GetType() != PropertyType::LayoutElement)
             {
                 ImGui::PopItemWidth();
                 bool * b = propContext.m_optionalProp->GetPropertyBool(propContext.m_optionalObject);
@@ -2435,7 +2435,7 @@ namespace vg::editor
         for (uint i = 0; i < countof(temp); ++i)
             temp[i] = pFloat[i];
 
-        const bool flatten = asBool(IProperty::Flags::Flatten & _prop->GetFlags());
+        const bool flatten = asBool(PropertyFlags::Flatten & _prop->GetFlags());
 
         const string LabelI = flatten ? fmt::sprintf("%s.I", displayName) : "I";
         const string LabelJ = flatten ? fmt::sprintf("%s.J", displayName) : "J";

@@ -35,7 +35,7 @@ namespace vg::gfx
     void RootSignatureTableDesc::addConstantBuffers(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
-        descritor.m_type = Descriptor::Type::ConstantBuffer;
+        descritor.m_type = RootSignatureDescType::ConstantBuffer;
         descritor.constantBuffer = Descriptor::ConstantBuffer(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }
@@ -44,7 +44,7 @@ namespace vg::gfx
     void RootSignatureTableDesc::addTextures(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
-        descritor.m_type = Descriptor::Type::Texture;
+        descritor.m_type = RootSignatureDescType::Texture;
         descritor.texture = Descriptor::Texture(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }
@@ -53,7 +53,7 @@ namespace vg::gfx
     void RootSignatureTableDesc::addBuffers(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
-        descritor.m_type = Descriptor::Type::Buffer;
+        descritor.m_type = RootSignatureDescType::Buffer;
         descritor.buffer = Descriptor::Buffer(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }
@@ -62,7 +62,7 @@ namespace vg::gfx
     void RootSignatureTableDesc::addRWTextures(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
-        descritor.m_type = Descriptor::Type::RWTexture;
+        descritor.m_type = RootSignatureDescType::RWTexture;
         descritor.rwTexture = Descriptor::RWTexture(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }
@@ -71,7 +71,7 @@ namespace vg::gfx
     void RootSignatureTableDesc::addRWBuffers(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
-        descritor.m_type = Descriptor::Type::RWBuffer;
+        descritor.m_type = RootSignatureDescType::RWBuffer;
         descritor.rwBuffer = Descriptor::RWBuffer(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }
@@ -80,7 +80,7 @@ namespace vg::gfx
     void RootSignatureTableDesc::addTLAS(core::u8 _binding, core::u16 _register, core::u16 _count)
     {
         RootSignatureTableDesc::Descriptor descritor;
-        descritor.m_type = Descriptor::Type::TLAS;
+        descritor.m_type = RootSignatureDescType::TLAS;
         descritor.tlas = Descriptor::TLAS(_binding, _register, _count);
         m_descriptors.push_back(descritor);
     }

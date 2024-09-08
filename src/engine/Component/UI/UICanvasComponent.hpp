@@ -17,8 +17,8 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumEx(UICanvasComponent, gfx::ViewportTarget, m_canvas.m_viewportTarget, "Target", IProperty::Flags::ReadOnly);
-        registerPropertyEx(UICanvasComponent, m_canvas.m_viewportIndex, "Viewport", IProperty::Flags::ReadOnly);
+        registerPropertyEnumEx(UICanvasComponent, gfx::ViewportTarget, m_canvas.m_viewportTarget, "Target", PropertyFlags::ReadOnly);
+        registerPropertyEx(UICanvasComponent, m_canvas.m_viewportIndex, "Viewport", PropertyFlags::ReadOnly);
         registerProperty(UICanvasComponent, m_canvas.m_viewIndex, "View");
         registerProperty(UICanvasComponent, m_canvas.m_resolution, "Resolution");
 

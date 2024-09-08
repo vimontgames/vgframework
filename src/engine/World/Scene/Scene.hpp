@@ -5,7 +5,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS_EX(Scene, "Scene", IClassDesc::Flags::SceneNode);
+    VG_REGISTER_OBJECT_CLASS_EX(Scene, "Scene", ClassDescFlags::SceneNode);
 
     //--------------------------------------------------------------------------------------
     Scene::Scene(const string & _name, IObject * _parent) :

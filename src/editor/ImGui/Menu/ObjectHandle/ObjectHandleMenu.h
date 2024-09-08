@@ -7,16 +7,15 @@ namespace vg::core
 
 namespace vg::editor
 {
+    vg_enum_class(ObjectHandleMenuOption, core::u8,
+        None = 0,
+        Select,
+        Clear
+    );
+
     class ImGuiObjectHandleMenu
     {
     public:
-        enum MenuOption
-        {
-            None = 0,
-            Select,
-            Clear
-        };
-
         bool SelectUID(core::UID * _uid, IGameObject * _gameobject);
     };
 }

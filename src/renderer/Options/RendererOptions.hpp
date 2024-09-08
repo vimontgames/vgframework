@@ -15,13 +15,13 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerPropertyEx(RendererOptions, m_toolMode, "Toolmode", IProperty::Flags::SingleLine);
+        registerPropertyEx(RendererOptions, m_toolMode, "Toolmode", PropertyFlags::SingleLine);
         setPropertyDescription(LightDesc, m_toolMode, "Enable Toolmode in Game views");
 
-        registerPropertyEx(RendererOptions, m_rayTracing, "RayTracing", IProperty::Flags::SingleLine);
+        registerPropertyEx(RendererOptions, m_rayTracing, "RayTracing", PropertyFlags::SingleLine);
         setPropertyDescription(LightDesc, m_rayTracing, "Enable Ray-Tracing features");
 
-        registerPropertyEx(RendererOptions, m_postProcess, "PostProcess", IProperty::Flags::SingleLine);
+        registerPropertyEx(RendererOptions, m_postProcess, "PostProcess", PropertyFlags::SingleLine);
         setPropertyDescription(RendererOptions, m_postProcess, "Enable Post-Process features");
 
         registerPropertyEnum(RendererOptions, LightingMode, m_lightingMode, "Lighting");
@@ -32,13 +32,13 @@ namespace vg::renderer
 
         registerPropertyGroupBegin(RendererOptions, "Advanced");
         {
-            registerPropertyEx(RendererOptions, m_wireframe, "Wireframe", IProperty::Flags::SingleLine);
+            registerPropertyEx(RendererOptions, m_wireframe, "Wireframe", PropertyFlags::SingleLine);
             setPropertyDescription(LightDesc, m_wireframe, "Show Wireframe");
 
-            registerPropertyEx(RendererOptions, m_aabb, "Bounding Box", IProperty::Flags::SingleLine);
+            registerPropertyEx(RendererOptions, m_aabb, "Bounding Box", PropertyFlags::SingleLine);
             setPropertyDescription(LightDesc, m_aabb, "Show Bounding Boxes");
 
-            registerPropertyEx(RendererOptions, m_debugUI, "Debug UI", IProperty::Flags::SingleLine);
+            registerPropertyEx(RendererOptions, m_debugUI, "Debug UI", PropertyFlags::SingleLine);
             setPropertyDescription(LightDesc, m_debugUI, "Show UI debug");
 
             registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
@@ -47,7 +47,7 @@ namespace vg::renderer
             registerPropertyEnum(RendererOptions, gfx::HDR, m_HDRmode, "HDR");
             setPropertyDescription(LightDesc, m_HDRmode, "High-dynamic range display mode");
 
-            registerPropertyEx(RendererOptions, m_backgroundColor, "Background", IProperty::Flags::Color);
+            registerPropertyEx(RendererOptions, m_backgroundColor, "Background", PropertyFlags::Color);
             setPropertyDescription(LightDesc, m_backgroundColor, "Scene background color");
 
             registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");

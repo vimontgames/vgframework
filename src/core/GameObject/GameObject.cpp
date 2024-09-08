@@ -17,7 +17,7 @@
 
 namespace vg::core
 {
-    VG_REGISTER_OBJECT_CLASS_EX(GameObject, "GameObject", IClassDesc::Flags::GameObject | IClassDesc::Flags::UID);
+    VG_REGISTER_OBJECT_CLASS_EX(GameObject, "GameObject", ClassDescFlags::GameObject | ClassDescFlags::UID);
 
     //--------------------------------------------------------------------------------------
     bool GameObject::registerProperties(IClassDesc & _desc)
@@ -25,9 +25,9 @@ namespace vg::core
         super::registerProperties(_desc);
 
         // Hide GameObject name
-        setPropertyFlag(GameObject, m_name, IProperty::Flags::NotVisible, false);
+        setPropertyFlag(GameObject, m_name, PropertyFlags::NotVisible, false);
         registerPropertyObjectPtrVector(GameObject, m_components, "Components");
-        registerPropertyObjectPtrVectorEx(GameObject, m_children, "Children", IProperty::Flags::NotVisible);
+        registerPropertyObjectPtrVectorEx(GameObject, m_children, "Children", PropertyFlags::NotVisible);
 
         return true;
     }

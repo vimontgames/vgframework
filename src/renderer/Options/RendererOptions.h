@@ -12,18 +12,16 @@ namespace vg::core
 
 namespace vg::renderer
 {
-    enum class RenderPassFlags : core::u32
-    {
+    vg_enum_class(RenderPassFlags, core::u32,
         ZPrepass        = 0x00000001,
         Opaque          = 0x00000002,
         Transparency    = 0x00000004
-    };
+    );
 
-    enum class LightingMode : core::u8
-    {
+    vg_enum_class(LightingMode, core::u8,
         Forward = 0,
         Deferred
-    };
+    );
 
     class RendererOptions final : public IRendererOptions, public core::Singleton<RendererOptions>
     {

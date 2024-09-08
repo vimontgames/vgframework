@@ -9,28 +9,27 @@ namespace vg::core
 
 namespace vg::editor
 {
+    vg_enum_class(GameObjectSceneEditorMenuOption, core::u8,
+        None = 0,
+
+        AddGameObject,
+        AddChildGameObject,
+        AddParentGameObject,
+
+        EditPrefab,
+        CreatePrefab,
+        UnpackPrefab,
+        AddPrefab,
+        AddChildPrefab,
+        ReplaceByPrefab,
+
+        Delete,
+        Rename
+    );
+
     class ImGuiGameObjectSceneEditorMenu : public ImGuiMenu
     {
     public:
-        enum MenuOption
-        {
-            None = 0,
-
-            AddGameObject,
-            AddChildGameObject,
-            AddParentGameObject,
-
-            EditPrefab,
-            CreatePrefab,
-            UnpackPrefab,
-            AddPrefab,
-            AddChildPrefab,
-            ReplaceByPrefab,
-
-            Delete,
-            Rename
-        };
-
         Status Display(core::IObject * _object) override;
 
         core::IGameObject * m_RenamingGameObject = nullptr;

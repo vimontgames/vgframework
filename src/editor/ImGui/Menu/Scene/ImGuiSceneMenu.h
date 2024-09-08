@@ -9,16 +9,15 @@ namespace vg::core
 
 namespace vg::editor
 {
+    vg_enum(SceneMenuOption, core::u8,
+        None = 0,
+        Save,
+        Close
+    );
+
     class ImGuiSceneMenu : public ImGuiMenu
     {
     public:
-        enum MenuOption
-        {
-            None = 0,
-            Save,
-            Close
-        };
-
         ImGuiSceneMenu(core::BaseSceneType _sceneType);
         Status Display(core::IObject * _object) final;
 

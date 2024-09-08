@@ -12,14 +12,14 @@ namespace vg::gfx
 
     enum class PixelFormat : core::u8;
 
+    vg_enum_class(FrameGraphResourceType, core::u8,
+        Buffer = 0,
+        Texture
+    );
+
     class FrameGraphResource
     {
     public:
-        enum class Type : core::u8
-        {
-            Buffer = 0,
-            Texture
-        };
 
         enum class InitState : core::u8
         {
@@ -48,8 +48,8 @@ namespace vg::gfx
             m_readWrite.clear();
         }
 
-        void setType(Type _type);
-        Type getType() const;
+        void setType(FrameGraphResourceType _type);
+        FrameGraphResourceType getType() const;
 
         void setName(const core::string & _name);
         const core::string & getName() const;
@@ -76,7 +76,7 @@ namespace vg::gfx
         ResourceState getCurrentState() const;
 
     private:
-        Type                            m_type;
+        FrameGraphResourceType                            m_type;
         core::string                    m_name;
         core::vector<PassRWAccess>		m_readWrite;
         ResourceState                   m_state = ResourceState::Undefined;

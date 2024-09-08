@@ -15,28 +15,28 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumEx(MeshGeometry, VertexFormat, m_vertexFormat, "Vertex Format", IProperty::Flags::ReadOnly);
+        registerPropertyEnumEx(MeshGeometry, VertexFormat, m_vertexFormat, "Vertex Format", PropertyFlags::ReadOnly);
         setPropertyDescription(MeshGeometry, m_vertexFormat, "The vertex format used by the geometry determines the available attributes");
 
-        registerPropertyEx(MeshGeometry, m_indexCount, "Index Count", IProperty::Flags::ReadOnly);
+        registerPropertyEx(MeshGeometry, m_indexCount, "Index Count", PropertyFlags::ReadOnly);
         setPropertyDescription(MeshGeometry, m_indexCount, "Total index count for geometry");
 
-        registerPropertyEx(MeshGeometry, m_indexSize, "Index Size", IProperty::Flags::ReadOnly);
+        registerPropertyEx(MeshGeometry, m_indexSize, "Index Size", PropertyFlags::ReadOnly);
         setPropertyDescription(MeshGeometry, m_indexSize, "Index size used by the geometry");
 
-        registerPropertyEx(MeshGeometry, m_vertexCount, "Vertex Count", IProperty::Flags::ReadOnly);
+        registerPropertyEx(MeshGeometry, m_vertexCount, "Vertex Count", PropertyFlags::ReadOnly);
         setPropertyDescription(MeshGeometry, m_vertexCount, "Total vertex count for geometry");
 
-        registerPropertyEx(MeshGeometry, m_vertexSize, "Vertex Size", IProperty::Flags::ReadOnly);
+        registerPropertyEx(MeshGeometry, m_vertexSize, "Vertex Size", PropertyFlags::ReadOnly);
         setPropertyDescription(MeshGeometry, m_vertexSize, "Per-vertex size of the vertex format used");
 
-        registerPropertyEx(MeshGeometry, m_indexBufferOffset, "IB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Debug);
+        registerPropertyEx(MeshGeometry, m_indexBufferOffset, "IB Offset", PropertyFlags::ReadOnly | PropertyFlags::Debug);
         setPropertyDescription(MeshGeometry, m_indexBufferOffset, "Index buffer offset");
 
-        registerPropertyEx(MeshGeometry, m_vertexBufferOffset, "VB Offset", IProperty::Flags::ReadOnly | IProperty::Flags::Debug);
+        registerPropertyEx(MeshGeometry, m_vertexBufferOffset, "VB Offset", PropertyFlags::ReadOnly | PropertyFlags::Debug);
         setPropertyDescription(MeshGeometry, m_vertexBufferOffset, "Vertex buffer offset");
 
-        registerPropertyObjectVectorEx(MeshGeometry, m_batches, Batch, "Batches", IProperty::Flags::ReadOnly);
+        registerPropertyObjectVectorEx(MeshGeometry, m_batches, Batch, "Batches", PropertyFlags::ReadOnly);
 
         return true;
     }

@@ -28,7 +28,7 @@ namespace vg::editor
 
         if (deleteComponent)
         {
-            m_selected = MenuOption::RemoveComponent;
+            m_selected = (uint)InspectorMenuOption::RemoveComponent;
             m_popup = "Delete Component";
             openPopup = true;
             ImGui::OpenPopup(m_popup.c_str());
@@ -44,9 +44,9 @@ namespace vg::editor
 
         if (_object == m_selectedObject)
         {
-            switch (m_selected)
+            switch ((InspectorMenuOption)m_selected)
             {
-                case MenuOption::RemoveComponent:
+                case InspectorMenuOption::RemoveComponent:
                 {
                     if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                     {

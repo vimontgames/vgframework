@@ -11,25 +11,22 @@ namespace vg::gfx
 {
     class ITexture;
 
-    enum class HorizontalAligment : core::u8
-    {
+    vg_enum_class( HorizontalAligment , core::u8,
         Left,
         Center,
         Right
-    };
+    );
 
-    enum class VerticalAligment : core::u8
-    {
+    vg_enum_class(VerticalAligment , core::u8,
         Top,
         Center,
         Bottom
-    };
+    );
 
-    enum class UIItemFlags : core::u32
-    {
+    vg_enum_class(UIItemFlags , core::u32,
         AutoResize      = 0x00000001,
         KeepAspectRatio = 0x00000002
-    };    
+    );    
 
     struct UIItem
     {

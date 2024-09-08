@@ -22,7 +22,7 @@ namespace vg::physics
     {
         super::registerProperties(_desc);
 
-        registerPropertyEx(ShapeDesc, m_rotation, "Rotate", IProperty::Flags::EulerAngle);
+        registerPropertyEx(ShapeDesc, m_rotation, "Rotate", PropertyFlags::EulerAngle);
         setPropertyDescription(ShapeDesc, m_rotation, "Euler ZYX rotation angles");
 
         registerProperty(ShapeDesc, m_offset, "Offset");

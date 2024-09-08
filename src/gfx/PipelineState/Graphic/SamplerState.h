@@ -4,19 +4,17 @@
 
 namespace vg::gfx
 {
-    enum class Filter : core::u8
-    {
+    vg_enum_class(Filter, core::u8,
         Nearest = 0,
         Linear,
         DepthCmp
-    };
+    );
 
-    enum class Address : core::u8
-    {
+    vg_enum_class(Address, core::u8,
         Repeat = 0,
         Clamp,
-        Mirror,
-    };
+        Mirror
+    );
 
     namespace base
     {

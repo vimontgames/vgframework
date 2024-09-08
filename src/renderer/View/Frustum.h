@@ -7,22 +7,20 @@ namespace vg::core
 
 namespace vg::renderer
 {
-    enum class FrustumPlane
-    {
+    vg_enum_class(FrustumPlane, core::u8,
         Left = 0,
         Right,
         Top,
         Bottom,
         Near,
         Far
-    };
+    );
 
-    enum class FrustumTest
-    {
+    vg_enum_class(FrustumTest, core::u8,
         Intersect = 0,
         Inside,
         Outside
-    };
+    );
 
     struct Frustum
     {

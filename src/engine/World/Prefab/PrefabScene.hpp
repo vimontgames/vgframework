@@ -5,7 +5,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS_EX(PrefabScene, "PrefabScene", IClassDesc::Flags::SceneNode);
+    VG_REGISTER_OBJECT_CLASS_EX(PrefabScene, "PrefabScene", ClassDescFlags::SceneNode);
 
     //--------------------------------------------------------------------------------------
     PrefabScene::PrefabScene(const string & _name, IObject * _parent) :

@@ -17,10 +17,10 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumEx(PhysicsShapeComponent, physics::ShapeType, m_shapeType, "Type", IProperty::Flags::None);
+        registerPropertyEnumEx(PhysicsShapeComponent, physics::ShapeType, m_shapeType, "Type", PropertyFlags::None);
         setPropertyDescription(PhysicsShapeComponent, m_shapeType, "Type of primitive to use for the physics shape");
 
-        registerPropertyObjectPtrEx(PhysicsShapeComponent, m_shapeDesc, "Shape", IProperty::Flags::Flatten);
+        registerPropertyObjectPtrEx(PhysicsShapeComponent, m_shapeDesc, "Shape", PropertyFlags::Flatten);
 
         return true;
     }

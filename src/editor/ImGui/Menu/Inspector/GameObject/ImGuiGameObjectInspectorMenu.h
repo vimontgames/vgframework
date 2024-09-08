@@ -11,15 +11,14 @@ namespace vg::editor
         core::vector<core::IClassDesc *> classes;
     };
 
+    vg_enum_class(GameObjectInspectorMenuOption, core::u8,
+        None = 0,
+        AddComponent
+    );
+
     class ImGuiGameObjectInspectorMenu : public ImGuiMenu
     {
     public:
-        enum MenuOption
-        {
-            None = 0,
-            AddComponent
-        };
-
         Status Display(core::IObject * _object);
 
         void addComponentPopup() { m_addComponent = true; }

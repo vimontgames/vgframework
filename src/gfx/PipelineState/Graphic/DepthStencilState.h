@@ -4,8 +4,7 @@
 
 namespace vg::gfx
 {
-    enum class ComparisonFunc : core::u16
-    {
+    vg_enum_class(ComparisonFunc, core::u16,
         Always = 0,
         Never,
         Equal,
@@ -14,10 +13,9 @@ namespace vg::gfx
         LessEqual,
         Greater,
         GreaterEqual
-    };
+    );
 
-    enum class StencilOp : core::u16
-    {
+    vg_enum_class(StencilOp, core::u16,
         Zero = 0,
         Keep,
         Replace,
@@ -26,7 +24,7 @@ namespace vg::gfx
         Invert,
         IncrementWrap,
         DecrementWrap
-    };
+    );
 
     struct StencilState
     {

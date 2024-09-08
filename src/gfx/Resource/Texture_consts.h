@@ -4,8 +4,7 @@
 
 namespace vg::gfx
 {
-	enum class TextureType : core::u8
-	{
+	vg_enum_class(TextureType, core::u8,
 		Texture1D			= 0x01,
 		Texture2D			= 0x02,
 		Texture3D			= 0x03,
@@ -15,32 +14,25 @@ namespace vg::gfx
 		TextureCubeArray	= 0x16,
 		Texture2DMS			= 0x22,
 		Texture2DMSArray	= 0x31
-	};
+	);
 
-	enum class PixelFormat : core::u8
-	{
-        Unknow = 0,
-		
+	vg_enum_class(PixelFormat, core::u8,
+        Unknow = 0,		
         R8G8B8A8_unorm,
         R8G8B8A8_unorm_sRGB,
-
         B8G8R8A8_unorm,
         B8G8R8A8_unorm_sRGB,
-
 		R10G10B10A2_unorm,
-
         R16G16B16A16_float,
-
         D32S8
-	};
+	);
 
-	enum class TextureFlags : core::u32
-	{
+	vg_enum_class(TextureFlags, core::u32,
 		None			= 0x00000000,
         Backbuffer		= 0x00000001,
 		RenderTarget	= 0x00000002,
         DepthStencil    = 0x00000004
-	};
+	);
 
 	class TextureDesc
 	{

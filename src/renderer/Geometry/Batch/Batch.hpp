@@ -13,13 +13,13 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(Batch, m_name, IProperty::Flags::NotVisible, false);
-        setPropertyFlag(Batch, m_name, IProperty::Flags::Debug, true);
+        setPropertyFlag(Batch, m_name, PropertyFlags::NotVisible, false);
+        setPropertyFlag(Batch, m_name, PropertyFlags::Debug, true);
 
-        registerPropertyEx(Batch, count, "Count", IProperty::Flags::ReadOnly);
+        registerPropertyEx(Batch, count, "Count", PropertyFlags::ReadOnly);
         setPropertyDescription(Batch, count, "Index or vertex count");
 
-        registerPropertyEx(Batch, offset, "Offset", IProperty::Flags::ReadOnly);
+        registerPropertyEx(Batch, offset, "Offset", PropertyFlags::ReadOnly);
         setPropertyDescription(Batch, offset, "Start index or start vertex");
 
         return true;

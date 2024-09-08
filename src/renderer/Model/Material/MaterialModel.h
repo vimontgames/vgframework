@@ -25,13 +25,12 @@ namespace vg
         class RenderContext;
         class MaterialImporterData;
 
-        enum class ShaderPass : core::u8
-        {
+        vg_enum_class(ShaderPass, core::u8,
             ZOnly = 0,
             Forward,
             Deferred,
             Transparent
-        };
+        );
 
         class MaterialModel : public IMaterialModel
         {

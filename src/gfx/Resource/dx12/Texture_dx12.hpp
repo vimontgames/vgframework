@@ -114,7 +114,7 @@ namespace vg::gfx::dx12
             return PixelFormat::R8G8B8A8_unorm;
 
         default:
-            VG_ASSERT(false, "Unhandled pixel format \"%s\" (%u)", asString(_d3d12Format).c_str(), _d3d12Format);
+            VG_ASSERT(false, "Unhandled DXGI_FORMAT %u", _d3d12Format);
             return PixelFormat::Unknow;
         }
     }

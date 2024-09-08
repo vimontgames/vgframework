@@ -30,7 +30,7 @@ namespace vg::engine
 
         registerOptionalProperty(UIComponent, m_useOffset, m_offset, "Offset");
 
-        registerOptionalPropertyEx(UIComponent, m_useColor, m_color, "Color", IProperty::Flags::Color);
+        registerOptionalPropertyEx(UIComponent, m_useColor, m_color, "Color", PropertyFlags::Color);
 
         return true;
     }

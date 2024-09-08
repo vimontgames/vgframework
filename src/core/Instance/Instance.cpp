@@ -33,10 +33,10 @@ namespace vg::core
         registerPropertyEnumBitfield(Instance, InstanceFlags, m_flags, "Flags");
         setPropertyDescription(Instance, m_flags, "Instance flags");
 
-        registerPropertyEx(Instance, m_color, "Color", IProperty::Flags::Color);
+        registerPropertyEx(Instance, m_color, "Color", PropertyFlags::Color);
         setPropertyDescription(Instance, m_color, "Instance color");
 
-        registerPropertyEx(Instance, m_local, "Transform", IProperty::Flags::Flatten);
+        registerPropertyEx(Instance, m_local, "Transform", PropertyFlags::Flatten);
         setPropertyDescription(Instance, m_local, "Local transform");
 
         return true;

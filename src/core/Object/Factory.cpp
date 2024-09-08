@@ -24,11 +24,11 @@ namespace vg::core
     Factory::Factory()
     {
         // TODO : make proper API to register deprecated type names
-        m_oldTypeNames.insert(std::pair("ResourceRef", IProperty::Type::ResourcePtr));
-        m_oldTypeNames.insert(std::pair("ResourceRefVector", IProperty::Type::ResourcePtrVector));
-        m_oldTypeNames.insert(std::pair("ObjectRef", IProperty::Type::ObjectPtr));
-        m_oldTypeNames.insert(std::pair("ObjectRefVector", IProperty::Type::ObjectPtrVector));
-        m_oldTypeNames.insert(std::pair("ObjectRefDictionary", IProperty::Type::ObjectPtrDictionary));
+        m_oldTypeNames.insert(std::pair("ResourceRef", PropertyType::ResourcePtr));
+        m_oldTypeNames.insert(std::pair("ResourceRefVector", PropertyType::ResourcePtrVector));
+        m_oldTypeNames.insert(std::pair("ObjectRef", PropertyType::ObjectPtr));
+        m_oldTypeNames.insert(std::pair("ObjectRefVector", PropertyType::ObjectPtrVector));
+        m_oldTypeNames.insert(std::pair("ObjectRefDictionary", PropertyType::ObjectPtrDictionary));
 
         // TODO : make proper API to register deprecated property names names for each class
         m_oldPropertyNames.insert(std::pair("m_world", "m_local"));
@@ -65,7 +65,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     // Returned pointer shall not be stored but used immediately
     //--------------------------------------------------------------------------------------
-    IClassDesc * Factory::registerClass(const char * _parentClassName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::Func _createFunc)
+    IClassDesc * Factory::registerClass(const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::Func _createFunc)
     {
         // Classes declared in shared static libs could be declared more than once at static init
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -94,7 +94,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IClassDesc * Factory::registerSingletonClass(const char * _parentClassName, const char * _className, const char * _classDisplayName, IClassDesc::Flags _flags, u32 sizeOf, IClassDesc::SingletonFunc _singletonFunc)
+    IClassDesc * Factory::registerSingletonClass(const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::SingletonFunc _singletonFunc)
     {
         // Classes declared in shared static libs could be declared more than once at static init
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -139,7 +139,7 @@ namespace vg::core
         const auto * desc = getClassDescriptor(_className);
         if (desc)
         {
-            VG_ASSERT(asBool(IClassDesc::Flags::Singleton & desc->GetFlags()));
+            VG_ASSERT(asBool(ClassDescFlags::Singleton & desc->GetFlags()));
             return desc->GetSingletonFunc()();
         }
         return nullptr;
@@ -152,7 +152,7 @@ namespace vg::core
 
         if (desc)
         {
-            VG_ASSERT(!asBool(IClassDesc::Flags::Singleton & desc->GetFlags()));
+            VG_ASSERT(!asBool(ClassDescFlags::Singleton & desc->GetFlags()));
             IObject * obj = desc->GetCreateFunc()(_name, _parent);
 
             const auto index = desc->GetNextIndex();
@@ -384,9 +384,9 @@ namespace vg::core
         for (uint i = 0; i < propCount; ++i)
         {
             const IProperty * prop = classDesc->GetPropertyByIndex(i);
-            const IProperty::Flags propFlags = prop->GetFlags();
+            const PropertyFlags propFlags = prop->GetFlags();
 
-            if (asBool(IProperty::Flags::NotSaved & propFlags))
+            if (asBool(PropertyFlags::NotSaved & propFlags))
                 continue;
 
             CopyProperty(prop, _srcObj, prop, _dstObj);            
@@ -398,14 +398,14 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Factory::CanCopyProperty(const core::IProperty * _srcProp, const core::IProperty * _dstProp) const
     {
-        const IProperty::Type srcPropType = _srcProp->GetType();
-        const IProperty::Type dstPropType = _dstProp->GetType();
+        const PropertyType srcPropType = _srcProp->GetType();
+        const PropertyType dstPropType = _dstProp->GetType();
 
         if (srcPropType != dstPropType)
             return false;
 
-        const bool srcIsEnumArray = asBool(IProperty::Flags::EnumArray & _srcProp->GetFlags());
-        const bool dstIsEnumArray = asBool(IProperty::Flags::EnumArray & _dstProp->GetFlags());
+        const bool srcIsEnumArray = asBool(PropertyFlags::EnumArray & _srcProp->GetFlags());
+        const bool dstIsEnumArray = asBool(PropertyFlags::EnumArray & _dstProp->GetFlags());
 
         if (srcIsEnumArray != dstIsEnumArray)
             return false;
@@ -416,8 +416,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Factory::CopyProperty(const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj)
     {
-        const IProperty::Type srcPropType = _srcProp->GetType();
-        const IProperty::Type dstPropType = _dstProp->GetType();
+        const PropertyType srcPropType = _srcProp->GetType();
+        const PropertyType dstPropType = _dstProp->GetType();
 
         if (srcPropType != dstPropType)
         {
@@ -425,8 +425,8 @@ namespace vg::core
             return false;
         }
 
-        const bool srcIsEnumArray = asBool(IProperty::Flags::EnumArray & _srcProp->GetFlags());
-        const bool dstIsEnumArray = asBool(IProperty::Flags::EnumArray & _dstProp->GetFlags());
+        const bool srcIsEnumArray = asBool(PropertyFlags::EnumArray & _srcProp->GetFlags());
+        const bool dstIsEnumArray = asBool(PropertyFlags::EnumArray & _dstProp->GetFlags());
 
         if (srcIsEnumArray != dstIsEnumArray)
         {
@@ -434,7 +434,7 @@ namespace vg::core
             return false;
         }
 
-        if (asBool(_srcProp->GetFlags() & IProperty::Flags::NotSaved))
+        if (asBool(_srcProp->GetFlags() & PropertyFlags::NotSaved))
             return false;
 
         if (!strcmp(_srcProp->GetName(), "m_uid"))
@@ -465,138 +465,138 @@ namespace vg::core
 
         switch (srcPropType)
         {
-        case IProperty::Type::Undefined:
+        case PropertyType::Undefined:
             VG_ASSERT_ENUM_NOT_IMPLEMENTED(srcPropType);
             return false;
 
-        case IProperty::Type::Bool:
+        case PropertyType::Bool:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyBool(_dstObj) = *_srcProp->GetPropertyBool(_srcObj);
             break;
 
-        case IProperty::Type::Int8:
-        case IProperty::Type::EnumI8:
-        case IProperty::Type::EnumFlagsI8:
+        case PropertyType::Int8:
+        case PropertyType::EnumI8:
+        case PropertyType::EnumFlagsI8:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyInt8(_dstObj) = *_srcProp->GetPropertyInt8(_srcObj);
             break;
 
-        case IProperty::Type::Int16:
-        case IProperty::Type::EnumI16:
-        case IProperty::Type::EnumFlagsI16:
+        case PropertyType::Int16:
+        case PropertyType::EnumI16:
+        case PropertyType::EnumFlagsI16:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyInt16(_dstObj) = *_srcProp->GetPropertyInt16(_srcObj);
             break;
 
-        case IProperty::Type::Int32:
-        case IProperty::Type::EnumI32:
-        case IProperty::Type::EnumFlagsI32:
+        case PropertyType::Int32:
+        case PropertyType::EnumI32:
+        case PropertyType::EnumFlagsI32:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyInt32(_dstObj) = *_srcProp->GetPropertyInt32(_srcObj);
             break;
 
-        case IProperty::Type::Int64:
-        case IProperty::Type::EnumI64:
-        case IProperty::Type::EnumFlagsI64:
+        case PropertyType::Int64:
+        case PropertyType::EnumI64:
+        case PropertyType::EnumFlagsI64:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyInt64(_dstObj) = *_srcProp->GetPropertyInt64(_srcObj);
             break;
 
-        case IProperty::Type::Uint8:
+        case PropertyType::Uint8:
             if (srcIsEnumArray)
                 memcpy(_dstProp->GetPropertyUint8(_dstObj), _srcProp->GetPropertyUint8(_srcObj), _srcProp->GetSizeOf() * _srcProp->GetEnumCount());
             else
                 *_dstProp->GetPropertyUint8(_dstObj) = *_srcProp->GetPropertyUint8(_srcObj);
             break;
 
-        case IProperty::Type::EnumU8:
-        case IProperty::Type::EnumFlagsU8:
+        case PropertyType::EnumU8:
+        case PropertyType::EnumFlagsU8:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyUint8(_dstObj) = *_srcProp->GetPropertyUint8(_srcObj);
             break;
 
-        case IProperty::Type::Uint16:
-        case IProperty::Type::EnumU16:
-        case IProperty::Type::EnumFlagsU16:
+        case PropertyType::Uint16:
+        case PropertyType::EnumU16:
+        case PropertyType::EnumFlagsU16:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyUint16(_dstObj) = *_srcProp->GetPropertyUint16(_srcObj);
             break;
 
-        case IProperty::Type::Uint32:
-        case IProperty::Type::EnumU32:
-        case IProperty::Type::EnumFlagsU32:
+        case PropertyType::Uint32:
+        case PropertyType::EnumU32:
+        case PropertyType::EnumFlagsU32:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyUint32(_dstObj) = *_srcProp->GetPropertyUint32(_srcObj);
             break;
 
-        case IProperty::Type::Float:
+        case PropertyType::Float:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyFloat(_dstObj) = *_srcProp->GetPropertyFloat(_srcObj);
             break;
 
-        case IProperty::Type::Float2:
+        case PropertyType::Float2:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyFloat2(_dstObj) = *_srcProp->GetPropertyFloat2(_srcObj);
             break;
 
-        case IProperty::Type::Float3:
+        case PropertyType::Float3:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyFloat3(_dstObj) = *_srcProp->GetPropertyFloat3(_srcObj);
             break;
 
-        case IProperty::Type::Float4:
+        case PropertyType::Float4:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyFloat4(_dstObj) = *_srcProp->GetPropertyFloat4(_srcObj);
             break;
 
-        case IProperty::Type::Float4x4:
+        case PropertyType::Float4x4:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyFloat4x4(_dstObj) = *_srcProp->GetPropertyFloat4x4(_srcObj);
             break;
 
-        case IProperty::Type::Uint64:
-        case IProperty::Type::EnumU64:
-        case IProperty::Type::EnumFlagsU64:
+        case PropertyType::Uint64:
+        case PropertyType::EnumU64:
+        case PropertyType::EnumFlagsU64:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyUint64(_dstObj) = *_srcProp->GetPropertyUint64(_srcObj);
             break;
 
-        case IProperty::Type::Uint2:
+        case PropertyType::Uint2:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             memcpy(_dstProp->GetPropertyUintN(_dstObj, 2), _srcProp->GetPropertyUintN(_srcObj, 2), sizeof(uint) * 2);
             break;
 
-        case IProperty::Type::Uint3:
+        case PropertyType::Uint3:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             memcpy(_dstProp->GetPropertyUintN(_dstObj, 3), _srcProp->GetPropertyUintN(_srcObj, 3), sizeof(uint) * 3);
             break;
 
-        case IProperty::Type::Uint4:
+        case PropertyType::Uint4:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             memcpy(_dstProp->GetPropertyUintN(_dstObj, 4), _srcProp->GetPropertyUintN(_srcObj, 4), sizeof(uint) * 4);
             break;
 
-        case IProperty::Type::Int2:
+        case PropertyType::Int2:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             memcpy(_dstProp->GetPropertyIntN(_dstObj, 2), _srcProp->GetPropertyIntN(_srcObj, 2), sizeof(int) * 2);
             break;
 
-        case IProperty::Type::Int3:
+        case PropertyType::Int3:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             memcpy(_dstProp->GetPropertyIntN(_dstObj, 3), _srcProp->GetPropertyIntN(_srcObj, 3), sizeof(int) * 3);
             break;
 
-        case IProperty::Type::Int4:
+        case PropertyType::Int4:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             memcpy(_dstProp->GetPropertyIntN(_dstObj, 4), _srcProp->GetPropertyIntN(_srcObj, 4), sizeof(int) * 4);
             break;
 
-        case IProperty::Type::String:
+        case PropertyType::String:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyString(_dstObj) = *_srcProp->GetPropertyString(_srcObj);
             break;
 
-        case IProperty::Type::Object:
+        case PropertyType::Object:
         {
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             IObject * srcObj = _srcProp->GetPropertyObject(_srcObj);
@@ -605,7 +605,7 @@ namespace vg::core
         }
         break;
 
-        case IProperty::Type::ObjectPtr:
+        case PropertyType::ObjectPtr:
         {
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             IObject ** srcObj = _srcProp->GetPropertyObjectPtr(_srcObj);
@@ -614,7 +614,7 @@ namespace vg::core
         }
         break;
 
-        case IProperty::Type::ObjectPtrVector:
+        case PropertyType::ObjectPtrVector:
         {
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             const vector<IObject *> * srcVec = _srcProp->GetPropertyObjectPtrVector(_srcObj);
@@ -635,7 +635,7 @@ namespace vg::core
         }
         break;
 
-        case IProperty::Type::Resource:
+        case PropertyType::Resource:
         {
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             IResource * srcRes = _srcProp->GetPropertyResource(_srcObj);
@@ -647,7 +647,7 @@ namespace vg::core
         }
         break;
 
-        case IProperty::Type::ResourceVector:
+        case PropertyType::ResourceVector:
         {
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             const size_t srcCount = _srcProp->GetPropertyResourceVectorCount(_srcObj);
@@ -677,7 +677,7 @@ namespace vg::core
         }
         break;
 
-        case IProperty::Type::BitMask:
+        case PropertyType::BitMask:
         {
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             auto * srcBitMask = _srcProp->GetPropertyBitMask(_srcObj);
@@ -686,12 +686,12 @@ namespace vg::core
         }
         break;
 
-        case IProperty::Type::Callback:
-        case IProperty::Type::LayoutElement:
+        case PropertyType::Callback:
+        case PropertyType::LayoutElement:
             // Nothing to do
             break;
 
-        case IProperty::Type::ObjectHandle:
+        case PropertyType::ObjectHandle:
         {
             auto * srcHandle = _srcProp->GetPropertyObjectHandle(_srcObj);
             auto * dstHandle = _dstProp->GetPropertyObjectHandle(_dstObj);
@@ -700,10 +700,10 @@ namespace vg::core
         break;
 
         default:
-        case IProperty::Type::ResourcePtr:
-        case IProperty::Type::ResourcePtrVector:
-        case IProperty::Type::ObjectPtrDictionary:
-        case IProperty::Type::ObjectVector:
+        case PropertyType::ResourcePtr:
+        case PropertyType::ResourcePtrVector:
+        case PropertyType::ObjectPtrDictionary:
+        case PropertyType::ObjectVector:
             VG_ASSERT_ENUM_NOT_IMPLEMENTED(srcPropType);
             return false;
         }
@@ -744,7 +744,7 @@ namespace vg::core
             const auto size = prop->GetSizeOf();
             const auto offset = prop->GetOffset();
             const auto flags = prop->GetFlags();
-            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->GetFlags());
+            const bool isEnumArray = asBool(PropertyFlags::EnumArray & prop->GetFlags());
 
             switch (type)
             {
@@ -752,10 +752,10 @@ namespace vg::core
                     //VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                     break;
 
-                case IProperty::Type::Callback:
+                case PropertyType::Callback:
                     break;
 
-                case IProperty::Type::ObjectPtrVector:
+                case PropertyType::ObjectPtrVector:
                 {
                     if (strcmp(prop->GetName(), "m_children"))
                     {
@@ -766,28 +766,28 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::Bool:
-                case IProperty::Type::Int8:
-                case IProperty::Type::Int16:
-                case IProperty::Type::Int32:
-                case IProperty::Type::Int64:
-                case IProperty::Type::Uint8:
-                case IProperty::Type::Uint16:
-                case IProperty::Type::Uint32:
-                case IProperty::Type::Uint64:
-                case IProperty::Type::Float:
-                case IProperty::Type::Float2:
-                case IProperty::Type::Float3:
-                case IProperty::Type::Float4:
-                case IProperty::Type::Float4x4:
-                case IProperty::Type::EnumU8:
-                case IProperty::Type::EnumU16:
-                case IProperty::Type::EnumU32:
-                case IProperty::Type::EnumU64:
-                case IProperty::Type::EnumFlagsU8:
-                case IProperty::Type::EnumFlagsU16:
-                case IProperty::Type::EnumFlagsU32:
-                case IProperty::Type::EnumFlagsU64:
+                case PropertyType::Bool:
+                case PropertyType::Int8:
+                case PropertyType::Int16:
+                case PropertyType::Int32:
+                case PropertyType::Int64:
+                case PropertyType::Uint8:
+                case PropertyType::Uint16:
+                case PropertyType::Uint32:
+                case PropertyType::Uint64:
+                case PropertyType::Float:
+                case PropertyType::Float2:
+                case PropertyType::Float3:
+                case PropertyType::Float4:
+                case PropertyType::Float4x4:
+                case PropertyType::EnumU8:
+                case PropertyType::EnumU16:
+                case PropertyType::EnumU32:
+                case PropertyType::EnumU64:
+                case PropertyType::EnumFlagsU8:
+                case PropertyType::EnumFlagsU16:
+                case PropertyType::EnumFlagsU32:
+                case PropertyType::EnumFlagsU64:
                 {
                     const void * src = (void *)(uint_ptr(_object) + offset);
 
@@ -804,14 +804,14 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::ObjectHandle:
+                case PropertyType::ObjectHandle:
                 {
                     const void * src = (void *)(uint_ptr(_object) + offset);
                     VG_VERIFY(_buffer.write(src, size));
                 }
                 break;
 
-                case IProperty::Type::String:
+                case PropertyType::String:
                 {
                     const string * s = prop->GetPropertyString(_object);
                     VG_VERIFY(_buffer.write((u32)s->length()));
@@ -839,7 +839,7 @@ namespace vg::core
             const auto size = prop->GetSizeOf();
             const auto offset = prop->GetOffset();
             const auto flags = prop->GetFlags();
-            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->GetFlags());
+            const bool isEnumArray = asBool(PropertyFlags::EnumArray & prop->GetFlags());
 
             switch (type)
             {
@@ -847,10 +847,10 @@ namespace vg::core
                     //VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                     break;
 
-                case IProperty::Type::Callback:
+                case PropertyType::Callback:
                     break;
 
-                case IProperty::Type::ObjectPtrVector:
+                case PropertyType::ObjectPtrVector:
                 {
                     if (strcmp(prop->GetName(), "m_children"))
                     {
@@ -861,28 +861,28 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::Bool:
-                case IProperty::Type::Int8:
-                case IProperty::Type::Int16:
-                case IProperty::Type::Int32:
-                case IProperty::Type::Int64:
-                case IProperty::Type::Uint8:
-                case IProperty::Type::Uint16:
-                case IProperty::Type::Uint32:
-                case IProperty::Type::Uint64:
-                case IProperty::Type::Float:
-                case IProperty::Type::Float2:
-                case IProperty::Type::Float3:
-                case IProperty::Type::Float4:
-                case IProperty::Type::Float4x4:
-                case IProperty::Type::EnumU8:
-                case IProperty::Type::EnumU16:
-                case IProperty::Type::EnumU32:
-                case IProperty::Type::EnumU64:
-                case IProperty::Type::EnumFlagsU8:
-                case IProperty::Type::EnumFlagsU16:
-                case IProperty::Type::EnumFlagsU32:
-                case IProperty::Type::EnumFlagsU64:
+                case PropertyType::Bool:
+                case PropertyType::Int8:
+                case PropertyType::Int16:
+                case PropertyType::Int32:
+                case PropertyType::Int64:
+                case PropertyType::Uint8:
+                case PropertyType::Uint16:
+                case PropertyType::Uint32:
+                case PropertyType::Uint64:
+                case PropertyType::Float:
+                case PropertyType::Float2:
+                case PropertyType::Float3:
+                case PropertyType::Float4:
+                case PropertyType::Float4x4:
+                case PropertyType::EnumU8:
+                case PropertyType::EnumU16:
+                case PropertyType::EnumU32:
+                case PropertyType::EnumU64:
+                case PropertyType::EnumFlagsU8:
+                case PropertyType::EnumFlagsU16:
+                case PropertyType::EnumFlagsU32:
+                case PropertyType::EnumFlagsU64:
                 {
                     void * dst = (void*)(uint_ptr(_object) + offset);
                     bool changed = false;
@@ -899,7 +899,7 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::ObjectHandle:
+                case PropertyType::ObjectHandle:
                 {
                     void * dst = (void *)(uint_ptr(_object) + offset);
                     bool changed = false;
@@ -907,7 +907,7 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::String:
+                case PropertyType::String:
                 {
                     bool changed = false;
                     u32 stringSize = 0;
@@ -926,7 +926,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint getComponentCount(IProperty::Type _type)
+    core::uint getComponentCount(PropertyType _type)
     {
         switch (_type)
         {
@@ -934,19 +934,19 @@ namespace vg::core
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(_type);
                 return 1;
 
-            case IProperty::Type::Float2:
-            case IProperty::Type::Uint2:
-            case IProperty::Type::Int2:
+            case PropertyType::Float2:
+            case PropertyType::Uint2:
+            case PropertyType::Int2:
                 return 2;
 
-            case IProperty::Type::Float3:
-            case IProperty::Type::Uint3:
-            case IProperty::Type::Int3:
+            case PropertyType::Float3:
+            case PropertyType::Uint3:
+            case PropertyType::Int3:
                 return 3;
 
-            case IProperty::Type::Float4:
-            case IProperty::Type::Uint4:
-            case IProperty::Type::Int4:
+            case PropertyType::Float4:
+            case PropertyType::Uint4:
+            case PropertyType::Int4:
                 return 4;
         }
     }
@@ -966,7 +966,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const vector<IClassDesc *> Factory::getClassDescriptors(IClassDesc::Flags _required, IClassDesc::Flags _excluded) const
+    const vector<IClassDesc *> Factory::getClassDescriptors(ClassDescFlags _required, ClassDescFlags _excluded) const
     {
         vector<IClassDesc *> classes;
         for (uint i = 0; i < m_classes.count(); ++i)
@@ -1037,9 +1037,9 @@ namespace vg::core
                         {
                             const char * name = xmlName->Value();
                             const char * typeName = xmlType->Value();
-                            auto type = enumGetValue<IProperty::Type>(typeName);
+                            auto type = enumGetValue<PropertyType>(typeName);
 
-                            if (IProperty::Type::Undefined == type)
+                            if (PropertyType::Undefined == type)
                             {
                                 auto it = m_oldTypeNames.find(typeName);
                                 if (m_oldTypeNames.end() != it)
@@ -1066,13 +1066,13 @@ namespace vg::core
                                 }
                             }
                             
-                            if (nullptr == prop || asBool(IProperty::Flags::NotSaved & prop->GetFlags()))
+                            if (nullptr == prop || asBool(PropertyFlags::NotSaved & prop->GetFlags()))
                             {
 
                             }
                             else
                             {
-                                const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->GetFlags());
+                                const bool isEnumArray = asBool(PropertyFlags::EnumArray & prop->GetFlags());
 
                                 if (prop->GetType() == type)
                                 {
@@ -1084,10 +1084,10 @@ namespace vg::core
                                             VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                                             break;
 
-                                        case IProperty::Type::LayoutElement:
+                                        case PropertyType::LayoutElement:
                                             break;
 
-                                        case IProperty::Type::BitMask:
+                                        case PropertyType::BitMask:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
 
@@ -1105,7 +1105,7 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::Float:
+                                        case PropertyType::Float:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             const XMLAttribute* xmlValue = xmlPropElem->FindAttribute("value");
@@ -1117,7 +1117,7 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::Float4x4:
+                                        case PropertyType::Float4x4:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             float* pFloat4x4 = (float*)(uint_ptr(_object) + offset);
@@ -1138,7 +1138,7 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::Object:
+                                        case PropertyType::Object:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             IObject * pObjectRef = (IObject *)(uint_ptr(_object) + offset);
@@ -1161,10 +1161,10 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::Resource:
-                                        case IProperty::Type::ResourcePtr:
+                                        case PropertyType::Resource:
+                                        case PropertyType::ResourcePtr:
                                         {
-                                            const bool ref = type == IProperty::Type::ResourcePtr;
+                                            const bool ref = type == PropertyType::ResourcePtr;
 
                                             auto serializeResourceFromXML = [=](IResource * _resource, const XMLElement * _xmlElement)
                                             {
@@ -1222,7 +1222,7 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::ResourcePtrVector:
+                                        case PropertyType::ResourcePtrVector:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             const XMLElement * xmlObjectRef = xmlPropElem->FirstChildElement("Object");
@@ -1262,7 +1262,7 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::ResourceVector:
+                                        case PropertyType::ResourceVector:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             const XMLElement * const xmlObjectRefStart = xmlPropElem->FirstChildElement("Object");
@@ -1327,7 +1327,7 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::ObjectPtr:
+                                        case PropertyType::ObjectPtr:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             IObject* pObjectRef = nullptr;
@@ -1354,7 +1354,7 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::ObjectPtrVector:
+                                        case PropertyType::ObjectPtrVector:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             const XMLElement* xmlObjectRef = xmlPropElem->FirstChildElement("Object");
@@ -1394,27 +1394,27 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::EnumFlagsU8:
+                                        case PropertyType::EnumFlagsU8:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumFlagsPropertyFromXML<u8>(_object, prop, xmlPropElem);
                                             break;
 
-                                        case IProperty::Type::EnumFlagsU16:
+                                        case PropertyType::EnumFlagsU16:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumFlagsPropertyFromXML<u16>(_object, prop, xmlPropElem);
                                             break;
 
-                                        case IProperty::Type::EnumFlagsU32:
+                                        case PropertyType::EnumFlagsU32:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumFlagsPropertyFromXML<u32>(_object, prop, xmlPropElem);
                                             break;
 
-                                        case IProperty::Type::EnumFlagsU64:
+                                        case PropertyType::EnumFlagsU64:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumFlagsPropertyFromXML<u64>(_object, prop, xmlPropElem);
                                             break;
 
-                                        case IProperty::Type::String:
+                                        case PropertyType::String:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
@@ -1426,7 +1426,7 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::Bool:
+                                        case PropertyType::Bool:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
@@ -1438,9 +1438,9 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::Uint2:
-                                        case IProperty::Type::Uint3:
-                                        case IProperty::Type::Uint4:
+                                        case PropertyType::Uint2:
+                                        case PropertyType::Uint3:
+                                        case PropertyType::Uint4:
                                         {
                                             auto serializeUintNFromXML = [](u32 * _value, const XMLElement * _xmlElement, uint _componentCount)
                                             {
@@ -1489,9 +1489,9 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::Int2:
-                                        case IProperty::Type::Int3:
-                                        case IProperty::Type::Int4:
+                                        case PropertyType::Int2:
+                                        case PropertyType::Int3:
+                                        case PropertyType::Int4:
                                         {                     
                                             auto serializeIntNFromXML = [](i32 * _value, const XMLElement * _xmlElement, uint _componentCount)
                                             {
@@ -1540,9 +1540,9 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::Float2:
-                                        case IProperty::Type::Float3:
-                                        case IProperty::Type::Float4:
+                                        case PropertyType::Float2:
+                                        case PropertyType::Float3:
+                                        case PropertyType::Float4:
                                         {
                                             auto serializeFloatNFromXML = [](float * _value, const XMLElement * _xmlElement, uint _componentCount)
                                             {
@@ -1591,22 +1591,22 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::EnumU8:
+                                        case PropertyType::EnumU8:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumPropertyFromXML<u8>(_object, prop, xmlPropElem);
                                             break;
 
-                                        case IProperty::Type::EnumU16:
+                                        case PropertyType::EnumU16:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumPropertyFromXML<u16>(_object, prop, xmlPropElem);
                                             break;
 
-                                        case IProperty::Type::EnumU32:
+                                        case PropertyType::EnumU32:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeEnumPropertyFromXML<u32>(_object, prop, xmlPropElem);
                                         break;
 
-                                        case IProperty::Type::Uint8:
+                                        case PropertyType::Uint8:
                                             if (isEnumArray)
                                             {
                                                 const XMLElement * xmlPropElemValue = xmlPropElem->FirstChildElement("Value");
@@ -1637,17 +1637,17 @@ namespace vg::core
                                             }
                                         break;
 
-                                        case IProperty::Type::Uint16:
+                                        case PropertyType::Uint16:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<u16>(_object, prop, xmlPropElem);
                                             break;
 
-                                        case IProperty::Type::Uint32:
+                                        case PropertyType::Uint32:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<u32>(_object, prop, xmlPropElem);
                                             break;
 
-                                        case IProperty::Type::ObjectHandle:
+                                        case PropertyType::ObjectHandle:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<u32>(_object, prop, xmlPropElem);
@@ -1660,27 +1660,27 @@ namespace vg::core
                                         }
                                         break;
 
-                                        case IProperty::Type::Uint64:
+                                        case PropertyType::Uint64:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<u64>(_object, prop, xmlPropElem);
                                             break;
 
-                                        case IProperty::Type::Int8:
+                                        case PropertyType::Int8:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<i8>(_object, prop, xmlPropElem);
                                             break;
 
-                                        case IProperty::Type::Int16:
+                                        case PropertyType::Int16:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<i16>(_object, prop, xmlPropElem);
                                             break;
 
-                                        case IProperty::Type::Int32:
+                                        case PropertyType::Int32:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<i32>(_object, prop, xmlPropElem);
                                             break;
 
-                                        case IProperty::Type::Int64:
+                                        case PropertyType::Int64:
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<i64>(_object, prop, xmlPropElem);
                                             break;
@@ -1729,7 +1729,7 @@ namespace vg::core
             const auto offset = prop->GetOffset();
             const auto flags = prop->GetFlags();
 
-            if (asBool(IProperty::Flags::NotSaved & flags) || type == IProperty::Type::LayoutElement)
+            if (asBool(PropertyFlags::NotSaved & flags) || type == PropertyType::LayoutElement)
                 continue;
 
             XMLElement * xmlPropElem = _xmlDoc.NewElement("Property");
@@ -1745,7 +1745,7 @@ namespace vg::core
 
             bool skipAttribute = false;
 
-            const bool isEnumArray = asBool(IProperty::Flags::EnumArray & prop->GetFlags());
+            const bool isEnumArray = asBool(PropertyFlags::EnumArray & prop->GetFlags());
 
             switch (type)
             {
@@ -1754,16 +1754,16 @@ namespace vg::core
                     skipAttribute = true;
                     break;
 
-                case IProperty::Type::LayoutElement:
+                case PropertyType::LayoutElement:
                     break;
 
-                case IProperty::Type::Callback:
+                case PropertyType::Callback:
                 {
                     skipAttribute = true;
                 }
                 break;
 
-                case IProperty::Type::BitMask:
+                case PropertyType::BitMask:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
 
@@ -1775,27 +1775,27 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::Int8:
+                case PropertyType::Int8:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeIntegerPropertyToXML<i8>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::Int16:
+                case PropertyType::Int16:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeIntegerPropertyToXML<i16>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::Int32:
+                case PropertyType::Int32:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeIntegerPropertyToXML<i32>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::Int64:
+                case PropertyType::Int64:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeIntegerPropertyToXML<i64>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::Uint8:
+                case PropertyType::Uint8:
                     if (isEnumArray)
                     {
                         const uint count = prop->GetEnumCount();
@@ -1816,22 +1816,22 @@ namespace vg::core
                     }
                     break;
 
-                case IProperty::Type::Uint16:
+                case PropertyType::Uint16:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeIntegerPropertyToXML<u16>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::Uint32:
+                case PropertyType::Uint32:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeIntegerPropertyToXML<u32>(_object, prop, xmlPropElem);
                 break;
 
-                case IProperty::Type::Uint64:
+                case PropertyType::Uint64:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeIntegerPropertyToXML<u64>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::ObjectHandle:
+                case PropertyType::ObjectHandle:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const ObjectHandle * objHandle = prop->GetPropertyObjectHandle(_object);
@@ -1839,10 +1839,10 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::Resource:
-                case IProperty::Type::ResourcePtr:
+                case PropertyType::Resource:
+                case PropertyType::ResourcePtr:
                 {
-                    const bool ref = type == IProperty::Type::ResourcePtr;
+                    const bool ref = type == PropertyType::ResourcePtr;
 
                     if (isEnumArray)
                     {
@@ -1867,7 +1867,7 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::ResourceVector:
+                case PropertyType::ResourceVector:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const uint sizeOf = prop->GetSizeOf();
@@ -1882,7 +1882,7 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::Object:
+                case PropertyType::Object:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const IObject * pObject = prop->GetPropertyObject(_object);
@@ -1890,7 +1890,7 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::ObjectPtr:
+                case PropertyType::ObjectPtr:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const IObject * pObject = *prop->GetPropertyObjectPtr(_object);
@@ -1899,7 +1899,7 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::ObjectVector:
+                case PropertyType::ObjectVector:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const uint sizeOf = prop->GetSizeOf();
@@ -1914,7 +1914,7 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::ResourcePtrVector:
+                case PropertyType::ResourcePtrVector:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     auto * vector = prop->GetPropertyResourcePtrVector(_object);
@@ -1924,7 +1924,7 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::ObjectPtrVector:
+                case PropertyType::ObjectPtrVector:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     auto * vector = prop->GetPropertyObjectPtrVector(_object);
@@ -1934,7 +1934,7 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::String:
+                case PropertyType::String:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const string * pString = prop->GetPropertyString(_object);
@@ -1942,7 +1942,7 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::Bool:
+                case PropertyType::Bool:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const bool * pBool = prop->GetPropertyBool(_object);
@@ -1950,7 +1950,7 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::Float:
+                case PropertyType::Float:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const float * pFloat = prop->GetPropertyFloat(_object);
@@ -1958,9 +1958,9 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::Uint2:
-                case IProperty::Type::Uint3:
-                case IProperty::Type::Uint4:
+                case PropertyType::Uint2:
+                case PropertyType::Uint3:
+                case PropertyType::Uint4:
                 {
                     auto serializeUintNToXML = [](XMLElement * _xmlElement, const uint * pUint, uint _componentCount)
                     {
@@ -2005,9 +2005,9 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::Int2:
-                case IProperty::Type::Int3:
-                case IProperty::Type::Int4:
+                case PropertyType::Int2:
+                case PropertyType::Int3:
+                case PropertyType::Int4:
                 {
                     auto serializeIntNToXML = [](XMLElement * _xmlElement, const int * pInt, uint _componentCount)
                         {
@@ -2052,9 +2052,9 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::Float2:
-                case IProperty::Type::Float3:
-                case IProperty::Type::Float4:
+                case PropertyType::Float2:
+                case PropertyType::Float3:
+                case PropertyType::Float4:
                 {
                     auto serializeFloatNToXML = [](XMLElement * _xmlElement, const float * pFloat, uint _componentCount)
                     {
@@ -2099,7 +2099,7 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::Float4x4:
+                case PropertyType::Float4x4:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
 
@@ -2123,42 +2123,42 @@ namespace vg::core
                 }
                 break;
 
-                case IProperty::Type::EnumFlagsU8:
+                case PropertyType::EnumFlagsU8:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumFlagsPropertyToXML<u8>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::EnumFlagsU16:
+                case PropertyType::EnumFlagsU16:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumFlagsPropertyToXML<u16>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::EnumFlagsU32:
+                case PropertyType::EnumFlagsU32:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumFlagsPropertyToXML<u32>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::EnumFlagsU64:
+                case PropertyType::EnumFlagsU64:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumFlagsPropertyToXML<u64>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::EnumU8:
+                case PropertyType::EnumU8:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumPropertyToXML<u8>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::EnumU16:
+                case PropertyType::EnumU16:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumPropertyToXML<u16>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::EnumU32:
+                case PropertyType::EnumU32:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumPropertyToXML<u32>(_object, prop, xmlPropElem);
                     break;
 
-                case IProperty::Type::EnumU64:
+                case PropertyType::EnumU64:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumPropertyToXML<u64>(_object, prop, xmlPropElem);
                     break;

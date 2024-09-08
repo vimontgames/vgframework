@@ -5,27 +5,23 @@
 
 namespace vg::gfx
 {
-    enum class ShaderStage : core::u8
-    {
+    vg_enum_class(ShaderStage, core::u8,
         Vertex = 0,
         Hull,
         Domain,
         Geometry,
         Pixel,
-
         Compute
-    };
+    );
 
-    enum class ShaderStageFlags : core::u16
-    {
+    vg_enum_class(ShaderStageFlags, core::u8,
         VS = 1 << core::asInteger(ShaderStage::Vertex),
         HS = 1 << core::asInteger(ShaderStage::Domain),
         DS = 1 << core::asInteger(ShaderStage::Hull),
         GS = 1 << core::asInteger(ShaderStage::Geometry),
         PS = 1 << core::asInteger(ShaderStage::Pixel),
-
         CS = 1 << core::asInteger(ShaderStage::Compute),
 
-        All = VS | HS | DS | GS | PS | CS
-    };
+        All = 0x3F // VS | HS | DS | GS | PS | CS
+    );
 }

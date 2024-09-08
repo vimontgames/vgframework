@@ -46,12 +46,11 @@ namespace vg::editor
         {
             inline static const ImVec2 interlineSize = ImVec2(256.0f, 8.0f);
 
-            enum Type
-            {
+            vg_enum(Type, core::u8,
                 BeforeNode,
                 Node,
                 AfterNode
-            };
+            );
         }
 
         // from https://fontawesome.com/v6/search?m=free

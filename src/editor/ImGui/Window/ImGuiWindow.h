@@ -92,7 +92,7 @@ namespace vg::editor
 
         static core::string                     getButtonLabel      (core::string _baseName, core::IObject * _object);
 
-        static bool                             isPropertyVisible   (core::IProperty::Flags _flags);
+        static bool                             isPropertyVisible   (core::PropertyFlags _flags);
         static core::string                     getPropertyLabel    (const core::string & _label, core::uint _index = 0);
         static ImVec4                           getPropertyColor    (const PropertyContext & _propContext);
         static void                             drawPropertyLabel   (const PropertyContext & _propContext, const core::IProperty * _prop);

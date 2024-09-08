@@ -93,268 +93,268 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterPropertyLayout(const char * _className, IProperty::LayoutElementType _layoutElementType, const char * _label, bool * _offset, IProperty::Flags _flags)
+    void ClassDesc::RegisterPropertyLayout(const char * _className, PropertyLayoutElement _layoutElementType, const char * _label, bool * _offset, PropertyFlags _flags)
     {
-        Property prop = Property(_className, _label, IProperty::Type::LayoutElement, (uint_ptr)_offset, (uint)_layoutElementType, _label, _flags);
+        Property prop = Property(_className, _label, PropertyType::LayoutElement, (uint_ptr)_offset, (uint)_layoutElementType, _label, _flags);
         pushProperty(prop);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, bool * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, bool * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::float2 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::float2 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::float3 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::float3 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::float4 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::float4 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, float4x4 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, float4x4 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::uint2 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::uint2 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::uint3 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::uint3 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::uint4 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::uint4 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::int2 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::int2 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::int3 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::int3 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::int4 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::int4 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::i8 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::i8 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::i16 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::i16 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::i32 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::i32 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::i64 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::i64 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u16 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u16 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u32 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u32 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u64 * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u64 * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, float * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, float * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::string * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::string * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, BitMask * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, BitMask * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, ObjectHandle * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, ObjectHandle * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterPropertyResource(const char * _className, const char * _propertyName, core::IResource * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterPropertyResource(const char * _className, const char * _propertyName, core::IResource * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterPropertyResourcePtr(const char * _className, const char * _propertyName, core::IResource ** _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterPropertyResourcePtr(const char * _className, const char * _propertyName, core::IResource ** _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::IObject * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::IObject * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::IObject ** _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::IObject ** _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, IProperty::Callback _funcPtr, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, IProperty::Callback _funcPtr, const char * _displayName, PropertyFlags _flags)
     {
-        pushProperty({ _className, _propertyName, IProperty::Type::Callback, (uint_ptr)_funcPtr, (u32)sizeof(void *), _displayName, _flags });
+        pushProperty({ _className, _propertyName, PropertyType::Callback, (uint_ptr)_funcPtr, (u32)sizeof(void *), _displayName, _flags });
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName, PropertyFlags _flags)
     {
-        pushProperty({ _className, _propertyName, asBool(_flags & IProperty::Flags::Resource) ? IProperty::Type::ResourceVector : IProperty::Type::ObjectVector, (uint_ptr)_offset, _sizeOf, _displayName, _flags });
+        pushProperty({ _className, _propertyName, asBool(_flags & PropertyFlags::Resource) ? PropertyType::ResourceVector : PropertyType::ObjectVector, (uint_ptr)_offset, _sizeOf, _displayName, _flags });
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _elemType, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _elemType, const char * _displayName, PropertyFlags _flags)
     {
-        pushProperty({ _className, _propertyName, asBool(_flags & IProperty::Flags::Resource) ? IProperty::Type::ResourcePtrVector : IProperty::Type::ObjectPtrVector, (uint_ptr)_offset, (u32)sizeof(vector<IObject *>), _displayName, _flags });
+        pushProperty({ _className, _propertyName, asBool(_flags & PropertyFlags::Resource) ? PropertyType::ResourcePtrVector : PropertyType::ObjectPtrVector, (uint_ptr)_offset, (u32)sizeof(vector<IObject *>), _displayName, _flags });
         auto & prop = properties.back();
         prop.SetInterface(_elemType);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, dictionary<core::IObject*>* _offset, const char * _displayName, IProperty::Flags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, dictionary<core::IObject*>* _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::u8 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u8 * _enumValues, IProperty::Flags _flags)
+    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::u8 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u8 * _enumValues, PropertyFlags _flags)
     {
-        const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        pushProperty({ _className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU8 : IProperty::Type::EnumU8, (uint_ptr)_offset, (u32)sizeof(u8), _displayName, _flags, _enumCount, _enumNames, _enumValues });
+        const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
+        pushProperty({ _className, _propertyName, bitfield ? PropertyType::EnumFlagsU8 : PropertyType::EnumU8, (uint_ptr)_offset, (u32)sizeof(u8), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::u16 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u16 * _enumValues, IProperty::Flags _flags)
+    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::u16 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u16 * _enumValues, PropertyFlags _flags)
     {
-        const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        pushProperty({ _className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU16 : IProperty::Type::EnumU16, (uint_ptr)_offset, (u32)sizeof(u16), _displayName, _flags, _enumCount, _enumNames, _enumValues });
+        const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
+        pushProperty({ _className, _propertyName, bitfield ? PropertyType::EnumFlagsU16 : PropertyType::EnumU16, (uint_ptr)_offset, (u32)sizeof(u16), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::u32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u32 * _enumValues, IProperty::Flags _flags)
+    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::u32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u32 * _enumValues, PropertyFlags _flags)
     {
-        const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        pushProperty({ _className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU32 : IProperty::Type::EnumU32, (uint_ptr)_offset, (u32)sizeof(u32), _displayName, _flags, _enumCount, _enumNames, _enumValues });
+        const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
+        pushProperty({ _className, _propertyName, bitfield ? PropertyType::EnumFlagsU32 : PropertyType::EnumU32, (uint_ptr)_offset, (u32)sizeof(u32), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::u64 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u64 * _enumValues, IProperty::Flags _flags)
+    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::u64 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const u64 * _enumValues, PropertyFlags _flags)
     {
-        const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        pushProperty({ _className, _propertyName, bitfield ? IProperty::Type::EnumFlagsU64 : IProperty::Type::EnumU64, (uint_ptr)_offset, (u32)sizeof(u64), _displayName, _flags, _enumCount, _enumNames, _enumValues });
+        const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
+        pushProperty({ _className, _propertyName, bitfield ? PropertyType::EnumFlagsU64 : PropertyType::EnumU64, (uint_ptr)_offset, (u32)sizeof(u64), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i8 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i8 * _enumValues, IProperty::Flags _flags)
+    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i8 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i8 * _enumValues, PropertyFlags _flags)
     {
-        const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        pushProperty({ _className, _propertyName, bitfield ? IProperty::Type::EnumFlagsI8 : IProperty::Type::EnumI8, (uint_ptr)_offset, (u32)sizeof(i8), _displayName, _flags, _enumCount, _enumNames, _enumValues });
+        const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
+        pushProperty({ _className, _propertyName, bitfield ? PropertyType::EnumFlagsI8 : PropertyType::EnumI8, (uint_ptr)_offset, (u32)sizeof(i8), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
     }
     
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i16 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i16 * _enumValues, IProperty::Flags _flags)
+    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i16 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i16 * _enumValues, PropertyFlags _flags)
     {
-        const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        pushProperty({ _className, _propertyName, bitfield ? IProperty::Type::EnumFlagsI16 : IProperty::Type::EnumI16, (uint_ptr)_offset, (u32)sizeof(i16), _displayName, _flags, _enumCount, _enumNames, _enumValues });
+        const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
+        pushProperty({ _className, _propertyName, bitfield ? PropertyType::EnumFlagsI16 : PropertyType::EnumI16, (uint_ptr)_offset, (u32)sizeof(i16), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
     }
     
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i32 * _enumValues, IProperty::Flags _flags)
+    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i32 * _enumValues, PropertyFlags _flags)
     {
-        const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        pushProperty({ _className, _propertyName, bitfield ? IProperty::Type::EnumFlagsI32 : IProperty::Type::EnumI32, (uint_ptr)_offset, (u32)sizeof(i32), _displayName, _flags, _enumCount, _enumNames, _enumValues });
+        const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
+        pushProperty({ _className, _propertyName, bitfield ? PropertyType::EnumFlagsI32 : PropertyType::EnumI32, (uint_ptr)_offset, (u32)sizeof(i32), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
     }
     
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i64 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i64 * _enumValues, IProperty::Flags _flags)
+    void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i64 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i64 * _enumValues, PropertyFlags _flags)
     {
-        const bool bitfield = asBool(IProperty::Flags::Bitfield & _flags);
-        pushProperty({ _className, _propertyName, bitfield ? IProperty::Type::EnumFlagsI64 : IProperty::Type::EnumI64, (uint_ptr)_offset, (u32)sizeof(i64), _displayName, _flags, _enumCount, _enumNames, _enumValues });
+        const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
+        pushProperty({ _className, _propertyName, bitfield ? PropertyType::EnumFlagsI64 : PropertyType::EnumI64, (uint_ptr)_offset, (u32)sizeof(i64), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
     }
@@ -450,7 +450,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IClassDesc::Flags ClassDesc::GetFlags() const
+    ClassDescFlags ClassDesc::GetFlags() const
     {
         return flags;
     }
@@ -462,39 +462,39 @@ namespace vg::core
     }
 
     template <typename T> struct TypeToEnum;
-    template <> struct TypeToEnum<bool> { static constexpr auto value = IProperty::Type::Bool; };
-    template <> struct TypeToEnum<core::i8> { static constexpr auto value = IProperty::Type::Int8; };
-    template <> struct TypeToEnum<core::i16> { static constexpr auto value = IProperty::Type::Int16; };
-    template <> struct TypeToEnum<core::i32> { static constexpr auto value = IProperty::Type::Int32; };
-    template <> struct TypeToEnum<core::i64> { static constexpr auto value = IProperty::Type::Int64; };
-    template <> struct TypeToEnum<core::u8> { static constexpr auto value = IProperty::Type::Uint8; };
-    template <> struct TypeToEnum<core::u16> { static constexpr auto value = IProperty::Type::Uint16; };
-    template <> struct TypeToEnum<core::u32> { static constexpr auto value = IProperty::Type::Uint32; };
-    template <> struct TypeToEnum<core::u64> { static constexpr auto value = IProperty::Type::Uint64; };
-    template <> struct TypeToEnum<core::uint2> { static constexpr auto value = IProperty::Type::Uint2; };
-    template <> struct TypeToEnum<core::uint3> { static constexpr auto value = IProperty::Type::Uint3; };
-    template <> struct TypeToEnum<core::uint4> { static constexpr auto value = IProperty::Type::Uint4; };
-    template <> struct TypeToEnum<core::int2> { static constexpr auto value = IProperty::Type::Int2; };
-    template <> struct TypeToEnum<core::int3> { static constexpr auto value = IProperty::Type::Int3; };
-    template <> struct TypeToEnum<core::int4> { static constexpr auto value = IProperty::Type::Int4; };
-    template <> struct TypeToEnum<float> { static constexpr auto value = IProperty::Type::Float; };
-    template <> struct TypeToEnum<core::float2> { static constexpr auto value = IProperty::Type::Float2; };
-    template <> struct TypeToEnum<core::float3> { static constexpr auto value = IProperty::Type::Float3; };
-    template <> struct TypeToEnum<core::float4> { static constexpr auto value = IProperty::Type::Float4; };
-    template <> struct TypeToEnum<core::float4x4> { static constexpr auto value = IProperty::Type::Float4x4; };
-    template <> struct TypeToEnum<core::string> { static constexpr auto value = IProperty::Type::String; };
-    template <> struct TypeToEnum<core::BitMask> { static constexpr auto value = IProperty::Type::BitMask; };
-    template <> struct TypeToEnum<core::ObjectHandle> { static constexpr auto value = IProperty::Type::ObjectHandle; };
-    template <> struct TypeToEnum<IObject> { static constexpr auto value = IProperty::Type::Object; };
-    template <> struct TypeToEnum<IObject*> { static constexpr auto value = IProperty::Type::ObjectPtr; };
-    template <> struct TypeToEnum<IResource> { static constexpr auto value = IProperty::Type::Resource; };
-    template <> struct TypeToEnum<IResource*> { static constexpr auto value = IProperty::Type::ResourcePtr; };
-    template <> struct TypeToEnum<IProperty::Callback> { static constexpr auto value = IProperty::Type::Callback; };
-    template <> struct TypeToEnum<vector<IObject*>> { static constexpr auto value = IProperty::Type::ObjectPtrVector; };
-    template <> struct TypeToEnum<dictionary<core::IObject*>> { static constexpr auto value = IProperty::Type::ObjectPtrDictionary; };
+    template <> struct TypeToEnum<bool> { static constexpr auto value = PropertyType::Bool; };
+    template <> struct TypeToEnum<core::i8> { static constexpr auto value = PropertyType::Int8; };
+    template <> struct TypeToEnum<core::i16> { static constexpr auto value = PropertyType::Int16; };
+    template <> struct TypeToEnum<core::i32> { static constexpr auto value = PropertyType::Int32; };
+    template <> struct TypeToEnum<core::i64> { static constexpr auto value = PropertyType::Int64; };
+    template <> struct TypeToEnum<core::u8> { static constexpr auto value = PropertyType::Uint8; };
+    template <> struct TypeToEnum<core::u16> { static constexpr auto value = PropertyType::Uint16; };
+    template <> struct TypeToEnum<core::u32> { static constexpr auto value = PropertyType::Uint32; };
+    template <> struct TypeToEnum<core::u64> { static constexpr auto value = PropertyType::Uint64; };
+    template <> struct TypeToEnum<core::uint2> { static constexpr auto value = PropertyType::Uint2; };
+    template <> struct TypeToEnum<core::uint3> { static constexpr auto value = PropertyType::Uint3; };
+    template <> struct TypeToEnum<core::uint4> { static constexpr auto value = PropertyType::Uint4; };
+    template <> struct TypeToEnum<core::int2> { static constexpr auto value = PropertyType::Int2; };
+    template <> struct TypeToEnum<core::int3> { static constexpr auto value = PropertyType::Int3; };
+    template <> struct TypeToEnum<core::int4> { static constexpr auto value = PropertyType::Int4; };
+    template <> struct TypeToEnum<float> { static constexpr auto value = PropertyType::Float; };
+    template <> struct TypeToEnum<core::float2> { static constexpr auto value = PropertyType::Float2; };
+    template <> struct TypeToEnum<core::float3> { static constexpr auto value = PropertyType::Float3; };
+    template <> struct TypeToEnum<core::float4> { static constexpr auto value = PropertyType::Float4; };
+    template <> struct TypeToEnum<core::float4x4> { static constexpr auto value = PropertyType::Float4x4; };
+    template <> struct TypeToEnum<core::string> { static constexpr auto value = PropertyType::String; };
+    template <> struct TypeToEnum<core::BitMask> { static constexpr auto value = PropertyType::BitMask; };
+    template <> struct TypeToEnum<core::ObjectHandle> { static constexpr auto value = PropertyType::ObjectHandle; };
+    template <> struct TypeToEnum<IObject> { static constexpr auto value = PropertyType::Object; };
+    template <> struct TypeToEnum<IObject*> { static constexpr auto value = PropertyType::ObjectPtr; };
+    template <> struct TypeToEnum<IResource> { static constexpr auto value = PropertyType::Resource; };
+    template <> struct TypeToEnum<IResource*> { static constexpr auto value = PropertyType::ResourcePtr; };
+    template <> struct TypeToEnum<IProperty::Callback> { static constexpr auto value = PropertyType::Callback; };
+    template <> struct TypeToEnum<vector<IObject*>> { static constexpr auto value = PropertyType::ObjectPtrVector; };
+    template <> struct TypeToEnum<dictionary<core::IObject*>> { static constexpr auto value = PropertyType::ObjectPtrDictionary; };
 
     //--------------------------------------------------------------------------------------
-    template <typename T> void ClassDesc::registerClassMemberT(const char * _className, const char * _propertyName, T * _offset, const char * _displayName, IProperty::Flags _flags)
+    template <typename T> void ClassDesc::registerClassMemberT(const char * _className, const char * _propertyName, T * _offset, const char * _displayName, PropertyFlags _flags)
     {
 #pragma warning(push)
 #pragma warning (disable: 4302)
@@ -506,45 +506,45 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> void ClassDesc::registerEnumArrayT(const char * _className, const char * _propertyName, T * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf)
+    template <typename T> void ClassDesc::registerEnumArrayT(const char * _className, const char * _propertyName, T * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf)
     {
-        VG_ASSERT(!asBool(IProperty::Flags::Bitfield & _flags));
+        VG_ASSERT(!asBool(PropertyFlags::Bitfield & _flags));
         auto type = TypeToEnum<T>::value;
         
-        if (asBool(IProperty::Flags::Resource & _flags))
-            VG_ASSERT(type == IProperty::Type::Resource);
+        if (asBool(PropertyFlags::Resource & _flags))
+            VG_ASSERT(type == PropertyType::Resource);
         //else
-        //    VG_ASSERT(type == IProperty::Type::Object);
+        //    VG_ASSERT(type == PropertyType::Object);
 
-        pushProperty({ _className, _propertyName, type, (uint_ptr)_offset, _elementSize, _displayName, IProperty::Flags::EnumArray | _flags, _enumCount, _enumNames, _enumValues, _enumSizeOf });
+        pushProperty({ _className, _propertyName, type, (uint_ptr)_offset, _elementSize, _displayName, PropertyFlags::EnumArray | _flags, _enumCount, _enumNames, _enumValues, _enumSizeOf });
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnumArray(const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf)
+    void ClassDesc::RegisterEnumArray(const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf)
     {
         registerEnumArrayT(_className, _propertyName, _offset, _displayName, _enumCount, _elementSize, _enumNames, _enumValues, _flags, _enumSizeOf);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnumArray(const char * _className, const char * _propertyName, core::float4 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf)
+    void ClassDesc::RegisterEnumArray(const char * _className, const char * _propertyName, core::float4 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf)
     {
         registerEnumArrayT(_className, _propertyName, _offset, _displayName, _enumCount, _elementSize, _enumNames, _enumValues, _flags, _enumSizeOf);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnumArray(const char * _className, const char * _propertyName, IResource * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf)
+    void ClassDesc::RegisterEnumArray(const char * _className, const char * _propertyName, IResource * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf)
     {
         registerEnumArrayT(_className, _propertyName, _offset, _displayName, _enumCount, _elementSize, _enumNames, _enumValues, _flags, _enumSizeOf);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnumArray(const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf)
+    void ClassDesc::RegisterEnumArray(const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf)
     {
         registerEnumArrayT(_className, _propertyName, _offset, _displayName, _enumCount, _elementSize, _enumNames, _enumValues, _flags, _enumSizeOf);
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterEnumArray(const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf)
+    void ClassDesc::RegisterEnumArray(const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf)
     {
         registerEnumArrayT(_className, _propertyName, _offset, _displayName, _enumCount, _elementSize, _enumNames, _enumValues, _flags, _enumSizeOf);
     }

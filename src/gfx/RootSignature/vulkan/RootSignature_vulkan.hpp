@@ -42,7 +42,7 @@ namespace vg::gfx::vulkan
                     VG_ASSERT(false, "Unhandled Descriptor::Type \"%s\" (%u)", asString(descriptor.getDescriptorType()).c_str(), descriptor.getDescriptorType());
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::ConstantBuffer:
+                    case RootSignatureDescType::ConstantBuffer:
                     {
                         const auto & constantbuffers = descriptor.getConstantBuffers();
                         vkLayoutBinding.binding = constantbuffers.m_binding;
@@ -53,7 +53,7 @@ namespace vg::gfx::vulkan
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::Texture:
+                    case RootSignatureDescType::Texture:
                     {
                         const auto & textures = descriptor.getTextures();
                         vkLayoutBinding.binding = textures.m_binding;
@@ -64,7 +64,7 @@ namespace vg::gfx::vulkan
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::Buffer:
+                    case RootSignatureDescType::Buffer:
                     {
                         const auto & buffers = descriptor.getBuffers();
                         vkLayoutBinding.binding = buffers.m_binding;
@@ -75,7 +75,7 @@ namespace vg::gfx::vulkan
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::RWTexture:
+                    case RootSignatureDescType::RWTexture:
                     {
                         const auto & textures = descriptor.getRWTextures();
                         vkLayoutBinding.binding = textures.m_binding;
@@ -86,7 +86,7 @@ namespace vg::gfx::vulkan
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::RWBuffer:
+                    case RootSignatureDescType::RWBuffer:
                     {
                         const auto & buffers = descriptor.getRWBuffers();
                         vkLayoutBinding.binding = buffers.m_binding;
@@ -97,7 +97,7 @@ namespace vg::gfx::vulkan
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::TLAS:
+                    case RootSignatureDescType::TLAS:
                     {
                         const auto & tlas = descriptor.getTLAS();
                         vkLayoutBinding.binding = tlas.m_binding;

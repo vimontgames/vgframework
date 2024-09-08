@@ -572,7 +572,7 @@ namespace vg::renderer
         m_sharedCullingJobOutput->clear();
 
         core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
-        auto jobSync = GetJobSync(IRenderer::JobSync::Culling);
+        auto jobSync = GetJobSync(RendererJobType::Culling);
 
         // Perform culling for each view (might want to split views later)
         uint jobStartCounter = 0;

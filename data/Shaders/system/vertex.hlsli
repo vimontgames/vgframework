@@ -4,12 +4,11 @@
 #include "packing.hlsli"
 
 // List every vertex format here (max 255 because it's serialized as u8 and 0xFF stands for "invalid vertex format")
-enum class VertexFormat : uint
-{
+vg_enum_class(VertexFormat, uint,
     Default         = 0,
     Skinning_4Bones = 1,
-    DebugDraw       = 2,
-};
+    DebugDraw       = 2
+);
 
 inline constexpr uint getVertexFormatStride(VertexFormat _format)
 {

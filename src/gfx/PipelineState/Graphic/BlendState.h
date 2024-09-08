@@ -4,32 +4,29 @@
 
 namespace vg::gfx
 {
-    enum class BlendFactor : core::u32
-    {
+    vg_enum_class(BlendFactor, core::u32,
         Zero = 0,
         One,
         SrcAlpha,
         OneMinusSrcAlpha,
         SrcColor,
         OneMinusSrcColor
-    };
+    );
 
-    enum class BlendOp : core::u32
-    {
+    vg_enum_class(BlendOp, core::u32,
         Add = 0,
         Substract,
         RevSubstract,
         Min,
         Max
-    };
+    );
 
-    enum ColorWrite : core::u32
-    {
+    vg_enum(ColorWrite, core::u32,
         Red     = 0x01,
         Green   = 0x02,
         Blue    = 0x04,
         Alpha   = 0x08
-    };
+    );
 
     struct RenderTargetBlend
     {

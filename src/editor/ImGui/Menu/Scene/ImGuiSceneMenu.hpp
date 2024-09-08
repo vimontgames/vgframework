@@ -57,7 +57,7 @@ namespace vg::editor
 
             if (ImGui::MenuItem("Save As"))
             {
-                m_selected = MenuOption::Save;
+                m_selected = SceneMenuOption::Save;
                 m_popup = fmt::sprintf("Save %s As ...", asString(m_sceneType));
 
                 saveFileDialog = true;
@@ -83,7 +83,7 @@ namespace vg::editor
 
             if (ImGui::MenuItem("Remove"))
             {
-                m_selected = MenuOption::Close;
+                m_selected = SceneMenuOption::Close;
                 openPopup = true;
                 m_popup = "Remove";
                 m_popupObject = scene;
@@ -121,7 +121,7 @@ namespace vg::editor
         
         switch (m_selected)
         {
-            case MenuOption::Save:
+            case SceneMenuOption::Save:
             if (ImGui::DisplayFileDialog(m_popup))
             {
                 if (ImGui::IsFileDialogOK())
@@ -136,7 +136,7 @@ namespace vg::editor
             }
             break;
 
-            case MenuOption::Close:
+            case SceneMenuOption::Close:
             {
                 if (m_popupObject == scene && ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {

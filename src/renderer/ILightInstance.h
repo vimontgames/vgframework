@@ -3,12 +3,11 @@
 
 namespace vg::renderer
 {
-    enum class LightType : core::u8
-    {
+    vg_enum_class(LightType, core::u8,
         Directional = 0,
         Omni,
         Spot
-    };
+    );
 
     class ILightDesc : public core::Object
     {

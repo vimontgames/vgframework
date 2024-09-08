@@ -98,7 +98,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     FrameGraphTextureResource * FrameGraph::addTextureResource(const FrameGraphResourceID & _resID, const FrameGraphTextureResourceDesc & _texResDesc, Texture * _tex)
     {
-        FrameGraphTextureResource * texRes = getResource<FrameGraphTextureResource>(FrameGraphResource::Type::Texture, _resID, false);
+        FrameGraphTextureResource * texRes = getResource<FrameGraphTextureResource>(FrameGraphResourceType::Texture, _resID, false);
         if (texRes)
         {
             texRes->setTextureResourceDesc(_texResDesc);
@@ -110,7 +110,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     FrameGraphBufferResource * FrameGraph::addBufferResource(const FrameGraphResourceID & _resID, const FrameGraphBufferResourceDesc & _bufResDesc, Buffer * _buf)
     {
-        FrameGraphBufferResource * bufRes = getResource<FrameGraphBufferResource>(FrameGraphResource::Type::Buffer, _resID, false);
+        FrameGraphBufferResource * bufRes = getResource<FrameGraphBufferResource>(FrameGraphResourceType::Buffer, _resID, false);
         if (bufRes)
             bufRes->setBufferResourceDesc(_bufResDesc, _buf);
         return bufRes;
@@ -119,17 +119,17 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     FrameGraphTextureResource * FrameGraph::getTextureResource(const FrameGraphResourceID & _resID) const
     {
-        return const_cast<FrameGraph*>(this)->getResource<FrameGraphTextureResource>(FrameGraphResource::Type::Texture, _resID, true);
+        return const_cast<FrameGraph*>(this)->getResource<FrameGraphTextureResource>(FrameGraphResourceType::Texture, _resID, true);
     }
 
     //--------------------------------------------------------------------------------------
     FrameGraphBufferResource * FrameGraph::getBufferResource(const FrameGraphResourceID & _resID) const
     {
-        return const_cast<FrameGraph*>(this)->getResource<FrameGraphBufferResource>(FrameGraphResource::Type::Buffer, _resID, true);
+        return const_cast<FrameGraph*>(this)->getResource<FrameGraphBufferResource>(FrameGraphResourceType::Buffer, _resID, true);
     }
 
     //--------------------------------------------------------------------------------------
-    template <class T> T * FrameGraph::getResource(FrameGraphResource::Type _type, const FrameGraphResourceID & _resID, bool _mustExist)
+    template <class T> T * FrameGraph::getResource(FrameGraphResourceType _type, const FrameGraphResourceID & _resID, bool _mustExist)
     {
         auto it = m_resources.find(_resID);
         if (m_resources.end() == it)

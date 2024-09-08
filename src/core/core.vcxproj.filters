@@ -82,6 +82,9 @@
     <Filter Include="Object\DynamicProperties\DynamicPropertyType">
       <UniqueIdentifier>{3c024c23-b3ff-4bb8-8206-4e3d942a082a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Types\Enum">
+      <UniqueIdentifier>{1a27caf1-38c7-4c2d-b3c6-583146cddf6f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -408,6 +411,12 @@
     </ClInclude>
     <ClInclude Include="Types\Enum.h">
       <Filter>Types</Filter>
+    </ClInclude>
+    <ClInclude Include="Types\Enum\Enum_magic.h">
+      <Filter>Types\Enum</Filter>
+    </ClInclude>
+    <ClInclude Include="Types\Enum\Enum_meta.h">
+      <Filter>Types\Enum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

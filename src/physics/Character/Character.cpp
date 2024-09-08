@@ -180,7 +180,7 @@ namespace vg::physics
         switch (state)
         {
             default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(state);
+                VG_ASSERT_NOT_IMPLEMENTED();
 
             case JPH::CharacterBase::EGroundState::OnGround:
                 return GroundState::Grounded;

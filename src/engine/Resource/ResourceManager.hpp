@@ -19,7 +19,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectPtrDictionaryEx(ResourceManager, m_resourceInfosMap, "Resources", IProperty::Flags::ReadOnly);
+        registerPropertyObjectPtrDictionaryEx(ResourceManager, m_resourceInfosMap, "Resources", PropertyFlags::ReadOnly);
 
         return true;
     }
@@ -185,7 +185,7 @@ namespace vg::engine
 
         for (const auto & info : allResourceInfos)
         {
-            if (CookedStatus::UP_TO_DATE != needsCook(*info))
+            if (CookStatus::UP_TO_DATE != needsCook(*info))
             {
                 // Setting resource path to null will remove clients so we need to copy
                 vector<core::IResource *> clients = info->m_clients;
@@ -393,7 +393,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    CookedStatus ResourceManager::needsCook(const ResourceInfo & _info)
+    CookStatus ResourceManager::needsCook(const ResourceInfo & _info)
     {
         const auto & resourcePath = _info.GetResourcePath();
         const string cookedPath = io::getCookedPath(resourcePath);
@@ -407,23 +407,23 @@ namespace vg::engine
                 if (io::getLastWriteTime(cookedPath, &cookedFilelastWrite))
                 {
                     if (cookedFilelastWrite < rawDataLastWrite)
-                        return CookedStatus::RAWDATA_FILE_UPDATED;
+                        return CookStatus::RAWDATA_FILE_UPDATED;
 
                     io::FileAccessTime metaFilelastWrite;
                     const string metaPath = io::getMetaPath(resourcePath);
                     if (io::getLastWriteTime(metaPath, &metaFilelastWrite))
                     {
                         if (cookedFilelastWrite < metaFilelastWrite)
-                            return CookedStatus::META_FILE_UPDATED;
+                            return CookStatus::META_FILE_UPDATED;
                     }
                 }
             }
             else
             {
-                return CookedStatus::NO_COOKED_FILE;
+                return CookStatus::NO_COOKED_FILE;
             }
         }
-        return CookedStatus::UP_TO_DATE;
+        return CookStatus::UP_TO_DATE;
     }
 
     //--------------------------------------------------------------------------------------
@@ -436,10 +436,10 @@ namespace vg::engine
         // check for an up-to-date cooked version of the resource
         auto needCook = needsCook(_info);
 
-        if (CookedStatus::UP_TO_DATE == needCook)
+        if (CookStatus::UP_TO_DATE == needCook)
         {
             if (_info.m_forceReimport)
-                needCook = CookedStatus::FORCE_REIMPORT;
+                needCook = CookStatus::FORCE_REIMPORT;
         }
 
         // Reimport is forced only once
@@ -450,7 +450,7 @@ namespace vg::engine
         while (!done)
         {
             const auto startCook = Timer::getTick();
-            if (CookedStatus::UP_TO_DATE != needCook)
+            if (CookStatus::UP_TO_DATE != needCook)
             {
                 VG_INFO("[Resource] File \"%s\" needs cook because %s", path.c_str(), asString(needCook).c_str());
 
@@ -488,9 +488,9 @@ namespace vg::engine
             }
             else
             {
-                if (CookedStatus::UP_TO_DATE == needCook)
+                if (CookStatus::UP_TO_DATE == needCook)
                 {
-                    needCook = CookedStatus::COOK_VERSION_DEPRECATED;
+                    needCook = CookStatus::COOK_VERSION_DEPRECATED;
                 }
                 else
                 {

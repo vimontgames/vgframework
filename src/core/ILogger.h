@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Types/Types.h"
+#include "core/Types/Enum.h"
 
 #ifndef VG_FINAL
 #define VG_ENABLE_LOGGER 1
@@ -34,19 +35,17 @@
 
 namespace vg::core
 {
-    enum class Level : core::u8
-    {
+    vg_enum_class(Level, u8,
         Info = 0,
         Warning,
         Error
-    };
+    );
 
-    enum class LevelFlags : core::u32
-    {
+    vg_enum_class(LevelFlags, u32,
         Info    = 1 << (u32)Level::Info,
         Warning = 1 << (u32)Level::Warning,
-        Error   = 1 << (u32)Level::Error,
-    };
+        Error   = 1 << (u32)Level::Error
+    );
 
     struct LogEntry
     {

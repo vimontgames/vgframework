@@ -5,24 +5,23 @@
 
 namespace vg::gfx
 {
+    vg_enum_class(RootSignatureDescType, core::u8,
+        ConstantBuffer = 0,
+        Texture,
+        Buffer,
+        RWTexture,
+        RWBuffer,
+        TLAS,
+        Sampler
+    );
+
     class RootSignatureTableDesc
     {
     public:
         class Descriptor
         {
         public:
-            enum class Type
-            {
-                ConstantBuffer = 0,
-                Texture,
-                Buffer,
-                RWTexture,
-                RWBuffer,
-                TLAS,
-                Sampler
-            };
-
-            Type getDescriptorType() const { return m_type; }
+            RootSignatureDescType getDescriptorType() const { return m_type; }
 
             struct DescriptorParameters
             {
@@ -114,19 +113,19 @@ namespace vg::gfx
                 {
                     default:VG_ASSERT(false);
                         return false;
-                    case Type::Texture:
+                    case RootSignatureDescType::Texture:
                         return texture == _other.texture;
-                    case Type::Buffer:
+                    case RootSignatureDescType::Buffer:
                         return buffer == _other.buffer;
-                    case Type::RWTexture:
+                    case RootSignatureDescType::RWTexture:
                         return rwTexture == _other.rwTexture;
-                    case Type::RWBuffer:
+                    case RootSignatureDescType::RWBuffer:
                         return rwBuffer == _other.rwBuffer;
-                    case Type::TLAS:
+                    case RootSignatureDescType::TLAS:
                         return tlas == _other.tlas;
-                    case Type::ConstantBuffer:
+                    case RootSignatureDescType::ConstantBuffer:
                         return constantBuffer == _other.constantBuffer;
-                    case Type::Sampler:
+                    case RootSignatureDescType::Sampler:
                         return sampler == _other.sampler;
                 }
 
@@ -135,20 +134,20 @@ namespace vg::gfx
             inline bool operator != (const Descriptor & _other) const { return !(operator == (_other)); }
 
             Descriptor() : 
-                m_type((Type)-1)
+                m_type((RootSignatureDescType)-1)
             {
             }
 
-            const Texture &         getTextures         () const { VG_ASSERT(Type::Texture        == m_type); return texture; }
-            const Buffer &          getBuffers          () const { VG_ASSERT(Type::Buffer         == m_type); return buffer; }
-            const RWTexture &       getRWTextures       () const { VG_ASSERT(Type::RWTexture      == m_type); return rwTexture; }
-            const RWBuffer &        getRWBuffers        () const { VG_ASSERT(Type::RWBuffer       == m_type); return rwBuffer; }
-            const TLAS &            getTLAS             () const { VG_ASSERT(Type::TLAS           == m_type); return tlas; }
-            const ConstantBuffer &  getConstantBuffers  () const { VG_ASSERT(Type::ConstantBuffer == m_type); return constantBuffer; }
-            const Sampler &         getSamplers         () const { VG_ASSERT(Type::Sampler        == m_type); return sampler; }
+            const Texture &         getTextures         () const { VG_ASSERT(RootSignatureDescType::Texture        == m_type); return texture; }
+            const Buffer &          getBuffers          () const { VG_ASSERT(RootSignatureDescType::Buffer         == m_type); return buffer; }
+            const RWTexture &       getRWTextures       () const { VG_ASSERT(RootSignatureDescType::RWTexture      == m_type); return rwTexture; }
+            const RWBuffer &        getRWBuffers        () const { VG_ASSERT(RootSignatureDescType::RWBuffer       == m_type); return rwBuffer; }
+            const TLAS &            getTLAS             () const { VG_ASSERT(RootSignatureDescType::TLAS           == m_type); return tlas; }
+            const ConstantBuffer &  getConstantBuffers  () const { VG_ASSERT(RootSignatureDescType::ConstantBuffer == m_type); return constantBuffer; }
+            const Sampler &         getSamplers         () const { VG_ASSERT(RootSignatureDescType::Sampler        == m_type); return sampler; }
 
         private:
-            Type m_type;
+            RootSignatureDescType m_type;
 
             union
             {

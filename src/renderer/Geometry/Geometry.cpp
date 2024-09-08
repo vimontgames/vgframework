@@ -20,10 +20,10 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerPropertyEx(Geometry, m_aabb.m_min, "AABBMin", IProperty::Flags::ReadOnly);
+        registerPropertyEx(Geometry, m_aabb.m_min, "AABBMin", PropertyFlags::ReadOnly);
         setPropertyDescription(Geometry, m_aabb.m_min, "Axis-Aligned Bounding Box minimum bounds");
 
-        registerPropertyEx(Geometry, m_aabb.m_max, "AABBMax", IProperty::Flags::ReadOnly);
+        registerPropertyEx(Geometry, m_aabb.m_max, "AABBMax", PropertyFlags::ReadOnly);
         setPropertyDescription(Geometry, m_aabb.m_max, "Axis-Aligned Bounding Box maximum bounds");
 
         return true;

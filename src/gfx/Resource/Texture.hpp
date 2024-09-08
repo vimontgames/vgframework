@@ -136,17 +136,17 @@ namespace vg::gfx
 	//--------------------------------------------------------------------------------------
 	// Texture
 	//--------------------------------------------------------------------------------------
-    VG_REGISTER_OBJECT_CLASS_EX(Texture, "Texture", IClassDesc::Flags::Model);
+    VG_REGISTER_OBJECT_CLASS_EX(Texture, "Texture", ClassDescFlags::Model);
 
     //--------------------------------------------------------------------------------------
     bool Texture::registerProperties(IClassDesc & _desc)
     {
-        registerPropertyEnumEx(Texture, PixelFormat, m_texDesc.format, "Format", IProperty::Flags::ReadOnly);
+        registerPropertyEnumEx(Texture, PixelFormat, m_texDesc.format, "Format", PropertyFlags::ReadOnly);
         
-        registerPropertyEx(Texture, m_texDesc.width, "Width", IProperty::Flags::ReadOnly);
+        registerPropertyEx(Texture, m_texDesc.width, "Width", PropertyFlags::ReadOnly);
         setPropertyDescription(Texture, m_texDesc.width, "Texture width");
 
-        registerPropertyEx(Texture, m_texDesc.height, "Height", IProperty::Flags::ReadOnly);
+        registerPropertyEx(Texture, m_texDesc.height, "Height", PropertyFlags::ReadOnly);
         setPropertyDescription(Texture, m_texDesc.height, "Texture height");
 
         return true;

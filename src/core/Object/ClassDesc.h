@@ -12,59 +12,59 @@ namespace vg::core
 
         bool                                IsRegisteredProperty        (const char * _propertyName) final override;
 
-        void                                RegisterPropertyLayout      (const char * _className, IProperty::LayoutElementType _layoutElementType, const char * _label, bool * _offset, IProperty::Flags _flags = IProperty::Flags::None) final override;
+        void                                RegisterPropertyLayout      (const char * _className, PropertyLayoutElement _layoutElementType, const char * _label, bool * _offset, PropertyFlags _flags = PropertyFlags::None) final override;
 
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, bool * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, i8 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, i16 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, i32 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, i64 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, u8 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, u16 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, u32 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, u64 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, uint2 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, uint3 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, uint4 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, int2 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, int3 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, int4 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, float * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, float2 * _offset, const char * _displayName, IProperty::Flags _flags) final override; 
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, float3 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, float4 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, float4x4 * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, string * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, BitMask * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, ObjectHandle * _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, bool * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, i8 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, i16 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, i32 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, i64 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, u8 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, u16 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, u32 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, u64 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, uint2 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, uint3 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, uint4 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, int2 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, int3 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, int4 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, float * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, float2 * _offset, const char * _displayName, PropertyFlags _flags) final override; 
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, float3 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, float4 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, float4x4 * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, string * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, BitMask * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, ObjectHandle * _offset, const char * _displayName, PropertyFlags _flags) final override;
 
-        void                                RegisterPropertyResource    (const char * _className, const char * _propertyName, IResource * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterPropertyResourcePtr (const char * _className, const char * _propertyName, IResource ** _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterPropertyResource    (const char * _className, const char * _propertyName, IResource * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterPropertyResourcePtr (const char * _className, const char * _propertyName, IResource ** _offset, const char * _displayName, PropertyFlags _flags) final override;
 
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, IProperty::Flags _flags) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, PropertyFlags _flags) final override;
 
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _elemType, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, dictionary<core::IObject*>* _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final override;
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName = nullptr, IProperty::Flags _flags = IProperty::Flags::None) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, vector<IObject*>* _offset, const char * _elemType, const char * _displayName = nullptr, PropertyFlags _flags = PropertyFlags::None) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, dictionary<core::IObject*>* _offset, const char * _displayName = nullptr, PropertyFlags _flags = PropertyFlags::None) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName = nullptr, PropertyFlags _flags = PropertyFlags::None) final override;
 
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, IProperty::Callback _funcPtr, const char * _displayName, IProperty::Flags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, IProperty::Callback _funcPtr, const char * _displayName, PropertyFlags _flags) final override;
 
-        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::u8 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames,  const u8 * _enumValues, IProperty::Flags _flags) final override;
-        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::u16 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u16 * _enumValues, IProperty::Flags _flags) final override;
-        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::u32 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u32 * _enumValues, IProperty::Flags _flags) final override;
-        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::u64 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u64 * _enumValues, IProperty::Flags _flags) final override;
+        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::u8 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames,  const u8 * _enumValues, PropertyFlags _flags) final override;
+        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::u16 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u16 * _enumValues, PropertyFlags _flags) final override;
+        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::u32 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u32 * _enumValues, PropertyFlags _flags) final override;
+        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::u64 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u64 * _enumValues, PropertyFlags _flags) final override;
         
-        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::i8 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames,  const i8 * _enumValues, IProperty::Flags _flags) final override;
-        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::i16 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const i16 * _enumValues, IProperty::Flags _flags) final override;
-        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::i32 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const i32 * _enumValues, IProperty::Flags _flags) final override;
-        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::i64 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const i64 * _enumValues, IProperty::Flags _flags) final override;
+        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::i8 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames,  const i8 * _enumValues, PropertyFlags _flags) final override;
+        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::i16 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const i16 * _enumValues, PropertyFlags _flags) final override;
+        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::i32 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const i32 * _enumValues, PropertyFlags _flags) final override;
+        void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::i64 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const i64 * _enumValues, PropertyFlags _flags) final override;
 
-        void                                RegisterEnumArray           (const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) final override;
-        void                                RegisterEnumArray           (const char * _className, const char * _propertyName, core::float4 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) final override;
-        void                                RegisterEnumArray           (const char * _className, const char * _propertyName, IResource * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) final override;
-        void                                RegisterEnumArray           (const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) final override;
-        void                                RegisterEnumArray           (const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf) final override;
+        void                                RegisterEnumArray           (const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) final override;
+        void                                RegisterEnumArray           (const char * _className, const char * _propertyName, core::float4 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) final override;
+        void                                RegisterEnumArray           (const char * _className, const char * _propertyName, IResource * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) final override;
+        void                                RegisterEnumArray           (const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) final override;
+        void                                RegisterEnumArray           (const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) final override;
 
         void                                RegisterResizeVectorFunc    (const char * _className, IClassDesc::ResizeVectorFunc _func) final override;
         void *                              ResizeVector                (core::IObject * _parent, core::uint _offset, core::uint _count, core::uint & _elementSize) const final override;
@@ -90,7 +90,7 @@ namespace vg::core
         IProperty *                         GetNextProperty             (const char * _propertyName) const final override;
         IClassDesc::Func                    GetCreateFunc               () const final override;
         IClassDesc::SingletonFunc           GetSingletonFunc            () const final override;
-        IClassDesc::Flags                   GetFlags                    () const final override;
+        ClassDescFlags                      GetFlags                    () const final override;
         u32                                 GetSizeOf                   () const final override;
         u32                                 GetNextIndex                () const final override;
 
@@ -102,7 +102,7 @@ namespace vg::core
         const char *                        category                    = nullptr;
         const char *                        description                 = nullptr;
         const char *                        icon                        = nullptr;
-        IClassDesc::Flags                   flags                       = IClassDesc::Flags::None;
+        ClassDescFlags                      flags                       = ClassDescFlags::None;
         u32                                 sizeOf                      = 0;
         Priority                            priority                    = 0;
         IClassDesc::Func                    createFunc                  = nullptr;
@@ -113,8 +113,8 @@ namespace vg::core
         mutable u32                         count = 0;
 
     private:
-        template <typename T> void          registerClassMemberT        (const char * _className, const char * _propertyName, T * _offset, const char * _displayName, IProperty::Flags _flags);
-        template <typename T> void          registerEnumArrayT          (const char * _className, const char * _propertyName, T * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, IProperty::Flags _flags, uint _enumSizeOf);
+        template <typename T> void          registerClassMemberT        (const char * _className, const char * _propertyName, T * _offset, const char * _displayName, PropertyFlags _flags);
+        template <typename T> void          registerEnumArrayT          (const char * _className, const char * _propertyName, T * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf);
 
     };
 }

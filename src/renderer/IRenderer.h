@@ -43,16 +43,14 @@ namespace vg
         
         struct RendererCreationParams;
 
+        vg_enum_class(RendererJobType, core::u8,
+            Culling,
+            DebugDraw
+        );
+
         class IRenderer : public core::IPlugin
         {
         public:
-
-            enum class JobSync
-            {
-                Culling,
-                DebugDraw
-            };
-
             IRenderer(const core::string & _name, core::IObject * _parent) :
                 core::IPlugin(_name, _parent)
             {
@@ -126,7 +124,7 @@ namespace vg
             virtual bool                                IsHDRSupported          (gfx::HDR _mode) const = 0;
             virtual bool                                IsVSyncSupported        (gfx::VSync _mode) const = 0;
 
-            virtual core::JobSync *                     GetJobSync              (JobSync _jobSync) = 0;
+            virtual core::JobSync *                     GetJobSync              (RendererJobType _jobSync) = 0;
         };
     }
 }

@@ -334,11 +334,11 @@ namespace vg::gfx::vulkan
                 default:
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(resType);
 
-                case FrameGraphResource::Type::Buffer:
+                case FrameGraphResourceType::Buffer:
                     transitionResource(((FrameGraphBufferResource *)resTrans.m_resource)->getBuffer(), resTrans.m_transitionDesc.begin, resTrans.m_transitionDesc.end);
                     break;
 
-                case FrameGraphResource::Type::Texture:
+                case FrameGraphResourceType::Texture:
                     transitionResource(((FrameGraphTextureResource *)resTrans.m_resource)->getTexture(), resTrans.m_transitionDesc.begin, resTrans.m_transitionDesc.end);
                     break;
             }            

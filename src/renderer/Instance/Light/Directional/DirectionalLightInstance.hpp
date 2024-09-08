@@ -87,7 +87,7 @@ namespace vg::renderer
             _cullingResult->m_output->add(shadowView);
 
             core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
-            jobScheduler->Start(shadowView->getCullingJob(), renderer->GetJobSync(IRenderer::JobSync::Culling));
+            jobScheduler->Start(shadowView->getCullingJob(), renderer->GetJobSync(RendererJobType::Culling));
         }
 
         return true;

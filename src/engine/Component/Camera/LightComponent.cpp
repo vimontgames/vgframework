@@ -22,7 +22,7 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerPropertyEnum(LightComponent, renderer::LightType, m_lightType, "Type");
-        registerPropertyObjectPtrEx(LightComponent, m_lightDesc, "Light", IProperty::Flags::Flatten);
+        registerPropertyObjectPtrEx(LightComponent, m_lightDesc, "Light", PropertyFlags::Flatten);
 
         return true;
     }

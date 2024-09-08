@@ -18,13 +18,13 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumEx(CharacterControllerComponent, physics::CharacterType, m_characterType, "Type", IProperty::Flags::ReadOnly);
-        registerPropertyObjectPtrEx(CharacterControllerComponent, m_characterDesc, "Character", IProperty::Flags::Flatten);
-        registerPropertyObjectPtrEx(CharacterControllerComponent, m_shapeDesc, "Shape", IProperty::Flags::Flatten);
-        registerPropertyEnumArrayEx(CharacterControllerComponent, u8, physics::GroundState, m_delayState, "GroundState Delay", IProperty::Flags::Flatten);
+        registerPropertyEnumEx(CharacterControllerComponent, physics::CharacterType, m_characterType, "Type", PropertyFlags::ReadOnly);
+        registerPropertyObjectPtrEx(CharacterControllerComponent, m_characterDesc, "Character", PropertyFlags::Flatten);
+        registerPropertyObjectPtrEx(CharacterControllerComponent, m_shapeDesc, "Shape", PropertyFlags::Flatten);
+        registerPropertyEnumArrayEx(CharacterControllerComponent, u8, physics::GroundState, m_delayState, "GroundState Delay", PropertyFlags::Flatten);
 
         registerPropertyGroupBegin(CharacterControllerComponent, "Debug");
-        registerPropertyEnumEx(CharacterControllerComponent, physics::GroundState, m_groundState, "State", IProperty::Flags::NotSaved);
+        registerPropertyEnumEx(CharacterControllerComponent, physics::GroundState, m_groundState, "State", PropertyFlags::NotSaved);
         registerPropertyGroupEnd(CharacterControllerComponent);
 
         return true;

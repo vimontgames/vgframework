@@ -11,15 +11,15 @@ namespace vg::core
 
 namespace vg::editor
 {
+    vg_enum_class(SceneListMenuOption, core::u8,
+        None = 0,
+        AddScene,
+        LoadScene
+    );
+
     class ImGuiSceneList : public ImGuiWindow
     {
     public:
-        enum MenuOption
-        {
-            None = 0,
-            AddScene,
-            LoadScene,
-        };
 
         struct SceneTypeInfo
         {

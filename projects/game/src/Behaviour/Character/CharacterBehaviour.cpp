@@ -47,10 +47,10 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
 
         registerPropertyGroupBegin(CharacterBehaviour, "Debug");
         {
-            registerPropertyEx(CharacterBehaviour, m_isActive, "Active", vg::core::IProperty::Flags::NotSaved);
-            registerPropertyEnumEx(CharacterBehaviour, CharacterState, m_state, "State", vg::core::IProperty::Flags::NotSaved);
-            registerPropertyEx(CharacterBehaviour, m_currentSpeed, "Speed", vg::core::IProperty::Flags::NotSaved);
-            registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rot", vg::core::IProperty::Flags::NotSaved);
+            registerPropertyEx(CharacterBehaviour, m_isActive, "Active", vg::core::PropertyFlags::NotSaved);
+            registerPropertyEnumEx(CharacterBehaviour, CharacterState, m_state, "State", vg::core::PropertyFlags::NotSaved);
+            registerPropertyEx(CharacterBehaviour, m_currentSpeed, "Speed", vg::core::PropertyFlags::NotSaved);
+            registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rot", vg::core::PropertyFlags::NotSaved);
         }
         registerPropertyGroupEnd(CharacterBehaviour);
     }

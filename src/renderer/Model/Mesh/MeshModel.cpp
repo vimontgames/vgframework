@@ -14,14 +14,14 @@ using namespace vg::gfx;
 
 namespace vg::renderer
 {
-    VG_REGISTER_OBJECT_CLASS_EX(MeshModel, "Mesh Model", IClassDesc::Flags::Model);
+    VG_REGISTER_OBJECT_CLASS_EX(MeshModel, "Mesh Model", ClassDescFlags::Model);
 
     //--------------------------------------------------------------------------------------
     bool MeshModel::registerProperties(core::IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectPtrEx(MeshModel, m_geometry, "Geometry", IProperty::Flags::NotSaved);
+        registerPropertyObjectPtrEx(MeshModel, m_geometry, "Geometry", PropertyFlags::NotSaved);
         
         return true;
     }

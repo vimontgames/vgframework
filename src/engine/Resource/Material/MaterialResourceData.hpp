@@ -13,9 +13,9 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(MaterialResource, m_name, IProperty::Flags::NotVisible | IProperty::Flags::NotSaved, true);
+        setPropertyFlag(MaterialResource, m_name, PropertyFlags::NotVisible | PropertyFlags::NotSaved, true);
         registerPropertyObject(MaterialResourceData, m_materialModelType, "Material Model");
-        registerPropertyObjectPtrEx(MaterialResourceData, m_data, "Material Data", IProperty::Flags::Flatten);
+        registerPropertyObjectPtrEx(MaterialResourceData, m_data, "Material Data", PropertyFlags::Flatten);
 
         return true;
     }

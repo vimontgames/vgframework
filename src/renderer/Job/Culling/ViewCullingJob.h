@@ -18,14 +18,12 @@ namespace vg::renderer
 
     struct Frustum;
 
-    enum class GraphicInstanceListType : core::u8
-    {
+    vg_enum_class(GraphicInstanceListType, core::u8,
         All = 0,
-
         Opaque,
         AlphaTest,
         Transparent
-    };
+    );
  
     struct ViewCullingJobOutput
     {

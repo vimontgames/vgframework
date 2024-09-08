@@ -9,11 +9,10 @@ namespace vg::core
     class IGameObject;
     class AABB;
 
-    enum class ComponentFlags : u32
-    {
+    vg_enum_class(ComponentFlags, u32,
         Enabled     = 0x00000001,
         NoCulling   = 0x00000002
-    };
+    );
 
     class IComponent : public core::Object
     {

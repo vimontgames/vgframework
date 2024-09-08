@@ -17,8 +17,7 @@ namespace vg::engine
 {
     class ResourceInfo;
 
-    enum class CookedStatus : core::u8
-    {
+    vg_enum_class(CookStatus, core::u8,
         UP_TO_DATE = 0,             // File doesn't need cook
 
         RAWDATA_FILE_UPDATED,       // File needs cook because raw data file has been updated
@@ -26,7 +25,7 @@ namespace vg::engine
         NO_COOKED_FILE,             // File needs cook because no cooked file was found
         FORCE_REIMPORT,             // File needs cook because reimport is forced
         COOK_VERSION_DEPRECATED     // File needs cook because cooked file version is deprecated
-    };
+    );
 
     class ResourceManager final : public IResourceManager, public core::Singleton<ResourceManager>
     {
@@ -62,7 +61,7 @@ namespace vg::engine
 
     protected:
         static void                 loading                     (ResourceManager * _this);
-        static CookedStatus         needsCook                   (const ResourceInfo & _info);
+        static CookStatus         needsCook                   (const ResourceInfo & _info);
 
         void                        updateLoading               (bool _async);
         void                        loadOneResource             (ResourceInfo & _info);

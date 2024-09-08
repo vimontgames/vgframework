@@ -18,16 +18,16 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Object::registerProperties(IClassDesc & _desc)
     {
-        registerPropertyEx(Object, m_name, "Name", IProperty::Flags::NotVisible);
+        registerPropertyEx(Object, m_name, "Name", PropertyFlags::NotVisible);
         setPropertyDescription(Object, m_name, "User-friendly name");
 
-        registerPropertyEx(Object, m_uid, "UID", IProperty::Flags::Debug | IProperty::Flags::Hexadecimal);
+        registerPropertyEx(Object, m_uid, "UID", PropertyFlags::Debug | PropertyFlags::Hexadecimal);
         setPropertyDescription(Object, m_uid, "Unique ID");
 
-        registerPropertyEx(Object, m_originalUID, "UID (Source)", IProperty::Flags::Debug | IProperty::Flags::Hexadecimal);
+        registerPropertyEx(Object, m_originalUID, "UID (Source)", PropertyFlags::Debug | PropertyFlags::Hexadecimal);
         setPropertyDescription(Object, m_originalUID, "Source object's unique ID");
 
-        registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectFlags, "Flags", IProperty::Flags::Debug);
+        registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectFlags, "Flags", PropertyFlags::Debug);
         setPropertyDescription(Object, m_objectFlags, "Object flags");
 
         return true;
@@ -206,111 +206,111 @@ namespace vg::core
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
                 break;
 
-        case IProperty::Type::Resource:
+        case PropertyType::Resource:
             ((Resource *)_previousValue)->SetResourcePath(((Resource *)_newValue)->GetResourcePath());
             break;
 
-            case IProperty::Type::ObjectHandle:
+            case PropertyType::ObjectHandle:
                 *(ObjectHandle *)_previousValue = *(ObjectHandle *)_newValue;
                 break;
 
-            case IProperty::Type::Bool:
+            case PropertyType::Bool:
                 *(bool *)_previousValue = *(bool *)_newValue;
                 break;
 
-            case IProperty::Type::Int8:
-            case IProperty::Type::EnumI8:
-            case IProperty::Type::EnumFlagsI8:
+            case PropertyType::Int8:
+            case PropertyType::EnumI8:
+            case PropertyType::EnumFlagsI8:
                 *(i8 *)_previousValue = *(i8 *)_newValue;
                 break;
 
-            case IProperty::Type::Int16:
-            case IProperty::Type::EnumI16:
-            case IProperty::Type::EnumFlagsI16:
+            case PropertyType::Int16:
+            case PropertyType::EnumI16:
+            case PropertyType::EnumFlagsI16:
                 *(i16 *)_previousValue = *(i16 *)_newValue;
                 break;
 
-            case IProperty::Type::Int32:
-            case IProperty::Type::EnumI32:
-            case IProperty::Type::EnumFlagsI32:
+            case PropertyType::Int32:
+            case PropertyType::EnumI32:
+            case PropertyType::EnumFlagsI32:
                 *(i32 *)_previousValue = *(i32 *)_newValue;
                 break;
 
-            case IProperty::Type::Int64:
-            case IProperty::Type::EnumI64:
-            case IProperty::Type::EnumFlagsI64:
+            case PropertyType::Int64:
+            case PropertyType::EnumI64:
+            case PropertyType::EnumFlagsI64:
                 *(i64 *)_previousValue = *(i64 *)_newValue;
                 break;
 
-            case IProperty::Type::Int2:
+            case PropertyType::Int2:
                 *(int2 *)_previousValue = *(int2 *)_newValue;
                 break;
 
-            case IProperty::Type::Int3:
+            case PropertyType::Int3:
                 *(int3 *)_previousValue = *(int3 *)_newValue;
                 break;
 
-            case IProperty::Type::Int4:
+            case PropertyType::Int4:
                 *(int4 *)_previousValue = *(int4 *)_newValue;
                 break;
 
-            case IProperty::Type::Uint8:
-            case IProperty::Type::EnumU8:
-            case IProperty::Type::EnumFlagsU8:
+            case PropertyType::Uint8:
+            case PropertyType::EnumU8:
+            case PropertyType::EnumFlagsU8:
                 *(u8 *)_previousValue = *(u8 *)_newValue;
                 break;
 
-            case IProperty::Type::Uint16:
-            case IProperty::Type::EnumU16:
-            case IProperty::Type::EnumFlagsU16:
+            case PropertyType::Uint16:
+            case PropertyType::EnumU16:
+            case PropertyType::EnumFlagsU16:
                 *(u16 *)_previousValue = *(u16 *)_newValue;
                 break;
 
-            case IProperty::Type::Uint32:
-            case IProperty::Type::EnumU32:
-            case IProperty::Type::EnumFlagsU32:
+            case PropertyType::Uint32:
+            case PropertyType::EnumU32:
+            case PropertyType::EnumFlagsU32:
                 *(u32 *)_previousValue = *(u32 *)_newValue;
                 break;
 
-            case IProperty::Type::Uint2:
+            case PropertyType::Uint2:
                 *(uint2 *)_previousValue = *(uint2 *)_newValue;
                 break;
 
-            case IProperty::Type::Uint3:
+            case PropertyType::Uint3:
                 *(uint3 *)_previousValue = *(uint3 *)_newValue;
                 break;
 
-            case IProperty::Type::Uint4:
+            case PropertyType::Uint4:
                 *(uint4 *)_previousValue = *(uint4 *)_newValue;
                 break;
 
-            case IProperty::Type::Uint64:
-            case IProperty::Type::EnumU64:
-            case IProperty::Type::EnumFlagsU64:
+            case PropertyType::Uint64:
+            case PropertyType::EnumU64:
+            case PropertyType::EnumFlagsU64:
                 *(u64 *)_previousValue = *(u64 *)_newValue;
                 break;
 
-            case IProperty::Type::Float:
+            case PropertyType::Float:
                 *(float *)_previousValue = *(float *)_newValue;
                 break;
 
-            case IProperty::Type::Float2:
+            case PropertyType::Float2:
                 *(float2 *)_previousValue = *(float2 *)_newValue;
                 break;
 
-            case IProperty::Type::Float3:
+            case PropertyType::Float3:
                 *(float3 *)_previousValue = *(float3 *)_newValue;
                 break;
 
-            case IProperty::Type::Float4:
+            case PropertyType::Float4:
                 *(float4 *)_previousValue = *(float4 *)_newValue;
                 break;
 
-            case IProperty::Type::Float4x4:
+            case PropertyType::Float4x4:
                 *(float4x4 *)_previousValue = *(float4x4 *)_newValue;
                 break;
 
-            case IProperty::Type::String:
+            case PropertyType::String:
                 *(string *)_previousValue = *(string *)_newValue;
                 break;
         }

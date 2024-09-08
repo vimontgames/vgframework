@@ -18,7 +18,6 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     inline JPH::EMotionQuality getJoltMotionQuality(physics::MotionQuality _quality)
     {
-        VG_STATIC_ASSERT(core::enumCount<JPH::EMotionQuality>()           == core::enumCount<physics::MotionQuality>(),           "Invalid enum size");
         VG_STATIC_ASSERT(core::asInteger(JPH::EMotionQuality::Discrete)   == core::asInteger(physics::MotionQuality::Discrete),   "Invalid enum value");
         VG_STATIC_ASSERT(core::asInteger(JPH::EMotionQuality::LinearCast) == core::asInteger(physics::MotionQuality::Continuous), "Invalid enum value");
         return (JPH::EMotionQuality)_quality;

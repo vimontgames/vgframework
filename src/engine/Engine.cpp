@@ -748,7 +748,7 @@ namespace vg::engine
         auto * scheduler = Kernel::getScheduler();
         {
             VG_PROFILE_CPU("Sync Animation");
-            scheduler->Wait(getJobSync(JobSync::Animation));
+            scheduler->Wait(getJobSync(EngineJobType::Animation));
         }
 
         // LateUpdate all GameObjects and components

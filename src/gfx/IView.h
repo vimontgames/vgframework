@@ -19,12 +19,11 @@ namespace vg::gfx
     class IViewport;
     struct ViewportID;
 
-    enum class ViewTarget : core::u8
-    {
+    vg_enum_class(ViewTarget, core::u8,
         Game        = 0,
         Editor      = 1,
         Shadow      = 2
-    };
+    );
     static inline const ViewTarget ViewTargetInvalid = (ViewTarget)0x03;
 
     using ViewIndex = core::u8;

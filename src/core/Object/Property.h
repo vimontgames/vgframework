@@ -20,14 +20,14 @@ namespace vg::core
     class Property final : public IProperty
     {
     public:
-                                        Property                        (const char * _class = "", const char * _name = "", Type _type = Type::Undefined, uint_ptr _offset = 0, core::u32 _sizeOf = 0, const char * _prettyName = "", Flags _flags = (Flags)0x0, uint _enumCount = 0, const char * _enumNames = nullptr, const void * _enumValues = nullptr, uint _enumSizeOf = -1);
+                                        Property                        (const char * _class = "", const char * _name = "", PropertyType _type = PropertyType::Undefined, uint_ptr _offset = 0, core::u32 _sizeOf = 0, const char * _prettyName = "", PropertyFlags _flags = (PropertyFlags)0x0, uint _enumCount = 0, const char * _enumNames = nullptr, const void * _enumValues = nullptr, uint _enumSizeOf = -1);
                                         Property                        (const Property & _other);
                                         ~Property                       ();
 
         void                            SetInterface                    (const char * _interface) final override;
         void                            SetRange                        (float2 _range) final override;
         void                            SetDefaultFolder                (const char * _path) final override;
-        void                            SetFlags                        (Flags _flagsToSet, Flags _flagsToRemove = Flags::None) final override;
+        void                            SetFlags                        (PropertyFlags _flagsToSet, PropertyFlags _flagsToRemove = PropertyFlags::None) final override;
         void                            SetOffset                       (uint_ptr _offset) final override;
         void                            SetDescription                  (const char * _description) final override;
         void                            SetEnumTypeName                 (const char * _enumTypeName) final override;
@@ -39,11 +39,11 @@ namespace vg::core
         const char *                    GetClassName                    () const final override;
         const char *                    GetDefaultFolder                () const final override;
         const char *                    GetDescription                  () const final override;
-        Type                            GetType                         () const final override;
+        PropertyType                    GetType                         () const final override;
         uint_ptr                        GetOffset                       () const final override;
 		core::u32		                GetSizeOf		                () const final override;
         const char *                    GetDisplayName                  () const final override;
-        Flags                           GetFlags                        () const final override; 
+        PropertyFlags                   GetFlags                        () const final override;
         float2                          GetRange                        () const final override;
         const char *                    GetEnumTypeName                 () const final override;
         u32                             GetEnumCount                    () const final override;
@@ -93,15 +93,14 @@ namespace vg::core
         IResource *                     GetPropertyResourceVectorElement(const IObject * _object, uint _index) const final override;
 
         IProperty::Callback             GetPropertyCallback             () const final override;
-
-        IProperty::LayoutElementType    GetLayoutElementType            () const final override;
+        PropertyLayoutElement           GetLayoutElementType            () const final override;
 
         bool                            IsResourceProperty              () const final override;
         bool                            IsObjectProperty                () const final override;
 
     protected:
         template <typename T> void      initEnum                        (uint _enumCount, const char * _enumNames, const void * _enumValues);
-        void                            checkPropertyType               (Type _type) const;
+        void                            checkPropertyType               (PropertyType _type) const;
         
     private:
         const char *                    name            = nullptr;
@@ -111,10 +110,10 @@ namespace vg::core
         const char *                    interfaceType   = nullptr;
         const char *                    description     = nullptr;
         const char *                    enumTypeName    = nullptr;
-        Type		                    type			= Type::Undefined;
+        PropertyType                    type			= PropertyType::Undefined;
         uint_ptr	                    offset			= (uint_ptr)-1;
 		core::u32	                    sizeOf			= 0x0;
-        Flags		                    flags			= Flags::None;
+        PropertyFlags                   flags			= PropertyFlags::None;
         float2		                    range			= float2(0.0f, 0.0f);
         vector<EnumDesc>                enums;
     };   

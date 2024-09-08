@@ -123,7 +123,7 @@ namespace vg::renderer
         ImGuiAdapter *                          getImGuiAdapter             () const { return m_imgui; }
         SharedCullingJobOutput *                getSharedCullingJobOutput   () const { return m_sharedCullingJobOutput; }
 
-        core::JobSync *                         GetJobSync                  (JobSync _jobSync) final override { return &m_jobSync[core::asInteger(_jobSync)]; }
+        core::JobSync *                         GetJobSync                  (RendererJobType _jobSync) final override { return &m_jobSync[core::asInteger(_jobSync)]; }
 
     private:
         void                                    registerShaders             ();
@@ -156,7 +156,7 @@ namespace vg::renderer
         SharedCullingJobOutput *                m_sharedCullingJobOutput    = nullptr;
 
         core::vector<Viewport *>                m_viewports[core::enumCount<gfx::ViewportTarget>()];
-        core::JobSync                           m_jobSync[core::enumCount<JobSync>()];
+        core::JobSync                           m_jobSync[core::enumCount<RendererJobType>()];
 
         // TODO : remove
         core::vector<View *>                    m_views[core::enumCount<gfx::ViewTarget>()];

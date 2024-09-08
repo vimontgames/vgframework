@@ -28,17 +28,17 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyCallbackEx(AnimationResource, playAnim, "Play", IProperty::Flags::SingleLine);
-        registerPropertyCallbackEx(AnimationResource, stopAnim, "Stop", IProperty::Flags::SingleLine);
+        registerPropertyCallbackEx(AnimationResource, playAnim, "Play", PropertyFlags::SingleLine);
+        registerPropertyCallbackEx(AnimationResource, stopAnim, "Stop", PropertyFlags::SingleLine);
 
         registerProperty(AnimationResource, m_play, "Play");
-        registerPropertyEx(AnimationResource, m_loop, "Loop", IProperty::Flags::SingleLine);
+        registerPropertyEx(AnimationResource, m_loop, "Loop", PropertyFlags::SingleLine);
 
-        setPropertyFlag(AnimationResource, m_name, IProperty::Flags::NotVisible, false);
+        setPropertyFlag(AnimationResource, m_name, PropertyFlags::NotVisible, false);
 
-        registerPropertyEx(AnimationResource, m_time, "Time", IProperty::Flags::NotSaved);
+        registerPropertyEx(AnimationResource, m_time, "Time", PropertyFlags::NotSaved);
 
-        registerPropertyEx(AnimationResource, m_weight, "Weight", IProperty::Flags::NotSaved);
+        registerPropertyEx(AnimationResource, m_weight, "Weight", PropertyFlags::NotSaved);
         setPropertyRange(AnimationResource, m_weight, float2(0.0f, 1.0f));
 
         registerProperty(AnimationResource, m_speed, "Speed");

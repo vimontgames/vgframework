@@ -15,11 +15,39 @@
 #include "resource.h"
 #include "application.h"
 
+#define TEST_META_ENUM 0
+
+#if TEST_META_ENUM
+#include "core/Types/Enum/Enum_meta.h"
+#endif
+
 HINSTANCE hInst;
 HWND g_hWnd;
 
 using namespace vg;
 engine::IEngine * g_engine = nullptr;
+
+#if TEST_META_ENUM
+
+vg_enum(Color, vg::core::u32, 
+	Red		= 0x000000FF, 
+	Green	= 0x0000FF00, 
+	Blue	= 0x00FF0000
+);
+
+void TestMetaEnum()
+{
+	VG_DEBUGPRINT("%s\n", ((vg::core::string)Color_meta.string).c_str());
+
+	const auto & pairs = meta::enumPairs<Color>();
+	for (auto i = 0; i < pairs.size(); ++i)
+	{
+		const auto & pair = pairs[i];
+        VG_DEBUGPRINT("[#%u] %s = %u\n", i, pair.second.c_str(), pair.first);
+	}
+}
+
+#endif
 
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -163,6 +191,10 @@ bool CreateGameWindow(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow, core::
 //--------------------------------------------------------------------------------------
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+	#if TEST_META_ENUM
+	TestMetaEnum();
+	#endif
+
 	#ifdef _CRTDBG_MAP_ALLOC
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	//_crtBreakAlloc = 159;

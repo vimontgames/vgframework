@@ -460,14 +460,14 @@ namespace vg::editor
 
                     if (newScene)
                     {
-                        m_selected = MenuOption::AddScene;
+                        m_selected = (uint)SceneListMenuOption::AddScene;
                         openFileDialog = true;
                         m_popup = typeInfo.newLabel;
                     }
 
                     if (loadScene)
                     {
-                        m_selected = MenuOption::LoadScene;
+                        m_selected = (uint)SceneListMenuOption::LoadScene;
                         openFileDialog = true;
                         m_popup = typeInfo.loadLabel;
                     }
@@ -485,9 +485,9 @@ namespace vg::editor
 
                     string ext = ImGuiWindow::getFileBrowserExt(worldRes);
 
-                    switch (m_selected)
+                    switch ((SceneListMenuOption)m_selected)
                     {
-                    case MenuOption::AddScene:
+                    case SceneListMenuOption::AddScene:
                     {
                         if (ImGui::DisplayFileDialog(m_popup))
                         {
@@ -499,7 +499,7 @@ namespace vg::editor
                     }
                     break;
 
-                    case MenuOption::LoadScene:
+                    case SceneListMenuOption::LoadScene:
                         if (ImGui::DisplayFileDialog(m_popup))
                         {
                             if (ImGui::IsFileDialogOK())

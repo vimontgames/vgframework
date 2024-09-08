@@ -7,29 +7,29 @@ namespace vg::renderer
     using namespace vg::core;
     using namespace vg::gfx;
 
-    VG_REGISTER_OBJECT_CLASS_EX(DefaultMaterialModel, "Default", IClassDesc::Flags::Model);
+    VG_REGISTER_OBJECT_CLASS_EX(DefaultMaterialModel, "Default", ClassDescFlags::Model);
 
     //--------------------------------------------------------------------------------------
     bool DefaultMaterialModel::registerProperties(core::IClassDesc & _desc)
     {
-        registerPropertyEnumEx(DefaultMaterialModel, UVSource, m_UVSource, "UV Source", IProperty::Flags::NotSaved);
+        registerPropertyEnumEx(DefaultMaterialModel, UVSource, m_UVSource, "UV Source", PropertyFlags::NotSaved);
 
-        registerPropertyEx(DefaultMaterialModel, m_tiling, "Tiling", IProperty::Flags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_tiling, "Tiling", PropertyFlags::NotSaved);
         setPropertyRange(DefaultMaterialModel, m_tiling, float2(0, 16));
 
-        registerPropertyObjectEx(DefaultMaterialModel, m_albedoMap, "Albedo Map", IProperty::Flags::NotSaved);
-        registerPropertyEx(DefaultMaterialModel, m_albedoColor, "Albedo Color", IProperty::Flags::Color);
+        registerPropertyObjectEx(DefaultMaterialModel, m_albedoMap, "Albedo Map", PropertyFlags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_albedoColor, "Albedo Color", PropertyFlags::Color);
 
-        registerPropertyObjectEx(DefaultMaterialModel, m_normalMap, "Normal Map", IProperty::Flags::NotSaved);
-        registerPropertyEx(DefaultMaterialModel, m_normalStrength, "Normal Strength", IProperty::Flags::NotSaved);
+        registerPropertyObjectEx(DefaultMaterialModel, m_normalMap, "Normal Map", PropertyFlags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_normalStrength, "Normal Strength", PropertyFlags::NotSaved);
         setPropertyRange(DefaultMaterialModel, m_normalStrength, float2(0.0f, 1.0f));
 
-        registerPropertyObjectEx(DefaultMaterialModel, m_pbrMap, "PBR Map", IProperty::Flags::NotSaved);
-        registerPropertyEx(DefaultMaterialModel, m_occlusion, "Occlusion", IProperty::Flags::NotSaved);
+        registerPropertyObjectEx(DefaultMaterialModel, m_pbrMap, "PBR Map", PropertyFlags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_occlusion, "Occlusion", PropertyFlags::NotSaved);
         setPropertyRange(DefaultMaterialModel, m_occlusion, float2(0.0f, 1.0f));
-        registerPropertyEx(DefaultMaterialModel, m_roughness, "Roughness", IProperty::Flags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_roughness, "Roughness", PropertyFlags::NotSaved);
         setPropertyRange(DefaultMaterialModel, m_roughness, float2(0.0f, 1.0f));
-        registerPropertyEx(DefaultMaterialModel, m_metalness, "Metalness", IProperty::Flags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_metalness, "Metalness", PropertyFlags::NotSaved);
         setPropertyRange(DefaultMaterialModel, m_metalness, float2(0.0f, 1.0f));
 
         return super::registerProperties(_desc);

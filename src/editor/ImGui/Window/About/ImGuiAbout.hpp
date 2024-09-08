@@ -98,6 +98,7 @@ namespace vg::editor
                 { "ImGuizmo",               "1.83",             "https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83" },
                 { "JoltPhysics",            "5.0.0",            "https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0" },
                 { "magic_enum",             "0.9.4",            "https://github.com/Neargye/magic_enum/releases/tag/v0.9.4" },
+                { "meta_enum",              "",                 "https://github.com/therocode/meta_enum/tree/master" },
                 { "optick",                 "1.3.1",            "https://github.com/bombomby/optick" },
                 { "px_sched",               "",                 "https://github.com/pplux/px" },
                 { "simple_enum",            "0.8.0",            "https://github.com/arturbac/simple_enum/releases/tag/v0.8.0" },

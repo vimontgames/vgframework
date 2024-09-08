@@ -17,13 +17,13 @@ namespace vg::physics
         registerProperty(PhysicsBodyDesc, m_softBody, "SoftBody");
         setPropertyDescription(PhysicsBodyDesc, m_softBody, "A flexible object that deforms and reacts to forces, simulating realistic bending and stretching");
 
-        registerPropertyEnumEx(PhysicsBodyDesc, ObjectLayer, m_layer, "Layer", IProperty::Flags::None);
+        registerPropertyEnumEx(PhysicsBodyDesc, ObjectLayer, m_layer, "Layer", PropertyFlags::None);
         setPropertyDescription(PhysicsBodyDesc, m_layer, "Defines the object's interaction with other objects based on its movement status\n\nNon-Moving:\nThe object does not change position and typically remains stationary in the simulation\n\nMoving:\nThe object can change position and interact with other moving objects based on physics");
 
-        registerPropertyEnumEx(PhysicsBodyDesc, MotionType, m_motion, "Motion", IProperty::Flags::None);
+        registerPropertyEnumEx(PhysicsBodyDesc, MotionType, m_motion, "Motion", PropertyFlags::None);
         setPropertyDescription(PhysicsBodyDesc, m_motion, "Determines how an object moves and interacts with forces\n\nStatic: Fixed in place, does not move or respond to forces\n\nKinematic:\nMoves under its own control, not affected by forces\n\nDynamic:\nAffected by forces and collisions, interacts physically");
         
-        registerPropertyEnumEx(PhysicsBodyDesc, MotionQuality, m_motionQuality, "Quality", IProperty::Flags::None);
+        registerPropertyEnumEx(PhysicsBodyDesc, MotionQuality, m_motionQuality, "Quality", PropertyFlags::None);
         setPropertyDescription(PhysicsBodyDesc, m_motionQuality, "Determines how accurately a physics engine calculates an object's motion and collision detection\n\nDiscrete:\nCollision checks occur only at specific time steps.\n\nContinuous:\nCollision checks are performed continuously along the object's movement path.");
 
         registerOptionalProperty(PhysicsBodyDesc, m_overrideMass, m_mass, "Mass");

@@ -7,11 +7,10 @@ namespace vg::core
     class IGameObject;
     class IWorld;
 
-    enum BaseSceneType : core::u8
-    {
+    vg_enum(BaseSceneType, core::u8,
         Scene = 0,
         Prefab
-    };
+    );
 
     class IBaseScene : public Object
     {

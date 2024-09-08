@@ -12,7 +12,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectVectorEx(MaterialResourceList, m_materialResources, MaterialResource, "Material", IProperty::Flags::Resource);
+        registerPropertyObjectVectorEx(MaterialResourceList, m_materialResources, MaterialResource, "Material", PropertyFlags::Resource);
 
         return true;
     }

@@ -7,11 +7,10 @@ namespace vg::gfx
 {
     class ITexture;
 
-    enum class ViewportTarget : core::u8
-    {
-        Game        = 0,
-        Editor      = 1
-    };
+    vg_enum_class(ViewportTarget, core::u8,
+        Game    = 0,
+        Editor  = 1
+    );
     static inline const ViewportTarget ViewportTargetInvalid = (ViewportTarget)-1;
 
     using ViewportIndex = core::u8;

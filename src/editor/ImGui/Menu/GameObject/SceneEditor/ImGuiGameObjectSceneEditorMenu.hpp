@@ -91,7 +91,7 @@ namespace vg::editor
                 ImGui::BeginDisabled(isRoot || isPrefabChild);
                 if (ImGui::MenuItem("Add"))
                 {
-                    m_selected = MenuOption::AddGameObject;
+                    m_selected = (uint)GameObjectSceneEditorMenuOption::AddGameObject;
                     m_popup = "Add GameObject";
                     m_popupObject = _object;
                     openPopup = true;
@@ -106,7 +106,7 @@ namespace vg::editor
                 ImGui::BeginDisabled(isPrefabOrPartOfPrefab);
                 if (ImGui::MenuItem("Add Child"))
                 {
-                    m_selected = MenuOption::AddChildGameObject;
+                    m_selected = (uint)GameObjectSceneEditorMenuOption::AddChildGameObject;
                     m_popup = "Add Child GameObject";
                     m_popupObject = _object;
                     openPopup = true;
@@ -121,7 +121,7 @@ namespace vg::editor
                 ImGui::BeginDisabled(isPrefabOrPartOfPrefab);
                 if (ImGui::MenuItem("Add Parent"))
                 {
-                    m_selected = MenuOption::AddParentGameObject;
+                    m_selected = (uint)GameObjectSceneEditorMenuOption::AddParentGameObject;
                     m_popup = "Add Parent GameObject";
                     m_popupObject = _object;
                     openPopup = true;
@@ -183,7 +183,7 @@ namespace vg::editor
                 ImGui::BeginDisabled(isPrefab || isPrefabChild);
                 if (ImGui::MenuItem("Create"))
                 {
-                    m_selected = MenuOption::CreatePrefab;
+                    m_selected = (uint)GameObjectSceneEditorMenuOption::CreatePrefab;
                     m_popup = "Create Prefab";
                     m_popupObject = _object;
                     openPopup = true;
@@ -198,7 +198,7 @@ namespace vg::editor
                 ImGui::BeginDisabled(!isPrefab && !isPrefabChild);
                 if (ImGui::MenuItem("Unpack"))
                 {
-                    m_selected = MenuOption::UnpackPrefab;
+                    m_selected = (uint)GameObjectSceneEditorMenuOption::UnpackPrefab;
                     m_popup = "Unpack Prefab";
                     m_popupObject = _object;
                     doUnpack = true;
@@ -214,7 +214,7 @@ namespace vg::editor
                 ImGui::BeginDisabled(isRoot || isPrefabChild);
                 if (ImGui::MenuItem("Add"))
                 {
-                    m_selected = MenuOption::AddPrefab;
+                    m_selected = (uint)GameObjectSceneEditorMenuOption::AddPrefab;
                     m_popup = "Add Prefab";
                     m_popupObject = _object;
                     openPopup = true;
@@ -229,7 +229,7 @@ namespace vg::editor
                 ImGui::BeginDisabled(isPrefabOrPartOfPrefab);
                 if (ImGui::MenuItem("Add Child"))
                 {
-                    m_selected = MenuOption::AddChildPrefab;
+                    m_selected = (uint)GameObjectSceneEditorMenuOption::AddChildPrefab;
                     m_popup = "Add Child Prefab";
                     m_popupObject = _object;
                     openPopup = true;
@@ -244,7 +244,7 @@ namespace vg::editor
                 ImGui::BeginDisabled(isRoot || isPrefab || isPrefabChild);
                 if (ImGui::MenuItem("Replace"))
                 {
-                    m_selected = MenuOption::ReplaceByPrefab;
+                    m_selected = (uint)GameObjectSceneEditorMenuOption::ReplaceByPrefab;
                     m_popup = "Replace by Prefab";
                     m_popupObject = _object;
                     openPopup = true;
@@ -367,13 +367,13 @@ namespace vg::editor
         
         if (m_popupObject == _object)
         {
-            auto selected = (MenuOption)m_selected;
+            auto selected = (GameObjectSceneEditorMenuOption)m_selected;
             switch (selected)
             {
-                case MenuOption::AddChildPrefab:
-                case MenuOption::AddPrefab:
-                case MenuOption::CreatePrefab:
-                case MenuOption::ReplaceByPrefab:
+                case GameObjectSceneEditorMenuOption::AddChildPrefab:
+                case GameObjectSceneEditorMenuOption::AddPrefab:
+                case GameObjectSceneEditorMenuOption::CreatePrefab:
+                case GameObjectSceneEditorMenuOption::ReplaceByPrefab:
                 {
                     const string ext = ".prefab";
 
@@ -381,7 +381,7 @@ namespace vg::editor
                     bool pickPrefabFile = false;
                     bool addPrefab = false;
 
-                    if (selected == CreatePrefab && prefabPath[0] == '\0')
+                    if (selected == GameObjectSceneEditorMenuOption::CreatePrefab && prefabPath[0] == '\0')
                         sprintf_s(prefabPath, "%s/%s.prefab", io::getRelativePath(ImGuiWindow::getDefaultFolder("Prefabs")).c_str(), _object->getName().c_str());
 
                     if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
@@ -412,7 +412,7 @@ namespace vg::editor
                         {
                             addPrefab = true;
                             ImGui::CloseCurrentPopup();
-                            m_selected = MenuOption::None;
+                            m_selected = (uint)GameObjectSceneEditorMenuOption::None;
                         }
 
                         ImGui::SameLine();
@@ -421,7 +421,7 @@ namespace vg::editor
                         {
                             ImGui::CloseCurrentPopup();
                             prefabPath[0] = '\0';
-                            m_selected = MenuOption::None;
+                            m_selected = (uint)GameObjectSceneEditorMenuOption::None;
                         }
 
                         ImGui::EndPopup();
@@ -463,7 +463,7 @@ namespace vg::editor
                                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(selected);
                                 break;
 
-                            case MenuOption::ReplaceByPrefab:
+                            case GameObjectSceneEditorMenuOption::ReplaceByPrefab:
                             {
                                 prefabRes->SetResourcePath(prefabPath);
                                 auto parent = dynamic_cast<IGameObject *>(gameObject->GetParent());
@@ -478,7 +478,7 @@ namespace vg::editor
                             }
                             break;
 
-                            case MenuOption::AddPrefab:
+                            case GameObjectSceneEditorMenuOption::AddPrefab:
                             {
                                 prefabRes->SetResourcePath(prefabPath);
                                 auto parent = dynamic_cast<IGameObject *>(gameObject->GetParent());
@@ -488,7 +488,7 @@ namespace vg::editor
                             }
                             break;
 
-                            case MenuOption::AddChildPrefab:
+                            case GameObjectSceneEditorMenuOption::AddChildPrefab:
                             {
                                 prefabRes->SetResourcePath(prefabPath);
                                 gameObject->SetObjectFlags(ObjectFlags::Opened, true);
@@ -496,7 +496,7 @@ namespace vg::editor
                             }
                             break;
 
-                            case MenuOption::CreatePrefab:
+                            case GameObjectSceneEditorMenuOption::CreatePrefab:
                             {
                                 auto parent = dynamic_cast<IGameObject *>(gameObject->GetParent());
                                 VG_ASSERT(parent);
@@ -532,9 +532,9 @@ namespace vg::editor
                 }
                 break;
 
-            case MenuOption::AddGameObject:
-            case MenuOption::AddChildGameObject:
-            case MenuOption::AddParentGameObject:
+            case GameObjectSceneEditorMenuOption::AddGameObject:
+            case GameObjectSceneEditorMenuOption::AddChildGameObject:
+            case GameObjectSceneEditorMenuOption::AddParentGameObject:
             {
                 if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
@@ -560,7 +560,7 @@ namespace vg::editor
                             VG_ASSERT_ENUM_NOT_IMPLEMENTED(selected);
                             break;
 
-                        case MenuOption::AddGameObject:
+                        case GameObjectSceneEditorMenuOption::AddGameObject:
                         {
                             auto parent = dynamic_cast<IGameObject *>(gameObject->GetParent());
                             if (parent)
@@ -568,12 +568,12 @@ namespace vg::editor
                         }
                         break;
 
-                        case MenuOption::AddChildGameObject:
+                        case GameObjectSceneEditorMenuOption::AddChildGameObject:
                             gameObject->SetObjectFlags(ObjectFlags::Opened, true);
                             gameObject->AddChild(newGameObject);
                             break;
 
-                        case MenuOption::AddParentGameObject:
+                        case GameObjectSceneEditorMenuOption::AddParentGameObject:
                             auto parent = dynamic_cast<IGameObject *>(gameObject->GetParent());
                             if (parent)
                             {
@@ -599,7 +599,7 @@ namespace vg::editor
                         newGameObject->Release();
                         ImGui::CloseCurrentPopup();
                         nameTmp[0] = '\0';
-                        m_selected = MenuOption::None;
+                        m_selected = (uint)GameObjectSceneEditorMenuOption::None;
                     }
 
                     ImGui::SameLine();
@@ -608,7 +608,7 @@ namespace vg::editor
                     {
                         ImGui::CloseCurrentPopup();
                         nameTmp[0] = '\0';
-                        m_selected = MenuOption::None;
+                        m_selected = (uint)GameObjectSceneEditorMenuOption::None;
                     }
                     ImGui::EndPopup();
                 }

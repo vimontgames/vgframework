@@ -31,14 +31,14 @@ using namespace vg::gfx;
 
 namespace vg::renderer
 {
-    VG_REGISTER_OBJECT_CLASS_EX(MeshInstance, "Mesh Instance", core::IClassDesc::Flags::Instance);
+    VG_REGISTER_OBJECT_CLASS_EX(MeshInstance, "Mesh Instance", core::ClassDescFlags::Instance);
 
     //--------------------------------------------------------------------------------------
     bool MeshInstance::registerProperties(core::IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectPtrEx(MeshInstance, m_instanceSkeleton, "Skeleton", IProperty::Flags::NotSaved);
+        registerPropertyObjectPtrEx(MeshInstance, m_instanceSkeleton, "Skeleton", PropertyFlags::NotSaved);
 
         return true;
     }

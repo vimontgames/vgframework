@@ -25,7 +25,7 @@ namespace vg::editor
 
         if (addComponent)
         {
-            m_selected = MenuOption::AddComponent;
+            m_selected = (uint)GameObjectInspectorMenuOption::AddComponent;
             m_popup = "Add Component";
             m_popupIcon = style::icon::Plus;
             openPopup = true;
@@ -39,15 +39,15 @@ namespace vg::editor
             openPopup = false;
         }
 
-        switch (m_selected)
+        switch ((GameObjectInspectorMenuOption)m_selected)
         {
-            case MenuOption::AddComponent:
+            case GameObjectInspectorMenuOption::AddComponent:
             {
                 if (ImGui::BeginPopupModal(fmt::sprintf("%s %s", style::icon::Plus, m_popup).c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
                     // List the available components
                     auto factory = Kernel::getFactory();
-                    auto componentClassDescs = factory->getClassDescriptors(IClassDesc::Flags::Component);
+                    auto componentClassDescs = factory->getClassDescriptors(ClassDescFlags::Component);
 
                     // make a list of categories
                     for (uint i = 0; i < componentClassDescs.size(); ++i)

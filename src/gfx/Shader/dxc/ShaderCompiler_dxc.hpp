@@ -146,7 +146,7 @@ namespace vg::gfx::dxc
         switch (_stage)
         {
             default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(caps.shaderModel);
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_stage);
                 break;
 
             case ShaderStage::Vertex:

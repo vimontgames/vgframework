@@ -7,7 +7,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_OBJECT_CLASS_EX(PrefabGameObject, "PrefabGameObject", IClassDesc::Flags::GameObject | IClassDesc::Flags::UID);
+    VG_REGISTER_OBJECT_CLASS_EX(PrefabGameObject, "PrefabGameObject", ClassDescFlags::GameObject | ClassDescFlags::UID);
 
     //--------------------------------------------------------------------------------------
     bool PrefabGameObject::registerProperties(IClassDesc & _desc)
@@ -132,26 +132,26 @@ namespace vg::engine
     {
         const auto flags = _prop->GetFlags();
 
-        const bool isFolder = asBool(IProperty::Flags::IsFolder & flags);
-        const bool isFile = asBool(IProperty::Flags::IsFile & flags);
+        const bool isFolder = asBool(PropertyFlags::IsFolder & flags);
+        const bool isFile = asBool(PropertyFlags::IsFile & flags);
 
-        const bool isEnumArray = asBool(IProperty::Flags::EnumArray & flags);
-        const bool isColor = asBool(IProperty::Flags::Color & flags);
+        const bool isEnumArray = asBool(PropertyFlags::EnumArray & flags);
+        const bool isColor = asBool(PropertyFlags::Color & flags);
 
-        const bool optional = asBool(IProperty::Flags::Optional & flags); // TODO: temp
+        const bool optional = asBool(PropertyFlags::Optional & flags); // TODO: temp
 
         switch (_prop->GetType())
         {
             default:
                 return false;
 
-            case IProperty::Type::Bool:
+            case PropertyType::Bool:
             {
                 return true;
             }
             break;
 
-            case IProperty::Type::String:
+            case PropertyType::String:
             {
                 if (isFile || isFolder)
                     return false;
@@ -160,9 +160,9 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Uint8:
-            case IProperty::Type::EnumU8:
-            case IProperty::Type::EnumFlagsU8:
+            case PropertyType::Uint8:
+            case PropertyType::EnumU8:
+            case PropertyType::EnumFlagsU8:
             {
                 if (isEnumArray)
                     return false;
@@ -171,9 +171,9 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Uint16:
-            case IProperty::Type::EnumU16:
-            case IProperty::Type::EnumFlagsU16:
+            case PropertyType::Uint16:
+            case PropertyType::EnumU16:
+            case PropertyType::EnumFlagsU16:
             {
                 if (isEnumArray)
                     return false;
@@ -182,9 +182,9 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Uint32:
-            case IProperty::Type::EnumU32:
-            case IProperty::Type::EnumFlagsU32:
+            case PropertyType::Uint32:
+            case PropertyType::EnumU32:
+            case PropertyType::EnumFlagsU32:
             {
                 if (isEnumArray)
                     return false;
@@ -193,12 +193,12 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Uint2:
-            case IProperty::Type::Uint3:
-            case IProperty::Type::Uint4:
-            case IProperty::Type::Int2:
-            case IProperty::Type::Int3:
-            case IProperty::Type::Int4:
+            case PropertyType::Uint2:
+            case PropertyType::Uint3:
+            case PropertyType::Uint4:
+            case PropertyType::Int2:
+            case PropertyType::Int3:
+            case PropertyType::Int4:
             {
                 if (isEnumArray)
                     return false;
@@ -207,9 +207,9 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Uint64:
-            case IProperty::Type::EnumU64:
-            case IProperty::Type::EnumFlagsU64:
+            case PropertyType::Uint64:
+            case PropertyType::EnumU64:
+            case PropertyType::EnumFlagsU64:
             {
                 if (isEnumArray)
                     return false;
@@ -218,9 +218,9 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Int8:
-            case IProperty::Type::EnumI8:
-            case IProperty::Type::EnumFlagsI8:
+            case PropertyType::Int8:
+            case PropertyType::EnumI8:
+            case PropertyType::EnumFlagsI8:
             {
                 if (isEnumArray)
                     return false;
@@ -229,9 +229,9 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Int16:
-            case IProperty::Type::EnumI16:
-            case IProperty::Type::EnumFlagsI16:
+            case PropertyType::Int16:
+            case PropertyType::EnumI16:
+            case PropertyType::EnumFlagsI16:
             {
                 if (isEnumArray)
                     return false;
@@ -240,9 +240,9 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Int32:
-            case IProperty::Type::EnumI32:
-            case IProperty::Type::EnumFlagsI32:
+            case PropertyType::Int32:
+            case PropertyType::EnumI32:
+            case PropertyType::EnumFlagsI32:
             {
                 if (isEnumArray)
                     return false;
@@ -251,9 +251,9 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Int64:
-            case IProperty::Type::EnumI64:
-            case IProperty::Type::EnumFlagsI64:
+            case PropertyType::Int64:
+            case PropertyType::EnumI64:
+            case PropertyType::EnumFlagsI64:
             {
                 if (isEnumArray)
                     return false;
@@ -262,7 +262,7 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Float:
+            case PropertyType::Float:
             {
                 if (isEnumArray)
                     return false;
@@ -271,7 +271,7 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Float2:
+            case PropertyType::Float2:
             {
                 if (isEnumArray)
                     return false;
@@ -280,7 +280,7 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Float3:
+            case PropertyType::Float3:
             {
                 if (isEnumArray)
                     return false;
@@ -289,7 +289,7 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Float4:
+            case PropertyType::Float4:
             {
                 if (isEnumArray)
                     return false;
@@ -298,7 +298,7 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::Float4x4:
+            case PropertyType::Float4x4:
             {
                 if (isEnumArray)
                     return false;
@@ -307,13 +307,13 @@ namespace vg::engine
             }
             break;
 
-            case IProperty::Type::ObjectHandle:
+            case PropertyType::ObjectHandle:
             {
                 return true;
             }
             break;       
 
-            case IProperty::Type::Resource:
+            case PropertyType::Resource:
             {
                 return true;
             }
@@ -324,7 +324,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     core::DynamicProperty * PrefabGameObject::createDynamicProperty(const core::IObject * _object, const core::IProperty * _prop)
     {
-        //if (_prop->getType() == IProperty::Type::Resource)
+        //if (_prop->getType() == PropertyType::Resource)
         //{
         //    _object = _prop->GetPropertyResource(_object);
         //    auto classDesc = _object->GetClassDesc();
@@ -353,111 +353,111 @@ namespace vg::engine
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(_prop->GetType());
                     return nullptr;
 
-                case IProperty::Type::ObjectHandle:
+                case PropertyType::ObjectHandle:
                     newDynProp = new DynamicPropertyObjectHandle(_prop->GetName());
                     break;
 
-                case IProperty::Type::Resource:
+                case PropertyType::Resource:
                     newDynProp = new DynamicPropertyResource(_prop->GetName());
                     break;
 
-                case IProperty::Type::Bool:
+                case PropertyType::Bool:
                     newDynProp = new DynamicPropertyBool(_prop->GetName());
                     break;
 
-                case IProperty::Type::String:
+                case PropertyType::String:
                     newDynProp = new DynamicPropertyString(_prop->GetName());
                     break;
 
-                case IProperty::Type::Float:
+                case PropertyType::Float:
                     newDynProp = new DynamicPropertyFloat(_prop->GetName());
                     break;
 
-                case IProperty::Type::Float2:
+                case PropertyType::Float2:
                     newDynProp = new DynamicPropertyFloat2(_prop->GetName());
                     break;
 
-                case IProperty::Type::Float3:
+                case PropertyType::Float3:
                     newDynProp = new DynamicPropertyFloat3(_prop->GetName());
                     break;
 
-                case IProperty::Type::Float4:
+                case PropertyType::Float4:
                     newDynProp = new DynamicPropertyFloat4(_prop->GetName());
                     break;  
 
-                case IProperty::Type::Float4x4:
+                case PropertyType::Float4x4:
                     newDynProp = new DynamicPropertyFloat4x4(_prop->GetName());
                     break;
 
-                case IProperty::Type::Uint8:
-                case IProperty::Type::EnumU8:
-                case IProperty::Type::EnumFlagsU8:
+                case PropertyType::Uint8:
+                case PropertyType::EnumU8:
+                case PropertyType::EnumFlagsU8:
                     newDynProp = new DynamicPropertyU8(_prop->GetName());
                     break;
 
-                case IProperty::Type::Uint16:
-                case IProperty::Type::EnumU16:
-                case IProperty::Type::EnumFlagsU16:
+                case PropertyType::Uint16:
+                case PropertyType::EnumU16:
+                case PropertyType::EnumFlagsU16:
                     newDynProp = new DynamicPropertyU16(_prop->GetName());
                     break;
 
-                case IProperty::Type::Uint64:
-                case IProperty::Type::EnumU64:
-                case IProperty::Type::EnumFlagsU64:
+                case PropertyType::Uint64:
+                case PropertyType::EnumU64:
+                case PropertyType::EnumFlagsU64:
                     newDynProp = new DynamicPropertyU64(_prop->GetName());
                     break;
 
-                case IProperty::Type::Uint32:
-                case IProperty::Type::EnumU32:
-                case IProperty::Type::EnumFlagsU32:
+                case PropertyType::Uint32:
+                case PropertyType::EnumU32:
+                case PropertyType::EnumFlagsU32:
                     newDynProp = new DynamicPropertyU32(_prop->GetName());
                     break;
 
-                case IProperty::Type::Uint2:
+                case PropertyType::Uint2:
                     newDynProp = new DynamicPropertyUInt2(_prop->GetName());
                     break;
 
-                case IProperty::Type::Uint3:
+                case PropertyType::Uint3:
                     newDynProp = new DynamicPropertyUInt3(_prop->GetName());
                     break;
 
-                case IProperty::Type::Uint4:
+                case PropertyType::Uint4:
                     newDynProp = new DynamicPropertyUInt4(_prop->GetName());
                     break;
 
-                case IProperty::Type::Int2:
+                case PropertyType::Int2:
                     newDynProp = new DynamicPropertyInt2(_prop->GetName());
                     break;
 
-                case IProperty::Type::Int3:
+                case PropertyType::Int3:
                     newDynProp = new DynamicPropertyInt3(_prop->GetName());
                     break;
 
-                case IProperty::Type::Int4:
+                case PropertyType::Int4:
                     newDynProp = new DynamicPropertyInt4(_prop->GetName());
                     break;
 
-                case IProperty::Type::Int8:
-                case IProperty::Type::EnumI8:
-                case IProperty::Type::EnumFlagsI8:
+                case PropertyType::Int8:
+                case PropertyType::EnumI8:
+                case PropertyType::EnumFlagsI8:
                     newDynProp = new DynamicPropertyI8(_prop->GetName());
                     break;
 
-                case IProperty::Type::Int16:
-                case IProperty::Type::EnumI16:
-                case IProperty::Type::EnumFlagsI16:
+                case PropertyType::Int16:
+                case PropertyType::EnumI16:
+                case PropertyType::EnumFlagsI16:
                     newDynProp = new DynamicPropertyI16(_prop->GetName());
                     break;
 
-                case IProperty::Type::Int32:
-                case IProperty::Type::EnumI32:
-                case IProperty::Type::EnumFlagsI32:
+                case PropertyType::Int32:
+                case PropertyType::EnumI32:
+                case PropertyType::EnumFlagsI32:
                     newDynProp = new DynamicPropertyI32(_prop->GetName());
                     break;
 
-                case IProperty::Type::Int64:
-                case IProperty::Type::EnumI64:
-                case IProperty::Type::EnumFlagsI64:
+                case PropertyType::Int64:
+                case PropertyType::EnumI64:
+                case PropertyType::EnumFlagsI64:
                     newDynProp = new DynamicPropertyI64(_prop->GetName());
                     break;
             }
@@ -530,7 +530,7 @@ namespace vg::engine
                             default:
                                 break;
 
-                            case IProperty::Type::ObjectPtrVector:
+                            case PropertyType::ObjectPtrVector:
                             {
                                 const auto vec = prop->GetPropertyObjectPtrVector(_object);
                                 for (uint j = 0; j < vec->size(); ++j)
@@ -543,7 +543,7 @@ namespace vg::engine
                             }
                             break;
 
-                            case IProperty::Type::ObjectPtr:
+                            case PropertyType::ObjectPtr:
                             {
                                 Object ** obj = (Object **)prop->GetPropertyObjectPtr(_object);
                                 if (nullptr != *obj)

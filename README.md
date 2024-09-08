@@ -66,8 +66,6 @@ Reset animation state when engine stops
 MaxDT and moved timing settings to engine options\
 Expose CullMode in materials
 
-![Screenshot](doc/img/0.30.jpg)
-
 ## 0.29 
 Override Prefab properties\
 Fix editor crash closing Prefab view\
@@ -266,7 +264,8 @@ The external libraries are included with the sources for convenience.
 | ImGuiFileDialog            | 0.6.7         | https://github.com/aiekick/ImGuiFileDialog
 | ImGuizmo                   | 1.83          | https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83             
 | JoltPhysics                | 5.0.0         | https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0                 
-| magic_enum                 | 0.9.4         | https://github.com/Neargye/magic_enum                                     
+| magic_enum                 | 0.9.4         | https://github.com/Neargye/magic_enum       
+| meta_enum                  |               | https://github.com/therocode/meta_enum/tree/master                
 | optick (*)                 | 1.3.1         | https://github.com/bombomby/optick                                        
 | px_sched                   |               | https://github.com/pplux/px   
 | simple_enum                | 0.8.0         | https://github.com/arturbac/simple_enum/releases/tag/v0.8.0

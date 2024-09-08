@@ -9,13 +9,13 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void FrameGraphResource::setType(FrameGraphResource::Type _type)
+    void FrameGraphResource::setType(FrameGraphResourceType _type)
     {
         m_type = _type;
     }
 
     //--------------------------------------------------------------------------------------
-    FrameGraphResource::Type FrameGraphResource::getType() const
+    FrameGraphResourceType FrameGraphResource::getType() const
     {
         return m_type;
     }

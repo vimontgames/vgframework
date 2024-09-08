@@ -2,23 +2,20 @@
 
 namespace vg::gfx
 {
-    enum class Usage : core::u8
-    {
+    vg_enum_class(Usage, core::u8,
         Default = 0,
         Upload,
         Staging
-    };
+    );
 
-    enum class CPUAccessFlags : core::u8
-    {
+    vg_enum_class(CPUAccessFlags, core::u8,
         None                = 0x00,
         Read                = 0x01,
         Write               = 0x02,
         ReadWrite           = 0x03
-    };
+    );
 
-    enum class BindFlags : core::u16
-    {
+    vg_enum_class(BindFlags, core::u16,
         None				            = 0x0000,
         ConstantBuffer                  = 0x0001,
         ShaderResource                  = 0x0002,
@@ -26,8 +23,8 @@ namespace vg::gfx
         VertexBuffer		            = 0x0008,
         UnorderedAccess		            = 0x0010,
         IndirectArgsBuffer	            = 0x0020,
-		RaytracingAccelerationStruct    = 0x0040,
-    };
+		RaytracingAccelerationStruct    = 0x0040
+    );
 
     class ResourceDesc
     {

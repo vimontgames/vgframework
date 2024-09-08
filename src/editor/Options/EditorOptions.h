@@ -6,26 +6,23 @@
 
 namespace vg::editor
 {
-    enum class GizmoType : core::u8
-    {
+    vg_enum_class(GizmoType, core::u8,
         Translate = 0,
         Rotate,
         Scale
-    };
+    );
 
-    enum class GizmoSpace : core::u8
-    {
+    vg_enum_class(GizmoSpace, core::u8,
         Local = 0,
         World
-    };
+    );
 
-    enum class EditorDebugFlags : core::u64
-    {
+    vg_enum_class(EditorDebugFlags, core::u64,
         Culling     = 0x00000001,
         Inspector   = 0x00000002,
         Picking     = 0x00000004,
         Properties  = 0x00000008
-    };
+    );
 
     struct GizmoOptions
     {

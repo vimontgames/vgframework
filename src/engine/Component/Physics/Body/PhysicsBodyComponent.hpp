@@ -22,7 +22,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectPtrEx(PhysicsBodyComponent, m_bodyDesc, "Body", IProperty::Flags::Flatten);
+        registerPropertyObjectPtrEx(PhysicsBodyComponent, m_bodyDesc, "Body", PropertyFlags::Flatten);
 
         return true;
     }

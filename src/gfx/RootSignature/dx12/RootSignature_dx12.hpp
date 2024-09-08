@@ -43,7 +43,7 @@ namespace vg::gfx::dx12
                     VG_ASSERT(false, "Unhandled Descriptor::Type \"%s\" (%u)", asString(descriptor.getDescriptorType()).c_str(), descriptor.getDescriptorType());
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::ConstantBuffer:
+                    case RootSignatureDescType::ConstantBuffer:
                     {
                         const auto & constantbuffers = descriptor.getConstantBuffers();
                         
@@ -57,7 +57,7 @@ namespace vg::gfx::dx12
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::Texture:
+                    case RootSignatureDescType::Texture:
                     {
                         const auto & textures = descriptor.getTextures();
                         
@@ -71,7 +71,7 @@ namespace vg::gfx::dx12
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::Buffer:
+                    case RootSignatureDescType::Buffer:
                     {
                         const auto & buffers = descriptor.getBuffers();
 
@@ -85,7 +85,7 @@ namespace vg::gfx::dx12
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::TLAS:
+                    case RootSignatureDescType::TLAS:
                     {
                         const auto & tlas = descriptor.getTLAS();
 
@@ -99,7 +99,7 @@ namespace vg::gfx::dx12
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::RWTexture:
+                    case RootSignatureDescType::RWTexture:
                     {
                         const auto & textures = descriptor.getRWTextures();
 
@@ -113,7 +113,7 @@ namespace vg::gfx::dx12
                     }
                     break;
 
-                    case RootSignatureTableDesc::Descriptor::Type::RWBuffer:
+                    case RootSignatureDescType::RWBuffer:
                     {
                         const auto & buffers = descriptor.getRWBuffers();
 

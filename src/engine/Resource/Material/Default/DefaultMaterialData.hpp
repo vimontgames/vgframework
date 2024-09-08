@@ -19,28 +19,28 @@ namespace vg::engine
         registerPropertyResource(DefaultMaterialData, m_albedoMap, "Albedo Map");
         setPropertyDescription(DefaultMaterialData, m_albedoMap, "Base color texture");
 
-        registerPropertyEx(DefaultMaterialData, m_albedoColor, "Albedo Color", IProperty::Flags::Color);
+        registerPropertyEx(DefaultMaterialData, m_albedoColor, "Albedo Color", PropertyFlags::Color);
         setPropertyDescription(DefaultMaterialData, m_albedoColor, "Base color multiplier");
 
         registerPropertyResource(DefaultMaterialData, m_normalMap, "Normal Map"); 
         setPropertyDescription(DefaultMaterialData, m_normalMap, "Normal map is used to simulate fine details on a surface by altering the surface normals");
 
-        registerPropertyEx(DefaultMaterialData, m_normalStrength, "Normal Strength", IProperty::Flags::None);
+        registerPropertyEx(DefaultMaterialData, m_normalStrength, "Normal Strength", PropertyFlags::None);
         setPropertyDescription(DefaultMaterialData, m_normalStrength, "Multiplier for Normal Map intensity");
         setPropertyRange(DefaultMaterialData, m_normalStrength, float2(0.0f, 1.0f));
 
         registerPropertyResource(DefaultMaterialData, m_pbrMap, "PBR Map");
         setPropertyDescription(DefaultMaterialData, m_pbrMap, "This texture holds lighting parameters:\nR: Ambient Occlusion\nG: Roughness\nB: Metalness");
 
-        registerPropertyEx(DefaultMaterialData, m_occlusion, "Occlusion", IProperty::Flags::None);
+        registerPropertyEx(DefaultMaterialData, m_occlusion, "Occlusion", PropertyFlags::None);
         setPropertyDescription(DefaultMaterialData, m_occlusion, "Amount of Ambient Occlusion from PBR texture red channel");
         setPropertyRange(DefaultMaterialData, m_occlusion, float2(0.0f, 1.0f));
 
-        registerPropertyEx(DefaultMaterialData, m_roughness, "Roughness", IProperty::Flags::None);
+        registerPropertyEx(DefaultMaterialData, m_roughness, "Roughness", PropertyFlags::None);
         setPropertyDescription(DefaultMaterialData, m_roughness, "Amount of Roughness from PBR texture green channel");
         setPropertyRange(DefaultMaterialData, m_roughness, float2(0.0f, 1.0f));
 
-        registerPropertyEx(DefaultMaterialData, m_metalness, "Metalness", IProperty::Flags::None);
+        registerPropertyEx(DefaultMaterialData, m_metalness, "Metalness", PropertyFlags::None);
         setPropertyDescription(DefaultMaterialData, m_metalness, "Amount of Metalness from PBR texture blue channel");
         setPropertyRange(DefaultMaterialData, m_metalness, float2(0.0f, 1.0f));
 

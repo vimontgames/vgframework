@@ -19,4 +19,10 @@ using namespace vg::core;
 #define inline
 #define constexpr
 
+//--------------------------------------------------------------------------------------
+// When compiling HLSL, process vg_enum[_class] shared declarations as regular enum [class] declarations
+//--------------------------------------------------------------------------------------
+#define vg_enum(Type, UnderlyingType, ...)       enum Type : UnderlyingType { __VA_ARGS__};
+#define vg_enum_class(Type, UnderlyingType, ...) enum class Type : UnderlyingType { __VA_ARGS__};
+
 #endif

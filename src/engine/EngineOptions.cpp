@@ -15,10 +15,10 @@ namespace vg::engine
 
         registerPropertyGroupBegin(EngineOptions, "Project");
         {
-            registerPropertyEx(EngineOptions, m_gamePath, "Game Path", IProperty::Flags::IsFolder);
+            registerPropertyEx(EngineOptions, m_gamePath, "Game Path", PropertyFlags::IsFolder);
             setPropertyDescription(EngineOptions, m_gamePath, "Game root folder (used to load game library)");
 
-            registerPropertyEx(EngineOptions, m_startWorld, "Start World", IProperty::Flags::IsFile);
+            registerPropertyEx(EngineOptions, m_startWorld, "Start World", PropertyFlags::IsFile);
             setPropertyDescription(EngineOptions, m_startWorld, "Default world to load at startup");
             setPropertyDefaultFolder(EngineOptions, m_startWorld, "data/Worlds")
         }

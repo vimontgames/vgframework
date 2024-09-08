@@ -23,10 +23,10 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumEx(CameraComponent, gfx::ViewportTarget, m_target, "Target", IProperty::Flags::ReadOnly);
+        registerPropertyEnumEx(CameraComponent, gfx::ViewportTarget, m_target, "Target", PropertyFlags::ReadOnly);
         setPropertyDescription(CameraComponent, m_target, "Camera target");
 
-        registerPropertyEx(CameraComponent, m_viewportIndex, "Viewport", IProperty::Flags::ReadOnly);
+        registerPropertyEx(CameraComponent, m_viewportIndex, "Viewport", PropertyFlags::ReadOnly);
         setPropertyRange(CameraComponent, m_viewportIndex, float2(0, 15));
         setPropertyDescription(CameraComponent, m_viewportIndex, "Viewport index");
 

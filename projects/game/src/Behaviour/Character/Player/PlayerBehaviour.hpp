@@ -42,7 +42,7 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
         registerProperty(PlayerBehaviour, m_controllerIndex, "Index");
         setPropertyDescription(PlayerBehaviour, m_controllerIndex, "Input index used to differenciate different inputs (e.g. Joypads)");
 
-        registerPropertyEx(PlayerBehaviour, m_customColor, "Custom Color", vg::core::IProperty::Flags::Color);
+        registerPropertyEx(PlayerBehaviour, m_customColor, "Custom Color", vg::core::PropertyFlags::Color);
         setPropertyDescription(PlayerBehaviour, m_customColor, "Custom color used for elements controller by this player");
 
         registerProperty(PlayerBehaviour, m_UI, "UI");

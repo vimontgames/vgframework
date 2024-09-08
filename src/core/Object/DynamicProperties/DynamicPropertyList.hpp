@@ -9,9 +9,9 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        //registerPropertyObjectPtrVectorEx(DynamicPropertyList, m_properties, "Properties", IProperty::Flags::Flatten); // "Flatten" is not implemented for ObjectPtrVector
+        //registerPropertyObjectPtrVectorEx(DynamicPropertyList, m_properties, "Properties", PropertyFlags::Flatten); // "Flatten" is not implemented for ObjectPtrVector
         registerPropertyObjectPtrVector(DynamicPropertyList, m_properties, "Properties");
-        setPropertyFlag(DynamicPropertyList, m_uid, IProperty::Flags::NotVisible | IProperty::Flags::Debug, false);
+        setPropertyFlag(DynamicPropertyList, m_uid, PropertyFlags::NotVisible | PropertyFlags::Debug, false);
 
         return true;
     }

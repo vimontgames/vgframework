@@ -10,7 +10,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(MaterialData, m_name, IProperty::Flags::NotVisible | IProperty::Flags::NotSaved, true);
+        setPropertyFlag(MaterialData, m_name, PropertyFlags::NotVisible | PropertyFlags::NotSaved, true);
 
         registerPropertyEnum(MaterialData, gfx::SurfaceType, m_surfaceType, "Surface");
         setPropertyDescription(MaterialData, m_surfaceType, "Surface type determines how the material deal with alpha transparency");
@@ -82,7 +82,7 @@ namespace vg::engine
             {
                 if (!strcmp(resourceClassDesc->GetClassName(), "TextureResource")) // dynamic_cast<TextureResource*>(dataProp->GetPropertyResource(this)) ?
                 {
-                    VG_ASSERT(IProperty::Type::Resource == dataProp->GetType());
+                    VG_ASSERT(PropertyType::Resource == dataProp->GetType());
 
                     if (_resource == dataProp->GetPropertyResource(this))
                     {

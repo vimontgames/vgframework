@@ -34,8 +34,8 @@ namespace vg::engine
 
         registerProperty(MeshComponent, m_displayBones, "Display Bones");
         registerPropertyResource(MeshComponent, m_meshResource, "Mesh");
-        registerPropertyObjectPtrEx(MeshComponent, m_meshInstance, "MeshInstance", IProperty::Flags::NotSaved | IProperty::Flags::Flatten);
-        registerPropertyObjectEx(MeshComponent, m_meshMaterials, "Materials", IProperty::Flags::Flatten);
+        registerPropertyObjectPtrEx(MeshComponent, m_meshInstance, "MeshInstance", PropertyFlags::NotSaved | PropertyFlags::Flatten);
+        registerPropertyObjectEx(MeshComponent, m_meshMaterials, "Materials", PropertyFlags::Flatten);
         registerProperty(MeshComponent, m_batchMask, "Batch Mask");
         
         return true;
@@ -84,7 +84,7 @@ namespace vg::engine
                 if (nullptr == m_updateSkeletonJob)
                     m_updateSkeletonJob = new AnimationJob(this, m_displayBones);
 
-                const auto animSync = Engine::get()->getJobSync(JobSync::Animation);
+                const auto animSync = Engine::get()->getJobSync(EngineJobType::Animation);
 
                 core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
                 jobScheduler->Start(m_updateSkeletonJob, animSync);
@@ -92,7 +92,7 @@ namespace vg::engine
                 #if 1
                 if (m_displayBones)
                 {
-                    const auto debugDrawSync = Engine::get()->GetRenderer()->GetJobSync(IRenderer::JobSync::DebugDraw);
+                    const auto debugDrawSync = Engine::get()->GetRenderer()->GetJobSync(RendererJobType::DebugDraw);
 
                     if (nullptr == m_drawSkeletonJob)
                         m_drawSkeletonJob = new DrawSkeletonJob(this);
