@@ -1273,7 +1273,7 @@ namespace vg::gfx::vulkan
     void Device::createVulkanBackbuffers()
     {
         VkImage * swapchainImages = (VkImage *)malloc(m_vkSwapchainImageCount * sizeof(VkImage));
-        assert(swapchainImages);
+        VG_ASSERT(swapchainImages);
         VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnGetSwapchainImagesKHR(m_vkDevice, m_vkSwapchain, &m_vkSwapchainImageCount, swapchainImages));
 
         for (uint i = 0; i < max_backbuffer_count; ++i)

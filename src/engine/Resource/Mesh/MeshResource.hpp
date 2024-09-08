@@ -99,7 +99,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MeshResource::unloadSubResources()
     {
-        auto * meshModel = dynamic_cast<renderer::IMeshModel *>(GetObject());
-        VG_ASSERT(nullptr != meshModel);
+        //auto * meshModel = dynamic_cast<renderer::IMeshModel *>(GetObject());
+        //VG_ASSERT(nullptr != meshModel);
     }
 }

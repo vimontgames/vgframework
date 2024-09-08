@@ -5,11 +5,15 @@
 
 namespace vg::gfx
 {
-    enum class ResourceFlags : core::u32
-	{
-		None			= 0x00000000,
-        Backbuffer		= 0x00000001
-	};
+    vg_enum_class(ResourceFlags, core::u32,
+		None        = 0x00000000,
+        Backbuffer  = 0x00000001
+	);
+
+    vg_enum_class(ResourceType, core::u8,
+        Texture     = 0,
+        Buffer
+    );
 
     namespace base
     {
@@ -18,12 +22,6 @@ namespace vg::gfx
             using super = core::Object;
 
         public:
-            enum class ResourceType : core::u8
-            {
-                Texture = 0,
-                Buffer,
-            };
-
             VG_INLINE void setResourceFlags(ResourceFlags _resourceFlags)
             {
                 m_flags = _resourceFlags;

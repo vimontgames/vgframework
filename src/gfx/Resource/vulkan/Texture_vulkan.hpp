@@ -38,7 +38,7 @@ namespace vg::gfx::vulkan
         switch (_vkFormat)
         {
             default:
-                VG_ASSERT(false, "Unhandled pixel format \"%s\"", asString(_vkFormat).c_str());
+                VG_ASSERT(false, "Unhandled pixel format %u", _vkFormat);
                 return PixelFormat::Unknow;
 
             case VK_FORMAT_R8G8B8A8_UNORM:
