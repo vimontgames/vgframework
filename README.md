@@ -263,12 +263,10 @@ The external libraries are included with the sources for convenience.
 | IconFontCppHeaders         |               | https://github.com/juliettef/IconFontCppHeaders                                                     
 | ImGuiFileDialog            | 0.6.7         | https://github.com/aiekick/ImGuiFileDialog
 | ImGuizmo                   | 1.83          | https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83             
-| JoltPhysics                | 5.0.0         | https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0                 
-| magic_enum                 | 0.9.4         | https://github.com/Neargye/magic_enum       
-| meta_enum                  |               | https://github.com/therocode/meta_enum/tree/master                
+| JoltPhysics                | 5.0.0         | https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0                   
+| meta_enum_lite             |               | https://github.com/vimontgames/meta_enum_lite            
 | optick (*)                 | 1.3.1         | https://github.com/bombomby/optick                                        
 | px_sched                   |               | https://github.com/pplux/px   
-| simple_enum                | 0.8.0         | https://github.com/arturbac/simple_enum/releases/tag/v0.8.0
 | stb                        |               | https://github.com/nothings/stb                                           
 | tinyXML2                   | 10.0.0        | https://github.com/leethomason/tinyxml2/releases/tag/10.0.0               
 | UFBX                       |               | https://github.com/ufbx/ufbx                                              
