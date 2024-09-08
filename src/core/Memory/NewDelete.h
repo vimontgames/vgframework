@@ -60,5 +60,11 @@ void operator delete[](void * _ptr, const char * _file, int _line) noexcept
     vg::core::MemoryAllocator::Delete(_ptr);
 }
 
+//--------------------------------------------------------------------------------------
+void operator delete[](void * _ptr) noexcept
+{
+    vg::core::MemoryAllocator::Delete(_ptr);
+}
+
 #pragma pop_macro("new")
 #endif

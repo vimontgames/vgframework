@@ -116,7 +116,7 @@ vg::core::IInput & Game::Input()
 void Game::addCharacter(CharacterType _type, CharacterBehaviour * _character)
 {
     auto & characters = m_characters[vg::core::asInteger(_type)];
-    VG_ASSERT(!characters.exists(_character));
+    VG_ASSERT(!vector_helper::exists(characters, _character));
     characters.push_back(_character);
 }
 
@@ -124,8 +124,8 @@ void Game::addCharacter(CharacterType _type, CharacterBehaviour * _character)
 void Game::removeCharacter(CharacterType _type, CharacterBehaviour * _character)
 {
     auto & characters = m_characters[vg::core::asInteger(_type)];
-    VG_ASSERT(characters.exists(_character));
-    characters.remove(_character);
+    VG_ASSERT(vector_helper::exists(characters, _character));
+    vector_helper::remove(characters, _character);
 }
 
 //--------------------------------------------------------------------------------------

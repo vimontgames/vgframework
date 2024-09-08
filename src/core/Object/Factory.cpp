@@ -969,7 +969,7 @@ namespace vg::core
     const vector<IClassDesc *> Factory::getClassDescriptors(ClassDescFlags _required, ClassDescFlags _excluded) const
     {
         vector<IClassDesc *> classes;
-        for (uint i = 0; i < m_classes.count(); ++i)
+        for (uint i = 0; i < m_classes.size(); ++i)
         {
             auto & clas = m_classes[i];
             if ((asBool(clas.flags & _required) || (u64)_required == -1) && !asBool(clas.flags & _excluded))
@@ -1918,8 +1918,8 @@ namespace vg::core
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     auto * vector = prop->GetPropertyResourcePtrVector(_object);
-                    const uint count = vector->count();
-                    for (uint i = 0; i < count; ++i)
+                    const auto count = vector->size();
+                    for (auto i = 0; i < count; ++i)
                         serializeToXML((const IObject *)(*vector)[i], _xmlDoc, xmlPropElem);
                 }
                 break;
@@ -1928,8 +1928,8 @@ namespace vg::core
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     auto * vector = prop->GetPropertyObjectPtrVector(_object);
-                    const uint count = vector->count();
-                    for (uint i = 0; i < count; ++i)
+                    const auto count = vector->size();
+                    for (auto i = 0; i < count; ++i)
                         serializeToXML((const IObject *)(*vector)[i], _xmlDoc, xmlPropElem);
                 }
                 break;

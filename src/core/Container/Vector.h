@@ -2,57 +2,37 @@
 
 namespace vg::core
 {
-    template <typename T> class vector : public std::vector<T>
+    namespace vector_helper
     {
-    public:
         //--------------------------------------------------------------------------------------
-        vector() : std::vector<T>()
-        {
-        }
+        // Helper funcs for std::vector
+        //--------------------------------------------------------------------------------------
 
         //--------------------------------------------------------------------------------------
-        vector(typename std::vector<T>::size_type _count) : std::vector<T>(_count)
+        template <typename T> inline T & find(const std::vector<T> & _vector, const T & _element)
         {
-        }
-
-        //--------------------------------------------------------------------------------------
-        uint count() const
-        {
-            return (uint)this->size();
-        }
-
-        //--------------------------------------------------------------------------------------
-        bool exists(const typename T & element) const
-        {
-            return std::find(this->begin(), this->end(), element) != this->end();
-        }
-
-        //--------------------------------------------------------------------------------------
-        T & find(const typename T & element) const
-        {
-            if (auto it = std::find(this->begin(), this->end(), element) != this->end())
+            if (auto it = std::find(this->begin(), this->end(), _element) != this->end())
                 return *it;
             else
                 return nullptr;
         }
 
         //--------------------------------------------------------------------------------------
-        bool remove(const typename T & element)
+        template <typename T> inline bool exists(const std::vector<T> & _vector, const T & _element)
         {
-            auto end = std::remove_if(this->begin(), this->end(), [=](auto s) { return s == element; });
-            if (end != this->end())
+            return find(_vector.begin(), _vector.end(), _element) != _vector.end();
+        }
+
+        //--------------------------------------------------------------------------------------
+        template <typename T> inline bool remove(std::vector<T> & _vector, const T & _element)
+        {
+            auto end = std::remove_if(_vector.begin(), _vector.end(), [=](auto s) { return s == _element; });
+            if (end != _vector.end())
             {
-                this->erase(end);
+                _vector.erase(end);
                 return true;
             }
             return false;
         }
-
-        //--------------------------------------------------------------------------------------
-        T & push_empty()
-        {
-            this->emplace_back();
-            return this->back();
-        }
-    };
+    }
 }

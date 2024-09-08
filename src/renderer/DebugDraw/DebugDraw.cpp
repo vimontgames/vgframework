@@ -641,7 +641,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DebugDraw::AddWireframeSphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix)
     {
-        DebugDrawIcoSphereData & icoSphere = getWorldData(_world)->m_icoSpheres.push_empty();
+        DebugDrawIcoSphereData & icoSphere = getWorldData(_world)->m_icoSpheres.emplace_back();
         icoSphere.world = mul(float4x4::scale(_radius), _matrix);
         icoSphere.color = _color;
     }
@@ -649,7 +649,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DebugDraw::AddHemisphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix)
     {
-        DebugDrawHemiSphereData & hemiSphere = getWorldData(_world)->m_hemiSpheres.push_empty();
+        DebugDrawHemiSphereData & hemiSphere = getWorldData(_world)->m_hemiSpheres.emplace_back();
         hemiSphere.world = mul(float4x4::scale(_radius), _matrix);
         hemiSphere.color = _color;
     }
@@ -657,7 +657,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DebugDraw::AddCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix)
     {
-        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders.push_empty();
+        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders.emplace_back();
 
         float3 s = float3(_radius, _radius, _height * 0.5f);
 
@@ -677,7 +677,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DebugDraw::AddTaperedCylinder(const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix)
     {
-        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders.push_empty();
+        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders.emplace_back();
 
         float radius = _bottomRadius;
         float3 s = float3(radius, radius, _height * 0.5f);

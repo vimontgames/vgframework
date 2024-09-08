@@ -327,7 +327,7 @@ namespace vg::renderer
         if (IsFullscreen())
         {
             auto & viewports = m_viewports[(int)ViewportTarget::Game];
-            for (uint i = 0; i < viewports.count(); ++i)
+            for (uint i = 0; i < viewports.size(); ++i)
             {
                 auto * viewport = viewports[i];
                 if (nullptr != viewport)
@@ -502,7 +502,7 @@ namespace vg::renderer
                     }
 
                     auto & views = m_views[j];
-                    for (uint i = 0; i < views.count(); ++i)
+                    for (uint i = 0; i < views.size(); ++i)
                     {
                         auto * view = (View*)views[i];
                         if (nullptr != view)
@@ -531,7 +531,7 @@ namespace vg::renderer
                 for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
                 {
                     auto & views = m_views[j];
-                    for (uint i = 0; i < views.count(); ++i)
+                    for (uint i = 0; i < views.size(); ++i)
                     {
                         auto * view = (View *)views[i];
                         if (view)
@@ -553,7 +553,7 @@ namespace vg::renderer
             if (target == ViewTarget::Game)
             {
                 auto & views = m_views[j];
-                for (uint i = 0; i < views.count(); ++i)
+                for (uint i = 0; i < views.size(); ++i)
                 {
                     auto * view = (View *)views[i];
                     if (nullptr != view)
@@ -659,7 +659,7 @@ namespace vg::renderer
             }
         }
 
-        auto index = (ViewportIndex)viewports.count();
+        auto index = (ViewportIndex)viewports.size();
         ViewportID id = ViewportID(target, index);
         viewports.push_back((Viewport *)_viewport);
         _viewport->SetViewportID(id);
@@ -737,7 +737,7 @@ namespace vg::renderer
             }
         }
 
-        auto index = (ViewIndex)views.count();
+        auto index = (ViewIndex)views.size();
         ViewID id = ViewID(target, index);
         views.push_back((View *)_view);
         _view->SetViewID(id);
@@ -991,7 +991,7 @@ namespace vg::renderer
             {
                 // Resize viewports to fit backbuffer
                 auto & viewports = m_viewports[(int)ViewportTarget::Game];
-                for (uint i = 0; i < viewports.count(); ++i)
+                for (uint i = 0; i < viewports.size(); ++i)
                 {
                     auto * viewport = viewports[i];
                     if (nullptr != viewport)

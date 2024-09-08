@@ -63,6 +63,8 @@ namespace vg::core
     
     using size_t = std::size_t;
 
+	template <typename T> using vector = std::vector<T>;
+
     template <typename T> using atomic = std::atomic<T>;
 
     template <typename T1, typename T2> using pair = std::pair<T1, T2>;

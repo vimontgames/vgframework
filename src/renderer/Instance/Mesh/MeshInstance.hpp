@@ -506,7 +506,7 @@ namespace vg::renderer
 
         if (nullptr == binding)
         {
-            binding = &m_animationBindings.push_empty();
+            binding = &m_animationBindings.emplace_back();
             binding->m_animation = (SkeletalAnimation*)_animation;
         }    
 

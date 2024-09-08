@@ -269,15 +269,15 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void Engine::registerWorld(World * _world)
     {
-        VG_ASSERT(!m_worlds.exists(_world));
+        VG_ASSERT(!vector_helper::exists(m_worlds, (IWorld*)_world));
         m_worlds.push_back(_world);
     }
 
     //--------------------------------------------------------------------------------------
     void Engine::unregisterWorld(World * _world)
     {
-        VG_ASSERT(m_worlds.exists(_world));
-        m_worlds.remove(_world);
+        VG_ASSERT(vector_helper::exists(m_worlds, (IWorld *)_world));
+        vector_helper::remove(m_worlds, (IWorld *)_world);
     }
 
     //--------------------------------------------------------------------------------------

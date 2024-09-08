@@ -26,7 +26,7 @@ namespace vg::editor
 
         static C * Find(K key)
         {
-            for (core::uint i = 0; i < s_ImGuiHandlers.count(); ++i)
+            for (auto i = 0; i < s_ImGuiHandlers.size(); ++i)
             {
                 if (s_ImGuiHandlers[i].key == key)
                     return s_ImGuiHandlers[i].handler;

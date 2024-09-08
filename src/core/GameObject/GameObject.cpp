@@ -417,9 +417,9 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool GameObject::RemoveComponent(IComponent * _component)
     {
-        if (m_components.exists((Component *)_component))
+        if (vector_helper::exists(m_components, (Component *)_component))
         {
-            m_components.remove((Component *)_component);
+            vector_helper::remove(m_components, (Component *)_component);
             recomputeUpdateFlags();
             return true;
         }
@@ -522,7 +522,7 @@ namespace vg::core
         if (_searchInChildren)
         {
             auto & children = getChildren();
-            for (uint i = 0; i < children.count(); ++i)
+            for (auto i = 0; i < children.size(); ++i)
             {
                 // TODO: do this more efficiently using a separate method that takes R/W vector ref as paremeters
                 auto others = children[i]->GetComponentsByType(_className, _searchInParent, _searchInChildren);
@@ -569,7 +569,7 @@ namespace vg::core
         if (_searchInChildren)
         {
             auto & children = getChildren();
-            for (uint i = 0; i < children.count(); ++i)
+            for (uint i = 0; i < children.size(); ++i)
             {
                 if (IComponent * component = children[i]->GetComponentByType(_className, _searchInParent, _searchInChildren))
                     return component;
@@ -617,9 +617,9 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool GameObject::RemoveChild(IGameObject * _gameObject, bool _recomputeFlags)
     {
-        if (m_children.exists((GameObject*)_gameObject))
+        if (vector_helper::exists(m_children, (GameObject*)_gameObject))
         {
-            m_children.remove((GameObject*)_gameObject);
+            vector_helper::remove(m_children, (GameObject*)_gameObject);
             VG_SAFE_RELEASE(_gameObject);
             if (_recomputeFlags)
                 recomputeUpdateFlags();
@@ -759,7 +759,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::removeGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
     {
-        if (m_graphicInstances.remove(_graphicInstance))
+        if (vector_helper::remove(m_graphicInstances, _graphicInstance))
             VG_SAFE_RELEASE(_graphicInstance);
     }
 

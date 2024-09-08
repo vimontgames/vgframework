@@ -49,7 +49,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool AnimationResourceList::Add()
     {
-        AnimationResource & animRes = m_animationResources.push_empty();
+        AnimationResource & animRes = m_animationResources.emplace_back();
         
         // Update resource owners
         for (auto & animRes : m_animationResources)

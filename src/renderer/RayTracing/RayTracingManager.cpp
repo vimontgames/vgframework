@@ -89,36 +89,36 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void RayTracingManager::addMeshModel(MeshModel * _meshModel)
     {
-        VG_ASSERT(!m_meshModels.exists(_meshModel));
+        VG_ASSERT(!vector_helper::exists(m_meshModels, _meshModel));
         m_meshModels.push_back(_meshModel);
     }
     
     //--------------------------------------------------------------------------------------
     void RayTracingManager::removeMeshModel(MeshModel * _meshModel)
     {
-        VG_ASSERT(m_meshModels.exists(_meshModel));
-        m_meshModels.remove(_meshModel);
+        VG_ASSERT(vector_helper::exists(m_meshModels, _meshModel));
+        vector_helper::remove(m_meshModels, _meshModel);
     }
 
     //--------------------------------------------------------------------------------------
     void RayTracingManager::addMeshInstance(MeshInstance * _meshInstance)
     {
-        VG_ASSERT(!m_meshInstances.exists(_meshInstance));
+        VG_ASSERT(!vector_helper::exists(m_meshInstances, _meshInstance));
         m_meshInstances.push_back(_meshInstance);
     }
 
     //--------------------------------------------------------------------------------------
     void RayTracingManager::removeMeshInstance(MeshInstance * _meshInstance)
     {
-        VG_ASSERT(m_meshInstances.exists(_meshInstance));
-        m_meshInstances.remove(_meshInstance);
+        VG_ASSERT(vector_helper::exists(m_meshInstances, _meshInstance));
+        vector_helper::remove(m_meshInstances, _meshInstance);
     }
 
     //--------------------------------------------------------------------------------------
     void RayTracingManager::updateMeshInstance(MeshInstance * _meshInstance)
     {
         // TODO : Use 'DirtyBLAS' + atomic to avoid search?
-        if(!m_meshInstanceUpdateQueue.exists(_meshInstance))
+        if(!vector_helper::exists(m_meshInstanceUpdateQueue, _meshInstance))
             m_meshInstanceUpdateQueue.push_back(_meshInstance);
     }
 

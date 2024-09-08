@@ -204,7 +204,7 @@ namespace vg::engine
             {
                 if (physics::IShape * physicsShape = shape->getPhysicsShape())
                 {
-                    physics::ShapeInfo & info = physicsShapes.push_empty();
+                    physics::ShapeInfo & info = physicsShapes.emplace_back();
                     info.m_shape = physicsShape;
                     totalMass += physicsShape->GetMass();
                 }

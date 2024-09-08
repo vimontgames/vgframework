@@ -120,7 +120,7 @@ namespace vg::engine
         {
             if (_scene != m_activeScene[typeIndex])
             {
-                if (m_scenes[typeIndex].exists((Scene *)_scene))
+                if (vector_helper::exists(m_scenes[typeIndex], (IBaseScene *)_scene))
                 {
                     m_activeScene[typeIndex] = (Scene *)_scene;
                     return true;
@@ -141,7 +141,7 @@ namespace vg::engine
     bool World::AddScene(IBaseScene * _scene, BaseSceneType _sceneType)
     {
         const auto typeIndex = asInteger(_sceneType);
-        if (nullptr != _scene && !m_scenes[typeIndex].exists((Scene *)_scene))
+        if (nullptr != _scene && !vector_helper::exists(m_scenes[typeIndex], (IBaseScene *)_scene))
         {
             _scene->SetParent(this);
             _scene->addRef();
@@ -159,9 +159,9 @@ namespace vg::engine
     bool World::RemoveScene(IBaseScene * _scene, BaseSceneType _sceneType)
     {
         const auto typeIndex = asInteger(_sceneType);
-        if (nullptr != _scene && m_scenes[typeIndex].exists((Scene*)_scene))
+        if (nullptr != _scene && vector_helper::exists(m_scenes[typeIndex], _scene))
         {
-            m_scenes[typeIndex].remove((Scene*)_scene);
+            vector_helper::remove(m_scenes[typeIndex], _scene);
 
             if (m_activeScene[typeIndex] == _scene)
                 SetActiveScene(nullptr, _sceneType);
@@ -176,7 +176,7 @@ namespace vg::engine
     uint World::RemoveAllScenes(BaseSceneType _sceneType)
     {
         const auto typeIndex = asInteger(_sceneType);
-        const uint sceneCount = m_scenes[typeIndex].count();
+        const auto sceneCount = m_scenes[typeIndex].size();
         for (uint i = 0; i < sceneCount; ++i)
         {
             auto & scene = m_scenes[typeIndex][i];
@@ -185,14 +185,14 @@ namespace vg::engine
         }
         m_scenes[typeIndex].clear();
         SetActiveScene(nullptr, _sceneType);
-        return sceneCount;
+        return (uint)sceneCount;
     }
 
     //--------------------------------------------------------------------------------------
     uint World::GetSceneCount(BaseSceneType _sceneType) const
     {
         const auto typeIndex = asInteger(_sceneType);
-        return m_scenes[typeIndex].count();
+        return (uint)m_scenes[typeIndex].size();
     }
 
     //--------------------------------------------------------------------------------------
@@ -292,7 +292,7 @@ namespace vg::engine
                         for (uint k = 0; k < componentShapes.size(); ++k)
                         {
                             const auto * bodyShape = componentShapes[k];
-                            physics::ShapeInfo & info = allSceneShapes.push_empty();
+                            physics::ShapeInfo & info = allSceneShapes.emplace_back();
                             info.m_shape = bodyShape->getPhysicsShape();
 
                             float4x4 matrix = bodyComponent->GetGameObject()->GetGlobalMatrix();

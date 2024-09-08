@@ -123,7 +123,7 @@ namespace vg::editor
 	//--------------------------------------------------------------------------------------
     Editor::~Editor()
 	{
-        for (uint i = 0; i < m_imGuiWindows.count(); ++i)
+        for (auto i = 0; i < m_imGuiWindows.size(); ++i)
             VG_SAFE_RELEASE(m_imGuiWindows[i]);
         m_imGuiWindows.clear();
 	}
@@ -193,7 +193,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     template <class T> T * Editor::getWindow(const core::string _name) const
     {
-        for (uint i = 0; i < m_imGuiWindows.count(); ++i)
+        for (auto i = 0; i < m_imGuiWindows.size(); ++i)
         {
             if (dynamic_cast<T *>(m_imGuiWindows[i]) != nullptr && (_name.empty() || m_imGuiWindows[i]->getName()._Starts_with(_name) ))
                 return (T *)(m_imGuiWindows[i]);
@@ -205,7 +205,7 @@ namespace vg::editor
     template <class T> core::vector<T *> Editor::getWindows(const core::string _name) const
     {
         core::vector<T *> windows;
-        for (uint i = 0; i < m_imGuiWindows.count(); ++i)
+        for (auto i = 0; i < m_imGuiWindows.size(); ++i)
         {
             if (dynamic_cast<T*>(m_imGuiWindows[i]) != nullptr && (_name.empty() || m_imGuiWindows[i]->getName()._Starts_with(_name)))
                 windows.push_back((T*)(m_imGuiWindows[i]));
@@ -419,7 +419,7 @@ namespace vg::editor
                             }
                         );
 
-                        for (uint i = 0; i < sortedWindows.count(); ++i)
+                        for (auto i = 0; i < sortedWindows.size(); ++i)
                         {
                             auto window = sortedWindows[i];
                             if (asBool(window->getFlags() & ImGuiWindow::Flags::AddMenuEntry))
@@ -548,7 +548,7 @@ namespace vg::editor
 
         for (auto & window : m_imGuiWindowsToDestroy)
         {
-            m_imGuiWindows.remove(window);
+            vector_helper::remove(m_imGuiWindows, window);
             VG_SAFE_RELEASE_ASYNC(window);
         }
         m_imGuiWindowsToDestroy.clear();

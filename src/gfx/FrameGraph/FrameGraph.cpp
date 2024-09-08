@@ -165,7 +165,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void FrameGraph::pushPassGroup(const core::string & _name)
     {
-        UserPassInfoNode & node = m_currentUserPass->m_children.push_empty();
+        UserPassInfoNode & node = m_currentUserPass->m_children.emplace_back();
         node.m_name = _name;
         node.m_parent = m_currentUserPass;
 

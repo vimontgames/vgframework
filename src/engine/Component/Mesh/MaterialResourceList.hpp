@@ -34,7 +34,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool MaterialResourceList::Add()
     {
-        MaterialResource & matRes = m_materialResources.push_empty();
+        MaterialResource & matRes = m_materialResources.emplace_back();
 
         // Update resource owners
         for (auto & matRes : m_materialResources)

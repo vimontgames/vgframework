@@ -165,7 +165,7 @@ namespace vg::renderer
             for (uint i = 0; i < _UFBXScene->nodes.count; i++)
             {
                 const ufbx_node * UFBXNode = _UFBXScene->nodes.data[i];
-                MeshImporterNode & node = _data.nodes.push_empty();
+                MeshImporterNode & node = _data.nodes.emplace_back();
 
                 //VG_DEBUGPRINT("Skin Node %u : %s\n", i, UFBXNode->name.data);
 
@@ -229,7 +229,7 @@ namespace vg::renderer
                     weightIndex++;
                 }
 
-                SkinVertex<MAXBONESPERVERTEX> & skinVertex = meshSkinVertices.push_empty();
+                SkinVertex<MAXBONESPERVERTEX> & skinVertex = meshSkinVertices.emplace_back();
 
                 // Normalize weights
                 if (weightTotal > 0.0f)

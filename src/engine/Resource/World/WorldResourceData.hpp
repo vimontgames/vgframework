@@ -87,11 +87,11 @@ namespace vg::engine
                 break;
 
             case core::Scene:
-                m_sceneResources.remove((SceneResource*)_sceneRes);
+                vector_helper::remove(m_sceneResources, (SceneResource*)_sceneRes);
                 break;
 
             case core::Prefab:
-                m_prefabsResources.remove((PrefabResource *)_sceneRes);
+                vector_helper::remove(m_prefabsResources, (PrefabResource *)_sceneRes);
                 break;
         }
         m_world->RemoveScene(scene, _sceneType);

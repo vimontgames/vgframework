@@ -428,7 +428,7 @@ namespace vg::core::io
 
         while (nullptr != (ent = readdir(dir)))
         {
-            FileInfo & info = files.push_empty();
+            FileInfo & info = files.emplace_back();
             info.name = ent->d_name;
             info.isFolder = (ent->d_type == DT_DIR) ? true : false;
         }

@@ -15,7 +15,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     IObject * Selection::GetSelectedObject()
     {
-        if (m_selectionArray.count() > 0)
+        if (m_selectionArray.size() > 0)
             return m_selectionArray[0];
         else
             return nullptr;
@@ -40,7 +40,7 @@ namespace vg::engine
     {
         clear();
 
-        for (uint i = 0; i < _objects.size(); ++i)
+        for (auto i = 0; i < _objects.size(); ++i)
             add(_objects[i]);
 
         updateSelectionMatrix();
@@ -124,7 +124,7 @@ namespace vg::engine
 
         setSelected(_object, false);
 
-        bool removedFromArray = m_selectionArray.remove(_object);
+        bool removedFromArray = vector_helper::remove(m_selectionArray, _object);
         bool removedFromHash = m_selectionSet.erase(_object) > 0;
 
         VG_ASSERT(removedFromArray == removedFromHash);

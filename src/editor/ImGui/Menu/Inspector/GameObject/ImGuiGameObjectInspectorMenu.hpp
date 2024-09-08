@@ -65,7 +65,7 @@ namespace vg::editor
                         }
                         if (!found)
                         {
-                            auto & newCat = m_categories.push_empty();
+                            auto & newCat = m_categories.emplace_back();
                             newCat.name = category;
                         }
                     }
@@ -93,7 +93,7 @@ namespace vg::editor
 
                             if (!strcmp(category, cat.name.c_str()))
                             {
-                                if (!cat.classes.exists(classDesc))
+                                if (!vector_helper::exists(cat.classes, classDesc))
                                     cat.classes.push_back(classDesc);
                             }
                         }
@@ -157,7 +157,7 @@ namespace vg::editor
                                         m_selectedClass = cat.classes[0];
                                 }
                             }
-                            else if (!cat.show && cat.classes.exists((IClassDesc *)m_selectedClass))
+                            else if (!cat.show && vector_helper::exists(cat.classes, (IClassDesc *)m_selectedClass))
                             {
                                 m_selectedClass = nullptr;
                             }
@@ -176,9 +176,8 @@ namespace vg::editor
                             if (!cat.show)
                                 continue;
 
-                            //ImGui::SeparatorText(cat.name.c_str());
                             auto & descriptors = cat.classes;
-                            for (uint j = 0; j < descriptors.count(); ++j)
+                            for (auto j = 0; j < descriptors.size(); ++j)
                             {
                                 auto * classDesc = descriptors[j];
                                 auto * className = classDesc->GetClassName();

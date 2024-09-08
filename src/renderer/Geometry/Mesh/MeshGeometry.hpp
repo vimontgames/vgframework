@@ -119,7 +119,7 @@ namespace vg::renderer
     {
         const core::u32 count = (core::u32)m_batches.size();
 
-        Batch & batch = m_batches.push_empty();
+        Batch & batch = m_batches.emplace_back();
         batch.setName(_name);
         batch.count = _count;
         batch.offset = _offset;

@@ -290,7 +290,7 @@ namespace vg::engine
         auto & resourcesLoaded = _async ? m_resourcesLoadedAsync : m_resourcesLoaded;
 
         // load first resource
-        if (resourcesToLoad.count() > 0)
+        if (resourcesToLoad.size() > 0)
         {
             VG_PROFILE_CPU("loading");
             IResource * res = resourcesToLoad[0];
@@ -305,7 +305,7 @@ namespace vg::engine
         }
 
         // load others next frame
-        for (uint i = 1; i < resourcesToLoad.count(); ++i)
+        for (uint i = 1; i < resourcesToLoad.size(); ++i)
             m_resourcesToLoad.push_back(resourcesToLoad[i]);
     }
 
@@ -375,7 +375,7 @@ namespace vg::engine
         if (m_resourceInfosMap.end() != it)
         {
             ResourceInfo * info = it->second;
-            VG_VERIFY(info->m_clients.remove(_resource));
+            VG_VERIFY(vector_helper::remove(info->m_clients, (IResource*)_resource));
 
             // Resource has no more owners, delete it
             if (info->m_clients.size() == 0)

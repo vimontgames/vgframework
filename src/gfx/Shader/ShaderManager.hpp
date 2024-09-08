@@ -379,7 +379,7 @@ namespace vg::gfx
             {
                 if (io::fileHasExtension(file.name, ".hlsl") || io::fileHasExtension(file.name, ".hlsli"))
                 {
-                    auto & hlslFile = _hlslFiles.push_empty();
+                    auto & hlslFile = _hlslFiles.emplace_back();
                     hlslFile.name = file.name;
                     hlslFile.folder = _subFolder;
                 }

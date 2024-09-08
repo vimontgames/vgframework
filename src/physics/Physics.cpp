@@ -248,7 +248,7 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void Physics::unregisterPhysicsWorld(PhysicsWorld * _physicsWorld)
     {
-        m_physicsWorlds.remove(_physicsWorld);
+        vector_helper::remove(m_physicsWorlds, _physicsWorld);
     }
 
     //--------------------------------------------------------------------------------------

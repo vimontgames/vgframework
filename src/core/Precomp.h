@@ -68,6 +68,7 @@ void operator delete(void * ptr, std::align_val_t _alignment) noexcept;
 void operator delete(void * ptr, std::align_val_t _alignment, const char * _file, int _line) noexcept;
 void * operator new[](std::size_t _size, const char * _file, int _line);
 void operator delete[](void * _ptr, const char * _file, int _line) noexcept;
+void operator delete[](void * _ptr) noexcept;
 
 #define VG_NEW new( __FILE__ , __LINE__ )
 #define new VG_NEW

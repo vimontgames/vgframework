@@ -127,7 +127,7 @@ namespace vg::renderer
         {
             const auto lightType = (LightType)i;
             auto & lights = culling.get(lightType);
-            if (lights.m_instances.count() > 0)
+            if (lights.m_instances.size() > 0)
             {
                 useDefaultLight = false;
                 break;

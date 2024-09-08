@@ -100,7 +100,7 @@ namespace vg::engine
     {
         VG_ASSERT(nullptr == GetDynamicPropertyList(_object));
 
-        auto *& newPropList = m_dynamicProperties.push_empty();
+        auto *& newPropList = m_dynamicProperties.emplace_back();
 
         // TODO : dedicated ctor?
         newPropList = new DynamicPropertyList(_object->getName(), nullptr);
@@ -345,7 +345,7 @@ namespace vg::engine
             if (auto * dynProp = getDynamicProperty(_object, _prop))
                 return dynProp;
            
-            auto & newDynProp = propList->m_properties.push_empty();
+            auto & newDynProp = propList->m_properties.emplace_back();
 
             switch (_prop->GetType())
             {

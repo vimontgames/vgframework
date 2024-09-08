@@ -76,7 +76,7 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
         {
             if (player->isActive())
             {
-                auto & info = activePlayersInfos.push_empty();
+                auto & info = activePlayersInfos.emplace_back();
                 info.behaviour = player;
                 info.position = player->getGameObject()->GetGlobalMatrix()[3].xyz;
                 info.distance = length(info.position - pos);

@@ -867,14 +867,14 @@ namespace vg::editor
                             {
                                 if (_objectContext.m_treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->GetParent()))
                                 {
-                                    auto & newInfo = _objectContext.m_treeNodes.push_empty();
+                                    auto & newInfo = _objectContext.m_treeNodes.emplace_back();
 
                                     newInfo.treeNodeOpen = ImGui::TreeNodeEx(ImGui::getObjectLabel(_prop->GetDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
                                     newInfo.treeNodeIsCollapsingHeader = false;
                                 }
                                 else
                                 {
-                                    auto & newInfo = _objectContext.m_treeNodes.push_empty();
+                                    auto & newInfo = _objectContext.m_treeNodes.emplace_back();
 
                                     newInfo.treeNodeOpen = ImGui::CollapsingHeader(ImGui::getObjectLabel(_prop->GetDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
                                     newInfo.treeNodeIsCollapsingHeader = true;
@@ -1423,7 +1423,7 @@ namespace vg::editor
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
                     auto * vec = _prop->GetPropertyObjectPtrVector(_object);
-                    const uint count = vec->count();
+                    const auto count = vec->size();
 
                     string treeNodeName = fmt::sprintf("%s[%u]", displayName, count);
 
