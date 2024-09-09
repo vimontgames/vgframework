@@ -4,12 +4,13 @@
 
 namespace vg::gfx
 {
-    class Texture;
+    class Texture; 
 }
 
 namespace vg::renderer
 {
     class View;
+    class ViewGUI;
 
     //--------------------------------------------------------------------------------------
     // A Viewport is a collection of views rendered together
@@ -47,14 +48,17 @@ namespace vg::renderer
        void                                     RemoveView          (core::u8 _index, gfx::ViewID _viewID) final override;
 
        const core::map<core::u8, gfx::ViewID> & GetViewIDs          () const final override;
+       gfx::IViewGUI *                          GetViewportGUI      () const final override;
+
        const core::string                       GetFrameGraphID     (const core::string & _name) const final override;
 
 
     private:
-        gfx::ViewportID                           m_viewportID;
-        gfx::ViewportFlags                        m_flags = (gfx::ViewportFlags)0x0;
-        core::uint2                               m_renderTargetSize = core::uint2(0, 0);
-        gfx::Texture *                            m_renderTarget = nullptr;
-        core::map<core::u8, gfx::ViewID>          m_viewIDs;
+        gfx::ViewportID                         m_viewportID;
+        gfx::ViewportFlags                      m_flags = (gfx::ViewportFlags)0x0;
+        core::uint2                             m_renderTargetSize = core::uint2(0, 0);
+        gfx::Texture *                          m_renderTarget = nullptr;
+        core::map<core::u8, gfx::ViewID>        m_viewIDs;
+        ViewGUI *                               m_viewportGUI = nullptr;
     };
 }

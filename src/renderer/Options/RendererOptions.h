@@ -33,6 +33,12 @@ namespace vg::renderer
         bool                    IsToolModeEnabled           () const final override { return isToolModeEnabled(); };
         bool                    IsRayTracingEnabled         () const final override { return isRayTracingEnabled(); };
 
+        gfx::VSync              GetVSync                    () const final override;
+        bool                    SetVSync                    (const gfx::VSync & _vsync) final override;
+
+        gfx::HDR                GetHDR                      () const final override;
+        bool                    SetHDR                      (const gfx::HDR & _hdr) final override;
+
         void                    OnPropertyChanged           (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
         bool				    isToolModeEnabled           () const { return m_toolMode; }
@@ -67,14 +73,13 @@ namespace vg::renderer
         void                    update                      () const;
 
     protected:
-        void                    ApplyVsync                  (const core::IProperty * _prop);
+        void                    ApplyVSync                  (const core::IProperty * _prop);
         void                    ApplyHDR                    (const core::IProperty * _prop);
 
     private:
         core::float4		    m_backgroundColor           = core::float4(0, 0, 0, 0);
         bool				    m_toolMode                  = true;
         bool                    m_aabb                      = false;
-        bool                    m_vsync                     = true;
         bool				    m_wireframe                 = false;
         bool                    m_debugUI                   = false;
         bool                    m_postProcess               = true;

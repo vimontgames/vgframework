@@ -26,7 +26,6 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 
 ## 0.32
 ### Build
-Use C\+\+20 *(previously C\+\+17)*\
 Update to Visual Studio 2022 17.11.2\
 HDR output (wip)
 
@@ -199,8 +198,10 @@ First run might take a few seconds because files are cooking.
 
 | Key			   | Description	 												
 | ---------------- | ------------------------------------------------------------- 
-| F                | Focus Selection
 | A                | Toggle snap
+| F                | Focus Selection
+| H                | Toggle HDR modes (None, HDR10, HDR16)
+| V                | Toggle VSync mode (None, 1 VBL, 2 VBL, 3 VBL, 4 VBL)
 | UP               | Move editor camera forward
 | LEFT             | Move editor camere left
 | DOWN             | Move editor camera backward

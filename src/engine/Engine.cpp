@@ -18,6 +18,7 @@
 #include "gfx/IDevice.h"
 
 #include "renderer/IRenderer.h"
+#include "renderer/IRendererOptions.h"
 
 #include "physics/IPhysics.h"
 
@@ -45,6 +46,8 @@ using namespace vg::engine;
 
 #define VG_ENGINE_VERSION_MAJOR 0
 #define VG_ENGINE_VERSION_MINOR 1
+
+#pragma optimize("", off)
 
 //--------------------------------------------------------------------------------------
 IEngine * CreateNew()
@@ -611,8 +614,10 @@ namespace vg::engine
     {
         static Timer::Tick previous = 0;
         Timer::Tick current = Timer::getTick();
-        if (previous != 0)
-            m_time.m_realDeltaTime = (float)(Timer::getEnlapsedTime(previous, current) * 0.001f); // use _dt in seconds for computations, not milliseconds
+        const float dt = previous ? (float)(Timer::getEnlapsedTime(previous, current) * 0.001f) : 0.0f;
+        m_time.m_realDeltaTime = dt;
+
+        m_time.m_fps = 1.0f / m_time.m_realDeltaTime;
 
         auto * engineOptions = GetOptions();
 
@@ -653,6 +658,20 @@ namespace vg::engine
 
         m_time.m_enlapsedTimeSinceStartReal += m_time.m_realDeltaTime;
         m_time.m_enlapsedTimeSinceStartScaled += m_time.m_scaledDeltaTime;
+
+        // Smooth values
+        m_timeInternal.m_counter++;
+        m_timeInternal.m_dtSum += m_time.m_realDeltaTime;
+        
+        if (m_timeInternal.m_dtSum > 1.0f)
+        {
+            m_time.smoothed.m_dt = (float)(m_timeInternal.m_dtSum / (float)m_timeInternal.m_counter);
+            m_timeInternal.m_dtSum = 0.0;
+
+            m_time.smoothed.m_fps = (float)1.0f / m_time.smoothed.m_dt;
+
+            m_timeInternal.m_counter = 0;
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -681,7 +700,49 @@ namespace vg::engine
 
         updateDt();
 
-        Kernel::getInput()->Update();
+        auto * input = Kernel::getInput();
+        input->Update();
+
+        if (input->IsKeyJustPressed(Key::V))
+        {
+            if (auto * renderer = GetRenderer())
+            {
+                if (auto * rendererOptions = renderer->GetOptions())
+                {
+                    auto vsync = rendererOptions->GetVSync();
+
+                    for (uint i = 1; i < (uint)enumCount<gfx::VSync>(); ++i)
+                    {
+                        gfx::VSync next = (gfx::VSync)((((uint)vsync) + i) % (uint)enumCount<gfx::VSync>());
+                        if (renderer->IsVSyncSupported(next))
+                        {
+                            rendererOptions->SetVSync(next);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else if (input->IsKeyJustPressed(Key::H))
+        {
+            if (auto * renderer = GetRenderer())
+            {
+                if (auto * rendererOptions = renderer->GetOptions())
+                {
+                    auto hdr = rendererOptions->GetHDR();
+
+                    for (uint i = 1; i < (uint)enumCount<gfx::HDR>(); ++i)
+                    {
+                        gfx::HDR next = (gfx::HDR)((((uint)hdr) + i) % (uint)enumCount<gfx::HDR>());
+                        if (renderer->IsHDRSupported(next))
+                        {
+                            rendererOptions->SetHDR(next);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
         m_resourceManager->updateLoading();
 
@@ -879,6 +940,7 @@ namespace vg::engine
 
         m_time.m_enlapsedTimeSinceStartReal = 0.0f;
         m_time.m_enlapsedTimeSinceStartScaled = 0.0f;
+        m_timeInternal.reset();
 
         // Detect joypads
         Kernel::getInput()->OnPlay();

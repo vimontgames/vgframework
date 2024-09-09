@@ -154,9 +154,28 @@ namespace vg::engine
         physics::IPhysics *                     m_physics           = nullptr;
         ResourceManager *                       m_resourceManager   = nullptr;
         Selection *                             m_selection         = nullptr;
-        Time                                    m_time;
         core::JobSync                           m_jobSync[core::enumCount<EngineJobType>()];
         core::vector<core::IWorld *>            m_worlds;
+
+        struct TimeInternal
+        {
+            TimeInternal()
+            {
+                reset();
+            }
+
+            void reset()
+            {
+                m_counter = 0;
+                m_dtSum = 0.0f;
+            }
+
+            core::uint m_counter;
+            float m_dtSum;            
+        };
+
+        Time                                    m_time;
+        TimeInternal                            m_timeInternal;
 	};
 }
 

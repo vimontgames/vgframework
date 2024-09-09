@@ -43,6 +43,13 @@ namespace vg
             float m_scaledDeltaTime = 0.0f;
             float m_enlapsedTimeSinceStartReal = 0.0f;
             float m_enlapsedTimeSinceStartScaled = 0.0f;
+            float m_fps = 0.0f;
+            
+            struct
+            {
+                float m_dt = 0.0f;
+                float m_fps = 0.0f;
+            } smoothed;
         };
 
 	    class IEngine : public core::IPlugin

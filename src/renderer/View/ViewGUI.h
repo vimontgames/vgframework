@@ -16,19 +16,22 @@ namespace vg::renderer
     class ViewGUI : public gfx::IViewGUI
     {
     public:
-        ViewGUI(gfx::IView * _view);
+        ViewGUI(gfx::IViewport * _viewport, gfx::IView * _view);
         ~ViewGUI();
 
-        void    AddCanvas           (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc) final override;
-        void    AddText             (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const core::string & _text) final override;
-        void    AddImage            (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const gfx::ITexture * _texture) final override;
+        void            AddCanvas           (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc) final override;
+        void            AddText             (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const core::string & _text) final override;
+        void            AddImage            (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const gfx::ITexture * _texture) final override;
 
-        void    RenderFullscreen    () final override;
-        void    RenderWindowed      () final override;
+        void            RenderFullscreen    () final override;
+        void            RenderWindowed      () final override;
 
     protected:
-        void    render              ();
-
+        void            render              ();
+        core::uint2     getSize             () const;
+        core::float2    getScale            () const;
+        core::float2    getOffset           () const;
+        
     private:
         struct UIElement
         {
@@ -68,14 +71,15 @@ namespace vg::renderer
                 return *this;
             }
 
-            const gfx::UICanvas *         m_canvas = nullptr;
+            const gfx::UICanvas *   m_canvas = nullptr;
             UIElementType           m_type = (UIElementType)-1;
             gfx::UIItem             m_item;            
             core::string            m_text;
             gfx::ITexture *         m_texture = nullptr;
         };
 
-        gfx::IView * m_view = nullptr;
-        core::vector<UIElement> m_uiElements;
+        gfx::IViewport *            m_viewport = nullptr;
+        gfx::IView *                m_view = nullptr;
+        core::vector<UIElement>     m_uiElements;
     };
 }

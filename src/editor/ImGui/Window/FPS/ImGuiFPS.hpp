@@ -1,6 +1,8 @@
 #include "ImguiFPS.h"
 #include "editor/Editor_Consts.h"
 
+#pragma optimize("", off)
+
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
@@ -12,18 +14,9 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiFPS::DrawGUI()
     {
+        const auto & time = Editor::get()->getEngine()->GetTime();
+
         static const uint smoothDtTime = 1; // 1.0s
-
-        m_accum += Editor::get()->getEngine()->GetTime().m_realDeltaTime;
-        m_frame++;
-
-        if (m_accum > (float)smoothDtTime)
-        {
-            m_dt = (float)(m_accum / (float)m_frame);
-            m_fps = (float)1.0f / m_dt;
-            m_accum = 0.0;
-            m_frame = 0;
-        }
 
         bool captureInProgress = VG_PROFILE_CAPTURE_IN_PROGRESS();
 
@@ -39,6 +32,9 @@ namespace vg::editor
 
             ImGui::Separator();
 
+            const auto fps = time.smoothed.m_fps;
+            const auto dt = time.smoothed.m_dt;
+
             ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
             {
                 ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
@@ -48,8 +44,8 @@ namespace vg::editor
                 }
                 ImGui::NextColumn();
                 {
-                    ImGui::Text("%.0f img/sec", m_fps);
-                    ImGui::Text("%.3f ms", m_dt * 1000.0f);                
+                    ImGui::Text("%.0f fps", fps);
+                    ImGui::Text("%.3f ms", dt * 1000.0f);                
                 }
                 ImGui::Columns(1);
 

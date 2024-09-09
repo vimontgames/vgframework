@@ -48,11 +48,14 @@
     <ClCompile Include="Component\UI\UIComponent.cpp">
       <Filter>Component\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Component\Debug\TestComponent.cpp">
-      <Filter>Component\Debug</Filter>
-    </ClCompile>
     <ClCompile Include="Component\Animation\AttachToNodeComponent.cpp">
       <Filter>Component\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Debug\TestComponent\TestComponent.cpp">
+      <Filter>Component\Debug\TestComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Debug\HUD\HUDComponent.cpp">
+      <Filter>Component\Debug\HUD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -281,9 +284,6 @@
     <ClInclude Include="Component\UI\UIImageComponent.hpp">
       <Filter>Component\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Component\Debug\TestComponent.h">
-      <Filter>Component\Debug</Filter>
-    </ClInclude>
     <ClInclude Include="Component\UI\UICanvasComponent.h">
       <Filter>Component\UI</Filter>
     </ClInclude>
@@ -315,6 +315,12 @@
     </ClInclude>
     <ClInclude Include="Resource\Texture\TextureResourceMeta.hpp">
       <Filter>Resource\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Debug\TestComponent\TestComponent.h">
+      <Filter>Component\Debug\TestComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Debug\HUD\HUDComponent.h">
+      <Filter>Component\Debug\HUD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -419,6 +425,12 @@
     </Filter>
     <Filter Include="Component\Physics\Shape">
       <UniqueIdentifier>{31ce39f0-2442-43e0-bf60-5659e8c56899}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Debug\HUD">
+      <UniqueIdentifier>{906dc735-b244-43d5-b4f8-fb167fabc9b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Debug\TestComponent">
+      <UniqueIdentifier>{236f90ce-ad64-4e16-b12c-aefafa4ac373}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -80,7 +80,7 @@ namespace vg::renderer
         const char * name = _prop.GetName();
         if (!strcmp(name, "m_VSync"))
         {
-            ApplyVsync(&_prop);
+            ApplyVSync(&_prop);
         }
         if (!strcmp(name, "m_HDRmode"))
         {
@@ -112,7 +112,35 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void RendererOptions::ApplyVsync(const core::IProperty * _prop)
+    gfx::VSync RendererOptions::GetVSync() const
+    {
+        return m_VSync;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool RendererOptions::SetVSync(const gfx::VSync & _vsync)
+    {
+        m_VSync = _vsync;
+        ApplyVSync(m_vsyncProp);
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::HDR RendererOptions::GetHDR() const
+    {
+        return m_HDRmode;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool RendererOptions::SetHDR(const gfx::HDR & _hdr)
+    {
+        m_HDRmode = _hdr;
+        ApplyHDR(m_hdrProp);
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RendererOptions::ApplyVSync(const core::IProperty * _prop)
     {
         if (nullptr != _prop)
         {

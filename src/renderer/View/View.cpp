@@ -46,7 +46,7 @@ namespace vg::renderer
 
         memset(&m_rawPickingData, 0x0, sizeof(m_rawPickingData));
 
-        m_viewGUI = new ViewGUI(this);
+        m_viewGUI = new ViewGUI(m_viewport, this);
     }
 
     //--------------------------------------------------------------------------------------

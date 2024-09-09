@@ -6,7 +6,8 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    ViewGUI::ViewGUI(gfx::IView * _view) :
+    ViewGUI::ViewGUI(gfx::IViewport * _viewport, gfx::IView * _view) :
+        m_viewport(_viewport),
         m_view(_view)
     {
     
@@ -69,6 +70,24 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    core::uint2 ViewGUI::getSize() const
+    {
+        return m_view ? m_view->GetSize() : m_viewport->GetRenderTargetSize();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float2 ViewGUI::getScale() const
+    {
+        return m_view ? m_view->GetViewportScale() : float2(1, 1);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float2 ViewGUI::getOffset() const
+    {
+        return m_view ? m_view->GetViewportOffset() : float2(0, 0);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ViewGUI::render()
     {
         sort(m_uiElements.begin(), m_uiElements.end(), [](UIElement & a, UIElement & b)
@@ -81,14 +100,18 @@ namespace vg::renderer
         const RendererOptions * options = RendererOptions::get();
         const bool debugUI = options->isDebugUIEnabled();
 
+        const uint2 size = getSize();
+        const float2 scale = getScale();
+        const float2 offset = getOffset();
+
         float2 screenSizeInPixels = ImVec2ToFloat2(ImGui::GetWindowContentRegionMax() - ImGui::GetWindowContentRegionMin());
-        float2 viewSizeInPixels = screenSizeInPixels * m_view->GetViewportScale();
-        float2 windowOffset = ImVec2ToFloat2(ImGui::GetCursorPos()) + screenSizeInPixels * m_view->GetViewportOffset();
+        float2 viewSizeInPixels = screenSizeInPixels * scale;
+        float2 windowOffset = ImVec2ToFloat2(ImGui::GetCursorPos()) + screenSizeInPixels * offset;
 
         ImVec2 clipOffset = ImGui::GetWindowPos() + ImVec2(windowOffset.x, windowOffset.y);
-        ImVec2 viewSize = ImVec2((float)m_view->GetSize().x+1.0f, (float)m_view->GetSize().y+ 1.0f);
+        ImVec2 viewClipSize = ImVec2((float)size.x+1.0f, (float)size.y+ 1.0f);
 
-        ImGui::PushClipRect(clipOffset, clipOffset + viewSize, true);
+        ImGui::PushClipRect(clipOffset, clipOffset + viewClipSize, true);
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0, 0, 0, 0));
   
         for (uint i = 0; i < m_uiElements.size(); ++i)
@@ -134,7 +157,7 @@ namespace vg::renderer
                     break;
                 
                 case HorizontalAligment::Right:
-                    offset.x += viewSizeInPixels.x * (1.0f - (float)canvas.m_size.x * 0.01f);
+                    offset.x += viewSizeInPixels.x - canvasSizeInPixel.x;
                     break;
             }
                 
@@ -153,7 +176,7 @@ namespace vg::renderer
                     break;
 
                 case VerticalAligment::Bottom:
-                    offset.y += viewSizeInPixels.y * (1.0f - (float)canvas.m_size.y * 0.01f);
+                    offset.y += viewSizeInPixels.y - canvasSizeInPixel.y;
                     break;
             }
 
@@ -234,17 +257,21 @@ namespace vg::renderer
                 {
                     if (elem.m_texture)
                     {
-                        ImGui::SetCursorPos(float2ToImVec2(elemPos.xy - elemSize * 0.5f + windowOffset));
+                        ImGui::SetCursorPos(float2ToImVec2(elemPos.xy - 0*elemSize * 0.5f + windowOffset));
                         ImTextureID texID = imGuiAdapter->GetTextureID(elem.m_texture);
 
                         ImGui::Image(texID, float2ToImVec2(elemSize), ImVec2(0, 0), ImVec2(1, 1), float4ToImVec4(elem.m_item.m_color));
 
-                        if (ImGui::IsItemHovered())
+                        // Picking on Viewport not supported yet
+                        if (m_view && m_view->IsToolmode())
                         {
-                            PickingHit hit;
-                            hit.m_id = elem.m_item.m_pickingID;
-                            hit.m_pos = float4(elemPos.xy, 0, 1);
-                            m_view->AddPickingHit(hit);
+                            if (ImGui::IsItemHovered())
+                            {
+                                PickingHit hit;
+                                hit.m_id = elem.m_item.m_pickingID;
+                                hit.m_pos = float4(elemPos.xy, 0, 1);
+                                m_view->AddPickingHit(hit);
+                            }
                         }
 
                         imGuiAdapter->ReleaseTextureID(elem.m_texture);
@@ -254,15 +281,19 @@ namespace vg::renderer
 
                 case UIElementType::Text:
                 {
-                    ImGui::SetCursorPos(float2ToImVec2(elemPos.xy + windowOffset - float2(0,elemSize.y * 0.5f)));
+                    ImGui::SetCursorPos(float2ToImVec2(elemPos.xy + windowOffset - 0*elemSize * 0.5f));
                     ImGui::TextColored(float4ToImVec4(elem.m_item.m_color), elem.m_text.c_str());
-                        
-                    if (ImGui::IsItemHovered())
+                    
+                    // Picking on Viewport not supported yet
+                    if (m_view && m_view->IsToolmode())
                     {
-                        PickingHit hit;
-                        hit.m_id = elem.m_item.m_pickingID;
-                        hit.m_pos = float4(elemPos.xy, 0, 1);
-                        m_view->AddPickingHit(hit);
+                        if (ImGui::IsItemHovered())
+                        {
+                            PickingHit hit;
+                            hit.m_id = elem.m_item.m_pickingID;
+                            hit.m_pos = float4(elemPos.xy, 0, 1);
+                            m_view->AddPickingHit(hit);
+                        }
                     }
                 }
             }
@@ -272,11 +303,11 @@ namespace vg::renderer
                 switch (elem.m_type)
                 {
                 case UIElementType::Image:
-                    ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + elemRect[0] - elemSize * 0.5f), float2ToImVec2(winOffset + elemRect[1] - elemSize * 0.5f), packRGBA8(elem.m_item.m_color * 0.5f));
+                    ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + elemRect[0] - 0*elemSize * 0.5f), float2ToImVec2(winOffset + elemRect[1] - 0*elemSize * 0.5f), packRGBA8(elem.m_item.m_color * 0.5f));
                     break;
 
                 case UIElementType::Text:
-                    ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + elemRect[0] - float2(0,elemSize.y * 0.5f)), float2ToImVec2(winOffset + elemRect[1] - float2(0, elemSize.y * 0.5f)), packRGBA8(elem.m_item.m_color*0.5f));
+                    ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + elemRect[0] - 0*float2(elemSize.x * 0.5f,elemSize.y * 0.5f)), float2ToImVec2(winOffset + elemRect[1] - 0*float2(elemSize.x * 0.5f, elemSize.y * 0.5f)), packRGBA8(elem.m_item.m_color*0.5f));
                     break;
                 }
             }

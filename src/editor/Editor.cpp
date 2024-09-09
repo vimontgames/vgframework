@@ -352,7 +352,11 @@ namespace vg::editor
                             if (auto * viewGUI = view->GetViewGUI())
                                 viewGUI->RenderFullscreen();
                         }
-                    }
+
+                        // Render viewport GUI on top of view GUIs
+                        if (auto * viewportGUI = viewport->GetViewportGUI())
+                            viewportGUI->RenderFullscreen();
+                    }                 
                 }
             }
             else

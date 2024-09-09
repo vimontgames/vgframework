@@ -58,7 +58,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IViewGUI * UIComponent::getViewGUI(const core::IWorld * _world) const
+    gfx::IViewGUI * UIComponent::getGUI(const core::IWorld * _world) const
     {
         auto * renderer = Engine::get()->GetRenderer();
         auto * canvas = getCanvas();
@@ -67,15 +67,23 @@ namespace vg::engine
         {
             if (auto * viewport = renderer->GetViewport(gfx::ViewportID(canvas->m_viewportTarget, canvas->m_viewportIndex)))
             {
-                const auto & views = viewport->GetViewIDs();
-                auto it = views.find(canvas->m_viewIndex);
-                if (views.end() != it)
+                if (canvas->m_useViewIndex)
                 {
-                    if (auto * view = renderer->GetView(it->second))
+                    const auto & views = viewport->GetViewIDs();
+                    auto it = views.find(canvas->m_viewIndex);
+                    if (views.end() != it)
                     {
-                        if (view->IsRender() && view->GetWorld() == _world)
-                            return view->GetViewGUI();
+                        if (auto * view = renderer->GetView(it->second))
+                        {
+                            if (view->IsRender() && view->GetWorld() == _world)
+                                return view->GetViewGUI();
+                        }
                     }
+                }
+                else
+                {
+                    if (auto * viewportGui = viewport->GetViewportGUI())
+                        return viewportGui;
                 }
 
                 // Prefab preview mode

@@ -31,7 +31,7 @@ namespace vg::engine
         VG_INLINE core::float4x4    getMatrix   () const; 
         VG_INLINE core::float4      getColor    () const;
 
-        gfx::IViewGUI *             getViewGUI  (const core::IWorld * _world) const;
+        gfx::IViewGUI *             getGUI      (const core::IWorld * _world) const;
         const gfx::UICanvas *       getCanvas   () const;
 
     protected:

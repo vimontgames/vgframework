@@ -564,6 +564,12 @@ namespace vg::editor
                         }
                     }
                 }
+
+                if (auto * viewportGUI = m_viewport->GetViewportGUI())
+                {
+                    ImGui::SetCursorPos(ImVec2(0, titleBarHeight + toolbarHeight));
+                    viewportGUI->RenderWindowed();
+                }
             }
 
             // Draw Border

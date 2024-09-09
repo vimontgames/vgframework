@@ -2,6 +2,7 @@
 #include "Viewport.h"
 #include "renderer/View/View.h"
 #include "renderer/Renderer.h"
+#include "renderer/View/ViewGUI.h"
 #include "gfx/FrameGraph/FrameGraph.h"
 
 using namespace vg::core;
@@ -19,11 +20,14 @@ namespace vg::renderer
             VG_SAFE_INCREASE_REFCOUNT(_params.dest);
             m_renderTarget = (gfx::Texture *)_params.dest;
         }
+
+        m_viewportGUI = new ViewGUI(this, nullptr);
     }
 
     //--------------------------------------------------------------------------------------
     Viewport::~Viewport()
     {
+        VG_SAFE_DELETE(m_viewportGUI);
         m_viewIDs.clear();
         VG_SAFE_RELEASE(m_renderTarget);
     }
@@ -174,6 +178,12 @@ namespace vg::renderer
     const core::map<gfx::ViewIndex, gfx::ViewID> & Viewport::GetViewIDs() const
     {
         return m_viewIDs;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::IViewGUI * Viewport::GetViewportGUI() const
+    {
+        return VG_SAFE_STATIC_CAST(gfx::IViewGUI, m_viewportGUI);
     }
 
     //--------------------------------------------------------------------------------------

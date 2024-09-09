@@ -60,9 +60,10 @@ namespace vg::gfx
         UICanvas()
         {
         }
-
+        
         ViewportTarget          m_viewportTarget    = ViewportTarget::Game;
         ViewportIndex           m_viewportIndex     = (ViewportIndex)0;
+        bool                    m_useViewIndex      = true;
         core::u8                m_viewIndex         = 0;
         core::uint2             m_resolution        = core::uint2(1280, 720);
     };

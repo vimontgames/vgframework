@@ -18,9 +18,16 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerPropertyEnumEx(UICanvasComponent, gfx::ViewportTarget, m_canvas.m_viewportTarget, "Target", PropertyFlags::ReadOnly);
+        setPropertyDescription(UICanvasComponent, m_canvas.m_viewportTarget, "Target viewport type");
+
         registerPropertyEx(UICanvasComponent, m_canvas.m_viewportIndex, "Viewport", PropertyFlags::ReadOnly);
-        registerProperty(UICanvasComponent, m_canvas.m_viewIndex, "View");
+        setPropertyDescription(UICanvasComponent, m_canvas.m_viewportIndex, "Target viewport index");
+
+        registerOptionalProperty(UICanvasComponent, m_canvas.m_useViewIndex, m_canvas.m_viewIndex, "View");
+        setPropertyDescription(UICanvasComponent, m_canvas.m_viewIndex, "Render UI to a specific view. Full viewport is used if not specified");
+
         registerProperty(UICanvasComponent, m_canvas.m_resolution, "Resolution");
+        setPropertyDescription(UICanvasComponent, m_canvas.m_resolution, "Reference resolution of UI elements");
 
         return true;
     }
@@ -51,7 +58,7 @@ namespace vg::engine
 
         m_canvas.m_resolution = m_canvas.m_resolution;
 
-        if (auto * gui = getViewGUI(_context.m_world))
+        if (auto * gui = getGUI(_context.m_world))
         {
             auto desc = gfx::UIItem(m_pickingID, getMatrix(), m_size, m_horizontal, m_vertical, getColor(), m_UIFlags);
             gui->AddCanvas(&m_canvas, desc);
