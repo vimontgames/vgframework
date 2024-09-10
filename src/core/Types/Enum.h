@@ -60,7 +60,7 @@ namespace vg
         //--------------------------------------------------------------------------------------
         template <typename E> inline constexpr bool asBool(E e)
         {
-            return 0 != asInteger(e); 
+            return 0 != static_cast<std::underlying_type_t<E>>(e);
         }
        
         //--------------------------------------------------------------------------------------

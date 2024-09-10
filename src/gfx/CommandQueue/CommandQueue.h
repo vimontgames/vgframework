@@ -5,6 +5,9 @@
 
 namespace vg::gfx
 {
+    constexpr core::uint TimestampQueryMaxCountPerFrame = 16;
+	using TimestampQueryIndex = core::u16;
+
 	namespace base
 	{
 		class CommandQueue : public core::Object

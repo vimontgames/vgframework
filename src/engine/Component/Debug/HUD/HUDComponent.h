@@ -17,6 +17,7 @@ namespace vg::engine
 
     protected:
         vg::core::ObjectHandle  m_fpsText;
-        
+        vg::core::ObjectHandle  m_cpuText;
+        vg::core::ObjectHandle  m_gpuText;        
     };
 }

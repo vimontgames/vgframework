@@ -650,6 +650,33 @@
     <ClInclude Include="Device\DXGIHelper.hpp">
       <Filter>Device</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_capi.cpp">
+      <Filter>Profiler\Optick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_core.cpp">
+      <Filter>Profiler\Optick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_gpu.cpp">
+      <Filter>Profiler\Optick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_message.cpp">
+      <Filter>Profiler\Optick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_miniz.cpp">
+      <Filter>Profiler\Optick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_serialization.cpp">
+      <Filter>Profiler\Optick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_server.cpp">
+      <Filter>Profiler\Optick</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_gpu.vulkan.cpp">
+      <Filter>Profiler\Optick\vulkan</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_gpu.d3d12.cpp">
+      <Filter>Profiler\Optick\dx12</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -798,6 +825,15 @@
     </Filter>
     <Filter Include="RayTracing\vulkan">
       <UniqueIdentifier>{5a1fc7c6-4638-4c15-8f06-b45b5d5c97d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profiler\Optick">
+      <UniqueIdentifier>{2fc822af-baf7-461f-b170-d3846cb8adac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profiler\Optick\dx12">
+      <UniqueIdentifier>{fe9715df-6727-422a-98be-f75735f1d945}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profiler\Optick\vulkan">
+      <UniqueIdentifier>{ac543bdd-832a-46ae-aed4-99b045fbc853}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

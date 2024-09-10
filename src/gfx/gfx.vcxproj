@@ -27,6 +27,119 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\extern\optick\src\optick_capi.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_DX12|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_core.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_DX12|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_gpu.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_DX12|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_gpu.vulkan.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_DX12|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_message.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_DX12|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_miniz.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_DX12|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_serialization.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_DX12|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_server.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">
+      </ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Final_DX12|x64'">
+      </ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\extern\optick\src\optick_gpu.d3d12.cpp" />
     <ClCompile Include="BindlessTable\BindlessTable.cpp" />
     <ClCompile Include="CommandList\CommandList.cpp" />
     <ClCompile Include="CommandPool\CommandPool.cpp" />

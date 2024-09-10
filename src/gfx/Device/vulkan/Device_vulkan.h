@@ -42,10 +42,11 @@ namespace vg::gfx::vulkan
         void                            applyHDR							(HDR _mode);
         void							applyColorSpace						(ColorSpace _mode);
 
-		VkInstance &					getVulkanInstance					();
-		VkDevice &						getVulkanDevice						();
-		VkPhysicalDevice &				getVulkanPhysicalDevice				();
-        VmaAllocator &                  getVulkanMemoryAllocator			();
+		VG_INLINE VkInstance &			getVulkanInstance						();
+		VG_INLINE VkDevice &			getVulkanDevice							();
+		VG_INLINE VkPhysicalDevice &	getVulkanPhysicalDevice					();
+		VG_INLINE VkPhysicalDeviceProperties & getVulkanPhysicalDeviceProperties();
+        VmaAllocator &					getVulkanMemoryAllocator				();
 
 		bool							onDebugMessage						(VkDebugUtilsMessageSeverityFlagBitsEXT _severity, VkDebugUtilsMessageTypeFlagsEXT _flags, const VkDebugUtilsMessengerCallbackDataEXT * _data);
 

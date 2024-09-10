@@ -1181,8 +1181,8 @@ namespace vg::gfx::vulkan
 		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageBufferUpdateAfterBind, true);
 		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUniformTexelBufferUpdateAfterBind, true);
 		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageTexelBufferUpdateAfterBind, true);
-
 		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, bufferDeviceAddress, true);
+		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, hostQueryReset, true);
 
 		if (m_caps.rayTracing)
 		{
@@ -1331,28 +1331,10 @@ namespace vg::gfx::vulkan
 		base::Device::deinit();
 	}
 
-	//--------------------------------------------------------------------------------------
-	VkInstance & Device::getVulkanInstance()
-	{
-		return m_vkInstance;
-	}
-
-	//--------------------------------------------------------------------------------------
-	VkDevice & Device::getVulkanDevice()
-	{
-		return m_vkDevice;
-	}
-
-	//--------------------------------------------------------------------------------------
-	VkPhysicalDevice & Device::getVulkanPhysicalDevice()
-	{
-		return m_vkPhysicalDevice;
-	}
-
     //--------------------------------------------------------------------------------------
-    VmaAllocator & Device::getVulkanMemoryAllocator() 
-    { 
-        return m_memoryAllocator->getVulkanMemoryAllocator(); 
+    VmaAllocator & Device::getVulkanMemoryAllocator()
+    {
+        return m_memoryAllocator->getVulkanMemoryAllocator();
     }
 
     //--------------------------------------------------------------------------------------
@@ -1368,11 +1350,11 @@ namespace vg::gfx::vulkan
 	{
 		super::beginFrame();
 
-        VkDevice & vkDevice = getVulkanDevice();
+		VkDevice & vkDevice = getVulkanDevice();
 
-        // Get/Increment the frame ring-buffer index
-        UINT FrameIndex = m_nextFrameIndex;
-        m_nextFrameIndex = (m_nextFrameIndex + 1) % (UINT)max_frame_latency;
+		// Get/Increment the frame ring-buffer index
+		UINT FrameIndex = m_nextFrameIndex;
+		m_nextFrameIndex = (m_nextFrameIndex + 1) % (UINT)max_frame_latency;
 
 		u32 currentBuffer;
 
@@ -1382,9 +1364,9 @@ namespace vg::gfx::vulkan
 			// Ensure no more than max_frame_latency renderings are outstanding
 			//if (m_frameCounter >= max_frame_latency)
 			{
-				#if VG_DBG_CPUGPUSYNC
+#if VG_DBG_CPUGPUSYNC
 				VG_DEBUGPRINT("Wait completion of frame %u (fence[%u])\n", m_frameCounter - max_frame_latency, FrameIndex);
-				#endif
+#endif
 
 				VG_PROFILE_GPU_SWAP(this);
 				vkWaitForFences(vkDevice, 1, &m_vkFences[FrameIndex], VK_TRUE, UINT64_MAX);
@@ -1395,16 +1377,31 @@ namespace vg::gfx::vulkan
 			VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, m_vkImageAcquiredSemaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer));
 		}
 
-        m_currentBackbufferIndex = currentBuffer;
+		m_currentBackbufferIndex = currentBuffer;
 
-        auto & context = getCurrentFrameContext();
+		auto & context = getCurrentFrameContext();
 
-        for (auto & cmdPool : context.commandPools)
-            cmdPool->beginFrame();
+		for (auto & cmdPool : context.commandPools)
+			cmdPool->beginFrame();
 
-        for (uint type = 0; type < enumCount<CommandListType>(); ++type)
-            for (auto & cmdList : context.commandLists[type])
-                cmdList->reset();
+		for (uint q = 0; q < enumCount<CommandListType>(); ++q)
+		{
+            const auto cmdQueueType = (CommandQueueType)q;
+            auto * queue = getCommandQueue(cmdQueueType);
+            const auto & queueCmdLists = context.commandLists[q];
+
+			if (queueCmdLists.size() > 0)
+			{
+				for (uint c = 0; c < queueCmdLists.size(); ++c)
+				{
+					auto * cmdList = queueCmdLists[c];
+					cmdList->reset();
+
+                    if (c == 0)
+                        queue->beginFrame(cmdList);
+				}
+			}
+		}
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -1417,12 +1414,17 @@ namespace vg::gfx::vulkan
         {
             const auto cmdQueueType = (CommandQueueType)q;
             auto * queue = getCommandQueue(cmdQueueType);
-
             const auto & queueCmdLists = context.commandLists[q];
+
             vector<VkCommandBuffer> cmdBuffersToExecute;
+
             for (uint c = 0; c < queueCmdLists.size(); ++c)
             {
                 auto * cmdList = queueCmdLists[c];
+
+                if (c + 1 == queueCmdLists.size())
+                    queue->endFrame(cmdList);
+
                 cmdList->close();
                 VkCommandBuffer & vkCmdBuffer = cmdList->getVulkanCommandBuffer();
                 cmdBuffersToExecute.push_back(vkCmdBuffer);

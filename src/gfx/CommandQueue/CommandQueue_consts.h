@@ -5,4 +5,6 @@
 namespace vg::gfx
 {
 	using CommandQueueType = CommandListType;
+
+	constexpr core::uint MaxQueriesCount = 3 * 2;
 }

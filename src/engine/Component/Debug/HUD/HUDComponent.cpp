@@ -18,7 +18,9 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerProperty(HUDComponent, m_fpsText, "FPS text");
+        registerProperty(HUDComponent, m_fpsText, "FPS");
+        registerProperty(HUDComponent, m_cpuText, "CPU");
+        registerProperty(HUDComponent, m_gpuText, "GPU");
 
         return true;
     }
@@ -39,14 +41,17 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void HUDComponent::Update(const Context & _context)
     {
-        if (auto * gameobject = m_fpsText.get<IGameObject>())
+        if (_context.m_playing)
         {
-            if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
+            if (auto * gameobject = m_fpsText.get<IGameObject>())
             {
-                const auto time = Engine::get()->getTime();
-                const auto fps = time.smoothed.m_fps;
+                if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
+                {
+                    const auto time = Engine::get()->getTime();
+                    const auto fps = time.smoothed.m_fps;
 
-                uiTextComponent->SetText(fmt::sprintf("%.0f FPS", fps));
+                    uiTextComponent->SetText(fmt::sprintf("%.0f FPS", fps));
+                }
             }
         }
     }

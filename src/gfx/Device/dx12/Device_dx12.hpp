@@ -553,9 +553,22 @@ namespace vg::gfx::dx12
 		for (auto & cmdPool : context.commandPools)
 			cmdPool->beginFrame();
 
-		for (uint type = 0; type < enumCount<CommandListType>(); ++type)
-			for (auto & cmdList : context.commandLists[type])
-				cmdList->reset();
+        
+        for (uint type = 0; type < enumCount<CommandListType>(); ++type)
+        {
+            // First cmdList will perform a Tiemstamp query
+            const auto cmdQueueType = (CommandQueueType)type;
+
+            if (context.commandLists[type].size() > 0)
+            {
+                for (auto & cmdList : context.commandLists[type])
+                    cmdList->reset();
+
+                auto & cmdList = context.commandLists[type][0];
+                auto * queue = getCommandQueue(cmdQueueType);
+                queue->beginFrame(cmdList);
+            }
+        }
 
 		auto * commandList = context.commandLists[asInteger(CommandListType::Graphics)][0]->getd3d12GraphicsCommandList();
 
@@ -606,6 +619,12 @@ namespace vg::gfx::dx12
                     barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
                     d3d12cmdList->ResourceBarrier(1, &barrier);
+                }
+
+                if (c + 1 == queueCmdLists.size())
+                {
+                    auto cmdList = queueCmdLists[c];
+                    queue->endFrame(cmdList);
                 }
 
                 d3d12cmdList->Close();
