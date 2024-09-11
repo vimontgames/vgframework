@@ -1,6 +1,8 @@
 # vgframework
 Yes, yet another work-in-progress game and graphic engine project :)
 
+![Screenshot](doc/img/v32.gif)
+
 [build](#build)\
 [description](#description)\
 [changelog](#changelog)\

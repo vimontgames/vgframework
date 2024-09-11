@@ -3,41 +3,31 @@
 ## 0.32
 ### Build
 Update to Visual Studio 2022 17.11.2\
-HDR output (wip)
+HDR output (WIP)\
+FPS and CPU/GPU frame timings displayed in HUD and editor
+Fix UI in FINAL fullscreen mode
 
 ## 0.31
 
-### Editor
 Fix Float4 color edit without alpha\
 Optimize selection \
-Better UI for DynamicProperty debug
-
-### Physics
+Better UI for DynamicProperty debug\
 Merge static colliders at init\
-Fix RigidCharacter initial matrix
-
-### Render
+Fix RigidCharacter initial matrix\
 Control views using Camera component\
 Viewport stats\
 Split-screen\
 Per-view UI\
-Fix wireframe
-
-### Misc
+Fix wireframe\
 Add **Final** target
 
 ## 0.30 
 
-### Physics
 Split "Rigid Body" component into separate "Body" and "Shape" components\
 Physics shapes now support rotation\
-Added 2 new shapes: TaperedCapsule and Cylinder
-
-### Animation
+Added 2 new shapes: TaperedCapsule and Cylinder\
 AttachToNode component to link object matrix to animation node\
-Reset animation state when engine stops
-
-### Misc
+Reset animation state when engine stops\
 MaxDT and moved timing settings to engine options\
 Expose CullMode in materials
 
