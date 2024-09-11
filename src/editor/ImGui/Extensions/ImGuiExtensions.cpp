@@ -10,6 +10,7 @@
 
 using namespace vg::core;
 using namespace vg::editor;
+using namespace vg::renderer;
 
 namespace ImGui
 {
@@ -406,38 +407,25 @@ namespace ImGui
         return false;
     }
 
-    static Font g_font = ImGui::Font::UbuntuMono;
-    static Style g_style = ImGui::Style::Regular;
-
+   
     //--------------------------------------------------------------------------------------
-    void PushFont(ImGui::Font _font)
+    void PushFont(Font _font)
     {
-        g_font = _font;
-
-        auto renderer = Editor::get()->getRenderer();
-        auto * imGuiAdapter = renderer->GetImGuiAdapter();
-        PushFont(imGuiAdapter->GetFont(g_font, g_style));
+        auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+        imGuiAdapter->PushFont(_font);
     }
 
     //--------------------------------------------------------------------------------------
-    //void PopFont()
-    //{
-    //
-    //}
-
-    //--------------------------------------------------------------------------------------
-    void PushStyle(ImGui::Style _style)
+    void PushStyle(Style _style)
     {
-        g_style = _style;
-
-        auto renderer = Editor::get()->getRenderer();
-        auto * imGuiAdapter = renderer->GetImGuiAdapter();
-        PushFont(imGuiAdapter->GetFont(g_font, g_style));
+        auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+        imGuiAdapter->PushStyle(_style);
     }
 
     //--------------------------------------------------------------------------------------
     void PopStyle()
     {
-        PopFont();
+        auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+        imGuiAdapter->PopStyle();
     }
 }

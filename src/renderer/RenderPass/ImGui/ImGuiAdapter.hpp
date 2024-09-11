@@ -19,23 +19,35 @@ namespace vg::renderer
     static uint max_imguitex_displayed_per_frame = 64;
 
     //--------------------------------------------------------------------------------------
-    string getFontPath(ImGui::Font _font, ImGui::Style _style)
+    string getFontPath(Font _font, Style _style)
     {
         switch (_font)
         {
-            case ImGui::Font::UbuntuMono:
+            case Font::UbuntuMono:
             {
                 switch (_style)
                 {
-                    case ImGui::Style::Regular:
+                    case Style::Regular:
                         return "ubuntu/UbuntuMono-R.ttf";
-                    case ImGui::Style::Bold:
+                    case Style::Bold:
                         return "ubuntu/UbuntuMono-B.ttf";
-                    case ImGui::Style::Italic:
+                    case Style::Italic:
                         return "ubuntu/UbuntuMono-RI.ttf";
                 };
             }
             break;
+
+            //case Font::Awesome:
+            //    switch (_style)
+            //    {
+            //        case Style::Regular:
+            //            return "Font-Awesome-6.x/fa-regular-400.ttf";
+            //        case Style::Bold:
+            //            return "Font-Awesome-6.x/fa-regular-400.ttf";
+            //        case Style::Italic:
+            //            return "Font-Awesome-6.x/fa-regular-400.ttf";
+            //    };
+            //break;
         }
 
         VG_ASSERT(false, "[ImGui] Could not get font %s - %s", asString(_font).c_str(), asString(_style).c_str());
@@ -55,13 +67,13 @@ namespace vg::renderer
         io.ConfigDockingTransparentPayload = true;
         //io.ConfigDragClickToInputText = true;
 
-        for (uint j = 0; j < enumCount<ImGui::Font>(); ++j)
+        for (uint j = 0; j < enumCount<Font>(); ++j)
         {
-            const auto font = (ImGui::Font)j;
+            const auto font = (Font)j;
 
-            for (uint i = 0; i < enumCount<ImGui::Style>(); ++i)
+            for (uint i = 0; i < enumCount<Style>(); ++i)
             {
-                const auto style = (ImGui::Style)i;
+                const auto style = (Style)i;
 
                 auto fontPath = getFontPath(font, style);
 
@@ -71,7 +83,7 @@ namespace vg::renderer
 
                     io.Fonts->AddFontFromFileTTF(fontPath.c_str(), editor::style::font::Height);
 
-                    float baseFontSize = editor::style::font::Height; // 13.0f is the size of the default font. Change to the font size you use.
+                    float baseFontSize = editor::style::font::Height;
                     float iconFontSize = baseFontSize;// *2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
 
                     // merge in icons from Font Awesome
@@ -487,13 +499,42 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    ImFont * ImGuiAdapter::GetFont(ImGui::Font _font, ImGui::Style _style) const
+    ImFont * ImGuiAdapter::GetFont(Font _font, Style _style) const
     {
         return m_imGuiFont[asInteger(_font)][asInteger(_style)];
     }
 
+    static Font g_font = Font::UbuntuMono;
+    static Style g_style = Style::Regular;
+
     //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::SetGUITheme(ImGui::Theme _theme)
+    void ImGuiAdapter::PushFont(vg::renderer::Font _font)
+    {
+        g_font = _font;
+        ImGui::PushFont(GetFont(g_font, g_style));
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::PopFont()
+    {
+        ImGui::PopFont();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::PushStyle(vg::renderer::Style _style)
+    {
+        g_style = _style;
+        ImGui::PushFont(GetFont(g_font, g_style));
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::PopStyle()
+    {
+        ImGui::PopFont();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::SetGUITheme(Theme _theme)
     {
         resetGUITheme();
 
@@ -503,23 +544,23 @@ namespace vg::renderer
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(_theme);
                 break;
 
-            case ImGui::Theme::ImGui_Classic:
+            case Theme::ImGui_Classic:
                 setGUITheme_ImGui_Classic();
                 break;
 
-            case ImGui::Theme::ImGui_Dark:
+            case Theme::ImGui_Dark:
                 setGUITheme_ImGui_Dark();
                 break;
 
-            case ImGui::Theme::ImGui_Light:
+            case Theme::ImGui_Light:
                 setGUITheme_ImGui_Light();
                 break;
 
-            case ImGui::Theme::VimontGames_Grey:
+            case Theme::VimontGames_Grey:
                 setGUIThemeVimontGames_Grey();
                 break;
 
-            case ImGui::Theme::VimontGames_Dark:
+            case Theme::VimontGames_Dark:
                 setGUIThemeVimontGames_Dark();
                 break;
         }

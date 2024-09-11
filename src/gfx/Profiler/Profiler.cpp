@@ -87,6 +87,8 @@ namespace vg::gfx
     void Profiler::start()
     {
         VG_INFO("[Profiler] Start capture");
+        auto * device = Device::get();
+        device->beginCapture();
         m_isCaptureInProgress = true;
         OPTICK_START_CAPTURE();
     }
@@ -113,6 +115,8 @@ namespace vg::gfx
         VG_INFO("[Profiler] Opening capture \"%s\"", filename.c_str());
         string command = fmt::sprintf("start %s", filename.c_str());
         system(command.c_str());
+        auto * device = Device::get();
+        device->endCapture();
     }
 
     //--------------------------------------------------------------------------------------

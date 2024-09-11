@@ -932,7 +932,7 @@ namespace vg::gfx
 		CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[0]; 
 
         VG_PROFILE_GPU_CONTEXT(cmdList);
-        VG_PROFILE_GPU("render");
+        VG_PROFILE_GPU("Render");
 
         // Split events by view
         auto profiler = core::Kernel::getProfiler();

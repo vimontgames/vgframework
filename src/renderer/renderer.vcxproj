@@ -82,6 +82,7 @@
     <ClInclude Include="Geometry\Vertex\VertexFormat.h" />
     <ClInclude Include="IDebugDraw.h" />
     <ClInclude Include="ILightInstance.h" />
+    <ClInclude Include="ImGui_consts.h" />
     <ClInclude Include="Instance\Light\Directional\DirectionalLightInstance.h" />
     <ClInclude Include="Instance\Light\Directional\DirectionalLightInstance.hpp" />
     <ClInclude Include="Instance\Light\LightInstance.h" />
@@ -140,6 +141,8 @@
     <ClInclude Include="RenderPass\Compute\ComputePostProcess\ComputePostProcessPass.hpp" />
     <ClInclude Include="RenderPass\Compute\ComputeSkinning\ComputeSkinningPass.h" />
     <ClInclude Include="RenderPass\Compute\ComputeSkinning\ComputeSkinningPass.hpp" />
+    <ClInclude Include="RenderPass\ImGui\Extensions\FontStyle\ImGuiFontStyleExtension.h" />
+    <ClInclude Include="RenderPass\ImGui\Extensions\FontStyle\ImGuiFontStyleExtension.hpp" />
     <ClInclude Include="RenderPass\ImGui\ImGui.h" />
     <ClInclude Include="RenderPass\ImGui\ImGui.hpp" />
     <ClInclude Include="RenderPass\ImGui\imguiAdapter.h" />

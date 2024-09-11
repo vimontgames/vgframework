@@ -118,12 +118,14 @@ namespace vg::renderer
         bool                                    IsVSyncSupported            (gfx::VSync _mode) const final override;
         bool                                    IsHDRSupported              (gfx::HDR _mode) const final override;
 
+        core::JobSync *                         GetJobSync                  (RendererJobType _jobSync) final override { return &m_jobSync[core::asInteger(_jobSync)]; }
+        double                                  GetGpuFrameTime             () const final override;
+        double                                  GetGpuWaitTime              () const  final override;
+
     public: // internal
         gfx::Texture *                          getBackbuffer               () const;
         ImGuiAdapter *                          getImGuiAdapter             () const { return m_imgui; }
         SharedCullingJobOutput *                getSharedCullingJobOutput   () const { return m_sharedCullingJobOutput; }
-
-        core::JobSync *                         GetJobSync                  (RendererJobType _jobSync) final override { return &m_jobSync[core::asInteger(_jobSync)]; }
 
     private:
         void                                    registerShaders             ();

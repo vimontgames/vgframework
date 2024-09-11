@@ -37,6 +37,9 @@ namespace vg::gfx::dx12
 
             bool							updateHDR					();
 
+            void							beginCapture				();
+			void							endCapture					();
+
 		protected:
 			void							init						(const DeviceParams & _params);
 			void							deinit						();
@@ -45,6 +48,8 @@ namespace vg::gfx::dx12
 
 			void							beginFrame					();
 			void							endFrame					();
+
+			void							setupd3d12DebugInfoQueue	(bool _enable = true);
 
 		private:
 			D3D12DXGISwapChain *			created3d12SwapChain		(HWND _winHandle, core::uint _width, core::uint _height);

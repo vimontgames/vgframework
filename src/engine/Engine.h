@@ -167,11 +167,15 @@ namespace vg::engine
             void reset()
             {
                 m_counter = 0;
-                m_dtSum = 0.0f;
+                m_dtSum = 0;
+                m_gpuSum = 0;
+                m_gpuWaitSum = 0;
             }
 
             core::uint m_counter;
-            float m_dtSum;            
+            float m_dtSum;  
+            float m_gpuSum;
+            float m_gpuWaitSum;
         };
 
         Time                                    m_time;

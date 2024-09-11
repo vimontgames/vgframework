@@ -14,7 +14,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    Timer::Tick Timer::getTick()
+    Ticks Timer::getTick()
     {
         LARGE_INTEGER li;
         QueryPerformanceCounter(&li);
@@ -22,7 +22,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    double Timer::getEnlapsedTime(Timer::Tick _start, Timer::Tick _end)
+    double Timer::getEnlapsedTime(Ticks _start, Ticks _end)
     {
         VG_ASSERT(s_freq > 0.0);
         return double(_end - _start) / s_freq;

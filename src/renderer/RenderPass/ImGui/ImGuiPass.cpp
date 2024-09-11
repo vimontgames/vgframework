@@ -2,6 +2,7 @@
 #include "ImGui.h"
 #include "ImGuiPass.h"
 #include "gfx/Device/Device.h"
+#include "gfx/IViewGUI.h"
 #include "renderer/Renderer.h"
 #include "renderer/Geometry/Batch/Batch.h"
 #include "imguiAdapter.h"
@@ -13,7 +14,7 @@
 #include "core/IWorld.h"
 #include "core/IBaseScene.h"
 #include "core/IGameObject.h"
-#include "corE/IComponent.h"
+#include "core/IComponent.h"
 #include "core/File/File.h"
 #include "editor/IEditor.h"
 
@@ -96,6 +97,18 @@ namespace vg::renderer
             guiContext.filedialog = ImGuiFileDialog::Instance();
 
             editor->DrawGUI(guiContext);
+        }
+        #else
+        // When no editor, render game UI directly to final target
+        if (Renderer::get()->IsFullscreen())
+        {
+            auto * renderer = Renderer::get();
+            auto & gameViewports = renderer->GetViewports(gfx::ViewportTarget::Game);
+            for (auto & gameViewport : gameViewports)
+            {
+                if (auto * viewportGUI = gameViewport->GetViewportGUI())
+                    viewportGUI->RenderFullscreen();
+            }
         }
         #endif
 

@@ -12,6 +12,11 @@
 
 //#define VG_DBG_CPUGPUSYNC 1
 
+namespace vg::core
+{
+    using Ticks = i64;
+}
+
 namespace vg::gfx
 {
 	class Device;
@@ -92,6 +97,17 @@ namespace vg::gfx
             PixelFormat                                     getHDRBackbufferFormat      (HDR _mode) const;
             ColorSpace                                      getHDRColorSpace            (HDR _mode) const;
 
+            VG_INLINE double                                getGpuFrameTime             () const;
+            void                                            setGpuFrameTime             (double _gpuFrameTime);
+
+            VG_INLINE double                                getGpuWaitTime              () const;
+
+            void							                beginCapture                ();
+            void							                endCapture                  ();
+
+            void                                            beginWaitGPU                ();
+            void                                            endWaitGPU                  ();
+
 		protected:
             DeviceCaps                                      m_caps;
 			gfx::CommandQueue*				                m_commandQueue[core::enumCount<CommandQueueType>()];
@@ -114,6 +130,10 @@ namespace vg::gfx
             core::u8                                        m_currentFrameIndex;        // current frame being rendered
             core::u8                                        m_nextFrameIndex;
             core::u8                                        m_currentBackbufferIndex;   // current backbuffer being used
+            double                                          m_gpuFrameTime = 0;
+            core::Ticks                                      m_beginWaitGPUTicks = 0;
+            double                                          m_gpuWaitTime = 0;
+            bool                                            m_captureInProgress = false;
 		};
 	}
 }
@@ -164,3 +184,7 @@ namespace vg::gfx
         TextureImporter *   m_textureImporter = nullptr;
 	};
 }
+
+#if VG_ENABLE_INLINE
+#include "Device.inl"
+#endif

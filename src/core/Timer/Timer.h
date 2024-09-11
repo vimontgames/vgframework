@@ -2,15 +2,15 @@
 
 namespace vg::core
 {
+    using Ticks = i64;
+
     class Timer
     {
     public:
-        using Tick = i64;
-
         static void init();
 
-        static Tick getTick();
-        static double getEnlapsedTime(Tick _start, Tick _end);
+        static Ticks getTick();
+        static double getEnlapsedTime(Ticks _start, Ticks _end);
         static double getCPUFrequency() { return s_freq; }
         
     private:

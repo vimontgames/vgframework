@@ -88,7 +88,7 @@ namespace vg::editor
 
         if (ImGui::BeginPopupContextItem("ImGuiPrefabViewTitlebarMenu"))
         {
-            ImGui::PushStyle(Style::Bold);
+            ImGui::PushStyle(renderer::Style::Bold);
             ImGui::Text(fmt::sprintf("Prefab", style::icon::Prefab).c_str());
             ImGui::PopStyle();
             ImGui::Spacing();

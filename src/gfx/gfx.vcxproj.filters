@@ -864,5 +864,8 @@
     <None Include="Device\vulkan\Device_vulkan.inl">
       <Filter>Device\vulkan</Filter>
     </None>
+    <None Include="Device\Device.inl">
+      <Filter>Device</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -125,6 +125,9 @@ namespace vg
             virtual bool                                IsVSyncSupported        (gfx::VSync _mode) const = 0;
 
             virtual core::JobSync *                     GetJobSync              (RendererJobType _jobSync) = 0;
+
+            virtual double                              GetGpuFrameTime         () const = 0;
+            virtual double                              GetGpuWaitTime          () const = 0;
         };
     }
 }

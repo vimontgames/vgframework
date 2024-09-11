@@ -6,9 +6,6 @@
     <ClCompile Include="ImGui\Window\ImGuiWindow.cpp">
       <Filter>ImGui\Window</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\Extensions\ImGuiExtensions.cpp">
-      <Filter>ImGui\Extensions</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\Menu\ImGuiMenu.cpp">
       <Filter>ImGui\Menu</Filter>
     </ClCompile>
@@ -36,6 +33,9 @@
     <ClCompile Include="ImGui\Extensions\FileDialog\ImGuiFileDialog.cpp">
       <Filter>ImGui\Extensions\FileDialog</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\Extensions\ImGuiExtensions.cpp">
+      <Filter>ImGui\Extensions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -50,9 +50,6 @@
     </ClInclude>
     <ClInclude Include="ImGui\Window\About\ImGuiAbout.hpp">
       <Filter>ImGui\Window\About</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\Extensions\imGuiExtensions.h">
-      <Filter>ImGui\Extensions</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\Window\FPS\ImGuiFPS.h">
       <Filter>ImGui\Window\FPS</Filter>
@@ -279,6 +276,9 @@
     </ClInclude>
     <ClInclude Include="ImGui\Window\Console\ImGuiConsoleOptions.h">
       <Filter>ImGui\Window\Console</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Extensions\imGuiExtensions.h">
+      <Filter>ImGui\Extensions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

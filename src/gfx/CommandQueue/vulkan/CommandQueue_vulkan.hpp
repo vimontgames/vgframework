@@ -41,15 +41,20 @@ namespace vg::gfx::vulkan
 	{
 		vkCmdWriteTimestamp(_cmdList->getVulkanCommandBuffer(), VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, m_vkQueryPool, m_queryIndex + 1);
 
-		// read N-2
-		auto * device = gfx::Device::get();
-		auto readQueryIndex = (m_queryIndex + 2) % MaxQueriesCount;
-		core::u64 results[2];
-		vkGetQueryPoolResults(device->getVulkanDevice(), m_vkQueryPool, readQueryIndex, 2, sizeof(core::u64) * 2, &results, sizeof(core::u64), VK_QUERY_RESULT_64_BIT);
-		vkResetQueryPool(device->getVulkanDevice(), m_vkQueryPool, readQueryIndex, 2);
-		core::u64 elapsed = results[1] - results[0];
-		double enlapsedTime = (double)(elapsed * m_timestampPeriod) * 0.000001;
-		VG_DEBUGPRINT("GPU frame time = %.3f ms\n", enlapsedTime);
+		// read timestamps
+		{
+			VG_PROFILE_CPU("ReadTimestamps");
+
+			auto * device = gfx::Device::get();
+			auto readQueryIndex = (m_queryIndex + 2) % MaxQueriesCount;
+			core::u64 results[2];
+			vkGetQueryPoolResults(device->getVulkanDevice(), m_vkQueryPool, readQueryIndex, 2, sizeof(core::u64) * 2, &results, sizeof(core::u64), VK_QUERY_RESULT_64_BIT);
+			vkResetQueryPool(device->getVulkanDevice(), m_vkQueryPool, readQueryIndex, 2);
+			core::u64 elapsed = results[1] - results[0];
+			double enlapsedTime = (double)(elapsed * m_timestampPeriod) * 0.000001;
+			//VG_DEBUGPRINT("GPU frame time = %.3f ms\n", enlapsedTime);
+			device->setGpuFrameTime(enlapsedTime);
+		}
 
 		m_queryIndex = (m_queryIndex + 2) % MaxQueriesCount;
 	}

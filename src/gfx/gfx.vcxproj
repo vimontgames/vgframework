@@ -380,6 +380,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CommandList\CommandList.inl" />
+    <None Include="Device\Device.inl" />
     <None Include="Device\vulkan\Device_vulkan.inl" />
     <None Include="FrameGraph\UserPass.inl" />
     <None Include="PipelineState\Compute\dx12\ComputePipelineState_dx12.inl" />

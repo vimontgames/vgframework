@@ -426,6 +426,13 @@
     <ClInclude Include="RenderPass\Render2D\HDROutput\HDROutputPass.hpp">
       <Filter>Pass\Render2D\HDROutput</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui_consts.h" />
+    <ClInclude Include="RenderPass\ImGui\Extensions\FontStyle\ImGuiFontStyleExtension.h">
+      <Filter>Pass\ImGui\Extensions\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\ImGui\Extensions\FontStyle\ImGuiFontStyleExtension.hpp">
+      <Filter>Pass\ImGui\Extensions\Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -586,6 +593,12 @@
     </Filter>
     <Filter Include="Pass\Render2D\HDROutput">
       <UniqueIdentifier>{be647942-8771-49a4-9084-c3a62cce30ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\ImGui\Extensions">
+      <UniqueIdentifier>{8108f5e5-f398-4021-99b6-88c481bfae58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\ImGui\Extensions\Font">
+      <UniqueIdentifier>{3bb83f65-0c3f-470f-928f-9a8fe5d6b449}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

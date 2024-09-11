@@ -6,6 +6,9 @@ namespace vg::renderer
 {
     using PickingID = core::uint;
 
+    enum class Font : core::u8;
+    enum class Style : core::u8;
+
     enum class UIElementType : core::u8
     {
         Canvas = 0,
@@ -20,7 +23,7 @@ namespace vg::renderer
         ~ViewGUI();
 
         void            AddCanvas           (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc) final override;
-        void            AddText             (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const core::string & _text) final override;
+        void            AddText             (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const core::string & _text, Font _font, Style _style) final override;
         void            AddImage            (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const gfx::ITexture * _texture) final override;
 
         void            RenderFullscreen    () final override;
@@ -43,11 +46,13 @@ namespace vg::renderer
 
             }
 
-            UIElement(const gfx::UICanvas * _canvas, const gfx::UIItem & _elemDesc, const core::string & _text) :
+            UIElement(const gfx::UICanvas * _canvas, const gfx::UIItem & _elemDesc, const core::string & _text, Font _font, Style _style) :
                 m_type(UIElementType::Text),
                 m_canvas(_canvas),
                 m_item(_elemDesc),
-                m_text(_text)
+                m_text(_text),
+                m_font(_font),
+                m_style(_style)
             {
 
             }
@@ -73,8 +78,14 @@ namespace vg::renderer
 
             const gfx::UICanvas *   m_canvas = nullptr;
             UIElementType           m_type = (UIElementType)-1;
-            gfx::UIItem             m_item;            
+            gfx::UIItem             m_item;   
+
+            // Text
             core::string            m_text;
+            Font                    m_font = (Font)0;
+            Style                   m_style = (Style)0;
+
+            // Texture
             gfx::ITexture *         m_texture = nullptr;
         };
 

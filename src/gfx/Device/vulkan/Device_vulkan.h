@@ -69,6 +69,9 @@ namespace vg::gfx::vulkan
 
 		 bool							updateHDR							();
 
+		 void							beginCapture						();
+		 void							endCapture							();
+
 	private:
 		void							registerExtensions					(const DeviceParams & _params);
 

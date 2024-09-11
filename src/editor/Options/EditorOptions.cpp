@@ -14,7 +14,7 @@ namespace vg::editor
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnum(EditorOptions, ImGui::Theme, m_theme, "Theme");
+        registerPropertyEnum(EditorOptions, renderer::Theme, m_theme, "Theme");
 
         registerPropertyGroupBegin(EditorOptions, "Gizmo");
         {
@@ -87,7 +87,7 @@ namespace vg::editor
         if (&m_theme == _previousValue)
         {
             auto imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
-            auto theme = *(ImGui::Theme *)_newValue;
+            auto theme = *(renderer::Theme *)_newValue;
             imGuiAdapter->SetGUITheme(theme);
         }
 

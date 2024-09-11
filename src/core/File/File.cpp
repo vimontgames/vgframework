@@ -424,7 +424,7 @@ namespace vg::core::io
         DIR * dir = nullptr;
         dirent * ent = nullptr;
         
-        VG_VERIFY(nullptr != (dir = opendir(_folder.c_str())));
+        VG_VERIFY(dir = opendir(_folder.c_str()));
 
         while (nullptr != (ent = readdir(dir)))
         {

@@ -1,5 +1,6 @@
 #pragma once
 #include "engine/IUITextComponent.h"
+#include "renderer/ImGui_consts.h"
 
 namespace vg::engine
 {
@@ -14,6 +15,8 @@ namespace vg::engine
         void    Update      (const Context & _context) final override;
 
     private:
-        core::string m_text;
+        renderer::Font  m_font = renderer::Font::UbuntuMono;
+        renderer::Style m_style = renderer::Style::Regular;
+        core::string    m_text;
     };
 }

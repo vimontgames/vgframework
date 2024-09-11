@@ -1,5 +1,5 @@
 #ifdef VG_DEBUG
-//#define GPU_FENCE_DEBUG 1
+#define DEBUG_GPU_CPU_SYNC 0
 #endif
 
 namespace vg::gfx::dx12
@@ -42,7 +42,7 @@ namespace vg::gfx::dx12
         size_t s;
 
         D3D12DXGIFactory * factory6 = nullptr;
-        VG_ASSERT(SUCCEEDED(m_dxgiFactory->QueryInterface(IID_PPV_ARGS(&factory6))));
+        VG_VERIFY_SUCCEEDED(m_dxgiFactory->QueryInterface(IID_PPV_ARGS(&factory6)));
 
         for (uint l = 0; l < countof(levels); ++l)
         {
@@ -76,38 +76,7 @@ namespace vg::gfx::dx12
 		VG_ASSERT(device, "[Device] Could not create DirectX device\n");
 
 		if (_params.debugDevice)
-		{
-			ID3D12InfoQueue * infoQueue = nullptr;
-			if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue))))
-			{
-				D3D12_MESSAGE_SEVERITY severities[] =
-				{
-					D3D12_MESSAGE_SEVERITY_INFO
-				};
-
-				D3D12_MESSAGE_ID messagesIDs[] =
-				{
-					D3D12_MESSAGE_ID_CLEARRENDERTARGETVIEW_MISMATCHINGCLEARVALUE,
-					D3D12_MESSAGE_ID_CREATEGRAPHICSPIPELINESTATE_RENDERTARGETVIEW_NOT_SET
-				};
-
-				D3D12_INFO_QUEUE_FILTER filter = {};
-										filter.DenyList.NumSeverities = (uint)countof(severities);
-										filter.DenyList.pSeverityList = severities;
-										filter.DenyList.NumIDs = (uint)countof(messagesIDs);
-										filter.DenyList.pIDList = messagesIDs;
-
-				infoQueue->PushStorageFilter(&filter);
-				{
-					infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
-					infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, _params.breakOnErrors);
-					infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, _params.breakOnWarnings);
-					infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_INFO, false);
-					infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_MESSAGE, false);
-				}
-				infoQueue->Release();
-			}
-		}
+            setupd3d12DebugInfoQueue();
 
         // Check max supported signature version
         D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
@@ -213,6 +182,90 @@ namespace vg::gfx::dx12
         }
 
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Device::setupd3d12DebugInfoQueue(bool _enable)
+    {
+        VG_ASSERT(m_deviceParams.debugDevice);
+
+        ID3D12InfoQueue * infoQueue = nullptr;
+        if (SUCCEEDED(m_d3d12device->QueryInterface(IID_PPV_ARGS(&infoQueue))))
+        {
+            if (_enable)
+            {
+                D3D12_MESSAGE_SEVERITY severities[] =
+                {
+                    D3D12_MESSAGE_SEVERITY_INFO
+                };
+
+                D3D12_MESSAGE_ID messagesIDs[] =
+                {
+                    D3D12_MESSAGE_ID_CLEARRENDERTARGETVIEW_MISMATCHINGCLEARVALUE,
+                    D3D12_MESSAGE_ID_CREATEGRAPHICSPIPELINESTATE_RENDERTARGETVIEW_NOT_SET
+                };
+
+                D3D12_INFO_QUEUE_FILTER filter = {};
+                filter.DenyList.NumSeverities = (uint)countof(severities);
+                filter.DenyList.pSeverityList = severities;
+                filter.DenyList.NumIDs = (uint)countof(messagesIDs);
+                filter.DenyList.pIDList = messagesIDs;
+
+                infoQueue->PushStorageFilter(&filter);
+                {
+                    infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+                    infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, m_deviceParams.breakOnErrors);
+                    infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, m_deviceParams.breakOnWarnings);
+                    infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_INFO, false);
+                    infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_MESSAGE, false);
+                }
+                infoQueue->Release();
+            }
+            else
+            {
+                D3D12_MESSAGE_SEVERITY severities[] =
+                {
+                    D3D12_MESSAGE_SEVERITY_ERROR,
+                    D3D12_MESSAGE_SEVERITY_WARNING,
+                    D3D12_MESSAGE_SEVERITY_INFO,
+                    D3D12_MESSAGE_SEVERITY_MESSAGE
+                };
+
+                D3D12_INFO_QUEUE_FILTER filter = {};
+                filter.DenyList.NumSeverities = (uint)countof(severities);
+                filter.DenyList.pSeverityList = severities;
+                filter.DenyList.NumIDs = 0;
+                filter.DenyList.pIDList = nullptr;
+
+                infoQueue->PushStorageFilter(&filter);
+                {
+                    infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, false);
+                    infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, false);
+                    infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, false);
+                    infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_INFO, false);
+                    infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_MESSAGE, false);
+                }
+                infoQueue->Release();
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Device::beginCapture()
+    {
+        super::beginCapture();
+
+        if (m_d3d12debug)
+            setupd3d12DebugInfoQueue(false);            
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Device::endCapture()
+    {
+        if (m_d3d12debug)
+            setupd3d12DebugInfoQueue(false);
+
+        super::endCapture();
     }
 
     //--------------------------------------------------------------------------------------
@@ -536,7 +589,8 @@ namespace vg::gfx::dx12
 
         // Wait for the last frame occupying this slot to be complete
         {
-            VG_PROFILE_CPU("Wait Fence");
+            VG_PROFILE_CPU("Wait GPU");
+            beginWaitGPU();
             FrameContext * Frame = &m_frameContext[FrameIndex];
 
             #if DEBUG_GPU_CPU_SYNC
@@ -545,6 +599,7 @@ namespace vg::gfx::dx12
 
             WaitForFence(m_d3d12fence, m_d3d12fenceEvent, Frame->mFrameFenceId);
             Frame->mFrameFenceId = FrameFence;
+            endWaitGPU();
         }
         m_currentFrameIndex = FrameIndex;
 
@@ -633,6 +688,7 @@ namespace vg::gfx::dx12
 
             if (cmdListsToExecute.size() > 0)
             {
+                VG_PROFILE_CPU("ExecuteCommandLists");
                 auto * d3d12queue = queue->getd3d12CommandQueue();
                 d3d12queue->ExecuteCommandLists((uint)cmdListsToExecute.size(), cmdListsToExecute.data());
             }

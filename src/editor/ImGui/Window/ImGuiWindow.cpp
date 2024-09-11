@@ -1264,9 +1264,11 @@ namespace vg::editor
                         
                     }
 
+                    ImGui::PushID(_prop);
                     static ImGuiObjectHandleMenu s_pickObjectHandlemenu;
                     if (s_pickObjectHandlemenu.SelectUID(&temp, propContext.m_gameobject))
                         edited = true;
+                    ImGui::PopID();
 
                     drawPropertyLabel(propContext, _prop);
 
@@ -2446,16 +2448,16 @@ namespace vg::editor
         {
             bool edited = false;
 
-            edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
+            edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat);
             drawPropertyLabel(_propContext, LabelI.c_str(), "Represents the x-axis in the transformed space");
 
-            edited |= ImGui::DragFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
+            edited |= ImGui::DragFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat);
             drawPropertyLabel(_propContext, LabelJ.c_str(), "Represents the y-axis in the transformed space");
 
-            edited |= ImGui::DragFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
+            edited |= ImGui::DragFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat);
             drawPropertyLabel(_propContext, LabelK.c_str(), "Represents the z-axis in the transformed space");
 
-            edited |= ImGui::DragFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), style::range::minFloat, style::range::maxFloat, g_editFloatFormat);
+            edited |= ImGui::DragFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat);
             drawPropertyLabel(_propContext, LabelT.c_str(), "Represents the translation component");
 
             if (edited)

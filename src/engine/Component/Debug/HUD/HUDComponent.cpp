@@ -19,6 +19,7 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerProperty(HUDComponent, m_fpsText, "FPS");
+        registerProperty(HUDComponent, m_frameText, "Frame");
         registerProperty(HUDComponent, m_cpuText, "CPU");
         registerProperty(HUDComponent, m_gpuText, "GPU");
 
@@ -43,15 +44,30 @@ namespace vg::engine
     {
         if (_context.m_playing)
         {
+            const auto time = Engine::get()->getTime();
+
             if (auto * gameobject = m_fpsText.get<IGameObject>())
             {
                 if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
-                {
-                    const auto time = Engine::get()->getTime();
-                    const auto fps = time.smoothed.m_fps;
+                    uiTextComponent->SetText(fmt::sprintf("%.0f FPS", time.smoothed.m_fps));
+            }
 
-                    uiTextComponent->SetText(fmt::sprintf("%.0f FPS", fps));
-                }
+            if (auto * gameobject = m_frameText.get<IGameObject>())
+            {
+                if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
+                    uiTextComponent->SetText(fmt::sprintf("%.2f ms", time.smoothed.m_dt * 1000.0f));
+            }
+
+            if (auto * gameobject = m_cpuText.get<IGameObject>())
+            {
+                if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
+                    uiTextComponent->SetText(fmt::sprintf("%.2f ms CPU", time.smoothed.m_dt * 1000.0f - time.smoothed.m_gpuWait));
+            }
+
+            if (auto * gameobject = m_gpuText.get<IGameObject>())
+            {
+                if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
+                    uiTextComponent->SetText(fmt::sprintf("%.2f ms GPU", time.smoothed.m_gpu));
             }
         }
     }

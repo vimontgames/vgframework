@@ -185,7 +185,7 @@
                                 <Property type="String" name="m_name" value="HUD"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="2153177869"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened|Selected"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -197,6 +197,9 @@
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="ObjectHandle" name="m_fpsText" value="852509354"/>
+                                        <Property type="ObjectHandle" name="m_frameText" value="433434260"/>
+                                        <Property type="ObjectHandle" name="m_cpuText" value="1829163074"/>
+                                        <Property type="ObjectHandle" name="m_gpuText" value="3160631276"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
@@ -204,10 +207,10 @@
                                         <Property type="String" name="m_name" value="Top-right Canvas"/>
                                         <Property type="Uint32" name="m_uid" flags="" value="568607132"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened|Selected"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="1.1754944e-38" Ky="0" Kz="1" Kw="0" Tx="-2" Ty="2" Tz="0" Tw="1"/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="UICanvasComponent">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="New UICanvasComponent"/>
@@ -218,7 +221,7 @@
                                                 <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
                                                 <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value=""/>
-                                                <Property type="Uint2" name="m_size" x="64" y="48"/>
+                                                <Property type="Uint2" name="m_size" x="64" y="74"/>
                                                 <Property type="Bool" name="m_useOffset" flags="NotVisible" value="false"/>
                                                 <Property type="Float3" name="m_offset" flags="Optional" x="0" y="0" z="0"/>
                                                 <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
@@ -235,7 +238,7 @@
                                                 <Property type="String" name="m_name" value="FPS"/>
                                                 <Property type="Uint32" name="m_uid" flags="" value="852509354"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Selected"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -254,7 +257,39 @@
                                                         <Property type="Float3" name="m_offset" flags="Optional" x="0" y="0" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
                                                         <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="EnumU8" name="m_font" value="Awesome"/>
+                                                        <Property type="EnumU8" name="m_style" value="Bold"/>
                                                         <Property type="String" name="m_text" value="FPS"/>
+                                                    </Object>
+                                                </Property>
+                                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                            </Object>
+                                            <Object class="GameObject">
+                                                <Property type="String" name="m_name" value="Frame"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="433434260"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="852509354"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                <Property type="ObjectPtrVector" name="m_components">
+                                                    <Object class="UITextComponent">
+                                                        <Property type="String" name="m_name" flags="NotVisible" value="New UITextComponent"/>
+                                                        <Property type="Uint32" name="m_uid" flags="" value="2074992369"/>
+                                                        <Property type="Uint32" name="m_originalUID" flags="" value="363825769"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                                        <Property type="EnumU8" name="m_horizontal" value="Right"/>
+                                                        <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                        <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
+                                                        <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
+                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="14" z="0"/>
+                                                        <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
+                                                        <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
+                                                        <Property type="EnumU8" name="m_style" value="Regular"/>
+                                                        <Property type="String" name="m_text" value="ms"/>
                                                     </Object>
                                                 </Property>
                                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -263,7 +298,7 @@
                                                 <Property type="String" name="m_name" value="CPU"/>
                                                 <Property type="Uint32" name="m_uid" flags="" value="1829163074"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="852509354"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Selected"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -279,10 +314,12 @@
                                                         <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
                                                         <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
-                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="14" z="0"/>
+                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="42" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
                                                         <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
-                                                        <Property type="String" name="m_text" value="ms CPU"/>
+                                                        <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
+                                                        <Property type="EnumU8" name="m_style" value="Regular"/>
+                                                        <Property type="String" name="m_text" value="CPU"/>
                                                     </Object>
                                                 </Property>
                                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -291,7 +328,7 @@
                                                 <Property type="String" name="m_name" value="GPU"/>
                                                 <Property type="Uint32" name="m_uid" flags="" value="3160631276"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="852509354"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Selected"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -307,10 +344,12 @@
                                                         <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
                                                         <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
-                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="28" z="0"/>
+                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="56" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
                                                         <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
-                                                        <Property type="String" name="m_text" value="ms GPU"/>
+                                                        <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
+                                                        <Property type="EnumU8" name="m_style" value="Regular"/>
+                                                        <Property type="String" name="m_text" value="GPU"/>
                                                     </Object>
                                                 </Property>
                                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -323,7 +362,7 @@
                                 <Property type="String" name="m_name" value="PlabloUI"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="1287416559"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab|Selected"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>

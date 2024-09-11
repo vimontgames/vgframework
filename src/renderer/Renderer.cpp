@@ -1070,4 +1070,16 @@ namespace vg::renderer
     {
         return m_device.isVSyncSupported(_mode);
     }
+
+    //--------------------------------------------------------------------------------------
+    double Renderer::GetGpuFrameTime() const
+    {
+        return m_device.getGpuFrameTime();
+    }
+
+    //--------------------------------------------------------------------------------------
+    double Renderer::GetGpuWaitTime() const
+    {
+        return m_device.getGpuWaitTime();
+    }
 }

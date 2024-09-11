@@ -2,6 +2,8 @@
 #include "renderer/RenderPass/ImGui/ImGui.h"
 #include "renderer/IImGuiAdapter.h"
 #include "Shaders/system/packing.hlsli"
+#include "editor/ImGui/Extensions/imGuiExtensions.h" 
+#include "renderer/RenderPass/ImGui/Extensions/FontStyle/ImGuiFontStyleExtension.h"
 
 namespace vg::renderer
 {
@@ -26,9 +28,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewGUI::AddText(const gfx::UICanvas * _canvas, const UIItem & _desc, const core::string & _text)
+    void ViewGUI::AddText(const gfx::UICanvas * _canvas, const UIItem & _desc, const core::string & _text, Font _font, Style _style)
     {
-        m_uiElements.push_back(UIElement(_canvas, _desc, _text));
+        m_uiElements.push_back(UIElement(_canvas, _desc, _text, _font, _style));
     }
 
     //--------------------------------------------------------------------------------------
@@ -47,6 +49,7 @@ namespace vg::renderer
 
         ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0, 0, 0, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0); // This is necessary in !VG_ENABLE_EDITOR mode to remove dark window borders
 
         #if !VG_ENABLE_EDITOR
         // if not rendered from inside dock the ImGui::Begin part is needed!
@@ -60,7 +63,7 @@ namespace vg::renderer
         ImGui::End();
         #endif
         ImGui::PopStyleColor();
-        ImGui::PopStyleVar();
+        ImGui::PopStyleVar(2);
     }
 
     //--------------------------------------------------------------------------------------
@@ -192,6 +195,14 @@ namespace vg::renderer
             float2 elemSize = elem.m_item.m_size;
             float2 elemPos = offset + elem.m_item.m_matrix[3].xy;
 
+            switch (elem.m_type)
+            {
+                case UIElementType::Text:
+                    imGuiAdapter->PushFont(elem.m_font);
+                    imGuiAdapter->PushStyle(elem.m_style);
+                    break;
+            }
+
             if (asBool(UIItemFlags::AutoResize & elem.m_item.m_flags))
             {
                 switch (elem.m_type)
@@ -295,6 +306,9 @@ namespace vg::renderer
                             m_view->AddPickingHit(hit);
                         }
                     }
+
+                    imGuiAdapter->PopFont();
+                    imGuiAdapter->PopStyle();
                 }
             }
 

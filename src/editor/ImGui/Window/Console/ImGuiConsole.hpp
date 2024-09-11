@@ -252,7 +252,7 @@ namespace vg::editor
                             break;
                     }
   
-                    char fullmsg[2048];
+                    char fullmsg[8192];
                     
                     if (item.count > 1)
                         sprintf(fullmsg, "[%s] %s (x%u)", item.category.c_str(), item.message.c_str(), item.count);

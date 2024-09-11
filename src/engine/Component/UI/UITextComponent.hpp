@@ -16,6 +16,8 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
+        registerPropertyEnum(UITextComponent, renderer::Font, m_font, "Font");
+        registerPropertyEnum(UITextComponent, renderer::Style, m_style, "Style");
         registerProperty(UITextComponent, m_text, "Text");
 
         return true;
@@ -44,6 +46,6 @@ namespace vg::engine
     void UITextComponent::Update(const Context & _context)
     {
         if (auto * gui = getGUI(_context.m_world))
-            gui->AddText(getCanvas(), gfx::UIItem(m_pickingID, getMatrix(), m_size, m_horizontal, m_vertical, getColor(), m_UIFlags), m_text);
+            gui->AddText(getCanvas(), gfx::UIItem(m_pickingID, getMatrix(), m_size, m_horizontal, m_vertical, getColor(), m_UIFlags), m_text, m_font, m_style);
     }
 }

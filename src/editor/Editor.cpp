@@ -258,7 +258,7 @@ namespace vg::editor
         auto wheel = input->GetMouseDelta().z;
         if (ctrl && wheel != 0)
         {
-            static core::Timer::Tick lastGizmoChangedTick = core::Timer::getTick();
+            static core::Ticks lastGizmoChangedTick = core::Timer::getTick();
             auto delay = Timer::getEnlapsedTime(lastGizmoChangedTick, Timer::getTick());
 
             if (delay > 100.0f) // 0.1 sec

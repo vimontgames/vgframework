@@ -16,6 +16,10 @@
 #include "gfx/Importer/TextureImporter.h"
 #include "gfx/RingBuffer/Upload/UploadBuffer.h"
 
+#if !VG_ENABLE_INLINE
+#include "Device.inl"
+#endif
+
 using namespace vg::core;
 using namespace vg::gfx;
 
@@ -65,6 +69,36 @@ namespace vg::gfx
 		{
             m_frameCounter++;
 		}
+
+        //--------------------------------------------------------------------------------------
+        void Device::setGpuFrameTime(double _gpuFrameTime)
+        {
+            m_gpuFrameTime = _gpuFrameTime;
+        }
+
+        //--------------------------------------------------------------------------------------
+        void Device::beginCapture()
+        {
+            m_captureInProgress = true;
+        }
+
+        //--------------------------------------------------------------------------------------
+        void Device::endCapture()
+        {
+            m_captureInProgress = false;
+        }
+
+        //--------------------------------------------------------------------------------------
+        void Device::beginWaitGPU()
+        {
+            m_beginWaitGPUTicks = core::Timer::getTick();
+        }
+
+        //--------------------------------------------------------------------------------------
+        void Device::endWaitGPU()
+        {
+            m_gpuWaitTime = core::Timer::getEnlapsedTime(m_beginWaitGPUTicks, core::Timer::getTick());
+        }
 
 		//--------------------------------------------------------------------------------------
 		gfx::Device * Device::getDevice()

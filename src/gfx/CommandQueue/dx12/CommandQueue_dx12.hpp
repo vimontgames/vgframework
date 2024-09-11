@@ -62,39 +62,46 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
 	void CommandQueue::endFrame(gfx::CommandList * _cmdList)
 	{
+		auto device = gfx::Device::get();
 		auto d3d12cmdList = ((ID3D12GraphicsCommandList *)_cmdList->getd3d12CommandList());
 
         // end frame query
         d3d12cmdList->EndQuery(m_d3d12queryHeap, D3D12_QUERY_TYPE_TIMESTAMP, m_queryIndex + 1);
 		m_isValidQuery[m_queryIndex + 1] = true;
 
-		auto d3d12resource = m_queryBuffer->getResource().getd3d12BufferResource();
-
-		auto readQueryIndex = (m_queryIndex + 2) % MaxQueriesCount;
-
-		if (m_isValidQuery[readQueryIndex])
+		// read timestamps
 		{
-			d3d12cmdList->ResolveQueryData(
-				m_d3d12queryHeap,
-				D3D12_QUERY_TYPE_TIMESTAMP,
-				readQueryIndex,
-				2,
-				d3d12resource,
-				readQueryIndex * sizeof(core::u64)
-			);
+			VG_PROFILE_CPU("ReadTimestamps");
+			auto d3d12resource = m_queryBuffer->getResource().getd3d12BufferResource();
 
-			D3D12_RANGE range = { sizeof(uint64_t) * readQueryIndex, sizeof(uint64_t) * (readQueryIndex + 1) };
-			core::u64 * pData = nullptr;
-			core::u64 start, end;
-			d3d12resource->Map(0, &range, (void**) &pData);
+			auto readQueryIndex = (m_queryIndex + 2) % MaxQueriesCount;
+
+			if (m_isValidQuery[readQueryIndex])
 			{
-				start = GetCPUTimestamp(pData[0]);
-				end = GetCPUTimestamp(pData[1]);
-			}
-			d3d12resource->Unmap(0, 0);
+				d3d12cmdList->ResolveQueryData(
+					m_d3d12queryHeap,
+					D3D12_QUERY_TYPE_TIMESTAMP,
+					readQueryIndex,
+					2,
+					d3d12resource,
+					readQueryIndex * sizeof(core::u64)
+				);
 
-			double enlapsedTime = double(end - start) / (((double)m_frequencyCPU) * 0.001);
-			VG_DEBUGPRINT("GPU frame time = %.3f ms\n", enlapsedTime);
+				D3D12_RANGE range = { sizeof(uint64_t) * readQueryIndex, sizeof(uint64_t) * (readQueryIndex + 1) };
+				core::u64 * pData = nullptr;
+				core::u64 start, end;
+				d3d12resource->Map(0, &range, (void **)&pData);
+				{
+					start = GetCPUTimestamp(pData[0]);
+					end = GetCPUTimestamp(pData[1]);
+				}
+				d3d12resource->Unmap(0, 0);
+
+				double enlapsedTime = double(end - start) / (((double)m_frequencyCPU) * 0.001);
+				//VG_DEBUGPRINT("GPU frame time = %.3f ms\n", enlapsedTime);
+				device->setGpuFrameTime(enlapsedTime);
+
+			}
 		}
 
 		m_queryIndex = (m_queryIndex + 2) % MaxQueriesCount;

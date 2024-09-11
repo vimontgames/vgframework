@@ -28,7 +28,7 @@ namespace vg
             void                vulkanInit                  ();
             #endif
 
-            void                SetGUITheme                 (ImGui::Theme _theme) final override;
+            void                SetGUITheme                 (Theme _theme) final override;
             bool                IsCurrentThemeDark          () const final override;
             const ImVec4 &      GetRowColorEven             () const final override { return m_rowColorEven;}
             const ImVec4 &      GetRowColorOdd              () const final override { return m_rowColorOdd; }
@@ -46,7 +46,13 @@ namespace vg
             void                render                      (gfx::CommandList * _cmdList);
 
             void                AddBeginFrameCallback       (BeginFrameCallback _func);
-            ImFont *            GetFont                     (ImGui::Font _font, ImGui::Style _style = ImGui::Style::Regular) const override;
+            ImFont *            GetFont                     (Font _font, Style _style = Style::Regular) const final override;
+
+            void                PushFont                    (vg::renderer::Font _font) final override;
+            void                PopFont                     () final override;
+
+            void                PushStyle                   (vg::renderer::Style _style) final override;
+            void                PopStyle                    () final override;
 
         protected:
             ImTextureID         getTextureID                (const gfx::Texture * _texture);
@@ -102,7 +108,7 @@ namespace vg
             ImVec4                              m_warningColor;
             ImVec4                              m_errorColor;
 
-            ImFont *                            m_imGuiFont[core::enumCount<ImGui::Style>()][core::enumCount<ImGui::Font>()];
+            ImFont *                            m_imGuiFont[core::enumCount<Font>()][core::enumCount<Style>()];
         };
     }
 }

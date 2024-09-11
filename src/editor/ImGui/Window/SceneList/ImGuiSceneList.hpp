@@ -132,11 +132,11 @@ namespace vg::editor
             textColor.x = prefabColor.x;
             textColor.y = prefabColor.y;
             textColor.z = prefabColor.z;
-            ImGui::PushStyle(ImGui::Style::Bold);
+            ImGui::PushStyle(renderer::Style::Bold);
         }
         else if (isPrefabChild)
         {
-            ImGui::PushStyle(ImGui::Style::Italic);
+            ImGui::PushStyle(renderer::Style::Italic);
         }
 
         const float disabledAlpha = ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled).w;

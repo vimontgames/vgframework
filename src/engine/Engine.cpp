@@ -612,8 +612,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void Engine::updateDt()
     {
-        static Timer::Tick previous = 0;
-        Timer::Tick current = Timer::getTick();
+        static Ticks previous = 0;
+        Ticks current = Timer::getTick();
         const float dt = previous ? (float)(Timer::getEnlapsedTime(previous, current) * 0.001f) : 0.0f;
         m_time.m_realDeltaTime = dt;
 
@@ -658,19 +658,23 @@ namespace vg::engine
 
         m_time.m_enlapsedTimeSinceStartReal += m_time.m_realDeltaTime;
         m_time.m_enlapsedTimeSinceStartScaled += m_time.m_scaledDeltaTime;
+        m_time.m_gpu = (float)m_renderer->GetGpuFrameTime();
+        m_time.m_gpuWait = (float)m_renderer->GetGpuWaitTime();
 
         // Smooth values
         m_timeInternal.m_counter++;
         m_timeInternal.m_dtSum += m_time.m_realDeltaTime;
+        m_timeInternal.m_gpuSum += m_time.m_gpu;
+        m_timeInternal.m_gpuWaitSum += m_time.m_gpuWait;
         
         if (m_timeInternal.m_dtSum > 1.0f)
         {
             m_time.smoothed.m_dt = (float)(m_timeInternal.m_dtSum / (float)m_timeInternal.m_counter);
-            m_timeInternal.m_dtSum = 0.0;
-
             m_time.smoothed.m_fps = (float)1.0f / m_time.smoothed.m_dt;
+            m_time.smoothed.m_gpu = (float)(m_timeInternal.m_gpuSum / (float)m_timeInternal.m_counter);
+            m_time.smoothed.m_gpuWait = (float)(m_timeInternal.m_gpuWaitSum / (float)m_timeInternal.m_counter);
 
-            m_timeInternal.m_counter = 0;
+            m_timeInternal.reset();
         }
     }
 

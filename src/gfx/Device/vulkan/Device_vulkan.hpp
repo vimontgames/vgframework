@@ -134,9 +134,24 @@ namespace vg::gfx::vulkan
 		}
 	}
 
+    //--------------------------------------------------------------------------------------
+	void Device::beginCapture()
+	{
+		super::beginCapture();
+	}
+
+    //--------------------------------------------------------------------------------------
+	void Device::endCapture()
+	{
+		super::endCapture();
+	}
+
 	//--------------------------------------------------------------------------------------
 	bool Device::onDebugMessage(VkDebugUtilsMessageSeverityFlagBitsEXT _severity, VkDebugUtilsMessageTypeFlagsEXT _flags, const VkDebugUtilsMessengerCallbackDataEXT * _data)
 	{
+        if (m_captureInProgress)
+            return false;
+
 		char prefix[64] = "";
 		const auto msgLen = strlen(_data->pMessage) + 5000;
 		char * message = (char *)malloc(msgLen);
@@ -1360,13 +1375,15 @@ namespace vg::gfx::vulkan
 
 		// Scope WaitGPU/VSync
 		{
-			VG_PROFILE_CPU("Wait Fence");
+			VG_PROFILE_CPU("Wait GPU");
+            beginWaitGPU();
+
 			// Ensure no more than max_frame_latency renderings are outstanding
 			//if (m_frameCounter >= max_frame_latency)
 			{
-#if VG_DBG_CPUGPUSYNC
+				#if VG_DBG_CPUGPUSYNC
 				VG_DEBUGPRINT("Wait completion of frame %u (fence[%u])\n", m_frameCounter - max_frame_latency, FrameIndex);
-#endif
+				#endif
 
 				VG_PROFILE_GPU_SWAP(this);
 				vkWaitForFences(vkDevice, 1, &m_vkFences[FrameIndex], VK_TRUE, UINT64_MAX);
@@ -1375,6 +1392,7 @@ namespace vg::gfx::vulkan
 			m_currentFrameIndex = FrameIndex;
 
 			VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, m_vkImageAcquiredSemaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer));
+			endWaitGPU();
 		}
 
 		m_currentBackbufferIndex = currentBuffer;
@@ -1443,6 +1461,7 @@ namespace vg::gfx::vulkan
                 submit_info.signalSemaphoreCount = 1;
                 submit_info.pSignalSemaphores = &m_vkDrawCompleteSemaphores[currentFrameIndex];
 
+				VG_PROFILE_CPU("Submit");
                 VG_VERIFY_VULKAN(vkQueueSubmit(queue->getVulkanCommandQueue(), 1, &submit_info, m_vkFences[currentFrameIndex]));
             }
         }
@@ -1451,19 +1470,22 @@ namespace vg::gfx::vulkan
         VG_DEBUGPRINT("Write fence %u\n", currentFrameIndex);
         #endif
 
-        VkPresentInfoKHR present;
+		{
+			VG_PROFILE_CPU("Present");
+			VkPresentInfoKHR present;
 
-        present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
-        present.pNext = nullptr;
-        present.waitSemaphoreCount = 1;
-        present.pWaitSemaphores = &m_vkDrawCompleteSemaphores[currentFrameIndex];
-        present.swapchainCount = 1;
-        present.pSwapchains = &m_vkSwapchain;
-        const u32 currentBackbuffer = m_currentBackbufferIndex;
-        present.pImageIndices = &currentBackbuffer;
-        present.pResults = nullptr;
+			present.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
+			present.pNext = nullptr;
+			present.waitSemaphoreCount = 1;
+			present.pWaitSemaphores = &m_vkDrawCompleteSemaphores[currentFrameIndex];
+			present.swapchainCount = 1;
+			present.pSwapchains = &m_vkSwapchain;
+			const u32 currentBackbuffer = m_currentBackbufferIndex;
+			present.pImageIndices = &currentBackbuffer;
+			present.pResults = nullptr;
 
-        VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue(), &present));
+			VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnQueuePresentKHR(getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue(), &present));
+		}
 
         auto requestedHDRMode = m_HDRModeRequested;
         if (!m_caps.hdr.isSupported(requestedHDRMode))

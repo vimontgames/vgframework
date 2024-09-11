@@ -69,7 +69,7 @@ namespace vg::editor
         ImGuiConsoleOptions &           getConsoleOptions       () { return m_consoleOptions; }
 
     private:
-        ImGui::Theme                    m_theme = ImGui::Theme::ImGui_Dark;
+        renderer::Theme                 m_theme = renderer::Theme::ImGui_Dark;
         GizmoOptions                    m_gizmo;
         EditorDebugFlags                m_debugFlags = (EditorDebugFlags)0x0;
         ImGuiConsoleOptions             m_consoleOptions;

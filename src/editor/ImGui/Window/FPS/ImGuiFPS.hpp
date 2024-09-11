@@ -34,18 +34,24 @@ namespace vg::editor
 
             const auto fps = time.smoothed.m_fps;
             const auto dt = time.smoothed.m_dt;
+            const auto cpuMs = dt * 1000.0f - time.smoothed.m_gpuWait;
+            const auto gpuMs = time.smoothed.m_gpu;
 
             ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
             {
                 ImGui::Columns(2, "mycolumns2", false);  // 2-ways, no border
                 {
                     ImGui::Text("FPS");
-                    ImGui::Text("Frame Time");
+                    ImGui::Text("Frame");
+                    ImGui::Text("CPU");
+                    ImGui::Text("GPU");
                 }
                 ImGui::NextColumn();
                 {
                     ImGui::Text("%.0f fps", fps);
-                    ImGui::Text("%.3f ms", dt * 1000.0f);                
+                    ImGui::Text("%.2f ms", dt * 1000.0f); 
+                    ImGui::Text("%.2f ms", cpuMs); 
+                    ImGui::Text("%.2f ms", gpuMs);
                 }
                 ImGui::Columns(1);
 
