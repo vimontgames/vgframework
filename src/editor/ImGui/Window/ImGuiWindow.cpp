@@ -356,19 +356,56 @@ namespace vg::editor
         TEMP enumVal = (TEMP)*pEnum;
         T temp = *pEnum;
 
+        // Special case font font style unavailables
+        auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+        auto font = (renderer::Font)-1;
+        if (!strcmp(_prop->GetEnumTypeName(), "Style"))
+        {
+            if (auto * fontProp = _object->GetClassDesc()->GetPropertyByName("m_font"))
+                font = *fontProp->GetPropertyEnum<renderer::Font>(_object);
+        }
         string preview = "";
         bool previewDisabled = false;
+
+        struct EnumPair
+        {
+            TEMP value;
+            core::string name;
+        };
+
+        vector<EnumPair> enumPairs;
+        enumPairs.resize(_prop->GetEnumCount());
         for (uint e = 0; e < _prop->GetEnumCount(); ++e)
         {
-            TEMP value = scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(e) : _prop->GetUnsignedEnumValue(e);
+            enumPairs[e].name = getEnumDisplayName<T>(_prop, e);
+            enumPairs[e].value = scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(e) : _prop->GetUnsignedEnumValue(e);
+        }
 
-            if (enumVal == value)
+        if (asBool(PropertyFlags::AlphabeticalOrder & flags))
+        {
+            sort(enumPairs.begin(), enumPairs.end(), [](EnumPair & a, EnumPair & b)
+            {
+                return (a.name < b.name);
+            }
+            );
+        }
+
+        for (const auto & pair : enumPairs)
+        {
+            if (enumVal == pair.value)
             {
                 //const auto enumValueFlags = _prop->GetEnumValueFlags(value);
                 //if (asBool(enumValueFlags & core::EnumValueFlags::Disabled))
                 //    previewDisabled = true;
 
-                preview = getEnumDisplayName<T>(_prop, e);
+                // Font/Style enum case (preview)
+                if ((renderer::Font)-1 != font)
+                {
+                    if (!imGuiAdapter->GetFont(font, (renderer::Style)pair.value))
+                        previewDisabled = true;
+                }
+
+                preview = pair.name;
                 break;
             }
         }
@@ -385,22 +422,26 @@ namespace vg::editor
             if (previewDisabled)
                 PopStyleColor();
 
-            for (uint e = 0; e < _prop->GetEnumCount(); ++e)
+            for (const auto & pair : enumPairs)
             {
-                const string enumName = getEnumDisplayName<T>(_prop, e);
-                TEMP value = scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(e) : _prop->GetUnsignedEnumValue(e);
-
                 bool selectableDisabled = false;
                 //const auto enumValueFlags = _prop->GetEnumValueFlags(value);
                 //if (asBool(enumValueFlags & core::EnumValueFlags::Disabled))
                 //    selectableDisabled = true;
 
+                // Font/Style enum case (selectable)
+                if ((renderer::Font)-1 != font)
+                {
+                    if (!imGuiAdapter->GetFont(font, (renderer::Style)pair.value))
+                        selectableDisabled = true;
+                }
+
                 if (selectableDisabled)
                     PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 
-                if (ImGui::Selectable(enumName.c_str()))
+                if (ImGui::Selectable(pair.name.c_str()) && !selectableDisabled)
                 {
-                    temp = (T)value; // TODO: GetEnumValue should be typed, storing Type+union with check on data type e.g. GetEnumValueU8 etc..
+                    temp = (T)pair.value; // TODO: GetEnumValue should be typed, storing Type+union with check on data type e.g. GetEnumValueU8 etc..
 
                     if (!readonly)
                     {

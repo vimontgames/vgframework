@@ -1,14 +1,14 @@
 # vgframework
 Yes, yet another work-in-progress game and graphic engine project :)
 
-![Screenshot](doc/img/v32.gif)
-
 [build](#build)\
 [description](#description)\
 [changelog](#changelog)\
 [getting started](#getting-started)\
 [extern libs](#extern-libs)\
 [disclaimer](#disclaimer)
+
+![Screenshot](doc/img/v32.gif)
 
 # build
 | Platform | API       | Debug                                                                                                                    | Release                                                                                                                      | Final 												
@@ -115,8 +115,7 @@ The external libraries are included with the sources for convenience.
 | D3D12 HDR Sample           |               | https://github.com/microsoft/directx-graphics-samples/tree/master/Samples/Desktop/D3D12HDR
 | Dear ImGui                 |               | https://github.com/ocornut/imgui/commits/docking                          
 | DirectXShaderCompiler      | August 2023   | https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308 
-| Dirent                     | 1.23.2        | https://github.com/tronkko/dirent                                         
-| Font-Awesome               | 6.x           | https://github.com/FortAwesome/Font-Awesome/tree/6.x                      
+| Dirent                     | 1.23.2        | https://github.com/tronkko/dirent                                                            
 | fmt                        | 10.1.1        | https://github.com/fmtlib/fmt/releases/tag/10.1.1                         
 | hlslpp                     | 3.4           | https://github.com/redorav/hlslpp/releases/tag/3.4                        
 | IconFontCppHeaders         |               | https://github.com/juliettef/IconFontCppHeaders                                                     
@@ -135,6 +134,15 @@ The external libraries are included with the sources for convenience.
 (*) *You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0*
 
 # data
+## fonts
+
+| Model						 | Author        | URL												
+| -------------------------- | ------------- | ------------------------------------------------------------- 
+| Font-Awesome               | 6.x           | https://github.com/FortAwesome/Font-Awesome/tree/6.x   
+| Rowdies                    |               | https://github.com/magictype/rowdy 
+| RubikMonoOne               |               | https://fonts.google.com/specimen/Rubik+Mono+One
+| UbuntuMono                 | 1.0           | https://fonts.google.com/specimen/Ubuntu+Mono
+
 ## models
 
 | Model						    | Author            | URL												

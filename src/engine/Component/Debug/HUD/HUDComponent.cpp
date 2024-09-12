@@ -61,13 +61,13 @@ namespace vg::engine
             if (auto * gameobject = m_cpuText.get<IGameObject>())
             {
                 if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
-                    uiTextComponent->SetText(fmt::sprintf("%.2f ms CPU", time.smoothed.m_dt * 1000.0f - time.smoothed.m_gpuWait));
+                    uiTextComponent->SetText(fmt::sprintf("%.2f ms", time.smoothed.m_dt * 1000.0f - time.smoothed.m_gpuWait));
             }
 
             if (auto * gameobject = m_gpuText.get<IGameObject>())
             {
                 if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
-                    uiTextComponent->SetText(fmt::sprintf("%.2f ms GPU", time.smoothed.m_gpu));
+                    uiTextComponent->SetText(fmt::sprintf("%.2f ms", time.smoothed.m_gpu));
             }
         }
     }

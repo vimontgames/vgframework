@@ -40,6 +40,7 @@ namespace vg
             virtual ImFont *        GetFont                 (Font _font, Style _style = Style::Regular) = 0;
 
             virtual void            PushFont                (vg::renderer::Font _font) = 0;
+            virtual void            PushFont                (vg::renderer::Font _font, vg::renderer::Style _style) = 0;
             virtual void            PopFont                 () = 0;
 
             virtual void            PushStyle               (vg::renderer::Style _style) = 0;

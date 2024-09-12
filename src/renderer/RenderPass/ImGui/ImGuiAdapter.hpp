@@ -32,11 +32,12 @@ namespace vg::renderer
 
         for (uint j = 0; j < enumCount<Font>(); ++j)
         {
-            const auto font = (Font)j;
-
             for (uint i = 0; i < enumCount<Style>(); ++i)
             {
+                const auto font = (Font)j;
                 const auto style = (Style)i;
+
+                //const auto fontPath = getFontPath(font, style);
 
                 // Do not create all fonts upfront, create on-demand instead
                 //createFont(font, style);
@@ -69,34 +70,45 @@ namespace vg::renderer
     {
         switch (_font)
         {
-        case Font::UbuntuMono:
-        {
-            switch (_style)
+            case Font::Rowndies:
             {
-            case Style::Regular:
-                return "ubuntu/UbuntuMono-R.ttf";
-            case Style::Bold:
-                return "ubuntu/UbuntuMono-B.ttf";
-            case Style::Italic:
-                return "ubuntu/UbuntuMono-RI.ttf";
-            };
-        }
-        break;
+                switch (_style)
+                {
+                    case Style::Regular:
+                        return "Rowdies/Rowdies-Regular.ttf";
+                    case Style::Bold:
+                        return "Rowdies/Rowdies-Bold.ttf";
+                    case Style::Light:
+                        return "Rowdies/Rowdies-Light.ttf";
+                };
+            }
+            break;
 
-        //case Font::Awesome:
-        //    switch (_style)
-        //    {
-        //        case Style::Regular:
-        //            return "Font-Awesome-6.x/fa-regular-400.ttf";
-        //        case Style::Bold:
-        //            return "Font-Awesome-6.x/fa-regular-400.ttf";
-        //        case Style::Italic:
-        //            return "Font-Awesome-6.x/fa-regular-400.ttf";
-        //    };
-        //break;
+            case Font::RubikMonoOne:
+            {
+                switch (_style)
+                {
+                    case Style::Regular:
+                        return "RubikMonoOne/RubikMonoOne-Regular.ttf";
+                };
+            }
+            break;    
+
+            case Font::UbuntuMono:
+            {
+                switch (_style)
+                {
+                case Style::Regular:
+                    return "ubuntu/UbuntuMono-R.ttf";
+                case Style::Bold:
+                    return "ubuntu/UbuntuMono-B.ttf";
+                case Style::Italic:
+                    return "ubuntu/UbuntuMono-RI.ttf";
+                };
+            }
+            break;
         }
 
-        VG_ASSERT(false, "[ImGui] Could not get font %s - %s", asString(_font).c_str(), asString(_style).c_str());
         return nullptr;
     };
 
@@ -589,8 +601,16 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::PushFont(vg::renderer::Font _font)
     {
+        ImGui::PushFont(GetFont(_font, g_style));
         g_font = _font;
-        ImGui::PushFont(GetFont(g_font, g_style));
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::PushFont(vg::renderer::Font _font, vg::renderer::Style _style)
+    {
+        ImGui::PushFont(GetFont(_font, _style));
+        g_font = _font;
+        g_style = _style;
     }
 
     //--------------------------------------------------------------------------------------
@@ -602,8 +622,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::PushStyle(vg::renderer::Style _style)
     {
+        ImGui::PushFont(GetFont(g_font, _style));
         g_style = _style;
-        ImGui::PushFont(GetFont(g_font, g_style));
     }
 
     //--------------------------------------------------------------------------------------

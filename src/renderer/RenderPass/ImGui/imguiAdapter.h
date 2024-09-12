@@ -49,6 +49,7 @@ namespace vg
             ImFont *            GetFont                     (Font _font, Style _style = Style::Regular) final override;
 
             void                PushFont                    (vg::renderer::Font _font) final override;
+            void                PushFont                    (vg::renderer::Font _font, vg::renderer::Style _style) final override;
             void                PopFont                     () final override;
 
             void                PushStyle                   (vg::renderer::Style _style) final override;

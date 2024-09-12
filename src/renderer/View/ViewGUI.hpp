@@ -198,8 +198,7 @@ namespace vg::renderer
             switch (elem.m_type)
             {
                 case UIElementType::Text:
-                    imGuiAdapter->PushFont(elem.m_font);
-                    imGuiAdapter->PushStyle(elem.m_style);
+                    imGuiAdapter->PushFont(elem.m_font, elem.m_style);
                     break;
             }
 
@@ -308,7 +307,6 @@ namespace vg::renderer
                     }
 
                     imGuiAdapter->PopFont();
-                    imGuiAdapter->PopStyle();
                 }
             }
 

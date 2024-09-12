@@ -5,14 +5,16 @@ namespace vg
     namespace renderer
     {
         vg_enum_class(Font, vg::core::u8,
-            UbuntuMono
-            //Awesome
+            UbuntuMono = 0,
+            Rowndies,
+            RubikMonoOne
         );
 
         vg_enum_class(Style, vg::core::u8,
             Regular = 0,
             Bold,
-            Italic
+            Italic,
+            Light
         );
 
         vg_enum_class(Theme, vg::core::u8,

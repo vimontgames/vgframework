@@ -75,25 +75,26 @@ namespace vg::core
     );
 
     vg_enum_class(PropertyFlags, u64,
-        None            = 0x0000000000000000,
-        ReadOnly        = 0x0000000000000001,   // Cannot edit from GUI
-        Color           = 0x0000000000000002,   // Type represents a color (e.g. float4 or u32)
-        IsFolder        = 0x0000000000000004,   // String is a folder
-        IsFile          = 0x0000000000000008,   // String is a folder
-        HasRange        = 0x0000000000000010,   // Property has [min..max] range
-        SingleLine      = 0x0000000000000020,   // This property and the following ones will be displayed on the same line to save space
-        Radio           = 0x0000000000000040,   // Part of a radio button group
-        Debug           = 0x0000000000000080,   // A debug property that is hidden by default
-        Bitfield        = 0x0000000000000100,   // Value displayed as hex, enum as flags
-        Resource        = 0x0000000000000200,   // Property is a Resource
-        NotSaved        = 0x0000000000000400,   // Property is not saved nor loaded
-        EnumArray       = 0x0000000000000800,   // Property is fixed-size C array with element count the size of the enum
-        Flatten         = 0x0000000000001000,   // Do not open TreeNode to display object of this type
-        Optional        = 0x0000000000002000,   // Previous property must be a bool, and if 'false' then this value won't be editable
-        HDR             = 0x0000000000004000,   // HDR value for color
-        NotVisible      = 0x0000000000008000,   // A property that is not visible
-        Hexadecimal     = 0x0000000000010000,   // Display value using hexadecimal
-        EulerAngle      = 0x0000000000020000    // Edited value is Euler angle
+        None                = 0x0000000000000000,
+        ReadOnly            = 0x0000000000000001,   // Cannot edit from GUI
+        Color               = 0x0000000000000002,   // Type represents a color (e.g. float4 or u32)
+        IsFolder            = 0x0000000000000004,   // String is a folder
+        IsFile              = 0x0000000000000008,   // String is a folder
+        HasRange            = 0x0000000000000010,   // Property has [min..max] range
+        SingleLine          = 0x0000000000000020,   // This property and the following ones will be displayed on the same line to save space
+        Radio               = 0x0000000000000040,   // Part of a radio button group
+        Debug               = 0x0000000000000080,   // A debug property that is hidden by default
+        Bitfield            = 0x0000000000000100,   // Value displayed as hex, enum as flags
+        Resource            = 0x0000000000000200,   // Property is a Resource
+        NotSaved            = 0x0000000000000400,   // Property is not saved nor loaded
+        EnumArray           = 0x0000000000000800,   // Property is fixed-size C array with element count the size of the enum
+        Flatten             = 0x0000000000001000,   // Do not open TreeNode to display object of this type
+        Optional            = 0x0000000000002000,   // Previous property must be a bool, and if 'false' then this value won't be editable
+        HDR                 = 0x0000000000004000,   // HDR value for color
+        NotVisible          = 0x0000000000008000,   // A property that is not visible
+        Hexadecimal         = 0x0000000000010000,   // Display value using hexadecimal
+        EulerAngle          = 0x0000000000020000,   // Edited value is Euler angle
+        AlphabeticalOrder   = 0x0000000000040000    // Sort multiple values in alphabetical order (e.g. enums)
     );
 
     vg_enum_class(PropertyLayoutElement, u8,

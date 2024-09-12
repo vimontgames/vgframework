@@ -16,7 +16,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnum(UITextComponent, renderer::Font, m_font, "Font");
+        registerPropertyEnumEx(UITextComponent, renderer::Font, m_font, "Font", PropertyFlags::AlphabeticalOrder);
         registerPropertyEnum(UITextComponent, renderer::Style, m_style, "Style");
         registerProperty(UITextComponent, m_text, "Text");
 
