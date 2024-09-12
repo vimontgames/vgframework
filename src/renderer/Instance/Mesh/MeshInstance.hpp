@@ -374,11 +374,14 @@ namespace vg::renderer
         if (nullptr == m_instanceSkeleton && nullptr == _skeleton)
             return false;
 
-        VG_SAFE_RELEASE(m_instanceSkeleton);
-
-        if (nullptr != _skeleton)
+        if (_skeleton == nullptr)
         {
-            m_instanceSkeleton = new Skeleton("InstanceSkeleton", this);
+            VG_SAFE_RELEASE(m_instanceSkeleton);
+        }
+        else
+        {
+            if (nullptr == m_instanceSkeleton)
+                m_instanceSkeleton = new Skeleton("InstanceSkeleton", this);
 
             m_instanceSkeleton->setNodes(_skeleton->getNodes());
             m_instanceSkeleton->setBoneIndices(_skeleton->getBoneIndices());
