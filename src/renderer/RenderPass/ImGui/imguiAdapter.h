@@ -46,7 +46,7 @@ namespace vg
             void                render                      (gfx::CommandList * _cmdList);
 
             void                AddBeginFrameCallback       (BeginFrameCallback _func);
-            ImFont *            GetFont                     (Font _font, Style _style = Style::Regular) const final override;
+            ImFont *            GetFont                     (Font _font, Style _style = Style::Regular) final override;
 
             void                PushFont                    (vg::renderer::Font _font) final override;
             void                PopFont                     () final override;
@@ -57,21 +57,21 @@ namespace vg
         protected:
             ImTextureID         getTextureID                (const gfx::Texture * _texture);
             void                releaseTextureID            (const gfx::Texture * _texture);
-
             void                releaseUserDescriptors      ();
 
-            void                resetGUITheme               ();
+            static const char * getFontPath                 (Font _font, Style _style);
+            bool                createFont                  (Font _font, Style _style);
+            void                updateFonts                 ();
 
+            void                resetGUITheme               ();
             void                setGUITheme_ImGui_Classic   ();
             void                setGUITheme_ImGui_Dark      ();
             void                setGUITheme_ImGui_Light     ();
             void                setGUIThemeVimontGames_Grey ();
             void                setGUIThemeVimontGames_Dark ();
-
             void                onGUIThemeChanged           ();
 
             gfx::PixelFormat    getOutputPixelFormat        () const;
-
             void                updateBackbufferFormat      ();
 
             #ifdef VG_VULKAN
@@ -80,6 +80,7 @@ namespace vg
 
         private:
             gfx::BindlessTextureHandle          m_fontTexHandle;
+            bool                                m_rebuildFontTex = false;
 
             core::vector<BeginFrameCallback>    m_beginFrameCallbacks;
 
@@ -108,7 +109,13 @@ namespace vg
             ImVec4                              m_warningColor;
             ImVec4                              m_errorColor;
 
-            ImFont *                            m_imGuiFont[core::enumCount<Font>()][core::enumCount<Style>()];
+            struct ImFontInfo
+            {
+                bool     needed = false;
+                bool     failed = false;
+                ImFont * ptr    = nullptr;
+            };
+            ImFontInfo                          m_imGuiFont[core::enumCount<Font>()][core::enumCount<Style>()];
         };
     }
 }

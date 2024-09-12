@@ -37,7 +37,7 @@ namespace vg
             virtual void            ReleaseTextureID        (const gfx::ITexture * _texture) = 0;
 
             virtual void            AddBeginFrameCallback   (BeginFrameCallback _func) = 0;
-            virtual ImFont *        GetFont                 (Font _font, Style _style = Style::Regular) const = 0;
+            virtual ImFont *        GetFont                 (Font _font, Style _style = Style::Regular) = 0;
 
             virtual void            PushFont                (vg::renderer::Font _font) = 0;
             virtual void            PopFont                 () = 0;

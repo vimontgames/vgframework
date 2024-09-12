@@ -19,42 +19,6 @@ namespace vg::renderer
     static uint max_imguitex_displayed_per_frame = 64;
 
     //--------------------------------------------------------------------------------------
-    string getFontPath(Font _font, Style _style)
-    {
-        switch (_font)
-        {
-            case Font::UbuntuMono:
-            {
-                switch (_style)
-                {
-                    case Style::Regular:
-                        return "ubuntu/UbuntuMono-R.ttf";
-                    case Style::Bold:
-                        return "ubuntu/UbuntuMono-B.ttf";
-                    case Style::Italic:
-                        return "ubuntu/UbuntuMono-RI.ttf";
-                };
-            }
-            break;
-
-            //case Font::Awesome:
-            //    switch (_style)
-            //    {
-            //        case Style::Regular:
-            //            return "Font-Awesome-6.x/fa-regular-400.ttf";
-            //        case Style::Bold:
-            //            return "Font-Awesome-6.x/fa-regular-400.ttf";
-            //        case Style::Italic:
-            //            return "Font-Awesome-6.x/fa-regular-400.ttf";
-            //    };
-            //break;
-        }
-
-        VG_ASSERT(false, "[ImGui] Could not get font %s - %s", asString(_font).c_str(), asString(_style).c_str());
-        return "";
-    };
-
-    //--------------------------------------------------------------------------------------
     // TODO: move themes to editor?
     //--------------------------------------------------------------------------------------
     ImGuiAdapter::ImGuiAdapter(WinHandle _winHandle, Device & _device)
@@ -63,9 +27,8 @@ namespace vg::renderer
         ImGuiIO & io = ImGui::GetIO();
         io.ConfigWindowsMoveFromTitleBarOnly = true;
 
-        io.ConfigFlags |= /*ImGuiConfigFlags_NavEnableKeyboard |*/ ImGuiConfigFlags_DockingEnable;
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigDockingTransparentPayload = true;
-        //io.ConfigDragClickToInputText = true;
 
         for (uint j = 0; j < enumCount<Font>(); ++j)
         {
@@ -75,28 +38,17 @@ namespace vg::renderer
             {
                 const auto style = (Style)i;
 
-                auto fontPath = getFontPath(font, style);
-
-                if (!fontPath.empty())
-                {
-                    fontPath = "data/Fonts/" + fontPath;
-
-                    io.Fonts->AddFontFromFileTTF(fontPath.c_str(), editor::style::font::Height);
-
-                    float baseFontSize = editor::style::font::Height;
-                    float iconFontSize = baseFontSize;// *2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
-
-                    // merge in icons from Font Awesome
-                    static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
-                    ImFontConfig icons_config;
-                    icons_config.MergeMode = true;
-                    icons_config.PixelSnapH = true;
-                    icons_config.GlyphMinAdvanceX = iconFontSize;
-                    m_imGuiFont[j][i] = io.Fonts->AddFontFromFileTTF("data/Fonts/Font-Awesome-6.x/" FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
-                }
+                // Do not create all fonts upfront, create on-demand instead
+                //createFont(font, style);
             }
-        }   
-        io.Fonts->Build();
+        }
+
+        // Mandatory fonts
+        m_imGuiFont[asInteger(Font::UbuntuMono)][asInteger(Style::Regular)].needed = true;
+        m_imGuiFont[asInteger(Font::UbuntuMono)][asInteger(Style::Bold)].needed = true;
+        m_imGuiFont[asInteger(Font::UbuntuMono)][asInteger(Style::Italic)].needed = true;
+
+        updateFonts();
 
         #ifdef _WIN32
         ImGui_ImplWin32_Init(_winHandle);
@@ -110,6 +62,114 @@ namespace vg::renderer
         #elif defined(VG_VULKAN)
         vulkanInit();
         #endif 
+    }
+
+    //--------------------------------------------------------------------------------------
+    const char * ImGuiAdapter::getFontPath(Font _font, Style _style)
+    {
+        switch (_font)
+        {
+        case Font::UbuntuMono:
+        {
+            switch (_style)
+            {
+            case Style::Regular:
+                return "ubuntu/UbuntuMono-R.ttf";
+            case Style::Bold:
+                return "ubuntu/UbuntuMono-B.ttf";
+            case Style::Italic:
+                return "ubuntu/UbuntuMono-RI.ttf";
+            };
+        }
+        break;
+
+        //case Font::Awesome:
+        //    switch (_style)
+        //    {
+        //        case Style::Regular:
+        //            return "Font-Awesome-6.x/fa-regular-400.ttf";
+        //        case Style::Bold:
+        //            return "Font-Awesome-6.x/fa-regular-400.ttf";
+        //        case Style::Italic:
+        //            return "Font-Awesome-6.x/fa-regular-400.ttf";
+        //    };
+        //break;
+        }
+
+        VG_ASSERT(false, "[ImGui] Could not get font %s - %s", asString(_font).c_str(), asString(_style).c_str());
+        return nullptr;
+    };
+
+    //--------------------------------------------------------------------------------------
+    bool ImGuiAdapter::createFont(Font _font, Style _style)
+    {
+        const auto fontPath = getFontPath(_font, _style);
+        auto & slot = m_imGuiFont[asInteger(_font)][asInteger(_style)];
+
+        if (fontPath)
+        {
+            string fontFullPath = fmt::sprintf("data/Fonts/%s", fontPath);
+
+            ImGuiIO & io = ImGui::GetIO();
+            io.Fonts->AddFontFromFileTTF(fontFullPath.c_str(), editor::style::font::Height);
+
+            float baseFontSize = editor::style::font::Height;
+            float iconFontSize = baseFontSize;// *2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
+
+            // merge in icons from Font Awesome
+            static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+            ImFontConfig icons_config;
+            icons_config.MergeMode = true;
+            icons_config.PixelSnapH = true;
+            icons_config.GlyphMinAdvanceX = iconFontSize;
+            slot.ptr = io.Fonts->AddFontFromFileTTF("data/Fonts/Font-Awesome-6.x/" FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
+        }
+
+        return nullptr != slot.ptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::updateFonts()
+    {
+        bool dirty = false;
+
+        for (uint j = 0; j < enumCount<Font>(); ++j)
+        {
+            for (uint i = 0; i < enumCount<Style>(); ++i)
+            {
+                auto & slot = m_imGuiFont[j][i];
+                if (slot.ptr == nullptr && slot.needed && !slot.failed)
+                {
+                    auto font = (Font)j;
+                    auto style = (Style)i;
+
+                    const char * path = getFontPath(font, style);
+
+                    if (createFont(font, style))
+                    {
+                        dirty = true;
+
+                        VG_INFO("[UI] Created font texture [%s][%s] from file \"%s\"", asString(font).c_str(), asString(style).c_str(), path);
+                    }
+                    else
+                    {
+                        slot.failed = true;
+
+                        if (path)
+                            VG_ERROR("[UI] Could not create font texture [%s][%s] from file \"%s\"", asString(font).c_str(), asString(style).c_str(), path);
+                        else
+                            VG_ERROR("[UI] Could not create font texture [%s][%s]", asString(font).c_str(), asString(style).c_str());
+                    }
+                }
+            }
+        }
+        
+        if (dirty)
+        {
+            ImGuiIO & io = ImGui::GetIO();
+            io.Fonts->Build();
+            m_rebuildFontTex = true;
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -321,30 +381,38 @@ namespace vg::renderer
         VG_PROFILE_CPU("Dear Imgui");
 
         gfx::Device * device = Device::get();
-        static bool firstFrame = true;
 
         updateBackbufferFormat();
 
+        updateFonts();
+
         #ifdef VG_DX12
+        static bool first = true;
+
+        if (m_rebuildFontTex)
+        {
+            ImGui_ImplDX12_CreateFontsTexture();
+            m_rebuildFontTex = false;
+            first = true;
+        }
 
         ImGui_ImplDX12_NewFrame();
-        if (firstFrame)
+  
+        if (first)
         {
             BindlessTable * bindlessTable = device->getBindlessTable();
             bindlessTable->updated3d12descriptor(m_fontTexHandle);
-            firstFrame = false;
+            first = false;
         }
 
         #elif defined(VG_VULKAN)
 
         ImGui_ImplVulkan_NewFrame();
-        if (firstFrame)
+        if (m_rebuildFontTex)
         {
-
             CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[0];
             ImGui_ImplVulkan_CreateFontsTexture(cmdList->getVulkanCommandBuffer());
-
-            firstFrame = false;
+            m_rebuildFontTex = false;
         }
 
         #endif
@@ -499,9 +567,20 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    ImFont * ImGuiAdapter::GetFont(Font _font, Style _style) const
+    ImFont * ImGuiAdapter::GetFont(Font _font, Style _style)
     {
-        return m_imGuiFont[asInteger(_font)][asInteger(_style)];
+        auto & info = m_imGuiFont[asInteger(_font)][asInteger(_style)];
+
+        if (!info.ptr)
+        {
+            // Rebuild font next frame
+            info.needed = true;
+
+            //if (createFont(_font, _style);
+            //updateFonts();
+        }
+
+        return info.ptr;
     }
 
     static Font g_font = Font::UbuntuMono;
