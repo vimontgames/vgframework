@@ -393,10 +393,9 @@ namespace vg::renderer
         VG_PROFILE_CPU("Dear Imgui");
 
         gfx::Device * device = Device::get();
-
-        updateBackbufferFormat();
-
+ 
         updateFonts();
+        updateBackbufferFormat();
 
         #ifdef VG_DX12
         static bool first = true;
@@ -486,6 +485,7 @@ namespace vg::renderer
             ImGui_ImplDX12_InvalidateDeviceObjects();
             bd->RTVFormat = renderOutputFormat;
             ImGui_ImplDX12_CreateDeviceObjects();
+            m_rebuildFontTex = true;
         }
 
         #elif defined(VG_VULKAN)
@@ -530,7 +530,10 @@ namespace vg::renderer
         #elif defined(VG_VULKAN)
         ImGui::Render();
         ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), _cmdList->getVulkanCommandBuffer(), nullptr);
-        #endif        
+        #endif   
+
+        // Clear gfx state cache after rendering ImGui because it could have changed any gfx state
+        _cmdList->clearStateCache();
     }
 
     //--------------------------------------------------------------------------------------
