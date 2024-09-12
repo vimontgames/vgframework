@@ -53,6 +53,7 @@ namespace vg::engine
 
     protected:
         void                                mergeStaticBodies       ();
+        void                                clearUI                 ();
 
     private:
         core::IBaseScene *                  m_activeScene[core::enumCount<core::BaseSceneType>()];

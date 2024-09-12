@@ -11,6 +11,7 @@
 #include "core/IInput.h"
 #include "core/Timer/Timer.h"
 #include "core/Math/Math.h"
+#include "gfx/IViewGUI.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IDebugDraw.h"
 
@@ -169,6 +170,9 @@ namespace vg::engine
             _scene->SetParent(nullptr);
             _scene->release();
         }
+
+        clearUI();
+
         return false;
     }
 
@@ -185,7 +189,31 @@ namespace vg::engine
         }
         m_scenes[typeIndex].clear();
         SetActiveScene(nullptr, _sceneType);
+
+        clearUI();
+
         return (uint)sceneCount;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // This is a hack to fix issue when a Prefab is being release (e.g. "Save & Update")
+    // As it happens during render, we might end up rendering UI that is using objects that just been released
+    // But it can cause flickering in all views
+    //--------------------------------------------------------------------------------------
+    void World::clearUI()
+    {
+        auto * renderer = Engine::get()->GetRenderer();
+        for (auto target = 0; target < enumCount<gfx::ViewTarget>(); ++target)
+        {
+            for (auto * view : renderer->GetViews((gfx::ViewTarget)target))
+                view->GetViewGUI()->Clear();
+        }
+
+        for (auto target = 0; target < enumCount<gfx::ViewportTarget>(); ++target)
+        {
+            for (auto * viewport : renderer->GetViewports((gfx::ViewportTarget)target))
+                viewport->GetViewportGUI()->Clear();
+        }
     }
 
     //--------------------------------------------------------------------------------------

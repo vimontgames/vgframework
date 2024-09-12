@@ -29,6 +29,8 @@ namespace vg::renderer
         void            RenderFullscreen    () final override;
         void            RenderWindowed      () final override;
 
+        void            Clear               () final override;
+
     protected:
         void            render              ();
         core::uint2     getSize             () const;

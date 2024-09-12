@@ -80,6 +80,8 @@ namespace vg::gfx
         virtual void AddText            (const UICanvas * _canvas, const UIItem & _desc, const core::string & _text, renderer::Font _font, renderer::Style _style) = 0;
         virtual void AddImage           (const UICanvas * _canvas, const UIItem & _desc, const gfx::ITexture * _texture) = 0;
 
+        virtual void Clear              () = 0;
+
         virtual void RenderFullscreen   () = 0;
         virtual void RenderWindowed     () = 0;
     };

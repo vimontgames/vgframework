@@ -110,7 +110,7 @@ namespace vg::renderer
         gfx::ViewCullingStats               GetViewCullingStats         () const final override;
 
         gfx::IViewGUI *                     GetViewGUI                  () const final override;
-
+        
         core::vector<gfx::FrameGraphResourceID>  getShadowMaps          () const;
 
         VG_INLINE const Frustum &           getCameraFrustum            () const;

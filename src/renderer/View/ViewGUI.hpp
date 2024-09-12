@@ -91,6 +91,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void ViewGUI::Clear()
+    {
+        m_uiElements.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
     void ViewGUI::render()
     {
         sort(m_uiElements.begin(), m_uiElements.end(), [](UIElement & a, UIElement & b)
