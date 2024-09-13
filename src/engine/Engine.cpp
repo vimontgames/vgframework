@@ -47,8 +47,6 @@ using namespace vg::engine;
 #define VG_ENGINE_VERSION_MAJOR 0
 #define VG_ENGINE_VERSION_MINOR 1
 
-#pragma optimize("", off)
-
 //--------------------------------------------------------------------------------------
 IEngine * CreateNew()
 {

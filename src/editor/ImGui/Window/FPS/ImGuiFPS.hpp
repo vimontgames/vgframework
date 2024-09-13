@@ -1,8 +1,6 @@
 #include "ImguiFPS.h"
 #include "editor/Editor_Consts.h"
 
-#pragma optimize("", off)
-
 namespace vg::editor
 {
     //--------------------------------------------------------------------------------------
