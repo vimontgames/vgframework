@@ -38,6 +38,7 @@ namespace vg
 
             virtual void            AddBeginFrameCallback   (BeginFrameCallback _func) = 0;
             virtual ImFont *        GetFont                 (Font _font, Style _style = Style::Regular) = 0;
+            virtual const char *    GetFontPath             (Font _font, Style _style) const = 0;
 
             virtual void            PushFont                (vg::renderer::Font _font) = 0;
             virtual void            PushFont                (vg::renderer::Font _font, vg::renderer::Style _style) = 0;

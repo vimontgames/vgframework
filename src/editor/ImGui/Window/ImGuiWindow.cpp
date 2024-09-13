@@ -401,7 +401,7 @@ namespace vg::editor
                 // Font/Style enum case (preview)
                 if ((renderer::Font)-1 != font)
                 {
-                    if (!imGuiAdapter->GetFont(font, (renderer::Style)pair.value))
+                    if (nullptr == imGuiAdapter->GetFontPath(font, (renderer::Style)pair.value))
                         previewDisabled = true;
                 }
 
@@ -432,7 +432,7 @@ namespace vg::editor
                 // Font/Style enum case (selectable)
                 if ((renderer::Font)-1 != font)
                 {
-                    if (!imGuiAdapter->GetFont(font, (renderer::Style)pair.value))
+                    if (nullptr == imGuiAdapter->GetFontPath(font, (renderer::Style)pair.value))
                         selectableDisabled = true;
                 }
 

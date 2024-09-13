@@ -47,6 +47,7 @@ namespace vg
 
             void                AddBeginFrameCallback       (BeginFrameCallback _func);
             ImFont *            GetFont                     (Font _font, Style _style = Style::Regular) final override;
+            const char *        GetFontPath                 (Font _font, Style _style) const final override;
 
             void                PushFont                    (vg::renderer::Font _font) final override;
             void                PushFont                    (vg::renderer::Font _font, vg::renderer::Style _style) final override;
@@ -60,7 +61,7 @@ namespace vg
             void                releaseTextureID            (const gfx::Texture * _texture);
             void                releaseUserDescriptors      ();
 
-            static const char * getFontPath                 (Font _font, Style _style);
+
             bool                createFont                  (Font _font, Style _style);
             void                updateFonts                 ();
 

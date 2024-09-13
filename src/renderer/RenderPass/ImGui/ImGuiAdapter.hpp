@@ -66,7 +66,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    const char * ImGuiAdapter::getFontPath(Font _font, Style _style)
+    const char * ImGuiAdapter::GetFontPath(Font _font, Style _style) const
     {
         switch (_font)
         {
@@ -115,7 +115,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool ImGuiAdapter::createFont(Font _font, Style _style)
     {
-        const auto fontPath = getFontPath(_font, _style);
+        const auto fontPath = GetFontPath(_font, _style);
         auto & slot = m_imGuiFont[asInteger(_font)][asInteger(_style)];
 
         if (fontPath)
@@ -155,7 +155,7 @@ namespace vg::renderer
                     auto font = (Font)j;
                     auto style = (Style)i;
 
-                    const char * path = getFontPath(font, style);
+                    const char * path = GetFontPath(font, style);
 
                     if (createFont(font, style))
                     {
@@ -588,11 +588,11 @@ namespace vg::renderer
 
         if (!info.ptr)
         {
-            // Rebuild font next frame
-            info.needed = true;
+            info.needed = true; // Rebuild font next frame
 
-            //if (createFont(_font, _style);
-            //updateFonts();
+            // Fallback to regular style if not found
+            if (_style != Style::Regular)
+                return GetFont(_font, Style::Regular);
         }
 
         return info.ptr;
