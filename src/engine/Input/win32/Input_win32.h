@@ -53,6 +53,8 @@ namespace vg::engine::win32
         core::uint      GetJoyCount                 () const override;
         core::float2    GetJoyLeftStickDir          (core::JoyID _id) const final override;
         core::float2    GetJoyRightStickDir         (core::JoyID _id) const final override;
+        float           GetLeftTrigger              (core::JoyID _id) const final override;
+        float           GetRightTrigger             (core::JoyID _id) const final override;
         bool            IsJoyButtonPressed          (core::JoyID _id, core::JoyButton _button) const final override;
         bool            IsJoyButtonJustPressed      (core::JoyID _id, core::JoyButton _button) const final override;
         bool            IsJoyButtonJustReleased     (core::JoyID _id, core::JoyButton _button) const final override;

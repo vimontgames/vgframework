@@ -24,6 +24,8 @@ namespace vg::engine
     {
         core::float2    m_leftStickDir = core::uint2(0, 0);
         core::float2    m_rightStickDir = core::uint2(0, 0);
+        float           m_leftTrigger = 0.0f;
+        float           m_rightTrigger = 0.0f;
         bool            m_pressed[core::enumCount<core::JoyButton>()];
         bool            m_wasPressed[core::enumCount<core::JoyButton>()];
     };

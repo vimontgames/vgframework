@@ -126,6 +126,7 @@ namespace vg::editor
 
                     Text("LeftStick");
                     Text("RightStick");
+                    Text("Triggers");
 
                     for (uint b = 0; b < enumCount<core::JoyButton>(); ++b)
                     {
@@ -141,6 +142,8 @@ namespace vg::editor
 
                     const float2 & joyRightDir = input->GetJoyRightStickDir(id);
                     Text("(%.2f, %.2f)", (float)joyRightDir.x, (float)joyRightDir.y);
+
+                    Text("(%.2f, %.2f)", input->GetLeftTrigger(id), input->GetRightTrigger(id));
 
                     for (uint b = 0; b < enumCount<core::JoyButton>(); ++b)
                     {

@@ -508,6 +508,9 @@ namespace vg::engine::win32
                 joy.m_rightStickDir.x = float(state.lRx) / 100.0f;
                 joy.m_rightStickDir.y = float(state.lRy) / 100.0f;
 
+                joy.m_leftTrigger = state.lZ > 0? saturate(+float(state.lZ) / 100.0f) : 0;
+                joy.m_rightTrigger = state.lZ < 0? saturate(-float(state.lZ) / 100.0f) : 0 ;
+
                 for (uint b = 0; b < enumCount<JoyButton>(); ++b)
                 {
                     joy.m_wasPressed[b] = joy.m_pressed[b];
@@ -556,6 +559,18 @@ namespace vg::engine::win32
     core::float2 Input::GetJoyRightStickDir(core::JoyID _id) const
     {
         return m_joystickData[_id].m_rightStickDir;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float Input::GetLeftTrigger(core::JoyID _id) const
+    {
+        return m_joystickData[_id].m_leftTrigger;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float Input::GetRightTrigger(core::JoyID _id) const
+    {
+        return m_joystickData[_id].m_rightTrigger;
     }
 
     //--------------------------------------------------------------------------------------
