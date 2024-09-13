@@ -15,13 +15,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Behaviour\Ball\BallBehaviour.cpp" />
     <ClCompile Include="Behaviour\Camera\GameCameraBehaviour.cpp" />
     <ClCompile Include="Behaviour\Character\CharacterBehaviour.cpp" />
-    <ClInclude Include="Behaviour\Ball\BallBehaviour.h" />
     <ClInclude Include="Behaviour\Camera\GameCameraBehaviour.h" />
     <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.hpp" />
     <ClCompile Include="Behaviour\Goal\GoalBehaviour.cpp" />
+    <ClCompile Include="Behaviour\Item\ItemBehaviour.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -35,6 +34,9 @@
     <ClInclude Include="Behaviour\Character\Enemy\EnemyBehaviour.hpp" />
     <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.h" />
     <ClInclude Include="Behaviour\Goal\GoalBehaviour.h" />
+    <ClInclude Include="Behaviour\Item\Ball\BallBehaviour.h" />
+    <ClInclude Include="Behaviour\Item\Ball\BallBehaviour.hpp" />
+    <ClInclude Include="Behaviour\Item\ItemBehaviour.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Game_consts.h" />
     <ClInclude Include="Precomp.h" />

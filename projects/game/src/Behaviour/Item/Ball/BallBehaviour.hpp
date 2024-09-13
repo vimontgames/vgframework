@@ -1,4 +1,3 @@
-#include "Precomp.h"
 #include "BallBehaviour.h"
 #include "editor/Editor_Consts.h"
 #include "Game.h"
@@ -11,7 +10,7 @@ VG_REGISTER_COMPONENT_CLASS(BallBehaviour, "Ball", "Game", "A ball used to play 
 
 //--------------------------------------------------------------------------------------
 BallBehaviour::BallBehaviour(const string & _name, IObject * _parent) :
-    super(_name, _parent)
+    super(_name, _parent, ItemType::Ball)
 {
 
 }

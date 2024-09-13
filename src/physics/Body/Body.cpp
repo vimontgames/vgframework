@@ -150,4 +150,10 @@ namespace vg::physics
         quaternion quat = quaternion(rot);
         m_physicsWorld->getBodyInterface().SetPositionAndRotation(m_bodyID, getJoltVec3(_world[3].xyz), getJoltQuaternion(quat), JPH::EActivation::Activate);
     }
+
+    //--------------------------------------------------------------------------------------
+    void Body::AddImpulse(const core::float3 & _impulse)
+    {
+        m_physicsWorld->getBodyInterface().AddImpulse(m_bodyID, getJoltVec3(_impulse));
+    }
 }

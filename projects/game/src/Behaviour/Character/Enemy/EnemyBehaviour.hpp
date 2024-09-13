@@ -14,7 +14,7 @@ VG_REGISTER_COMPONENT_CLASS(EnemyBehaviour, "Enemy", "Game", "Player Behaviour",
 
 //--------------------------------------------------------------------------------------
 EnemyBehaviour::EnemyBehaviour(const string & _name, IObject * _parent) :
-    super(_name, _parent)
+    super(_name, _parent, CharacterType::Enemy)
 {
     SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
 }
@@ -44,13 +44,11 @@ bool EnemyBehaviour::registerProperties(IClassDesc & _desc)
 void EnemyBehaviour::OnPlay()
 {
     super::OnPlay();
-    Game::get()->addCharacter(CharacterType::Enemy, this);
 }
 
 //--------------------------------------------------------------------------------------
 void EnemyBehaviour::OnStop()
 {
-    Game::get()->removeCharacter(CharacterType::Enemy, this);
     super::OnStop();
 }
 

@@ -28,12 +28,14 @@ namespace vg::engine
         void                                    OnStop              () final override;
         void                                    OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
         bool                                    TryGetAABB          (core::AABB & _aabb) const final override;
-        core::u32                               getShapesColor      () const;
+
+        void                                    AddImpulse          (const core::float3 & _impulse) final override;
 
         void                                    onShapeUpdated      ();
         void                                    updateShapesColor   ();
 
         core::vector<PhysicsShapeComponent *>   getShapes           () const;
+        core::u32                               getShapesColor      () const;
         const physics::IBodyDesc *              getBodyDesc         () const { return m_bodyDesc; }
 
     private:

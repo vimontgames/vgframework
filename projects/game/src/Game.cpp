@@ -133,8 +133,31 @@ const vg::core::vector<PlayerBehaviour *> & Game::getPlayers() const
 { 
     return reinterpret_cast<const vg::core::vector<PlayerBehaviour *> &>(m_characters[vg::core::asInteger(CharacterType::Player)]);
 }
+
 //--------------------------------------------------------------------------------------
 const vg::core::vector<EnemyBehaviour *> & Game::getEnemies() const 
 { 
     return reinterpret_cast<const vg::core::vector<EnemyBehaviour *> &>(m_characters[vg::core::asInteger(CharacterType::Player)]);
+}
+
+//--------------------------------------------------------------------------------------
+void Game::addItem(ItemType _type, ItemBehaviour * _item)
+{
+    auto & items = m_items[vg::core::asInteger(_type)];
+    VG_ASSERT(!vector_helper::exists(items, _item));
+    items.push_back(_item);
+}
+
+//--------------------------------------------------------------------------------------
+void Game::removeItem(ItemType _type, ItemBehaviour * _item)
+{
+    auto & items = m_items[vg::core::asInteger(_type)];
+    VG_ASSERT(vector_helper::exists(items, _item));
+    vector_helper::remove(items, _item);
+}
+
+//--------------------------------------------------------------------------------------
+const vg::core::vector<BallBehaviour *> & Game::getBalls() const
+{
+    return reinterpret_cast<const vg::core::vector<BallBehaviour *> &>(m_items[vg::core::asInteger(ItemType::Ball)]);
 }

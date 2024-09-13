@@ -1,11 +1,14 @@
 #include "Precomp.h"
 #include "PlayerBehaviour.h"
 #include "Game.h"
+#include "Behaviour/Item/Ball/BallBehaviour.h"
 #include "engine/ICharacterControllerComponent.h"
 #include "engine/IUITextComponent.h"
+#include "engine/IPhysicsBodyComponent.h"
 #include "editor/Editor_Consts.h"
 #include "core/GameObject/GameObject.h"
 #include "core/IWorld.h"
+#include "core/Math/Math.h"
 #include "core/string/string.h"
 
 using namespace vg::core;
@@ -15,7 +18,7 @@ VG_REGISTER_COMPONENT_CLASS(PlayerBehaviour, "Player", "Game", "Player Behaviour
 
 //--------------------------------------------------------------------------------------
 PlayerBehaviour::PlayerBehaviour(const string & _name, IObject * _parent) :
-    super(_name, _parent)
+    super(_name, _parent, CharacterType::Player)
 {
     SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
 
@@ -36,13 +39,13 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 
     registerPropertyGroupBegin(PlayerBehaviour, "Player");
     {
-        registerPropertyEnum(PlayerBehaviour, vg::core::InputType, m_controllerType, "Input");
+        registerPropertyEnum(PlayerBehaviour, InputType, m_controllerType, "Input");
         setPropertyDescription(PlayerBehaviour, m_controllerType, "Input type used by player");
 
         registerProperty(PlayerBehaviour, m_controllerIndex, "Index");
         setPropertyDescription(PlayerBehaviour, m_controllerIndex, "Input index used to differenciate different inputs (e.g. Joypads)");
 
-        registerPropertyEx(PlayerBehaviour, m_customColor, "Custom Color", vg::core::PropertyFlags::Color);
+        registerPropertyEx(PlayerBehaviour, m_customColor, "Custom Color", PropertyFlags::Color);
         setPropertyDescription(PlayerBehaviour, m_customColor, "Custom color used for elements controller by this player");
 
         registerProperty(PlayerBehaviour, m_UI, "UI");
@@ -58,7 +61,6 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 void PlayerBehaviour::OnPlay()
 {
     super::OnPlay();
-    Game::get()->addCharacter(CharacterType::Player, this);
 
     // Compute initial rotation around Z axis
     const auto global = GetGameObject()->GetGlobalMatrix();
@@ -68,7 +70,6 @@ void PlayerBehaviour::OnPlay()
 //--------------------------------------------------------------------------------------
 void PlayerBehaviour::OnStop()
 {
-    Game::get()->removeCharacter(CharacterType::Player, this);
     super::OnStop();
 }
 
@@ -106,8 +107,15 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
             float3 translation = float3(0, 0, 0);
             const float joyDeadZone = 0.15f;
 
-            bool running = input.IsJoyButtonPressed(joyID, JoyButton::X);
-            m_currentSpeed = running ? m_runSpeed : m_walkSpeed;
+            float runAmount = input.GetRightTrigger(joyID);
+            if (runAmount > joyDeadZone)
+                runAmount = lerp(0.0f, 1.0f, saturate(runAmount - joyDeadZone) / (1.0f - joyDeadZone));
+            else
+                runAmount = 0.0f;
+
+            bool running = runAmount > 0.0f;
+
+            m_currentSpeed = lerp(m_walkSpeed, m_runSpeed, runAmount);
 
             const float2 leftJoyDir = input.GetJoyLeftStickDir(joyID);
 
@@ -152,7 +160,31 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     if (anim->IsFinished())
                         m_state = CharacterState::Idle;
                 }                    
-            }    
+            }  
+
+            if (input.IsJoyButtonJustPressed(joyID, JoyButton::X))
+            {
+                // kick
+                auto & balls = Game::get()->getBalls();
+                for (uint i = 0; i < balls.size(); ++i)
+                {
+                    auto & ball = balls[i];
+
+                    float3 delta = ball->GetGameObject()->GetGlobalMatrix()[3].xyz - this->GetGameObject()->GetGlobalMatrix()[3].xyz;
+                    float dist = length(delta);
+                    if (dist < 1)
+                    {
+                        float3 dir = normalize(delta);
+                        
+                        if (auto * physicsBody = ball->GetGameObject()->GetComponentT<vg::engine::IPhysicsBodyComponent>())
+                        {
+                            //VG_INFO("[Player] Kick ball %u (dist = %.2f, dir = %.2f, %.2f, %.2f)", i, dist, dir.x, dir.y, dir.z);
+                            float kickStrength = lerp(250.0f, 400.0f, runAmount);
+                            physicsBody->AddImpulse(dir * kickStrength);
+                        }
+                    }
+                }
+            }
 
             if (charaController)
             {
@@ -193,19 +225,19 @@ void PlayerBehaviour::Update(const Context & _context)
                 if (IGameObject * lifeGO = uiGO->GetChildGameObject("Life"))
                 {
                     if (IUITextComponent * lifeComp = lifeGO->GetComponentT<IUITextComponent>())
-                        lifeComp->SetText(fmt::sprintf("Life  %u", m_life));
+                        lifeComp->SetText(fmt::sprintf("Life   %u", m_life));
                 }
 
                 if (IGameObject * hpGO = uiGO->GetChildGameObject("HP"))
                 {
                     if (IUITextComponent * textComp = hpGO->GetComponentT<IUITextComponent>())
-                        textComp->SetText(fmt::sprintf("HP    %.0f%%", m_hp));
+                        textComp->SetText(fmt::sprintf("Health %.0f%%", m_hp));
                 }
 
                 if (IGameObject * scoreGO = uiGO->GetChildGameObject("Score"))
                 {
                     if (IUITextComponent * scoreComp = scoreGO->GetComponentT<IUITextComponent>())
-                        scoreComp->SetText(fmt::sprintf("Score %i", m_score));
+                        scoreComp->SetText(fmt::sprintf("Score  %i", m_score));
                 }
             }
         }

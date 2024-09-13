@@ -9,11 +9,11 @@
     <ClCompile Include="Behaviour\Goal\GoalBehaviour.cpp">
       <Filter>Behaviour\Goal</Filter>
     </ClCompile>
-    <ClCompile Include="Behaviour\Ball\BallBehaviour.cpp">
-      <Filter>Behaviour\Ball</Filter>
-    </ClCompile>
     <ClCompile Include="Behaviour\Camera\GameCameraBehaviour.cpp">
       <Filter>Behaviour\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Behaviour\Item\ItemBehaviour.cpp">
+      <Filter>Behaviour\Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -38,11 +38,17 @@
     <ClInclude Include="Behaviour\Goal\GoalBehaviour.h">
       <Filter>Behaviour\Goal</Filter>
     </ClInclude>
-    <ClInclude Include="Behaviour\Ball\BallBehaviour.h">
-      <Filter>Behaviour\Ball</Filter>
-    </ClInclude>
     <ClInclude Include="Behaviour\Camera\GameCameraBehaviour.h">
       <Filter>Behaviour\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Item\ItemBehaviour.h">
+      <Filter>Behaviour\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Item\Ball\BallBehaviour.h">
+      <Filter>Behaviour\Item\Ball</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Item\Ball\BallBehaviour.hpp">
+      <Filter>Behaviour\Item\Ball</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -61,11 +67,14 @@
     <Filter Include="Behaviour\Goal">
       <UniqueIdentifier>{ca4b3ef2-69b6-4062-bac1-08197050ee8d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Behaviour\Ball">
-      <UniqueIdentifier>{b39b140f-ec00-4c86-ab6f-3aed3a13966c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Behaviour\Camera">
       <UniqueIdentifier>{73afb719-c434-407f-bbb2-9d58c1588663}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Item">
+      <UniqueIdentifier>{370cc594-90d9-4215-8439-ab5f709e10c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Item\Ball">
+      <UniqueIdentifier>{fb89c9e6-7259-4e92-b4b9-cc07c445a601}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

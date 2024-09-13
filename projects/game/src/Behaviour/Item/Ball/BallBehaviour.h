@@ -1,12 +1,12 @@
 #pragma once
-#include "core/Component/Behaviour/Behaviour.h"
+#include "Behaviour/Item/ItemBehaviour.h"
 
 class CharacterBehaviour;
 
-class BallBehaviour : public vg::core::Behaviour
+class BallBehaviour : public ItemBehaviour
 {
 public:
-    VG_CLASS_DECL(BallBehaviour, vg::core::Behaviour);
+    VG_CLASS_DECL(BallBehaviour, ItemBehaviour);
 
     BallBehaviour(const vg::core::string & _name, vg::core::IObject * _parent);
     ~BallBehaviour();

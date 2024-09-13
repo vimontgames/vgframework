@@ -18,6 +18,9 @@ class CharacterBehaviour;
 class PlayerBehaviour;
 class EnemyBehaviour;
 
+class ItemBehaviour;
+class BallBehaviour;
+
 class Game : public vg::IGame, public vg::core::Singleton<Game>
 {
     public:
@@ -44,8 +47,15 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
         const vg::core::vector<PlayerBehaviour *> &     getPlayers              () const;
         const vg::core::vector<EnemyBehaviour *> &      getEnemies              () const;
 
+        void                                            addItem                 (ItemType _type, ItemBehaviour * _item);
+        void                                            removeItem              (ItemType _type, ItemBehaviour * _item);
+        const vg::core::vector<ItemBehaviour *> &       getItem                 (ItemType _type) const { return m_items[vg::core::asInteger(_type)]; }
+
+        const vg::core::vector<BallBehaviour *> &       getBalls                () const;
+
     private:
         static vg::engine::IEngine *                    s_engine;
 
         vg::core::vector<CharacterBehaviour *>          m_characters[vg::core::enumCount<CharacterType>()];
+        vg::core::vector<ItemBehaviour *>               m_items[vg::core::enumCount<ItemType>()];
 };

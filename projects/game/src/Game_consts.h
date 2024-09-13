@@ -14,3 +14,7 @@ vg_enum(CharacterState, vg::core::u8,
     Running,
     Jumping
 );
+
+vg_enum(ItemType, vg::core::u8,
+    Ball = 0
+);

@@ -7,7 +7,7 @@ class CharacterBehaviour : public vg::core::Behaviour
 public:
     VG_CLASS_DECL(CharacterBehaviour, vg::core::Behaviour);
 
-    CharacterBehaviour(const vg::core::string& _name, vg::core::IObject* _parent);
+    CharacterBehaviour(const vg::core::string & _name, vg::core::IObject * _parent, CharacterType _characterType);
     ~CharacterBehaviour();
 
     void                OnEnable() override;
@@ -28,6 +28,7 @@ protected:
 
 protected:
     bool                m_isActive = false;
+    CharacterType       m_characterType;
 
     vg::core::uint      m_life = 1;
     float               m_hp = 100.0f;

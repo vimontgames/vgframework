@@ -14,8 +14,9 @@ using namespace vg::engine;
 VG_REGISTER_ABSTRACT_CLASS(CharacterBehaviour, "CharacterBehaviour");
 
 //--------------------------------------------------------------------------------------
-CharacterBehaviour::CharacterBehaviour(const string& _name, IObject* _parent) :
-    super(_name, _parent)
+CharacterBehaviour::CharacterBehaviour(const string & _name, IObject * _parent, CharacterType _characterType) :
+    super(_name, _parent),
+    m_characterType(_characterType)
 {
     SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
 
@@ -85,13 +86,14 @@ void CharacterBehaviour::OnDisable()
 void CharacterBehaviour::OnPlay()
 {
     super::OnPlay();
-
+    Game::get()->addCharacter(m_characterType, this);
     m_startPos = GetGameObject()->getGlobalMatrix()[3].xyz;
 }
 
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::OnStop()
 {
+    Game::get()->removeCharacter(m_characterType, this);
     super::OnStop();
 }
 

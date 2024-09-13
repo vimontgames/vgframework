@@ -34,10 +34,12 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_ABSTRACT(IBody, core::Object)
 
-        virtual void Activate(const core::float4x4 & _world) = 0;
-        virtual void Deactivate(const core::float4x4 & _world) = 0;
+        virtual void            Activate    (const core::float4x4 & _world) = 0;
+        virtual void            Deactivate  (const core::float4x4 & _world) = 0;
 
-        virtual core::float4x4 GetMatrix() const = 0;
-        virtual void SetMatrix(core::float4x4 _world) = 0;
+        virtual core::float4x4  GetMatrix   () const = 0;
+        virtual void            SetMatrix   (core::float4x4 _world) = 0;
+
+        virtual void            AddImpulse  (const core::float3 & _impulse) = 0;
     };
 }

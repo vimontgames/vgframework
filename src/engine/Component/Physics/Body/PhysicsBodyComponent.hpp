@@ -336,4 +336,11 @@ namespace vg::engine
 
         return found;
     }
+
+    //--------------------------------------------------------------------------------------
+    void PhysicsBodyComponent::AddImpulse(const core::float3 & _impulse)
+    {
+        if (m_body)
+            m_body->AddImpulse(_impulse);
+    }
 }
