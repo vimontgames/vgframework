@@ -11,10 +11,10 @@ Yes, yet another work-in-progress game and graphic engine project :)
 ![Screenshot](doc/img/v32.gif)
 
 # build
-| Platform | API       | Debug                                                                                                                    | Release                                                                                                                      | Final 												
-| -------- | --------- | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
-| Win64    | DirectX12 | ![Debug_Win64_DX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_Win64_DX12.yml/badge.svg)     | ![Release_Win64_DX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_Win64_DX12.yml/badge.svg)     | ![Final_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Final_Win64_DX12.yml/badge.svg)
-| Win64    | Vulkan    | ![Debug_Win64_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_Win64_Vulkan.yml/badge.svg) | ![Release_Win64_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_Win64_Vulkan.yml/badge.svg) | ![Final_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Final_Win64_Vulkan.yml/badge.svg)
+| Platform | API    | Debug                                                                                                                    | Release                                                                                                                      | Final 												
+| -------- | ------ | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
+| Win64    | DX12   | ![Debug_Win64_DX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_Win64_DX12.yml/badge.svg)     | ![Release_Win64_DX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_Win64_DX12.yml/badge.svg)     | ![Final_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Final_Win64_DX12.yml/badge.svg)
+| Win64    | Vulkan | ![Debug_Win64_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_Win64_Vulkan.yml/badge.svg) | ![Release_Win64_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_Win64_Vulkan.yml/badge.svg) | ![Final_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Final_Win64_Vulkan.yml/badge.svg)
 
 # description
 
@@ -34,9 +34,12 @@ Moved [changelog](CHANGELOG.md) to a separate file.
 - Install the required SDKs and configure the environment variables.
 - Open the "vgframework.sln" solution in Visual Studio 2022 Community IDE.
 - Build & Run
- 
-You can double-click "Play (DX12).bat" or "Play (Vulkan).bat" to start the game sample without editor.\
-In game you can press ESC at any time to go back Editor mode.\
+
+**Debug** and **Release** versions will start with the editor:
+Press F5 to enter game mode and F11 to maximize game view and press ESC to go back Editor mode.
+
+**Final** versions are compiled without the editor, they will start directly in game mode and maximized.
+
 First run might take a few seconds because files are cooking.
  
 ## command-line args
