@@ -7,7 +7,7 @@ namespace vg::renderer
 {
     using PickingID = core::uint;
     enum class Font : core::u8;
-    enum class Style : core::u8;
+    enum class FontStyle : core::u8;
 }
 
 namespace vg::gfx
@@ -77,7 +77,7 @@ namespace vg::gfx
         virtual ~IViewGUI() {};
 
         virtual void AddCanvas          (const UICanvas * _canvas, const UIItem & _desc) = 0;
-        virtual void AddText            (const UICanvas * _canvas, const UIItem & _desc, const core::string & _text, renderer::Font _font, renderer::Style _style) = 0;
+        virtual void AddText            (const UICanvas * _canvas, const UIItem & _desc, const core::string & _text, renderer::Font _font, renderer::FontStyle _style) = 0;
         virtual void AddImage           (const UICanvas * _canvas, const UIItem & _desc, const gfx::ITexture * _texture) = 0;
 
         virtual void Clear              () = 0;

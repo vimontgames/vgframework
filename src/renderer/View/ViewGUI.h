@@ -7,7 +7,7 @@ namespace vg::renderer
     using PickingID = core::uint;
 
     enum class Font : core::u8;
-    enum class Style : core::u8;
+    enum class FontStyle : core::u8;
 
     enum class UIElementType : core::u8
     {
@@ -23,7 +23,7 @@ namespace vg::renderer
         ~ViewGUI();
 
         void            AddCanvas           (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc) final override;
-        void            AddText             (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const core::string & _text, Font _font, Style _style) final override;
+        void            AddText             (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const core::string & _text, Font _font, FontStyle _style) final override;
         void            AddImage            (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const gfx::ITexture * _texture) final override;
 
         void            RenderFullscreen    () final override;
@@ -48,7 +48,7 @@ namespace vg::renderer
 
             }
 
-            UIElement(const gfx::UICanvas * _canvas, const gfx::UIItem & _elemDesc, const core::string & _text, Font _font, Style _style) :
+            UIElement(const gfx::UICanvas * _canvas, const gfx::UIItem & _elemDesc, const core::string & _text, Font _font, FontStyle _style) :
                 m_type(UIElementType::Text),
                 m_canvas(_canvas),
                 m_item(_elemDesc),
@@ -85,7 +85,7 @@ namespace vg::renderer
             // Text
             core::string            m_text;
             Font                    m_font = (Font)0;
-            Style                   m_style = (Style)0;
+            FontStyle                   m_style = (FontStyle)0;
 
             // Texture
             gfx::ITexture *         m_texture = nullptr;

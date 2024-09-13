@@ -10,7 +10,7 @@ namespace vg
             RubikMonoOne
         );
 
-        vg_enum_class(Style, vg::core::u8,
+        vg_enum_class(FontStyle, vg::core::u8,
             Regular = 0,
             Bold,
             Italic,

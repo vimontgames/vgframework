@@ -101,7 +101,7 @@
                                         <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
                                         <Property type="EnumU8" name="m_font" flags="AlphabeticalOrder" value="RubikMonoOne"/>
                                         <Property type="EnumU8" name="m_style" value="Regular"/>
-                                        <Property type="String" name="m_text" value="Score ?"/>
+                                        <Property type="String" name="m_text" value="Score "/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -110,7 +110,7 @@
                                 <Property type="String" name="m_name" value="HP"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="3295830338"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Selected"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2" Ty="0" Tz="0" Tw="1"/>
@@ -131,7 +131,7 @@
                                         <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
                                         <Property type="EnumU8" name="m_font" flags="AlphabeticalOrder" value="RubikMonoOne"/>
                                         <Property type="EnumU8" name="m_style" value="Regular"/>
-                                        <Property type="String" name="m_text" value="HP    ?"/>
+                                        <Property type="String" name="m_text" value="HP    "/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -140,7 +140,7 @@
                                 <Property type="String" name="m_name" value="Life"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="690946679"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="229357744"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Selected"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2" Ty="0" Tz="0" Tw="1"/>
@@ -161,7 +161,7 @@
                                         <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
                                         <Property type="EnumU8" name="m_font" flags="AlphabeticalOrder" value="RubikMonoOne"/>
                                         <Property type="EnumU8" name="m_style" value="Regular"/>
-                                        <Property type="String" name="m_text" value="Life  ?"/>
+                                        <Property type="String" name="m_text" value="Life  "/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>

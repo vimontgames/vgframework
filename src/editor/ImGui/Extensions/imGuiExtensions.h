@@ -12,7 +12,7 @@ namespace vg::core
 namespace vg::renderer
 {
     enum class Font : vg::core::u8;
-    enum class Style : vg::core::u8;
+    enum class FontStyle : vg::core::u8;
 }
 
 namespace ImGui
@@ -44,9 +44,9 @@ namespace ImGui
     bool CollapsingHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, vg::core::IObject * _object, const char * _icon, const vg::core::string & _tooltip, vg::core::uint _index = 0, ImVec4 * _buttonColor = nullptr);
 
     void PushFont(vg::renderer::Font _font);
-    void PushFont(vg::renderer::Font _font, vg::renderer::Style _style);
+    void PushFont(vg::renderer::Font _font, vg::renderer::FontStyle _style);
     void PopFont();
 
-    void PushStyle(vg::renderer::Style _style);
+    void PushStyle(vg::renderer::FontStyle _style);
     void PopStyle();
 }

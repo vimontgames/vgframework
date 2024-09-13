@@ -21,7 +21,7 @@ namespace vg::editor
 
         namespace font
         {
-            inline static const float Height = 14.0f;
+            inline static const float DefaultFontHeight = 14.0f;
         }
 
         namespace label

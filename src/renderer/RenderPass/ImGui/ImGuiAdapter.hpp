@@ -16,12 +16,19 @@ using namespace vg::gfx;
 
 namespace vg::renderer
 {
-    static uint max_imguitex_displayed_per_frame = 64;
+    const core::uint ImGuiAdapter::s_maxImGuiTexDisplayedPerFrame = 64;
+
+    const Font       ImGuiAdapter::s_defaultFont                  = Font::UbuntuMono;
+    const FontStyle      ImGuiAdapter::s_defaultFontStyle             = FontStyle::Regular;
+    const core::u8   ImGuiAdapter::s_defaultFontSize              = (core::u8)round(style::font::DefaultFontHeight);
 
     //--------------------------------------------------------------------------------------
     // TODO: move themes to editor?
     //--------------------------------------------------------------------------------------
-    ImGuiAdapter::ImGuiAdapter(WinHandle _winHandle, Device & _device)
+    ImGuiAdapter::ImGuiAdapter(WinHandle _winHandle, Device & _device) :
+        m_currentFont(s_defaultFont),
+        m_currentFontStyle(s_defaultFontStyle),
+        m_currentFontSize(s_defaultFontSize)
     {
         ImGui::CreateContext();
         ImGuiIO & io = ImGui::GetIO();
@@ -32,10 +39,10 @@ namespace vg::renderer
 
         for (uint j = 0; j < enumCount<Font>(); ++j)
         {
-            for (uint i = 0; i < enumCount<Style>(); ++i)
+            for (uint i = 0; i < enumCount<FontStyle>(); ++i)
             {
                 const auto font = (Font)j;
-                const auto style = (Style)i;
+                const auto style = (FontStyle)i;
 
                 //const auto fontPath = getFontPath(font, style);
 
@@ -45,9 +52,9 @@ namespace vg::renderer
         }
 
         // Mandatory fonts
-        m_imGuiFont[asInteger(Font::UbuntuMono)][asInteger(Style::Regular)].needed = true;
-        m_imGuiFont[asInteger(Font::UbuntuMono)][asInteger(Style::Bold)].needed = true;
-        m_imGuiFont[asInteger(Font::UbuntuMono)][asInteger(Style::Italic)].needed = true;
+        m_imGuiFont[asInteger(s_defaultFont)][asInteger(FontStyle::Regular)].needed = true;
+        m_imGuiFont[asInteger(s_defaultFont)][asInteger(FontStyle::Bold)].needed = true;
+        m_imGuiFont[asInteger(s_defaultFont)][asInteger(FontStyle::Italic)].needed = true;
 
         updateFonts();
 
@@ -66,7 +73,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    const char * ImGuiAdapter::GetFontPath(Font _font, Style _style) const
+    const char * ImGuiAdapter::GetFontPath(Font _font, FontStyle _style) const
     {
         switch (_font)
         {
@@ -74,11 +81,11 @@ namespace vg::renderer
             {
                 switch (_style)
                 {
-                    case Style::Regular:
+                    case FontStyle::Regular:
                         return "Rowdies/Rowdies-Regular.ttf";
-                    case Style::Bold:
+                    case FontStyle::Bold:
                         return "Rowdies/Rowdies-Bold.ttf";
-                    case Style::Light:
+                    case FontStyle::Light:
                         return "Rowdies/Rowdies-Light.ttf";
                 };
             }
@@ -88,7 +95,7 @@ namespace vg::renderer
             {
                 switch (_style)
                 {
-                    case Style::Regular:
+                    case FontStyle::Regular:
                         return "RubikMonoOne/RubikMonoOne-Regular.ttf";
                 };
             }
@@ -98,11 +105,11 @@ namespace vg::renderer
             {
                 switch (_style)
                 {
-                case Style::Regular:
+                case FontStyle::Regular:
                     return "ubuntu/UbuntuMono-R.ttf";
-                case Style::Bold:
+                case FontStyle::Bold:
                     return "ubuntu/UbuntuMono-B.ttf";
-                case Style::Italic:
+                case FontStyle::Italic:
                     return "ubuntu/UbuntuMono-RI.ttf";
                 };
             }
@@ -113,7 +120,7 @@ namespace vg::renderer
     };
 
     //--------------------------------------------------------------------------------------
-    bool ImGuiAdapter::createFont(Font _font, Style _style)
+    bool ImGuiAdapter::createFont(Font _font, FontStyle _style)
     {
         const auto fontPath = GetFontPath(_font, _style);
         auto & slot = m_imGuiFont[asInteger(_font)][asInteger(_style)];
@@ -123,10 +130,10 @@ namespace vg::renderer
             string fontFullPath = fmt::sprintf("data/Fonts/%s", fontPath);
 
             ImGuiIO & io = ImGui::GetIO();
-            io.Fonts->AddFontFromFileTTF(fontFullPath.c_str(), editor::style::font::Height);
+            io.Fonts->AddFontFromFileTTF(fontFullPath.c_str(), editor::style::font::DefaultFontHeight);
 
-            float baseFontSize = editor::style::font::Height;
-            float iconFontSize = baseFontSize;// *2.0f / 3.0f; // FontAwesome fonts need to have their sizes reduced by 2.0f/3.0f in order to align correctly
+            float baseFontSize = editor::style::font::DefaultFontHeight;
+            float iconFontSize = baseFontSize;
 
             // merge in icons from Font Awesome
             static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
@@ -147,13 +154,13 @@ namespace vg::renderer
 
         for (uint j = 0; j < enumCount<Font>(); ++j)
         {
-            for (uint i = 0; i < enumCount<Style>(); ++i)
+            for (uint i = 0; i < enumCount<FontStyle>(); ++i)
             {
                 auto & slot = m_imGuiFont[j][i];
                 if (slot.ptr == nullptr && slot.needed && !slot.failed)
                 {
                     auto font = (Font)j;
-                    auto style = (Style)i;
+                    auto style = (FontStyle)i;
 
                     const char * path = GetFontPath(font, style);
 
@@ -578,11 +585,11 @@ namespace vg::renderer
 
         it->second.m_refCount--;
 
-        VG_ASSERT(descriptorSetsFrameData.m_descriptorSetAllocs.size() <= max_imguitex_displayed_per_frame);
+        VG_ASSERT(descriptorSetsFrameData.m_descriptorSetAllocs.size() <= s_maxImGuiTexDisplayedPerFrame);
     }
 
     //--------------------------------------------------------------------------------------
-    ImFont * ImGuiAdapter::GetFont(Font _font, Style _style)
+    ImFont * ImGuiAdapter::GetFont(Font _font, FontStyle _style)
     {
         auto & info = m_imGuiFont[asInteger(_font)][asInteger(_style)];
 
@@ -591,29 +598,32 @@ namespace vg::renderer
             info.needed = true; // Rebuild font next frame
 
             // Fallback to regular style if not found
-            if (_style != Style::Regular)
-                return GetFont(_font, Style::Regular);
+            if (_style != FontStyle::Regular)
+                return GetFont(_font, FontStyle::Regular);
         }
 
         return info.ptr;
     }
 
-    static Font g_font = Font::UbuntuMono;
-    static Style g_style = Style::Regular;
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::PushDefaultFont()
+    {
+        ImGui::PushFont(GetFont(s_defaultFont, s_defaultFontStyle));
+    }
 
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::PushFont(vg::renderer::Font _font)
     {
-        ImGui::PushFont(GetFont(_font, g_style));
-        g_font = _font;
+        ImGui::PushFont(GetFont(_font, m_currentFontStyle));
+        m_currentFont = _font;
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::PushFont(vg::renderer::Font _font, vg::renderer::Style _style)
+    void ImGuiAdapter::PushFont(vg::renderer::Font _font, vg::renderer::FontStyle _style)
     {
         ImGui::PushFont(GetFont(_font, _style));
-        g_font = _font;
-        g_style = _style;
+        m_currentFont = _font;
+        m_currentFontStyle = _style;
     }
 
     //--------------------------------------------------------------------------------------
@@ -623,10 +633,10 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::PushStyle(vg::renderer::Style _style)
+    void ImGuiAdapter::PushStyle(vg::renderer::FontStyle _style)
     {
-        ImGui::PushFont(GetFont(g_font, _style));
-        g_style = _style;
+        ImGui::PushFont(GetFont(m_currentFont, _style));
+        m_currentFontStyle = _style;
     }
 
     //--------------------------------------------------------------------------------------

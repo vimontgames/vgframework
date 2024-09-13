@@ -12,7 +12,7 @@ namespace vg::core
 namespace vg::renderer
 {
     enum class Font : vg::core::u8;
-    enum class Style : vg::core::u8;
+    enum class FontStyle : vg::core::u8;
 }
 
 namespace ImGui

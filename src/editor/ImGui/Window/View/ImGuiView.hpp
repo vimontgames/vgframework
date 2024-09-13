@@ -314,7 +314,7 @@ namespace vg::editor
         const float saveWindowRounding = style.WindowRounding;
         style.WindowRounding = 0; 
 
-        const auto titleBarHeight = editor::style::font::Height + 2 * ImGui::GetStyle().FramePadding.y;
+        const auto titleBarHeight = editor::style::font::DefaultFontHeight + 2 * ImGui::GetStyle().FramePadding.y;
 
         ImGui::SetNextWindowSizeConstraints(ImVec2(320, 256 + titleBarHeight), ImVec2(MAX_FLOAT, MAX_FLOAT));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(padding, padding));
@@ -538,27 +538,27 @@ namespace vg::editor
                                 string text = fmt::sprintf("Opaque %u", stats.opaque);
                                 ImVec2 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRect(pos, vMax, 0x7F7F7F7F);
-                                pos.y += style::font::Height;
+                                pos.y += style::font::DefaultFontHeight;
                                 ImGui::Text(text.c_str(), stats.opaque);
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
-                                pos.y += style::font::Height;
+                                pos.y += style::font::DefaultFontHeight;
                                 ImGui::Text("Transparent %u", stats.transparent);
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
-                                pos.y += style::font::Height;
+                                pos.y += style::font::DefaultFontHeight;
                                 ImGui::Text("Directional %u", stats.directional);
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
-                                pos.y += style::font::Height;
+                                pos.y += style::font::DefaultFontHeight;
                                 ImGui::Text("Omni %u", stats.omni);
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
-                                pos.y += style::font::Height;
+                                pos.y += style::font::DefaultFontHeight;
                                 ImGui::Text("Spot %u", stats.spot);
                             }
                         }

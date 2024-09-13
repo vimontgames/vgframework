@@ -40,7 +40,7 @@ namespace vg::editor
 
         if (ImGui::BeginPopupContextItem("ImGuiGameViewTitlebarMenu"))
         {
-            ImGui::PushStyle(renderer::Style::Bold);
+            ImGui::PushStyle(renderer::FontStyle::Bold);
             ImGui::Text(fmt::sprintf("Game", style::icon::GameView).c_str());
             ImGui::PopStyle();
             ImGui::Separator();

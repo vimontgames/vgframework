@@ -28,7 +28,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewGUI::AddText(const gfx::UICanvas * _canvas, const UIItem & _desc, const core::string & _text, Font _font, Style _style)
+    void ViewGUI::AddText(const gfx::UICanvas * _canvas, const UIItem & _desc, const core::string & _text, Font _font, FontStyle _style)
     {
         m_uiElements.push_back(UIElement(_canvas, _desc, _text, _font, _style));
     }

@@ -16,7 +16,7 @@ namespace vg::engine
 
     private:
         renderer::Font  m_font = renderer::Font::UbuntuMono;
-        renderer::Style m_style = renderer::Style::Regular;
+        renderer::FontStyle m_style = renderer::FontStyle::Regular;
         core::string    m_text;
     };
 }

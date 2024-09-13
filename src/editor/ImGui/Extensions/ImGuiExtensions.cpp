@@ -416,14 +416,14 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    void PushFont(vg::renderer::Font _font, vg::renderer::Style _style)
+    void PushFont(vg::renderer::Font _font, vg::renderer::FontStyle _style)
     {
         auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
         imGuiAdapter->PushFont(_font, _style);
     }
 
     //--------------------------------------------------------------------------------------
-    void PushStyle(Style _style)
+    void PushStyle(FontStyle _style)
     {
         auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
         imGuiAdapter->PushStyle(_style);

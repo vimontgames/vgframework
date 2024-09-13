@@ -60,7 +60,7 @@ namespace vg::editor
 
         if (ImGui::BeginPopupContextItem("ImGuiEditorViewTitlebarMenu"))
         {
-            ImGui::PushStyle(renderer::Style::Bold);
+            ImGui::PushStyle(renderer::FontStyle::Bold);
             ImGui::Text(fmt::sprintf("Scene", style::icon::Scene).c_str());
             ImGui::PopStyle();
             ImGui::Spacing();

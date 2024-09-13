@@ -46,14 +46,15 @@ namespace vg
             void                render                      (gfx::CommandList * _cmdList);
 
             void                AddBeginFrameCallback       (BeginFrameCallback _func);
-            ImFont *            GetFont                     (Font _font, Style _style = Style::Regular) final override;
-            const char *        GetFontPath                 (Font _font, Style _style) const final override;
+            ImFont *            GetFont                     (Font _font, FontStyle _style = FontStyle::Regular) final override;
+            const char *        GetFontPath                 (Font _font, FontStyle _style) const final override;
 
+            void                PushDefaultFont             () final override;
             void                PushFont                    (vg::renderer::Font _font) final override;
-            void                PushFont                    (vg::renderer::Font _font, vg::renderer::Style _style) final override;
+            void                PushFont                    (vg::renderer::Font _font, vg::renderer::FontStyle _style) final override;
             void                PopFont                     () final override;
 
-            void                PushStyle                   (vg::renderer::Style _style) final override;
+            void                PushStyle                   (vg::renderer::FontStyle _style) final override;
             void                PopStyle                    () final override;
 
         protected:
@@ -61,8 +62,7 @@ namespace vg
             void                releaseTextureID            (const gfx::Texture * _texture);
             void                releaseUserDescriptors      ();
 
-
-            bool                createFont                  (Font _font, Style _style);
+            bool                createFont                  (Font _font, FontStyle _style);
             void                updateFonts                 ();
 
             void                resetGUITheme               ();
@@ -81,8 +81,17 @@ namespace vg
             #endif
 
         private:
+            static const core::uint             s_maxImGuiTexDisplayedPerFrame;
+            static const Font                   s_defaultFont;
+            static const FontStyle                  s_defaultFontStyle;
+            static const core::u8               s_defaultFontSize;
+
             gfx::BindlessTextureHandle          m_fontTexHandle;
             bool                                m_rebuildFontTex = false;
+
+            Font                                m_currentFont;
+            FontStyle                               m_currentFontStyle;
+            core::u8                            m_currentFontSize;
 
             core::vector<BeginFrameCallback>    m_beginFrameCallbacks;
 
@@ -117,7 +126,7 @@ namespace vg
                 bool     failed = false;
                 ImFont * ptr    = nullptr;
             };
-            ImFontInfo                          m_imGuiFont[core::enumCount<Font>()][core::enumCount<Style>()];
+            ImFontInfo                          m_imGuiFont[core::enumCount<Font>()][core::enumCount<FontStyle>()];
         };
     }
 }
