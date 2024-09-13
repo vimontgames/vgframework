@@ -50,5 +50,25 @@ namespace vg::gfx
             VG_ASSERT(m_rwTextureHandle.isValid());
             return m_rwTextureHandle; 
         }
+
+        //--------------------------------------------------------------------------------------
+        VG_INLINE bool Texture::isDepthStencilFormat(PixelFormat _format)
+        {
+            switch (_format)
+            {
+                default:
+                    VG_ASSERT(false, "Unhandled PixelFormat \"%s\" (%u)", core::asString(_format).c_str(), _format);
+                case PixelFormat::R8G8B8A8_unorm:
+                case PixelFormat::R8G8B8A8_unorm_sRGB:
+                case PixelFormat::B8G8R8A8_unorm:
+                case PixelFormat::B8G8R8A8_unorm_sRGB:
+                case PixelFormat::R10G10B10A2_unorm:
+                case PixelFormat::R16G16B16A16_float:
+                    return false;
+
+                case PixelFormat::D32S8:
+                    return true;
+            }
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace vg::gfx
 			VG_INLINE const gfx::BindlessRWTextureHandle	getRWTextureHandle		() const;
 
             static core::u32								getPixelFormatSize		(PixelFormat _format);
-            static bool										isDepthStencilFormat	(PixelFormat _format);
+			VG_INLINE static bool							isDepthStencilFormat	(PixelFormat _format);
             static core::u32								computeMaxMipmapCount	(const TextureDesc & _texDesc);
 			
         protected:
