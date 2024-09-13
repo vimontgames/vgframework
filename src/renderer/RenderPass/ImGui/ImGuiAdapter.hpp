@@ -18,9 +18,9 @@ namespace vg::renderer
 {
     const core::uint ImGuiAdapter::s_maxImGuiTexDisplayedPerFrame = 64;
 
-    const Font       ImGuiAdapter::s_defaultFont                  = Font::UbuntuMono;
-    const FontStyle      ImGuiAdapter::s_defaultFontStyle             = FontStyle::Regular;
-    const core::u8   ImGuiAdapter::s_defaultFontSize              = (core::u8)round(style::font::DefaultFontHeight);
+    const Font      ImGuiAdapter::s_defaultFont      = Font::UbuntuMono;
+    const FontStyle ImGuiAdapter::s_defaultFontStyle = FontStyle::Regular;
+    const core::u8  ImGuiAdapter::s_defaultFontSize  = (core::u8)round(style::font::DefaultFontHeight);
 
     //--------------------------------------------------------------------------------------
     // TODO: move themes to editor?
@@ -246,7 +246,7 @@ namespace vg::renderer
         VkDescriptorPoolCreateInfo imguiDescriptorDesc = {};
         imguiDescriptorDesc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         imguiDescriptorDesc.pNext = nullptr;
-        imguiDescriptorDesc.maxSets = max_frame_latency * max_imguitex_displayed_per_frame;
+        imguiDescriptorDesc.maxSets = max_frame_latency * s_maxImGuiTexDisplayedPerFrame;
         imguiDescriptorDesc.poolSizeCount = (uint)countof(imguiDescriptorPoolSizes);
         imguiDescriptorDesc.pPoolSizes = imguiDescriptorPoolSizes;
         imguiDescriptorDesc.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT | VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
