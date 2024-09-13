@@ -44,6 +44,7 @@ namespace ImGui
     bool CollapsingHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, vg::core::IObject * _object, const char * _icon, const vg::core::string & _tooltip, vg::core::uint _index = 0, ImVec4 * _buttonColor = nullptr);
 
     void PushFont(vg::renderer::Font _font);
+    void PushFont(vg::renderer::Font _font, vg::renderer::Style _style);
     void PopFont();
 
     void PushStyle(vg::renderer::Style _style);

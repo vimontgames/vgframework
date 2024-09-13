@@ -88,6 +88,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiPass::Render(const RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const
     {
+        auto * imGuiAdapter = Renderer::get()->getImGuiAdapter();
+        imGuiAdapter->PushFont(Font::UbuntuMono, Style::Regular);
         #if VG_ENABLE_EDITOR
         editor::IEditor * editor = getEngine()->GetEditor();
         if (editor)
@@ -112,6 +114,7 @@ namespace vg::renderer
         }
         #endif
 
-        Renderer::get()->getImGuiAdapter()->render(_cmdList);
+        imGuiAdapter->PopFont();
+        imGuiAdapter->render(_cmdList);
     }
 }

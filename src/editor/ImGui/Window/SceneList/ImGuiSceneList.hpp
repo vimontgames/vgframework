@@ -190,13 +190,9 @@ namespace vg::editor
             _gameObject->SetObjectFlags(ObjectFlags::Opened, open);
 
         if (isPrefab)
-        {
-            ImGui::PopFont();
-        }
+            ImGui::PopStyle();
         else if (isPrefabChild)
-        {
-            ImGui::PopFont();
-        }
+            ImGui::PopStyle();
 
         bool startDragDrop = false;
 
