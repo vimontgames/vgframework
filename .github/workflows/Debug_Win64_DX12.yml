@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: "Debug PC DirectX12"
+name: "Debug Win64 DX12"
 
 on:
   push:
@@ -21,7 +21,7 @@ env:
   BUILD_CONFIGURATION: Debug
 
   # Platform to build.
-  BUILD_PLATFORM: '"PC DirectX12"'
+  BUILD_PLATFORM: '"Win64 DX12"'
 
 permissions:
   contents: read
