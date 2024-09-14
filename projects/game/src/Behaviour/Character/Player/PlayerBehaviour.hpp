@@ -228,7 +228,7 @@ void PlayerBehaviour::Update(const Context & _context)
                         lifeComp->SetText(fmt::sprintf("Life   %u", m_life));
                 }
 
-                if (IGameObject * hpGO = uiGO->GetChildGameObject("HP"))
+                if (IGameObject * hpGO = uiGO->GetChildGameObject("Health"))
                 {
                     if (IUITextComponent * textComp = hpGO->GetComponentT<IUITextComponent>())
                         textComp->SetText(fmt::sprintf("Health %.0f%%", m_hp));
