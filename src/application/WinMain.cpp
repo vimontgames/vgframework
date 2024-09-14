@@ -268,7 +268,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     Application * app = new Application(*g_engine);
 	const auto version = app->GetVersion();
 
-	core::string title = "VG Framework " + core::to_string(version.major) + "." + core::to_string(version.minor) + " " + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
+	core::string title = "VG Framework " + core::to_string(version.major) + "." + core::to_string(version.minor) + " " + core::Plugin::getPlatform() + "|" + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
     if (engineParams.renderer.device.debugDevice)
         title += " (debug device)";
 
