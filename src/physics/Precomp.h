@@ -8,14 +8,21 @@
 #define JPH_FLOATING_POINT_EXCEPTIONS_ENABLED
 #endif
 
-//#define JPH_USE_AVX2
-#define JPH_USE_AVX
-#define JPH_USE_SSE4_1
-#define JPH_USE_SSE4_2
-#define JPH_USE_LZCNT
-#define JPH_USE_TZCNT
-#define JPH_USE_F16C
-#define JPH_USE_FMADD
+#if defined(_M_X64)
+// Do not use intel intrinsics for ARM64EC.
+// Todo: test JPH_USE_NEON and other defines for ARM64EC
+// For regular ARM64, JPH_USE_NEON is automatically defined in Jolt\Core\Core.h
+#if !defined(_M_ARM64EC)
+    //#define JPH_USE_AVX2
+    #define JPH_USE_AVX
+    #define JPH_USE_SSE4_1
+    #define JPH_USE_SSE4_2
+    #define JPH_USE_LZCNT
+    #define JPH_USE_TZCNT
+    #define JPH_USE_F16C
+    #define JPH_USE_FMADD
+#endif
+#endif
 
 #pragma push_macro("new")
 #undef new
