@@ -98,6 +98,7 @@ namespace vg::editor
                 { "ImGuizmo",               "1.83",             "https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83" },
                 { "JoltPhysics",            "5.0.0",            "https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0" },
                 { "meta_enum_lite",         "1.0",              "https://github.com/vimontgames/meta_enum_lite" },
+                { "miniaudio",              "0.11.21",          "https://github.com/mackron/miniaudio" },
                 { "optick",                 "1.3.1",            "https://github.com/bombomby/optick" },
                 { "px_sched",               "",                 "https://github.com/pplux/px" },
                 { "stb_image",              "",                 "https://github.com/nothings/stb" },
@@ -110,7 +111,7 @@ namespace vg::editor
             drawLibraryDescriptionList("3rd-parties:", thirdParties, (uint)countof(thirdParties));
 
             Columns(1);
-            Text("Special Thanks to SlavSquat, Bob, Guigui, Marcel, Hamilcar and the old guard");
+            Text("Special thanks to JOYxt, Onduril, SlavSquat, Bob, Guigui, Marcel, Hamilcar and all the old guard.");
 
             End();
         }

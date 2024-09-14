@@ -125,7 +125,8 @@ The external libraries are included with the sources for convenience.
 | ImGuiFileDialog            | 0.6.7         | https://github.com/aiekick/ImGuiFileDialog
 | ImGuizmo                   | 1.83          | https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83             
 | JoltPhysics                | 5.0.0         | https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0                   
-| meta_enum_lite             |               | https://github.com/vimontgames/meta_enum_lite            
+| meta_enum_lite             |               | https://github.com/vimontgames/meta_enum_lite         
+| miniaudio                  | 0.11.21       | https://github.com/mackron/miniaudio   
 | optick (*)                 | 1.3.1         | https://github.com/bombomby/optick                                        
 | px_sched                   |               | https://github.com/pplux/px   
 | stb                        |               | https://github.com/nothings/stb                                           
