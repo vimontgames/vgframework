@@ -83,6 +83,13 @@ namespace vg::audio
         RegisterClasses();
         
         AudioOptions * audioOptions = new AudioOptions("AudioOptions", this);
+
+        // initialize SoLoud.
+        m_soloud.init();
+
+        // Test
+        m_testSpeech.setText("VG Framework");
+        m_soloud.play(m_testSpeech);
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -93,6 +100,9 @@ namespace vg::audio
 
         // Unregister our classes
         UnregisterClasses();
+
+        // Shutdown sound engine
+        m_soloud.deinit();
 	}
 
 	//--------------------------------------------------------------------------------------

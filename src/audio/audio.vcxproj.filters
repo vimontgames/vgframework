@@ -6,6 +6,9 @@
       <Filter>Options</Filter>
     </ClCompile>
     <ClCompile Include="Audio.cpp" />
+    <ClCompile Include="SoLoud\SoLoud.cpp">
+      <Filter>SoLoud</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -16,10 +19,16 @@
     <ClInclude Include="Audio_Consts.h" />
     <ClInclude Include="IAudio.h" />
     <ClInclude Include="IAudioOptions.h" />
+    <ClInclude Include="SoLoud\SoLoud.h">
+      <Filter>SoLoud</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Options">
       <UniqueIdentifier>{d5fef440-ae77-4d6c-86bc-94704fbfa40c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SoLoud">
+      <UniqueIdentifier>{c966a61c-4651-4ddf-bf99-8a252580e018}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
