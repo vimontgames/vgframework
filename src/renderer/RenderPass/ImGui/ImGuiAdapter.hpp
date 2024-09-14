@@ -609,6 +609,8 @@ namespace vg::renderer
     void ImGuiAdapter::PushDefaultFont()
     {
         ImGui::PushFont(GetFont(s_defaultFont, s_defaultFontStyle));
+        m_currentFont = s_defaultFont;
+        m_currentFontStyle = s_defaultFontStyle;
     }
 
     //--------------------------------------------------------------------------------------
