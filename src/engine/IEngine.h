@@ -24,6 +24,11 @@ namespace vg
         class IPhysics;
     }
 
+    namespace audio
+    {
+        class IAudio;
+    }
+
     #if VG_ENABLE_EDITOR
     namespace editor
     {
@@ -105,6 +110,7 @@ namespace vg
 
 		    virtual renderer::IRenderer *	            GetRenderer	        () const = 0;
             virtual physics::IPhysics *                 GetPhysics          () const = 0;
+            virtual audio::IAudio *                     GetAudio            () const = 0;
             virtual engine::IResourceManager *          GetResourceManager  () const = 0;
             virtual core::ISelection *                  GetSelection        () const = 0;
 

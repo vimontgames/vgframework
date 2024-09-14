@@ -11,7 +11,7 @@ namespace vg::physics
 
         PhysicsOptions(const core::string & _name, core::IObject * _parent = nullptr);
 
-        void                    OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+        void                    OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
         void                    OnLoad() final override;
 
         static bool			    load(core::IObject * _object);

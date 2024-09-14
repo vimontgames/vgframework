@@ -1,0 +1,5 @@
+#include "core/Precomp.h"
+#include "core/Kernel.h"
+#include "core/Object/AutoRegisterClass.h"
+#include "core/Timer/Timer.h"
+#include "core/IProfiler.h"

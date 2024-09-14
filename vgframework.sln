@@ -44,6 +44,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "application", "src\applicat
 		{51C074CB-0146-4324-9D1E-EB8192BF6673} = {51C074CB-0146-4324-9D1E-EB8192BF6673}
 		{F31ACA84-29B9-4517-80E5-3D625A8AC34B} = {F31ACA84-29B9-4517-80E5-3D625A8AC34B}
 		{F9F268C0-B4CB-4B80-B857-C75C7555E09B} = {F9F268C0-B4CB-4B80-B857-C75C7555E09B}
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58} = {FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Natvis", "Natvis", "{D18557C7-59EB-4E5F-B1A5-68C78127148D}"
@@ -155,15 +156,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\Debug_Win64_DX12.yml = .github\workflows\Debug_Win64_DX12.yml
 		.github\workflows\Debug_Win64_Vulkan.yml = .github\workflows\Debug_Win64_Vulkan.yml
-		.github\workflows\Final_Win64_Vulkan.yml = .github\workflows\Final_Win64_Vulkan.yml
 		.github\workflows\Final_Win64_DX12.yml = .github\workflows\Final_Win64_DX12.yml
-		.github\workflows\Release_Win64_Vulkan.yml = .github\workflows\Release_Win64_Vulkan.yml
+		.github\workflows\Final_Win64_Vulkan.yml = .github\workflows\Final_Win64_Vulkan.yml
 		.github\workflows\Release_Win64_DX12.yml = .github\workflows\Release_Win64_DX12.yml
+		.github\workflows\Release_Win64_Vulkan.yml = .github\workflows\Release_Win64_Vulkan.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D0B49AF3-70DB-42E7-AF6D-45C0620C439A}"
 	ProjectSection(SolutionItems) = preProject
 		TODO.txt = TODO.txt
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio", "src\audio\audio.vcxproj", "{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}"
+	ProjectSection(ProjectDependencies) = postProject
+		{257A93DC-9206-4770-9560-7A22DFF0AC01} = {257A93DC-9206-4770-9560-7A22DFF0AC01}
 	EndProjectSection
 EndProject
 Global
@@ -270,6 +276,18 @@ Global
 		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Release|Win64 DX12.Build.0 = Release|x64
 		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Release|Win64 Vulkan.ActiveCfg = Release|x64
 		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Release|Win64 Vulkan.Build.0 = Release|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Debug|Win64 DX12.ActiveCfg = Debug|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Debug|Win64 DX12.Build.0 = Debug|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Debug|Win64 Vulkan.ActiveCfg = Debug|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Debug|Win64 Vulkan.Build.0 = Debug|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Final|Win64 DX12.ActiveCfg = Final|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Final|Win64 DX12.Build.0 = Final|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Final|Win64 Vulkan.ActiveCfg = Final|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Final|Win64 Vulkan.Build.0 = Final|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Release|Win64 DX12.ActiveCfg = Release|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Release|Win64 DX12.Build.0 = Release|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Release|Win64 Vulkan.ActiveCfg = Release|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Release|Win64 Vulkan.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

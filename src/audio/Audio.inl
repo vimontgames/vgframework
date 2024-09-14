@@ -1,0 +1,4 @@
+namespace vg::audio
+{
+    
+}

@@ -2,7 +2,6 @@
 
 #include "engine.h"
 #include "engine/EngineOptions.h"
-
 #include "core/Kernel.h"
 #include "core/IProfiler.h"
 #include "core/Timer/Timer.h"
@@ -13,15 +12,12 @@
 #include "core/Object/Factory.h"
 #include "core/GameObject/GameObject.h"
 #include "core/Math/Math.h"
-
 #include "gfx/IView.h"
 #include "gfx/IDevice.h"
-
 #include "renderer/IRenderer.h"
 #include "renderer/IRendererOptions.h"
-
 #include "physics/IPhysics.h"
-
+#include "audio/IAudio.h"
 #include "engine/World/World.h"
 #include "engine/World/Scene/Scene.h"
 #include "engine/Input/Input.h"
@@ -32,9 +28,7 @@
 #include "engine/Component/Camera/CameraComponent.h"
 #include "engine/Component/Mesh/MeshComponent.h"
 #include "engine/Behaviour/FreeCam/FreeCamBehaviour.h"
-
 #include "editor/IEditor.h"
-
 #include "application/IGame.h"
 
 #if !VG_ENABLE_INLINE
@@ -371,6 +365,10 @@ namespace vg::engine
         m_physics = Plugin::create<physics::IPhysics>("physics");
         m_physics->Init(_params.physics, _singletons);
 
+        // Load Audio DLL
+        m_audio = Plugin::create<audio::IAudio>("audio");
+        m_audio->Init(_params.audio, _singletons);
+
         m_resourceManager = new ResourceManager("Resource Manager", this);
 
         // Load project DLL
@@ -397,6 +395,12 @@ namespace vg::engine
     physics::IPhysicsOptions * Engine::getPhysicsOptions() const
     {
         return m_physics->GetOptions();
+    }
+
+    //--------------------------------------------------------------------------------------
+    audio::IAudioOptions * Engine::getAudioOptions() const
+    {
+        return m_audio->GetOptions();
     }
 
     //--------------------------------------------------------------------------------------
@@ -570,10 +574,13 @@ namespace vg::engine
         VG_SAFE_DELETE(m_resourceManager);
 
         m_physics->Deinit();
-        m_physics->release();
+        VG_SAFE_RELEASE(m_physics);
+
+        m_audio->Deinit();
+        VG_SAFE_RELEASE(m_audio);
 
 		m_renderer->deinit();
-		m_renderer->release();
+        VG_SAFE_RELEASE(m_renderer);
 
         VG_SAFE_DELETE(factory);
         Kernel::setFactory(nullptr);
@@ -871,6 +878,12 @@ namespace vg::engine
     physics::IPhysics * Engine::GetPhysics() const
     {
         return m_physics;
+    }
+
+    //--------------------------------------------------------------------------------------
+    audio::IAudio * Engine::GetAudio() const
+    {
+        return m_audio;
     }
 
     //--------------------------------------------------------------------------------------

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Precomp.cpp" />
+    <ClCompile Include="Options\AudioOptions.cpp">
+      <Filter>Options</Filter>
+    </ClCompile>
+    <ClCompile Include="Audio.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Precomp.h" />
+    <ClInclude Include="Options\AudioOptions.h">
+      <Filter>Options</Filter>
+    </ClInclude>
+    <ClInclude Include="Audio.h" />
+    <ClInclude Include="Audio_Consts.h" />
+    <ClInclude Include="IAudio.h" />
+    <ClInclude Include="IAudioOptions.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Options">
+      <UniqueIdentifier>{d5fef440-ae77-4d6c-86bc-94704fbfa40c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Audio.def" />
+    <None Include="Audio.inl" />
+  </ItemGroup>
+</Project>

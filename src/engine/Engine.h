@@ -25,6 +25,11 @@ namespace vg::physics
     class IPhysicsOptions;
 }
 
+namespace vg::audio
+{
+    class IAudioOptions;
+}
+
 namespace vg::engine
 {
     vg_enum_class(EngineJobType, core::u8,
@@ -99,6 +104,7 @@ namespace vg::engine
 
 		renderer::IRenderer *	                GetRenderer	        () const final override;
         physics::IPhysics *                     GetPhysics          () const final override;
+        audio::IAudio *                         GetAudio            () const final override;
         engine::IResourceManager *              GetResourceManager  () const final override;
         core::ISelection *                      GetSelection        () const final override;
 
@@ -120,6 +126,7 @@ namespace vg::engine
     public:
         renderer::IRendererOptions *            getRendererOptions  () const;
         physics::IPhysicsOptions *              getPhysicsOptions   () const;
+        audio::IAudioOptions *                  getAudioOptions     () const;
 
         VG_INLINE const Time &                  getTime             () const;
 
@@ -152,6 +159,7 @@ namespace vg::engine
 
 		renderer::IRenderer *	                m_renderer          = nullptr;
         physics::IPhysics *                     m_physics           = nullptr;
+        audio::IAudio *                         m_audio             = nullptr;
         ResourceManager *                       m_resourceManager   = nullptr;
         Selection *                             m_selection         = nullptr;
         core::JobSync                           m_jobSync[core::enumCount<EngineJobType>()];

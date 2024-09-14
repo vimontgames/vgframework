@@ -20,16 +20,6 @@
 #pragma push_macro("new")
 #undef new
 
-//#if defined(VG_DEBUG)
-//#pragma message("VG_DEBUG")
-//#elif defined(VG_RELEASE)
-//#pragma message("VG_RELEASE")
-//#elif defined(VG_FINAL)
-//#pragma message("VG_FINAL")
-//#else
-//#pragma error No configuration defined
-//#endif
-
 #include "Jolt/Jolt.h"
 #include "Jolt/Physics/PhysicsSystem.h"
 #include "Jolt/Physics/Collision/Shape/Shape.h"
