@@ -135,10 +135,24 @@ namespace vg::editor
                             bool selected = cat.show;
                             if (ImGui::Selectable(cat.name.c_str(), &selected))
                             {
+                                bool everythingIsSelected = true;
+                                for (int j = 0; j < m_categories.size(); j++)
+                                {
+                                    auto & cat2 = m_categories[j];
+                                    if (!cat2.show)
+                                    {
+                                        everythingIsSelected = false;
+                                        break;
+                                    }
+                                }
+
                                 cat.show = selected;
 
-                                if (!ImGui::IsKeyPressed(ImGuiKey_LeftCtrl) && !ImGui::IsKeyPressed(ImGuiKey_RightCtrl))
+                                if (!ImGui::GetIO().KeyCtrl)
                                 {
+                                    if (everythingIsSelected)
+                                        cat.show = true;
+   
                                     // Unselect others unless ctrl is pressed
                                     for (int j = 0; j < m_categories.size(); j++)
                                     {
@@ -162,6 +176,7 @@ namespace vg::editor
                                 m_selectedClass = nullptr;
                             }
                         }
+
                         ImGui::EndCombo();
                     }
 
