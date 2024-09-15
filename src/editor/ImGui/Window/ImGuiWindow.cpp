@@ -10,22 +10,18 @@
 #include "core/IGameObject.h"
 #include "core/IComponent.h"
 #include "core/ISelection.h"
+#include "core/IResourceManager.h"
 #include "core/Misc/BitMask/BitMask.h"
 #include "core/Misc/AABB/AABB.h"
 #include "core/Object/DynamicProperties/DynamicProperties.h"
 #include "core/Object/ObjectHandle.h"
 #include "core/Types/Traits.h"
-
 #include "renderer/IRenderer.h"
-
 #include "engine/IEngine.h"
-#include "engine/IResourceManager.h"
-
 #include "editor/ImGui/ImGui.h"
 #include "editor/Editor_Consts.h"
 #include "editor/imgui/Extensions/imGuiExtensions.h"
 #include "editor/imgui/Extensions/FileDialog/ImGuiFileDialog.h"
-
 #include "ImGuiWindow.h"
 
 #if !VG_ENABLE_INLINE

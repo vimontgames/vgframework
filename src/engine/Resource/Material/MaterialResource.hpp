@@ -41,7 +41,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MaterialResource::~MaterialResource()
     {
-        ResourceManager::get()->unloadResource(this, GetResourcePath());
+       
     }
 
     //--------------------------------------------------------------------------------------
@@ -53,28 +53,9 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialResource::OnResourcePathChanged(const string & _oldPath, const string & _newPath)
-    {
-        if (_oldPath != _newPath)
-            ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
-    }
-
-    //--------------------------------------------------------------------------------------
     bool MaterialResource::Cook(const string & _file) const
     {
-        // Cooked file is same format as source file for now
-        const string cookedPath = io::getCookedPath(_file);
-
-        string data;
-        if (io::readFile(_file, data))
-        {
-            if (io::writeFile(cookedPath, data))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return super::Cook(_file);
     }
 
     //--------------------------------------------------------------------------------------

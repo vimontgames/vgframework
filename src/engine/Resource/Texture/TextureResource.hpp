@@ -35,7 +35,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     TextureResource::~TextureResource()
     {
-        ResourceManager::get()->unloadResource(this, GetResourcePath());
+        
     }
 
     //--------------------------------------------------------------------------------------
@@ -47,13 +47,6 @@ namespace vg::engine
                        ext.push_back(".jpg");
                        ext.push_back(".png");
         return ext;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void TextureResource::OnResourcePathChanged(const string & _oldPath, const string & _newPath)
-    {
-        if (_oldPath != _newPath)
-            ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
     }
 
     //--------------------------------------------------------------------------------------

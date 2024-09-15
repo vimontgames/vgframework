@@ -35,7 +35,7 @@ namespace vg::core
         const string &              GetResourcePath         () const final override;
 
         const vector<string>        GetExtensions           () const override;;
-        void                        OnResourcePathChanged   (const string & _oldPath, const string & _newPath) override { };
+        void                        OnResourcePathChanged   (const string & _oldPath, const string & _newPath) override;
 
         bool                        Cook                    (const core::string & _file) const;
 

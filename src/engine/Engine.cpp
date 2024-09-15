@@ -358,6 +358,11 @@ namespace vg::engine
         Kernel::setProfiler(_singletons.profiler);
         _singletons.scheduler->RegisterCurrentThread("Main");
 
+        // Resource manager has to be created after Profiler to register the loading thread
+        m_resourceManager = new ResourceManager("Resource Manager", this);
+        _singletons.resourceManager = m_resourceManager;
+        Kernel::setResourceManager(_singletons.resourceManager);
+
         // Register worker threads, it will be useful to get worker thread names in profiler
         _singletons.scheduler->RegisterWorkerThreads();
 
@@ -368,8 +373,6 @@ namespace vg::engine
         // Load Audio DLL
         m_audio = Plugin::create<audio::IAudio>("audio");
         m_audio->Init(_params.audio, _singletons);
-
-        m_resourceManager = new ResourceManager("Resource Manager", this);
 
         // Load project DLL
         LoadGame(engineOptions->GetProjectPath());
@@ -849,7 +852,7 @@ namespace vg::engine
 
         if (m_startInPlayMode)
         {
-            engine::IResourceManager * rm = GetResourceManager();
+            auto * rm = GetResourceManager();
             if (!rm->HasResourceLoading())
             {
                 Play();
@@ -887,7 +890,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    IResourceManager * Engine::GetResourceManager() const
+    core::IResourceManager * Engine::GetResourceManager() const
     {
         return m_resourceManager;
     }

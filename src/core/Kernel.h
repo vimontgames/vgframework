@@ -8,15 +8,17 @@ namespace vg::core
     class IInput;
     class IFactory;
     class ISelection;
+    class IResourceManager;
 
     struct Singletons
     {
-        ILogger *       logger      = nullptr;
-        IProfiler *     profiler    = nullptr;
-        IScheduler *    scheduler   = nullptr;
-        IInput *        input       = nullptr;
-        IFactory *      factory     = nullptr;
-        ISelection *    selection   = nullptr;
+        ILogger *           logger          = nullptr;
+        IProfiler *         profiler        = nullptr;
+        IScheduler *        scheduler       = nullptr;
+        IInput *            input           = nullptr;
+        IFactory *          factory         = nullptr;
+        ISelection *        selection       = nullptr;
+        IResourceManager *  resourceManager = nullptr;
     };
 
     class Kernel
@@ -39,6 +41,9 @@ namespace vg::core
 
         static void setSelection(ISelection * _selection);
         static ISelection * getSelection(bool _mustExist = true);
+
+        static void setResourceManager(IResourceManager * _resourceManager);
+        static IResourceManager * getResourceManager(bool _mustExist = true);
 
         static void setSingletons(const Singletons & _other);
         static Singletons & getSingletons();
@@ -122,6 +127,18 @@ namespace vg::core
     {
         VG_ASSERT(!_mustExist || s_singletons.selection, "ISelection interface is not specified for this executable or dynamic library.");
         return s_singletons.selection;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline void Kernel::setResourceManager(IResourceManager * _resourceManager)
+    {
+        s_singletons.resourceManager = _resourceManager;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline IResourceManager * Kernel::getResourceManager(bool _mustExist)
+    {
+        return s_singletons.resourceManager;
     }
 
     //--------------------------------------------------------------------------------------

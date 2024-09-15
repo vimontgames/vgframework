@@ -106,7 +106,6 @@
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\win32\Input_win32.h" />
     <ClInclude Include="Input\win32\Input_win32.hpp" />
-    <ClInclude Include="IResourceManager.h" />
     <ClInclude Include="IPhysicsBodyComponent.h" />
     <ClInclude Include="ISelection.h" />
     <ClInclude Include="IWorldResource.h" />

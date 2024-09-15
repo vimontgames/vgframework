@@ -30,8 +30,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MeshResource::~MeshResource()
     {
-        // unload this
-        ResourceManager::get()->unloadResource(this, GetResourcePath());
+
     }
 
     //--------------------------------------------------------------------------------------
@@ -40,13 +39,6 @@ namespace vg::engine
         vector<string> ext;
                        ext.push_back(".fbx");
         return ext;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void MeshResource::OnResourcePathChanged(const string & _oldPath, const string & _newPath)
-    {
-        if (_oldPath != _newPath)
-            ResourceManager::get()->loadResourceAsync(this, _oldPath, _newPath);
     }
 
     //--------------------------------------------------------------------------------------

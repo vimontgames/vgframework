@@ -118,7 +118,6 @@
     <ClInclude Include="Resource\ResourceManager.hpp">
       <Filter>Resource</Filter>
     </ClInclude>
-    <ClInclude Include="IResourceManager.h" />
     <ClInclude Include="Resource\Material\MaterialResource.h">
       <Filter>Resource\Material</Filter>
     </ClInclude>

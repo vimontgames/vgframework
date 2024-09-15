@@ -314,7 +314,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void ResourceManager::loadResourceAsync(Resource * _resource, const core::string & _oldPath, const string & _newPath)
+    void ResourceManager::LoadResourceAsync(IResource * _resource, const core::string & _oldPath, const string & _newPath)
     {
         VG_ASSERT(_resource->GetParent() != nullptr); 
         VG_ASSERT(_resource->GetResourcePath() == _newPath); // TODO: get rid of the '_newPath' parameter?
@@ -324,7 +324,7 @@ namespace vg::engine
         {
             auto it = m_resourceInfosMap.find(_oldPath);
             if (m_resourceInfosMap.end() != it)
-                unloadResource(_resource, _oldPath);
+                UnloadResource(_resource, _oldPath);
         }
 
         if (io::exists(_newPath))
@@ -373,7 +373,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     // Resource Shared Object is released after the last client is unloaded
     //--------------------------------------------------------------------------------------
-    void ResourceManager::unloadResource(core::Resource * _resource, const core::string & _path)
+    void ResourceManager::UnloadResource(core::IResource * _resource, const core::string & _path)
     {
         auto it = m_resourceInfosMap.find(_path);
         if (m_resourceInfosMap.end() != it)

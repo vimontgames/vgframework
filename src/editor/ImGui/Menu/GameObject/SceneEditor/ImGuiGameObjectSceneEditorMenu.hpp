@@ -3,16 +3,17 @@
 #include "core/IResource.h"
 #include "core/ISelection.h"
 #include "core/IInput.h"
+#include "core/IResourceManager.h"
+#include "core/IBaseScene.h"
+#include "core/File/File.h"
 #include "engine/IEngine.h"
-#include "engine/IResourceManager.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
 #include "editor/ImGui/Extensions/FileDialog/ImGuiFileDialog.h"
 #include "editor/ImGui/Window/View/ImGuiView.h"
 #include "editor/Editor.h"
-#include "core/IBaseScene.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
-#include "core/File/File.h"
+
 #include "engine/IWorldResource.h"
 
 using namespace vg::core;

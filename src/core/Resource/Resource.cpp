@@ -3,6 +3,7 @@
 #include "core/File/File.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Kernel.h"
+#include "core/IResourceManager.h"
 
 #include "ResourceMeta.hpp"
 
@@ -56,6 +57,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Resource::~Resource()
     {
+        Kernel::getResourceManager()->UnloadResource(this, GetResourcePath());
 		VG_SAFE_RELEASE(m_object);
     }
 
@@ -155,9 +157,29 @@ namespace vg::core
     };
 
     //--------------------------------------------------------------------------------------
+    void Resource::OnResourcePathChanged(const string & _oldPath, const string & _newPath)
+    {
+        if (_oldPath != _newPath)
+            Kernel::getResourceManager()->LoadResourceAsync(this, _oldPath, _newPath);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Default cook is to simply copy the file: Cooked file is same format as source file for now (TODO : serializeFrom/ToBinary)
+    //--------------------------------------------------------------------------------------
     bool Resource::Cook(const core::string & _file) const
     { 
-        return false; 
+        const string cookedPath = io::getCookedPath(_file);
+
+        string data;
+        if (io::readFile(_file, data))
+        {
+            if (io::writeFile(cookedPath, data))
+            {
+                return true;
+            }
+        }
+
+        return false;
     };
 
     //--------------------------------------------------------------------------------------

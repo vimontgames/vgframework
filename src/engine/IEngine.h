@@ -36,9 +36,13 @@ namespace vg
     }
     #endif
 
-    namespace engine
+    namespace core
     {
         class IResourceManager;
+    }
+
+    namespace engine
+    {
         class IWorldResource;
         class IEngineOptions;
 
@@ -111,7 +115,7 @@ namespace vg
 		    virtual renderer::IRenderer *	            GetRenderer	        () const = 0;
             virtual physics::IPhysics *                 GetPhysics          () const = 0;
             virtual audio::IAudio *                     GetAudio            () const = 0;
-            virtual engine::IResourceManager *          GetResourceManager  () const = 0;
+            virtual core::IResourceManager *            GetResourceManager  () const = 0;
             virtual core::ISelection *                  GetSelection        () const = 0;
 
             virtual bool                                CreateWorld         (const core::string & _filename) = 0;

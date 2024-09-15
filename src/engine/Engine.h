@@ -105,7 +105,7 @@ namespace vg::engine
 		renderer::IRenderer *	                GetRenderer	        () const final override;
         physics::IPhysics *                     GetPhysics          () const final override;
         audio::IAudio *                         GetAudio            () const final override;
-        engine::IResourceManager *              GetResourceManager  () const final override;
+        core::IResourceManager *                GetResourceManager  () const final override;
         core::ISelection *                      GetSelection        () const final override;
 
         bool                                    CreateWorld         (const core::string & _filename) final override;

@@ -1,5 +1,5 @@
 #include "ImGuiResource.h"
-#include "engine/IResourceManager.h"
+#include "core/IResourceManager.h"
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -17,7 +17,7 @@ namespace vg::editor
     {
         if (ImGui::IconBegin(style::icon::Resource, getName().c_str(), &m_isVisible))
         {
-            engine::IResourceManager * rm = Editor::get()->getEngine()->GetResourceManager();
+            IResourceManager * rm = Editor::get()->getEngine()->GetResourceManager();
 
             bool enabled = rm != nullptr && !rm->HasResourceLoading();
 
@@ -35,7 +35,7 @@ namespace vg::editor
 
             for (uint i = 0; i < resCount; ++i)
             {
-                const engine::IResourceInfo & resInfo = rm->GetResourceInfo(i);
+                const IResourceInfo & resInfo = rm->GetResourceInfo(i);
                 const string resType = resInfo.GetResourceType();
 
                 auto it = resourcesByType.find(resType);

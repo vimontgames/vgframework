@@ -409,6 +409,7 @@
     <ClInclude Include="Types\Enum.h">
       <Filter>Types</Filter>
     </ClInclude>
+    <ClInclude Include="IResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

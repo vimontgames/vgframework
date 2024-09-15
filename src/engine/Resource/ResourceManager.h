@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Singleton/Singleton.h"
-#include "engine/IResourceManager.h"
+#include "core/IResourceManager.h"
 #include "core/Object/Object.h"
 #include "core/Scheduler/Mutex.h"
 
@@ -27,10 +27,10 @@ namespace vg::engine
         COOK_VERSION_DEPRECATED     // File needs cook because cooked file version is deprecated
     );
 
-    class ResourceManager final : public IResourceManager, public core::Singleton<ResourceManager>
+    class ResourceManager final : public core::IResourceManager, public core::Singleton<ResourceManager>
     {
     public:
-        VG_CLASS_DECL(ResourceManager, IResourceManager);
+        VG_CLASS_DECL(ResourceManager, core::IResourceManager);
 
         ResourceManager(const core::string & _name, IObject * _parent);
         ~ResourceManager();
@@ -41,7 +41,7 @@ namespace vg::engine
 
         bool                        HasResourceLoading          () const final override;
         core::uint                  GetResourceCount            () const final override;
-        const IResourceInfo &       GetResourceInfo             (core::uint _index) const final override;
+        const core::IResourceInfo & GetResourceInfo             (core::uint _index) const final override;
 
         core::IResourceMeta *       GetOrCreateResourceMeta     (const core::IResource * _resource) const final override;
         core::IResourceMeta *       GetResourceMeta             (const core::string & _resourcePath) const final override;
@@ -51,8 +51,8 @@ namespace vg::engine
         core::uint                  UpdateResources             () final override;
         void                        Reimport                    (core::IResource * _res) final override;
 
-        void                        loadResourceAsync           (core::Resource * _resource, const core::string & _oldPath, const core::string & _path);
-        void                        unloadResource              (core::Resource * _resource, const core::string & _path);
+        void                        LoadResourceAsync           (core::IResource * _resource, const core::string & _oldPath, const core::string & _path) final override;
+        void                        UnloadResource              (core::IResource * _resource, const core::string & _path) final override ;
 
         void                        updateLoading               ();
         void                        flushPendingLoading         ();

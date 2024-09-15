@@ -6,10 +6,7 @@ namespace vg::core
 {
     class IResource;
     class IResourceMeta;
-}
 
-namespace vg::engine
-{
     class IResourceInfo : public core::Object
     {
     public:
@@ -21,7 +18,7 @@ namespace vg::engine
         virtual const core::IResource * GetClient       (core::uint _index) const = 0;
     };
 
-    class IResourceManager : public core::Object
+    class IResourceManager : public Object
     {
     public:
         using super = core::Object;
@@ -36,34 +33,38 @@ namespace vg::engine
         virtual void Lock() const = 0;
         virtual void Unlock() const = 0;
 
+        // Load/unload resource
+        virtual void LoadResourceAsync(core::IResource * _resource, const core::string & _oldPath, const core::string & _path) = 0;
+        virtual void UnloadResource(core::IResource * _resource, const core::string & _path) = 0;
+
         // Return 'true' if any resource is currently loading 
         virtual bool HasResourceLoading() const = 0;
         
         // Get number of registered resources
-        virtual core::uint GetResourceCount() const = 0;
+        virtual uint GetResourceCount() const = 0;
 
         // Get infos about a loaded (or requested resource)
-        virtual const IResourceInfo & GetResourceInfo(core::uint _index) const = 0;
+        virtual const IResourceInfo & GetResourceInfo(uint _index) const = 0;
 
         // Get or create ResourceMeta and update Timestamps
-        virtual core::IResourceMeta * GetOrCreateResourceMeta(const core::IResource * _resource) const = 0;
+        virtual IResourceMeta * GetOrCreateResourceMeta(const IResource * _resource) const = 0;
 
         // Get ResourceMeta from path if it already exists
-        virtual core::IResourceMeta * GetResourceMeta(const core::string & _resourcePath) const = 0;
+        virtual IResourceMeta * GetResourceMeta(const string & _resourcePath) const = 0;
 
         // Add or update ResourceMeta
-        virtual void SetResourceMeta(const core::string & _resourcePath, core::IResourceMeta * _meta) = 0;
+        virtual void SetResourceMeta(const string & _resourcePath, IResourceMeta * _meta) = 0;
 
         // Register extension for resource type
         //virtual void RegisterExtension(const core::string & _className, const core::string & _extension) = 0;
 
         // Reimport resource meta
-        virtual core::uint UpdateMeta() = 0;
+        virtual uint UpdateMeta() = 0;
 
         // Reimport modified resources
-        virtual core::uint UpdateResources() = 0;
+        virtual uint UpdateResources() = 0;
 
         // Force reimport specific resource
-        virtual void Reimport(core::IResource * _res) = 0;
+        virtual void Reimport(IResource * _res) = 0;
     };
 }

@@ -47,6 +47,7 @@
     <ClInclude Include="IProperty.h" />
     <ClInclude Include="IResource.h" />
     <ClInclude Include="IBaseScene.h" />
+    <ClInclude Include="IResourceManager.h" />
     <ClInclude Include="IResourceMeta.h" />
     <ClInclude Include="IScheduler.h" />
     <ClInclude Include="ISelection.h" />
