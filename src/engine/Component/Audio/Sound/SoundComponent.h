@@ -1,11 +1,7 @@
 #pragma once
 
 #include "engine/ISoundComponent.h"
-
-namespace audio
-{
-    class ISoundInstance;
-}
+#include "engine/Resource/Audio/SoundResource.h"
 
 namespace vg::engine
 {
@@ -17,8 +13,9 @@ namespace vg::engine
         SoundComponent(const core::string & _name, IObject * _parent);
         ~SoundComponent();
 
+        audio::PlaySoundHandle Play() final override;
+
     private:
-        core::string            m_path;
-        audio::ISoundInstance * m_soundInstance = nullptr;
+        SoundResource   m_soundRes;
     };
 }

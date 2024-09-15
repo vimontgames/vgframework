@@ -1,6 +1,7 @@
 #include "audio/Precomp.h"
 #include "audio.h"
 #include "Options/AudioOptions.h"
+#include "Sound/Sound.h"
 
 #if !VG_ENABLE_INLINE
 #include "audio.inl"
@@ -111,5 +112,37 @@ namespace vg::audio
     IAudioOptions * Audio::GetOptions() const
     {
         return AudioOptions::get();
-    }    
+    }  
+
+    //--------------------------------------------------------------------------------------
+    ISound * Audio::CreateSound(const core::string & _path)
+    {
+        return new Sound(_path, nullptr);
+    }
+
+    //--------------------------------------------------------------------------------------
+    PlaySoundHandle Audio::PlaySound(const ISound * _sound)
+    {
+        if (_sound)
+        {
+            if (auto * slAudioSource = ((Sound *)_sound)->getSLAudioSource())
+            {
+                return (PlaySoundHandle)m_soloud.play(*slAudioSource);
+            }
+        }
+
+        return PlaySoundHandle(0);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Audio::StopSound(const PlaySoundHandle & _handle)
+    {
+        if (0 != _handle)
+        {
+            m_soloud.stop((SoLoud::handle)_handle);
+            return true;
+        }
+
+        return false;
+    }
 }

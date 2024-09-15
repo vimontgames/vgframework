@@ -2351,6 +2351,8 @@ namespace vg::editor
             folder = "Textures";
         else if (!strcmp(_resourceTypeName.c_str(), "MaterialResource"))
             folder = "Materials";
+        else if (!strcmp(_resourceTypeName.c_str(), "SoundResource"))
+            folder = "Sounds";
         else if (!strcmp(_resourceTypeName.c_str(), "AnimationResource"))
             folder = "Animations";
         else if (!strcmp(_resourceTypeName.c_str(), "SceneResource"))

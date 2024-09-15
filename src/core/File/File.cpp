@@ -1,5 +1,6 @@
 #include "core/Precomp.h"
 #include "file.h"
+#include "core/Kernel.h"
 #include <iostream>
 #include <fstream>
 #include <filesystem>
@@ -239,6 +240,18 @@ namespace vg::core::io
         }
         else
             return filename;
+    }
+
+    //--------------------------------------------------------------------------------------
+    string getFileExtension(const string & _file)
+    {
+        size_t pos = _file.find_last_of('.');
+
+        if (string::npos != pos && 0 != pos)
+            return tolower(_file.substr(pos + 1)); // +1 to skip the dot itself
+
+        VG_WARNING("[File] File \"%s\" has no extension");
+        return "";
     }
 
     //--------------------------------------------------------------------------------------

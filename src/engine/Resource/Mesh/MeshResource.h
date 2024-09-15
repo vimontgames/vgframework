@@ -32,8 +32,5 @@ namespace vg::engine
         void                                onResourceUnloaded      (core::IResource * _resource) final override;
 
         renderer::IMeshModel *              getMeshModel            () const { return (renderer::IMeshModel*)m_object; } 
-
-    private:
-        //core::vector<MaterialResource>      m_materialResources;
     };
 }

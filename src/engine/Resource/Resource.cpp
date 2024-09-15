@@ -15,5 +15,6 @@
 #include "BaseScene/Scene/SceneResource.hpp"
 #include "BaseScene/Prefab/PrefabResource.hpp"
 #include "World/WorldResource.hpp"
+#include "Audio/SoundResource.hpp"
 #include "ResourceInfo.hpp"
 #include "ResourceManager.hpp"

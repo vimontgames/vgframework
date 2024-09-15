@@ -14,4 +14,6 @@ namespace vg::audio
         Mp3,
         Flac
     );
+
+    using PlaySoundHandle = core::u64;
 }

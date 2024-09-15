@@ -13,14 +13,15 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerProperty(SoundComponent, m_path, "Path");
+        registerPropertyResource(SoundComponent, m_soundRes, "Path");
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
     SoundComponent::SoundComponent(const core::string & _name, IObject * _parent) :
-        super(_name, _parent)
+        super(_name, _parent),
+        m_soundRes(_name, _parent)
     {
         SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update | UpdateFlags::LateUpdate, false);
     }
@@ -29,5 +30,11 @@ namespace vg::engine
     SoundComponent::~SoundComponent()
     {
 
+    }
+
+    //--------------------------------------------------------------------------------------
+    audio::PlaySoundHandle SoundComponent::Play()
+    {
+        return m_soundRes.play();
     }
 }

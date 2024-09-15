@@ -40,6 +40,7 @@ namespace vg::core::io
     string getFileName(const string & _file);
     string getFileNameWithoutExt(const string & _file);
     bool fileHasExtension(const string & _file, const string & _ext);
+    string getFileExtension(const string & _file);
     string addExtensionIfNotPresent(const string & _file, const core::string & _ext);
     string addExtensionIfNotPresent(const string & _file, const core::vector<core::string> _ext);
 

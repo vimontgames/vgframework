@@ -23,10 +23,13 @@ namespace vg::audio
 
         void							    Init                        (const AudioCreationParams & _params, core::Singletons & _singletons) final override;
         void							    Deinit                      () final override;
-
         void                                Update                      (float _dt) final override;
-
         IAudioOptions *                     GetOptions                  () const final override;
+        ISound *                            CreateSound                 (const core::string & _path) final override;
+        PlaySoundHandle                     PlaySound                   (const ISound * _sound) final override;
+        bool                                StopSound                   (const PlaySoundHandle & _handle) final override;
+
+        VG_INLINE SoLoud::Soloud &          getSLEngine                 ();
         
     private:
         AudioCreationParams                 m_audioCreationParams;

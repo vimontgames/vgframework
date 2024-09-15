@@ -62,6 +62,8 @@
     <ClInclude Include="ISnapComponent.h" />
     <ClInclude Include="ISoundComponent.h" />
     <ClInclude Include="IUITextComponent.h" />
+    <ClInclude Include="Resource\Audio\SoundResource.h" />
+    <ClInclude Include="Resource\Audio\SoundResource.hpp" />
     <ClInclude Include="Resource\BaseScene\BaseSceneResource.h" />
     <ClInclude Include="Resource\BaseScene\BaseSceneResource.hpp" />
     <ClInclude Include="Resource\BaseScene\Prefab\PrefabResource.h" />

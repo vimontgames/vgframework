@@ -16,7 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Audio.cpp" />
-    <ClCompile Include="Instance\SoundInstance.cpp" />
     <ClCompile Include="Options\AudioOptions.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -24,17 +23,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="SoLoud\SoLoud.cpp" />
+    <ClCompile Include="Sound\Sound.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Audio.h" />
     <ClInclude Include="Audio_Consts.h" />
     <ClInclude Include="IAudio.h" />
     <ClInclude Include="IAudioOptions.h" />
-    <ClInclude Include="Instance\SoundInstance.h" />
-    <ClInclude Include="ISoundInstance.h" />
+    <ClInclude Include="ISound.h" />
     <ClInclude Include="Options\AudioOptions.h" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="SoLoud\SoLoud.h" />
+    <ClInclude Include="Sound\Sound.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Audio.def" />

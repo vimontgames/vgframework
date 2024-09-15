@@ -30,3 +30,8 @@
 #include "soloud/src/audiosource/speech/resonator.cpp"
 #include "soloud/src/audiosource/speech/soloud_speech.cpp"
 #include "soloud/src/audiosource/speech/tts.cpp"
+
+#include "soloud/src/audiosource/wav/stb_vorbis.c"
+#include "soloud/src/audiosource/wav/dr_impl.cpp"
+#include "soloud/src/audiosource/wav/soloud_wav.cpp"
+#include "soloud/src/audiosource/wav/soloud_wavstream.cpp"

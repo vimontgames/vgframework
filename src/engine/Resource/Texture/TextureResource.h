@@ -13,8 +13,7 @@ namespace vg::engine
     {
     public:
         VG_CLASS_DECL(TextureResource, core::Resource);
-        using super = core::Resource;
-
+ 
                                             TextureResource         (const core::string & _name = "", core::IObject * _parent = nullptr);
                                             ~TextureResource        ();
 

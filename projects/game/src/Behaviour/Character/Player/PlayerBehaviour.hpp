@@ -5,6 +5,7 @@
 #include "engine/ICharacterControllerComponent.h"
 #include "engine/IUITextComponent.h"
 #include "engine/IPhysicsBodyComponent.h"
+#include "engine/ISoundComponent.h"
 #include "editor/Editor_Consts.h"
 #include "core/GameObject/GameObject.h"
 #include "core/IWorld.h"
@@ -181,6 +182,10 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                             //VG_INFO("[Player] Kick ball %u (dist = %.2f, dir = %.2f, %.2f, %.2f)", i, dist, dir.x, dir.y, dir.z);
                             float kickStrength = lerp(250.0f, 400.0f, runAmount);
                             physicsBody->AddImpulse(dir * kickStrength);
+
+                            // Play sound
+                            if (auto * soundComponent = ball->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
+                                soundComponent->Play();
                         }
                     }
                 }

@@ -331,6 +331,12 @@
       <Filter>Component\Audio\Sound</Filter>
     </ClInclude>
     <ClInclude Include="ISoundComponent.h" />
+    <ClInclude Include="Resource\Audio\SoundResource.h">
+      <Filter>Resource\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Audio\SoundResource.hpp">
+      <Filter>Resource\Audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -446,6 +452,9 @@
     </Filter>
     <Filter Include="Component\Audio\Sound">
       <UniqueIdentifier>{b310ec75-f637-48ab-85cb-630058b0415d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Audio">
+      <UniqueIdentifier>{e7683dca-e937-4a21-89ff-43dc3d1213d4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

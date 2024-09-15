@@ -15,8 +15,6 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        //registerPropertyObjectVectorEx(MeshResource, m_materialResources, MaterialResource, "Materials", PropertyFlags::NotSaved | PropertyFlags::ReadOnly);
-
         return true;
     }
 
