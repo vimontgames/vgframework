@@ -111,7 +111,7 @@ namespace vg::core
 #define VG_VERIFY(f) VG_ASSERT(f)
 #else
 #define VG_ASSERT(condition, ...) __noop
-#define VG_VERIFY(f) f
+#define VG_VERIFY(f) ((void)(f)) 
 #endif
 
 #define VG_ASSERT_ENUM_NOT_IMPLEMENTED(value) VG_ASSERT(false, "case %s: is not implemented", vg::core::asString(value).c_str());

@@ -49,24 +49,6 @@ namespace vg::audio
         VG_SAFE_DELETE(m_slAudioSource);
     }
 
-    ////--------------------------------------------------------------------------------------
-    //void Sound::SetSoundFlags(SoundFlags _flags, bool _enabled)
-    //{
-    //    if (_enabled)
-    //        m_soundFlags |= _flags;
-    //    else
-    //        m_soundFlags &= ~_flags;
-    //
-    //    if (asBool(SoundFlags::Loop & _flags))
-    //        m_slAudioSource->setLooping(_enabled);
-    //}
-    //
-    ////--------------------------------------------------------------------------------------
-    //SoundFlags Sound::GetSoundFlags() const
-    //{
-    //    return m_soundFlags;
-    //}
-
     //--------------------------------------------------------------------------------------
     AudioSourceType Sound::getAudioSourceTypeFromFilename(const core::string & _filename)
     {
