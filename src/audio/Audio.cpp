@@ -121,13 +121,25 @@ namespace vg::audio
     }
 
     //--------------------------------------------------------------------------------------
-    PlaySoundHandle Audio::PlaySound(const ISound * _sound)
+    PlaySoundHandle Audio::Play(const ISound * _sound, const SoundSettings & _settings)
     {
         if (_sound)
         {
             if (auto * slAudioSource = ((Sound *)_sound)->getSLAudioSource())
             {
-                return (PlaySoundHandle)m_soloud.play(*slAudioSource);
+                PlaySoundHandle handle;
+                
+                if (asBool(SoundFlags::Background & _settings.m_flags))
+                    handle = (PlaySoundHandle)m_soloud.playBackground(*slAudioSource, _settings.m_volume);
+                else
+                    handle = (PlaySoundHandle)m_soloud.play(*slAudioSource, _settings.m_volume);
+
+                if (asBool(SoundFlags::Loop & _settings.m_flags))
+                    m_soloud.setLooping((SoLoud::handle)handle, true);
+                else
+                    m_soloud.setLooping((SoLoud::handle)handle, false);
+
+                return handle;
             }
         }
 
@@ -135,11 +147,35 @@ namespace vg::audio
     }
 
     //--------------------------------------------------------------------------------------
-    bool Audio::StopSound(const PlaySoundHandle & _handle)
+    bool Audio::Stop(const PlaySoundHandle & _handle)
     {
         if (0 != _handle)
         {
             m_soloud.stop((SoLoud::handle)_handle);
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Audio::SetVolume(const PlaySoundHandle & _handle, float _volume)
+    {
+        if (0 != _handle)
+        {
+            m_soloud.setVolume((SoLoud::handle)_handle, _volume);
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Audio::SetLooping(const PlaySoundHandle & _handle, bool _looping) 
+    {
+        if (0 != _handle)
+        {
+            m_soloud.setLooping((SoLoud::handle)_handle, _looping);
             return true;
         }
 

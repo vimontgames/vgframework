@@ -2299,11 +2299,11 @@ namespace vg::editor
             if (!strcmp(_resource->GetClassName(), "PrefabResource"))
                 anyVisibleProperty = false;
 
-            if (anyVisibleProperty)
+            //if (anyVisibleProperty)
             {
                 const string resourceLabel = fmt::sprintf("%s###%s", _prop->GetDisplayName(), _resource->GetResourcePath());
 
-                if (ImGui::TreeNodeEx(resourceLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                //if (ImGui::TreeNodeEx(resourceLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
                 {
                     ImGuiWindow::displayObject(resourceObject);
 
@@ -2328,7 +2328,7 @@ namespace vg::editor
 
                     ImGui::Spacing();
 
-                    ImGui::TreePop();
+                    //ImGui::TreePop();
                 }
             }            
         }

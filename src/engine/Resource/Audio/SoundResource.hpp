@@ -13,9 +13,6 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyCallbackEx(SoundResource, playSound, "Play", PropertyFlags::SingleLine);
-        registerPropertyCallbackEx(SoundResource, stopSound, "Stop", PropertyFlags::SingleLine);
-
         return true;
     }
 
@@ -50,26 +47,29 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool SoundResource::play()
+    IResourceMeta * SoundResource::CreateResourceMeta(const core::string & _path) const
+    {
+        return nullptr; // new SoundResourceMeta(_path);
+    }
+
+    //--------------------------------------------------------------------------------------
+    audio::PlaySoundHandle SoundResource::play(const audio::SoundSettings & _settings)
     {
         if (auto * sound = getSound())
         {
-            if (auto handle = Engine::get()->GetAudio()->PlaySound(sound))
-            {
-                setSoundHandle(handle);
-                return true;
-            }
+            if (auto handle = Engine::get()->GetAudio()->Play(sound, _settings))
+                return handle;
         }
 
         return false;
     }
 
     //--------------------------------------------------------------------------------------
-    bool SoundResource::stop()
+    bool SoundResource::stop(const audio::PlaySoundHandle & _handle)
     {
-        if (auto handle = getSoundHandle())
+        if (_handle)
         {
-            if (Engine::get()->GetAudio()->StopSound(handle))
+            if (Engine::get()->GetAudio()->Stop(_handle))
                 return true;
         }
 
@@ -77,14 +77,26 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool SoundResource::playSound(IObject * _object)
+    bool SoundResource::setVolume(const audio::PlaySoundHandle & _handle, float _volume)
     {
-        return ((SoundResource*)_object)->play();
+        if (_handle)
+        {
+            if (Engine::get()->GetAudio()->SetVolume(_handle, _volume))
+                return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
-    bool SoundResource::stopSound(IObject * _object)
+    bool SoundResource::setLooping(const audio::PlaySoundHandle & _handle, bool _looping) 
     {
-        return ((SoundResource *)_object)->stop();
+        if (_handle)
+        {
+            if (Engine::get()->GetAudio()->SetLooping(_handle, _looping))
+                return true;
+        }
+
+        return false;
     }
 }

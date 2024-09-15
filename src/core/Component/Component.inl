@@ -18,7 +18,7 @@ namespace vg::core
         if (_enabled)
             m_flags |= _flags;
         else
-            (std::underlying_type<ComponentFlags>::type&)m_flags &= ~(std::underlying_type<ComponentFlags>::type&)_flags;
+            m_flags &= ~_flags;
     }
 
     //--------------------------------------------------------------------------------------
