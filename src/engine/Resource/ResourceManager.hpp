@@ -192,11 +192,13 @@ namespace vg::engine
                 for (auto client : clients)
                     VG_SAFE_INCREASE_REFCOUNT(client);
 
+                // Remove all clients
                 for (uint i = 0; i < clients.size(); ++i)
-                {
                     clients[i]->ClearResourcePath();
+
+                // Rebind all clients to update the resource
+                for (uint i = 0; i < clients.size(); ++i)
                     clients[i]->SetResourcePath(info->m_path);
-                }
 
                 for (auto client : clients)
                     VG_SAFE_RELEASE(client);
@@ -236,9 +238,11 @@ namespace vg::engine
                 for (auto client : clients)
                     VG_SAFE_INCREASE_REFCOUNT(client);
 
+                // Remove all clients
                 for (uint i = 0; i < clients.size(); ++i)
                     clients[i]->ClearResourcePath();
 
+                // Rebind all clients to update the resource
                 for (uint i = 0; i < clients.size(); ++i)
                     clients[i]->SetResourcePath(path);
 
