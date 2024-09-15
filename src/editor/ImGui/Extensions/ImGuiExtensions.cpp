@@ -407,6 +407,12 @@ namespace ImGui
         return false;
     }
 
+    //--------------------------------------------------------------------------------------
+    void PushDefaultFont()
+    {
+        auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+        imGuiAdapter->PushDefaultFont();
+    }
    
     //--------------------------------------------------------------------------------------
     void PushFont(Font _font)

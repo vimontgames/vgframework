@@ -1,4 +1,5 @@
 #include "ImguiAbout.h"
+#include "renderer/ImGui_consts.h"
 
 namespace vg::editor
 {
@@ -9,7 +10,7 @@ namespace vg::editor
         const char * url;
     };
 
-    static const float columnWidth[3] = { 256, 128, 640 };
+    static const float columnWidth[3] = { 220, 150, 750 };
 
     //--------------------------------------------------------------------------------------
     ImGuiAbout::ImGuiAbout() :
@@ -21,8 +22,10 @@ namespace vg::editor
     void ImGuiAbout::drawLibraryDescriptionList(const char * _label, LibraryDescription * _infos, core::uint _count)
     {
         Columns(1);
+        ImGui::PushStyle(renderer::FontStyle::Bold);
         Text(_label);
         Text("");
+        ImGui::PopStyle();
 
         Columns(3, _label, false);
 
@@ -53,8 +56,12 @@ namespace vg::editor
     {
         if (IconBegin(style::icon::About, "About", &m_isVisible, ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoCollapse))
         {
+            ImGui::PushDefaultFont();
+
+            ImGui::PushStyle(renderer::FontStyle::Bold);
             Text("VG Framework");
             Text("");
+            ImGui::PopStyle();
 
             Columns(3, "author", false);
 
@@ -83,7 +90,7 @@ namespace vg::editor
 
             drawLibraryDescriptionList("SDK", SDKs, (uint)countof(SDKs));
 
-            LibraryDescription thirdParties[] =
+            LibraryDescription externLibs[] =
             {
                 { "D3D12 Memory Allocator", "",                 "https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator" },
                 { "D3D12 HDR Sample",       "",                 "https://github.com/microsoft/directx-graphics-samples/tree/master/Samples/Desktop/D3D12HDR" },
@@ -108,12 +115,44 @@ namespace vg::editor
                 { "WinPixEventRuntime",     "1.0.231030001",    "https://www.nuget.org/packages/WinPixEventRuntime" },
             };
 
-            drawLibraryDescriptionList("3rd-parties:", thirdParties, (uint)countof(thirdParties));
+            drawLibraryDescriptionList("Extern libs", externLibs, (uint)countof(externLibs));
+
+            LibraryDescription fonts[] =
+            {
+                { "Font-Awesome",   "6.x",  "https://github.com/FortAwesome/Font-Awesome/tree/6.x" },
+                { "Rowdies",        "",     "https://github.com/magictype/rowdy" },
+                { "RubikMonoOne",   "",     "https://fonts.google.com/specimen/Rubik+Mono+One" },
+                { "UbuntuMono",     "1.0",  "https://fonts.google.com/specimen/Ubuntu+Mono" }
+            };
+
+            drawLibraryDescriptionList("Fonts", fonts, (uint)countof(fonts));
+
+            LibraryDescription models[] =
+            {
+                { "3D Foot Ball Free low-poly 3D",  "prabath-weerapana","https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball" },
+                { "Luigi",                          "Anthony Yanez",    "https://www.turbosquid.com/3d-models/luigi-super-model-1308288" },
+                { "Traffic Cone Free 3D model",     "hinndia",          "https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c" },
+                { "Soccergoal",                     "NorbertVarga",     "https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894" }
+            };
+
+            drawLibraryDescriptionList("Models", models, (uint)countof(models));
+
+            LibraryDescription sound[] =
+            {
+                { "Tally Dub",  "Brotheration Records","https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/" }
+            };
+
+            drawLibraryDescriptionList("Sound", sound, (uint)countof(sound));
 
             Columns(1);
-            Text("Special thanks to JOYxt, Onduril, SlavSquat, Bob, Guigui, Marcel, Hamilcar and all the old guard.");
+            ImGui::PushStyle(renderer::FontStyle::Bold);
+            Text("Special thanks");
+            Text("");
+            ImGui::PopStyle();
+            Text("JOYxt, Onduril, SlavSquat, Bob, Guigui, Marcel, Hamilcar and all the old guard.");
 
-            End();
+            ImGui::PopFont();
+            End();            
         }
     }
 }

@@ -704,6 +704,11 @@ namespace vg::renderer
         switch (_params.target)
         {
             default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_params.target);
+                break;
+
+            case ViewTarget::Game:
+            case ViewTarget::Editor:
                 view = new LitView(_params);
                 break;
         }
