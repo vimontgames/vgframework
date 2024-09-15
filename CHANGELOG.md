@@ -2,10 +2,11 @@
 
 ## 0.32
 ### Build
-Update to Visual Studio 2022 17.11.2\
+Sound using SoLoud library\
 HDR output (WIP)\
 FPS and CPU/GPU frame timings displayed in HUD and editor
 Fix UI in FINAL fullscreen mode
+Update to Visual Studio 2022 17.11.2
 
 ## 0.31
 
