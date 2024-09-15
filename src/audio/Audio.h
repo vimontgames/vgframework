@@ -31,7 +31,6 @@ namespace vg::audio
     private:
         AudioCreationParams                 m_audioCreationParams;
         SoLoud::Soloud                      m_soloud;
-        SoLoud::Speech                      m_testSpeech;  // A sound source (speech, in this case)
 	};
 }
 

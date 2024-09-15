@@ -111,6 +111,7 @@ namespace vg::editor
             inline static const char * Script               = ICON_FA_FILE_LINES;
             inline static const char * Shaders              = ICON_FA_HAT_WIZARD;
             inline static const char * Sliders              = ICON_FA_SLIDERS;
+            inline static const char * Sound                = ICON_FA_MUSIC;
             inline static const char * Snap                 = ICON_FA_RULER_COMBINED;
             inline static const char * Statistics           = ICON_FA_CHART_SIMPLE;
             inline static const char * Stop                 = ICON_FA_STOP;

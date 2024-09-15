@@ -18,6 +18,7 @@
     <ClCompile Include="Behaviour\FreeCam\FreeCamBehaviour.cpp" />
     <ClCompile Include="Component\Animation\AnimationComponent.cpp" />
     <ClCompile Include="Component\Animation\AttachToNodeComponent.cpp" />
+    <ClCompile Include="Component\Audio\AudioComponent.cpp" />
     <ClCompile Include="Component\Camera\CameraComponent.cpp" />
     <ClCompile Include="Component\Camera\LightComponent.cpp" />
     <ClCompile Include="Component\Debug\HUD\HUDComponent.cpp" />
@@ -38,6 +39,8 @@
     <ClCompile Include="Resource\Resource.cpp" />
     <ClCompile Include="Selection\Selection.cpp" />
     <ClInclude Include="Component\Animation\AttachToNodeComponent.h" />
+    <ClInclude Include="Component\Audio\Sound\SoundComponent.h" />
+    <ClInclude Include="Component\Audio\Sound\SoundComponent.hpp" />
     <ClInclude Include="Component\Debug\HUD\HUDComponent.h" />
     <ClInclude Include="Component\Debug\TestComponent\TestComponent.h" />
     <ClInclude Include="Component\Editor\Snap\SnapComponent.h" />
@@ -57,6 +60,7 @@
     <ClCompile Include="GameObject\Prefab\PrefabGameObject.cpp" />
     <ClInclude Include="IPhysicsShapeComponent.h" />
     <ClInclude Include="ISnapComponent.h" />
+    <ClInclude Include="ISoundComponent.h" />
     <ClInclude Include="IUITextComponent.h" />
     <ClInclude Include="Resource\BaseScene\BaseSceneResource.h" />
     <ClInclude Include="Resource\BaseScene\BaseSceneResource.hpp" />

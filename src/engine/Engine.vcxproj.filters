@@ -57,6 +57,9 @@
     <ClCompile Include="Component\Debug\HUD\HUDComponent.cpp">
       <Filter>Component\Debug\HUD</Filter>
     </ClCompile>
+    <ClCompile Include="Component\Audio\AudioComponent.cpp">
+      <Filter>Component\Audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -322,6 +325,13 @@
     <ClInclude Include="Component\Debug\HUD\HUDComponent.h">
       <Filter>Component\Debug\HUD</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Audio\Sound\SoundComponent.h">
+      <Filter>Component\Audio\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Audio\Sound\SoundComponent.hpp">
+      <Filter>Component\Audio\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="ISoundComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -431,6 +441,12 @@
     </Filter>
     <Filter Include="Component\Debug\TestComponent">
       <UniqueIdentifier>{236f90ce-ad64-4e16-b12c-aefafa4ac373}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Audio">
+      <UniqueIdentifier>{c3948e93-99ef-4d38-95b2-0bb7446dc277}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Audio\Sound">
+      <UniqueIdentifier>{b310ec75-f637-48ab-85cb-630058b0415d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

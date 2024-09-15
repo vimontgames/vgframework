@@ -86,10 +86,6 @@ namespace vg::audio
 
         // initialize SoLoud.
         m_soloud.init();
-
-        // Test
-        m_testSpeech.setText("VG Framework");
-        m_soloud.play(m_testSpeech);
 	}
 
 	//--------------------------------------------------------------------------------------

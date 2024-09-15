@@ -9,6 +9,9 @@
     <ClCompile Include="SoLoud\SoLoud.cpp">
       <Filter>SoLoud</Filter>
     </ClCompile>
+    <ClCompile Include="Instance\SoundInstance.cpp">
+      <Filter>Instance</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -22,6 +25,10 @@
     <ClInclude Include="SoLoud\SoLoud.h">
       <Filter>SoLoud</Filter>
     </ClInclude>
+    <ClInclude Include="Instance\SoundInstance.h">
+      <Filter>Instance</Filter>
+    </ClInclude>
+    <ClInclude Include="ISoundInstance.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Options">
@@ -29,6 +36,9 @@
     </Filter>
     <Filter Include="SoLoud">
       <UniqueIdentifier>{c966a61c-4651-4ddf-bf99-8a252580e018}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Instance">
+      <UniqueIdentifier>{e1dad0fe-8308-478b-b58c-29d2563a9c19}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
