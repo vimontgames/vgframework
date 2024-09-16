@@ -1008,6 +1008,20 @@ namespace vg::renderer
                     }
                 }
             }
+            else
+            {
+                // Hide all game view so as not to render the game views if it's not visible in the editor
+                auto & viewports = m_viewports[(int)ViewportTarget::Game];
+                for (uint i = 0; i < viewports.size(); ++i)
+                {
+                    auto * viewport = viewports[i];
+                    if (nullptr != viewport)
+                    {
+                        viewport->SetFocused(false);
+                        viewport->SetVisible(false);
+                    }
+                }
+            }
         }
     }
 

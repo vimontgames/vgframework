@@ -124,7 +124,6 @@ namespace vg::engine
                 {
                     view->SetRenderTarget(viewport->GetRenderTarget());
                     view->SetRenderTargetSize(viewport->GetRenderTargetSize());
-                    view->SetVisible(true);
                     renderer->AddView(view);
                     viewport->AddView(m_viewIndex, view->GetViewID());
                     VG_SAFE_RELEASE(view);
