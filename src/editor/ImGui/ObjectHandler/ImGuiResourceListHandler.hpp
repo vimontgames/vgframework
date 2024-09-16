@@ -32,7 +32,7 @@ namespace vg::editor
 
             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
-            string label = fmt::sprintf("%s[%u])", _label.c_str(), resourceCount);
+            string label = fmt::sprintf("%ss (%u)", _label.c_str(), resourceCount);
 
             ImGuiStyle & style = ImGui::GetStyle();
 

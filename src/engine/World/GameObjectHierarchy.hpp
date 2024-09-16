@@ -40,7 +40,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectPtr(Scene, m_root, "Root");
+        registerPropertyObjectPtrEx(Scene, m_root, "Root", core::PropertyFlags::NotVisible);
 
         return true;
     }

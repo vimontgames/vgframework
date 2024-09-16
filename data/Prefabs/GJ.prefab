@@ -1,34 +1,34 @@
 <Root>
     <Object class="PrefabScene">
-        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="236289321"/>
-        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
         <Property type="String" name="m_name" flags="NotVisible" value="GJ"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-        <Property type="ObjectPtr" name="m_root">
+        <Property type="Uint32" name="m_uid" flags="" value="236289321"/>
+        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+        <Property type="ObjectPtr" name="m_root" flags="NotVisible">
             <Object class="GameObject">
-                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2219202540"/>
-                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                 <Property type="String" name="m_name" value="Root"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                <Property type="Uint32" name="m_uid" flags="" value="2219202540"/>
+                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                 <Property type="ObjectPtrVector" name="m_components"/>
                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
                     <Object class="GameObject">
-                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3525072167"/>
-                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                         <Property type="String" name="m_name" value="GJ"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                        <Property type="Uint32" name="m_uid" flags="" value="3525072167"/>
+                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened|Selected"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="EnemyBehaviour">
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1062217233"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                 <Property type="String" name="m_name" flags="NotVisible" value="EnemyBehaviour #0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="1062217233"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Uint32" name="m_life" value="1"/>
                                 <Property type="Float" name="m_hp" value="100"/>
@@ -39,18 +39,18 @@
                                 <Property type="Float" name="m_runJumpSpeed" value="7"/>
                             </Object>
                             <Object class="CharacterControllerComponent">
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2225564048"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                 <Property type="String" name="m_name" flags="NotVisible" value="CharacterControllerComponent #5"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="2225564048"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="EnumU8" name="m_characterType" flags="ReadOnly" value="Rigid"/>
                                 <Property type="ObjectPtr" name="m_characterDesc" flags="Flatten">
                                     <Object class="RigidCharacterDesc">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3882169885"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="RigidCharacterDesc #27"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="3882169885"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                         <Property type="Float" name="m_mass" value="75"/>
                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.377828"/>
                                         <Property type="Float" name="m_maxSlopeAngle" flags="HasRange" value="45"/>
@@ -58,19 +58,19 @@
                                 </Property>
                                 <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
                                     <Object class="CapsuleShapeDesc">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2637626638"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="CapsuleShapeDesc #8"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="2637626638"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                         <Property type="Float3" name="m_rotation" flags="EulerAngle" x="0" y="0" z="0"/>
                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0.875"/>
                                         <Property type="Bool" name="m_tapered" flags="NotVisible" value="false"/>
-                                        <Property type="Float" name="m_topRadius" flags="HasRange|Optional" value="0.25"/>
+                                        <Property type="Float" name="m_topRadius" flags="" value="0.25"/>
                                         <Property type="Float" name="m_bottomRadius" flags="HasRange" value="0.5"/>
                                         <Property type="Float" name="m_height" flags="HasRange" value="1.75"/>
                                     </Object>
                                 </Property>
-                                <Property type="Uint8" name="m_delayState" flags="EnumArray|Flatten">
+                                <Property type="Uint8" name="m_delayState" flags="">
                                     <Value name="Grounded" value="0"/>
                                     <Value name="Blocked" value="0"/>
                                     <Value name="Touching" value="0"/>
@@ -78,53 +78,53 @@
                                 </Property>
                             </Object>
                             <Object class="AnimationComponent">
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2122673958"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                 <Property type="String" name="m_name" flags="NotVisible" value="AnimationComponent #5"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                <Property type="Uint32" name="m_uid" flags="" value="2122673958"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Object" name="m_animations">
                                     <Object class="AnimationResourceList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="935014634"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New AnimationComponent"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                        <Property type="ResourceVector" name="m_animationResources" flags="Resource">
+                                        <Property type="Uint32" name="m_uid" flags="" value="935014634"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                        <Property type="ResourceVector" name="m_resources" flags="Resource">
                                             <Object class="AnimationResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="746984965"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" value="Idle"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="746984965"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/J_G/JG_Idle_1.fbx"/>
                                                 <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="SingleLine" value="true"/>
                                                 <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="804951803"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" value="Walking"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="804951803"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/J_G/JG_Walking.fbx"/>
                                                 <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="SingleLine" value="false"/>
                                                 <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2342741769"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" value="Running"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="2342741769"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/J_G/JG_Run_1.fbx"/>
                                                 <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="SingleLine" value="false"/>
                                                 <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="656154442"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" value="Jump"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="656154442"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/J_G/JG_Jump.fbx"/>
                                                 <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="SingleLine" value="false"/>
@@ -134,34 +134,52 @@
                                     </Object>
                                 </Property>
                             </Object>
+                            <Object class="SoundComponent">
+                                <Property type="String" name="m_name" flags="NotVisible" value="arg"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="4057464457"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Resource" name="m_soundRes" flags="Resource">
+                                    <Object class="SoundResource">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="New SoundComponent"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="4234670508"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Sounds/GJ/arg.wav"/>
+                                    </Object>
+                                </Property>
+                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" flags="Bitfield" value=""/>
+                                <Property type="Float" name="m_soundSettings.m_volume" flags="HasRange" value="1"/>
+                            </Object>
                             <Object class="MeshComponent">
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4120299909"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                 <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #37"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="4120299909"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Bool" name="m_displayBones" value="true"/>
                                 <Property type="Resource" name="m_meshResource" flags="Resource">
                                     <Object class="MeshResource">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2236698880"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="2236698880"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Meshes/GJ/J_G_Combine.fbx"/>
                                     </Object>
                                 </Property>
                                 <Property type="Object" name="m_meshMaterials" flags="Flatten">
                                     <Object class="MaterialResourceList">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="344581480"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-                                        <Property type="ResourceVector" name="m_materialResources" flags="Resource">
+                                        <Property type="Uint32" name="m_uid" flags="" value="344581480"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                        <Property type="ResourceVector" name="m_resources" flags="Resource">
                                             <Object class="MaterialResource">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1784062717"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" value="JG"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="1784062717"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Materials/GJ/GJ.mat"/>
                                             </Object>
                                         </Property>
@@ -172,26 +190,26 @@
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
                             <Object class="GameObject">
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2507986118"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                 <Property type="String" name="m_name" value="GJ_RightHand"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                <Property type="Uint32" name="m_uid" flags="" value="2507986118"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Selected"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="-0.9999823" Iy="-0.0040099621" Iz="-0.0044074561" Iw="0" Jx="0.0039848005" Jy="0.099920698" Jz="-0.99498779" Jw="0" Kx="0.0044302288" Ky="-0.99498785" Kz="-0.099902965" Kw="0" Tx="-0.95762956" Ty="-0.012848332" Tz="1.2753206" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="-0.9999823" Iy="-0.0040099621" Iz="-0.0044074561" Iw="0" Jx="0.0039848005" Jy="0.099920698" Jz="-0.99498779" Jw="0" Kx="0.0044302288" Ky="-0.99498785" Kz="-0.099902965" Kw="0" Tx="-0.95762956" Ty="-0.012848332" Tz="1.2753206" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="PhysicsBodyComponent">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2226555861"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New RigidBodyComponent"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="2226555861"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                             <Object class="PhysicsBodyDesc">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1428932358"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyDesc #38"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="1428932358"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_trigger" value="true"/>
                                                 <Property type="Bool" name="m_softBody" value="false"/>
                                                 <Property type="EnumU16" name="m_layer" value="Moving"/>
@@ -205,18 +223,18 @@
                                         </Property>
                                     </Object>
                                     <Object class="PhysicsShapeComponent">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3245892966"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="3245892966"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
                                         <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
                                             <Object class="SphereShapeDesc">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3510451234"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="SphereShapeDesc #2"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="3510451234"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Float3" name="m_rotation" flags="EulerAngle" x="0" y="0" z="0"/>
                                                 <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
                                                 <Property type="Float" name="m_radius" flags="HasRange" value="0.2"/>
@@ -224,10 +242,10 @@
                                         </Property>
                                     </Object>
                                     <Object class="AttachToNodeComponent">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3645143640"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New AttachToNodeComponent"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="3645143640"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="String" name="m_NodeName" value="Jg_ R Finger21"/>
                                     </Object>
@@ -235,26 +253,26 @@
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
                             </Object>
                             <Object class="GameObject">
-                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1563062627"/>
-                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="2507986118"/>
                                 <Property type="String" name="m_name" value="GJ_LeftHand"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                <Property type="Uint32" name="m_uid" flags="" value="1563062627"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="2507986118"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Selected"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="0.99998224" Iy="-0.0040074023" Iz="-0.0044101356" Iw="0" Jx="-0.0039877649" Jy="0.099920601" Jz="-0.99498773" Jw="0" Kx="0.0044280384" Ky="0.99498743" Kz="0.099902824" Kw="0" Tx="0.95761532" Ty="-0.012845897" Tz="1.2753178" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.99998224" Iy="-0.0040074023" Iz="-0.0044101356" Iw="0" Jx="-0.0039877649" Jy="0.099920601" Jz="-0.99498773" Jw="0" Kx="0.0044280384" Ky="0.99498743" Kz="0.099902824" Kw="0" Tx="0.95761532" Ty="-0.012845897" Tz="1.2753178" Tw="1"/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="PhysicsBodyComponent">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3526070733"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="2226555861"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New RigidBodyComponent"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="3526070733"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="2226555861"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                             <Object class="PhysicsBodyDesc">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="521733271"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="1428932358"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyDesc #38"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="521733271"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="1428932358"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_trigger" value="true"/>
                                                 <Property type="Bool" name="m_softBody" value="false"/>
                                                 <Property type="EnumU16" name="m_layer" value="Moving"/>
@@ -268,18 +286,18 @@
                                         </Property>
                                     </Object>
                                     <Object class="PhysicsShapeComponent">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="2131414610"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="2131414610"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="EnumU8" name="m_shapeType" value="Sphere"/>
                                         <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
                                             <Object class="SphereShapeDesc">
-                                                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1429600130"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                                                 <Property type="String" name="m_name" flags="NotVisible" value="SphereShapeDesc #3"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="1429600130"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Float3" name="m_rotation" flags="EulerAngle" x="0" y="0" z="0"/>
                                                 <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
                                                 <Property type="Float" name="m_radius" flags="HasRange" value="0.2"/>
@@ -287,10 +305,10 @@
                                         </Property>
                                     </Object>
                                     <Object class="AttachToNodeComponent">
-                                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="544978170"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="3645143640"/>
                                         <Property type="String" name="m_name" flags="NotVisible" value="New AttachToNodeComponent"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value="Opened"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="544978170"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="3645143640"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="String" name="m_NodeName" value="Jg_ L Finger21"/>
                                     </Object>

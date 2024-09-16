@@ -144,7 +144,7 @@ namespace vg::engine
             VG_ASSERT(matResData);
             MaterialResource * matRes = dynamic_cast<MaterialResource *>(matResData->GetParent());
             VG_ASSERT(matRes);
-            const auto & matResources = m_meshMaterials.getMaterialResources();
+            const auto & matResources = m_meshMaterials.getResources();
             for (uint i = 0; i < matResources.size(); ++i)
             {
                 if (&matResources[i] == matRes)
@@ -162,7 +162,7 @@ namespace vg::engine
             VG_ASSERT(matResData);
             MaterialResource * matRes = dynamic_cast<MaterialResource *>(matResData->GetParent());
             VG_ASSERT(matRes);
-            const auto & matResources = m_meshMaterials.getMaterialResources();
+            const auto & matResources = m_meshMaterials.getResources();
             for (uint i = 0; i < matResources.size(); ++i)
             {
                 if (&matResources[i] == matRes)
@@ -211,7 +211,7 @@ namespace vg::engine
         else if (auto matRes = dynamic_cast<MaterialResource *>(_resource))
         {
             // Material resource loaded
-            const auto & matResources = m_meshMaterials.getMaterialResources();
+            const auto & matResources = m_meshMaterials.getResources();
             for (uint i = 0; i < matResources.size(); ++i)
             {
                 if (&matResources[i] == matRes)
@@ -246,7 +246,7 @@ namespace vg::engine
         else if (auto matRes = dynamic_cast<MaterialResource *>(_resource))
         {
             // Material resource loaded
-            const auto & matResources = m_meshMaterials.getMaterialResources();
+            const auto & matResources = m_meshMaterials.getResources();
             for (uint i = 0; i < matResources.size(); ++i)
             {
                 if (&matResources[i] == matRes)

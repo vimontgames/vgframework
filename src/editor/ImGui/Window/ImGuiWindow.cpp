@@ -1583,6 +1583,12 @@ namespace vg::editor
                                 if (debugInspector)
                                     componentShortName += fmt::sprintf(" (0x%016X)", (u64)pComponent);
 
+                                //if (auto * nameProp = pComponent->GetClassDesc()->GetPropertyByName("m_name"))
+                                //{
+                                //    if (!asBool(core::PropertyFlags::NotVisible & nameProp->GetFlags()))
+                                //        componentShortName += " - " + *nameProp->GetPropertyString(pComponent);
+                                //}
+
                                 ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
                                 const bool isOpen = asBool(ObjectFlags::Opened & pComponent->GetObjectFlags());

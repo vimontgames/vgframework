@@ -13,7 +13,7 @@ namespace vg::editor
         //--------------------------------------------------------------------------------------
         bool displayObject(IObject * _object, ObjectContext & _objectContext) final
         {
-            return displayResourceList(_object, "Animation", "m_animationResources");
+            return displayResourceList(_object, "Animation", "m_resources");
         }
     };
 

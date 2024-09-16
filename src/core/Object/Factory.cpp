@@ -33,6 +33,8 @@ namespace vg::core
         // TODO : make proper API to register deprecated property names names for each class
         m_oldPropertyNames.insert(std::pair("m_world", "m_local"));
         m_oldPropertyNames.insert(std::pair("m_radius", "m_bottomRadius"));
+        m_oldPropertyNames.insert(std::pair("m_materialResources", "m_resources"));
+        m_oldPropertyNames.insert(std::pair("m_animationResources", "m_resources"));        
 
         // TODO: make proper API blah
         m_oldClassNames.insert(std::pair("RigidBodyComponent", "PhysicsBodyComponent"));

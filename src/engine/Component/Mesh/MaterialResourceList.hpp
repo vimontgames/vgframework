@@ -11,57 +11,19 @@ namespace vg::engine
     bool MaterialResourceList::registerProperties(vg::core::IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-
-        registerPropertyObjectVectorEx(MaterialResourceList, m_materialResources, MaterialResource, "Material", PropertyFlags::Resource);
-
         return true;
     }
 
     //--------------------------------------------------------------------------------------
     MaterialResourceList::MaterialResourceList(const core::string & _name, core::IObject * _parent) :
-        IResourceList(_name, _parent)
+        super(_name, _parent)
     {
-        // resize of vector not supported because owner changes its address
-        m_materialResources.reserve(256);
+
     }
 
     //--------------------------------------------------------------------------------------
     MaterialResourceList::~MaterialResourceList()
     {
 
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool MaterialResourceList::Add()
-    {
-        MaterialResource & matRes = m_materialResources.emplace_back();
-
-        // Update resource owners
-        for (auto & matRes : m_materialResources)
-            matRes.SetParent(this);
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool MaterialResourceList::Remove()
-    {
-        if (m_materialResources.size() > 0)
-        {
-            m_materialResources.pop_back();
-
-            // Update resource owners
-            for (auto & matRes : m_materialResources)
-                matRes.SetParent(this);
-
-            return true;
-        }
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    size_t MaterialResourceList::Size() const 
-    {
-        return m_materialResources.size();
-    }
+    }    
 }

@@ -43,7 +43,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void AnimationComponent::Update(const Context & _context)
     {
-        auto & animResources = m_animations.getAnimationResources();
+        auto & animResources = m_animations.getResources();
 
         if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused()) // TODO: check if running from prefab world using context instead? Or include play/stop/paused state in context maybe?
         {
@@ -138,7 +138,7 @@ namespace vg::engine
         MeshComponent * meshComponent = getMeshComponent();
         if (meshComponent)
         {
-            auto & animResources = m_animations.getAnimationResources();
+            auto & animResources = m_animations.getResources();
             for (uint i = 0; i < animResources.size(); ++i)
             {
                 AnimationResource & animRes = animResources[i];
@@ -173,7 +173,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     IAnimationResource * AnimationComponent::GetAnimation(core::uint _index) const
     {
-        auto & anims = m_animations.getAnimationResources();
+        auto & anims = m_animations.getResources();
         if (_index < GetAnimationCount())
             return (IAnimationResource *) &anims[_index];
         else
@@ -183,7 +183,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     core::uint AnimationComponent::GetAnimationIndex(const core::string & _name) const
     {
-        auto & anims = m_animations.getAnimationResources();
+        auto & anims = m_animations.getResources();
         for (uint i = 0; i < anims.size(); ++i)
         {
             auto & anim = anims[i];
@@ -197,13 +197,13 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     core::uint AnimationComponent::GetAnimationCount() const
     {
-        return (uint)m_animations.getAnimationResources().size();
+        return (uint)m_animations.getResources().size();
     }
 
     //--------------------------------------------------------------------------------------
     bool AnimationComponent::PlayAnimation(core::uint _index, float _blendTime, bool _loop)
     {
-        auto & anims = m_animations.getAnimationResources();
+        auto & anims = m_animations.getResources();
 
         if (_index != m_currentIndex)
         {
