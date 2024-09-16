@@ -27,6 +27,51 @@
     <ClCompile Include="World\PhysicsWorld.cpp">
       <Filter>World</Filter>
     </ClCompile>
+    <ClCompile Include="Jolt\Jolt.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltBody.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltCharacter.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltCollision.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltConstraints.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltCore.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltGeometry.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltObjectStream.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltPhysics.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltRagdoll.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltSoftBody.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltVehicle.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltRenderer.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltSkeleton.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
+    <ClCompile Include="Jolt\JoltTriangle.cpp">
+      <Filter>Jolt</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Physics.def" />
@@ -154,6 +199,9 @@
     </Filter>
     <Filter Include="World">
       <UniqueIdentifier>{6f5f9f9c-cab5-4756-a5a6-6e1fbc3c4ed3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Jolt">
+      <UniqueIdentifier>{ac483251-76f7-44f0-9726-f6323d3201e1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

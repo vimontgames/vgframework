@@ -8,7 +8,7 @@
 #define JPH_FLOATING_POINT_EXCEPTIONS_ENABLED
 #endif
 
-#define JPH_USE_AVX2
+//#define JPH_USE_AVX2
 #define JPH_USE_AVX
 #define JPH_USE_SSE4_1
 #define JPH_USE_SSE4_2

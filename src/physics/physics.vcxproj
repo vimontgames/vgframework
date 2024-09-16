@@ -20,6 +20,21 @@
     <ClCompile Include="Character\Character.cpp" />
     <ClCompile Include="Contact\ContactListener.cpp" />
     <ClCompile Include="JobSystem\JobSystemAdapter.cpp" />
+    <ClCompile Include="Jolt\Jolt.cpp" />
+    <ClCompile Include="Jolt\JoltBody.cpp" />
+    <ClCompile Include="Jolt\JoltCharacter.cpp" />
+    <ClCompile Include="Jolt\JoltCollision.cpp" />
+    <ClCompile Include="Jolt\JoltConstraints.cpp" />
+    <ClCompile Include="Jolt\JoltCore.cpp" />
+    <ClCompile Include="Jolt\JoltGeometry.cpp" />
+    <ClCompile Include="Jolt\JoltObjectStream.cpp" />
+    <ClCompile Include="Jolt\JoltPhysics.cpp" />
+    <ClCompile Include="Jolt\JoltRagdoll.cpp" />
+    <ClCompile Include="Jolt\JoltRenderer.cpp" />
+    <ClCompile Include="Jolt\JoltSkeleton.cpp" />
+    <ClCompile Include="Jolt\JoltSoftBody.cpp" />
+    <ClCompile Include="Jolt\JoltTriangle.cpp" />
+    <ClCompile Include="Jolt\JoltVehicle.cpp" />
     <ClCompile Include="Options\PhysicsOptions.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Precomp.cpp">
@@ -150,7 +165,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <ModuleDefinitionFile>Physics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;$(SolutionDir)\extern\JoltPhysics\Lib\$(Platform)\Debug\Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -173,7 +188,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>Physics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;$(SolutionDir)\extern\JoltPhysics\Lib\$(Platform)\Release\Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Final|x64'">
@@ -197,7 +212,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ModuleDefinitionFile>Physics.def</ModuleDefinitionFile>
-      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;$(SolutionDir)\extern\JoltPhysics\Lib\$(Platform)\Distribution\Jolt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)lib\Core_$(Platform)_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

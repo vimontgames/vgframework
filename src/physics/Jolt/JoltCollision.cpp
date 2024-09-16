@@ -1,0 +1,46 @@
+#include "physics/Precomp.h"
+
+#pragma push_macro("new")
+#undef new
+
+#include "Jolt/Physics/Collision/CastConvexVsTriangles.cpp"
+#include "Jolt/Physics/Collision/CastSphereVsTriangles.cpp"
+#include "Jolt/Physics/Collision/CollideConvexVsTriangles.cpp"
+#include "Jolt/Physics/Collision/CollideSphereVsTriangles.cpp"
+#include "Jolt/Physics/Collision/CollisionDispatch.cpp"
+#include "Jolt/Physics/Collision/CollisionGroup.cpp"
+#include "Jolt/Physics/Collision/EstimateCollisionResponse.cpp"
+#include "Jolt/Physics/Collision/GroupFilter.cpp"
+#include "Jolt/Physics/Collision/GroupFilterTable.cpp"
+#include "Jolt/Physics/Collision/ManifoldBetweenTwoFaces.cpp"
+#include "Jolt/Physics/Collision/NarrowPhaseQuery.cpp"
+#include "Jolt/Physics/Collision/NarrowPhaseStats.cpp"
+#include "Jolt/Physics/Collision/PhysicsMaterial.cpp"
+#include "Jolt/Physics/Collision/PhysicsMaterialSimple.cpp"
+#include "Jolt/Physics/Collision/TransformedShape.cpp"
+
+#include "Jolt/Physics/Collision/BroadPhase/BroadPhase.cpp"
+#include "Jolt/Physics/Collision/BroadPhase/BroadPhaseBruteForce.cpp"
+#include "Jolt/Physics/Collision/BroadPhase/BroadPhaseQuadTree.cpp"
+#include "Jolt/Physics/Collision/BroadPhase/QuadTree.cpp"
+
+#include "Jolt/Physics/Collision/Shape/BoxShape.cpp"
+#include "Jolt/Physics/Collision/Shape/CapsuleShape.cpp"
+#include "Jolt/Physics/Collision/Shape/CompoundShape.cpp"
+#include "Jolt/Physics/Collision/Shape/ConvexHullShape.cpp"
+#include "Jolt/Physics/Collision/Shape/ConvexShape.cpp"
+#include "Jolt/Physics/Collision/Shape/CylinderShape.cpp"
+#include "Jolt/Physics/Collision/Shape/DecoratedShape.cpp"
+#include "Jolt/Physics/Collision/Shape/HeightFieldShape.cpp"
+#include "Jolt/Physics/Collision/Shape/MeshShape.cpp"
+#include "Jolt/Physics/Collision/Shape/MutableCompoundShape.cpp"
+#include "Jolt/Physics/Collision/Shape/OffsetCenterOfMassShape.cpp"
+#include "Jolt/Physics/Collision/Shape/RotatedTranslatedShape.cpp"
+#include "Jolt/Physics/Collision/Shape/ScaledShape.cpp"
+#include "Jolt/Physics/Collision/Shape/Shape.cpp"
+#include "Jolt/Physics/Collision/Shape/SphereShape.cpp"
+#include "Jolt/Physics/Collision/Shape/StaticCompoundShape.cpp"
+#include "Jolt/Physics/Collision/Shape/TaperedCapsuleShape.cpp"
+#include "Jolt/Physics/Collision/Shape/TriangleShape.cpp"
+
+#pragma pop_macro("new")
