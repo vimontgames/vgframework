@@ -7,7 +7,7 @@ using namespace vg::core;
 
 namespace vg::editor
 {
-    class ImGuiMaterialResourceListHandler : public ImGuiResourceListHandler
+    class ImGuiMaterialListHandler : public ImGuiResourceListHandler
     {
     public:
         //--------------------------------------------------------------------------------------
@@ -17,7 +17,7 @@ namespace vg::editor
         }
     };
 
-    VG_AUTO_REGISTER_IMGUI_OBJECT_HANDLER(MaterialResourceList, ImGuiMaterialResourceListHandler);
+    VG_AUTO_REGISTER_IMGUI_OBJECT_HANDLER(MaterialResourceList, ImGuiMaterialListHandler);
 }
 
 

@@ -89,7 +89,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectVectorEx(ResourceList<T>, m_resources, T, "Resources", core::PropertyFlags::Resource);
+        registerPropertyObjectVectorEx(ResourceList<T>, m_resources, T, "File", core::PropertyFlags::Resource);
 
         return true;
     }

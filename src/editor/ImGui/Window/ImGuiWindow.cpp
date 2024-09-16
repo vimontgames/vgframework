@@ -1428,8 +1428,18 @@ namespace vg::editor
 
                     IProperty::Callback pFunc = _prop->GetPropertyCallback();
 
-                    if (ImGui::Button(displayName))
+                    float textWidth = ImGui::CalcTextSize(displayName).x;
+                    float minWidth = style::button::SizeSmall.x;
+                    float buttonWidth = std::max(textWidth + ImGui::GetStyle().FramePadding.x * 2, minWidth);
+
+                    if (ImGui::Button(displayName, ImVec2(buttonWidth,0)))
                         pFunc(_object);
+
+                    if (auto * desc = _prop->GetDescription())
+                    {
+                        if (ImGui::IsItemHovered())
+                            ImGui::SetTooltip(desc);
+                    }
                 }
                 break;
 

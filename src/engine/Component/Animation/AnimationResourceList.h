@@ -5,7 +5,7 @@
 
 namespace vg::engine
 {
-    class AnimationResourceList : public ResourceList<AnimationResource>
+    class AnimationResourceList final : public ResourceList<AnimationResource>
     {
     public:
         VG_CLASS_DECL(AnimationResourceList, ResourceList<AnimationResource>);

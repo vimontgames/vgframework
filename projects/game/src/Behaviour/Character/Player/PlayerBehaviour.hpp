@@ -184,8 +184,8 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                             physicsBody->AddImpulse(dir * kickStrength);
 
                             // Play sound
-                            if (auto * soundComponent = ball->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
-                                soundComponent->Play();
+                            //if (auto * soundComponent = ball->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
+                            //    soundComponent->Play();
                         }
                     }
                 }

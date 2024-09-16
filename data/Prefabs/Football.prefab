@@ -80,17 +80,15 @@
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Resource" name="m_soundRes" flags="Resource">
-                                    <Object class="SoundResource">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New SoundComponent"/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="4096398380"/>
+                                <Property type="Object" name="m_sounds">
+                                    <Object class="SoundResourceList">
+                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="0"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Sounds/Soccer/shoot.wav"/>
+                                        <Property type="ResourceVector" name="m_resources" flags="Resource"/>
                                     </Object>
                                 </Property>
-                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" flags="Bitfield" value=""/>
-                                <Property type="Float" name="m_soundSettings.m_volume" flags="HasRange" value="1"/>
                             </Object>
                             <Object class="MeshComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #1"/>

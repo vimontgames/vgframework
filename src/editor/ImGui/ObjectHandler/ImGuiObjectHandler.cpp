@@ -13,6 +13,8 @@ namespace vg::editor
 #include "Material/ImGuiMaterialModelTypeHandler.hpp"
 
 #include "ImGuiResourceListHandler.hpp"
-#include "Material/ImGuiMaterialResourceListHandler.hpp"
-#include "Animation/ImGuiAnimationResourceListHandler.hpp"
+
+#include "Material/ImGuiMaterialListHandler.hpp"
+#include "Animation/ImGuiAnimationListHandler.hpp"
 #include "Animation/ImGuiSkeletonObjectHandler.hpp"
+#include "Audio/ImGuiSoundListHandler.hpp"

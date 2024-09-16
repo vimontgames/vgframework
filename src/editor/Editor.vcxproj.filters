@@ -171,13 +171,13 @@
     <ClInclude Include="ImGui\Menu\Inspector\Component\ImGuiComponentInspectorMenu.hpp">
       <Filter>ImGui\Menu\Inspector\Component</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\ObjectHandler\Material\ImGuiMaterialResourceListHandler.hpp">
+    <ClInclude Include="ImGui\ObjectHandler\Material\ImGuiMaterialListHandler.hpp">
       <Filter>ImGui\ObjectHandler\Material</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\ObjectHandler\Material\ImGuiMaterialModelTypeHandler.hpp">
       <Filter>ImGui\ObjectHandler\Material</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\ObjectHandler\Animation\ImGuiAnimationResourceListHandler.hpp">
+    <ClInclude Include="ImGui\ObjectHandler\Animation\ImGuiAnimationListHandler.hpp">
       <Filter>ImGui\ObjectHandler\Animation</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\ObjectHandler\ImGuiResourceListHandler.hpp">
@@ -279,6 +279,9 @@
     </ClInclude>
     <ClInclude Include="ImGui\Extensions\imGuiExtensions.h">
       <Filter>ImGui\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\ObjectHandler\Audio\ImGuiSoundListHandler.hpp">
+      <Filter>ImGui\ObjectHandler\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -426,6 +429,9 @@
     </Filter>
     <Filter Include="ImGui\Menu\ObjectHandle">
       <UniqueIdentifier>{56071f0d-1c14-4ae5-8346-d5210971fcdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\ObjectHandler\Audio">
+      <UniqueIdentifier>{c500a89e-9b95-4221-9ead-f614c560bcdc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

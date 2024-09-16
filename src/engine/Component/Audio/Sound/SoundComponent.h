@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/ISoundComponent.h"
-#include "engine/Resource/Audio/SoundResource.h"
+#include "engine/Component/Audio/Sound/SoundResourceList.h"
 
 namespace vg::engine
 {
@@ -18,16 +18,10 @@ namespace vg::engine
         void                    OnPlay() final override;
         void                    OnStop() final override;
 
-        audio::PlaySoundHandle  Play() final override;
-        bool                    Stop() final override;
-
-    protected:
-        static bool             playSound(IObject * _object);
-        static bool             stopSound(IObject * _object);
+        //audio::PlaySoundHandle  Play() final override;
+        //bool                    Stop() final override;
 
     private:
-        SoundResource           m_soundRes;
-        audio::SoundSettings    m_soundSettings;
-        audio::PlaySoundHandle  m_playSoundHandle = 0;
+        SoundResourceList       m_sounds;
     };
 }

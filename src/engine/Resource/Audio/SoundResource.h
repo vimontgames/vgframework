@@ -21,12 +21,19 @@ namespace vg::engine
         core::IObject *                     Load                (const core::string & _file) final override;
         core::IResourceMeta *               CreateResourceMeta  (const core::string & _path) const final override;
 
-        audio::PlaySoundHandle              play                (const audio::SoundSettings & _settings);
-        bool                                stop                (const audio::PlaySoundHandle & _handle);
+        audio::PlaySoundHandle              play                ();
+        bool                                stop                ();
         bool                                setVolume           (const audio::PlaySoundHandle & _handle, float _volume);
         bool                                setLooping          (const audio::PlaySoundHandle & _handle, bool _looping);
 
     private:
+        static bool                         playSound           (IObject * _object);
+        static bool                         stopSound           (IObject * _object);
+
         audio::ISound *                     getSound            () const { return (audio::ISound *)GetObject(); }
+
+    private:
+        audio::SoundSettings                m_soundSettings;
+        audio::PlaySoundHandle              m_playSoundHandle = 0;
     };
 }

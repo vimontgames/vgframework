@@ -14,7 +14,7 @@ namespace vg::engine
     public:
         VG_CLASS_DECL_ABSTRACT(ISoundComponent, core::Component);
 
-        virtual audio::PlaySoundHandle  Play() = 0;
-        virtual bool                    Stop() = 0;
+        //virtual audio::PlaySoundHandle  Play() = 0;
+        //virtual bool                    Stop() = 0;
     };
 }

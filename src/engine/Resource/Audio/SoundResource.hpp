@@ -1,6 +1,7 @@
 #include "SoundResource.h"
 #include "audio/IAudio.h"
 #include "audio/ISound.h"
+#include "editor/Editor_Consts.h"
 
 using namespace vg::core;
 
@@ -13,7 +14,32 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
+        registerPropertyEnumBitfield(SoundResource, audio::SoundFlags, m_soundSettings.m_flags, "Flags");
+        setPropertyDescription(SoundResource, m_soundSettings.m_flags, "Sound flags")
+
+        registerProperty(SoundResource, m_soundSettings.m_volume, "Volume");
+        setPropertyRange(SoundResource, m_soundSettings.m_volume, float2(0, 1));
+        setPropertyDescription(SoundResource, m_soundSettings.m_volume, "Sound volume")
+
+        registerPropertyCallbackEx(SoundResource, playSound, editor::style::icon::Play, PropertyFlags::SingleLine);
+        setPropertyDescription(SoundResource, playSound, "Play sound");
+
+        registerPropertyCallbackEx(SoundResource, stopSound, editor::style::icon::Stop, PropertyFlags::SingleLine);
+        setPropertyDescription(SoundResource, stopSound, "Stop sound");
+
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool SoundResource::playSound(IObject * _object)
+    {
+        return ((SoundResource *)_object)->play();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool SoundResource::stopSound(IObject * _object)
+    {
+        return ((SoundResource *)_object)->stop();
     }
 
     //--------------------------------------------------------------------------------------
@@ -53,24 +79,30 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    audio::PlaySoundHandle SoundResource::play(const audio::SoundSettings & _settings)
+    audio::PlaySoundHandle SoundResource::play()
     {
-        if (auto * sound = getSound())
+        if (m_playSoundHandle)
         {
-            if (auto handle = Engine::get()->GetAudio()->Play(sound, _settings))
-                return handle;
+            stop();
+            m_playSoundHandle = 0;
         }
 
-        return false;
+        if (auto * sound = getSound())
+            m_playSoundHandle = Engine::get()->GetAudio()->Play(sound, m_soundSettings);
+
+        return m_playSoundHandle;
     }
 
     //--------------------------------------------------------------------------------------
-    bool SoundResource::stop(const audio::PlaySoundHandle & _handle)
+    bool SoundResource::stop()
     {
-        if (_handle)
+        if (m_playSoundHandle)
         {
-            if (Engine::get()->GetAudio()->Stop(_handle))
+            if (Engine::get()->GetAudio()->Stop(m_playSoundHandle))
+            {
+                m_playSoundHandle = 0;
                 return true;
+            }
         }
 
         return false;

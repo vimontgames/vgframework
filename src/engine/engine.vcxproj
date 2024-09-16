@@ -41,6 +41,8 @@
     <ClInclude Include="Component\Animation\AttachToNodeComponent.h" />
     <ClInclude Include="Component\Audio\Sound\SoundComponent.h" />
     <ClInclude Include="Component\Audio\Sound\SoundComponent.hpp" />
+    <ClInclude Include="Component\Audio\Sound\SoundResourceList.h" />
+    <ClInclude Include="Component\Audio\Sound\SoundResourceList.hpp" />
     <ClInclude Include="Component\Debug\HUD\HUDComponent.h" />
     <ClInclude Include="Component\Debug\TestComponent\TestComponent.h" />
     <ClInclude Include="Component\Editor\Snap\SnapComponent.h" />

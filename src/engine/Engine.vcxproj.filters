@@ -340,6 +340,12 @@
     <ClInclude Include="Resource\ResourceList.h">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Audio\Sound\SoundResourceList.h">
+      <Filter>Component\Audio\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Audio\Sound\SoundResourceList.hpp">
+      <Filter>Component\Audio\Sound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
