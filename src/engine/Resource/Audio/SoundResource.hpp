@@ -10,9 +10,21 @@ namespace vg::engine
     VG_REGISTER_RESOURCE_CLASS(SoundResource, "Sound");
 
     //--------------------------------------------------------------------------------------
+    void * ResizeSoundResourceVector(IObject * _parent, uint _offset, uint _count, uint & _elementSize)
+    {
+        auto vec = (core::vector<SoundResource> *)(uint_ptr(_parent) + _offset);
+        vec->clear();
+        vec->resize(_count);
+        _elementSize = sizeof(SoundResource);
+        return vec->data();
+    }
+
+    //--------------------------------------------------------------------------------------
     bool SoundResource::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
+
+        setPropertyFlag(SoundResource, m_name, core::PropertyFlags::NotVisible, false);
 
         registerPropertyEnumBitfield(SoundResource, audio::SoundFlags, m_soundSettings.m_flags, "Flags");
         setPropertyDescription(SoundResource, m_soundSettings.m_flags, "Sound flags")
@@ -27,8 +39,11 @@ namespace vg::engine
         registerPropertyCallbackEx(SoundResource, stopSound, editor::style::icon::Stop, PropertyFlags::SingleLine);
         setPropertyDescription(SoundResource, stopSound, "Stop sound");
 
+        registerResizeVectorFunc(SoundResource, ResizeSoundResourceVector);
+
         return true;
     }
+
 
     //--------------------------------------------------------------------------------------
     bool SoundResource::playSound(IObject * _object)
@@ -76,6 +91,44 @@ namespace vg::engine
     IResourceMeta * SoundResource::CreateResourceMeta(const core::string & _path) const
     {
         return nullptr; // new SoundResourceMeta(_path);
+    }
+
+
+    //--------------------------------------------------------------------------------------
+    void SoundResource::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
+    {
+        const char * name = _prop.GetName();
+        if (!strcmp(name, "m_soundSettings.m_volume"))
+        {
+            if (m_playSoundHandle)
+                setVolume(m_playSoundHandle, *_prop.GetPropertyFloat(_object));
+        }
+        else if(!strcmp(name, "m_soundSettings.m_flags"))
+        {
+            if (m_playSoundHandle)
+            {
+                audio::SoundFlags flags = *_prop.GetPropertyEnum<audio::SoundFlags>(_object);
+                if (asBool(audio::SoundFlags::Loop & flags))
+                    setLooping(m_playSoundHandle, true);
+                else
+                    setLooping(m_playSoundHandle, false);
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void SoundResource::OnPlay()
+    {
+        super::OnPlay();
+        if (asBool(audio::SoundFlags::PlayOnStart & m_soundSettings.m_flags))
+            m_playSoundHandle = play();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void SoundResource::OnStop()
+    {
+        stop();
+        super::OnStop();
     }
 
     //--------------------------------------------------------------------------------------

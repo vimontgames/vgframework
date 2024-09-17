@@ -13,13 +13,11 @@ namespace vg::engine
         SoundComponent(const core::string & _name, IObject * _parent);
         ~SoundComponent();
 
-        void                    OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent);
-
         void                    OnPlay() final override;
         void                    OnStop() final override;
 
-        //audio::PlaySoundHandle  Play() final override;
-        //bool                    Stop() final override;
+        audio::PlaySoundHandle  Play(core::uint _index) final override;
+        bool                    Stop(core::uint _index) final override;
 
     private:
         SoundResourceList       m_sounds;

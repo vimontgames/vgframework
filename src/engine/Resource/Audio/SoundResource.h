@@ -20,6 +20,10 @@ namespace vg::engine
         const core::vector<core::string>    GetExtensions       () const final;
         core::IObject *                     Load                (const core::string & _file) final override;
         core::IResourceMeta *               CreateResourceMeta  (const core::string & _path) const final override;
+        void                                OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent);
+
+        void                                OnPlay              () final override;
+        void                                OnStop              () final override;
 
         audio::PlaySoundHandle              play                ();
         bool                                stop                ();

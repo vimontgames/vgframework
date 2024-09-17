@@ -2711,7 +2711,7 @@
                                         <Property type="Object" name="m_sounds">
                                             <Object class="SoundResourceList">
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="2681241083"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="ResourceVector" name="m_resources" flags="Resource"/>
@@ -2772,7 +2772,7 @@
                                         <Property type="Object" name="m_sounds">
                                             <Object class="SoundResourceList">
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="3853890545"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="ResourceVector" name="m_resources" flags="Resource"/>

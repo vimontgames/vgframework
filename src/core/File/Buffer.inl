@@ -219,15 +219,18 @@ namespace vg::core::io
     //--------------------------------------------------------------------------------------
     inline bool Buffer::write(const void * _data, core::size_t _size)
     {
-        const auto requested = m_write + _size;
-        const auto current = m_data.size();
+        if (_size > 0)
+        {
+            const auto requested = m_write + _size;
+            const auto current = m_data.size();
 
-        if (requested > current)
-            m_data.resize(requested);
+            if (requested > current)
+                m_data.resize(requested);
 
-        memcpy(&m_data[m_write], _data, _size);
+            memcpy(&m_data[m_write], _data, _size);
 
-        m_write += _size;
+            m_write += _size;
+        }
 
         return true;
     }

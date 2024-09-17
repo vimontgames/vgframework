@@ -83,10 +83,20 @@
                                 <Property type="Object" name="m_sounds">
                                     <Object class="SoundResourceList">
                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="628682374"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                        <Property type="ResourceVector" name="m_resources" flags="Resource"/>
+                                        <Property type="ResourceVector" name="m_resources" flags="Resource">
+                                            <Object class="SoundResource">
+                                                <Property type="String" name="m_name" value="Shoot"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="2098644402"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Sounds/Soccer/shoot.wav"/>
+                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" flags="Bitfield" value=""/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" flags="HasRange" value="1"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                             </Object>

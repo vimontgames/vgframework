@@ -1,5 +1,6 @@
 #include "SoundComponent.h"
 #include "editor/Editor_Consts.h"
+#include "core/IGameObject.h"
 #include "core/Object/Update.h"
 
 using namespace vg::core;
@@ -34,55 +35,50 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void SoundComponent::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
-    {
-        //const char * name = _prop.GetName();
-        //if (!strcmp(name, "m_soundSettings.m_volume"))
-        //{
-        //    if (m_playSoundHandle)
-        //        m_soundRes.setVolume(m_playSoundHandle, *_prop.GetPropertyFloat(_object));
-        //}
-        //else if(!strcmp(name, "m_soundSettings.m_flags"))
-        //{
-        //    if (m_playSoundHandle)
-        //    {
-        //        audio::SoundFlags flags = *_prop.GetPropertyEnum<audio::SoundFlags>(_object);
-        //        if (asBool(audio::SoundFlags::Loop & flags))
-        //            m_soundRes.setLooping(m_playSoundHandle, true);
-        //        else
-        //            m_soundRes.setLooping(m_playSoundHandle, false);
-        //    }
-        //}
-    }
-
-    //--------------------------------------------------------------------------------------
     void SoundComponent::OnPlay()
     {
         super::OnPlay();
-        //if (asBool(SoundFlags::PlayOnStart & m_soundSettings.m_flags))
-        //    m_playSoundHandle = Play();
+        auto & resources = m_sounds.getResources();
+        for (auto i = 0; i < resources.size(); ++i)
+            resources[i].OnPlay();
     }
     
     //--------------------------------------------------------------------------------------
     void SoundComponent::OnStop()
     {
-        //m_soundRes.stop(m_playSoundHandle);
+        auto & resources = m_sounds.getResources();
+        for (auto i = 0; i < resources.size(); ++i)
+            resources[i].OnStop();
         super::OnStop();
     }
 
     //--------------------------------------------------------------------------------------
-    //audio::PlaySoundHandle SoundComponent::Play()
-    //{
-    //    if (m_playSoundHandle)
-    //        Stop();
-    //
-    //    m_playSoundHandle = m_soundRes.play(m_soundSettings);
-    //    return m_playSoundHandle;
-    //}
-    //
-    ////--------------------------------------------------------------------------------------
-    //bool SoundComponent::Stop()
-    //{
-    //    return m_soundRes.stop(m_playSoundHandle);
-    //}
+    audio::PlaySoundHandle SoundComponent::Play(core::uint _index)
+    {    
+        auto & resources = m_sounds.getResources();
+        if (_index < resources.size())
+        {
+            return resources[_index].play();
+        }
+        else
+        {
+            VG_WARNING("[Sound] Could not play sound at index %u in GameObject \"%s\"", _index, GetGameObject()->getName().c_str());
+            return (audio::PlaySoundHandle)0;
+        }
+    }
+    
+    //--------------------------------------------------------------------------------------
+    bool SoundComponent::Stop(core::uint _index)
+    {
+        auto & resources = m_sounds.getResources();
+        if (_index < resources.size())
+        {
+            return resources[_index].stop();
+        }
+        else
+        {
+            VG_WARNING("[Sound] Could not play stop at index %u in GameObject \"%s\"", _index, GetGameObject()->getName().c_str());
+            return false;
+        }
+    }
 }
