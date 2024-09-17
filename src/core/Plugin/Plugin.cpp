@@ -4,6 +4,29 @@
 
 namespace vg::core
 {
+#if VG_WINDOWS
+	// Returns the string description of a Win32 error
+	static string GetWin32ErrorAsString(DWORD errorID)
+	{
+		if (errorID == 0)
+		{
+			return std::string();
+		}
+
+		LPSTR messageBuffer = nullptr;
+
+		// Call FormatMessage asking to allocate.
+		size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+			NULL, errorID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+
+		std::string message(messageBuffer, size);
+
+		LocalFree(messageBuffer);
+
+		return message;
+	}
+#endif
+
 	//--------------------------------------------------------------------------------------
 	IPlugin * Plugin::createInternal(const string & _name, const string & _suffix)
 	{
@@ -29,7 +52,7 @@ namespace vg::core
         else
         {
             DWORD error = GetLastError();
-			VG_ASSERT(false, "Error %u (0x%08X) loading %s Plugin \"%s\"", error, error, _name.c_str(), filename.c_str());
+			VG_ASSERT(false, "Error: \"%s\" (0x%08X) loading %s Plugin \"%s\"", GetWin32ErrorAsString(error).c_str(), error, _name.c_str(), filename.c_str());
         }
 		#endif
 
@@ -45,7 +68,13 @@ namespace vg::core
 	string Plugin::getPlatform()
 	{
 		#ifdef VG_WINDOWS
-		return "x64";
+			#if defined(_M_ARM64EC) 
+				return "ARM64EC";
+			#elif defined(_M_ARM64)
+				return "ARM64";
+			#else
+				return "x64";
+			#endif
 		#endif
 	}
 
