@@ -153,6 +153,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{7C17C1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A6056C5D-D628-4DFE-945D-0938671C5BA8}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\Debug_Win64_DX12.yml = .github\workflows\Debug_Win64_DX12.yml
+		.github\workflows\Debug_Win64_Vulkan.yml = .github\workflows\Debug_Win64_Vulkan.yml
+		.github\workflows\Final_Win64_DX12.yml = .github\workflows\Final_Win64_DX12.yml
+		.github\workflows\Final_Win64_Vulkan.yml = .github\workflows\Final_Win64_Vulkan.yml
+		.github\workflows\Release_Win64_DX12.yml = .github\workflows\Release_Win64_DX12.yml
+		.github\workflows\Release_Win64_Vulkan.yml = .github\workflows\Release_Win64_Vulkan.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D0B49AF3-70DB-42E7-AF6D-45C0620C439A}"
 	ProjectSection(SolutionItems) = preProject
@@ -162,26 +170,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio", "src\audio\audio.vcxproj", "{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}"
 	ProjectSection(ProjectDependencies) = postProject
 		{257A93DC-9206-4770-9560-7A22DFF0AC01} = {257A93DC-9206-4770-9560-7A22DFF0AC01}
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Win64", "Win64", "{25144555-698F-4854-8BD2-72CE2AD91C6A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ARM64EC", "ARM64EC", "{250BB0C6-866B-47FC-A3E2-B080F52A5FDE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DX12", "DX12", "{52CEF9E4-368A-494D-A866-F6CB557C0987}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Win64\DX12\Debug_Win64_DX12.yml = .github\workflows\Win64\DX12\Debug_Win64_DX12.yml
-		.github\workflows\Win64\DX12\Final_Win64_DX12.yml = .github\workflows\Win64\DX12\Final_Win64_DX12.yml
-		.github\workflows\Win64\DX12\Release_Win64_DX12.yml = .github\workflows\Win64\DX12\Release_Win64_DX12.yml
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DX12", "DX12", "{7B2904A4-5B08-4513-95F5-25BDDF2E6C89}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vulkan", "Vulkan", "{66D82B2F-7F37-4D12-81F5-DBA8C1297ADC}"
-	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Win64\Vulkan\Debug_Win64_Vulkan.yml = .github\workflows\Win64\Vulkan\Debug_Win64_Vulkan.yml
-		.github\workflows\Win64\Vulkan\Final_Win64_Vulkan.yml = .github\workflows\Win64\Vulkan\Final_Win64_Vulkan.yml
-		.github\workflows\Win64\Vulkan\Release_Win64_Vulkan.yml = .github\workflows\Win64\Vulkan\Release_Win64_Vulkan.yml
 	EndProjectSection
 EndProject
 Global
@@ -372,11 +360,6 @@ Global
 		{2451B526-F25E-4778-A38E-00BAA0B569A7} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{4AD9B61D-1402-4E76-ACBA-5D3B57B9F408} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{A6056C5D-D628-4DFE-945D-0938671C5BA8} = {7C17C12C-1875-4215-8A0B-C4FBC50907FE}
-		{25144555-698F-4854-8BD2-72CE2AD91C6A} = {A6056C5D-D628-4DFE-945D-0938671C5BA8}
-		{250BB0C6-866B-47FC-A3E2-B080F52A5FDE} = {A6056C5D-D628-4DFE-945D-0938671C5BA8}
-		{52CEF9E4-368A-494D-A866-F6CB557C0987} = {25144555-698F-4854-8BD2-72CE2AD91C6A}
-		{7B2904A4-5B08-4513-95F5-25BDDF2E6C89} = {250BB0C6-866B-47FC-A3E2-B080F52A5FDE}
-		{66D82B2F-7F37-4D12-81F5-DBA8C1297ADC} = {25144555-698F-4854-8BD2-72CE2AD91C6A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}
