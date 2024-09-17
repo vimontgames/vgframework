@@ -1,6 +1,7 @@
 # vgframework
 Yes, yet another work-in-progress game and graphic engine project :)
 
+[news](#news)\
 [build](#build)\
 [description](#description)\
 [changelog](#changelog)\
@@ -10,11 +11,17 @@ Yes, yet another work-in-progress game and graphic engine project :)
 
 ![Screenshot](doc/img/v32.gif)
 
+# news
+<small>07/17/24</small>
+Experimental ARM64EC support by [Onduril](https://github.com/vimontgames/vgframework/tree/arm64EC)
+
 # build
-| Platform | API    | Debug                                                                                                                    | Release                                                                                                                      | Final 												
-| -------- | ------ | ------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
-| Win64    | DX12   | ![Debug_Win64_DX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_Win64_DX12.yml/badge.svg)     | ![Release_Win64_DX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_Win64_DX12.yml/badge.svg)     | ![Final_PC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Final_Win64_DX12.yml/badge.svg)
-| Win64    | Vulkan | ![Debug_Win64_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Debug_Win64_Vulkan.yml/badge.svg) | ![Release_Win64_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Release_Win64_Vulkan.yml/badge.svg) | ![Final_PC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Final_Win64_Vulkan.yml/badge.svg)
+| Platform | API    | Debug                                                                                                                                       | Release                                                                                                                                         | Final 												
+| -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
+| ARM64EC  | DX12   | ![Debug_ARM64EC_DX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC/DX12/Debug_ARM64EC_DX12.yml/badge.svg)       | ![Release_ARM64EC_DX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC/DX12/Release_ARM64EC_DX12.yml/badge.svg)       | ![Final_ARM64EC_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC/DX12/Final_ARM64EC_DX12.yml/badge.svg)
+| ARM64EC  | Vulkan | ![Debug_ARM64EC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC/Vulkan/Debug_ARM64EC_Vulkan.yml/badge.svg) | ![Release_ARM64EC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC/Vulkan/Release_ARM64EC_Vulkan.yml/badge.svg) | ![Final_ARM64EC_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC/Vulkan/Final_ARM64EC_Vulkan.yml/badge.svg)
+| Win64    | DX12   | ![Debug_Win64_DX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64/DX12/Debug_Win64_DX12.yml/badge.svg)             | ![Release_Win64_DX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64/DX12/Release_Win64_DX12.yml/badge.svg)             | ![Final_Win64_DirectX12.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64/DX12/Final_Win64_DX12.yml/badge.svg)
+| Win64    | Vulkan | ![Debug_Win64_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64/Vulkan/Debug_Win64_Vulkan.yml/badge.svg)       | ![Release_Win64_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64/Vulkan/Release_Win64_Vulkan.yml/badge.svg)       | ![Final_Win64_Vulkan.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64/Vulkan/Final_Win64_Vulkan.yml/badge.svg)
 
 # description
 
@@ -89,7 +96,15 @@ First run might take a few seconds because files are cooking.
 VS Studio 2022 Community\
 https://visualstudio.microsoft.com/fr/vs/community/
 
-During the install select *"Desktop development with C++"* and *"MSVC v143 - VS 2022 C++ x64/x86 build tools (latest)"* (or add them later from *Tool>Get Tools and Features...*)
+To compile the solution you will need the following components if they are not already installed:
+- MSVC v143 - VS 2022 C++ x64/x86 build tools (latest)
+- C++ ATL for latest v143 build tools (x86 & x64)
+
+You will also need if you want to build the ARM64EC versions:
+- MSVC v143 - VS 2022 C++ ARM64/ARM64EC build tools (latest)
+- C++ ATL for latest v143 build tools (ARM64/ARM64EC)
+
+![Screenshot](doc/img/vsbuild.png)
 
 You can change the Solution Platform in Visual Studio's command line to toggle between the DirectX12 and the Vulkan renderers.
 
