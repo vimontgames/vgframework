@@ -267,8 +267,9 @@ namespace vg::renderer
         init_info.MinImageCount = max_frame_latency;
         init_info.ImageCount = max_frame_latency;
         init_info.CheckVkResultFn = nullptr;
+        init_info.RenderPass = m_vkImguiRenderPass;
 
-        ImGui_ImplVulkan_Init(&init_info, m_vkImguiRenderPass);
+        ImGui_ImplVulkan_Init(&init_info);
 
         VkSamplerCreateInfo sampler_info = {};
         sampler_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -347,12 +348,16 @@ namespace vg::renderer
         bindlessTable->freeBindlessTextureHandle(m_fontTexHandle);
 
         #ifdef VG_DX12
+
         ImGui_ImplDX12_Shutdown();
+
         #elif defined(VG_VULKAN)
+
+        ImGui_ImplVulkan_Shutdown();
         vkDestroyDescriptorPool(device->getVulkanDevice(), m_vkImguiDescriptorPool, nullptr);
         vkDestroyRenderPass(device->getVulkanDevice(), m_vkImguiRenderPass, nullptr);
         vkDestroySampler(device->getVulkanDevice(), m_vkSampler, nullptr);
-        ImGui_ImplVulkan_Shutdown();
+
         #endif
 
         #ifdef _WIN32
@@ -429,7 +434,7 @@ namespace vg::renderer
         if (m_rebuildFontTex)
         {
             CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[0];
-            ImGui_ImplVulkan_CreateFontsTexture(cmdList->getVulkanCommandBuffer());
+            ImGui_ImplVulkan_CreateFontsTexture(/*cmdList->getVulkanCommandBuffer()*/);
             m_rebuildFontTex = false;
         }
 
@@ -514,12 +519,12 @@ namespace vg::renderer
             vkDestroyPipeline(device->getVulkanDevice(), bd->Pipeline, v->Allocator);
             bd->Pipeline = nullptr;
 
-            vkDestroyRenderPass(device->getVulkanDevice(), bd->RenderPass, nullptr);
-            bd->RenderPass = nullptr;
+            vkDestroyRenderPass(device->getVulkanDevice(), v->RenderPass, nullptr);
+            v->RenderPass = nullptr;
 
             createVulkanRenderPass();
 
-            bd->RenderPass = m_vkImguiRenderPass;
+            v->RenderPass = m_vkImguiRenderPass;
 
             ImGui_ImplVulkan_CreateDeviceObjects();
             m_vkRenderTargetFormat = renderOutputFormat;
