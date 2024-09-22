@@ -691,6 +691,10 @@ namespace vg::renderer
     void ImGuiAdapter::resetGUITheme()
     {
         ImGui::GetStyle() = ImGuiStyle();
+
+        ImGuiStyle & style = ImGui::GetStyle();
+        style.TabBarOverlineSize = 0;
+        style.DockingSeparatorSize = 0;
     }
 
     //--------------------------------------------------------------------------------------
