@@ -1604,7 +1604,7 @@ namespace vg::editor
                                 const bool isOpen = asBool(ObjectFlags::Opened & pComponent->GetObjectFlags());
                                 ImGui::SetNextItemOpen(isOpen);
 
-                                const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", componentShortName, pComponent).c_str(), nullptr, ImGuiTreeNodeFlags_InvisibleArrow | ImGuiTreeNodeFlags_AllowItemOverlap);
+                                const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", componentShortName, pComponent).c_str(), nullptr, /*ImGuiTreeNodeFlags_InvisibleArrow |*/ ImGuiTreeNodeFlags_AllowItemOverlap);
 
                                 // Save Open/Close state
                                 if (open != isOpen)

@@ -16,7 +16,7 @@
 
 // CHANGELOG
 // (minor and older changes stripped away, please see git history for details)
-//  2023-XX-XX: Metal: Added support for multiple windows via the ImGuiPlatformIO interface.
+//  2024-XX-XX: Metal: Added support for multiple windows via the ImGuiPlatformIO interface.
 //  2022-08-23: Metal: Update deprecated property 'sampleCount'->'rasterSampleCount'.
 //  2022-07-05: Metal: Add dispatch synchronization.
 //  2022-06-30: Metal: Use __bridge for ARC based systems.
@@ -87,7 +87,6 @@ struct ImGui_ImplMetal_Data
     ImGui_ImplMetal_Data()      { memset(this, 0, sizeof(*this)); }
 };
 
-static ImGui_ImplMetal_Data*    ImGui_ImplMetal_CreateBackendData() { return IM_NEW(ImGui_ImplMetal_Data)(); }
 static ImGui_ImplMetal_Data*    ImGui_ImplMetal_GetBackendData()    { return ImGui::GetCurrentContext() ? (ImGui_ImplMetal_Data*)ImGui::GetIO().BackendRendererUserData : nullptr; }
 static void                     ImGui_ImplMetal_DestroyBackendData(){ IM_DELETE(ImGui_ImplMetal_GetBackendData()); }
 
@@ -133,8 +132,11 @@ bool ImGui_ImplMetal_CreateDeviceObjects(MTL::Device* device)
 
 bool ImGui_ImplMetal_Init(id<MTLDevice> device)
 {
-    ImGui_ImplMetal_Data* bd = ImGui_ImplMetal_CreateBackendData();
     ImGuiIO& io = ImGui::GetIO();
+    IMGUI_CHECKVERSION();
+    IM_ASSERT(io.BackendRendererUserData == nullptr && "Already initialized a renderer backend!");
+
+    ImGui_ImplMetal_Data* bd = IM_NEW(ImGui_ImplMetal_Data)();
     io.BackendRendererUserData = (void*)bd;
     io.BackendRendererName = "imgui_impl_metal";
     io.BackendFlags |= ImGuiBackendFlags_RendererHasVtxOffset;  // We can honor the ImDrawCmd::VtxOffset field, allowing for large meshes.
@@ -166,7 +168,7 @@ void ImGui_ImplMetal_Shutdown()
 void ImGui_ImplMetal_NewFrame(MTLRenderPassDescriptor* renderPassDescriptor)
 {
     ImGui_ImplMetal_Data* bd = ImGui_ImplMetal_GetBackendData();
-    IM_ASSERT(bd->SharedMetalContext != nil && "No Metal context. Did you call ImGui_ImplMetal_Init() ?");
+    IM_ASSERT(bd != nil && "Context or backend not initialized! Did you call ImGui_ImplMetal_Init()?");
     bd->SharedMetalContext.framebufferDescriptor = [[FramebufferDescriptor alloc] initWithRenderPassDescriptor:renderPassDescriptor];
 
     if (bd->SharedMetalContext.depthStencilState == nil)
@@ -707,13 +709,13 @@ static void ImGui_ImplMetal_InvalidateDeviceObjectsForPlatformWindows()
     }
 
     MTLVertexDescriptor* vertexDescriptor = [MTLVertexDescriptor vertexDescriptor];
-    vertexDescriptor.attributes[0].offset = IM_OFFSETOF(ImDrawVert, pos);
+    vertexDescriptor.attributes[0].offset = offsetof(ImDrawVert, pos);
     vertexDescriptor.attributes[0].format = MTLVertexFormatFloat2; // position
     vertexDescriptor.attributes[0].bufferIndex = 0;
-    vertexDescriptor.attributes[1].offset = IM_OFFSETOF(ImDrawVert, uv);
+    vertexDescriptor.attributes[1].offset = offsetof(ImDrawVert, uv);
     vertexDescriptor.attributes[1].format = MTLVertexFormatFloat2; // texCoords
     vertexDescriptor.attributes[1].bufferIndex = 0;
-    vertexDescriptor.attributes[2].offset = IM_OFFSETOF(ImDrawVert, col);
+    vertexDescriptor.attributes[2].offset = offsetof(ImDrawVert, col);
     vertexDescriptor.attributes[2].format = MTLVertexFormatUChar4; // color
     vertexDescriptor.attributes[2].bufferIndex = 0;
     vertexDescriptor.layouts[0].stepRate = 1;

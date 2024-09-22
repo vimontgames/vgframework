@@ -518,7 +518,7 @@ namespace vg::editor
                             ImGui::PushID("SceneTree");
 
                             IGameObject* root = scene->GetRoot();
-                            auto flags = ImGuiTreeNodeFlags_InvisibleArrow | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_DefaultOpen;
+                            auto flags = /*ImGuiTreeNodeFlags_InvisibleArrow |*/ ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_DefaultOpen;
                             if (nullptr != root)
                                 flags |= ImGuiTreeNodeFlags_None;
                             else

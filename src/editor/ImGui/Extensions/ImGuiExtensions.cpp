@@ -284,20 +284,25 @@ namespace ImGui
         float line_height = ImGui::GetTextLineHeight() + item_spacing_y;
 
         ImDrawList * draw_list = ImGui::GetWindowDrawList();
+        auto origin = ImGui::GetCursorPos();
         float y0 = ImGui::GetCursorScreenPos().y + (float)(int)item_offset_y;
 
-        int row_display_start;
-        int row_display_end;
-        ImGui::CalcListClipping(row_count, line_height, &row_display_start, &row_display_end);
-        for (int row_n = row_display_start; row_n < row_display_end; row_n++)
+        ImGuiListClipper clipper;
+        clipper.Begin(row_count, line_height);  // Use the clipper with row count and line height
+        while (clipper.Step())
         {
-            ImU32 col = (row_n & 1) ? col_odd : col_even;
-            if ((col & IM_COL32_A_MASK) == 0)
-                continue;
-            float y1 = y0 + (line_height * row_n);
-            float y2 = y1 + line_height;
-            draw_list->AddRectFilled(ImVec2(x1, y1), ImVec2(x2, y2), col);
+            for (int row_n = clipper.DisplayStart; row_n < clipper.DisplayEnd; row_n++)
+            {
+                ImU32 col = (row_n & 1) ? col_odd : col_even;
+                if ((col & IM_COL32_A_MASK) == 0)
+                    continue;
+                float y1 = y0 + (line_height * row_n);
+                float y2 = y1 + line_height;
+                draw_list->AddRectFilled(ImVec2(x1, y1), ImVec2(x2, y2), col);
+            }
         }
+        clipper.End();
+        ImGui::SetCursorPos(origin);
     }
 
     //--------------------------------------------------------------------------------------

@@ -131,7 +131,7 @@ The external libraries are included with the sources for convenience.
 | -------------------------- | ------------- | ------------------------------------------------------------------------- 
 | D3D12 Memory Allocator     |               | https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator    
 | D3D12 HDR Sample           |               | https://github.com/microsoft/directx-graphics-samples/tree/master/Samples/Desktop/D3D12HDR
-| Dear ImGui                 |               | https://github.com/ocornut/imgui/commits/docking                          
+| Dear ImGui - Docking       | 1.91.2        | https://github.com/ocornut/imgui/tree/docking                          
 | DirectXShaderCompiler      | August 2023   | https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308 
 | Dirent                     | 1.23.2        | https://github.com/tronkko/dirent                                                            
 | fmt                        | 10.1.1        | https://github.com/fmtlib/fmt/releases/tag/10.1.1                         
