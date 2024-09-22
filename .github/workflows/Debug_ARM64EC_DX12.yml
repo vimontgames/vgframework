@@ -38,11 +38,6 @@ jobs:
       with:
         vs-version: '[17.11.2, 18.0.0)'
 
-    - name: Install ARM64EC Workload
-      run: |
-        # Ensure the ARM64EC tools are installed
-        vs_installer.exe modify --add Microsoft.VisualStudio.Component.VC.Tools.ARM64EC --quiet --wait
-
     - name: Restore NuGet packages
       working-directory: ${{env.GITHUB_WORKSPACE}}
       run: nuget restore ${{env.SOLUTION_FILE_PATH}}
