@@ -350,6 +350,7 @@ namespace ImGui
         auto icon = _enabled ? style::icon::Checked : style::icon::Unchecked;
 
         // begin of line
+        auto scrollY = ImGui::GetScrollY();
         auto pos = ImVec2(ImGui::GetStyle().FramePadding.x, _headerPos.y);
         ImGui::SetCursorPos(pos);
 
@@ -358,7 +359,7 @@ namespace ImGui
 
         // Draw the rectangle
         ImVec2 windowPos = ImGui::GetWindowPos();
-        ImGui::GetWindowDrawList()->AddRectFilled(windowPos + ImVec2(6, 4 + pos.y), windowPos + collapsedButtonSize + ImVec2(-3, -5 + pos.y), ImGui::GetColorU32(bgColor), 0.0f, ImDrawListFlags_None); // 
+        ImGui::GetWindowDrawList()->AddRectFilled(windowPos + ImVec2(6, 4 + pos.y - scrollY), windowPos + collapsedButtonSize + ImVec2(-3, -5 + pos.y - scrollY), ImGui::GetColorU32(bgColor), 0.0f, ImDrawListFlags_None); // 
 
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(bgColor.x, bgColor.y, bgColor.z, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
