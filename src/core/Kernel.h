@@ -9,6 +9,7 @@ namespace vg::core
     class IFactory;
     class ISelection;
     class IResourceManager;
+    class IUndoRedoManager;
 
     struct Singletons
     {
@@ -19,6 +20,7 @@ namespace vg::core
         IFactory *          factory         = nullptr;
         ISelection *        selection       = nullptr;
         IResourceManager *  resourceManager = nullptr;
+        IUndoRedoManager *  undoRedoManager = nullptr;
     };
 
     class Kernel
@@ -44,6 +46,9 @@ namespace vg::core
 
         static void setResourceManager(IResourceManager * _resourceManager);
         static IResourceManager * getResourceManager(bool _mustExist = true);
+
+        static void setUndoRedoManager(IUndoRedoManager * _undoRedoManager);
+        static IUndoRedoManager * getUndoRedoManager(bool _mustExist = true);
 
         static void setSingletons(const Singletons & _other);
         static Singletons & getSingletons();
@@ -139,6 +144,18 @@ namespace vg::core
     inline IResourceManager * Kernel::getResourceManager(bool _mustExist)
     {
         return s_singletons.resourceManager;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline void Kernel::setUndoRedoManager(IUndoRedoManager * _undoRedoManager)
+    {
+        s_singletons.undoRedoManager = _undoRedoManager;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline IUndoRedoManager * Kernel::getUndoRedoManager(bool _mustExist)
+    {
+        return s_singletons.undoRedoManager;
     }
 
     //--------------------------------------------------------------------------------------

@@ -9,6 +9,7 @@
 #include "core/Logger/Logger.h"
 #include "core/File/File.h"
 #include "core/Scheduler/Scheduler.h"
+#include "core/UndoRedo/UndoRedo.h"
 #include "core/Object/Factory.h"
 #include "core/GameObject/GameObject.h"
 #include "core/Math/Math.h"
@@ -344,6 +345,10 @@ namespace vg::engine
         _singletons.selection = m_selection;
         Kernel::setSelection(_singletons.selection);
 
+        m_undoRedo = new core::UndoRedoManager();
+        _singletons.undoRedoManager = m_undoRedo;
+        Kernel::setUndoRedoManager(_singletons.undoRedoManager);
+
         // Register Engine classes earlier so as to be able to display early error messages
         RegisterClasses();
 
@@ -594,6 +599,9 @@ namespace vg::engine
 
         VG_SAFE_RELEASE(m_selection);
         Kernel::setSelection(nullptr);
+
+        VG_SAFE_RELEASE(m_undoRedo);
+        Kernel::setUndoRedoManager(nullptr);
 	}
 
     //--------------------------------------------------------------------------------------

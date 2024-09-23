@@ -324,13 +324,6 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     core::DynamicProperty * PrefabGameObject::createDynamicProperty(const core::IObject * _object, const core::IProperty * _prop)
     {
-        //if (_prop->getType() == PropertyType::Resource)
-        //{
-        //    _object = _prop->GetPropertyResource(_object);
-        //    auto classDesc = _object->GetClassDesc();
-        //    _prop = classDesc->GetPropertyByName("m_resourcePath");
-        //}
-
         if (auto * dynProp = getDynamicProperty(_object, _prop))
             return dynProp;
 

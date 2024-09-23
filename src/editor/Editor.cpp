@@ -1,6 +1,7 @@
 #include "editor/Precomp.h"
 #include "editor.h"
 #include "core/IInput.h"
+#include "core/IUndoRedo.h"
 #include "core/IResource.h"
 #include "core/IGameObject.h"
 #include "core/File/File.h"
@@ -275,9 +276,10 @@ namespace vg::editor
         if (ctrl)
         {
             if (input->IsKeyJustPressed(Key::Z))
-                VG_INFO("[Editor] Undo");
-            if (input->IsKeyJustPressed(Key::Y))
-                VG_INFO("[Editor] Redo");
+                Kernel::getUndoRedoManager()->Undo();
+
+            else if (input->IsKeyJustPressed(Key::Y))
+                Kernel::getUndoRedoManager()->Redo();
         }
     }
 

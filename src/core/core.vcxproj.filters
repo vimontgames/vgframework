@@ -82,6 +82,9 @@
     <Filter Include="Object\DynamicProperties\DynamicPropertyType">
       <UniqueIdentifier>{3c024c23-b3ff-4bb8-8206-4e3d942a082a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UndoRedo">
+      <UniqueIdentifier>{a6debba9-ea3f-4ff4-9a16-045ce3463263}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -410,6 +413,10 @@
       <Filter>Types</Filter>
     </ClInclude>
     <ClInclude Include="IResourceManager.h" />
+    <ClInclude Include="IUndoRedo.h" />
+    <ClInclude Include="UndoRedo\UndoRedo.h">
+      <Filter>UndoRedo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -482,6 +489,9 @@
     </ClCompile>
     <ClCompile Include="Object\DynamicProperties\DynamicProperties.cpp">
       <Filter>Object\DynamicProperties</Filter>
+    </ClCompile>
+    <ClCompile Include="UndoRedo\UndoRedo.cpp">
+      <Filter>UndoRedo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -63,6 +63,7 @@
     <ClInclude Include="IResourceMeta.h" />
     <ClInclude Include="IScheduler.h" />
     <ClInclude Include="ISelection.h" />
+    <ClInclude Include="IUndoRedo.h" />
     <ClInclude Include="IWorld.h" />
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="Logger\Logger.h" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Types\Enum.h" />
     <ClInclude Include="Types\Types.h" />
     <ClInclude Include="Types\Traits.h" />
+    <ClInclude Include="UndoRedo\UndoRedo.h" />
     <ClInclude Include="XML\XML.h" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +188,7 @@
     <ClCompile Include="Scheduler\Scheduler.cpp" />
     <ClCompile Include="string\string.cpp" />
     <ClCompile Include="Timer\Timer.cpp" />
+    <ClCompile Include="UndoRedo\UndoRedo.cpp" />
     <ClCompile Include="XML\XML.cpp" />
   </ItemGroup>
   <ItemGroup>

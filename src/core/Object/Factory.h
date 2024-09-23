@@ -47,7 +47,7 @@ namespace vg::core
         const UIDObjectHash &                       GetUIDObjects                   () const final override;
         IObject *                                   FindByUID                       (UID _uid) final override;
 
-    protected:
+    //protected:
         bool                                        serializeFromXML                (IObject * _object, const XMLElem * _xmlElem) const;
 
         template <typename T> void                  serializeIntegerPropertyFromXML (IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem, core::uint _index = 0) const;
@@ -59,8 +59,11 @@ namespace vg::core
         template <typename T> void                  serializeEnumFlagsPropertyFromXML(IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem) const;
         template <typename T> void                  serializeEnumFlagsPropertyToXML (const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const;
 
-        bool                                        serializeToMemory               (const IObject * _object, io::Buffer & _buffer);
+        bool                                        serializeObjectToMemory         (const IObject * _object, io::Buffer & _buffer);
+        void                                        serializePropertyToMemory       (const IObject * _object, const IProperty * _prop, io::Buffer & _buffer);
+
         bool                                        serializeFromMemory             (IObject * _object, io::Buffer & _buffer);
+        void                                        serializePropertyFromMemory     (IObject * _object, const IProperty * _prop, io::Buffer & _buffer);
 
         void                                        ReleaseAsync                    (core::IObject * _object);
         void                                        FlushReleaseAsync               ();

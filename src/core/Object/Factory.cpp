@@ -220,10 +220,110 @@ namespace vg::core
         {
             io::Buffer * buffer = new io::Buffer();
             it = m_initValues.insert(std::pair(_object, buffer)).first;
-            return serializeToMemory(_object, *buffer);
+            return serializeObjectToMemory(_object, *buffer);
         }
         
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Factory::serializeObjectToMemory(const IObject * _object, io::Buffer & _buffer)
+    {
+        const char * className = _object->GetClassName();
+        const auto * classDesc = getClassDescriptor(className);
+
+        for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
+        {
+            const auto & prop = classDesc->GetPropertyByIndex(p);
+            serializePropertyToMemory(_object, prop, _buffer);
+        }
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Factory::serializePropertyToMemory(const IObject * _object, const IProperty * _prop, io::Buffer & _buffer)
+    {
+        const auto name = _prop->GetName();
+        const auto type = _prop->GetType();
+        const auto size = _prop->GetSizeOf();
+        const auto offset = _prop->GetOffset();
+        const auto flags = _prop->GetFlags();
+        const bool isEnumArray = asBool(PropertyFlags::EnumArray & _prop->GetFlags());
+
+        switch (type)
+        {
+            default:
+                //VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                break;
+
+            case PropertyType::Callback:
+                break;
+
+            case PropertyType::ObjectPtrVector:
+            {
+                if (strcmp(_prop->GetName(), "m_children"))
+                {
+                    auto * vector = _prop->GetPropertyObjectPtrVector(_object);
+                    for (uint i = 0; i < vector->size(); ++i)
+                        SaveProperties((*vector)[i]);
+                }
+            }
+            break;
+
+            case PropertyType::Bool:
+            case PropertyType::Int8:
+            case PropertyType::Int16:
+            case PropertyType::Int32:
+            case PropertyType::Int64:
+            case PropertyType::Uint8:
+            case PropertyType::Uint16:
+            case PropertyType::Uint32:
+            case PropertyType::Uint64:
+            case PropertyType::Float:
+            case PropertyType::Float2:
+            case PropertyType::Float3:
+            case PropertyType::Float4:
+            case PropertyType::Float4x4:
+            case PropertyType::EnumU8:
+            case PropertyType::EnumU16:
+            case PropertyType::EnumU32:
+            case PropertyType::EnumU64:
+            case PropertyType::EnumFlagsU8:
+            case PropertyType::EnumFlagsU16:
+            case PropertyType::EnumFlagsU32:
+            case PropertyType::EnumFlagsU64:
+            {
+                const void * src = (void *)(uint_ptr(_object) + offset);
+
+                if (isEnumArray)
+                {
+                    const auto totalSize = _prop->GetEnumCount() * size;
+                    VG_VERIFY(_buffer.write(src, totalSize));
+                }
+                else
+                {
+
+                    VG_VERIFY(_buffer.write(src, size));
+                }
+            }
+            break;
+
+            case PropertyType::ObjectHandle:
+            {
+                const void * src = (void *)(uint_ptr(_object) + offset);
+                VG_VERIFY(_buffer.write(src, size));
+            }
+            break;
+
+            case PropertyType::String:
+            {
+                const string * s = _prop->GetPropertyString(_object);
+                VG_VERIFY(_buffer.write((u32)s->length()));
+                VG_VERIFY(_buffer.write(s->c_str(), s->length()));
+            }
+            break;
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -732,101 +832,6 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::serializeToMemory(const IObject * _object, io::Buffer & _buffer)
-    {
-        const char * className = _object->GetClassName();
-        const auto * classDesc = getClassDescriptor(className);
-
-        for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
-        {
-            const auto & prop = classDesc->GetPropertyByIndex(p);
-
-            const auto name = prop->GetName();
-            const auto type = prop->GetType();
-            const auto size = prop->GetSizeOf();
-            const auto offset = prop->GetOffset();
-            const auto flags = prop->GetFlags();
-            const bool isEnumArray = asBool(PropertyFlags::EnumArray & prop->GetFlags());
-
-            switch (type)
-            {
-                default:
-                    //VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                    break;
-
-                case PropertyType::Callback:
-                    break;
-
-                case PropertyType::ObjectPtrVector:
-                {
-                    if (strcmp(prop->GetName(), "m_children"))
-                    {
-                        auto * vector = prop->GetPropertyObjectPtrVector(_object);
-                        for (uint i = 0; i < vector->size(); ++i)
-                            SaveProperties((*vector)[i]);
-                    }
-                }
-                break;
-
-                case PropertyType::Bool:
-                case PropertyType::Int8:
-                case PropertyType::Int16:
-                case PropertyType::Int32:
-                case PropertyType::Int64:
-                case PropertyType::Uint8:
-                case PropertyType::Uint16:
-                case PropertyType::Uint32:
-                case PropertyType::Uint64:
-                case PropertyType::Float:
-                case PropertyType::Float2:
-                case PropertyType::Float3:
-                case PropertyType::Float4:
-                case PropertyType::Float4x4:
-                case PropertyType::EnumU8:
-                case PropertyType::EnumU16:
-                case PropertyType::EnumU32:
-                case PropertyType::EnumU64:
-                case PropertyType::EnumFlagsU8:
-                case PropertyType::EnumFlagsU16:
-                case PropertyType::EnumFlagsU32:
-                case PropertyType::EnumFlagsU64:
-                {
-                    const void * src = (void *)(uint_ptr(_object) + offset);
-
-                    if (isEnumArray)
-                    {
-                        const auto totalSize = prop->GetEnumCount() * size;
-                        VG_VERIFY(_buffer.write(src, totalSize));
-                    }
-                    else
-                    {
-
-                        VG_VERIFY(_buffer.write(src, size));
-                    }
-                }
-                break;
-
-                case PropertyType::ObjectHandle:
-                {
-                    const void * src = (void *)(uint_ptr(_object) + offset);
-                    VG_VERIFY(_buffer.write(src, size));
-                }
-                break;
-
-                case PropertyType::String:
-                {
-                    const string * s = prop->GetPropertyString(_object);
-                    VG_VERIFY(_buffer.write((u32)s->length()));
-                    VG_VERIFY(_buffer.write(s->c_str(), s->length()));
-                }
-                break;
-            }
-        }
-
-        return true;
-    }
-
-    //--------------------------------------------------------------------------------------
     bool Factory::serializeFromMemory(IObject * _object, io::Buffer & _buffer)
     {
         const char * className = _object->GetClassName();
@@ -835,96 +840,101 @@ namespace vg::core
         for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
         {
             const auto & prop = classDesc->GetPropertyByIndex(p);
-
-            const char * name = prop->GetName();
-            const auto type = prop->GetType();
-            const auto size = prop->GetSizeOf();
-            const auto offset = prop->GetOffset();
-            const auto flags = prop->GetFlags();
-            const bool isEnumArray = asBool(PropertyFlags::EnumArray & prop->GetFlags());
-
-            switch (type)
-            {
-                default:
-                    //VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                    break;
-
-                case PropertyType::Callback:
-                    break;
-
-                case PropertyType::ObjectPtrVector:
-                {
-                    if (strcmp(prop->GetName(), "m_children"))
-                    {
-                        auto * vector = prop->GetPropertyObjectPtrVector(_object);
-                        for (uint i = 0; i < vector->size(); ++i)
-                            RestoreProperties((*vector)[i]);
-                    }
-                }
-                break;
-
-                case PropertyType::Bool:
-                case PropertyType::Int8:
-                case PropertyType::Int16:
-                case PropertyType::Int32:
-                case PropertyType::Int64:
-                case PropertyType::Uint8:
-                case PropertyType::Uint16:
-                case PropertyType::Uint32:
-                case PropertyType::Uint64:
-                case PropertyType::Float:
-                case PropertyType::Float2:
-                case PropertyType::Float3:
-                case PropertyType::Float4:
-                case PropertyType::Float4x4:
-                case PropertyType::EnumU8:
-                case PropertyType::EnumU16:
-                case PropertyType::EnumU32:
-                case PropertyType::EnumU64:
-                case PropertyType::EnumFlagsU8:
-                case PropertyType::EnumFlagsU16:
-                case PropertyType::EnumFlagsU32:
-                case PropertyType::EnumFlagsU64:
-                {
-                    void * dst = (void*)(uint_ptr(_object) + offset);
-                    bool changed = false;
-
-                    if (isEnumArray)
-                    {
-                        const auto totalSize = prop->GetEnumCount() * size;
-                        VG_VERIFY(_buffer.restore(dst, totalSize, changed));
-                    }
-                    else
-                    {
-                        VG_VERIFY(_buffer.restore(dst, size, changed));
-                    }
-                }
-                break;
-
-                case PropertyType::ObjectHandle:
-                {
-                    void * dst = (void *)(uint_ptr(_object) + offset);
-                    bool changed = false;
-                    VG_VERIFY(_buffer.restore(dst, size, changed));
-                }
-                break;
-
-                case PropertyType::String:
-                {
-                    bool changed = false;
-                    u32 stringSize = 0;
-                    char temp[1024];
-                    VG_ASSERT(stringSize < 1024);
-                    VG_VERIFY(_buffer.restore(&stringSize, sizeof(u32), changed));
-                    VG_VERIFY(_buffer.restore(temp, stringSize, changed));
-                    temp[stringSize] = '\0';
-                    *prop->GetPropertyString(_object) = temp;
-                }
-                break;
-            }
+            serializePropertyFromMemory(_object, prop, _buffer);
         }
 
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Factory::serializePropertyFromMemory(IObject * _object, const IProperty * _prop, io::Buffer & _buffer)
+    {
+        const char * name = _prop->GetName();
+        const auto type = _prop->GetType();
+        const auto size = _prop->GetSizeOf();
+        const auto offset = _prop->GetOffset();
+        const auto flags = _prop->GetFlags();
+        const bool isEnumArray = asBool(PropertyFlags::EnumArray & _prop->GetFlags());
+
+        switch (type)
+        {
+            default:
+                //VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                break;
+
+            case PropertyType::Callback:
+                break;
+
+            case PropertyType::ObjectPtrVector:
+            {
+                if (strcmp(_prop->GetName(), "m_children"))
+                {
+                    auto * vector = _prop->GetPropertyObjectPtrVector(_object);
+                    for (uint i = 0; i < vector->size(); ++i)
+                        RestoreProperties((*vector)[i]);
+                }
+            }
+            break;
+
+            case PropertyType::Bool:
+            case PropertyType::Int8:
+            case PropertyType::Int16:
+            case PropertyType::Int32:
+            case PropertyType::Int64:
+            case PropertyType::Uint8:
+            case PropertyType::Uint16:
+            case PropertyType::Uint32:
+            case PropertyType::Uint64:
+            case PropertyType::Float:
+            case PropertyType::Float2:
+            case PropertyType::Float3:
+            case PropertyType::Float4:
+            case PropertyType::Float4x4:
+            case PropertyType::EnumU8:
+            case PropertyType::EnumU16:
+            case PropertyType::EnumU32:
+            case PropertyType::EnumU64:
+            case PropertyType::EnumFlagsU8:
+            case PropertyType::EnumFlagsU16:
+            case PropertyType::EnumFlagsU32:
+            case PropertyType::EnumFlagsU64:
+            {
+                void * dst = (void *)(uint_ptr(_object) + offset);
+                bool changed = false;
+
+                if (isEnumArray)
+                {
+                    const auto totalSize = _prop->GetEnumCount() * size;
+                    VG_VERIFY(_buffer.restore(dst, totalSize, changed));
+                }
+                else
+                {
+                    VG_VERIFY(_buffer.restore(dst, size, changed));
+                }
+            }
+            break;
+
+            case PropertyType::ObjectHandle:
+            {
+                void * dst = (void *)(uint_ptr(_object) + offset);
+                bool changed = false;
+                VG_VERIFY(_buffer.restore(dst, size, changed));
+            }
+            break;
+
+            case PropertyType::String:
+            {
+                bool changed = false;
+                u32 stringSize = 0;
+                char temp[1024];
+                VG_ASSERT(stringSize < 1024);
+                VG_VERIFY(_buffer.restore(&stringSize, sizeof(u32), changed));
+                VG_VERIFY(_buffer.restore(temp, stringSize, changed));
+                temp[stringSize] = '\0';
+                *_prop->GetPropertyString(_object) = temp;
+            }
+            break;
+        }
     }
 
     //--------------------------------------------------------------------------------------

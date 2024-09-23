@@ -10,6 +10,7 @@
 #include "core/IGameObject.h"
 #include "core/IComponent.h"
 #include "core/ISelection.h"
+#include "core/UndoRedo/UndoRedo.h"
 #include "core/IResourceManager.h"
 #include "core/Misc/BitMask/BitMask.h"
 #include "core/Misc/AABB/AABB.h"
@@ -196,9 +197,82 @@ namespace vg::editor
     template <> bool equals(core::float4x4 a, core::float4x4 b) { return all(a == b); }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool storeProperty(T * _out, T _value, IObject * _object, const IProperty * _prop, PropertyContext & _propContext)
+    // This should be part of the Undo/Redo manager
+    //--------------------------------------------------------------------------------------
+
+    vg_enum_class(EditingState, core::u8,
+        Unknown = 0,
+        BeginEdit,
+        Editing,
+        EndEdit
+    );
+    
+    struct ObjectPropertyPair
     {
-        if (!_propContext.m_readOnly && !equals(*_out,_value))
+        ObjectPropertyPair() :
+            m_object(nullptr),
+            m_prop(nullptr)
+        {
+
+        }
+
+        ObjectPropertyPair(IObject * _object, const IProperty * _prop) :
+            m_object(_object),
+            m_prop(_prop)
+        {
+
+        }
+
+        bool operator != (const ObjectPropertyPair & _other) const
+        {
+            return m_object != _other.m_object && m_prop != _other.m_prop;
+        }
+
+        IObject * m_object;
+        const IProperty * m_prop;
+    };
+
+#if VG_ENABLE_UNDO_REDO
+    static ObjectPropertyPair g_currentEditedObjectProperty;
+    static core::IUndoRedoEntry * g_currentUndoRedoEntry = nullptr;
+#endif
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> bool createDynamicPropertyIfNeeded(T * _out, T _value, IObject * _object, const IProperty * _prop, PropertyContext & _propContext)
+    {
+        if ((!_propContext.m_readOnly))
+        {
+            if (_propContext.m_isPrefabInstance && !_propContext.m_isPrefabOverride)
+            {
+                if (_propContext.m_propOverride = _propContext.m_prefab->CreateDynamicProperty(_object, _prop))
+                {
+                    ((typename TypeToDynamicPropertyTypeEnum<T>::type *)_propContext.m_propOverride)->SetValue(_value);
+                    _propContext.m_propOverride->Enable(true);
+
+                    if (_propContext.m_optionalPropOverride)
+                        _propContext.m_optionalPropOverride->Enable(true);
+
+                    //_object = (IObject *)_propContext.m_propOverride;
+                    //_propContext.m_isPrefabOverride = true;
+
+                    return true;
+                }
+                else
+                {
+                    VG_ASSERT(false, "[Factory] Could not create DynamicProperty \"%s\" for class \"%s\"", _prop->GetName(), _object->GetClassName());
+
+                    return false;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T> bool storeProperty(T * _out, T _value, IObject * _object, const IProperty * _prop, PropertyContext & _propContext, EditingState _editingState = EditingState::Unknown)
+    {
+        if (EditingState::BeginEdit == _editingState || EditingState::EndEdit == _editingState || (!_propContext.m_readOnly && !equals(*_out,_value)))
         {
             if (_propContext.m_isPrefabInstance && !_propContext.m_isPrefabOverride)
             {
@@ -222,7 +296,19 @@ namespace vg::editor
                     return false;
                 }
             }
-            
+
+            #if VG_ENABLE_UNDO_REDO
+            auto * undoRedoManager = Kernel::getUndoRedoManager();
+
+            if (EditingState::BeginEdit == _editingState)
+            {
+                // Backup value before editing
+                VG_ASSERT(g_currentUndoRedoEntry == nullptr);
+                g_currentUndoRedoEntry = new UndoRedoPropertyEntry(_object, _prop, _propContext.m_originalObject, _propContext.m_prefab, _propContext.m_propOverride);
+                undoRedoManager->BeforeChange(g_currentUndoRedoEntry);
+            }
+            #endif
+
             if (_propContext.m_isPrefabOverride)
             {
                 VG_ASSERT(_propContext.m_originalObject != _object);
@@ -234,10 +320,21 @@ namespace vg::editor
                 _object->SetPropertyValue(*_prop, _out, &_value);
             }
 
+            #if VG_ENABLE_UNDO_REDO
+            if (EditingState::EndEdit == _editingState)
+            {
+                // Finalize Undo/Redo entry after editing
+                //undoRedoManager->Done(&undoRedoEntry);
+                VG_ASSERT(g_currentUndoRedoEntry != nullptr);
+                undoRedoManager->AfterChange(g_currentUndoRedoEntry);
+                g_currentUndoRedoEntry = nullptr;
+            }
+            #endif
+
             return true;
         }
         return false;
-    }    
+    }  
 
     template <typename T> struct ImGuiDataTypeInfo;
     template <> struct ImGuiDataTypeInfo<u8> { static const ImGuiDataType_ type = ImGuiDataType_U8; };
@@ -298,6 +395,55 @@ namespace vg::editor
                 edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, nullptr, nullptr, editFormat);
         }
 
+        bool dynPropertyJustCreated = false;
+        if (edited)
+        {
+            // Create dynamic property (if needed) early so as not to fuck up the undo/redo logic
+            S initVal[count];
+            for (int i = 0; i < count; ++i)
+                initVal[i] = _ptr[i];
+
+            dynPropertyJustCreated = createDynamicPropertyIfNeeded((T *)_ptr, vectorTraits<T>::makeVector(initVal), _object, _prop, _propContext);
+
+            if (dynPropertyJustCreated)
+            {
+                for (int i = 0; i < count; ++i)
+                    temp[i] = initVal[i];
+            }
+        }
+
+        // After ImGui control & before Undo/Redo action
+        EditingState editingState = EditingState::Unknown;
+
+        #if VG_ENABLE_UNDO_REDO
+        if (!dynPropertyJustCreated)
+        {
+            ObjectPropertyPair current(_object, _prop);
+
+            if (edited & ImGui::IsItemActive())
+            {
+                if (g_currentEditedObjectProperty != current)
+                {
+                    //VG_INFO("[Undo/Redo] Begin editing Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
+                    editingState = EditingState::BeginEdit;
+                    g_currentEditedObjectProperty = current;
+                }
+                else
+                {
+                    editingState = EditingState::Editing;
+                }
+            }
+            
+            if (ImGui::IsItemDeactivatedAfterEdit())
+            {
+                //VG_INFO("[Undo/Redo] End editing Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
+                editingState = EditingState::EndEdit;
+                g_currentEditedObjectProperty = {};
+                edited = true;
+            }
+        }
+        #endif
+
         ImGuiWindow::drawPropertyLabel(_propContext, _prop);
 
         if (edited)
@@ -314,7 +460,7 @@ namespace vg::editor
                 }
             }
 
-            if (storeProperty((T *)_ptr, vectorTraits<T>::makeVector(temp), _object, _prop, _propContext))
+            if (storeProperty((T *)_ptr, vectorTraits<T>::makeVector(temp), _object, _prop, _propContext, editingState))
                 return true;
         }
 

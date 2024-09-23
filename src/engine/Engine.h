@@ -8,6 +8,7 @@
 namespace vg::core
 {
     class Entity;
+    class UndoRedoManager;
 }
 
 namespace vg::gfx
@@ -162,6 +163,7 @@ namespace vg::engine
         audio::IAudio *                         m_audio             = nullptr;
         ResourceManager *                       m_resourceManager   = nullptr;
         Selection *                             m_selection         = nullptr;
+        core::UndoRedoManager *                 m_undoRedo          = nullptr;
         core::JobSync                           m_jobSync[core::enumCount<EngineJobType>()];
         core::vector<core::IWorld *>            m_worlds;
 
