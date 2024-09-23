@@ -82,9 +82,9 @@ namespace vg::editor
             {
                 IInput * input = Kernel::getInput();
                 
-                const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::RCONTROL);
-                const bool alt = input->IsKeyPressed(Key::LALT) || input->IsKeyPressed(Key::RALT);
-                const bool shift = input->IsKeyPressed(Key::LSHIFT) || input->IsKeyPressed(Key::RSHIFT);
+                const bool ctrl = input->IsKeyPressed(Key::LeftControl) || input->IsKeyPressed(Key::RightControl);
+                const bool alt = input->IsKeyPressed(Key::LeftAlt) || input->IsKeyPressed(Key::RightAlt);
+                const bool shift = input->IsKeyPressed(Key::LeftShift) || input->IsKeyPressed(Key::RightShift);
 
                 if (!ctrl && !shift)
                 {
@@ -146,16 +146,16 @@ namespace vg::editor
                     }
 
                     // Pan using keyboard
-                    if (!input->IsKeyPressed(Key::LCONTROL))
+                    if (!input->IsKeyPressed(Key::LeftControl))
                     {
-                        if (input->IsKeyPressed(Key::A))
+                        if (input->IsKeyPressed(Key::Q))
                             T -= moveSpeed * I;
                         else if (input->IsKeyPressed(Key::D))
                             T += moveSpeed * I;
 
-                        if (input->IsKeyPressed(Key::PAGEDOWN))
+                        if (input->IsKeyPressed(Key::PageDown))
                             T -= moveSpeed * J;
-                        else if (input->IsKeyPressed(Key::PAGEUP))
+                        else if (input->IsKeyPressed(Key::PageUp))
                             T += moveSpeed * J;
                     }
                 }
@@ -171,7 +171,7 @@ namespace vg::editor
                     // zoom using keyboard
                     if (!ctrl)
                     {
-                        if (input->IsKeyPressed(Key::W))
+                        if (input->IsKeyPressed(Key::Z))
                             T -= moveSpeed * K;
                         else if (input->IsKeyPressed(Key::S))
                             T += moveSpeed * K;
@@ -597,7 +597,7 @@ namespace vg::editor
                             // Update picking if not currently manipulating gizmos
                             auto * renderer = Editor::get()->getRenderer();
                             auto picking = renderer->GetPicking();
-                            bool showTooltip = Kernel::getInput()->IsKeyPressed(Key::LSHIFT); // ImGui::IsKeyPressed(ImGuiKey_LeftShift);
+                            bool showTooltip = Kernel::getInput()->IsKeyPressed(Key::LeftShift); // ImGui::IsKeyPressed(ImGuiKey_LeftShift);
 
                             string tooltip, tooltipDbg;
                             picking->Update(view, showTooltip, tooltip, tooltipDbg);
@@ -779,7 +779,7 @@ namespace vg::editor
                         m_manipulating = true;
                         VG_INFO("[Editor] Start manipulating Gizmo");
 
-                        if (Kernel::getInput()->IsKeyPressed(Key::LSHIFT))
+                        if (Kernel::getInput()->IsKeyPressed(Key::LeftShift))
                         {
                             // Duplicate the current selection and manipulate the copy
                             VG_INFO("[Editor] Duplicate current selection");

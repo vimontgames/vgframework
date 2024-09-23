@@ -16,8 +16,10 @@ namespace vg::engine
     struct KeyboardData
     {
         static const core::uint s_buffersize = 256;
-        char        m_current[s_buffersize];
-        char        m_previous[s_buffersize];
+
+        core::KeyboardLayout    m_layout = core::KeyboardLayout::Qwerty;
+        char                    m_current[s_buffersize];
+        char                    m_previous[s_buffersize];
     };
 
     struct JoystickData
@@ -60,7 +62,7 @@ namespace vg::engine
 
 namespace vg::engine
 {
-    class Input : public VG_PLATFORM::Input
+    class Input final : public VG_PLATFORM::Input
     {
         using super = VG_PLATFORM::Input;
 

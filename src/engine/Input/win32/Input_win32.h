@@ -40,12 +40,14 @@ namespace vg::engine::win32
 
     #pragma region Keyboard
     public:
-        bool            IsKeyPressed                (core::Key _key) const final override;
-        bool            IsKeyJustPressed            (core::Key _key) const final override;
-        bool            IsKeyJustReleased           (core::Key _key) const final override;
+        core::KeyboardLayout    GetKeyboardLayout           () const;
+        bool                    IsKeyPressed                (core::Key _key) const final override;
+        bool                    IsKeyJustPressed            (core::Key _key) const final override;
+        bool                    IsKeyJustReleased           (core::Key _key) const final override;
 
     private:
-        bool            wasKeyPressed               (core::Key _key) const;
+        bool                    wasKeyPressed               (core::Key _key) const;
+        core::uint              getKeycodeIndex             (core::Key _key) const;
     #pragma endregion Keyboard
 
     #pragma region Joy

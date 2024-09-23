@@ -252,8 +252,8 @@ namespace vg::editor
         auto input = Kernel::getInput();
         auto options = EditorOptions::get();
 
-        const bool shift = input->IsKeyPressed(Key::LSHIFT) || input->IsKeyPressed(Key::RSHIFT);
-        const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::RCONTROL);
+        const bool shift = input->IsKeyPressed(Key::LeftShift) || input->IsKeyPressed(Key::RightShift);
+        const bool ctrl = input->IsKeyPressed(Key::LeftControl) || input->IsKeyPressed(Key::RightControl);
 
         auto wheel = input->GetMouseDelta().z;
         if (ctrl && wheel != 0)
@@ -270,6 +270,14 @@ namespace vg::editor
 
                 lastGizmoChangedTick = core::Timer::getTick();
             }
+        }
+
+        if (ctrl)
+        {
+            if (input->IsKeyJustPressed(Key::Z))
+                VG_INFO("[Editor] Undo");
+            if (input->IsKeyJustPressed(Key::Y))
+                VG_INFO("[Editor] Redo");
         }
     }
 

@@ -64,7 +64,7 @@ namespace vg::renderer
         if (_view->IsMouseOverView())
         {
             auto input = Kernel::getInput();
-            const bool ctrl = input->IsKeyPressed(Key::LCONTROL) || input->IsKeyPressed(Key::LCONTROL);
+            const bool ctrl = input->IsKeyPressed(Key::LeftControl) || input->IsKeyPressed(Key::LeftControl);
             auto selection = Kernel::getSelection();
             
             bool isValidPicking = false;

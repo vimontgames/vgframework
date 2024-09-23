@@ -183,6 +183,16 @@ namespace vg::engine::win32
         {
             memset(&m_keyboardData, 0, sizeof(m_keyboardData));
 
+            // get keyboard layout
+            WORD langId = LOWORD(::GetKeyboardLayout(0));
+
+            if (langId == MAKELANGID(LANG_FRENCH, SUBLANG_FRENCH))
+                m_keyboardData.m_layout = KeyboardLayout::Azerty;
+            else
+                m_keyboardData.m_layout = KeyboardLayout::Qwerty;
+
+            VG_INFO("[Input] Using %s keyboard layout", asString(m_keyboardData.m_layout).c_str());
+
             hr = m_directInputDevice->CreateDevice(GUID_SysKeyboard, &m_directInputKeyboard, nullptr);
             VG_ASSERT(SUCCEEDED(hr) && "Could not create keyboard input device");
 
@@ -376,15 +386,70 @@ namespace vg::engine::win32
 
 #pragma region Keyboard
     //--------------------------------------------------------------------------------------
+    KeyboardLayout Input::GetKeyboardLayout() const
+    {
+        return m_keyboardData.m_layout;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint Input::getKeycodeIndex(Key _key) const
+    {
+        auto keyRemap = _key;
+
+        switch (m_keyboardData.m_layout)
+        {
+            case KeyboardLayout::Qwerty:
+            {
+                // Nothing to do
+            }
+            break;
+
+            case KeyboardLayout::Azerty:
+            {
+                switch (keyRemap)
+                {
+                    case Key::Q: 
+                        keyRemap = Key::A; // Q -> A
+                        break;
+                    case Key::W: 
+                        keyRemap = Key::Z; // W -> Z
+                        break;
+                    case Key::A: 
+                        keyRemap = Key::Q; // A -> Q
+                        break;
+                    case Key::Z: 
+                        keyRemap = Key::W; // Z -> W
+                        break;
+                    case Key::M: 
+                        keyRemap = Key::SemiColon; // M -> ;
+                        break;
+                    case Key::SemiColon: 
+                        keyRemap = Key::M; // ; -> M
+                        break;
+                    case Key::Comma: 
+                        keyRemap = Key::N; // , -> N
+                        break;
+                    case Key::N: 
+                        keyRemap = Key::Comma; // N -> ,
+                        break;
+                }
+            }
+            break;
+        }
+
+        return keycode[core::asInteger(keyRemap)];
+    }
+
+    //--------------------------------------------------------------------------------------
     bool Input::IsKeyPressed(core::Key _key) const
     {
-        return 0 != m_keyboardData.m_current[keycode[core::asInteger(_key)]];
+        return 0 != m_keyboardData.m_current[getKeycodeIndex(_key)];
     }
 
     //--------------------------------------------------------------------------------------
     bool Input::wasKeyPressed(core::Key _key) const
     {
-        return 0 != m_keyboardData.m_previous[keycode[core::asInteger(_key)]];
+        return 0 != m_keyboardData.m_previous[getKeycodeIndex(_key)];
     }
 
     //--------------------------------------------------------------------------------------
@@ -411,7 +476,7 @@ namespace vg::engine::win32
 
         HRESULT hr = m_directInputKeyboard->GetDeviceState(m_keyboardData.s_buffersize, &m_keyboardData.m_current);
         if (FAILED(hr))
-            m_directInputKeyboard->Acquire();
+            m_directInputKeyboard->Acquire(); 
     }
 
 #pragma endregion Keyboard

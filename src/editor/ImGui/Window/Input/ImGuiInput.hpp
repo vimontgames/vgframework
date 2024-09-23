@@ -19,7 +19,7 @@ namespace vg::editor
             if (!input->IsInputEnabled(InputType::Keyboard))
                 ImGui::PushStyleColor(ImGuiCol_Text, getDisabledTextColor());
 
-            if (ImGui::CollapsingHeader("Keyboard", ImGuiTreeNodeFlags_DefaultOpen))
+            if (ImGui::CollapsingHeader(fmt::sprintf("Keyboard (%s)", asString(input->GetKeyboardLayout())).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
             {
                 Columns(2, "Keyboard", true);
                 float columnWidth[2] = { 196, 128 };
