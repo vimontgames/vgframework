@@ -8,7 +8,8 @@ namespace vg::core
     // Vector type traits for metaprogramming usage
     //--------------------------------------------------------------------------------------
 
-    template <typename T> struct vectorTraits;
+    template <typename T> struct vectorTraits { using type = T;    static const uint count = 1; static T   makeVector(const T * _values) { return *_values; } };
+
     template <> struct vectorTraits<u8>     { using type = u8;    static const uint count = 1; static u8     makeVector(const u8 * _values) { return *_values; } };
     template <> struct vectorTraits<u16>    { using type = u16;   static const uint count = 1; static u16    makeVector(u16 * _values)      { return _values[0]; } };
     template <> struct vectorTraits<u32>    { using type = u32;   static const uint count = 1; static u32    makeVector(u32 * _values)      { return _values[0]; } };
@@ -31,6 +32,8 @@ namespace vg::core
     template <> struct vectorTraits<float2> { using type = float; static const uint count = 2; static float2 makeVector(float * _values)    { return float2(_values[0], _values[1]); } };
     template <> struct vectorTraits<float3> { using type = float; static const uint count = 3; static float3 makeVector(float * _values)    { return float3(_values[0], _values[1], _values[2]); } };
     template <> struct vectorTraits<float4> { using type = float; static const uint count = 4; static float4 makeVector(float * _values)    { return float4(_values[0], _values[1], _values[2], _values[3]); } };
+
+    template <> struct vectorTraits<float4x4> { using type = float; static const uint count = 16; static float4x4 makeVector(float * _values) { return float4x4(_values[0], _values[1], _values[2], _values[3], _values[4], _values[5], _values[6], _values[7], _values[8], _values[9], _values[10], _values[11], _values[12], _values[13], _values[14], _values[15] ); } };
 
     template <typename T> struct scalarTraits;
     template <> struct scalarTraits<u8>     { using larger_type = u64; using signed_type = i8;  using unsigned_type = u8;  static const bool is_signed = false; static const bool is_integer = true; };

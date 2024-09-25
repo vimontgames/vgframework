@@ -67,7 +67,10 @@ namespace vg::editor
 
         static bool                             displayResource     (core::IResource * _resource, const core::IProperty * _prop, core::uint _index, PropertyContext & _propContext);
 
+        static bool                             editBool            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & label, float availableWidth, bool singleLine);
         static bool                             editFloat4x4        (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
+        template <typename T> static bool       editEnum            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
+        template <typename T> static bool       editEnumFlags       (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
 
         static core::string                     getFileBrowserExt   (const core::IResource * _resource);
         static core::string                     getDefaultFolder    (const core::IResource * _resource);
@@ -86,9 +89,6 @@ namespace vg::editor
         static bool                             updateSelection     (core::IObject * _object);
 
         static void                             displayArrayObject  (core::IObject * _object, core::uint _index, const char * _name);
-
-        template <typename T> static bool       displayEnum         (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
-        template <typename T> static bool       displayEnumFlags    (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
 
         static core::string                     getButtonLabel      (core::string _baseName, core::IObject * _object);
 

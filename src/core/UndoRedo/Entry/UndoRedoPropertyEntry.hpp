@@ -34,13 +34,13 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     string UndoRedoPropertyEntry::GetName() const
     {
-        return "Edit property";
+        return "Property";
     }
 
     //--------------------------------------------------------------------------------------
     string UndoRedoPropertyEntry::GetDescription() const
     {
-        return fmt::sprintf("(%s)%s", asString(m_prop->GetType()), m_prop->GetName());
+        return fmt::sprintf("(%s)%s", asString(m_prop->GetType()), m_prop->GetDisplayName());
     }
 
     //--------------------------------------------------------------------------------------

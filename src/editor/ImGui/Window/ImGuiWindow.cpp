@@ -260,9 +260,7 @@ namespace vg::editor
 
             if (EditingState::BeginEdit == _editingState)
             {
-                // Backup value before editing
-                VG_ASSERT(false == undoRedoManager->HasCurrentlyEditedEntry());
-                undoRedoManager->BeforeChange(new UndoRedoPropertyEntry(_object, _prop, _propContext.m_originalObject, _propContext.m_prefab, _propContext.m_propOverride));
+             
             }
             #endif
 
@@ -303,6 +301,90 @@ namespace vg::editor
     template <> struct ImGuiDataTypeInfo<i64> { static const ImGuiDataType_ type = ImGuiDataType_S64; };
 
     template <> struct ImGuiDataTypeInfo<float> { static const ImGuiDataType_ type = ImGuiDataType_Float; };
+
+    vg_enum_class(InteractionType, core::u8,
+        Single = 0,
+        Continuous
+    );
+
+    template <typename T> EditingState undoRedoBeforeEdit(bool & edited, PropertyContext & _propContext, IObject * _object, const IProperty * _prop, typename vectorTraits<T>::type * temp,  typename vectorTraits<T>::type * _ptr, InteractionType _interactionType)
+    {
+        constexpr auto count = vectorTraits<T>::count;
+        using S = typename vectorTraits<T>::type;
+
+        bool dynPropertyJustCreated = false;
+        if (edited)
+        {
+            // Create dynamic property (if needed) early so as not to fuck up the undo/redo logic
+            S initVal[count];
+            for (int i = 0; i < count; ++i)
+                initVal[i] = _ptr[i];
+
+            dynPropertyJustCreated = createDynamicPropertyIfNeeded((T *)_ptr, vectorTraits<T>::makeVector(initVal), _object, _prop, _propContext);
+
+            if (dynPropertyJustCreated)
+            {
+                for (int i = 0; i < count; ++i)
+                    temp[i] = initVal[i];
+            }
+        }
+
+        EditingState editingState = EditingState::Unknown;
+
+        // After ImGui control & before Undo/Redo action
+        #if VG_ENABLE_UNDO_REDO
+        if (!dynPropertyJustCreated)
+        {
+            UndoRedoTarget undoRedoTarget(_object, _prop);
+            auto * undoRedoManager = Kernel::getUndoRedoManager();
+
+            if (edited)
+            {
+                bool recordUndoRedoBeginValue = false;
+                if (InteractionType::Continuous == _interactionType)
+                {
+                    // For slider-like edits we backup value on begin change and after last change
+                    if (edited & ImGui::IsItemActive())
+                        recordUndoRedoBeginValue = true;
+
+                }
+                else
+                {
+                    // For checkbox-like edits (one shot) we create the undoRedo 'before' value immediatly
+                    recordUndoRedoBeginValue = true;
+                }
+
+                if (recordUndoRedoBeginValue)
+                {
+                    if (undoRedoManager->GetCurrentUndoRedoTarget() != undoRedoTarget)
+                    {
+                        //VG_INFO("[Undo/Redo] Begin editing Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
+                        editingState = EditingState::BeginEdit;
+
+                        // Backup value before editing
+                        VG_ASSERT(false == undoRedoManager->HasCurrentlyEditedEntry());
+                        undoRedoManager->BeforeChange(new UndoRedoPropertyEntry(_object, _prop, _propContext.m_originalObject, _propContext.m_prefab, _propContext.m_propOverride));
+                        undoRedoManager->SetCurrentUndoRedoTarget(undoRedoTarget);
+                    }
+                    else
+                    {
+                        editingState = EditingState::Editing;
+                    }
+                }
+            }
+            
+            if (ImGui::IsItemDeactivatedAfterEdit() || (edited && InteractionType::Single == _interactionType))
+            {
+                //VG_INFO("[Undo/Redo] End editing Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
+                editingState = EditingState::EndEdit;
+                undoRedoManager->ClearCurrentUndoRedoTarget();
+                edited = true;
+            }
+        }
+        #endif
+
+        return editingState;
+    }
 
     template <typename T> bool editScalarProperty(PropertyContext & _propContext, const string & _label, IObject * _object, const IProperty * _prop, typename vectorTraits<T>::type * _ptr)
     {
@@ -350,55 +432,7 @@ namespace vg::editor
                 edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, nullptr, nullptr, editFormat);
         }
 
-        bool dynPropertyJustCreated = false;
-        if (edited)
-        {
-            // Create dynamic property (if needed) early so as not to fuck up the undo/redo logic
-            S initVal[count];
-            for (int i = 0; i < count; ++i)
-                initVal[i] = _ptr[i];
-
-            dynPropertyJustCreated = createDynamicPropertyIfNeeded((T *)_ptr, vectorTraits<T>::makeVector(initVal), _object, _prop, _propContext);
-
-            if (dynPropertyJustCreated)
-            {
-                for (int i = 0; i < count; ++i)
-                    temp[i] = initVal[i];
-            }
-        }
-
-        // After ImGui control & before Undo/Redo action
-        EditingState editingState = EditingState::Unknown;
-
-        #if VG_ENABLE_UNDO_REDO
-        if (!dynPropertyJustCreated)
-        {
-            UndoRedoTarget undoRedoTarget(_object, _prop);
-            auto * undoRedoManager = Kernel::getUndoRedoManager();
-
-            if (edited & ImGui::IsItemActive())
-            {
-                if (undoRedoManager->GetCurrentUndoRedoTarget() != undoRedoTarget)
-                {
-                    //VG_INFO("[Undo/Redo] Begin editing Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
-                    editingState = EditingState::BeginEdit;
-                    undoRedoManager->SetCurrentUndoRedoTarget(undoRedoTarget);
-                }
-                else
-                {
-                    editingState = EditingState::Editing;
-                }
-            }
-            
-            if (ImGui::IsItemDeactivatedAfterEdit())
-            {
-                //VG_INFO("[Undo/Redo] End editing Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
-                editingState = EditingState::EndEdit;
-                undoRedoManager->ClearCurrentUndoRedoTarget();
-                edited = true;
-            }
-        }
-        #endif
+        EditingState editingState = undoRedoBeforeEdit<T>(edited, _propContext, _object, _prop, (S*)&temp[0], _ptr, InteractionType::Continuous);
 
         ImGuiWindow::drawPropertyLabel(_propContext, _prop);
 
@@ -440,7 +474,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool ImGuiWindow::displayEnum(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
+    template <typename T> bool ImGuiWindow::editEnum(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
     {
         const auto displayName = _prop->GetDisplayName();
         const auto offset = _prop->GetOffset();
@@ -539,11 +573,13 @@ namespace vg::editor
 
                 if (ImGui::Selectable(pair.name.c_str()) && !selectableDisabled)
                 {
-                    temp = (T)pair.value; // TODO: GetEnumValue should be typed, storing Type+union with check on data type e.g. GetEnumValueU8 etc..
-
-                    if (!readonly)
+                    bool edited = ((T)pair.value != *pEnum);
+                    if (edited && !readonly)
                     {
-                        if (storeProperty<T>((T *)pEnum, temp, _object, _prop, _propContext)) 
+                        auto editingState = undoRedoBeforeEdit<T>(edited, _propContext, _object, _prop, (T *)&temp, pEnum, InteractionType::Single);
+                        temp = (T)pair.value; // TODO: GetEnumValue should be typed, storing Type+union with check on data type e.g. GetEnumValueU8 etc..
+                    
+                        if (storeProperty<T>((T *)pEnum, temp, _object, _prop, _propContext, editingState))
                             changed = true;
                     }
                 }
@@ -566,7 +602,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool ImGuiWindow::displayEnumFlags(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
+    template <typename T> bool ImGuiWindow::editEnumFlags(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
     {
         const auto displayName = _prop->GetDisplayName();
         const auto offset = _prop->GetOffset();
@@ -622,7 +658,9 @@ namespace vg::editor
 
             if (edited)
             {
-                if (storeProperty<T>((T *)pEnum, enumVal, _object, _prop, _propContext))
+                auto editingState = undoRedoBeforeEdit<T>(edited, _propContext, _object, _prop, (T *)&enumVal, pEnum, InteractionType::Single);
+
+                if (storeProperty<T>((T *)pEnum, enumVal, _object, _prop, _propContext, editingState))
                 {
                     *pEnum = enumVal;
                     changed = true;
@@ -1092,101 +1130,78 @@ namespace vg::editor
                 case PropertyType::Bool:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    bool * pBool = _prop->GetPropertyBool(_object);
-                    bool temp = *pBool;
-
-                    bool edited;
-
-                    if (singleLine)
-                    {
-                        // Several checkboxes in the same line
-                        edited = ImGui::Checkbox(getPropertyLabel(label).c_str(), &temp);
-                    }
-                    else
-                    {
-                        // The only checkbox in the line => align right
-                        auto cursorPosX = GetCursorPosX();
-                        ImGui::SetCursorPosX(availableWidth - style::label::PixelWidth - ImGui::GetFrameHeight() + ImGui::GetStyle().ItemSpacing.y + cursorPosX - style.FramePadding.x - style.ItemSpacing.x);
-                        edited = ImGui::Checkbox(getPropertyLabel(label).c_str(), &temp);
-                    }
-
-                    if (edited)
-                    {
-                        if (storeProperty<bool>(pBool, temp, _object, _prop, propContext))
-                            changed = true;
-                    }
-                    drawPropertyLabel(propContext, _prop);
+                    changed |= editBool(_object, _prop, propContext, label, availableWidth, singleLine);
                 };
                 break;
 
                 case PropertyType::EnumU8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnum<u8>(_object, _prop, propContext);
+                    changed |= editEnum<u8>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumI8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnum<i8>(_object, _prop, propContext);
+                    changed |= editEnum<i8>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumU16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnum<u16>(_object, _prop, propContext);
+                    changed |= editEnum<u16>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumI16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnum<i16>(_object, _prop, propContext);
+                    changed |= editEnum<i16>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumU32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnum<u32>(_object, _prop, propContext);
+                    changed |= editEnum<u32>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumI32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnum<i32>(_object, _prop, propContext);
+                    changed |= editEnum<i32>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumFlagsU8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<u8>(_object, _prop, propContext);
+                    changed |= editEnumFlags<u8>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumFlagsI8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<i8>(_object, _prop, propContext);
+                    changed |= editEnumFlags<i8>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumFlagsU16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<u16>(_object, _prop, propContext);
+                    changed |= editEnumFlags<u16>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumFlagsI16:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<i16>(_object, _prop, propContext);
+                    changed |= editEnumFlags<i16>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumFlagsU32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<u32>(_object, _prop, propContext);
+                    changed |= editEnumFlags<u32>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumFlagsI32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<i32>(_object, _prop, propContext);
+                    changed |= editEnumFlags<i32>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumFlagsU64:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<u64>(_object, _prop, propContext);
+                    changed |= editEnumFlags<u64>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumFlagsI64:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= displayEnumFlags<i64>(_object, _prop, propContext);
+                    changed |= editEnumFlags<i64>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::Uint8:
@@ -2582,6 +2597,41 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    bool ImGuiWindow::editBool(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & label, float availableWidth, bool singleLine)
+    {
+        bool changed = false;
+
+        bool * pBool = _prop->GetPropertyBool(_object);
+        bool temp = *pBool;
+
+        bool edited;
+
+        if (singleLine)
+        {
+            // Several checkboxes in the same line
+            edited = ImGui::Checkbox(getPropertyLabel(label).c_str(), &temp);
+        }
+        else
+        {
+            // The only checkbox in the line => align right
+            auto cursorPosX = GetCursorPosX();
+            const ImGuiStyle & style = ImGui::GetStyle();
+            ImGui::SetCursorPosX(availableWidth - style::label::PixelWidth - ImGui::GetFrameHeight() + ImGui::GetStyle().ItemSpacing.y + cursorPosX - style.FramePadding.x - style.ItemSpacing.x);
+            edited = ImGui::Checkbox(getPropertyLabel(label).c_str(), &temp);
+        }
+
+        EditingState editingState = undoRedoBeforeEdit<bool>(edited, _propContext, _object, _prop, &temp, pBool, InteractionType::Single);
+
+        if (edited)
+        {
+            if (storeProperty<bool>(pBool, temp, _object, _prop, _propContext, editingState))
+                changed = true;
+        }
+        drawPropertyLabel(_propContext, _prop);
+        return changed;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ImGuiWindow::editFloat4x4(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
     {
         bool changed = false;
@@ -2604,22 +2654,31 @@ namespace vg::editor
         if (flatten || ImGui::TreeNode(getObjectLabel(displayName, _propContext.m_originalProp).c_str()))
         {
             bool edited = false;
+            EditingState editingState = EditingState::Unknown;
 
             edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat);
+            if (EditingState::Unknown == editingState)
+                editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
             drawPropertyLabel(_propContext, LabelI.c_str(), "Represents the x-axis in the transformed space");
 
             edited |= ImGui::DragFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat);
+            if (EditingState::Unknown == editingState)
+                editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
             drawPropertyLabel(_propContext, LabelJ.c_str(), "Represents the y-axis in the transformed space");
 
             edited |= ImGui::DragFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat);
+            if (EditingState::Unknown == editingState)
+                editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
             drawPropertyLabel(_propContext, LabelK.c_str(), "Represents the z-axis in the transformed space");
 
             edited |= ImGui::DragFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat);
+            if (EditingState::Unknown == editingState)
+                editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
             drawPropertyLabel(_propContext, LabelT.c_str(), "Represents the translation component");
 
             if (edited)
             {
-                if (storeProperty(pFloat4x4, float4x4(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7], temp[8], temp[9], temp[10], temp[11], temp[12], temp[13], temp[14], temp[15]), _object, _prop, _propContext))
+                if (storeProperty(pFloat4x4, float4x4(temp[0], temp[1], temp[2], temp[3], temp[4], temp[5], temp[6], temp[7], temp[8], temp[9], temp[10], temp[11], temp[12], temp[13], temp[14], temp[15]), _object, _prop, _propContext, editingState))
                     changed = true;
             }
 
