@@ -231,7 +231,7 @@ namespace vg::renderer
 
         for (uint i = 0; i < countof(m_frustum.planes); ++i)
         {
-            float normXYZ = rcp(dot(m_frustum.planes[i].xyz, m_frustum.planes[i].xyz));
+            float normXYZ = rsqrt(dot(m_frustum.planes[i].xyz, m_frustum.planes[i].xyz));
             m_frustum.planes[i] /= normXYZ;
         }
     }
