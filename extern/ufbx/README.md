@@ -1,4 +1,4 @@
-# ufbx [![CI](https://github.com/bqqbarbhg/ufbx/actions/workflows/ci.yml/badge.svg)](https://github.com/bqqbarbhg/ufbx/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/bqqbarbhg/ufbx/branch/master/graph/badge.svg)](https://codecov.io/gh/bqqbarbhg/ufbx)
+# ufbx [![CI](https://github.com/bqqbarbhg/ufbx/actions/workflows/ci.yml/badge.svg)](https://github.com/bqqbarbhg/ufbx/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/ufbx/ufbx/branch/master/graph/badge.svg)](https://codecov.io/gh/ufbx/ufbx)
 
 Single source file FBX file loader.
 
@@ -26,6 +26,10 @@ for (size_t i = 0; i < scene->nodes.count; i++) {
 
 ufbx_free_scene(scene);
 ```
+
+## Documentation
+
+[Online documentation](https://ufbx.github.io/)
 
 ## Setup
 
@@ -79,15 +83,18 @@ The following platforms are tested on CI and produce bit-exact results:
 ## Testing
 
 * Internal tests run on all platforms listed above
+  * 592 test cases / 604 FBX files
 * Fuzzed in multiple layers
-  * Parsers (fbx binary/fbx ascii/deflate/xml/mcx/obj/mtl) fuzzed via AFL
+  * Parsers (fbx binary/fbx ascii/deflate/xml/mcx/obj/mtl) fuzzed using AFL
+  * Structured FBX binary/ascii fuzzing using AFL
   * Built-in fuzzing for byte modifications/truncation/out-of-memory
   * Semantic fuzzing for binary FBX and OBJ files
-* Public dataset: 3.0GB / 245 files
+* Public dataset: 4.7GB / 323 files
   * Loaded, validated, and compared against reference .obj files
 * Private dataset: 33.6GB / 12618 files
   * Loaded and validated
 * Static analysis for maximum stack depth on Linux GCC/Clang
+* In total 95% branch line coverage (99% partial line coverage)
 
 ## Versioning
 

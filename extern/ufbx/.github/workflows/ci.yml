@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, integration ]
 
 # Cancel any in-flight jobs for the same PR/branch so there's only one active
 # at a time
@@ -34,7 +34,7 @@ jobs:
           path: build/hashes.txt
 
   ci_ubuntu:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: ci_pre_hashes
     steps:
       - uses: actions/checkout@v3
@@ -53,10 +53,6 @@ jobs:
         run: python3 misc/run_tests.py tests stack readme threadcheck hashes --runner ci_linux
       - name: Verbose test info
         run: build/runner_clang_release_x64/runner -d data -v
-      - name: Generate coverage
-        run: LLVM_COV=llvm-cov-11 bash misc/generate_coverage.sh
-      - name: Upload coverage
-        run: bash <(curl -s https://codecov.io/bash) -f coverage.lcov -y .github/codecov.yml
       - name: Compress hashdumps
         if: ${{ always() && !cancelled() }}
         run: python3 misc/hash_diff.py compress build/hashdumps -o build/hashdump_ci_linux.txt.gz
@@ -68,7 +64,7 @@ jobs:
           path: build/hashdump_ci_linux.txt.gz
 
   ci_windows:
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: ci_pre_hashes
     steps:
       - uses: actions/checkout@v3
@@ -82,6 +78,10 @@ jobs:
         run: python misc/run_tests.py tests stack readme threadcheck hashes --runner ci_windows
       - name: Verbose test info
         run: build\runner_vs_cl64_release_x64\runner.exe -d data -v
+      - name: Check C++ tests
+        run: python misc/run_tests.py cpp --compiler vs_cl64
+      - name: Check features
+        run: python misc/run_tests.py features --compiler vs_cl64
       - name: Compress hashdumps
         if: ${{ always() && !cancelled() }}
         run: python3 misc/hash_diff.py compress build/hashdumps -o build/hashdump_ci_windows.txt.gz
@@ -93,7 +93,7 @@ jobs:
           path: build/hashdump_ci_windows.txt.gz
 
   ci_macos:
-    runs-on: macos-11
+    runs-on: macos-14
     needs: ci_pre_hashes
     steps:
       - uses: actions/checkout@v3
@@ -103,7 +103,7 @@ jobs:
           name: reference-hashes
           path: build
       - name: Run tests
-        run: python3 misc/run_tests.py tests stack readme threadcheck hashes --remove-compiler gcc --additional-compiler gcc-11 --remove-arch x86 --runner ci_macos
+        run: python3 misc/run_tests.py tests cpp stack readme threadcheck hashes --remove-compiler gcc --additional-compiler gcc-11 --remove-arch x86 --runner ci_macos
       - name: Compile ufbx as Objective C
         run: clang -Wall -Wextra -Werror -ObjC -c ufbx.c -o build/ufbx-objc.o
       - name: Compress hashdumps
@@ -116,27 +116,75 @@ jobs:
           name: hash-dumps
           path: build/hashdump_ci_macos.txt.gz
 
+  ci_coverage:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: Update apt
+        run: sudo apt-get update
+      - name: Install apt dependencies
+        run: sudo apt-get install -y gcc-multilib g++-multilib lcov llvm-11
+      - name: Generate coverage
+        run: LLVM_COV=llvm-cov-11 bash misc/generate_coverage.sh
+      - name: Upload coverage
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: bash <(curl -s https://codecov.io/bash) -F tests -f coverage.lcov -y .github/codecov.yml
+
+  ci_coverage32:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: Update apt
+        run: sudo apt-get update
+      - name: Install apt dependencies
+        run: sudo apt-get install -y gcc-multilib g++-multilib lcov llvm-11
+      - name: Generate coverage
+        run: LLVM_COV=llvm-cov-11 bash misc/generate_coverage_32.sh
+      - name: Upload coverage
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: bash <(curl -s https://codecov.io/bash) -F tests -f coverage.lcov -y .github/codecov.yml
+
+  ci_no_assert:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: Update apt
+        run: sudo apt-get update
+      - name: Install apt dependencies
+        run: sudo apt-get install -y gcc-multilib g++-multilib lcov llvm-11
+      - name: Generate coverage
+        run: LLVM_COV=llvm-cov-11 bash misc/generate_coverage_no_assert.sh
+      - name: Upload coverage
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: bash <(curl -s https://codecov.io/bash) -F tests -f coverage.lcov -y .github/codecov.yml
+
+  ci_cpp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Update apt
+        run: sudo apt-get update
+      - name: Install apt dependencies
+        run: sudo apt-get install -y gcc-multilib g++-multilib llvm-11
+      - name: Run tests
+        run: python3 misc/run_tests.py cpp --heavy
+
+
   ci_picort:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Run picort
         run: python misc/run_tests.py picort
-      - name: Upload result images
-        env:
-          BUNNY_API_TOKEN: ${{ secrets.BUNNY_API_TOKEN }}
-        if: ${{ always() && !cancelled() }}
-        continue-on-error: true
-        run: |
-          HASH="$(git rev-parse --short=16 HEAD)"
-          URL="https://storage.bunnycdn.com/ufbx-images/$HASH"
-          DST_URL="https://ufbx-images.b-cdn.net/$HASH"
-          curl -sS -w " -> $DST_URL/barbarian.png \n" --request PUT --header "AccessKey: $BUNNY_API_TOKEN" --header "Content-Type: image/png" --url $URL/barbarian.png --data-binary @build/images/barbarian.png
-          curl -sS -w " -> $DST_URL/barbarian-scalar.png \n" --request PUT --header "AccessKey: $BUNNY_API_TOKEN" --header "Content-Type: image/png" --url $URL/barbarian-scalar.png --data-binary @build/images/barbarian-scalar.png
-          curl -sS -w " -> $DST_URL/barbarian-big.png \n" --request PUT --header "AccessKey: $BUNNY_API_TOKEN" --header "Content-Type: image/png" --url $URL/barbarian-big.png --data-binary @build/images/barbarian-big.png
-          curl -sS -w " -> $DST_URL/slime-binary.png \n" --request PUT --header "AccessKey: $BUNNY_API_TOKEN" --header "Content-Type: image/png" --url $URL/slime-binary.png --data-binary @build/images/slime-binary.png
-          curl -sS -w " -> $DST_URL/slime-ascii.png \n" --request PUT --header "AccessKey: $BUNNY_API_TOKEN" --header "Content-Type: image/png" --url $URL/slime-ascii.png --data-binary @build/images/slime-ascii.png
-          curl -sS -w " -> $DST_URL/slime-big.png \n" --request PUT --header "AccessKey: $BUNNY_API_TOKEN" --header "Content-Type: image/png" --url $URL/slime-big.png --data-binary @build/images/slime-big.png
 
   ci_domfuzz:
     runs-on: ubuntu-latest
@@ -144,6 +192,13 @@ jobs:
       - uses: actions/checkout@v3
       - name: Run domfuzz/objfuzz
         run: python misc/run_tests.py domfuzz objfuzz
+
+  ci_unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run unit tests
+        run: python misc/run_tests.py unit
 
   ci_viewer:
     runs-on: ubuntu-latest
@@ -156,8 +211,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Compile feature permutations
+      - name: Update apt
+        run: sudo apt-get update
+      - name: Install apt dependencies
+        run: sudo apt-get install -y tcc
+      - name: Compile feature permutations (limited, Clang+GCC)
         run: python misc/run_tests.py features
+      - name: Compile feature permutations (exhaustive, TCC)
+        run: python misc/run_tests.py features --heavy --additional-compiler tcc --compiler tcc
 
   ci_analysis:
     runs-on: ubuntu-latest
@@ -196,13 +257,25 @@ jobs:
         run: python3 misc/analyze_stack.py build/ufbx-clang-debug.su --limit 0x20000 --cache build/ufbx-cache.pickle
       - name: Analyze Clang release stack
         if: ${{ always() && !cancelled() }}
-        run: python3 misc/analyze_stack.py build/ufbx-clang-release.su --limit 0x10000 --cache build/ufbx-cache.pickle
+        run: python3 misc/analyze_stack.py build/ufbx-clang-release.su --limit 0x20000 --cache build/ufbx-cache.pickle
       - name: Analyze GCC debug stack
         if: ${{ always() && !cancelled() }}
         run: python3 misc/analyze_stack.py build/ufbx-gcc-debug.su --limit 0x20000 --cache build/ufbx-cache.pickle
       - name: Analyze GCC release stack
         if: ${{ always() && !cancelled() }}
-        run: python3 misc/analyze_stack.py build/ufbx-gcc-release.su --limit 0x10000 --cache build/ufbx-cache.pickle
+        run: python3 misc/analyze_stack.py build/ufbx-gcc-release.su --limit 0x20000 --cache build/ufbx-cache.pickle
+      - name: Analyze symbols (linked)
+        if: ${{ always() && !cancelled() }}
+        run: |
+          clang -c ufbx.c -o build/ufbx-linked.o
+          objdump -t build/ufbx-linked.o > build/ufbx-linked.syms
+          python3 misc/analyze_symbols.py build/ufbx-linked.syms
+      - name: Analyze symbols (static)
+        if: ${{ always() && !cancelled() }}
+        run: |
+          gcc -DUFBX_STATIC -c ufbx.c -o build/ufbx-static.o
+          objdump -t build/ufbx-static.o > build/ufbx-static.syms
+          python3 misc/analyze_symbols.py build/ufbx-static.syms --all-local
 
   ci_compat:
     runs-on: ubuntu-latest
@@ -229,7 +302,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Check formatting
         if: ${{ always() && !cancelled() }}
-        run: python3 misc/check_formatting.py ufbx.c ufbx.h
+        run: python3 misc/check_formatting.py ufbx.h ufbx.c
       - name: Check for typos
         if: ${{ always() && !cancelled() }}
         uses: crate-ci/typos@master
@@ -286,6 +359,8 @@ jobs:
         run: build/fdlibm_runner -d data
       - name: Compile runner.c
         run: gcc -c test/runner.c -o build/runner.o
+      - name: Hash scenes with threads
+        run: python3 misc/run_tests.py hashes --hash-threads --runner ci_hash_threads
       - name: Build and run standard C99
         run: |
           gcc -Wall -Wextra -Werror -Wno-unused-function -std=c99 -DUFBX_STANDARD_C build/runner.o ufbx.c -lm -o build/runner-c99
@@ -311,6 +386,8 @@ jobs:
         run: |
           g++ -Wall -Wextra -Werror -Wno-unused-function -pthread -std=c++11 -DUFBX_STANDARD_C -x c++ ufbx.c test/threadcheck.cpp -lm -o build/threadcheck-cpp11
           build/threadcheck-cpp11 data/maya_cube_7500_binary.fbx 2
+      - name: Link C/C++ LTO
+        run: bash misc/lto_compatability.sh
       - name: Compress hashdumps
         if: ${{ always() && !cancelled() }}
         run: python3 misc/hash_diff.py compress build/hashdumps -o build/hashdump_ci_exotic.txt.gz
@@ -320,6 +397,24 @@ jobs:
         with:
           name: hash-dumps
           path: build/hashdump_ci_exotic.txt.gz
+
+  ci_compilers:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Add Ubuntu sources
+        run: |
+          echo "deb http://azure.archive.ubuntu.com/ubuntu/ xenial main universe" | sudo tee -a /etc/apt/sources.list
+          echo "deb http://azure.archive.ubuntu.com/ubuntu/ bionic main universe" | sudo tee -a /etc/apt/sources.list
+          echo "deb http://azure.archive.ubuntu.com/ubuntu/ focal main universe" | sudo tee -a /etc/apt/sources.list
+          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5 3B4FE6ACC0B21F32
+          sudo apt update
+      - name: Install compilers
+        run: sudo apt-get install -y gcc-5 g++-5 gcc-6 g++-6 gcc-7 g++-7 gcc-8 g++-8 gcc-9 gcc-10 clang-6.0 clang-7 clang-8 clang-9 clang-10 clang-11 clang-12 clang-13
+      - name: Make build directory
+        run: mkdir build
+      - name: Run tests
+        run: python3 misc/run_tests.py tests --no-sanitize --force-opt O0 --additional-compiler gcc-5 --additional-compiler gcc-6 --additional-compiler gcc-7 --additional-compiler gcc-8 --additional-compiler gcc-9 --additional-compiler gcc-10 --additional-compiler clang-6.0 --additional-compiler clang-7 --additional-compiler clang-8 --additional-compiler clang-9 --additional-compiler clang-10 --additional-compiler clang-11 --additional-compiler clang-12 --additional-compiler clang-13
 
   ci_hasher:
     runs-on: ubuntu-latest
@@ -417,7 +512,7 @@ jobs:
           name: reference-hashes
           path: build
       - name: Run tests
-        run: python3 misc/run_tests.py tests stack hashes --no-sanitize --threads 2 --runner ci_arm64
+        run: python3 misc/run_tests.py tests hashes --no-sanitize --threads 2 --runner ci_arm64
       - name: Compress hashdumps
         if: ${{ always() && !cancelled() }}
         run: python3 misc/hash_diff.py compress build/hashdumps -o build/hashdump_ci_arm32.txt.gz
@@ -429,7 +524,7 @@ jobs:
           path: build/hashdump_ci_arm32.txt.gz
 
   ci_arm64:
-    runs-on: [self-hosted, ARM64]
+    runs-on: [self-hosted, ARM64, legacy]
     needs: ci_pre_hashes
     steps:
       - uses: actions/checkout@v3
@@ -441,7 +536,7 @@ jobs:
           name: reference-hashes
           path: build
       - name: Run tests
-        run: python3 misc/run_tests.py tests stack hashes --no-sanitize --threads 2 --runner ci_arm64
+        run: python3 misc/run_tests.py tests hashes --no-sanitize --threads 2 --runner ci_arm64
       - name: Compress hashdumps
         if: ${{ always() && !cancelled() }}
         run: python3 misc/hash_diff.py compress build/hashdumps -o build/hashdump_ci_arm64.txt.gz
@@ -453,17 +548,44 @@ jobs:
           path: build/hashdump_ci_arm64.txt.gz
 
   ci_dataset:
-    runs-on: [self-hosted, ARM64]
+    runs-on: [self-hosted, dataset]
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 2
       - name: Create build directory
         run: mkdir build
-      - name: Compile check_fbx.c
-        run: clang -O2 test/check_fbx.c -lm -o build/check_fbx
+      - name: Compile check_fbx.c with coverage
+        run: clang -coverage -DUFBX_DEV=1 -DEXTERNAL_UFBX -g -Og ufbx.c test/check_fbx.c -lm -o build/check_fbx
       - name: Run dataset tests
-        run: python3 misc/check_dataset.py --exe build/check_fbx --root /mnt/fbx-files --host-url https://ufbx-dataset.b-cdn.net
+        run: python3 misc/check_dataset.py --exe build/check_fbx --root /mnt/fbx-files --host-url https://ufbx-dataset.b-cdn.net --threads 4
+      - name: Generate coverage
+        run: LLVM_COV=llvm-cov bash misc/generate_lcov.sh
+      - name: Upload coverage
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: bash <(curl -s https://codecov.io/bash) -F tests -f coverage.lcov -y .github/codecov.yml
+
+  ci_fuzz:
+    runs-on: [self-hosted, ARM64, legacy]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: Create build directory
+        run: mkdir build
+      - name: Compile check_fbx.c with coverage
+        run: clang -coverage -DUFBX_DEV=1 -DEXTERNAL_UFBX -O2 ufbx.c test/check_fbx.c -lm -o build/check_fbx
+      - name: Check fuzz files
+        run: |
+          build/check_fbx -d /mnt/fbx-files/fuzz/fuzz-fa
+          build/check_fbx -d /mnt/fbx-files/fuzz/fuzz-fb
+      - name: Generate coverage
+        run: LLVM_COV=llvm-cov bash misc/generate_lcov.sh
+      - name: Upload coverage
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: bash <(curl -s https://codecov.io/bash) -F tests -f coverage.lcov -y .github/codecov.yml
 
   ci_post_hashes:
     runs-on: ubuntu-latest

@@ -317,3 +317,198 @@ UFBXT_TEST(matrix_inverse_random)
 	ufbxt_logf(".. Absolute diff: avg %.3g, max %.3g (%zu tests)", err.sum / (ufbx_real)err.num, err.max, err.num);
 }
 #endif
+
+UFBXT_TEST(quat_normalize)
+#if UFBXT_IMPL
+{
+	ufbxt_diff_error err = { 0 };
+
+	{
+		ufbx_quat q = { 1.0f, -1.0f, 2.0f, 0.0f };
+		ufbx_quat n = ufbx_quat_normalize(q);
+
+		ufbx_real len = (ufbx_real)sqrt(1*1 + 1*1 + 2*2);
+		ufbx_quat ref;
+		ref.x = (ufbx_real)1.0 / len;
+		ref.y = (ufbx_real)-1.0 / len;
+		ref.z = (ufbx_real)2.0 / len;
+		ref.w = 0.0f;
+		ufbxt_assert_close_quat(&err, n, ref);
+	}
+
+	{
+		ufbx_quat q = { 0.0f };
+		ufbx_quat n = ufbx_quat_normalize(q);
+		ufbxt_assert_close_quat(&err, n, ufbx_identity_quat);
+	}
+
+	ufbxt_logf(".. Absolute diff: avg %.3g, max %.3g (%zu tests)", err.sum / (ufbx_real)err.num, err.max, err.num);
+}
+#endif
+
+UFBXT_TEST(quat_mul)
+#if UFBXT_IMPL
+{
+	ufbxt_diff_error err = { 0 };
+
+	uint32_t indices[3];
+
+	for (int iorder = 0; iorder < 6; iorder++) {
+		ufbx_rotation_order order = (ufbx_rotation_order)iorder;
+
+		switch (order) {
+		case UFBX_ROTATION_ORDER_XYZ:
+			indices[0] = 0;
+			indices[1] = 1;
+			indices[2] = 2;
+			break;
+		case UFBX_ROTATION_ORDER_XZY:
+			indices[0] = 0;
+			indices[1] = 2;
+			indices[2] = 1;
+			break;
+		case UFBX_ROTATION_ORDER_YZX:
+			indices[0] = 1;
+			indices[1] = 2;
+			indices[2] = 0;
+			break;
+		case UFBX_ROTATION_ORDER_YXZ:
+			indices[0] = 1;
+			indices[1] = 0;
+			indices[2] = 2;
+			break;
+		case UFBX_ROTATION_ORDER_ZXY:
+			indices[0] = 2;
+			indices[1] = 0;
+			indices[2] = 1;
+			break;
+		case UFBX_ROTATION_ORDER_ZYX:
+			indices[0] = 2;
+			indices[1] = 1;
+			indices[2] = 0;
+			break;
+		default:
+			ufbxt_assert(0 && "Bad order");
+			break;
+		}
+
+		for (int x = -360; x <= 360; x += 45)
+		for (int y = -360; y <= 360; y += 45)
+		for (int z = -360; z <= 360; z += 45) {
+			ufbx_vec3 v = { (ufbx_real)x, (ufbx_real)y, (ufbx_real)z };
+			ufbx_vec3 vs[3] = { 0 };
+			vs[0].x = v.x;
+			vs[1].y = v.y;
+			vs[2].z = v.z;
+
+			ufbx_quat q0 = ufbx_euler_to_quat(vs[indices[2]], UFBX_ROTATION_ORDER_XYZ);
+			ufbx_quat q1 = ufbx_euler_to_quat(vs[indices[1]], UFBX_ROTATION_ORDER_YZX);
+			ufbx_quat q2 = ufbx_euler_to_quat(vs[indices[0]], UFBX_ROTATION_ORDER_ZXY);
+
+			ufbx_quat q01 = ufbx_quat_mul(q0, q1);
+			ufbx_quat q012 = ufbx_quat_mul(q01, q2);
+
+			ufbx_quat ref = ufbx_euler_to_quat(v, order);
+
+			ufbxt_assert_close_quat(&err, q012, ref);
+			ufbxt_assert_close_quat(&err, q012, ref);
+		}
+	}
+
+	ufbxt_logf(".. Absolute diff: avg %.3g, max %.3g (%zu tests)", err.sum / (ufbx_real)err.num, err.max, err.num);
+}
+#endif
+
+UFBXT_TEST(matrix_for_normals_scale)
+#if UFBXT_IMPL
+{
+	ufbxt_diff_error err = { 0 };
+
+	{
+		ufbx_matrix geometry_to_world = { 0 };
+		geometry_to_world.m00 = 2.0f;
+		geometry_to_world.m11 = 2.0f;
+		geometry_to_world.m22 = 2.0f;
+		geometry_to_world.m03 = 1.0f;
+		geometry_to_world.m13 = 2.0f;
+		geometry_to_world.m23 = 3.0f;
+
+		ufbx_matrix normal_to_world = ufbx_matrix_for_normals(&geometry_to_world);
+
+		ufbx_vec3 basis[] = {
+			{ 4.0f, 0.0f, 0.0f },
+			{ 0.0f, 4.0f, 0.0f },
+			{ 0.0f, 0.0f, 4.0f },
+		};
+		ufbxt_assert_close_vec3(&err, normal_to_world.cols[0], basis[0]);
+		ufbxt_assert_close_vec3(&err, normal_to_world.cols[1], basis[1]);
+		ufbxt_assert_close_vec3(&err, normal_to_world.cols[2], basis[2]);
+		ufbxt_assert_close_vec3(&err, normal_to_world.cols[3], ufbx_zero_vec3);
+	}
+
+	{
+		ufbx_matrix geometry_to_world = { 0 };
+		geometry_to_world.m00 = 2.0f;
+		geometry_to_world.m11 = 1.0f;
+		geometry_to_world.m22 = 1.0f;
+
+		ufbx_matrix normal_to_world = ufbx_matrix_for_normals(&geometry_to_world);
+
+		ufbx_vec3 basis[] = {
+			{ 1.0f, 0.0f, 0.0f },
+			{ 0.0f, 2.0f, 0.0f },
+			{ 0.0f, 0.0f, 2.0f },
+		};
+		ufbxt_assert_close_vec3(&err, normal_to_world.cols[0], basis[0]);
+		ufbxt_assert_close_vec3(&err, normal_to_world.cols[1], basis[1]);
+		ufbxt_assert_close_vec3(&err, normal_to_world.cols[2], basis[2]);
+		ufbxt_assert_close_vec3(&err, normal_to_world.cols[3], ufbx_zero_vec3);
+
+		ufbx_vec3 geo_normal = { 1.0f, 1.0f, 0.0f };
+		ufbx_vec3 world_normal = ufbx_transform_direction(&normal_to_world, geo_normal);
+		ufbx_vec3 geo_tangent = { 1.0f, -1.0f, 0.0f };
+		ufbx_vec3 geo_bitangent = { 0.0f, 0.0f, -1.0f };
+		ufbx_vec3 world_tangent = ufbx_transform_direction(&geometry_to_world, geo_tangent);
+		ufbx_vec3 world_bitangent = ufbx_transform_direction(&geometry_to_world, geo_bitangent);
+
+		ufbx_vec3 normal = ufbx_vec3_normalize(world_normal);
+		ufbx_vec3 ref_normal = ufbx_vec3_normalize(ufbxt_cross3(world_tangent, world_bitangent));
+		ufbxt_assert_close_vec3(&err, normal, ref_normal);
+	}
+
+	{
+		ufbx_matrix geometry_to_world = { 0 };
+		geometry_to_world.m00 = 1.0f;
+		geometry_to_world.m11 = 0.0f;
+		geometry_to_world.m22 = 1.0f;
+
+		ufbx_matrix normal_to_world = ufbx_matrix_for_normals(&geometry_to_world);
+
+		ufbx_vec3 basis[] = {
+			{ 0.0f, 0.0f, 0.0f },
+			{ 0.0f, 1.0f, 0.0f },
+			{ 0.0f, 0.0f, 0.0f },
+		};
+		ufbxt_assert_close_vec3(&err, normal_to_world.cols[0], basis[0]);
+		ufbxt_assert_close_vec3(&err, normal_to_world.cols[1], basis[1]);
+		ufbxt_assert_close_vec3(&err, normal_to_world.cols[2], basis[2]);
+		ufbxt_assert_close_vec3(&err, normal_to_world.cols[3], ufbx_zero_vec3);
+
+		ufbx_vec3 geo_normal = { 1.0f, 1.0f, 0.0f };
+		ufbx_vec3 world_normal = ufbx_transform_direction(&normal_to_world, geo_normal);
+		ufbx_vec3 geo_tangent = { 1.0f, -1.0f, 0.0f };
+		ufbx_vec3 geo_bitangent = { 0.0f, 0.0f, -1.0f };
+		ufbx_vec3 world_tangent = ufbx_transform_direction(&geometry_to_world, geo_tangent);
+		ufbx_vec3 world_bitangent = ufbx_transform_direction(&geometry_to_world, geo_bitangent);
+
+		ufbx_vec3 normal = ufbx_vec3_normalize(world_normal);
+		ufbx_vec3 ref_normal = ufbx_vec3_normalize(ufbxt_cross3(world_tangent, world_bitangent));
+		ufbxt_assert_close_vec3(&err, normal, ref_normal);
+
+		ufbx_vec3 up_normal = { 0.0f, 1.0f, 0.0f };
+		ufbxt_assert_close_vec3(&err, normal, up_normal);
+	}
+
+	ufbxt_logf(".. Absolute diff: avg %.3g, max %.3g (%zu tests)", err.sum / (ufbx_real)err.num, err.max, err.num);
+}
+#endif

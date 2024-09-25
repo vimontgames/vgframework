@@ -208,6 +208,7 @@ class Function(Base):
     array_arguments: List[ArrayArgument]
     blob_arguments: List[BlobArgument]
     is_inline: bool
+    is_unsafe: bool
     member_name: Optional[str]
     ffi_name: Optional[str]
     catch_name: Optional[str]
@@ -271,18 +272,14 @@ def init_type(file, typ, key, mods):
         mods = mods[:]
 
         if mods[0]["type"] == "nullable":
-            for n in range(len(mods)):
-                if mods[n]["type"] == "pointer":
-                    mods[n]["nullable"] = True
-                    mods = mods[1:]
-                    break
+            if mods[-1]["type"] == "pointer":
+                mods[-1]["nullable"] = True
+                mods = mods[1:]
 
         if mods[0]["type"] == "const":
-            for n in range(len(mods)):
-                if mods[n]["type"] == "pointer":
-                    mods[n]["const"] = True
-                    mods = mods[1:]
-                    break
+            if mods[-1]["type"] == "pointer":
+                mods[-1]["const"] = True
+                mods = mods[1:]
 
     if mods:
         mod = mods[-1]
@@ -352,7 +349,9 @@ def parse_type_imp(file, typ, mods):
 def parse_type(file, typ, in_func=False):
     mods = typ["mods"]
     if in_func:
-        mods = [m for m in mods if m["type"] not in ("function", "inline", "abi")]
+        mods = [m for m in mods if m["type"] not in ("function", "inline", "abi", "unsafe")]
+    else:
+        mods = [m for m in mods if m["type"] not in ("abi_data", )]
     return parse_type_imp(file, typ, mods)
 
 def parse_field(file: File, st: Struct, decl, anon_path):
@@ -451,6 +450,7 @@ def parse_func(file: File, decl):
         fn.pretty_name = fn.pretty_name[:-4]
     fn.return_type = parse_type(file, decl["type"], in_func=True)
     fn.is_inline = any(m for m in mods if m["type"] == "inline")
+    fn.is_unsafe = any(m for m in mods if m["type"] == "unsafe")
     fn.arguments = [parse_argument(file, arg) for arg in func_mod["args"]]
 
     file.functions[name] = fn
@@ -566,17 +566,19 @@ sizes_base = {
     "int16_t": 2,
     "uint32_t": 4,
     "int32_t": 4,
-    "uint64_t": 4,
-    "int64_t": 4,
+    "uint64_t": 8,
+    "int64_t": 8,
     "float": 4,
     "double": 8,
     "enum": 4,
+    "UFBX_REAL_TYPE": 8,
 }
 
 sizes_32bit = {
     **sizes_base,
     "size_t": 4,
     "ptrdiff_t": 4,
+    "uintptr_t": 4,
     "*": 4,
 }
 
@@ -584,6 +586,7 @@ sizes_64bit = {
     **sizes_base,
     "size_t": 8,
     "ptrdiff_t": 8,
+    "uintptr_t": 8,
     "*": 8,
 }
 
@@ -702,6 +705,7 @@ prim_types = {
     "size_t",
     "float",
     "double",
+    "uintptr_t",
 }
 
 pod_types = {
@@ -741,6 +745,7 @@ pod_structs = [
     "ufbx_surface_point",
     "ufbx_topo_edge",
     "ufbx_coordinate_axes",
+    "ufbx_transform_override",
 ]
 
 input_structs = [
@@ -753,11 +758,16 @@ input_structs = [
     "ufbx_subdivide_opts",
     "ufbx_geometry_cache_opts",
     "ufbx_geometry_cache_data_opts",
+    "ufbx_anim_opts",
+    "ufbx_prop_override_desc",
+    "ufbx_bake_opts",
+    "ufbx_thread_opts",
 ]
 
 interface_structs = [
     "ufbx_allocator",
     "ufbx_stream",
+    "ufbx_thread_pool",
 ]
 
 union_prefer = {
@@ -794,7 +804,7 @@ member_functions = [
     MemberFunction(func="ufbx_get_compatible_matrix_for_normals", self_type="ufbx_node"),
     MemberFunction(func="ufbx_evaluate_curve", self_type="ufbx_anim_curve", member_name="evaluate"),
     MemberFunction(func="ufbx_evaluate_anim_value_real", self_type="ufbx_anim_value", member_name="evaluate_real"),
-    MemberFunction(func="ufbx_evaluate_anim_value_vec2", self_type="ufbx_anim_value", member_name="evaluate_vec2"),
+    # MemberFunction(func="ufbx_evaluate_anim_value_vec2", self_type="ufbx_anim_value", member_name="evaluate_vec2"),
     MemberFunction(func="ufbx_evaluate_anim_value_vec3", self_type="ufbx_anim_value", member_name="evaluate_vec3"),
     MemberFunction(func="ufbx_evaluate_transform", self_type="ufbx_node"),
     MemberFunction(func="ufbx_evaluate_blend_weight", self_type="ufbx_blend_channel"),
@@ -821,6 +831,8 @@ member_functions = [
     MemberFunction(func="ufbx_sample_geometry_cache_real", self_type="ufbx_cache_channel", member_name="sample_real"),
     MemberFunction(func="ufbx_read_geometry_cache_vec3", self_type="ufbx_cache_frame", member_name="read_vec3"),
     MemberFunction(func="ufbx_sample_geometry_cache_vec3", self_type="ufbx_cache_channel", member_name="sample_vec3"),
+    MemberFunction(func="ufbx_dom_find_len", self_type="ufbx_dom_node", member_name="find_len"),
+    MemberFunction(func="ufbx_dom_find", self_type="ufbx_dom_node", member_name="find"),
 ]
 
 member_globals = [
@@ -1035,19 +1047,25 @@ if __name__ == "__main__":
     file.functions["ufbx_tessellate_nurbs_surface"].alloc_type = "mesh"
     file.functions["ufbx_load_geometry_cache"].alloc_type = "geometryCache"
     file.functions["ufbx_load_geometry_cache_len"].alloc_type = "geometryCache"
+    file.functions["ufbx_create_anim"].alloc_type = "anim"
+    file.functions["ufbx_bake_anim"].alloc_type = "bakedAnim"
 
     file.functions["ufbx_free_scene"].kind = "free"
     file.functions["ufbx_free_mesh"].kind = "free"
     file.functions["ufbx_free_line_curve"].kind = "free"
     file.functions["ufbx_free_geometry_cache"].kind = "free"
+    file.functions["ufbx_free_anim"].kind = "free"
+    file.functions["ufbx_free_baked_anim"].kind = "free"
 
     file.functions["ufbx_retain_scene"].kind = "retain"
     file.functions["ufbx_retain_mesh"].kind = "retain"
     file.functions["ufbx_retain_line_curve"].kind = "retain"
     file.functions["ufbx_retain_geometry_cache"].kind = "retain"
+    file.functions["ufbx_retain_anim"].kind = "retain"
+    file.functions["ufbx_retain_baked_anim"].kind = "retain"
 
     file.functions["ufbx_triangulate_face"].return_array_scale = 3
-    file.functions["ufbx_ffi_triangulate_face"].return_array_scale = 3
+    # file.functions["ufbx_ffi_triangulate_face"].return_array_scale = 3
     file.functions["ufbx_read_geometry_cache_real"].return_array_scale = 1
     file.functions["ufbx_sample_geometry_cache_real"].return_array_scale = 1
     file.functions["ufbx_read_geometry_cache_vec3"].return_array_scale = 1

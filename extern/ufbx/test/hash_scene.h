@@ -347,9 +347,9 @@ ufbxt_noinline static void ufbxt_hash_dom_value_imp(ufbxt_hash *h, const ufbx_do
 	ufbxt_hash_string(h, v->value_str);
 	size_t count = (size_t)v->value_int;
 	if (v->type == UFBX_DOM_VALUE_ARRAY_RAW_STRING) {
-		const ufbx_string *vs = (const ufbx_string*)v->value_blob.data;
+		const ufbx_blob *vs = (const ufbx_blob*)v->value_blob.data;
 		for (size_t i = 0; i < count; i++) {
-			ufbxt_hash_string(h, vs[i]);
+			ufbxt_hash_blob(h, vs[i]);
 		}
 	} else if (v->type == UFBX_DOM_VALUE_ARRAY_F32) {
 		const float *vs = (const float*)v->value_blob.data;
@@ -421,26 +421,34 @@ ufbxt_noinline static void ufbxt_hash_node_imp(ufbxt_hash *h, const ufbx_node *v
 	ufbxt_hash_element_ref(h, v->bone);
 	ufbxt_hash_element_ref(h, v->attrib);
 	ufbxt_hash_element_ref(h, v->geometry_transform_helper);
+	ufbxt_hash_element_ref(h, v->scale_helper);
 	ufbxt_hash_pod(h, v->attrib_type);
 	ufbxt_hash_list(h, v->all_attribs, ufbxt_hash_element_ref_imp);
-	ufbxt_hash_pod(h, v->inherit_type);
+	ufbxt_hash_pod(h, v->inherit_mode);
+	ufbxt_hash_pod(h, v->original_inherit_mode);
 	ufbxt_hash_transform(h, v->local_transform);
 	ufbxt_hash_transform(h, v->geometry_transform);
+	ufbxt_hash_vec3(h, v->inherit_scale);
 	ufbxt_hash_pod(h, v->rotation_order);
 	ufbxt_hash_vec3(h, v->euler_rotation);
-	ufbxt_hash_transform(h, v->world_transform);
 	ufbxt_hash_matrix(h, v->node_to_parent);
 	ufbxt_hash_matrix(h, v->node_to_world);
 	ufbxt_hash_matrix(h, v->geometry_to_node);
 	ufbxt_hash_matrix(h, v->geometry_to_world);
+	ufbxt_hash_matrix(h, v->unscaled_node_to_world);
 	ufbxt_hash_quat(h, v->adjust_pre_rotation);
-	ufbxt_hash_vec3(h, v->adjust_pre_scale);
+	ufbxt_hash_real(h, v->adjust_pre_scale);
 	ufbxt_hash_quat(h, v->adjust_post_rotation);
+	ufbxt_hash_real(h, v->adjust_post_scale);
+	ufbxt_hash_real(h, v->adjust_mirror_axis);
 	ufbxt_hash_pod(h, v->visible);
 	ufbxt_hash_pod(h, v->is_root);
 	ufbxt_hash_pod(h, v->has_geometry_transform);
+	ufbxt_hash_pod(h, v->has_root_adjust_transform);
 	ufbxt_hash_pod(h, v->has_adjust_transform);
 	ufbxt_hash_pod(h, v->is_geometry_transform_helper);
+	ufbxt_hash_pod(h, v->is_scale_helper);
+	ufbxt_hash_pod(h, v->is_scale_compensate_parent);
 	ufbxt_hash_pod(h, v->node_depth);
 	ufbxt_hash_list(h, v->materials, ufbxt_hash_element_ref_imp);
 }
@@ -452,6 +460,7 @@ ufbxt_noinline static void ufbxt_hash_vertex_real_imp(ufbxt_hash *h, const ufbx_
 	ufbxt_hash_list(h, v->indices, ufbxt_hash_pod_imp);
 	ufbxt_hash_size_t(h, v->value_reals);
 	ufbxt_hash_pod(h, v->unique_per_vertex);
+	ufbxt_hash_list(h, v->values_w, ufbxt_hash_real_imp);
 }
 
 ufbxt_noinline static void ufbxt_hash_vertex_vec2_imp(ufbxt_hash *h, const ufbx_vertex_vec2 *v)
@@ -461,6 +470,7 @@ ufbxt_noinline static void ufbxt_hash_vertex_vec2_imp(ufbxt_hash *h, const ufbx_
 	ufbxt_hash_list(h, v->indices, ufbxt_hash_pod_imp);
 	ufbxt_hash_size_t(h, v->value_reals);
 	ufbxt_hash_pod(h, v->unique_per_vertex);
+	ufbxt_hash_list(h, v->values_w, ufbxt_hash_real_imp);
 }
 
 ufbxt_noinline static void ufbxt_hash_vertex_vec3_imp(ufbxt_hash *h, const ufbx_vertex_vec3 *v)
@@ -470,6 +480,7 @@ ufbxt_noinline static void ufbxt_hash_vertex_vec3_imp(ufbxt_hash *h, const ufbx_
 	ufbxt_hash_list(h, v->indices, ufbxt_hash_pod_imp);
 	ufbxt_hash_size_t(h, v->value_reals);
 	ufbxt_hash_pod(h, v->unique_per_vertex);
+	ufbxt_hash_list(h, v->values_w, ufbxt_hash_real_imp);
 }
 
 ufbxt_noinline static void ufbxt_hash_vertex_vec4_imp(ufbxt_hash *h, const ufbx_vertex_vec4 *v)
@@ -479,6 +490,7 @@ ufbxt_noinline static void ufbxt_hash_vertex_vec4_imp(ufbxt_hash *h, const ufbx_
 	ufbxt_hash_list(h, v->indices, ufbxt_hash_pod);
 	ufbxt_hash_size_t(h, v->value_reals);
 	ufbxt_hash_pod(h, v->unique_per_vertex);
+	ufbxt_hash_list(h, v->values_w, ufbxt_hash_real_imp);
 }
 
 #define ufbxt_hash_vertex_real(h, v) (ufbxt_push_tag(h, #v), ufbxt_hash_vertex_real_imp(h, v), ufbxt_pop_tag(h))
@@ -502,9 +514,9 @@ ufbxt_noinline static void ufbxt_hash_color_set_imp(ufbxt_hash *h, const ufbx_co
 	ufbxt_hash_vertex_vec4(h, &v->vertex_color);
 }
 
-ufbxt_noinline static void ufbxt_hash_mesh_material_imp(ufbxt_hash *h, const ufbx_mesh_material *v)
+ufbxt_noinline static void ufbxt_hash_mesh_part_imp(ufbxt_hash *h, const ufbx_mesh_part *v)
 {
-	ufbxt_hash_element_ref(h, v->material);
+	ufbxt_hash_pod(h, v->index);
 	ufbxt_hash_size_t(h, v->num_faces);
 	ufbxt_hash_size_t(h, v->num_triangles);
 	ufbxt_hash_size_t(h, v->num_empty_faces);
@@ -517,9 +529,6 @@ ufbxt_noinline static void ufbxt_hash_face_group_imp(ufbxt_hash *h, const ufbx_f
 {
 	ufbxt_hash_pod(h, v->id);
 	ufbxt_hash_string(h, v->name);
-	ufbxt_hash_size_t(h, v->num_faces);
-	ufbxt_hash_size_t(h, v->num_triangles);
-	ufbxt_hash_list(h, v->face_indices, ufbxt_hash_pod_imp);
 }
 
 ufbxt_noinline static void ufbxt_hash_subdivision_weight_range_imp(ufbxt_hash *h, ufbx_subdivision_weight_range v)
@@ -594,8 +603,11 @@ ufbxt_noinline static void ufbxt_hash_mesh_imp(ufbxt_hash *h, const ufbx_mesh *v
 	ufbxt_hash_list_ptr(h, v->uv_sets, ufbxt_hash_uv_set_imp);
 	ufbxt_hash_list_ptr(h, v->color_sets, ufbxt_hash_color_set_imp);
 
-	ufbxt_hash_list_ptr(h, v->materials, ufbxt_hash_mesh_material_imp);
+	ufbxt_hash_list(h, v->materials, ufbxt_hash_element_ref_imp);
 	ufbxt_hash_list_ptr(h, v->face_groups, ufbxt_hash_face_group_imp);
+
+	ufbxt_hash_list_ptr(h, v->material_parts, ufbxt_hash_mesh_part_imp);
+	ufbxt_hash_list_ptr(h, v->face_group_parts, ufbxt_hash_mesh_part_imp);
 
 	ufbxt_hash_pod(h, v->skinned_is_local);
 	ufbxt_hash_vertex_vec3(h, &v->skinned_position);
@@ -1012,18 +1024,32 @@ ufbxt_noinline static void ufbxt_hash_shader_binding_imp(ufbxt_hash *h, const uf
 	ufbxt_hash_list(h, v->prop_bindings, ufbxt_hash_shader_prop_binding_imp);
 }
 
-ufbxt_noinline static void ufbxt_hash_anim_layer_desc_imp(ufbxt_hash *h, ufbx_anim_layer_desc v)
+ufbxt_noinline static void ufbxt_hash_prop_override_imp(ufbxt_hash *h, const ufbx_prop_override *v)
 {
-	ufbxt_hash_element_ref(h, v.layer);
-	ufbxt_hash_real(h, v.weight);
+	ufbxt_hash_pod(h, v->element_id);
+	ufbxt_hash_pod(h, v->_internal_key);
+	ufbxt_hash_string(h, v->prop_name);
+	ufbxt_hash_vec4(h, v->value);
+	ufbxt_hash_string(h, v->value_str);
+	ufbxt_hash_pod(h, v->value_int);
+}
+
+ufbxt_noinline static void ufbxt_hash_transform_override_imp(ufbxt_hash *h, const ufbx_transform_override *v)
+{
+	ufbxt_hash_pod(h, v->node_id);
+	ufbxt_hash_transform(h, v->transform);
 }
 
 ufbxt_noinline static void ufbxt_hash_anim_imp(ufbxt_hash *h, const ufbx_anim *v)
 {
-	ufbxt_hash_list(h, v->layers, ufbxt_hash_anim_layer_desc_imp);
-	ufbxt_hash_pod(h, v->ignore_connections);
 	ufbxt_hash_double(h, v->time_begin);
 	ufbxt_hash_double(h, v->time_end);
+	ufbxt_hash_list(h, v->layers, ufbxt_hash_element_ref_imp);
+	ufbxt_hash_list(h, v->override_layer_weights, ufbxt_hash_pod_imp);
+	ufbxt_hash_list_ptr(h, v->prop_overrides, ufbxt_hash_prop_override_imp);
+	ufbxt_hash_list_ptr(h, v->transform_overrides, ufbxt_hash_transform_override_imp);
+	ufbxt_hash_pod(h, v->ignore_connections);
+	ufbxt_hash_pod(h, v->custom);
 }
 
 #define ufbxt_hash_anim(h, v) (ufbxt_push_tag(h, #v), ufbxt_hash_anim_imp(h, v), ufbxt_pop_tag(h))
@@ -1034,7 +1060,7 @@ ufbxt_noinline static void ufbxt_hash_anim_stack_imp(ufbxt_hash *h, const ufbx_a
 	ufbxt_hash_double(h, v->time_end);
 
 	ufbxt_hash_list(h, v->layers, ufbxt_hash_element_ref_imp);
-	ufbxt_hash_anim(h, &v->anim);
+	ufbxt_hash_anim(h, v->anim);
 }
 
 ufbxt_noinline static void ufbxt_hash_anim_prop_imp(ufbxt_hash *h, const ufbx_anim_prop *v)
@@ -1057,7 +1083,7 @@ ufbxt_noinline static void ufbxt_hash_anim_layer_imp(ufbxt_hash *h, const ufbx_a
 	ufbxt_hash_list(h, v->anim_values, ufbxt_hash_element_ref_imp);
 	ufbxt_hash_list_ptr(h, v->anim_props, ufbxt_hash_anim_prop_imp);
 
-	ufbxt_hash_anim(h, &v->anim);
+	ufbxt_hash_anim(h, v->anim);
 
 	ufbxt_hash_pod(h, v->_min_element_id);
 	ufbxt_hash_pod(h, v->_max_element_id);
@@ -1093,6 +1119,8 @@ ufbxt_noinline static void ufbxt_hash_keyframe_imp(ufbxt_hash *h, const ufbx_key
 ufbxt_noinline static void ufbxt_hash_anim_curve_imp(ufbxt_hash *h, const ufbx_anim_curve *v)
 {
 	ufbxt_hash_list_ptr(h, v->keyframes, ufbxt_hash_keyframe_imp);
+	ufbxt_hash_real(h, v->min_value);
+	ufbxt_hash_real(h, v->max_value);
 }
 
 ufbxt_noinline static void ufbxt_hash_display_layer_imp(ufbxt_hash *h, const ufbx_display_layer *v)
@@ -1155,6 +1183,20 @@ ufbxt_noinline static void ufbxt_hash_constraint_imp(ufbxt_hash *h, const ufbx_c
 	ufbxt_hash_vec3(h, v->ik_pole_vector);
 }
 
+ufbxt_noinline static void ufbxt_hash_audio_layer_imp(ufbxt_hash *h, const ufbx_audio_layer *v)
+{
+	ufbxt_hash_list(h, v->clips, ufbxt_hash_element_ref_imp);
+}
+
+ufbxt_noinline static void ufbxt_hash_audio_clip_imp(ufbxt_hash *h, const ufbx_audio_clip *v)
+{
+	ufbxt_hash_string(h, v->absolute_filename);
+	ufbxt_hash_string(h, v->relative_filename);
+	ufbxt_hash_blob(h, v->raw_absolute_filename);
+	ufbxt_hash_blob(h, v->raw_relative_filename);
+	ufbxt_hash_blob(h, v->content);
+}
+
 ufbxt_noinline static void ufbxt_hash_bone_pose_imp(ufbxt_hash *h, const ufbx_bone_pose *v)
 {
 	ufbxt_hash_element_ref(h, v->bone_node);
@@ -1163,7 +1205,7 @@ ufbxt_noinline static void ufbxt_hash_bone_pose_imp(ufbxt_hash *h, const ufbx_bo
 
 ufbxt_noinline static void ufbxt_hash_pose_imp(ufbxt_hash *h, const ufbx_pose *v)
 {
-	ufbxt_hash_pod(h, v->bind_pose);
+	ufbxt_hash_pod(h, v->is_bind_pose);
 	ufbxt_hash_list_ptr(h, v->bone_poses, ufbxt_hash_bone_pose_imp);
 }
 
@@ -1198,13 +1240,6 @@ ufbxt_noinline static void ufbxt_hash_application_imp(ufbxt_hash *h, const ufbx_
 
 #define ufbxt_hash_application(h, v) (ufbxt_push_tag(h, #v), ufbxt_hash_application_imp(h, v), ufbxt_pop_tag(h))
 
-ufbxt_noinline static void ufbxt_hash_warning_imp(ufbxt_hash *h, const ufbx_warning *v)
-{
-	ufbxt_hash_pod(h, v->type);
-	ufbxt_hash_size_t(h, v->count);
-	// `v->description` omitted as it contains path-specific string
-}
-
 ufbxt_noinline static void ufbxt_hash_metadata_imp(ufbxt_hash *h, const ufbx_metadata *v)
 {
 	ufbxt_hash_pod(h, v->ascii);
@@ -1217,7 +1252,7 @@ ufbxt_noinline static void ufbxt_hash_metadata_imp(ufbxt_hash *h, const ufbx_met
 	ufbxt_hash_props(h, &v->scene_props);
 	ufbxt_hash_application(h, &v->original_application);
 	ufbxt_hash_application(h, &v->latest_application);
-	ufbxt_hash_list_ptr(h, v->warnings, ufbxt_hash_warning_imp);
+	ufbxt_hash_array(h, v->has_warning, ufbxt_hash_pod_imp);
 }
 
 #define ufbxt_hash_metadata(h, v) (ufbxt_push_tag(h, #v), ufbxt_hash_metadata_imp(h, v), ufbxt_pop_tag(h))
@@ -1252,8 +1287,7 @@ ufbxt_noinline static void ufbxt_hash_scene_imp(ufbxt_hash *h, const ufbx_scene 
 	ufbxt_hash_metadata(h, &v->metadata);
 	ufbxt_hash_scene_settings(h, &v->settings);
 	ufbxt_hash_element_ref(h, v->root_node);
-	ufbxt_hash_anim(h, &v->anim);
-	ufbxt_hash_anim(h, &v->combined_anim);
+	ufbxt_hash_anim(h, v->anim);
 
 	ufbxt_hash_list(h, v->elements, ufbxt_hash_element_imp);
 
@@ -1295,6 +1329,8 @@ ufbxt_noinline static void ufbxt_hash_scene_imp(ufbxt_hash *h, const ufbx_scene 
 	ufbxt_hash_list(h, v->selection_nodes, ufbxt_hash_selection_node_imp);
 	ufbxt_hash_list(h, v->characters, ufbxt_hash_character_imp);
 	ufbxt_hash_list(h, v->constraints, ufbxt_hash_constraint_imp);
+	ufbxt_hash_list(h, v->audio_layers, ufbxt_hash_audio_layer_imp);
+	ufbxt_hash_list(h, v->audio_clips, ufbxt_hash_audio_clip_imp);
 	ufbxt_hash_list(h, v->poses, ufbxt_hash_pose_imp);
 	ufbxt_hash_list(h, v->metadata_objects, ufbxt_hash_metadata_object_imp);
 

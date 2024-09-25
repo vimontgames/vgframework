@@ -136,6 +136,50 @@ UFBXT_FILE_TEST(maya_color_sets)
 }
 #endif
 
+#if UFBXT_IMPL
+static ufbx_load_opts ufbxt_flip_winding_opts()
+{
+	ufbx_load_opts opts = { 0 };
+	opts.reverse_winding = true;
+	return opts;
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS_ALT_FLAGS(maya_color_sets_winding, maya_color_sets, ufbxt_flip_winding_opts, UFBXT_FILE_TEST_FLAG_FUZZ_ALWAYS|UFBXT_FILE_TEST_FLAG_FUZZ_OPTS)
+#if UFBXT_IMPL
+{
+	ufbx_node *node = ufbx_find_node(scene, "pCube1");
+	ufbxt_assert(node && node->mesh);
+	ufbx_mesh *mesh = node->mesh;
+
+	ufbxt_assert(mesh->color_sets.count == 4);
+	ufbxt_assert(!strcmp(mesh->color_sets.data[0].name.data, "RGBCube"));
+	ufbxt_assert(!strcmp(mesh->color_sets.data[1].name.data, "White"));
+	ufbxt_assert(!strcmp(mesh->color_sets.data[2].name.data, "Black"));
+	ufbxt_assert(!strcmp(mesh->color_sets.data[3].name.data, "Alpha"));
+
+	for (size_t i = 0; i < mesh->num_indices; i++) {
+		ufbx_vec3 pos = ufbx_get_vertex_vec3(&mesh->vertex_position, i);
+		ufbx_vec4 refs[4] = {
+			{ 0.0, 0.0, 0.0, 1.0 },
+			{ 1.0, 1.0, 1.0, 1.0 },
+			{ 0.0, 0.0, 0.0, 1.0 },
+			{ 1.0, 1.0, 1.0, 0.0 },
+		};
+
+		refs[0].x = pos.x + 0.5f;
+		refs[0].y = pos.y + 0.5f;
+		refs[0].z = pos.z + 0.5f;
+		refs[3].w = (pos.x + 0.5f) * 0.1f + (pos.y + 0.5f) * 0.2f + (pos.z + 0.5f) * 0.4f;
+
+		for (size_t set_i = 0; set_i < 4; set_i++) {
+			ufbx_vec4 color = ufbx_get_vertex_vec4(&mesh->color_sets.data[set_i].vertex_color, i);
+			ufbxt_assert_close_vec4(err, color, refs[set_i]);
+		}
+	}
+}
+#endif
+
 UFBXT_FILE_TEST(maya_uv_sets)
 #if UFBXT_IMPL
 {
@@ -424,8 +468,8 @@ UFBXT_FILE_TEST(blender_279_ball)
 	ufbxt_assert(mesh->face_smoothing.count);
 
 	ufbxt_assert(mesh->materials.count == 2);
-	ufbxt_assert(mesh->materials.data[0].material == red);
-	ufbxt_assert(mesh->materials.data[1].material == white);
+	ufbxt_assert(mesh->materials.data[0] == red);
+	ufbxt_assert(mesh->materials.data[1] == white);
 
 	for (size_t face_i = 0; face_i < mesh->num_faces; face_i++) {
 		ufbx_face face = mesh->faces.data[face_i];
@@ -607,7 +651,7 @@ UFBXT_FILE_TEST(synthetic_indexed_by_vertex)
 UFBXT_FILE_TEST(synthetic_by_vertex_bad_index)
 #if UFBXT_IMPL
 {
-	ufbxt_check_warning(scene, UFBX_WARNING_INDEX_CLAMPED, 9, NULL);
+	ufbxt_check_warning(scene, UFBX_WARNING_INDEX_CLAMPED, UFBX_ELEMENT_MESH, "#pCube1", 9, NULL);
 
 	ufbxt_assert(scene->meshes.count == 1);
 	ufbx_mesh *mesh = scene->meshes.data[0];
@@ -632,7 +676,7 @@ UFBXT_FILE_TEST(synthetic_by_vertex_bad_index)
 UFBXT_FILE_TEST(synthetic_by_vertex_overflow)
 #if UFBXT_IMPL
 {
-	ufbxt_check_warning(scene, UFBX_WARNING_INDEX_CLAMPED, 12, NULL);
+	ufbxt_check_warning(scene, UFBX_WARNING_INDEX_CLAMPED, UFBX_ELEMENT_MESH, "#pCube1", 12, NULL);
 
 	ufbxt_assert(scene->meshes.count == 1);
 	ufbx_mesh *mesh = scene->meshes.data[0];
@@ -725,7 +769,7 @@ static ufbx_load_opts ufbxt_generate_normals_opts()
 }
 #endif
 
-UFBXT_FILE_TEST_OPTS_ALT(synthetic_missing_normals_generated, synthetic_missing_normals, ufbxt_generate_normals_opts)
+UFBXT_FILE_TEST_OPTS_ALT_FLAGS(synthetic_missing_normals_generated, synthetic_missing_normals, ufbxt_generate_normals_opts, UFBXT_FILE_TEST_FLAG_FUZZ_ALWAYS|UFBXT_FILE_TEST_FLAG_FUZZ_OPTS)
 #if UFBXT_IMPL
 {
 	ufbx_node *node = ufbx_find_node(scene, "pCube1");
@@ -784,7 +828,7 @@ UFBXT_FILE_TEST(max_edge_visibility)
 			ufbxt_assert(num_visible == 12);
 		}
 
-		ufbx_mesh *sub_mesh = ufbx_subdivide_mesh(mesh, 2, NULL, NULL);
+		ufbx_mesh *sub_mesh = ufbxt_subdivide_mesh(mesh, 2, NULL, NULL);
 		ufbxt_assert(sub_mesh);
 		ufbxt_check_mesh(scene, sub_mesh);
 
@@ -873,16 +917,23 @@ UFBXT_FILE_TEST(zbrush_d20)
 
 		// WHAT? The 6100 version has duplicated blend shapes
 		// and 7500 has duplicated blend deformers...
+		// After e8cab0f ufbx ignores duplicated connections so we see only
+		// a single blend deformer here..
 		if (scene->metadata.version == 6100) {
 			ufbxt_assert(mesh->blend_deformers.count == 1);
 			ufbxt_assert(blend->channels.count == 4);
 		} else {
-			ufbxt_assert(mesh->blend_deformers.count == 2);
+			ufbxt_assert(mesh->blend_deformers.count == 1);
 			ufbxt_assert(blend->channels.count == 2);
+
+			ufbx_blend_deformer *blend_deformer = mesh->blend_deformers.data[0];
+			char warning_substring[128];
+			snprintf(warning_substring, sizeof(warning_substring), "to %u", mesh->element_id);
+			ufbxt_check_warning_imp(scene, UFBX_WARNING_DUPLICATE_CONNECTION, blend_deformer->element_id, 1, warning_substring);
 		}
 
 		// Check that poly groups work in subdivision
-		ufbx_mesh *sub_mesh = ufbx_subdivide_mesh(mesh, 2, NULL, NULL);
+		ufbx_mesh *sub_mesh = ufbxt_subdivide_mesh(mesh, 2, NULL, NULL);
 		ufbxt_assert(sub_mesh);
 		ufbxt_check_mesh(scene, sub_mesh);
 
@@ -969,7 +1020,7 @@ UFBXT_FILE_TEST(maya_polygon_hole)
 		ufbxt_assert(num_holes == 2);
 	}
 
-	ufbx_mesh *sub_mesh = ufbx_subdivide_mesh(mesh, 2, NULL, NULL);
+	ufbx_mesh *sub_mesh = ufbxt_subdivide_mesh(mesh, 2, NULL, NULL);
 	ufbxt_assert(sub_mesh);
 	ufbxt_check_mesh(scene, sub_mesh);
 
@@ -1011,7 +1062,7 @@ UFBXT_FILE_TEST_OPTS(synthetic_cursed_geometry, ufbxt_generate_normals_opts)
 		ufbxt_assert(num_tris == 0 || num_tris == face.num_indices - 2);
 	}
 
-	ufbx_mesh *sub_mesh = ufbx_subdivide_mesh(mesh, 2, NULL, NULL);
+	ufbx_mesh *sub_mesh = ufbxt_subdivide_mesh(mesh, 2, NULL, NULL);
 	ufbx_free_mesh(sub_mesh);
 }
 #endif
@@ -1083,9 +1134,9 @@ UFBXT_FILE_TEST(zbrush_polygroup_mess)
 
 	ufbxt_assert(mesh->face_groups.count == 2029);
 	for (size_t i = 0; i < mesh->face_groups.count; i++) {
-		ufbx_face_group *group = &mesh->face_groups.data[i];
-		ufbxt_assert(group->num_faces < ufbxt_arraycount(groups_per_face_count));
-		groups_per_face_count[group->num_faces]++;
+		ufbx_mesh_part *part = &mesh->face_group_parts.data[i];
+		ufbxt_assert(part->num_faces < ufbxt_arraycount(groups_per_face_count));
+		groups_per_face_count[part->num_faces]++;
 	}
 
 	for (size_t i = 0; i < ufbxt_arraycount(groups_per_face_count_ref); i++) {
@@ -1136,8 +1187,9 @@ UFBXT_FILE_TEST(synthetic_face_group_id)
 		ufbxt_hintf("i = %zu", i);
 		ufbxt_assert(i < mesh->face_groups.count);
 		ufbx_face_group *group = &mesh->face_groups.data[i];
+		ufbx_mesh_part *part = &mesh->face_group_parts.data[i];
 		ufbxt_assert(group->id == ref_groups[i].id);
-		ufbxt_assert(group->num_faces == ref_groups[i].face_count);
+		ufbxt_assert(part->num_faces == ref_groups[i].face_count);
 	}
 }
 #endif
@@ -1154,15 +1206,15 @@ UFBXT_FILE_TEST(blender_279_empty_cube)
 	ufbxt_assert(mesh->num_vertices == 0);
 
 	ufbxt_assert(mesh->materials.count == 1);
-	ufbxt_assert(mesh->materials.data[0].material);
-	ufbxt_assert(mesh->materials.data[0].num_faces == 0);
+	ufbxt_assert(mesh->materials.data[0]);
+	ufbxt_assert(mesh->material_parts.data[0].num_faces == 0);
 }
 #endif
 
 UFBXT_FILE_TEST(synthetic_truncated_crease_partial)
 #if UFBXT_IMPL
 {
-	ufbxt_check_warning(scene, UFBX_WARNING_TRUNCATED_ARRAY, 1, "Truncated array: EdgeCrease");
+	ufbxt_check_warning(scene, UFBX_WARNING_TRUNCATED_ARRAY, UFBX_ELEMENT_MESH, "#pPlane1", 1, "Truncated array: EdgeCrease");
 
 	ufbx_node *node = ufbx_find_node(scene, "pPlane1");
 	ufbxt_assert(node && node->mesh);
@@ -1178,7 +1230,7 @@ UFBXT_FILE_TEST(synthetic_truncated_crease_partial)
 UFBXT_FILE_TEST(synthetic_truncated_crease_full)
 #if UFBXT_IMPL
 {
-	ufbxt_check_warning(scene, UFBX_WARNING_TRUNCATED_ARRAY, 1, "Truncated array: EdgeCrease");
+	ufbxt_check_warning(scene, UFBX_WARNING_TRUNCATED_ARRAY, UFBX_ELEMENT_MESH, "#pPlane1", 1, "Truncated array: EdgeCrease");
 
 	ufbx_node *node = ufbx_find_node(scene, "pPlane1");
 	ufbxt_assert(node && node->mesh);
@@ -1188,5 +1240,511 @@ UFBXT_FILE_TEST(synthetic_truncated_crease_full)
 	ufbxt_assert_close_real(err, mesh->edge_crease.data[1], 0.0f);
 	ufbxt_assert_close_real(err, mesh->edge_crease.data[2], 0.0f);
 	ufbxt_assert_close_real(err, mesh->edge_crease.data[3], 0.0f);
+}
+#endif
+
+UFBXT_FILE_TEST_FLAGS(motionbuilder_smoothing, UFBXT_FILE_TEST_FLAG_ALLOW_INVALID_UNICODE)
+#if UFBXT_IMPL
+{
+	ufbxt_check_warning(scene, UFBX_WARNING_MISSING_GEOMETRY_DATA, UFBX_ELEMENT_MESH, "#pCube1", 1, "Missing geometry data: Smoothing");
+
+	ufbx_node *node = ufbx_find_node(scene, "pCube1");
+	ufbxt_assert(node && node->mesh);
+	ufbx_mesh *mesh = node->mesh;
+
+	ufbxt_assert(mesh->edge_smoothing.count == 0);
+}
+#endif
+
+#if UFBXT_IMPL 
+static ufbx_load_opts ufbxt_skip_mesh_parts_opts()
+{
+	ufbx_load_opts opts = { 0 };
+	opts.skip_mesh_parts = true;
+	return opts;
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS_ALT(maya_cube_skip_mesh_parts, maya_cube, ufbxt_skip_mesh_parts_opts)
+#if UFBXT_IMPL 
+{
+	ufbx_node *node = ufbx_find_node(scene, "pCube1");
+	ufbxt_assert(node && node->mesh);
+	ufbx_mesh *mesh = node->mesh;
+	ufbxt_assert(mesh->materials.count == 1);
+	ufbxt_assert(mesh->material_parts.count == 0);
+	ufbxt_assert(mesh->face_groups.count == 0);
+	ufbxt_assert(mesh->face_group_parts.count == 0);
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS_ALT(synthetic_face_group_id_skip_mesh_parts, synthetic_face_group_id, ufbxt_skip_mesh_parts_opts)
+#if UFBXT_IMPL 
+{
+	ufbx_node *node = ufbx_find_node(scene, "20 Sided");
+	ufbxt_assert(node && node->mesh);
+	ufbx_mesh *mesh = node->mesh;
+	ufbxt_assert(mesh->materials.count == 1);
+	ufbxt_assert(mesh->material_parts.count == 0);
+	ufbxt_assert(mesh->face_groups.count == 14);
+	ufbxt_assert(mesh->face_group_parts.count == 0);
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS_ALT(synthetic_face_groups_skip_mesh_parts, synthetic_face_groups, ufbxt_skip_mesh_parts_opts)
+#if UFBXT_IMPL
+{
+	ufbx_node *node = ufbx_find_node(scene, "Cube");
+	ufbxt_assert(node && node->mesh);
+	ufbx_mesh *mesh = node->mesh;
+	ufbxt_assert(mesh->materials.count == 2);
+	ufbxt_assert(mesh->material_parts.count == 0);
+	ufbxt_assert(mesh->face_groups.count == 4);
+	ufbxt_assert(mesh->face_group_parts.count == 0);
+}
+#endif
+
+#if UFBXT_IMPL
+static ufbx_load_opts ufbxt_cm_y_up_opts()
+{
+	ufbx_load_opts opts = { 0 };
+	opts.target_unit_meters = (ufbx_real)0.01;
+	opts.target_axes = ufbx_axes_right_handed_y_up;
+	return opts;
+}
+static ufbx_load_opts ufbxt_cm_y_up_abort_opts()
+{
+	ufbx_load_opts opts = { 0 };
+	opts.target_unit_meters = (ufbx_real)0.01;
+	opts.target_axes = ufbx_axes_right_handed_y_up;
+	opts.index_error_handling = UFBX_INDEX_ERROR_HANDLING_ABORT_LOADING;
+	return opts;
+}
+#endif
+
+#if UFBXT_IMPL
+static ufbx_metadata_object *ufbxt_find_metadata_object(ufbx_element *element)
+{
+	for (size_t i = 0; i < element->connections_dst.count; i++) {
+		ufbx_connection *conn = &element->connections_dst.data[i];
+		if (conn->src_prop.length != 0 || conn->dst_prop.length != 0) continue;
+		if (conn->src->type == UFBX_ELEMENT_METADATA_OBJECT) {
+			return ufbx_as_metadata_object(conn->src);
+		}
+	}
+	return NULL;
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS(revit_wall_square, ufbxt_cm_y_up_opts)
+#if UFBXT_IMPL
+{
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS_ALT(revit_wall_square_abort, revit_wall_square, ufbxt_cm_y_up_abort_opts)
+#if UFBXT_IMPL
+{
+}
+#endif
+
+UFBXT_FILE_TEST(synthetic_direct_by_polygon)
+#if UFBXT_IMPL
+{
+	ufbx_node *node = ufbx_find_node(scene, "pPlane1");
+	ufbxt_assert(node);
+
+	ufbx_mesh *mesh = node->mesh;
+	ufbxt_assert(mesh);
+
+	ufbxt_assert(mesh->faces.count == 2);
+	ufbxt_assert(!mesh->vertex_normal.unique_per_vertex);
+	ufbxt_assert(mesh->vertex_normal.values.count == 2);
+
+	ufbx_vec3 ref_normals[] = {
+		{ -0.707106769f, 0.707106769f, 0.0f },
+		{ 0.707106769f, 0.707106769f, 0.0f },
+	};
+	for (size_t face_ix = 0; face_ix < mesh->faces.count; face_ix++) {
+		ufbx_face face = mesh->faces.data[face_ix];
+		for (size_t i = 0; i < face.num_indices; i++) {
+			ufbx_vec3 normal = ufbx_get_vertex_vec3(&mesh->vertex_normal, face.index_begin + i);
+			ufbxt_assert_close_vec3(err, normal, ref_normals[face_ix]);
+		}
+	}
+}
+#endif
+
+UFBXT_FILE_TEST_FLAGS(blender_292_circle, UFBXT_FILE_TEST_FLAG_ALLOW_STRICT_ERROR)
+#if UFBXT_IMPL
+{
+	ufbx_node *node = ufbx_find_node(scene, "Circle");
+	ufbxt_assert(node);
+	ufbxt_assert(node->mesh);
+	ufbx_mesh *mesh = node->mesh;
+	ufbxt_assert(mesh->num_vertices == 8);
+
+	for (size_t i = 0; i < mesh->num_vertices; i++) {
+		ufbxt_assert(mesh->vertex_first_index.data[i] == UFBX_NO_INDEX);
+	}
+}
+#endif
+
+#if UFBXT_IMPL
+static ufbx_load_opts ufbxt_retain_vertex_w_opts()
+{
+	ufbx_load_opts opts = { 0 };
+	opts.retain_vertex_attrib_w = true;
+	return opts;
+}
+#endif
+
+#if UFBXT_IMPL
+static void ufbxt_check_tangent_sign(ufbx_mesh *mesh, ufbx_real ref_sign)
+{
+	if (mesh->element.scene->metadata.version < 7000) {
+		ufbxt_assert(mesh->vertex_normal.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_tangent.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_bitangent.values_w.count == 0);
+		return;
+	}
+
+	for (size_t ix = 0; ix < mesh->num_indices; ix++) {
+		ufbx_vec3 normal = ufbx_get_vertex_vec3(&mesh->vertex_normal, ix);
+		ufbx_vec3 tangent = ufbx_get_vertex_vec3(&mesh->vertex_tangent, ix);
+		ufbx_vec3 bitangent = ufbx_get_vertex_vec3(&mesh->vertex_bitangent, ix);
+
+		ufbx_vec3 b = ufbxt_cross3(normal, tangent);
+		ufbx_real dot = ufbxt_dot3(bitangent, b);
+		ufbx_real sign = dot > 0.0f ? 1.0f : -1.0f;
+
+		ufbx_real tangent_w = ufbx_get_vertex_w_vec3(&mesh->vertex_tangent, ix);
+		ufbxt_assert(tangent_w == sign);
+		if (ref_sign != 0.0f) {
+			ufbxt_assert(sign == ref_sign);
+		}
+	}
+}
+static void ufbxt_check_tangent_sign_set(ufbx_mesh *mesh, ufbx_uv_set *set, ufbx_real ref_sign)
+{
+	if (mesh->element.scene->metadata.version < 7000) {
+		ufbxt_assert(mesh->vertex_normal.values_w.count == 0);
+		ufbxt_assert(set->vertex_tangent.values_w.count == 0);
+		ufbxt_assert(set->vertex_bitangent.values_w.count == 0);
+		return;
+	}
+
+	for (size_t ix = 0; ix < mesh->num_indices; ix++) {
+		ufbx_vec3 normal = ufbx_get_vertex_vec3(&mesh->vertex_normal, ix);
+		ufbx_vec3 tangent = ufbx_get_vertex_vec3(&set->vertex_tangent, ix);
+		ufbx_vec3 bitangent = ufbx_get_vertex_vec3(&set->vertex_bitangent, ix);
+
+		ufbx_vec3 b = ufbxt_cross3(normal, tangent);
+		ufbx_real dot = ufbxt_dot3(bitangent, b);
+		ufbx_real sign = dot > 0.0f ? 1.0f : -1.0f;
+
+		ufbx_real tangent_w = ufbx_get_vertex_w_vec3(&set->vertex_tangent, ix);
+		ufbxt_assert(tangent_w == sign);
+		if (ref_sign != 0.0f) {
+			ufbxt_assert(sign == ref_sign);
+		}
+	}
+}
+static void ufbxt_check_vertex_w(ufbx_mesh *mesh, ufbx_vertex_vec3 *attrib, ufbx_real ref)
+{
+	if (mesh->element.scene->metadata.version < 7000) {
+		ufbxt_assert(attrib->values_w.count == 0);
+		return;
+	}
+
+	for (size_t ix = 0; ix < mesh->num_indices; ix++) {
+		ufbx_real value_w = ufbx_get_vertex_w_vec3(attrib, ix);
+		ufbxt_assert(value_w == ref);
+	}
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS_FLAGS(maya_tangent_sign, ufbxt_retain_vertex_w_opts, UFBXT_FILE_TEST_FLAG_FUZZ_ALWAYS|UFBXT_FILE_TEST_FLAG_FUZZ_OPTS)
+#if UFBXT_IMPL
+{
+	{
+		ufbx_node *node = ufbx_find_node(scene, "Positive");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_check_tangent_sign(mesh, 1.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_normal, 1.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_bitangent, 1.0f);
+	}
+
+	{
+		ufbx_node *node = ufbx_find_node(scene, "FlipX");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_check_tangent_sign(mesh, -1.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_normal, 1.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_bitangent, 1.0f);
+	}
+
+	{
+		ufbx_node *node = ufbx_find_node(scene, "FlipY");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_check_tangent_sign(mesh, -1.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_normal, 1.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_bitangent, 1.0f);
+	}
+
+	{
+		ufbx_node *node = ufbx_find_node(scene, "FlipBoth");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_check_tangent_sign(mesh, 1.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_normal, 1.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_bitangent, 1.0f);
+	}
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS(max_tangent_sign, ufbxt_retain_vertex_w_opts)
+#if UFBXT_IMPL
+{
+	{
+		ufbx_node *node = ufbx_find_node(scene, "Positive");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_check_tangent_sign(mesh, 1.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_normal, 0.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_bitangent, 1.0f);
+	}
+
+	{
+		ufbx_node *node = ufbx_find_node(scene, "FlipX");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_check_tangent_sign(mesh, -1.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_normal, 0.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_bitangent, 1.0f);
+	}
+
+	{
+		ufbx_node *node = ufbx_find_node(scene, "FlipY");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_check_tangent_sign(mesh, -1.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_normal, 0.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_bitangent, 1.0f);
+	}
+
+	{
+		ufbx_node *node = ufbx_find_node(scene, "FlipBoth");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_check_tangent_sign(mesh, 1.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_normal, 0.0f);
+		ufbxt_check_vertex_w(mesh, &mesh->vertex_bitangent, 1.0f);
+	}
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS(blender340_tangent_sign, ufbxt_retain_vertex_w_opts)
+#if UFBXT_IMPL
+{
+	{
+		ufbx_node *node = ufbx_find_node(scene, "Positive");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_assert(mesh->vertex_normal.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_tangent.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_bitangent.values_w.count == 0);
+	}
+
+	{
+		ufbx_node *node = ufbx_find_node(scene, "FlipX");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_assert(mesh->vertex_normal.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_tangent.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_bitangent.values_w.count == 0);
+	}
+
+	{
+		ufbx_node *node = ufbx_find_node(scene, "FlipY");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_assert(mesh->vertex_normal.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_tangent.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_bitangent.values_w.count == 0);
+	}
+
+	{
+		ufbx_node *node = ufbx_find_node(scene, "FlipXY");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_assert(mesh->vertex_normal.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_tangent.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_bitangent.values_w.count == 0);
+	}
+}
+#endif
+
+UFBXT_FILE_TEST_ALT(maya_tangent_sign_default, maya_tangent_sign)
+#if UFBXT_IMPL
+{
+	{
+		ufbx_node *node = ufbx_find_node(scene, "Positive");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_assert(mesh->vertex_normal.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_tangent.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_bitangent.values_w.count == 0);
+	}
+
+	{
+		ufbx_node *node = ufbx_find_node(scene, "FlipX");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_assert(mesh->vertex_normal.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_tangent.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_bitangent.values_w.count == 0);
+	}
+
+	{
+		ufbx_node *node = ufbx_find_node(scene, "FlipY");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_assert(mesh->vertex_normal.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_tangent.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_bitangent.values_w.count == 0);
+	}
+
+	{
+		ufbx_node *node = ufbx_find_node(scene, "FlipBoth");
+		ufbxt_assert(node && node->mesh);
+		ufbx_mesh *mesh = node->mesh;
+		ufbxt_assert(mesh->vertex_normal.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_tangent.values_w.count == 0);
+		ufbxt_assert(mesh->vertex_bitangent.values_w.count == 0);
+	}
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS(maya_tangent_sign_mixed_split, ufbxt_retain_vertex_w_opts)
+#if UFBXT_IMPL
+{
+	ufbx_node *node = ufbx_find_node(scene, "polySurface2");
+	ufbxt_assert(node && node->mesh);
+	ufbx_mesh *mesh = node->mesh;
+	ufbxt_check_vertex_w(mesh, &mesh->vertex_normal, 1.0f);
+	ufbxt_check_vertex_w(mesh, &mesh->vertex_bitangent, 1.0f);
+	ufbxt_check_tangent_sign(mesh, 0.0f);
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS(maya_tangent_sign_mixed, ufbxt_retain_vertex_w_opts)
+#if UFBXT_IMPL
+{
+	ufbx_node *node = ufbx_find_node(scene, "pPlane1");
+	ufbxt_assert(node && node->mesh);
+	ufbx_mesh *mesh = node->mesh;
+	ufbxt_check_vertex_w(mesh, &mesh->vertex_normal, 1.0f);
+	ufbxt_check_vertex_w(mesh, &mesh->vertex_bitangent, 1.0f);
+
+	// ???: The tangent sign seems absolutely arbitrary here
+	static const ufbx_real tangent_w_ref[] = {
+		-1.0f,-1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
+	};
+	for (size_t i = 0; i < mesh->num_indices; i++) {
+		ufbx_real w = ufbx_get_vertex_w_vec3(&mesh->vertex_tangent, i);
+		ufbxt_assert(w == tangent_w_ref[i]);
+	}
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS(maya_uv_set_tangent_w, ufbxt_retain_vertex_w_opts)
+#if UFBXT_IMPL
+{
+	ufbx_node *node = ufbx_find_node(scene, "pPlane1");
+	ufbxt_assert(node && node->mesh);
+	ufbx_mesh *mesh = node->mesh;
+	ufbxt_assert(mesh->uv_sets.count == 3);
+	ufbxt_check_vertex_w(mesh, &mesh->vertex_normal, 1.0f);
+
+	ufbx_uv_set *uv_map1 = &mesh->uv_sets.data[0];
+	ufbxt_assert(!strcmp(uv_map1->name.data, "map1"));
+	ufbxt_check_tangent_sign_set(mesh, uv_map1, 1.0f);
+	ufbxt_check_vertex_w(mesh, &uv_map1->vertex_bitangent, 1.0f);
+
+	ufbx_uv_set *uv_left = &mesh->uv_sets.data[1];
+	ufbxt_assert(!strcmp(uv_left->name.data, "FlipLeft"));
+	ufbxt_check_vertex_w(mesh, &uv_left->vertex_bitangent, 1.0f);
+
+	// ???: The tangent sign seems absolutely arbitrary here
+	static const ufbx_real tangent_w_left[] = {
+		-1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
+	};
+	for (size_t i = 0; i < mesh->num_indices; i++) {
+		ufbx_real w = ufbx_get_vertex_w_vec3(&uv_left->vertex_tangent, i);
+		if (scene->metadata.version >= 7000) {
+			ufbxt_assert(w == tangent_w_left[i]);
+		} else {
+			ufbxt_assert(w == 0.0f);
+		}
+	}
+
+	ufbx_uv_set *uv_right = &mesh->uv_sets.data[2];
+	ufbxt_assert(!strcmp(uv_right->name.data, "FlipRight"));
+	ufbxt_check_vertex_w(mesh, &uv_right->vertex_bitangent, 1.0f);
+
+	// ???: The tangent sign seems absolutely arbitrary here,
+	// they are however inverted compared to `uv_left` whivch makes sense,
+	// so there is a chance that they do encode something useful (?)
+	static const ufbx_real tangent_w_right[] = {
+		1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, -1.0f, -1.0f,
+	};
+	for (size_t i = 0; i < mesh->num_indices; i++) {
+		ufbx_real w = ufbx_get_vertex_w_vec3(&uv_right->vertex_tangent, i);
+		if (scene->metadata.version >= 7000) {
+			ufbxt_assert(w == tangent_w_right[i]);
+		} else {
+			ufbxt_assert(w == 0.0f);
+		}
+	}
+}
+#endif
+
+UFBXT_FILE_TEST_FLAGS(synthetic_missing_mapping, UFBXT_FILE_TEST_FLAG_ALLOW_STRICT_ERROR)
+#if UFBXT_IMPL
+{
+	ufbx_node *node = ufbx_find_node(scene, "pCube1");
+	ufbxt_assert(node && node->mesh);
+	ufbx_mesh *mesh = node->mesh;
+
+	static const char *const ref_warnings[] = {
+		"Ignoring geometry 'Normals' with bad mapping mode ''",
+		"Ignoring geometry 'Binormals' with bad mapping mode ''",
+		"Ignoring geometry 'Tangents' with bad mapping mode 'Missing'",
+		"Ignoring geometry 'UV' with bad mapping mode ''",
+		"Ignoring geometry 'Smoothing' with bad mapping mode ''",
+		"Ignoring geometry 'Materials' with bad mapping mode ''",
+	};
+	bool found[ufbxt_arraycount(ref_warnings)] = { 0 };
+
+	ufbxt_assert(scene->metadata.warnings.count == 6);
+	for (size_t i = 0; i < scene->metadata.warnings.count; i++) {
+		ufbx_warning *warning = &scene->metadata.warnings.data[i];
+		ufbxt_assert(warning->type == UFBX_WARNING_MISSING_POLYGON_MAPPING);
+		ufbxt_assert(warning->element_id == mesh->element_id);
+		for (size_t j = 0; j < ufbxt_arraycount(ref_warnings); j++) {
+			if (!strcmp(warning->description.data, ref_warnings[j])) {
+				found[j] = true;
+				break;
+			}
+		}
+	}
+
+	for (size_t i = 0; i < ufbxt_arraycount(ref_warnings); i++) {
+		ufbxt_hintf("i=%zu", i);
+		ufbxt_assert(found[i]);
+	}
 }
 #endif

@@ -158,7 +158,7 @@ UFBXT_FILE_TEST_OPTS(marvelous_quad, ufbxt_scale_to_cm_opts)
 		ufbxt_assert(node && node->mesh);
 		ufbx_mesh *mesh = node->mesh;
 		ufbxt_assert(mesh->materials.count == 1);
-		ufbx_material *material = mesh->materials.data[0].material;
+		ufbx_material *material = mesh->materials.data[0];
 
 		// What? Marvelous writes relative filenames as absolute.
 		// TODO: Quirk mode to fix this?
@@ -173,6 +173,63 @@ UFBXT_FILE_TEST_OPTS(marvelous_quad, ufbxt_scale_to_cm_opts)
 
 	ufbxt_check_frame(scene, err, false, "marvelous_quad_12", NULL, 12.0/24.0);
 	ufbxt_check_frame(scene, err, false, "marvelous_quad_22", NULL, 22.0/24.0);
+}
+#endif
+
+UFBXT_FILE_TEST_FLAGS(synthetic_missing_cache_fail, UFBXT_FILE_TEST_FLAG_ALLOW_ERROR)
+#if UFBXT_IMPL
+{
+	ufbxt_assert(load_error->type == UFBX_ERROR_EXTERNAL_FILE_NOT_FOUND);
+	ufbxt_assert(!strcmp(load_error->info, "missing_cache.xml"));
+}
+#endif
+
+#if UFBXT_IMPL
+static bool ufbxt_open_file_no_skip(void *user, ufbx_stream *stream, const char *path, size_t path_len, const ufbx_open_file_info *info)
+{
+	if (!ufbx_open_file(stream, path, path_len)) return false;
+	stream->skip_fn = NULL;
+	return true;
+}
+#endif
+
+UFBXT_TEST(cache_skip_read)
+#if UFBXT_IMPL
+{
+	char buffer[512];
+	snprintf(buffer, sizeof(buffer), "%s%s", data_root, "max_cache_box_7500_binary_fpc/max_cache_box.pc2");
+
+	ufbx_geometry_cache_opts opts = { 0 };
+	opts.open_file_cb.fn = &ufbxt_open_file_no_skip;
+
+	ufbx_error error;
+	ufbx_geometry_cache *cache = ufbx_load_geometry_cache(buffer, &opts, &error);
+	ufbxt_assert(cache);
+	ufbxt_assert(cache->frames.count == 11);
+
+	for (size_t i = 0; i < cache->frames.count; i++) {
+		ufbx_cache_frame *frame = &cache->frames.data[0];
+		ufbxt_assert(frame->file_format == UFBX_CACHE_FILE_FORMAT_PC2);
+
+		size_t num_vertices = frame->data_count;
+		ufbxt_assert(num_vertices == 770);
+
+		ufbx_vec3 *vertices = calloc(num_vertices, sizeof(ufbx_vec3));
+		ufbxt_assert(vertices);
+
+		ufbx_geometry_cache_data_opts data_opts = { 0 };
+		data_opts.open_file_cb.fn = &ufbxt_open_file_no_skip;
+		size_t num_read = ufbx_read_geometry_cache_vec3(frame, vertices, num_vertices, &data_opts);
+		ufbxt_assert(num_read == num_vertices);
+
+		free(vertices);
+	}
+
+	// Retain and free for fun
+	ufbx_retain_geometry_cache(cache);
+	ufbx_free_geometry_cache(cache);
+
+	ufbx_free_geometry_cache(cache);
 }
 #endif
 

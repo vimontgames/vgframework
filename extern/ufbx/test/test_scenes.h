@@ -7,6 +7,10 @@ UFBXT_FILE_TEST_FLAGS(maya_slime, UFBXT_FILE_TEST_FLAG_HEAVY_TO_FUZZ)
 	ufbx_node *node_high = ufbx_find_node(scene, "Slime_002:Slime_Body_high");
 	ufbxt_assert(node_high);
 	ufbxt_assert(!node_high->visible);
+
+	ufbxt_assert(scene->textures.count == 1);
+	ufbx_texture *texture = scene->textures.data[0];
+	ufbxt_assert(texture->content.size == 306577);
 }
 #endif
 
@@ -82,67 +86,132 @@ UFBXT_FILE_TEST(maya_kenney_character)
 		ufbxt_assert(mesh->skin_deformers.count == 1);
 
 		for (size_t level = 0; level <= 2; level++) {
-			ufbx_mesh *sub_mesh = mesh;
-			if (level > 0) {
-				ufbx_subdivide_opts opts = { 0 };
-				opts.evaluate_source_vertices = true;
-				opts.evaluate_skin_weights = true;
-				sub_mesh = ufbx_subdivide_mesh(mesh, level, &opts, NULL);
-				ufbxt_assert(sub_mesh);
-
-				ufbxt_check_source_vertices(sub_mesh, mesh, err);
-			} else {
-				ufbx_retain_mesh(sub_mesh);
-			}
-
-			ufbx_skin_deformer *skin = mesh->skin_deformers.data[0];
-
-			for (size_t vi = 0; vi < sub_mesh->num_vertices; vi++) {
-				ufbx_vec3 skin_pos = sub_mesh->skinned_position.values.data[vi];
-
-				if (level == 0) {
-					ufbx_matrix mat = ufbx_get_skin_vertex_matrix(skin, vi, NULL);
-					ufbx_vec3 local_pos = sub_mesh->vertices.data[vi];
-					ufbx_vec3 world_pos = ufbx_transform_position(&mat, local_pos);
-					ufbxt_assert_close_vec3(err, world_pos, skin_pos);
-
-					ufbx_skin_vertex skin_vertex = skin->vertices.data[vi];
-					ufbx_matrix sum = { 0 };
-					for (size_t wi = 0; wi < skin_vertex.num_weights; wi++) {
-						ufbx_skin_weight weight = skin->weights.data[skin_vertex.weight_begin + wi];
-						ufbx_skin_cluster *cluster = skin->clusters.data[weight.cluster_index];
-						for (size_t i = 0; i < 12; i++) {
-							sum.v[i] += cluster->geometry_to_world.v[i] * weight.weight;
-						}
-					}
-
-					ufbx_vec3 manual_pos = ufbx_transform_position(&sum, local_pos);
-					ufbxt_assert_close_vec3(err, manual_pos, skin_pos);
-				} else {
-					ufbx_subdivision_result *sub_res = sub_mesh->subdivision_result;
-					ufbxt_assert(sub_res);
-
-					ufbx_subdivision_weight_range range = sub_res->skin_cluster_ranges.data[vi];
-					ufbx_matrix sum = { 0 };
-					for (size_t wi = 0; wi < range.num_weights; wi++) {
-						ufbx_subdivision_weight weight = sub_res->skin_cluster_weights.data[range.weight_begin + wi];
-						ufbx_skin_cluster *cluster = skin->clusters.data[weight.index];
-						for (size_t i = 0; i < 12; i++) {
-							sum.v[i] += cluster->geometry_to_world.v[i] * weight.weight;
-						}
-					}
-
-					ufbx_vec3 local_pos = sub_mesh->vertices.data[vi];
-					ufbx_vec3 manual_pos = ufbx_transform_position(&sum, local_pos);
-					ufbxt_assert_close_vec3_threshold(err, manual_pos, skin_pos, 10.0f);
-					manual_pos = manual_pos;
+			for (size_t weight_limit = 0; weight_limit <= 5; weight_limit++) {
+				if (weight_limit == 5) {
+					weight_limit = 8;
 				}
-			}
 
-			ufbx_free_mesh(sub_mesh);
+				ufbx_mesh *sub_mesh = mesh;
+				if (level > 0) {
+					ufbx_subdivide_opts opts = { 0 };
+					opts.evaluate_source_vertices = true;
+					opts.evaluate_skin_weights = true;
+					if (weight_limit > 0) {
+						opts.max_skin_weights = weight_limit;
+						opts.max_source_vertices = weight_limit;
+					}
+					sub_mesh = ufbx_subdivide_mesh(mesh, level, &opts, NULL);
+					ufbxt_assert(sub_mesh);
+
+					ufbx_real threshold = 0.001f;
+					if (weight_limit == 1) {
+						threshold = 0.5f;
+					} else if (weight_limit == 2) {
+						threshold = 0.25f;
+					} else if (weight_limit == 3) {
+						threshold = 0.125f;
+					} else if (weight_limit == 4) {
+						threshold = 0.1f;
+					} else if (weight_limit == 8) {
+						threshold = 0.01f;
+					}
+
+					ufbxt_check_source_vertices(sub_mesh, mesh, err, threshold);
+				} else {
+					ufbx_retain_mesh(sub_mesh);
+				}
+
+				ufbx_skin_deformer *skin = mesh->skin_deformers.data[0];
+
+				for (size_t vi = 0; vi < sub_mesh->num_vertices; vi++) {
+					ufbx_vec3 skin_pos = sub_mesh->skinned_position.values.data[vi];
+
+					if (level == 0) {
+						ufbx_matrix mat = ufbx_get_skin_vertex_matrix(skin, vi, NULL);
+						ufbx_vec3 local_pos = sub_mesh->vertices.data[vi];
+						ufbx_vec3 world_pos = ufbx_transform_position(&mat, local_pos);
+						ufbxt_assert_close_vec3(err, world_pos, skin_pos);
+
+						ufbx_skin_vertex skin_vertex = skin->vertices.data[vi];
+						ufbx_matrix sum = { 0 };
+						for (size_t wi = 0; wi < skin_vertex.num_weights; wi++) {
+							ufbx_skin_weight weight = skin->weights.data[skin_vertex.weight_begin + wi];
+							ufbx_skin_cluster *cluster = skin->clusters.data[weight.cluster_index];
+							for (size_t i = 0; i < 12; i++) {
+								sum.v[i] += cluster->geometry_to_world.v[i] * weight.weight;
+							}
+						}
+
+						ufbx_vec3 manual_pos = ufbx_transform_position(&sum, local_pos);
+						ufbxt_assert_close_vec3(err, manual_pos, skin_pos);
+					} else {
+						ufbx_subdivision_result *sub_res = sub_mesh->subdivision_result;
+						ufbxt_assert(sub_res);
+
+						ufbx_subdivision_weight_range range = sub_res->skin_cluster_ranges.data[vi];
+						ufbx_matrix sum = { 0 };
+						for (size_t wi = 0; wi < range.num_weights; wi++) {
+							ufbx_subdivision_weight weight = sub_res->skin_cluster_weights.data[range.weight_begin + wi];
+							ufbx_skin_cluster *cluster = skin->clusters.data[weight.index];
+							for (size_t i = 0; i < 12; i++) {
+								sum.v[i] += cluster->geometry_to_world.v[i] * weight.weight;
+							}
+						}
+
+						ufbx_real threshold = 10.0f;
+						if (weight_limit == 1) {
+							threshold = 20.0f;
+						} else if (weight_limit == 2) {
+							threshold = 20.0f;
+						} else if (weight_limit == 3) {
+							threshold = 10.0f;
+						}
+
+						ufbx_vec3 local_pos = sub_mesh->vertices.data[vi];
+						ufbx_vec3 manual_pos = ufbx_transform_position(&sum, local_pos);
+						ufbxt_assert_close_vec3_threshold(err, manual_pos, skin_pos, threshold);
+						manual_pos = manual_pos;
+					}
+				}
+
+				ufbx_free_mesh(sub_mesh);
+			}
 		}
 
 		ufbx_free_scene(state);
 	}
+}
+#endif
+
+#if UFBXT_IMPL
+static ufbx_load_opts ufbxt_ignore_content_opts()
+{
+	ufbx_load_opts opts = { 0 };
+	opts.ignore_all_content = true;
+	return opts;
+}
+#endif
+
+UFBXT_FILE_TEST_OPTS_ALT(maya_slime_ignore, maya_slime, ufbxt_ignore_content_opts)
+#if UFBXT_IMPL
+{
+	ufbx_node *node_high = ufbx_find_node(scene, "Slime_002:Slime_Body_high");
+	ufbxt_assert(node_high);
+	ufbxt_assert(!node_high->visible);
+
+	ufbx_mesh *mesh = node_high->mesh;
+	ufbxt_assert(mesh);
+	ufbxt_assert(mesh->num_faces == 0);
+	ufbxt_assert(mesh->num_vertices == 0);
+
+	ufbxt_assert(scene->anim_curves.count == 76);
+	for (size_t i = 0; i < scene->anim_curves.count; i++) {
+		ufbx_anim_curve *curve = scene->anim_curves.data[i];
+		ufbxt_assert(curve->keyframes.count == 0);
+	}
+
+	ufbxt_assert(scene->textures.count == 1);
+	ufbx_texture *texture = scene->textures.data[0];
+	ufbxt_assert(texture->content.size == 0);
 }
 #endif

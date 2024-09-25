@@ -59,11 +59,14 @@
 
 #if defined(_MSC_VER)
 	#pragma warning(push)
+	#pragma warning(disable: 4061) // enumerator 'ENUM' in switch of enum 'enum' is not explicitly handled by a case label
 	#pragma warning(disable: 4201) // nonstandard extension used: nameless struct/union
 	#pragma warning(disable: 4505) // unreferenced local function has been removed
+	#pragma warning(disable: 4820) // type': 'N' bytes padding added after data member 'member'
 #elif defined(__clang__)
 	#pragma clang diagnostic push
 	#pragma clang diagnostic ignored "-Wpedantic"
+	#pragma clang diagnostic ignored "-Wpadded"
 	#if defined(__cplusplus)
 		#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
 		#pragma clang diagnostic ignored "-Wold-style-cast"
@@ -71,9 +74,15 @@
 #elif defined(__GNUC__)
 	#pragma GCC diagnostic push
 	#pragma GCC diagnostic ignored "-Wpedantic"
+	#pragma GCC diagnostic ignored "-Wpadded"
 	#if defined(__cplusplus)
 		#pragma GCC diagnostic ignored "-Wzero-as-null-pointer-constant"
 		#pragma GCC diagnostic ignored "-Wold-style-cast"
+	#else
+		#if __GNUC__ >= 5
+			#pragma GCC diagnostic ignored "-Wc90-c99-compat"
+			#pragma GCC diagnostic ignored "-Wc99-c11-compat"
+		#endif
 	#endif
 #endif
 
@@ -85,58 +94,141 @@
 	#define ufbx_inline static
 #endif
 
+// Assertion function used in ufbx, defaults to C standard `assert()`.
+// You can define this to your custom preferred assert macro, but in that case
+// make sure that it is also used within `ufbx.c`.
+// Defining `UFBX_NO_ASSERT` to any value disables assertions.
 #ifndef ufbx_assert
-	#if !defined(UFBX_NO_ASSERT)
+	#if defined(UFBX_NO_ASSERT)
+		#define ufbx_assert(cond) (void)0
+	#else
 		#include <assert.h>
 		#define ufbx_assert(cond) assert(cond)
-	#else
-		#define ufbx_assert(cond) (void)0
 	#endif
 #endif
 
 // Pointer may be `NULL`.
 #define ufbx_nullable
 
-// Changing this value from default can lead into breaking API guarantees.
+// Changing this value from default or calling this function can lead into
+// breaking API guarantees.
 #define ufbx_unsafe
 
+// Linkage of the main ufbx API functions.
+// Defaults to nothing, or `static` if `UFBX_STATIC` is defined.
+// If you want to isolate ufbx to a single translation unit you can do the following:
+//   #define UFBX_STATIC
+//   #include "ufbx.h"
+//   #include "ufbx.c"
 #ifndef ufbx_abi
-	#define ufbx_abi
+	#if defined(UFBX_STATIC)
+		#define ufbx_abi static
+	#else
+		#define ufbx_abi
+	#endif
+#endif
+
+// Linkage of the main ufbx data fields in the header.
+// Defaults to `extern`, or `static` if `UFBX_STATIC` is defined.
+#ifndef ufbx_abi_data
+	#if defined(UFBX_STATIC)
+		#define ufbx_abi_data static
+	#else
+		#define ufbx_abi_data extern
+	#endif
+#endif
+
+// Linkage of the main ufbx data fields in the source.
+// Defaults to nothing, or `static` if `UFBX_STATIC` is defined.
+#ifndef ufbx_abi_data_definition
+	#if defined(UFBX_STATIC)
+		#define ufbx_abi_data_def static
+	#else
+		#define ufbx_abi_data_def
+	#endif
 #endif
 
 // -- Configuration
 
-#if defined(UFBX_REAL_IS_FLOAT)
-	typedef float ufbx_real;
-#else
-	typedef double ufbx_real;
+#ifndef UFBX_REAL_TYPE
+	#if defined(UFBX_REAL_IS_FLOAT)
+		#define UFBX_REAL_TYPE float
+	#else
+		#define UFBX_REAL_TYPE double
+	#endif
 #endif
 
+// Limits for embedded arrays within structures.
 #define UFBX_ERROR_STACK_MAX_DEPTH 8
 #define UFBX_PANIC_MESSAGE_LENGTH 128
 #define UFBX_ERROR_INFO_LENGTH 256
 
+// Number of thread groups to use if threading is enabled.
+// A thread group processes a number of tasks and is then waited and potentially
+// re-used later. In essence, this controls the granularity of threading.
+#define UFBX_THREAD_GROUP_COUNT 4
+
 // -- Language
+
+// bindgen-disable
+
+#if UFBX_CPP11
+
+template <typename T, typename U>
+struct ufbxi_type_is { };
+
+template <typename T>
+struct ufbxi_type_is<T, T> { using type = int; };
+
+template <typename T>
+struct ufbx_converter { };
+
+#define UFBX_CONVERSION_IMPL(p_name) \
+	template <typename T, typename S=typename ufbxi_type_is<T, decltype(ufbx_converter<T>::from(*(const p_name*)nullptr))>::type> \
+	operator T() const { return ufbx_converter<T>::from(*this); }
+
+#define UFBX_CONVERSION_TO_IMPL(p_name) \
+	template <typename T, typename S=typename ufbxi_type_is<p_name, decltype(ufbx_converter<T>::to(*(const T*)nullptr))>::type> \
+	p_name(const T &t) { *this = ufbx_converter<T>::to(t); }
+
+#define UFBX_CONVERSION_LIST_IMPL(p_name) \
+	template <typename T, typename S=typename ufbxi_type_is<T, decltype(ufbx_converter<T>::from_list((p_name*)nullptr, (size_t)0))>::type> \
+	operator T() const { return ufbx_converter<T>::from_list(data, count); }
+
+#else
+
+#define UFBX_CONVERSION_IMPL(p_name)
+#define UFBX_CONVERSION_TO_IMPL(p_name)
+#define UFBX_CONVERSION_LIST_IMPL(p_name)
+
+#endif
 
 #if defined(__cplusplus)
 	#define UFBX_LIST_TYPE(p_name, p_type) struct p_name { p_type *data; size_t count; \
 		p_type &operator[](size_t index) const { ufbx_assert(index < count); return data[index]; } \
 		p_type *begin() const { return data; } \
-		p_type *end() const { return data + count; } }
+		p_type *end() const { return data + count; } \
+		UFBX_CONVERSION_LIST_IMPL(p_type) \
+	}
 #else
 	#define UFBX_LIST_TYPE(p_name, p_type) typedef struct p_name { p_type *data; size_t count; } p_name
 #endif
 
-#if UFBX_STDC >= 202311L || UFBX_CPP11
+// This cannot be enabled automatically if supported as the source file may be
+// compiled with a different compiler using different settings than the header
+// consumers, in practice it should work but it causes issues such as #70.
+#if (UFBX_STDC >= 202311L || UFBX_CPP11) && defined(UFBX_USE_EXPLICIT_ENUM)
 	#define UFBX_ENUM_REPR : int
 	#define UFBX_ENUM_FORCE_WIDTH(p_prefix)
 	#define UFBX_FLAG_REPR : int
 	#define UFBX_FLAG_FORCE_WIDTH(p_prefix)
+	#define UFBX_HAS_FORCE_32BIT 0
 #else
 	#define UFBX_ENUM_REPR
 	#define UFBX_ENUM_FORCE_WIDTH(p_prefix) p_prefix##_FORCE_32BIT = 0x7fffffff
 	#define UFBX_FLAG_REPR
 	#define UFBX_FLAG_FORCE_WIDTH(p_prefix) p_prefix##_FORCE_32BIT = 0x7fffffff
+	#define UFBX_HAS_FORCE_32BIT 1
 #endif
 
 #define UFBX_ENUM_TYPE(p_name, p_prefix, p_last) \
@@ -159,30 +251,46 @@
 	#define UFBX_CALLBACK_IMPL(p_name, p_fn, p_return, p_params, p_args)
 #endif
 
+// bindgen-enable
+
 // -- Version
 
+// Packing/unpacking for `UFBX_HEADER_VERSION` and `ufbx_source_version`.
 #define ufbx_pack_version(major, minor, patch) ((uint32_t)(major)*1000000u + (uint32_t)(minor)*1000u + (uint32_t)(patch))
 #define ufbx_version_major(version) ((uint32_t)(version)/1000000u%1000u)
 #define ufbx_version_minor(version) ((uint32_t)(version)/1000u%1000u)
 #define ufbx_version_patch(version) ((uint32_t)(version)%1000u)
 
-#define UFBX_HEADER_VERSION ufbx_pack_version(0, 5, 0)
+// Version of the ufbx header.
+// `UFBX_VERSION` is simply an alias of `UFBX_HEADER_VERSION`.
+// `ufbx_source_version` contains the version of the corresponding source file.
+// HINT: The version can be compared numerically to the result of `ufbx_pack_version()`,
+// for example `#if UFBX_VERSION >= ufbx_pack_version(0, 12, 0)`.
+#define UFBX_HEADER_VERSION ufbx_pack_version(0, 14, 3)
 #define UFBX_VERSION UFBX_HEADER_VERSION
 
 // -- Basic types
 
-#define UFBX_NO_INDEX ((uint32_t)~0u)
+// Main floating point type used everywhere in ufbx, defaults to `double`.
+// If you define `UFBX_REAL_IS_FLOAT` to any value, `ufbx_real` will be defined
+// as `float` instead.
+// You can also manually define `UFBX_REAL_TYPE` to any floating point type.
+typedef UFBX_REAL_TYPE ufbx_real;
 
 // Null-terminated UTF-8 encoded string within an FBX file
 typedef struct ufbx_string {
 	const char *data;
 	size_t length;
+
+	UFBX_CONVERSION_IMPL(ufbx_string)
 } ufbx_string;
 
 // Opaque byte buffer blob
 typedef struct ufbx_blob {
 	const void *data;
 	size_t size;
+
+	UFBX_CONVERSION_IMPL(ufbx_blob)
 } ufbx_blob;
 
 // 2D vector
@@ -191,6 +299,8 @@ typedef struct ufbx_vec2 {
 		struct { ufbx_real x, y; };
 		ufbx_real v[2];
 	};
+
+	UFBX_CONVERSION_IMPL(ufbx_vec2)
 } ufbx_vec2;
 
 // 3D vector
@@ -199,6 +309,8 @@ typedef struct ufbx_vec3 {
 		struct { ufbx_real x, y, z; };
 		ufbx_real v[3];
 	};
+
+	UFBX_CONVERSION_IMPL(ufbx_vec3)
 } ufbx_vec3;
 
 // 4D vector
@@ -207,6 +319,8 @@ typedef struct ufbx_vec4 {
 		struct { ufbx_real x, y, z, w; };
 		ufbx_real v[4];
 	};
+
+	UFBX_CONVERSION_IMPL(ufbx_vec4)
 } ufbx_vec4;
 
 // Quaternion
@@ -215,11 +329,13 @@ typedef struct ufbx_quat {
 		struct { ufbx_real x, y, z, w; };
 		ufbx_real v[4];
 	};
+
+	UFBX_CONVERSION_IMPL(ufbx_quat)
 } ufbx_quat;
 
 // Order in which Euler-angle rotation axes are applied for a transform
 // NOTE: The order in the name refers to the order of axes *applied*,
-// not the multiplication order: eg. `UFBX_ROTATION_XYZ` is `Z*Y*X`
+// not the multiplication order: eg. `UFBX_ROTATION_ORDER_XYZ` is `Z*Y*X`
 // [TODO: Figure out what the spheric rotation order is...]
 typedef enum ufbx_rotation_order UFBX_ENUM_REPR {
 	UFBX_ROTATION_ORDER_XYZ,
@@ -241,6 +357,8 @@ typedef struct ufbx_transform {
 	ufbx_vec3 translation;
 	ufbx_quat rotation;
 	ufbx_vec3 scale;
+
+	UFBX_CONVERSION_IMPL(ufbx_transform)
 } ufbx_transform;
 
 // 4x3 matrix encoding an affine transformation.
@@ -256,6 +374,8 @@ typedef struct ufbx_matrix {
 		ufbx_vec3 cols[4];
 		ufbx_real v[12];
 	};
+
+	UFBX_CONVERSION_IMPL(ufbx_matrix)
 } ufbx_matrix;
 
 typedef struct ufbx_void_list {
@@ -270,6 +390,9 @@ UFBX_LIST_TYPE(ufbx_vec2_list, ufbx_vec2);
 UFBX_LIST_TYPE(ufbx_vec3_list, ufbx_vec3);
 UFBX_LIST_TYPE(ufbx_vec4_list, ufbx_vec4);
 UFBX_LIST_TYPE(ufbx_string_list, ufbx_string);
+
+// Sentinel value used to represent a missing index.
+#define UFBX_NO_INDEX ((uint32_t)~0u)
 
 // -- Document object model
 
@@ -411,7 +534,9 @@ typedef enum ufbx_prop_flags UFBX_FLAG_REPR {
 // Single property with name/type/value.
 struct ufbx_prop {
 	ufbx_string name;
+
 	uint32_t _internal_key;
+
 	ufbx_prop_type type;
 	ufbx_prop_flags flags;
 
@@ -507,6 +632,10 @@ typedef struct ufbx_selection_node ufbx_selection_node;
 typedef struct ufbx_character ufbx_character;
 typedef struct ufbx_constraint ufbx_constraint;
 
+// Audio
+typedef struct ufbx_audio_layer ufbx_audio_layer;
+typedef struct ufbx_audio_clip ufbx_audio_clip;
+
 // Miscellaneous
 typedef struct ufbx_pose ufbx_pose;
 typedef struct ufbx_metadata_object ufbx_metadata_object;
@@ -550,6 +679,8 @@ UFBX_LIST_TYPE(ufbx_selection_set_list, ufbx_selection_set*);
 UFBX_LIST_TYPE(ufbx_selection_node_list, ufbx_selection_node*);
 UFBX_LIST_TYPE(ufbx_character_list, ufbx_character*);
 UFBX_LIST_TYPE(ufbx_constraint_list, ufbx_constraint*);
+UFBX_LIST_TYPE(ufbx_audio_layer_list, ufbx_audio_layer*);
+UFBX_LIST_TYPE(ufbx_audio_clip_list, ufbx_audio_clip*);
 UFBX_LIST_TYPE(ufbx_pose_list, ufbx_pose*);
 UFBX_LIST_TYPE(ufbx_metadata_object_list, ufbx_metadata_object*);
 
@@ -592,6 +723,8 @@ typedef enum ufbx_element_type UFBX_ENUM_REPR {
 	UFBX_ELEMENT_SELECTION_NODE,      // < `ufbx_selection_node`
 	UFBX_ELEMENT_CHARACTER,           // < `ufbx_character`
 	UFBX_ELEMENT_CONSTRAINT,          // < `ufbx_constraint`
+	UFBX_ELEMENT_AUDIO_LAYER,         // < `ufbx_audio_layer`
+	UFBX_ELEMENT_AUDIO_CLIP,          // < `ufbx_audio_clip`
 	UFBX_ELEMENT_POSE,                // < `ufbx_pose`
 	UFBX_ELEMENT_METADATA_OBJECT,     // < `ufbx_metadata_object`
 
@@ -619,7 +752,7 @@ UFBX_LIST_TYPE(ufbx_connection_list, ufbx_connection);
 // Some fields (like `connections_src`) are advanced and not visible
 // in the specialized element structs.
 // NOTE: The `element_id` value is consistent when loading the
-// _same_ file, but re-exporting the file will invalidate them. (TOMOVE)
+// _same_ file, but re-exporting the file will invalidate them.
 struct ufbx_element {
 	ufbx_string name;
 	ufbx_props props;
@@ -655,18 +788,48 @@ struct ufbx_unknown {
 // -- Nodes
 
 // Inherit type specifies how hierarchial node transforms are combined.
-// `UFBX_INHERIT_NORMAL` is combined using the "proper" multiplication
-// `UFBX_INHERIT_NO_SHEAR` does component-wise { pos+pos, rot*rot, scale*scale }
-// `UFBX_INHERIT_NO_SCALE` ignores the parent scale { pos+pos, rot*rot, scale }
-typedef enum ufbx_inherit_type UFBX_ENUM_REPR {
-	UFBX_INHERIT_NO_SHEAR, // R*r*S*s
-	UFBX_INHERIT_NORMAL,   // R*S*r*s
-	UFBX_INHERIT_NO_SCALE, // R*r*s
+// This only affects the final scaling, as rotation and translation are always
+// inherited correctly.
+// NOTE: These don't map to `"InheritType"` property as there may be new ones for
+// compatibility with various exporters.
+typedef enum ufbx_inherit_mode UFBX_ENUM_REPR {
 
-	UFBX_ENUM_FORCE_WIDTH(UFBX_INHERIT_TYPE)
-} ufbx_inherit_type;
+	// Normal matrix composition of hierarchy: `R*S*r*s`.
+	//   child.node_to_world = parent.node_to_world * child.node_to_parent;
+	UFBX_INHERIT_MODE_NORMAL,
 
-UFBX_ENUM_TYPE(ufbx_inherit_type, UFBX_INHERIT_TYPE, UFBX_INHERIT_NO_SCALE);
+	// Ignore parent scale when computing the transform: `R*r*s`.
+	//   ufbx_transform t = node.local_transform;
+	//   t.translation *= parent.inherit_scale;
+	//   t.scale *= node.inherit_scale_node.inherit_scale;
+	//   child.node_to_world = parent.unscaled_node_to_world * t;
+	// Also known as "Segment scale compensate" in some software.
+	UFBX_INHERIT_MODE_IGNORE_PARENT_SCALE,
+
+	// Apply parent scale component-wise: `R*r*S*s`.
+	//   ufbx_transform t = node.local_transform;
+	//   t.translation *= parent.inherit_scale;
+	//   t.scale *= node.inherit_scale_node.inherit_scale;
+	//   child.node_to_world = parent.unscaled_node_to_world * t;
+	UFBX_INHERIT_MODE_COMPONENTWISE_SCALE,
+
+	UFBX_ENUM_FORCE_WIDTH(UFBX_INHERIT_MODE)
+} ufbx_inherit_mode;
+
+UFBX_ENUM_TYPE(ufbx_inherit_mode, UFBX_INHERIT_MODE, UFBX_INHERIT_MODE_COMPONENTWISE_SCALE);
+
+// Axis used to mirror transformations for handedness conversion.
+typedef enum ufbx_mirror_axis UFBX_ENUM_REPR {
+
+	UFBX_MIRROR_AXIS_NONE,
+	UFBX_MIRROR_AXIS_X,
+	UFBX_MIRROR_AXIS_Y,
+	UFBX_MIRROR_AXIS_Z,
+
+	UFBX_ENUM_FORCE_WIDTH(UFBX_MIRROR_AXIS)
+} ufbx_mirror_axis;
+
+UFBX_ENUM_TYPE(ufbx_mirror_axis, UFBX_MIRROR_AXIS, UFBX_MIRROR_AXIS_Z);
 
 // Nodes form the scene transformation hierarchy and can contain attached
 // elements such as meshes or lights. In normal cases a single `ufbx_node`
@@ -690,9 +853,12 @@ struct ufbx_node {
 	// List of child nodes parented to this node.
 	ufbx_node_list children;
 
-	// Attached element type and typed pointers.
+	// Common attached element type and typed pointers. Set to `NULL` if not in
+	// use, so checking `attrib_type` is not required.
 	//
-	// Set to `NULL` if not in use, so checking `attrib_type` is not required.
+	// HINT: If you need less common attributes access `ufbx_node.attrib`, you
+	// can use utility functions like `ufbx_as_nurbs_curve(attrib)` to convert
+	// and check the attribute in one step.
 	ufbx_nullable ufbx_mesh *mesh;
 	ufbx_nullable ufbx_light *light;
 	ufbx_nullable ufbx_camera *camera;
@@ -708,6 +874,10 @@ struct ufbx_node {
 	// See `UFBX_GEOMETRY_TRANSFORM_HANDLING_HELPER_NODES`.
 	ufbx_nullable ufbx_node *geometry_transform_helper;
 
+	// Scale helper if one exists.
+	// See `UFBX_INHERIT_MODE_HANDLING_HELPER_NODES`.
+	ufbx_nullable ufbx_node *scale_helper;
+
 	// `attrib->type` if `attrib` is defined, otherwise `UFBX_ELEMENT_UNKNOWN`.
 	ufbx_element_type attrib_type;
 
@@ -719,9 +889,21 @@ struct ufbx_node {
 
 	// Local transform in parent, geometry transform is a non-inherited
 	// transform applied only to attachments like meshes
-	ufbx_inherit_type inherit_type;
+	ufbx_inherit_mode inherit_mode;
+	ufbx_inherit_mode original_inherit_mode;
 	ufbx_transform local_transform;
 	ufbx_transform geometry_transform;
+
+	// Combined scale when using `UFBX_INHERIT_MODE_COMPONENTWISE_SCALE`.
+	// Contains `local_transform.scale` otherwise.
+	ufbx_vec3 inherit_scale;
+
+	// Node where scale is inherited from for `UFBX_INHERIT_MODE_COMPONENTWISE_SCALE`
+	// and even for `UFBX_INHERIT_MODE_IGNORE_PARENT_SCALE`.
+	// For componentwise-scale nodes, this will point to `parent`, for scale ignoring
+	// nodes this will point to the parent of the nearest componentwise-scaled node
+	// in the parent chain.
+	ufbx_nullable ufbx_node *inherit_scale_node;
 
 	// Raw Euler angles in degrees for those who want them
 
@@ -731,10 +913,6 @@ struct ufbx_node {
 	// The angles are specified in degrees.
 	ufbx_vec3 euler_rotation;
 
-	// Transform to the global "world" space, may be incorrect if the node
-	// uses `UFBX_INHERIT_NORMAL`, prefer using the `node_to_world` matrix.
-	ufbx_transform world_transform;
-
 	// Matrices derived from the transformations, for transforming geometry
 	// prefer using `geometry_to_world` as that supports geometric transforms.
 
@@ -743,8 +921,6 @@ struct ufbx_node {
 	ufbx_matrix node_to_parent;
 	// Transform from this node to the world space, ie. multiplying all the
 	// `node_to_parent` matrices of the parent chain together.
-	// NOTE: Not the same as `ufbx_transform_to_matrix(&world_transform)`
-	// as this matrix will account for potential shear (if `inherit_type == UFBX_INHERIT_NORMAL`).
 	ufbx_matrix node_to_world;
 	// Transform from the attribute to this node. Does not affect the transforms
 	// of `children`!
@@ -753,18 +929,27 @@ struct ufbx_node {
 	// Transform from attribute space to world space.
 	// Equivalent to `ufbx_matrix_mul(&node_to_world, &geometry_to_node)`.
 	ufbx_matrix geometry_to_world;
+	// Transform from this node to world space, ignoring self scaling.
+	ufbx_matrix unscaled_node_to_world;
 
 	// ufbx-specific adjustment for switching between coodrinate/unit systems.
 	// HINT: In most cases you don't need to deal with these as these are baked
 	// into all the transforms above and into `ufbx_evaluate_transform()`.
-	ufbx_quat adjust_pre_rotation;  // < Rotation applied between parent and self
-	ufbx_vec3 adjust_pre_scale;     // < Scaling applied between parent and self
-	ufbx_quat adjust_post_rotation; // < Rotation applied in local space at the end
+	ufbx_vec3 adjust_pre_translation;    // < Translation applied between parent and self
+	ufbx_quat adjust_pre_rotation;       // < Rotation applied between parent and self
+	ufbx_real adjust_pre_scale;          // < Scaling applied between parent and self
+	ufbx_quat adjust_post_rotation;      // < Rotation applied in local space at the end
+	ufbx_real adjust_post_scale;         // < Scaling applied in local space at the end
+	ufbx_real adjust_translation_scale;  // < Scaling applied to translation only
+	ufbx_mirror_axis adjust_mirror_axis; // < Mirror translation and rotation on this axis
 
 	// Materials used by `mesh` or other `attrib`.
 	// There may be multiple copies of a single `ufbx_mesh` with different materials
 	// in the `ufbx_node` instances.
 	ufbx_material_list materials;
+
+	// Bind pose
+	ufbx_nullable ufbx_pose *bind_pose;
 
 	// Visibility state.
 	bool visible;
@@ -776,12 +961,23 @@ struct ufbx_node {
 	bool has_geometry_transform;
 
 	// If `true` the transform is adjusted by ufbx, not enabled by default.
-	// See `adjust_pre_rotation`, `adjust_pre_scale`, `adjust_post_rotation`.
+	// See `adjust_pre_rotation`, `adjust_pre_scale`, `adjust_post_rotation`,
+	// and `adjust_post_scale`.
 	bool has_adjust_transform;
 
-	// True if this node is node is a synthetic geometry transform helper.
+	// Scale is adjusted by root scale.
+	bool has_root_adjust_transform;
+
+	// True if this node is a synthetic geometry transform helper.
 	// See `UFBX_GEOMETRY_TRANSFORM_HANDLING_HELPER_NODES`.
 	bool is_geometry_transform_helper;
+
+	// True if the node is a synthetic scale compensation helper.
+	// See `UFBX_INHERIT_MODE_HANDLING_HELPER_NODES`.
+	bool is_scale_helper;
+
+	// Parent node to children that can compensate for parent scale.
+	bool is_scale_compensate_parent;
 
 	// How deep is this node in the parent hierarchy. Root node is at depth `0`
 	// and the immediate children of root at `1`.
@@ -798,11 +994,23 @@ struct ufbx_node {
 // single defined value per vertex accessible via:
 //   attrib.values.data[attrib.indices.data[mesh->vertex_first_index[vertex_ix]]
 typedef struct ufbx_vertex_attrib {
+	// Is this attribute defined by the mesh.
 	bool exists;
+	// List of values the attribute uses.
 	ufbx_void_list values;
+	// Indices into `values[]`, indexed up to `ufbx_mesh.num_indices`.
 	ufbx_uint32_list indices;
+	// Number of `ufbx_real` entries per value.
 	size_t value_reals;
+	// `true` if this attribute is defined per vertex, instead of per index.
 	bool unique_per_vertex;
+	// Optional 4th 'W' component for the attribute.
+	// May be defined for the following:
+	//   ufbx_mesh.vertex_normal
+	//   ufbx_mesh.vertex_tangent / ufbx_uv_set.vertex_tangent
+	//   ufbx_mesh.vertex_bitangent / ufbx_uv_set.vertex_bitangent
+	// NOTE: This is not loaded by default, set `ufbx_load_opts.retain_vertex_attrib_w`.
+	ufbx_real_list values_w;
 } ufbx_vertex_attrib;
 
 // 1D vertex attribute, see `ufbx_vertex_attrib` for information
@@ -812,6 +1020,7 @@ typedef struct ufbx_vertex_real {
 	ufbx_uint32_list indices;
 	size_t value_reals;
 	bool unique_per_vertex;
+	ufbx_real_list values_w;
 
 	UFBX_VERTEX_ATTRIB_IMPL(ufbx_real)
 } ufbx_vertex_real;
@@ -823,6 +1032,7 @@ typedef struct ufbx_vertex_vec2 {
 	ufbx_uint32_list indices;
 	size_t value_reals;
 	bool unique_per_vertex;
+	ufbx_real_list values_w;
 
 	UFBX_VERTEX_ATTRIB_IMPL(ufbx_vec2)
 } ufbx_vertex_vec2;
@@ -834,6 +1044,7 @@ typedef struct ufbx_vertex_vec3 {
 	ufbx_uint32_list indices;
 	size_t value_reals;
 	bool unique_per_vertex;
+	ufbx_real_list values_w;
 
 	UFBX_VERTEX_ATTRIB_IMPL(ufbx_vec3)
 } ufbx_vertex_vec3;
@@ -845,6 +1056,7 @@ typedef struct ufbx_vertex_vec4 {
 	ufbx_uint32_list indices;
 	size_t value_reals;
 	bool unique_per_vertex;
+	ufbx_real_list values_w;
 
 	UFBX_VERTEX_ATTRIB_IMPL(ufbx_vec4)
 } ufbx_vertex_vec4;
@@ -894,36 +1106,31 @@ typedef struct ufbx_face {
 
 UFBX_LIST_TYPE(ufbx_face_list, ufbx_face);
 
-typedef struct ufbx_mesh_material {
-	ufbx_nullable ufbx_material *material;
+// Subset of mesh faces used by a single material or group.
+typedef struct ufbx_mesh_part {
 
-	// Sub-set of the geometry that uses this specific material
-	size_t num_faces;     // < Number of faces (polygons) using this material
-	size_t num_triangles; // < Number of triangles using this material if triangulated
+	// Index of the mesh part.
+	uint32_t index;
+
+	// Sub-set of the geometry
+	size_t num_faces;     // < Number of faces (polygons)
+	size_t num_triangles; // < Number of triangles if triangulated
 
 	size_t num_empty_faces; // < Number of faces with zero vertices
 	size_t num_point_faces; // < Number of faces with a single vertex
 	size_t num_line_faces;  // < Number of faces with two vertices
 
-	// Indices to `ufbx_mesh.faces[]` that use this material.
+	// Indices to `ufbx_mesh.faces[]`.
 	// Always contains `num_faces` elements.
 	ufbx_uint32_list face_indices;
 
-} ufbx_mesh_material;
+} ufbx_mesh_part;
 
-UFBX_LIST_TYPE(ufbx_mesh_material_list, ufbx_mesh_material);
+UFBX_LIST_TYPE(ufbx_mesh_part_list, ufbx_mesh_part);
 
 typedef struct ufbx_face_group {
 	int32_t id;       // < Numerical ID for this group.
 	ufbx_string name; // < Name for the face group.
-
-	// Sub-set of the geometry in this face group
-	size_t num_faces;     // < Number of faces (polygons) using this material
-	size_t num_triangles; // < Number of triangles using this material if triangulated
-
-	// Indices to `ufbx_mesh.faces[]` that use this material.
-	// Always contains `num_faces` elements.
-	ufbx_uint32_list face_indices;
 } ufbx_face_group;
 
 UFBX_LIST_TYPE(ufbx_face_group_list, ufbx_face_group);
@@ -1090,7 +1297,7 @@ struct ufbx_mesh {
 	// NOTE: UV/tangent/bitangent and color are the from first sets,
 	// use `uv_sets/color_sets` to access the other layers.
 	ufbx_vertex_vec3 vertex_position;  // < Vertex positions
-	ufbx_vertex_vec3 vertex_normal;    // < (optional) Normal vectors (TODO: Generate?)
+	ufbx_vertex_vec3 vertex_normal;    // < (optional) Normal vectors, always defined if `ufbx_load_opts.generate_missing_normals`
 	ufbx_vertex_vec2 vertex_uv;        // < (optional) UV / texture coordinates
 	ufbx_vertex_vec3 vertex_tangent;   // < (optional) Tangent vector in UV.x direction
 	ufbx_vertex_vec3 vertex_bitangent; // < (optional) Tangent vector in UV.y direction
@@ -1102,19 +1309,25 @@ struct ufbx_mesh {
 	ufbx_uv_set_list uv_sets;
 	ufbx_color_set_list color_sets;
 
-	// List of materials used by the mesh. This is a list of structures that contains
-	// compact lists of face indices that use a specific material which can be more
-	// useful convenient `face_material`. Use `materials[index].material` for the
-	// actual material pointers.
+	// Materials used by the mesh.
 	// NOTE: These can be wrong if you want to support per-instance materials!
 	// Use `ufbx_node.materials[]` to get the per-instance materials at the same indices.
-	// HINT: If this mesh has no material then `materials[]` will be empty, but if
-	// you enable `ufbx_load_opts.allow_null_material` there will be a single
-	// `ufbx_mesh_material` with `material == NULL` with all the faces in it.
-	ufbx_mesh_material_list materials;
+	ufbx_material_list materials;
 
 	// Face groups for this mesh.
 	ufbx_face_group_list face_groups;
+
+	// Segments that use a given material.
+	// Defined even if the mesh doesn't have any materials.
+	ufbx_mesh_part_list material_parts;
+
+	// Segments for each face group.
+	ufbx_mesh_part_list face_group_parts;
+
+	// Order of `material_parts` by first face that refers to it.
+	// Useful for compatibility with FBX SDK and various importers using it,
+	// as they use this material order by default.
+	ufbx_uint32_list material_part_usage_order;
 
 	// Skinned vertex positions, for efficiency the skinned positions are the
 	// same as the static ones for non-skinned meshes and `skinned_is_local`
@@ -1136,6 +1349,9 @@ struct ufbx_mesh {
 	ufbx_subdivision_display_mode subdivision_display_mode;
 	ufbx_subdivision_boundary subdivision_boundary;
 	ufbx_subdivision_boundary subdivision_uv_boundary;
+
+	// The winding of the faces has been reversed.
+	bool reversed_winding;
 
 	// Normals have been generated instead of evalauted.
 	// Either from missing normals (via `ufbx_load_opts.generate_missing_normals`), skinning,
@@ -1436,7 +1652,7 @@ struct ufbx_empty {
 
 // -- Node attributes (curves/surfaces)
 
-// Segment of a `ufbx_line_curve`, indices refer to `ufbx_line_curve.point_indces[]`
+// Segment of a `ufbx_line_curve`, indices refer to `ufbx_line_curve.point_indices[]`
 typedef struct ufbx_line_segment {
 	uint32_t index_begin;
 	uint32_t num_indices;
@@ -1505,7 +1721,7 @@ typedef struct ufbx_nurbs_basis {
 	// `order`. If for example `num_wrap_control_points == 3` you should repeat
 	// the first 3 control points after the end.
 	// HINT: You don't need to worry about this if you use ufbx functions
-	// like `ufbx_evaluate_nurbs_curve_point()` as they handle this internally.
+	// like `ufbx_evaluate_nurbs_curve()` as they handle this internally.
 	size_t num_wrap_control_points;
 
 	// `true` if the parametrization is well defined.
@@ -1554,7 +1770,7 @@ struct ufbx_nurbs_surface {
 	// them by `w` before evaluating the surface.
 	ufbx_vec4_list control_points;
 
-	// How many segments tessellate each step in `ufbx_nurbs_basis.steps`.
+	// How many segments tessellate each span in `ufbx_nurbs_basis.spans`.
 	uint32_t span_subdivision_u;
 	uint32_t span_subdivision_v;
 
@@ -1607,8 +1823,8 @@ struct ufbx_stereo_camera {
 		ufbx_node_list instances;
 	}; };
 
-	ufbx_camera *left;
-	ufbx_camera *right;
+	ufbx_nullable ufbx_camera *left;
+	ufbx_nullable ufbx_camera *right;
 };
 
 struct ufbx_camera_switcher {
@@ -1662,7 +1878,7 @@ typedef struct ufbx_lod_level {
 
 	// Minimum distance to show this LOD level.
 	// NOTE: In world units by default, or in screen percentage if
-	// `ufbx_lod_group.relative_thresholds` is set.
+	// `ufbx_lod_group.relative_distances` is set.
 	ufbx_real distance;
 
 	// LOD display mode.
@@ -1860,6 +2076,9 @@ struct ufbx_blend_channel {
 	// Key morph targets to blend between depending on `weight`
 	// In usual cases there's only one target per channel
 	ufbx_blend_keyframe_list keyframes;
+
+	// Final blend shape ignoring any intermediate blend shapes.
+	ufbx_nullable ufbx_blend_shape *target_shape;
 };
 
 // Blend shape target containing the actual vertex offsets
@@ -1947,6 +2166,12 @@ typedef struct ufbx_cache_frame {
 	// Format of the wrapper file.
 	ufbx_cache_file_format file_format;
 
+	// Axis to mirror the read data by.
+	ufbx_mirror_axis mirror_axis;
+
+	// Factor to scale the geometry by.
+	ufbx_real scale_factor;
+
 	ufbx_cache_data_format data_format;     // < Format of the data in the file
 	ufbx_cache_data_encoding data_encoding; // < Binary encoding of the data
 	uint64_t data_offset;                   // < Byte offset into the file
@@ -1972,6 +2197,12 @@ typedef struct ufbx_cache_channel {
 	// List of frames belonging to this channel.
 	// Sorted by time (`ufbx_cache_frame.time`).
 	ufbx_cache_frame_list frames;
+
+	// Axis to mirror the frames by.
+	ufbx_mirror_axis mirror_axis;
+
+	// Factor to scale the geometry by.
+	ufbx_real scale_factor;
 
 } ufbx_cache_channel;
 
@@ -2008,11 +2239,24 @@ struct ufbx_cache_file {
 		uint32_t typed_id;
 	}; };
 
+	// Filename relative to the currently loaded file.
+	// HINT: If using functions other than `ufbx_load_file()`, you can provide
+	// `ufbx_load_opts.filename/raw_filename` to let ufbx resolve this.
 	ufbx_string filename;
+	// Absolute filename specified in the file.
 	ufbx_string absolute_filename;
+	// Relative filename specified in the file.
+	// NOTE: May be absolute if the file is saved in a different drive.
 	ufbx_string relative_filename;
+
+	// Filename relative to the loaded file, non-UTF-8 encoded.
+	// HINT: If using functions other than `ufbx_load_file()`, you can provide
+	// `ufbx_load_opts.filename/raw_filename` to let ufbx resolve this.
 	ufbx_blob raw_filename;
+	// Absolute filename specified in the file, non-UTF-8 encoded.
 	ufbx_blob raw_absolute_filename;
+	// Relative filename specified in the file, non-UTF-8 encoded.
+	// NOTE: May be absolute if the file is saved in a different drive.
 	ufbx_blob raw_relative_filename;
 
 	ufbx_cache_file_format format;
@@ -2113,6 +2357,7 @@ typedef enum ufbx_shader_type UFBX_ENUM_REPR {
 	UFBX_SHADER_SHADERFX_GRAPH,
 	// Variation of the FBX phong shader that can recover PBR properties like
 	// `metalness` or `roughness` from the FBX non-physical values.
+	// NOTE: Enable `ufbx_load_opts.use_blender_pbr_material`.
 	UFBX_SHADER_BLENDER_PHONG,
 	// Wavefront .mtl format shader (used by .obj files)
 	UFBX_SHADER_WAVEFRONT_MTL,
@@ -2428,7 +2673,7 @@ UFBX_ENUM_TYPE(ufbx_texture_type, UFBX_TEXTURE_TYPE, UFBX_TEXTURE_SHADER);
 
 // Blend modes to combine layered textures with, compatible with common blend
 // mode definitions in many art programs. Simpler blend modes have equations
-// specified below where `src` is the layer to compososite over `dst`.
+// specified below where `src` is the layer to composite over `dst`.
 // See eg. https://www.w3.org/TR/2013/WD-compositing-1-20131010/#blendingseparable
 typedef enum ufbx_blend_mode UFBX_ENUM_REPR {
 	UFBX_BLEND_TRANSLUCENT,   // < `src` effects result alpha
@@ -2491,7 +2736,7 @@ typedef enum ufbx_shader_texture_type UFBX_ENUM_REPR {
 	UFBX_SHADER_TEXTURE_UNKNOWN,
 
 	// Select an output of a multi-output shader.
-	// HINT: If this type is used the `ufbx_shader_texture_texture` and
+	// HINT: If this type is used the `ufbx_shader_texture.main_texture` and
 	// `ufbx_shader_texture.main_texture_output_index` fields are set.
 	UFBX_SHADER_TEXTURE_SELECT_OUTPUT,
 
@@ -2504,6 +2749,7 @@ typedef enum ufbx_shader_texture_type UFBX_ENUM_REPR {
 
 UFBX_ENUM_TYPE(ufbx_shader_texture_type, UFBX_SHADER_TEXTURE_TYPE, UFBX_SHADER_TEXTURE_OSL);
 
+// Input to a shader texture, see `ufbx_shader_texture`.
 typedef struct ufbx_shader_texture_input {
 
 	// Name of the input.
@@ -2543,6 +2789,13 @@ typedef struct ufbx_shader_texture_input {
 
 UFBX_LIST_TYPE(ufbx_shader_texture_input_list, ufbx_shader_texture_input);
 
+// Texture that emulates a shader graph node.
+// 3ds Max exports some materials as node graphs serialized to textures.
+// ufbx can parse a small subset of these, as normal maps are often hidden behind
+// some kind of bump node.
+// NOTE: These encode a lot of details of 3ds Max internals, not recommended for direct use.
+// HINT: `ufbx_texture.file_textures[]` contains a list of "real" textures that are connected
+// to the `ufbx_texture` that is pretending to be a shader node.
 typedef struct ufbx_shader_texture {
 
 	// Type of this shader node.
@@ -2583,11 +2836,25 @@ typedef struct ufbx_texture_file {
 	uint32_t index;
 
 	// Paths to the resource.
+
+	// Filename relative to the currently loaded file.
+	// HINT: If using functions other than `ufbx_load_file()`, you can provide
+	// `ufbx_load_opts.filename/raw_filename` to let ufbx resolve this.
 	ufbx_string filename;
+	// Absolute filename specified in the file.
 	ufbx_string absolute_filename;
+	// Relative filename specified in the file.
+	// NOTE: May be absolute if the file is saved in a different drive.
 	ufbx_string relative_filename;
+
+	// Filename relative to the loaded file, non-UTF-8 encoded.
+	// HINT: If using functions other than `ufbx_load_file()`, you can provide
+	// `ufbx_load_opts.filename/raw_filename` to let ufbx resolve this.
 	ufbx_blob raw_filename;
+	// Absolute filename specified in the file, non-UTF-8 encoded.
 	ufbx_blob raw_absolute_filename;
+	// Relative filename specified in the file, non-UTF-8 encoded.
+	// NOTE: May be absolute if the file is saved in a different drive.
 	ufbx_blob raw_relative_filename;
 
 	// Optional embedded content blob, eg. raw .png format data
@@ -2610,11 +2877,25 @@ struct ufbx_texture {
 	ufbx_texture_type type;
 
 	// FILE: Paths to the resource
+
+	// Filename relative to the currently loaded file.
+	// HINT: If using functions other than `ufbx_load_file()`, you can provide
+	// `ufbx_load_opts.filename/raw_filename` to let ufbx resolve this.
 	ufbx_string filename;
+	// Absolute filename specified in the file.
 	ufbx_string absolute_filename;
+	// Relative filename specified in the file.
+	// NOTE: May be absolute if the file is saved in a different drive.
 	ufbx_string relative_filename;
+
+	// Filename relative to the loaded file, non-UTF-8 encoded.
+	// HINT: If using functions other than `ufbx_load_file()`, you can provide
+	// `ufbx_load_opts.filename/raw_filename` to let ufbx resolve this.
 	ufbx_blob raw_filename;
+	// Absolute filename specified in the file, non-UTF-8 encoded.
 	ufbx_blob raw_absolute_filename;
+	// Relative filename specified in the file, non-UTF-8 encoded.
+	// NOTE: May be absolute if the file is saved in a different drive.
 	ufbx_blob raw_relative_filename;
 
 	// FILE: Optional embedded content blob, eg. raw .png format data
@@ -2665,11 +2946,25 @@ struct ufbx_video {
 	}; };
 
 	// Paths to the resource
+
+	// Filename relative to the currently loaded file.
+	// HINT: If using functions other than `ufbx_load_file()`, you can provide
+	// `ufbx_load_opts.filename/raw_filename` to let ufbx resolve this.
 	ufbx_string filename;
+	// Absolute filename specified in the file.
 	ufbx_string absolute_filename;
+	// Relative filename specified in the file.
+	// NOTE: May be absolute if the file is saved in a different drive.
 	ufbx_string relative_filename;
+
+	// Filename relative to the loaded file, non-UTF-8 encoded.
+	// HINT: If using functions other than `ufbx_load_file()`, you can provide
+	// `ufbx_load_opts.filename/raw_filename` to let ufbx resolve this.
 	ufbx_blob raw_filename;
+	// Absolute filename specified in the file, non-UTF-8 encoded.
 	ufbx_blob raw_absolute_filename;
+	// Relative filename specified in the file, non-UTF-8 encoded.
+	// NOTE: May be absolute if the file is saved in a different drive.
 	ufbx_blob raw_relative_filename;
 
 	// Optional embedded content blob
@@ -2718,45 +3013,56 @@ struct ufbx_shader_binding {
 
 // -- Animation
 
-typedef struct ufbx_anim_layer_desc {
-	ufbx_anim_layer *layer;
-	ufbx_real weight;
-} ufbx_anim_layer_desc;
-
-UFBX_LIST_TYPE(ufbx_const_anim_layer_desc_list, const ufbx_anim_layer_desc);
-
 typedef struct ufbx_prop_override {
-	// Element (`ufbx_element.id`) to override the property from
-	// NOTE: You can get this from typed structs eg. `my_node->element.id`
 	uint32_t element_id;
 
-	// Property name to override.
-	const char *prop_name;
-
-	// Override value, use `value.x` for scalars. `value_int` is initialized
-	// from `value.x` if zero so keep `value` zeroed even if you don't need it!
-	ufbx_vec3 value;
-	const char *value_str;
-	int64_t value_int;
-
-	// Internal: Gets filled automatically by `ufbx_prepare_prop_overrides()`
 	uint32_t _internal_key;
+
+	ufbx_string prop_name;
+	ufbx_vec4 value;
+	ufbx_string value_str;
+	int64_t value_int;
 } ufbx_prop_override;
 
-UFBX_LIST_TYPE(ufbx_const_prop_override_list, const ufbx_prop_override);
+UFBX_LIST_TYPE(ufbx_prop_override_list, ufbx_prop_override);
 
+typedef struct ufbx_transform_override {
+	uint32_t node_id;
+	ufbx_transform transform;
+} ufbx_transform_override;
+
+UFBX_LIST_TYPE(ufbx_transform_override_list, ufbx_transform_override);
+
+// Animation descriptor used for evaluating animation.
+// Usually obtained from `ufbx_scene` via either global animation `ufbx_scene.anim`,
+// per-stack animation `ufbx_anim_stack.anim` or per-layer animation `ufbx_anim_layer.anim`.
+//
+// For advanced usage you can use `ufbx_create_anim()` to create animation descriptors
+// with custom layers, property overrides, special flags, etc.
 typedef struct ufbx_anim {
-	ufbx_const_anim_layer_desc_list layers;
 
-	// Override individual `ufbx_prop` values from elements
-	// NOTE: Call `ufbx_prepare_prop_overrides()` to obtain this!
-	ufbx_const_prop_override_list prop_overrides;
-
-	bool ignore_connections;
-
-	// Not used by evaluation
+	// Time begin/end for the animation, both may be zero if absent.
 	double time_begin;
 	double time_end;
+
+	// List of layers in the animation.
+	ufbx_anim_layer_list layers;
+
+	// Optional overrides for weights for each layer in `layers[]`.
+	ufbx_real_list override_layer_weights;
+
+	// Sorted by `element_id, prop_name`
+	ufbx_prop_override_list prop_overrides;
+
+	// Sorted by `node_id`
+	ufbx_transform_override_list transform_overrides;
+
+	// Evaluate connected properties as if they would not be connected.
+	bool ignore_connections;
+
+	// Custom `ufbx_anim` created by `ufbx_create_anim()`.
+	bool custom;
+
 } ufbx_anim;
 
 struct ufbx_anim_stack {
@@ -2771,12 +3077,14 @@ struct ufbx_anim_stack {
 	double time_end;
 
 	ufbx_anim_layer_list layers;
-	ufbx_anim anim;
+	ufbx_anim *anim;
 };
 
 typedef struct ufbx_anim_prop {
 	ufbx_element *element;
+
 	uint32_t _internal_key;
+
 	ufbx_string prop_name;
 	ufbx_anim_value *anim_value;
 } ufbx_anim_prop;
@@ -2801,7 +3109,7 @@ struct ufbx_anim_layer {
 	ufbx_anim_value_list anim_values;
 	ufbx_anim_prop_list anim_props; // < Sorted by `element,prop_name`
 
-	ufbx_anim anim;
+	ufbx_anim *anim;
 
 	uint32_t _min_element_id;
 	uint32_t _max_element_id;
@@ -2809,7 +3117,12 @@ struct ufbx_anim_layer {
 };
 
 struct ufbx_anim_value {
-	union { ufbx_element element; struct { ufbx_string name; ufbx_props props; }; };
+	union { ufbx_element element; struct {
+		ufbx_string name;
+		ufbx_props props;
+		uint32_t element_id;
+		uint32_t typed_id;
+	}; };
 
 	ufbx_vec3 default_value;
 	ufbx_nullable ufbx_anim_curve *curves[3];
@@ -2864,6 +3177,9 @@ struct ufbx_anim_curve {
 	}; };
 
 	ufbx_keyframe_list keyframes;
+
+	ufbx_real min_value;
+	ufbx_real max_value;
 };
 
 // -- Collections
@@ -3024,11 +3340,67 @@ struct ufbx_constraint {
 	ufbx_vec3 ik_pole_vector;
 };
 
+// -- Audio
+
+struct ufbx_audio_layer {
+	union { ufbx_element element; struct {
+		ufbx_string name;
+		ufbx_props props;
+		uint32_t element_id;
+		uint32_t typed_id;
+	}; };
+
+	// Clips contained in this layer.
+	ufbx_audio_clip_list clips;
+};
+
+struct ufbx_audio_clip {
+	union { ufbx_element element; struct {
+		ufbx_string name;
+		ufbx_props props;
+		uint32_t element_id;
+		uint32_t typed_id;
+	}; };
+
+	// Filename relative to the currently loaded file.
+	// HINT: If using functions other than `ufbx_load_file()`, you can provide
+	// `ufbx_load_opts.filename/raw_filename` to let ufbx resolve this.
+	ufbx_string filename;
+	// Absolute filename specified in the file.
+	ufbx_string absolute_filename;
+	// Relative filename specified in the file.
+	// NOTE: May be absolute if the file is saved in a different drive.
+	ufbx_string relative_filename;
+
+	// Filename relative to the loaded file, non-UTF-8 encoded.
+	// HINT: If using functions other than `ufbx_load_file()`, you can provide
+	// `ufbx_load_opts.filename/raw_filename` to let ufbx resolve this.
+	ufbx_blob raw_filename;
+	// Absolute filename specified in the file, non-UTF-8 encoded.
+	ufbx_blob raw_absolute_filename;
+	// Relative filename specified in the file, non-UTF-8 encoded.
+	// NOTE: May be absolute if the file is saved in a different drive.
+	ufbx_blob raw_relative_filename;
+
+	// Optional embedded content blob, eg. raw .png format data
+	ufbx_blob content;
+};
+
 // -- Miscellaneous
 
 typedef struct ufbx_bone_pose {
+
+	// Node to apply the pose to.
 	ufbx_node *bone_node;
+
+	// Matrix from node local space to world space.
 	ufbx_matrix bone_to_world;
+
+	// Matrix from node local space to parent space.
+	// NOTE: FBX only stores world transformations so this is approximated from
+	// the parent world transform.
+	ufbx_matrix bone_to_parent;
+
 } ufbx_bone_pose;
 
 UFBX_LIST_TYPE(ufbx_bone_pose_list, ufbx_bone_pose);
@@ -3041,7 +3413,11 @@ struct ufbx_pose {
 		uint32_t typed_id;
 	}; };
 
-	bool bind_pose;
+	// Set if this pose is marked as a bind pose.
+	bool is_bind_pose;
+
+	// List of bone poses.
+	// Sorted by `ufbx_node.typed_id`.
 	ufbx_bone_pose_list bone_poses;
 };
 
@@ -3059,7 +3435,9 @@ struct ufbx_metadata_object {
 typedef struct ufbx_name_element {
 	ufbx_string name;
 	ufbx_element_type type;
+
 	uint32_t _internal_key;
+
 	ufbx_element *element;
 } ufbx_name_element;
 
@@ -3075,12 +3453,11 @@ typedef enum ufbx_exporter UFBX_ENUM_REPR {
 	UFBX_EXPORTER_BLENDER_BINARY,
 	UFBX_EXPORTER_BLENDER_ASCII,
 	UFBX_EXPORTER_MOTION_BUILDER,
-	UFBX_EXPORTER_BC_UNITY_EXPORTER,
 
 	UFBX_ENUM_FORCE_WIDTH(UFBX_EXPORTER)
 } ufbx_exporter;
 
-UFBX_ENUM_TYPE(ufbx_exporter, UFBX_EXPORTER, UFBX_EXPORTER_BC_UNITY_EXPORTER);
+UFBX_ENUM_TYPE(ufbx_exporter, UFBX_EXPORTER, UFBX_EXPORTER_MOTION_BUILDER);
 
 typedef struct ufbx_application {
 	ufbx_string vendor;
@@ -3110,6 +3487,18 @@ typedef enum ufbx_warning_type UFBX_ENUM_REPR {
 
 	// Truncated array has been auto-expanded.
 	UFBX_WARNING_TRUNCATED_ARRAY,
+
+	// Geometry data has been defined but has no data.
+	UFBX_WARNING_MISSING_GEOMETRY_DATA,
+
+	// Duplicated connection between two elements that shouldn't have.
+	UFBX_WARNING_DUPLICATE_CONNECTION,
+
+	// Vertex 'W' attribute length differs from main attribute.
+	UFBX_WARNING_BAD_VERTEX_W_ATTRIBUTE,
+
+	// Missing polygon mapping type.
+	UFBX_WARNING_MISSING_POLYGON_MAPPING,
 
 	// Out-of-bounds index has been clamped to be in-bounds.
 	// HINT: You can use `ufbx_index_error_handling` to adjust behavior.
@@ -3149,11 +3538,64 @@ typedef struct ufbx_warning {
 	ufbx_warning_type type;
 	// Description of the warning.
 	ufbx_string description;
+	// The element related to this warning or `UFBX_NO_INDEX` if not related to a specific element.
+	uint32_t element_id;
 	// Number of times this warning was encountered.
 	size_t count;
 } ufbx_warning;
 
 UFBX_LIST_TYPE(ufbx_warning_list, ufbx_warning);
+
+typedef enum ufbx_thumbnail_format UFBX_ENUM_REPR {
+	UFBX_THUMBNAIL_FORMAT_UNKNOWN, // < Unknown format
+	UFBX_THUMBNAIL_FORMAT_RGB_24,  // < 8-bit RGB pixels, in memory R,G,B
+	UFBX_THUMBNAIL_FORMAT_RGBA_32, // < 8-bit RGBA pixels, in memory R,G,B,A
+
+	UFBX_ENUM_FORCE_WIDTH(UFBX_THUMBNAIL_FORMAT)
+} ufbx_thumbnail_format;
+
+UFBX_ENUM_TYPE(ufbx_thumbnail_format, UFBX_THUMBNAIL_FORMAT, UFBX_THUMBNAIL_FORMAT_RGBA_32);
+
+// Specify how unit / coordinate system conversion should be performed.
+// Affects how `ufbx_load_opts.target_axes` and `ufbx_load_opts.target_unit_meters` work,
+// has no effect if neither is specified.
+typedef enum ufbx_space_conversion UFBX_ENUM_REPR {
+
+	// Store the space conversion transform in the root node.
+	// Sets `ufbx_node.local_transform` of the root node.
+	UFBX_SPACE_CONVERSION_TRANSFORM_ROOT,
+
+	// Perform the conversion by using "adjust" transforms.
+	// Compensates for the transforms using `ufbx_node.adjust_pre_rotation` and
+	// `ufbx_node.adjust_pre_scale`. You don't need to account for these unless
+	// you are manually building transforms from `ufbx_props`.
+	UFBX_SPACE_CONVERSION_ADJUST_TRANSFORMS,
+
+	// Perform the conversion by scaling geometry in addition to adjusting transforms.
+	// Compensates transforms like `UFBX_SPACE_CONVERSION_ADJUST_TRANSFORMS` but
+	// applies scaling to geometry as well.
+	UFBX_SPACE_CONVERSION_MODIFY_GEOMETRY,
+
+	UFBX_ENUM_FORCE_WIDTH(UFBX_SPACE_CONVERSION)
+} ufbx_space_conversion;
+
+UFBX_ENUM_TYPE(ufbx_space_conversion, UFBX_SPACE_CONVERSION, UFBX_SPACE_CONVERSION_MODIFY_GEOMETRY);
+
+// Embedded thumbnail in the file, valid if the dimensions are non-zero.
+typedef struct ufbx_thumbnail {
+	ufbx_props props;
+
+	// Extents of the thumbnail
+	uint32_t width;
+	uint32_t height;
+
+	// Format of `ufbx_thumbnail.data`.
+	ufbx_thumbnail_format format;
+
+	// Thumbnail pixel data, layout as contiguous rows from bottom to top.
+	// See `ufbx_thumbnail.format` for the pixel format.
+	ufbx_blob data;
+} ufbx_thumbnail;
 
 // Miscellaneous data related to the loaded file
 typedef struct ufbx_metadata {
@@ -3175,10 +3617,6 @@ typedef struct ufbx_metadata {
 	// Index arrays may contain `UFBX_NO_INDEX` instead of a valid index
 	// to indicate gaps.
 	bool may_contain_no_index;
-
-	// May contain `ufbx_mesh_material` entries where `ufbx_mesh_material.material == NULL`.
-	// NOTE: The corresponding `ufbx_node.material[]` will be empty in this case.
-	bool may_contain_null_materials;
 
 	// May contain meshes with no defined vertex position.
 	// NOTE: `ufbx_mesh.vertex_position.exists` may be `false`!
@@ -3213,6 +3651,8 @@ typedef struct ufbx_metadata {
 	ufbx_application original_application;
 	ufbx_application latest_application;
 
+	ufbx_thumbnail thumbnail;
+
 	bool geometry_ignored;
 	bool animation_ignored;
 	bool embedded_ignored;
@@ -3229,10 +3669,28 @@ typedef struct ufbx_metadata {
 
 	ufbx_real bone_prop_size_unit;
 	bool bone_prop_limb_length_relative;
-	double ktime_to_sec;
+
+	ufbx_real ortho_size_unit;
+
+	int64_t ktime_second; // < One second in internal KTime units
 
 	ufbx_string original_file_path;
 	ufbx_blob raw_original_file_path;
+
+	// Space conversion method used on the scene.
+	ufbx_space_conversion space_conversion;
+
+	// Transform that has been applied to root for axis/unit conversion.
+	ufbx_quat root_rotation;
+	ufbx_real root_scale;
+
+	// Axis that the scene has been mirrored by.
+	// All geometry has been mirrored in this axis.
+	ufbx_mirror_axis mirror_axis;
+
+	// Amount geometry has been scaled.
+	// See `UFBX_SPACE_CONVERSION_MODIFY_GEOMETRY`.
+	ufbx_real geometry_scale;
 
 } ufbx_metadata;
 
@@ -3296,11 +3754,14 @@ typedef struct ufbx_scene_settings {
 	// HINT: Use `ufbx_load_opts.target_unit_meters` to normalize this.
 	ufbx_real unit_meters;
 
+	// Frames per second the animation is defined at.
 	double frames_per_second;
 
 	ufbx_vec3 ambient_color;
 	ufbx_string default_camera;
 
+	// Animation user interface settings.
+	// HINT: Use `ufbx_scene_settings.frames_per_second` instead of interpreting these yourself.
 	ufbx_time_mode time_mode;
 	ufbx_time_protocol time_protocol;
 	ufbx_snap_mode snap_mode;
@@ -3320,10 +3781,7 @@ struct ufbx_scene {
 	ufbx_node *root_node;
 
 	// Default animation descriptor
-	ufbx_anim anim;
-
-	// All animation stacks combined
-	ufbx_anim combined_anim;
+	ufbx_anim *anim;
 
 	union {
 		struct {
@@ -3384,6 +3842,10 @@ struct ufbx_scene {
 			ufbx_character_list characters;
 			ufbx_constraint_list constraints;
 
+			// Audio
+			ufbx_audio_layer_list audio_layers;
+			ufbx_audio_clip_list audio_clips;
+
 			// Miscellaneous
 			ufbx_pose_list poses;
 			ufbx_metadata_object_list metadata_objects;
@@ -3441,9 +3903,13 @@ typedef struct ufbx_topo_edge {
 	ufbx_topo_flags flags;
 } ufbx_topo_edge;
 
+// Vertex data array for `ufbx_generate_indices()`.
+// NOTE: `ufbx_generate_indices()` compares the vertices using `memcmp()`, so
+// any padding should be cleared to zero.
 typedef struct ufbx_vertex_stream {
-	const void *data;
-	size_t vertex_size;
+	void *data;          // < Data pointer of shape `char[vertex_count][vertex_size]`.
+	size_t vertex_count; // < Number of vertices in this stream, for sanity checking.
+	size_t vertex_size;  // < Size of a vertex in bytes.
 } ufbx_vertex_stream;
 
 // -- Memory callbacks
@@ -3616,6 +4082,13 @@ typedef enum ufbx_error_type UFBX_ENUM_REPR {
 	// File not found.
 	UFBX_ERROR_FILE_NOT_FOUND,
 
+	// Empty file.
+	UFBX_ERROR_EMPTY_FILE,
+
+	// External file not found.
+	// See `ufbx_load_opts.load_external_files` for more information.
+	UFBX_ERROR_EXTERNAL_FILE_NOT_FOUND,
+
 	// Out of memory (allocator returned `NULL`).
 	UFBX_ERROR_OUT_OF_MEMORY,
 
@@ -3649,6 +4122,9 @@ typedef enum ufbx_error_type UFBX_ENUM_REPR {
 	// The vertex streams in `ufbx_generate_indices()` are empty.
 	UFBX_ERROR_ZERO_VERTEX_SIZE,
 
+	// Vertex stream passed to `ufbx_generate_indices()`.
+	UFBX_ERROR_TRUNCATED_VERTEX_STREAM,
+
 	// Invalid UTF-8 encountered in a file when loading with `UFBX_UNICODE_ERROR_HANDLING_ABORT_LOADING`.
 	UFBX_ERROR_INVALID_UTF8,
 
@@ -3662,13 +4138,24 @@ typedef enum ufbx_error_type UFBX_ENUM_REPR {
 	// Out of bounds index in the file when loading with `UFBX_INDEX_ERROR_HANDLING_ABORT_LOADING`.
 	UFBX_ERROR_BAD_INDEX,
 
+	// Node is deeper than `ufbx_load_opts.node_depth_limit` in the hierarchy.
+	UFBX_ERROR_NODE_DEPTH_LIMIT,
+
+	// Error parsing ASCII array in a thread.
+	// Threaded ASCII parsing is slightly more strict than non-threaded, for cursed files,
+	// set `ufbx_load_opts.force_single_thread_ascii_parsing` to `true`.
+	UFBX_ERROR_THREADED_ASCII_PARSE,
+
 	// Unsafe options specified without enabling `ufbx_load_opts.allow_unsafe`.
 	UFBX_ERROR_UNSAFE_OPTIONS,
+
+	// Duplicated override property in `ufbx_create_anim()`
+	UFBX_ERROR_DUPLICATE_OVERRIDE,
 
 	UFBX_ENUM_FORCE_WIDTH(UFBX_ERROR_TYPE)
 } ufbx_error_type;
 
-UFBX_ENUM_TYPE(ufbx_error_type, UFBX_ERROR_TYPE, UFBX_ERROR_UNSAFE_OPTIONS);
+UFBX_ENUM_TYPE(ufbx_error_type, UFBX_ERROR_TYPE, UFBX_ERROR_DUPLICATE_OVERRIDE);
 
 // Error description with detailed stack trace
 // HINT: You can use `ufbx_format_error()` for formatting the error
@@ -3831,25 +4318,202 @@ typedef enum ufbx_geometry_transform_handling UFBX_ENUM_REPR {
 
 UFBX_ENUM_TYPE(ufbx_geometry_transform_handling, UFBX_GEOMETRY_TRANSFORM_HANDLING, UFBX_GEOMETRY_TRANSFORM_HANDLING_MODIFY_GEOMETRY_NO_FALLBACK);
 
-// Specify how unit / coordinate system conversion should be performed.
-// Affects how `ufbx_load_opts.target_axes` and `ufbx_load_opts.target_unit_meters` work,
-// has no effect if neither is specified.
-typedef enum ufbx_space_conversion UFBX_ENUM_REPR {
+// How to handle FBX transform inherit modes.
+typedef enum ufbx_inherit_mode_handling UFBX_ENUM_REPR {
 
-	// Store the space conversion transform in the root node.
-	// Sets `ufbx_node.local_transform` of the root node.
-	UFBX_SPACE_CONVERSION_TRANSFORM_ROOT,
+	// Preserve inherit mode in `ufbx_node.inherit_mode`.
+	// NOTE: To correctly handle all scenes you would need to handle the
+	// non-standard inherit modes.
+	UFBX_INHERIT_MODE_HANDLING_PRESERVE,
 
-	// Perform the conversion by using "adjust" transforms.
-	// Compensates for the transforms using `ufbx_node.adjust_pre_rotation` and
-	// `ufbx_node.adjust_pre_scale`. You don't need to account for these unless
-	// you are manually building transforms from `ufbx_props`.
-	UFBX_SPACE_CONVERSION_ADJUST_TRANSFORMS,
+	// Create scale helper nodes parented to nodes that need special inheritance.
+	// Scale helper nodes will have `ufbx_node.is_scale_helper` and parents of
+	// scale helpers will have `ufbx_node.scale_helper` pointing to it.
+	UFBX_INHERIT_MODE_HANDLING_HELPER_NODES,
 
-	UFBX_ENUM_FORCE_WIDTH(UFBX_SPACE_CONVERSION)
-} ufbx_space_conversion;
+	// Attempt to compensate for bone scale by inversely scaling children.
+	// NOTE: This only works for uniform non-animated scaling, if scale is
+	// non-uniform or animated, ufbx will add scale helpers in the same way
+	// as `UFBX_INHERIT_MODE_HANDLING_HELPER_NODES`.
+	UFBX_INHERIT_MODE_HANDLING_COMPENSATE,
 
-UFBX_ENUM_TYPE(ufbx_space_conversion, UFBX_SPACE_CONVERSION, UFBX_SPACE_CONVERSION_ADJUST_TRANSFORMS);
+	// Attempt to compensate for bone scale by inversely scaling children.
+	// Will never create helper nodes.
+	UFBX_INHERIT_MODE_HANDLING_COMPENSATE_NO_FALLBACK,
+
+	// Ignore non-standard inheritance modes.
+	// Forces all nodes to have `UFBX_INHERIT_MODE_NORMAL` regardless of the
+	// inherit mode specified in the file. This can be useful for emulating
+	// results from importers/programs that don't support inherit modes.
+	UFBX_INHERIT_MODE_HANDLING_IGNORE,
+
+	UFBX_ENUM_FORCE_WIDTH(UFBX_INHERIT_MODE_HANDLING)
+} ufbx_inherit_mode_handling;
+
+UFBX_ENUM_TYPE(ufbx_inherit_mode_handling, UFBX_INHERIT_MODE_HANDLING, UFBX_INHERIT_MODE_HANDLING_IGNORE);
+
+// How to handle FBX transform pivots.
+typedef enum ufbx_pivot_handling UFBX_ENUM_REPR {
+
+	// Take pivots into account when computing the transform.
+	UFBX_PIVOT_HANDLING_RETAIN,
+
+	// Translate objects to be located at their pivot.
+	// NOTE: Only applied if rotation and scaling pivots are equal.
+	// NOTE: Results in geometric translation. Use `ufbx_geometry_transform_handling`
+	// to interpret these in a standard scene graph.
+	UFBX_PIVOT_HANDLING_ADJUST_TO_PIVOT,
+
+	UFBX_ENUM_FORCE_WIDTH(UFBX_PIVOT_HANDLING)
+} ufbx_pivot_handling;
+
+UFBX_ENUM_TYPE(ufbx_pivot_handling, UFBX_PIVOT_HANDLING, UFBX_PIVOT_HANDLING_ADJUST_TO_PIVOT);
+
+typedef enum ufbx_baked_key_flags UFBX_FLAG_REPR {
+	// This keyframe represents a constant step from the left side
+	UFBX_BAKED_KEY_STEP_LEFT = 0x1,
+	// This keyframe represents a constant step from the right side
+	UFBX_BAKED_KEY_STEP_RIGHT = 0x2,
+	// This keyframe is the main part of a step
+	// Bordering either `UFBX_BAKED_KEY_STEP_LEFT` or `UFBX_BAKED_KEY_STEP_RIGHT`.
+	UFBX_BAKED_KEY_STEP_KEY = 0x4,
+	// This keyframe is a real keyframe in the source animation
+	UFBX_BAKED_KEY_KEYFRAME = 0x8,
+	// This keyframe has been reduced by maximum sample rate.
+	// See `ufbx_bake_opts.maximum_sample_rate`.
+	UFBX_BAKED_KEY_REDUCED = 0x10,
+
+	UFBX_FLAG_FORCE_WIDTH(UFBX_BAKED_KEY)
+} ufbx_baked_key_flags;
+
+typedef struct ufbx_baked_vec3 {
+	double time;                // < Time of the keyframe, in seconds
+	ufbx_vec3 value;            // < Value at `time`, can be linearly interpolated
+	ufbx_baked_key_flags flags; // < Additional information about the keyframe
+} ufbx_baked_vec3;
+
+UFBX_LIST_TYPE(ufbx_baked_vec3_list, ufbx_baked_vec3);
+
+typedef struct ufbx_baked_quat {
+	double time;                // < Time of the keyframe, in seconds
+	ufbx_quat value;            // < Value at `time`, can be (spherically) linearly interpolated
+	ufbx_baked_key_flags flags; // < Additional information about the keyframe
+} ufbx_baked_quat;
+
+UFBX_LIST_TYPE(ufbx_baked_quat_list, ufbx_baked_quat);
+
+// Baked transform animation for a single node.
+typedef struct ufbx_baked_node {
+
+	// Typed ID of the node, maps to `ufbx_scene.nodes[]`.
+	uint32_t typed_id;
+	// Element ID of the element, maps to `ufbx_scene.elements[]`.
+	uint32_t element_id;
+
+	// The translation channel has constant values for the whole animation.
+	bool constant_translation;
+	// The rotation channel has constant values for the whole animation.
+	bool constant_rotation;
+	// The scale channel has constant values for the whole animation.
+	bool constant_scale;
+
+	// Translation keys for the animation, maps to `ufbx_node.local_transform.translation`.
+	ufbx_baked_vec3_list translation_keys;
+	// Rotation keyframes, maps to `ufbx_node.local_transform.rotation`.
+	ufbx_baked_quat_list rotation_keys;
+	// Scale keyframes, maps to `ufbx_node.local_transform.scale`.
+	ufbx_baked_vec3_list scale_keys;
+
+} ufbx_baked_node;
+
+UFBX_LIST_TYPE(ufbx_baked_node_list, ufbx_baked_node);
+
+// Baked property animation.
+typedef struct ufbx_baked_prop {
+	// Name of the property, eg. `"Visibility"`.
+	ufbx_string name;
+	// The value of the property is constant for the whole animation.
+	bool constant_value;
+	// Property value keys.
+	ufbx_baked_vec3_list keys;
+} ufbx_baked_prop;
+
+UFBX_LIST_TYPE(ufbx_baked_prop_list, ufbx_baked_prop);
+
+// Baked property animation for a single element.
+typedef struct ufbx_baked_element {
+	// Element ID of the element, maps to `ufbx_scene.elements[]`.
+	uint32_t element_id;
+	// List of properties the animation modifies.
+	ufbx_baked_prop_list props;
+} ufbx_baked_element;
+
+UFBX_LIST_TYPE(ufbx_baked_element_list, ufbx_baked_element);
+
+typedef struct ufbx_baked_anim_metadata {
+	// Memory statistics
+	size_t result_memory_used;
+	size_t temp_memory_used;
+	size_t result_allocs;
+	size_t temp_allocs;
+} ufbx_baked_anim_metadata;
+
+// Animation baked into linearly interpolated keyframes.
+// See `ufbx_bake_anim()`.
+typedef struct ufbx_baked_anim {
+
+	// Nodes that are modified by the animation.
+	// Some nodes may be missing if the specified animation does not transform them.
+	// Conversely, some non-obviously animated nodes may be included as exporters
+	// often may add dummy keyframes for objects.
+	ufbx_baked_node_list nodes;
+
+	// Element properties modified by the animation.
+	ufbx_baked_element_list elements;
+
+	// Playback time range for the animation.
+	double playback_time_begin;
+	double playback_time_end;
+	double playback_duration;
+
+	// Keyframe time range.
+	double key_time_min;
+	double key_time_max;
+
+	// Additional bake information.
+	ufbx_baked_anim_metadata metadata;
+
+} ufbx_baked_anim;
+
+// -- Thread API
+//
+// NOTE: This API is still experimental and may change.
+// Documentation is currently missing on purpose.
+
+typedef uintptr_t ufbx_thread_pool_context;
+
+typedef struct ufbx_thread_pool_info {
+	uint32_t max_concurrent_tasks;
+} ufbx_thread_pool_info;
+
+typedef bool ufbx_thread_pool_init_fn(void *user, ufbx_thread_pool_context ctx, const ufbx_thread_pool_info *info);
+typedef bool ufbx_thread_pool_run_fn(void *user, ufbx_thread_pool_context ctx, uint32_t group, uint32_t start_index, uint32_t count);
+typedef bool ufbx_thread_pool_wait_fn(void *user, ufbx_thread_pool_context ctx, uint32_t group, uint32_t max_index);
+typedef void ufbx_thread_pool_free_fn(void *user, ufbx_thread_pool_context ctx);
+
+typedef struct ufbx_thread_pool {
+	ufbx_thread_pool_init_fn *init_fn;
+	ufbx_thread_pool_run_fn *run_fn;
+	ufbx_thread_pool_wait_fn *wait_fn;
+	ufbx_thread_pool_free_fn *free_fn;
+	void *user;
+} ufbx_thread_pool;
+
+typedef struct ufbx_thread_opts {
+	ufbx_thread_pool pool;
+	size_t num_tasks;
+	size_t memory_limit;
+} ufbx_thread_opts;
 
 // -- Main API
 
@@ -3860,6 +4524,7 @@ typedef struct ufbx_load_opts {
 
 	ufbx_allocator_opts temp_allocator;   // < Allocator used during loading
 	ufbx_allocator_opts result_allocator; // < Allocator used for the final scene
+	ufbx_thread_opts thread_opts;         // < Threading options
 
 	// Preferences
 	bool ignore_geometry;    // < Do not load geometry datsa (vertices, indices, etc)
@@ -3877,6 +4542,9 @@ typedef struct ufbx_load_opts {
 	// NOTE: This only applies to files *implicitly* referenced by the scene, if
 	// you request additional files via eg. `ufbx_load_opts.obj_mtl_path` they
 	// are still loaded.
+	// NOTE: Will fail loading if any external files are not found by default, use
+	// `ufbx_load_opts.ignore_missing_external_files` to suppress this, in this case
+	// you can find the errors at `ufbx_metadata.warnings[]` as `UFBX_WARNING_MISSING_EXTERNAL_FILE`.
 	bool load_external_files;
 
 	// Don't fail loading if external files are not found.
@@ -3886,14 +4554,28 @@ typedef struct ufbx_load_opts {
 	// a bit of memory and time if not needed
 	bool skip_skin_vertices;
 
+	// Skip computing `ufbx_mesh.material_parts[]` and `ufbx_mesh.face_group_parts[]`.
+	bool skip_mesh_parts;
+
 	// Clean-up skin weights by removing negative, zero and NAN weights.
 	bool clean_skin_weights;
+
+	// Read Blender materials as PBR values.
+	// Blender converts PBR materials to legacy FBX Phong materials in a deterministic way.
+	// If this setting is enabled, such materials will be read as `UFBX_SHADER_BLENDER_PHONG`,
+	// which means ufbx will be able to parse roughness and metallic textures.
+	bool use_blender_pbr_material;
 
 	// Don't adjust reading the FBX file depending on the detected exporter
 	bool disable_quirks;
 
 	// Don't allow partially broken FBX files to load
 	bool strict;
+
+	// Force ASCII parsing to use a single thread.
+	// The multi-threaded ASCII parsing is slightly more lenient as it ignores
+	// the self-reported size of ASCII arrays, that threaded parsing depends on.
+	bool force_single_thread_ascii_parsing;
 
 	// UNSAFE: If enabled allows using unsafe options that may fundamentally
 	// break the API guarantees.
@@ -3911,11 +4593,6 @@ typedef struct ufbx_load_opts {
 	// disabled, all lone nodes will be parented under `ufbx_scene.root_node`.
 	bool allow_nodes_out_of_root;
 
-	// If a mesh does not have a material create a `ufbx_mesh_material` part
-	// with a `NULL` material pointer. This can be more convenient if you need
-	// to split models into parts per material.
-	bool allow_null_material;
-
 	// Allow meshes with no vertex position attribute.
 	// NOTE: If this is set `ufbx_mesh.vertex_position.exists` may be `false`.
 	bool allow_missing_vertex_position;
@@ -3932,6 +4609,12 @@ typedef struct ufbx_load_opts {
 
 	// Path separator character, defaults to '\' on Windows and '/' otherwise.
 	char path_separator;
+
+	// Maximum depth of the node hirerachy.
+	// Will fail with `UFBX_ERROR_NODE_DEPTH_LIMIT` if a node is deeper than this limit.
+	// NOTE: The default of 0 allows arbitrarily deep hierarchies. Be careful if using
+	// recursive algorithms without setting this limit.
+	uint32_t node_depth_limit;
 
 	// Estimated file size for progress reporting
 	uint64_t file_size_estimate;
@@ -3959,9 +4642,28 @@ typedef struct ufbx_load_opts {
 	// See `ufbx_geometry_transform_handling` for an explanation.
 	ufbx_geometry_transform_handling geometry_transform_handling;
 
+	// How to handle unconventional transform inherit modes.
+	// See `ufbx_inherit_mode_handling` for an explanation.
+	ufbx_inherit_mode_handling inherit_mode_handling;
+
+	// How to handle pivots.
+	// See `ufbx_pivot_handling` for an explanation.
+	ufbx_pivot_handling pivot_handling;
+
 	// How to perform space conversion by `target_axes` and `target_unit_meters`.
 	// See `ufbx_space_conversion` for an explanation.
 	ufbx_space_conversion space_conversion;
+
+	// Axis used to mirror for conversion between left-handed and right-handed coordinates.
+	ufbx_mirror_axis handedness_conversion_axis;
+
+	// Do not change winding of faces when converting handedness.
+	bool handedness_conversion_retain_winding;
+
+	// Reverse winding of all faces.
+	// If `handedness_conversion_retain_winding` is not specified, mirrored meshes
+	// will retain their original winding.
+	bool reverse_winding;
 
 	// Apply an implicit root transformation to match axes.
 	// Used if `ufbx_coordinate_axes_valid(target_axes)`.
@@ -3985,13 +4687,9 @@ typedef struct ufbx_load_opts {
 	// See `UFBX_GEOMETRY_TRANSFORM_HANDLING_HELPER_NODES`.
 	ufbx_string geometry_transform_helper_name;
 
-	// Do not scale necessary properties curves with `target_unit_meters`.
-	// Used only if `space_conversion == UFBX_SPACE_CONVERSION_TRANSFORM_ROOT`.
-	bool no_prop_unit_scaling;
-
-	// Do not scale necessary animation curves with `target_unit_meters`.
-	// Used only if `space_conversion == UFBX_SPACE_CONVERSION_TRANSFORM_ROOT`.
-	bool no_anim_curve_unit_scaling;
+	// Name for dummy scale helper nodes.
+	// See `UFBX_INHERIT_MODE_HANDLING_HELPER_NODES`.
+	ufbx_string scale_helper_name;
 
 	// Normalize vertex normals.
 	bool normalize_normals;
@@ -4003,8 +4701,15 @@ typedef struct ufbx_load_opts {
 	bool use_root_transform;
 	ufbx_transform root_transform;
 
+	// Animation keyframe clamp threhsold, only applies to specific interpolation modes.
+	double key_clamp_threshold;
+
 	// Specify how to handle Unicode errors in strings.
 	ufbx_unicode_error_handling unicode_error_handling;
+
+	// Retain the 'W' component of mesh normal/tangent/bitangent.
+	// See `ufbx_vertex_attrib.values_w`.
+	bool retain_vertex_attrib_w;
 
 	// Retain the raw document structure using `ufbx_dom_node`.
 	bool retain_dom;
@@ -4048,6 +4753,16 @@ typedef struct ufbx_load_opts {
 	// (.obj) Data for the .mtl file.
 	ufbx_blob obj_mtl_data;
 
+	// The world unit in meters that .obj files are assumed to be in.
+	// .obj files do not define the working units. By default the unit scale
+	// is read as zero, and no unit conversion is performed.
+	ufbx_real obj_unit_meters;
+
+	// Coordinate space .obj files are assumed to be in.
+	// .obj files do not define the coordinate space they use. By default no
+	// coordinate space is assumed and no conversion is performed.
+	ufbx_coordinate_axes obj_axes;
+
 	uint32_t _end_zero;
 } ufbx_load_opts;
 
@@ -4071,6 +4786,157 @@ typedef struct ufbx_evaluate_opts {
 	uint32_t _end_zero;
 } ufbx_evaluate_opts;
 
+UFBX_LIST_TYPE(ufbx_const_uint32_list, const uint32_t);
+UFBX_LIST_TYPE(ufbx_const_real_list, const ufbx_real);
+
+typedef struct ufbx_prop_override_desc {
+	// Element (`ufbx_element.element_id`) to override the property from
+	uint32_t element_id;
+
+	// Property name to override.
+	ufbx_string prop_name;
+
+	// Override value, use `value.x` for scalars. `value_int` is initialized
+	// from `value.x` if zero so keep `value` zeroed even if you don't need it!
+	ufbx_vec4 value;
+	ufbx_string value_str;
+	int64_t value_int;
+} ufbx_prop_override_desc;
+
+UFBX_LIST_TYPE(ufbx_const_prop_override_desc_list, const ufbx_prop_override_desc);
+
+UFBX_LIST_TYPE(ufbx_const_transform_override_list, const ufbx_transform_override);
+
+typedef struct ufbx_anim_opts {
+	uint32_t _begin_zero;
+
+	// Animation layers indices.
+	// Corresponding to `ufbx_scene.anim_layers[]`, aka `ufbx_anim_layer.typed_id`.
+	ufbx_const_uint32_list layer_ids;
+
+	// Override layer weights, parallel to `ufbx_anim_opts.layer_ids[]`.
+	ufbx_const_real_list override_layer_weights;
+
+	// Property overrides.
+	// These allow you to override FBX properties, such as 'UFBX_Lcl_Rotation`.
+	ufbx_const_prop_override_desc_list prop_overrides;
+
+	// Transform overrides.
+	// These allow you to override individual nodes' `ufbx_node.local_transform`.
+	ufbx_const_transform_override_list transform_overrides;
+
+	// Ignore connected properties
+	bool ignore_connections;
+
+	ufbx_allocator_opts result_allocator; // < Allocator used to create the `ufbx_anim`
+
+	uint32_t _end_zero;
+} ufbx_anim_opts;
+
+// Specifies how to handle stepped tangents.
+typedef enum ufbx_bake_step_handling UFBX_ENUM_REPR {
+
+	// One millisecond default step duration, with potential extra slack for converting to `float`.
+	UFBX_BAKE_STEP_HANDLING_DEFAULT,
+
+	// Use a custom interpolation duration for the constant step.
+	// See `ufbx_bake_opts.step_custom_duration` and optionally `ufbx_bake_opts.step_custom_epsilon`.
+	UFBX_BAKE_STEP_HANDLING_CUSTOM_DURATION,
+
+	// Stepped keyframes are represented as keyframes at the exact same time.
+	// Use flags `UFBX_BAKED_KEY_STEP_LEFT` and `UFBX_BAKED_KEY_STEP_RIGHT` to differentiate
+	// between the primary key and edge limits.
+	UFBX_BAKE_STEP_HANDLING_IDENTICAL_TIME,
+
+	// Represent stepped keyframe times as the previous/next representable `double` value.
+	// Using this and robust linear interpolation will handle stepped tangents correctly
+	// without having to look at the key flags.
+	// NOTE: Casting these values to `float` or otherwise modifying them can collapse
+	// the keyframes to have the identical time.
+	UFBX_BAKE_STEP_HANDLING_ADJACENT_DOUBLE,
+
+	// Treat all stepped tangents as linearly interpolated.
+	UFBX_BAKE_STEP_HANDLING_IGNORE,
+
+	UFBX_ENUM_FORCE_WIDTH(ufbx_bake_step_handling)
+} ufbx_bake_step_handling;
+
+UFBX_ENUM_TYPE(ufbx_bake_step_handling, UFBX_BAKE_STEP_HANDLING, UFBX_BAKE_STEP_HANDLING_IGNORE);
+
+typedef struct ufbx_bake_opts {
+	uint32_t _begin_zero;
+
+	ufbx_allocator_opts temp_allocator;   // < Allocator used during loading
+	ufbx_allocator_opts result_allocator; // < Allocator used for the final baked animation
+
+	// Move the keyframe times to start from zero regardless of the animation start time.
+	// For example, for an animation spanning between frames [30, 60] will be moved to
+	// [0, 30] in the baked animation.
+	// NOTE: This is in general not equivalent to subtracting `ufbx_anim.time_begin`
+	// from each keyframe, as this trimming is done exactly using internal FBX ticks.
+	bool trim_start_time;
+
+	// Samples per second to use for resampling non-linear animation.
+	// Default: 30
+	double resample_rate;
+
+	// Minimum sample rate to not resample.
+	// Many exporters resample animation by default. To avoid double-resampling
+	// keyframe rates higher or equal to this will not be resampled.
+	// Default: 19.5
+	double minimum_sample_rate;
+
+	// Maximum sample rate to use, this will remove keys if they are too close together.
+	// Default: unlimited
+	double maximum_sample_rate;
+
+	// Bake the raw versions of properties related to transforms.
+	bool bake_transform_props;
+
+	// Do not bake node transforms.
+	bool skip_node_transforms;
+
+	// Do not resample linear rotation keyframes.
+	// FBX interpolates rotation in Euler angles, so this might cause incorrect interpolation.
+	bool no_resample_rotation;
+
+	// Ignore layer weight animation.
+	bool ignore_layer_weight_animation;
+
+	// Maximum number of segments to generate from one keyframe.
+	// Default: 32
+	size_t max_keyframe_segments;
+
+	// How to handle stepped tangents.
+	ufbx_bake_step_handling step_handling;
+
+	// Interpolation duration used by `UFBX_BAKE_STEP_HANDLING_CUSTOM_DURATION`.
+	double step_custom_duration;
+
+	// Interpolation epsilon used by `UFBX_BAKE_STEP_HANDLING_CUSTOM_DURATION`.
+	// Defined as the minimum fractional decrease/increase in key time, ie.
+	// `time / (1.0 + step_custom_epsilon)` and `time * (1.0 + step_custom_epsilon)`.
+	double step_custom_epsilon;
+
+	// Enable key reduction.
+	bool key_reduction_enabled;
+
+	// Enable key reduction for non-constant rotations.
+	// Assumes rotations will be interpolated using a spherical linear interpolation at runtime.
+	bool key_reduction_rotation;
+
+	// Threshold for reducing keys for linear segments.
+	// Default `0.000001`, use negative to disable.
+	double key_reduction_threshold;
+
+	// Maximum passes over the keys to reduce.
+	// Every pass can potentially halve the the amount of keys.
+	// Default: `4`
+	size_t key_reduction_passes;
+
+	uint32_t _end_zero;
+} ufbx_bake_opts;
+
 // Options for `ufbx_tessellate_nurbs_curve()`
 // NOTE: Initialize to zero with `{ 0 }` (C) or `{ }` (C++)
 typedef struct ufbx_tessellate_curve_opts {
@@ -4079,8 +4945,8 @@ typedef struct ufbx_tessellate_curve_opts {
 	ufbx_allocator_opts temp_allocator;   // < Allocator used during tessellation
 	ufbx_allocator_opts result_allocator; // < Allocator used for the final line curve
 
-	// How many segments tessellate each step in `ufbx_nurbs_basis.steps`.
-	uint32_t span_subdivision;
+	// How many segments tessellate each span in `ufbx_nurbs_basis.spans`.
+	size_t span_subdivision;
 
 	uint32_t _end_zero;
 } ufbx_tessellate_curve_opts;
@@ -4093,13 +4959,16 @@ typedef struct ufbx_tessellate_surface_opts {
 	ufbx_allocator_opts temp_allocator;   // < Allocator used during tessellation
 	ufbx_allocator_opts result_allocator; // < Allocator used for the final mesh
 
-	// How many segments tessellate each step in `ufbx_nurbs_basis.steps`.
+	// How many segments tessellate each span in `ufbx_nurbs_basis.spans`.
 	// NOTE: Default is `4`, _not_ `ufbx_nurbs_surface.span_subdivision_u/v` as that
 	// would make it easy to create an FBX file with an absurdly high subdivision
 	// rate (similar to mesh subdivision). Please enforce copy the value yourself
 	// enforcing whatever limits you deem reasonable.
-	uint32_t span_subdivision_u;
-	uint32_t span_subdivision_v;
+	size_t span_subdivision_u;
+	size_t span_subdivision_v;
+
+	// Skip computing `ufbx_mesh.material_parts[]`
+	bool skip_mesh_parts;
 
 	uint32_t _end_zero;
 } ufbx_tessellate_surface_opts;
@@ -4159,10 +5028,19 @@ typedef struct ufbx_geometry_cache_opts {
 	// FPS value for converting frame times to seconds
 	double frames_per_second;
 
+	// Axis to mirror the geometry by.
+	ufbx_mirror_axis mirror_axis;
+
+	// Enable scaling `scale_factor` all geometry by.
+	bool use_scale_factor;
+
+	// Factor to scale the geometry by.
+	ufbx_real scale_factor;
+
 	uint32_t _end_zero;
 } ufbx_geometry_cache_opts;
 
-// Options for `ufbx_read_geometry_cache_*()`
+// Options for `ufbx_read_geometry_cache_TYPE()`
 // NOTE: Initialize to zero with `{ 0 }` (C) or `{ }` (C++)
 typedef struct ufbx_geometry_cache_data_opts {
 	uint32_t _begin_zero;
@@ -4173,6 +5051,9 @@ typedef struct ufbx_geometry_cache_data_opts {
 	bool additive;
 	bool use_weight;
 	ufbx_real weight;
+
+	// Ignore scene transform.
+	bool ignore_transform;
 
 	uint32_t _end_zero;
 } ufbx_geometry_cache_data_opts;
@@ -4190,27 +5071,26 @@ extern "C" {
 #endif
 
 // Various zero/empty/identity values
-extern const ufbx_string ufbx_empty_string;
-extern const ufbx_blob ufbx_empty_blob;
-extern const ufbx_matrix ufbx_identity_matrix;
-extern const ufbx_transform ufbx_identity_transform;
-extern const ufbx_vec2 ufbx_zero_vec2;
-extern const ufbx_vec3 ufbx_zero_vec3;
-extern const ufbx_vec4 ufbx_zero_vec4;
-extern const ufbx_quat ufbx_identity_quat;
+ufbx_abi_data const ufbx_string ufbx_empty_string;
+ufbx_abi_data const ufbx_blob ufbx_empty_blob;
+ufbx_abi_data const ufbx_matrix ufbx_identity_matrix;
+ufbx_abi_data const ufbx_transform ufbx_identity_transform;
+ufbx_abi_data const ufbx_vec2 ufbx_zero_vec2;
+ufbx_abi_data const ufbx_vec3 ufbx_zero_vec3;
+ufbx_abi_data const ufbx_vec4 ufbx_zero_vec4;
+ufbx_abi_data const ufbx_quat ufbx_identity_quat;
 
-// Commonly used coordinate axes
-
-extern const ufbx_coordinate_axes ufbx_axes_right_handed_y_up;
-extern const ufbx_coordinate_axes ufbx_axes_right_handed_z_up;
-extern const ufbx_coordinate_axes ufbx_axes_left_handed_y_up;
-extern const ufbx_coordinate_axes ufbx_axes_left_handed_z_up;
+// Commonly used coordinate axes.
+ufbx_abi_data const ufbx_coordinate_axes ufbx_axes_right_handed_y_up;
+ufbx_abi_data const ufbx_coordinate_axes ufbx_axes_right_handed_z_up;
+ufbx_abi_data const ufbx_coordinate_axes ufbx_axes_left_handed_y_up;
+ufbx_abi_data const ufbx_coordinate_axes ufbx_axes_left_handed_z_up;
 
 // Sizes of element types. eg `sizeof(ufbx_node)`
-extern const size_t ufbx_element_type_size[UFBX_ELEMENT_TYPE_COUNT];
+ufbx_abi_data const size_t ufbx_element_type_size[UFBX_ELEMENT_TYPE_COUNT];
 
 // Version of the source file, comparable to `UFBX_HEADER_VERSION`
-extern const uint32_t ufbx_source_version;
+ufbx_abi_data const uint32_t ufbx_source_version;
 
 // Practically always `true` (see below), if not you need to be careful with threads.
 //
@@ -4304,6 +5184,10 @@ ufbx_abi ufbx_prop *ufbx_find_prop_concat(const ufbx_props *props, const ufbx_st
 // Get an element connected to a property.
 ufbx_abi ufbx_element *ufbx_get_prop_element(const ufbx_element *element, const ufbx_prop *prop, ufbx_element_type type);
 
+// Find an element connected to a property by name.
+ufbx_abi ufbx_element *ufbx_find_prop_element_len(const ufbx_element *element, const char *name, size_t name_len, ufbx_element_type type);
+ufbx_inline ufbx_element *ufbx_find_prop_element(const ufbx_element *element, const char *name, ufbx_element_type type) { return ufbx_find_prop_element_len(element, name, strlen(name), type); }
+
 // Find any element of type `type` in `scene` by `name`.
 // For example if you want to find `ufbx_material` named `Mat`:
 //   (ufbx_material*)ufbx_find_element(scene, UFBX_ELEMENT_MATERIAL, "Mat");
@@ -4363,7 +5247,6 @@ ufbx_abi ufbx_real ufbx_evaluate_curve(const ufbx_anim_curve *curve, double time
 
 // Evaluate a value from bundled animation curves.
 ufbx_abi ufbx_real ufbx_evaluate_anim_value_real(const ufbx_anim_value *anim_value, double time);
-ufbx_abi ufbx_vec2 ufbx_evaluate_anim_value_vec2(const ufbx_anim_value *anim_value, double time);
 ufbx_abi ufbx_vec3 ufbx_evaluate_anim_value_vec3(const ufbx_anim_value *anim_value, double time);
 
 // Evaluate an animated property `name` from `element` at `time`.
@@ -4378,10 +5261,39 @@ ufbx_inline ufbx_prop ufbx_evaluate_prop(const ufbx_anim *anim, const ufbx_eleme
 // `ufbx_props.defaults`. This lets you use `ufbx_find_prop/value()` for the results.
 ufbx_abi ufbx_props ufbx_evaluate_props(const ufbx_anim *anim, const ufbx_element *element, double time, ufbx_prop *buffer, size_t buffer_size);
 
-ufbx_abi ufbx_transform ufbx_evaluate_transform(const ufbx_anim *anim, const ufbx_node *node, double time);
-ufbx_abi ufbx_real ufbx_evaluate_blend_weight(const ufbx_anim *anim, const ufbx_blend_channel *channel, double time);
+// Flags to control `ufbx_evaluate_transform_flags()`.
+typedef enum ufbx_transform_flags UFBX_FLAG_REPR {
 
-ufbx_abi ufbx_const_prop_override_list ufbx_prepare_prop_overrides(ufbx_prop_override *overrides, size_t num_overrides);
+	// Ignore parent scale helper.
+	UFBX_TRANSFORM_FLAG_IGNORE_SCALE_HELPER = 0x1,
+
+	// Ignore componentwise scale.
+	// Note that if you don't specify this, ufbx will have to potentially
+	// evaluate the entire parent chain in the worst case.
+	UFBX_TRANSFORM_FLAG_IGNORE_COMPONENTWISE_SCALE = 0x2,
+
+	// Require explicit components
+	UFBX_TRANSFORM_FLAG_EXPLICIT_INCLUDES = 0x4,
+
+	// If `UFBX_TRANSFORM_FLAG_EXPLICIT_INCLUDES`: Evaluate `ufbx_transform.translation`.
+	UFBX_TRANSFORM_FLAG_INCLUDE_TRANSLATION = 0x10,
+	// If `UFBX_TRANSFORM_FLAG_EXPLICIT_INCLUDES`: Evaluate `ufbx_transform.rotation`.
+	UFBX_TRANSFORM_FLAG_INCLUDE_ROTATION = 0x20,
+	// If `UFBX_TRANSFORM_FLAG_EXPLICIT_INCLUDES`: Evaluate `ufbx_transform.scale`.
+	UFBX_TRANSFORM_FLAG_INCLUDE_SCALE = 0x40,
+
+	UFBX_FLAG_FORCE_WIDTH(UFBX_TRANSFORM_FLAGS)
+} ufbx_transform_flags;
+
+// Evaluate the animated transform of a node given a time.
+// The returned transform is the local transform of the node (ie. relative to the parent),
+// comparable to `ufbx_node.local_transform`.
+ufbx_abi ufbx_transform ufbx_evaluate_transform(const ufbx_anim *anim, const ufbx_node *node, double time);
+ufbx_abi ufbx_transform ufbx_evaluate_transform_flags(const ufbx_anim *anim, const ufbx_node *node, double time, uint32_t flags);
+
+// Evaluate the blend shape weight of a blend channel.
+// NOTE: Return value uses `1.0` for full weight, instead of `100.0` that the internal property `UFBX_Weight` uses.
+ufbx_abi ufbx_real ufbx_evaluate_blend_weight(const ufbx_anim *anim, const ufbx_blend_channel *channel, double time);
 
 // Evaluate the whole `scene` at a specific `time` in the animation `anim`.
 // The returned scene behaves as if it had been exported at a specific time
@@ -4392,23 +5304,70 @@ ufbx_abi ufbx_const_prop_override_list ufbx_prepare_prop_overrides(ufbx_prop_ove
 // scene cannot be freed until all evaluated scenes are freed.
 ufbx_abi ufbx_scene *ufbx_evaluate_scene(const ufbx_scene *scene, const ufbx_anim *anim, double time, const ufbx_evaluate_opts *opts, ufbx_error *error);
 
+// Create a custom animation descriptor.
+// `ufbx_anim_opts` is used to specify animation layers and weights.
+// HINT: You can also leave `ufbx_anim_opts.layer_ids[]` empty and only specify
+// overrides to evaluate the scene with different properties or local transforms.
+ufbx_abi ufbx_anim *ufbx_create_anim(const ufbx_scene *scene, const ufbx_anim_opts *opts, ufbx_error *error);
+
+// Free an animation returned by `ufbx_create_anim()`.
+ufbx_abi void ufbx_free_anim(ufbx_anim *anim);
+
+// Increase the animation reference count.
+ufbx_abi void ufbx_retain_anim(ufbx_anim *anim);
+
+// Animation baking
+
+// "Bake" an animation to linearly interpolated keyframes.
+// Composites the FBX transformation chain into quaternion rotations.
+ufbx_abi ufbx_baked_anim *ufbx_bake_anim(const ufbx_scene *scene, const ufbx_anim *anim, const ufbx_bake_opts *opts, ufbx_error *error);
+
+ufbx_abi void ufbx_retain_baked_anim(ufbx_baked_anim *bake);
+ufbx_abi void ufbx_free_baked_anim(ufbx_baked_anim *bake);
+
+ufbx_abi ufbx_baked_node *ufbx_find_baked_node_by_typed_id(ufbx_baked_anim *bake, uint32_t typed_id);
+ufbx_abi ufbx_baked_node *ufbx_find_baked_node(ufbx_baked_anim *bake, ufbx_node *node);
+
+ufbx_abi ufbx_baked_element *ufbx_find_baked_element_by_element_id(ufbx_baked_anim *bake, uint32_t element_id);
+ufbx_abi ufbx_baked_element *ufbx_find_baked_element(ufbx_baked_anim *bake, ufbx_element *element);
+
+// Evaluate baked animation `keyframes` at `time`.
+// Internally linearly interpolates between two adjacent keyframes.
+// Handles stepped tangents cleanly, which is not strictly necessary for custom interpolation.
+ufbx_abi ufbx_vec3 ufbx_evaluate_baked_vec3(ufbx_baked_vec3_list keyframes, double time);
+
+// Evaluate baked animation `keyframes` at `time`.
+// Internally spherically interpolates (`ufbx_quat_slerp()`) between two adjacent keyframes.
+// Handles stepped tangents cleanly, which is not strictly necessary for custom interpolation.
+ufbx_abi ufbx_quat ufbx_evaluate_baked_quat(ufbx_baked_quat_list keyframes, double time);
+
+// Poses
+
+// Retrieve the bone pose for `node`.
+// Returns `NULL` if the pose does not contain `node`.
+ufbx_abi ufbx_bone_pose *ufbx_get_bone_pose(const ufbx_pose *pose, const ufbx_node *node);
+
 // Materials
 
+// Find a texture for a given material FBX property.
 ufbx_abi ufbx_texture *ufbx_find_prop_texture_len(const ufbx_material *material, const char *name, size_t name_len);
 ufbx_inline ufbx_texture *ufbx_find_prop_texture(const ufbx_material *material, const char *name) {
 	return ufbx_find_prop_texture_len(material, name, strlen(name));
 }
 
+// Find a texture for a given shader property.
 ufbx_abi ufbx_string ufbx_find_shader_prop_len(const ufbx_shader *shader, const char *name, size_t name_len);
 ufbx_inline ufbx_string ufbx_find_shader_prop(const ufbx_shader *shader, const char *name) {
 	return ufbx_find_shader_prop_len(shader, name, strlen(name));
 }
 
+// Map from a shader property to material property.
 ufbx_abi ufbx_shader_prop_binding_list ufbx_find_shader_prop_bindings_len(const ufbx_shader *shader, const char *name, size_t name_len);
 ufbx_inline ufbx_shader_prop_binding_list ufbx_find_shader_prop_bindings(const ufbx_shader *shader, const char *name) {
 	return ufbx_find_shader_prop_bindings_len(shader, name, strlen(name));
 }
 
+// Find an input in a shader texture.
 ufbx_abi ufbx_shader_texture_input *ufbx_find_shader_texture_input_len(const ufbx_shader_texture *shader, const char *name, size_t name_len);
 ufbx_inline ufbx_shader_texture_input *ufbx_find_shader_texture_input(const ufbx_shader_texture *shader, const char *name) {
 	return ufbx_find_shader_texture_input_len(shader, name, strlen(name));
@@ -4416,8 +5375,13 @@ ufbx_inline ufbx_shader_texture_input *ufbx_find_shader_texture_input(const ufbx
 
 // Math
 
+// Returns `true` if `axes` forms a valid coordinate space.
 ufbx_abi bool ufbx_coordinate_axes_valid(ufbx_coordinate_axes axes);
 
+// Vector math utility functions.
+ufbx_abi ufbx_vec3 ufbx_vec3_normalize(ufbx_vec3 v);
+
+// Quaternion math utility functions.
 ufbx_abi ufbx_real ufbx_quat_dot(ufbx_quat a, ufbx_quat b);
 ufbx_abi ufbx_quat ufbx_quat_mul(ufbx_quat a, ufbx_quat b);
 ufbx_abi ufbx_quat ufbx_quat_normalize(ufbx_quat q);
@@ -4427,43 +5391,85 @@ ufbx_abi ufbx_vec3 ufbx_quat_rotate_vec3(ufbx_quat q, ufbx_vec3 v);
 ufbx_abi ufbx_vec3 ufbx_quat_to_euler(ufbx_quat q, ufbx_rotation_order order);
 ufbx_abi ufbx_quat ufbx_euler_to_quat(ufbx_vec3 v, ufbx_rotation_order order);
 
+// Matrix math utility functions.
 ufbx_abi ufbx_matrix ufbx_matrix_mul(const ufbx_matrix *a, const ufbx_matrix *b);
 ufbx_abi ufbx_real ufbx_matrix_determinant(const ufbx_matrix *m);
 ufbx_abi ufbx_matrix ufbx_matrix_invert(const ufbx_matrix *m);
+
+// Get a matrix that can be used to transform geometry normals.
+// NOTE: You must normalize the normals after transforming them with this matrix,
+// eg. using `ufbx_vec3_normalize()`.
+// NOTE: This function flips the normals if the determinant is negative.
 ufbx_abi ufbx_matrix ufbx_matrix_for_normals(const ufbx_matrix *m);
+
+// Matrix transformation utilities.
 ufbx_abi ufbx_vec3 ufbx_transform_position(const ufbx_matrix *m, ufbx_vec3 v);
 ufbx_abi ufbx_vec3 ufbx_transform_direction(const ufbx_matrix *m, ufbx_vec3 v);
+
+// Conversions between `ufbx_matrix` and `ufbx_transform`.
 ufbx_abi ufbx_matrix ufbx_transform_to_matrix(const ufbx_transform *t);
 ufbx_abi ufbx_transform ufbx_matrix_to_transform(const ufbx_matrix *m);
 
 // Skinning
 
+// Get a matrix representing the deformation for a single vertex.
+// Returns `fallback` if the vertex is not skinned.
 ufbx_abi ufbx_matrix ufbx_catch_get_skin_vertex_matrix(ufbx_panic *panic, const ufbx_skin_deformer *skin, size_t vertex, const ufbx_matrix *fallback);
 ufbx_inline ufbx_matrix ufbx_get_skin_vertex_matrix(const ufbx_skin_deformer *skin, size_t vertex, const ufbx_matrix *fallback) {
 	return ufbx_catch_get_skin_vertex_matrix(NULL, skin, vertex, fallback);
 }
 
+// Resolve the index into `ufbx_blend_shape.position_offsets[]` given a vertex.
+// Returns `UFBX_NO_INDEX` if the vertex is not included in the blend shape.
+ufbx_abi uint32_t ufbx_get_blend_shape_offset_index(const ufbx_blend_shape *shape, size_t vertex);
+
+// Get the offset for a given vertex in the blend shape.
+// Returns `ufbx_zero_vec3` if the vertex is not a included in the blend shape.
 ufbx_abi ufbx_vec3 ufbx_get_blend_shape_vertex_offset(const ufbx_blend_shape *shape, size_t vertex);
+
+// Get the _current_ blend offset given a blend deformer.
+// NOTE: This depends on the current animated blend weight of the deformer.
 ufbx_abi ufbx_vec3 ufbx_get_blend_vertex_offset(const ufbx_blend_deformer *blend, size_t vertex);
 
+// Apply the blend shape with `weight` to given vertices.
 ufbx_abi void ufbx_add_blend_shape_vertex_offsets(const ufbx_blend_shape *shape, ufbx_vec3 *vertices, size_t num_vertices, ufbx_real weight);
+
+// Apply the blend deformer with `weight` to given vertices.
+// NOTE: This depends on the current animated blend weight of the deformer.
 ufbx_abi void ufbx_add_blend_vertex_offsets(const ufbx_blend_deformer *blend, ufbx_vec3 *vertices, size_t num_vertices, ufbx_real weight);
 
 // Curves/surfaces
 
+// Low-level utility to evaluate NURBS the basis functions.
 ufbx_abi size_t ufbx_evaluate_nurbs_basis(const ufbx_nurbs_basis *basis, ufbx_real u, ufbx_real *weights, size_t num_weights, ufbx_real *derivatives, size_t num_derivatives);
 
+// Evaluate a point on a NURBS curve given the parameter `u`.
 ufbx_abi ufbx_curve_point ufbx_evaluate_nurbs_curve(const ufbx_nurbs_curve *curve, ufbx_real u);
+
+// Evaluate a point on a NURBS surface given the parameter `u` and `v`.
 ufbx_abi ufbx_surface_point ufbx_evaluate_nurbs_surface(const ufbx_nurbs_surface *surface, ufbx_real u, ufbx_real v);
 
+// Tessellate a NURBS curve into a polyline.
 ufbx_abi ufbx_line_curve *ufbx_tessellate_nurbs_curve(const ufbx_nurbs_curve *curve, const ufbx_tessellate_curve_opts *opts, ufbx_error *error);
+
+// Tessellate a NURBS surface into a mesh.
 ufbx_abi ufbx_mesh *ufbx_tessellate_nurbs_surface(const ufbx_nurbs_surface *surface, const ufbx_tessellate_surface_opts *opts, ufbx_error *error);
 
+// Free a line returned by `ufbx_tessellate_nurbs_curve()`.
 ufbx_abi void ufbx_free_line_curve(ufbx_line_curve *curve);
+
+// Increase the refcount of the line.
 ufbx_abi void ufbx_retain_line_curve(ufbx_line_curve *curve);
 
 // Mesh Topology
 
+// Find the face that contains a given `index`.
+// Returns `UFBX_NO_INDEX` if out of bounds.
+ufbx_abi uint32_t ufbx_find_face_index(ufbx_mesh *mesh, size_t index);
+
+// Triangulate a mesh face, returning the number of triangles.
+// NOTE: You need to space for `(face.num_indices - 2) * 3 - 1` indices!
+// HINT: Using `ufbx_mesh.max_face_triangles * 3` is always safe.
 ufbx_abi uint32_t ufbx_catch_triangulate_face(ufbx_panic *panic, uint32_t *indices, size_t num_indices, const ufbx_mesh *mesh, ufbx_face face);
 ufbx_inline uint32_t ufbx_triangulate_face(uint32_t *indices, size_t num_indices, const ufbx_mesh *mesh, ufbx_face face) {
 	return ufbx_catch_triangulate_face(NULL, indices, num_indices, mesh, face);
@@ -4478,21 +5484,27 @@ ufbx_inline void ufbx_compute_topology(const ufbx_mesh *mesh, ufbx_topo_edge *to
 // Get the next/previous edge around a vertex
 // NOTE: Does not return the half-edge on the opposite side (ie. `topo[index].twin`)
 
+// Get the next half-edge in `topo`.
 ufbx_abi uint32_t ufbx_catch_topo_next_vertex_edge(ufbx_panic *panic, const ufbx_topo_edge *topo, size_t num_topo, uint32_t index);
 ufbx_inline uint32_t ufbx_topo_next_vertex_edge(const ufbx_topo_edge *topo, size_t num_topo, uint32_t index) {
 	return ufbx_catch_topo_next_vertex_edge(NULL, topo, num_topo, index);
 }
 
+// Get the previous half-edge in `topo`.
 ufbx_abi uint32_t ufbx_catch_topo_prev_vertex_edge(ufbx_panic *panic, const ufbx_topo_edge *topo, size_t num_topo, uint32_t index);
 ufbx_inline uint32_t ufbx_topo_prev_vertex_edge(const ufbx_topo_edge *topo, size_t num_topo, uint32_t index) {
 	return ufbx_catch_topo_prev_vertex_edge(NULL, topo, num_topo, index);
 }
 
+// Calculate a normal for a given face.
+// The returned normal is weighted by face area.
 ufbx_abi ufbx_vec3 ufbx_catch_get_weighted_face_normal(ufbx_panic *panic, const ufbx_vertex_vec3 *positions, ufbx_face face);
 ufbx_inline ufbx_vec3 ufbx_get_weighted_face_normal(const ufbx_vertex_vec3 *positions, ufbx_face face) {
 	return ufbx_catch_get_weighted_face_normal(NULL, positions, face);
 }
 
+// Generate indices for normals from the topology.
+// Respects smoothing groups.
 ufbx_abi size_t ufbx_catch_generate_normal_mapping(ufbx_panic *panic, const ufbx_mesh *mesh,
 	const ufbx_topo_edge *topo, size_t num_topo,
 	uint32_t *normal_indices, size_t num_normal_indices, bool assume_smooth);
@@ -4500,6 +5512,8 @@ ufbx_abi size_t ufbx_generate_normal_mapping(const ufbx_mesh *mesh,
 	const ufbx_topo_edge *topo, size_t num_topo,
 	uint32_t *normal_indices, size_t num_normal_indices, bool assume_smooth);
 
+// Compute normals given normal indices.
+// You can use `ufbx_generate_normal_mapping()` to generate the normal indices.
 ufbx_abi void ufbx_catch_compute_normals(ufbx_panic *panic, const ufbx_mesh *mesh, const ufbx_vertex_vec3 *positions,
 	const uint32_t *normal_indices, size_t num_normal_indices,
 	ufbx_vec3 *normals, size_t num_normals);
@@ -4507,13 +5521,20 @@ ufbx_abi void ufbx_compute_normals(const ufbx_mesh *mesh, const ufbx_vertex_vec3
 	const uint32_t *normal_indices, size_t num_normal_indices,
 	ufbx_vec3 *normals, size_t num_normals);
 
+// Subdivide a mesh using the Catmull-Clark subdivision `level` times.
 ufbx_abi ufbx_mesh *ufbx_subdivide_mesh(const ufbx_mesh *mesh, size_t level, const ufbx_subdivide_opts *opts, ufbx_error *error);
 
+// Free a mesh returned from `ufbx_subdivide_mesh()` or `ufbx_tessellate_nurbs_surface()`.
 ufbx_abi void ufbx_free_mesh(ufbx_mesh *mesh);
+
+// Increase the mesh reference count.
 ufbx_abi void ufbx_retain_mesh(ufbx_mesh *mesh);
 
 // Geometry caches
 
+// Load geometry cache information from a file.
+// As geometry caches can be massive, this does not actually read the data, but
+// only seeks through the files to form the metadata.
 ufbx_abi ufbx_geometry_cache *ufbx_load_geometry_cache(
 	const char *filename,
 	const ufbx_geometry_cache_opts *opts, ufbx_error *error);
@@ -4521,37 +5542,61 @@ ufbx_abi ufbx_geometry_cache *ufbx_load_geometry_cache_len(
 	const char *filename, size_t filename_len,
 	const ufbx_geometry_cache_opts *opts, ufbx_error *error);
 
+// Free a geometry cache returned from `ufbx_load_geometry_cache()`.
 ufbx_abi void ufbx_free_geometry_cache(ufbx_geometry_cache *cache);
+// Increase the geometry cache reference count.
 ufbx_abi void ufbx_retain_geometry_cache(ufbx_geometry_cache *cache);
 
+// Read a frame from a geometry cache.
 ufbx_abi size_t ufbx_read_geometry_cache_real(const ufbx_cache_frame *frame, ufbx_real *data, size_t num_data, const ufbx_geometry_cache_data_opts *opts);
-ufbx_abi size_t ufbx_sample_geometry_cache_real(const ufbx_cache_channel *channel, double time, ufbx_real *data, size_t num_data, const ufbx_geometry_cache_data_opts *opts);
 ufbx_abi size_t ufbx_read_geometry_cache_vec3(const ufbx_cache_frame *frame, ufbx_vec3 *data, size_t num_data, const ufbx_geometry_cache_data_opts *opts);
+// Sample the a geometry cache channel, linearly blending between adjacent frames.
+ufbx_abi size_t ufbx_sample_geometry_cache_real(const ufbx_cache_channel *channel, double time, ufbx_real *data, size_t num_data, const ufbx_geometry_cache_data_opts *opts);
 ufbx_abi size_t ufbx_sample_geometry_cache_vec3(const ufbx_cache_channel *channel, double time, ufbx_vec3 *data, size_t num_data, const ufbx_geometry_cache_data_opts *opts);
 
 // DOM
 
+// Find a DOM node given a name.
 ufbx_abi ufbx_dom_node *ufbx_dom_find_len(const ufbx_dom_node *parent, const char *name, size_t name_len);
 ufbx_inline ufbx_dom_node *ufbx_dom_find(const ufbx_dom_node *parent, const char *name) { return ufbx_dom_find_len(parent, name, strlen(name)); }
 
 // Utility
 
+// Generate an index buffer for a flat vertex buffer.
+// `streams` specifies one or more vertex data arrays, each stream must contain `num_indices` vertices.
+// This function compacts the data within `streams` in-place, writing the deduplicated indices to `indices`.
 ufbx_abi size_t ufbx_generate_indices(const ufbx_vertex_stream *streams, size_t num_streams, uint32_t *indices, size_t num_indices, const ufbx_allocator_opts *allocator, ufbx_error *error);
+
+// Thread pool
+
+// Run a single thread pool task.
+// See `ufbx_thread_pool_run_fn` for more information.
+ufbx_unsafe ufbx_abi void ufbx_thread_pool_run_task(ufbx_thread_pool_context ctx, uint32_t index);
+
+// Get or set an arbitrary user pointer for the thread pool context.
+// `ufbx_thread_pool_get_user_ptr()` returns `NULL` if unset.
+ufbx_unsafe ufbx_abi void ufbx_thread_pool_set_user_ptr(ufbx_thread_pool_context ctx, void *user_ptr);
+ufbx_unsafe ufbx_abi void *ufbx_thread_pool_get_user_ptr(ufbx_thread_pool_context ctx);
 
 // -- Inline API
 
+// Utility functions for reading geometry data for a single index.
 ufbx_abi ufbx_real ufbx_catch_get_vertex_real(ufbx_panic *panic, const ufbx_vertex_real *v, size_t index);
 ufbx_abi ufbx_vec2 ufbx_catch_get_vertex_vec2(ufbx_panic *panic, const ufbx_vertex_vec2 *v, size_t index);
 ufbx_abi ufbx_vec3 ufbx_catch_get_vertex_vec3(ufbx_panic *panic, const ufbx_vertex_vec3 *v, size_t index);
 ufbx_abi ufbx_vec4 ufbx_catch_get_vertex_vec4(ufbx_panic *panic, const ufbx_vertex_vec4 *v, size_t index);
 
+// Utility functions for reading geometry data for a single index.
 ufbx_inline ufbx_real ufbx_get_vertex_real(const ufbx_vertex_real *v, size_t index) { ufbx_assert(index < v->indices.count); return v->values.data[(int32_t)v->indices.data[index]]; }
 ufbx_inline ufbx_vec2 ufbx_get_vertex_vec2(const ufbx_vertex_vec2 *v, size_t index) { ufbx_assert(index < v->indices.count); return v->values.data[(int32_t)v->indices.data[index]]; }
 ufbx_inline ufbx_vec3 ufbx_get_vertex_vec3(const ufbx_vertex_vec3 *v, size_t index) { ufbx_assert(index < v->indices.count); return v->values.data[(int32_t)v->indices.data[index]]; }
 ufbx_inline ufbx_vec4 ufbx_get_vertex_vec4(const ufbx_vertex_vec4 *v, size_t index) { ufbx_assert(index < v->indices.count); return v->values.data[(int32_t)v->indices.data[index]]; }
 
-ufbx_abi size_t ufbx_get_triangulate_face_num_indices(ufbx_face face);
+ufbx_abi ufbx_real ufbx_catch_get_vertex_w_vec3(ufbx_panic *panic, const ufbx_vertex_vec3 *v, size_t index);
+ufbx_inline ufbx_real ufbx_get_vertex_w_vec3(const ufbx_vertex_vec3 *v, size_t index) { ufbx_assert(index < v->indices.count); return v->values_w.count > 0 ? v->values_w.data[(int32_t)v->indices.data[index]] : 0.0f; }
 
+// Functions for converting an untyped `ufbx_element` to a concrete type.
+// Returns `NULL` if the element is not that type.
 ufbx_abi ufbx_unknown *ufbx_as_unknown(const ufbx_element *element);
 ufbx_abi ufbx_node *ufbx_as_node(const ufbx_element *element);
 ufbx_abi ufbx_mesh *ufbx_as_mesh(const ufbx_element *element);
@@ -4590,93 +5635,129 @@ ufbx_abi ufbx_selection_set *ufbx_as_selection_set(const ufbx_element *element);
 ufbx_abi ufbx_selection_node *ufbx_as_selection_node(const ufbx_element *element);
 ufbx_abi ufbx_character *ufbx_as_character(const ufbx_element *element);
 ufbx_abi ufbx_constraint *ufbx_as_constraint(const ufbx_element *element);
+ufbx_abi ufbx_audio_layer *ufbx_as_audio_layer(const ufbx_element *element);
+ufbx_abi ufbx_audio_clip *ufbx_as_audio_clip(const ufbx_element *element);
 ufbx_abi ufbx_pose *ufbx_as_pose(const ufbx_element *element);
 ufbx_abi ufbx_metadata_object *ufbx_as_metadata_object(const ufbx_element *element);
-
-// -- FFI API
-
-ufbx_abi void ufbx_ffi_find_int_len(int64_t *retval, const ufbx_props *props, const char *name, size_t name_len, const int64_t *def);
-ufbx_abi void ufbx_ffi_find_vec3_len(ufbx_vec3 *retval, const ufbx_props *props, const char *name, size_t name_len, const ufbx_vec3 *def);
-ufbx_abi void ufbx_ffi_find_string_len(ufbx_string *retval, const ufbx_props *props, const char *name, size_t name_len, const ufbx_string *def);
-ufbx_abi void ufbx_ffi_find_anim_props(ufbx_anim_prop_list *retval, const ufbx_anim_layer *layer, const ufbx_element *element);
-ufbx_abi void ufbx_ffi_get_compatible_matrix_for_normals(ufbx_matrix *retval, const ufbx_node *node);
-ufbx_abi void ufbx_ffi_evaluate_anim_value_vec2(ufbx_vec2 *retval, const ufbx_anim_value *anim_value, double time);
-ufbx_abi void ufbx_ffi_evaluate_anim_value_vec3(ufbx_vec3 *retval, const ufbx_anim_value *anim_value, double time);
-ufbx_abi void ufbx_ffi_evaluate_prop_len(ufbx_prop *retval, const ufbx_anim *anim, const ufbx_element *element, const char *name, size_t name_len, double time);
-ufbx_abi void ufbx_ffi_evaluate_props(ufbx_props *retval, const ufbx_anim *anim, ufbx_element *element, double time, ufbx_prop *buffer, size_t buffer_size);
-ufbx_abi void ufbx_ffi_evaluate_transform(ufbx_transform *retval, const ufbx_anim *anim, const ufbx_node *node, double time);
-ufbx_abi ufbx_real ufbx_ffi_evaluate_blend_weight(const ufbx_anim *anim, const ufbx_blend_channel *channel, double time);
-ufbx_abi void ufbx_ffi_prepare_prop_overrides(ufbx_const_prop_override_list *retval, ufbx_prop_override *overrides, size_t num_overrides);
-ufbx_abi void ufbx_ffi_quat_mul(ufbx_quat *retval, const ufbx_quat *a, const ufbx_quat *b);
-ufbx_abi void ufbx_ffi_quat_normalize(ufbx_quat *retval, const ufbx_quat *q);
-ufbx_abi void ufbx_ffi_quat_fix_antipodal(ufbx_quat *retval, const ufbx_quat *q, const ufbx_quat *reference);
-ufbx_abi void ufbx_ffi_quat_slerp(ufbx_quat *retval, const ufbx_quat *a, const ufbx_quat *b, ufbx_real t);
-ufbx_abi void ufbx_ffi_quat_rotate_vec3(ufbx_vec3 *retval, const ufbx_quat *q, const ufbx_vec3 *v);
-ufbx_abi void ufbx_ffi_quat_to_euler(ufbx_vec3 *retval, const ufbx_quat *q, ufbx_rotation_order order);
-ufbx_abi void ufbx_ffi_euler_to_quat(ufbx_quat *retval, const ufbx_vec3 *v, ufbx_rotation_order order);
-ufbx_abi void ufbx_ffi_matrix_mul(ufbx_matrix *retval, const ufbx_matrix *a, const ufbx_matrix *b);
-ufbx_abi void ufbx_ffi_matrix_invert(ufbx_matrix *retval, const ufbx_matrix *m);
-ufbx_abi void ufbx_ffi_matrix_for_normals(ufbx_matrix *retval, const ufbx_matrix *m);
-ufbx_abi void ufbx_ffi_transform_position(ufbx_vec3 *retval, const ufbx_matrix *m, const ufbx_vec3 *v);
-ufbx_abi void ufbx_ffi_transform_direction(ufbx_vec3 *retval, const ufbx_matrix *m, const ufbx_vec3 *v);
-ufbx_abi void ufbx_ffi_transform_to_matrix(ufbx_matrix *retval, const ufbx_transform *t);
-ufbx_abi void ufbx_ffi_matrix_to_transform(ufbx_transform *retval, const ufbx_matrix *m);
-ufbx_abi void ufbx_ffi_get_skin_vertex_matrix(ufbx_matrix *retval, const ufbx_skin_deformer *skin, size_t vertex, const ufbx_matrix *fallback);
-ufbx_abi void ufbx_ffi_get_blend_shape_vertex_offset(ufbx_vec3 *retval, const ufbx_blend_shape *shape, size_t vertex);
-ufbx_abi void ufbx_ffi_get_blend_vertex_offset(ufbx_vec3 *retval, const ufbx_blend_deformer *blend, size_t vertex);
-ufbx_abi void ufbx_ffi_evaluate_nurbs_curve(ufbx_curve_point *retval, const ufbx_nurbs_curve *curve, ufbx_real u);
-ufbx_abi void ufbx_ffi_evaluate_nurbs_surface(ufbx_surface_point *retval, const ufbx_nurbs_surface *surface, ufbx_real u, ufbx_real v);
-ufbx_abi void ufbx_ffi_get_weighted_face_normal(ufbx_vec3 *retval, const ufbx_vertex_vec3 *positions, const ufbx_face *face);
-ufbx_abi size_t ufbx_ffi_get_triangulate_face_num_indices(const ufbx_face *face);
-ufbx_abi uint32_t ufbx_ffi_triangulate_face(uint32_t *indices, size_t num_indices, const ufbx_mesh *mesh, const ufbx_face *face);
 
 #ifdef __cplusplus
 }
 #endif
 
 // bindgen-disable
+
 #if UFBX_CPP11
 
-ufbx_inline void ufbx_retain(ufbx_scene *scene) { ufbx_retain_scene(scene); }
-ufbx_inline void ufbx_free(ufbx_scene *scene) { ufbx_free_scene(scene); }
-ufbx_inline void ufbx_retain(ufbx_mesh *mesh) { ufbx_retain_mesh(mesh); }
-ufbx_inline void ufbx_free(ufbx_mesh *mesh) { ufbx_free_mesh(mesh); }
-ufbx_inline void ufbx_retain(ufbx_line_curve *curve) { ufbx_retain_line_curve(curve); }
-ufbx_inline void ufbx_free(ufbx_line_curve *curve) { ufbx_free_line_curve(curve); }
-ufbx_inline void ufbx_retain(ufbx_geometry_cache *cache) { ufbx_retain_geometry_cache(cache); }
-ufbx_inline void ufbx_free(ufbx_geometry_cache *cache) { ufbx_free_geometry_cache(cache); }
+struct ufbx_string_view {
+	const char *data;
+	size_t length;
+
+	ufbx_string_view() : data(nullptr), length(0) { }
+	ufbx_string_view(const char *data_, size_t length_) : data(data_), length(length_) { }
+	UFBX_CONVERSION_TO_IMPL(ufbx_string_view)
+};
+
+ufbx_inline ufbx_scene *ufbx_load_file(ufbx_string_view filename, const ufbx_load_opts *opts, ufbx_error *error) { return ufbx_load_file_len(filename.data, filename.length, opts, error); }
+ufbx_inline ufbx_prop *ufbx_find_prop(const ufbx_props *props, ufbx_string_view name) { return ufbx_find_prop_len(props, name.data, name.length); }
+ufbx_inline ufbx_real ufbx_find_real(const ufbx_props *props, ufbx_string_view name, ufbx_real def) { return ufbx_find_real_len(props, name.data, name.length, def); }
+ufbx_inline ufbx_vec3 ufbx_find_vec3(const ufbx_props *props, ufbx_string_view name, ufbx_vec3 def) { return ufbx_find_vec3_len(props, name.data, name.length, def); }
+ufbx_inline int64_t ufbx_find_int(const ufbx_props *props, ufbx_string_view name, int64_t def) { return ufbx_find_int_len(props, name.data, name.length, def); }
+ufbx_inline bool ufbx_find_bool(const ufbx_props *props, ufbx_string_view name, bool def) { return ufbx_find_bool_len(props, name.data, name.length, def); }
+ufbx_inline ufbx_string ufbx_find_string(const ufbx_props *props, ufbx_string_view name, ufbx_string def) { return ufbx_find_string_len(props, name.data, name.length, def); }
+ufbx_inline ufbx_blob ufbx_find_blob(const ufbx_props *props, ufbx_string_view name, ufbx_blob def) { return ufbx_find_blob_len(props, name.data, name.length, def); }
+ufbx_inline ufbx_element *ufbx_find_prop_element(const ufbx_element *element, ufbx_string_view name, ufbx_element_type type) { return ufbx_find_prop_element_len(element, name.data, name.length, type); }
+ufbx_inline ufbx_element *ufbx_find_element(const ufbx_scene *scene, ufbx_element_type type, ufbx_string_view name) { return ufbx_find_element_len(scene, type, name.data, name.length); }
+ufbx_inline ufbx_node *ufbx_find_node(const ufbx_scene *scene, ufbx_string_view name) { return ufbx_find_node_len(scene, name.data, name.length); }
+ufbx_inline ufbx_anim_stack *ufbx_find_anim_stack(const ufbx_scene *scene, ufbx_string_view name) { return ufbx_find_anim_stack_len(scene, name.data, name.length); }
+ufbx_inline ufbx_material *ufbx_find_material(const ufbx_scene *scene, ufbx_string_view name) { return ufbx_find_material_len(scene, name.data, name.length); }
+ufbx_inline ufbx_anim_prop *ufbx_find_anim_prop(const ufbx_anim_layer *layer, const ufbx_element *element, ufbx_string_view prop) { return ufbx_find_anim_prop_len(layer, element, prop.data, prop.length); }
+ufbx_inline ufbx_prop ufbx_evaluate_prop(const ufbx_anim *anim, const ufbx_element *element, ufbx_string_view name, double time) { return ufbx_evaluate_prop_len(anim, element, name.data, name.length, time); }
+ufbx_inline ufbx_texture *ufbx_find_prop_texture(const ufbx_material *material, ufbx_string_view name) { return ufbx_find_prop_texture_len(material, name.data, name.length); }
+ufbx_inline ufbx_string ufbx_find_shader_prop(const ufbx_shader *shader, ufbx_string_view name) { return ufbx_find_shader_prop_len(shader, name.data, name.length); }
+ufbx_inline ufbx_shader_prop_binding_list ufbx_find_shader_prop_bindings(const ufbx_shader *shader, ufbx_string_view name) { return ufbx_find_shader_prop_bindings_len(shader, name.data, name.length); }
+ufbx_inline ufbx_shader_texture_input *ufbx_find_shader_texture_input(const ufbx_shader_texture *shader, ufbx_string_view name) { return ufbx_find_shader_texture_input_len(shader, name.data, name.length); }
+ufbx_inline ufbx_geometry_cache *ufbx_load_geometry_cache(ufbx_string_view filename, const ufbx_geometry_cache_opts *opts, ufbx_error *error) { return ufbx_load_geometry_cache_len(filename.data, filename.length, opts, error); }
+ufbx_inline ufbx_dom_node *ufbx_dom_find(const ufbx_dom_node *parent, ufbx_string_view name) { return ufbx_dom_find_len(parent, name.data, name.length); }
+
+#endif
+
+#if UFBX_CPP11
+
+template <typename T>
+struct ufbx_type_traits { enum { valid = 0 }; };
+
+template<> struct ufbx_type_traits<ufbx_scene> {
+	enum { valid = 1 };
+	static void retain(ufbx_scene *ptr) { ufbx_retain_scene(ptr); }
+	static void free(ufbx_scene *ptr) { ufbx_free_scene(ptr); }
+};
+
+template<> struct ufbx_type_traits<ufbx_mesh> {
+	enum { valid = 1 };
+	static void retain(ufbx_mesh *ptr) { ufbx_retain_mesh(ptr); }
+	static void free(ufbx_mesh *ptr) { ufbx_free_mesh(ptr); }
+};
+
+template<> struct ufbx_type_traits<ufbx_line_curve> {
+	enum { valid = 1 };
+	static void retain(ufbx_line_curve *ptr) { ufbx_retain_line_curve(ptr); }
+	static void free(ufbx_line_curve *ptr) { ufbx_free_line_curve(ptr); }
+};
+
+template<> struct ufbx_type_traits<ufbx_geometry_cache> {
+	enum { valid = 1 };
+	static void retain(ufbx_geometry_cache *ptr) { ufbx_retain_geometry_cache(ptr); }
+	static void free(ufbx_geometry_cache *ptr) { ufbx_free_geometry_cache(ptr); }
+};
+
+template<> struct ufbx_type_traits<ufbx_anim> {
+	enum { valid = 1 };
+	static void retain(ufbx_anim *ptr) { ufbx_retain_anim(ptr); }
+	static void free(ufbx_anim *ptr) { ufbx_free_anim(ptr); }
+};
+
+template<> struct ufbx_type_traits<ufbx_baked_anim> {
+	enum { valid = 1 };
+	static void retain(ufbx_baked_anim *ptr) { ufbx_retain_baked_anim(ptr); }
+	static void free(ufbx_baked_anim *ptr) { ufbx_free_baked_anim(ptr); }
+};
+
+class ufbx_deleter {
+public:
+	template <typename T>
+	void operator()(T *ptr) const {
+		static_assert(ufbx_type_traits<T>::valid, "ufbx_deleter() unsupported for type");
+		ufbx_type_traits<T>::free(ptr);
+	}
+};
 
 // RAII wrapper over refcounted ufbx types.
-// Behaves like `std::shared_ptr<T>`.
+
+// Behaves like `std::unique_ptr<T>`.
 template <typename T>
-struct ufbx_ref {
-	ufbx_ref() noexcept : ptr(nullptr) { }
-	explicit ufbx_ref(T *ptr) noexcept : ptr(ptr) { }
-	ufbx_ref(const ufbx_ref &ref) noexcept : ptr(ref.ptr) { ufbx_retain(ref.ptr); }
-	ufbx_ref(ufbx_ref &&ref) noexcept : ptr(ref.ptr) { ref.ptr = nullptr; }
-	~ufbx_ref() { ufbx_free(ptr); }
+class ufbx_unique_ptr {
+	T *ptr;
+	using traits = ufbx_type_traits<T>;
+	static_assert(ufbx_type_traits<T>::valid, "ufbx_unique_ptr unsupported for type");
+public:
+	ufbx_unique_ptr() noexcept : ptr(nullptr) { }
+	explicit ufbx_unique_ptr(T *ptr_) noexcept : ptr(ptr_) { }
+	ufbx_unique_ptr(ufbx_unique_ptr &&ref) noexcept : ptr(ref.ptr) { ref.ptr = nullptr; }
+	~ufbx_unique_ptr() { traits::free(ptr); }
 
-	ufbx_ref &operator=(const ufbx_ref &ref) noexcept {
-		if (&ref == this) return *this;
-		ufbx_free(ptr);
-		ufbx_retain(ref.ptr);
-		ptr = ref.ptr;
-		return *this;
-	}
-
-	ufbx_ref &operator=(ufbx_ref &&ref) noexcept {
+	ufbx_unique_ptr &operator=(ufbx_unique_ptr &&ref) noexcept {
 		if (&ref == this) return *this;
 		ptr = ref.ptr;
 		ref.ptr = nullptr;
 		return *this;
 	}
 
-	void reset() noexcept {
-		ufbx_free(ptr);
-		ptr = nullptr;
+	void reset(T *new_ptr=nullptr) noexcept {
+		traits::free(ptr);
+		ptr = new_ptr;
 	}
 
-	void swap(ufbx_ref &ref) noexcept {
+	void swap(ufbx_unique_ptr &ref) noexcept {
 		T *tmp = ptr;
 		ptr = ref.ptr;
 		ref.ptr = tmp;
@@ -4685,15 +5766,55 @@ struct ufbx_ref {
 	T &operator*() const noexcept { return *ptr; }
 	T *operator->() const noexcept { return ptr; }
 	T *get() const noexcept { return ptr; }
-
-private:
-	T *ptr;
+	explicit operator bool() const noexcept { return ptr != nullptr; }
 };
 
-typedef ufbx_ref<ufbx_scene> ufbx_scene_ref;
-typedef ufbx_ref<ufbx_mesh> ufbx_mesh_ref;
-typedef ufbx_ref<ufbx_line_curve> ufbx_line_curve_ref;
-typedef ufbx_ref<ufbx_geometry_cache> ufbx_geometry_cache_ref;
+// Behaves like `std::shared_ptr<T>` except uses ufbx's internal reference counting,
+// so it is half the size of a standard `shared_ptr` but might be marginally slower.
+template <typename T>
+class ufbx_shared_ptr {
+	T *ptr;
+	using traits = ufbx_type_traits<T>;
+	static_assert(ufbx_type_traits<T>::valid, "ufbx_shared_ptr unsupported for type");
+public:
+
+	ufbx_shared_ptr() noexcept : ptr(nullptr) { }
+	explicit ufbx_shared_ptr(T *ptr_) noexcept : ptr(ptr_) { }
+	ufbx_shared_ptr(const ufbx_shared_ptr &ref) noexcept : ptr(ref.ptr) { traits::retain(ref.ptr); }
+	ufbx_shared_ptr(ufbx_shared_ptr &&ref) noexcept : ptr(ref.ptr) { ref.ptr = nullptr; }
+	~ufbx_shared_ptr() { traits::free(ptr); }
+
+	ufbx_shared_ptr &operator=(const ufbx_shared_ptr &ref) noexcept {
+		if (&ref == this) return *this;
+		traits::free(ptr);
+		traits::retain(ref.ptr);
+		ptr = ref.ptr;
+		return *this;
+	}
+
+	ufbx_shared_ptr &operator=(ufbx_shared_ptr &&ref) noexcept {
+		if (&ref == this) return *this;
+		ptr = ref.ptr;
+		ref.ptr = nullptr;
+		return *this;
+	}
+
+	void reset(T *new_ptr=nullptr) noexcept {
+		traits::free(ptr);
+		ptr = new_ptr;
+	}
+
+	void swap(ufbx_shared_ptr &ref) noexcept {
+		T *tmp = ptr;
+		ptr = ref.ptr;
+		ref.ptr = tmp;
+	}
+
+	T &operator*() const noexcept { return *ptr; }
+	T *operator->() const noexcept { return ptr; }
+	T *get() const noexcept { return ptr; }
+	explicit operator bool() const noexcept { return ptr != nullptr; }
+};
 
 #endif
 // bindgen-enable
@@ -4736,12 +5857,12 @@ typedef ufbx_ref<ufbx_geometry_cache> ufbx_geometry_cache_ref;
 // Used by: `ufbx_node`.
 #define UFBX_RotationOffset "RotationOffset"
 
-// Pre-rotation: Rotation applied _after_ `ufbxi_Lcl_Rotation`.
+// Pre-rotation: Rotation applied _after_ `UFBX_Lcl_Rotation`.
 // Used by: `ufbx_node`.
 // Affected by `UFBX_RotationPivot` but not `UFBX_RotationOrder`.
 #define UFBX_PreRotation "PreRotation"
 
-// Post-rotation: Rotation applied _before_ `ufbxi_Lcl_Rotation`.
+// Post-rotation: Rotation applied _before_ `UFBX_Lcl_Rotation`.
 // Used by: `ufbx_node`.
 // Affected by `UFBX_RotationPivot` but not `UFBX_RotationOrder`.
 #define UFBX_PostRotation "PostRotation"
@@ -4754,6 +5875,10 @@ typedef ufbx_ref<ufbx_geometry_cache> ufbx_geometry_cache_ref;
 // Used by: `ufbx_anim_layer`.
 #define UFBX_Weight "Weight"
 
+// Blend shape deformation weight (100.0 being full).
+// Used by: `ufbx_blend_channel`.
+#define UFBX_DeformPercent "DeformPercent"
+
 #if defined(_MSC_VER)
 	#pragma warning(pop)
 #elif defined(__clang__)
@@ -4763,4 +5888,3 @@ typedef ufbx_ref<ufbx_geometry_cache> ufbx_geometry_cache_ref;
 #endif
 
 #endif
-

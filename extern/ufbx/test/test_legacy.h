@@ -54,23 +54,23 @@ UFBXT_FILE_TEST(max2009_blob)
 			center.z /= (ufbx_real)face.num_indices;
 
 			if (center.z >= 14.0f) {
-				ufbx_mesh_material *mat = &mesh->materials.data[mesh->face_material.data[fi]];
-				ufbxt_assert(!strcmp(mat->material->name.data, "Top"));
+				ufbx_material *mat = mesh->materials.data[mesh->face_material.data[fi]];
+				ufbxt_assert(!strcmp(mat->name.data, "Top"));
 				num_top++;
 			}
 			if (center.y <= -10.0f) {
-				ufbx_mesh_material *mat = &mesh->materials.data[mesh->face_material.data[fi]];
-				ufbxt_assert(!strcmp(mat->material->name.data, "Right"));
+				ufbx_material *mat = mesh->materials.data[mesh->face_material.data[fi]];
+				ufbxt_assert(!strcmp(mat->name.data, "Right"));
 				num_right++;
 			}
 			if (center.y >= 10.0f) {
-				ufbx_mesh_material *mat = &mesh->materials.data[mesh->face_material.data[fi]];
-				ufbxt_assert(!strcmp(mat->material->name.data, "Left"));
+				ufbx_material *mat = mesh->materials.data[mesh->face_material.data[fi]];
+				ufbxt_assert(!strcmp(mat->name.data, "Left"));
 				num_left++;
 			}
 			if (center.x >= 9.0f) {
-				ufbx_mesh_material *mat = &mesh->materials.data[mesh->face_material.data[fi]];
-				ufbxt_assert(!strcmp(mat->material->name.data, "Front"));
+				ufbx_material *mat = mesh->materials.data[mesh->face_material.data[fi]];
+				ufbxt_assert(!strcmp(mat->name.data, "Front"));
 				num_front++;
 			}
 		}
@@ -87,7 +87,7 @@ UFBXT_FILE_TEST(max2009_blob)
 		ufbx_light *light = node->light;
 		ufbxt_assert(light->type == UFBX_LIGHT_POINT);
 		if (scene->metadata.version < 6000) {
-			ufbxt_assert(light->decay == UFBX_LIGHT_DECAY_QUADRATIC);
+			ufbxt_assert(light->decay == UFBX_LIGHT_DECAY_NONE);
 		}
 		ufbx_vec3 color = { 0.172549024224281f, 0.364705890417099f, 1.0f };
 		ufbxt_assert_close_vec3(err, light->color, color);
@@ -100,7 +100,7 @@ UFBXT_FILE_TEST(max2009_blob)
 		ufbx_light *light = node->light;
 		ufbxt_assert(light->type == UFBX_LIGHT_SPOT);
 		if (scene->metadata.version < 6000) {
-			ufbxt_assert(light->decay == UFBX_LIGHT_DECAY_QUADRATIC);
+			ufbxt_assert(light->decay == UFBX_LIGHT_DECAY_NONE);
 		}
 		ufbx_vec3 color = { 0.972549080848694f ,0.0705882385373116f, 0.0705882385373116f };
 		ufbxt_assert_close_vec3(err, light->color, color);
@@ -243,11 +243,82 @@ UFBXT_FILE_TEST(synthetic_legacy_nonzero_material)
 	ufbxt_assert(mesh->faces.count == 1);
 	ufbxt_assert(mesh->num_indices == 3);
 	ufbxt_assert(mesh->materials.count == 2);
-	ufbxt_assert(!strcmp(mesh->materials.data[0].material->name.data, "Right"));
-	ufbxt_assert(mesh->materials.data[0].num_faces == 0);
-	ufbxt_assert(!strcmp(mesh->materials.data[1].material->name.data, "Left"));
-	ufbxt_assert(mesh->materials.data[1].num_faces == 1);
+	ufbxt_assert(!strcmp(mesh->materials.data[0]->name.data, "Right"));
+	ufbxt_assert(mesh->material_parts.data[0].num_faces == 0);
+	ufbxt_assert(!strcmp(mesh->materials.data[1]->name.data, "Left"));
+	ufbxt_assert(mesh->material_parts.data[1].num_faces == 1);
 	ufbxt_assert(mesh->face_material.count == 1);
 	ufbxt_assert(mesh->face_material.data[0] == 1);
+}
+#endif
+
+UFBXT_FILE_TEST_FLAGS(synthetic_legacy_unquoted_child_fail, UFBXT_FILE_TEST_FLAG_ALLOW_ERROR)
+#if UFBXT_IMPL
+{
+	ufbxt_assert(!scene);
+	ufbxt_assert(load_error);
+}
+#endif
+
+UFBXT_FILE_TEST(max2009_cube_texture)
+#if UFBXT_IMPL
+{
+	ufbxt_assert(scene->videos.count == 1);
+	ufbx_video *video = scene->videos.data[0];
+	ufbxt_assert(!strcmp(video->relative_filename.data, "..\\..\\tiny_clouds.png"));
+	ufbxt_assert(!strcmp(video->absolute_filename.data, "C:\\Documents and Settings\\XP3\\My Documents\\tiny_clouds.png"));
+	if (scene->metadata.version >= 6000) {
+		ufbxt_assert(!strcmp(video->name.data, "Clouds"));
+	} else {
+		ufbxt_assert(!strcmp(video->name.data, "tiny_clouds"));
+	}
+	if (!scene->metadata.ascii) {
+		ufbxt_check_blob_content(video->content, "textures/tiny_clouds.png");
+	}
+
+	if (scene->metadata.version >= 6000) {
+		ufbxt_assert(scene->textures.count == 1);
+		ufbx_texture *texture = scene->textures.data[0];
+		ufbxt_assert(!strcmp(texture->name.data, "Clouds"));
+		if (!scene->metadata.ascii) {
+			ufbxt_check_blob_content(texture->content, "textures/tiny_clouds.png");
+		}
+	}
+
+	ufbx_node *node = ufbx_find_node(scene, "Box01");
+	ufbxt_assert(node);
+	ufbxt_assert(node->mesh);
+	ufbxt_assert(node->materials.count == 1);
+
+	ufbx_material *material = node->materials.data[0];
+	ufbxt_assert(!strcmp(material->name.data, "Clouds"));
+
+	// The 5800 file does not seem to link the video to the material in any way??
+	if (scene->metadata.version >= 6000) {
+		ufbxt_assert(material->fbx.diffuse_color.texture);
+	}
+}
+#endif
+
+UFBXT_FILE_TEST(max2009_cube_anim)
+#if UFBXT_IMPL
+{
+	ufbxt_check_frame(scene, err, false, "max2009_cube_anim_15", NULL, 15.0/30.0);
+	ufbxt_check_frame(scene, err, false, "max2009_cube_anim_45", NULL, 45.0/30.0);
+
+	ufbxt_assert(scene->settings.frames_per_second == 30.0);
+
+	{
+		ufbx_anim_stack *stack = ufbx_find_anim_stack(scene, "Take 001");
+		ufbxt_assert(stack);
+
+		ufbxt_assert_close_double(err, stack->time_begin, 0.0 / 30.0);
+		ufbxt_assert_close_double(err, stack->time_end, 60.0 / 30.0);
+
+		ufbxt_assert(ufbx_find_int(&stack->props, "LocalStart", INT64_MIN) == INT64_C(0));
+		ufbxt_assert(ufbx_find_int(&stack->props, "LocalStop", INT64_MIN) == INT64_C(92372316000));
+		ufbxt_assert(ufbx_find_int(&stack->props, "ReferenceStart", INT64_MIN) == INT64_C(0));
+		ufbxt_assert(ufbx_find_int(&stack->props, "ReferenceStop", INT64_MIN) == INT64_C(92372316000));
+	}
 }
 #endif
