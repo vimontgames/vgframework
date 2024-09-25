@@ -197,47 +197,6 @@ namespace vg::editor
     template <> bool equals(core::float4x4 a, core::float4x4 b) { return all(a == b); }
 
     //--------------------------------------------------------------------------------------
-    // This should be part of the Undo/Redo manager
-    //--------------------------------------------------------------------------------------
-
-    vg_enum_class(EditingState, core::u8,
-        Unknown = 0,
-        BeginEdit,
-        Editing,
-        EndEdit
-    );
-    
-    struct ObjectPropertyPair
-    {
-        ObjectPropertyPair() :
-            m_object(nullptr),
-            m_prop(nullptr)
-        {
-
-        }
-
-        ObjectPropertyPair(IObject * _object, const IProperty * _prop) :
-            m_object(_object),
-            m_prop(_prop)
-        {
-
-        }
-
-        bool operator != (const ObjectPropertyPair & _other) const
-        {
-            return m_object != _other.m_object && m_prop != _other.m_prop;
-        }
-
-        IObject * m_object;
-        const IProperty * m_prop;
-    };
-
-#if VG_ENABLE_UNDO_REDO
-    static ObjectPropertyPair g_currentEditedObjectProperty;
-    static core::IUndoRedoEntry * g_currentUndoRedoEntry = nullptr;
-#endif
-
-    //--------------------------------------------------------------------------------------
     template <typename T> bool createDynamicPropertyIfNeeded(T * _out, T _value, IObject * _object, const IProperty * _prop, PropertyContext & _propContext)
     {
         if ((!_propContext.m_readOnly))
@@ -251,9 +210,6 @@ namespace vg::editor
 
                     if (_propContext.m_optionalPropOverride)
                         _propContext.m_optionalPropOverride->Enable(true);
-
-                    //_object = (IObject *)_propContext.m_propOverride;
-                    //_propContext.m_isPrefabOverride = true;
 
                     return true;
                 }
@@ -303,9 +259,8 @@ namespace vg::editor
             if (EditingState::BeginEdit == _editingState)
             {
                 // Backup value before editing
-                VG_ASSERT(g_currentUndoRedoEntry == nullptr);
-                g_currentUndoRedoEntry = new UndoRedoPropertyEntry(_object, _prop, _propContext.m_originalObject, _propContext.m_prefab, _propContext.m_propOverride);
-                undoRedoManager->BeforeChange(g_currentUndoRedoEntry);
+                VG_ASSERT(false == undoRedoManager->HasCurrentlyEditedEntry());
+                undoRedoManager->BeforeChange(new UndoRedoPropertyEntry(_object, _prop, _propContext.m_originalObject, _propContext.m_prefab, _propContext.m_propOverride));
             }
             #endif
 
@@ -324,10 +279,8 @@ namespace vg::editor
             if (EditingState::EndEdit == _editingState)
             {
                 // Finalize Undo/Redo entry after editing
-                //undoRedoManager->Done(&undoRedoEntry);
-                VG_ASSERT(g_currentUndoRedoEntry != nullptr);
-                undoRedoManager->AfterChange(g_currentUndoRedoEntry);
-                g_currentUndoRedoEntry = nullptr;
+                VG_ASSERT(undoRedoManager->HasCurrentlyEditedEntry());
+                undoRedoManager->AfterChange();
             }
             #endif
 
@@ -418,15 +371,16 @@ namespace vg::editor
         #if VG_ENABLE_UNDO_REDO
         if (!dynPropertyJustCreated)
         {
-            ObjectPropertyPair current(_object, _prop);
+            UndoRedoTarget undoRedoTarget(_object, _prop);
+            auto * undoRedoManager = Kernel::getUndoRedoManager();
 
             if (edited & ImGui::IsItemActive())
             {
-                if (g_currentEditedObjectProperty != current)
+                if (undoRedoManager->GetCurrentUndoRedoTarget() != undoRedoTarget)
                 {
                     //VG_INFO("[Undo/Redo] Begin editing Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
                     editingState = EditingState::BeginEdit;
-                    g_currentEditedObjectProperty = current;
+                    undoRedoManager->SetCurrentUndoRedoTarget(undoRedoTarget);
                 }
                 else
                 {
@@ -438,7 +392,7 @@ namespace vg::editor
             {
                 //VG_INFO("[Undo/Redo] End editing Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
                 editingState = EditingState::EndEdit;
-                g_currentEditedObjectProperty = {};
+                undoRedoManager->ClearCurrentUndoRedoTarget();
                 edited = true;
             }
         }

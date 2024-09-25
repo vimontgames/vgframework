@@ -64,6 +64,7 @@ namespace vg::core
 		IObject *					Instanciate			() const override;
 
 		void                        OnLoad				() override;
+		void                        OnSave				() override;
 
         void                        OnPlay				() override;
         void                        OnStop				() override;

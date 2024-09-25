@@ -20,6 +20,42 @@ namespace vg::core
         virtual void Redo() = 0;
     };
 
+    struct UndoRedoTarget
+    {
+        UndoRedoTarget() :
+            m_object(nullptr),
+            m_prop(nullptr)
+        {
+
+        }
+
+        UndoRedoTarget(IObject * _object, const IProperty * _prop) :
+            m_object(_object),
+            m_prop(_prop)
+        {
+
+        }
+
+        bool operator != (const UndoRedoTarget & _other) const
+        {
+            return m_object != _other.m_object && m_prop != _other.m_prop;
+        }
+
+        bool isEmpty() const
+        {
+            return nullptr == m_object && nullptr == m_prop;
+        }
+
+        void clear()
+        {
+            m_object = nullptr;
+            m_prop = nullptr;
+        }
+
+        IObject *           m_object = nullptr;
+        const IProperty *   m_prop = nullptr;
+    };
+
     class IUndoRedoManager : public Object
     {
     public:
@@ -35,6 +71,13 @@ namespace vg::core
         virtual void Clear() = 0;
 
         virtual void BeforeChange(IUndoRedoEntry * _entry) = 0;
-        virtual void AfterChange(IUndoRedoEntry * _entry) = 0;
+        virtual void AfterChange() = 0;
+
+        virtual const UndoRedoTarget & GetCurrentUndoRedoTarget() const = 0;
+        virtual void SetCurrentUndoRedoTarget(const UndoRedoTarget & _undoRedoTarget) = 0;
+        virtual void ClearCurrentUndoRedoTarget() = 0;
+
+        virtual bool HasCurrentlyEditedEntry() const = 0;
+        virtual IUndoRedoEntry * GetEditedEntry() const = 0;
     };
 }

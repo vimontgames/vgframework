@@ -85,6 +85,9 @@
     <Filter Include="UndoRedo">
       <UniqueIdentifier>{a6debba9-ea3f-4ff4-9a16-045ce3463263}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UndoRedo\Entry">
+      <UniqueIdentifier>{4c661d57-b085-4a38-becb-44c83b1d191c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -416,6 +419,27 @@
     <ClInclude Include="IUndoRedo.h" />
     <ClInclude Include="UndoRedo\UndoRedo.h">
       <Filter>UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoRedo\UndoRedoManager.h">
+      <Filter>UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoRedo\UndoRedoManager.hpp">
+      <Filter>UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoRedo\UndoRedoEntry.h">
+      <Filter>UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoRedo\UndoRedoEntry.hpp">
+      <Filter>UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoRedo\UndoRedo_consts.h">
+      <Filter>UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoRedo\Entry\UndoRedoPropertyEntry.h">
+      <Filter>UndoRedo\Entry</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoRedo\Entry\UndoRedoPropertyEntry.hpp">
+      <Filter>UndoRedo\Entry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -150,6 +150,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Object::OnSave()
+    {
+        // Unselect object on save
+        SetObjectFlags(ObjectFlags::Selected, false);
+    }
+
+    //--------------------------------------------------------------------------------------
     void Object::OnPlay()
     {
         auto * factory = Kernel::getFactory();
