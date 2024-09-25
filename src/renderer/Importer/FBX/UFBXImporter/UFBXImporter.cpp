@@ -3,8 +3,12 @@
 #include "core/Timer/Timer.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "core/File/File.h"
-#include "ufbx/ufbx.c"
 #include "core/string/string.h"
+
+#pragma push_macro("free")
+#undef free
+#include "ufbx/ufbx.c"
+#pragma pop_macro("free")
 
 using namespace vg::core;
 
@@ -27,7 +31,6 @@ namespace vg::renderer
     {
         ufbx_load_opts opts = {};
         opts.load_external_files = false,
-        opts.allow_null_material = true,
         opts.generate_missing_normals = true,
         opts.evaluate_skinning = true,
         opts.target_axes.right = UFBX_COORDINATE_AXIS_POSITIVE_X;
@@ -143,14 +146,16 @@ namespace vg::renderer
         _data.name = name;
 
         uint maxMaterialCount = 0, maxTriangleCount = 0, totalTriangleCount = 0;;
-        for (size_t i = 0; i < _UFbxMesh->materials.count; i++)
+        for (size_t i = 0; i < _UFbxMesh->material_parts.count; i++)
         {
-            const ufbx_mesh_material * UFbxMeshMat = &_UFbxMesh->materials.data[i];
-            if (0 != UFbxMeshMat->num_triangles)
+            const ufbx_material * UFbxMeshMat = _UFbxMesh->materials.data[i];
+            const ufbx_mesh_part * ufbxMeshPart = &_UFbxMesh->material_parts.data[i];
+            if (0 != ufbxMeshPart->num_triangles)
             {
                 maxMaterialCount++;
-                totalTriangleCount += (uint)UFbxMeshMat->num_triangles;
-                maxTriangleCount = max(maxTriangleCount, (uint)UFbxMeshMat->num_triangles);
+                const uint triangleCount = (uint)ufbxMeshPart->num_triangles;
+                totalTriangleCount += triangleCount;
+                maxTriangleCount = max(maxTriangleCount, triangleCount);
             }
         }
 
@@ -179,7 +184,7 @@ namespace vg::renderer
                 node.normal_to_world = UFBXMatrixToFloat4x3(ufbx_matrix_for_normals(&UFBXNode->geometry_to_world));
 
                 // Store original TRS
-                ufbx_transform transform = ufbx_evaluate_transform(&_UFBXScene->anim_stacks[0]->anim, UFBXNode, 0.0f);
+                ufbx_transform transform = ufbx_evaluate_transform(_UFBXScene->anim_stacks[0]->anim, UFBXNode, 0.0f);
 
                 node.rot = UFBXQuatToQuat(transform.rotation);
                 node.pos = UFBXVec3ToFloat3(transform.translation);
@@ -275,19 +280,20 @@ namespace vg::renderer
 
         uint vertexIndex = 0;
 
-        for (size_t i = 0; i < _UFbxMesh->materials.count; i++)
+        for (size_t i = 0; i < _UFbxMesh->material_parts.count; i++)
         {
-            const ufbx_mesh_material * UFbxMeshMat = &_UFbxMesh->materials.data[i];
+            const ufbx_mesh_part * ufbxMeshPart = &_UFbxMesh->material_parts.data[i];
+            const ufbx_material * ufbxMat = ufbxMeshPart->index < _UFbxMesh->materials.count ? _UFbxMesh->materials[ufbxMeshPart->index] : nullptr;
 
-            if (UFbxMeshMat->num_triangles == 0)
+            if (ufbxMeshPart->num_triangles == 0)
                 continue;
 
             uint batchIndexCount = 0;
             uint startIndex = (uint)indexBuffer.size();
 
-            for (size_t j = 0; j < UFbxMeshMat->num_faces; j++)
+            for (size_t j = 0; j < ufbxMeshPart->num_faces; j++)
             {
-                ufbx_face face = _UFbxMesh->faces.data[UFbxMeshMat->face_indices.data[j]];
+                ufbx_face face = _UFbxMesh->faces.data[ufbxMeshPart->face_indices.data[j]];
                 uint triangleCount = ufbx_triangulate_face(triangleIndexTmp, maxIndexCountPerFace, _UFbxMesh, face);
 
                 for (uint t = 0; t < triangleCount; t++)
@@ -340,35 +346,34 @@ namespace vg::renderer
             }
 
             Batch batch;
-                  batch.setName(UFbxMeshMat->material ? UFbxMeshMat->material->name.data : fmt::sprintf("Material %u", i).c_str());
+                  batch.setName(ufbxMat? ufbxMat->name.data : fmt::sprintf("Material %u", i).c_str());
                   batch.count = batchIndexCount;
                   batch.offset = startIndex;
             batches.push_back(batch);
         }
 
         vector<MaterialImporterData> materials;
-        for (auto i = 0; i < _UFbxMesh->materials.count; ++i)
+        for (auto i = 0; i < _UFbxMesh->material_parts.count; ++i)
         {
-            const ufbx_mesh_material * UFbxMeshMat = &_UFbxMesh->materials[i];
-            if (0 != UFbxMeshMat->num_triangles)
+            const ufbx_mesh_part * ufbxMeshPart = &_UFbxMesh->material_parts.data[i];
+            const ufbx_material * ufbxMat = ufbxMeshPart->index < _UFbxMesh->materials.count ? _UFbxMesh->materials[ufbxMeshPart->index] : nullptr;
+
+            if (0 != ufbxMeshPart->num_triangles && nullptr != ufbxMat)
             {
-                if (nullptr != UFbxMeshMat->material)
-                {
-                    MaterialImporterData matImportData;
+                MaterialImporterData matImportData;
 
-                    matImportData.m_name = UFbxMeshMat->material->name.data;
+                matImportData.m_name = ufbxMat->name.data;
 
-                    const auto & albedo = UFbxMeshMat->material->pbr.maps[UFBX_MATERIAL_PBR_BASE_COLOR];
-                    const auto & normal = UFbxMeshMat->material->pbr.maps[UFBX_MATERIAL_PBR_NORMAL_MAP];
+                const auto & albedo = ufbxMat->fbx.maps[UFBX_MATERIAL_PBR_BASE_COLOR];
+                const auto & normal = ufbxMat->fbx.maps[UFBX_MATERIAL_PBR_NORMAL_MAP];
 
-                    matImportData.m_texturePath[(int)MaterialTextureType::Albedo] = io::cleanPath(albedo.texture ? albedo.texture->absolute_filename.data : "");
-                    matImportData.m_texturePath[(int)MaterialTextureType::Albedo] = io::getRelativePath(matImportData.m_texturePath[(int)MaterialTextureType::Albedo]);
+                matImportData.m_texturePath[(int)MaterialTextureType::Albedo] = io::cleanPath(albedo.texture ? albedo.texture->absolute_filename.data : "");
+                matImportData.m_texturePath[(int)MaterialTextureType::Albedo] = io::getRelativePath(matImportData.m_texturePath[(int)MaterialTextureType::Albedo]);
 
-                    matImportData.m_texturePath[(int)MaterialTextureType::Normal] = io::cleanPath(normal.texture ? normal.texture->absolute_filename.data : "");
-                    matImportData.m_texturePath[(int)MaterialTextureType::Normal] = io::getRelativePath(matImportData.m_texturePath[(int)MaterialTextureType::Normal]);
+                matImportData.m_texturePath[(int)MaterialTextureType::Normal] = io::cleanPath(normal.texture ? normal.texture->absolute_filename.data : "");
+                matImportData.m_texturePath[(int)MaterialTextureType::Normal] = io::getRelativePath(matImportData.m_texturePath[(int)MaterialTextureType::Normal]);
 
-                    materials.push_back(matImportData);
-                }
+                materials.push_back(matImportData);
             }
         }
 
@@ -483,7 +488,7 @@ namespace vg::renderer
         {
             double time = _UFBXAnimStack->time_begin + (double)i / _animData.framerate;
         
-            ufbx_transform transform = ufbx_evaluate_transform(&_UFBXAnimStack->anim, _UFBXNode, time);
+            ufbx_transform transform = ufbx_evaluate_transform(_UFBXAnimStack->anim, _UFBXNode, time);
         
             _animNodeData.rot.push_back(UFBXQuatToQuat(transform.rotation));
             _animNodeData.pos.push_back(UFBXVec3ToFloat3(transform.translation));

@@ -110,7 +110,7 @@ namespace vg::editor
                 { "SoLoud",                 "August 2024",      "https://github.com/jarikomppa/soloud" },
                 { "stb_image",              "",                 "https://github.com/nothings/stb" },
                 { "tinyXML2",               "10.0.0",           "https://github.com/leethomason/tinyxml2" },
-                { "UFBX",                   "0.5.0-30f035b",    "https://github.com/ufbx/ufbx" },
+                { "UFBX",                   "0.14.3",           "https://github.com/ufbx/ufbx" },
                 { "VulkanMemoryAllocator",  "3.0.1",            "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator" },
                 { "WinPixEventRuntime",     "1.0.231030001",    "https://www.nuget.org/packages/WinPixEventRuntime" },
             };

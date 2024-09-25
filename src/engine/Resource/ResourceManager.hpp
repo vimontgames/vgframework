@@ -546,7 +546,6 @@ namespace vg::engine
 
             // Set Shared Resource Object and Notify owner
             res->SetObject(info->m_object);
-            //res->setName(info->m_object->getName());
             res->loadSubResources();
             IObject * resOwner = res->GetParent();
             VG_ASSERT(nullptr != resOwner);

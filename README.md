@@ -146,7 +146,7 @@ The external libraries are included with the sources for convenience.
 | SoLoud                     | August 2024   | https://github.com/jarikomppa/soloud   
 | stb                        |               | https://github.com/nothings/stb                                           
 | tinyXML2                   | 10.0.0        | https://github.com/leethomason/tinyxml2/releases/tag/10.0.0               
-| UFBX                       |               | https://github.com/ufbx/ufbx                                              
+| UFBX                       | 0.14.3        | https://github.com/ufbx/ufbx                                              
 | Vulkan Memory Allocator    | 3.0.1         | https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator         
 | WinPixEventRuntime         | 1.0.231030001 | https://www.nuget.org/packages/WinPixEventRuntime                         
 
