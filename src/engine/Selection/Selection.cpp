@@ -24,9 +24,12 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void Selection::SetSelectedObject(core::IObject * _object)
     {
-        clear();
-        add(_object);
-        updateSelectionMatrix();
+        if (false == (m_selectionArray.size() == 1 && m_selectionArray[0] == _object))
+        {
+            clear();
+            add(_object);
+            updateSelectionMatrix();
+        }
     }
 
     //--------------------------------------------------------------------------------------

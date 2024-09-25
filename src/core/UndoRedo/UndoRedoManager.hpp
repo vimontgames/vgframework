@@ -104,6 +104,19 @@ namespace vg::core
                 destroyEntry(e);
             m_undoneStack.clear();
         }
+        ClearEditedEntry();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool UndoRedoManager::ClearEditedEntry()
+    {
+        if (HasCurrentlyEditedEntry())
+        {
+            m_currentEntry = nullptr;
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -137,6 +150,18 @@ namespace vg::core
     {
         VG_ASSERT(HasCurrentlyEditedEntry());
         return m_currentEntry;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::vector<IUndoRedoEntry *> & UndoRedoManager::GetUndoStack() const
+    {
+        return (core::vector<IUndoRedoEntry *>&)m_doneStack;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::vector<IUndoRedoEntry *> & UndoRedoManager::GetRedoStack() const
+    {
+        return (core::vector<IUndoRedoEntry *>&)m_undoneStack;
     }
 
     //--------------------------------------------------------------------------------------

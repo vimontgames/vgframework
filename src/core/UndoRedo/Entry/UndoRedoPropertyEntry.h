@@ -23,6 +23,9 @@ namespace vg::core
         void Undo() final override;
         void Redo() final override;
 
+        string GetName() const final override;
+        string GetDescription() const final override;
+
     private:
         io::Buffer m_original;
         io::Buffer m_modified;

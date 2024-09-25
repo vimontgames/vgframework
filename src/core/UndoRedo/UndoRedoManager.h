@@ -32,6 +32,10 @@ namespace vg::core
 
         bool HasCurrentlyEditedEntry() const final override;
         IUndoRedoEntry * GetEditedEntry() const final override;
+        bool ClearEditedEntry() final override;
+
+        const core::vector<IUndoRedoEntry *> & GetUndoStack() const final override;
+        const core::vector<IUndoRedoEntry *> & GetRedoStack() const final override;
 
     protected:
         void destroyEntry(UndoRedoEntry * _entry);

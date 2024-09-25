@@ -135,8 +135,7 @@ namespace vg::renderer
                                     }
                                     else
                                     {
-                                        selection->Clear();
-                                        selection->Add(go);
+                                        selection->SetSelectedObject(go);
                                     }
                                 }
                             }

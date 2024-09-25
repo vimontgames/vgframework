@@ -2,6 +2,7 @@
 #include "core/Kernel.h"
 #include "core/Object/Factory.h"
 #include "core/IGameObject.h"
+#include "core/string/string.h"
 
 namespace vg::core
 {
@@ -28,6 +29,18 @@ namespace vg::core
     {
         Factory * factory = (Factory *)Kernel::getFactory();
         factory->serializePropertyToMemory(m_object, m_prop, m_modified);
+    }
+
+    //--------------------------------------------------------------------------------------
+    string UndoRedoPropertyEntry::GetName() const
+    {
+        return "Edit property";
+    }
+
+    //--------------------------------------------------------------------------------------
+    string UndoRedoPropertyEntry::GetDescription() const
+    {
+        return fmt::sprintf("(%s)%s", asString(m_prop->GetType()), m_prop->GetName());
     }
 
     //--------------------------------------------------------------------------------------

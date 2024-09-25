@@ -12,10 +12,13 @@ namespace vg::core
         UndoRedoEntry() {}
         ~UndoRedoEntry() {}
 
-        void BeforeChange() = 0;
-        void AfterChange() = 0;
+        void BeforeChange() override = 0;
+        void AfterChange() override = 0;
 
-        void Undo() = 0;
-        void Redo() = 0;
+        void Undo() override= 0;
+        void Redo() override= 0;
+
+        string GetName() const override = 0;
+        string GetDescription() const override = 0;
     };
 }

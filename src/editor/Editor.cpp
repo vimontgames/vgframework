@@ -41,6 +41,7 @@
 #include "editor/ImGui/Toolbar/Main/ImGuiMainToolbar.h"
 #include "editor/ImGui/Window/View/PrefabView/ImGuiPrefabView.h"
 #include "editor/ImGui/Window/Statistics/ImGuiStatistics.h"
+#include "editor/ImGui/Window/UndoRedo/ImGuiUndoRedo.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
 
 using namespace vg::core;
@@ -113,6 +114,7 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiAbout());  
         m_imGuiWindows.push_back(new ImGuiStatistics());
         m_imGuiWindows.push_back(new ImGuiTime());
+        m_imGuiWindows.push_back(new ImGuiUndoRedo());
 
         // Add ImGui toolbars
         m_imGuiWindows.push_back(new ImGuiMainToolbar("Main Toolbar", ImGuiWindow::StartVisible));

@@ -18,6 +18,9 @@ namespace vg::core
 
         virtual void Undo() = 0;
         virtual void Redo() = 0;
+
+        virtual string GetName() const = 0;
+        virtual string GetDescription() const = 0;
     };
 
     struct UndoRedoTarget
@@ -79,5 +82,9 @@ namespace vg::core
 
         virtual bool HasCurrentlyEditedEntry() const = 0;
         virtual IUndoRedoEntry * GetEditedEntry() const = 0;
+        virtual bool ClearEditedEntry() = 0;
+
+        virtual const core::vector<IUndoRedoEntry *> & GetUndoStack() const = 0;
+        virtual const core::vector<IUndoRedoEntry *> & GetRedoStack() const = 0;
     };
 }

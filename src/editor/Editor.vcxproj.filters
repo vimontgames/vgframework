@@ -283,6 +283,12 @@
     <ClInclude Include="ImGui\ObjectHandler\Audio\ImGuiSoundListHandler.hpp">
       <Filter>ImGui\ObjectHandler\Audio</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\Window\UndoRedo\ImGuiUndoRedo.h">
+      <Filter>ImGui\Window\UndoRedo</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\Window\UndoRedo\ImGuiUndoRedo.hpp">
+      <Filter>ImGui\Window\UndoRedo</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -432,6 +438,9 @@
     </Filter>
     <Filter Include="ImGui\ObjectHandler\Audio">
       <UniqueIdentifier>{c500a89e-9b95-4221-9ead-f614c560bcdc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\Window\UndoRedo">
+      <UniqueIdentifier>{d4798306-257f-485e-a1b1-291e47ed74d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

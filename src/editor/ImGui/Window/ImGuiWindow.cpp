@@ -34,6 +34,10 @@ using namespace vg::gfx;
 using namespace ImGui;
 
 #include "editor/Editor.h"
+#include "editor/ImGui/Menu/ObjectHandle/ObjectHandleMenu.h"
+#include "editor/ImGui/ObjectHandler/ImGuiObjectHandler.h"
+#include "editor/ImGui/Menu/Inspector/Component/ImGuiComponentInspectorMenu.h"
+
 #include "editor/ImGui/Window/ImGuiObjectPropertyContext.hpp"
 #include "editor/ImGui/Window/FPS/ImGuiFPS.hpp"
 #include "editor/ImGui/Window/Plugin/ImGuiPlugin.hpp"
@@ -53,9 +57,7 @@ using namespace ImGui;
 #include "editor/ImGui/Window/View/GameView/ImGuiGameView.hpp"
 #include "editor/ImGui/Window/Console/ImGuiConsole.hpp"
 #include "editor/ImGui/Window/Statistics/ImGuiStatistics.hpp"
-#include "editor/ImGui/Menu/ObjectHandle/ObjectHandleMenu.h"
-#include "editor/ImGui/ObjectHandler/ImGuiObjectHandler.h"
-#include "editor/ImGui/Menu/Inspector/Component/ImGuiComponentInspectorMenu.h"
+#include "editor/ImGui/Window/UndoRedo/ImGuiUndoRedo.hpp"
 
 #include "shlobj_core.h"
 
