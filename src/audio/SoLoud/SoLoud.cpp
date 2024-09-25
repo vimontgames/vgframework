@@ -1,7 +1,24 @@
 #include "audio/Precomp.h"
 #include "SoLoud.h"
 
+//--------------------------------------------------------------------------------------
+// All available audio backends
+//--------------------------------------------------------------------------------------
+#define AUDIOBACKED_NULL       0
+#define AUDIOBACKEND_MINIAUDIO 1
+
+//--------------------------------------------------------------------------------------
+// Current audio backend
+//--------------------------------------------------------------------------------------
+#define AUDIOBACKEND AUDIOBACKEND_MINIAUDIO
+
+#if AUDIOBACKEND == AUDIOBACKED_NULL
+#define WITH_NULL
+#include "soloud/src/backend/null/soloud_null.cpp"
+#elif AUDIOBACKEND == AUDIOBACKEND_MINIAUDIO
 #define WITH_MINIAUDIO
+#include "soloud/src/backend/miniaudio/soloud_miniaudio.cpp"
+#endif
 
 #include "soloud/src/core/soloud.cpp"
 #include "soloud/src/core/soloud_audiosource.cpp"
@@ -22,8 +39,6 @@
 #include "soloud/src/core/soloud_misc.cpp"
 #include "soloud/src/core/soloud_queue.cpp"
 #include "soloud/src/core/soloud_thread.cpp"
-
-#include "soloud/src/backend/miniaudio/soloud_miniaudio.cpp"
 
 #include "soloud/src/audiosource/speech/darray.cpp"
 #include "soloud/src/audiosource/speech/klatt.cpp"
