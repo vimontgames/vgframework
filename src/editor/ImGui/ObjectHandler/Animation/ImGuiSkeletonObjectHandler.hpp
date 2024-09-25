@@ -24,7 +24,7 @@ namespace vg::editor
             if (skeleton)
             {
                 const auto * factory = Kernel::getFactory();
-                const auto * classDesc = factory->getClassDescriptor(_object->GetClassName());
+                const auto * classDesc = factory->GetClassDescriptor(_object->GetClassName());
 
                 for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
                 {

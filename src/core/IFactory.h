@@ -23,19 +23,19 @@ namespace vg::core
     public:
         virtual ~IFactory() {}
 
-        virtual IClassDesc *                registerClass               (const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::Func _createFunc) = 0;
-        virtual IClassDesc *                registerSingletonClass      (const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) = 0;
-        virtual const IClassDesc *          getClassDescriptor          (const char * _className, bool _mustExist = true) const = 0;
-        virtual const vector<IClassDesc *>  getClassDescriptors         (ClassDescFlags _required = (ClassDescFlags)-1, ClassDescFlags _excluded = (ClassDescFlags)0) const = 0;
-        virtual bool                        isRegisteredClass           (const char * _className) const = 0;
-        virtual IObject *                   getSingleton                (const char * _className) const = 0;
-        virtual IObject *                   createObject                (const char * _className, const string & _name = "", IObject * _parent = nullptr) const = 0;
+        virtual IClassDesc *                RegisterObjectClass         (const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::Func _createFunc) = 0;
+        virtual IClassDesc *                RegisterSingletonClass      (const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) = 0;
+        virtual const IClassDesc *          GetClassDescriptor          (const char * _className, bool _mustExist = true) const = 0;
+        virtual const vector<IClassDesc *>  GetClassDescriptors         (ClassDescFlags _required = (ClassDescFlags)-1, ClassDescFlags _excluded = (ClassDescFlags)0) const = 0;
+        virtual bool                        IsRegisteredClass           (const char * _className) const = 0;
+        virtual IObject *                   GetSingleton                (const char * _className) const = 0;
+        virtual IObject *                   CreateObject                (const char * _className, const string & _name = "", IObject * _parent = nullptr) const = 0;
 
-        virtual bool                        loadFromXML                 (IObject * _object, const string & _XMLfilename) const = 0;
-        virtual bool                        saveToXML                   (const IObject * _object, const string & _xmlFile) const  = 0;
+        virtual bool                        LoadFromXML                 (IObject * _object, const string & _XMLfilename) const = 0;
+        virtual bool                        SaveToXML                   (IObject * _object, const string & _xmlFile) const  = 0;
 
-        virtual bool                        serializeFromXML            (IObject * _object, XMLDoc & _xmlDoc) const = 0;
-        virtual bool                        serializeToXML              (const IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent = nullptr) const = 0;
+        virtual bool                        SerializeFromXML            (IObject * _object, XMLDoc & _xmlDoc) const = 0;
+        virtual bool                        SerializeToXML              (IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent = nullptr) const = 0;
 
         virtual void                        ReleaseAsync                (core::IObject * _object) = 0;
         virtual void                        FlushReleaseAsync           () = 0;
@@ -61,12 +61,12 @@ namespace vg::core
 //--------------------------------------------------------------------------------------
 // Create any Object from its className
 //--------------------------------------------------------------------------------------
-#define CreateFactoryObject(type, name, parent)                         Kernel::getFactory()->createObject(#type, name, parent)  
+#define CreateFactoryObject(type, name, parent)                         Kernel::getFactory()->CreateObject(#type, name, parent)  
 
 //--------------------------------------------------------------------------------------
 // Register object class macros
 //--------------------------------------------------------------------------------------
-#define registerClassHelper(className, displayName, flags)              registerClass(className::super::getStaticClassName(), #className, displayName, flags, sizeof(className), [](const vg::core::string & _name, vg::core::IObject * _parent) { auto newObj = new className(_name, _parent); VG_ASSERT(nullptr != dynamic_cast<vg::core::IObject*>(newObj)); return dynamic_cast<vg::core::IObject*>(newObj); }) // 'dynamic_cast' should not be necessary but the cast is present to workaround weird Lambda to std::function conversion compilation issue  
-#define registerInterfaceHelper(className, displayName, flags)          registerClass(className::super::getStaticClassName(), #className, displayName, flags, sizeof(className), [](const vg::core::string & _name, vg::core::IObject * _parent) { return nullptr; }) // 'dynamic_cast' should not be necessary but the cast is present to workaround weird Lambda to std::function conversion compilation issue  
-#define registerClassSingletonHelper(className, displayName, flags)     registerSingletonClass(className::super::getStaticClassName(), #className, displayName, flags | vg::core::ClassDescFlags::Singleton, sizeof(className), [](){ return className::get(); } )
-#define registerPlugin(className, displayName)                          registerSingletonClass(className::super::getStaticClassName(), #className, displayName, vg::core::ClassDescFlags::Singleton | vg::core::ClassDescFlags::Plugin, sizeof(className), [](){ return className::get(); } )
+#define registerClassHelper(className, displayName, flags)              RegisterObjectClass(className::super::getStaticClassName(), #className, displayName, flags, sizeof(className), [](const vg::core::string & _name, vg::core::IObject * _parent) { auto newObj = new className(_name, _parent); VG_ASSERT(nullptr != dynamic_cast<vg::core::IObject*>(newObj)); return dynamic_cast<vg::core::IObject*>(newObj); }) // 'dynamic_cast' should not be necessary but the cast is present to workaround weird Lambda to std::function conversion compilation issue  
+#define registerInterfaceHelper(className, displayName, flags)          RegisterObjectClass(className::super::getStaticClassName(), #className, displayName, flags, sizeof(className), [](const vg::core::string & _name, vg::core::IObject * _parent) { return nullptr; }) // 'dynamic_cast' should not be necessary but the cast is present to workaround weird Lambda to std::function conversion compilation issue  
+#define registerClassSingletonHelper(className, displayName, flags)     RegisterSingletonClass(className::super::getStaticClassName(), #className, displayName, flags | vg::core::ClassDescFlags::Singleton, sizeof(className), [](){ return className::get(); } )
+#define registerPlugin(className, displayName)                          RegisterSingletonClass(className::super::getStaticClassName(), #className, displayName, vg::core::ClassDescFlags::Singleton | vg::core::ClassDescFlags::Plugin, sizeof(className), [](){ return className::get(); } )

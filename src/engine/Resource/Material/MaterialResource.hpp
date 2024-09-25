@@ -62,13 +62,13 @@ namespace vg::engine
     core::IObject * MaterialResource::Load(const string & _path)
     {
         IFactory * factory = Kernel::getFactory();
-        MaterialResourceData * object = (MaterialResourceData*)factory->createObject("MaterialResourceData");
+        MaterialResourceData * object = (MaterialResourceData*)factory->CreateObject("MaterialResourceData");
         if (nullptr != object)
         {
             object->SetParent(this);
             object->setName(io::getFileName(_path));
 
-            if (factory->loadFromXML(object, _path))
+            if (factory->LoadFromXML(object, _path))
             {
                 // Create the material, textures aren't loaded yet
                 object->CreateRendererMaterial();
@@ -86,10 +86,10 @@ namespace vg::engine
     {
         const auto * factory = Kernel::getFactory();
 
-        IObject * resData = factory->createObject("MaterialResourceData");
+        IObject * resData = factory->CreateObject("MaterialResourceData");
         if (nullptr != resData)
         {
-            factory->saveToXML(resData, _path);
+            factory->SaveToXML(resData, _path);
             VG_SAFE_RELEASE(resData);
             return true;
         }
@@ -104,7 +104,7 @@ namespace vg::engine
         if (nullptr != object)
         {
             const auto * factory = Kernel::getFactory();
-            return factory->saveToXML(object, _path);
+            return factory->SaveToXML(object, _path);
         }
         return false;
     }

@@ -8,7 +8,7 @@ namespace vg::editor
         m_prefabRes((core::IResource*)_prefabRes)
     {
         IFactory * factory = Kernel::getFactory();
-        m_prefabWorld = (IWorld *)factory->createObject("World", _prefabRes->GetResourcePath());
+        m_prefabWorld = (IWorld *)factory->CreateObject("World", _prefabRes->GetResourcePath());
         m_prefabWorld->SetObjectFlags(ObjectFlags::Prefab, true);
         VG_SAFE_INCREASE_REFCOUNT(m_prefabRes);
     }
@@ -42,7 +42,7 @@ namespace vg::editor
             if (scene && scene->hasFile())
             {
                 const string & filePath = scene->getFile();
-                factory->saveToXML(scene, filePath);
+                factory->SaveToXML(scene, filePath);
             }
         }
         
@@ -53,7 +53,7 @@ namespace vg::editor
             if (scene && scene->hasFile())
             {
                 const string & filePath = scene->getFile();
-                factory->saveToXML(scene, filePath);
+                factory->SaveToXML(scene, filePath);
                 auto rm = engine->GetResourceManager();
                 rm->Reimport(m_prefabRes);
             }
@@ -130,7 +130,7 @@ namespace vg::editor
             if (scene->hasFile())
             {
                 const string & filePath = scene->getFile();
-                factory->saveToXML(scene, filePath);
+                factory->SaveToXML(scene, filePath);
             }
         }
 

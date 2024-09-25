@@ -66,7 +66,7 @@ namespace vg::engine
     renderer::IMaterialModel * DefaultMaterialData::CreateRendererMaterialModel() const
     {
         IFactory * factory = Kernel::getFactory();
-        auto * material = (renderer::IMaterialModel*)factory->createObject("DefaultMaterialModel", "Default");
+        auto * material = (renderer::IMaterialModel*)factory->CreateObject("DefaultMaterialModel", "Default");
 
         // This is generic code that could go to parent class and be shared by all material types in the future
         {

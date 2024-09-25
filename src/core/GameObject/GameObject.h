@@ -17,7 +17,7 @@ namespace vg::core
                                                         GameObject                  (const core::string & _name, IObject * _parent);
         virtual                                         ~GameObject                 ();
 
-        bool                                            RegisterUID               () override;
+        bool                                            RegisterUID                 () override;
 
         void                                            OnLoad                      () override;
 

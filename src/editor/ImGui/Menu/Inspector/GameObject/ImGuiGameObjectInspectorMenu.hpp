@@ -47,7 +47,7 @@ namespace vg::editor
                 {
                     // List the available components
                     auto factory = Kernel::getFactory();
-                    auto componentClassDescs = factory->getClassDescriptors(ClassDescFlags::Component);
+                    auto componentClassDescs = factory->GetClassDescriptors(ClassDescFlags::Component);
 
                     // make a list of categories
                     for (uint i = 0; i < componentClassDescs.size(); ++i)
@@ -243,7 +243,7 @@ namespace vg::editor
 
                             if (m_selectedClass)
                             {
-                                IComponent * comp = (IComponent *)Kernel::getFactory()->createObject(m_selectedClass->GetClassName(), "New " + (string)m_selectedClass->GetClassName(), _object);
+                                IComponent * comp = (IComponent *)Kernel::getFactory()->CreateObject(m_selectedClass->GetClassName(), "New " + (string)m_selectedClass->GetClassName(), _object);
                                 if (comp)
                                 {
                                     comp->SetObjectFlags(ObjectFlags::Opened, true);

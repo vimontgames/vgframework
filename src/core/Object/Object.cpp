@@ -146,14 +146,14 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Object::OnLoad()
     {
+        SetObjectFlags(ObjectFlags::Selected, false); // Unselect object on load
         RegisterUID();
     }
 
     //--------------------------------------------------------------------------------------
     void Object::OnSave()
     {
-        // Unselect object on save
-        SetObjectFlags(ObjectFlags::Selected, false);
+        SetObjectFlags(ObjectFlags::Selected, false); // Unselect object on save
     }
 
     //--------------------------------------------------------------------------------------
@@ -351,7 +351,7 @@ namespace vg::core
         {
             const auto * factory = Kernel::getFactory();
             if (factory)
-                return factory->isRegisteredClass(GetClassName());
+                return factory->IsRegisteredClass(GetClassName());
         }
         return true;
     }
@@ -363,7 +363,7 @@ namespace vg::core
         {
             const auto * factory = Kernel::getFactory();
             if (factory)
-                m_classDesc = factory->getClassDescriptor(GetClassName());
+                m_classDesc = factory->GetClassDescriptor(GetClassName());
         }
         VG_ASSERT(m_classDesc);
         return m_classDesc;

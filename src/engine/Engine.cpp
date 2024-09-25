@@ -532,7 +532,7 @@ namespace vg::engine
             if (scene->hasFile())
             {
                 IFactory * factory = Kernel::getFactory();
-                factory->saveToXML(scene, scene->getFile());
+                factory->SaveToXML(scene, scene->getFile());
                 return true;
             }
         }

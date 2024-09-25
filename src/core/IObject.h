@@ -49,6 +49,7 @@ namespace vg::core
         virtual IObject *                   Instanciate         () const = 0;
 
         virtual void                        OnLoad              () = 0;
+        virtual void                        OnSave              () = 0;
 
         virtual void                        OnPlay              () = 0;
         virtual void                        OnStop              () = 0;

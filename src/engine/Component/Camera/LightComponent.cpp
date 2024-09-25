@@ -67,11 +67,11 @@ namespace vg::engine
                 break;
 
             case renderer::LightType::Directional:
-                m_lightDesc = (renderer::ILightDesc *)factory->createObject("DirectionalLightDesc", "", this);
+                m_lightDesc = (renderer::ILightDesc *)factory->CreateObject("DirectionalLightDesc", "", this);
                 break;
 
             case renderer::LightType::Omni:
-                m_lightDesc = (renderer::ILightDesc *)factory->createObject("OmniLightDesc", "", this);
+                m_lightDesc = (renderer::ILightDesc *)factory->CreateObject("OmniLightDesc", "", this);
                 break;
         }
 

@@ -21,7 +21,7 @@ namespace vg::core
         setFile(io::getMetaPath(_resourcePath));
 
         if (const auto * factory = Kernel::getFactory())
-            return factory->loadFromXML(this, getFile());
+            return factory->LoadFromXML(this, getFile());
 
         return false;
     }
@@ -33,7 +33,7 @@ namespace vg::core
         setFile(io::getMetaPath(_resourcePath));
 
         if (const auto * factory = Kernel::getFactory())
-            return factory->saveToXML(this, getFile());
+            return factory->SaveToXML(this, getFile());
 
         return false;
     }

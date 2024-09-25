@@ -164,7 +164,7 @@ namespace vg::engine
             IFactory * factory = Kernel::getFactory();
             VG_SAFE_RELEASE(m_bodyDesc);
 
-            m_bodyDesc = (physics::IBodyDesc *)factory->createObject("PhysicsBodyDesc", "", this);
+            m_bodyDesc = (physics::IBodyDesc *)factory->CreateObject("PhysicsBodyDesc", "", this);
 
             if (m_bodyDesc)
             {

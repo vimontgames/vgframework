@@ -655,7 +655,7 @@ namespace vg::editor
         const char * className = _object->GetClassName();
 
         const auto * factory = Kernel::getFactory();
-        const auto * classDesc = factory->getClassDescriptor(className);
+        const auto * classDesc = factory->GetClassDescriptor(className);
 
         if (!classDesc)
             return false;
@@ -1767,7 +1767,7 @@ namespace vg::editor
 
                             const char * interfaceName = _prop->GetInterface();
                             const auto * factory = Kernel::getFactory();
-                            const vector<IClassDesc *> elemClassDescs = factory->getClassDescriptors();
+                            const vector<IClassDesc *> elemClassDescs = factory->GetClassDescriptors();
                             vector<IClassDesc*> compatibleElemDescs;
                             for (auto & elemDesc : elemClassDescs)
                             {
@@ -1823,7 +1823,7 @@ namespace vg::editor
 
                             if (add && nullptr != elemDesc)
                             {
-                                auto * obj = factory->createObject(elemDesc->GetClassName(), fmt::sprintf("[%u]", vec->size()));
+                                auto * obj = factory->CreateObject(elemDesc->GetClassName(), fmt::sprintf("[%u]", vec->size()));
                                 vec->push_back(obj);
                             }
 
@@ -2161,7 +2161,7 @@ namespace vg::editor
     {
         const char * className = _resource->GetClassName();
         const auto * factory = Kernel::getFactory();
-        const auto * classDesc = factory->getClassDescriptor(className);
+        const auto * classDesc = factory->GetClassDescriptor(className);
 
         ImGui::PushID(_resource);
         ImGui::PushID(_prop);
@@ -2399,7 +2399,7 @@ namespace vg::editor
         if (resourceObject)
         {
             bool anyVisibleProperty = false;
-            auto * objectClassDesc = factory->getClassDescriptor(resourceObject->GetClassName());
+            auto * objectClassDesc = factory->GetClassDescriptor(resourceObject->GetClassName());
 
             for (uint i = 0; i < objectClassDesc->GetPropertyCount(); ++i)
             {

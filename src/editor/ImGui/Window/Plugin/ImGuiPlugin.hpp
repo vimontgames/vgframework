@@ -15,7 +15,7 @@ namespace vg::editor
         if (ImGui::IconBegin(getIcon().c_str(), "Plugins", &m_isVisible))
         {
             const auto & factory = Editor::get()->getFactory();
-            const auto & pluginDescs = factory->getClassDescriptors(ClassDescFlags::Plugin);
+            const auto & pluginDescs = factory->GetClassDescriptors(ClassDescFlags::Plugin);
 
             static ImGuiTableFlags flags = ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersV | ImGuiTableFlags_Reorderable | ImGuiTableFlags_Hideable;
 
@@ -33,7 +33,7 @@ namespace vg::editor
                     if (nullptr == pluginDesc)
                         continue;
 
-                    const IPlugin * plugin = static_cast<IPlugin *>(factory->getSingleton(pluginDesc->GetClassName()));
+                    const IPlugin * plugin = static_cast<IPlugin *>(factory->GetSingleton(pluginDesc->GetClassName()));
 
                     ImGui::TableNextRow();
 

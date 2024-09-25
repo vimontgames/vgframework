@@ -303,7 +303,7 @@ namespace vg::engine
                     staticCollidersGO->release();
 
                     IFactory * factory = Kernel::getFactory();
-                    physics::IBodyDesc * bodyDesc = (physics::IBodyDesc *)factory->createObject("PhysicsBodyDesc", "", this);
+                    physics::IBodyDesc * bodyDesc = (physics::IBodyDesc *)factory->CreateObject("PhysicsBodyDesc", "", this);
                     
                     vector<physics::ShapeInfo> allSceneShapes;
                     

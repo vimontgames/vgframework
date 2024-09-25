@@ -60,11 +60,11 @@ namespace vg::engine
     core::IObject * WorldResource::Load(const string & _path)
     {
         IFactory * factory = Kernel::getFactory();
-        WorldResourceData * worldData = dynamic_cast<WorldResourceData *>(factory->createObject("WorldResourceData"));
+        WorldResourceData * worldData = dynamic_cast<WorldResourceData *>(factory->CreateObject("WorldResourceData"));
         if (nullptr != worldData)
         {
             worldData->SetParent(this);
-            if (factory->loadFromXML(worldData, _path))
+            if (factory->LoadFromXML(worldData, _path))
             {
                 worldData->createWorld();
 
@@ -82,10 +82,10 @@ namespace vg::engine
     {
         const auto * factory = Kernel::getFactory();
 
-        WorldResourceData * worldData = dynamic_cast<WorldResourceData *>(factory->createObject("WorldResourceData", core::io::getFileNameWithoutExt(_path)));
+        WorldResourceData * worldData = dynamic_cast<WorldResourceData *>(factory->CreateObject("WorldResourceData", core::io::getFileNameWithoutExt(_path)));
         if (nullptr != worldData)
         {
-            factory->saveToXML(worldData, _path);
+            factory->SaveToXML(worldData, _path);
             VG_SAFE_RELEASE(worldData);
             return true;
         }
@@ -100,7 +100,7 @@ namespace vg::engine
         if (nullptr != worldData)
         {
             const auto * factory = Kernel::getFactory();
-            return factory->saveToXML(worldData, _path);
+            return factory->SaveToXML(worldData, _path);
         }
         return false;
     }

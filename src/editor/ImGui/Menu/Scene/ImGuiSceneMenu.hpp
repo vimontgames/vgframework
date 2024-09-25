@@ -128,7 +128,7 @@ namespace vg::editor
                 {
                     string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), typeInfo.fileExt.c_str());
                     scene->setName(io::getFileNameWithoutExt(newFilePath));
-                    factory->saveToXML(scene, newFilePath);
+                    factory->SaveToXML(scene, newFilePath);
                     status = Status::Saved;
                 }
 

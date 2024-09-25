@@ -433,7 +433,7 @@ namespace vg::editor
             ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
             {
                 const auto* factory = Kernel::getFactory();
-                engine::IEngine* engine = (engine::IEngine*)factory->getSingleton("Engine");
+                engine::IEngine* engine = (engine::IEngine*)factory->GetSingleton("Engine");
 
                 engine::IWorldResource* worldRes = engine->GetWorldResource();
                 IWorld* world = worldRes ? worldRes->GetWorld() : nullptr;

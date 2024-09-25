@@ -54,7 +54,7 @@ namespace vg::editor
             vector<IClassDesc *> matModel;
             
             IFactory * factory = Kernel::getFactory();
-            const auto models = factory->getClassDescriptors(ClassDescFlags::Model);
+            const auto models = factory->GetClassDescriptors(ClassDescFlags::Model);
             for (uint i = 0; i < models.size(); ++i)
             {
                 auto * desc = models[i];

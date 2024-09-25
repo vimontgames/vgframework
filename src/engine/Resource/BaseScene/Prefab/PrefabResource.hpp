@@ -54,11 +54,11 @@ namespace vg::engine
     core::IObject* PrefabResource::Load(const string& _path)
     {
         IFactory* factory = Kernel::getFactory();
-        PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->createObject("PrefabScene"));
+        PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->CreateObject("PrefabScene"));
         if (nullptr != prefabScene)
         {
             prefabScene->SetParent(this);
-            if (factory->loadFromXML(prefabScene, _path))
+            if (factory->LoadFromXML(prefabScene, _path))
                 return prefabScene;
         }
 
@@ -72,7 +72,7 @@ namespace vg::engine
     {
         auto * factory = Kernel::getFactory();
 
-        if (PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->createObject("PrefabScene")))
+        if (PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->CreateObject("PrefabScene")))
         {
             // Use file name as default scene name
             prefabScene->setName(io::getFileNameWithoutExt(_path));
@@ -94,7 +94,7 @@ namespace vg::engine
 
             VG_SAFE_RELEASE(root);
 
-            factory->saveToXML(prefabScene, _path);
+            factory->SaveToXML(prefabScene, _path);
             VG_SAFE_RELEASE(prefabScene);
             return true;
         }
@@ -109,7 +109,7 @@ namespace vg::engine
         if (nullptr != scene)
         {
             const auto* factory = Kernel::getFactory();
-            return factory->saveToXML(scene, _path);
+            return factory->SaveToXML(scene, _path);
         }
         return false;
     }

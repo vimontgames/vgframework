@@ -19,19 +19,19 @@ namespace vg::core
                                                     Factory                         ();
                                                     ~Factory                        ();
 
-        IClassDesc *                                registerClass                   (const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::Func _createFunc) final;
-        IClassDesc *                                registerSingletonClass          (const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) final;
-        const IClassDesc *                          getClassDescriptor              (const char * _className, bool _mustExist = true) const final;
-        const vector<IClassDesc *>                  getClassDescriptors             (ClassDescFlags _required = (ClassDescFlags)-1, ClassDescFlags _excluded = (ClassDescFlags)0) const final;
-        bool                                        isRegisteredClass               (const char * _className) const final;
-        IObject *                                   getSingleton                    (const char * _className) const final;
-        IObject *                                   createObject                    (const char * _className, const string & _name, IObject * _parent = nullptr) const final;
+        IClassDesc *                                RegisterObjectClass             (const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::Func _createFunc) final;
+        IClassDesc *                                RegisterSingletonClass          (const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) final;
+        const IClassDesc *                          GetClassDescriptor              (const char * _className, bool _mustExist = true) const final;
+        const vector<IClassDesc *>                  GetClassDescriptors             (ClassDescFlags _required = (ClassDescFlags)-1, ClassDescFlags _excluded = (ClassDescFlags)0) const final;
+        bool                                        IsRegisteredClass               (const char * _className) const final;
+        IObject *                                   GetSingleton                    (const char * _className) const final;
+        IObject *                                   CreateObject                    (const char * _className, const string & _name, IObject * _parent = nullptr) const final;
 
-        bool                                        loadFromXML                     (IObject * _object, const string & _XMLfilename) const final;
-        bool                                        saveToXML                       (const IObject * _object, const string & _xmlFile) const final;
+        bool                                        LoadFromXML                     (IObject * _object, const string & _xmlFile) const final;
+        bool                                        SaveToXML                       (IObject * _object, const string & _xmlFile) const final;
 
-        bool                                        serializeFromXML                (IObject * _object, XMLDoc & _xmlDoc) const final;
-        bool                                        serializeToXML                  (const IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent = nullptr) const final;
+        bool                                        SerializeFromXML                (IObject * _object, XMLDoc & _xmlDoc) const final;
+        bool                                        SerializeToXML                  (IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent = nullptr) const final;
 
         bool                                        SaveProperties                  (core::IObject * _object) final override;
         bool                                        RestoreProperties               (core::IObject * _object) final override;
@@ -48,7 +48,7 @@ namespace vg::core
         IObject *                                   FindByUID                       (UID _uid) final override;
 
     //protected:
-        bool                                        serializeFromXML                (IObject * _object, const XMLElem * _xmlElem) const;
+        bool                                        SerializeFromXML                (IObject * _object, const XMLElem * _xmlElem) const;
 
         template <typename T> void                  serializeIntegerPropertyFromXML (IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem, core::uint _index = 0) const;
         template <typename T> void                  serializeIntegerPropertyToXML   (const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem, core::uint _index = 0) const;

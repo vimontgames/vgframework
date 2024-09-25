@@ -53,11 +53,11 @@ namespace vg::engine
 	core::IObject * SceneResource::Load(const string & _path)
 	{
 		IFactory * factory = Kernel::getFactory();
-		IBaseScene * scene = dynamic_cast<IBaseScene*>(factory->createObject("Scene"));
+		IBaseScene * scene = dynamic_cast<IBaseScene*>(factory->CreateObject("Scene"));
 		if (nullptr != scene)
 		{
 			scene->SetParent(this);
-			if (factory->loadFromXML(scene, _path))
+			if (factory->LoadFromXML(scene, _path))
 			{
 				//fixMissingUIDs(scene->GetRoot());
 				return scene;
@@ -74,7 +74,7 @@ namespace vg::engine
 	{
 		const auto * factory = Kernel::getFactory();
 
-		IBaseScene * scene = dynamic_cast<IBaseScene*>(factory->createObject("Scene"));
+		IBaseScene * scene = dynamic_cast<IBaseScene*>(factory->CreateObject("Scene"));
 		if (nullptr != scene)
 		{
 			// Use file name as default scene name
@@ -85,7 +85,7 @@ namespace vg::engine
 			scene->SetRoot(root);
 			root->release();
 
-			factory->saveToXML(scene, _path);
+			factory->SaveToXML(scene, _path);
 			VG_SAFE_RELEASE(scene);
 			return true;
 		}
@@ -100,7 +100,7 @@ namespace vg::engine
 		if (nullptr != scene)
 		{
 			const auto * factory = Kernel::getFactory();
-			return factory->saveToXML(scene, _path);
+			return factory->SaveToXML(scene, _path);
 		}
 		return false;
 	}

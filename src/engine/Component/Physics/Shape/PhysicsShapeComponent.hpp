@@ -118,19 +118,19 @@ namespace vg::engine
                     break;
 
                 case physics::ShapeType::Sphere:
-                    m_shapeDesc = (physics::IShapeDesc *)factory->createObject("SphereShapeDesc", "", this);
+                    m_shapeDesc = (physics::IShapeDesc *)factory->CreateObject("SphereShapeDesc", "", this);
                     break;
 
                 case physics::ShapeType::Box:
-                    m_shapeDesc = (physics::IShapeDesc *)factory->createObject("BoxShapeDesc", "", this);
+                    m_shapeDesc = (physics::IShapeDesc *)factory->CreateObject("BoxShapeDesc", "", this);
                     break;
 
                 case physics::ShapeType::Capsule:
-                    m_shapeDesc = (physics::IShapeDesc *)factory->createObject("CapsuleShapeDesc", "", this);
+                    m_shapeDesc = (physics::IShapeDesc *)factory->CreateObject("CapsuleShapeDesc", "", this);
                     break;
 
                 case physics::ShapeType::Cylinder:
-                    m_shapeDesc = (physics::IShapeDesc *)factory->createObject("CylinderShapeDesc", "", this);
+                    m_shapeDesc = (physics::IShapeDesc *)factory->CreateObject("CylinderShapeDesc", "", this);
                     break;
             }
 

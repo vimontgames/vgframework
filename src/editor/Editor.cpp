@@ -236,13 +236,13 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     vg::engine::IEngine * Editor::findEngine() const
     {
-        return (vg::engine::IEngine *)getFactory()->getSingleton("Engine");
+        return (vg::engine::IEngine *)getFactory()->GetSingleton("Engine");
     }
 
     //--------------------------------------------------------------------------------------
     vg::renderer::IRenderer * Editor::findRenderer() const
     {
-        return (vg::renderer::IRenderer *)getFactory()->getSingleton("Renderer");
+        return (vg::renderer::IRenderer *)getFactory()->GetSingleton("Renderer");
     }
 
     //--------------------------------------------------------------------------------------

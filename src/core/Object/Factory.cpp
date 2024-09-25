@@ -67,7 +67,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     // Returned pointer shall not be stored but used immediately
     //--------------------------------------------------------------------------------------
-    IClassDesc * Factory::registerClass(const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::Func _createFunc)
+    IClassDesc * Factory::RegisterObjectClass(const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::Func _createFunc)
     {
         // Classes declared in shared static libs could be declared more than once at static init
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -96,7 +96,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IClassDesc * Factory::registerSingletonClass(const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::SingletonFunc _singletonFunc)
+    IClassDesc * Factory::RegisterSingletonClass(const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::SingletonFunc _singletonFunc)
     {
         // Classes declared in shared static libs could be declared more than once at static init
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -124,7 +124,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::isRegisteredClass(const char * _className) const
+    bool Factory::IsRegisteredClass(const char * _className) const
     {
         for (uint i = 0; i < m_classes.size(); ++i)
         {
@@ -136,9 +136,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * Factory::getSingleton(const char * _className) const
+    IObject * Factory::GetSingleton(const char * _className) const
     {
-        const auto * desc = getClassDescriptor(_className);
+        const auto * desc = GetClassDescriptor(_className);
         if (desc)
         {
             VG_ASSERT(asBool(ClassDescFlags::Singleton & desc->GetFlags()));
@@ -148,9 +148,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * Factory::createObject(const char * _className, const string & _name, IObject * _parent) const
+    IObject * Factory::CreateObject(const char * _className, const string & _name, IObject * _parent) const
     {
-        auto * desc = getClassDescriptor(_className);
+        auto * desc = GetClassDescriptor(_className);
 
         if (desc)
         {
@@ -173,10 +173,10 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::loadFromXML(IObject * _object, const string & _XMLfilename) const
+    bool Factory::LoadFromXML(IObject * _object, const string & _xmlFile) const
     {
         const auto startLoad = Timer::getTick();
-        string relativePath = io::getRelativePath(_XMLfilename);
+        string relativePath = io::getRelativePath(_xmlFile);
 
         XMLDoc xmlDoc;
         if (XMLError::XML_SUCCESS == xmlDoc.LoadFile(relativePath.c_str()))
@@ -185,7 +185,7 @@ namespace vg::core
             if (xmlRoot != nullptr)
             {
                 //VG_INFO("[Factory] Load \"%s\"", relativePath.c_str());
-                if (serializeFromXML(_object, xmlDoc))
+                if (SerializeFromXML(_object, xmlDoc))
                 {
                     VG_INFO("[Factory] \"%s\" loaded from XML in %.2f ms", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                     _object->setFile(relativePath.c_str());
@@ -198,13 +198,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::saveToXML(const IObject * _object, const string & _xmlFile) const
+    bool Factory::SaveToXML(IObject * _object, const string & _xmlFile) const
     {
         XMLDoc xmlDoc;
         XMLNode * xmlRoot = xmlDoc.NewElement("Root");
         xmlDoc.InsertFirstChild(xmlRoot);
 
-        if (serializeToXML(_object, xmlDoc))
+        if (SerializeToXML(_object, xmlDoc))
             if (XMLError::XML_SUCCESS == xmlDoc.SaveFile(_xmlFile.c_str()))
                 return true;
 
@@ -230,7 +230,7 @@ namespace vg::core
     bool Factory::serializeObjectToMemory(const IObject * _object, io::Buffer & _buffer)
     {
         const char * className = _object->GetClassName();
-        const auto * classDesc = getClassDescriptor(className);
+        const auto * classDesc = GetClassDescriptor(className);
 
         for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
         {
@@ -331,7 +331,7 @@ namespace vg::core
     {
         const auto className = _object->GetClassName();
         
-        IObject * newObj = createObject(className, _object->getName(), _parent);
+        IObject * newObj = CreateObject(className, _object->getName(), _parent);
         VG_ASSERT(nullptr != newObj);
         if (nullptr == newObj)
             return nullptr;
@@ -347,7 +347,7 @@ namespace vg::core
         if (!strcmp(_class, _other))
             return true;
 
-        if (const ClassDesc * classDesc = (const ClassDesc*)getClassDescriptor(_class, false))
+        if (const ClassDesc * classDesc = (const ClassDesc*)GetClassDescriptor(_class, false))
         {
             if (classDesc->parentClassName && strcmp(_class, classDesc->parentClassName))
             {
@@ -476,7 +476,7 @@ namespace vg::core
         const auto dstClassName = _dstObj->GetClassName();
         VG_ASSERT(dstClassName == srcClassName, "[Factory] Cannot assign object of type \"%s\" to another object of type \"%s\"", srcClassName, dstClassName);
 
-        const auto * classDesc = getClassDescriptor(srcClassName);
+        const auto * classDesc = GetClassDescriptor(srcClassName);
 
         VG_ASSERT(nullptr != classDesc);
         if (nullptr == classDesc)
@@ -729,7 +729,7 @@ namespace vg::core
             for (uint i = 0; i < count; ++i)
             {
                 IObject * srcChild = (*srcVec)[i];
-                IObject * newChild = createObject(srcChild->GetClassName(), srcChild->getName(), _dstObj);
+                IObject * newChild = CreateObject(srcChild->GetClassName(), srcChild->getName(), _dstObj);
                 CopyProperties((IObject *)srcChild, newChild);
                 newChild->SetParent(_dstObj);
                 dstVec->push_back(newChild);
@@ -758,7 +758,7 @@ namespace vg::core
             if (srcCount > 0)
             {
                 const char * elemClassName = _srcProp->GetPropertyResourceVectorElement(_srcObj, 0)->GetClassName();
-                const IClassDesc * elemClassDesc = getClassDescriptor(elemClassName);
+                const IClassDesc * elemClassDesc = GetClassDescriptor(elemClassName);
                 VG_ASSERT(elemClassDesc);
                 if (elemClassDesc)
                 {
@@ -835,7 +835,7 @@ namespace vg::core
     bool Factory::serializeFromMemory(IObject * _object, io::Buffer & _buffer)
     {
         const char * className = _object->GetClassName();
-        const auto * classDesc = getClassDescriptor(className);
+        const auto * classDesc = GetClassDescriptor(className);
 
         for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
         {
@@ -964,7 +964,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const IClassDesc * Factory::getClassDescriptor(const char * _className, bool _mustExist) const
+    const IClassDesc * Factory::GetClassDescriptor(const char * _className, bool _mustExist) const
     {
         for (uint i = 0; i < m_classes.size(); ++i)
         {
@@ -978,7 +978,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const vector<IClassDesc *> Factory::getClassDescriptors(ClassDescFlags _required, ClassDescFlags _excluded) const
+    const vector<IClassDesc *> Factory::GetClassDescriptors(ClassDescFlags _required, ClassDescFlags _excluded) const
     {
         vector<IClassDesc *> classes;
         for (uint i = 0; i < m_classes.size(); ++i)
@@ -1004,11 +1004,11 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::serializeFromXML(IObject* _object, XMLDoc & _xmlDoc) const
+    bool Factory::SerializeFromXML(IObject* _object, XMLDoc & _xmlDoc) const
     {
         auto * parent = _xmlDoc.RootElement();
         const XMLElement * xmlObject = parent->FirstChildElement("Object");
-        bool result = serializeFromXML(_object, xmlObject);
+        bool result = SerializeFromXML(_object, xmlObject);
         return result;
     }
 
@@ -1023,7 +1023,7 @@ namespace vg::core
     };
 
     //--------------------------------------------------------------------------------------
-    bool Factory::serializeFromXML(IObject * _object, const XMLElem * xmlObject) const
+    bool Factory::SerializeFromXML(IObject * _object, const XMLElem * xmlObject) const
     {
         if (_object == nullptr)
         {
@@ -1037,7 +1037,7 @@ namespace vg::core
             if (nullptr != xmlClassAttr)
             {
                 const char * className = fixDeprecatedClassName(xmlClassAttr->Value());
-                const auto * classDesc = getClassDescriptor(className);
+                const auto * classDesc = GetClassDescriptor(className);
                 if (nullptr != classDesc)
                 {
                     const XMLElement * xmlPropElem = xmlObject->FirstChildElement("Property");
@@ -1161,11 +1161,11 @@ namespace vg::core
                                                 if (nullptr != xmlClassAttrRef)
                                                 {
                                                     const char * classNameRef = xmlClassAttrRef->Value();
-                                                    const auto * classDescRef = getClassDescriptor(classNameRef);
+                                                    const auto * classDescRef = GetClassDescriptor(classNameRef);
                                                     if (nullptr != classDescRef)
                                                     {
                                                         // TODO: clear contents?
-                                                        VG_VERIFY(serializeFromXML(pObjectRef, xmlObjectRef));
+                                                        VG_VERIFY(SerializeFromXML(pObjectRef, xmlObjectRef));
                                                         pObjectRef->SetParent(_object);
                                                     }
                                                 }
@@ -1188,10 +1188,10 @@ namespace vg::core
                                                     if (nullptr != xmlClassAttrRef)
                                                     {
                                                         const char * classNameRef = xmlClassAttrRef->Value();
-                                                        classDescRef = getClassDescriptor(classNameRef);
+                                                        classDescRef = GetClassDescriptor(classNameRef);
                                                         if (nullptr != classDescRef)
                                                         {
-                                                            if (serializeFromXML(_resource, xmlObjectRef))
+                                                            if (SerializeFromXML(_resource, xmlObjectRef))
                                                             {
                                                                 _resource->SetParent(_object);
                                                                 _resource->OnResourcePathChanged("", _resource->GetResourcePath());
@@ -1251,11 +1251,11 @@ namespace vg::core
                                                         if (nullptr != xmlClassAttrRef)
                                                         {
                                                             const char * classNameRef = xmlClassAttrRef->Value();
-                                                            const auto * classDescRef = getClassDescriptor(classNameRef);
+                                                            const auto * classDescRef = GetClassDescriptor(classNameRef);
                                                             if (nullptr != classDescRef)
                                                             {
-                                                                IResource * resource = (IResource*)createObject(classNameRef, "", _object);
-                                                                if (serializeFromXML(resource, xmlObjectRef))
+                                                                IResource * resource = (IResource*)CreateObject(classNameRef, "", _object);
+                                                                if (SerializeFromXML(resource, xmlObjectRef))
                                                                 {
                                                                     resource->SetParent(_object);
                                                                     resource->OnResourcePathChanged("", resource->GetResourcePath());
@@ -1290,7 +1290,7 @@ namespace vg::core
                                                     if (nullptr != xmlClassAttrRef)
                                                     {
                                                         const char * classNameRef = xmlClassAttrRef->Value();
-                                                        const auto * classDescRef = getClassDescriptor(classNameRef);
+                                                        const auto * classDescRef = GetClassDescriptor(classNameRef);
                                                         if (nullptr != classDescRef)
                                                         {
                                                             count++;
@@ -1317,11 +1317,11 @@ namespace vg::core
                                                         if (nullptr != xmlClassAttrRef)
                                                         {
                                                             const char * classNameRef = xmlClassAttrRef->Value();
-                                                            const auto * classDescRef = getClassDescriptor(classNameRef);
+                                                            const auto * classDescRef = GetClassDescriptor(classNameRef);
                                                             if (nullptr != classDescRef)
                                                             {
                                                                 IResource * pResource = (IResource *)(uint_ptr(data) + index * elemSize);
-                                                                if (serializeFromXML(pResource, xmlObjectRef))
+                                                                if (SerializeFromXML(pResource, xmlObjectRef))
                                                                 {
                                                                     pResource->SetParent(_object);
                                                                     pResource->OnResourcePathChanged("", pResource->GetResourcePath());
@@ -1350,11 +1350,11 @@ namespace vg::core
                                                 if (nullptr != xmlClassAttrRef)
                                                 {
                                                     const char* classNameRef = fixDeprecatedClassName(xmlClassAttrRef->Value());
-                                                    const auto* classDescRef = getClassDescriptor(classNameRef);
+                                                    const auto* classDescRef = GetClassDescriptor(classNameRef);
                                                     if (nullptr != classDescRef)
                                                     {
-                                                        pObjectRef = createObject(classNameRef, "", _object);
-                                                        if (!serializeFromXML(pObjectRef, xmlObjectRef))
+                                                        pObjectRef = CreateObject(classNameRef, "", _object);
+                                                        if (!SerializeFromXML(pObjectRef, xmlObjectRef))
                                                             VG_SAFE_DELETE(pObjectRef);
                                                     }
                                                 }
@@ -1385,11 +1385,11 @@ namespace vg::core
                                                         if (nullptr != xmlClassAttrRef)
                                                         {
                                                             const char* classNameRef = fixDeprecatedClassName(xmlClassAttrRef->Value());
-                                                            const auto* classDescRef = getClassDescriptor(classNameRef);
+                                                            const auto* classDescRef = GetClassDescriptor(classNameRef);
                                                             if (nullptr != classDescRef)
                                                             {
-                                                                pObjectRef = createObject(classNameRef, "", _object);
-                                                                if (serializeFromXML(pObjectRef, xmlObjectRef))
+                                                                pObjectRef = CreateObject(classNameRef, "", _object);
+                                                                if (SerializeFromXML(pObjectRef, xmlObjectRef))
                                                                 {
                                                                     vector->push_back(pObjectRef);
                                                                 }
@@ -1715,7 +1715,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::serializeToXML(const IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent) const
+    bool Factory::SerializeToXML(IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent) const
     {
         auto * parent = nullptr != _parent ? _parent : _xmlDoc.RootElement();
 
@@ -1727,10 +1727,12 @@ namespace vg::core
                 return false;
         }
 
+        _object->OnSave();
+
         XMLElement * xmlElement = _xmlDoc.NewElement("Object");
         xmlElement->SetAttribute("class", className);
 
-        const auto * classDesc = getClassDescriptor(className);
+        const auto * classDesc = GetClassDescriptor(className);
 
         for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
         {
@@ -1865,16 +1867,16 @@ namespace vg::core
                             {
                                 auto enumValueName = prop->GetEnumName(i);
                                 xmlPropElemChild->SetAttribute("name", enumValueName);
-                                const IObject * pResource = ref ? *prop->GetPropertyResourcePtr(_object, i) : prop->GetPropertyResource(_object, i);
-                                serializeToXML(pResource, _xmlDoc, xmlPropElemChild);
+                                IObject * pResource = ref ? *prop->GetPropertyResourcePtr(_object, i) : prop->GetPropertyResource(_object, i);
+                                SerializeToXML(pResource, _xmlDoc, xmlPropElemChild);
                             }
                             xmlPropElem->InsertEndChild(xmlPropElemChild);
                         }
                     }
                     else
                     {
-                        const IObject * pResource = ref ? *prop->GetPropertyResourcePtr(_object) : prop->GetPropertyResource(_object);
-                        serializeToXML(pResource, _xmlDoc, xmlPropElem);
+                        IObject * pResource = ref ? *prop->GetPropertyResourcePtr(_object) : prop->GetPropertyResource(_object);
+                        SerializeToXML(pResource, _xmlDoc, xmlPropElem);
                     }
                 }
                 break;
@@ -1889,7 +1891,7 @@ namespace vg::core
                     for (uint i = 0; i < count; ++i)
                     {
                         IObject * pObject = (IObject *)(data + sizeOf * i);
-                        serializeToXML((const IObject *)(pObject), _xmlDoc, xmlPropElem);
+                        SerializeToXML(pObject, _xmlDoc, xmlPropElem);
                     }
                 }
                 break;
@@ -1897,17 +1899,17 @@ namespace vg::core
                 case PropertyType::Object:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
-                    const IObject * pObject = prop->GetPropertyObject(_object);
-                    serializeToXML(pObject, _xmlDoc, xmlPropElem);
+                    IObject * pObject = prop->GetPropertyObject(_object);
+                    SerializeToXML(pObject, _xmlDoc, xmlPropElem);
                 }
                 break;
 
                 case PropertyType::ObjectPtr:
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
-                    const IObject * pObject = *prop->GetPropertyObjectPtr(_object);
+                    IObject * pObject = *prop->GetPropertyObjectPtr(_object);
                     if (nullptr != pObject)
-                        serializeToXML(pObject, _xmlDoc, xmlPropElem);
+                        SerializeToXML(pObject, _xmlDoc, xmlPropElem);
                 }
                 break;
 
@@ -1921,7 +1923,7 @@ namespace vg::core
                     for (uint i = 0; i < count; ++i)
                     {
                         IObject * pObject = (IObject *)(data + sizeOf * i);
-                        serializeToXML((const IObject *)(pObject), _xmlDoc, xmlPropElem);
+                        SerializeToXML(pObject, _xmlDoc, xmlPropElem);
                     }
                 }
                 break;
@@ -1932,7 +1934,7 @@ namespace vg::core
                     auto * vector = prop->GetPropertyResourcePtrVector(_object);
                     const auto count = vector->size();
                     for (auto i = 0; i < count; ++i)
-                        serializeToXML((const IObject *)(*vector)[i], _xmlDoc, xmlPropElem);
+                        SerializeToXML((*vector)[i], _xmlDoc, xmlPropElem);
                 }
                 break;
 
@@ -1942,7 +1944,7 @@ namespace vg::core
                     auto * vector = prop->GetPropertyObjectPtrVector(_object);
                     const auto count = vector->size();
                     for (auto i = 0; i < count; ++i)
-                        serializeToXML((const IObject *)(*vector)[i], _xmlDoc, xmlPropElem);
+                        SerializeToXML((*vector)[i], _xmlDoc, xmlPropElem);
                 }
                 break;
 

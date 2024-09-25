@@ -482,7 +482,7 @@ namespace vg::core
         if (!strcmp(objectClassName, _className))
             return true;
 
-        const auto * classDesc = Kernel::getFactory()->getClassDescriptor(objectClassName);
+        const auto * classDesc = Kernel::getFactory()->GetClassDescriptor(objectClassName);
         if (nullptr != classDesc)
         {
             const char * parentClassName = nullptr;
@@ -493,7 +493,7 @@ namespace vg::core
                 if (!strcmp(parentClassName, _className))
                     return true;
 
-                classDesc = Kernel::getFactory()->getClassDescriptor(parentClassName, false);
+                classDesc = Kernel::getFactory()->GetClassDescriptor(parentClassName, false);
             } while (nullptr != classDesc);
         }
 
@@ -550,7 +550,7 @@ namespace vg::core
                 }
                 else 
                 {
-                    const auto * classDesc = Kernel::getFactory()->getClassDescriptor(component->GetClassName());
+                    const auto * classDesc = Kernel::getFactory()->GetClassDescriptor(component->GetClassName());
                     if (nullptr != classDesc)
                     {
                         const char * interfaceName = classDesc->GetParentClassName();
@@ -587,7 +587,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IComponent * GameObject::AddComponent(const char * _className, const core::string & _name)
     {
-        Component * component = (Component *)Kernel::getFactory()->createObject(_className, _name, this);
+        Component * component = (Component *)Kernel::getFactory()->CreateObject(_className, _name, this);
         if (component)
         {
             addComponent(component);

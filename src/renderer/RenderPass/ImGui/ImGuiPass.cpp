@@ -82,7 +82,7 @@ namespace vg::renderer
     const vg::engine::IEngine * ImGuiPass::getEngine()
     {
         const auto * factory = Kernel::getFactory();
-        return (const vg::engine::IEngine *) factory->getSingleton("Engine");
+        return (const vg::engine::IEngine *) factory->GetSingleton("Engine");
     }
     
     //--------------------------------------------------------------------------------------

@@ -18,7 +18,7 @@ namespace vg::editor
             bool changed = false;
 
             const auto * factory = Kernel::getFactory();
-            const auto * classDesc = factory->getClassDescriptor(_object->GetClassName());
+            const auto * classDesc = factory->GetClassDescriptor(_object->GetClassName());
             auto list = dynamic_cast<engine::IResourceList *>(_object);
             auto availableWidth = ImGui::GetContentRegionAvail().x;
 

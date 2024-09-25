@@ -23,7 +23,7 @@ namespace vg::editor
             auto * go = dynamic_cast<core::IGameObject*>(_object);
 
             const auto * factory = Kernel::getFactory();
-            const auto * classDesc = factory->getClassDescriptor(go->GetClassName());
+            const auto * classDesc = factory->GetClassDescriptor(go->GetClassName());
 
             // Sort top-level properties to display components at the end
             const char * curClassName = nullptr;
