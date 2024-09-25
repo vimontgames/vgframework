@@ -199,40 +199,40 @@ namespace vg::renderer
     {
         const float4x4 viewProj = mul(m_view, m_proj);
 
-        m_frustum.planes[asInteger(FrustumPlane::Left)].x = viewProj._14 + viewProj._11;
-        m_frustum.planes[asInteger(FrustumPlane::Left)].y = viewProj._24 + viewProj._21;
-        m_frustum.planes[asInteger(FrustumPlane::Left)].z = viewProj._34 + viewProj._31;
-        m_frustum.planes[asInteger(FrustumPlane::Left)].w = viewProj._44 + viewProj._41;
+        m_frustum.planes[asInteger(FrustumPlane::Left)].x = viewProj._m03 + viewProj._m00;
+        m_frustum.planes[asInteger(FrustumPlane::Left)].y = viewProj._m13 + viewProj._m10;
+        m_frustum.planes[asInteger(FrustumPlane::Left)].z = viewProj._m23 + viewProj._m20;
+        m_frustum.planes[asInteger(FrustumPlane::Left)].w = viewProj._m33 + viewProj._m30;
 
-        m_frustum.planes[asInteger(FrustumPlane::Right)].x = viewProj._14 - viewProj._11;
-        m_frustum.planes[asInteger(FrustumPlane::Right)].y = viewProj._24 - viewProj._21;
-        m_frustum.planes[asInteger(FrustumPlane::Right)].z = viewProj._34 - viewProj._31;
-        m_frustum.planes[asInteger(FrustumPlane::Right)].w = viewProj._44 - viewProj._41;
+        m_frustum.planes[asInteger(FrustumPlane::Right)].x = viewProj._m03 - viewProj._m00;
+        m_frustum.planes[asInteger(FrustumPlane::Right)].y = viewProj._m13 - viewProj._m10;
+        m_frustum.planes[asInteger(FrustumPlane::Right)].z = viewProj._m23 - viewProj._m20;
+        m_frustum.planes[asInteger(FrustumPlane::Right)].w = viewProj._m33 - viewProj._m30;
 
-        m_frustum.planes[asInteger(FrustumPlane::Top)].x = viewProj._14 - viewProj._12;
-        m_frustum.planes[asInteger(FrustumPlane::Top)].y = viewProj._24 - viewProj._22;
-        m_frustum.planes[asInteger(FrustumPlane::Top)].z = viewProj._34 - viewProj._32;
-        m_frustum.planes[asInteger(FrustumPlane::Top)].w = viewProj._44 - viewProj._42;
+        m_frustum.planes[asInteger(FrustumPlane::Top)].x = viewProj._m03 - viewProj._m01;
+        m_frustum.planes[asInteger(FrustumPlane::Top)].y = viewProj._m13 - viewProj._m11;
+        m_frustum.planes[asInteger(FrustumPlane::Top)].z = viewProj._m23 - viewProj._m21;
+        m_frustum.planes[asInteger(FrustumPlane::Top)].w = viewProj._m33 - viewProj._m31;
 
-        m_frustum.planes[asInteger(FrustumPlane::Bottom)].x = viewProj._14 + viewProj._12;
-        m_frustum.planes[asInteger(FrustumPlane::Bottom)].y = viewProj._24 + viewProj._22;
-        m_frustum.planes[asInteger(FrustumPlane::Bottom)].z = viewProj._34 + viewProj._32;
-        m_frustum.planes[asInteger(FrustumPlane::Bottom)].w = viewProj._44 + viewProj._42;
+        m_frustum.planes[asInteger(FrustumPlane::Bottom)].x = viewProj._m03 + viewProj._m01;
+        m_frustum.planes[asInteger(FrustumPlane::Bottom)].y = viewProj._m13 + viewProj._m11;
+        m_frustum.planes[asInteger(FrustumPlane::Bottom)].z = viewProj._m23 + viewProj._m21;
+        m_frustum.planes[asInteger(FrustumPlane::Bottom)].w = viewProj._m33 + viewProj._m31;
 
-        m_frustum.planes[asInteger(FrustumPlane::Near)].x = viewProj._13;
-        m_frustum.planes[asInteger(FrustumPlane::Near)].y = viewProj._23;
-        m_frustum.planes[asInteger(FrustumPlane::Near)].z = viewProj._33;
-        m_frustum.planes[asInteger(FrustumPlane::Near)].w = viewProj._43;
+        m_frustum.planes[asInteger(FrustumPlane::Near)].x = viewProj._m02;
+        m_frustum.planes[asInteger(FrustumPlane::Near)].y = viewProj._m12;
+        m_frustum.planes[asInteger(FrustumPlane::Near)].z = viewProj._m22;
+        m_frustum.planes[asInteger(FrustumPlane::Near)].w = viewProj._m32;
 
-        m_frustum.planes[asInteger(FrustumPlane::Far)].x = viewProj._14 - viewProj._13;
-        m_frustum.planes[asInteger(FrustumPlane::Far)].y = viewProj._24 - viewProj._23;
-        m_frustum.planes[asInteger(FrustumPlane::Far)].z = viewProj._34 - viewProj._33;
-        m_frustum.planes[asInteger(FrustumPlane::Far)].w = viewProj._44 - viewProj._43;
+        m_frustum.planes[asInteger(FrustumPlane::Far)].x = viewProj._m03 - viewProj._m02;
+        m_frustum.planes[asInteger(FrustumPlane::Far)].y = viewProj._m13 - viewProj._m12;
+        m_frustum.planes[asInteger(FrustumPlane::Far)].z = viewProj._m23 - viewProj._m22;
+        m_frustum.planes[asInteger(FrustumPlane::Far)].w = viewProj._m33 - viewProj._m32;
 
         for (uint i = 0; i < countof(m_frustum.planes); ++i)
         {
-            float normXYZ = length(m_frustum.planes[i].xyz);
-            m_frustum.planes[i] /= (float4)normXYZ;
+            float normXYZ = rcp(dot(m_frustum.planes[i].xyz, m_frustum.planes[i].xyz));
+            m_frustum.planes[i] /= normXYZ;
         }
     }
 

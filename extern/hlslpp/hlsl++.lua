@@ -5,7 +5,8 @@ Workspace = "workspace/".._ACTION
 
 -- Compilers
 
--- x86/x64
+-- Visual Studio Configs
+PlatformMSVC64AVX512	= "MSVC 64 AVX512"
 PlatformMSVC64AVX2		= "MSVC 64 AVX2"
 PlatformMSVC64AVX		= "MSVC 64 AVX"
 PlatformMSVC64SSE41		= "MSVC 64 SSE 4.1"
@@ -18,28 +19,34 @@ PlatformLLVM64SSE41		= "LLVM 64 SSE 4.1"
 PlatformLLVM64SSE2		= "LLVM 64 SSE 2"
 PlatformLLVM32SSE2		= "LLVM 32 SSE 2"
 
-PlatformOSX64			= "OSX 64"
-PlatformLinux64_GCC		= "Linux64_GCC"
-PlatformLinux64_Clang	= "Linux64_Clang"
-
--- NEON
 PlatformARM 			= "MSVC ARM"
 PlatformARM64 			= "MSVC ARM64"
+
+PlatformWSL64GCC		= 'Linux 64 GCC'
+PlatformWSL64Clang		= 'Linux 64 Clang'
+
 PlatformAndroidARM 		= "Android ARM"
 PlatformAndroidARM64 	= "Android ARM64"
 
 Platform360 			= "Xbox 360"
 
+-- XCode Configs
+PlatformOSX64			= "OSX 64"
+
+-- Linux Make Configs
+PlatformLinux64_GCC		= "Linux64_GCC"
+PlatformLinux64_Clang	= "Linux64_Clang"
+
 UnitTestProject = "unit_tests"
 AndroidProject = "hlsl++_android"
 
-isMacBuild = _ACTION == "xcode4"
-isLinuxBuild = _ACTION == "gmake2"
-isWindowsBuild = not isMacBuild and not isLinuxBuild
+isXCodeBuild = _ACTION == "xcode4"
+isLinuxMakeBuild = _ACTION == "gmake2"
+isVisualStudioBuild = not isXCodeBuild and not isLinuxMakeBuild
 supportsARMBuild = _ACTION == "vs2017" or _ACTION == "vs2019" or _ACTION == "vs2022"
 
 -- Directories
-srcDir = "src"
+unitTestDir = "unit_tests"
 includeDir = "include"
 
 premake.override(premake.vstudio.vc2010.elements, "clCompile", function(oldfn, cfg)
@@ -79,7 +86,7 @@ workspace("hlsl++")
 	warnings('extra')
 	flags { 'fatalcompilewarnings' }
 	
-	if(isMacBuild) then
+	if(isXCodeBuild) then
 	
 		platforms { PlatformOSX64 }
 		toolset("clang")
@@ -87,7 +94,7 @@ workspace("hlsl++")
 		buildoptions { "-std=c++11" }
 		linkoptions { "-stdlib=libc++" }
 		
-	elseif(isLinuxBuild) then
+	elseif(isLinuxMakeBuild) then
 	
 		platforms { PlatformLinux64_GCC, PlatformLinux64_Clang }
 		architecture("x64")
@@ -103,6 +110,7 @@ workspace("hlsl++")
 	
 		platforms
 		{
+			PlatformMSVC64AVX512,
 			PlatformMSVC64AVX2,
 			PlatformMSVC64AVX,
 			PlatformMSVC64SSE41,
@@ -114,8 +122,11 @@ workspace("hlsl++")
 			PlatformLLVM64SSE41,
 			PlatformLLVM64SSE2,
 			PlatformLLVM32SSE2, 
+			
+			PlatformWSL64GCC,
+			PlatformWSL64Clang,
 
-			Platform360
+			Platform360,
 		}
 
 		if(supportsARMBuild) then
@@ -141,6 +152,11 @@ workspace("hlsl++")
 		end
 		
 		startproject(UnitTestProject)
+
+		filter { "platforms:"..PlatformMSVC64AVX512 }
+			toolset("msc")
+			architecture("x64")
+			buildoptions { "/arch:AVX512" }
 		
 		filter { "platforms:"..PlatformMSVC64AVX2 }
 			toolset("msc")
@@ -213,6 +229,24 @@ workspace("hlsl++")
 			linkoptions { "-lm" } -- Link against the standard math library
 			handleAndroidWarnings()
 			
+		filter { 'platforms:'..PlatformWSL64GCC..' or '..PlatformWSL64Clang}
+			system('linux')
+			architecture('x64')
+			toolchainversion('wsl2')
+			
+			-- Make sure all files are copied to the same folder, without splitting by project
+			-- This works for both remote and WSL projects
+			remoterootdir("~/projects/hlslpp")
+			remoteprojectrelativedir("")
+			remoteprojectdir("$(RemoteRootDir)")
+			remotedeploydir("$(RemoteRootDir)")
+			
+		filter { 'platforms:'..PlatformWSL64GCC}
+			toolset('gcc')
+			
+		filter { 'platforms:'..PlatformWSL64Clang}
+			toolset('clang')
+			
 		filter { "platforms:"..Platform360 }
 			system("xbox360")
 			vectorextensions ("default")
@@ -246,23 +280,23 @@ project (UnitTestProject)
 	--links { "hlsl++" }
 	files
 	{
-		srcDir.."/*.cpp",
-		srcDir.."/*.h",
+		unitTestDir.."/*.cpp",
+		unitTestDir.."/*.h",
 	}
 	
 	filter { "platforms:"..PlatformAndroidARM.." or ".. PlatformAndroidARM64}
 		kind("sharedlib")
 		files
 		{
-			"src/android/android_native_app_glue.h",
-			"src/android/android_native_app_glue.c",
+			unitTestDir.."/android/android_native_app_glue.h",
+			unitTestDir.."/android/android_native_app_glue.c",
 		}
 		
 	filter{}
 	
 	includedirs
 	{
-		srcDir.."/**.h"
+		unitTestDir.."/**.h"
 	}
 
 if (supportsARMBuild) then
@@ -275,9 +309,9 @@ project (AndroidProject)
 	androidapplibname(UnitTestProject)
 	files
 	{
-		"src/android/AndroidManifest.xml",
-		"src/android/build.xml",
-		"src/android/project.properties",
-		"src/android/res/values/strings.xml",
+		unitTestDir.."/android/AndroidManifest.xml",
+		unitTestDir.."/android/build.xml",
+		unitTestDir.."/android/project.properties",
+		unitTestDir.."/android/res/values/strings.xml",
 	}
 end

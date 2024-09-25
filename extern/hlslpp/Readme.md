@@ -3,7 +3,13 @@
 
 # HLSL++
 
-Small header-only math library for C++ with the same syntax as the hlsl shading language. It supports any SSE (x86/x64 devices like PC, Mac, PS4/5, Xbox One/Series) and NEON (ARM devices like Android, iOS, Switch) platforms. It features swizzling and all the operators and functions from the [hlsl documentation](https://docs.microsoft.com/en-us/windows/desktop/direct3dhlsl/dx-graphics-hlsl-reference). The library is aimed mainly at game developers as it's meant to ease the C++ to shader bridge by providing common syntax, but can be used for any application requiring fast, portable math. It also adds some functionality that hlsl doesn't natively provide, such as convenient matrix functions, quaternions and extended vectors such as float8 (8-component float) that take advantage of wide SSE registers.
+Small header-only math library for C++ with the same syntax as the hlsl shading language. It features swizzling and all the operators and functions from the [hlsl documentation](https://docs.microsoft.com/en-us/windows/desktop/direct3dhlsl/dx-graphics-hlsl-reference). The library is aimed mainly at game developers as it's meant to ease the C++ to shader bridge by providing common syntax, but can be used for any application requiring fast, portable math. It also adds some functionality that hlsl doesn't natively provide, such as convenient matrix functions, quaternions and extended vectors such as float8 (8-component float) that take advantage of wide SIMD registers.
+
+## Platforms
+
+- SSE/AVX/AVX2/AVX512: x86/x64 devices like PC, Intel Mac, PS4/5, Xbox One/Series
+- NEON: ARM devices like Android, Mac M1, iOS, Switch
+- WASM
 
 ## Example
 
@@ -38,7 +44,7 @@ The natvis files provided for Visual Studio debugging allow you to see both vect
 
 ## Requirements
 
-The only required features are a C++ compiler supporting anonymous unions, and SSE or NEON depending on your target platform. If your target platform does not have SIMD support, it can also fall back to a scalar implementation. As a curiosity it also includes an Xbox 360 implementation.
+The only required features are a C++ compiler supporting anonymous unions, and SIMD extensions depending on your target platform (SSE/NEON/WASM). If your target platform does not have SIMD support, it can also fall back to a scalar implementation. As a curiosity it also includes an Xbox 360 implementation.
 
 ## How to use
 
@@ -46,24 +52,25 @@ The only required features are a C++ compiler supporting anonymous unions, and S
 // The quickest way, expensive in compile times but good for fast iteration
 #include "hlsl++.h"
 
-// If you care about your compile times in your cpp files
-#include "hlsl++_vector_float.h"
-#include "hlsl++_matrix_float.h"
+// If you care about compile times in your cpp files
+#include "hlsl++/vector_float.h"
+#include "hlsl++/matrix_float.h"
 
 // If you only need type information (e.g. in header files) and don't use any functions
-#include "hlsl++_vector_float_type.h"
-#include "hlsl++_quaternion_type.h"
+#include "hlsl++/vector_float_type.h"
+#include "hlsl++/quaternion_type.h"
 ```
 
-* Remember to add an include path to ```"hlslpp/include"```
+* Remember to add an include path to ```"include"```. IMPORTANT NOTE: The include structure has changed to remove prefixes and move towards a sensible folder hierarchy. Compatibility includes will stay around for a bit but will eventually be removed (probably in version 4.0)
 * Windows has defines for min and max so if you're using this library and the <windows.h> header remember to #define NOMINMAX before including it
 * To force the scalar version of the library, define ```HLSLPP_SCALAR``` globally. The scalar library is only different from the SIMD version in its use of regular floats to represent vectors. It should only be used if your platform (e.g. embedded) does not have native SIMD support. It can also be used to compare performance
 * To enable the transforms feature, define ```HLSLPP_FEATURE_TRANSFORM``` globally
-* The f32 members of float4 and the [ ] operators make use of the union directly, so the generated code is up to the compiler. Use with care
+* The f32 members of floatN (and other types) and the [ ] operators make use of the union directly, so the generated code is up to the compiler. Use with care
+* The f32 members of floatN (and other types) have the & operator overridden to take the address of the individual float. This is very useful to pass to libraries that expect data pointers like imgui
 
 ## Features
 
-* SSE/AVX/AVX2, NEON, Xbox360, and scalar versions
+* SSE/AVX/AVX2/AVX512, NEON, Xbox360, WebAssembly and scalar versions
 * float1, float2, float3, float4, float8
 * int1, int2, int3, int4
 * uint1, uint2, uint3, uint4

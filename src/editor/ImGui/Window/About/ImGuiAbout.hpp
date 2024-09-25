@@ -99,7 +99,7 @@ namespace vg::editor
                 { "DirectXShaderCompiler",  "v1.7.2308",        "https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308" },
                 { "Font-Awesome",           "6.x",              "https://github.com/FortAwesome/Font-Awesome/tree/6.x" },
                 { "fmt",                    "10.1.1",           "https://github.com/fmtlib/fmt/releases/tag/10.1.1" },
-                { "hlslpp",                 "3.4",              "https://github.com/redorav/hlslpp/releases/tag/3.3.1" },
+                { "hlslpp",                 "3.5.2",            "https://github.com/redorav/hlslpp/releases/tag/3.5.2" },
                 { "IconFontCppHeaders",     "90da802",          "https://github.com/juliettef/IconFontCppHeaders" },
                 { "ImGuiFileDialog",        "0.6.7",            "https://github.com/aiekick/ImGuiFileDialog" },
                 { "ImGuizmo",               "1.83",             "https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83" },

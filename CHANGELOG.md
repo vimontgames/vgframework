@@ -1,7 +1,11 @@
 # changelog
 
+## 0.33
+Update hlslpp from 3.4 to 3.5.2\
+Undo/Redo 
+
+
 ## 0.32
-### Build
 Sound using SoLoud library\
 HDR output (WIP)\
 FPS and CPU/GPU frame timings displayed in HUD and editor
