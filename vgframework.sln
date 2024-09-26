@@ -168,25 +168,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Win64", "Win64", "{8006A66E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DX12", "DX12", "{10B0BBE1-BF80-4ECD-8F14-8194F451766D}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Debug_Win64_DX12.yml = .github\workflows\Debug_Win64_DX12.yml
-		.github\workflows\Final_Win64_DX12.yml = .github\workflows\Final_Win64_DX12.yml
-		.github\workflows\Release_Win64_DX12.yml = .github\workflows\Release_Win64_DX12.yml
+		.github\workflows\Win64_DX12_Debug.yml = .github\workflows\Win64_DX12_Debug.yml
+		.github\workflows\Win64_DX12_Final.yml = .github\workflows\Win64_DX12_Final.yml
+		.github\workflows\Win64_DX12_Release.yml = .github\workflows\Win64_DX12_Release.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vulkan", "Vulkan", "{E092AAFC-AD5F-4267-B76E-A8B5E8D544B5}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Debug_Win64_Vulkan.yml = .github\workflows\Debug_Win64_Vulkan.yml
-		.github\workflows\Final_Win64_Vulkan.yml = .github\workflows\Final_Win64_Vulkan.yml
-		.github\workflows\Release_Win64_Vulkan.yml = .github\workflows\Release_Win64_Vulkan.yml
+		.github\workflows\Win64_Vulkan_Debug.yml = .github\workflows\Win64_Vulkan_Debug.yml
+		.github\workflows\Win64_Vulkan_Final.yml = .github\workflows\Win64_Vulkan_Final.yml
+		.github\workflows\Win64_Vulkan_Release.yml = .github\workflows\Win64_Vulkan_Release.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ARM64EC", "ARM64EC", "{1521C3BF-A6FF-43FE-A2C4-0214FE9C0E56}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DX12", "DX12", "{98E46C92-0EB4-4952-A209-EE9FCB60C9BC}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Debug_ARM64EC_DX12.yml = .github\workflows\Debug_ARM64EC_DX12.yml
-		.github\workflows\Final_ARM64EC_DX12.yml = .github\workflows\Final_ARM64EC_DX12.yml
-		.github\workflows\Release_ARM64EC_DX12.yml = .github\workflows\Release_ARM64EC_DX12.yml
+		.github\workflows\ARM64EC_DX12_Debug.yml = .github\workflows\ARM64EC_DX12_Debug.yml
+		.github\workflows\ARM64EC_DX12_Final.yml = .github\workflows\ARM64EC_DX12_Final.yml
+		.github\workflows\ARM64EC_DX12_Release.yml = .github\workflows\ARM64EC_DX12_Release.yml
 	EndProjectSection
 EndProject
 Global
