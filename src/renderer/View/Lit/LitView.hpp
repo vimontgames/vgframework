@@ -58,14 +58,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void LitView::RegisterFrameGraph(const gfx::RenderPassContext & _renderPassContext, FrameGraph & _frameGraph)
     {
-        _frameGraph.pushPassGroup(_renderPassContext.m_view->getName());
+        _frameGraph.pushPassGroup(_renderPassContext.m_view->GetName());
 
         // If the view does not belong to a viewport then it must register its target
         if (!GetViewport())
         {
             auto * target = getRenderTarget();
             if (target)
-                _frameGraph.importRenderTarget(target->getName(), target, float4(0, 0, 0, 1), FrameGraphResource::InitState::Clear);
+                _frameGraph.importRenderTarget(target->GetName(), target, float4(0, 0, 0, 1), FrameGraphResource::InitState::Clear);
         }
 
         const RendererOptions * options = RendererOptions::get();

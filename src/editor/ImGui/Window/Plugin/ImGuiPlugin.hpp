@@ -46,7 +46,7 @@ namespace vg::editor
 
                     ImGui::TableSetColumnIndex(2);
                     if (plugin != nullptr)
-                        ImGui::Text(plugin->getName().c_str());
+                        ImGui::Text(plugin->GetName().c_str());
                 }
 
                 ImGui::EndTable();

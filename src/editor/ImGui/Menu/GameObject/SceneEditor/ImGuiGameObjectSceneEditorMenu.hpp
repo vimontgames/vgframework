@@ -331,7 +331,7 @@ namespace vg::editor
                         IGameObject * root = srcChildren[0];
                         VG_SAFE_INCREASE_REFCOUNT(root);
                         root->SetParent(nullptr);
-                        root->setName(prefabGO->getName());
+                        root->SetName(prefabGO->GetName());
                         root->SetLocalMatrix(prefabGO->GetLocalMatrix());
                         prefabParent->AddChild(root);
                         VG_SAFE_RELEASE(root);
@@ -342,7 +342,7 @@ namespace vg::editor
                     return true;
                 };
 
-                string msg = fmt::sprintf("Are you sure you want to unpack Prefab instance \"%s\" of \"%s\"?", prefabGO->getName(), prefabGO->GetPrefabResource()->GetResourcePath());
+                string msg = fmt::sprintf("Are you sure you want to unpack Prefab instance \"%s\" of \"%s\"?", prefabGO->GetName(), prefabGO->GetPrefabResource()->GetResourcePath());
                 ImGui::MessageBox(MessageBoxType::YesNo, "Unpack Prefab", msg.c_str(), unpackPrefab);
             }
         }
@@ -383,7 +383,7 @@ namespace vg::editor
                     bool addPrefab = false;
 
                     if (selected == GameObjectSceneEditorMenuOption::CreatePrefab && prefabPath[0] == '\0')
-                        sprintf_s(prefabPath, "%s/%s.prefab", io::getRelativePath(ImGuiWindow::getDefaultFolder("Prefabs")).c_str(), _object->getName().c_str());
+                        sprintf_s(prefabPath, "%s/%s.prefab", io::getRelativePath(ImGuiWindow::getDefaultFolder("Prefabs")).c_str(), _object->GetName().c_str());
 
                     if (ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                     {

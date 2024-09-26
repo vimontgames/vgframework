@@ -45,7 +45,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void GraphicInstance::SetPickingID(PickingID _id)
     {
-        VG_ASSERT((PickingID)0 == m_pickingID, "GraphicInstance \"%s\" already uses PickingID %u", getName().c_str(), m_pickingID);
+        VG_ASSERT((PickingID)0 == m_pickingID, "GraphicInstance \"%s\" already uses PickingID %u", GetName().c_str(), m_pickingID);
         m_pickingID = _id;
     }
 

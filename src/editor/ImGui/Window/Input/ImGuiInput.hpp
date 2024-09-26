@@ -12,7 +12,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiInput::DrawGUI()
     {
-        if (IconBegin(getIcon().c_str(), getName().c_str(), &m_isVisible))
+        if (IconBegin(getIcon().c_str(), GetName().c_str(), &m_isVisible))
         {
             const IInput * input = Kernel::getInput();
 

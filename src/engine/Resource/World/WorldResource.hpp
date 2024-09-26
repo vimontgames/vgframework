@@ -130,7 +130,7 @@ namespace vg::engine
                 case core::Scene:
                 {
                     SceneResource * sceneRes = new SceneResource();
-                    sceneRes->setName(io::getFileNameWithoutExt(_file));
+                    sceneRes->SetName(io::getFileNameWithoutExt(_file));
 
                     if (sceneRes->CreateFile(_file))
                     {
@@ -144,7 +144,7 @@ namespace vg::engine
                 case core::Prefab:
                 {
                     PrefabResource * prefabRes = new PrefabResource();
-                    prefabRes->setName(io::getFileNameWithoutExt(_file));
+                    prefabRes->SetName(io::getFileNameWithoutExt(_file));
 
                     if (prefabRes->CreateFile(_file))
                     {

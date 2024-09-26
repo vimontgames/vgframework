@@ -136,7 +136,7 @@ namespace vg::gfx
     Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
 		super::Texture(_texDesc, _name, _initData, _reservedSlot)
 	{
-        setName(_name);
+        SetName(_name);
 	}
 
 	//--------------------------------------------------------------------------------------

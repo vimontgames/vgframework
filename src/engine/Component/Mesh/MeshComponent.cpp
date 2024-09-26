@@ -199,7 +199,7 @@ namespace vg::engine
                 }
                 
                 getGameObject()->addGraphicInstance(m_meshInstance);
-                m_meshInstance->setName(getGameObject()->getName().c_str());
+                m_meshInstance->SetName(getGameObject()->GetName().c_str());
                 m_registered = true;
             }
 

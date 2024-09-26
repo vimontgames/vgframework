@@ -75,7 +75,7 @@ namespace vg::engine
         if (PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->CreateObject("PrefabScene")))
         {
             // Use file name as default scene name
-            prefabScene->setName(io::getFileNameWithoutExt(_path));
+            prefabScene->SetName(io::getFileNameWithoutExt(_path));
 
             // Add default root node to scene
             auto root = (GameObject *)CreateFactoryObject(GameObject, "Root", this);

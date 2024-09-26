@@ -33,7 +33,7 @@ namespace vg::gfx
 			m_cmdPool(_cmdPool)
 		{
 			string name = asString(_type) + "CmdList#" + to_string(_index);
-			setName(name);
+			SetName(name);
 		}
 
 		//--------------------------------------------------------------------------------------

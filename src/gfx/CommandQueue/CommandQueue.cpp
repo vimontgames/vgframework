@@ -15,7 +15,7 @@ namespace vg::gfx
 			m_type(_type)
 		{
 			string name = asString(_type) + "CmdQueue";
-			setName(name);
+			SetName(name);
 		}
 
 		//--------------------------------------------------------------------------------------

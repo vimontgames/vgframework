@@ -339,7 +339,7 @@ namespace vg::engine
 
                     bodyDesc->SetMass(mass);
                     
-                    physics::IBody * body = Engine::get()->GetPhysics()->CreateBody(GetPhysicsWorld(), bodyDesc, allSceneShapes, staticCollidersGO->GetGlobalMatrix(), staticCollidersGO->getName(), staticCollidersGO);
+                    physics::IBody * body = Engine::get()->GetPhysics()->CreateBody(GetPhysicsWorld(), bodyDesc, allSceneShapes, staticCollidersGO->GetGlobalMatrix(), staticCollidersGO->GetName(), staticCollidersGO);
                     body->Activate(staticCollidersGO->GetGlobalMatrix());
 
                     m_staticColliders.push_back(body);

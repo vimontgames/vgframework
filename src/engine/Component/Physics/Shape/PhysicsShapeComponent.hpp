@@ -78,7 +78,7 @@ namespace vg::engine
             }
             else
             {
-                VG_WARNING("[Physics] PhysicsShapeComponent in GameObject \"%s\" has no physics shape", _context.m_gameObject->getName().c_str());
+                VG_WARNING("[Physics] PhysicsShapeComponent in GameObject \"%s\" has no physics shape", _context.m_gameObject->GetName().c_str());
             }
         }
     }

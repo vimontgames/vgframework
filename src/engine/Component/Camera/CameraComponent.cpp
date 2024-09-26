@@ -89,7 +89,7 @@ namespace vg::engine
                 return it->second;
         }
 
-        VG_WARNING("[Camera] Camera \"%s\" could not get ViewID for %s target at index %u", getName().c_str(), asString(m_target).c_str(), m_viewportIndex);
+        VG_WARNING("[Camera] Camera \"%s\" could not get ViewID for %s target at index %u", GetName().c_str(), asString(m_target).c_str(), m_viewportIndex);
         return {};
     }
 

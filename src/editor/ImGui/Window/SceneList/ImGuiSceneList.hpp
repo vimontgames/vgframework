@@ -157,14 +157,14 @@ namespace vg::editor
             open = ImGui::TreeNodeEx(gameObjectLabel, flags);
             ImGui::SameLine();
             char temp[256];
-            sprintf_s(temp, _gameObject->getName().c_str());
+            sprintf_s(temp, _gameObject->GetName().c_str());
             sprintf_s(gameObjectLabel, "###Ren%p", _gameObject);
 
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4, 0));
             {
                 if (ImGui::InputText(gameObjectLabel, temp, 256, ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EnterReturnsTrue))
                 {
-                    _gameObject->setName(temp);
+                    _gameObject->SetName(temp);
                     m_gameObjectMenu.m_RenamingGameObject = nullptr;
                 }
                 else
@@ -178,7 +178,7 @@ namespace vg::editor
         else
         {
             char gameObjectLabel[1024];
-            sprintf(gameObjectLabel, "%s###%p", _gameObject->getName().c_str(), (void *)_gameObject);
+            sprintf(gameObjectLabel, "%s###%p", _gameObject->GetName().c_str(), (void *)_gameObject);
             open = ImGui::TreeNodeEx(gameObjectLabel, flags | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth);
         }
 
@@ -258,7 +258,7 @@ namespace vg::editor
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
             {
                 ImGui::SetCursorPosY(ImGui::GetCursorPosY() - style::draganddrop::interlineSize.y - 1);
-                string beforeGO = fmt::sprintf("###after %s", _gameObject->getName().c_str());
+                string beforeGO = fmt::sprintf("###after %s", _gameObject->GetName().c_str());
                 ImGui::InvisibleButton(beforeGO.c_str(), style::draganddrop::interlineSize);
         
                 // debug
@@ -414,7 +414,7 @@ namespace vg::editor
         ImGui::PushID(sceneTypeName.c_str());
 
         auto worldRes = getEngine()->GetWorldResource();
-        string label = worldRes && worldRes->GetObject() ? worldRes->GetObject()->getName() : "<No World loaded>";
+        string label = worldRes && worldRes->GetObject() ? worldRes->GetObject()->GetName() : "<No World loaded>";
 
         if (ImGui::IconBegin(typeInfo.icon.c_str(), fmt::sprintf("%s###%s", typeInfo.windowName, sceneTypeName).c_str(), &m_isVisible))
         {
@@ -526,7 +526,7 @@ namespace vg::editor
 
                             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
-                            const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", scene->getName(), scene).c_str(), flags);
+                            const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", scene->GetName(), scene).c_str(), flags);
 
                             bool enabled = asBool(InstanceFlags::Enabled & root->GetInstanceFlags());
 
@@ -542,11 +542,11 @@ namespace vg::editor
                                 // Check in case menu just unloaded the scene (e.g. "Save & Update")
                                 if (nullptr != sceneRes->GetObject())
                                 {
-                                    string sceneLabel = fmt::sprintf("%s %s", typeInfo.icon, scene->getName());
+                                    string sceneLabel = fmt::sprintf("%s %s", typeInfo.icon, scene->GetName());
 
                                     ImGui::CollapsingHeaderLabel(collapsingHeaderPos, sceneLabel.c_str(), enabled);
 
-                                    if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, enabled, root, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s Scene \"%s\"", enabled ? "Disable" : "Enable", scene->getName().c_str())))
+                                    if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, enabled, root, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s Scene \"%s\"", enabled ? "Disable" : "Enable", scene->GetName().c_str())))
                                         root->SetInstanceFlags(InstanceFlags::Enabled, !enabled);
 
                                     if (open)

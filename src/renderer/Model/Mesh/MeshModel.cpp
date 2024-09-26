@@ -64,7 +64,7 @@ namespace vg::renderer
             const auto batches = geo->batches();
             names.resize(batches.size());
             for (uint i = 0; i < batches.size(); ++i)
-                names[i] = batches[i].getName();
+                names[i] = batches[i].GetName();
         }
         return names;
     }
@@ -211,7 +211,7 @@ namespace vg::renderer
         for (uint b = 0; b < _data.batches.size(); ++b)
         {
             const auto & batch = _data.batches[b];
-            meshGeometry->addBatch(batch.getName(), batch.count, batch.offset);
+            meshGeometry->addBatch(batch.GetName(), batch.count, batch.offset);
         }
 
         VG_SAFE_RELEASE(ib);

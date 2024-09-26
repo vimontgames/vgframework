@@ -37,7 +37,7 @@ namespace vg::core
 	Object::Object(const core::string & _name, IObject * _parent) :
 		m_refCount(1)
 	{
-		setName(_name);
+		SetName(_name);
         SetParent(_parent);
 	}
 
@@ -88,7 +88,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     UID Object::GetUID(bool _mustBeValid) const
     {
-        VG_ASSERT(!_mustBeValid || (UID)0 != m_uid, "Object \"%s\" has no UID", getName().c_str());
+        VG_ASSERT(!_mustBeValid || (UID)0 != m_uid, "Object \"%s\" has no UID", GetName().c_str());
         return m_uid;
     }
 
@@ -109,7 +109,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     UID Object::GetOriginalUID(bool _mustBeValid) const
     {
-        VG_ASSERT(!_mustBeValid || (UID)0 != m_originalUID, "Object \"%s\" has no original UID", getName().c_str());
+        VG_ASSERT(!_mustBeValid || (UID)0 != m_originalUID, "Object \"%s\" has no original UID", GetName().c_str());
         return m_originalUID;
     }
 
@@ -370,13 +370,13 @@ namespace vg::core
     }
 
 	//--------------------------------------------------------------------------------------
-	void Object::setName(const string & _name)
+	void Object::SetName(const string & _name)
 	{
 		m_name = _name;
 	}
 
 	//--------------------------------------------------------------------------------------
-	const string & Object::getName() const
+	const string & Object::GetName() const
 	{
 		return m_name;
 	}
@@ -384,14 +384,14 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     const string Object::GetFullName() const
     {
-        string name = getName();
+        string name = GetName();
         IObject * parent = GetParent();
         while (parent)
         {
             // TODO: each class should override GetFullName and stop when != Scene or GameObject
             if (strcmp("Scene", parent->GetClassDesc()->GetClassName()))
             {
-                name = parent->getName() + ">" + name;
+                name = parent->GetName() + ">" + name;
                 parent = parent->GetParent();
             }
             else
@@ -422,7 +422,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     const string Object::GetShortName() const
     {
-        string name = getName();
+        string name = GetName();
         const IObject * obj = this;
         while (obj)
         {
@@ -431,7 +431,7 @@ namespace vg::core
             {
                 if (!strcmp("GameObject", obj->GetClassDesc()->GetClassName()))
                 {
-                    name = obj->getName() + ">" + name;
+                    name = obj->GetName() + ">" + name;
                     return name;
                 }
             }

@@ -419,7 +419,7 @@ namespace vg::engine
             VG_ASSERT(dynamic_cast<WorldResource*>(_resource));
             WorldResource * worldRes = (WorldResource *)_resource;
             auto world = worldRes->GetWorld();
-            world->setName(io::getFileNameWithoutExt(worldRes->GetResourcePath()));
+            world->SetName(io::getFileNameWithoutExt(worldRes->GetResourcePath()));
 
             auto & editorViews = m_renderer->GetViews(gfx::ViewTarget::Editor);
             for (auto view : editorViews)
@@ -485,7 +485,7 @@ namespace vg::engine
         if (world)
         {
             const auto filename = m_worldResource->GetResourcePath();
-            world->setName(core::io::getFileNameWithoutExt(filename));
+            world->SetName(core::io::getFileNameWithoutExt(filename));
             return m_worldResource->SaveFile(filename);
         }
 
@@ -498,7 +498,7 @@ namespace vg::engine
         IObject * world = m_worldResource->GetObject();
         if (world)
         {
-            world->setName(core::io::getFileNameWithoutExt(_filename));
+            world->SetName(core::io::getFileNameWithoutExt(_filename));
             return m_worldResource->SaveFile(_filename);
         }
         

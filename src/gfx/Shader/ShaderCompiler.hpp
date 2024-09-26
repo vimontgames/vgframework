@@ -43,7 +43,7 @@ namespace vg::gfx
         auto * shader = super::compile(_api, _path, _entryPoint, _stage, _macros, _warningAndErrors);
 
         if (shader)
-            shader->setName(_entryPoint);
+            shader->SetName(_entryPoint);
 
         return shader;
     }

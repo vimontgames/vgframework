@@ -306,8 +306,8 @@ namespace vg::core
     {
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
-            VG_PROFILE_CPU(getName().c_str());
-            VG_ASSERT(asBool(UpdateFlags::FixedUpdate & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", getName().c_str(), asString(UpdateFlags::FixedUpdate).c_str());
+            VG_PROFILE_CPU(GetName().c_str());
+            VG_ASSERT(asBool(UpdateFlags::FixedUpdate & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::FixedUpdate).c_str());
 
             ComponentUpdateContext componentUpdateContext(_context, this);
 
@@ -336,8 +336,8 @@ namespace vg::core
     {
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
-            VG_PROFILE_CPU(getName().c_str());
-            VG_ASSERT(asBool(UpdateFlags::Update & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", getName().c_str(), asString(UpdateFlags::Update).c_str());
+            VG_PROFILE_CPU(GetName().c_str());
+            VG_ASSERT(asBool(UpdateFlags::Update & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::Update).c_str());
 
             ComponentUpdateContext componentUpdateContext(_context, this);
 
@@ -366,8 +366,8 @@ namespace vg::core
     {
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
-            VG_PROFILE_CPU(getName().c_str());
-            VG_ASSERT(asBool(UpdateFlags::LateUpdate & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", getName().c_str(), asString(UpdateFlags::LateUpdate).c_str());
+            VG_PROFILE_CPU(GetName().c_str());
+            VG_ASSERT(asBool(UpdateFlags::LateUpdate & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::LateUpdate).c_str());
 
             ComponentUpdateContext componentUpdateContext(_context, this);
 
@@ -410,7 +410,7 @@ namespace vg::core
             }
         }
 
-        VG_ASSERT(-1 != componentIndex, "[GameObject] Component \"%s\" does not belong to GameObject \"%s\"", _component->getName().c_str(), getName().c_str());
+        VG_ASSERT(-1 != componentIndex, "[GameObject] Component \"%s\" does not belong to GameObject \"%s\"", _component->GetName().c_str(), GetName().c_str());
         return componentIndex;
     }
 
@@ -462,7 +462,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IGameObject * GameObject::GetChildGameObject(const string & _name) const 
     {
-        if (getName() == _name)
+        if (GetName() == _name)
             return (IGameObject*)this;
 
         const auto & children = getChildren();
@@ -658,7 +658,7 @@ namespace vg::core
                 break;
             }
         }
-        VG_ASSERT(-1 != childIndex, "[GameObject] GameObject \"%s\" is not a child of GameObject \"%s\"", _child->getName().c_str(), getName().c_str());
+        VG_ASSERT(-1 != childIndex, "[GameObject] GameObject \"%s\" is not a child of GameObject \"%s\"", _child->GetName().c_str(), GetName().c_str());
         return childIndex;
     }
 

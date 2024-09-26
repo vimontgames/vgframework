@@ -17,7 +17,7 @@ namespace vg::physics
     PhysicsWorld::PhysicsWorld(const core::IWorld * _world) :
         m_world(_world)
     {
-        setName(_world->getName());
+        SetName(_world->GetName());
 
         #pragma push_macro("new")
         #undef new

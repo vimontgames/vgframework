@@ -82,8 +82,8 @@ namespace vg::core
         void                        onResourceLoaded    (IResource * _resource) override;
 		void                        onResourceUnloaded	(IResource * _resource) override;
 
-		void					    setName		        (const string & _name) override;
-		const string &			    getName		        () const override;
+		void					    SetName		        (const string & _name) override;
+		const string &			    GetName		        () const override;
 		const string 				GetFullName			() const override;
 		const string                GetShortName		() const override;
 

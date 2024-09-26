@@ -145,7 +145,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::copyTexture(gfx::Texture * _dst, gfx::Buffer * _src, core::uint_ptr _srcOffset)
     {
-        VG_ASSERT(_srcOffset <= _src->getBufDesc().getSize(), "Offset is greater than size %u of the source Buffer \"%s\"", _srcOffset, _src->getBufDesc().getSize(), _src->getName().c_str());
+        VG_ASSERT(_srcOffset <= _src->getBufDesc().getSize(), "Offset is greater than size %u of the source Buffer \"%s\"", _srcOffset, _src->getBufDesc().getSize(), _src->GetName().c_str());
         
         super::copyTexture(_dst, _src, _srcOffset);
     }
@@ -156,8 +156,8 @@ namespace vg::gfx
         if ((size_t)-1 == _size)
             _size = _dst->getBufDesc().getSize();
 
-        VG_ASSERT(_size <= _dst->getBufDesc().getSize(), "Size %u is greater than size %u of the destination Buffer \"%s\"", _size, _dst->getBufDesc().getSize(), _src->getName().c_str());
-        VG_ASSERT(_srcOffset <= _src->getBufDesc().getSize(), "Offset %u is greater than size %u of the source Buffer \"%s\"", _srcOffset, _src->getBufDesc().getSize(), _src->getName().c_str());
+        VG_ASSERT(_size <= _dst->getBufDesc().getSize(), "Size %u is greater than size %u of the destination Buffer \"%s\"", _size, _dst->getBufDesc().getSize(), _src->GetName().c_str());
+        VG_ASSERT(_srcOffset <= _src->getBufDesc().getSize(), "Offset %u is greater than size %u of the source Buffer \"%s\"", _srcOffset, _src->getBufDesc().getSize(), _src->GetName().c_str());
 
         super::copyBuffer(_dst, _src, _srcOffset, _size);
     }

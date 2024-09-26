@@ -9,7 +9,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     VG_INLINE const core::string ImGuiWindow::getIconizedName() const
     {
-        return getIcon().empty()? getName() : getIcon() + " " + getName();
+        return getIcon().empty()? GetName() : getIcon() + " " + GetName();
     }
 
     //--------------------------------------------------------------------------------------

@@ -47,7 +47,7 @@ namespace vg::core
     void UndoRedoPropertyEntry::Undo()
     {
         // Restore the original value serialized in memory before change
-        VG_INFO("[Undo/Redo] Undo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop->GetName(), m_prop, m_originalObject->getName().c_str(), m_object);
+        VG_INFO("[Undo/Redo] Undo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop->GetName(), m_prop, m_originalObject->GetName().c_str(), m_object);
 
         m_original.resetRead();
         Factory * factory = (Factory *)Kernel::getFactory();
@@ -69,7 +69,7 @@ namespace vg::core
     void UndoRedoPropertyEntry::Redo()
     {
         // Restore the modified value serialized in memory before change
-        VG_INFO("[Undo/Redo] Redo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop->GetName(), m_prop, m_originalObject->getName().c_str(), m_object);
+        VG_INFO("[Undo/Redo] Redo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop->GetName(), m_prop, m_originalObject->GetName().c_str(), m_object);
 
         m_modified.resetRead();
         Factory * factory = (Factory *)Kernel::getFactory();

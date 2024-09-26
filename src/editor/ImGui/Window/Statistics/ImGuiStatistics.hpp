@@ -16,7 +16,7 @@ namespace vg::editor
 
         auto drawViewDetail = [=](IView * _view)
         {
-            if (ImGui::TreeNodeEx(_view->getName().c_str(), ImGuiTreeNodeFlags_None))
+            if (ImGui::TreeNodeEx(_view->GetName().c_str(), ImGuiTreeNodeFlags_None))
             {
                 ImGui::Columns(2, "mycolumns2", false);
                 {
@@ -121,7 +121,7 @@ namespace vg::editor
 
         auto drawViewportDetails = [=](IViewport * _viewport)
         {
-            if (ImGui::TreeNodeEx(_viewport->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+            if (ImGui::TreeNodeEx(_viewport->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
             {
                 ImGui::Columns(2, "mycolumns2", false);
                 {

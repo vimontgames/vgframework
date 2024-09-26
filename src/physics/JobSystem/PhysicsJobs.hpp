@@ -7,7 +7,7 @@ namespace vg::physics
         Job("PhysicsJob", nullptr)
     {
         #if defined(JPH_EXTERNAL_PROFILE) || defined(JPH_PROFILE_ENABLED)
-        setName(_jphJob->GetName());
+        SetName(_jphJob->GetName());
         #endif
 
         _jphJob->AddRef();

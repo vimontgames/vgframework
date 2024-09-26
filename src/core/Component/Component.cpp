@@ -43,19 +43,19 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Component::FixedUpdate(const Context & _context)
     {
-        VG_ASSERT(false, "GameObject \"%s\"'s Component \"%s\" should implement 'FixedUpdate'", _context.m_gameObject->getName().c_str(), GetClassName());
+        VG_ASSERT(false, "GameObject \"%s\"'s Component \"%s\" should implement 'FixedUpdate'", _context.m_gameObject->GetName().c_str(), GetClassName());
     }
 
     //--------------------------------------------------------------------------------------
     void Component::Update(const Context & _context)
     {
-        VG_ASSERT(false, "GameObject \"%s\"'s Component \"%s\" should implement 'Update'", _context.m_gameObject->getName().c_str(), GetClassName());
+        VG_ASSERT(false, "GameObject \"%s\"'s Component \"%s\" should implement 'Update'", _context.m_gameObject->GetName().c_str(), GetClassName());
     }
 
     //--------------------------------------------------------------------------------------
     void Component::LateUpdate(const Context & _context)
     {
-        VG_ASSERT(false, "GameObject \"%s\"'s Component \"%s\" should implement 'LateUpdate'", _context.m_gameObject->getName().c_str(), GetClassName());
+        VG_ASSERT(false, "GameObject \"%s\"'s Component \"%s\" should implement 'LateUpdate'", _context.m_gameObject->GetName().c_str(), GetClassName());
     }
 
     //--------------------------------------------------------------------------------------

@@ -69,6 +69,7 @@ namespace vg::editor
 
         static bool                             editBool            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & label, float availableWidth, bool singleLine);
         static bool                             editFloat4x4        (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
+        static bool                             editObjectHandle    (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
         template <typename T> static bool       editEnum            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
         template <typename T> static bool       editEnumFlags       (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
 

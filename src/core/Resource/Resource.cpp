@@ -36,7 +36,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Resource::Resource(const Resource & _other) : IResource(_other)
     {
-        setName(_other.getName());
+        SetName(_other.GetName());
 
         m_resourcePath = _other.m_resourcePath;
         m_object = _other.m_object;
@@ -46,7 +46,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Resource & Resource::operator=(const vg::core::Resource & _from)
     {
-        setName(_from.getName());
+        SetName(_from.GetName());
 
         SetParent(_from.GetParent());
         SetResourcePath(_from.GetResourcePath());

@@ -12,7 +12,7 @@ namespace vg::editor
     void ImGuiInspector::DrawGUI()
     {
         ImGui::PushID("ImGuiInspector");
-        if (ImGui::IconBegin(style::icon::Inspector, getName().c_str(), &m_isVisible))
+        if (ImGui::IconBegin(style::icon::Inspector, GetName().c_str(), &m_isVisible))
         {
             auto * object = getSelection()->GetSelectedObject();
             if (nullptr != object)

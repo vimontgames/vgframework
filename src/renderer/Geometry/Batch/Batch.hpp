@@ -35,7 +35,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     Batch::Batch(const Batch & _other)
     {
-        setName(_other.getName());
+        SetName(_other.GetName());
         offset = _other.offset;
         count = _other.count;
     }
@@ -51,7 +51,7 @@ namespace vg::renderer
     {
         string name;
         _buffer.read(&name);
-        setName(name);
+        SetName(name);
         _buffer.read(&offset);
         _buffer.read(&count);
 
@@ -61,7 +61,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool Batch::write(io::Buffer & _buffer) const
     {
-        _buffer.write(getName());
+        _buffer.write(GetName());
         _buffer.write(offset);
         _buffer.write(count);
 

@@ -119,7 +119,7 @@ namespace vg::renderer
         auto * device = gfx::Device::get();
         
         if (m_toolmodeRWBufferStaging == nullptr)
-            m_toolmodeRWBufferStaging = device->createBuffer(stagingDesc, (toolmodeRWBuffer->getName() + "_Staging").c_str());
+            m_toolmodeRWBufferStaging = device->createBuffer(stagingDesc, (toolmodeRWBuffer->GetName() + "_Staging").c_str());
 
         // copy to staging
         _cmdList->copyBuffer(m_toolmodeRWBufferStaging, toolmodeRWBuffer, 0);

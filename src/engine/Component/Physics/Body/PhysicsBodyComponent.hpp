@@ -216,11 +216,11 @@ namespace vg::engine
             m_bodyDesc->SetMass(totalMass);
 
             if (m_bodyDesc->GetMotion() != physics::MotionType::Static || !EngineOptions::get()->mergeStaticBodies())
-                m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, physicsShapes, GetGameObject()->GetGlobalMatrix(), GetGameObject()->getName() + "_PhysicsBody", this);
+                m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, physicsShapes, GetGameObject()->GetGlobalMatrix(), GetGameObject()->GetName() + "_PhysicsBody", this);
         }
         else
         {
-            VG_WARNING("[Physics] PhysicsBodyComponent in GameObject \"%s\" has no PhysicsShapeComponent", GetGameObject()->getName().c_str());
+            VG_WARNING("[Physics] PhysicsBodyComponent in GameObject \"%s\" has no PhysicsShapeComponent", GetGameObject()->GetName().c_str());
         }
 
         updateShapesColor();

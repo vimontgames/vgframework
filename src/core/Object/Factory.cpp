@@ -159,12 +159,12 @@ namespace vg::core
 
             const auto index = desc->GetNextIndex();
 
-            if (obj->getName().length() == 0)
+            if (obj->GetName().length() == 0)
             {
                 if (_name.length())
-                    obj->setName(_name);
+                    obj->SetName(_name);
                 else
-                    obj->setName((string)obj->GetClassName() + " #" + to_string(index));
+                    obj->SetName((string)obj->GetClassName() + " #" + to_string(index));
             }
 
             return obj;
@@ -215,7 +215,7 @@ namespace vg::core
     bool Factory::SaveProperties(core::IObject * _object)
     {
         auto it = m_initValues.find(_object);
-        VG_ASSERT((it == m_initValues.end()), "Object \"%s\" is already present in hash", _object->getName().c_str());
+        VG_ASSERT((it == m_initValues.end()), "Object \"%s\" is already present in hash", _object->GetName().c_str());
         if (it == m_initValues.end())
         {
             io::Buffer * buffer = new io::Buffer();
@@ -331,7 +331,7 @@ namespace vg::core
     {
         const auto className = _object->GetClassName();
         
-        IObject * newObj = CreateObject(className, _object->getName(), _parent);
+        IObject * newObj = CreateObject(className, _object->GetName(), _parent);
         VG_ASSERT(nullptr != newObj);
         if (nullptr == newObj)
             return nullptr;
@@ -390,7 +390,7 @@ namespace vg::core
                 else
                 {
                     // If it's already in the table but for another object then we must give it a new UID
-                    VG_WARNING("[Factory] (%s) \"%s\" has the same UID 0x%08X than (%s) \"%s\"", _object->GetClassDesc()->GetClassName(), _object->getName().c_str(), uid, it->second->GetClassDesc()->GetClassName(), it->second->getName().c_str());
+                    VG_WARNING("[Factory] (%s) \"%s\" has the same UID 0x%08X than (%s) \"%s\"", _object->GetClassDesc()->GetClassName(), _object->GetName().c_str(), uid, it->second->GetClassDesc()->GetClassName(), it->second->GetName().c_str());
                     return getNewUID(_object);
                 }
             }
@@ -729,7 +729,7 @@ namespace vg::core
             for (uint i = 0; i < count; ++i)
             {
                 IObject * srcChild = (*srcVec)[i];
-                IObject * newChild = CreateObject(srcChild->GetClassName(), srcChild->getName(), _dstObj);
+                IObject * newChild = CreateObject(srcChild->GetClassName(), srcChild->GetName(), _dstObj);
                 CopyProperties((IObject *)srcChild, newChild);
                 newChild->SetParent(_dstObj);
                 dstVec->push_back(newChild);

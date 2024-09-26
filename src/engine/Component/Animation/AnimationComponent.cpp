@@ -187,7 +187,7 @@ namespace vg::engine
         for (uint i = 0; i < anims.size(); ++i)
         {
             auto & anim = anims[i];
-            if (anim.getName() == _name)
+            if (anim.GetName() == _name)
                 return i;
         }
         VG_WARNING("[Animation] Could not find Animation \"%s\"", _name.c_str());

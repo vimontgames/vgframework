@@ -103,10 +103,10 @@ namespace vg::engine
         auto *& newPropList = m_dynamicProperties.emplace_back();
 
         // TODO : dedicated ctor?
-        newPropList = new DynamicPropertyList(_object->getName(), nullptr);
+        newPropList = new DynamicPropertyList(_object->GetName(), nullptr);
         newPropList->SetUID(_object->GetOriginalUID());
         newPropList->SetOriginalUID(0x0);
-        newPropList->setName(_object->getName());
+        newPropList->SetName(_object->GetName());
         
         return newPropList;
     }
@@ -119,7 +119,7 @@ namespace vg::engine
             for (uint i = 0; i < propList->m_properties.size(); ++i)
             {
                 auto & prop = propList->m_properties[i];
-                if (prop->getName() == _prop->GetName())
+                if (prop->GetName() == _prop->GetName())
                     return prop;
             }
         }
@@ -578,7 +578,7 @@ namespace vg::engine
 
                     if (nullptr == _dynProp || _dynProp->GetProperty() == overrideProp->GetProperty())
                     {
-                        if (IProperty * origProp = classDesc->GetPropertyByName(overrideProp->getName().c_str()))
+                        if (IProperty * origProp = classDesc->GetPropertyByName(overrideProp->GetName().c_str()))
                         {
                             if (_dynProp == nullptr)
                                 overrideProp->BackupOriginalValue(obj, origProp);
@@ -594,7 +594,7 @@ namespace vg::engine
                     }
 
                     if (!found)
-                        VG_WARNING("[Prefab] Could not find property \"%s\" in Prefab \"%s\"", overrideProp->getName().c_str(), m_prefabResource.GetResourcePath().c_str());
+                        VG_WARNING("[Prefab] Could not find property \"%s\" in Prefab \"%s\"", overrideProp->GetName().c_str(), m_prefabResource.GetResourcePath().c_str());
                 }
             }
             else

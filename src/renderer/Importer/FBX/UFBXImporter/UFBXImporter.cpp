@@ -346,7 +346,7 @@ namespace vg::renderer
             }
 
             Batch batch;
-                  batch.setName(ufbxMat? ufbxMat->name.data : fmt::sprintf("Material %u", i).c_str());
+                  batch.SetName(ufbxMat? ufbxMat->name.data : fmt::sprintf("Material %u", i).c_str());
                   batch.count = batchIndexCount;
                   batch.offset = startIndex;
             batches.push_back(batch);

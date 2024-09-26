@@ -57,7 +57,7 @@ namespace vg::core
 		#endif
 
 		if (nullptr != instance)
-			instance->setName(filename);
+			instance->SetName(filename);
 		else
 			VG_ERROR("Could not create instance of Plugin \"%s\"", _name.c_str());
 

@@ -1,8 +1,10 @@
 #pragma once
 
+#include "core/Object/Object.h"
+
 namespace vg::editor
 {
-    class ImGuiMenu
+    class ImGuiMenu : public core::Object
     {
     public:
         enum class Status
@@ -17,7 +19,7 @@ namespace vg::editor
         };
 
         virtual ~ImGuiMenu() = default;
-        virtual Status  Display(core::IObject * _object) = 0;
+        virtual Status  Display(core::IObject * _object) { return Status::None; }
 
     protected:
         core::uint      m_selected  = 0;

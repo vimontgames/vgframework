@@ -17,7 +17,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool ResourceMeta::Load(const core::string & _resourcePath)
     {
-        setName(io::getMetaPath(io::getFileName(_resourcePath)));
+        SetName(io::getMetaPath(io::getFileName(_resourcePath)));
         setFile(io::getMetaPath(_resourcePath));
 
         if (const auto * factory = Kernel::getFactory())
@@ -29,7 +29,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool ResourceMeta::Save(const core::string & _resourcePath)
     {
-        setName(io::getMetaPath(io::getFileName(_resourcePath)));
+        SetName(io::getMetaPath(io::getFileName(_resourcePath)));
         setFile(io::getMetaPath(_resourcePath));
 
         if (const auto * factory = Kernel::getFactory())

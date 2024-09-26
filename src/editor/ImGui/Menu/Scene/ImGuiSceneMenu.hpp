@@ -127,7 +127,7 @@ namespace vg::editor
                 if (ImGui::IsFileDialogOK())
                 {
                     string newFilePath = io::addExtensionIfNotPresent(ImGui::GetFileDialogSelectedFile(), typeInfo.fileExt.c_str());
-                    scene->setName(io::getFileNameWithoutExt(newFilePath));
+                    scene->SetName(io::getFileNameWithoutExt(newFilePath));
                     factory->SaveToXML(scene, newFilePath);
                     status = Status::Saved;
                 }
@@ -140,7 +140,7 @@ namespace vg::editor
             {
                 if (m_popupObject == scene && ImGui::BeginPopupModal(m_popup.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
-                    ImGui::Text("Are you sure you want to close %s \"%s\"?", asString(m_sceneType).c_str(), scene->getName().c_str());
+                    ImGui::Text("Are you sure you want to close %s \"%s\"?", asString(m_sceneType).c_str(), scene->GetName().c_str());
 
                     if (ImGui::Button("Yes", style::button::SizeMedium))
                     {

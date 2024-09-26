@@ -43,7 +43,7 @@ namespace vg::core
     public:
         DynamicPropertyT(const core::string & _name = "", core::IObject * _parent = nullptr)
         {
-            setName(_name);
+            SetName(_name);
         }
 
         ~DynamicPropertyT()

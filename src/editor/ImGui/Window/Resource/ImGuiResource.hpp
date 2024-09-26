@@ -15,7 +15,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiResource::DrawGUI()
     {
-        if (ImGui::IconBegin(style::icon::Resource, getName().c_str(), &m_isVisible))
+        if (ImGui::IconBegin(style::icon::Resource, GetName().c_str(), &m_isVisible))
         {
             IResourceManager * rm = Editor::get()->getEngine()->GetResourceManager();
 
@@ -159,7 +159,7 @@ namespace vg::editor
 
                                             if (gameobject)
                                             {
-                                                sprintf_s(clientLabel, "%s###%u %u", gameobject->getName().c_str(), i, j);
+                                                sprintf_s(clientLabel, "%s###%u %u", gameobject->GetName().c_str(), i, j);
                                                 bool openResGameObject = ImGui::TreeNodeEx(clientLabel, ImGuiTreeNodeFlags_Leaf);
 
                                                 if (ImGui::IsItemHovered())

@@ -67,7 +67,7 @@ namespace vg::renderer
 
                     ITexture * dest = view->GetRenderTarget();
                     if(dest)
-                        readRenderTarget(dest->getName());
+                        readRenderTarget(dest->GetName());
                 }
             }
         }

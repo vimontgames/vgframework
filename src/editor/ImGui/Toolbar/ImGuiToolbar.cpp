@@ -50,7 +50,7 @@ namespace vg::editor
             window_class.DockNodeFlagsOverrideSet |= ImGuiDockNodeFlags_NoResizeX;
         ImGui::SetNextWindowClass(&window_class);
 
-        const auto name = getName();
+        const auto name = GetName();
 
         // 3. Begin into the window
         ImGui::Begin(name.c_str(), &m_isVisible, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);        

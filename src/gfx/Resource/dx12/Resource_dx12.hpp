@@ -14,9 +14,9 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::setName(const core::string & _name)
+    void Resource::SetName(const core::string & _name)
     {
-        super::setName(_name);
+        super::SetName(_name);
 
         if (m_d3d12resource)
         {
@@ -32,7 +32,7 @@ namespace vg::gfx::dx12
         m_d3d12resource = _resource;
         m_d3d12ma_alloc = _alloc;
 
-        setName(_name);
+        SetName(_name);
     }
  
     //--------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ namespace vg::gfx::dx12
         m_d3d12resource = _resource;
         m_d3d12ma_alloc = _alloc;
 
-        setName(_name);
+        SetName(_name);
     }
 
     //--------------------------------------------------------------------------------------

@@ -485,7 +485,7 @@ namespace vg::renderer
                         {
                             auto * rt = (Texture *)viewport->GetRenderTarget();
                             if (rt)
-                                m_frameGraph.importRenderTarget(rt->getName(), rt, float4(0, 0, 0, 1), FrameGraphResource::InitState::Clear);
+                                m_frameGraph.importRenderTarget(rt->GetName(), rt, float4(0, 0, 0, 1), FrameGraphResource::InitState::Clear);
                         }
                     }
                 }
@@ -620,7 +620,7 @@ namespace vg::renderer
     gfx::ITexture * Renderer::CreateTexture(const gfx::TextureDesc & _texDesc, const core::string & _name)
     {
         auto tex = m_device.createTexture(_texDesc, _name);
-        tex->setName(_name);
+        tex->SetName(_name);
         return tex;
     }
 
@@ -629,7 +629,7 @@ namespace vg::renderer
     {
         if (auto * viewport = new Viewport(_params))
         {
-            viewport->setName(_name);
+            viewport->SetName(_name);
             viewport->SetFlags(_flags);
 
             return viewport;
@@ -663,7 +663,7 @@ namespace vg::renderer
         ViewportID id = ViewportID(target, index);
         viewports.push_back((Viewport *)_viewport);
         _viewport->SetViewportID(id);
-        _viewport->setName(fmt::sprintf("%s Viewport #%u", asString(id.target), id.index));
+        _viewport->SetName(fmt::sprintf("%s Viewport #%u", asString(id.target), id.index));
 
         return id;
     }
@@ -715,7 +715,7 @@ namespace vg::renderer
         
         if (view)
         {
-            view->setName(_name);
+            view->SetName(_name);
             view->setFlags(_flags);
         }
         return view;
@@ -746,7 +746,7 @@ namespace vg::renderer
         ViewID id = ViewID(target, index);
         views.push_back((View *)_view);
         _view->SetViewID(id);
-        _view->setName(fmt::sprintf("%s View #%u", asString(id.target), id.index));
+        _view->SetName(fmt::sprintf("%s View #%u", asString(id.target), id.index));
 
         return id;
     }

@@ -151,7 +151,7 @@ namespace vg::renderer
                     {
                         blas = it->second;
                         instance->setInstanceBLAS(blas);    // This will increase RefCount
-                        VG_INFO("[Renderer] Use existing BLAS 0x%016X for instance \"%s\" with key 0x%016X (RefCount=%u)", it->second, instance->getName().c_str(), key, blas->getRefCount());
+                        VG_INFO("[Renderer] Use existing BLAS 0x%016X for instance \"%s\" with key 0x%016X (RefCount=%u)", it->second, instance->GetName().c_str(), key, blas->getRefCount());
                     }
                     else
                     {
@@ -189,7 +189,7 @@ namespace vg::renderer
 
                         BLASMap.insert(std::pair(key, blas));
 
-                        VG_INFO("[Renderer] Create BLAS 0x%016X for instance \"%s\" with key 0x%016X (RefCount=%u)", blas, instance->getName().c_str(), key, blas->getRefCount());
+                        VG_INFO("[Renderer] Create BLAS 0x%016X for instance \"%s\" with key 0x%016X (RefCount=%u)", blas, instance->GetName().c_str(), key, blas->getRefCount());
                     }
                 }
             }
@@ -220,7 +220,7 @@ namespace vg::renderer
                         blas = new gfx::BLAS(gfx::BLASUpdateType::Dynamic, key);
                         skin->setInstanceBLAS(blas);
                         blas->Release();
-                        VG_INFO("[Renderer] Create BLAS 0x%016X for skinned instance \"%s\" with key 0x%016X (RefCount=%u)", blas, skin->getName().c_str(), key, blas->getRefCount());
+                        VG_INFO("[Renderer] Create BLAS 0x%016X for skinned instance \"%s\" with key 0x%016X (RefCount=%u)", blas, skin->GetName().c_str(), key, blas->getRefCount());
                     }
 
                     blas->clear();
@@ -278,7 +278,7 @@ namespace vg::renderer
                     const auto startBuildTLAS = Timer::getTick();
                     tlas = new gfx::TLAS();
                     _view->setTLAS(tlas);
-                    VG_INFO("[Renderer] Built TLAS for View \"%s\" in %.2f ms", _view->getName().c_str(), Timer::getEnlapsedTime(startBuildTLAS, Timer::getTick()));
+                    VG_INFO("[Renderer] Built TLAS for View \"%s\" in %.2f ms", _view->GetName().c_str(), Timer::getEnlapsedTime(startBuildTLAS, Timer::getTick()));
                 }
 
                 tlas->reset();

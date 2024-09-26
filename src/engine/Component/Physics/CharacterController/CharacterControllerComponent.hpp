@@ -126,7 +126,7 @@ namespace vg::engine
 
             VG_ASSERT(m_characterDesc && m_shape);
             if (m_characterDesc && m_shape)
-                m_character = getPhysics()->CreateCharacter(world->GetPhysicsWorld(), m_characterDesc, m_shape, GetGameObject()->GetGlobalMatrix(), GetGameObject()->getName() + "_CharacterController", this);
+                m_character = getPhysics()->CreateCharacter(world->GetPhysicsWorld(), m_characterDesc, m_shape, GetGameObject()->GetGlobalMatrix(), GetGameObject()->GetName() + "_CharacterController", this);
         }
         return nullptr != m_character;
     }

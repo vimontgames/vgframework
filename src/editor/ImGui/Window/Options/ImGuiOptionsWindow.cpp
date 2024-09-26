@@ -20,7 +20,7 @@ namespace vg::editor
         auto * options = GetOptions();
         if (options)
         {
-            if (ImGui::IconBegin(getIcon().c_str(), getName().c_str(), &m_isVisible))
+            if (ImGui::IconBegin(getIcon().c_str(), GetName().c_str(), &m_isVisible))
             {
                 if (ImGui::TooltipButton(fmt::sprintf("%s Reload", editor::style::icon::Reload).c_str(), true, true, "Reload", style::button::SizeLarge))
                     GetOptions()->Load();

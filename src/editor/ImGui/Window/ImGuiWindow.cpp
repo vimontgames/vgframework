@@ -228,7 +228,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool storeProperty(T * _out, T _value, IObject * _object, const IProperty * _prop, PropertyContext & _propContext, EditingState _editingState = EditingState::Unknown)
+    template <typename T> bool storeProperty(T * _out, T _value, IObject * _object, const IProperty * _prop, PropertyContext & _propContext, EditingState _editingState)
     {
         if (EditingState::BeginEdit == _editingState || EditingState::EndEdit == _editingState || (!_propContext.m_readOnly && !equals(*_out,_value)))
         {
@@ -745,7 +745,7 @@ namespace vg::editor
         if (_name)
             treeNodeName = "[" + string(_name) + "]";
         else if (_object)
-            treeNodeName = fmt::sprintf("[%u] %s", _index, _object->getName());
+            treeNodeName = fmt::sprintf("[%u] %s", _index, _object->GetName());
         else
             treeNodeName = "[" + to_string(_index) + "]";
 
@@ -866,6 +866,26 @@ namespace vg::editor
         //    return (_prop->getRange().y - _prop->getRange().x) / 1000.0f;
         //else
             return 1.0f;
+    }
+
+    //--------------------------------------------------------------------------------------
+    ImGuiInputTextFlags getImGuiInputTextFlags(const PropertyContext & _propContext, const IProperty * _prop)
+    {
+        ImGuiInputTextFlags flags = ImGuiInputTextFlags_EnterReturnsTrue;
+        if (_propContext.m_readOnly)
+            flags |= ImGuiInputTextFlags_ReadOnly;
+        return flags;
+    }
+
+    //--------------------------------------------------------------------------------------
+    ImGuiInputTextFlags getImGuiInputNumberFlags(const PropertyContext & _propContext, const IProperty * _prop)
+    {
+        ImGuiInputTextFlags flags = getImGuiInputTextFlags(_propContext, _prop);
+
+        if (asBool(PropertyFlags::Hexadecimal & _prop->GetFlags()))
+            flags |= ImGuiInputTextFlags_CharsHexadecimal;
+
+        return flags;
     }
 
     //--------------------------------------------------------------------------------------
@@ -999,13 +1019,7 @@ namespace vg::editor
 
         propContext.m_readOnly = asBool(PropertyFlags::ReadOnly & flags) || (propContext.m_isPrefabInstance && !propContext.m_isPrefabOverride && !propContext.m_canPrefabOverride);
 
-        ImGuiInputTextFlags imguiInputTextflags = ImGuiInputTextFlags_EnterReturnsTrue;
-        if (propContext.m_readOnly)
-            imguiInputTextflags = ImGuiInputTextFlags_ReadOnly;
-
-        ImGuiInputTextFlags imguiNumberTextInputFlag = imguiInputTextflags;
-        if (hexa)
-            imguiNumberTextInputFlag |= ImGuiInputTextFlags_CharsHexadecimal;
+        ImGuiInputTextFlags imguiInputTextflags = getImGuiInputTextFlags(propContext, _prop);
 
         const bool flatten = asBool(PropertyFlags::Flatten & flags);
         const bool isEnumArray = asBool(PropertyFlags::EnumArray & flags);
@@ -1382,55 +1396,7 @@ namespace vg::editor
 
                 case PropertyType::ObjectHandle:
                 {
-                    ObjectHandle * pObjHandle = _prop->GetPropertyObjectHandle(_object);
-
-                    bool edited = false;
-
-                    //sprintf_s(buffer, "0x%016X", );
-                    //if (ImGui::InputText(getPropertyLabel(label).c_str(), buffer, countof(buffer), imguiInputTextflags))
-                    //    edited = true;
-
-                    UID temp = 0;
-                    IObject * obj = nullptr;
-
-                    if (pObjHandle)
-                    {
-                        temp = pObjHandle->getUID();
-                        obj = pObjHandle->getObject();
-                    }
-
-                    //if (ImGui::InputScalar(getPropertyLabel(label).c_str(), ImGuiDataType_U32, &temp, nullptr, nullptr, "%08X", imguiNumberTextInputFlag))
-                    //    edited = true;
-
-                    char buffer[1024];
-                    sprintf_s(buffer, "%s (0x%08X)", obj ? obj->getName().c_str() : "(null)", temp);
-
-                    const float buttonWidth = style::button::SizeSmall.x;
-
-                    auto availableWidth = GetContentRegionAvail().x;
-                    ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - buttonWidth);
-                    ImGui::InputText(getPropertyLabel(label).c_str(), buffer, countof(buffer), imguiInputTextflags | ImGuiInputTextFlags_ReadOnly);
-                    ImGui::PopItemWidth();
-
-                    ImGui::SameLine();
-                    if (ImGui::Button(style::icon::GameObject, style::button::SizeSmall))
-                    {
-                        
-                    }
-
-                    ImGui::PushID(_prop);
-                    static ImGuiObjectHandleMenu s_pickObjectHandlemenu;
-                    if (s_pickObjectHandlemenu.SelectUID(&temp, propContext.m_gameobject))
-                        edited = true;
-                    ImGui::PopID();
-
-                    drawPropertyLabel(propContext, _prop);
-
-                    if (edited)
-                    {
-                        if (storeProperty((UID*)pObjHandle->getUIDPtr(), (UID)temp, _object, _prop, propContext))
-                            changed = true;
-                    }
+                    editObjectHandle(_object, _prop, propContext);
                 }
                 break;
 
@@ -1528,11 +1494,15 @@ namespace vg::editor
                         if (ImGui::InputText(getPropertyLabel(label).c_str(), buffer, countof(buffer), imguiInputTextflags))
                             edited = true;
 
+                        string bufferString = (string)buffer;
+
+                        EditingState editingState = undoRedoBeforeEdit<string>(edited, propContext, _object, _prop, &bufferString, pString, InteractionType::Single);
+
                         drawPropertyLabel(propContext, _prop);
 
                         if (edited)
                         {
-                            if (storeProperty(pString, (string)buffer, _object, _prop, propContext))
+                            if (storeProperty(pString, bufferString, _object, _prop, propContext, editingState))
                                 changed = true;
                         }                        
                     }                    
@@ -1605,7 +1575,7 @@ namespace vg::editor
                                 {
                                     ImGui::SetCursorPosY(ImGui::GetCursorPosY() - style::draganddrop::interlineSize.y - 1);
 
-                                    string label = fmt::sprintf("###%s %s", asString(type), component->getName().c_str());
+                                    string label = fmt::sprintf("###%s %s", asString(type), component->GetName().c_str());
                                     ImGui::InvisibleButton(label.c_str(), style::draganddrop::interlineSize);
 
                                     // debug
@@ -1651,7 +1621,7 @@ namespace vg::editor
                                         {
                                             if (from != to)
                                             {
-                                                VG_INFO("[Inspector] Drag and drop component \"%s\" %s component \"%s\"", from->getName().c_str(), asString(type).c_str(), to->getName().c_str());
+                                                VG_INFO("[Inspector] Drag and drop component \"%s\" %s component \"%s\"", from->GetName().c_str(), asString(type).c_str(), to->GetName().c_str());
 
                                                 IGameObject * toParent = dynamic_cast<IGameObject *>(to->GetParent());
                                                 IGameObject * fromParent = dynamic_cast<IGameObject *>(from->GetParent());
@@ -2684,6 +2654,67 @@ namespace vg::editor
 
             if (!flatten)
                 ImGui::TreePop();
+        }
+
+        return changed;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ImGuiWindow::editObjectHandle(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
+    {
+        bool changed = false;
+
+        ObjectHandle * pObjHandle = _prop->GetPropertyObjectHandle(_object);
+
+        bool edited = false;
+
+        UID temp = 0;
+        IObject * obj = nullptr;
+
+        if (pObjHandle)
+        {
+            temp = pObjHandle->getUID();
+            obj = pObjHandle->getObject();
+        }
+
+        char buffer[1024];
+        if (EditorOptions::get()->IsDebugInspector())
+            sprintf_s(buffer, "%s (0x%08X)", obj ? obj->GetName().c_str() : "(null)", temp); 
+        else
+            sprintf_s(buffer, "%s", obj ? obj->GetName().c_str() : "");
+
+        const float buttonWidth = style::button::SizeSmall.x;
+
+        auto availableWidth = GetContentRegionAvail().x;
+        ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - buttonWidth);
+        const auto label = ImGui::getObjectLabel(_prop->GetDisplayName(), _propContext.m_originalProp);
+        ImGui::InputText(getPropertyLabel(label).c_str(), buffer, countof(buffer), getImGuiInputTextFlags(_propContext, _prop) | ImGuiInputTextFlags_ReadOnly);
+
+        bool openPopup = false;
+        if (IsItemHovered() && IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            openPopup = true;
+
+        ImGui::PopItemWidth();
+
+        ImGui::SameLine();
+        if (ImGui::Button(style::icon::GameObject, style::button::SizeSmall))
+        {
+        }
+
+        ImGui::PushID(_prop);
+        ImGuiObjectHandleMenu * pickObjectHandlemenu = Editor::get()->getMenu<ImGuiObjectHandleMenu>();
+        if (pickObjectHandlemenu->SelectUID(&temp, _propContext.m_gameobject, openPopup))
+            edited = true;
+        ImGui::PopID();
+
+        EditingState editingState = undoRedoBeforeEdit<UID>(edited, _propContext, _object, _prop, (UID *)&temp, (UID *)pObjHandle->getUIDPtr(), InteractionType::Single);
+
+        drawPropertyLabel(_propContext, _prop);
+
+        if (edited)
+        {
+            if (storeProperty((UID *)pObjHandle->getUIDPtr(), (UID)temp, _object, _prop, _propContext, editingState))
+                changed = true;
         }
 
         return changed;

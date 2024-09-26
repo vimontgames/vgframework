@@ -535,7 +535,7 @@ namespace vg::renderer
                     break;
                 }
             }
-            VG_ASSERT(-1 != index, "Could not find node \"%s\" (#%u) from animation \"%s\" in skin \"%s\"", animNode.name.c_str(), i, binding->m_animation->getName().c_str(), meshModel->getName().c_str());
+            VG_ASSERT(-1 != index, "Could not find node \"%s\" (#%u) from animation \"%s\" in skin \"%s\"", animNode.name.c_str(), i, binding->m_animation->GetName().c_str(), meshModel->GetName().c_str());
             binding->m_animToSkeletonIndex.push_back(index);
         }
 
@@ -615,7 +615,7 @@ namespace vg::renderer
             {
                 const auto & batches = geo->batches();
                 if (_batchIndex < batches.size())
-                    return batches[_batchIndex].getName();
+                    return batches[_batchIndex].GetName();
             }
         }
         return "";

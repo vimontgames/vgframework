@@ -205,9 +205,7 @@ namespace vg::editor
                                 {
                                     m_selectedClass = classDesc;
                                     if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
-                                    {
                                         doCreate = true;
-                                    }
                                 }
 
                                 if (isSelected)

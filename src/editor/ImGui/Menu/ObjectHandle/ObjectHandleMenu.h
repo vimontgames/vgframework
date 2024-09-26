@@ -1,5 +1,7 @@
 #pragma once
 
+#include "editor/ImGui/Menu/ImGuiMenu.h"
+
 namespace vg::core
 {
     using UID = core::u32;
@@ -13,9 +15,13 @@ namespace vg::editor
         Clear
     );
 
-    class ImGuiObjectHandleMenu
+    class ImGuiObjectHandleMenu : public ImGuiMenu
     {
     public:
-        bool SelectUID(core::UID * _uid, IGameObject * _gameobject);
+        bool SelectUID(core::UID * _uid, core::IGameObject * _gameobject, bool _open);
+        ~ImGuiObjectHandleMenu();
+
+    private:
+        ImGuiTextFilter m_filter;
     };
 }

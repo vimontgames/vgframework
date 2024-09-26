@@ -27,7 +27,7 @@ namespace vg::engine
         m_surfaceType(gfx::SurfaceType::Opaque),
         m_cullMode(gfx::CullMode::Back)
     {
-        setName(_parent->getName());
+        SetName(_parent->GetName());
     }
 
     //--------------------------------------------------------------------------------------

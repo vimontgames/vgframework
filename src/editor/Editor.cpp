@@ -13,6 +13,7 @@
 #include "engine/IWorldResource.h"
 #include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
 #include "editor/Options/EditorOptions.h"
+#include "editor/ImGui/Menu/ObjectHandle/ObjectHandleMenu.h"
 
 #if !VG_ENABLE_INLINE
 #include "Editor.inl"
@@ -121,6 +122,9 @@ namespace vg::editor
 
         // Plugins
         m_imGuiWindows.push_back(new ImGuiPlugin(IconWithText(style::icon::Plugin, "Plugin")));
+
+        // Menus
+        m_imGuiMenus.push_back(new ImGuiObjectHandleMenu());
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -129,6 +133,10 @@ namespace vg::editor
         for (auto i = 0; i < m_imGuiWindows.size(); ++i)
             VG_SAFE_RELEASE(m_imGuiWindows[i]);
         m_imGuiWindows.clear();
+
+        for (auto i = 0; i < m_imGuiMenus.size(); ++i)
+            VG_SAFE_RELEASE(m_imGuiMenus[i]);
+        m_imGuiMenus.clear();
 	}
 
     //--------------------------------------------------------------------------------------
@@ -198,7 +206,7 @@ namespace vg::editor
     {
         for (auto i = 0; i < m_imGuiWindows.size(); ++i)
         {
-            if (dynamic_cast<T *>(m_imGuiWindows[i]) != nullptr && (_name.empty() || m_imGuiWindows[i]->getName()._Starts_with(_name) ))
+            if (dynamic_cast<T *>(m_imGuiWindows[i]) != nullptr && (_name.empty() || m_imGuiWindows[i]->GetName()._Starts_with(_name) ))
                 return (T *)(m_imGuiWindows[i]);
         }
         return nullptr;
@@ -210,12 +218,13 @@ namespace vg::editor
         core::vector<T *> windows;
         for (auto i = 0; i < m_imGuiWindows.size(); ++i)
         {
-            if (dynamic_cast<T*>(m_imGuiWindows[i]) != nullptr && (_name.empty() || m_imGuiWindows[i]->getName()._Starts_with(_name)))
+            if (dynamic_cast<T*>(m_imGuiWindows[i]) != nullptr && (_name.empty() || m_imGuiWindows[i]->GetName()._Starts_with(_name)))
                 windows.push_back((T*)(m_imGuiWindows[i]));
         }
 
         return windows;
     }
+
 
     //--------------------------------------------------------------------------------------
     void Editor::destroyWindow(ImGuiWindow * _window)
@@ -427,7 +436,7 @@ namespace vg::editor
                         sort(sortedWindows.begin(), sortedWindows.end(), [](ImGuiWindow * a, ImGuiWindow * b)
                             {
                                 if (a->getPath().empty() == b->getPath().empty())
-                                    return a->getName() < b->getName();
+                                    return a->GetName() < b->GetName();
                                 else if (a->getPath().empty())
                                     return true;
                                 else
@@ -607,7 +616,7 @@ namespace vg::editor
             {
                 if (m_imGuiWindows[i]->isVisible())
                 {
-                    VG_PROFILE_CPU(m_imGuiWindows[i]->getName().c_str());
+                    VG_PROFILE_CPU(m_imGuiWindows[i]->GetName().c_str());
                     m_imGuiWindows[i]->DrawGUI();
                 }
             }
@@ -679,7 +688,7 @@ namespace vg::editor
         else
         {
             prefabView = new ImGuiPrefabView(_prefabRes);
-            prefabView->setName(io::getFileNameWithoutExt(_prefabRes->GetResourcePath()));
+            prefabView->SetName(io::getFileNameWithoutExt(_prefabRes->GetResourcePath()));
             editor->m_imGuiWindows.push_back(prefabView);
         }
 
@@ -757,7 +766,7 @@ namespace vg::editor
         if (_gameObjects.size() > 1)
             msg = "Are you sure you want to delete " + to_string(_gameObjects.size()) + " GameObjects and their children?";
         else
-            msg = "Are you sure you want to delete " + (string)_gameObjects[0]->GetClassName() + " \"" + _gameObjects[0]->getName() + "\"?";
+            msg = "Are you sure you want to delete " + (string)_gameObjects[0]->GetClassName() + " \"" + _gameObjects[0]->GetName() + "\"?";
         ImGui::MessageBox(MessageBoxType::YesNo, "Delete GameObject", msg.c_str(), deleteGameObject);
     }
 }

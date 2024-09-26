@@ -43,7 +43,7 @@ namespace vg::core
         for (uint i = 0; i < m_properties.size(); ++i)
         {
             auto & prop = m_properties[i];
-            if (prop->getName() == _prop->GetName())
+            if (prop->GetName() == _prop->GetName())
             {
                 prop->CopyProperty(_prop);
                 return prop;

@@ -186,7 +186,7 @@ namespace vg::gfx
         if (nullptr != _userPass)
         {
             _userPass->addRef();
-            _userPass->setName(_renderPassID);
+            _userPass->SetName(_renderPassID);
             _userPass->setFrameGraph(this);
 
             m_userPassInfo.push_back({ _renderContext, _userPass });
@@ -579,7 +579,7 @@ namespace vg::gfx
                 return;
             }
         }
-        VG_ASSERT(false, "Could not release Texture \"%s\" from pool", _tex->getName());
+        VG_ASSERT(false, "Could not release Texture \"%s\" from pool", _tex->GetName());
     }
 
     //--------------------------------------------------------------------------------------
@@ -653,7 +653,7 @@ namespace vg::gfx
                 return;
             }
         }
-        VG_ASSERT(false, "Could not release Buffer \"%s\" from pool", _buffer->getName());
+        VG_ASSERT(false, "Could not release Buffer \"%s\" from pool", _buffer->GetName());
     }
 
     //--------------------------------------------------------------------------------------
@@ -749,7 +749,7 @@ namespace vg::gfx
             VG_ASSERT(subPasses.size() == 1);
             SubPass * subPass = subPasses[0];
             const auto & userPassInfo = subPass->getUserPassesInfos()[0];
-            VG_PROFILE_GPU(userPassInfo.m_userPass->getName().c_str());
+            VG_PROFILE_GPU(userPassInfo.m_userPass->GetName().c_str());
 
             for (uint i = 0; i < subPasses.size(); ++i)
             {
@@ -762,7 +762,7 @@ namespace vg::gfx
             {
                 cmdList->beginSubPass(i, subPass);
                 {
-                    VG_ASSERT(isEnumValue(userPassInfo.m_userPass->getUserPassType()), "UserPass \"%s\" has invalid RenderPassType 0x%02X. Valid values are Graphic (0), Compute (1), and Raytrace (2)", userPassInfo.m_userPass->getName().c_str(), userPassInfo.m_userPass->getUserPassType());
+                    VG_ASSERT(isEnumValue(userPassInfo.m_userPass->getUserPassType()), "UserPass \"%s\" has invalid RenderPassType 0x%02X. Valid values are Graphic (0), Compute (1), and Raytrace (2)", userPassInfo.m_userPass->GetName().c_str(), userPassInfo.m_userPass->getUserPassType());
                     userPassInfo.m_userPass->Render(userPassInfo.m_renderContext, cmdList);
                 }
                 cmdList->endSubPass();
@@ -947,7 +947,7 @@ namespace vg::gfx
             if (slot.used)
             {
                 Texture * tex = slot.tex;
-                VG_WARNING("[FrameGraph] Texture \"%s\" (%u) was not released", tex->getName().c_str(), i);
+                VG_WARNING("[FrameGraph] Texture \"%s\" (%u) was not released", tex->GetName().c_str(), i);
                 releaseTextureFromPool(tex);
             }
         }
@@ -957,7 +957,7 @@ namespace vg::gfx
             if (slot.used)
             {
                 Buffer * buffer = slot.buffer;
-                VG_WARNING("[FrameGraph] Buffer \"%s\" (%u) was not released", buffer->getName().c_str(), i);
+                VG_WARNING("[FrameGraph] Buffer \"%s\" (%u) was not released", buffer->GetName().c_str(), i);
                 releaseBufferFromPool(buffer);
             }
         }

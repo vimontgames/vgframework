@@ -79,7 +79,7 @@ namespace vg::editor
             //else if (isPrefabInstanced)
             //    ImGui::PopStyleColor(1);
 
-            if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s \"%s\"", isGameobjectEnabled? "Disable" : "Enable", goTypeName, go->getName().c_str())))
+            if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s \"%s\"", isGameobjectEnabled? "Disable" : "Enable", goTypeName, go->GetName().c_str())))
                 go->SetInstanceFlags(InstanceFlags::Enabled, !isGameobjectEnabled);
 
             if (open)
@@ -147,7 +147,7 @@ namespace vg::editor
                     m_gameObjectInspectorMenu.addComponentPopup();
 
                 if (ImGui::IsItemHovered())
-                    ImGui::SetTooltip(fmt::sprintf("Add Component to \"%s\"", go->getName()).c_str());
+                    ImGui::SetTooltip(fmt::sprintf("Add Component to \"%s\"", go->GetName()).c_str());
             }
 
             ImGui::PopID();

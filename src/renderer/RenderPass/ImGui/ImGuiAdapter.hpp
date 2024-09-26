@@ -459,7 +459,7 @@ namespace vg::renderer
 
         for (const auto & data : descriptorSetsFrameData.m_descriptorSetAllocs)
         {
-            VG_ASSERT(data.second.m_refCount == 0, "ImTextureID %u from Texture \"%s\" still has a RefCount of %u and was not released", data.second.m_id, data.first->getName().c_str(), data.second.m_refCount);
+            VG_ASSERT(data.second.m_refCount == 0, "ImTextureID %u from Texture \"%s\" still has a RefCount of %u and was not released", data.second.m_id, data.first->GetName().c_str(), data.second.m_refCount);
 
             #ifdef VG_VULKAN
             if (0 == data.second.m_refCount)

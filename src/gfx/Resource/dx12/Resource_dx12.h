@@ -27,7 +27,7 @@ namespace vg::gfx::dx12
         void                                unmap(core::uint _subResource = 0, Range _write = Range());
 
     protected:
-        void                                setName(const core::string & _name);
+        void                                SetName(const core::string & _name);
 
     private:
         ID3D12Resource *					m_d3d12resource = nullptr;

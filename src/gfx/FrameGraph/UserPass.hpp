@@ -14,13 +14,13 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     static string makeUniqueName(const string & _name, const RenderPassContext _renderContext)
     {
-        return _name + "-" + _renderContext.m_view->getName();
+        return _name + "-" + _renderContext.m_view->GetName();
     }
 
 	//--------------------------------------------------------------------------------------
 	UserPass::UserPass(const core::string & _name)
 	{
-        setName(_name);
+        SetName(_name);
 		reset();
 	}
 

@@ -179,7 +179,7 @@ namespace vg::gfx::vulkan
                 vkShaderStage.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
                 vkShaderStage.stage = getVulkanShaderStage(_stage);
                 vkShaderStage.module = shader->getVulkanBytecode();
-                vkShaderStage.pName = shader->getName().c_str();
+                vkShaderStage.pName = shader->GetName().c_str();
 
                 _vkStages.push_back(vkShaderStage);
                 return true;

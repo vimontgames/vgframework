@@ -105,13 +105,13 @@ namespace vg::renderer
                                 if (autoSelectParentPrefab)
                                 {
                                     if (_showTooltip)
-                                        _tooltipMsg = fmt::sprintf("%s %s", editor::style::icon::Prefab, go->getName());
+                                        _tooltipMsg = fmt::sprintf("%s %s", editor::style::icon::Prefab, go->GetName());
                                 }
                                 else
                                 {
                                     if (_showTooltip)
                                     {
-                                        _tooltipMsg = fmt::sprintf("%s %s", editor::style::icon::GameObject, go->getName());
+                                        _tooltipMsg = fmt::sprintf("%s %s", editor::style::icon::GameObject, go->GetName());
 
                                         string subObjectName = component->GetSubObjectName((uint)id.y);
                                         if (!subObjectName.empty())
@@ -120,7 +120,7 @@ namespace vg::renderer
                                 }
 
                                 if (_showTooltip)
-                                    _tooltipDbg = fmt::sprintf("\n\n%s \"%s\" (ID %u, %u)\nCounter = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", component->GetClassName(), component->getName().c_str(), (uint)id.x, (uint)id.y, _view->GetPickingRequestedHitCount(), (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
+                                    _tooltipDbg = fmt::sprintf("\n\n%s \"%s\" (ID %u, %u)\nCounter = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", component->GetClassName(), component->GetName().c_str(), (uint)id.x, (uint)id.y, _view->GetPickingRequestedHitCount(), (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
 
                                 if (input->IsMouseButtonJustPressed(MouseButton::Left))
                                 {

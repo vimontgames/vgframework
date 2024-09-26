@@ -78,7 +78,7 @@ namespace vg::engine
 		if (nullptr != scene)
 		{
 			// Use file name as default scene name
-			scene->setName(io::getFileNameWithoutExt(_path));
+			scene->SetName(io::getFileNameWithoutExt(_path));
 
 			// Add default root node to scene
             GameObject * root = (GameObject *)CreateFactoryObject(GameObject, "Root", this);

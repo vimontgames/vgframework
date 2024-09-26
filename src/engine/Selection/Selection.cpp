@@ -290,7 +290,7 @@ namespace vg::engine
 
                 // Get unique name and sort
                 {
-                    string name = newGO->getName();
+                    string name = newGO->GetName();
                     uint number = extractIndex(name);
 
                     const auto children = parentGameObject->GetChildren();
@@ -298,7 +298,7 @@ namespace vg::engine
                     for (uint j = 0; j < children.size(); ++j)
                     {
                         auto child = children[j];
-                        string childName = child->getName();
+                        string childName = child->GetName();
                         uint childIndex = extractIndex(childName);
                         if (-1 != childIndex)
                         {
@@ -310,19 +310,19 @@ namespace vg::engine
                     if (-1 == number)
                     {
                         name = fmt::sprintf("%s_%.2u", name, highestChildIndex + 1);
-                        newGO->setName(name);
+                        newGO->SetName(name);
                     }
                     else
                     {
                         name = extractBaseName(name);
                         name = fmt::sprintf("%s_%.2u", name, highestChildIndex + 1);
-                        newGO->setName(name);
+                        newGO->SetName(name);
                     }
 
                     for (uint j = 0; j < children.size(); ++j)
                     {
                         auto child = children[j];
-                        string childName = child->getName();
+                        string childName = child->GetName();
                         uint childIndex = extractIndex(childName);
                         if (-1 != childIndex)
                         {

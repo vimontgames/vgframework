@@ -62,7 +62,7 @@ namespace vg::engine
         }
         else
         {
-            VG_WARNING("[Sound] Could not play sound at index %u in GameObject \"%s\"", _index, GetGameObject()->getName().c_str());
+            VG_WARNING("[Sound] Could not play sound at index %u in GameObject \"%s\"", _index, GetGameObject()->GetName().c_str());
             return (audio::PlaySoundHandle)0;
         }
     }
@@ -77,7 +77,7 @@ namespace vg::engine
         }
         else
         {
-            VG_WARNING("[Sound] Could not play stop at index %u in GameObject \"%s\"", _index, GetGameObject()->getName().c_str());
+            VG_WARNING("[Sound] Could not play stop at index %u in GameObject \"%s\"", _index, GetGameObject()->GetName().c_str());
             return false;
         }
     }

@@ -14,7 +14,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiTime::DrawGUI()
     {
-        if (IconBegin(getIcon().c_str(), getName().c_str(), &m_isVisible))
+        if (IconBegin(getIcon().c_str(), GetName().c_str(), &m_isVisible))
         {
             auto * engine = Editor::get()->getEngine();
 
