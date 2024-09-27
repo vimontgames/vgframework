@@ -1,5 +1,4 @@
-# build
-| Platform | API    | Debug                                                                                                                        | Release                                                                                                                          | Final 												
+| Platform | gfxAPI | Debug                                                                                                                        | Release                                                                                                                          | Final 												
 | -------- | ------ | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
 | ARM64EC  | DX12   | ![ARM64EC_DX12_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_DX12_Debug.yml/badge.svg)     | ![ARM64EC_DX12_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_DX12_Release.yml/badge.svg)     | ![ARM64EC_DX12_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_DX12_Final.yml/badge.svg)
 | ARM64EC  | Vulkan | ![ARM64EC_Vulkan_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_Vulkan_Debug.yml/badge.svg) | ![ARM64EC_Vulkan_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_Vulkan_Release.yml/badge.svg) | ![ARM64EC_Vulkan_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_Vulkan_Final.yml/badge.svg)
@@ -20,10 +19,6 @@ Yes, yet another work-in-progress game and graphic engine project :)
 
 ![Screenshot](doc/img/v32.gif)
 
-# news
-<small>07/17/24</small>
-Experimental ARM64EC support by [Onduril](https://github.com/vimontgames/vgframework/tree/arm64EC)
-
 # description
 
 Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would also like to support Metal the day I got and Apple device) so it can be 100% bindless from the very beginning and do strong choices in that direction:  
@@ -31,6 +26,10 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 * All the interface is made to encourage using only push constants and bindless buffers/textures, not updating tables constantly as if we were still emulating DX9.
 * You can't access the command lists without using the framegraph that is part of the graphic driver layer. Go framegraph or do not render anything.
 * Apart from the number of root constants, all shaders are sharing the same root signatures.
+
+# news
+<small>07/17/24</small>
+Experimental ARM64EC support by [Onduril](https://github.com/vimontgames/vgframework/tree/arm64EC)
 
 # changelog
 
@@ -166,12 +165,12 @@ The external libraries are included with the sources for convenience.
 
 ## models
 
-| Model						    | Author            | URL												
-| ----------------------------- | ----------------- | ------------------------------------------------------------- 
-| 3D Foot Ball Free low-poly 3D | prabath-weerapana | https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball
-| Luigi						    | Anthony Yanez     | https://www.turbosquid.com/3d-models/luigi-super-model-1308288 
-| Traffic Cone Free 3D model	| hinndia           | https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c
-| Soccergoal                    | NorbertVarga      | https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894
+| Model						          | Author             | URL												
+| ----------------------------------- | ------------------ | ------------------------------------------------------------- 
+| 3D Foot Ball Free low-poly 3D       | prabath-weerapana  | https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball
+| Luigi						          | Anthony Yanez      | https://www.turbosquid.com/3d-models/luigi-super-model-1308288 
+| Traffic Cone Free 3D model	      | hinndia            | https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c
+| Soccergoal                          | NorbertVarga       | https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894
 
 ## sound
 

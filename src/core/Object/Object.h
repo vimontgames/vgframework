@@ -111,6 +111,11 @@ namespace vg::core
 		UID							m_originalUID = (UID)0;
 		ObjectFlags					m_objectFlags = (ObjectFlags)0x0;
         Object *					m_parent = nullptr;
+
+		#ifndef VG_FINAL
+		string						m_parentNameDbg;
+		#endif
+
 		string					    m_name;
         string                      m_file;
 		mutable const IClassDesc * m_classDesc = nullptr;

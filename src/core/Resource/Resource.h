@@ -45,6 +45,9 @@ namespace vg::core
         void                        loadSubResources        () override;
         void                        unloadSubResources      () override;
 
+        void                        onResourceLoaded        (core::IResource * _resource) override;
+        void                        onResourceUnloaded      (core::IResource * _resource) override;
+
         bool                        CanCreateFile           () const override { return false; }
         bool                        CanSaveFile             () const override { return false; }
 

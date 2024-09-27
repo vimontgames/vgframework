@@ -58,6 +58,8 @@ namespace vg::engine
         if (nullptr != prefabScene)
         {
             prefabScene->SetParent(this);
+            prefabScene->SetName(io::getFileName(_path));
+
             if (factory->LoadFromXML(prefabScene, _path))
                 return prefabScene;
         }

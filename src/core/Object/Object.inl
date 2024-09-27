@@ -12,13 +12,20 @@ namespace vg::core
         if (_enabled)
             m_objectFlags |= _flags;
         else
-            (std::underlying_type<ObjectFlags>::type&)m_objectFlags &= ~(std::underlying_type<ObjectFlags>::type)_flags;
+            m_objectFlags &= ~_flags;
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE void Object::setParent(IObject * _parent)
     {
         m_parent = (Object *)_parent;
+
+        #ifndef VG_FINAL
+        if (_parent)
+            m_parentNameDbg = (core::string)"(" + m_parent->GetClassName() + (core::string)") " + m_parent->GetName();
+        else
+            m_parentNameDbg = "(null)";
+        #endif
     }
 
     //--------------------------------------------------------------------------------------

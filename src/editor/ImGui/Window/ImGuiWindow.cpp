@@ -2626,25 +2626,31 @@ namespace vg::editor
             bool edited = false;
             EditingState editingState = EditingState::Unknown;
 
-            edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat);
+            if (_propContext.m_readOnly)
+                ImGui::BeginDisabled();
+
+            edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
             if (EditingState::Unknown == editingState)
                 editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
             drawPropertyLabel(_propContext, LabelI.c_str(), "Represents the x-axis in the transformed space");
 
-            edited |= ImGui::DragFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat);
+            edited |= ImGui::DragFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
             if (EditingState::Unknown == editingState)
                 editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
             drawPropertyLabel(_propContext, LabelJ.c_str(), "Represents the y-axis in the transformed space");
 
-            edited |= ImGui::DragFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat);
+            edited |= ImGui::DragFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
             if (EditingState::Unknown == editingState)
                 editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
             drawPropertyLabel(_propContext, LabelK.c_str(), "Represents the z-axis in the transformed space");
 
-            edited |= ImGui::DragFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat);
+            edited |= ImGui::DragFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
             if (EditingState::Unknown == editingState)
                 editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
             drawPropertyLabel(_propContext, LabelT.c_str(), "Represents the translation component");
+
+            if (_propContext.m_readOnly)
+                ImGui::EndDisabled();
 
             if (edited)
             {

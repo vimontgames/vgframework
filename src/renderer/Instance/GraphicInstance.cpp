@@ -16,6 +16,9 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         //registerPropertyObjectPtrVectorEx(GraphicInstance, m_materials, "Materials", PropertyFlags::NotSaved);
+        setPropertyFlag(GraphicInstance, m_flags, PropertyFlags::ReadOnly | PropertyFlags::NotVisible, true);
+        setPropertyFlag(GraphicInstance, m_color, PropertyFlags::ReadOnly | PropertyFlags::NotVisible, true);
+        setPropertyFlag(GraphicInstance, m_local, PropertyFlags::ReadOnly | PropertyFlags::NotVisible, true);
 
         return true;
     }

@@ -82,4 +82,16 @@ namespace vg::engine
 
         return nullptr;
     }
+
+    //--------------------------------------------------------------------------------------
+    void GameObjectHierarchy::onResourceLoaded(core::IResource * _resource)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObjectHierarchy::onResourceUnloaded(core::IResource * _resource)
+    {
+
+    }
 }

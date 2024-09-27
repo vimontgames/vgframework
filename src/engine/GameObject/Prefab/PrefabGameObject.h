@@ -24,6 +24,8 @@ namespace vg::engine
                                                             PrefabGameObject            (const core::string & _name, core::IObject * _parent);
         virtual                                             ~PrefabGameObject           ();
 
+        void                                                SetName                     (const core::string & _name) final override;
+
         bool                                                IsPrefab                    () const override;
         core::IResource *                                   GetPrefabResource           () const override;
 

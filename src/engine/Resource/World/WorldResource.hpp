@@ -289,15 +289,6 @@ namespace vg::engine
                                 break;
 
                                 case BaseSceneType::Prefab:
-                                if (worldResData->m_world->AddScene(scene, BaseSceneType::Prefab))
-                                {
-                                    //if (Engine::get()->isPlaying())
-                                    //{
-                                    //    IObject * root = scene->GetRoot();
-                                    //    if (nullptr != root)
-                                    //        root->OnPlay();
-                                    //}
-                                }
                                 break;
 
                                 case BaseSceneType::Scene:

@@ -206,6 +206,19 @@ namespace vg::core
         
     }
 
+
+    //--------------------------------------------------------------------------------------
+    void Resource::onResourceLoaded(core::IResource * _resource)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Resource::onResourceUnloaded(core::IResource * _resource)
+    {
+
+    }
+
     //--------------------------------------------------------------------------------------
     IResourceMeta * Resource::CreateResourceMeta(const core::string & _path) const
     {

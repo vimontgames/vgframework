@@ -37,6 +37,13 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void PrefabGameObject::SetName(const string & _name)
+    {
+        super::SetName(_name);
+        m_prefabResource.SetName(_name);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool PrefabGameObject::IsPrefab() const
     {
         return true;

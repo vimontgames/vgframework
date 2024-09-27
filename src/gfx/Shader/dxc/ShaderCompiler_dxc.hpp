@@ -134,7 +134,15 @@ namespace vg::gfx::dxc
     {
         VG_SAFE_RELEASE(m_d3d12dxcCompiler);
         VG_SAFE_RELEASE(m_d3d12dxcLibrary);
-        VG_SAFE_RELEASE(m_d3d12dxcIncludeHandler);
+
+        try
+        {
+            VG_SAFE_RELEASE(m_d3d12dxcIncludeHandler);
+        }
+        catch (const std::exception & e)
+        {
+            VG_UNREFERENCED_VARIABLE(e);
+        }
     }
 
     //--------------------------------------------------------------------------------------

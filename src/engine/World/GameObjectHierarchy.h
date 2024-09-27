@@ -27,6 +27,9 @@ namespace vg::engine
 
         core::IWorld *                  GetWorld                () const final override;
 
+        void                            onResourceLoaded        (core::IResource * _resource) final override;
+        void                            onResourceUnloaded      (core::IResource * _resource) final override;
+
     public:
         void                            setRoot                 (core::GameObject * _sector);
         VG_INLINE core::GameObject *    getRoot                 () const { return m_root; }
