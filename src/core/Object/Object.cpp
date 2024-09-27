@@ -1,5 +1,6 @@
 #include "core/Precomp.h"
 #include "Object.h"
+#include "core/ISelection.h"
 #include "core/Kernel.h"
 #include "core/File/File.h"
 #include "core/Resource/Resource.h"
@@ -146,14 +147,20 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Object::OnLoad()
     {
-        SetObjectFlags(ObjectFlags::Selected, false); // Unselect object on load
+        auto selection = Kernel::getSelection();
+        if (selection->IsSelectedObject(this))
+            selection->Remove(this);    // Unselect object on load
+
+        SetObjectFlags(ObjectFlags::Selected, false); 
         RegisterUID();
     }
 
     //--------------------------------------------------------------------------------------
     void Object::OnSave()
     {
-        SetObjectFlags(ObjectFlags::Selected, false); // Unselect object on save
+        auto selection = Kernel::getSelection();
+        if (selection->IsSelectedObject(this))
+            selection->Remove(this);    // Unselect object on save
     }
 
     //--------------------------------------------------------------------------------------
