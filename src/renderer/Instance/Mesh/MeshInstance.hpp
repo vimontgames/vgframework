@@ -494,6 +494,12 @@ namespace vg::renderer
         if (meshModel == nullptr)
             return false;
 
+        const Skeleton * meshSkeleton = meshModel->getSkeleton();
+        VG_ASSERT(meshSkeleton);
+
+        if (!meshSkeleton)
+            return false;
+
         AnimationBinding * binding = nullptr;
         for (uint i = 0; i < m_animationBindings.size(); ++i)
         {
@@ -517,7 +523,6 @@ namespace vg::renderer
         const vector<AnimNodeData> & animNodes = binding->m_animation->getAnimationData().animNodes;
         binding->m_animToSkeletonIndex.reserve(animNodes.size());
 
-        const Skeleton * meshSkeleton = meshModel->getSkeleton();
         const vector<MeshImporterNode> & skeletonNodes = meshSkeleton->getNodes();
         
         for (uint i = 0; i < animNodes.size(); ++i)

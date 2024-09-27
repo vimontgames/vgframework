@@ -168,7 +168,8 @@ The external libraries are included with the sources for convenience.
 | Model						          | Author             | URL												
 | ----------------------------------- | ------------------ | ------------------------------------------------------------- 
 | 3D Foot Ball Free low-poly 3D       | prabath-weerapana  | https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball
-| Luigi						          | Anthony Yanez      | https://www.turbosquid.com/3d-models/luigi-super-model-1308288 
+| Baseball Bat Free low-poly 3D model | sepandjahrominejad | https://www.cgtrader.com/free-3d-models/military/melee/baseball-bat-5c0d0b8c-0ff9-40f8-b49d-779978a2801b
+| Luigi                               | Anthony Yanez      | https://www.turbosquid.com/3d-models/luigi-super-model-1308288 
 | Traffic Cone Free 3D model	      | hinndia            | https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c
 | Soccergoal                          | NorbertVarga       | https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894
 
