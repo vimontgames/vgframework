@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: "Win64 Vulkan Final"
+name: "Win64 Vulkan Final    "
 
 on:
   push:

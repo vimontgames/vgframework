@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: "ARM64EC DX12 Final"
+name: "ARM64EC DX12 Final    "
 
 on:
   push:
