@@ -84,8 +84,8 @@ namespace vg::editor
 
             LibraryDescription SDKs[] =
             {
-                { "Vulkan SDK",             "1.3.261.1",        "https://sdk.lunarg.com/sdk/download/1.3.261.1/windows/VulkanSDK-1.3.261.1-Installer.exe" },
                 { "Windows 10 SDK",         "10.0.17763.0",     "https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/" },
+                { "Vulkan SDK",             "1.3.290.0",        "https://vulkan.lunarg.com/sdk/home" },
             };
 
             drawLibraryDescriptionList("SDK", SDKs, (uint)countof(SDKs));

@@ -323,6 +323,16 @@ namespace vg::gfx
         }
 	}
 
+    #if VG_VULKAN
+    #define STRINGIFY(x) #x
+    #define EXPAND_AND_STRINGIFY(x) STRINGIFY(x)
+
+    #if VK_HEADER_VERSION < 290
+    #pragma message("Error: Current Vulkan SDK version " EXPAND_AND_STRINGIFY(VK_HEADER_VERSION) " is too old. Vulkan SDK version >=290 is required.")
+    #error Vulkan SDK version >= 290 is required
+    #endif
+    #endif
+
 	//--------------------------------------------------------------------------------------
 	void Device::init(const DeviceParams & _params)
 	{
@@ -333,8 +343,6 @@ namespace vg::gfx
         VG_PROFILE_INIT();
         m_textureImporter = new TextureImporter();
         m_bindlessTable->init();
-
-        VG_INFO("[Device] Init %s device in %0.2f ms", asString(_params.api).c_str(), Timer::getEnlapsedTime(startDeviceInit, Timer::getTick()));
 	}
 
 	//--------------------------------------------------------------------------------------

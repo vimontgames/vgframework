@@ -122,7 +122,7 @@ namespace vg::gfx::dx12
 
         uint major = (m_caps.d3d12.featureLevel & 0xF000) >> 12;
         uint minor = (m_caps.d3d12.featureLevel & 0x0F00) >> 8;
-        VG_INFO("[Device] DirectX %u.%u %s- %s - %s", major, minor, m_d3d12debug ? "debug " : "", asString(m_caps.shaderModel).c_str(), description);
+        VG_INFO("[Device] Init DX%u.%u %sdevice (SDK %u) - %s - %s", major, minor, m_d3d12debug ? "debug " : "", D3D12_SDK_VERSION, asString(m_caps.shaderModel).c_str(), description);
 
         m_memoryAllocator = new gfx::MemoryAllocator();
 

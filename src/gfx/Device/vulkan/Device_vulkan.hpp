@@ -232,21 +232,35 @@ namespace vg::gfx::vulkan
 		}
 
         bool ignore = false;
-        //static const char * ignoreList[] =
+        //static const char * ignoredMessageIds[] =
         //{
-        //    "VUID-vkCmdResetQueryPool-commandBuffer-recording",
-        //    "VUID-vkFreeDescriptorSets-pDescriptorSets-00309",
-        //    "UNASSIGNED-CoreValidation-DrawState-QueryNotReset",
-        //    "UNASSIGNED-CoreValidation-Shader-DescriptorTypeMismatch"
+        //    //"VUID-vkCmdResetQueryPool-commandBuffer-recording",
+        //    //"VUID-vkFreeDescriptorSets-pDescriptorSets-00309",
+        //    //"UNASSIGNED-CoreValidation-DrawState-QueryNotReset",
+        //    //"UNASSIGNED-CoreValidation-Shader-DescriptorTypeMismatch"
         //};
-        //for (uint i = 0; i < countof(ignoreList); ++i)
+        //for (uint i = 0; i < countof(ignoredMessageIds); ++i)
         //{
-        //    if (!strcmp(ignoreList[i], _data->pMessageIdName))
+        //    if (!strcmp(_data->pMessageIdName, ignoredMessageIds[i]))
         //    {
         //        ignore = true;
         //        break;
         //    }
         //}
+
+		static const char * ignoredMessages[] =
+		{
+			// This is a known issue on AMD 7800XT and not yet solved in SDK 1.3.290.0 (https://github.com/GPUOpen-Drivers/AMD-Gfx-Drivers/issues/11)
+			"MessageID = 0x22b1fbac | vkGetDeviceProcAddr(): pName is trying to grab vkGetPhysicalDeviceCalibrateableTimeDomainsKHR which is an instance level function" 
+		};
+        for (uint i = 0; i < countof(ignoredMessages); ++i)
+        {
+            if (strstr(_data->pMessage, ignoredMessages[i]))
+            {
+                ignore = true;
+                break;
+            }
+        }
 
 		// Hack to ignore false positive in this very specific case
 		// Generated SPIR-V code is a ByteAddressBuffer but validation layers says shader is expecting a texel buffer
@@ -567,7 +581,18 @@ namespace vg::gfx::vulkan
 			// SM 6_6 : VK_NV_compute_shader_derivatives, VK_KHR_shader_atomic_int64
 		}
 		
-        VG_INFO("[Device] Vulkan %s- %s - %s", validationLayer ? "debug " : "", asString(m_caps.shaderModel).c_str(), m_vkPhysicalDeviceProperties.deviceName);
+        // Check if the function is available (it's only available in Vulkan 1.1 and above)
+        u32 instanceVersion = 1;
+        if (vkEnumerateInstanceVersion != nullptr)
+            vkEnumerateInstanceVersion(&instanceVersion);
+
+        // You can also use the VK_API_VERSION_1_0 or VK_API_VERSION_1_1 macros if you need to
+        u32 major = VK_VERSION_MAJOR(instanceVersion);
+        u32 minor = VK_VERSION_MINOR(instanceVersion);
+        u32 patch = VK_VERSION_PATCH(instanceVersion);
+        u32 header = VK_HEADER_VERSION;
+
+        VG_INFO("[Device] Init Vulkan %sdevice (SDK %u.%u.%u) - %s - %s", validationLayer ? "debug " : "", major, minor, header, asString(m_caps.shaderModel).c_str(), m_vkPhysicalDeviceProperties.deviceName);
 
 		VkWin32SurfaceCreateInfoKHR createInfo;
 									createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
@@ -1181,35 +1206,35 @@ namespace vg::gfx::vulkan
 																			destination.name = value;																\
 																		}
 
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorIndexing, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingPartiallyBound, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderSampledImageArrayNonUniformIndexing, true);
-		//CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderInputAttachmentArrayDynamicIndexing, true);
-		//CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderInputAttachmentArrayNonUniformIndexing, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderUniformTexelBufferArrayDynamicIndexing, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, runtimeDescriptorArray, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderStorageImageArrayNonUniformIndexing, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUpdateUnusedWhilePending, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUniformBufferUpdateAfterBind, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingSampledImageUpdateAfterBind, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageImageUpdateAfterBind, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageBufferUpdateAfterBind, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUniformTexelBufferUpdateAfterBind, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageTexelBufferUpdateAfterBind, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, bufferDeviceAddress, true);
-		CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, hostQueryReset, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorIndexing, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingPartiallyBound, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderSampledImageArrayNonUniformIndexing, true);
+        //CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderInputAttachmentArrayDynamicIndexing, true);
+        //CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderInputAttachmentArrayNonUniformIndexing, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderUniformTexelBufferArrayDynamicIndexing, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, runtimeDescriptorArray, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, shaderStorageImageArrayNonUniformIndexing, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUpdateUnusedWhilePending, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUniformBufferUpdateAfterBind, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingSampledImageUpdateAfterBind, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageImageUpdateAfterBind, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageBufferUpdateAfterBind, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingUniformTexelBufferUpdateAfterBind, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, descriptorBindingStorageTexelBufferUpdateAfterBind, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, bufferDeviceAddress, true);
+        CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, hostQueryReset, true);
 
-		if (m_caps.rayTracing)
-		{
-			CheckVulkanFeature(accelerationStructureSupportedFeatures, accelerationStructureFeatures, accelerationStructure, true);
-			CheckVulkanFeature(accelerationStructureSupportedFeatures, accelerationStructureFeatures, descriptorBindingAccelerationStructureUpdateAfterBind, true);
-			CheckVulkanFeature(rayQuerySupportedFeatures, rayQueryFeatures, rayQuery, true);
-		}
+        if (m_caps.rayTracing)
+        {
+            CheckVulkanFeature(accelerationStructureSupportedFeatures, accelerationStructureFeatures, accelerationStructure, true);
+            CheckVulkanFeature(accelerationStructureSupportedFeatures, accelerationStructureFeatures, descriptorBindingAccelerationStructureUpdateAfterBind, true);
+            CheckVulkanFeature(rayQuerySupportedFeatures, rayQueryFeatures, rayQuery, true);
+        }
 
         VkPhysicalDeviceFeatures enabledFeatures = {};
-		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fillModeNonSolid, true);
-		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fragmentStoresAndAtomics, true);
-		//CheckVulkanFeature(supportedFeatures.features, enabledFeatures, textureCompressionETC2, true);
+        CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fillModeNonSolid, true);
+        CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fragmentStoresAndAtomics, true);
+        //CheckVulkanFeature(supportedFeatures.features, enabledFeatures, textureCompressionETC2, true);
 
 		VkDeviceCreateInfo deviceCreateInfo; 
 						   deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;

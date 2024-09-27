@@ -168,7 +168,11 @@ float2 GetUV0(float2 _uv0, float2 _uv1, float3 _worldPos, GPUMaterialData _mater
 }
 
 //--------------------------------------------------------------------------------------
+#if _ZONLY
+void PS_Forward(VS_Output _input)
+#else
 PS_Output PS_Forward(VS_Output _input)
+#endif
 {
     PS_Output output = (PS_Output)0;
 
@@ -232,16 +236,16 @@ PS_Output PS_Forward(VS_Output _input)
     #if _ALPHATEST
     clip(output.color0.a-0.5f); 
     #endif
-
-    #if _ZONLY
-    output.color0 = (float4)0.0f;
-    #endif
     
     #if !_ALPHABLEND
     output.color0.a = 1.0f;           
     #endif 
 
+    #if _ZONLY
+    return;
+    #else
     return output;
+    #endif
 }
 
 //--------------------------------------------------------------------------------------
@@ -291,7 +295,11 @@ struct PS_OutputDeferred
 };
 
 //--------------------------------------------------------------------------------------
+#if _ZONLY
+void PS_Deferred(VS_Output _input)
+#else
 PS_OutputDeferred PS_Deferred(VS_Output _input)
+#endif
 {
     PS_OutputDeferred output = (PS_OutputDeferred)0;
 
@@ -347,8 +355,8 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     #endif
 
     #if _ZONLY
-    output = (PS_OutputDeferred)0;
-    #endif
-    
+    return;
+    #else    
     return output;
+    #endif
 }

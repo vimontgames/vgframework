@@ -2,6 +2,7 @@
 
 ## 0.33
 Update hlslpp from 3.4 to 3.5.2\
+Update Vulkan SDK to 1.3.290.0\
 Undo/Redo 
 
 

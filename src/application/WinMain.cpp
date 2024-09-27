@@ -236,7 +236,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     #ifdef VG_DEBUG
     engineParams.renderer.device.debugDevice = false;
-    engineParams.renderer.device.breakOnWarnings = false;
+    engineParams.renderer.device.breakOnWarnings = true;
 	engineParams.renderer.device.breakOnErrors = true;
     #endif
 
