@@ -276,11 +276,14 @@ namespace vg::editor
             }
 
             #if VG_ENABLE_UNDO_REDO
-            if (EditingState::EndEdit == _editingState)
+            if (!_propContext.m_readOnly)
             {
-                // Finalize Undo/Redo entry after editing
-                VG_ASSERT(undoRedoManager->HasCurrentlyEditedEntry());
-                undoRedoManager->AfterChange();
+                if (EditingState::EndEdit == _editingState)
+                {
+                    // Finalize Undo/Redo entry after editing
+                    VG_ASSERT(undoRedoManager->HasCurrentlyEditedEntry());
+                    undoRedoManager->AfterChange();
+                }
             }
             #endif
 
@@ -401,10 +404,16 @@ namespace vg::editor
         bool edited = false;
 
         const auto dragSpeed = scalarTraits<S>::is_integer ? ImGuiWindow::getDragSpeedInt(_prop) : ImGuiWindow::getDragSpeedFloat(_prop);
-        const auto editFormat = scalarTraits<S>::is_integer ? (scalarTraits<S>::is_signed ? g_editIntFormat : g_editUIntFormat ) : g_editFloatFormat;
         const auto flags = _prop->GetFlags();
 
+        auto editFormat = scalarTraits<S>::is_integer ? (scalarTraits<S>::is_signed ? g_editIntFormat : g_editUIntFormat) : g_editFloatFormat;
+        if (asBool(PropertyFlags::Hexadecimal & flags))
+            editFormat = "0x%0X";
+
         VG_ASSERT(!asBool(PropertyFlags::Color & flags) || (count == 3 || count == 4));
+
+        if (_propContext.m_readOnly)
+            ImGui::BeginDisabled(true);
 
         if (asBool(PropertyFlags::Color & flags) && (count == 3 || count == 4))
         {
@@ -432,9 +441,15 @@ namespace vg::editor
                 edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, nullptr, nullptr, editFormat);
         }
 
+        if (_propContext.m_readOnly)
+            edited = false;
+
         EditingState editingState = undoRedoBeforeEdit<T>(edited, _propContext, _object, _prop, (S*)&temp[0], _ptr, InteractionType::Continuous);
 
         ImGuiWindow::drawPropertyLabel(_propContext, _prop);
+
+        if (_propContext.m_readOnly)
+            ImGui::EndDisabled();
 
         if (edited)
         {
