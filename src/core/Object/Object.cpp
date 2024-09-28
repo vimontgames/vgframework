@@ -22,10 +22,10 @@ namespace vg::core
         registerPropertyEx(Object, m_name, "Name", PropertyFlags::NotVisible);
         setPropertyDescription(Object, m_name, "User-friendly name");
 
-        registerPropertyEx(Object, m_uid, "UID", PropertyFlags::Debug | PropertyFlags::Hexadecimal);
+        registerPropertyEx(Object, m_uid, "UID", PropertyFlags::Debug | PropertyFlags::Hexadecimal | PropertyFlags::ReadOnly);
         setPropertyDescription(Object, m_uid, "Unique ID");
 
-        registerPropertyEx(Object, m_originalUID, "UID (Source)", PropertyFlags::Debug | PropertyFlags::Hexadecimal);
+        registerPropertyEx(Object, m_originalUID, "UID (Source)", PropertyFlags::Debug | PropertyFlags::Hexadecimal | PropertyFlags::ReadOnly);
         setPropertyDescription(Object, m_originalUID, "Source object's unique ID");
 
         registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectFlags, "Flags", PropertyFlags::Debug);
@@ -136,6 +136,50 @@ namespace vg::core
     void Object::SetObjectFlags(ObjectFlags _flags, bool _enabled)
     {
         setObjectFlags(_flags, _enabled);
+    }
+
+    //--------------------------------------------------------------------------------------
+    const IObject * findByOriginalUID(const Object * _object, UID _originalUID)
+    {
+        if (_object->GetOriginalUID(false) == _originalUID)
+            return _object;
+
+        if (const auto * classDesc = _object->GetClassDesc())
+        {
+            const auto propCount = classDesc->GetPropertyCount();
+            for (uint i = 0; i < propCount; ++i)
+            {
+                const auto * prop = classDesc->GetPropertyByIndex(i);
+                switch (prop->GetType())
+                {
+                    default:
+                        break;
+
+                    //TODO: other 'Object' types
+
+                    case PropertyType::ObjectPtrVector:
+                    {
+                        if (const auto * objVec = prop->GetPropertyObjectPtrVector(_object))
+                        {
+                            for (const auto * obj : *objVec)
+                            {
+                                if (auto * found = findByOriginalUID((Object*)obj, _originalUID))
+                                    return found;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const IObject * Object::FindByOriginalUID(UID _originalUID) const
+    {
+        return findByOriginalUID(this, _originalUID);
     }
 
     //--------------------------------------------------------------------------------------

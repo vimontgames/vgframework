@@ -61,6 +61,8 @@ namespace vg::core
 		ObjectFlags                 GetObjectFlags		() const final override;
 		void                        SetObjectFlags		(ObjectFlags _flags, bool _enabled) final override;
 
+		const IObject *				FindByOriginalUID	(UID _originalUID) const final override;
+
 		IObject *					Instanciate			() const override;
 
 		void                        OnLoad				() override;

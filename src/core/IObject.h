@@ -46,6 +46,8 @@ namespace vg::core
         virtual ObjectFlags                 GetObjectFlags      () const = 0;
         virtual void                        SetObjectFlags      (ObjectFlags _flags, bool _enabled) = 0;
 
+        virtual const IObject *             FindByOriginalUID   (UID _originalUID) const = 0;
+
         virtual IObject *                   Instanciate         () const = 0;
 
         virtual void                        OnLoad              () = 0;

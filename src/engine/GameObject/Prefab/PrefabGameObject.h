@@ -54,6 +54,8 @@ namespace vg::engine
         bool                                                canOverrideProperty         (const core::IObject * _object, const core::IProperty * _prop) const;
         core::DynamicProperty *                             createDynamicProperty       (const core::IObject * _object, const core::IProperty * _prop);
 
+        void                                                patchPrefabGameObjectUIDs   (const core::IObject * _root, core::IObject * _object);
+
     private:
         PrefabResource                                      m_prefabResource;
         core::vector<core::DynamicPropertyList *>           m_dynamicProperties;

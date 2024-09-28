@@ -491,6 +491,11 @@ namespace vg::engine
                     instance->SetObjectFlags(ObjectFlags::NotSerialized, true);
                     instance->SetParent(this);
 
+                    // If an object in a Prefab references another object from the same Prefab using UID, 
+                    // then it must be "patched" so that it becomes an UID in the instanced Prefab too.
+                    patchPrefabGameObjectUIDs(instance, instance);
+
+                    // Unless it's explicitely overriden in the Prefab instance of course.
                     OverrideGameObjectProperties((GameObject*)instance, nullptr);
 
                     AddChild(instance);
@@ -498,6 +503,60 @@ namespace vg::engine
                 }
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PrefabGameObject::patchPrefabGameObjectUIDs(const IObject * _root, IObject * _object)
+    {
+        if (nullptr == _object)
+            return;
+
+        if (const auto * classDesc = _object->GetClassDesc())
+        {
+            const auto propCount = classDesc->GetPropertyCount();
+            for (uint i = 0; i < propCount; ++i)
+            {
+                const auto * prop = classDesc->GetPropertyByIndex(i);
+                switch (prop->GetType())
+                {
+                    default:
+                        break;
+
+                    case PropertyType::ObjectHandle:
+                    {
+                        if (ObjectHandle * handle = prop->GetPropertyObjectHandle(_object))
+                        {
+                            if (0x0 != handle->getUID())
+                            {
+                                const IObject * newTarget = _root->FindByOriginalUID(handle->getUID());
+                                if (newTarget)
+                                {
+                                    VG_INFO("[Prefab] Patched ObjectHandle UID 0x%08X from Property \"%s\" in Object \"%s\" of class %s to UID 0x%08X", handle->getUID(), prop->GetName(), _object->GetName().c_str(), classDesc->GetClassName(), newTarget->GetUID());
+                                    handle->setUID(newTarget->GetUID());
+                                }
+                                else
+                                {
+                                    VG_WARNING("[Prefab] Could not to patch ObjectHandle UID 0x%08X from Property \"%s\" in Object \"%s\" of class %s", handle->getUID(), prop->GetName(), _object->GetName().c_str(), classDesc->GetClassName());
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+                    case PropertyType::ObjectPtrVector:
+                    {
+                        if (auto * objVec = prop->GetPropertyObjectPtrVector(_object))
+                        {
+                            for (auto * obj : *objVec)
+                                patchPrefabGameObjectUIDs(_root, obj);
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        
     }
 
     //--------------------------------------------------------------------------------------
