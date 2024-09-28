@@ -17,7 +17,11 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerProperty(AttachToNodeComponent, m_NodeName, "Node");
+        registerOptionalProperty(AttachToNodeComponent, m_useTarget, m_target, "Target");
+        setPropertyDescription(AttachToNodeComponent, m_target, "Use to specify another GameObject to look for skeleton. Otherwise the first skeleton found in parents will be used.");
+
+        registerProperty(AttachToNodeComponent, m_boneName, "Bone");
+        setPropertyDescription(AttachToNodeComponent, m_boneName, "The bone to follow. Bone names can be found under \"MeshComponent>Skeleton>Nodes\".");
 
         return true;
     }
@@ -80,7 +84,7 @@ namespace vg::engine
     {
         super::SetPropertyValue(_prop, _previousValue, _newValue);
 
-        if (&m_NodeName == _previousValue)
+        if (&m_boneName == _previousValue)
             updateCache();
     }
 
@@ -89,20 +93,43 @@ namespace vg::engine
     {
         clearCache();
 
-        if (const GameObject * go = getGameObject())
+        const GameObject * gameObject = nullptr;
+        const renderer::ISkeleton * skeleton = nullptr;
+
+        if (m_useTarget)
         {
-            if (const MeshComponent * mc = go->GetComponentInParentsT<MeshComponent>())
+            if (const GameObject * go = m_target.get<GameObject>())
             {
-                if (const renderer::IMeshInstance * mi = mc->getMeshInstance())
+                if (const MeshComponent * mc = go->GetComponentT<MeshComponent>())
                 {
-                    if (const renderer::ISkeleton * sk = mi->GetSkeleton())
+                    if (const renderer::IMeshInstance * mi = mc->getMeshInstance())
                     {
-                        m_skeleton = sk;
-                        m_nodeIndex = sk->FindNodeIndex(m_NodeName);
-                        return true;
+                        if (const renderer::ISkeleton * sk = mi->GetSkeleton())
+                            skeleton = sk;
                     }
                 }
             }
+        }
+        else
+        {
+            if (const GameObject * go = getGameObject())
+            {
+                if (const MeshComponent * mc = go->GetComponentInParentsT<MeshComponent>())
+                {
+                    if (const renderer::IMeshInstance * mi = mc->getMeshInstance())
+                    {
+                        if (const renderer::ISkeleton * sk = mi->GetSkeleton())
+                            skeleton = sk;
+                    }
+                }
+            }
+        }
+
+        if (nullptr != skeleton)
+        {
+            m_skeleton = skeleton;
+            m_nodeIndex = skeleton->FindNodeIndex(m_boneName);
+            return true;
         }
 
         return false;

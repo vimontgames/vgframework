@@ -19,7 +19,7 @@
                         <Property type="String" name="m_name" value="GJ"/>
                         <Property type="Uint32" name="m_uid" flags="" value="3525072167"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened|Selected"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -143,7 +143,7 @@
                                 <Property type="Object" name="m_sounds">
                                     <Object class="SoundResourceList">
                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="127572953"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                         <Property type="ResourceVector" name="m_resources" flags="Resource"/>
@@ -191,7 +191,7 @@
                                 <Property type="String" name="m_name" value="GJ_RightHand"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="2507986118"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Selected"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="-0.9999823" Iy="-0.0040099621" Iz="-0.0044074561" Iw="0" Jx="0.0039848005" Jy="0.099920698" Jz="-0.99498779" Jw="0" Kx="0.0044302288" Ky="-0.99498785" Kz="-0.099902965" Kw="0" Tx="-0.95762956" Ty="-0.012848332" Tz="1.2753206" Tw="1"/>
@@ -245,7 +245,9 @@
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                        <Property type="String" name="m_NodeName" value="Jg_ R Finger21"/>
+                                        <Property type="Bool" name="m_useTarget" flags="NotVisible" value="true"/>
+                                        <Property type="ObjectHandle" name="m_target" flags="Optional" value="3525072167"/>
+                                        <Property type="String" name="m_boneName" value="Jg_ R Finger21"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -254,7 +256,7 @@
                                 <Property type="String" name="m_name" value="GJ_LeftHand"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="1563062627"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="2507986118"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Selected"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.99998224" Iy="-0.0040074023" Iz="-0.0044101356" Iw="0" Jx="-0.0039877649" Jy="0.099920601" Jz="-0.99498773" Jw="0" Kx="0.0044280384" Ky="0.99498743" Kz="0.099902824" Kw="0" Tx="0.95761532" Ty="-0.012845897" Tz="1.2753178" Tw="1"/>
@@ -308,7 +310,9 @@
                                         <Property type="Uint32" name="m_originalUID" flags="" value="3645143640"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                        <Property type="String" name="m_NodeName" value="Jg_ L Finger21"/>
+                                        <Property type="Bool" name="m_useTarget" flags="NotVisible" value="true"/>
+                                        <Property type="ObjectHandle" name="m_target" flags="Optional" value="3525072167"/>
+                                        <Property type="String" name="m_boneName" value="Jg_ L Finger21"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Component/Component.h"
+#include "core/Object/ObjectHandle.h"
 
 namespace vg::renderer
 {
@@ -30,7 +31,9 @@ namespace vg::engine
         void                            clearCache          ();
 
     private:
-        core::string                    m_NodeName;
+        bool                            m_useTarget = false;
+        core::ObjectHandle              m_target;
+        core::string                    m_boneName;
         const renderer::ISkeleton *     m_skeleton;
         renderer::NodeIndex             m_nodeIndex;
     };
