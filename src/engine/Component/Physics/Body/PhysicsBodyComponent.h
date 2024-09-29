@@ -29,6 +29,7 @@ namespace vg::engine
         void                                    OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
         bool                                    TryGetAABB          (core::AABB & _aabb) const final override;
 
+        void                                    SetMatrix           (const core::float4x4 & _matrix) final override;
         void                                    AddImpulse          (const core::float3 & _impulse) final override;
 
         void                                    onShapeUpdated      ();

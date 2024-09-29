@@ -62,13 +62,13 @@ namespace vg::engine
             if (nullptr == m_bodyDesc)
                 return;
 
-            if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused())   // TODO: use context?
+            if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused())   
             {
                 if (m_body)
                 {
                     if (m_bodyDesc->IsTrigger())
                     {
-                        m_body->SetMatrix(_context.m_gameObject->getGlobalMatrix());
+                        SetMatrix(_context.m_gameObject->getGlobalMatrix());
                     }
                     else
                     {
@@ -342,5 +342,11 @@ namespace vg::engine
     {
         if (m_body)
             m_body->AddImpulse(_impulse);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PhysicsBodyComponent::SetMatrix(const core::float4x4 & _matrix)
+    {
+        m_body->SetMatrix(_matrix);
     }
 }
