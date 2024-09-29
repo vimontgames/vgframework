@@ -27,7 +27,7 @@
                         <Property type="Uint32" name="m_uid" flags="" value="807269994"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/Soccer/rugbytexture.png"/>
+                        <Property type="String" name="m_resourcePath" flags="NotVisible" value=""/>
                     </Object>
                 </Property>
                 <Property type="Float4" name="m_albedoColor" flags="Color" x="0.49372387" y="0.11568425" z="0.11568425" w="1"/>
