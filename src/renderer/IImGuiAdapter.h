@@ -45,8 +45,8 @@ namespace vg
             virtual void            PushFont                (vg::renderer::Font _font, vg::renderer::FontStyle _style) = 0;
             virtual void            PopFont                 () = 0;
 
-            virtual void            PushStyle               (vg::renderer::FontStyle _style) = 0;
-            virtual void            PopStyle                () = 0;
+            virtual void            PushFontStyle           (vg::renderer::FontStyle _style) = 0;
+            virtual void            PopFontStyle            () = 0;
         };
     }
 }

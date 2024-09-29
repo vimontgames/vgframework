@@ -15,7 +15,7 @@ namespace vg::core
     class UndoRedoPropertyEntry final : public UndoRedoEntry
     {
     public:
-        UndoRedoPropertyEntry(IObject * _object, const IProperty * _prop, IObject * _originalObject, IGameObject * _prefab, IDynamicProperty * _propOverride);
+        UndoRedoPropertyEntry(IObject * _object, const IProperty * _prop, IObject * _originalObject = nullptr, IGameObject * _prefab = nullptr, IDynamicProperty * _propOverride = nullptr);
 
         void BeforeChange() final override;
         void AfterChange() final override;
@@ -23,7 +23,8 @@ namespace vg::core
         void Undo() final override;
         void Redo() final override;
 
-        string GetName() const final override;
+        string GetEntryName() const final override;
+        string GetObjectName() const final override;
         string GetDescription() const final override;
 
     private:

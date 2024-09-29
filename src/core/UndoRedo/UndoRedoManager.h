@@ -2,6 +2,7 @@
 
 #include "core/IUndoRedo.h"
 #include "UndoRedoEntry.h"
+#include "UndoRedoEntryGroup.h"
 
 namespace vg::core
 {

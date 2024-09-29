@@ -10,59 +10,88 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    void displayElem(IUndoRedoEntry * elem)
+    {
+        ImGui::TableNextRow();
+        ImGui::TableSetColumnIndex(0);
+
+        auto * subs = elem->GetSubEntries();
+
+        if (subs)
+        {
+            const string nodeName = fmt::sprintf("%s###0x%016X", elem->GetEntryName(), (u64)elem);
+            bool open = ImGui::TreeNodeEx(nodeName.c_str(), ImGuiTreeNodeFlags_SpanAllColumns);           
+
+            ImGui::TableNextColumn();
+            Text("%s", elem->GetObjectName().c_str());
+
+            ImGui::TableNextColumn();
+            Text("%s", elem->GetDescription().c_str());
+
+            if (open)
+            {
+                for (auto * sub : *subs)
+                {
+                    displayElem(sub);
+                }
+                ImGui::TreePop();
+            }
+        }
+        else
+        {
+            Text("%s", elem->GetEntryName().c_str());
+
+            ImGui::TableNextColumn();
+            Text("%s", elem->GetObjectName().c_str());
+
+            ImGui::TableNextColumn();
+            Text("%s", elem->GetDescription().c_str());
+        }
+    };
+
+    //--------------------------------------------------------------------------------------
     void ImGuiUndoRedo::DrawGUI()
     {
         if (ImGui::IconBegin(getIcon().c_str(), "Undo/Redo", &m_isVisible))
         {
             const auto * undoRedoManager = Kernel::getUndoRedoManager();
             auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
-            static const float columnWidth[] = { 128, 196 };
 
             ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
             {
                 const auto & undoStack = undoRedoManager->GetUndoStack();
                 const auto & redoStack = undoRedoManager->GetRedoStack();
 
-                ImGui::Columns(2, "Undo/Redo", true);                
-                SetColumnWidth(0, columnWidth[0]);
-                SetColumnWidth(1, columnWidth[1]);
-
                 imGuiAdapter->PushDefaultFont();
-                imGuiAdapter->PushStyle(renderer::FontStyle::Bold);
 
-                for (auto & elem : undoStack)
-                    Text("%s", elem->GetName().c_str());
+                const ImGuiTableFlags flags = ImGuiTableFlags_RowBg | ImGuiTableFlags_Resizable;
 
-                NextColumn();
-
-                for (auto & elem : undoStack)
-                    Text("%s", elem->GetDescription().c_str());
-
-                imGuiAdapter->PopStyle();
-
-                ImGui::Columns(1);    
-                //ImGui::Separator();
-
-                ImGui::Columns(2, "Undo/Redo", true);
-                SetColumnWidth(0, columnWidth[0]);
-                SetColumnWidth(1, columnWidth[1]);
-
-                // Redo stack is displayed in reverse order
-                for (auto i = (int)redoStack.size() - 1; i >= 0; --i)
+                if (ImGui::BeginTable("3ways", 3, flags))
                 {
-                    auto & elem = redoStack[i];
-                    Text("%s", elem->GetName().c_str());
-                }
-                NextColumn();
+                    // The first column will use the default _WidthStretch when ScrollX is Off and _WidthFixed when ScrollX is On
+                    ImGui::TableSetupColumn("Entry", ImGuiTableColumnFlags_WidthFixed, 96.0f);
+                    ImGui::TableSetupColumn("Object", ImGuiTableColumnFlags_WidthFixed, 96.0f);
+                    ImGui::TableSetupColumn("Details");
+                    ImGui::TableHeadersRow();
 
-                // Redo stack is displayed in reverse order
-                for (auto i = (int)redoStack.size() - 1; i >= 0; --i)
-                {
-                    auto & elem = redoStack[i];
-                    Text("%s", elem->GetDescription().c_str());
-                }
+                    for (auto & elem : undoStack)
+                    {
+                        //ImGui::TableNextRow();
+                        displayElem(elem);
+                    }
 
-                ImGui::Columns(1);
+                    // Redo stack is displayed in reverse order
+                    ImGui::BeginDisabled(true);
+                    for (auto i = (int)redoStack.size() - 1; i >= 0; --i)
+                    {
+                        //ImGui::TableNextRow();
+                        auto & elem = redoStack[i];
+                        displayElem(elem);
+                    }
+                    ImGui::EndDisabled();
+
+                    ImGui::EndTable();
+                }
                 imGuiAdapter->PopFont();
             }
             ImGui::EndChild();

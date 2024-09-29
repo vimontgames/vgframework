@@ -446,13 +446,13 @@ namespace ImGui
     void PushStyle(FontStyle _style)
     {
         auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
-        imGuiAdapter->PushStyle(_style);
+        imGuiAdapter->PushFontStyle(_style);
     }
 
     //--------------------------------------------------------------------------------------
     void PopStyle()
     {
         auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
-        imGuiAdapter->PopStyle();
+        imGuiAdapter->PopFontStyle();
     }
 }

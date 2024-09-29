@@ -159,6 +159,8 @@
     <ClInclude Include="UndoRedo\UndoRedo.h" />
     <ClInclude Include="UndoRedo\UndoRedoEntry.h" />
     <ClInclude Include="UndoRedo\UndoRedoEntry.hpp" />
+    <ClInclude Include="UndoRedo\UndoRedoEntryGroup.h" />
+    <ClInclude Include="UndoRedo\UndoRedoEntryGroup.hpp" />
     <ClInclude Include="UndoRedo\UndoRedoManager.h" />
     <ClInclude Include="UndoRedo\UndoRedoManager.hpp" />
     <ClInclude Include="UndoRedo\UndoRedo_consts.h" />

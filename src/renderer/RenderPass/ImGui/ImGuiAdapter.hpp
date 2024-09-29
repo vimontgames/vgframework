@@ -640,14 +640,14 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::PushStyle(vg::renderer::FontStyle _style)
+    void ImGuiAdapter::PushFontStyle(vg::renderer::FontStyle _style)
     {
         ImGui::PushFont(GetFont(m_currentFont, _style));
         m_currentFontStyle = _style;
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::PopStyle()
+    void ImGuiAdapter::PopFontStyle()
     {
         ImGui::PopFont();
     }

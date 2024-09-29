@@ -54,8 +54,8 @@ namespace vg
             void                PushFont                    (vg::renderer::Font _font, vg::renderer::FontStyle _style) final override;
             void                PopFont                     () final override;
 
-            void                PushStyle                   (vg::renderer::FontStyle _style) final override;
-            void                PopStyle                    () final override;
+            void                PushFontStyle                   (vg::renderer::FontStyle _style) final override;
+            void                PopFontStyle                    () final override;
 
         protected:
             ImTextureID         getTextureID                (const gfx::Texture * _texture);

@@ -769,6 +769,8 @@ namespace vg::editor
                 float4x4 matrix = selectionMatrix;
                 float4x4 delta = float4x4::identity();
 
+                auto * undoRedoManager = Kernel::getUndoRedoManager();
+
                 ImGuizmo::SetID((int)_view->GetViewID().id);
                 if (ImGuizmo::Manipulate(viewMatrix, projMatrix, imGuizmoOperation, imGuizmoSpace, (float *)&matrix, (float *)&delta, snap))
                 {
@@ -778,6 +780,21 @@ namespace vg::editor
                     {
                         m_manipulating = true;
                         VG_INFO("[Editor] Start manipulating Gizmo");
+
+                        UndoRedoTarget undoRedoTarget(this, nullptr);
+                        VG_ASSERT(false == undoRedoManager->HasCurrentlyEditedEntry());
+                        auto * undoRedoGroup = new UndoRedoEntryGroup(asString(gizmoOptions.m_type));
+                        for (uint i = 0; i < selectedObjectsWithoutParents.size(); ++i)
+                        {
+                            auto * obj = selectedObjectsWithoutParents[i];
+                            auto * prop = obj->GetClassDesc()->GetPropertyByName("m_local");
+                            undoRedoGroup->AddSubEntry(new UndoRedoPropertyEntry(obj, prop));
+                        }
+
+                        undoRedoManager->BeforeChange(undoRedoGroup);
+
+                        //undoRedoManager->BeforeChange(new UndoRedoPropertyEntry(selectedObjectsWithoutParents[0], selectedObjectsWithoutParents[0]->GetClassDesc()->GetPropertyByName("m_transform")));
+                        undoRedoManager->SetCurrentUndoRedoTarget(undoRedoTarget);                       
 
                         if (Kernel::getInput()->IsKeyPressed(Key::LeftShift))
                         {
@@ -790,6 +807,8 @@ namespace vg::editor
                             skip = true;
                         }
                     }
+
+                    //undoRedoManager->
 
                     // apply delta to selected objects without parents
                     if (!skip)
@@ -810,6 +829,11 @@ namespace vg::editor
                 {
                     VG_INFO("[Editor] Stop manipulating Gizmo");
                     m_manipulating = false;
+
+                    // Finalize Undo/Redo entry after editing
+                    undoRedoManager->ClearCurrentUndoRedoTarget();
+                    VG_ASSERT(undoRedoManager->HasCurrentlyEditedEntry());
+                    undoRedoManager->AfterChange();
                 }
             }
             ImGui::PopClipRect();

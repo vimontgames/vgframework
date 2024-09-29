@@ -10,7 +10,10 @@ namespace vg::core
     UndoRedoPropertyEntry::UndoRedoPropertyEntry(IObject * _object, const IProperty * _prop, IObject * _originalObject, IGameObject * _prefab, IDynamicProperty * _propOverride)
     {
         m_object = _object;
+        VG_ASSERT(m_object);
+
         m_prop = (IProperty *)_prop;
+        VG_ASSERT(m_prop);
 
         m_originalObject = _originalObject;
         m_prefab = _prefab;
@@ -32,9 +35,15 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    string UndoRedoPropertyEntry::GetName() const
+    string UndoRedoPropertyEntry::GetEntryName() const
     {
         return "Property";
+    }
+
+    //--------------------------------------------------------------------------------------
+    string UndoRedoPropertyEntry::GetObjectName() const
+    {
+        return m_object->GetName();
     }
 
     //--------------------------------------------------------------------------------------
@@ -47,7 +56,7 @@ namespace vg::core
     void UndoRedoPropertyEntry::Undo()
     {
         // Restore the original value serialized in memory before change
-        VG_INFO("[Undo/Redo] Undo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop->GetName(), m_prop, m_originalObject->GetName().c_str(), m_object);
+        VG_INFO("[Undo/Redo] Undo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop->GetName(), m_prop, m_originalObject? m_originalObject->GetName().c_str() : m_object->GetName().c_str(), m_object);
 
         m_original.resetRead();
         Factory * factory = (Factory *)Kernel::getFactory();
@@ -69,7 +78,7 @@ namespace vg::core
     void UndoRedoPropertyEntry::Redo()
     {
         // Restore the modified value serialized in memory before change
-        VG_INFO("[Undo/Redo] Redo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop->GetName(), m_prop, m_originalObject->GetName().c_str(), m_object);
+        VG_INFO("[Undo/Redo] Redo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop->GetName(), m_prop, m_originalObject ? m_originalObject->GetName().c_str() : m_object->GetName().c_str(), m_object);
 
         m_modified.resetRead();
         Factory * factory = (Factory *)Kernel::getFactory();

@@ -19,8 +19,12 @@ namespace vg::core
         virtual void Undo() = 0;
         virtual void Redo() = 0;
 
-        virtual string GetName() const = 0;
+        virtual string GetEntryName() const = 0;
+        virtual string GetObjectName() const = 0;
         virtual string GetDescription() const = 0;
+
+        virtual void AddSubEntry(IUndoRedoEntry * _subEntry) = 0;
+        virtual const vector<IUndoRedoEntry *> * GetSubEntries() const = 0;
     };
 
     struct UndoRedoTarget
@@ -46,7 +50,7 @@ namespace vg::core
 
         bool isEmpty() const
         {
-            return nullptr == m_object && nullptr == m_prop;
+            return nullptr == m_object;// && nullptr == m_prop; 
         }
 
         void clear()
