@@ -1,52 +1,52 @@
 <Root>
     <Object class="MaterialResourceData">
-        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3882493845"/>
-        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+        <Property type="Uint32" name="m_uid" flags="" value="2795286163"/>
+        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
         <Property type="Object" name="m_materialModelType">
             <Object class="MaterialModelType">
-                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3647762806"/>
-                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                <Property type="Uint32" name="m_uid" flags="" value="3257878880"/>
+                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                 <Property type="String" name="m_shader" value="Default"/>
             </Object>
         </Property>
         <Property type="ObjectPtr" name="m_data" flags="Flatten">
             <Object class="DefaultMaterialData">
-                <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="429012722"/>
-                <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-                <Property type="String" name="m_name" flags="NotVisible" value="Default"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                <Property type="Uint32" name="m_uid" flags="" value="2408447147"/>
+                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                 <Property type="EnumU8" name="m_surfaceType" value="Opaque"/>
+                <Property type="EnumU8" name="m_cullMode" value="Back"/>
                 <Property type="EnumU32" name="m_UVSource" value="UV0"/>
                 <Property type="Float2" name="m_tiling" flags="HasRange" x="1" y="1"/>
                 <Property type="Resource" name="m_albedoMap" flags="Resource">
                     <Object class="TextureResource">
-                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="807269994"/>
-                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                        <Property type="Uint32" name="m_uid" flags="" value="3365314983"/>
+                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/Soccer/Ball.png"/>
                     </Object>
                 </Property>
                 <Property type="Float4" name="m_albedoColor" flags="Color" x="1" y="1" z="1" w="1"/>
                 <Property type="Resource" name="m_normalMap" flags="Resource">
                     <Object class="TextureResource">
-                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3425643469"/>
-                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                        <Property type="Uint32" name="m_uid" flags="" value="3033038577"/>
+                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                         <Property type="String" name="m_resourcePath" flags="NotVisible" value=""/>
                     </Object>
                 </Property>
                 <Property type="Float" name="m_normalStrength" flags="HasRange" value="1"/>
                 <Property type="Resource" name="m_pbrMap" flags="Resource">
                     <Object class="TextureResource">
-                        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-                        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+                        <Property type="Uint32" name="m_uid" flags="" value="1868218771"/>
+                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                         <Property type="String" name="m_resourcePath" flags="NotVisible" value=""/>
                     </Object>
                 </Property>
