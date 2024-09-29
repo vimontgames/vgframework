@@ -2662,6 +2662,22 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    float4x4 load_float4x4(const float (&temp)[16])
+    {
+        return float4x4(temp[0],  temp[1],  temp[2],  temp[3],
+                        temp[4],  temp[5],  temp[6],  temp[7],
+                        temp[8],  temp[9],  temp[10], temp[11],
+                        temp[12], temp[13], temp[14], temp[15]);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void store_float4x4(const float4x4 & _mat, float(&temp)[16])
+    {
+        for (uint i = 0; i < countof(temp); ++i)
+            temp[i] = ((float*)&_mat)[i];
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ImGuiWindow::editFloat4x4(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
     {
         bool changed = false;
@@ -2671,8 +2687,7 @@ namespace vg::editor
         float * pFloat = (float *)pFloat4x4;
 
         float temp[16];
-        for (uint i = 0; i < countof(temp); ++i)
-            temp[i] = pFloat[i];
+        store_float4x4(*pFloat4x4, temp);
 
         const bool flatten = asBool(PropertyFlags::Flatten & _prop->GetFlags());
 
@@ -2719,12 +2734,14 @@ namespace vg::editor
                 float scale[3];
                 ImGuizmo::DecomposeMatrixToComponents((float *)&temp[0], (float *)&translation, (float *)&rotation, (float *)&scale);
 
+                float prevTranslation[3] = { translation[0], translation[1], translation[2] };
+                float prevRot[3] = { rotation[0], rotation[1], rotation[2] };
+                float prevScale[3] = { scale[0], scale[1], scale[2] };
+
                 edited |= ImGui::DragFloat3(getPropertyLabel("T").c_str(), (float *)&translation, getDragSpeedFloat(_prop) * 90.0f/8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
                 if (EditingState::Unknown == editingState)
                     editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous); 
                 drawPropertyLabel(_propContext, TLabel.c_str(), "Represents the translation part of the matrix");
-
-                float prevRot[3] = { rotation[0], rotation[1], rotation[2] };
 
                 edited |= ImGui::DragFloat3(getPropertyLabel("R").c_str(), (float *)&rotation, getDragSpeedFloat(_prop) * 90.0f / 8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
 
@@ -2732,13 +2749,79 @@ namespace vg::editor
                     editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous); 
                 drawPropertyLabel(_propContext, RLabel.c_str(), "Represents the rotation part of the matrix");
 
-                edited |= ImGui::DragFloat3(getPropertyLabel("S").c_str(), (float *)&scale, getDragSpeedFloat(_prop) * 90.0f / 8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                edited |= ImGui::DragFloat3(getPropertyLabel("S").c_str(), (float *)&scale, getDragSpeedFloat(_prop) * 90.0f / 8.0f, 0.01f, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
                 if (EditingState::Unknown == editingState)
                     editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous); 
                 drawPropertyLabel(_propContext, SLabel.c_str(), "Represents the scale part of the matrix");
 
                 if (edited)
-                    ImGuizmo::RecomposeMatrixFromComponents((float *)&translation, (float *)&rotation, (float *)&scale, (float *)&temp[0]);
+                {
+                    // Do not recompose matrix from TRS, but apply matrix operations instead
+                    //ImGuizmo::RecomposeMatrixFromComponents((float *)&translation, (float *)&rotation, (float *)&scale, (float *)&temp[0]);
+                    float4x4 m = load_float4x4(temp);
+
+                    if (prevTranslation[0] != translation[0])
+                    {
+                        float delta = translation[0] - prevTranslation[0];
+                        m[3].x += delta;
+                    }
+                    else if (prevTranslation[1] != translation[1])
+                    {
+                        float delta = translation[1] - prevTranslation[1];
+                        m[3].y += delta;
+                    }
+                    else if (prevTranslation[2] != translation[2])
+                    {
+                        float delta = translation[2] - prevTranslation[2];
+                        m[3].z += delta;
+                    }
+
+                    if (prevRot[0] != rotation[0])
+                    {
+                        float delta = rotation[0] - prevRot[0];
+                        float4x4 mRot = float4x4::rotation_x(delta * PI / 180.0f);
+                        m = mul(mRot, m);
+                        
+                    } else if (prevRot[1] != rotation[1])
+                    {
+                        float delta = rotation[1] - prevRot[1];
+                        float4x4 mRot = float4x4::rotation_y(delta * PI / 180.0f);
+                        m = mul(mRot, m);
+                    }
+                    else if (prevRot[2] != rotation[2])
+                    {
+                        float delta = rotation[2] - prevRot[2];
+                        float4x4 mRot = float4x4::rotation_z(delta * PI / 180.0f);
+                        m = mul(mRot, m);
+                    }
+
+                    if (prevScale[0] != scale[0])
+                    {
+                        float ratio = scale[0] / prevScale[0];
+                        m[0].x *= ratio;
+                        m[1].x *= ratio;
+                        m[2].x *= ratio;
+                        //m[3].x *= ratio;
+                    }
+                    else if (prevScale[1] != scale[1])
+                    {
+                        float ratio = scale[1] / prevScale[1];
+                        m[0].y *= ratio;
+                        m[1].y *= ratio;
+                        m[2].y *= ratio;
+                        //m[3].y *= ratio;
+                    }
+                    else if (prevScale[2] != scale[2])
+                    {
+                        float ratio = scale[2] / prevScale[2];
+                        m[0].z *= ratio;
+                        m[1].z *= ratio;
+                        m[2].z *= ratio;
+                        //m[3].z *= ratio;
+                    }
+
+                    store_float4x4(m, temp);
+                }
             }
 
             ImGui::Spacing();
