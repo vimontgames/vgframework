@@ -103,7 +103,10 @@ namespace vg::engine
         auto material = getMaterialModel();
 
         if (auto * matProp = findTextureResourceProperty(_resource))
-            material->SetTexture(matProp->GetName(), (gfx::ITexture *)_resource->GetObject());        
+        {
+            if (material)
+                material->SetTexture(matProp->GetName(), (gfx::ITexture *)_resource->GetObject());
+        }
     }
 
     //--------------------------------------------------------------------------------------
