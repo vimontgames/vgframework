@@ -52,6 +52,8 @@
     <ClInclude Include="Behaviour\Item\Ball\BallBehaviour.h" />
     <ClInclude Include="Behaviour\Item\Ball\BallBehaviour.hpp" />
     <ClInclude Include="Behaviour\Item\ItemBehaviour.h" />
+    <ClInclude Include="Behaviour\Item\Weapon\WeaponBehaviour.h" />
+    <ClInclude Include="Behaviour\Item\Weapon\WeaponBehaviour.hpp" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Game_consts.h" />
     <ClInclude Include="Precomp.h" />

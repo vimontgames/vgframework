@@ -106,11 +106,12 @@ You will also need if you want to build the ARM64EC versions:
 
 ![Screenshot](doc/img/vsbuild.png)
 
-You can change the Solution Platform in Visual Studio's command line to toggle between the DirectX12 and the Vulkan renderers.
+Use the 'Configuration' combo to select the target and graphics API you want to use:
+
+![Screenshot](doc/img/SolutionPlatformName2.png)
 
 Also don't forget to set the *working directory* to **$(SolutionDir)**.
 
-![Screenshot](doc/img/SolutionPlatformName2.png)
 
 ## SDKs
 

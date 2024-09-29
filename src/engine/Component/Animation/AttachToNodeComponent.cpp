@@ -23,6 +23,10 @@ namespace vg::engine
         registerProperty(AttachToNodeComponent, m_boneName, "Bone");
         setPropertyDescription(AttachToNodeComponent, m_boneName, "The bone to follow. Bone names can be found under \"MeshComponent>Skeleton>Nodes\".");
 
+        //registerOptionalPropertyEx(AttachToNodeComponent, m_useTransform, m_transform, "Transform", PropertyFlags::Flatten);
+        registerPropertyEx(AttachToNodeComponent, m_transform, "Transform", PropertyFlags::Flatten);
+        setPropertyDescription(AttachToNodeComponent, m_transform, "An additional transform to apply after attaching to node.");
+
         return true;
     }
 
@@ -49,32 +53,40 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void AttachToNodeComponent::OnEnable()
+    void AttachToNodeComponent::OnPlay()
     {
-        super::OnEnable();
+        super::OnPlay();
         updateCache();
     }
 
     //--------------------------------------------------------------------------------------
-    void AttachToNodeComponent::OnDisable()
+    void AttachToNodeComponent::OnStop()
     {
-        
-        super::OnDisable();
+        clearCache();
+        super::OnStop();
     }  
 
     //--------------------------------------------------------------------------------------
     void AttachToNodeComponent::Update(const Context & _context)
     {
-        // TODO: this might be slow if the node is never found but need it because MeshInstance might not be immediately available
-        if (!m_skeleton)
-            updateCache();
-
-        if (m_skeleton)
+        if (_context.m_playing && !_context.m_paused)
         {
-            if (m_nodeIndex < (int)m_skeleton->GetNodeCount())
+            // TODO: this might be slow if the node is never found but need it because MeshInstance might not be immediately available
+            if (!m_skeleton)
+                updateCache();
+
+            if (m_skeleton)
             {
-                float4x4 mWorld = transpose(m_skeleton->GetNodeWorldMatrix(m_nodeIndex));
-                getGameObject()->SetLocalMatrix(mWorld); 
+                if (m_nodeIndex < (int)m_skeleton->GetNodeCount())
+                {
+                    float4x4 mBone = transpose(m_skeleton->GetNodeWorldMatrix(m_nodeIndex));
+                    float4x4 mGlobal = mul(mBone, m_gameObject->GetGlobalMatrix());
+
+                    //if (m_useTransform)
+                        mGlobal = mul(m_transform, mGlobal);
+
+                    getGameObject()->SetGlobalMatrix(mGlobal);
+                }
             }
         }
     }
@@ -89,6 +101,27 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void AttachToNodeComponent::SetUseTarget(bool _useTarget)
+    {
+        m_useTarget = _useTarget;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void AttachToNodeComponent::SetTarget(core::IGameObject * _target)
+    {
+        m_target.setUID(_target ? _target->GetUID() : 0x0);
+
+        if (!_target)
+            clearCache();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void AttachToNodeComponent::SetBoneName(const core::string & _boneName)
+    {
+        m_boneName = _boneName;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool AttachToNodeComponent::updateCache()
     {
         clearCache();
@@ -98,9 +131,9 @@ namespace vg::engine
 
         if (m_useTarget)
         {
-            if (const GameObject * go = m_target.get<GameObject>())
+            if (gameObject = m_target.get<GameObject>())
             {
-                if (const MeshComponent * mc = go->GetComponentT<MeshComponent>())
+                if (const MeshComponent * mc = gameObject->GetComponentT<MeshComponent>())
                 {
                     if (const renderer::IMeshInstance * mi = mc->getMeshInstance())
                     {
@@ -112,9 +145,9 @@ namespace vg::engine
         }
         else
         {
-            if (const GameObject * go = getGameObject())
+            if (gameObject = getGameObject())
             {
-                if (const MeshComponent * mc = go->GetComponentInParentsT<MeshComponent>())
+                if (const MeshComponent * mc = gameObject->GetComponentInParentsT<MeshComponent>())
                 {
                     if (const renderer::IMeshInstance * mi = mc->getMeshInstance())
                     {
@@ -127,6 +160,7 @@ namespace vg::engine
 
         if (nullptr != skeleton)
         {
+            m_gameObject = gameObject;
             m_skeleton = skeleton;
             m_nodeIndex = skeleton->FindNodeIndex(m_boneName);
             return true;
@@ -139,6 +173,7 @@ namespace vg::engine
     void AttachToNodeComponent::clearCache()
     {
         m_skeleton = nullptr;
+        m_gameObject = nullptr;
         m_nodeIndex = -1;
     }
 }

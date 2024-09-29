@@ -20,6 +20,7 @@ class EnemyBehaviour;
 
 class ItemBehaviour;
 class BallBehaviour;
+class WeaponBehaviour;
 
 class Game : public vg::IGame, public vg::core::Singleton<Game>
 {
@@ -52,6 +53,7 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
         const vg::core::vector<ItemBehaviour *> &       getItem                 (ItemType _type) const { return m_items[vg::core::asInteger(_type)]; }
 
         const vg::core::vector<BallBehaviour *> &       getBalls                () const;
+        const vg::core::vector<WeaponBehaviour*> &      getWeapons              () const;
 
     private:
         static vg::engine::IEngine *                    s_engine;

@@ -54,8 +54,8 @@ namespace vg::core
         virtual core::uint      GetJoyCount                 () const = 0;
         virtual core::float2    GetJoyLeftStickDir          (JoyID _id) const = 0;
         virtual core::float2    GetJoyRightStickDir         (JoyID _id) const = 0;
-        virtual float           GetLeftTrigger              (core::JoyID _id) const = 0;
-        virtual float           GetRightTrigger             (core::JoyID _id) const = 0;
+        virtual float           GetJoyLeftTrigger           (core::JoyID _id) const = 0;
+        virtual float           GetJoyRightTrigger          (core::JoyID _id) const = 0;
         virtual bool            IsJoyButtonPressed          (JoyID _id, JoyButton _button) const = 0;
         virtual bool            IsJoyButtonJustPressed      (JoyID _id, JoyButton _button) const = 0;
         virtual bool            IsJoyButtonJustReleased     (JoyID _id, JoyButton _button) const = 0;

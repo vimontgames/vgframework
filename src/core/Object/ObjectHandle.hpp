@@ -33,6 +33,20 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void ObjectHandle::set(core::IObject * _object)
+    {
+        if (_object)
+        {
+            VG_ASSERT(_object->GetUID(false));
+            setUID(_object->GetUID());
+        }
+        else
+        {
+            setUID(0x0);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     IObject * ObjectHandle::getObject() const
     {
         auto * factory = Kernel::getFactory();

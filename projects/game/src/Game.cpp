@@ -161,3 +161,9 @@ const vg::core::vector<BallBehaviour *> & Game::getBalls() const
 {
     return reinterpret_cast<const vg::core::vector<BallBehaviour *> &>(m_items[vg::core::asInteger(ItemType::Ball)]);
 }
+
+//--------------------------------------------------------------------------------------
+const vg::core::vector<WeaponBehaviour *> & Game::getWeapons() const
+{
+    return reinterpret_cast<const vg::core::vector<WeaponBehaviour *> &>(m_items[vg::core::asInteger(ItemType::Weapon)]);
+}

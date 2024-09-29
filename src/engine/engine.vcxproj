@@ -75,6 +75,7 @@
     <ClInclude Include="Component\UI\UITextComponent.hpp" />
     <ClInclude Include="GameObject\Prefab\PrefabGameObject.h" />
     <ClCompile Include="GameObject\Prefab\PrefabGameObject.cpp" />
+    <ClInclude Include="IAttachToNodeComponent.h" />
     <ClInclude Include="IPhysicsShapeComponent.h" />
     <ClInclude Include="ISnapComponent.h" />
     <ClInclude Include="ISoundComponent.h" />

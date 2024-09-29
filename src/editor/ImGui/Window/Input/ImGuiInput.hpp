@@ -143,7 +143,7 @@ namespace vg::editor
                     const float2 & joyRightDir = input->GetJoyRightStickDir(id);
                     Text("(%.2f, %.2f)", (float)joyRightDir.x, (float)joyRightDir.y);
 
-                    Text("(%.2f, %.2f)", input->GetLeftTrigger(id), input->GetRightTrigger(id));
+                    Text("(%.2f, %.2f)", input->GetJoyLeftTrigger(id), input->GetJoyRightTrigger(id));
 
                     for (uint b = 0; b < enumCount<core::JoyButton>(); ++b)
                     {

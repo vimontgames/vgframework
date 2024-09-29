@@ -2616,6 +2616,51 @@ namespace vg::editor
         return changed;
     }
 
+    void QuaternionToEuler(const quaternion & q, float & pitch, float & yaw, float & roll)
+    {
+        // Convert quaternion to Euler angles (pitch, yaw, roll)
+        float sinr_cosp = 2.0f * (q.w * q.x + q.y * q.z);
+        float cosr_cosp = 1.0f - 2.0f * (q.x * q.x + q.y * q.y);
+        roll = atan2(sinr_cosp, cosr_cosp);
+
+        float sinp = 2.0f * (q.w * q.y - q.z * q.x);
+        if (fabs(sinp) >= 1)
+            pitch = copysign(PI / 2, sinp); // Use 90 degrees if out of range
+        else
+            pitch = asin(sinp);
+
+        float siny_cosp = 2.0f * (q.w * q.z + q.x * q.y);
+        float cosy_cosp = 1.0f - 2.0f * (q.y * q.y + q.z * q.z);
+        yaw = atan2(siny_cosp, cosy_cosp);
+    }
+
+    quaternion EulerToQuaternion(float pitch, float yaw, float roll)
+    {
+        float cy = cos(yaw * 0.5f);
+        float sy = sin(yaw * 0.5f);
+        float cr = cos(roll * 0.5f);
+        float sr = sin(roll * 0.5f);
+        float cp = cos(pitch * 0.5f);
+        float sp = sin(pitch * 0.5f);
+
+        quaternion q;
+        q.w = cy * cr * cp + sy * sr * sp;
+        q.x = cy * sr * cp - sy * cr * sp;
+        q.y = cy * cr * sp + sy * sr * cp;
+        q.z = sy * cr * cp - cy * sr * sp;
+
+        return q;
+    }
+
+    float ClampEulerAngle(float angle) 
+    {
+        if (angle > 180.0f)
+            return angle - 360.0f;
+        if (angle < -180.0f) 
+            return angle + 360.0f;
+        return angle;
+    }
+
     //--------------------------------------------------------------------------------------
     bool ImGuiWindow::editFloat4x4(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
     {
@@ -2636,6 +2681,25 @@ namespace vg::editor
         const string LabelK = flatten ? fmt::sprintf("%s.K", displayName) : "K";
         const string LabelT = flatten ? fmt::sprintf("%s.T", displayName) : "T";
 
+        //static bool useTRS = false;
+        //
+        //if (ImGui::BeginCombo("Mode", useTRS? "TRS" : "float4x4"))
+        //{
+        //    bool is_selected = useTRS;
+        //    if (ImGui::Selectable("TRS", is_selected))
+        //        useTRS = true;
+        //    if (is_selected)
+        //        ImGui::SetItemDefaultFocus();
+        //
+        //    is_selected = !useTRS;
+        //    if (ImGui::Selectable("float4x4", is_selected))
+        //        useTRS = false;
+        //    if (is_selected)
+        //        ImGui::SetItemDefaultFocus();
+        //
+        //    ImGui::EndCombo(); // End combo
+        //}
+
         if (flatten || ImGui::TreeNode(getObjectLabel(displayName, _propContext.m_originalProp).c_str()))
         {
             bool edited = false;
@@ -2644,26 +2708,67 @@ namespace vg::editor
             if (_propContext.m_readOnly)
                 ImGui::BeginDisabled();
 
-            edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-            if (EditingState::Unknown == editingState)
-                editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
-            drawPropertyLabel(_propContext, LabelI.c_str(), "Represents the x-axis in the transformed space");
+            //if (useTRS)
+            {
+                const string TLabel = flatten ? fmt::sprintf("%s.T", displayName) : "T";
+                const string RLabel = flatten ? fmt::sprintf("%s.R", displayName) : "R";
+                const string SLabel = flatten ? fmt::sprintf("%s.S", displayName) : "S";
 
-            edited |= ImGui::DragFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-            if (EditingState::Unknown == editingState)
-                editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
-            drawPropertyLabel(_propContext, LabelJ.c_str(), "Represents the y-axis in the transformed space");
+                float translation[3];
+                float rotation[3];
+                float scale[3];
+                ImGuizmo::DecomposeMatrixToComponents((float *)&temp[0], (float *)&translation, (float *)&rotation, (float *)&scale);
 
-            edited |= ImGui::DragFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-            if (EditingState::Unknown == editingState)
-                editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
-            drawPropertyLabel(_propContext, LabelK.c_str(), "Represents the z-axis in the transformed space");
+                edited |= ImGui::DragFloat3(getPropertyLabel("T").c_str(), (float *)&translation, getDragSpeedFloat(_prop) * 90.0f/8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                if (EditingState::Unknown == editingState)
+                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous); 
+                drawPropertyLabel(_propContext, TLabel.c_str(), "Represents the translation part of the matrix");
 
-            edited |= ImGui::DragFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-            if (EditingState::Unknown == editingState)
-                editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
-            drawPropertyLabel(_propContext, LabelT.c_str(), "Represents the translation component");
+                float prevRot[3] = { rotation[0], rotation[1], rotation[2] };
 
+                edited |= ImGui::DragFloat3(getPropertyLabel("R").c_str(), (float *)&rotation, getDragSpeedFloat(_prop) * 90.0f / 8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+
+                if (EditingState::Unknown == editingState)
+                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous); 
+                drawPropertyLabel(_propContext, RLabel.c_str(), "Represents the rotation part of the matrix");
+
+                edited |= ImGui::DragFloat3(getPropertyLabel("S").c_str(), (float *)&scale, getDragSpeedFloat(_prop) * 90.0f / 8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                if (EditingState::Unknown == editingState)
+                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous); 
+                drawPropertyLabel(_propContext, SLabel.c_str(), "Represents the scale part of the matrix");
+
+                if (edited)
+                    ImGuizmo::RecomposeMatrixFromComponents((float *)&translation, (float *)&rotation, (float *)&scale, (float *)&temp[0]);
+            }
+
+            ImGui::Spacing();
+
+            //else
+            if (ImGui::TreeNode(getObjectLabel("(float4x4) " + (string)displayName, _propContext.m_originalProp).c_str()))
+            {
+                edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                if (EditingState::Unknown == editingState)
+                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
+                drawPropertyLabel(_propContext, LabelI.c_str(), "Represents the x-axis in the transformed space");
+
+                edited |= ImGui::DragFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                if (EditingState::Unknown == editingState)
+                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
+                drawPropertyLabel(_propContext, LabelJ.c_str(), "Represents the y-axis in the transformed space");
+
+                edited |= ImGui::DragFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                if (EditingState::Unknown == editingState)
+                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
+                drawPropertyLabel(_propContext, LabelK.c_str(), "Represents the z-axis in the transformed space");
+
+                edited |= ImGui::DragFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                if (EditingState::Unknown == editingState)
+                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
+                drawPropertyLabel(_propContext, LabelT.c_str(), "Represents the translation component"); 
+
+                ImGui::TreePop();
+            }
+            
             if (_propContext.m_readOnly)
                 ImGui::EndDisabled();
 

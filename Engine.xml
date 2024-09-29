@@ -1,20 +1,20 @@
 <Root>
     <Object class="EngineOptions">
         <Property type="String" name="m_name" flags="NotVisible" value="EngineOptions"/>
-        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="1488493778"/>
-        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+        <Property type="Uint32" name="m_uid" flags="" value="1488493778"/>
+        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
         <Property type="String" name="m_gamePath" flags="IsFolder" value="projects/game"/>
         <Property type="String" name="m_startWorld" flags="IsFile" value="data/Worlds/Game.world"/>
         <Property type="Bool" name="m_showRigidBodies" flags="NotVisible" value="false"/>
-        <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" flags="Bitfield|Optional" value="Sphere|Box|Capsule|Cylinder"/>
+        <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" flags="" value="Sphere|Box|Capsule|Cylinder"/>
         <Property type="Bool" name="m_mergeStaticBodies" value="true"/>
         <Property type="Bool" name="m_useTimeScale" flags="NotVisible" value="false"/>
-        <Property type="Float" name="m_timeScale" flags="HasRange|Optional" value="1"/>
+        <Property type="Float" name="m_timeScale" flags="" value="1"/>
         <Property type="Bool" name="m_useMaxDT" flags="NotVisible" value="true"/>
-        <Property type="Float" name="m_maxDT" flags="HasRange|Optional" value="16.666666"/>
+        <Property type="Float" name="m_maxDT" flags="" value="16.666666"/>
         <Property type="Bool" name="m_useFixedDT" flags="NotVisible" value="false"/>
-        <Property type="Float" name="m_fixedDT" flags="HasRange|Optional" value="16.666666"/>
+        <Property type="Float" name="m_fixedDT" flags="" value="16.666666"/>
         <Property type="Bool" name="m_animationJobs" value="true"/>
     </Object>
 </Root>

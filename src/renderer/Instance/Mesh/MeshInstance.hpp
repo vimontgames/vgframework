@@ -472,7 +472,7 @@ namespace vg::renderer
                 }
 
                 // Update skeleton node
-                skeletonNode.node_to_parent = TRS(pos, rot, scale);
+                skeletonNode.node_to_parent = TRSToFloat4x4(pos, rot, scale);
 
                 if (-1 != skeletonNode.parent_index)
                     skeletonNode.node_to_world = mul(skeletonNodes[skeletonNode.parent_index].node_to_world, skeletonNode.node_to_parent);

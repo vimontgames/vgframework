@@ -203,6 +203,7 @@
     <None Include="Component\Component.inl" />
     <None Include="GameObject\GameObject.inl" />
     <None Include="Instance\Instance.inl" />
+    <None Include="Math\Math.inl" />
     <None Include="Misc\AABB\AABB.inl" />
     <None Include="Misc\BitMask\BitMask.inl" />
     <None Include="Object\Object.inl" />

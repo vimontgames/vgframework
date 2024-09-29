@@ -16,5 +16,6 @@ vg_enum(CharacterState, vg::core::u8,
 );
 
 vg_enum(ItemType, vg::core::u8,
-    Ball = 0
+    Ball = 0,
+    Weapon
 );

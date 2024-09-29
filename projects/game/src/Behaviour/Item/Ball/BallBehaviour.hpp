@@ -46,6 +46,7 @@ void BallBehaviour::OnCollisionEnter(vg::core::IGameObject * _other)
         if (player->isActive())
         {
             m_lastOwnerCharacter = player;
+            SetOwner(player->GetGameObject());
             GetGameObject()->SetColor(player->getCustomColor());
         }
     }

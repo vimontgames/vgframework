@@ -540,5 +540,8 @@
     <None Include="Misc\AABB\AABB.inl">
       <Filter>Misc\AABB</Filter>
     </None>
+    <None Include="Math\Math.inl">
+      <Filter>Math</Filter>
+    </None>
   </ItemGroup>
 </Project>

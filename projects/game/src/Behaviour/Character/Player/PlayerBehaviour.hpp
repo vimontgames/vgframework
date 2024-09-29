@@ -2,9 +2,11 @@
 #include "PlayerBehaviour.h"
 #include "Game.h"
 #include "Behaviour/Item/Ball/BallBehaviour.h"
+#include "Behaviour/Item/Weapon/WeaponBehaviour.h"
 #include "engine/ICharacterControllerComponent.h"
 #include "engine/IUITextComponent.h"
 #include "engine/IPhysicsBodyComponent.h"
+#include "engine/IPhysicsShapeComponent.h"
 #include "engine/ISoundComponent.h"
 #include "editor/Editor_Consts.h"
 #include "core/GameObject/GameObject.h"
@@ -80,7 +82,8 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
     if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused()) // TODO: Use context intead?
     {
         IInput & input = Game::Input();
-        IAnimationComponent * animationComponent = GetGameObject()->GetComponentT<IAnimationComponent>();
+        IGameObject * playerGO = GetGameObject();
+        IAnimationComponent * animationComponent = playerGO->GetComponentT<IAnimationComponent>();
        
         switch (m_state)
         {
@@ -108,7 +111,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
             float3 translation = float3(0, 0, 0);
             const float joyDeadZone = 0.15f;
 
-            float runAmount = input.GetRightTrigger(joyID);
+            float runAmount = input.GetJoyRightTrigger(joyID);
             if (runAmount > joyDeadZone)
                 runAmount = lerp(0.0f, 1.0f, saturate(runAmount - joyDeadZone) / (1.0f - joyDeadZone));
             else
@@ -143,7 +146,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     m_state = CharacterState::Idle;
             }
 
-            vg::engine::ICharacterControllerComponent * charaController = GetGameObject()->GetComponentT<vg::engine::ICharacterControllerComponent>();
+            vg::engine::ICharacterControllerComponent * charaController = playerGO->GetComponentT<vg::engine::ICharacterControllerComponent>();
 
             bool jump = false;
             if (input.IsJoyButtonJustPressed(joyID, JoyButton::A))
@@ -165,29 +168,79 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
             if (input.IsJoyButtonJustPressed(joyID, JoyButton::X))
             {
-                // kick
+                const float3 playerPos = playerGO->GetGlobalMatrix()[3].xyz;
+
+                const float pickupDist = 1.0f;
+
+                // Kick close balls
                 auto & balls = Game::get()->getBalls();
                 for (uint i = 0; i < balls.size(); ++i)
                 {
-                    auto & ball = balls[i];
+                    auto * ballBehaviour = balls[i];
+                    auto * ballGO = ballBehaviour->GetGameObject();
 
-                    float3 delta = ball->GetGameObject()->GetGlobalMatrix()[3].xyz - this->GetGameObject()->GetGlobalMatrix()[3].xyz;
+                    float3 delta = ballGO->GetGlobalMatrix()[3].xyz - playerPos;
                     float dist = length(delta);
-                    if (dist < 1)
+                    if (dist < pickupDist)
                     {
                         float3 dir = normalize(delta);
-                        
-                        if (auto * physicsBody = ball->GetGameObject()->GetComponentT<vg::engine::IPhysicsBodyComponent>())
+                        ballBehaviour->SetOwner(ballGO);
+                        if (auto * physicsBody = ballGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
                         {
                             //VG_INFO("[Player] Kick ball %u (dist = %.2f, dir = %.2f, %.2f, %.2f)", i, dist, dir.x, dir.y, dir.z);
                             float kickStrength = lerp(250.0f, 400.0f, runAmount);
                             physicsBody->AddImpulse(dir * kickStrength);
 
                             // Play sound
-                            if (auto * soundComponent = ball->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
+                            if (auto * soundComponent = ballGO->GetComponentT<vg::engine::ISoundComponent>())
                                 soundComponent->Play(0);
                         }
                     }
+                }
+
+                // Pick closest weapon
+                auto & weapons = Game::get()->getWeapons();
+                float closestDist = pickupDist+1;
+                IGameObject * closestWeaponGO = nullptr;
+                WeaponBehaviour * closestWeaponBehaviour = nullptr;
+                for (uint i = 0; i < weapons.size(); ++i)
+                {
+                    auto * weaponBehaviour = weapons[i];
+                    IGameObject * weaponGO = weaponBehaviour->GetGameObject();
+                    float3 delta = weaponGO->GetGlobalMatrix()[3].xyz - playerPos;
+                    float dist = length(delta);
+                    if (dist < closestDist && dist < pickupDist && !weaponBehaviour->CanPick())
+                    {
+                        closestDist = dist;
+                        closestWeaponBehaviour = weaponBehaviour;
+                        closestWeaponGO = closestWeaponBehaviour->GetGameObject();
+                    }
+                }
+
+                if (closestWeaponBehaviour)
+                {
+                    closestWeaponBehaviour->SetOwner(playerGO);
+                    m_rightHandItem = closestWeaponBehaviour;
+
+                    if (auto * physicsShapeComponent = closestWeaponGO->GetComponentT<vg::engine::IPhysicsShapeComponent>())
+                        physicsShapeComponent->SetComponentFlags(vg::core::ComponentFlags::Enabled, false);
+
+                }
+            }
+
+            if (input.GetJoyLeftTrigger(joyID) > joyDeadZone)
+            {
+                if (nullptr != m_rightHandItem)
+                {
+                    // drop
+                    m_rightHandItem->SetOwner(nullptr);
+
+                    m_rightHandItem->GetGameObject()->SetGlobalMatrix(this->GetGameObject()->GetGlobalMatrix());
+
+                    if (auto * physicsShapeComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsShapeComponent>())
+                        physicsShapeComponent->SetComponentFlags(vg::core::ComponentFlags::Enabled, true);
+
+                    m_rightHandItem = nullptr;
                 }
             }
 

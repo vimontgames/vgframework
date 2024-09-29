@@ -35,22 +35,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    inline float4x4 TRS(const float3 & _translation, const quaternion _rotation, const float3 _scale)
-    {
-        quaternion q = _rotation;
+    VG_INLINE void Float4x4ToTRS(const float4x4 & _mat44, float3 & _translation, float3 & _rotation, float3 & _scale);
+    
+    //--------------------------------------------------------------------------------------
+    VG_INLINE float4x4 TRSToFloat4x4(const float3 & _translation, const float3 & _rotation, const float3 & _scale);
 
-        float xx = q.x * q.x, xy = q.x * q.y, xz = q.x * q.z, xw = q.x * q.w;
-        float yy = q.y * q.y, yz = q.y * q.z, yw = q.y * q.w;
-        float zz = q.z * q.z, zw = q.z * q.w;
-        float sx = 2.0f * _scale.x, sy = 2.0f * _scale.y, sz = 2.0f * _scale.z;
-
-        return float4x4(
-            sx * (-yy - zz + 0.5f), sy * (-zw + xy), sz * (+xz + yw), _translation.x,
-            sx * (+xy + zw), sy * (-xx - zz + 0.5f), sz * (-xw + yz), _translation.y,
-            sx * (-yw + xz), sy * (+xw + yz), sz * (-xx - yy + 0.5f), _translation.z,
-            0, 0, 0, 1
-        );
-    }
+    //--------------------------------------------------------------------------------------
+    VG_INLINE float4x4 TRSToFloat4x4(const float3 & _translation, const quaternion _rotation, const float3 _scale);
 
     //--------------------------------------------------------------------------------------
     inline float4x4 getMatrixWithoutScale(const float4x4 & _matrix)
@@ -235,3 +226,7 @@ namespace vg::core
         return hash;
     }
 }
+
+#if VG_ENABLE_INLINE
+#include "Math.inl"
+#endif

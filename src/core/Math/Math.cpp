@@ -1,6 +1,10 @@
 #include "core/Precomp.h"
 #include "Math.h"
 
+#if !VG_ENABLE_INLINE
+#include "Math.inl"
+#endif
+
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------

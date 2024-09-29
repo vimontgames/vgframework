@@ -15,6 +15,7 @@ namespace vg::core
         UID         getUID      () const;
         const UID * getUIDPtr   () const;
 
+        void        set         (core::IObject * _object);
         IObject *   getObject   () const;
 
         template <typename T> T* get() const

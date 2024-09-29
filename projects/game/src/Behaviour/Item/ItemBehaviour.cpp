@@ -2,6 +2,7 @@
 #include "ItemBehaviour.h"
 
 #include "Ball/BallBehaviour.hpp"
+#include "Weapon/WeaponBehaviour.hpp"
 
 VG_REGISTER_ABSTRACT_CLASS(ItemBehaviour, "ItemBehaviour");
 
@@ -24,6 +25,8 @@ bool ItemBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
+    registerPropertyEx(ItemBehaviour, m_owner, "Owner", vg::core::PropertyFlags::NotSaved);
+
     return true;
 }
 
@@ -39,4 +42,16 @@ void ItemBehaviour::OnStop()
 {
     Game::get()->removeItem(m_itemType, this);
     super::OnStop();
+}
+
+//--------------------------------------------------------------------------------------
+void ItemBehaviour::SetOwner(vg::core::IGameObject * _object)
+{
+    m_owner.set(_object);
+}
+
+//--------------------------------------------------------------------------------------
+bool ItemBehaviour::CanPick() const
+{
+    return nullptr != m_owner.getObject();
 }

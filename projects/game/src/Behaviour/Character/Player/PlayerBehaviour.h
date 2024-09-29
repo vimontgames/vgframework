@@ -23,4 +23,5 @@ private:
     vg::core::u8                m_controllerIndex   = 0;
     vg::core::float4            m_customColor       = vg::core::float4(1, 1, 1, 1);
     vg::core::ObjectHandle      m_UI;
+    ItemBehaviour *             m_rightHandItem = nullptr;
 };

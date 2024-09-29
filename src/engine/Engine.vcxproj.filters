@@ -346,6 +346,7 @@
     <ClInclude Include="Component\Audio\Sound\SoundResourceList.hpp">
       <Filter>Component\Audio\Sound</Filter>
     </ClInclude>
+    <ClInclude Include="IAttachToNodeComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

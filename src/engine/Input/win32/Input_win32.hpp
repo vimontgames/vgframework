@@ -627,13 +627,13 @@ namespace vg::engine::win32
     }
 
     //--------------------------------------------------------------------------------------
-    float Input::GetLeftTrigger(core::JoyID _id) const
+    float Input::GetJoyLeftTrigger(core::JoyID _id) const
     {
         return m_joystickData[_id].m_leftTrigger;
     }
 
     //--------------------------------------------------------------------------------------
-    float Input::GetRightTrigger(core::JoyID _id) const
+    float Input::GetJoyRightTrigger(core::JoyID _id) const
     {
         return m_joystickData[_id].m_rightTrigger;
     }

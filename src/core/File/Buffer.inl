@@ -205,6 +205,9 @@ namespace vg::core::io
     //--------------------------------------------------------------------------------------
     inline bool Buffer::restore(void * _data, core::size_t _size, bool & _modified)
     {
+        if (_size == 0)
+            return true;
+
         if (m_read < m_data.size())
         {
             if (memcmp(_data, &m_data[m_read], _size))
