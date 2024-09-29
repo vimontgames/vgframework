@@ -228,14 +228,15 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 }
             }
 
-            if (input.GetJoyLeftTrigger(joyID) > joyDeadZone)
+            if (input.IsJoyButtonJustPressed(joyID, JoyButton::Y))
             {
                 if (nullptr != m_rightHandItem)
                 {
                     // drop
                     m_rightHandItem->SetOwner(nullptr);
 
-                    m_rightHandItem->GetGameObject()->SetGlobalMatrix(this->GetGameObject()->GetGlobalMatrix());
+                    if (auto * physicsBodyComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsBodyComponent>())
+                        physicsBodyComponent->SetMatrix(m_rightHandItem->GetGameObject()->GetGlobalMatrix());
 
                     if (auto * physicsShapeComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsShapeComponent>())
                         physicsShapeComponent->SetComponentFlags(vg::core::ComponentFlags::Enabled, true);
