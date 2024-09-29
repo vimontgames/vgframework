@@ -58,7 +58,7 @@ namespace vg::editor
             if (ImGui::MenuItem("Save As"))
             {
                 m_selected = SceneMenuOption::Save;
-                m_popup = fmt::sprintf("Save %s \"%s\" As ...", asString(m_sceneType), scene->GetName().c_str());
+                m_popup = fmt::sprintf("Save %s \"%s\" As ...###Save As ...", asString(m_sceneType), scene->GetName().c_str());
 
                 saveFileDialog = true;
             }
