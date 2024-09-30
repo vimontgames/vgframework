@@ -9,6 +9,7 @@
 #include "UndoRedoEntry.hpp"
 #include "UndoRedoEntryGroup.hpp"
 #include "Entry/UndoRedoPropertyEntry.hpp"
+#include "Entry/UndoRedoDestroyEntry.hpp"
 
 namespace vg::core
 {

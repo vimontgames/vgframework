@@ -407,10 +407,32 @@ namespace vg::editor
         const auto flags = _prop->GetFlags();
 
         auto editFormat = scalarTraits<S>::is_integer ? (scalarTraits<S>::is_signed ? g_editIntFormat : g_editUIntFormat) : g_editFloatFormat;
+
+        bool uid = false;
+        bool invalidUID = false;
         if (asBool(PropertyFlags::Hexadecimal & flags))
+        {
+            if (!strcmp(_prop->GetName(), "m_uid") || !strcmp(_prop->GetName(), "m_originalUID"))
+            {
+                uid = true;
+
+                const auto * factory = Kernel::getFactory();
+                if (!factory->FindByUID((UID)temp[0]))
+                    invalidUID = true;
+
+            }
             editFormat = "0x%0X";
+        }
 
         VG_ASSERT(!asBool(PropertyFlags::Color & flags) || (count == 3 || count == 4));
+
+        if (uid)
+        {
+            auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+
+            if (invalidUID)
+                ImGui::PushStyleColor(ImGuiCol_Text, imGuiAdapter->GetErrorColor());
+        }
 
         if (_propContext.m_readOnly)
             ImGui::BeginDisabled(true);
@@ -446,10 +468,18 @@ namespace vg::editor
 
         EditingState editingState = undoRedoBeforeEdit<T>(edited, _propContext, _object, _prop, (S*)&temp[0], _ptr, InteractionType::Continuous);
 
-        ImGuiWindow::drawPropertyLabel(_propContext, _prop);
-
         if (_propContext.m_readOnly)
             ImGui::EndDisabled();
+
+        string tooltip = _prop->GetDescription() ? (string)_prop->GetDescription() : "";
+
+        if (invalidUID)
+            tooltip += " (invalid)";
+
+        ImGuiWindow::drawPropertyLabel(_propContext, _prop->GetDisplayName(), tooltip.c_str());
+
+        if (invalidUID)
+            ImGui::PopStyleColor();
 
         if (edited)
         {
@@ -797,8 +827,6 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     ImVec4 ImGuiWindow::getPropertyColor(const PropertyContext & _propContext)
     {
-        ImGui::SameLine();
-
         if (_propContext.m_isPrefabInstance)
         {
             if (_propContext.m_isPrefabOverride)
@@ -826,22 +854,11 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiWindow::drawPropertyLabel(const PropertyContext & _propContext, const char * _label, const char * _tooltip)
     {
-        auto x = ImGui::GetCursorPosX();
-
         ImGui::SameLine();
-
-        ImGui::PushStyleColor(ImGuiCol_Text, getPropertyColor(_propContext));
-
-        // ugly workaround
-        if (x>100)
-            ImGui::SetCursorPosX(x);
-
         ImGui::Text(_label);
 
-        if (_tooltip && ImGui::IsItemHovered())
+        if (_tooltip && _tooltip[0] != '\0' && ImGui::IsItemHovered())
             ImGui::SetTooltip(_tooltip);
-
-        ImGui::PopStyleColor();
     };
 
     //--------------------------------------------------------------------------------------
@@ -1023,6 +1040,8 @@ namespace vg::editor
         const bool flatten = asBool(PropertyFlags::Flatten & flags);
         const bool isEnumArray = asBool(PropertyFlags::EnumArray & flags);
         const auto enumArrayTreeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
+
+        ImGui::PushStyleColor(ImGuiCol_Text, getPropertyColor(propContext));
 
         //ImGui::BeginDisabled(readOnly);
         {
@@ -1991,6 +2010,8 @@ namespace vg::editor
             }
         }
         //ImGui::EndDisabled();
+
+        ImGui::PopStyleColor();
 
         //ImGui::SameLine();
         //ImGui::Text(label.c_str());

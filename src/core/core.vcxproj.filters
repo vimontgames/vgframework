@@ -447,6 +447,12 @@
     <ClInclude Include="UndoRedo\UndoRedoEntryGroup.hpp">
       <Filter>UndoRedo</Filter>
     </ClInclude>
+    <ClInclude Include="UndoRedo\Entry\UndoRedoDestroyEntry.h">
+      <Filter>UndoRedo\Entry</Filter>
+    </ClInclude>
+    <ClInclude Include="UndoRedo\Entry\UndoRedoDestroyEntry.hpp">
+      <Filter>UndoRedo\Entry</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

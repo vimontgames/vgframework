@@ -45,7 +45,7 @@ namespace vg::core
         UID                                         RegisterUID                     (IObject * _object) final override;
         void                                        ReleaseUID                      (IObject * _object, UID & _uid) final override;
         const UIDObjectHash &                       GetUIDObjects                   () const final override;
-        IObject *                                   FindByUID                       (UID _uid) final override;
+        IObject *                                   FindByUID                       (UID _uid) const final override;
 
     //protected:
         bool                                        SerializeFromXML                (IObject * _object, const XMLElem * _xmlElem) const;
@@ -62,7 +62,7 @@ namespace vg::core
         bool                                        serializeObjectToMemory         (const IObject * _object, io::Buffer & _buffer);
         void                                        serializePropertyToMemory       (const IObject * _object, const IProperty * _prop, io::Buffer & _buffer);
 
-        bool                                        serializeFromMemory             (IObject * _object, io::Buffer & _buffer);
+        bool                                        serializeObjectFromMemory       (IObject * _object, io::Buffer & _buffer);
         void                                        serializePropertyFromMemory     (IObject * _object, const IProperty * _prop, io::Buffer & _buffer);
 
         void                                        ReleaseAsync                    (core::IObject * _object);
@@ -84,6 +84,6 @@ namespace vg::core
         u8                                          m_objectsToReleaseTableIndex = 0;
         core::unordered_map<IObject *, io::Buffer*> m_initValues;
         UIDObjectHash                               m_uidObjectHash;
-        mutex                                       m_uidObjectHashMutex;
+        mutable mutex                               m_uidObjectHashMutex;
     };    
 }

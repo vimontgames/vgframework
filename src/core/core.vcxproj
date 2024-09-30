@@ -154,6 +154,8 @@
     <ClInclude Include="Types\Enum.h" />
     <ClInclude Include="Types\Types.h" />
     <ClInclude Include="Types\Traits.h" />
+    <ClInclude Include="UndoRedo\Entry\UndoRedoDestroyEntry.h" />
+    <ClInclude Include="UndoRedo\Entry\UndoRedoDestroyEntry.hpp" />
     <ClInclude Include="UndoRedo\Entry\UndoRedoPropertyEntry.h" />
     <ClInclude Include="UndoRedo\Entry\UndoRedoPropertyEntry.hpp" />
     <ClInclude Include="UndoRedo\UndoRedo.h" />

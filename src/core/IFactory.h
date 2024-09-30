@@ -54,7 +54,7 @@ namespace vg::core
         virtual UID                         RegisterUID                 (IObject * _object) = 0;
         virtual void                        ReleaseUID                  (IObject * _object, UID & _uid) = 0;
         virtual const UIDObjectHash &       GetUIDObjects               () const = 0;
-        virtual IObject *                   FindByUID                   (UID _uid) = 0;
+        virtual IObject *                   FindByUID                   (UID _uid) const = 0;
     };  
 }
 

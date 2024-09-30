@@ -444,7 +444,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * Factory::FindByUID(UID _uid)
+    IObject * Factory::FindByUID(UID _uid) const
     {
         lock_guard<mutex> lock(m_uidObjectHashMutex);
 
@@ -822,7 +822,7 @@ namespace vg::core
         if (it != m_initValues.end())
         {
             io::Buffer * buffer = it->second;
-            bool result = serializeFromMemory(_object, *buffer);
+            bool result = serializeObjectFromMemory(_object, *buffer);
             VG_SAFE_DELETE(it->second);
             m_initValues.erase(it);
             return result;
@@ -832,7 +832,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::serializeFromMemory(IObject * _object, io::Buffer & _buffer)
+    bool Factory::serializeObjectFromMemory(IObject * _object, io::Buffer & _buffer)
     {
         const char * className = _object->GetClassName();
         const auto * classDesc = GetClassDescriptor(className);

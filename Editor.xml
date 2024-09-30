@@ -1,9 +1,9 @@
 <Root>
     <Object class="EditorOptions">
-        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="3465924071"/>
-        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
         <Property type="String" name="m_name" flags="NotVisible" value="Editor Options"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+        <Property type="Uint32" name="m_uid" flags="" value="3465924071"/>
+        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
         <Property type="EnumU8" name="m_theme" value="VimontGames_Dark"/>
         <Property type="EnumU8" name="m_gizmo.m_type" value="Translate"/>
         <Property type="EnumU8" name="m_gizmo.m_space" value="World"/>
@@ -14,6 +14,6 @@
         <Property type="Bool" name="m_gizmo.m_snapScale" flags="NotVisible" value="true"/>
         <Property type="Float" name="m_gizmo.m_scaleSnap" flags="Optional" value="0.5"/>
         <Property type="EnumFlagsU32" name="m_consoleOptions.m_levels" flags="Bitfield" value="Warning|Error"/>
-        <Property type="EnumFlagsU64" name="m_debugFlags" flags="Bitfield" value=""/>
+        <Property type="EnumFlagsU64" name="m_debugFlags" flags="Bitfield" value="Properties"/>
     </Object>
 </Root>

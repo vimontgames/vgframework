@@ -462,7 +462,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyResource">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_image"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="2891135819"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -500,7 +500,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyString">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_text"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="1502769601"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="3702819663"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -524,7 +524,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyResource">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_image"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="3286484115"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -540,7 +540,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyU8">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_canvas.m_viewIndex"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="165065989"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -578,7 +578,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyString">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_text"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="1502769601"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="2275027812"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -594,7 +594,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyResource">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_image"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="1285027474"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -610,7 +610,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyU8">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_canvas.m_viewIndex"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="1233312099"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -670,7 +670,7 @@
                                                 <Property type="ObjectPtrVector" name="m_properties">
                                                     <Object class="DynamicPropertyFloat4">
                                                         <Property type="String" name="m_name" flags="NotVisible" value="m_color"/>
-                                                        <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="" value="792090432"/>
                                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                         <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -1906,7 +1906,7 @@
                                                 <Property type="ObjectPtrVector" name="m_properties">
                                                     <Object class="DynamicPropertyU8">
                                                         <Property type="String" name="m_name" flags="NotVisible" value="m_team"/>
-                                                        <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="" value="2919475540"/>
                                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                         <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -1944,7 +1944,7 @@
                                                 <Property type="ObjectPtrVector" name="m_properties">
                                                     <Object class="DynamicPropertyU8">
                                                         <Property type="String" name="m_name" flags="NotVisible" value="m_team"/>
-                                                        <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" flags="" value="3091372258"/>
                                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                         <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -2525,7 +2525,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyObjectHandle">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_UI"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="122303089"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -2533,7 +2533,7 @@
                                             </Object>
                                             <Object class="DynamicPropertyFloat4">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_customColor"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="2650136618"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -2549,7 +2549,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyBool">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_displayBones"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="1608393871"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -2587,7 +2587,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyObjectHandle">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_UI"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="2157013239"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -2595,7 +2595,7 @@
                                             </Object>
                                             <Object class="DynamicPropertyFloat4">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_customColor"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="1941843965"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -2611,7 +2611,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyBool">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_displayBones"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="3477715217"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -2649,7 +2649,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyObjectHandle">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_UI"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="2798160664"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -2657,7 +2657,7 @@
                                             </Object>
                                             <Object class="DynamicPropertyFloat4">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_customColor"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="3504055082"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -2673,7 +2673,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyBool">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_displayBones"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="3789805728"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
@@ -2761,7 +2761,7 @@
                                         <Property type="ObjectPtrVector" name="m_properties">
                                             <Object class="DynamicPropertyFloat4">
                                                 <Property type="String" name="m_name" flags="NotVisible" value="m_color"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="2433451732"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="977322677"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>

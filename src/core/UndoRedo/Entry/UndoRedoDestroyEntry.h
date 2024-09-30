@@ -10,12 +10,12 @@ namespace vg::core
     class IDynamicProperty;
 
     //--------------------------------------------------------------------------------------
-    class UndoRedoPropertyEntry final : public UndoRedoEntry
+    class UndoRedoDestroyEntry final : public UndoRedoEntry
     {
         using super = UndoRedoEntry;
 
     public:
-        UndoRedoPropertyEntry(IObject * _object, const IProperty * _prop, IObject * _originalObject = nullptr, IGameObject * _prefab = nullptr, IDynamicProperty * _propOverride = nullptr);
+        UndoRedoDestroyEntry(IObject * _object, IObject * _parent, uint _indexInParent);
 
         void BeforeChange() final override;
         void AfterChange() final override;
@@ -27,12 +27,12 @@ namespace vg::core
         string GetObjectName() const final override;
         string GetDescription() const final override;
 
-    private:
-        io::Buffer m_original;
-        io::Buffer m_modified;
+        IObject * getParent() const;
 
-        IProperty * m_prop;
-        IGameObject * m_prefab;
-        IDynamicProperty * m_propOverride;
+    private:
+        io::Buffer m_buffer;
+        string m_className;
+        UID m_parentUID;
+        uint m_indexInParent;
     };
 }

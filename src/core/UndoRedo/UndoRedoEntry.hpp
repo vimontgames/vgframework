@@ -7,7 +7,7 @@ namespace vg::core
     {
         if (nullptr != _object)
         {
-            m_objectUID = _object->GetUID();
+            m_objectUID = _object->GetUID(false);
             VG_ASSERT(m_objectUID);
 
             m_objectName = _object->GetName();
