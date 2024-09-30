@@ -73,9 +73,6 @@ namespace vg::core
     {
         IFactory * factory = Kernel::getFactory();
 
-        //if (!m_originalUID)
-        //    m_originalUID = m_uid;
-
         SetUID(factory->RegisterUID(this));
         return HasValidUID();
     }

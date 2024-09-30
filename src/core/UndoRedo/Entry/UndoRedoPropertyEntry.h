@@ -14,6 +14,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     class UndoRedoPropertyEntry final : public UndoRedoEntry
     {
+        using super = UndoRedoEntry;
+
     public:
         UndoRedoPropertyEntry(IObject * _object, const IProperty * _prop, IObject * _originalObject = nullptr, IGameObject * _prefab = nullptr, IDynamicProperty * _propOverride = nullptr);
 
@@ -31,10 +33,7 @@ namespace vg::core
         io::Buffer m_original;
         io::Buffer m_modified;
 
-        IObject * m_object;
         IProperty * m_prop;
-
-        IObject * m_originalObject;
         IGameObject * m_prefab;
         IDynamicProperty * m_propOverride;
     };

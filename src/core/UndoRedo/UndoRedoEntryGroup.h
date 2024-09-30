@@ -6,10 +6,10 @@ namespace vg::core
     class IProperty;
     class IDynamicProperty;
 
-    class UndoRedoEntryGroup : public IUndoRedoEntry
+    class UndoRedoEntryGroup : public UndoRedoEntry
     {
     public:
-        UndoRedoEntryGroup(const string & _name);
+        UndoRedoEntryGroup(const string & _entryName);
         ~UndoRedoEntryGroup();
 
         void BeforeChange() override;
@@ -26,7 +26,7 @@ namespace vg::core
         const vector<IUndoRedoEntry *> * GetSubEntries() const final override;
 
     private:
-        string m_name;
+        string m_entryName;
         core::vector<IUndoRedoEntry *> m_subEntries;
     };
 }

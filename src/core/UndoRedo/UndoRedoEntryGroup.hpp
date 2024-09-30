@@ -4,9 +4,10 @@ namespace vg::core
 {
     //--------------------------------------------------------------------------------------
     UndoRedoEntryGroup::UndoRedoEntryGroup(const string & _name) :
-        m_name(_name)
+        UndoRedoEntry(nullptr),
+        m_entryName(_name)
     {
-      
+
     }
 
     //--------------------------------------------------------------------------------------
@@ -56,7 +57,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     string UndoRedoEntryGroup::GetEntryName() const
     {
-        return m_name;
+        return m_entryName;
     }
 
     //--------------------------------------------------------------------------------------

@@ -7,15 +7,15 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    UndoRedoPropertyEntry::UndoRedoPropertyEntry(IObject * _object, const IProperty * _prop, IObject * _originalObject, IGameObject * _prefab, IDynamicProperty * _propOverride)
+    UndoRedoPropertyEntry::UndoRedoPropertyEntry(IObject * _object, const IProperty * _prop, IObject * _originalObject, IGameObject * _prefab, IDynamicProperty * _propOverride) :
+        UndoRedoEntry(_object)
     {
-        m_object = _object;
-        VG_ASSERT(m_object);
+        if (nullptr != _originalObject)
+            m_objectName = _originalObject->GetName();
 
         m_prop = (IProperty *)_prop;
         VG_ASSERT(m_prop);
 
-        m_originalObject = _originalObject;
         m_prefab = _prefab;
         m_propOverride = _propOverride;
     }
@@ -24,14 +24,14 @@ namespace vg::core
     void UndoRedoPropertyEntry::BeforeChange()
     {
         Factory * factory = (Factory *)Kernel::getFactory();
-        factory->serializePropertyToMemory(m_object, m_prop, m_original);
+        factory->serializePropertyToMemory(GetObject(), m_prop, m_original);
     }
 
     //--------------------------------------------------------------------------------------
     void UndoRedoPropertyEntry::AfterChange()
     {
         Factory * factory = (Factory *)Kernel::getFactory();
-        factory->serializePropertyToMemory(m_object, m_prop, m_modified);
+        factory->serializePropertyToMemory(GetObject(), m_prop, m_modified);
     }
 
     //--------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     string UndoRedoPropertyEntry::GetObjectName() const
     {
-        return m_object->GetName();
+        return super::GetObjectName();
     }
 
     //--------------------------------------------------------------------------------------
@@ -55,44 +55,58 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void UndoRedoPropertyEntry::Undo()
     {
-        // Restore the original value serialized in memory before change
-        VG_INFO("[Undo/Redo] Undo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop->GetName(), m_prop, m_originalObject? m_originalObject->GetName().c_str() : m_object->GetName().c_str(), m_object);
-
-        m_original.resetRead();
-        Factory * factory = (Factory *)Kernel::getFactory();
-        factory->serializePropertyFromMemory(m_object, m_prop, m_original);
-
-        if (m_prefab)
+        if (auto * object = GetObject())
         {
-            auto & children = m_prefab->GetChildren();
-            for (uint i = 0; i < children.size(); ++i)
-                m_prefab->OverrideGameObjectProperties(children[i], m_propOverride);
+            // Restore the original value serialized in memory before change
+            VG_INFO("[Undo/Redo] Undo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop->GetName(), m_prop, m_objectName.c_str(), object);
+
+            m_original.resetRead();
+            Factory * factory = (Factory *)Kernel::getFactory();
+            factory->serializePropertyFromMemory(object, m_prop, m_original);
+
+            if (m_prefab)
+            {
+                auto & children = m_prefab->GetChildren();
+                for (uint i = 0; i < children.size(); ++i)
+                    m_prefab->OverrideGameObjectProperties(children[i], m_propOverride);
+            }
+            else
+            {
+                object->OnPropertyChanged(object, *m_prop);
+            }
         }
         else
         {
-            m_object->OnPropertyChanged(m_object, *m_prop);
+            VG_ERROR("[Undo/Redo] Cannot Undo Property \"%s\" (0x%016X) from Object \"%s\" (UID=0x%08X)", m_prop->GetName(), m_prop, m_objectName.c_str(), m_objectUID);
         }
     }
 
     //--------------------------------------------------------------------------------------
     void UndoRedoPropertyEntry::Redo()
     {
-        // Restore the modified value serialized in memory before change
-        VG_INFO("[Undo/Redo] Redo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop->GetName(), m_prop, m_originalObject ? m_originalObject->GetName().c_str() : m_object->GetName().c_str(), m_object);
-
-        m_modified.resetRead();
-        Factory * factory = (Factory *)Kernel::getFactory();
-        factory->serializePropertyFromMemory(m_object, m_prop, m_modified);
-
-        if (m_prefab)
+        if (auto * object = GetObject())
         {
-            auto & children = m_prefab->GetChildren();
-            for (uint i = 0; i < children.size(); ++i)
-                m_prefab->OverrideGameObjectProperties(children[i], m_propOverride);
+            // Restore the modified value serialized in memory before change
+            VG_INFO("[Undo/Redo] Redo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop->GetName(), m_prop, m_objectName.c_str(), object);
+
+            m_modified.resetRead();
+            Factory * factory = (Factory *)Kernel::getFactory();
+            factory->serializePropertyFromMemory(object, m_prop, m_modified);
+
+            if (m_prefab)
+            {
+                auto & children = m_prefab->GetChildren();
+                for (uint i = 0; i < children.size(); ++i)
+                    m_prefab->OverrideGameObjectProperties(children[i], m_propOverride);
+            }
+            else
+            {
+                object->OnPropertyChanged(object, *m_prop);
+            }
         }
         else
         {
-            m_object->OnPropertyChanged(m_object, *m_prop);
+            VG_ERROR("[Undo/Redo] Cannot Redo Property \"%s\" (0x%016X) from Object \"%s\" (UID=0x%08X)", m_prop->GetName(), m_prop, m_objectName.c_str(), m_objectUID);
         }
     }
 }

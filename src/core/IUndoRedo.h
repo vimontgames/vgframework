@@ -25,6 +25,8 @@ namespace vg::core
 
         virtual void AddSubEntry(IUndoRedoEntry * _subEntry) = 0;
         virtual const vector<IUndoRedoEntry *> * GetSubEntries() const = 0;
+
+        virtual IObject * GetObject() const = 0;
     };
 
     struct UndoRedoTarget
