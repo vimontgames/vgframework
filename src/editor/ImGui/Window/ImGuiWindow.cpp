@@ -854,7 +854,12 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiWindow::drawPropertyLabel(const PropertyContext & _propContext, const char * _label, const char * _tooltip)
     {
+        // ugly workaround
+        auto x = ImGui::GetCursorPosX();
         ImGui::SameLine();
+        if (x > 100)
+            ImGui::SetCursorPosX(x);
+
         ImGui::Text(_label);
 
         if (_tooltip && _tooltip[0] != '\0' && ImGui::IsItemHovered())
