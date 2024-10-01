@@ -101,6 +101,7 @@ namespace vg::core
                 factory->ReleaseUID(this, m_uid);
             }
             m_uid = _uid;
+            RegisterUID();
         }
     }
 
@@ -208,16 +209,16 @@ namespace vg::core
     void Object::OnPlay()
     {
         auto * factory = Kernel::getFactory();
-        if (factory)
-            factory->SaveProperties(this);
+        //if (factory)
+        //    factory->SaveProperties(this);
     }
 
     //--------------------------------------------------------------------------------------
     void Object::OnStop()
     {
         auto * factory = Kernel::getFactory();
-        if (factory)
-            factory->RestoreProperties(this);        
+        //if (factory)
+        //    factory->RestoreProperties(this);        
     }
 
     //--------------------------------------------------------------------------------------

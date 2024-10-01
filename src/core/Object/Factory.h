@@ -33,8 +33,8 @@ namespace vg::core
         bool                                        SerializeFromXML                (IObject * _object, XMLDoc & _xmlDoc) const final;
         bool                                        SerializeToXML                  (IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent = nullptr) const final;
 
-        bool                                        SaveProperties                  (core::IObject * _object) final override;
-        bool                                        RestoreProperties               (core::IObject * _object) final override;
+        bool                                        SaveProperties                  (core::IObject * _object, BufferType _bufferType) final override;
+        bool                                        RestoreProperties               (core::IObject * _object, BufferType _bufferType) final override;
         bool                                        CopyProperties                  (const core::IObject * _srcObj, core::IObject * _dstObj) final override;
         bool                                        CanCopyProperty                 (const core::IProperty * _srcProp, const core::IProperty * _dstProp) const final override;
         bool                                        CopyProperty                    (const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj) final override;
@@ -59,11 +59,11 @@ namespace vg::core
         template <typename T> void                  serializeEnumFlagsPropertyFromXML(IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem) const;
         template <typename T> void                  serializeEnumFlagsPropertyToXML (const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem) const;
 
-        bool                                        serializeObjectToMemory         (const IObject * _object, io::Buffer & _buffer);
-        void                                        serializePropertyToMemory       (const IObject * _object, const IProperty * _prop, io::Buffer & _buffer);
+        bool                                        serializeObjectToMemory         (const IObject * _object, io::Buffer & _buffer, BufferType _bufferType);
+        void                                        serializePropertyToMemory       (const IObject * _object, const IProperty * _prop, io::Buffer & _buffer, BufferType _bufferType);
 
-        bool                                        serializeObjectFromMemory       (IObject * _object, io::Buffer & _buffer);
-        void                                        serializePropertyFromMemory     (IObject * _object, const IProperty * _prop, io::Buffer & _buffer);
+        bool                                        serializeObjectFromMemory       (IObject * _object, io::Buffer & _buffer, BufferType _bufferType);
+        void                                        serializePropertyFromMemory     (IObject * _object, const IProperty * _prop, io::Buffer & _buffer, BufferType _bufferType);
 
         void                                        ReleaseAsync                    (core::IObject * _object);
         void                                        FlushReleaseAsync               ();
@@ -82,7 +82,7 @@ namespace vg::core
         mutex                                       m_objectsToReleaseMutex;
         vector<IObject*>                            m_objectsToRelease[2];
         u8                                          m_objectsToReleaseTableIndex = 0;
-        core::unordered_map<IObject *, io::Buffer*> m_initValues;
+        core::unordered_map<UID, io::Buffer *>      m_buffers[enumCount<BufferType>()];
         UIDObjectHash                               m_uidObjectHash;
         mutable mutex                               m_uidObjectHashMutex;
     };    

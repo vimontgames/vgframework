@@ -59,9 +59,13 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Factory::~Factory()
     {
-        for (auto val : m_initValues)
-            VG_SAFE_DELETE(val.second);
-        m_initValues.clear();
+        for (uint i = 0; i < enumCount< BufferType>(); ++i)
+        {
+            auto & buffers = m_buffers[i];
+            for (auto val : buffers)
+                VG_SAFE_DELETE(val.second);
+            buffers.clear();
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -212,37 +216,47 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::SaveProperties(core::IObject * _object)
+    bool Factory::SaveProperties(core::IObject * _object, BufferType _bufferType)
     {
-        auto it = m_initValues.find(_object);
-        VG_ASSERT((it == m_initValues.end()), "Object \"%s\" is already present in hash", _object->GetName().c_str());
-        if (it == m_initValues.end())
+        auto & buffers = m_buffers[asInteger(_bufferType)];
+        auto it = buffers.find(_object->GetUID());
+
+        if (it == buffers.end())
         {
             io::Buffer * buffer = new io::Buffer();
-            it = m_initValues.insert(std::pair(_object, buffer)).first;
-            return serializeObjectToMemory(_object, *buffer);
+            buffers.insert(std::pair(_object->GetUID(), buffer)).first;
+            return serializeObjectToMemory(_object, *buffer, _bufferType);
+        }
+        else
+        {
+            VG_SAFE_DELETE(it->second);
+            io::Buffer * buffer = new io::Buffer();
+            buffers[_object->GetUID()] = buffer;
+            return serializeObjectToMemory(_object, *buffer, _bufferType);
         }
         
         return false;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::serializeObjectToMemory(const IObject * _object, io::Buffer & _buffer)
+    bool Factory::serializeObjectToMemory(const IObject * _object, io::Buffer & _buffer, BufferType _bufferType)
     {
         const char * className = _object->GetClassName();
         const auto * classDesc = GetClassDescriptor(className);
 
+        //VG_DEBUGPRINT("[Factory] Serialize Object \"%s\" (write 0x%016X = %u)\n", _object->GetName().c_str(), &_buffer, _buffer.getWriteOffset());
+
         for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
         {
             const auto & prop = classDesc->GetPropertyByIndex(p);
-            serializePropertyToMemory(_object, prop, _buffer);
+            serializePropertyToMemory(_object, prop, _buffer, _bufferType);
         }
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    void Factory::serializePropertyToMemory(const IObject * _object, const IProperty * _prop, io::Buffer & _buffer)
+    void Factory::serializePropertyToMemory(const IObject * _object, const IProperty * _prop, io::Buffer & _buffer, BufferType _bufferType)
     {
         const auto name = _prop->GetName();
         const auto type = _prop->GetType();
@@ -251,26 +265,24 @@ namespace vg::core
         const auto flags = _prop->GetFlags();
         const bool isEnumArray = asBool(PropertyFlags::EnumArray & _prop->GetFlags());
 
+        if (asBool(PropertyFlags::NotSaved & flags))
+            return;
+
+        //VG_DEBUGPRINT("[Factory] Serialize Property %s->%s (write 0x%016X = %u)\n", _object->GetName().c_str(), _prop->GetName(), &_buffer, _buffer.getWriteOffset());
+
         switch (type)
         {
             default:
                 //VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                VG_WARNING("[Factory] Cannot serialize Property (%s)\"%s\" to memory", asString(type).c_str(), name);
                 break;
 
+            // Do nothing
             case PropertyType::Callback:
+            case PropertyType::LayoutElement:
                 break;
 
-            case PropertyType::ObjectPtrVector:
-            {
-                if (strcmp(_prop->GetName(), "m_children"))
-                {
-                    auto * vector = _prop->GetPropertyObjectPtrVector(_object);
-                    for (uint i = 0; i < vector->size(); ++i)
-                        SaveProperties((*vector)[i]);
-                }
-            }
-            break;
-
+            // POD => Just memcpy
             case PropertyType::Bool:
             case PropertyType::Int8:
             case PropertyType::Int16:
@@ -280,6 +292,12 @@ namespace vg::core
             case PropertyType::Uint16:
             case PropertyType::Uint32:
             case PropertyType::Uint64:
+            case PropertyType::Uint2:
+            case PropertyType::Uint3:
+            case PropertyType::Uint4:
+            case PropertyType::Int2:
+            case PropertyType::Int3:
+            case PropertyType::Int4:
             case PropertyType::Float:
             case PropertyType::Float2:
             case PropertyType::Float3:
@@ -289,10 +307,18 @@ namespace vg::core
             case PropertyType::EnumU16:
             case PropertyType::EnumU32:
             case PropertyType::EnumU64:
+            case PropertyType::EnumI8:
+            case PropertyType::EnumI16:
+            case PropertyType::EnumI32:
+            case PropertyType::EnumI64:
             case PropertyType::EnumFlagsU8:
             case PropertyType::EnumFlagsU16:
             case PropertyType::EnumFlagsU32:
             case PropertyType::EnumFlagsU64:
+            case PropertyType::EnumFlagsI8:
+            case PropertyType::EnumFlagsI16:
+            case PropertyType::EnumFlagsI32:
+            case PropertyType::EnumFlagsI64:
             {
                 const void * src = (void *)(uint_ptr(_object) + offset);
 
@@ -303,7 +329,6 @@ namespace vg::core
                 }
                 else
                 {
-
                     VG_VERIFY(_buffer.write(src, size));
                 }
             }
@@ -323,6 +348,74 @@ namespace vg::core
                 VG_VERIFY(_buffer.write(s->c_str(), s->length()));
             }
             break;
+
+            case PropertyType::BitMask:
+            {
+                auto * bitMask = _prop->GetPropertyBitMask(_object);
+                VG_VERIFY(bitMask->toBuffer(_buffer));
+            }
+            break;
+
+            case PropertyType::Object:
+            {
+                IObject * obj = _prop->GetPropertyObject(_object);
+                auto uid = obj->GetUID();
+                VG_VERIFY(_buffer.write(uid));
+                SaveProperties(obj, _bufferType);
+            }
+            break;
+
+            case PropertyType::Resource:
+            {
+                IResource * obj = _prop->GetPropertyResource(_object);
+                auto uid = obj->GetUID();
+                VG_VERIFY(_buffer.write(uid));
+                SaveProperties(obj, _bufferType);
+            }
+            break;
+
+            case PropertyType::ResourceVector:
+            {
+                auto count = _prop->GetPropertyResourceVectorCount(_object);
+                VG_VERIFY(_buffer.write((u64)count));
+
+                if (count > 0)
+                {
+                    const char * className = _prop->GetPropertyResourceVectorElement(_object, 0)->GetClassName();
+                    VG_VERIFY(_buffer.write((u32)strlen(className)));
+                    VG_VERIFY(_buffer.write(className, strlen(className)));
+
+                    for (uint i = 0; i < count; ++i)
+                    {
+                        IResource * obj = _prop->GetPropertyResourceVectorElement(_object, i);
+                        auto uid = obj->GetUID();
+                        VG_VERIFY(_buffer.write(uid));
+                        SaveProperties(obj, _bufferType);
+                    }
+                }
+            }
+            break;
+
+            case PropertyType::ObjectPtrVector:
+            {
+                auto * vector = _prop->GetPropertyObjectPtrVector(_object);
+                VG_VERIFY(_buffer.write((u64)vector->size()));
+
+                for (uint i = 0; i < vector->size(); ++i)
+                {
+                    auto * obj = (*vector)[i];
+
+                    auto uid = (*vector)[i]->GetUID();
+                    VG_VERIFY(_buffer.write(uid));
+
+                    const char * className = obj->GetClassName();
+                    VG_VERIFY(_buffer.write((u32)strlen(className)));
+                    VG_VERIFY(_buffer.write(className, strlen(className)));
+
+                    SaveProperties(obj, _bufferType);
+                }
+            }
+            break;            
         }
     }
 
@@ -816,38 +909,54 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::RestoreProperties(core::IObject * _object)
+    bool Factory::RestoreProperties(core::IObject * _object, BufferType _bufferType)
     {
-        auto it = m_initValues.find(_object);
-        if (it != m_initValues.end())
+        auto & buffers = m_buffers[asInteger(_bufferType)];
+        auto uid = _object->GetUID(false);
+        if (0x0 != uid)
         {
-            io::Buffer * buffer = it->second;
-            bool result = serializeObjectFromMemory(_object, *buffer);
-            VG_SAFE_DELETE(it->second);
-            m_initValues.erase(it);
-            return result;
+            auto it = buffers.find(uid);
+            if (it != buffers.end())
+            {
+                io::Buffer * buffer = it->second;
+                buffer->resetRead();
+                bool result = serializeObjectFromMemory(_object, *buffer, _bufferType);
+
+                if (_bufferType == BufferType::InitValue)
+                {
+                    VG_SAFE_DELETE(it->second);
+                    buffers.erase(it);
+                }
+                return result;
+            }
+        }
+        else
+        {
+            VG_ERROR("[Factory] Cannot restore properties of (%s)\"%s\" because it has no UID", _object->GetClassName(), _object->GetName().c_str());
         }
 
         return false;
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::serializeObjectFromMemory(IObject * _object, io::Buffer & _buffer)
+    bool Factory::serializeObjectFromMemory(IObject * _object, io::Buffer & _buffer, BufferType _bufferType)
     {
         const char * className = _object->GetClassName();
         const auto * classDesc = GetClassDescriptor(className);
 
+        //VG_DEBUGPRINT("[Factory] Serialize Object \"%s\" (read 0x%016X = %u)\n", _object->GetName().c_str(), &_buffer, _buffer.getReadOffset());
+
         for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
         {
             const auto & prop = classDesc->GetPropertyByIndex(p);
-            serializePropertyFromMemory(_object, prop, _buffer);
+            serializePropertyFromMemory(_object, prop, _buffer, _bufferType);
         }
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    void Factory::serializePropertyFromMemory(IObject * _object, const IProperty * _prop, io::Buffer & _buffer)
+    void Factory::serializePropertyFromMemory(IObject * _object, const IProperty * _prop, io::Buffer & _buffer, BufferType _bufferType)
     {
         const char * name = _prop->GetName();
         const auto type = _prop->GetType();
@@ -856,26 +965,26 @@ namespace vg::core
         const auto flags = _prop->GetFlags();
         const bool isEnumArray = asBool(PropertyFlags::EnumArray & _prop->GetFlags());
 
+        if (asBool(PropertyFlags::NotSaved & flags))
+            return;
+
+        //VG_DEBUGPRINT("[Factory] Serialize Property %s->%s (read 0x%016X = %u)\n", _object->GetName().c_str(), _prop->GetName(), &_buffer, _buffer.getReadOffset());
+
+        bool changed = false;
+
         switch (type)
         {
             default:
                 //VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                VG_WARNING("[Factory] Cannot serialize Property (%s)\"%s\" from memory", asString(type).c_str(), name);
                 break;
 
+            // Do nothing
+            case PropertyType::LayoutElement:
             case PropertyType::Callback:
                 break;
 
-            case PropertyType::ObjectPtrVector:
-            {
-                if (strcmp(_prop->GetName(), "m_children"))
-                {
-                    auto * vector = _prop->GetPropertyObjectPtrVector(_object);
-                    for (uint i = 0; i < vector->size(); ++i)
-                        RestoreProperties((*vector)[i]);
-                }
-            }
-            break;
-
+            // POD => Just memcpy
             case PropertyType::Bool:
             case PropertyType::Int8:
             case PropertyType::Int16:
@@ -885,6 +994,12 @@ namespace vg::core
             case PropertyType::Uint16:
             case PropertyType::Uint32:
             case PropertyType::Uint64:
+            case PropertyType::Uint2:
+            case PropertyType::Uint3:
+            case PropertyType::Uint4:
+            case PropertyType::Int2:
+            case PropertyType::Int3:
+            case PropertyType::Int4:
             case PropertyType::Float:
             case PropertyType::Float2:
             case PropertyType::Float3:
@@ -894,37 +1009,36 @@ namespace vg::core
             case PropertyType::EnumU16:
             case PropertyType::EnumU32:
             case PropertyType::EnumU64:
+            case PropertyType::EnumI8:
+            case PropertyType::EnumI16:
+            case PropertyType::EnumI32:
+            case PropertyType::EnumI64:
             case PropertyType::EnumFlagsU8:
             case PropertyType::EnumFlagsU16:
             case PropertyType::EnumFlagsU32:
             case PropertyType::EnumFlagsU64:
+            case PropertyType::EnumFlagsI8:
+            case PropertyType::EnumFlagsI16:
+            case PropertyType::EnumFlagsI32:
+            case PropertyType::EnumFlagsI64:
             {
                 void * dst = (void *)(uint_ptr(_object) + offset);
-                bool changed = false;
-
                 if (isEnumArray)
-                {
-                    const auto totalSize = _prop->GetEnumCount() * size;
-                    VG_VERIFY(_buffer.restore(dst, totalSize, changed));
-                }
+                    VG_VERIFY(_buffer.restore(dst, _prop->GetEnumCount() * size, changed));
                 else
-                {
                     VG_VERIFY(_buffer.restore(dst, size, changed));
-                }
             }
             break;
 
             case PropertyType::ObjectHandle:
             {
                 void * dst = (void *)(uint_ptr(_object) + offset);
-                bool changed = false;
                 VG_VERIFY(_buffer.restore(dst, size, changed));
             }
             break;
 
             case PropertyType::String:
             {
-                bool changed = false;
                 u32 stringSize = 0;
                 char temp[1024];
                 VG_ASSERT(stringSize < 1024);
@@ -932,6 +1046,114 @@ namespace vg::core
                 VG_VERIFY(_buffer.restore(temp, stringSize, changed));
                 temp[stringSize] = '\0';
                 *_prop->GetPropertyString(_object) = temp;
+            }
+            break;
+
+            case PropertyType::BitMask:
+            {
+                auto * bitMask = _prop->GetPropertyBitMask(_object);
+                VG_VERIFY(bitMask->fromBuffer(_buffer));
+            }
+            break;
+
+            case PropertyType::Object:
+            {
+                UID uid = 0;
+                VG_VERIFY(_buffer.restore(&uid, sizeof(UID), changed));
+                IObject * obj = _prop->GetPropertyObject(_object);
+                obj->SetUID(uid);
+                RestoreProperties(obj, _bufferType);
+            }
+            break;
+
+            case PropertyType::Resource:
+            {
+                UID uid = 0;
+                VG_VERIFY(_buffer.restore(&uid, sizeof(UID), changed));
+                IResource * obj = _prop->GetPropertyResource(_object);
+                obj->SetUID(uid);
+                obj->SetParent(_object);
+                RestoreProperties(obj, _bufferType);
+
+                auto path = obj->GetResourcePath();
+                if (!path.empty() && nullptr == obj->GetObject())
+                    obj->OnResourcePathChanged("", path);
+            }
+            break;
+
+            case PropertyType::ResourceVector:
+            {
+                u64 count = 0;
+                VG_VERIFY(_buffer.read(&count));
+
+                if (count > 0)
+                {
+                    u32 stringSize = 0;
+                    char className[1024];
+                    VG_ASSERT(stringSize < 1024);
+                    VG_VERIFY(_buffer.restore(&stringSize, sizeof(u32), changed));
+                    VG_VERIFY(_buffer.restore(className, stringSize, changed));
+                    className[stringSize] = '\0';
+
+                    const IClassDesc * elemClassDesc = GetClassDescriptor(className);
+                    VG_ASSERT(elemClassDesc);
+                    if (count != _prop->GetPropertyResourceVectorCount(_object))
+                    {
+                        uint elementSize;
+                        elemClassDesc->ResizeVector(_object, (uint)_prop->GetOffset(), (uint)count, elementSize);
+                    }
+
+                    for (uint i = 0; i < count; ++i)
+                    {
+                        UID uid = 0;
+                        VG_VERIFY(_buffer.restore(&uid, sizeof(UID), changed));
+
+                        IResource * obj = _prop->GetPropertyResourceVectorElement(_object, i);
+                        obj->SetUID(uid);
+                        obj->SetParent(_object);
+                        RestoreProperties(obj, _bufferType);
+
+                        auto path = obj->GetResourcePath();
+                        if (!path.empty() && nullptr == obj->GetObject())
+                            obj->OnResourcePathChanged("", path);
+                    }
+                }
+            }
+            break;
+
+            case PropertyType::ObjectPtrVector:
+            {
+                u64 count = 0;
+                VG_VERIFY(_buffer.restore(&count, sizeof(u64), changed));
+
+                auto * vector = _prop->GetPropertyObjectPtrVector(_object);
+                for (uint i = 0; i < count; ++i)
+                {
+                    UID uid = 0;
+                    VG_VERIFY(_buffer.restore(&uid, sizeof(UID), changed));
+
+                    u32 stringSize = 0;
+                    char className[1024];
+                    VG_ASSERT(stringSize < 1024);
+                    VG_VERIFY(_buffer.restore(&stringSize, sizeof(u32), changed));
+                    VG_VERIFY(_buffer.restore(className, stringSize, changed));
+                    className[stringSize] = '\0';
+
+                    if (i < vector->size())
+                    {
+                        auto * obj = (*vector)[i];
+                        RestoreProperties((*vector)[i], _bufferType);
+                    }
+                    else
+                    {
+                        //VG_WARNING("[Factory] Need to create an Object of type \"%s\"", className);
+                        IObject * newObj = CreateObject(className, "", _object);
+                        newObj->SetUID(uid);
+                        RestoreProperties(newObj, _bufferType);
+                        newObj->OnLoad();
+                        (*vector).push_back(newObj);
+                    }
+                }
             }
             break;
         }

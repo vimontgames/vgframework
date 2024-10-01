@@ -22,7 +22,7 @@ namespace vg::core
         if (auto * object = GetObject())
         {
             m_buffer.resetWrite();
-            factory->serializeObjectToMemory(object, m_buffer);
+            factory->serializeObjectToMemory(object, m_buffer, BufferType::UndoRedo);
         }
     }
 
@@ -47,7 +47,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     string UndoRedoDestroyEntry::GetDescription() const
     {
-        return fmt::sprintf("(%s) \"%s\"", m_className, m_objectName);
+        return fmt::sprintf("(%s)", m_className);
     }
 
     //--------------------------------------------------------------------------------------
@@ -68,11 +68,11 @@ namespace vg::core
         {
             IGameObject * obj = (IGameObject*)factory->CreateObject(m_className.c_str(), m_objectName, parent);
             m_buffer.resetRead();
-            factory->serializeObjectFromMemory(obj, m_buffer);
+            factory->serializeObjectFromMemory(obj, m_buffer, BufferType::UndoRedo);
             VG_ASSERT(m_objectUID == obj->GetUID());
 
             parent->AddChild(obj);
-            //obj->OnLoad();
+            obj->OnLoad();
             obj->Release();
         }
     }

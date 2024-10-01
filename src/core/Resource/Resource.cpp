@@ -30,7 +30,7 @@ namespace vg::core
     Resource::Resource(const core::string & _name, IObject * _parent) : 
         IResource(_name, _parent)
     {
-
+    
     }
 
     //--------------------------------------------------------------------------------------

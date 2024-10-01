@@ -115,7 +115,7 @@ namespace vg::core
         if (!_value._Starts_with("0x"))
             return false;
 
-        uint itemCount = (_bitCount + getNumBitsPerItem() - 1) / getNumBitsPerItem(); //(_value.length() - 2) / (sizeof(T) << 1);
+        uint itemCount = (_bitCount + getNumBitsPerItem() - 1) / getNumBitsPerItem();
         uint charCount = sizeof(T) << 1;
         core::vector<T> bits;
 
@@ -140,5 +140,36 @@ namespace vg::core
         }
 
         return true; 
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool BitMask::toBuffer(io::Buffer & _buffer)
+    {
+        bool result = _buffer.write((u32)m_bitCount);
+             result |= _buffer.write((u32)m_bits.size());
+
+        for (uint i = 0; i < m_bits.size(); ++i)
+            result |= _buffer.write((u64)m_bits[i]);
+
+        return result;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool BitMask::fromBuffer(io::Buffer & _buffer)
+    {
+        u32 bitCount = 0;
+        bool result  = _buffer.read(&bitCount);
+
+        u32 size = 0;
+        result |= _buffer.read(&size);
+
+        if (result)
+        {
+            setBitCount(bitCount);
+            for (uint i = 0; i < size; ++i)
+                result |= _buffer.read(&m_bits[i]);
+        }
+
+        return result;
     }
 }

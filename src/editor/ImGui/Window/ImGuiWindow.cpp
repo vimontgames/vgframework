@@ -724,10 +724,13 @@ namespace vg::editor
         const char * className = _object->GetClassName();
 
         const auto * factory = Kernel::getFactory();
-        const auto * classDesc = factory->GetClassDescriptor(className);
+        const auto * classDesc = factory->GetClassDescriptor(className, false);
 
         if (!classDesc)
             return false;
+
+        // debug
+        ImGui::Text("Parent = 0x%016X (%s)", _object->GetParent(), _object->GetClassName());
 
         if (_objectContext.m_treeNodes.size() > 0)
         {
@@ -1919,7 +1922,6 @@ namespace vg::editor
                         if (nullptr != pObject)
                         {
                             auto classDesc = pObject->GetClassDesc();
-                            VG_ASSERT(classDesc);
                             if (classDesc && asBool(ClassDescFlags::Component & classDesc->GetFlags()))
                                 treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
                         }

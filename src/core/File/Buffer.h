@@ -56,6 +56,9 @@ namespace vg::core::io
         void resetRead();
         void resetWrite();
 
+        size_t getReadOffset() const { return m_read; }
+        size_t getWriteOffset() const { return m_write; }
+
     private:
         size_t              m_read = 0;
         size_t              m_write = 0;

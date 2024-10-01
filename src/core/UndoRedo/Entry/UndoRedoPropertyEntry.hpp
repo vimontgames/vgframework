@@ -24,14 +24,14 @@ namespace vg::core
     void UndoRedoPropertyEntry::BeforeChange()
     {
         Factory * factory = (Factory *)Kernel::getFactory();
-        factory->serializePropertyToMemory(GetObject(), m_prop, m_original);
+        factory->serializePropertyToMemory(GetObject(), m_prop, m_original, BufferType::UndoRedo);
     }
 
     //--------------------------------------------------------------------------------------
     void UndoRedoPropertyEntry::AfterChange()
     {
         Factory * factory = (Factory *)Kernel::getFactory();
-        factory->serializePropertyToMemory(GetObject(), m_prop, m_modified);
+        factory->serializePropertyToMemory(GetObject(), m_prop, m_modified, BufferType::UndoRedo);
     }
 
     //--------------------------------------------------------------------------------------
@@ -62,7 +62,7 @@ namespace vg::core
 
             m_original.resetRead();
             Factory * factory = (Factory *)Kernel::getFactory();
-            factory->serializePropertyFromMemory(object, m_prop, m_original);
+            factory->serializePropertyFromMemory(object, m_prop, m_original, BufferType::UndoRedo);
 
             if (m_prefab)
             {
@@ -91,7 +91,7 @@ namespace vg::core
 
             m_modified.resetRead();
             Factory * factory = (Factory *)Kernel::getFactory();
-            factory->serializePropertyFromMemory(object, m_prop, m_modified);
+            factory->serializePropertyFromMemory(object, m_prop, m_modified, BufferType::UndoRedo);
 
             if (m_prefab)
             {

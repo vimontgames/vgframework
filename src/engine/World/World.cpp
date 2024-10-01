@@ -245,6 +245,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void World::OnPlay()
     {
+        IFactory * factory = Kernel::getFactory();
+
         for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
         {
             const IBaseScene * scene = GetScene(i, BaseSceneType::Scene);
@@ -253,8 +255,10 @@ namespace vg::engine
                 IObject * root = scene->GetRoot();
                 if (nullptr != root)
                 {
+                    factory->SaveProperties(root, BufferType::InitValue);
+
                     root->OnEnable();
-                    root->OnPlay();
+                    root->OnPlay();                    
                 }
             }
         }
@@ -371,6 +375,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void World::OnStop()
     {
+        IFactory * factory = Kernel::getFactory();
+
         for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
         {
             const IBaseScene * scene = GetScene(i, BaseSceneType::Scene);
@@ -379,6 +385,8 @@ namespace vg::engine
                 IObject * root = scene->GetRoot();
                 if (nullptr != root)
                 {
+                    factory->RestoreProperties(root, BufferType::InitValue);
+
                     root->OnDisable();
                     root->OnStop();
                 }

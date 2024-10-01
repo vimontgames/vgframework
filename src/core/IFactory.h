@@ -18,6 +18,11 @@ namespace vg::core
 
     using UID = core::u32;
 
+    vg_enum_class(BufferType, core::u8,
+        InitValue = 0,
+        UndoRedo
+    );
+
     class IFactory
     {
     public:
@@ -40,8 +45,8 @@ namespace vg::core
         virtual void                        ReleaseAsync                (core::IObject * _object) = 0;
         virtual void                        FlushReleaseAsync           () = 0;
 
-        virtual bool                        SaveProperties              (core::IObject * _object) = 0; 
-        virtual bool                        RestoreProperties           (core::IObject * _object) = 0;
+        virtual bool                        SaveProperties              (core::IObject * _object, BufferType _bufferType) = 0; 
+        virtual bool                        RestoreProperties           (core::IObject * _object, BufferType _bufferType) = 0;
         virtual bool                        CopyProperties              (const core::IObject * _srcObj, core::IObject * _dstObj) = 0;
         virtual bool                        CanCopyProperty             (const core::IProperty * _srcProp, const core::IProperty * _dstProp) const = 0;
         virtual bool                        CopyProperty                (const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj) = 0;

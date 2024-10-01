@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Types/Types.h"
+#include "core/File/Buffer.h"
 
 namespace vg::core
 {
@@ -21,6 +22,9 @@ namespace vg::core
 
         core::string toString(bool _leadingZeroes = false) const;
         bool fromString(const core::string & _value, core::uint _bitCount);
+
+        bool toBuffer(io::Buffer & _buffer);
+        bool fromBuffer(io::Buffer & _buffer);
         
     private:
         VG_INLINE core::uint getNumBitsPerItem() const;

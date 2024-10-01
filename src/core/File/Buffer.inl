@@ -54,6 +54,18 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
+    inline bool Buffer::read(u64 * _value)
+    {
+        return read(_value, sizeof(u64));
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline bool Buffer::write(u64 _value)
+    {
+        return write(&_value, sizeof(u64));
+    }
+
+    //--------------------------------------------------------------------------------------
     inline bool Buffer::read(float * _value)
     {
         return read(_value, sizeof(float));

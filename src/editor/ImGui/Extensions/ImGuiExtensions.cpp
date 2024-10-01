@@ -233,6 +233,8 @@ namespace ImGui
         {
             ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
 
+            static unordered_set<string> doNotAskDialogTitles;
+
             if (ImGui::BeginPopupModal(g_ModalMsgBox.m_title.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
             {
                 ImGui::Text(g_ModalMsgBox.m_message.c_str());
@@ -259,7 +261,7 @@ namespace ImGui
                     if (init && isLastButton)
                         ImGui::SetKeyboardFocusHere();
 
-                    if ( !item.label.empty() && (ImGui::Button(item.label.c_str(), ImVec2(fixedButtonWidth,0))) || (ImGui::IsItemFocused() && ImGui::IsKeyPressed(ImGuiKey_Enter)) )
+                    if (!item.label.empty() && (ImGui::Button(item.label.c_str(), ImVec2(fixedButtonWidth,0))) || (ImGui::IsItemFocused() && ImGui::IsKeyPressed(ImGuiKey_Enter)) )
                     {
                         if (item.action != nullptr)
                             close = item.action();
@@ -268,6 +270,11 @@ namespace ImGui
                     if (!isLastButton)
                         ImGui::SameLine();
                 }
+
+                static bool doNotAsk = false;
+                if (ImGui::Checkbox("Do not ask", &doNotAsk))
+                    doNotAskDialogTitles.insert(g_ModalMsgBox.m_title);
+
                 ImGui::EndPopup();
             }
         }
