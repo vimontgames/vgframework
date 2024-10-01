@@ -57,7 +57,7 @@ namespace vg::engine
         PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->CreateObject("PrefabScene"));
         if (nullptr != prefabScene)
         {
-            prefabScene->SetParent(this);
+            prefabScene->SetParent(nullptr/* this*/);
             prefabScene->SetName(io::getFileName(_path));
 
             if (factory->LoadFromXML(prefabScene, _path))
