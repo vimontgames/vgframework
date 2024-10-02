@@ -2,6 +2,7 @@
 
 #include "core/IUndoRedo.h"
 #include "core/File/Buffer.h"
+#include "core/Object/Property.h"
 
 namespace vg::core
 {
@@ -31,7 +32,7 @@ namespace vg::core
         io::Buffer m_original;
         io::Buffer m_modified;
 
-        IProperty * m_prop;
+        Property m_prop;
         IGameObject * m_prefab;
         IDynamicProperty * m_propOverride;
     };

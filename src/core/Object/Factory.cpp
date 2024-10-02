@@ -396,6 +396,28 @@ namespace vg::core
             }
             break;
 
+            case PropertyType::ObjectPtr:
+            {
+                IObject ** obj = _prop->GetPropertyObjectPtr(_object);
+
+                if (*obj)
+                {
+                    auto uid = (*obj)->GetUID();
+                    VG_VERIFY(_buffer.write(uid));
+
+                    const char * className = (*obj)->GetClassName();
+                    VG_VERIFY(_buffer.write((u32)strlen(className)));
+                    VG_VERIFY(_buffer.write(className, strlen(className)));
+
+                    SaveProperties(*obj, _bufferType);
+                }
+                else
+                {
+                    VG_VERIFY(_buffer.write((UID)0x0));
+                }
+            }
+            break;
+
             case PropertyType::ObjectPtrVector:
             {
                 auto * vector = _prop->GetPropertyObjectPtrVector(_object);
@@ -1116,6 +1138,38 @@ namespace vg::core
                         auto path = obj->GetResourcePath();
                         if (!path.empty() && nullptr == obj->GetObject())
                             obj->OnResourcePathChanged("", path);
+                    }
+                }
+            }
+            break;
+
+            case PropertyType::ObjectPtr:
+            {
+                UID uid = 0;
+                VG_VERIFY(_buffer.restore(&uid, sizeof(UID), changed));
+
+                if (0 != uid)
+                {
+                    u32 stringSize = 0;
+                    char className[1024];
+                    VG_ASSERT(stringSize < 1024);
+                    VG_VERIFY(_buffer.restore(&stringSize, sizeof(u32), changed));
+                    VG_VERIFY(_buffer.restore(className, stringSize, changed));
+                    className[stringSize] = '\0';
+
+                    auto ** obj = _prop->GetPropertyObjectPtr(_object);
+
+                    if (nullptr != *obj)
+                    {
+                        RestoreProperties(*obj, _bufferType);
+                    }
+                    else
+                    {
+                        IObject * newObj = CreateObject(className, "", _object);
+                        newObj->SetUID(uid);
+                        RestoreProperties(newObj, _bufferType);
+                        newObj->OnLoad();
+                        *obj = newObj;
                     }
                 }
             }

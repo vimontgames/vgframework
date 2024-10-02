@@ -116,12 +116,7 @@ namespace vg::core
     void Object::SetOriginalUID(UID _uid)
     {
         if (_uid != m_originalUID)
-        {
-            //IFactory * factory = Kernel::getFactory();
-            //if (m_originalUID)
-            //    factory->ReleaseUID(m_originalUID);
             m_originalUID = _uid;
-        }
     }
 
     //--------------------------------------------------------------------------------------

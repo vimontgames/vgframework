@@ -89,7 +89,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     core::DynamicPropertyList * PrefabGameObject::getDynamicPropertyList(const core::IObject * _object) const
     {
-        const auto uid = _object->GetOriginalUID();
+        const auto uid = _object->GetOriginalUID(false);
         if (uid)
         {
             for (uint i = 0; i < m_dynamicProperties.size(); ++i)
@@ -98,6 +98,10 @@ namespace vg::engine
                 if (propList->GetUID() == uid)
                     return propList;
             }
+        }
+        else
+        {
+            VG_WARNING("[Prefab] Cannot get DynamicPropertyList for (%s)\"%s\" because it has no original UID", _object->GetClassName(), _object->GetName().c_str());
         }
         return nullptr;
     }
@@ -138,6 +142,12 @@ namespace vg::engine
     bool PrefabGameObject::canOverrideProperty(const core::IObject * _object, const core::IProperty * _prop) const
     {
         const auto flags = _prop->GetFlags();
+
+        if (!_object->GetUID(false))
+        {
+            VG_WARNING("[Prefab] Cannot override Property (%s)\"%s\" because Object \"%s\" has no UID", asString(_prop->GetType()).c_str(), _prop->GetName(), _object->GetName().c_str());
+            return false;
+        }
 
         const bool isFolder = asBool(PropertyFlags::IsFolder & flags);
         const bool isFile = asBool(PropertyFlags::IsFile & flags);

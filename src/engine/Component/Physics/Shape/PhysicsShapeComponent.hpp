@@ -31,11 +31,12 @@ namespace vg::engine
     {
         if (_parent)
         {
-            if (m_shapeDesc == nullptr)
-                createShapeDesc();
-
-            if (m_shape == nullptr)
-                createShape();
+            // Because of the way Undo/Redo works, the shape desc should not be created here
+            //if (m_shapeDesc == nullptr)
+            //    createShapeDesc();
+            //
+            //if (m_shape == nullptr)
+            //    createShape();
         }
     }
 
@@ -55,7 +56,11 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void PhysicsShapeComponent::OnLoad()
     {
-        createShape();
+        if (m_shapeDesc == nullptr)
+            createShapeDesc();
+
+        if (m_shape == nullptr)
+            createShape();
 
         if (m_shapeDesc)
             m_shapeDesc->RegisterUID();
@@ -157,13 +162,12 @@ namespace vg::engine
     {
         VG_SAFE_RELEASE(m_shape);
         VG_ASSERT(m_shapeDesc);
+
         if (m_shapeDesc)
             m_shape = getPhysics()->CreateShape(m_shapeDesc);
         
         if (auto * bodyComp = getBodyComponent())
-        {
             m_shape->SetColor(bodyComp->getShapesColor());
-        }
 
         return nullptr != m_shape;
     }
