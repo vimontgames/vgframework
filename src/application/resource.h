@@ -2,8 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by application.rc
 //
-#define IDI_ICON1                       101
-#define IDI_ICON2                       102
+#define IDI_APPICON                       101
 
 // Next default values for new objects
 // 

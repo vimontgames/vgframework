@@ -31,4 +31,5 @@ del *.pdb
 cd ..
 cd ..
 del package.bat
+del build_all.bat
 
