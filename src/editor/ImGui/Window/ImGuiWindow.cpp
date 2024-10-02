@@ -729,8 +729,9 @@ namespace vg::editor
         if (!classDesc)
             return false;
 
-        // debug
-        ImGui::Text("Parent = 0x%016X (%s)", _object->GetParent(), _object->GetClassName());
+        // debug only
+        if (EditorOptions::get()->IsDebugPropertyVisible())
+            ImGui::Text("Parent = 0x%016X (%s)", _object->GetParent(), _object->GetClassName());
 
         if (_objectContext.m_treeNodes.size() > 0)
         {
