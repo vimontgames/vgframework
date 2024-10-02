@@ -26,7 +26,7 @@
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="PhysicsBodyComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsBodyComponent"/>
-                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="3932737972"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -50,7 +50,7 @@
                             </Object>
                             <Object class="PhysicsShapeComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
-                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="3990820587"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -58,7 +58,7 @@
                                 <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
                                     <Object class="CapsuleShapeDesc">
                                         <Property type="String" name="m_name" flags="NotVisible" value="CapsuleShapeDesc #20"/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="3884290469"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                         <Property type="Float3" name="m_rotation" flags="EulerAngle" x="0" y="0" z="0"/>
@@ -100,10 +100,17 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Materials/VGF_Boy/VGF_Boy.mat"/>
                                             </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Materials/VGF_Boy/VGF_Boy_Glass.mat"/>
+                                            </Object>
                                         </Property>
                                     </Object>
                                 </Property>
-                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                <Property type="BitMask" name="m_batchMask" BitCount="2" Value="0x0000000000000003"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
