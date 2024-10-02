@@ -43,10 +43,6 @@
 #include "winpixeventruntime\Include\WinPixEventRuntime\pix3.h"
 #endif
 
-#if VG_ENABLE_SHADER_COMPILATION
-#include "dxc/inc/dxcapi.h"
-#endif
-
 #pragma push_macro("new")
 #undef new
 #include "D3D12MemoryAllocator/src/D3D12MemAlloc.h"
