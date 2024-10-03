@@ -59,7 +59,7 @@ namespace vg::engine
 
     //--------------------------------------------------------------------------------------
     CameraComponent::CameraComponent(const core::string & _name, core::IObject * _parent) :
-        core::Component(_name, _parent),
+        super(_name, _parent),
         m_target(gfx::ViewportTarget::Game),
         m_viewportIndex((gfx::ViewportIndex)0),
         m_viewIndex((gfx::ViewIndex)0),
@@ -145,5 +145,13 @@ namespace vg::engine
             const float4x4 & matrix = getGameObject()->GetGlobalMatrix();
             view->SetupPerspectiveCamera(matrix, float2(m_near, m_far), m_fovY, m_viewportOffset, m_viewportScale);
         }      
+    }
+
+
+    //--------------------------------------------------------------------------------------
+    void CameraComponent::SetViewportOffsetAndScale(core::float2 _offset, const core::float2 & _scale)
+    {
+        m_viewportOffset = _offset;
+        m_viewportScale = _scale;
     }
 }

@@ -2918,12 +2918,10 @@ namespace vg::editor
 
         ImGui::PopItemWidth();
 
-        ImGui::SameLine();
-        if (ImGui::Button(style::icon::GameObject, style::button::SizeSmall))
-        {
-        }
 
         ImGui::PushID(_prop);
+        ImGui::SameLine();
+        ImGui::Button(style::icon::GameObject, style::button::SizeSmall);
         ImGuiObjectHandleMenu * pickObjectHandlemenu = Editor::get()->getMenu<ImGuiObjectHandleMenu>();
         if (pickObjectHandlemenu->SelectUID(&temp, _propContext.m_gameobject, openPopup))
             edited = true;

@@ -27,9 +27,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Behaviour\Camera\GameCameraBehaviour.cpp" />
+    <ClCompile Include="Behaviour\Camera\GameCameraManagerBehaviour.cpp" />
     <ClCompile Include="Behaviour\Character\CharacterBehaviour.cpp" />
     <ClInclude Include="Behaviour\Camera\GameCameraBehaviour.h" />
+    <ClInclude Include="Behaviour\Camera\GameCameraBehaviour.hpp" />
+    <ClInclude Include="Behaviour\Camera\GameCameraManagerBehaviour.h" />
     <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.hpp" />
     <ClCompile Include="Behaviour\Goal\GoalBehaviour.cpp" />
     <ClCompile Include="Behaviour\Item\ItemBehaviour.cpp" />
@@ -59,6 +61,7 @@
     <ClInclude Include="Precomp.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Behaviour\Character\Player\PlayerBehaviour.inl" />
     <None Include="Game.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -1,4 +1,3 @@
-#include "Precomp.h"
 #include "GameCameraBehaviour.h"
 #include "Game.h"
 #include "core/GameObject/GameObject.h"
@@ -31,6 +30,9 @@ bool GameCameraBehaviour::registerProperties(IClassDesc & _desc)
     registerProperty(GameCameraBehaviour, m_target, "Target");
     setPropertyDescription(GameCameraBehaviour, m_target, "Camera target");
 
+    registerProperty(GameCameraBehaviour, m_offset, "Offset");
+    setPropertyDescription(GameCameraBehaviour, m_offset, "Camera offset");
+
     registerProperty(GameCameraBehaviour, m_delay, "Delay");
     setPropertyDescription(GameCameraBehaviour, m_delay, "Time to smooth camera position (s)");
 
@@ -38,17 +40,23 @@ bool GameCameraBehaviour::registerProperties(IClassDesc & _desc)
 }
 
 //--------------------------------------------------------------------------------------
-void GameCameraBehaviour::OnPlay()
+void GameCameraBehaviour::setTarget(const IGameObject * _target)
 {
-    super::OnPlay();
-    m_offset = getGameObject()->getGlobalMatrix()[3].xyz;
+    m_target.setUID(_target->GetUID());
+}
 
-    auto * target = m_target.get<IGameObject>();
-    if (target)
-    {
-        if (auto * player = target->GetComponentInChildrenT<CharacterBehaviour>())
-            m_offset -= player->getGameObject()->GetGlobalMatrix()[3].xyz;
-    }
+//--------------------------------------------------------------------------------------
+void GameCameraBehaviour::OnEnable()
+{
+    super::OnEnable();
+    //m_offset = getGameObject()->getGlobalMatrix()[3].xyz;
+    //
+    //auto * target = m_target.get<IGameObject>();
+    //if (target)
+    //{
+    //    if (auto * player = target->GetComponentInChildrenT<CharacterBehaviour>())
+    //        m_offset -= player->getGameObject()->GetGlobalMatrix()[3].xyz;
+    //}
 }
 
 //--------------------------------------------------------------------------------------

@@ -8,11 +8,16 @@
 #include "engine/IPhysicsBodyComponent.h"
 #include "engine/IPhysicsShapeComponent.h"
 #include "engine/ISoundComponent.h"
+#include "engine/IUICanvasComponent.h"
 #include "editor/Editor_Consts.h"
 #include "core/GameObject/GameObject.h"
 #include "core/IWorld.h"
 #include "core/Math/Math.h"
 #include "core/string/string.h"
+
+#if !VG_ENABLE_INLINE
+#include "PlayerBehaviour.inl"
+#endif
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -54,6 +59,8 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
         registerProperty(PlayerBehaviour, m_UI, "UI");
         setPropertyDescription(PlayerBehaviour, m_UI, "Player UI Prefab instance linked");
 
+        registerPropertyEx(PlayerBehaviour, m_viewIndex, "View", vg::core::PropertyFlags::NotSaved | vg::core::PropertyFlags::ReadOnly);
+        setPropertyDescription(PlayerBehaviour, m_viewIndex, "Index of the View used by this player");
     }
     registerPropertyGroupEnd(PlayerBehaviour);
     
@@ -68,11 +75,16 @@ void PlayerBehaviour::OnPlay()
     // Compute initial rotation around Z axis
     const auto global = GetGameObject()->GetGlobalMatrix();
     m_currentRotation = -atan2(global[1].x, global[0].x) * 180.0f / PI;
+
+    // Hide UI until the player is active
+    if (auto * uiGO = m_UI.get<IGameObject>())
+        uiGO->SetInstanceFlags(InstanceFlags::Enabled, false);
 }
 
 //--------------------------------------------------------------------------------------
 void PlayerBehaviour::OnStop()
 {
+    m_isActive = false;
     super::OnStop();
 }
 
@@ -129,7 +141,18 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 m_currentRotation = radiansToDegrees(atan2((float)leftJoyDir.x, (float)leftJoyDir.y));
 
                 if (!m_isActive)
+                {
+                    m_viewIndex = (u8)Game::get()->getActivePlayers().size();
+                    
+                    if (auto * uiGO = m_UI.get<IGameObject>())
+                    {
+                        uiGO->SetInstanceFlags(InstanceFlags::Enabled, true);
+                        if (auto * uiCanvasComponent = uiGO->GetComponentInChildrenT<IUICanvasComponent>())
+                            uiCanvasComponent->SetViewIndex(m_viewIndex);
+                    }
+
                     m_isActive = true;
+                }
             }
 
             if (any(abs(translation.xy) > 0.0f))

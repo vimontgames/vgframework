@@ -46,6 +46,12 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void UICanvasComponent::SetViewIndex(core::uint _viewIndex)
+    {
+        m_canvas.m_viewIndex = _viewIndex;
+    }
+
+    //--------------------------------------------------------------------------------------
     void UICanvasComponent::Update(const Context & _context)
     {
         m_canvas.m_pickingID = m_pickingID;

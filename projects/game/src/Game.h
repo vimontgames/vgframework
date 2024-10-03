@@ -46,6 +46,7 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
         const vg::core::vector<CharacterBehaviour *> &  getCharacters           (CharacterType _type) const { return m_characters[vg::core::asInteger(_type)];}
 
         const vg::core::vector<PlayerBehaviour *> &     getPlayers              () const;
+        const vg::core::vector<PlayerBehaviour*>        getActivePlayers        () const;
         const vg::core::vector<EnemyBehaviour *> &      getEnemies              () const;
 
         void                                            addItem                 (ItemType _type, ItemBehaviour * _item);

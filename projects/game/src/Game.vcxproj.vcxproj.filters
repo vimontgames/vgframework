@@ -9,11 +9,11 @@
     <ClCompile Include="Behaviour\Goal\GoalBehaviour.cpp">
       <Filter>Behaviour\Goal</Filter>
     </ClCompile>
-    <ClCompile Include="Behaviour\Camera\GameCameraBehaviour.cpp">
-      <Filter>Behaviour\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="Behaviour\Item\ItemBehaviour.cpp">
       <Filter>Behaviour\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Behaviour\Camera\GameCameraManagerBehaviour.cpp">
+      <Filter>Behaviour\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +56,12 @@
     <ClInclude Include="Behaviour\Item\Weapon\WeaponBehaviour.hpp">
       <Filter>Behaviour\Item\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="Behaviour\Camera\GameCameraManagerBehaviour.h">
+      <Filter>Behaviour\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Camera\GameCameraBehaviour.hpp">
+      <Filter>Behaviour\Camera</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviour">
@@ -88,5 +94,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Game.def" />
+    <None Include="Behaviour\Character\Player\PlayerBehaviour.inl">
+      <Filter>Behaviour\Character\Player</Filter>
+    </None>
   </ItemGroup>
 </Project>

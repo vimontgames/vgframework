@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Component/Component.h"
+#include "engine/ICameraComponent.h"
 #include "gfx/IView.h"
 
 namespace vg::core
@@ -22,23 +22,25 @@ namespace vg::renderer
 
 namespace vg::engine
 {
-    class CameraComponent : public core::Component
+    class CameraComponent : public ICameraComponent
     {
     public:
-        VG_CLASS_DECL(CameraComponent, core::Component);
+        VG_CLASS_DECL(CameraComponent, ICameraComponent);
 
-                                                CameraComponent     (const core::string & _name, core::IObject * _parent);
-                                                ~CameraComponent    ();
+                                                CameraComponent             (const core::string & _name, core::IObject * _parent);
+                                                ~CameraComponent            ();
 
-        void                                    Update              (const Context & _context) override;
+        void                                    Update                      (const Context & _context) override;
 
-        VG_INLINE void                          setViewportTarget   (gfx::ViewportTarget _target);
-        VG_INLINE gfx::ViewportTarget           getViewportTarget   () const;
-        gfx::ViewID                             getViewID           () const;
+        void                                    SetViewportOffsetAndScale   (core::float2 _offset, const core::float2 & _scale) final override;
 
-        VG_INLINE float                         getFovY             () const;
-        VG_INLINE float                         getNear             () const;
-        VG_INLINE float                         getFar              () const;
+        VG_INLINE void                          setViewportTarget           (gfx::ViewportTarget _target);
+        VG_INLINE gfx::ViewportTarget           getViewportTarget           () const;
+        gfx::ViewID                             getViewID                   () const;
+
+        VG_INLINE float                         getFovY                     () const;
+        VG_INLINE float                         getNear                     () const;
+        VG_INLINE float                         getFar                      () const;
 
     protected:
         gfx::ViewportTarget                     m_target;

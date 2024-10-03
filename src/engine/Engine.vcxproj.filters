@@ -347,6 +347,8 @@
       <Filter>Component\Audio\Sound</Filter>
     </ClInclude>
     <ClInclude Include="IAttachToNodeComponent.h" />
+    <ClInclude Include="ICameraComponent.h" />
+    <ClInclude Include="IUICanvasComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

@@ -3,8 +3,8 @@
 #include "core/Kernel.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "engine/IEngine.h"
-
 #include "Behaviour/Character/Player/PlayerBehaviour.h"
+#include "Behaviour/Item/ItemBehaviour.h"
 
 using namespace vg::core;
 
@@ -118,6 +118,7 @@ void Game::addCharacter(CharacterType _type, CharacterBehaviour * _character)
     auto & characters = m_characters[vg::core::asInteger(_type)];
     VG_ASSERT(!vector_helper::exists(characters, _character));
     characters.push_back(_character);
+    VG_INFO("[Game] Add %s Character \"%s\"", asString(_type).c_str(), _character->GetName().c_str());
 }
 
 //--------------------------------------------------------------------------------------
@@ -126,12 +127,27 @@ void Game::removeCharacter(CharacterType _type, CharacterBehaviour * _character)
     auto & characters = m_characters[vg::core::asInteger(_type)];
     VG_ASSERT(vector_helper::exists(characters, _character));
     vector_helper::remove(characters, _character);
+    VG_INFO("[Game] Remove %s Character \"%s\"", asString(_type).c_str(), _character->GetName().c_str());
 }
 
 //--------------------------------------------------------------------------------------
 const vg::core::vector<PlayerBehaviour *> & Game::getPlayers() const 
 { 
     return reinterpret_cast<const vg::core::vector<PlayerBehaviour *> &>(m_characters[vg::core::asInteger(CharacterType::Player)]);
+}
+
+//--------------------------------------------------------------------------------------
+const vg::core::vector<PlayerBehaviour *> Game::getActivePlayers() const
+{
+    const auto players = m_characters[vg::core::asInteger(CharacterType::Player)];
+    vector<PlayerBehaviour *> activePlayers;
+    activePlayers.reserve(players.size());
+    for (auto * player : players)
+    {
+        if (player->isActive())
+            activePlayers.push_back((PlayerBehaviour*)player);
+    }
+    return activePlayers;
 }
 
 //--------------------------------------------------------------------------------------
@@ -146,6 +162,7 @@ void Game::addItem(ItemType _type, ItemBehaviour * _item)
     auto & items = m_items[vg::core::asInteger(_type)];
     VG_ASSERT(!vector_helper::exists(items, _item));
     items.push_back(_item);
+    VG_INFO("[Game] Add %s Item \"%s\"", asString(_type).c_str(), _item->GetName().c_str());
 }
 
 //--------------------------------------------------------------------------------------
@@ -154,6 +171,7 @@ void Game::removeItem(ItemType _type, ItemBehaviour * _item)
     auto & items = m_items[vg::core::asInteger(_type)];
     VG_ASSERT(vector_helper::exists(items, _item));
     vector_helper::remove(items, _item);
+    VG_INFO("[Game] Remove %s Item \"%s\"", asString(_type).c_str(), _item->GetName().c_str());
 }
 
 //--------------------------------------------------------------------------------------
