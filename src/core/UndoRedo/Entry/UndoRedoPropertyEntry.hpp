@@ -23,14 +23,16 @@ namespace vg::core
     void UndoRedoPropertyEntry::BeforeChange()
     {
         Factory * factory = (Factory *)Kernel::getFactory();
-        factory->serializePropertyToMemory(GetObject(), &m_prop, m_original, BufferType::UndoRedo);
+        if (auto * obj = GetObject())
+            factory->serializePropertyToMemory(obj, &m_prop, m_original, BufferType::UndoRedo);
     }
 
     //--------------------------------------------------------------------------------------
     void UndoRedoPropertyEntry::AfterChange()
     {
         Factory * factory = (Factory *)Kernel::getFactory();
-        factory->serializePropertyToMemory(GetObject(), &m_prop, m_modified, BufferType::UndoRedo);
+        if (auto * obj = GetObject())
+            factory->serializePropertyToMemory(obj, &m_prop, m_modified, BufferType::UndoRedo);
     }
 
     //--------------------------------------------------------------------------------------

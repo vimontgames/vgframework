@@ -258,6 +258,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Factory::serializePropertyToMemory(const IObject * _object, const IProperty * _prop, io::Buffer & _buffer, BufferType _bufferType)
     {
+        VG_ASSERT(nullptr != _object);
+
         const auto name = _prop->GetName();
         const auto type = _prop->GetType();
         const auto size = _prop->GetSizeOf();
