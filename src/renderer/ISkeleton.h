@@ -5,6 +5,7 @@
 namespace vg::renderer
 {
     using NodeIndex = core::i16;
+    enum class NodeFlags : core::u32;
 
     class ISkeleton : public core::Object
     {
@@ -13,6 +14,7 @@ namespace vg::renderer
 
         virtual core::uint              GetNodeCount            () const = 0;
         virtual const core::string      GetNodeName             (NodeIndex _index) const = 0;
+        virtual NodeFlags               GetNodeFlags            (NodeIndex _index) const = 0;
         virtual const core::float4x4 &  GetNodeWorldMatrix      (NodeIndex _index) const = 0;
         virtual NodeIndex               GetParentIndex          (NodeIndex _index) const = 0;
         virtual void                    SelectNode              (NodeIndex _index, bool _selected) = 0;

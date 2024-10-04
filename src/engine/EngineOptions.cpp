@@ -52,8 +52,8 @@ namespace vg::engine
 
         registerPropertyGroupBegin(EngineOptions, "Animation");
         {
-            registerProperty(EngineOptions, m_animationJobs, "Use Jobs");
-            setPropertyDescription(EngineOptions, m_animationJobs, "Use multithreaded jobs for animation");
+            registerPropertyEnumBitfield(EngineOptions, AnimationOptionFlags, m_animationOptionFlags, "Options");
+            setPropertyDescription(EngineOptions, m_animationOptionFlags, "Options for animations");
         }
         registerPropertyGroupEnd(EngineOptions);
 

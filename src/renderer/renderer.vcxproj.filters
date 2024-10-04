@@ -433,6 +433,9 @@
     <ClInclude Include="RenderPass\ImGui\Extensions\FontStyle\ImGuiFontStyleExtension.hpp">
       <Filter>Pass\ImGui\Extensions\Font</Filter>
     </ClInclude>
+    <ClInclude Include="Importer\NodeFlags.h">
+      <Filter>Importer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

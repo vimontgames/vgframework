@@ -2,6 +2,7 @@
 
 #include "renderer/ISkeleton.h"
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
+#include "renderer/Importer/NodeFlags.h"
 
 using namespace vg::core;
 using namespace vg::renderer;
@@ -35,7 +36,7 @@ namespace vg::editor
                 const uint nodeCount = skeleton->GetNodeCount();
 
                 char treeNodeLabel[256];
-                sprintf_s(treeNodeLabel, "Nodes (%u)", nodeCount);
+                sprintf_s(treeNodeLabel, "Bones [%u]", nodeCount);
                 if (ImGui::TreeNode(treeNodeLabel))
                 {
                     for (uint i = 0; i < nodeCount; ++i)
@@ -72,12 +73,58 @@ namespace vg::editor
                                 skeleton->SelectNode(i, b);
                                 changed = true;
                             }
-                            ImGui::BeginDisabled(true);
+
                             {
+                                string enumLabel = ImGui::getObjectLabel("Node Flags", _object);
+                                auto enumVal = skeleton->GetNodeFlags(i);
+                                string preview = "";
+                                bool first = true;
+                                for (uint e = 0; e < enumCount<NodeFlags>(); ++e)
+                                {
+                                    NodeFlags enumBit = (NodeFlags)getEnumValue<NodeFlags>(e);
+                                    if (NodeFlags::Selected == enumBit)
+                                        continue;
+
+                                    if (asBool(enumVal & enumBit))
+                                    {
+                                        if (!first)
+                                            preview += " | ";
+                                        preview += getEnumString((NodeFlags)enumBit);
+                                        first = false;
+                                    }
+                                }
+
+                                if (ImGui::BeginCombo(ImGuiWindow::getPropertyLabel(enumLabel).c_str(), preview.c_str(), ImGuiComboFlags_None))
+                                {
+                                    for (uint e = 0; e < enumCount<NodeFlags>(); ++e)
+                                    {
+                                        NodeFlags enumBit = (NodeFlags)getEnumValue<NodeFlags>(e);
+                                        if (NodeFlags::Selected == enumBit)
+                                            continue;
+
+                                        bool value = asBool(enumVal & enumBit) ? true : false;
+                                        const string name = getEnumString((NodeFlags)enumBit);
+
+                                        ImGui::BeginDisabled(true);
+
+                                        if (ImGui::Checkbox(name.c_str(), &value))
+                                        {
+                                            if (value)
+                                                enumVal |= enumBit;
+                                            else
+                                                enumVal &= ~enumBit;
+                                        }
+
+                                        ImGui::EndDisabled();
+                                    }
+                                    ImGui::EndCombo();
+                                }
+
+                                ImGui::BeginDisabled(true);
                                 int parent = skeleton->GetParentIndex(i);
-                                changed |= ImGui::InputInt("ParentIndex", &parent);
+                                changed |= ImGui::InputInt("ParentIndex", &parent); 
+                                ImGui::EndDisabled();
                             }
-                            ImGui::EndDisabled();
 
                             ImGui::TreePop();
                         }

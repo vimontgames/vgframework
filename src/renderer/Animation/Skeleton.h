@@ -5,13 +5,14 @@
 
 namespace vg::renderer
 {
-    class Skeleton : public ISkeleton
+    class Skeleton final : public ISkeleton
     {
     public:
         VG_CLASS_DECL_PASSTHROUGH(Skeleton, ISkeleton)
 
         core::uint                                          GetNodeCount        () const final override;
         const core::string                                  GetNodeName         (NodeIndex _index) const final override;
+        NodeFlags                                           GetNodeFlags        (NodeIndex _index) const final override;
         const core::float4x4 &                              GetNodeWorldMatrix  (NodeIndex _index) const final override;
         NodeIndex                                           GetParentIndex      (NodeIndex _index) const final override;
         void                                                SelectNode          (NodeIndex _index, bool _selected) final override;

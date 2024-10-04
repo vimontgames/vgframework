@@ -5,21 +5,19 @@
 #include "core/Misc/AABB/AABB.h"
 #include "renderer/Geometry/Batch/Batch.h"
 #include "renderer/Geometry/Vertex/VertexFormat.h"
+#include "NodeFlags.h"
 
 namespace vg::renderer
 {
     using MeshImporterVertex = renderer::FatVertex;
-
-    enum class NodeFlags : core::u16
-    {
-        Selected = 0x00000001
-    };
 
     class MeshImporterNode 
     {
     public:
         bool read(core::io::Buffer & _buffer);
         bool write(core::io::Buffer & _buffer) const;
+
+        void computeNodeFlags();
 
         core::string        name;
         core::i16           parent_index;

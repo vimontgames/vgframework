@@ -113,6 +113,7 @@
     <ClInclude Include="IDebugDraw.h" />
     <ClInclude Include="ILightInstance.h" />
     <ClInclude Include="ImGui_consts.h" />
+    <ClInclude Include="Importer\NodeFlags.h" />
     <ClInclude Include="Instance\Light\Directional\DirectionalLightInstance.h" />
     <ClInclude Include="Instance\Light\Directional\DirectionalLightInstance.hpp" />
     <ClInclude Include="Instance\Light\LightInstance.h" />

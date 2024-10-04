@@ -603,7 +603,7 @@ namespace vg::editor
         {
             if (enumVal == enumPairs[e].value)
             {
-                preview = getEnumDisplayName<T>(_prop, enumVal);
+                preview = getEnumDisplayName<T>(_prop, e);
 
                 auto it = preview.find_last_of("_");
                 if (string::npos != it && it != preview.length())

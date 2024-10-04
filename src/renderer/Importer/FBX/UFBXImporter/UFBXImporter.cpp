@@ -189,6 +189,8 @@ namespace vg::renderer
                 node.rot = UFBXQuatToQuat(transform.rotation);
                 node.pos = UFBXVec3ToFloat3(transform.translation);
                 node.scale = UFBXVec3ToFloat3(transform.scale);
+
+                node.computeNodeFlags();
             }
 
             UFbxSkin = _UFbxMesh->skin_deformers[0];

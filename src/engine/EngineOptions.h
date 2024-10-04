@@ -10,6 +10,11 @@ namespace vg::physics
 
 namespace vg::engine
 {
+    vg_enum_class(AnimationOptionFlags, core::u32,
+        Jobs        = 0x00000001,
+        Skeleton    = 0x00000002
+    );
+
     class EngineOptions final : public IEngineOptions, public core::Singleton<EngineOptions>
     {
     public:
@@ -26,7 +31,9 @@ namespace vg::engine
 
         void                    OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
-        VG_INLINE bool          useAnimationJobs    () const { return m_animationJobs;}
+        VG_INLINE bool          useAnimationJobs    () const { return (core::u32)AnimationOptionFlags::Jobs & (core::u32)m_animationOptionFlags; }
+        VG_INLINE bool          isShowSkeleton      () const { return (core::u32)AnimationOptionFlags::Skeleton & (core::u32)m_animationOptionFlags; }
+
         VG_INLINE bool          isBodyVisible       (physics::ShapeType _shape) const { return m_showRigidBodies && ((1 << (core::u32)_shape) & (core::u32)m_showRigidBodiesMask); }
         VG_INLINE bool          mergeStaticBodies   () const { return m_mergeStaticBodies; }
 
@@ -49,6 +56,6 @@ namespace vg::engine
         float                   m_fixedDT = 1000.0f / 60.0f;
 
         // Animation
-        bool                    m_animationJobs = false;        
+        AnimationOptionFlags    m_animationOptionFlags = AnimationOptionFlags::Jobs;
     };
 }

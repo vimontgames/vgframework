@@ -32,7 +32,6 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerProperty(MeshComponent, m_displayBones, "Display Bones");
         registerPropertyResource(MeshComponent, m_meshResource, "Mesh");
         registerPropertyObjectPtrEx(MeshComponent, m_meshInstance, "MeshInstance", PropertyFlags::NotSaved | PropertyFlags::Flatten);
         registerPropertyObjectEx(MeshComponent, m_meshMaterials, "Materials", PropertyFlags::Flatten);
@@ -79,18 +78,19 @@ namespace vg::engine
 
         if (m_meshInstance->IsSkinned())
         {
+            const bool displayBones = isSkeletonVisible();
+
             if (EngineOptions::get()->useAnimationJobs())
             {
                 if (nullptr == m_updateSkeletonJob)
-                    m_updateSkeletonJob = new AnimationJob(this, m_displayBones);
+                    m_updateSkeletonJob = new AnimationJob(this, displayBones);
 
                 const auto animSync = Engine::get()->getJobSync(EngineJobType::Animation);
 
                 core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
                 jobScheduler->Start(m_updateSkeletonJob, animSync);
 
-                #if 1
-                if (m_displayBones)
+                if (isSkeletonVisible())
                 {
                     const auto debugDrawSync = Engine::get()->GetRenderer()->GetJobSync(RendererJobType::DebugDraw);
 
@@ -98,7 +98,6 @@ namespace vg::engine
                         m_drawSkeletonJob = new DrawSkeletonJob(this);
                     jobScheduler->StartAfter(animSync, m_drawSkeletonJob, debugDrawSync);
                 }
-                #endif
             }
             else
             {
@@ -106,10 +105,16 @@ namespace vg::engine
 
                 m_meshInstance->UpdateSkeleton();
 
-                if (m_displayBones)
+                if (displayBones)
                     m_meshInstance->DrawSkeleton(_context.m_world);
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshComponent::isSkeletonVisible() const
+    {
+        return EngineOptions::get()->isShowSkeleton();
     }
 
     //--------------------------------------------------------------------------------------

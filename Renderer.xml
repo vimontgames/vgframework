@@ -1,14 +1,14 @@
 <Root>
     <Object class="RendererOptions">
         <Property type="String" name="m_name" flags="NotVisible" value="Renderer Options"/>
-        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="4100248654"/>
-        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
-        <Property type="Bool" name="m_toolMode" flags="SingleLine" value="false"/>
+        <Property type="Uint32" name="m_uid" flags="" value="4100248654"/>
+        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+        <Property type="Bool" name="m_toolMode" flags="SingleLine" value="true"/>
         <Property type="Bool" name="m_rayTracing" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_postProcess" flags="SingleLine" value="true"/>
         <Property type="EnumU8" name="m_lightingMode" value="Deferred"/>
-        <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
+        <Property type="EnumU32" name="m_debugDisplayMode" flags="AlphabeticalOrder" value="None"/>
         <Property type="EnumFlagsU32" name="m_displayFlags" flags="Bitfield" value="AlbedoMap|NormalMap"/>
         <Property type="Bool" name="m_wireframe" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_aabb" flags="SingleLine" value="false"/>

@@ -32,6 +32,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    NodeFlags Skeleton::GetNodeFlags(NodeIndex _index) const
+    {
+        VG_ASSERT(_index < m_nodes.size());
+        return m_nodes[_index].flags;
+    }
+
+    //--------------------------------------------------------------------------------------
     const core::float4x4 & Skeleton::GetNodeWorldMatrix(NodeIndex _index) const
     {
         VG_ASSERT(_index < m_nodes.size());

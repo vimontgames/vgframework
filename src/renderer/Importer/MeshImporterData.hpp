@@ -3,7 +3,102 @@ using namespace vg::core;
 namespace vg::renderer
 {
     // Cooked mesh version
-    static const u32 MeshImporterDataVersion = 13;
+    static const u32 MeshImporterDataVersion = 14;
+
+    // Use unordered_map for the flags
+    static const std::unordered_map<std::string, NodeFlags> g_mixamoBoneFlags =
+    {
+        {"mixamorig:Hips",               NodeFlags::LowerBody},
+        {"mixamorig:Spine",              NodeFlags::UpperBody},
+        {"mixamorig:Spine1",             NodeFlags::UpperBody},
+        {"mixamorig:Spine2",             NodeFlags::UpperBody},
+        {"mixamorig:Neck",               NodeFlags::UpperBody},
+        {"mixamorig:Head",               NodeFlags::UpperBody},
+
+        // Left Arm and Hand
+        {"mixamorig:LeftShoulder",       NodeFlags::UpperBody},
+        {"mixamorig:LeftArm",            NodeFlags::UpperBody},
+        {"mixamorig:LeftForeArm",        NodeFlags::UpperBody},
+        {"mixamorig:LeftHand",           NodeFlags::UpperBody},
+        {"mixamorig:LeftHandThumb1",     NodeFlags::UpperBody},
+        {"mixamorig:LeftHandThumb2",     NodeFlags::UpperBody},
+        {"mixamorig:LeftHandThumb3",     NodeFlags::UpperBody},
+        {"mixamorig:LeftHandIndex1",     NodeFlags::UpperBody},
+        {"mixamorig:LeftHandIndex2",     NodeFlags::UpperBody},
+        {"mixamorig:LeftHandIndex3",     NodeFlags::UpperBody},
+        {"mixamorig:LeftHandIndex_End",  NodeFlags::UpperBody},
+
+        // Left Hand Fingers
+        {"mixamorig:LeftHandMiddle1",    NodeFlags::UpperBody},
+        {"mixamorig:LeftHandMiddle2",    NodeFlags::UpperBody},
+        {"mixamorig:LeftHandMiddle3",    NodeFlags::UpperBody},
+        {"mixamorig:LeftHandMiddle_End", NodeFlags::UpperBody},
+        {"mixamorig:LeftHandRing1",      NodeFlags::UpperBody},
+        {"mixamorig:LeftHandRing2",      NodeFlags::UpperBody},
+        {"mixamorig:LeftHandRing3",      NodeFlags::UpperBody},
+        {"mixamorig:LeftHandRing_End",   NodeFlags::UpperBody},
+        {"mixamorig:LeftHandPinky1",     NodeFlags::UpperBody},
+        {"mixamorig:LeftHandPinky2",     NodeFlags::UpperBody},
+        {"mixamorig:LeftHandPinky3",     NodeFlags::UpperBody},
+        {"mixamorig:LeftHandPinky_End",  NodeFlags::UpperBody},
+
+        // Right Arm and Hand
+        {"mixamorig:RightShoulder",      NodeFlags::UpperBody},
+        {"mixamorig:RightArm",           NodeFlags::UpperBody},
+        {"mixamorig:RightForeArm",       NodeFlags::UpperBody},
+        {"mixamorig:RightHand",          NodeFlags::UpperBody},
+        {"mixamorig:RightHandThumb1",    NodeFlags::UpperBody},
+        {"mixamorig:RightHandThumb2",    NodeFlags::UpperBody},
+        {"mixamorig:RightHandThumb3",    NodeFlags::UpperBody},
+        {"mixamorig:RightHandIndex1",    NodeFlags::UpperBody},
+        {"mixamorig:RightHandIndex2",    NodeFlags::UpperBody},
+        {"mixamorig:RightHandIndex3",    NodeFlags::UpperBody},
+        {"mixamorig:RightHandIndex_End", NodeFlags::UpperBody},
+
+        // Right Hand Fingers
+        {"mixamorig:RightHandMiddle1",   NodeFlags::UpperBody},
+        {"mixamorig:RightHandMiddle2",   NodeFlags::UpperBody},
+        {"mixamorig:RightHandMiddle3",   NodeFlags::UpperBody},
+        {"mixamorig:RightHandMiddle_End",NodeFlags::UpperBody},
+        {"mixamorig:RightHandRing1",     NodeFlags::UpperBody},
+        {"mixamorig:RightHandRing2",     NodeFlags::UpperBody},
+        {"mixamorig:RightHandRing3",     NodeFlags::UpperBody},
+        {"mixamorig:RightHandRing_End",  NodeFlags::UpperBody},
+        {"mixamorig:RightHandPinky1",    NodeFlags::UpperBody},
+        {"mixamorig:RightHandPinky2",    NodeFlags::UpperBody},
+        {"mixamorig:RightHandPinky3",    NodeFlags::UpperBody},
+        {"mixamorig:RightHandPinky_End", NodeFlags::UpperBody},
+
+        // Left Leg Bones
+        {"mixamorig:LeftUpLeg",          NodeFlags::LowerBody},
+        {"mixamorig:LeftLeg",            NodeFlags::LowerBody},
+        {"mixamorig:LeftFoot",           NodeFlags::LowerBody},
+        {"mixamorig:LeftToeBase",        NodeFlags::LowerBody},
+        {"mixamorig:LeftToe_End",        NodeFlags::LowerBody},
+
+        // Right Leg Bones
+        {"mixamorig:RightUpLeg",         NodeFlags::LowerBody},
+        {"mixamorig:RightLeg",           NodeFlags::LowerBody},
+        {"mixamorig:RightFoot",          NodeFlags::LowerBody},
+        {"mixamorig:RightToeBase",       NodeFlags::LowerBody},
+        {"mixamorig:RightToe_End",       NodeFlags::LowerBody},
+
+        // Additional Bones
+        {"mixamorig:LeftEye",            NodeFlags::UpperBody},
+        {"mixamorig:RightEye",           NodeFlags::UpperBody},
+        {"mixamorig:Jaw",                NodeFlags::UpperBody},
+        {"mixamorig:Spine3",             NodeFlags::UpperBody},
+        {"mixamorig:Spine4",             NodeFlags::UpperBody}
+    };
+
+    //--------------------------------------------------------------------------------------
+    void MeshImporterNode::computeNodeFlags()
+    {
+        auto it = g_mixamoBoneFlags.find(name);
+            
+        if (g_mixamoBoneFlags.end() != it)
+            flags |= it->second;
+    }
 
     //--------------------------------------------------------------------------------------
     bool MeshImporterNode::read(core::io::Buffer & _buffer)
