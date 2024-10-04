@@ -190,7 +190,7 @@ namespace vg::renderer
                 node.pos = UFBXVec3ToFloat3(transform.translation);
                 node.scale = UFBXVec3ToFloat3(transform.scale);
 
-                node.computeNodeFlags();
+                node.computeBodyPartFlags();
             }
 
             UFbxSkin = _UFbxMesh->skin_deformers[0];

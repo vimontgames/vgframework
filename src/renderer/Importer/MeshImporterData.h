@@ -5,7 +5,7 @@
 #include "core/Misc/AABB/AABB.h"
 #include "renderer/Geometry/Batch/Batch.h"
 #include "renderer/Geometry/Vertex/VertexFormat.h"
-#include "NodeFlags.h"
+#include "BodyPartFlags.h"
 
 namespace vg::renderer
 {
@@ -17,11 +17,13 @@ namespace vg::renderer
         bool read(core::io::Buffer & _buffer);
         bool write(core::io::Buffer & _buffer) const;
 
-        void computeNodeFlags();
+        void computeBodyPartFlags();
+
+        bool                selected = false;
 
         core::string        name;
         core::i16           parent_index;
-        NodeFlags           flags;
+        BodyPartFlags       flags;
 
         core::float4x4      geometry_to_node;
         core::float4x4      node_to_parent;

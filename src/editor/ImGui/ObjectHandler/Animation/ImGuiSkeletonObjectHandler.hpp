@@ -2,7 +2,7 @@
 
 #include "renderer/ISkeleton.h"
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
-#include "renderer/Importer/NodeFlags.h"
+#include "renderer/Importer/BodyPartFlags.h"
 
 using namespace vg::core;
 using namespace vg::renderer;
@@ -75,37 +75,38 @@ namespace vg::editor
                             }
 
                             {
-                                string enumLabel = ImGui::getObjectLabel("Node Flags", _object);
+                                ImGui::BeginDisabled(true);
+                                int parent = skeleton->GetParentIndex(i);
+                                changed |= ImGui::InputInt("ParentIndex", &parent);
+                                ImGui::EndDisabled();
+
+                                string enumLabel = ImGui::getObjectLabel("BodyParts", _object);
                                 auto enumVal = skeleton->GetNodeFlags(i);
                                 string preview = "";
                                 bool first = true;
-                                for (uint e = 0; e < enumCount<NodeFlags>(); ++e)
+                                for (uint e = 0; e < enumCount<BodyPartFlags>(); ++e)
                                 {
-                                    NodeFlags enumBit = (NodeFlags)getEnumValue<NodeFlags>(e);
-                                    if (NodeFlags::Selected == enumBit)
-                                        continue;
+                                    BodyPartFlags enumBit = (BodyPartFlags)getEnumValue<BodyPartFlags>(e);
 
                                     if (asBool(enumVal & enumBit))
                                     {
                                         if (!first)
                                             preview += " | ";
-                                        preview += getEnumString((NodeFlags)enumBit);
+                                        preview += getEnumString((BodyPartFlags)enumBit);
                                         first = false;
                                     }
                                 }
 
-                                if (ImGui::BeginCombo(ImGuiWindow::getPropertyLabel(enumLabel).c_str(), preview.c_str(), ImGuiComboFlags_None))
+                                ImGui::BeginDisabledStyle(true);
+
+                                if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_None))
                                 {
-                                    for (uint e = 0; e < enumCount<NodeFlags>(); ++e)
+                                    for (uint e = 0; e < enumCount<BodyPartFlags>(); ++e)
                                     {
-                                        NodeFlags enumBit = (NodeFlags)getEnumValue<NodeFlags>(e);
-                                        if (NodeFlags::Selected == enumBit)
-                                            continue;
+                                        BodyPartFlags enumBit = (BodyPartFlags)getEnumValue<BodyPartFlags>(e);
 
                                         bool value = asBool(enumVal & enumBit) ? true : false;
-                                        const string name = getEnumString((NodeFlags)enumBit);
-
-                                        ImGui::BeginDisabled(true);
+                                        const string name = getEnumString((BodyPartFlags)enumBit);
 
                                         if (ImGui::Checkbox(name.c_str(), &value))
                                         {
@@ -114,16 +115,11 @@ namespace vg::editor
                                             else
                                                 enumVal &= ~enumBit;
                                         }
-
-                                        ImGui::EndDisabled();
                                     }
                                     ImGui::EndCombo();
                                 }
 
-                                ImGui::BeginDisabled(true);
-                                int parent = skeleton->GetParentIndex(i);
-                                changed |= ImGui::InputInt("ParentIndex", &parent); 
-                                ImGui::EndDisabled();
+                                ImGui::EndDisabledStyle();
                             }
 
                             ImGui::TreePop();

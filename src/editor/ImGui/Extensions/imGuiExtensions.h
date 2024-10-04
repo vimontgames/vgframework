@@ -50,4 +50,7 @@ namespace ImGui
 
     void PushStyle(vg::renderer::FontStyle _style);
     void PopStyle();
+
+    void BeginDisabledStyle(bool _disabled);
+    void EndDisabledStyle();
 }

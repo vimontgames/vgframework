@@ -8,6 +8,11 @@ namespace vg::renderer
     class IMeshInstance;
 }
 
+namespace vg::renderer
+{
+    enum class BodyPartFlags : core::u32;
+}
+
 namespace vg::engine
 {
     class AnimationResource : public IAnimationResource
@@ -66,6 +71,7 @@ namespace vg::engine
         float                                   m_time      = 0.0f;
         float                                   m_weight    = 0.0f;
         float                                   m_speed     = 1.0f;
-
+        bool                                    m_useBodyParts = false;
+        renderer::BodyPartFlags                 m_bodyParts;
     };
 }

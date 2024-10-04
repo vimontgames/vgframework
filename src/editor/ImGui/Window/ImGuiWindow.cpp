@@ -565,7 +565,8 @@ namespace vg::editor
         const auto flags = _prop->GetFlags();
 
         const bool readonly = asBool(PropertyFlags::ReadOnly & flags);
-        ImGui::BeginDisabled(readonly);
+        if (readonly)
+            BeginDisabledStyle(true);
 
         T * pEnum = (T *)(uint_ptr(_object) + offset);
         int enumVal = (int)*pEnum;
@@ -615,18 +616,24 @@ namespace vg::editor
 
         bool changed = false;
 
-        string enumLabel = ImGui::getObjectLabel(_prop->GetDisplayName(), _prop);
+        string enumLabel = ImGui::getObjectLabel("", _prop->GetDisplayName(), _prop);
         if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
         {
             for (uint e = 0; e < enumPairs.size(); ++e)
             {
                 const string enumName = enumPairs[e].name;
+                //ImGui::BeginDisabled(readonly);
                 changed |= editEnum_Recur<T>(enumPairs, enumName, e, pEnum, readonly);
+                //ImGui::EndDisabled();
             }
             ImGui::EndCombo();
         }
 
-        ImGui::EndDisabled();
+        if (readonly)
+            EndDisabledStyle();
+
+        drawPropertyLabel(_propContext, _prop);
+        
         return changed;
     }
 
@@ -638,7 +645,8 @@ namespace vg::editor
         const auto flags = _prop->GetFlags();
 
         const bool readonly = asBool(PropertyFlags::ReadOnly & flags);
-        ImGui::BeginDisabled(readonly);
+        if (readonly)
+            BeginDisabledStyle(true);
 
         T * pEnum = (T*)(uint_ptr(_object) + offset);
         int enumVal = (int)*pEnum;
@@ -664,11 +672,12 @@ namespace vg::editor
         if (!found)
             preview = "<None>";
 
-        string enumLabel = ImGui::getObjectLabel(_prop->GetDisplayName(), _prop);
+        string enumLabel = ImGui::getObjectLabel("", _prop->GetDisplayName(), _prop);
         if (ImGui::BeginCombo(getPropertyLabel(enumLabel).c_str(), preview.c_str(), ImGuiComboFlags_None))
         {
             for (uint e = 0; e < _prop->GetEnumCount(); ++e)
             {
+                //ImGui::BeginDisabled(readonly);
                 bool value = ((enumVal >> e) & 1) ? true : false;
                 const char * name = _prop->GetEnumName(e);
                 if (ImGui::Checkbox(name, &value))
@@ -682,6 +691,7 @@ namespace vg::editor
                     }
                     edited = true;
                 }
+                //ImGui::EndDisabled();
             }
             ImGui::EndCombo();
 
@@ -699,7 +709,9 @@ namespace vg::editor
 
         drawPropertyLabel(_propContext, _prop);
 
-        ImGui::EndDisabled();
+        if (readonly)
+            EndDisabledStyle();
+
         return changed;
     }
 
@@ -959,11 +971,15 @@ namespace vg::editor
         
         const IClassDesc * classDesc = propContext.m_originalObject->GetClassDesc();
         auto * previousProp = classDesc->GetPreviousProperty(propContext.m_originalProp->GetName());
-        const bool singleLine = asBool(PropertyFlags::SingleLine & flags);
+        bool singleLine = false;
         // Render property next to the previous one
-        if (singleLine && (previousProp && asBool(PropertyFlags::SingleLine & previousProp->GetFlags())))
-            ImGui::SameLine();
+        if (asBool(PropertyFlags::SingleLine & flags))
+        {
+            singleLine = true;
 
+            if ((previousProp && asBool(PropertyFlags::SingleLine & previousProp->GetFlags())))
+                ImGui::SameLine();
+        }
         const bool hexa = asBool(PropertyFlags::Hexadecimal & flags);
 
         bool optional = false, optionalChanged = false;
@@ -1034,7 +1050,7 @@ namespace vg::editor
                         optional = true;
 
                         if (!*b)
-                            ImGui::BeginDisabled(true);
+                            ImGui::BeginDisabledStyle(true);
                     }
                 }                
             }
@@ -2059,7 +2075,7 @@ namespace vg::editor
                 ImGui::PopItemWidth();
                 bool * b = propContext.m_optionalProp->GetPropertyBool(propContext.m_optionalObject);
                 if (!*b)
-                    ImGui::EndDisabled();
+                    ImGui::EndDisabledStyle();
             }
         }
 

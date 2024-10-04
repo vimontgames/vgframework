@@ -26,7 +26,7 @@ namespace vg::engine
 
         registerPropertyGroupBegin(EngineOptions, "Physics");
         {
-            registerOptionalPropertyEnumBitfield(EngineOptions, m_showRigidBodies, physics::ShapeTypeFlags, m_showRigidBodiesMask, "Show bodies")
+            registerOptionalPropertyEnumBitfield(EngineOptions, m_showRigidBodies, physics::ShapeTypeFlags, m_showRigidBodiesMask, "Bodies")
             setPropertyDescription(EngineOptions, m_showRigidBodiesMask, "Show physics bodies of type");
 
             registerProperty(EngineOptions, m_mergeStaticBodies, "Merge static");

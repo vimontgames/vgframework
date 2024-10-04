@@ -32,7 +32,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    NodeFlags Skeleton::GetNodeFlags(NodeIndex _index) const
+    BodyPartFlags Skeleton::GetNodeFlags(NodeIndex _index) const
     {
         VG_ASSERT(_index < m_nodes.size());
         return m_nodes[_index].flags;
@@ -56,17 +56,15 @@ namespace vg::renderer
     void Skeleton::SelectNode(NodeIndex _index, bool _selected)
     {
         VG_ASSERT(_index < m_nodes.size());
-        if (_selected)
-            m_nodes[_index].flags |= NodeFlags::Selected;
-        else
-            m_nodes[_index].flags &= ~NodeFlags::Selected;
+        if (m_nodes[_index].selected != _selected)
+            m_nodes[_index].selected = _selected;
     }
 
     //--------------------------------------------------------------------------------------
     bool Skeleton::IsNodeSelected(NodeIndex _index) const
     {
         VG_ASSERT(_index < m_nodes.size());
-        return asBool(NodeFlags::Selected & m_nodes[_index].flags);
+        return m_nodes[_index].selected;
     }
 
     //--------------------------------------------------------------------------------------

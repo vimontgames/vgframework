@@ -5,6 +5,7 @@
 #include "engine/Component/Animation/AnimationComponent.h"
 #include "engine/Component/Mesh/MeshComponent.h"
 #include "renderer/IMeshInstance.h"
+#include "renderer/Importer/BodyPartFlags.h"
 
 using namespace vg::core;
 using namespace vg::renderer;
@@ -31,18 +32,21 @@ namespace vg::engine
         registerPropertyCallbackEx(AnimationResource, playAnim, "Play", PropertyFlags::SingleLine);
         registerPropertyCallbackEx(AnimationResource, stopAnim, "Stop", PropertyFlags::SingleLine);
 
-        registerProperty(AnimationResource, m_play, "Play");
-        registerPropertyEx(AnimationResource, m_loop, "Loop", PropertyFlags::SingleLine);
+        registerPropertyEx(AnimationResource, m_play, "Play", PropertyFlags::SingleLine | PropertyFlags::Debug);
+        registerPropertyEx(AnimationResource, m_loop, "Loop", PropertyFlags::SingleLine | PropertyFlags::Debug);
 
         setPropertyFlag(AnimationResource, m_name, PropertyFlags::NotVisible, false);
 
         registerPropertyEx(AnimationResource, m_time, "Time", PropertyFlags::NotSaved);
 
+        registerProperty(AnimationResource, m_speed, "Speed");
+        setPropertyRange(AnimationResource, m_speed, float2(0.0f, 10.0f));
+
         registerPropertyEx(AnimationResource, m_weight, "Weight", PropertyFlags::NotSaved);
         setPropertyRange(AnimationResource, m_weight, float2(0.0f, 1.0f));
 
-        registerProperty(AnimationResource, m_speed, "Speed");
-        setPropertyRange(AnimationResource, m_speed, float2(0.0f, 10.0f));
+        registerPropertyEnumBitfield(AnimationResource, renderer::BodyPartFlags, m_bodyParts, "Mask");
+        setPropertyDescription(AnimationResource, m_bodyParts, "Body parts of the mesh that will use this animation");
 
         registerResizeVectorFunc(AnimationResource, ResizeAnimationResourceVector);
 

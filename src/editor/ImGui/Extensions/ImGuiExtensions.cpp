@@ -462,4 +462,31 @@ namespace ImGui
         auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
         imGuiAdapter->PopFontStyle();
     }
+
+    static bool g_isFakeDisabled = false;
+    static float g_backupAlpha;
+
+    //--------------------------------------------------------------------------------------
+    void BeginDisabledStyle(bool _disabled)
+    {
+        if (!g_isFakeDisabled)
+        {
+            //ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+            ImGuiContext & g = *GImGui;
+            g_backupAlpha = g.Style.Alpha;
+            g.Style.Alpha *= g.Style.DisabledAlpha;
+            g_isFakeDisabled = true;
+        }
+    }
+    //--------------------------------------------------------------------------------------
+    void EndDisabledStyle()
+    {
+        if (g_isFakeDisabled)
+        {
+            //ImGui::PopStyleColor();
+            ImGuiContext & g = *GImGui;
+            g.Style.Alpha = g_backupAlpha;
+            g_isFakeDisabled = false;
+        }
+    }
 }

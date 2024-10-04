@@ -675,7 +675,7 @@ namespace vg::renderer
                 u32 color = unselectedColor;
                 float3 boxSize = float3(0.01f, 0.01f, 0.01f);
 
-                if (asBool(NodeFlags::Selected & node.flags))
+                if (skeleton->IsNodeSelected(j))
                 {
                     color = selectedColor;
                     boxSize *= 1.5f;

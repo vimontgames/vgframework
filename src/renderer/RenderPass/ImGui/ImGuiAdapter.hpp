@@ -695,6 +695,7 @@ namespace vg::renderer
         ImGuiStyle & style = ImGui::GetStyle();
         style.TabBarOverlineSize = 0;
         style.DockingSeparatorSize = 0;
+        style.DisabledAlpha = 0.8f;
     }
 
     //--------------------------------------------------------------------------------------

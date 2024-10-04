@@ -12,7 +12,7 @@ namespace vg::renderer
 
         core::uint                                          GetNodeCount        () const final override;
         const core::string                                  GetNodeName         (NodeIndex _index) const final override;
-        NodeFlags                                           GetNodeFlags        (NodeIndex _index) const final override;
+        BodyPartFlags                                           GetNodeFlags        (NodeIndex _index) const final override;
         const core::float4x4 &                              GetNodeWorldMatrix  (NodeIndex _index) const final override;
         NodeIndex                                           GetParentIndex      (NodeIndex _index) const final override;
         void                                                SelectNode          (NodeIndex _index, bool _selected) final override;
