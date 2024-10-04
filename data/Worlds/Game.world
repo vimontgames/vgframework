@@ -21,35 +21,6 @@
                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Scenes/Aiguelongue.scene"/>
             </Object>
         </Property>
-        <Property type="ResourcePtrVector" name="m_prefabsResources" flags="Resource">
-            <Object class="PrefabResource">
-                <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                <Property type="Uint32" name="m_uid" flags="" value="3169814511"/>
-                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Goal.prefab"/>
-            </Object>
-            <Object class="PrefabResource">
-                <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                <Property type="Uint32" name="m_uid" flags="" value="3346520030"/>
-                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Football.prefab"/>
-            </Object>
-            <Object class="PrefabResource">
-                <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                <Property type="Uint32" name="m_uid" flags="" value="3147124227"/>
-                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Bat.prefab"/>
-            </Object>
-            <Object class="PrefabResource">
-                <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                <Property type="Uint32" name="m_uid" flags="" value="0"/>
-                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/GJ.prefab"/>
-            </Object>
-        </Property>
+        <Property type="ResourcePtrVector" name="m_prefabsResources" flags="Resource"/>
     </Object>
 </Root>

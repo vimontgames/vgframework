@@ -156,7 +156,6 @@
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="true"/>
                                 <Property type="Resource" name="m_meshResource" flags="Resource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
@@ -248,6 +247,7 @@
                                         <Property type="Bool" name="m_useTarget" flags="NotVisible" value="true"/>
                                         <Property type="ObjectHandle" name="m_target" flags="Optional" value="3525072167"/>
                                         <Property type="String" name="m_boneName" value="Jg_ R Finger21"/>
+                                        <Property type="Float4x4" name="m_transform" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -313,6 +313,7 @@
                                         <Property type="Bool" name="m_useTarget" flags="NotVisible" value="true"/>
                                         <Property type="ObjectHandle" name="m_target" flags="Optional" value="3525072167"/>
                                         <Property type="String" name="m_boneName" value="Jg_ L Finger21"/>
+                                        <Property type="Float4x4" name="m_transform" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>

@@ -76,7 +76,6 @@
                                 <Property type="Uint32" name="m_originalUID" flags="" value="4120299909"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="true"/>
                                 <Property type="Resource" name="m_meshResource" flags="Resource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
@@ -102,7 +101,7 @@
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value=""/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="576853119"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Materials/VGF_Boy/VGF_Boy_Glass.mat"/>
