@@ -8,11 +8,17 @@ vg_enum(CharacterType , vg::core::u8,
     Enemy
 );
 
-vg_enum(CharacterState, vg::core::u8,
+vg_enum(CharacterPrimaryState, vg::core::u8,
     Idle = 0,
     Walking,
     Running,
     Jumping
+);
+
+vg_enum(CharacterSecondaryState, vg::core::u8,
+    None = 0,
+    SwordHit,
+    KickBall
 );
 
 vg_enum(ItemType, vg::core::u8,

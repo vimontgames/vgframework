@@ -20,8 +20,11 @@ CharacterBehaviour::CharacterBehaviour(const string & _name, IObject * _parent, 
 {
     SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
 
-    for (uint i = 0; i < vg::core::countof(m_anim); ++i)
-        m_anim[i] = -1;
+    for (uint i = 0; i < vg::core::countof(m_primaryAnim); ++i)
+        m_primaryAnim[i] = -1;
+
+    for (uint i = 0; i < vg::core::countof(m_secondaryAnim); ++i)
+        m_secondaryAnim[i] = -1;
 }
 
 //--------------------------------------------------------------------------------------
@@ -46,14 +49,16 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
         registerProperty(CharacterBehaviour, m_jumpSpeed, "Small Jump");
         registerProperty(CharacterBehaviour, m_runJumpSpeed, "Big Jump");
 
-        registerPropertyGroupBegin(CharacterBehaviour, "Debug");
+        //registerPropertyGroupBegin(CharacterBehaviour, "Debug");
         {
             registerPropertyEx(CharacterBehaviour, m_isActive, "Active", vg::core::PropertyFlags::NotSaved);
-            registerPropertyEnumEx(CharacterBehaviour, CharacterState, m_state, "State", vg::core::PropertyFlags::NotSaved);
             registerPropertyEx(CharacterBehaviour, m_currentSpeed, "Speed", vg::core::PropertyFlags::NotSaved);
             registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rot", vg::core::PropertyFlags::NotSaved);
+
+            registerPropertyEnumEx(CharacterBehaviour, CharacterPrimaryState, m_primaryState, "Primary State", vg::core::PropertyFlags::NotSaved);
+            registerPropertyEnumEx(CharacterBehaviour, CharacterSecondaryState, m_secondaryState, "Secondary State", vg::core::PropertyFlags::NotSaved);
         }
-        registerPropertyGroupEnd(CharacterBehaviour);
+        //registerPropertyGroupEnd(CharacterBehaviour);
     }
     registerPropertyGroupEnd(CharacterBehaviour);
 
@@ -69,10 +74,56 @@ void CharacterBehaviour::OnEnable()
 
     if (nullptr != animationComponent)
     {
-        m_anim[CharacterState::Idle] = animationComponent->GetAnimationIndex("Idle");
-        m_anim[CharacterState::Walking] = animationComponent->GetAnimationIndex("Walking");
-        m_anim[CharacterState::Running] = animationComponent->GetAnimationIndex("Running");
-        m_anim[CharacterState::Jumping] = animationComponent->GetAnimationIndex("Jump");
+        for (uint i = 0; i < enumCount<CharacterPrimaryState>(); ++i)
+        {
+            const auto characterPrimaryState = (CharacterPrimaryState)i;
+
+            switch (characterPrimaryState)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(characterPrimaryState);
+                    break;
+
+                case CharacterPrimaryState::Idle:
+                    m_primaryAnim[i] = animationComponent->GetAnimationIndex("Idle");
+                    break;
+
+                case CharacterPrimaryState::Walking:
+                    m_primaryAnim[i] = animationComponent->GetAnimationIndex("Walking");
+                    break;
+
+                case CharacterPrimaryState::Running:
+                    m_primaryAnim[i] = animationComponent->GetAnimationIndex("Running");
+                    break;
+
+                case CharacterPrimaryState::Jumping:
+                    m_primaryAnim[i] = animationComponent->GetAnimationIndex("Jump");
+                    break;
+            }               
+        }
+
+        for (uint i = 0; i < enumCount<CharacterSecondaryState>(); ++i)
+        {
+            const auto characterSecondaryState = (CharacterSecondaryState)i;
+
+            switch (characterSecondaryState)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(characterSecondaryState);
+                    break;
+
+                case CharacterSecondaryState::None:
+                    break;
+
+                case CharacterSecondaryState::SwordHit:
+                    m_secondaryAnim[i] = animationComponent->GetAnimationIndex("SwordHit");
+                    break;
+
+                case CharacterSecondaryState::KickBall:
+                    m_secondaryAnim[i] = animationComponent->GetAnimationIndex("KickBall");
+                    break;
+            }
+        }
     }   
 }
 
@@ -98,10 +149,24 @@ void CharacterBehaviour::OnStop()
 }
 
 //--------------------------------------------------------------------------------------
-void CharacterBehaviour::PlayAnim(CharacterState _state, bool _loop)
+void CharacterBehaviour::PlayAnim(CharacterPrimaryState _state, bool _loop)
 {
     if (IAnimationComponent * animationComponent = GetGameObject()->GetComponentT<IAnimationComponent>())
-        animationComponent->PlayAnimation(m_anim[_state], _loop, 1.0f);
+        animationComponent->PlayAnimation(m_primaryAnim[_state], _loop);
+}
+
+//--------------------------------------------------------------------------------------
+void CharacterBehaviour::PlayAnim(CharacterSecondaryState _state, bool _loop)
+{
+    if (IAnimationComponent * animationComponent = GetGameObject()->GetComponentT<IAnimationComponent>())
+        animationComponent->PlayAnimation(m_secondaryAnim[_state], _loop);
+}
+
+//--------------------------------------------------------------------------------------
+void CharacterBehaviour::StopAnim(CharacterSecondaryState _state)
+{
+    if (IAnimationComponent * animationComponent = GetGameObject()->GetComponentT<IAnimationComponent>())
+        animationComponent->StopAnimation(m_secondaryAnim[_state]);
 }
 
 //--------------------------------------------------------------------------------------

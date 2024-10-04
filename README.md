@@ -178,9 +178,11 @@ The external libraries are included with the sources for convenience.
 
 ## sound
 
-| Sound		 | Author               | URL												
-| ---------- | -------------------- | ------------------------------------------------------------- 
-| Tally Dub  | Brotheration Records | https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/  
+| Sound		           | Author               | URL												
+| -------------------- | -------------------- | ------------------------------------------------------------- 
+| FX - Swoosh - normal | bolkmar              | https://freesound.org/people/bolkmar/sounds/451127/
+| Large sword swing    | Luis0413             | https://freesound.org/people/Luis0413/sounds/737748/
+| Tally Dub            | Brotheration Records | https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/  
 
 # misc
 

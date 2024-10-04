@@ -51,12 +51,13 @@ namespace vg::engine
         VG_INLINE float                         getTime                 () const { return m_time; }
         VG_INLINE float                         getWeight               () const { return m_weight; }
         VG_INLINE float                         getSpeed                () const { return m_speed; }
+        VG_INLINE bool                          isAdditive              () const { return m_useBodyParts; }
 
         void                                    setTime                 (float _time);
         void                                    setWeight               (float _weight);
 
         renderer::IMeshInstance *               getMeshInstance         ();
-        VG_INLINE void                          setPlay                 (bool _play) { m_play = _play;; }
+        VG_INLINE void                          setPlay                 (bool _play) { m_play = _play; }
         VG_INLINE void                          setLoop                 (bool _loop) { m_loop = _loop; }
 
     private:
@@ -66,12 +67,12 @@ namespace vg::engine
         static bool			                    stopAnim                (IObject * _object);
 
     private:
-        bool                                    m_play      = false;
-        bool                                    m_loop      = false;
-        float                                   m_time      = 0.0f;
-        float                                   m_weight    = 0.0f;
-        float                                   m_speed     = 1.0f;
-        bool                                    m_useBodyParts = false;
-        renderer::BodyPartFlags                 m_bodyParts;
+        bool                                    m_play          = false;
+        bool                                    m_loop          = false;
+        float                                   m_time          = 0.0f;
+        float                                   m_weight        = 0.0f;
+        float                                   m_speed         = 1.0f;
+        bool                                    m_useBodyParts  = false;
+        renderer::BodyPartFlags                 m_bodyParts     = (renderer::BodyPartFlags)0x0;
     };
 }

@@ -33,6 +33,10 @@ namespace vg::engine
         setPropertyRange(SoundResource, m_soundSettings.m_volume, float2(0, 1));
         setPropertyDescription(SoundResource, m_soundSettings.m_volume, "Sound volume")
 
+        registerProperty(SoundResource, m_soundSettings.m_delay, "Delay");
+        setPropertyRange(SoundResource, m_soundSettings.m_delay, float2(0, 60.0f));
+        setPropertyDescription(SoundResource, m_soundSettings.m_delay, "Sound delay")
+
         registerPropertyCallbackEx(SoundResource, playSound, editor::style::icon::Play, PropertyFlags::SingleLine);
         setPropertyDescription(SoundResource, playSound, "Play sound");
 

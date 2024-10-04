@@ -98,22 +98,44 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
         IGameObject * playerGO = GetGameObject();
         IAnimationComponent * animationComponent = playerGO->GetComponentT<IAnimationComponent>();
        
-        switch (m_state)
+        switch (m_primaryState)
         {
-            case CharacterState::Idle:
-                PlayAnim(CharacterState::Idle, true);
-            break;
-
-            case CharacterState::Walking:
-                PlayAnim(CharacterState::Walking, true);
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_primaryState);
                 break;
 
-            case CharacterState::Running:
-                PlayAnim(CharacterState::Running, true);
+            case CharacterPrimaryState::Idle:
+                PlayAnim(CharacterPrimaryState::Idle, true);
+            break;
+
+            case CharacterPrimaryState::Walking:
+                PlayAnim(CharacterPrimaryState::Walking, true);
+                break;
+
+            case CharacterPrimaryState::Running:
+                PlayAnim(CharacterPrimaryState::Running, true);
                 break;     
 
-            case CharacterState::Jumping:
-                PlayAnim(CharacterState::Jumping, false);
+            case CharacterPrimaryState::Jumping:
+                PlayAnim(CharacterPrimaryState::Jumping, true);
+                break;
+        }
+
+        switch (m_secondaryState)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_secondaryState);
+                break;
+
+            case CharacterSecondaryState::None:
+                break;
+
+            case CharacterSecondaryState::SwordHit:
+            //    PlayAnim(CharacterSecondaryState::SwordHit, true);
+                break;
+            //
+            case CharacterSecondaryState::KickBall:
+            //    PlayAnim(CharacterSecondaryState::KickBall, true);
                 break;
         }
 
@@ -159,15 +181,15 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
             if (any(abs(translation.xy) > 0.0f))
             {
                 if (m_currentSpeed >= (m_walkSpeed + m_runSpeed) * 0.5f)
-                    m_state = CharacterState::Running;
+                    m_primaryState = CharacterPrimaryState::Running;
                 else
-                    m_state = CharacterState::Walking;
+                    m_primaryState = CharacterPrimaryState::Walking;
             }
 
-            if (m_state == CharacterState::Walking || m_state == CharacterState::Running)
+            if (m_primaryState == CharacterPrimaryState::Walking || m_primaryState == CharacterPrimaryState::Running)
             {
                 if (abs((float)translation.x) < 0.0001f)
-                    m_state = CharacterState::Idle;
+                    m_primaryState = CharacterPrimaryState::Idle;
             }
 
             vg::engine::ICharacterControllerComponent * charaController = playerGO->GetComponentT<vg::engine::ICharacterControllerComponent>();
@@ -181,47 +203,20 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
             if (charaController && vg::physics::GroundState::InAir == charaController->GetGroundState())
             {
-                m_state = CharacterState::Jumping;
+                m_primaryState = CharacterPrimaryState::Jumping;
 
-                if (IAnimationResource * anim = animationComponent->GetAnimation(m_anim[CharacterState::Jumping]))
+                if (IAnimationResource * anim = animationComponent->GetAnimation(m_primaryAnim[CharacterPrimaryState::Jumping]))
                 {
                     if (anim->IsFinished())
-                        m_state = CharacterState::Idle;
+                        m_primaryState = CharacterPrimaryState::Idle;
                 }                    
-            }  
+            } 
+
+            const float pickupDist = 1.0f;
+            const float3 playerPos = playerGO->GetGlobalMatrix()[3].xyz;
 
             if (input.IsJoyButtonJustPressed(joyID, JoyButton::X))
             {
-                const float3 playerPos = playerGO->GetGlobalMatrix()[3].xyz;
-
-                const float pickupDist = 1.0f;
-
-                // Kick close balls
-                auto & balls = Game::get()->getBalls();
-                for (uint i = 0; i < balls.size(); ++i)
-                {
-                    auto * ballBehaviour = balls[i];
-                    auto * ballGO = ballBehaviour->GetGameObject();
-
-                    float3 delta = ballGO->GetGlobalMatrix()[3].xyz - playerPos;
-                    float dist = length(delta);
-                    if (dist < pickupDist)
-                    {
-                        float3 dir = normalize(delta);
-                        ballBehaviour->SetOwner(ballGO);
-                        if (auto * physicsBody = ballGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
-                        {
-                            //VG_INFO("[Player] Kick ball %u (dist = %.2f, dir = %.2f, %.2f, %.2f)", i, dist, dir.x, dir.y, dir.z);
-                            float kickStrength = lerp(250.0f, 400.0f, runAmount);
-                            physicsBody->AddImpulse(dir * kickStrength);
-
-                            // Play sound
-                            if (auto * soundComponent = ballGO->GetComponentT<vg::engine::ISoundComponent>())
-                                soundComponent->Play(0);
-                        }
-                    }
-                }
-
                 // Pick closest weapon
                 if (nullptr == m_rightHandItem)
                 {
@@ -250,10 +245,60 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
                         if (auto * physicsBodyComponent = closestWeaponGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
                             physicsBodyComponent->SetTrigger(true);
+                    }
+                }
+                else
+                {
+                    // HIT
+                    if (CharacterSecondaryState::None == m_secondaryState)
+                    {
+                        m_secondaryState = CharacterSecondaryState::SwordHit;
+                        PlayAnim(CharacterSecondaryState::SwordHit, false);
 
-                        //if (auto * physicsShapeComponent = closestWeaponGO->GetComponentT<vg::engine::IPhysicsShapeComponent>())
-                        //    physicsShapeComponent->SetComponentFlags(vg::core::ComponentFlags::Enabled, false);
+                        // Play sound
+                        if (auto * soundComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
+                            soundComponent->Play(0);
+                    }
+                }
+            }
 
+            if (CharacterSecondaryState::SwordHit == m_secondaryState)
+            {
+                if (IAnimationResource * anim = animationComponent->GetAnimation(m_secondaryAnim[CharacterSecondaryState::SwordHit]))
+                {
+                    if (anim->IsFinished())
+                    {
+                        StopAnim(CharacterSecondaryState::SwordHit);
+                        m_secondaryState = CharacterSecondaryState::None;
+                    }
+                }
+            }
+
+            if (input.IsJoyButtonJustPressed(joyID, JoyButton::B))
+            {
+                // Kick close balls
+                auto & balls = Game::get()->getBalls();
+                for (uint i = 0; i < balls.size(); ++i)
+                {
+                    auto * ballBehaviour = balls[i];
+                    auto * ballGO = ballBehaviour->GetGameObject();
+
+                    float3 delta = ballGO->GetGlobalMatrix()[3].xyz - playerPos;
+                    float dist = length(delta);
+                    if (dist < pickupDist)
+                    {
+                        float3 dir = normalize(delta);
+                        ballBehaviour->SetOwner(ballGO);
+                        if (auto * physicsBody = ballGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
+                        {
+                            //VG_INFO("[Player] Kick ball %u (dist = %.2f, dir = %.2f, %.2f, %.2f)", i, dist, dir.x, dir.y, dir.z);
+                            float kickStrength = lerp(250.0f, 400.0f, runAmount);
+                            physicsBody->AddImpulse(dir * kickStrength);
+
+                            // Play sound
+                            if (auto * soundComponent = ballGO->GetComponentT<vg::engine::ISoundComponent>())
+                                soundComponent->Play(0);
+                        }
                     }
                 }
             }
@@ -271,9 +316,6 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                         physicsBodyComponent->SetMatrix(m_rightHandItem->GetGameObject()->GetGlobalMatrix());
                     }
 
-                    //if (auto * physicsShapeComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsShapeComponent>())
-                    //    physicsShapeComponent->SetComponentFlags(vg::core::ComponentFlags::Enabled, true);
-
                     m_rightHandItem = nullptr;
                 }
             }
@@ -286,8 +328,8 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 updatedVelocity.xy = 0.75f * currentVelocity.xy + 0.25f * targetVelocity.xy;
                 updatedVelocity.z = currentVelocity.z;
 
-                if (abs((float)currentVelocity.z) <= 0.0001f && m_state == CharacterState::Jumping)
-                    m_state = CharacterState::Idle;
+                if (abs((float)currentVelocity.z) <= 0.0001f && m_primaryState == CharacterPrimaryState::Jumping)
+                    m_primaryState = CharacterPrimaryState::Idle;
 
                 if (jump)
                     updatedVelocity += float3(0, 0, running? m_runJumpSpeed : m_jumpSpeed);

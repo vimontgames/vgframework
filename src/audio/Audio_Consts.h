@@ -25,6 +25,7 @@ namespace vg::audio
     {
         SoundFlags  m_flags = (SoundFlags)0x0;
         float       m_volume = 1.0f;
+        float       m_delay = 0.0f;
     };
 
     using PlaySoundHandle = core::u64;

@@ -121,7 +121,7 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
             }
             else
             {
-                m_state = CharacterState::Idle;
+                m_primaryState = CharacterPrimaryState::Idle;
                 m_targetAcquired = false;
             }            
 
@@ -136,9 +136,9 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
             if (any(abs(translation.xy) > 0.0f))
             {
                 if (m_currentSpeed >= (m_walkSpeed + m_runSpeed) * 0.5f)
-                    m_state = CharacterState::Running;
+                    m_primaryState = CharacterPrimaryState::Running;
                 else
-                    m_state = CharacterState::Walking;
+                    m_primaryState = CharacterPrimaryState::Walking;
 
                 m_currentRotation = radiansToDegrees(atan2((float)dir.x, (float)-dir.y));
             }
@@ -162,22 +162,22 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
 
         IAnimationComponent * animationComponent = _context.m_gameObject->GetComponentT<IAnimationComponent>();
 
-        switch (m_state)
+        switch (m_primaryState)
         {
-            case CharacterState::Idle:
-                PlayAnim(CharacterState::Idle, true);
+            case CharacterPrimaryState::Idle:
+                PlayAnim(CharacterPrimaryState::Idle, true);
                 break;
 
-            case CharacterState::Walking:
-                PlayAnim(CharacterState::Walking, true);
+            case CharacterPrimaryState::Walking:
+                PlayAnim(CharacterPrimaryState::Walking, true);
                 break;
 
-            case CharacterState::Running:
-                PlayAnim(CharacterState::Running, true);
+            case CharacterPrimaryState::Running:
+                PlayAnim(CharacterPrimaryState::Running, true);
                 break;
 
-            case CharacterState::Jumping:
-                PlayAnim(CharacterState::Jumping, false);
+            case CharacterPrimaryState::Jumping:
+                PlayAnim(CharacterPrimaryState::Jumping, false);
                 break;
         }
     }

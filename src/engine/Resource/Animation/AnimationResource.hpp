@@ -45,7 +45,7 @@ namespace vg::engine
         registerPropertyEx(AnimationResource, m_weight, "Weight", PropertyFlags::NotSaved);
         setPropertyRange(AnimationResource, m_weight, float2(0.0f, 1.0f));
 
-        registerPropertyEnumBitfield(AnimationResource, renderer::BodyPartFlags, m_bodyParts, "Mask");
+        registerOptionalPropertyEnumBitfield(AnimationResource, m_useBodyParts, renderer::BodyPartFlags, m_bodyParts, "Mask");
         setPropertyDescription(AnimationResource, m_bodyParts, "Body parts of the mesh that will use this animation");
 
         registerResizeVectorFunc(AnimationResource, ResizeAnimationResourceVector);

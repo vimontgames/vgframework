@@ -459,15 +459,18 @@ namespace vg::renderer
 
                     if (-1 != index)
                     {
-                        const AnimNodeData & animNode = anim.animNodes[index];
+                        if (animationBinding.m_normalizedWeight > 0.0f)
+                        {
+                            const AnimNodeData & animNode = anim.animNodes[index];
 
-                        const quaternion animRot = animNode.rot.size() > 0 ? lerp(animNode.rot[f0], animNode.rot[f1], t) : animNode.const_rot;
-                        const float3 animPos = animNode.pos.size() > 0 ? lerp(animNode.pos[f0], animNode.pos[f1], t) : animNode.const_pos;
-                        const float3 animScale = animNode.scale.size() > 0 ? lerp(animNode.scale[f0], animNode.scale[f1], t) : animNode.const_scale;
+                            const quaternion animRot = animNode.rot.size() > 0 ? lerp(animNode.rot[f0], animNode.rot[f1], t) : animNode.const_rot;
+                            const float3 animPos = animNode.pos.size() > 0 ? lerp(animNode.pos[f0], animNode.pos[f1], t) : animNode.const_pos;
+                            const float3 animScale = animNode.scale.size() > 0 ? lerp(animNode.scale[f0], animNode.scale[f1], t) : animNode.const_scale;
 
-                        rot += animRot * animationBinding.m_normalizedWeight;
-                        pos += animPos * animationBinding.m_normalizedWeight;
-                        scale += animScale * animationBinding.m_normalizedWeight;
+                            rot += animRot * animationBinding.m_normalizedWeight;
+                            pos += animPos * animationBinding.m_normalizedWeight;
+                            scale += animScale * animationBinding.m_normalizedWeight;
+                        }
                     }
                 }
 

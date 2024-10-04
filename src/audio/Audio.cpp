@@ -131,6 +131,8 @@ namespace vg::audio
                 
                 if (asBool(SoundFlags::Background & _settings.m_flags))
                     handle = (PlaySoundHandle)m_soloud.playBackground(*slAudioSource, _settings.m_volume);
+                else if (_settings.m_delay > 0.0f)
+                    handle = (PlaySoundHandle)m_soloud.playClocked((double)_settings.m_delay, *slAudioSource, _settings.m_volume);
                 else
                     handle = (PlaySoundHandle)m_soloud.play(*slAudioSource, _settings.m_volume);
 

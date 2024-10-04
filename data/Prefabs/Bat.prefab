@@ -52,7 +52,7 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="1326616026"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="EnumU8" name="m_shapeType" value="Cylinder"/>
                                 <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
@@ -72,19 +72,46 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="New WeaponBehaviour"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="684624813"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                             </Object>
                             <Object class="AttachToNodeComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New AttachToNodeComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="30838399"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Bool" name="m_useTarget" flags="NotVisible" value="false"/>
                                 <Property type="ObjectHandle" name="m_target" flags="Optional" value="0"/>
                                 <Property type="String" name="m_boneName" value="mixamorig:RightHand"/>
                                 <Property type="Float4x4" name="m_transform" flags="Flatten" Ix="-0.17364785" Iy="0.98480582" Iz="0" Iw="0" Jx="0.17100908" Jy="0.030153519" Jz="0.98480332" Jw="0" Kx="0.9698444" Ky="0.17100975" Kz="-0.17364761" Kw="0" Tx="-0.059999999" Ty="0.090000004" Tz="0.050000001" Tw="1"/>
+                            </Object>
+                            <Object class="SoundComponent">
+                                <Property type="String" name="m_name" flags="NotVisible" value="New SoundComponent"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="3170463"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Object" name="m_sounds">
+                                    <Object class="SoundResourceList">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="New SoundComponent"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="2664982256"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                        <Property type="ResourceVector" name="m_resources" flags="Resource">
+                                            <Object class="SoundResource">
+                                                <Property type="String" name="m_name" value="Swoosh"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="2530293024"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Sounds/Weapons/swoosh_bat.wav"/>
+                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" flags="Bitfield" value=""/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" flags="HasRange" value="0.5"/>
+                                                <Property type="Float" name="m_soundSettings.m_delay" flags="HasRange" value="1"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
                             </Object>
                             <Object class="MeshComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>

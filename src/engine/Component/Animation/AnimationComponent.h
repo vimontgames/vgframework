@@ -27,7 +27,8 @@ namespace vg::engine
         core::uint              GetAnimationIndex   (const core::string & _name) const final override;
         core::uint              GetAnimationCount   () const final override;
 
-        bool                    PlayAnimation       (core::uint _index, float _blendTime, bool _loop) final override;
+        bool                    PlayAnimation       (core::uint _index, bool _loop) final override;
+        bool                    StopAnimation       (core::uint _index) final override;
 
         void                    bindAnimations      ();
 
@@ -35,7 +36,8 @@ namespace vg::engine
         MeshComponent *         getMeshComponent    () const;
 
     private:
-        core::uint              m_currentIndex = -1;
+        core::uint              m_primaryIndex = -1;
+        core::uint              m_secondaryIndex = -1;
         AnimationResourceList   m_animations;
     };
 }

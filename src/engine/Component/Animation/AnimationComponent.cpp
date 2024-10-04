@@ -47,20 +47,17 @@ namespace vg::engine
 
         if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused()) // TODO: check if running from prefab world using context instead? Or include play/stop/paused state in context maybe?
         {
-            if (-1 != m_currentIndex)
+            if (-1 != m_primaryIndex || -1 != m_secondaryIndex)
             {
-                auto & currentAnim = animResources[m_currentIndex];
-                float currentWeight = currentAnim.getWeight();
+                float amount = _context.m_dt * 16.0f;
 
-                float amount = _context.m_dt * 8.0f;
-
-                if (currentWeight < 1.0f)
+                //if (currentWeight < 1.0f)
                 {
                     for (uint i = 0; i < animResources.size(); ++i)
                     {
                         auto & anim = animResources[i];
 
-                        if (i == m_currentIndex)
+                        if ((i == m_primaryIndex || i == m_secondaryIndex) && anim.isPlaying())
                         {
                             float weight = anim.getWeight();
                             weight = saturate(weight + amount);
@@ -75,19 +72,27 @@ namespace vg::engine
                     }
                 }
 
-                float sum2 = 0.0f;
-                for (uint i = 0; i < animResources.size(); ++i)
-                {
-                    auto & anim = animResources[i];
-                    sum2 += anim.getWeight();
-                }
-                VG_ASSERT(sum2 > 0.0f);
+                float sumAdd = 0.0f;
+                float sumBlend = 0.0f;
 
                 for (uint i = 0; i < animResources.size(); ++i)
                 {
                     auto & anim = animResources[i];
-                    float weight = anim.getWeight();
-                    anim.setWeight(weight / sum2);
+                    const float weight = anim.getWeight();
+                    if (anim.isAdditive())
+                        sumAdd += weight;
+                    else
+                        sumBlend += weight;
+                }
+                //VG_ASSERT(sumBlend > 0.0f);
+
+                for (uint i = 0; i < animResources.size(); ++i)
+                {
+                    auto & anim = animResources[i];
+                    const float weight = anim.getWeight();
+
+                    if (!anim.isAdditive())
+                        anim.setWeight(sumBlend > 0 ? weight / sumBlend : 0);
                 }
             }
         }
@@ -105,7 +110,7 @@ namespace vg::engine
                     const float framerate = anim->GetFramerate();
                     
                     float t = animRes.getTime();
-                    animRes.setTime(t + _context.m_dt);
+                    animRes.setTime(t + _context.m_dt * animRes.getSpeed());
                 }
             }
         }
@@ -190,7 +195,7 @@ namespace vg::engine
             if (anim.GetName() == _name)
                 return i;
         }
-        VG_WARNING("[Animation] Could not find Animation \"%s\"", _name.c_str());
+        VG_WARNING("[Animation] GameObject \"%s\" not find Animation \"%s\"", GetGameObject()->GetName().c_str(), _name.c_str());
         return -1;
     }
 
@@ -201,22 +206,71 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool AnimationComponent::PlayAnimation(core::uint _index, float _blendTime, bool _loop)
+    bool AnimationComponent::PlayAnimation(core::uint _index, bool _loop)
     {
-        auto & anims = m_animations.getResources();
-
-        if (_index != m_currentIndex)
+        if (-1 != _index)
         {
+            auto & anims = m_animations.getResources();
             auto & anim = anims[_index];
 
-            if (!anim.isPlaying())
+            if (anim.isAdditive())
             {
-                anim.setTime(0.0f);
-                anim.setPlay(true);
-                anim.setLoop(_loop);
+                //if (_index != m_secondaryIndex)
+                {
+                    anim.setTime(0.0f);
+                    anim.setPlay(true);
+                    anim.setLoop(_loop);
+
+                    m_secondaryIndex = _index;
+
+                    return true;
+                }
             }
-            
-            m_currentIndex = _index;
+            else
+            {
+                if (_index != m_primaryIndex)
+                {
+                    if (!anim.isPlaying())
+                    {
+                        anim.setTime(0.0f);
+                        anim.setPlay(true);
+                        anim.setLoop(_loop);
+                    }
+
+                    m_primaryIndex = _index;
+
+                    return true;
+                }
+            }            
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool AnimationComponent::StopAnimation(core::uint _index)
+    {
+        if (-1 != _index)
+        {
+            auto & anims = m_animations.getResources();
+            auto & anim = anims[_index];
+
+            if (anim.isAdditive())
+            {
+                if (_index == m_secondaryIndex)
+                {
+                    anim.setPlay(false);
+                    return true;
+                }
+            }
+            else
+            {
+                if (_index == m_primaryIndex)
+                {
+                    anim.setPlay(false);
+                    return true;
+                }
+            }
         }
 
         return false;
