@@ -32,6 +32,9 @@ namespace vg::engine
         void                                    SetMatrix           (const core::float4x4 & _matrix) final override;
         void                                    AddImpulse          (const core::float3 & _impulse) final override;
 
+        void                                    SetTrigger          (bool _trigger) final override;
+        bool                                    IsTrigger           () const final override;
+
         void                                    onShapeUpdated      ();
         void                                    updateShapesColor   ();
 

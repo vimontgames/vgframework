@@ -41,6 +41,7 @@ void ItemBehaviour::OnPlay()
 void ItemBehaviour::OnStop()
 {
     Game::get()->removeItem(m_itemType, this);
+    m_owner.clear();
     super::OnStop();
 }
 

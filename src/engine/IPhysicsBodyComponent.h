@@ -11,5 +11,8 @@ namespace vg::engine
 
         virtual void SetMatrix(const core::float4x4 & _matrix) = 0;
         virtual void AddImpulse(const core::float3 & _impulse) = 0;
+
+        virtual void SetTrigger(bool _trigger) = 0;
+        virtual bool IsTrigger() const = 0;
     };
 }

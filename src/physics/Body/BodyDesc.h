@@ -9,6 +9,7 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_PASSTHROUGH(PhysicsBodyDesc, IBodyDesc);
 
+        void                SetTrigger          (bool _trigger)         { m_trigger = _trigger; }
         bool                IsTrigger           () const final override { return m_trigger; }
         bool                IsSoftBody          () const final override { return m_softBody;}
 

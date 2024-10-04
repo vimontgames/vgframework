@@ -9,8 +9,10 @@ namespace vg::physics
     {
     public:
         VG_CLASS_DECL_ABSTRACT(IBodyDesc, core::Object)
-
+        
+        virtual void                SetTrigger          (bool _trigger) = 0;
         virtual bool                IsTrigger           () const = 0;
+
         virtual bool                IsSoftBody          () const = 0;
 
         virtual BodyType            GetBodyType         () const = 0;

@@ -85,6 +85,7 @@ void PlayerBehaviour::OnPlay()
 void PlayerBehaviour::OnStop()
 {
     m_isActive = false;
+    m_rightHandItem = nullptr;
     super::OnStop();
 }
 
@@ -222,32 +223,38 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 }
 
                 // Pick closest weapon
-                auto & weapons = Game::get()->getWeapons();
-                float closestDist = pickupDist+1;
-                IGameObject * closestWeaponGO = nullptr;
-                WeaponBehaviour * closestWeaponBehaviour = nullptr;
-                for (uint i = 0; i < weapons.size(); ++i)
+                if (nullptr == m_rightHandItem)
                 {
-                    auto * weaponBehaviour = weapons[i];
-                    IGameObject * weaponGO = weaponBehaviour->GetGameObject();
-                    float3 delta = weaponGO->GetGlobalMatrix()[3].xyz - playerPos;
-                    float dist = length(delta);
-                    if (dist < closestDist && dist < pickupDist && !weaponBehaviour->CanPick())
+                    auto & weapons = Game::get()->getWeapons();
+                    float closestDist = pickupDist + 1;
+                    IGameObject * closestWeaponGO = nullptr;
+                    WeaponBehaviour * closestWeaponBehaviour = nullptr;
+                    for (uint i = 0; i < weapons.size(); ++i)
                     {
-                        closestDist = dist;
-                        closestWeaponBehaviour = weaponBehaviour;
-                        closestWeaponGO = closestWeaponBehaviour->GetGameObject();
+                        auto * weaponBehaviour = weapons[i];
+                        IGameObject * weaponGO = weaponBehaviour->GetGameObject();
+                        float3 delta = weaponGO->GetGlobalMatrix()[3].xyz - playerPos;
+                        float dist = length(delta);
+                        if (dist < closestDist && dist < pickupDist && !weaponBehaviour->CanPick())
+                        {
+                            closestDist = dist;
+                            closestWeaponBehaviour = weaponBehaviour;
+                            closestWeaponGO = closestWeaponBehaviour->GetGameObject();
+                        }
                     }
-                }
 
-                if (closestWeaponBehaviour)
-                {
-                    closestWeaponBehaviour->SetOwner(playerGO);
-                    m_rightHandItem = closestWeaponBehaviour;
+                    if (closestWeaponBehaviour)
+                    {
+                        closestWeaponBehaviour->SetOwner(playerGO);
+                        m_rightHandItem = closestWeaponBehaviour;
 
-                    if (auto * physicsShapeComponent = closestWeaponGO->GetComponentT<vg::engine::IPhysicsShapeComponent>())
-                        physicsShapeComponent->SetComponentFlags(vg::core::ComponentFlags::Enabled, false);
+                        if (auto * physicsBodyComponent = closestWeaponGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
+                            physicsBodyComponent->SetTrigger(true);
 
+                        //if (auto * physicsShapeComponent = closestWeaponGO->GetComponentT<vg::engine::IPhysicsShapeComponent>())
+                        //    physicsShapeComponent->SetComponentFlags(vg::core::ComponentFlags::Enabled, false);
+
+                    }
                 }
             }
 
@@ -259,10 +266,13 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     m_rightHandItem->SetOwner(nullptr);
 
                     if (auto * physicsBodyComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsBodyComponent>())
+                    {
+                        physicsBodyComponent->SetTrigger(false);
                         physicsBodyComponent->SetMatrix(m_rightHandItem->GetGameObject()->GetGlobalMatrix());
+                    }
 
-                    if (auto * physicsShapeComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsShapeComponent>())
-                        physicsShapeComponent->SetComponentFlags(vg::core::ComponentFlags::Enabled, true);
+                    //if (auto * physicsShapeComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsShapeComponent>())
+                    //    physicsShapeComponent->SetComponentFlags(vg::core::ComponentFlags::Enabled, true);
 
                     m_rightHandItem = nullptr;
                 }

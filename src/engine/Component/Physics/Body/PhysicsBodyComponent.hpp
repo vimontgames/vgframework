@@ -128,6 +128,27 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void PhysicsBodyComponent::SetTrigger(bool _trigger)
+    {
+        if (m_bodyDesc)
+        {
+            if (m_bodyDesc->IsTrigger() != _trigger)
+            {
+                m_bodyDesc->SetTrigger(_trigger);
+                createBody();
+            }
+        }   
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool PhysicsBodyComponent::IsTrigger() const
+    {
+        if (m_bodyDesc)
+            return m_bodyDesc->IsTrigger();
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     void PhysicsBodyComponent::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
         if (!strcmp(_prop.GetName(), "m_trigger"))

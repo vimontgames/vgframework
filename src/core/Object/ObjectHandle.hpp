@@ -42,7 +42,7 @@ namespace vg::core
         }
         else
         {
-            setUID(0x0);
+            clear();
         }
     }
 
@@ -51,5 +51,11 @@ namespace vg::core
     {
         auto * factory = Kernel::getFactory();
         return factory->FindByUID(m_uid);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ObjectHandle::clear()
+    {
+        setUID(0x0);
     }
 }
