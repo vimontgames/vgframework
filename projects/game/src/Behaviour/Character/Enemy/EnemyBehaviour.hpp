@@ -16,7 +16,7 @@ VG_REGISTER_COMPONENT_CLASS(EnemyBehaviour, "Enemy", "Game", "Player Behaviour",
 EnemyBehaviour::EnemyBehaviour(const string & _name, IObject * _parent) :
     super(_name, _parent, CharacterType::Enemy)
 {
-    SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
+    EnableUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
 }
 
 //--------------------------------------------------------------------------------------

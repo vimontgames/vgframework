@@ -26,7 +26,7 @@ namespace vg::engine
         void                                Update              (const Context & _context) override;
 
         void                                OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
-        void                                SetComponentFlags   (core::ComponentFlags _flags, bool _enabled) final override;
+        void                                EnableComponentFlags   (core::ComponentFlags _flags, bool _enabled) final override;
 
         const core::string                  GetSubObjectName    (core::uint _subObjectIndex) const override;
         

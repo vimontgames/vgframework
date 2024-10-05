@@ -28,7 +28,7 @@ VG_REGISTER_COMPONENT_CLASS(PlayerBehaviour, "Player", "Game", "Player Behaviour
 PlayerBehaviour::PlayerBehaviour(const string & _name, IObject * _parent) :
     super(_name, _parent, CharacterType::Player)
 {
-    SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
+    EnableUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
 
     m_life = 3;
     m_hp = 100.0f;
@@ -244,7 +244,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                         m_rightHandItem = closestWeaponBehaviour;
 
                         if (auto * physicsBodyComponent = closestWeaponGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
-                            physicsBodyComponent->SetTrigger(true);
+                            physicsBodyComponent->SetMotionType(vg::physics::MotionType::Kinematic);
                     }
                 }
                 else
@@ -312,7 +312,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
                     if (auto * physicsBodyComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsBodyComponent>())
                     {
-                        physicsBodyComponent->SetTrigger(false);
+                        physicsBodyComponent->SetMotionType(vg::physics::MotionType::Dynamic);
                         physicsBodyComponent->SetMatrix(m_rightHandItem->GetGameObject()->GetGlobalMatrix());
                     }
 

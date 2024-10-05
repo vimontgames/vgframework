@@ -25,7 +25,7 @@ namespace vg::engine
         super(_name, _parent),
         m_sounds(_name, this)
     {
-        SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update | UpdateFlags::LateUpdate, false);
+        EnableUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update | UpdateFlags::LateUpdate, false);
     }
 
     //--------------------------------------------------------------------------------------

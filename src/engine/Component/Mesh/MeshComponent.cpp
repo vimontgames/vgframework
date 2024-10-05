@@ -118,9 +118,9 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshComponent::SetComponentFlags(ComponentFlags _flags, bool _enabled)
+    void MeshComponent::EnableComponentFlags(ComponentFlags _flags, bool _enabled)
     {
-        super::SetComponentFlags(_flags, _enabled);
+        super::EnableComponentFlags(_flags, _enabled);
 
         if (m_meshInstance)
             m_meshInstance->SetInstanceFlags(InstanceFlags::Enabled, asBool(ComponentFlags::Enabled & GetComponentFlags()));

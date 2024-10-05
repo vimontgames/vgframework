@@ -670,7 +670,7 @@ namespace vg::editor
             }
         }
         if (!found)
-            preview = "<None>";
+            preview = "";
 
         string enumLabel = ImGui::getObjectLabel("", _prop->GetDisplayName(), _prop);
         if (ImGui::BeginCombo(getPropertyLabel(enumLabel).c_str(), preview.c_str(), ImGuiComboFlags_None))
@@ -1759,7 +1759,7 @@ namespace vg::editor
 
                                 if (CollapsingHeaderCheckbox(collapsingHeaderPos, isComponentEnabled, pComponent,style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s component", isComponentEnabled ? "Disable" : "Enable", classDesc->GetClassDisplayName()).c_str()))
                                 {
-                                    pComponent->SetComponentFlags(ComponentFlags::Enabled, !isComponentEnabled);
+                                    pComponent->EnableComponentFlags(ComponentFlags::Enabled, !isComponentEnabled);
                                     changed = true;
                                 }
 

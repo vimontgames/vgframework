@@ -9,6 +9,7 @@ namespace vg::engine
     {
     public:
         VG_CLASS_DECL(CharacterControllerComponent, ICharacterControllerComponent);
+
         CharacterControllerComponent(const core::string & _name, IObject * _parent);
         ~CharacterControllerComponent();
 

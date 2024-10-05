@@ -54,7 +54,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void PhysicsBodyComponent::Update(const Context & _context)
     {
-        if (physics::MotionType::Static != m_bodyDesc->GetMotion())
+        if (physics::MotionType::Static != m_bodyDesc->GetMotionType())
         {
             if (nullptr == _context.m_world)
                 return;
@@ -66,7 +66,7 @@ namespace vg::engine
             {
                 if (m_body)
                 {
-                    if (m_bodyDesc->IsTrigger())
+                    if (m_bodyDesc->IsTrigger() || m_bodyDesc->GetMotionType() == physics::MotionType::Kinematic)
                     {
                         SetMatrix(_context.m_gameObject->getGlobalMatrix());
                     }
@@ -146,6 +146,27 @@ namespace vg::engine
         if (m_bodyDesc)
             return m_bodyDesc->IsTrigger();
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PhysicsBodyComponent::SetMotionType(physics::MotionType _motionType)
+    {
+        if (m_bodyDesc)
+        {
+            if (m_bodyDesc->GetMotionType() != _motionType)
+            {
+                m_bodyDesc->SetMotionType(_motionType);
+                createBody();
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    physics::MotionType PhysicsBodyComponent::GetMotionType() const
+    {
+        if (m_bodyDesc)
+            return m_bodyDesc->GetMotionType();
+        return (physics::MotionType)-1;
     }
 
     //--------------------------------------------------------------------------------------
@@ -236,7 +257,7 @@ namespace vg::engine
         {
             m_bodyDesc->SetMass(totalMass);
 
-            if (m_bodyDesc->GetMotion() != physics::MotionType::Static || !EngineOptions::get()->mergeStaticBodies())
+            if (m_bodyDesc->GetMotionType() != physics::MotionType::Static || !EngineOptions::get()->mergeStaticBodies())
                 m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, physicsShapes, GetGameObject()->GetGlobalMatrix(), GetGameObject()->GetName() + "_PhysicsBody", this);
         }
         else
@@ -264,19 +285,19 @@ namespace vg::engine
             // Update static/dynamic physics flags
             if (asBool(InstanceFlags::Static & go->getInstanceFlags()))
             {
-                if (physics::ObjectLayer::NonMoving != m_bodyDesc->GetLayer() || physics::MotionType::Static != m_bodyDesc->GetMotion())
+                if (physics::ObjectLayer::NonMoving != m_bodyDesc->GetLayer() || physics::MotionType::Static != m_bodyDesc->GetMotionType())
                 {
                     m_bodyDesc->SetLayer(physics::ObjectLayer::NonMoving);
-                    m_bodyDesc->SetMotion(physics::MotionType::Static);
+                    m_bodyDesc->SetMotionType(physics::MotionType::Static);
                     updated = true;
                 }
             }
             else
             {
-                if (physics::ObjectLayer::Moving != m_bodyDesc->GetLayer() || physics::MotionType::Dynamic != m_bodyDesc->GetMotion())
+                if (physics::ObjectLayer::Moving != m_bodyDesc->GetLayer() || physics::MotionType::Dynamic != m_bodyDesc->GetMotionType())
                 {
                     m_bodyDesc->SetLayer(physics::ObjectLayer::Moving);
-                    m_bodyDesc->SetMotion(physics::MotionType::Dynamic);
+                    m_bodyDesc->SetMotionType(physics::MotionType::Dynamic);
                     updated = true;
                 }
             }
@@ -311,7 +332,7 @@ namespace vg::engine
         }
         else
         {
-            if (m_bodyDesc->GetMotion() == physics::MotionType::Dynamic)
+            if (m_bodyDesc->GetMotionType() == physics::MotionType::Dynamic)
                 return 0xFF0000FF;
             else
                 return 0xFF00FFFF; 

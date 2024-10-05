@@ -11,6 +11,7 @@ namespace vg::physics
 
         void                SetTrigger          (bool _trigger)         { m_trigger = _trigger; }
         bool                IsTrigger           () const final override { return m_trigger; }
+
         bool                IsSoftBody          () const final override { return m_softBody;}
 
         BodyType            GetBodyType         () const final override { return m_softBody ? BodyType::Soft : BodyType::Rigid; }
@@ -18,8 +19,8 @@ namespace vg::physics
         ObjectLayer         GetLayer            () const final override { return m_layer; }
         void                SetLayer            (ObjectLayer _layer) final override { m_layer = _layer; }
 
-        MotionType          GetMotion           () const final override { return m_motion; }
-        void                SetMotion           (MotionType _motion)  final override { m_motion = _motion; }
+        MotionType          GetMotionType           () const final override { return m_motion; }
+        void                SetMotionType           (MotionType _motion)  final override { m_motion = _motion; }
 
         MotionQuality       GetMotionQuality    () const final override { return m_motionQuality; }
         void                SetMotionQuality    (MotionQuality _quality) { m_motionQuality = _quality; }

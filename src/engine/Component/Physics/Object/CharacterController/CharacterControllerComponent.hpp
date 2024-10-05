@@ -52,7 +52,7 @@ namespace vg::engine
         if (m_character == nullptr)
             createCharacter();
 
-        SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
+        EnableUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
     }
 
     //--------------------------------------------------------------------------------------

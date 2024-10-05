@@ -113,12 +113,15 @@ namespace vg::physics
     //JPH::Body * floor = nullptr;
 
 	//--------------------------------------------------------------------------------------
-	void Physics::Init(const PhysicsCreationParams & _params, Singletons & _singletons)
+	void Physics::Init(const PhysicsCreationParams & _params, const Callbacks & _callbacks, Singletons & _singletons)
 	{
         Timer::init();
 
         // Copy init params
         m_physicsCreationParams = _params;
+
+        // Store callbacks
+        m_callbacks = _callbacks;
 
         // Set our singletons used by this DLL
         Kernel::setSingletons(_singletons);

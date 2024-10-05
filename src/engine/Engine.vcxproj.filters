@@ -187,12 +187,6 @@
     <ClInclude Include="IAnimationResource.h" />
     <ClInclude Include="IPhysicsBodyComponent.h" />
     <ClInclude Include="ICharacterControllerComponent.h" />
-    <ClInclude Include="Component\Physics\CharacterController\CharacterControllerComponent.h">
-      <Filter>Component\Physics\CharacterController</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\Physics\CharacterController\CharacterControllerComponent.hpp">
-      <Filter>Component\Physics\CharacterController</Filter>
-    </ClInclude>
     <ClInclude Include="World\World.h">
       <Filter>World</Filter>
     </ClInclude>
@@ -296,12 +290,6 @@
     <ClInclude Include="Component\Animation\AttachToNodeComponent.h">
       <Filter>Component\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Component\Physics\Body\PhysicsBodyComponent.h">
-      <Filter>Component\Physics\Body</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\Physics\Body\PhysicsBodyComponent.hpp">
-      <Filter>Component\Physics\Body</Filter>
-    </ClInclude>
     <ClInclude Include="Component\Physics\PhysicsComponent.h">
       <Filter>Component\Physics</Filter>
     </ClInclude>
@@ -349,6 +337,31 @@
     <ClInclude Include="IAttachToNodeComponent.h" />
     <ClInclude Include="ICameraComponent.h" />
     <ClInclude Include="IUICanvasComponent.h" />
+    <ClInclude Include="IPhysicsObjectComponent.h" />
+    <ClInclude Include="Component\Physics\Object\Body\PhysicsBodyComponent.h">
+      <Filter>Component\Physics\Object\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\Object\Body\PhysicsBodyComponent.hpp">
+      <Filter>Component\Physics\Object\Body</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\Object\CharacterController\CharacterControllerComponent.h">
+      <Filter>Component\Physics\Object\CharacterController</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\Object\CharacterController\CharacterControllerComponent.hpp">
+      <Filter>Component\Physics\Object\CharacterController</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\Object\MergeStaticColliders\MergeStaticCollidersComponent.h">
+      <Filter>Component\Physics\Object\MergeStaticCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\Object\MergeStaticColliders\MergeStaticCollidersComponent.hpp">
+      <Filter>Component\Physics\Object\MergeStaticCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\Object\PhysicsObjectComponent.h">
+      <Filter>Component\Physics\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Physics\Object\PhysicsObjectComponent.hpp">
+      <Filter>Component\Physics\Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -395,9 +408,6 @@
     </Filter>
     <Filter Include="Component\Physics">
       <UniqueIdentifier>{310b5b18-9c40-4819-b116-112472efe86d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Component\Physics\CharacterController">
-      <UniqueIdentifier>{e5e6bcb2-d143-43db-a667-1b67eb4eebff}</UniqueIdentifier>
     </Filter>
     <Filter Include="World">
       <UniqueIdentifier>{6ca8f485-7f94-42b8-908a-025eab0c8d0c}</UniqueIdentifier>
@@ -447,9 +457,6 @@
     <Filter Include="Component\Debug">
       <UniqueIdentifier>{01236c8d-6efe-456e-92b9-d923acf60499}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component\Physics\Body">
-      <UniqueIdentifier>{ba03511c-b8ea-4ddc-8a57-8295edeeb759}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Component\Physics\Shape">
       <UniqueIdentifier>{31ce39f0-2442-43e0-bf60-5659e8c56899}</UniqueIdentifier>
     </Filter>
@@ -467,6 +474,18 @@
     </Filter>
     <Filter Include="Resource\Audio">
       <UniqueIdentifier>{e7683dca-e937-4a21-89ff-43dc3d1213d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Physics\Object">
+      <UniqueIdentifier>{3cc9c96f-d140-49b4-bd48-1582da109d65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Physics\Object\Body">
+      <UniqueIdentifier>{ccc8e470-e662-47be-802c-f892e1b35386}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Physics\Object\CharacterController">
+      <UniqueIdentifier>{9f2febef-6f1b-41ad-9505-18f33fc6826c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Physics\Object\MergeStaticCollider">
+      <UniqueIdentifier>{d9f8099c-01ad-4620-a7c6-40d04d5b256b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -14,7 +14,7 @@ VG_REGISTER_COMPONENT_CLASS(GoalBehaviour, "Goal", "Game", "A goal where you can
 GoalBehaviour::GoalBehaviour(const string & _name, IObject * _parent) :
     super(_name, _parent)
 {
-    SetUpdateFlags(UpdateFlags::Update);
+    EnableUpdateFlags(UpdateFlags::Update);
 }
 
 //--------------------------------------------------------------------------------------

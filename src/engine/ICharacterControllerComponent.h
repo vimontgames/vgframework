@@ -1,13 +1,13 @@
 #pragma once
 
-#include "core/Component/Component.h"
+#include "engine/Component/Physics/Object/PhysicsObjectComponent.h"
 
 namespace vg::engine
 {
-    class ICharacterControllerComponent : public core::Component
+    class ICharacterControllerComponent : public PhysicsObjectComponent
     {
     public:
-        VG_CLASS_DECL_ABSTRACT(ICharacterControllerComponent, core::Component);
+        VG_CLASS_DECL_ABSTRACT(ICharacterControllerComponent, PhysicsObjectComponent);
 
         virtual physics::GroundState    GetGroundState  () const = 0;
 

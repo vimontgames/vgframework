@@ -28,6 +28,7 @@
 #include "engine/Selection/Selection.h"
 #include "engine/Component/Camera/CameraComponent.h"
 #include "engine/Component/Mesh/MeshComponent.h"
+#include "engine/Component/Physics/Object/PhysicsObjectComponent.h"
 #include "engine/Behaviour/FreeCam/FreeCamBehaviour.h"
 #include "editor/IEditor.h"
 #include "application/IGame.h"
@@ -373,7 +374,9 @@ namespace vg::engine
 
         // Load Physics DLL
         m_physics = Plugin::create<physics::IPhysics>("physics");
-        m_physics->Init(_params.physics, _singletons);
+        physics::Callbacks physicsEngineCallbacks;
+        physicsEngineCallbacks.validateContact = shouldCollide;
+        m_physics->Init(_params.physics, physicsEngineCallbacks, _singletons);
 
         // Load Audio DLL
         m_audio = Plugin::create<audio::IAudio>("audio");
@@ -388,10 +391,19 @@ namespace vg::engine
         m_editor->Init(_singletons);
         #endif
 
-        // Create default world resource or load world path from commandline (TODO)
+        // Create default world resource or load world path from command line (TODO)
         VG_ASSERT(m_worldResource == nullptr);
         m_worldResource = new WorldResource("Default", this);
 	}
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::shouldCollide(core::IObject * _obj1, core::IObject * _obj2)
+    {
+        auto * body1 = VG_SAFE_STATIC_CAST(PhysicsObjectComponent, _obj1);
+        auto * body2 = VG_SAFE_STATIC_CAST(PhysicsObjectComponent, _obj2);
+
+        return true;
+    }
 
     //--------------------------------------------------------------------------------------
     renderer::IRendererOptions * Engine::getRendererOptions() const

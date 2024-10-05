@@ -3,6 +3,7 @@
 #include "core/IGameObject.h"
 #include "physics/World/PhysicsWorld.h"
 #include "Jolt/Physics/Body/Body.h"
+#include "physics/Physics.h"
 
 using namespace vg::core;
 
@@ -26,6 +27,29 @@ namespace vg::physics
     ContactListener::~ContactListener()
     {
 
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Called after detecting a collision between a body pair, but before calling OnContactAdded and before adding the contact constraint. 
+    // If the function rejects the contact, the contact will not be added and any other contacts between this body pair will not be processed. 
+    // This function will only be called once per PhysicsSystem::Update per body pair and may not be called again the next update if a contact 
+    // persists and no new contact pairs between sub shapes are found. 
+    // This is a rather expensive time to reject a contact point since a lot of the collision detection has happened already, make sure you 
+    // filter out the majority of undesired body pairs through the ObjectLayerPairFilter that is registered on the PhysicsSystem. Note that this 
+    // callback is called when all bodies are locked, so don't use any locking functions! Body 1 will have a motion type that is larger or equal 
+    // than body 2's motion type (order from large to small: dynamic -> kinematic -> static). When motion types are equal, they are ordered by 
+    // BodyID. The collision result (inCollisionResult) is reported relative to inBaseOffset.
+    //--------------------------------------------------------------------------------------
+    JPH::ValidateResult ContactListener::OnContactValidate(const JPH::Body & _inBody1, const JPH::Body & _inBody2, JPH::RVec3Arg _inBaseOffset, const JPH::CollideShapeResult & _inCollisionResult)
+    {
+        auto * obj1 = (core::IObject *)_inBody1.GetUserData();
+        auto * obj2 = (core::IObject *)_inBody2.GetUserData();
+
+        auto & callbacks = Physics::get()->getCallbacks();
+        if (nullptr != callbacks.validateContact)
+            return callbacks.validateContact(obj1, obj2) ? JPH::ValidateResult::AcceptAllContactsForThisBodyPair : JPH::ValidateResult::RejectAllContactsForThisBodyPair;
+        else
+            return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
     }
 
     //--------------------------------------------------------------------------------------

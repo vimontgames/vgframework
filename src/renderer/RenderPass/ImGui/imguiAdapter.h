@@ -83,14 +83,14 @@ namespace vg
         private:
             static const core::uint             s_maxImGuiTexDisplayedPerFrame;
             static const Font                   s_defaultFont;
-            static const FontStyle                  s_defaultFontStyle;
+            static const FontStyle              s_defaultFontStyle;
             static const core::u8               s_defaultFontSize;
 
             gfx::BindlessTextureHandle          m_fontTexHandle;
             bool                                m_rebuildFontTex = false;
 
             Font                                m_currentFont;
-            FontStyle                               m_currentFontStyle;
+            FontStyle                           m_currentFontStyle;
             core::u8                            m_currentFontSize;
 
             core::vector<BeginFrameCallback>    m_beginFrameCallbacks;

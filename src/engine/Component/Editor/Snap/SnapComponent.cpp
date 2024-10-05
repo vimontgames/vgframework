@@ -24,7 +24,7 @@ namespace vg::engine
     SnapComponent::SnapComponent(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
-        SetUpdateFlags(UpdateFlags::Update, false);
+        EnableUpdateFlags(UpdateFlags::Update, false);
     }
 
     //--------------------------------------------------------------------------------------

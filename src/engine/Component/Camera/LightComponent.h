@@ -22,7 +22,7 @@ namespace vg::engine
         void                        OnLoad              () override;
         void                        Update              (const Context & _context) override;
         void                        OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent);
-        void                        SetComponentFlags   (core::ComponentFlags _flags, bool _enabled = true) final override;
+        void                        EnableComponentFlags   (core::ComponentFlags _flags, bool _enabled = true) final override;
         bool                        TryGetAABB          (core::AABB & _aabb) const final override;
 
     protected:

@@ -20,8 +20,8 @@ namespace vg::physics
         virtual ObjectLayer         GetLayer            () const = 0;
         virtual void                SetLayer            (ObjectLayer _layer) = 0;
 
-        virtual MotionType          GetMotion           () const = 0;
-        virtual void                SetMotion           (MotionType _motion) = 0;
+        virtual MotionType          GetMotionType       () const = 0;
+        virtual void                SetMotionType       (MotionType _motion) = 0;
 
         virtual MotionQuality       GetMotionQuality    () const = 0;
         virtual void                SetMotionQuality    (MotionQuality _quality) = 0;

@@ -124,7 +124,6 @@ namespace vg::engine
 
         core::JobSync *                         getJobSync          (EngineJobType _jobSync) { return &m_jobSync[core::asInteger(_jobSync)]; }
 
-    public:
         renderer::IRendererOptions *            getRendererOptions  () const;
         physics::IPhysicsOptions *              getPhysicsOptions   () const;
         audio::IAudioOptions *                  getAudioOptions     () const;
@@ -145,6 +144,8 @@ namespace vg::engine
         void                                    stop                ();
         void                                    pause               ();
         void                                    resume              ();
+
+        static bool                             shouldCollide       (core::IObject * _obj1, core::IObject * _obj2);
 
 	private:
         bool                                    m_isPlaying         : 1;

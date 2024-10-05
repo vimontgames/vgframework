@@ -28,7 +28,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void Component::setUpdateFlags(UpdateFlags _flags, bool _enabled)
+    VG_INLINE void Component::enableUpdateFlags(UpdateFlags _flags, bool _enabled)
     {
         if (_enabled)
             m_update |= _flags;

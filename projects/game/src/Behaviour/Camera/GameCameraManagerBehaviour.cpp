@@ -13,7 +13,7 @@ VG_REGISTER_COMPONENT_CLASS(GameCameraManagerBehaviour, "Game Camera Manager", "
 GameCameraManagerBehaviour::GameCameraManagerBehaviour(const string & _name, IObject * _parent) :
     super(_name, _parent)
 {
-    SetUpdateFlags(UpdateFlags::Update);
+    EnableUpdateFlags(UpdateFlags::Update);
 }
 
 //--------------------------------------------------------------------------------------

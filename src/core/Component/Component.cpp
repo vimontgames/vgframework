@@ -88,7 +88,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Component::SetComponentFlags(ComponentFlags _flags, bool _enabled)
+    void Component::EnableComponentFlags(ComponentFlags _flags, bool _enabled)
     {
         setComponentFlags(_flags, _enabled);
 
@@ -108,9 +108,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Component::SetUpdateFlags(UpdateFlags _flags, bool _enabled)
+    void Component::EnableUpdateFlags(UpdateFlags _flags, bool _enabled)
     {
-        setUpdateFlags(_flags, _enabled);
+        enableUpdateFlags(_flags, _enabled);
     }
 
     //--------------------------------------------------------------------------------------

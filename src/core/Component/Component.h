@@ -27,10 +27,10 @@ namespace vg::core
         void                        SetPropertyValue        (const IProperty & _prop, void * _previousValue, void * _newValue) override;
 
         ComponentFlags              GetComponentFlags       () const final override;
-        void                        SetComponentFlags       (ComponentFlags _flags, bool _enabled = true) override;
+        void                        EnableComponentFlags    (ComponentFlags _flags, bool _enabled = true) override;
 
         UpdateFlags                 GetUpdateFlags          () const final override;
-        void                        SetUpdateFlags          (UpdateFlags _flags, bool _enabled = true) final override;
+        void                        EnableUpdateFlags       (UpdateFlags _flags, bool _enabled = true) final override;
 
         bool                        TryGetAABB              (AABB & _aabb) const { return false; }
 
@@ -40,7 +40,7 @@ namespace vg::core
         VG_INLINE void              setComponentFlags       (ComponentFlags _flags, bool _enabled);
 
         VG_INLINE UpdateFlags       getUpdateFlags          () const;
-        VG_INLINE void              setUpdateFlags          (UpdateFlags _flags, bool _enabled = true);
+        VG_INLINE void              enableUpdateFlags       (UpdateFlags _flags, bool _enabled = true);
 
         VG_INLINE GameObject *      getGameObject           () const;
 

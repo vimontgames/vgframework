@@ -1,12 +1,12 @@
 #pragma once
 
-#include "core/Component/Component.h"
+#include "engine/IPhysicsObjectComponent.h"
 
 namespace vg::engine
 {
-    class IPhysicsShapeComponent : public core::Component
+    class IPhysicsShapeComponent : public IPhysicsObjectComponent
     {
     public:
-        VG_CLASS_DECL_ABSTRACT(IPhysicsShapeComponent, core::Component);
+        VG_CLASS_DECL_ABSTRACT(IPhysicsShapeComponent, IPhysicsObjectComponent);
     };
 }

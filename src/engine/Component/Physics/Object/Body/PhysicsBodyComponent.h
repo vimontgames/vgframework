@@ -35,6 +35,9 @@ namespace vg::engine
         void                                    SetTrigger          (bool _trigger) final override;
         bool                                    IsTrigger           () const final override;
 
+        void                                    SetMotionType       (physics::MotionType _motionType) final override;
+        physics::MotionType                     GetMotionType       () const final override;
+        
         void                                    onShapeUpdated      ();
         void                                    updateShapesColor   ();
 

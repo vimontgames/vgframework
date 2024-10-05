@@ -106,7 +106,7 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Sounds/Weapons/swoosh_bat.wav"/>
                                                 <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" flags="Bitfield" value=""/>
-                                                <Property type="Float" name="m_soundSettings.m_volume" flags="HasRange" value="0.5"/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" flags="HasRange" value="0.25"/>
                                                 <Property type="Float" name="m_soundSettings.m_delay" flags="HasRange" value="1"/>
                                             </Object>
                                         </Property>

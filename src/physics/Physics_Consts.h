@@ -9,12 +9,12 @@ namespace vg::physics
 {
     struct PhysicsCreationParams
     {
-        engine::IEngine * engine = nullptr;
-        core::uint maxBodies = 65535;
-        core::uint numBodyMutexes = 0;
-	    core::uint maxBodyPairs = 65536;
-	    core::uint maxContactConstraints = 10240;
-        core::uint maxPhysicsBarriers = 8;
+        engine::IEngine *           engine                  = nullptr;
+        core::uint                  maxBodies               = 65535;
+        core::uint                  numBodyMutexes          = 0;
+	    core::uint                  maxBodyPairs            = 65536;
+	    core::uint                  maxContactConstraints   = 10240;
+        core::uint                  maxPhysicsBarriers      = 8;
     };
 
     // Minimum dimension for physics shape

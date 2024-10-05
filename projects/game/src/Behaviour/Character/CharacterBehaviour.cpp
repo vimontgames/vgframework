@@ -18,7 +18,7 @@ CharacterBehaviour::CharacterBehaviour(const string & _name, IObject * _parent, 
     super(_name, _parent),
     m_characterType(_characterType)
 {
-    SetUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
+    EnableUpdateFlags(UpdateFlags::FixedUpdate | UpdateFlags::Update);
 
     for (uint i = 0; i < vg::core::countof(m_primaryAnim); ++i)
         m_primaryAnim[i] = -1;

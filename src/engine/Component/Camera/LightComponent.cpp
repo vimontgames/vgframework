@@ -32,8 +32,6 @@ namespace vg::engine
         super(_name, _parent),
         m_lightType(renderer::LightType::Omni)
     {
-        SetUpdateFlags((UpdateFlags)0x0);
-
         if (nullptr == m_lightDesc)
             createLightDesc();
         if (nullptr == m_light)
@@ -146,9 +144,9 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void LightComponent::SetComponentFlags(ComponentFlags _flags, bool _enabled)
+    void LightComponent::EnableComponentFlags(ComponentFlags _flags, bool _enabled)
     {
-        super::SetComponentFlags(_flags, _enabled);
+        super::EnableComponentFlags(_flags, _enabled);
 
         if (m_light)
             m_light->SetInstanceFlags(InstanceFlags::Enabled, asBool(ComponentFlags::Enabled & GetComponentFlags()));

@@ -1,5 +1,9 @@
 #include "engine/Precomp.h"
 #include "PhysicsComponent.h"
-#include "Body/PhysicsBodyComponent.hpp"
+
+#include "Object/PhysicsObjectComponent.hpp"
+#include "Object/Body/PhysicsBodyComponent.hpp"
+#include "Object/CharacterController/CharacterControllerComponent.hpp"
+#include "Object/MergeStaticColliders/MergeStaticCollidersComponent.hpp"
+
 #include "Shape/PhysicsShapeComponent.hpp"
-#include "CharacterController/CharacterControllerComponent.hpp"
