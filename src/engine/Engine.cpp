@@ -399,8 +399,20 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Engine::shouldCollide(core::IObject * _obj1, core::IObject * _obj2)
     {
-        auto * body1 = VG_SAFE_STATIC_CAST(PhysicsObjectComponent, _obj1);
-        auto * body2 = VG_SAFE_STATIC_CAST(PhysicsObjectComponent, _obj2);
+        const auto * body1 = VG_SAFE_STATIC_CAST(PhysicsObjectComponent, _obj1);
+        const auto * body2 = VG_SAFE_STATIC_CAST(PhysicsObjectComponent, _obj2);
+
+        if (body1->isCollisionMaskEnabled() || body2->isCollisionMaskEnabled())
+        {
+            const auto cat1 = (physics::CategoryFlag)(1ULL<< (u64)body1->getCategory());
+            const auto mask1 = body1->getCollisionMask();
+
+            const auto cat2 = (physics::CategoryFlag)(1ULL << (u64)body2->getCategory());
+            const auto mask2 = body2->getCollisionMask();
+
+            if (!u64(cat1 & mask2) || !u64(cat2 & mask1))
+                return false;
+        }
 
         return true;
     }

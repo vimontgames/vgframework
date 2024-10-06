@@ -1,6 +1,7 @@
 #include "engine/Precomp.h"
 #include "EngineOptions.h"
 #include "physics/Physics_Consts.h"
+#include "core/Object/Property.h"
 
 using namespace vg::core;
 
@@ -31,6 +32,8 @@ namespace vg::engine
 
             registerProperty(EngineOptions, m_mergeStaticBodies, "Merge static");
             setPropertyDescription(EngineOptions, m_mergeStaticBodies, "Merge static bodies at init");
+
+            registerPropertyEnumArray(EngineOptions, string, physics::Category, m_physicsCategories, "Category");
         }
         registerPropertyGroupEnd(EngineOptions);
 
@@ -66,12 +69,64 @@ namespace vg::engine
     {
         setFile("Engine.xml");
         Load();
+        if (auto * physicsCategoriesProp = GetClassDesc()->GetPropertyByName(VG_STRINGIFY(m_physicsCategories)))
+            updateDynamicEnum(*physicsCategoriesProp);
     }
 
     //--------------------------------------------------------------------------------------
     void EngineOptions::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
+        updateDynamicEnum(_prop);
+    }
 
+    //--------------------------------------------------------------------------------------
+    void EngineOptions::updateDynamicEnum(const core::IProperty & _prop)
+    {
+        if (!strcmp(_prop.GetName(), VG_STRINGIFY(m_physicsCategories)))
+        {
+            // "Patch" all properties using an enum of type "physics::Category" or "physics::CategoryFlags"
+            IFactory * factory = Kernel::getFactory();
+
+            const auto classDescs = factory->GetClassDescriptors();
+
+            for (auto * desc : classDescs)
+            {
+                const auto propCount = desc->GetPropertyCount();
+                for (uint i = 0; i < propCount; ++i)
+                {
+                    Property * prop = (Property*)desc->GetPropertyByIndex(i);
+
+                    if ( (PropertyType::EnumU8  == prop->GetType() && !strcmp("Category", prop->GetEnumTypeName())) 
+                      || (PropertyType::EnumFlagsU64 == prop->GetType() && !strcmp("CategoryFlag", prop->GetEnumTypeName())))
+                    {
+                        for (uint i = 0; i < countof(m_physicsCategories); ++i)
+                            prop->SetEnumName(i, m_physicsCategories[i]);
+                    }
+                }
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::vector<core::string> EngineOptions::getPhysicsCategoryNames() const
+    {
+        vector<string> names(enumCount<physics::Category>());
+        for (uint i = 0; i < names.size(); ++i)
+            names[i] = m_physicsCategories[i];
+        return names;
+    }
+
+    //--------------------------------------------------------------------------------------
+    physics::Category EngineOptions::GetPhysicsCategory(const core::string & _name) const
+    {
+        for (uint i = 0; i < countof(m_physicsCategories); ++i)
+        {
+            if (_name == m_physicsCategories[i])
+                return (physics::Category)i;
+        }
+
+        VG_WARNING("[Physics] Could not find physics::Category with name \"%s\"", _name.c_str());
+        return (physics::Category)0;
     }
 
     //--------------------------------------------------------------------------------------

@@ -79,6 +79,9 @@
     <None Include="Component\UI\UIComponent.inl">
       <Filter>Component\UI</Filter>
     </None>
+    <None Include="Component\Physics\Object\PhysicsObjectComponent.inl">
+      <Filter>Component\Physics\Object</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEngine.h" />

@@ -107,6 +107,7 @@
     <None Include="Component\Camera\CameraComponent.inl" />
     <None Include="Component\Camera\LightComponent.inl" />
     <None Include="Component\Mesh\MeshComponent.inl" />
+    <None Include="Component\Physics\Object\PhysicsObjectComponent.inl" />
     <None Include="Component\UI\UIComponent.inl" />
     <None Include="Engine.def" />
     <None Include="Engine.inl" />

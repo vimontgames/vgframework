@@ -9,6 +9,13 @@
         <Property type="Bool" name="m_showRigidBodies" flags="NotVisible" value="false"/>
         <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" flags="" value="Sphere|Box|Capsule|Cylinder"/>
         <Property type="Bool" name="m_mergeStaticBodies" value="true"/>
+        <Property type="String" name="m_physicsCategories" flags="EnumArray">
+            <Value name="Category_0" value="Default"/>
+            <Value name="Category_1" value="Player 1"/>
+            <Value name="Category_2" value="Player 2"/>
+            <Value name="Category_3" value="Player 3"/>
+            <Value name="Category_4" value="Player 4"/>
+        </Property>
         <Property type="Bool" name="m_useTimeScale" flags="NotVisible" value="false"/>
         <Property type="Float" name="m_timeScale" flags="" value="1"/>
         <Property type="Bool" name="m_useMaxDT" flags="NotVisible" value="true"/>

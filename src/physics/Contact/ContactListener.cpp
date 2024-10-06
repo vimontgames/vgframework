@@ -47,7 +47,7 @@ namespace vg::physics
 
         auto & callbacks = Physics::get()->getCallbacks();
         if (nullptr != callbacks.validateContact)
-            return callbacks.validateContact(obj1, obj2) ? JPH::ValidateResult::AcceptAllContactsForThisBodyPair : JPH::ValidateResult::RejectAllContactsForThisBodyPair;
+            return callbacks.validateContact(obj1, obj2) ? JPH::ValidateResult::AcceptContact : JPH::ValidateResult::RejectContact;
         else
             return JPH::ValidateResult::AcceptAllContactsForThisBodyPair;
     }

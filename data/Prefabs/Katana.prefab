@@ -28,8 +28,11 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsBodyComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="3010574837"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="EnumU8" name="m_category" value="Default"/>
+                                <Property type="Bool" name="m_useCollisionMask" flags="NotVisible" value="false"/>
+                                <Property type="EnumFlagsU64" name="m_collisionMask" flags="" value=""/>
                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                     <Object class="PhysicsBodyDesc">
                                         <Property type="String" name="m_name" flags="NotVisible" value="PhysicsBodyDesc #92"/>
@@ -42,7 +45,7 @@
                                         <Property type="EnumU8" name="m_motion" value="Dynamic"/>
                                         <Property type="EnumU8" name="m_motionQuality" value="Continuous"/>
                                         <Property type="Bool" name="m_overrideMass" flags="NotVisible" value="true"/>
-                                        <Property type="Float" name="m_mass" flags="Optional" value="6.8722343"/>
+                                        <Property type="Float" name="m_mass" flags="Optional" value="1"/>
                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
                                         <Property type="Float" name="m_restitution" flags="HasRange" value="0.1"/>
                                     </Object>
