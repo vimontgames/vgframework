@@ -73,8 +73,6 @@
 // Use for static inheritance of platform-specific implementation classes
 //--------------------------------------------------------------------------------------
 
-#define VG_STRINGIFY(quoteMe) #quoteMe
-
 #define VG_GFXAPI_MAKE_HEADER_PATH(filename, api)			            VG_STRINGIFY(api##/filename##_##api.h)
 #define VG_GFXAPI_MAKE_HEADER_PATH_EXT(filename, version, api)          VG_STRINGIFY(api##/filename##_##version##_##api.h)
 #define VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, api)	            VG_STRINGIFY(api##/filename##_##api.hpp)

@@ -153,6 +153,8 @@ namespace vg::core
 
 #define VG_UNREFERENCED_VARIABLE(x) (void)(x)
 
+#define VG_STRINGIFY(quoteMe) #quoteMe
+
 //--------------------------------------------------------------------------------------
 // standard includes
 //--------------------------------------------------------------------------------------
