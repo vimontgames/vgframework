@@ -905,6 +905,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::onGUIThemeChanged()
     {
+        m_textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+
         // update alternating row colors
         ImVec4 bgColor = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);
         float d1, d2;

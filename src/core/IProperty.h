@@ -134,6 +134,7 @@ namespace vg::core
         virtual float2                          GetRange                        () const = 0;
         virtual const char *                    GetEnumTypeName                 () const = 0;
         virtual u32                             GetEnumCount                    () const = 0;
+        virtual void                            SetEnumName                     (uint index, core::string _name) = 0;
         virtual const char *                    GetEnumName                     (uint index) const = 0;
         virtual u64                             GetUnsignedEnumValue            (uint index) const = 0;
         virtual i64                             GetSignedEnumValue              (uint index) const = 0;
@@ -162,7 +163,7 @@ namespace vg::core
         virtual float4 *                        GetPropertyFloat4               (const IObject * _object, uint _index = 0) const = 0;
         virtual float *                         GetPropertyFloatN               (const IObject * _object, uint _componentCount, uint _index = 0) const = 0;
         virtual float4x4 *                      GetPropertyFloat4x4             (const IObject * _object) const = 0;
-        virtual string *                        GetPropertyString               (const IObject * _object) const = 0;
+        virtual string *                        GetPropertyString               (const IObject * _object, uint _index = 0) const = 0;
         virtual IResource *                     GetPropertyResource             (const IObject * _object, uint _index = 0) const = 0;
         virtual vector<IResource *> *           GetPropertyResourcePtrVector    (const IObject * _object) const = 0;
         virtual IResource **                    GetPropertyResourcePtr          (const IObject * _object, uint _index = 0) const = 0;

@@ -338,6 +338,7 @@ namespace vg::core
 
             case PropertyType::ObjectHandle:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyToMemory is not implemented for type '%s'", asString(type).c_str());
                 const void * src = (void *)(uint_ptr(_object) + offset);
                 VG_VERIFY(_buffer.write(src, size));
             }
@@ -345,14 +346,21 @@ namespace vg::core
 
             case PropertyType::String:
             {
-                const string * s = _prop->GetPropertyString(_object);
-                VG_VERIFY(_buffer.write((u32)s->length()));
-                VG_VERIFY(_buffer.write(s->c_str(), s->length()));
+                const uint count = isEnumArray ? _prop->GetEnumCount() : 1;
+
+                for (uint i = 0; i < count; ++i)
+                {
+                    const string * s = _prop->GetPropertyString(_object, i);
+
+                    VG_VERIFY(_buffer.write((u32)s->length()));
+                    VG_VERIFY(_buffer.write(s->c_str(), s->length()));
+                }
             }
             break;
 
             case PropertyType::BitMask:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyToMemory is not implemented for type '%s'", asString(type).c_str());
                 auto * bitMask = _prop->GetPropertyBitMask(_object);
                 VG_VERIFY(bitMask->toBuffer(_buffer));
             }
@@ -360,6 +368,7 @@ namespace vg::core
 
             case PropertyType::Object:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyToMemory is not implemented for type '%s'", asString(type).c_str());
                 IObject * obj = _prop->GetPropertyObject(_object);
                 auto uid = obj->GetUID();
                 VG_VERIFY(_buffer.write(uid));
@@ -369,6 +378,7 @@ namespace vg::core
 
             case PropertyType::Resource:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyToMemory is not implemented for type '%s'", asString(type).c_str());
                 IResource * obj = _prop->GetPropertyResource(_object);
                 auto uid = obj->GetUID();
                 VG_VERIFY(_buffer.write(uid));
@@ -378,6 +388,8 @@ namespace vg::core
 
             case PropertyType::ResourceVector:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyToMemory is not implemented for type '%s'", asString(type).c_str());
+
                 auto count = _prop->GetPropertyResourceVectorCount(_object);
                 VG_VERIFY(_buffer.write((u64)count));
 
@@ -400,6 +412,8 @@ namespace vg::core
 
             case PropertyType::ObjectPtr:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyToMemory is not implemented for type '%s'", asString(type).c_str());
+
                 IObject ** obj = _prop->GetPropertyObjectPtr(_object);
 
                 if (*obj)
@@ -422,6 +436,8 @@ namespace vg::core
 
             case PropertyType::ObjectPtrVector:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyToMemory is not implemented for type '%s'", asString(type).c_str());
+
                 auto * vector = _prop->GetPropertyObjectPtrVector(_object);
                 VG_VERIFY(_buffer.write((u64)vector->size()));
 
@@ -1056,6 +1072,8 @@ namespace vg::core
 
             case PropertyType::ObjectHandle:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyFromMemory is not implemented for type '%s'", asString(type).c_str());
+
                 void * dst = (void *)(uint_ptr(_object) + offset);
                 VG_VERIFY(_buffer.restore(dst, size, changed));
             }
@@ -1063,18 +1081,25 @@ namespace vg::core
 
             case PropertyType::String:
             {
-                u32 stringSize = 0;
-                char temp[1024];
-                VG_ASSERT(stringSize < 1024);
-                VG_VERIFY(_buffer.restore(&stringSize, sizeof(u32), changed));
-                VG_VERIFY(_buffer.restore(temp, stringSize, changed));
-                temp[stringSize] = '\0';
-                *_prop->GetPropertyString(_object) = temp;
+                const uint count = isEnumArray ? _prop->GetEnumCount() : 1;
+
+                for (uint i = 0; i < count; ++i)
+                {
+                    u32 stringSize = 0;
+                    char temp[1024];
+                    VG_ASSERT(stringSize < 1024);
+                    VG_VERIFY(_buffer.restore(&stringSize, sizeof(u32), changed));
+                    VG_VERIFY(_buffer.restore(temp, stringSize, changed));
+                    temp[stringSize] = '\0';
+                    *_prop->GetPropertyString(_object, i) = temp;
+                }           
             }
             break;
 
             case PropertyType::BitMask:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyFromMemory is not implemented for type '%s'", asString(type).c_str());
+
                 auto * bitMask = _prop->GetPropertyBitMask(_object);
                 VG_VERIFY(bitMask->fromBuffer(_buffer));
             }
@@ -1082,6 +1107,8 @@ namespace vg::core
 
             case PropertyType::Object:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyFromMemory is not implemented for type '%s'", asString(type).c_str());
+
                 UID uid = 0;
                 VG_VERIFY(_buffer.restore(&uid, sizeof(UID), changed));
                 IObject * obj = _prop->GetPropertyObject(_object);
@@ -1092,6 +1119,8 @@ namespace vg::core
 
             case PropertyType::Resource:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyFromMemory is not implemented for type '%s'", asString(type).c_str());
+
                 UID uid = 0;
                 VG_VERIFY(_buffer.restore(&uid, sizeof(UID), changed));
                 IResource * obj = _prop->GetPropertyResource(_object);
@@ -1107,6 +1136,8 @@ namespace vg::core
 
             case PropertyType::ResourceVector:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyFromMemory is not implemented for type '%s'", asString(type).c_str());
+
                 u64 count = 0;
                 VG_VERIFY(_buffer.read(&count));
 
@@ -1147,6 +1178,8 @@ namespace vg::core
 
             case PropertyType::ObjectPtr:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyFromMemory is not implemented for type '%s'", asString(type).c_str());
+
                 UID uid = 0;
                 VG_VERIFY(_buffer.restore(&uid, sizeof(UID), changed));
 
@@ -1179,6 +1212,8 @@ namespace vg::core
 
             case PropertyType::ObjectPtrVector:
             {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyFromMemory is not implemented for type '%s'", asString(type).c_str());
+
                 u64 count = 0;
                 VG_VERIFY(_buffer.restore(&count, sizeof(u64), changed));
 
@@ -1706,12 +1741,42 @@ namespace vg::core
 
                                         case PropertyType::String:
                                         {
-                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
-                                            const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
-                                            if (nullptr != xmlValue)
+                                            if (isEnumArray)
                                             {
-                                                string * pString = (string*)(uint_ptr(_object) + offset);
-                                                *pString = xmlValue->Value();
+                                                const XMLElement * xmlPropElemValue = xmlPropElem->FirstChildElement("Value");
+                                                if (nullptr != xmlPropElemValue)
+                                                {
+                                                    do
+                                                    {
+                                                        const XMLAttribute * xmlValueName = xmlPropElemValue->FindAttribute("name");
+                                                        if (nullptr != xmlValueName)
+                                                        {
+                                                            for (uint i = 0; i < prop->GetEnumCount(); ++i)
+                                                            {
+                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i)))
+                                                                {
+                                                                    if (const XMLAttribute * xmlValue = xmlPropElemValue->FindAttribute("value"))
+                                                                    {
+                                                                        string * pString = prop->GetPropertyString(_object, i);
+                                                                        *pString = xmlValue->Value();
+                                                                    }
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        xmlPropElemValue = xmlPropElemValue->NextSiblingElement("Value");
+                                                    } while (nullptr != xmlPropElemValue);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                const XMLAttribute * xmlValue = xmlPropElem->FindAttribute("value");
+                                                if (nullptr != xmlValue)
+                                                {
+                                                    string * pString = prop->GetPropertyString(_object);
+                                                    *pString = xmlValue->Value();
+                                                }
                                             }
                                         }
                                         break;
@@ -2228,9 +2293,31 @@ namespace vg::core
 
                 case PropertyType::String:
                 {
-                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
-                    const string * pString = prop->GetPropertyString(_object);
-                    xmlPropElem->SetAttribute("value", pString->c_str());
+                    if (isEnumArray)
+                    {
+                        const uint count = prop->GetEnumCount();
+                        for (uint i = 0; i < count; ++i)
+                        {
+                            const string * pString = prop->GetPropertyString(_object, i);
+
+                            if (!pString->empty())
+                            {
+                                XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
+                                {
+                                    auto enumValueName = prop->GetEnumName(i);
+                                    xmlPropElemChild->SetAttribute("name", enumValueName);
+
+                                    xmlPropElemChild->SetAttribute("value", pString->c_str());
+                                }
+                                xmlPropElem->InsertEndChild(xmlPropElemChild);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        const string * pString = prop->GetPropertyString(_object);
+                        xmlPropElem->SetAttribute("value", pString->c_str());
+                    }
                 }
                 break;
 

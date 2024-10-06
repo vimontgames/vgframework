@@ -30,6 +30,8 @@ namespace vg
 
             void                SetGUITheme                 (Theme _theme) final override;
             bool                IsCurrentThemeDark          () const final override;
+
+            const ImVec4 &      GetTextColor                () const final override { return m_textColor; }
             const ImVec4 &      GetRowColorEven             () const final override { return m_rowColorEven;}
             const ImVec4 &      GetRowColorOdd              () const final override { return m_rowColorOdd; }
 
@@ -115,6 +117,7 @@ namespace vg
 
             DescriptorSetsFrameData             m_descriptorSetsFrameData[2];
 
+            ImVec4                              m_textColor;
             ImVec4                              m_rowColorEven;
             ImVec4                              m_rowColorOdd;
             ImVec4                              m_warningColor;

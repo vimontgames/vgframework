@@ -57,6 +57,7 @@ namespace vg::core
 
                 // Types that support enumArray
                 case PropertyType::Resource:
+                case PropertyType::String:
                 case PropertyType::Uint8:
                 case PropertyType::Float4:
                     if (asBool(PropertyFlags::EnumArray & _flags))
@@ -255,6 +256,12 @@ namespace vg::core
     u32 Property::GetEnumCount() const
     {
         return (u32)enums.size();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Property::SetEnumName(uint index, core::string _name)
+    {
+        enums[index].name = _name;
     }
 
     //--------------------------------------------------------------------------------------
@@ -494,11 +501,11 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    core::string * Property::GetPropertyString(const IObject * _object) const
+    core::string * Property::GetPropertyString(const IObject * _object, uint _index) const
     {
         VG_ASSERT(nullptr != _object);
         checkPropertyType(PropertyType::String);
-        return (string*)(uint_ptr(_object) + offset);
+        return (string*)(uint_ptr(_object) + offset + _index * this->GetSizeOf());
     }
 
     //--------------------------------------------------------------------------------------

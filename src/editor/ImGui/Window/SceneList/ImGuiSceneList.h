@@ -44,6 +44,5 @@ namespace vg::editor
         ImGuiGameObjectSceneEditorMenu  m_gameObjectMenu;
         core::IGameObject *             m_dragAndDropNodeTarget = nullptr;
         core::IGameObject *             m_dragAndDropInterlineTarget = nullptr;
-        ImVec4                          m_originalTextColor;
     };
 }

@@ -47,6 +47,7 @@ namespace vg::core
         float2                          GetRange                        () const final override;
         const char *                    GetEnumTypeName                 () const final override;
         u32                             GetEnumCount                    () const final override;
+        void                            SetEnumName                     (uint index, core::string _name) final override;
         const char *                    GetEnumName                     (uint index) const final override;
         u64                             GetUnsignedEnumValue            (uint index) const final override;
         i64                             GetSignedEnumValue              (uint index) const final override;
@@ -75,7 +76,7 @@ namespace vg::core
         float4 *                        GetPropertyFloat4               (const IObject * _object, uint _index = 0) const final;
         float *                         GetPropertyFloatN               (const IObject * _object, uint _componentCount, uint _index = 0) const final override;
         float4x4 *                      GetPropertyFloat4x4             (const IObject * _object) const final override;
-        string *                        GetPropertyString               (const IObject * _object) const final override;
+        string *                        GetPropertyString               (const IObject * _object, uint _index = 0) const final override;
         IResource *                     GetPropertyResource             (const IObject * _object, uint _index = 0) const final override;
         IResource **                    GetPropertyResourcePtr          (const IObject * _object, uint _index = 0) const final override;
         vector<IResource *> *           GetPropertyResourcePtrVector    (const IObject * _object) const final override;

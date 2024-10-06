@@ -24,6 +24,8 @@ namespace vg
 
             virtual void            SetGUITheme             (Theme _theme) = 0;
             virtual bool            IsCurrentThemeDark      () const = 0;
+
+            virtual const ImVec4 &  GetTextColor            () const = 0;
             virtual const ImVec4 &  GetRowColorEven         () const = 0;
             virtual const ImVec4 &  GetRowColorOdd          () const = 0;
 

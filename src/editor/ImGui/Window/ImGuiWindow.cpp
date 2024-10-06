@@ -199,7 +199,7 @@ namespace vg::editor
     template <> bool equals(core::float4x4 a, core::float4x4 b) { return all(a == b); }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool createDynamicPropertyIfNeeded(T * _out, T _value, IObject * _object, const IProperty * _prop, PropertyContext & _propContext)
+    template <typename T> bool createDynamicPropertyIfNeeded(T * _out, T _value, IObject *& _object, const IProperty *& _prop, PropertyContext & _propContext)
     {
         if ((!_propContext.m_readOnly))
         {
@@ -212,6 +212,9 @@ namespace vg::editor
 
                     if (_propContext.m_optionalPropOverride)
                         _propContext.m_optionalPropOverride->Enable(true);
+
+                    _object = _propContext.m_propOverride;
+                    _prop = _propContext.m_propOverride->GetProperty();
 
                     return true;
                 }
@@ -243,9 +246,11 @@ namespace vg::editor
                         _propContext.m_optionalPropOverride->Enable(true);
 
                     _object = (IObject *)_propContext.m_propOverride;
+                    //_prop = _propContext.m_propOverride->GetProperty();
+                    //_out = (T*)((uint_ptr)_object + _prop->GetOffset());
                     _propContext.m_isPrefabOverride = true;
 
-                    return true;
+                    //return true;
                 } 
                 else
                 {
@@ -310,7 +315,7 @@ namespace vg::editor
         Continuous
     );
 
-    template <typename T> EditingState undoRedoBeforeEdit(bool & edited, PropertyContext & _propContext, IObject * _object, const IProperty * _prop, typename vectorTraits<T>::type * temp,  typename vectorTraits<T>::type * _ptr, InteractionType _interactionType)
+    template <typename T> EditingState undoRedoBeforeEdit(bool & edited, PropertyContext & _propContext, IObject * _object, const IProperty * _prop, typename vectorTraits<T>::type * temp,  typename vectorTraits<T>::type * _ptr, InteractionType _interactionType, bool _itemActive = false, bool _itemAfterEdit = false)
     {
         constexpr auto count = vectorTraits<T>::count;
         using S = typename vectorTraits<T>::type;
@@ -325,7 +330,7 @@ namespace vg::editor
 
             dynPropertyJustCreated = createDynamicPropertyIfNeeded((T *)_ptr, vectorTraits<T>::makeVector(initVal), _object, _prop, _propContext);
 
-            if (dynPropertyJustCreated)
+            if (dynPropertyJustCreated && InteractionType::Continuous == _interactionType)
             {
                 for (int i = 0; i < count; ++i)
                     temp[i] = initVal[i];
@@ -336,7 +341,7 @@ namespace vg::editor
 
         // After ImGui control & before Undo/Redo action
         #if VG_ENABLE_UNDO_REDO
-        if (!dynPropertyJustCreated)
+        if (!dynPropertyJustCreated || InteractionType::Single == _interactionType)
         {
             UndoRedoTarget undoRedoTarget(_object, _prop);
             auto * undoRedoManager = Kernel::getUndoRedoManager();
@@ -347,7 +352,7 @@ namespace vg::editor
                 if (InteractionType::Continuous == _interactionType)
                 {
                     // For slider-like edits we backup value on begin change and after last change
-                    if (edited & ImGui::IsItemActive())
+                    if (edited & (_itemActive || ImGui::IsItemActive()))
                         recordUndoRedoBeginValue = true;
 
                 }
@@ -376,7 +381,7 @@ namespace vg::editor
                 }
             }
             
-            if (ImGui::IsItemDeactivatedAfterEdit() || (edited && InteractionType::Single == _interactionType))
+            if ( (_itemAfterEdit || ImGui::IsItemDeactivatedAfterEdit()) || (edited && InteractionType::Single == _interactionType))
             {
                 //VG_INFO("[Undo/Redo] End editing Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
                 editingState = EditingState::EndEdit;
@@ -389,6 +394,7 @@ namespace vg::editor
         return editingState;
     }
 
+    //--------------------------------------------------------------------------------------
     template <typename T> bool editScalarProperty(PropertyContext & _propContext, const string & _label, IObject * _object, const IProperty * _prop, typename vectorTraits<T>::type * _ptr)
     {
         constexpr auto count = vectorTraits<T>::count;
@@ -510,9 +516,12 @@ namespace vg::editor
     };
 
     //--------------------------------------------------------------------------------------
-    template <typename T> bool editEnum_Recur(const vector<EnumPair<T>> & enumPairs, string _enumName, uint _index, T * _pEnum, bool _readonly)
+    template <typename T> bool editEnum_Recur(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const vector<EnumPair<T>> & enumPairs, string _enumName, uint _index, T * _pEnum)
     {
         bool changed = false;
+
+        if (_enumName.empty())
+            return false;
 
         auto it = _enumName.find_first_of("_");
         if (it != string::npos)
@@ -521,7 +530,7 @@ namespace vg::editor
             if (ImGui::BeginMenu(category.c_str()))
             {
                 string name = _enumName.substr(it + 1);
-                bool res = editEnum_Recur(enumPairs, name, _index, _pEnum, _readonly);
+                bool res = editEnum_Recur(_object, _prop, _propContext, enumPairs, name, _index, _pEnum);
                 ImGui::EndMenu();
                 return res;
             }
@@ -530,10 +539,17 @@ namespace vg::editor
         {
             if (ImGui::Selectable(_enumName.c_str()))
             {
-                if (!_readonly)
+                if (!_propContext.m_readOnly)
                 {
-                    *_pEnum = (T)enumPairs[_index].value;
-                    changed = true;
+                    auto enumVal = (T)enumPairs[_index].value;
+                    bool edited = true;
+                    auto editingState = undoRedoBeforeEdit<T>(edited, _propContext, _object, _prop, (T *)&enumVal, _pEnum, InteractionType::Single);
+
+                    if (storeProperty<T>((T *)_pEnum, enumVal, _object, _prop, _propContext, editingState))
+                    {
+                        *_pEnum = enumVal;
+                        changed = true;
+                    }
                 }
             }
         }
@@ -622,9 +638,7 @@ namespace vg::editor
             for (uint e = 0; e < enumPairs.size(); ++e)
             {
                 const string enumName = enumPairs[e].name;
-                //ImGui::BeginDisabled(readonly);
-                changed |= editEnum_Recur<T>(enumPairs, enumName, e, pEnum, readonly);
-                //ImGui::EndDisabled();
+                changed |= editEnum_Recur<T>(_object, _prop, _propContext, enumPairs, enumName, e, pEnum);
             }
             ImGui::EndCombo();
         }
@@ -648,8 +662,8 @@ namespace vg::editor
         if (readonly)
             BeginDisabledStyle(true);
 
-        T * pEnum = (T*)(uint_ptr(_object) + offset);
-        int enumVal = (int)*pEnum;
+        T * pEnum = (T*)(uint_ptr(_object) + offset); 
+        T enumVal = (T)*pEnum;
 
         bool edited = false, changed = false;
         string preview;
@@ -657,7 +671,7 @@ namespace vg::editor
         bool first = true, found = false;
         for (uint e = 0; e < _prop->GetEnumCount(); ++e)
         {
-            if (enumVal & (1 << e))
+            if (enumVal & (T(1) << T(e)))
             {
                 found = true;
 
@@ -677,21 +691,23 @@ namespace vg::editor
         {
             for (uint e = 0; e < _prop->GetEnumCount(); ++e)
             {
-                //ImGui::BeginDisabled(readonly);
                 bool value = ((enumVal >> e) & 1) ? true : false;
                 const char * name = _prop->GetEnumName(e);
-                if (ImGui::Checkbox(name, &value))
+
+                if (name[0] != '\0')
                 {
-                    if (!readonly)
+                    if (ImGui::Checkbox(name, &value))
                     {
-                        if (value)
-                            enumVal |= 1 << e;
-                        else
-                            enumVal &= ~(1 << e);
+                        if (!readonly)
+                        {
+                            if (value)
+                                enumVal |= T(1) << T(e);
+                            else
+                                enumVal &= ~(T(1) << T(e));
+                        }
+                        edited = true;
                     }
-                    edited = true;
                 }
-                //ImGui::EndDisabled();
             }
             ImGui::EndCombo();
 
@@ -721,6 +737,7 @@ namespace vg::editor
         ObjectContext objectContext;
         return displayObject(_object, objectContext);
     }
+
     //--------------------------------------------------------------------------------------
     bool ImGuiWindow::displayProperty(core::IObject * _object, const core::IProperty * _prop)
     {
@@ -783,8 +800,6 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiWindow::displayArrayObject(IObject * _object, core::uint _index, const char * _name)
     {
-        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_Text));
-
         string treeNodeName;
 
         if (_name)
@@ -820,8 +835,6 @@ namespace vg::editor
             else
                 updateSelection(_object);
         }
-
-        ImGui::PopStyleColor();
     }
 
     //--------------------------------------------------------------------------------------
@@ -843,12 +856,14 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     ImVec4 ImGuiWindow::getPropertyColor(const PropertyContext & _propContext)
     {
+        auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+
         if (_propContext.m_isPrefabInstance)
         {
             if (_propContext.m_isPrefabOverride)
                 return ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive);
             else if (_propContext.m_canPrefabOverride)
-                return ImGui::GetStyleColorVec4(ImGuiCol_Text);
+                return imGuiAdapter->GetTextColor();
             else
                 return ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
         }
@@ -857,18 +872,18 @@ namespace vg::editor
             if (_propContext.m_readOnly)
                 return ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
             else
-                return ImGui::GetStyleColorVec4(ImGuiCol_Text);
+                return imGuiAdapter->GetTextColor();
         }
     };
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::drawPropertyLabel(const PropertyContext & _propContext, const core::IProperty * _prop)
+    void ImGuiWindow::drawPropertyLabel(const PropertyContext & _propContext, const core::IProperty * _prop, core::uint _index)
     {
-        drawPropertyLabel(_propContext, _prop->GetDisplayName(), _prop->GetDescription());
+        drawPropertyLabel(_propContext, _prop->GetDisplayName(), _prop->GetDescription(), _index);
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::drawPropertyLabel(const PropertyContext & _propContext, const char * _label, const char * _tooltip)
+    void ImGuiWindow::drawPropertyLabel(const PropertyContext & _propContext, const char * _label, const char * _tooltip, core::uint _index)
     {
         // ugly workaround
         auto x = ImGui::GetCursorPosX();
@@ -876,7 +891,16 @@ namespace vg::editor
         if (x > 100)
             ImGui::SetCursorPosX(x);
 
-        ImGui::Text(_label);
+        if (asBool(PropertyFlags::EnumArray & _propContext.m_originalProp->GetFlags()))
+        {
+            string name = _propContext.m_originalProp->GetEnumName(_index);
+            std::replace(name.begin(), name.end(), '_', ' ');
+            ImGui::Text(name.c_str());
+        }
+        else
+        {
+            ImGui::Text(_label);
+        }
 
         if (_tooltip && _tooltip[0] != '\0' && ImGui::IsItemHovered())
             ImGui::SetTooltip(_tooltip);
@@ -1066,6 +1090,8 @@ namespace vg::editor
         const bool isEnumArray = asBool(PropertyFlags::EnumArray & flags);
         const auto enumArrayTreeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
 
+        auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+
         ImGui::PushStyleColor(ImGuiCol_Text, getPropertyColor(propContext));
 
         //ImGui::BeginDisabled(readOnly);
@@ -1147,40 +1173,8 @@ namespace vg::editor
                 case PropertyType::BitMask:
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    BitMask * pBitMask = _prop->GetPropertyBitMask(_object);
-
-                    string enumLabel = ImGui::getObjectLabel(_prop->GetDisplayName(), _prop);
-                    string preview = pBitMask->toString();
-
-                    if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
-                    {
-                        const auto bitCount = pBitMask->getBitCount();
-                        const auto names = pBitMask->getNames();
-
-                        for (uint i = 0; i < bitCount; ++i)
-                        {
-                            bool value = pBitMask->getBitValue(i);
-                            string bitName;
-                            
-                            if (i < names.size() && !names[i].empty())
-                                bitName = fmt::sprintf("[%u] %s", i, names[i]);
-                            else 
-                                bitName = fmt::sprintf("Bit %u", i);
-                            
-                            if (ImGui::Checkbox(bitName.c_str(), &value))
-                            {
-                                if (!propContext.m_readOnly)
-                                {
-                                    if (value)
-                                        pBitMask->setBitValue(i, true);
-                                    else
-                                        pBitMask->setBitValue(i, false);
-                                }
-                                changed = true;
-                            }
-                        }
-                        ImGui::EndCombo();
-                    }
+                    if (!isEnumArray)
+                        changed |= editBitMask(_object, _prop, propContext);
                 }
                 break;
 
@@ -1214,6 +1208,11 @@ namespace vg::editor
                 case PropertyType::EnumU32:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
                     changed |= editEnum<u32>(_object, _prop, propContext);
+                    break;
+
+                case PropertyType::EnumU64:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= editEnum<u64>(_object, _prop, propContext);
                     break;
 
                 case PropertyType::EnumI32:
@@ -1445,110 +1444,25 @@ namespace vg::editor
 
                 case PropertyType::String:
                 {
-                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-
-                    bool selectPath = false; 
-
-                    string * pString = _prop->GetPropertyString(_object);
-                    char buffer[1024];
-
-                    const bool isFolder = asBool(PropertyFlags::IsFolder & flags);
-                    const bool isFile = asBool(PropertyFlags::IsFile & flags);
-
-                    if (isFolder || isFile)
+                    if (isEnumArray)
                     {
-                        auto availableWidth = GetContentRegionAvail().x;
-                        ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - style::button::SizeSmall.x);
-                        sprintf_s(buffer, pString->c_str());
-                        if (ImGui::InputText(getPropertyLabel(displayName).c_str(), buffer, countof(buffer), imguiInputTextflags))
-                            *pString = buffer;
-                        ImGui::PopItemWidth();
-
-                        ImGui::SameLine();
-                        auto x = ImGui::GetCursorPosX();
-                        ImGui::SetCursorPosX(x + style::button::SizeSmall.x);
-                        drawPropertyLabel(propContext, _prop);
-                        auto x2 = ImGui::GetCursorPosX();
-                        ImGui::SameLine();
-                        ImGui::SetCursorPosX(x - 4);
-
-                        if (isFolder)
+                        char label[1024];
+                        sprintf_s(label, "%s (%u)", displayName, _prop->GetEnumCount());
+                        if (ImGui::TreeNodeEx(label))
                         {
-                            const string selectFolderString = "Select Folder";
-                            if (ImGui::Button(style::icon::Folder, style::button::SizeSmall))
+                            for (uint e = 0; e < _prop->GetEnumCount(); ++e)
                             {
-                                ImGui::SelectFolderDialog(selectFolderString);
+                                const string enumLabel = ImGui::getObjectLabel(_prop->GetEnumName(e), _prop + e);
+                                changed |= editString(_object, _prop, propContext, enumLabel, e);
                             }
 
-                            if (ImGui::DisplayFileDialog(selectFolderString))
-                            {
-                                if (ImGui::IsFileDialogOK())
-                                {
-                                    const string newFolder = io::getRelativePath(ImGui::GetFileDialogSelectedPath());
-
-                                    if (newFolder != *pString)
-                                    {
-                                        *pString = newFolder;
-                                        changed = true;
-                                    }
-                                }
-
-                                ImGui::CloseFileDialog();
-                            }
-                        }
-                        else if (isFile)
-                        {
-                            const string selectFileString = "Select File";
-
-                            if (ImGui::Button(style::icon::File, style::button::SizeSmall))
-                            {
-                                const auto defaultFolder = _prop->GetDefaultFolder();
-
-                                // TODO: other extensions deduced from default folder?
-                                string ext = ".*";
-                                if (strstr(defaultFolder, "World"))
-                                    ext = "World files (*.world){.world}";
-
-                                ImGui::OpenFileDialog(selectFileString, ext, defaultFolder);
-                            }
-
-                            if (ImGui::DisplayFileDialog(selectFileString))
-                            {
-                                if (ImGui::IsFileDialogOK())
-                                {
-                                    const string newFile = io::getRelativePath(ImGui::GetFileDialogSelectedFile());
-
-                                    if (newFile != *pString)
-                                    {
-                                        *pString = newFile;
-                                        changed = true;
-                                    }                                    
-                                }
-
-                                ImGui::CloseFileDialog();
-                            }
+                            ImGui::TreePop();
                         }
                     }
                     else
                     {
-                        bool edited = false;
-
-                        sprintf_s(buffer, pString->c_str());
-                        if (ImGui::InputText(getPropertyLabel(label).c_str(), buffer, countof(buffer), imguiInputTextflags))
-                            edited = true;
-
-                        string bufferString = (string)buffer;
-
-                        EditingState editingState = undoRedoBeforeEdit<string>(edited, propContext, _object, _prop, &bufferString, pString, InteractionType::Single);
-
-                        drawPropertyLabel(propContext, _prop);
-
-                        if (edited)
-                        {
-                            if (storeProperty(pString, bufferString, _object, _prop, propContext, editingState))
-                                changed = true;
-                        }                        
-                    }                    
+                        changed |= editString(_object, _prop, propContext, label);
+                    }
                 }
                 break;
 
@@ -1932,7 +1846,7 @@ namespace vg::editor
                     }
                     else
                     {
-                        ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetColorU32(ImGuiCol_Text));
+                        ImGui::PushStyleColor(ImGuiCol_Text, imGuiAdapter->GetTextColor());
 
                         auto treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
 
@@ -2725,25 +2639,6 @@ namespace vg::editor
         const string LabelK = flatten ? fmt::sprintf("%s.K", displayName) : "K";
         const string LabelT = flatten ? fmt::sprintf("%s.T", displayName) : "T";
 
-        //static bool useTRS = false;
-        //
-        //if (ImGui::BeginCombo("Mode", useTRS? "TRS" : "float4x4"))
-        //{
-        //    bool is_selected = useTRS;
-        //    if (ImGui::Selectable("TRS", is_selected))
-        //        useTRS = true;
-        //    if (is_selected)
-        //        ImGui::SetItemDefaultFocus();
-        //
-        //    is_selected = !useTRS;
-        //    if (ImGui::Selectable("float4x4", is_selected))
-        //        useTRS = false;
-        //    if (is_selected)
-        //        ImGui::SetItemDefaultFocus();
-        //
-        //    ImGui::EndCombo(); // End combo
-        //}
-
         if (flatten || ImGui::TreeNode(getObjectLabel(displayName, _propContext.m_originalProp).c_str()))
         {
             bool edited = false;
@@ -2751,6 +2646,8 @@ namespace vg::editor
 
             if (_propContext.m_readOnly)
                 ImGui::BeginDisabled();
+
+            bool itemActive = false, itemAfterEdit = false;
 
             //if (useTRS)
             {
@@ -2768,19 +2665,18 @@ namespace vg::editor
                 float prevScale[3] = { scale[0], scale[1], scale[2] };
 
                 edited |= ImGui::DragFloat3(getPropertyLabel("T").c_str(), (float *)&translation, getDragSpeedFloat(_prop) * 90.0f/8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-                if (EditingState::Unknown == editingState)
-                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous); 
+                itemActive = ImGui::IsItemActive();
+                itemAfterEdit = ImGui::IsItemDeactivatedAfterEdit();
                 drawPropertyLabel(_propContext, TLabel.c_str(), "Represents the translation part of the matrix");
 
                 edited |= ImGui::DragFloat3(getPropertyLabel("R").c_str(), (float *)&rotation, getDragSpeedFloat(_prop) * 90.0f / 8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-
-                if (EditingState::Unknown == editingState)
-                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous); 
+                itemActive |= ImGui::IsItemActive();
+                itemAfterEdit |= ImGui::IsItemDeactivatedAfterEdit();
                 drawPropertyLabel(_propContext, RLabel.c_str(), "Represents the rotation part of the matrix");
 
                 edited |= ImGui::DragFloat3(getPropertyLabel("S").c_str(), (float *)&scale, getDragSpeedFloat(_prop) * 90.0f / 8.0f, 0.01f, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-                if (EditingState::Unknown == editingState)
-                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous); 
+                itemActive |= ImGui::IsItemActive();
+                itemAfterEdit |= ImGui::IsItemDeactivatedAfterEdit();
                 drawPropertyLabel(_propContext, SLabel.c_str(), "Represents the scale part of the matrix");
 
                 if (edited)
@@ -2852,6 +2748,9 @@ namespace vg::editor
                     store_float4x4(m, temp);
                 }
             }
+
+            if (EditingState::Unknown == editingState)
+                editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous, itemActive, itemAfterEdit);
 
             ImGui::Spacing();
 
@@ -2956,4 +2855,172 @@ namespace vg::editor
         return changed;
     }
 
+    //--------------------------------------------------------------------------------------
+    bool ImGuiWindow::editBitMask(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
+    {
+        bool changed = false;
+        
+        BitMask * pBitMask = _prop->GetPropertyBitMask(_object);
+
+        string enumLabel = ImGui::getObjectLabel(_prop->GetDisplayName(), _prop);
+        string preview = pBitMask->toString();
+
+        if (_propContext.m_readOnly)
+            ImGui::BeginDisabledStyle(true);
+
+        if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
+        {
+            const auto bitCount = pBitMask->getBitCount();
+            const auto names = pBitMask->getNames();
+
+            for (uint i = 0; i < bitCount; ++i)
+            {
+                bool value = pBitMask->getBitValue(i);
+                string bitName;
+
+                if (i < names.size())
+                {
+                    if (names[i].empty())
+                        continue;
+
+                    bitName = fmt::sprintf("[%u] %s", i, names[i]);
+                }
+                else
+                {
+                    bitName = fmt::sprintf("Bit %u", i);
+                }
+
+                if (ImGui::Checkbox(bitName.c_str(), &value))
+                {
+                    if (!_propContext.m_readOnly)
+                    {
+                        if (value)
+                            pBitMask->setBitValue(i, true);
+                        else
+                            pBitMask->setBitValue(i, false);
+                    }
+                    changed = true;
+                }
+            }
+            ImGui::EndCombo();
+        }
+
+        if (_propContext.m_readOnly)
+            ImGui::EndDisabledStyle();
+
+        return changed;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ImGuiWindow::editString(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & _label, uint _index)
+    {
+        bool changed = false;
+        bool selectPath = false;
+
+        string * pString = _prop->GetPropertyString(_object, _index);
+        char buffer[1024];
+
+        const auto flags = _prop->GetFlags();
+        const bool isFolder = asBool(PropertyFlags::IsFolder & flags);
+        const bool isFile = asBool(PropertyFlags::IsFile & flags);
+        const auto displayName = _prop->GetDisplayName();
+
+        if (isFolder || isFile)
+        {
+            auto availableWidth = GetContentRegionAvail().x;
+            ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - style::button::SizeSmall.x);
+            sprintf_s(buffer, pString->c_str());
+            if (ImGui::InputText(getPropertyLabel(displayName).c_str(), buffer, countof(buffer), getImGuiInputTextFlags(_propContext, _prop)))
+                *pString = buffer;
+            ImGui::PopItemWidth();
+
+            ImGui::SameLine();
+            auto x = ImGui::GetCursorPosX();
+            ImGui::SetCursorPosX(x + style::button::SizeSmall.x);
+            drawPropertyLabel(_propContext, _prop);
+            auto x2 = ImGui::GetCursorPosX();
+            ImGui::SameLine();
+            ImGui::SetCursorPosX(x - 4);
+
+            if (isFolder)
+            {
+                const string selectFolderString = "Select Folder";
+                if (ImGui::Button(style::icon::Folder, style::button::SizeSmall))
+                {
+                    ImGui::SelectFolderDialog(selectFolderString);
+                }
+
+                if (ImGui::DisplayFileDialog(selectFolderString))
+                {
+                    if (ImGui::IsFileDialogOK())
+                    {
+                        const string newFolder = io::getRelativePath(ImGui::GetFileDialogSelectedPath());
+
+                        if (newFolder != *pString)
+                        {
+                            *pString = newFolder;
+                            changed = true;
+                        }
+                    }
+
+                    ImGui::CloseFileDialog();
+                }
+            }
+            else if (isFile)
+            {
+                const string selectFileString = "Select File";
+
+                if (ImGui::Button(style::icon::File, style::button::SizeSmall))
+                {
+                    const auto defaultFolder = _prop->GetDefaultFolder();
+
+                    // TODO: other extensions deduced from default folder?
+                    string ext = ".*";
+                    if (strstr(defaultFolder, "World"))
+                        ext = "World files (*.world){.world}";
+
+                    ImGui::OpenFileDialog(selectFileString, ext, defaultFolder);
+                }
+
+                if (ImGui::DisplayFileDialog(selectFileString))
+                {
+                    if (ImGui::IsFileDialogOK())
+                    {
+                        const string newFile = io::getRelativePath(ImGui::GetFileDialogSelectedFile());
+
+                        if (newFile != *pString)
+                        {
+                            *pString = newFile;
+                            changed = true;
+                        }
+                    }
+
+                    ImGui::CloseFileDialog();
+                }
+            }
+        }
+        else
+        {
+            bool edited = false;
+
+            sprintf_s(buffer, pString->c_str());
+
+            if (ImGui::InputText(getPropertyLabel(_label, _index).c_str(), buffer, countof(buffer), getImGuiInputTextFlags(_propContext, _prop)))
+                edited = true;
+
+            string bufferString = (string)buffer;
+
+            EditingState editingState = undoRedoBeforeEdit<string>(edited, _propContext, _object, _prop, &bufferString, pString, InteractionType::Single);
+
+            drawPropertyLabel(_propContext, _prop, _index);
+
+            if (edited)
+            {
+                if (storeProperty(pString, bufferString, _object, _prop, _propContext, editingState))
+                    changed = true;
+            }
+        }
+
+        return changed;
+    }
 }

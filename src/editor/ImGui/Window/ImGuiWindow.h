@@ -67,9 +67,11 @@ namespace vg::editor
 
         static bool                             displayResource     (core::IResource * _resource, const core::IProperty * _prop, core::uint _index, PropertyContext & _propContext);
 
-        static bool                             editBool            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & label, float availableWidth, bool singleLine);
+        static bool                             editBool            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & _label, float _availableWidth, bool _singleLine);
         static bool                             editFloat4x4        (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
+        static bool                             editString          (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & _label, core::uint _index = 0);
         static bool                             editObjectHandle    (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
+        static bool                             editBitMask         (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
         template <typename T> static bool       editEnum            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
         template <typename T> static bool       editEnumFlags       (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
 
@@ -96,8 +98,8 @@ namespace vg::editor
         static bool                             isPropertyVisible   (core::PropertyFlags _flags);
         static core::string                     getPropertyLabel    (const core::string & _label, core::uint _index = 0);
         static ImVec4                           getPropertyColor    (const PropertyContext & _propContext);
-        static void                             drawPropertyLabel   (const PropertyContext & _propContext, const core::IProperty * _prop);
-        static void                             drawPropertyLabel   (const PropertyContext & _propContext, const char * _label, const char * _tooltip);
+        static void                             drawPropertyLabel   (const PropertyContext & _propContext, const core::IProperty * _prop, core::uint _index = 0);
+        static void                             drawPropertyLabel   (const PropertyContext & _propContext, const char * _label, const char * _tooltip, core::uint _index = 0);
 
     protected:
         core::string                            m_icon;
