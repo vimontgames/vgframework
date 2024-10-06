@@ -19,16 +19,16 @@ namespace vg::engine
                                         GameObjectHierarchy      (const core::string & _name, core::IObject * _parent);
                                         ~GameObjectHierarchy     ();
 
-        core::u32						addRef                  () override;
-        core::u32						release                 () override;
+        core::u32						AddRef                  () override;
+        core::u32						Release                 () override;
 
         void                            SetRoot                 (core::IGameObject * _sector) final override;
         core::IGameObject *             GetRoot                 () const final override;
 
         core::IWorld *                  GetWorld                () const final override;
 
-        void                            onResourceLoaded        (core::IResource * _resource) final override;
-        void                            onResourceUnloaded      (core::IResource * _resource) final override;
+        void                            OnResourceLoaded        (core::IResource * _resource) final override;
+        void                            OnResourceUnloaded      (core::IResource * _resource) final override;
 
     public:
         void                            setRoot                 (core::GameObject * _sector);

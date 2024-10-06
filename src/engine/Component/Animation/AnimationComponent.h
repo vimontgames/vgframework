@@ -20,8 +20,8 @@ namespace vg::engine
         void                    OnEnable            () final override;
         void                    OnDisable           () final override;
 
-        void                    onResourceLoaded    (core::IResource * _resource) final override;
-        void                    onResourceUnloaded  (core::IResource * _resource) final override;
+        void                    OnResourceLoaded    (core::IResource * _resource) final override;
+        void                    OnResourceUnloaded  (core::IResource * _resource) final override;
 
         IAnimationResource *    GetAnimation        (core::uint _index) const final override;
         core::uint              GetAnimationIndex   (const core::string & _name) const final override;

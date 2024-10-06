@@ -18,10 +18,10 @@ namespace vg::core
     bool ResourceMeta::Load(const core::string & _resourcePath)
     {
         SetName(io::getMetaPath(io::getFileName(_resourcePath)));
-        setFile(io::getMetaPath(_resourcePath));
+        SetFile(io::getMetaPath(_resourcePath));
 
         if (const auto * factory = Kernel::getFactory())
-            return factory->LoadFromXML(this, getFile());
+            return factory->LoadFromXML(this, GetFile());
 
         return false;
     }
@@ -30,10 +30,10 @@ namespace vg::core
     bool ResourceMeta::Save(const core::string & _resourcePath)
     {
         SetName(io::getMetaPath(io::getFileName(_resourcePath)));
-        setFile(io::getMetaPath(_resourcePath));
+        SetFile(io::getMetaPath(_resourcePath));
 
         if (const auto * factory = Kernel::getFactory())
-            return factory->SaveToXML(this, getFile());
+            return factory->SaveToXML(this, GetFile());
 
         return false;
     }

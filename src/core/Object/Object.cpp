@@ -368,17 +368,17 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Object::onResourceLoaded(IResource * _resource)
+    void Object::OnResourceLoaded(IResource * _resource)
     {
         if (nullptr != m_parent)
-            m_parent->onResourceLoaded(_resource);
+            m_parent->OnResourceLoaded(_resource);
     }
 
     //--------------------------------------------------------------------------------------
-    void Object::onResourceUnloaded(IResource * _resource)
+    void Object::OnResourceUnloaded(IResource * _resource)
     {
         if (nullptr != m_parent)
-            m_parent->onResourceUnloaded(_resource);
+            m_parent->OnResourceUnloaded(_resource);
     }
 
     //--------------------------------------------------------------------------------------
@@ -486,31 +486,31 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Object::hasFile() const
+    bool Object::HasFile() const
     {
         return !m_file.empty();
     }
 
     //--------------------------------------------------------------------------------------
-    void Object::setFile(const string & _file)
+    void Object::SetFile(const string & _file)
     {
         m_file = _file;
     }
 
     //--------------------------------------------------------------------------------------
-    const string & Object::getFile() const
+    const string & Object::GetFile() const
     {
         return m_file;
     }
 
 	//--------------------------------------------------------------------------------------
-	u32 Object::addRef()
+	u32 Object::AddRef()
 	{
 		return m_refCount.fetch_add(1) + 1;
 	}
 
 	//--------------------------------------------------------------------------------------
-	u32 Object::release()
+	u32 Object::Release()
 	{
 		const u32 prev = m_refCount.fetch_sub(1);
 		if (1 == prev)
@@ -519,16 +519,10 @@ namespace vg::core
 	}
 
     //--------------------------------------------------------------------------------------
-    u32 Object::getRefCount() const
+    u32 Object::GetRefCount() const
     {
         return m_refCount.load();
     }
-
-	//--------------------------------------------------------------------------------------
-	u32 Object::Release()
-	{
-		return release();
-	}
 
     //--------------------------------------------------------------------------------------
     bool Object::resizeVector(core::IObject * _parent, core::uint _offset, core::uint _count, void ** _data)

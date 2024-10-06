@@ -436,7 +436,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void Engine::onResourceLoaded(core::IResource * _resource)
+    void Engine::OnResourceLoaded(core::IResource * _resource)
     {
         if (_resource == m_worldResource)
         {
@@ -468,7 +468,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void Engine::onResourceUnloaded(core::IResource * _resource)
+    void Engine::OnResourceUnloaded(core::IResource * _resource)
     {
         if (_resource == m_worldResource)
         {
@@ -553,10 +553,10 @@ namespace vg::engine
         IBaseScene * scene = VG_SAFE_STATIC_CAST(IBaseScene, _sceneRes->GetObject());
         if (nullptr != scene)
         {
-            if (scene->hasFile())
+            if (scene->HasFile())
             {
                 IFactory * factory = Kernel::getFactory();
-                factory->SaveToXML(scene, scene->getFile());
+                factory->SaveToXML(scene, scene->GetFile());
                 return true;
             }
         }

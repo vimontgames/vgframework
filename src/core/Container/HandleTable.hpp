@@ -23,7 +23,7 @@ namespace vg::core
                 if (pair.first == _desc)
                 {
                     VG_ASSERT(pair.second);
-                    pair.second->addRef();
+                    pair.second->AddRef();
                     return index;
                 }
                 ++index;
@@ -78,7 +78,7 @@ namespace vg::core
         if (_handle.isValid())
         {
             auto & pair = m_pairs[_handle.getIndex()];
-            refCount = pair.second->release();
+            refCount = pair.second->Release();
             if (refCount == 0)
             {
                 pair.first = {};

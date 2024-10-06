@@ -30,8 +30,8 @@ namespace vg::engine
 
         const core::string                  GetSubObjectName    (core::uint _subObjectIndex) const override;
         
-        void                                onResourceLoaded    (core::IResource * _resource) override;
-        void                                onResourceUnloaded  (core::IResource * _resource) override;
+        void                                OnResourceLoaded    (core::IResource * _resource) override;
+        void                                OnResourceUnloaded  (core::IResource * _resource) override;
 
         bool                                TryGetAABB          (core::AABB & _aabb) const final override;
 

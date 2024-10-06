@@ -390,8 +390,8 @@ namespace vg::engine
                 _resource->Unload(_path);
             }
             
-            _resource->unloadSubResources();
-            _resource->GetParent()->onResourceUnloaded(_resource);  
+            _resource->UnloadSubResources();
+            _resource->GetParent()->OnResourceUnloaded(_resource);  
             _resource->SetObject(nullptr);
         }
     }
@@ -546,11 +546,11 @@ namespace vg::engine
 
             // Set Shared Resource Object and Notify owner
             res->SetObject(info->m_object);
-            res->loadSubResources();
+            res->LoadSubResources();
             IObject * resOwner = res->GetParent();
             VG_ASSERT(nullptr != resOwner);
             if (nullptr != resOwner)
-                resOwner->onResourceLoaded(res);
+                resOwner->OnResourceLoaded(res);
         }
         m_resourcesLoaded.clear();
 
@@ -567,8 +567,8 @@ namespace vg::engine
                     if (nullptr != info->m_object)
                     {
                         res->SetObject(info->m_object);
-                        res->loadSubResources();
-                        res->GetParent()->onResourceLoaded(res);
+                        res->LoadSubResources();
+                        res->GetParent()->OnResourceLoaded(res);
                     }
                 }
             }

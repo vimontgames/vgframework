@@ -98,7 +98,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialData::onResourceLoaded(core::IResource * _resource)
+    void MaterialData::OnResourceLoaded(core::IResource * _resource)
     {
         auto material = getMaterialModel();
 
@@ -110,7 +110,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialData::onResourceUnloaded(core::IResource * _resource)
+    void MaterialData::OnResourceUnloaded(core::IResource * _resource)
     {
         auto material = getMaterialModel();
 

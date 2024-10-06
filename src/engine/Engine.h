@@ -119,8 +119,8 @@ namespace vg::engine
 
         IEngineOptions *                        GetOptions          () final override;
 
-        void                                    onResourceLoaded    (core::IResource * _resource) final override;
-        void                                    onResourceUnloaded  (core::IResource * _resource) final override;
+        void                                    OnResourceLoaded    (core::IResource * _resource) final override;
+        void                                    OnResourceUnloaded  (core::IResource * _resource) final override;
 
         core::JobSync *                         getJobSync          (EngineJobType _jobSync) { return &m_jobSync[core::asInteger(_jobSync)]; }
 

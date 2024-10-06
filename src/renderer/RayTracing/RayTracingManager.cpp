@@ -151,7 +151,7 @@ namespace vg::renderer
                     {
                         blas = it->second;
                         instance->setInstanceBLAS(blas);    // This will increase RefCount
-                        VG_INFO("[Renderer] Use existing BLAS 0x%016X for instance \"%s\" with key 0x%016X (RefCount=%u)", it->second, instance->GetName().c_str(), key, blas->getRefCount());
+                        VG_INFO("[Renderer] Use existing BLAS 0x%016X for instance \"%s\" with key 0x%016X", it->second, instance->GetName().c_str(), key);
                     }
                     else
                     {
@@ -189,7 +189,7 @@ namespace vg::renderer
 
                         BLASMap.insert(std::pair(key, blas));
 
-                        VG_INFO("[Renderer] Create BLAS 0x%016X for instance \"%s\" with key 0x%016X (RefCount=%u)", blas, instance->GetName().c_str(), key, blas->getRefCount());
+                        VG_INFO("[Renderer] Create BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, instance->GetName().c_str(), key);
                     }
                 }
             }
@@ -220,7 +220,7 @@ namespace vg::renderer
                         blas = new gfx::BLAS(gfx::BLASUpdateType::Dynamic, key);
                         skin->setInstanceBLAS(blas);
                         blas->Release();
-                        VG_INFO("[Renderer] Create BLAS 0x%016X for skinned instance \"%s\" with key 0x%016X (RefCount=%u)", blas, skin->GetName().c_str(), key, blas->getRefCount());
+                        VG_INFO("[Renderer] Create BLAS 0x%016X for skinned instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
                     }
 
                     blas->clear();

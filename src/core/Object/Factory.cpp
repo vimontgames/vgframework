@@ -192,7 +192,7 @@ namespace vg::core
                 if (SerializeFromXML(_object, xmlDoc))
                 {
                     VG_INFO("[Factory] \"%s\" loaded from XML in %.2f ms", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
-                    _object->setFile(relativePath.c_str());
+                    _object->SetFile(relativePath.c_str());
                     return true;
                 }
             }

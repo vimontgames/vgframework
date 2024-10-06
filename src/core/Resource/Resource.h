@@ -42,11 +42,11 @@ namespace vg::core
         core::IObject *             Load                    (const core::string & _file);
         void                        Unload                  (const core::string & _file);
 
-        void                        loadSubResources        () override;
-        void                        unloadSubResources      () override;
+        void                        LoadSubResources        () override;
+        void                        UnloadSubResources      () override;
 
-        void                        onResourceLoaded        (core::IResource * _resource) override;
-        void                        onResourceUnloaded      (core::IResource * _resource) override;
+        void                        OnResourceLoaded        (core::IResource * _resource) override;
+        void                        OnResourceUnloaded      (core::IResource * _resource) override;
 
         bool                        CanCreateFile           () const override { return false; }
         bool                        CanSaveFile             () const override { return false; }

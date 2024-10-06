@@ -25,8 +25,8 @@ namespace vg::engine
 
         const core::vector<core::string>    GetExtensions           () const final;
         
-        void                                onResourceLoaded        (core::IResource * _resource) final override;
-        void                                onResourceUnloaded      (core::IResource * _resource) final override;
+        void                                OnResourceLoaded        (core::IResource * _resource) final override;
+        void                                OnResourceUnloaded      (core::IResource * _resource) final override;
 
         bool                                Cook                    (const core::string & _file) const final override;
         core::IObject *                     Load                    (const core::string & _path) final override;

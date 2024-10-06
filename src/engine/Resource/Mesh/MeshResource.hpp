@@ -61,7 +61,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshResource::onResourceLoaded(core::IResource * _resource)
+    void MeshResource::OnResourceLoaded(core::IResource * _resource)
     {
         const auto userData = _resource->GetUserData();
         const uint matID = (userData >> 16) & 0xFFFF;
@@ -69,7 +69,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshResource::onResourceUnloaded(core::IResource * _resource)
+    void MeshResource::OnResourceUnloaded(core::IResource * _resource)
     {
         const auto userData = _resource->GetUserData();
         const uint matID = (userData >> 16) & 0xFFFF;
@@ -77,7 +77,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshResource::loadSubResources()
+    void MeshResource::LoadSubResources()
     {
         auto * meshModel = dynamic_cast<renderer::IMeshModel *>(GetObject());
         VG_ASSERT(nullptr != meshModel);
@@ -87,7 +87,7 @@ namespace vg::engine
     // Textures are currently SubResources from MeshResources (In the future, textures should be SubResources of MaterialResources, and Materials should be SubResources of MeshResources)
     // When a MeshResource (<=> a handle to shared MeshModel data) is unloaded we "detach" the associated Texture Resources
     //--------------------------------------------------------------------------------------
-    void MeshResource::unloadSubResources()
+    void MeshResource::UnloadSubResources()
     {
         //auto * meshModel = dynamic_cast<renderer::IMeshModel *>(GetObject());
         //VG_ASSERT(nullptr != meshModel);

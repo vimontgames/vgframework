@@ -67,7 +67,7 @@ namespace vg::engine
     EngineOptions::EngineOptions(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
-        setFile("Engine.xml");
+        SetFile("Engine.xml");
         Load();
         if (auto * physicsCategoriesProp = GetClassDesc()->GetPropertyByName(VG_STRINGIFY(m_physicsCategories)))
             updateDynamicEnum(*physicsCategoriesProp);

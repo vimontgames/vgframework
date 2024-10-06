@@ -29,8 +29,8 @@ namespace vg::engine
         bool                                                IsPrefab                    () const override;
         core::IResource *                                   GetPrefabResource           () const override;
 
-        void                                                onResourceLoaded            (core::IResource * _resource) override;
-        void                                                onResourceUnloaded          (core::IResource * _resource) override;
+        void                                                OnResourceLoaded            (core::IResource * _resource) override;
+        void                                                OnResourceUnloaded          (core::IResource * _resource) override;
 
         void                                                OnLoad                      () override;
 

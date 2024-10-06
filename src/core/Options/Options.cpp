@@ -23,7 +23,7 @@ namespace vg::core
     bool Options::Load()
     {
         const auto * factory = Kernel::getFactory();
-        if (factory->LoadFromXML(this, getFile()))
+        if (factory->LoadFromXML(this, GetFile()))
         {
             OnLoad();
             return true;
@@ -35,6 +35,6 @@ namespace vg::core
     bool Options::Save()
     {
         const auto * factory = Kernel::getFactory();
-        return factory->SaveToXML(this, getFile());
+        return factory->SaveToXML(this, GetFile());
     }
 }

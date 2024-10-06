@@ -36,12 +36,12 @@ namespace vg::editor
         if (m_prefabRes)
             scene = VG_SAFE_STATIC_CAST(IBaseScene, m_prefabRes->GetObject());
 
-        ImGui::BeginDisabled(!scene || !scene->hasFile());
+        ImGui::BeginDisabled(!scene || !scene->HasFile());
         if (ImGui::TooltipButton(fmt::sprintf("%s", editor::style::icon::Save).c_str(), true, true, "Save Prefab", style::button::SizeSmall))
         {
-            if (scene && scene->hasFile())
+            if (scene && scene->HasFile())
             {
-                const string & filePath = scene->getFile();
+                const string & filePath = scene->GetFile();
                 factory->SaveToXML(scene, filePath);
             }
         }
@@ -50,9 +50,9 @@ namespace vg::editor
 
         if (ImGui::TooltipButton(fmt::sprintf("%s", editor::style::icon::Apply).c_str(), true, true, "Save & Update Prefab", style::button::SizeSmall))
         {
-            if (scene && scene->hasFile())
+            if (scene && scene->HasFile())
             {
-                const string & filePath = scene->getFile();
+                const string & filePath = scene->GetFile();
                 factory->SaveToXML(scene, filePath);
                 auto rm = engine->GetResourceManager();
                 rm->Reimport(m_prefabRes);
@@ -93,12 +93,12 @@ namespace vg::editor
             ImGui::PopStyle();
             ImGui::Spacing();
 
-            ImGui::BeginDisabled(!scene->hasFile());
+            ImGui::BeginDisabled(!scene->HasFile());
             if (ImGui::MenuItem(fmt::sprintf("%s Save", style::icon::Save).c_str(), "Ctrl-S"))
                 save = true;
             ImGui::EndDisabled();
 
-            ImGui::BeginDisabled(!scene->hasFile());
+            ImGui::BeginDisabled(!scene->HasFile());
             if (ImGui::MenuItem(fmt::sprintf("%s Save & Update", style::icon::Apply).c_str(), "Ctrl-U"))
             {
                 save = true;
@@ -127,9 +127,9 @@ namespace vg::editor
 
         if (save)
         {
-            if (scene->hasFile())
+            if (scene->HasFile())
             {
-                const string & filePath = scene->getFile();
+                const string & filePath = scene->GetFile();
                 factory->SaveToXML(scene, filePath);
             }
         }

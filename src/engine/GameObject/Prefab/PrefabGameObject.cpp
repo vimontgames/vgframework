@@ -485,7 +485,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void PrefabGameObject::onResourceLoaded(IResource * _resource)
+    void PrefabGameObject::OnResourceLoaded(IResource * _resource)
     {
         if (_resource == &m_prefabResource)
         {
@@ -717,7 +717,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void PrefabGameObject::onResourceUnloaded(IResource * _resource)
+    void PrefabGameObject::OnResourceUnloaded(IResource * _resource)
     {
         if (_resource == &m_prefabResource)
         {

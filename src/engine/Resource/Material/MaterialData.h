@@ -31,8 +31,8 @@ namespace vg::engine
 
         void                                OnPropertyChanged           (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
-        void                                onResourceLoaded            (core::IResource * _resource) override;
-        void                                onResourceUnloaded          (core::IResource * _resource) override;
+        void                                OnResourceLoaded            (core::IResource * _resource) override;
+        void                                OnResourceUnloaded          (core::IResource * _resource) override;
 
     protected:
         renderer::IMaterialModel *          getMaterialModel            () const;

@@ -154,7 +154,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void AnimationComponent::onResourceLoaded(IResource * _resource)
+    void AnimationComponent::OnResourceLoaded(IResource * _resource)
     {
         MeshComponent * meshComponent = getMeshComponent();
         if (meshComponent)
@@ -165,7 +165,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void AnimationComponent::onResourceUnloaded(core::IResource * _resource)
+    void AnimationComponent::OnResourceUnloaded(core::IResource * _resource)
     {
         MeshComponent * meshComponents = GetGameObject()->GetComponentT<MeshComponent>();
         if (meshComponents)

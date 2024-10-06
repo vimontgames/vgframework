@@ -146,7 +146,7 @@ namespace vg::engine
         if (nullptr != _scene && !vector_helper::exists(m_scenes[typeIndex], (IBaseScene *)_scene))
         {
             _scene->SetParent(this);
-            _scene->addRef();
+            _scene->AddRef();
             m_scenes[typeIndex].push_back((Scene*)_scene);
 
             if (nullptr == m_activeScene)
@@ -169,7 +169,7 @@ namespace vg::engine
                 SetActiveScene(nullptr, _sceneType);
 
             _scene->SetParent(nullptr);
-            _scene->release();
+            _scene->Release();
         }
 
         clearUI();

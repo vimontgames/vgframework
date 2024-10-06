@@ -24,15 +24,15 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::u32 GameObjectHierarchy::addRef()
+    core::u32 GameObjectHierarchy::AddRef()
     {
-        return super::addRef();
+        return super::AddRef();
     }
 
     //--------------------------------------------------------------------------------------
-    core::u32 GameObjectHierarchy::release()
+    core::u32 GameObjectHierarchy::Release()
     {
-        return super::release();
+        return super::Release();
     }
 
     //--------------------------------------------------------------------------------------
@@ -84,13 +84,13 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObjectHierarchy::onResourceLoaded(core::IResource * _resource)
+    void GameObjectHierarchy::OnResourceLoaded(core::IResource * _resource)
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObjectHierarchy::onResourceUnloaded(core::IResource * _resource)
+    void GameObjectHierarchy::OnResourceUnloaded(core::IResource * _resource)
     {
 
     }

@@ -145,7 +145,7 @@ namespace vg::core
 #define VG_SAFE_DELETE(p)  { if (p) { delete (p); (p) = nullptr;} }
 #define VG_SAFE_RELEASE(p) { if (p) { (p)->Release(); (p) = nullptr; } }
 
-#define VG_SAFE_INCREASE_REFCOUNT(p) { if (p) { p->addRef(); }}
+#define VG_SAFE_INCREASE_REFCOUNT(p) { if (p) { p->AddRef(); }}
 
 #define VG_SAFE_RELEASE_ASYNC(p) { auto * factory = vg::core::Kernel::getFactory(); if (factory) factory->ReleaseAsync(p); else (p)->Release(); p = nullptr; }
 

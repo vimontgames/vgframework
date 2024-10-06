@@ -36,7 +36,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void UIImageComponent::onResourceLoaded(IResource * _resource)
+    void UIImageComponent::OnResourceLoaded(IResource * _resource)
     {
         if (_resource == &m_image)
         {
@@ -50,7 +50,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void UIImageComponent::onResourceUnloaded(IResource * _resource)
+    void UIImageComponent::OnResourceUnloaded(IResource * _resource)
     {
         if (_resource == &m_image)
             VG_SAFE_RELEASE_ASYNC(m_texture);

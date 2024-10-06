@@ -263,7 +263,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void WorldResource::onResourceLoaded(core::IResource * _resource)
+    void WorldResource::OnResourceLoaded(core::IResource * _resource)
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(GetObject());
         VG_ASSERT(worldResData);
@@ -311,7 +311,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void WorldResource::onResourceUnloaded(core::IResource * _resource)
+    void WorldResource::OnResourceUnloaded(core::IResource * _resource)
     {
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(GetObject());
         VG_ASSERT(worldResData);

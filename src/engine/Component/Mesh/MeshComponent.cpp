@@ -182,7 +182,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshComponent::onResourceLoaded(IResource * _resource)
+    void MeshComponent::OnResourceLoaded(IResource * _resource)
     {
         if (_resource == &m_meshResource)
         {
@@ -231,7 +231,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshComponent::onResourceUnloaded(core::IResource * _resource)
+    void MeshComponent::OnResourceUnloaded(core::IResource * _resource)
     {
         if (_resource == &m_meshResource)
         {

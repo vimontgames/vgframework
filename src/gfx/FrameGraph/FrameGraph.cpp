@@ -185,7 +185,7 @@ namespace vg::gfx
 
         if (nullptr != _userPass)
         {
-            _userPass->addRef();
+            _userPass->AddRef();
             _userPass->SetName(_renderPassID);
             _userPass->setFrameGraph(this);
 

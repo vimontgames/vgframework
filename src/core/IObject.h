@@ -66,23 +66,20 @@ namespace vg::core
         virtual void                        OnPropertyChanged   (IObject * _object, const IProperty & _prop, bool _notifyParent = true) = 0;
         virtual void						SetPropertyValue    (const IProperty & _prop, void * _previousValue, void * _newValue) = 0;
 
-        virtual void                        onResourceLoaded    (IResource * _resource) = 0;
-        virtual void                        onResourceUnloaded  (IResource * _resource) = 0;
+        virtual void                        OnResourceLoaded    (IResource * _resource) = 0;
+        virtual void                        OnResourceUnloaded  (IResource * _resource) = 0;
 
 		virtual void					    SetName		        (const string & _name) = 0;
 		virtual const string &			    GetName		        () const = 0;
         virtual const string                GetFullName         () const = 0;
         virtual const string                GetShortName        () const = 0;
 
-        virtual bool                        hasFile             () const = 0;
-        virtual void					    setFile             (const string & _file) = 0;
-        virtual const string &			    getFile             () const = 0;
+        virtual bool                        HasFile             () const = 0;
+        virtual void					    SetFile             (const string & _file) = 0;
+        virtual const string &			    GetFile             () const = 0;
 
-		virtual u32						    addRef		        () = 0;
-		virtual u32						    release		        () = 0;
-        virtual u32                         getRefCount         () const = 0;
-
-		// Added alias so that we can use the same 'VG_SAFE_RELEASE' macro everywhere
+		virtual u32						    AddRef		        () = 0;
 		virtual u32						    Release		        () = 0;
+        virtual u32                         GetRefCount         () const = 0;
 	};
 }

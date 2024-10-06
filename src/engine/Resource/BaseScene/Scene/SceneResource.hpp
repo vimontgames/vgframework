@@ -83,7 +83,7 @@ namespace vg::engine
 			// Add default root node to scene
             GameObject * root = (GameObject *)CreateFactoryObject(GameObject, "Root", this);
 			scene->SetRoot(root);
-			root->release();
+			root->Release();
 
 			factory->SaveToXML(scene, _path);
 			VG_SAFE_RELEASE(scene);

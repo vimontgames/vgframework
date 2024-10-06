@@ -139,7 +139,7 @@ namespace vg::renderer
 	Renderer::~Renderer()
 	{
         VG_SAFE_DELETE(m_fbxImporter);
-		m_device.release();
+		m_device.Release();
         IProfiler * profiler = Kernel::getProfiler();
         VG_SAFE_DELETE(profiler);
 	}
@@ -304,7 +304,7 @@ namespace vg::renderer
         VG_SAFE_DELETE(m_imgui);
         VG_SAFE_DELETE(m_hdrOutputPass);
 
-        m_frameGraph.release();
+        m_frameGraph.Release();
 
 		m_device.deinit();
 

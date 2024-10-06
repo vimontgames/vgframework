@@ -117,11 +117,11 @@ namespace vg::editor
 
                                             if (nullptr != material)
                                             {
-                                                sprintf_s(clientLabel, "%s###%u %u", io::getFileName(material->getFile()).c_str(), i, j);
+                                                sprintf_s(clientLabel, "%s###%u %u", io::getFileName(material->GetFile()).c_str(), i, j);
                                                 bool openResGameObject = ImGui::TreeNodeEx(clientLabel, ImGuiTreeNodeFlags_Leaf);
 
                                                 if (ImGui::IsItemHovered())
-                                                    ImGui::SetTooltip(material->getFile().c_str());
+                                                    ImGui::SetTooltip(material->GetFile().c_str());
 
                                                 if (openResGameObject)
                                                 {

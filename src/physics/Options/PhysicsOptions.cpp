@@ -23,7 +23,7 @@ namespace vg::physics
     PhysicsOptions::PhysicsOptions(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
-        setFile("Physics.xml");
+        SetFile("Physics.xml");
         Load();
     }
 

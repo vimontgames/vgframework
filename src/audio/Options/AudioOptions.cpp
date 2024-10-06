@@ -21,7 +21,7 @@ namespace vg::audio
     AudioOptions::AudioOptions(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
-        setFile("Audio.xml");
+        SetFile("Audio.xml");
         Load();
     }
 

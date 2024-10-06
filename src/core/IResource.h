@@ -44,8 +44,8 @@ namespace vg::core
         virtual core::IObject *         Load                    (const core::string & _file) = 0;
         virtual void                    Unload                  (const core::string & _file) = 0;
 
-        virtual void                    loadSubResources        () = 0;
-        virtual void                    unloadSubResources      () = 0;
+        virtual void                    LoadSubResources        () = 0;
+        virtual void                    UnloadSubResources      () = 0;
 
         virtual bool                    CanCreateFile           () const = 0;
         virtual bool                    CanSaveFile             () const = 0;

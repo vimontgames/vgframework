@@ -76,7 +76,7 @@ namespace vg::editor
     EditorOptions::EditorOptions(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
-        setFile("Editor.xml");
+        SetFile("Editor.xml");
         Load();
         Editor::get()->getRenderer()->GetImGuiAdapter()->SetGUITheme(m_theme);
     }

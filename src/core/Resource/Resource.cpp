@@ -195,26 +195,26 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::loadSubResources()
+    void Resource::LoadSubResources()
     {
         
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::unloadSubResources()
+    void Resource::UnloadSubResources()
     {
         
     }
 
 
     //--------------------------------------------------------------------------------------
-    void Resource::onResourceLoaded(core::IResource * _resource)
+    void Resource::OnResourceLoaded(core::IResource * _resource)
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    void Resource::onResourceUnloaded(core::IResource * _resource)
+    void Resource::OnResourceUnloaded(core::IResource * _resource)
     {
 
     }

@@ -81,24 +81,21 @@ namespace vg::core
         void                        OnPropertyChanged   (IObject * _object, const IProperty & _prop, bool _notifyParent) override;
 		void						SetPropertyValue	(const IProperty & _prop, void * _previousValue, void * _newValue) override;
 		
-        void                        onResourceLoaded    (IResource * _resource) override;
-		void                        onResourceUnloaded	(IResource * _resource) override;
+        void                        OnResourceLoaded    (IResource * _resource) override;
+		void                        OnResourceUnloaded	(IResource * _resource) override;
 
 		void					    SetName		        (const string & _name) override;
 		const string &			    GetName		        () const override;
 		const string 				GetFullName			() const override;
 		const string                GetShortName		() const override;
 
-        bool                        hasFile             () const override;
-        void					    setFile             (const string & _file) override;
-        const string &			    getFile             () const override;
+        bool                        HasFile             () const override;
+        void					    SetFile             (const string & _file) override;
+        const string &			    GetFile             () const override;
 
-		u32						    addRef		        () override;
-		u32						    release		        () override;
-		u32                         getRefCount			() const override;
-
-		// Added so that we can use the same 'VG_SAFE_RELEASE' macro everywhere
-		u32						    Release		        () final;
+		u32						    AddRef		        () override;
+		u32						    Release		        () override;
+		u32                         GetRefCount			() const override;
 
         VG_INLINE void				setParent			(IObject * _parent);
 		VG_INLINE IObject *			getParent			() const;

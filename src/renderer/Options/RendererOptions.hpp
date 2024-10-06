@@ -62,7 +62,7 @@ namespace vg::renderer
         super(_name, _parent),
         m_renderPassFlags(RenderPassFlags::ZPrepass | RenderPassFlags::Opaque | RenderPassFlags::Transparency)
     {
-        setFile("Renderer.xml");
+        SetFile("Renderer.xml");
         Load();
 
         auto * renderer = Renderer::get();

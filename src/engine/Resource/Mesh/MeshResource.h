@@ -25,11 +25,11 @@ namespace vg::engine
         core::IObject *                     Load                    (const core::string & _path) override;
         void                                Unload                  (const core::string & _path) override;
 
-        void                                loadSubResources        () override;
-        void                                unloadSubResources      () override;
+        void                                LoadSubResources        () override;
+        void                                UnloadSubResources      () override;
 
-        void                                onResourceLoaded        (core::IResource * _resource) final override;
-        void                                onResourceUnloaded      (core::IResource * _resource) final override;
+        void                                OnResourceLoaded        (core::IResource * _resource) final override;
+        void                                OnResourceUnloaded      (core::IResource * _resource) final override;
 
         renderer::IMeshModel *              getMeshModel            () const { return (renderer::IMeshModel*)m_object; } 
     };

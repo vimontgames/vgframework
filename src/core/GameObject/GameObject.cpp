@@ -591,7 +591,7 @@ namespace vg::core
         if (component)
         {
             addComponent(component);
-            component->release();
+            component->Release();
         }
         return component;
     }
@@ -752,7 +752,7 @@ namespace vg::core
     void GameObject::addGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
     {
         VG_ASSERT(m_graphicInstances.end() == std::find(m_graphicInstances.begin(), m_graphicInstances.end(), _graphicInstance));
-        _graphicInstance->addRef();
+        _graphicInstance->AddRef();
         m_graphicInstances.push_back(_graphicInstance);
     }
 

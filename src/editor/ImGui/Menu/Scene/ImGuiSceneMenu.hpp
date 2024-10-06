@@ -70,7 +70,7 @@ namespace vg::editor
                 if (ImGui::MenuItem("Update", nullptr, false))
                     update = true;
 
-                ImGui::BeginDisabled(!scene->hasFile());
+                ImGui::BeginDisabled(!scene->HasFile());
                 if (ImGui::MenuItem("Save & Update", nullptr, false))
                 {
                     save = true;
