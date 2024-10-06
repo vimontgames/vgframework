@@ -2655,9 +2655,11 @@ namespace vg::editor
 
             //if (useTRS)
             {
-                const string TLabel = flatten ? fmt::sprintf("%s.T", displayName) : "T";
-                const string RLabel = flatten ? fmt::sprintf("%s.R", displayName) : "R";
-                const string SLabel = flatten ? fmt::sprintf("%s.S", displayName) : "S";
+                const bool defaultTransform = !strcmp(displayName, "Transform");
+
+                const string TLabel = flatten && !defaultTransform ? fmt::sprintf("%s.T", displayName) : "Translation";
+                const string RLabel = flatten && !defaultTransform ? fmt::sprintf("%s.R", displayName) : "Rotation";
+                const string SLabel = flatten && !defaultTransform ? fmt::sprintf("%s.S", displayName) : "Scale";
 
                 float translation[3];
                 float rotation[3];
@@ -2756,11 +2758,11 @@ namespace vg::editor
             if (EditingState::Unknown == editingState)
                 editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous, itemActive, itemAfterEdit);
 
-            ImGui::Spacing();
-
             //else
-            if (ImGui::TreeNode(getObjectLabel("(float4x4) " + (string)displayName, _propContext.m_originalProp).c_str()))
+            if (false && ImGui::TreeNode(getObjectLabel("(float4x4) " + (string)displayName, _propContext.m_originalProp).c_str()))
             {
+                ImGui::Spacing();
+
                 edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
                 if (EditingState::Unknown == editingState)
                     editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);

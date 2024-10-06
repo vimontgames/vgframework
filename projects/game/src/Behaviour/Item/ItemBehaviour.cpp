@@ -52,6 +52,12 @@ void ItemBehaviour::SetOwner(vg::core::IGameObject * _object)
 }
 
 //--------------------------------------------------------------------------------------
+const vg::core::ObjectHandle & ItemBehaviour::GetOwner() const
+{
+    return m_owner;
+}
+
+//--------------------------------------------------------------------------------------
 bool ItemBehaviour::CanPick() const
 {
     return nullptr != m_owner.getObject();

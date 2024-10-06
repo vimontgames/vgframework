@@ -19,7 +19,12 @@ namespace vg::core
         IObject *   getObject   () const;  
         void        clear();
 
-        template <typename T> T* get() const
+        template <typename T> T * get() const
+        {
+            return VG_SAFE_STATIC_CAST(T, getObject());
+        }
+
+        template <typename T> T* safeGet() const
         {
             return dynamic_cast<T *>(getObject());
         }

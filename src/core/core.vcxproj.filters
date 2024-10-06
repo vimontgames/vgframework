@@ -453,6 +453,9 @@
     <ClInclude Include="UndoRedo\Entry\UndoRedoDestroyEntry.hpp">
       <Filter>UndoRedo\Entry</Filter>
     </ClInclude>
+    <ClInclude Include="Misc\GenericEnumTypes.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

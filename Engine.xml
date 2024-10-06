@@ -6,6 +6,11 @@
         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
         <Property type="String" name="m_gamePath" flags="IsFolder" value="projects/game"/>
         <Property type="String" name="m_startWorld" flags="IsFile" value="data/Worlds/Game.world"/>
+        <Property type="String" name="m_gameObjectTags" flags="EnumArray">
+            <Value name="Tag_0" value="Player"/>
+            <Value name="Tag_1" value="Enemy"/>
+            <Value name="Tag_2" value="Weapon"/>
+        </Property>
         <Property type="Bool" name="m_showRigidBodies" flags="NotVisible" value="false"/>
         <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" flags="" value="Sphere|Box|Capsule|Cylinder"/>
         <Property type="Bool" name="m_mergeStaticBodies" value="true"/>

@@ -22,6 +22,9 @@ namespace vg::engine
             registerPropertyEx(EngineOptions, m_startWorld, "Start World", PropertyFlags::IsFile);
             setPropertyDescription(EngineOptions, m_startWorld, "Default world to load at startup");
             setPropertyDefaultFolder(EngineOptions, m_startWorld, "data/Worlds")
+
+            registerPropertyEnumArray(EngineOptions, string, core::Tag, m_gameObjectTags, "GameObject Tags");
+            setPropertyDescription(EngineOptions, m_gameObjectTags, "Use GameObject Tags to categorize object (e.g. Player, Ennemy ...)")
         }
         registerPropertyGroupEnd(EngineOptions);
 
@@ -34,6 +37,7 @@ namespace vg::engine
             setPropertyDescription(EngineOptions, m_mergeStaticBodies, "Merge static bodies at init");
 
             registerPropertyEnumArray(EngineOptions, string, physics::Category, m_physicsCategories, "Category");
+            setPropertyDescription(EngineOptions, m_physicsCategories, "Use physics Categories to filter collisions")
         }
         registerPropertyGroupEnd(EngineOptions);
 
@@ -69,6 +73,10 @@ namespace vg::engine
     {
         SetFile("Engine.xml");
         Load();
+
+        if (auto * gameObjectTagsProp = GetClassDesc()->GetPropertyByName(VG_STRINGIFY(m_gameObjectTags)))
+            updateDynamicEnum(*gameObjectTagsProp);
+
         if (auto * physicsCategoriesProp = GetClassDesc()->GetPropertyByName(VG_STRINGIFY(m_physicsCategories)))
             updateDynamicEnum(*physicsCategoriesProp);
     }
@@ -82,22 +90,30 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void EngineOptions::updateDynamicEnum(const core::IProperty & _prop)
     {
-        if (!strcmp(_prop.GetName(), VG_STRINGIFY(m_physicsCategories)))
+        // "Patch" properties using a generic enum type
+        IFactory * factory = Kernel::getFactory();
+
+        const auto classDescs = factory->GetClassDescriptors();
+
+        for (auto * desc : classDescs)
         {
-            // "Patch" all properties using an enum of type "physics::Category" or "physics::CategoryFlags"
-            IFactory * factory = Kernel::getFactory();
-
-            const auto classDescs = factory->GetClassDescriptors();
-
-            for (auto * desc : classDescs)
+            const auto propCount = desc->GetPropertyCount();
+            for (uint i = 0; i < propCount; ++i)
             {
-                const auto propCount = desc->GetPropertyCount();
-                for (uint i = 0; i < propCount; ++i)
-                {
-                    Property * prop = (Property*)desc->GetPropertyByIndex(i);
+                Property * prop = (Property*)desc->GetPropertyByIndex(i);
 
-                    if ( (PropertyType::EnumU8  == prop->GetType() && !strcmp("Category", prop->GetEnumTypeName())) 
-                      || (PropertyType::EnumFlagsU64 == prop->GetType() && !strcmp("CategoryFlag", prop->GetEnumTypeName())))
+                if (!strcmp(_prop.GetName(), VG_STRINGIFY(m_gameObjectTags)))
+                {
+                    if (PropertyType::EnumFlagsU64 == prop->GetType() && !strcmp(VG_STRINGIFY(Tag), prop->GetEnumTypeName()))
+                    {
+                        for (uint i = 0; i < countof(m_gameObjectTags); ++i)
+                            prop->SetEnumName(i, m_gameObjectTags[i]);
+                    }
+                }
+                else if (!strcmp(_prop.GetName(), VG_STRINGIFY(m_physicsCategories)))
+                {
+                    if ((PropertyType::EnumU8 == prop->GetType() && !strcmp(VG_STRINGIFY(Category), prop->GetEnumTypeName()))
+                        || (PropertyType::EnumFlagsU64 == prop->GetType() && !strcmp(VG_STRINGIFY(CategoryFlag), prop->GetEnumTypeName())))
                     {
                         for (uint i = 0; i < countof(m_physicsCategories); ++i)
                             prop->SetEnumName(i, m_physicsCategories[i]);
@@ -117,6 +133,19 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    core::Tag EngineOptions::GetGameObjectTag(const core::string & _name) const
+    {
+        for (uint i = 0; i < countof(m_gameObjectTags); ++i)
+        {
+            if (_name == m_gameObjectTags[i])
+                return (core::Tag)(1ULL<<(core::u64)i);
+        }
+
+        VG_WARNING("[Engine] Could not find core::Tag with name \"%s\"", _name.c_str());
+        return (core::Tag)0;
+    }
+
+    //--------------------------------------------------------------------------------------
     physics::Category EngineOptions::GetPhysicsCategory(const core::string & _name) const
     {
         for (uint i = 0; i < countof(m_physicsCategories); ++i)
@@ -125,7 +154,7 @@ namespace vg::engine
                 return (physics::Category)i;
         }
 
-        VG_WARNING("[Physics] Could not find physics::Category with name \"%s\"", _name.c_str());
+        VG_WARNING("[Engine] Could not find physics::Category with name \"%s\"", _name.c_str());
         return (physics::Category)0;
     }
 

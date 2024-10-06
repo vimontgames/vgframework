@@ -11,13 +11,14 @@ public:
     ItemBehaviour(const vg::core::string & _name, vg::core::IObject * _parent, ItemType _itemType);
     ~ItemBehaviour();
 
-    void                    OnPlay() override;
-    void                    OnStop() override;
+    void                                    OnPlay() override;
+    void                                    OnStop() override;
 
-    virtual void            SetOwner(vg::core::IGameObject * _object);
-    virtual bool            CanPick() const;
+    virtual void                            SetOwner(vg::core::IGameObject * _object);
+    virtual const vg::core::ObjectHandle &  GetOwner() const;
+    virtual bool                            CanPick() const;
 
 private:
-    ItemType                m_itemType;
-    vg::core::ObjectHandle  m_owner;
+    ItemType                                m_itemType;
+    vg::core::ObjectHandle                  m_owner;
 };

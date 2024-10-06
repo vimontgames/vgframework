@@ -32,7 +32,7 @@ namespace vg::core
         void                                            SetInstanceFlags            (InstanceFlags _flags, bool _enabled) final override;
 
         UpdateFlags                                     GetUpdateFlags              () const final override;
-        void                                            SetUpdateFlags              (UpdateFlags _flags, bool _enabled) final override;
+        void                                            EnableUpdateFlags           (UpdateFlags _flags, bool _enabled) final override;
 
         IBaseScene *                                    GetScene                    () const final override;
         IWorld *                                        GetWorld                    () const final override;
@@ -76,6 +76,9 @@ namespace vg::core
         template <class T> inline core::vector<T *>     GetComponentsByTypeT        () const { return super::GetComponentsT<T>(); }
         template <class T> inline core::vector<T *>     GetComponentsInChildrenT    () const { return super::GetComponentsT<T>(); }
 
+        void                                            EnableTags                  (Tag _tags, bool _enabled) final override;
+        Tag                                             GetTags                     () const final override;
+
         void                                            AddChild                    (IGameObject * _gameObject, uint _index = -1) final override;
         bool                                            RemoveChild                 (IGameObject * _gameObject, bool _recomputeFlags = true) final override;
         core::uint                                      RemoveAllChildren           (bool _recomputeFlags = true) final override;
@@ -115,6 +118,7 @@ namespace vg::core
 
     private:
         UpdateFlags                                     m_update = (UpdateFlags)0x0;
+        Tag                                   m_tags = (Tag)0x0;
         vector<Component *>                             m_components;
         vector<GameObject *>                            m_children;
         vector<renderer::IGraphicInstance*>             m_graphicInstances;

@@ -253,17 +253,19 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
                         if (auto * physicsBody = closestWeaponGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
                         {
-                            // Weapon still collides with other physic objects but is moved by code
-                            physicsBody->SetMotionType(vg::physics::MotionType::Kinematic);
+                            physicsBody->SetTrigger(true);
 
-                            // Weapon should collide with everything but the players
-                            auto player1Cat = Game::get()->Engine().GetOptions()->GetPhysicsCategory("Player 1");
-                            auto mask = (vg::physics::CategoryFlag)0x0;
-                            for (uint i = 0; i < 4; ++i)
-                                mask |= (vg::physics::CategoryFlag)(1ULL << ((u64)player1Cat + i));
-                            physicsBody->SetCollisionMask(~mask);
-
-                            physicsBody->EnableCollisionMask(true);
+                            //// Weapon still collides with other physic objects but is moved by code
+                            //physicsBody->SetMotionType(vg::physics::MotionType::Kinematic);
+                            //
+                            //// Weapon should collide with everything but the players
+                            //auto player1Cat = Game::get()->Engine().GetOptions()->GetPhysicsCategory("Player 1");
+                            //auto mask = (vg::physics::CategoryFlag)0x0;
+                            //for (uint i = 0; i < 4; ++i)
+                            //    mask |= (vg::physics::CategoryFlag)(1ULL << ((u64)player1Cat + i));
+                            //physicsBody->SetCollisionMask(~mask);
+                            //
+                            //physicsBody->EnableCollisionMask(true);
                         }
                     }
                 }
@@ -332,12 +334,14 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
                     if (auto * physicsBody = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsBodyComponent>())
                     {
-                        physicsBody->SetMotionType(vg::physics::MotionType::Dynamic);
-                        physicsBody->SetMatrix(m_rightHandItem->GetGameObject()->GetGlobalMatrix());
+                        physicsBody->SetTrigger(false);
 
-                        // Weapon should collide with everything again
-                        physicsBody->EnableCollisionMask(false);
-                        physicsBody->SetCollisionMask((vg::physics::CategoryFlag)-1);
+                        //physicsBody->SetMotionType(vg::physics::MotionType::Dynamic);
+                        //physicsBody->SetMatrix(m_rightHandItem->GetGameObject()->GetGlobalMatrix());
+                        //
+                        //// Weapon should collide with everything again
+                        //physicsBody->EnableCollisionMask(false);
+                        //physicsBody->SetCollisionMask((vg::physics::CategoryFlag)-1);
                     }
 
                     m_rightHandItem = nullptr;

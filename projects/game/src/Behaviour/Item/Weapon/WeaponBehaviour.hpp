@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Behaviour/Character/Player/PlayerBehaviour.h"
 #include "engine/IAttachToNodeComponent.h"
+#include "engine/IEngineOptions.h"
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -13,7 +14,7 @@ VG_REGISTER_COMPONENT_CLASS(WeaponBehaviour, "Weapon", "Game", "A weapon the pla
 WeaponBehaviour::WeaponBehaviour(const string & _name, IObject * _parent) :
     super(_name, _parent, ItemType::Weapon)
 {
-
+    EnableUpdateFlags(vg::core::UpdateFlags::Update, false);
 }
 
 //--------------------------------------------------------------------------------------
@@ -34,6 +35,19 @@ bool WeaponBehaviour::registerProperties(IClassDesc & _desc)
 void WeaponBehaviour::OnPlay()
 {
     super::OnPlay();
+    m_ennemyTag = Game::get()->Engine().GetOptions()->GetGameObjectTag("Enemy");
+}
+
+//--------------------------------------------------------------------------------------
+void WeaponBehaviour::OnTriggerEnter(vg::core::IGameObject * _other)
+{
+    if (asBool(m_ennemyTag & _other->GetTags()))
+    {
+        if (auto * owner = GetOwner().get<IGameObject>())
+        {
+            VG_WARNING("[Enemy] Enemy \"%s\" was hit y Weapon \"%s\" hit owned by \"%s\" ", _other->GetName().c_str(), GetName().c_str(), owner->GetName().c_str());
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------------

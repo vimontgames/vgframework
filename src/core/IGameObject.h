@@ -16,6 +16,8 @@ namespace vg::core
     class IDynamicPropertyList;
     class IDynamicProperty;
 
+    vg_generic_enum_bitfield_64(Tag);
+
     class IGameObject : public Instance
     {
     public:
@@ -44,8 +46,11 @@ namespace vg::core
         virtual vector<IComponent *>            GetComponentsByType             (const char * _className, bool _searchInParent = false, bool _searchInChildren = false) const = 0;
         virtual core::uint                      GetComponentIndex               (const IComponent * _component) const = 0;
 
+        virtual void                            EnableTags                      (Tag _tags, bool _enabled) = 0;
+        virtual Tag                             GetTags                         () const = 0;
+
         virtual UpdateFlags                     GetUpdateFlags                  () const = 0;
-        virtual void                            SetUpdateFlags                  (UpdateFlags _flags, bool _enabled) = 0;
+        virtual void                            EnableUpdateFlags               (UpdateFlags _flags, bool _enabled) = 0;
 
         virtual IBaseScene *                    GetScene                        () const = 0;
         virtual IWorld *                        GetWorld                        () const = 0;

@@ -1,5 +1,6 @@
 #pragma once
 #include "core/Singleton/Singleton.h"
+#include "core/IGameObject.h"
 #include "engine/IEngineOptions.h"
 #include "physics/Physics_Consts.h"
 
@@ -29,6 +30,8 @@ namespace vg::engine
         bool                        TryGetFixedDT           (float & _fixedDT) const final override;
         bool                        TryGetMaxDT             (float & _maxDT) const final override;
         void                        OnPropertyChanged       (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+
+        core::Tag                   GetGameObjectTag        (const core::string & _name) const final override;
         physics::Category           GetPhysicsCategory      (const core::string & _name) const final override;
 
         core::vector<core::string>  getPhysicsCategoryNames () const;
@@ -46,6 +49,7 @@ namespace vg::engine
         // Project
         core::string                m_gamePath;
         core::string                m_startWorld;
+        vg::core::string            m_gameObjectTags[core::enumCount<core::Tag>()];
 
         // Physics
         bool                        m_mergeStaticBodies = false;

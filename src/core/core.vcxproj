@@ -73,6 +73,7 @@
     <ClInclude Include="Misc\AABB\AABB.h" />
     <ClCompile Include="Misc\AABB\AABB.cpp" />
     <ClInclude Include="Misc\BitMask\BitMask.h" />
+    <ClInclude Include="Misc\GenericEnumTypes.h" />
     <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Object\AutoRegisterClass.h" />
     <ClInclude Include="Object\AutoRegisterClass.hpp" />

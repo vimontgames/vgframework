@@ -201,3 +201,4 @@ namespace vg
 // Static reflection for enums
 //--------------------------------------------------------------------------------------
 #include "core/Types/Enum.h"
+#include "core/Misc/GenericEnumTypes.h"

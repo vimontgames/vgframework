@@ -1,6 +1,11 @@
 #pragma once
 #include "core/Options/Options.h"
 
+namespace vg::core
+{
+    enum class Tag : core::u64;
+}
+
 namespace vg::physics
 {
     enum class Category : core::u8;
@@ -20,6 +25,7 @@ namespace vg::engine
         virtual bool                    TryGetFixedDT       (float & _fixedDT) const = 0;
         virtual bool                    TryGetMaxDT         (float & _maxDT) const = 0;
 
+        virtual core::Tag               GetGameObjectTag    (const core::string & _name) const = 0;
         virtual physics::Category       GetPhysicsCategory  (const core::string & _name) const = 0;
     };
 }

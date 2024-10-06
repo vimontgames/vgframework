@@ -26,6 +26,10 @@ namespace vg::core
 
         // Hide GameObject name
         setPropertyFlag(GameObject, m_name, PropertyFlags::NotVisible, false);
+
+        registerPropertyEnumBitfield(GameObject, Tag, m_tags, "Tags");
+        setPropertyDescription(GameObject, m_tags, "GameObjects can use Tags to categorize object (e.g. Player, Ennemy ...)")
+
         registerPropertyObjectPtrVector(GameObject, m_components, "Components");
         registerPropertyObjectPtrVectorEx(GameObject, m_children, "Children", PropertyFlags::NotVisible);
 
@@ -184,8 +188,24 @@ namespace vg::core
         return getUpdateFlags();
     }
 
+
     //--------------------------------------------------------------------------------------
-    void GameObject::SetUpdateFlags(UpdateFlags _flags, bool _enabled)
+    void GameObject::EnableTags(Tag _tags, bool _enabled)
+    {
+        if (_enabled)
+            m_tags |= _tags;
+        else
+            m_tags &= ~_tags;
+    }
+
+    //--------------------------------------------------------------------------------------
+    Tag GameObject::GetTags() const
+    {
+        return m_tags;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::EnableUpdateFlags(UpdateFlags _flags, bool _enabled)
     {
         setUpdateFlags(_flags, _enabled);
     }
