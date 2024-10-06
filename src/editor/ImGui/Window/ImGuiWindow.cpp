@@ -673,14 +673,18 @@ namespace vg::editor
         {
             if (enumVal & (T(1) << T(e)))
             {
-                found = true;
+                auto name = _prop->GetEnumName(e);
+                if (name[0] != 0)
+                {
+                    found = true;
 
-                if (first)
-                    first = false;
-                else
-                    preview += "|";
+                    if (first)
+                        first = false;
+                    else
+                        preview += "|";
 
-                preview += _prop->GetEnumName(e);
+                    preview += name;
+                }
             }
         }
         if (!found)

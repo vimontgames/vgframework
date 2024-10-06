@@ -256,11 +256,14 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                             // Weapon still collides with other physic objects but is moved by code
                             physicsBody->SetMotionType(vg::physics::MotionType::Kinematic);
 
-                            // Weapon should collide with everything but the current player
+                            // Weapon should collide with everything but the players
                             auto player1Cat = Game::get()->Engine().GetOptions()->GetPhysicsCategory("Player 1");
-                            auto playerCat = (vg::physics::Category)((uint)player1Cat + m_viewIndex);
+                            auto mask = (vg::physics::CategoryFlag)0x0;
+                            for (uint i = 0; i < 4; ++i)
+                                mask |= (vg::physics::CategoryFlag)(1ULL << ((u64)player1Cat + i));
+                            physicsBody->SetCollisionMask(~mask);
+
                             physicsBody->EnableCollisionMask(true);
-                            physicsBody->SetCollisionMask(~(vg::physics::CategoryFlag)(1ULL<<(u64)playerCat));
                         }
                     }
                 }
