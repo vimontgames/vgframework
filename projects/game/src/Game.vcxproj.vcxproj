@@ -61,6 +61,7 @@
     <ClInclude Include="Precomp.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Behaviour\Character\CharacterBehaviour.inl" />
     <None Include="Behaviour\Character\Player\PlayerBehaviour.inl" />
     <None Include="Game.def" />
   </ItemGroup>

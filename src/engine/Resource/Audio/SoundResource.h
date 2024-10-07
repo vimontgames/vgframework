@@ -1,5 +1,5 @@
 #pragma once
-#include "core/Resource/Resource.h"
+#include "engine/ISoundResource.h"
 #include "audio/Audio_Consts.h"
 
 namespace vg::audio
@@ -9,10 +9,10 @@ namespace vg::audio
 
 namespace vg::engine
 {
-    class SoundResource final : public core::Resource
+    class SoundResource final : public ISoundResource
     {
     public:
-        VG_CLASS_DECL(SoundResource, core::Resource);
+        VG_CLASS_DECL(SoundResource, ISoundResource);
 
         SoundResource(const core::string & _name = "", core::IObject * _parent = nullptr);
         ~SoundResource();

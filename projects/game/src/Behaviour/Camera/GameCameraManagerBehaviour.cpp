@@ -110,11 +110,14 @@ void GameCameraManagerBehaviour::updateGameViewports()
                 break;
         }
 
-        cameras[i] = camGO;
-        auto * playerGO = player->GetGameObject();
-        camGO->SetName("Camera_" + playerGO->GetName());
-        if (auto * gameCamBehaviour = camGO->GetComponentT<GameCameraBehaviour>())
-            gameCamBehaviour->setTarget(playerGO);  
+        if (nullptr != camGO)
+        {
+            cameras[i] = camGO;
+            auto * playerGO = player->GetGameObject();
+            camGO->SetName("Camera_" + playerGO->GetName());
+            if (auto * gameCamBehaviour = camGO->GetComponentT<GameCameraBehaviour>())
+                gameCamBehaviour->setTarget(playerGO);
+        }
     }
 
     if (cameras.size() > 0)

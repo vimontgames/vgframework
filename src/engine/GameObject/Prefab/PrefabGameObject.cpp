@@ -143,6 +143,9 @@ namespace vg::engine
     {
         const auto flags = _prop->GetFlags();
 
+        if (asBool(PropertyFlags::NotSaved & flags))
+            return false;
+
         if (!_object->GetUID(false))
         {
             VG_WARNING("[Prefab] Cannot override Property (%s)\"%s\" because Object \"%s\" has no UID", asString(_prop->GetType()).c_str(), _prop->GetName(), _object->GetName().c_str());

@@ -103,7 +103,7 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
 
             float3 dir = (float3)0.0f;
 
-            if (isClose)
+            if (isClose )
             {
                 m_isActive = true;
 
@@ -121,26 +121,28 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
             }
             else
             {
-                m_primaryState = CharacterPrimaryState::Idle;
+                m_moveState = MoveState::Idle;
                 m_targetAcquired = false;
             }            
 
-            m_currentSpeed = m_walkSpeed; // TODO : smooth
+            m_speedCurrent = m_walkSpeed; // TODO : smooth
             
-            if (m_targetAcquired)
+            if (MoveState::Hurt != m_moveState)
             {
-                dir = normalize(m_targetPosSmooth - pos);
-                translation.xy = dir.xy * m_currentSpeed;
-            }
+                if (m_targetAcquired)
+                {
+                    dir = normalize(m_targetPosSmooth - pos);
+                    translation.xy = dir.xy * m_speedCurrent;
+                    m_targetRotation = radiansToDegrees(atan2((float)dir.x, (float)-dir.y));
+                }
 
-            if (any(abs(translation.xy) > 0.0f))
-            {
-                if (m_currentSpeed >= (m_walkSpeed + m_runSpeed) * 0.5f)
-                    m_primaryState = CharacterPrimaryState::Running;
-                else
-                    m_primaryState = CharacterPrimaryState::Walking;
-
-                m_currentRotation = radiansToDegrees(atan2((float)dir.x, (float)-dir.y));
+                if (any(abs(translation.xy) > 0.0f))
+                {
+                    if (m_speedCurrent >= (m_walkSpeed + m_runSpeed) * 0.5f)
+                        m_moveState = MoveState::Run;
+                    else
+                        m_moveState = MoveState::Walk;                    
+                }
             }
 
             vg::engine::ICharacterControllerComponent * charaController = _context.m_gameObject->GetComponentT<vg::engine::ICharacterControllerComponent>();
@@ -150,10 +152,15 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                 float3 currentVelocity = charaController->GetVelocity();
                 float3 targetVelocity = translation.xyz;
                 float3 updatedVelocity;
-                updatedVelocity.xy = smoothdamp(currentVelocity.xy, targetVelocity.xy, m_velocitySmoothdamp, 0.01f, _context.m_dt);
+                updatedVelocity.xy = smoothdamp(currentVelocity.xy, targetVelocity.xy, m_velocitySmoothdamp, 0.02f, _context.m_dt);
                 updatedVelocity.z = currentVelocity.z;
 
+                m_velocityNorm = (updatedVelocity.x != 0 || updatedVelocity.y != 0) ? (float)length(updatedVelocity) / _context.m_dt : 0.0f;
+
                 charaController->SetVelocity(updatedVelocity);
+
+                m_currentRotation = smoothdamp(m_currentRotation, m_targetRotation, m_rotationSmoothdamp, 0.02f, _context.m_dt);
+
                 charaController->SetRotation(quaternion::rotation_z(degreesToRadians(m_currentRotation)));
 
                 dbgDraw->AddLine(_context.m_world, pos, pos + normalize(updatedVelocity), 0xFF00FF00);
@@ -162,22 +169,31 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
 
         IAnimationComponent * animationComponent = _context.m_gameObject->GetComponentT<IAnimationComponent>();
 
-        switch (m_primaryState)
+        if (MoveState::Hurt == m_moveState)
         {
-            case CharacterPrimaryState::Idle:
-                PlayAnim(CharacterPrimaryState::Idle, true);
+            if (IAnimationResource * anim = animationComponent->GetAnimation(m_moveAnim[asInteger(MoveState::Hurt)]))
+            {
+                if (anim->GetTime() > 1.2f)
+                    m_moveState = MoveState::Idle;
+            }
+        }
+
+        switch (m_moveState)
+        {
+            case MoveState::Idle:
+                PlayMoveAnim(MoveState::Idle, true);
                 break;
 
-            case CharacterPrimaryState::Walking:
-                PlayAnim(CharacterPrimaryState::Walking, true);
+            case MoveState::Walk:
+                PlayMoveAnim(MoveState::Walk, true);
                 break;
 
-            case CharacterPrimaryState::Running:
-                PlayAnim(CharacterPrimaryState::Running, true);
+            case MoveState::Run:
+                PlayMoveAnim(MoveState::Run, true);
                 break;
 
-            case CharacterPrimaryState::Jumping:
-                PlayAnim(CharacterPrimaryState::Jumping, false);
+            case MoveState::Hurt:
+                PlayMoveAnim(MoveState::Hurt, false);
                 break;
         }
     }

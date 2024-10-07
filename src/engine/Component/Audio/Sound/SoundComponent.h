@@ -13,11 +13,15 @@ namespace vg::engine
         SoundComponent(const core::string & _name, IObject * _parent);
         ~SoundComponent();
 
-        void                    OnPlay() final override;
-        void                    OnStop() final override;
+        void                    OnPlay          () final override;
+        void                    OnStop          () final override;
 
-        audio::PlaySoundHandle  Play(core::uint _index) final override;
-        bool                    Stop(core::uint _index) final override;
+        audio::PlaySoundHandle  Play            (core::uint _index) final override;
+        bool                    Stop            (core::uint _index) final override;
+
+        ISoundResource *        GetSound        (core::uint _index) const final override;
+        core::uint              GetSoundIndex   (const core::string & _name) const final override;
+        core::uint              GetSoundCount   () const final override;
 
     private:
         SoundResourceList       m_sounds;

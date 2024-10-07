@@ -99,44 +99,38 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
         IGameObject * playerGO = GetGameObject();
         IAnimationComponent * animationComponent = playerGO->GetComponentT<IAnimationComponent>();
        
-        switch (m_primaryState)
+        switch (m_moveState)
         {
             default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_primaryState);
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_moveState);
                 break;
 
-            case CharacterPrimaryState::Idle:
-                PlayAnim(CharacterPrimaryState::Idle, true);
+            case MoveState::Idle:
+                PlayMoveAnim(MoveState::Idle, true);
             break;
 
-            case CharacterPrimaryState::Walking:
-                PlayAnim(CharacterPrimaryState::Walking, true);
+            case MoveState::Walk:
+                PlayMoveAnim(MoveState::Walk, true);
                 break;
 
-            case CharacterPrimaryState::Running:
-                PlayAnim(CharacterPrimaryState::Running, true);
+            case MoveState::Run:
+                PlayMoveAnim(MoveState::Run, true);
                 break;     
 
-            case CharacterPrimaryState::Jumping:
-                PlayAnim(CharacterPrimaryState::Jumping, true);
+            case MoveState::Jump:
+                PlayMoveAnim(MoveState::Jump, true);
                 break;
         }
 
-        switch (m_secondaryState)
+        switch (m_fightState)
         {
             default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_secondaryState);
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_fightState);
                 break;
 
-            case CharacterSecondaryState::None:
-                break;
-
-            case CharacterSecondaryState::SwordHit:
-            //    PlayAnim(CharacterSecondaryState::SwordHit, true);
-                break;
-            //
-            case CharacterSecondaryState::KickBall:
-            //    PlayAnim(CharacterSecondaryState::KickBall, true);
+            case FightState::None:
+            case FightState::Hit:
+            case FightState::Kick:
                 break;
         }
 
@@ -155,13 +149,13 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
             bool running = runAmount > 0.0f;
 
-            m_currentSpeed = lerp(m_walkSpeed, m_runSpeed, runAmount);
+            m_speedCurrent = lerp(m_walkSpeed, m_runSpeed, runAmount);
 
             const float2 leftJoyDir = input.GetJoyLeftStickDir(joyID);
 
             if (any(abs(leftJoyDir).xy > joyDeadZone))
             {
-                translation.xy += leftJoyDir.xy * float2(1, -1) * m_currentSpeed;
+                translation.xy += leftJoyDir.xy * float2(1, -1) * m_speedCurrent;
                 m_currentRotation = radiansToDegrees(atan2((float)leftJoyDir.x, (float)leftJoyDir.y));
 
                 if (!m_isActive)
@@ -188,16 +182,16 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
             if (any(abs(translation.xy) > 0.0f))
             {
-                if (m_currentSpeed >= (m_walkSpeed + m_runSpeed) * 0.5f)
-                    m_primaryState = CharacterPrimaryState::Running;
+                if (m_speedCurrent >= (m_walkSpeed + m_runSpeed) * 0.5f)
+                    m_moveState = MoveState::Run;
                 else
-                    m_primaryState = CharacterPrimaryState::Walking;
+                    m_moveState = MoveState::Walk;
             }
 
-            if (m_primaryState == CharacterPrimaryState::Walking || m_primaryState == CharacterPrimaryState::Running)
+            if (m_moveState == MoveState::Walk || m_moveState == MoveState::Run)
             {
                 if (abs((float)translation.x) < 0.0001f)
-                    m_primaryState = CharacterPrimaryState::Idle;
+                    m_moveState = MoveState::Idle;
             }
 
             vg::engine::ICharacterControllerComponent * charaController = playerGO->GetComponentT<vg::engine::ICharacterControllerComponent>();
@@ -211,12 +205,12 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
             if (charaController && vg::physics::GroundState::InAir == charaController->GetGroundState())
             {
-                m_primaryState = CharacterPrimaryState::Jumping;
+                m_moveState = MoveState::Jump;
 
-                if (IAnimationResource * anim = animationComponent->GetAnimation(m_primaryAnim[CharacterPrimaryState::Jumping]))
+                if (IAnimationResource * anim = animationComponent->GetAnimation(m_moveAnim[asInteger(MoveState::Jump)]))
                 {
                     if (anim->IsFinished())
-                        m_primaryState = CharacterPrimaryState::Idle;
+                        m_moveState = MoveState::Idle;
                 }                    
             } 
 
@@ -272,10 +266,10 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 else
                 {
                     // HIT
-                    if (CharacterSecondaryState::None == m_secondaryState)
+                    if (FightState::None == m_fightState)
                     {
-                        m_secondaryState = CharacterSecondaryState::SwordHit;
-                        PlayAnim(CharacterSecondaryState::SwordHit, false);
+                        m_fightState = FightState::Hit;
+                        PlayFightAnim(FightState::Hit, false);
 
                         // Play sound
                         if (auto * soundComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
@@ -284,14 +278,14 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 }
             }
 
-            if (CharacterSecondaryState::SwordHit == m_secondaryState)
+            if (FightState::Hit == m_fightState)
             {
-                if (IAnimationResource * anim = animationComponent->GetAnimation(m_secondaryAnim[CharacterSecondaryState::SwordHit]))
+                if (IAnimationResource * anim = animationComponent->GetAnimation(m_fightAnim[asInteger(FightState::Hit)]))
                 {
                     if (anim->IsFinished())
                     {
-                        StopAnim(CharacterSecondaryState::SwordHit);
-                        m_secondaryState = CharacterSecondaryState::None;
+                        StopFightAnim(FightState::Hit);
+                        m_fightState = FightState::None;
                     }
                 }
             }
@@ -353,14 +347,16 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 float3 currentVelocity = charaController->GetVelocity();
                 float3 targetVelocity = translation.xyz;
                 float3 updatedVelocity;
-                updatedVelocity.xy = 0.75f * currentVelocity.xy + 0.25f * targetVelocity.xy;
+                updatedVelocity.xy = smoothdamp(currentVelocity.xy, targetVelocity.xy, m_velocitySmoothdamp, 0.02f, _context.m_dt);
                 updatedVelocity.z = currentVelocity.z;
 
-                if (abs((float)currentVelocity.z) <= 0.0001f && m_primaryState == CharacterPrimaryState::Jumping)
-                    m_primaryState = CharacterPrimaryState::Idle;
+                if (abs((float)currentVelocity.z) <= 0.0001f && m_moveState == MoveState::Jump)
+                    m_moveState = MoveState::Idle;
 
                 if (jump)
                     updatedVelocity += float3(0, 0, running? m_runJumpSpeed : m_jumpSpeed);
+
+                m_velocityNorm = (updatedVelocity.x != 0 || updatedVelocity.y != 0) ? (float)length(updatedVelocity) / _context.m_dt : 0.0f;
 
                 charaController->SetVelocity(updatedVelocity);
                 charaController->SetRotation(quaternion::rotation_z(degreesToRadians(m_currentRotation)));

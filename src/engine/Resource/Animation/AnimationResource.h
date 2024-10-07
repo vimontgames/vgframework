@@ -15,7 +15,7 @@ namespace vg::renderer
 
 namespace vg::engine
 {
-    class AnimationResource : public IAnimationResource
+    class AnimationResource final : public IAnimationResource
     {
     public:
         VG_CLASS_DECL(AnimationResource, IAnimationResource)
@@ -42,6 +42,9 @@ namespace vg::engine
         bool                                    PlayOnce                () final override;
 
         bool                                    Stop                    () final override;
+
+        float                                   GetTime                 () const final override;
+        float                                   GetLength               () const final override;
         float                                   GetWeight               () const final override;
 
         VG_INLINE const renderer::IAnimation *  getAnimation            () const { return (renderer::IAnimation *)m_object; }

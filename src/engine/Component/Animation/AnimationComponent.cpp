@@ -3,6 +3,7 @@
 #include "AnimationResourceList.hpp"
 #include "core/GameObject/GameObject.h"
 #include "engine/Component/Mesh/MeshComponent.h"
+#include "engine/Engine.h"
 #include "renderer/IMeshInstance.h"
 #include "renderer/IAnimation.h"
 #include "editor/Editor_Consts.h"
@@ -49,7 +50,7 @@ namespace vg::engine
         {
             if (-1 != m_primaryIndex || -1 != m_secondaryIndex)
             {
-                float amount = _context.m_dt * 16.0f;
+                float amount = _context.m_dt * 4.0f;
 
                 //if (currentWeight < 1.0f)
                 {
@@ -68,6 +69,9 @@ namespace vg::engine
                             float weight = anim.getWeight();
                             weight = saturate(weight - amount);
                             anim.setWeight(weight);
+
+                            if (weight == 0.0f)
+                                anim.setTime(0.0f);
                         }
                     }
                 }
@@ -97,6 +101,9 @@ namespace vg::engine
             }
         }
 
+        auto * engine = Engine::get();
+        const float dt = engine->IsPlaying() ? _context.m_dt : engine->getTime().m_realDeltaTime;
+
         for (uint i = 0; i < animResources.size(); ++i)
         {
             AnimationResource & animRes = animResources[i];
@@ -110,7 +117,7 @@ namespace vg::engine
                     const float framerate = anim->GetFramerate();
                     
                     float t = animRes.getTime();
-                    animRes.setTime(t + _context.m_dt * animRes.getSpeed());
+                    animRes.setTime(t + dt * animRes.getSpeed());
                 }
             }
         }
@@ -195,7 +202,7 @@ namespace vg::engine
             if (anim.GetName() == _name)
                 return i;
         }
-        VG_WARNING("[Animation] GameObject \"%s\" not find Animation \"%s\"", GetGameObject()->GetName().c_str(), _name.c_str());
+        VG_WARNING("[Animation] GameObject \"%s\" has no Animation \"%s\"", GetGameObject()->GetName().c_str(), _name.c_str());
         return -1;
     }
 

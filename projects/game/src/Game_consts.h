@@ -2,26 +2,33 @@
 
 #include "core/Types/Types.h"
 
-vg_enum(CharacterType , vg::core::u8,
+vg_enum_class(CharacterType , vg::core::u8,
     Neutral = 0,
     Player,
     Enemy
 );
 
-vg_enum(CharacterPrimaryState, vg::core::u8,
+vg_enum_class(MoveState, vg::core::u8,
     Idle = 0,
-    Walking,
-    Running,
-    Jumping
+    Walk,
+    Run,
+    Jump,
+    Hurt,
+    Die
 );
 
-vg_enum(CharacterSecondaryState, vg::core::u8,
+vg_enum_class(FightState, vg::core::u8,
     None = 0,
-    SwordHit,
-    KickBall
+    Hit,
+    Kick
 );
 
-vg_enum(ItemType, vg::core::u8,
+vg_enum_class(SoundState, vg::core::u8,
+    None = 0,
+    TakeDamage
+);
+
+vg_enum_class(ItemType, vg::core::u8,
     Ball = 0,
     Weapon
 );

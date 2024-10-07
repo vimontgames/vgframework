@@ -2,6 +2,8 @@
 #include "game_consts.h"
 #include "core/Component/Behaviour/Behaviour.h"
 
+class ItemBehaviour;
+
 class CharacterBehaviour : public vg::core::Behaviour
 {
 public:
@@ -19,14 +21,20 @@ public:
     void                    FixedUpdate(const Context & _context) override;
     void                    Update(const Context & _context) override;
 
-    bool                    isActive() const { return m_isActive; }
-
     void                    addScore(vg::core::i32 _points);
+    bool                    takeHit(CharacterBehaviour * _attacker, ItemBehaviour * _weapon = nullptr);
+
+    VG_INLINE bool          isActive() const;
+    VG_INLINE MoveState     getMoveState() const;
+    VG_INLINE FightState    getFightState() const;
 
 protected:
-    void                    PlayAnim(CharacterPrimaryState _state, bool _loop = false);
-    void                    PlayAnim(CharacterSecondaryState _state, bool _loop = false);
-    void                    StopAnim(CharacterSecondaryState _state);
+    void                    PlayMoveAnim(MoveState _state, bool _loop = false);
+
+    void                    PlayFightAnim(FightState _state, bool _loop = false);
+    void                    StopFightAnim(FightState _state);
+
+    void                    PlaySound(SoundState _sound);
 
 protected:
     bool                    m_isActive = false;
@@ -41,15 +49,26 @@ protected:
     float                   m_jumpSpeed = 3.0f;
     float                   m_runJumpSpeed = 4.0f;
 
-    CharacterPrimaryState   m_primaryState = CharacterPrimaryState::Idle;
-    vg::core::uint          m_primaryAnim[vg::core::enumCount<CharacterPrimaryState>()];
+    MoveState               m_moveState = MoveState::Idle;
+    vg::core::uint          m_moveAnim[vg::core::enumCount<MoveState>()];
 
-    CharacterSecondaryState m_secondaryState = CharacterSecondaryState::None;
-    vg::core::uint          m_secondaryAnim[vg::core::enumCount<CharacterSecondaryState>()];
+    FightState              m_fightState = FightState::None;
+    vg::core::uint          m_fightAnim[vg::core::enumCount<FightState>()];
 
-    float                   m_currentSpeed = 0.0f;
-    float                   m_currentRotation = 0.0f;
+    SoundState              m_soundState = SoundState::None;
+    vg::core::uint          m_sound[vg::core::enumCount<SoundState>()];
+
+    float                   m_speedCurrent = 0.0f;
     vg::core::float2        m_velocitySmoothdamp = vg::core::float2(0, 0);
+    float                   m_velocityNorm = 0;
+
+    float                   m_targetRotation = 0.0f;
+    float                   m_currentRotation = 0.0f;
+    float                   m_rotationSmoothdamp = 0.0f;
 
     vg::core::float3        m_startPos = (vg::core::float3)0.0f; 
 };
+
+#if VG_ENABLE_INLINE
+#include "CharacterBehaviour.inl"
+#endif

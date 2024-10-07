@@ -63,7 +63,7 @@ namespace vg::engine
 
     //--------------------------------------------------------------------------------------
     SoundResource::SoundResource(const string & _name, IObject * _parent) :
-        Resource(_name, _parent)
+        super(_name, _parent)
     {
 
     }

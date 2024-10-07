@@ -45,7 +45,14 @@ void WeaponBehaviour::OnTriggerEnter(vg::core::IGameObject * _other)
     {
         if (auto * owner = GetOwner().get<IGameObject>())
         {
-            VG_WARNING("[Enemy] Enemy \"%s\" was hit y Weapon \"%s\" hit owned by \"%s\" ", _other->GetName().c_str(), GetName().c_str(), owner->GetName().c_str());
+            if (auto * attacker = owner->GetComponentT<CharacterBehaviour>())
+            {
+                if (attacker->getFightState() == FightState::Hit)
+                {
+                    if (auto * defender = _other->GetComponentT<CharacterBehaviour>())
+                        defender->takeHit(attacker, this);
+                }
+            }
         }
     }
 }

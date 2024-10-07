@@ -97,5 +97,8 @@
     <None Include="Behaviour\Character\Player\PlayerBehaviour.inl">
       <Filter>Behaviour\Character\Player</Filter>
     </None>
+    <None Include="Behaviour\Character\CharacterBehaviour.inl">
+      <Filter>Behaviour\Character</Filter>
+    </None>
   </ItemGroup>
 </Project>

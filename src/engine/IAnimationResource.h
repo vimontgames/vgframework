@@ -22,6 +22,8 @@ namespace vg::engine
 
             virtual bool    Stop        () = 0;
 
+            virtual float   GetTime     () const = 0;
+            virtual float   GetLength   () const = 0;
             virtual float   GetWeight   () const = 0;
     };
 }

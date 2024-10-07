@@ -165,6 +165,21 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    float AnimationResource::GetLength() const
+    {
+        if (IAnimation * anim = (IAnimation *)GetObject())
+            return anim->GetLength();
+        else
+            return 0.0f;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float AnimationResource::GetTime() const
+    {
+        return m_time;
+    }
+
+    //--------------------------------------------------------------------------------------
     float AnimationResource::GetWeight() const
     {
         return m_weight;

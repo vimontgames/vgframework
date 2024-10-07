@@ -87,6 +87,7 @@
     <ClInclude Include="IPhysicsShapeComponent.h" />
     <ClInclude Include="ISnapComponent.h" />
     <ClInclude Include="ISoundComponent.h" />
+    <ClInclude Include="ISoundResource.h" />
     <ClInclude Include="IUICanvasComponent.h" />
     <ClInclude Include="IUITextComponent.h" />
     <ClInclude Include="Resource\Audio\SoundResource.h" />

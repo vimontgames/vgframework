@@ -203,7 +203,7 @@ namespace vg::editor
     {
         if ((!_propContext.m_readOnly))
         {
-            if (_propContext.m_isPrefabInstance && !_propContext.m_isPrefabOverride)
+            if (_propContext.m_isPrefabInstance && !_propContext.m_isPrefabOverride && !asBool(_prop->GetFlags() & PropertyFlags::NotSaved))
             {
                 if (_propContext.m_propOverride = _propContext.m_prefab->CreateDynamicProperty(_object, _prop))
                 {
@@ -235,7 +235,7 @@ namespace vg::editor
     {
         if (EditingState::BeginEdit == _editingState || EditingState::EndEdit == _editingState || (!_propContext.m_readOnly && !equals(*_out,_value)))
         {
-            if (_propContext.m_isPrefabInstance && !_propContext.m_isPrefabOverride)
+            if (_propContext.m_isPrefabInstance && !_propContext.m_isPrefabOverride && _propContext.m_canPrefabOverride)
             {
                 if (_propContext.m_propOverride = _propContext.m_prefab->CreateDynamicProperty(_object, _prop))
                 {
@@ -862,6 +862,11 @@ namespace vg::editor
     {
         auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
 
+        if (asBool(PropertyFlags::NotSaved & _propContext.m_originalProp->GetFlags()))
+        {
+            return ImGui::GetStyleColorVec4(ImGuiCol_TextLink);
+        }
+
         if (_propContext.m_isPrefabInstance)
         {
             if (_propContext.m_isPrefabOverride)
@@ -1086,7 +1091,16 @@ namespace vg::editor
 
         bool changed = false;
 
-        propContext.m_readOnly = asBool(PropertyFlags::ReadOnly & flags) || (propContext.m_isPrefabInstance && !propContext.m_isPrefabOverride && !propContext.m_canPrefabOverride);
+        propContext.m_readOnly = asBool(PropertyFlags::ReadOnly & flags);
+
+        if (propContext.m_isPrefabInstance && !propContext.m_isPrefabOverride)
+        {
+            if (!propContext.m_canPrefabOverride)
+            {
+                if (!asBool(PropertyFlags::NotSaved & flags))
+                    propContext.m_readOnly = true;
+            }
+        }
 
         ImGuiInputTextFlags imguiInputTextflags = getImGuiInputTextFlags(propContext, _prop);
 

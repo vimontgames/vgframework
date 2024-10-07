@@ -365,6 +365,7 @@
     <ClInclude Include="Component\Physics\Object\PhysicsObjectComponent.hpp">
       <Filter>Component\Physics\Object</Filter>
     </ClInclude>
+    <ClInclude Include="ISoundResource.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

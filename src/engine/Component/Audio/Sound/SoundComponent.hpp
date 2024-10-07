@@ -81,4 +81,34 @@ namespace vg::engine
             return false;
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    ISoundResource * SoundComponent::GetSound(core::uint _index) const
+    {
+        auto & sounds = m_sounds.getResources();
+        if (_index < GetSoundCount())
+            return (ISoundResource *)&sounds[_index];
+        else
+            return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint SoundComponent::GetSoundIndex(const core::string & _name) const
+    {
+        auto & sounds = m_sounds.getResources();
+        for (uint i = 0; i < sounds.size(); ++i)
+        {
+            auto & sound = sounds[i];
+            if (sound.GetName() == _name)
+                return i;
+        }
+        VG_WARNING("[Sound] GameObject \"%s\" has no Sound \"%s\"", GetGameObject()->GetName().c_str(), _name.c_str());
+        return -1;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint SoundComponent::GetSoundCount() const
+    {
+        return (uint)m_sounds.getResources().size();
+    }
 }

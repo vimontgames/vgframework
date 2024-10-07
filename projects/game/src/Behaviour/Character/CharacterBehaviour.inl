@@ -1,0 +1,17 @@
+//--------------------------------------------------------------------------------------
+VG_INLINE bool CharacterBehaviour::isActive() const
+{
+    return m_isActive; 
+}
+
+//--------------------------------------------------------------------------------------
+VG_INLINE MoveState CharacterBehaviour::getMoveState() const
+{
+    return m_moveState;
+}
+
+//--------------------------------------------------------------------------------------
+VG_INLINE FightState CharacterBehaviour::getFightState() const
+{
+    return m_fightState;
+}
