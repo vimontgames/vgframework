@@ -1,4 +1,4 @@
-#include "ViewGUI.h"
+#include "UIRenderer.h"
 #include "renderer/RenderPass/ImGui/ImGui.h"
 #include "renderer/IImGuiAdapter.h"
 #include "Shaders/system/packing.hlsli"
@@ -8,7 +8,7 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    ViewGUI::ViewGUI(gfx::IViewport * _viewport, gfx::IView * _view) :
+    UIRenderer::UIRenderer(gfx::IViewport * _viewport, gfx::IView * _view) :
         m_viewport(_viewport),
         m_view(_view)
     {
@@ -16,25 +16,25 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    ViewGUI::~ViewGUI()
+    UIRenderer::~UIRenderer()
     {
   
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewGUI::AddCanvas(const gfx::UICanvas * _canvas, const UIItem & _desc)
+    void UIRenderer::AddCanvas(const gfx::UICanvas * _canvas, const UIItem & _desc)
     {
         m_uiElements.push_back(UIElement(_canvas, _desc));
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewGUI::AddText(const gfx::UICanvas * _canvas, const UIItem & _desc, const core::string & _text, Font _font, FontStyle _style)
+    void UIRenderer::AddText(const gfx::UICanvas * _canvas, const UIItem & _desc, const core::string & _text, Font _font, FontStyle _style)
     {
         m_uiElements.push_back(UIElement(_canvas, _desc, _text, _font, _style));
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewGUI::AddImage(const gfx::UICanvas * _canvas, const UIItem & _desc, const gfx::ITexture * _texture)
+    void UIRenderer::AddImage(const gfx::UICanvas * _canvas, const UIItem & _desc, const gfx::ITexture * _texture)
     {
         m_uiElements.push_back(UIElement(_canvas, _desc, _texture));
     }
@@ -42,7 +42,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Create transparent window to render game UI
     //--------------------------------------------------------------------------------------
-    void ViewGUI::RenderFullscreen()
+    void UIRenderer::RenderFullscreen()
     {
         ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
         ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
@@ -67,37 +67,37 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewGUI::RenderWindowed()
+    void UIRenderer::RenderWindowed()
     {
         render();
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint2 ViewGUI::getSize() const
+    core::uint2 UIRenderer::getSize() const
     {
         return m_view ? m_view->GetSize() : m_viewport->GetRenderTargetSize();
     }
 
     //--------------------------------------------------------------------------------------
-    core::float2 ViewGUI::getScale() const
+    core::float2 UIRenderer::getScale() const
     {
         return m_view ? m_view->GetViewportScale() : float2(1, 1);
     }
 
     //--------------------------------------------------------------------------------------
-    core::float2 ViewGUI::getOffset() const
+    core::float2 UIRenderer::getOffset() const
     {
         return m_view ? m_view->GetViewportOffset() : float2(0, 0);
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewGUI::Clear()
+    void UIRenderer::Clear()
     {
         m_uiElements.clear();
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewGUI::render()
+    void UIRenderer::render()
     {
         sort(m_uiElements.begin(), m_uiElements.end(), [](UIElement & a, UIElement & b)
         {

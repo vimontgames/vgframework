@@ -70,7 +70,7 @@ namespace vg::gfx
     };
 
     class IView;
-    class IViewGUI;
+    class IUIRenderer;
 
     class IViewport : public core::Object
     {
@@ -104,7 +104,7 @@ namespace vg::gfx
         virtual void                                RemoveView          (core::u8 _index, ViewID _viewID) = 0;
 
         virtual const core::map<core::u8, ViewID> & GetViewIDs          () const = 0;
-        virtual IViewGUI *                          GetViewportGUI      () const = 0;
+        virtual IUIRenderer *                       GetUIRenderer       () const = 0;
 
         virtual const core::string                  GetFrameGraphID     (const core::string & _name) const = 0;
     };

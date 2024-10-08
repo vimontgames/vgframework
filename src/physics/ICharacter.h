@@ -14,7 +14,6 @@ namespace vg::physics
 
         virtual void            SetMass         (float _mass) = 0;
         virtual void            SetMaxSlopeAngle(float _maxSlopeAngle) = 0;
-        //virtual void            SetFriction     (float _friction) = 0;
     };
 
     class ICharacter : public core::Object

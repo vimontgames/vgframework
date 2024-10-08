@@ -8,7 +8,7 @@ namespace vg::gfx
     enum class VerticalAligment : core::u8;
     enum class UIItemFlags : core::u32;
 
-    class IViewGUI;
+    class IUIRenderer;
     struct UICanvas;
 }
 
@@ -31,7 +31,7 @@ namespace vg::engine
         VG_INLINE core::float4x4    getMatrix   () const; 
         VG_INLINE core::float4      getColor    () const;
 
-        gfx::IViewGUI *             getGUI      (const core::IWorld * _world) const;
+        gfx::IUIRenderer *             getGUI      (const core::IWorld * _world) const;
         const gfx::UICanvas *       getCanvas   () const;
 
     protected:

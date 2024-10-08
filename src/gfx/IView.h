@@ -14,7 +14,7 @@ namespace vg::core
 namespace vg::gfx
 {
     class ITexture;
-    class IViewGUI;
+    class IUIRenderer;
     class UserPass;
     class IViewport;
     struct ViewportID;
@@ -170,6 +170,6 @@ namespace vg::gfx
 
         virtual ViewCullingStats        GetViewCullingStats         () const = 0;
 
-        virtual IViewGUI *              GetViewGUI                  () const = 0;
+        virtual IUIRenderer *           GetUIRenderer                  () const = 0;
     };
 }

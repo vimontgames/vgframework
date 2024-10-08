@@ -411,10 +411,10 @@
     <ClInclude Include="RenderPass\Update\GPUDebug\GPUDebugUpdatePass.hpp">
       <Filter>Pass\Update\GPUDebug</Filter>
     </ClInclude>
-    <ClInclude Include="View\ViewGUI.h">
+    <ClInclude Include="View\UIRenderer.h">
       <Filter>View</Filter>
     </ClInclude>
-    <ClInclude Include="View\ViewGUI.hpp">
+    <ClInclude Include="View\UIRenderer.hpp">
       <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="Viewport\Viewport.h">

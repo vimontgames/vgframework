@@ -2,7 +2,7 @@
 #include "ImGui.h"
 #include "ImGuiPass.h"
 #include "gfx/Device/Device.h"
-#include "gfx/IViewGUI.h"
+#include "gfx/IUIRenderer.h"
 #include "renderer/Renderer.h"
 #include "renderer/Geometry/Batch/Batch.h"
 #include "imguiAdapter.h"

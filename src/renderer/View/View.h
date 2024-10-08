@@ -20,7 +20,7 @@ namespace vg::gfx
     class FrameGraph;
     class Buffer;
     class TLAS;
-    class IViewGUI;
+    class IUIRenderer;
     class IViewport;
 }
 
@@ -28,7 +28,7 @@ namespace vg::renderer
 {
     class ViewConstantsUpdatePass;
     class ShadowView;
-    class ViewGUI;
+    class UIRenderer;
 
     //--------------------------------------------------------------------------------------
     // Base class for user views.
@@ -109,7 +109,7 @@ namespace vg::renderer
 
         gfx::ViewCullingStats               GetViewCullingStats         () const final override;
 
-        gfx::IViewGUI *                     GetViewGUI                  () const final override;
+        gfx::IUIRenderer *                     GetUIRenderer                  () const final override;
         
         core::vector<gfx::FrameGraphResourceID>  getShadowMaps          () const;
 
@@ -192,7 +192,7 @@ namespace vg::renderer
         Frustum                             m_frustum;
         ViewCullingJobOutput                m_cullingJobResult;
         core::vector<ShadowView*>           m_shadowViews;
-        ViewGUI *                           m_viewGUI                   = nullptr;
+        UIRenderer *                           m_viewGUI                   = nullptr;
     };
 }
 

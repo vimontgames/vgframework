@@ -1,7 +1,7 @@
 #include "UICanvasComponent.h"
 #include "editor/Editor_Consts.h"
 #include "core/IGameObject.h"
-#include "gfx/IViewGUI.h"
+#include "gfx/IUIRenderer.h"
 #include "renderer/IRenderer.h"
 #include "engine/Engine.h"
 #include "engine/EngineOptions.h"

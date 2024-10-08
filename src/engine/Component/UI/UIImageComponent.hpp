@@ -4,7 +4,7 @@
 #include "renderer/IRenderer.h"
 #include "gfx/ITexture.h"
 #include "core/IGameObject.h"
-#include "gfx/IViewGUI.h"
+#include "gfx/IUIRenderer.h"
 
 using namespace vg::core;
 

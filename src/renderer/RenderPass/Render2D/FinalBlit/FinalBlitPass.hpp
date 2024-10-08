@@ -1,6 +1,6 @@
 #include "FinalBlitPass.h"
 #include "shaders/system/rootConstants2D.hlsli"
-#include "renderer/View/ViewGUI.h"
+#include "renderer/View/UIRenderer.h"
 #include "shaders/driver/driver.hlsl.h"
 
 namespace vg::renderer
@@ -98,7 +98,7 @@ namespace vg::renderer
         // When no editor we render game UI directly to backbuffer
         if (Renderer::get()->IsFullscreen())
         {
-            if (auto * viewGUI = VG_SAFE_STATIC_CAST(ViewGUI, _renderPassContext.m_view->GetViewGUI()))
+            if (auto * viewGUI = VG_SAFE_STATIC_CAST(UIRenderer, _renderPassContext.m_view->GetUIRenderer()))
                 viewGUI->RenderFullscreen();
         }
         #endif

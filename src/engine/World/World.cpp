@@ -12,7 +12,7 @@
 #include "core/IInput.h"
 #include "core/Timer/Timer.h"
 #include "core/Math/Math.h"
-#include "gfx/IViewGUI.h"
+#include "gfx/IUIRenderer.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IDebugDraw.h"
 
@@ -207,13 +207,13 @@ namespace vg::engine
         for (auto target = 0; target < enumCount<gfx::ViewTarget>(); ++target)
         {
             for (auto * view : renderer->GetViews((gfx::ViewTarget)target))
-                view->GetViewGUI()->Clear();
+                view->GetUIRenderer()->Clear();
         }
 
         for (auto target = 0; target < enumCount<gfx::ViewportTarget>(); ++target)
         {
             for (auto * viewport : renderer->GetViewports((gfx::ViewportTarget)target))
-                viewport->GetViewportGUI()->Clear();
+                viewport->GetUIRenderer()->Clear();
         }
     }
 

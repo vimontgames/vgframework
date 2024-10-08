@@ -225,8 +225,8 @@
     <ClInclude Include="View\Shadow\ShadowView.h" />
     <ClInclude Include="View\Shadow\ShadowView.hpp" />
     <ClInclude Include="View\View.h" />
-    <ClInclude Include="View\ViewGUI.h" />
-    <ClInclude Include="View\ViewGUI.hpp" />
+    <ClInclude Include="View\UIRenderer.h" />
+    <ClInclude Include="View\UIRenderer.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

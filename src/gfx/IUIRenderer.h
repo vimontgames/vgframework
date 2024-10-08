@@ -71,10 +71,10 @@ namespace vg::gfx
         core::uint2             m_resolution        = core::uint2(1280, 720);
     };
 
-    class IViewGUI
+    class IUIRenderer
     {
     public:
-        virtual ~IViewGUI() {};
+        virtual ~IUIRenderer() {};
 
         virtual void AddCanvas          (const UICanvas * _canvas, const UIItem & _desc) = 0;
         virtual void AddText            (const UICanvas * _canvas, const UIItem & _desc, const core::string & _text, renderer::Font _font, renderer::FontStyle _style) = 0;

@@ -8,7 +8,7 @@
 #include "renderer/Renderer.h"
 #include "renderer/Job/Culling/ViewCullingJob.h"
 #include "renderer/RenderPass/Update/ViewConstants/ViewConstantsUpdatePass.h"
-#include "renderer/View/ViewGUI.h"
+#include "renderer/View/UIRenderer.h"
 
 #if !VG_ENABLE_INLINE
 #include "View.inl"
@@ -17,7 +17,7 @@
 #include "Lit/LitView.hpp"
 #include "Shadow/ShadowView.hpp"
 #include "Frustum.hpp"
-#include "ViewGUI.hpp"
+#include "UIRenderer.hpp"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -46,7 +46,7 @@ namespace vg::renderer
 
         memset(&m_rawPickingData, 0x0, sizeof(m_rawPickingData));
 
-        m_viewGUI = new ViewGUI(m_viewport, this);
+        m_viewGUI = new UIRenderer(m_viewport, this);
     }
 
     //--------------------------------------------------------------------------------------
@@ -584,8 +584,8 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IViewGUI * View::GetViewGUI() const
+    gfx::IUIRenderer * View::GetUIRenderer() const
     {
-        return VG_SAFE_STATIC_CAST(gfx::IViewGUI, m_viewGUI);
+        return VG_SAFE_STATIC_CAST(gfx::IUIRenderer, m_viewGUI);
     }
 }

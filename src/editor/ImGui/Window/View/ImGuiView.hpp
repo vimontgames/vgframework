@@ -1,7 +1,7 @@
 #include "ImguiView.h"
 #include "core/IInput.h"
 #include "gfx/ITexture.h"
-#include "gfx/IViewGUI.h"
+#include "gfx/IUIRenderer.h"
 #include "renderer/IImGuiAdapter.h"
 #include "renderer/IPicking.h"
 #include "engine/ISnapComponent.h"
@@ -518,10 +518,10 @@ namespace vg::editor
                 {
                     if (auto * view = renderer->GetView(pair.second))
                     {
-                        if (auto * viewGUI = view->GetViewGUI())
+                        if (auto * uiRenderer = view->GetUIRenderer())
                         {
                             ImGui::SetCursorPos(ImVec2(0, titleBarHeight + toolbarHeight));
-                            viewGUI->RenderWindowed();
+                            uiRenderer->RenderWindowed();
 
                             const auto options = EditorOptions::get();
                             bool debugCulling = options->IsDebugCulling();
@@ -565,10 +565,10 @@ namespace vg::editor
                     }
                 }
 
-                if (auto * viewportGUI = m_viewport->GetViewportGUI())
+                if (auto * uiRenderer = m_viewport->GetUIRenderer())
                 {
                     ImGui::SetCursorPos(ImVec2(0, titleBarHeight + toolbarHeight));
-                    viewportGUI->RenderWindowed();
+                    uiRenderer->RenderWindowed();
                 }
             }
 

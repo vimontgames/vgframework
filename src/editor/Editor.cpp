@@ -7,7 +7,7 @@
 #include "core/File/File.h"
 #include "core/Timer/Timer.h"
 #include "core/UndoRedo/UndoRedo.h"
-#include "gfx/IViewGUI.h"
+#include "gfx/IUIRenderer.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IImGuiAdapter.h"
 #include "engine/IEngine.h"
@@ -371,13 +371,13 @@ namespace vg::editor
                     {
                         if (auto * view = renderer->GetView(pair.second))
                         {
-                            if (auto * viewGUI = view->GetViewGUI())
-                                viewGUI->RenderFullscreen();
+                            if (auto * uiRenderer = view->GetUIRenderer())
+                                uiRenderer->RenderFullscreen();
                         }
 
                         // Render viewport GUI on top of view GUIs
-                        if (auto * viewportGUI = viewport->GetViewportGUI())
-                            viewportGUI->RenderFullscreen();
+                        if (auto * uiRenderer = viewport->GetUIRenderer())
+                            uiRenderer->RenderFullscreen();
                     }                 
                 }
             }

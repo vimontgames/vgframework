@@ -2,7 +2,7 @@
 #include "Viewport.h"
 #include "renderer/View/View.h"
 #include "renderer/Renderer.h"
-#include "renderer/View/ViewGUI.h"
+#include "renderer/View/UIRenderer.h"
 #include "gfx/FrameGraph/FrameGraph.h"
 
 using namespace vg::core;
@@ -21,7 +21,7 @@ namespace vg::renderer
             m_renderTarget = (gfx::Texture *)_params.dest;
         }
 
-        m_viewportGUI = new ViewGUI(this, nullptr);
+        m_viewportGUI = new UIRenderer(this, nullptr);
     }
 
     //--------------------------------------------------------------------------------------
@@ -181,9 +181,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IViewGUI * Viewport::GetViewportGUI() const
+    gfx::IUIRenderer * Viewport::GetUIRenderer() const
     {
-        return VG_SAFE_STATIC_CAST(gfx::IViewGUI, m_viewportGUI);
+        return VG_SAFE_STATIC_CAST(gfx::IUIRenderer, m_viewportGUI);
     }
 
     //--------------------------------------------------------------------------------------

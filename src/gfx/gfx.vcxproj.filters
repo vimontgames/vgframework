@@ -627,7 +627,7 @@
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Multiview.h">
       <Filter>Device\vulkan\Extension\Device</Filter>
     </ClInclude>
-    <ClInclude Include="IViewGUI.h" />
+    <ClInclude Include="IUIRenderer.h" />
     <ClInclude Include="PipelineState\Graphic\RasterizerState_consts.h">
       <Filter>PipelineState\Graphic</Filter>
     </ClInclude>

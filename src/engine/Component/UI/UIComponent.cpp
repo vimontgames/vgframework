@@ -1,7 +1,7 @@
 #include "engine/Precomp.h"
 #include "UIComponent.h"
 #include "renderer/IPicking.h"
-#include "gfx/IViewGUI.h"
+#include "gfx/IUIRenderer.h"
 
 #if !VG_ENABLE_INLINE
 #include "UIComponent.inl"
@@ -23,7 +23,7 @@ namespace vg::engine
         registerPropertyEnum(UIComponent, gfx::HorizontalAligment, m_horizontal, "Horizontal");
         registerPropertyEnum(UIComponent, gfx::VerticalAligment, m_vertical, "Vertical");
 
-        registerPropertyEnumBitfield(UIComponent, gfx::UIItemFlags, m_UIFlags, "UI Flags");
+        registerPropertyEnumBitfield(UIComponent, gfx::UIItemFlags, m_UIFlags, "Flags");
 
         registerProperty(UIComponent, m_size, "Size");
         //setPropertyRange(UIComponent, m_size, float2(0, 3840));      
@@ -58,7 +58,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IViewGUI * UIComponent::getGUI(const core::IWorld * _world) const
+    gfx::IUIRenderer * UIComponent::getGUI(const core::IWorld * _world) const
     {
         auto * renderer = Engine::get()->GetRenderer();
         auto * canvas = getCanvas();
@@ -76,21 +76,21 @@ namespace vg::engine
                         if (auto * view = renderer->GetView(it->second))
                         {
                             if (view->IsRender() && view->GetWorld() == _world)
-                                return view->GetViewGUI();
+                                return view->GetUIRenderer();
                         }
                     }
                 }
                 else
                 {
-                    if (auto * viewportGui = viewport->GetViewportGUI())
-                        return viewportGui;
+                    if (auto * uiRenderer = viewport->GetUIRenderer())
+                        return uiRenderer;
                 }
 
                 // Prefab preview mode
                 if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Editor, _world))
                 {
                     if (view->IsRender() && view->GetWorld() == _world && asBool(gfx::IView::Flags::Prefab & view->GetFlags()))
-                        return view->GetViewGUI();
+                        return view->GetUIRenderer();
                 }
             }            
         }

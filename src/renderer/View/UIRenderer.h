@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gfx/IViewGUI.h"
+#include "gfx/IUIRenderer.h"
 
 namespace vg::renderer
 {
@@ -16,11 +16,11 @@ namespace vg::renderer
         Image
     };
 
-    class ViewGUI : public gfx::IViewGUI
+    class UIRenderer : public gfx::IUIRenderer
     {
     public:
-        ViewGUI(gfx::IViewport * _viewport, gfx::IView * _view);
-        ~ViewGUI();
+        UIRenderer(gfx::IViewport * _viewport, gfx::IView * _view);
+        ~UIRenderer();
 
         void            AddCanvas           (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc) final override;
         void            AddText             (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const core::string & _text, Font _font, FontStyle _style) final override;
