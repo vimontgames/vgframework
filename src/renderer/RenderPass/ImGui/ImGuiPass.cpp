@@ -109,8 +109,8 @@ namespace vg::renderer
             auto & gameViewports = renderer->GetViewports(gfx::ViewportTarget::Game);
             for (auto & gameViewport : gameViewports)
             {
-                if (auto * viewportGUI = gameViewport->GetViewportGUI())
-                    viewportGUI->RenderFullscreen();
+                if (auto * uiRenderer = gameViewport->GetUIRenderer())
+                    uiRenderer->RenderFullscreen();
             }
         }
         #endif
