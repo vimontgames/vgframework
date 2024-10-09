@@ -93,7 +93,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void UIRenderer::render()
     {
-        VG_PROFILE_CPU("UIRenderer");
+        VG_PROFILE_CPU("RenderUI");
 
         sort(m_uiElements.begin(), m_uiElements.end(), [](UIElement & a, UIElement & b)
         {

@@ -592,7 +592,7 @@ namespace vg::editor
         enumPairs.resize(_prop->GetEnumCount());
         for (uint e = 0; e < _prop->GetEnumCount(); ++e)
         {
-            enumPairs[e].name = _prop->GetEnumName(e); // getFlatEnumDisplayName<T>(_prop, e);
+            enumPairs[e].name = _prop->GetEnumName(e);
 
             if (enumPairs[e].name._Starts_with(enumTypeName))
                 enumPairs[e].name = enumPairs[e].name.substr(enumTypeName.length()+1);
@@ -668,12 +668,14 @@ namespace vg::editor
         bool edited = false, changed = false;
         string preview;
 
-        bool first = true, found = false;
+        bool first = true, found = false, allBitsSet = _prop->GetEnumCount() > 0;
         for (uint e = 0; e < _prop->GetEnumCount(); ++e)
         {
             if (enumVal & (T(1) << T(e)))
             {
-                auto name = _prop->GetEnumName(e);
+                string name = _prop->GetEnumName(e);
+                std::replace(name.begin(), name.end(), '_', ' ');
+
                 if (name[0] != 0)
                 {
                     found = true;
@@ -686,8 +688,14 @@ namespace vg::editor
                     preview += name;
                 }
             }
+            else
+            {
+                allBitsSet = false;
+            }
         }
-        if (!found)
+        if (allBitsSet)
+            preview = "All";
+        else if (!found)
             preview = "";
 
         string enumLabel = ImGui::getObjectLabel("", _prop->GetDisplayName(), _prop);
@@ -696,11 +704,13 @@ namespace vg::editor
             for (uint e = 0; e < _prop->GetEnumCount(); ++e)
             {
                 bool value = ((enumVal >> e) & 1) ? true : false;
-                const char * name = _prop->GetEnumName(e);
+                string name = _prop->GetEnumName(e);
 
-                if (name[0] != '\0')
+                if (!name.empty())
                 {
-                    if (ImGui::Checkbox(name, &value))
+                    std::replace(name.begin(), name.end(), '_', ' ');
+
+                    if (ImGui::Checkbox(name.c_str(), &value))
                     {
                         if (!readonly)
                         {
@@ -1433,9 +1443,9 @@ namespace vg::editor
                             for (uint e = 0; e < _prop->GetEnumCount(); ++e)
                             {
                                 if (asBool(PropertyFlags::Color & flags))
-                                    changed |= ImGui::ColorEdit4(_prop->GetEnumName(e), pFloat4 + e * 4);
+                                    changed |= ImGui::ColorEdit4(_prop->GetEnumName(e).c_str(), pFloat4 + e * 4);
                                 else
-                                    changed |= ImGui::InputFloat4(_prop->GetEnumName(e), pFloat4 + e * 4, g_editFloatFormat, imguiInputTextflags);
+                                    changed |= ImGui::InputFloat4(_prop->GetEnumName(e).c_str(), pFloat4 + e * 4, g_editFloatFormat, imguiInputTextflags);
                             }
                             ImGui::TreePop();
                         }
@@ -1851,7 +1861,7 @@ namespace vg::editor
                             {
                                 pObject = ref ? *_prop->GetPropertyObjectPtr(_object, e) : _prop->GetPropertyObject(_object, e);
 
-                                if (ImGui::TreeNodeEx(_prop->GetEnumName(e), ImGuiTreeNodeFlags_DefaultOpen))
+                                if (ImGui::TreeNodeEx(_prop->GetEnumName(e).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
                                 {
                                     if (nullptr != pObject)
                                         displayObject(pObject);
@@ -1945,7 +1955,7 @@ namespace vg::editor
                             {
                                 auto pResource = ref ? *_prop->GetPropertyResourcePtr(_object, e) : _prop->GetPropertyResource(_object, e);
 
-                                if (ImGui::TreeNodeEx(_prop->GetEnumName(e), /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen))
+                                if (ImGui::TreeNodeEx(_prop->GetEnumName(e).c_str(), /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen))
                                 {
                                     if (nullptr != pResource)
                                         changed |= displayResource(pResource, _prop, e, propContext);

@@ -209,7 +209,7 @@
                         <Property type="String" name="m_name" value="UI"/>
                         <Property type="Uint32" name="m_uid" flags="" value="1177627180"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -265,9 +265,10 @@
                                                 <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
                                                 <Property type="EnumU8" name="m_canvas.m_viewportTarget" flags="ReadOnly" value="Game"/>
                                                 <Property type="Uint8" name="m_canvas.m_viewportIndex" flags="ReadOnly" value="0"/>
-                                                <Property type="Bool" name="m_canvas.m_useViewIndex" flags="NotVisible" value="false"/>
-                                                <Property type="Uint8" name="m_canvas.m_viewIndex" flags="Optional" value="0"/>
+                                                <Property type="Bool" name="m_canvas.m_useViewMask" flags="NotVisible" value="false"/>
+                                                <Property type="EnumFlagsU32" name="m_canvas.m_viewMask" flags="" value="View_0|View_1|View_2|View_3|View_4|View_5|View_6|View_7|View_8|View_9|View_10|View_11|View_12|View_13|View_14|View_15"/>
                                                 <Property type="Uint2" name="m_canvas.m_resolution" x="1280" y="720"/>
+                                                <Property type="EnumU8" name="m_canvas.m_canvasType" value="CanvasType_2D"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
@@ -295,7 +296,7 @@
                                                         <Property type="Float3" name="m_offset" flags="Optional" x="0" y="0" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
                                                         <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
-                                                        <Property type="EnumU8" name="m_font" flags="AlphabeticalOrder" value="Rowndies"/>
+                                                        <Property type="EnumU8" name="m_font" value="RubikMonoOne"/>
                                                         <Property type="EnumU8" name="m_style" value="Regular"/>
                                                         <Property type="String" name="m_text" value="FPS"/>
                                                     </Object>
@@ -326,7 +327,7 @@
                                                         <Property type="Float3" name="m_offset" flags="Optional" x="0" y="14" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
                                                         <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
-                                                        <Property type="EnumU8" name="m_font" flags="AlphabeticalOrder" value="Rowndies"/>
+                                                        <Property type="EnumU8" name="m_font" value="Rowndies"/>
                                                         <Property type="EnumU8" name="m_style" value="Regular"/>
                                                         <Property type="String" name="m_text" value="ms"/>
                                                     </Object>
@@ -354,10 +355,10 @@
                                                         <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
                                                         <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
-                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="42" z="0"/>
+                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="32" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
                                                         <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
-                                                        <Property type="EnumU8" name="m_font" flags="AlphabeticalOrder" value="Rowndies"/>
+                                                        <Property type="EnumU8" name="m_font" value="Rowndies"/>
                                                         <Property type="EnumU8" name="m_style" value="Regular"/>
                                                         <Property type="String" name="m_text" value="CPU"/>
                                                     </Object>
@@ -385,10 +386,10 @@
                                                         <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
                                                         <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
-                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="56" z="0"/>
+                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="46" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
                                                         <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
-                                                        <Property type="EnumU8" name="m_font" flags="AlphabeticalOrder" value="Rowndies"/>
+                                                        <Property type="EnumU8" name="m_font" value="Rowndies"/>
                                                         <Property type="EnumU8" name="m_style" value="Regular"/>
                                                         <Property type="String" name="m_text" value="ms"/>
                                                     </Object>
@@ -416,10 +417,10 @@
                                                         <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
                                                         <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
-                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="84" z="0"/>
+                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="64" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
                                                         <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
-                                                        <Property type="EnumU8" name="m_font" flags="AlphabeticalOrder" value="Rowndies"/>
+                                                        <Property type="EnumU8" name="m_font" value="Rowndies"/>
                                                         <Property type="EnumU8" name="m_style" value="Regular"/>
                                                         <Property type="String" name="m_text" value="GPU"/>
                                                     </Object>
@@ -447,10 +448,10 @@
                                                         <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
                                                         <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
-                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="98" z="0"/>
+                                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="78" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
                                                         <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
-                                                        <Property type="EnumU8" name="m_font" flags="AlphabeticalOrder" value="Rowndies"/>
+                                                        <Property type="EnumU8" name="m_font" value="Rowndies"/>
                                                         <Property type="EnumU8" name="m_style" value="Regular"/>
                                                         <Property type="String" name="m_text" value="ms"/>
                                                     </Object>
@@ -482,22 +483,6 @@
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
-                                    <Object class="DynamicPropertyList">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New UITextComponent"/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="431654339"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                        <Property type="ObjectPtrVector" name="m_properties">
-                                            <Object class="DynamicPropertyString">
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_text"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="1502769601"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
-                                                <Property type="String" name="m_value" flags="Optional" value="Pablo"/>
-                                            </Object>
-                                        </Property>
-                                    </Object>
                                     <Object class="DynamicPropertyList">
                                         <Property type="String" name="m_name" flags="NotVisible" value="New UIImageComponent"/>
                                         <Property type="Uint32" name="m_uid" flags="" value="1247048370"/>
@@ -538,30 +523,6 @@
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                     <Object class="DynamicPropertyList">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New UITextComponent"/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="431654339"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                        <Property type="ObjectPtrVector" name="m_properties">
-                                            <Object class="DynamicPropertyString">
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_text"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="3702819663"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
-                                                <Property type="String" name="m_value" flags="Optional" value="Roméo"/>
-                                            </Object>
-                                            <Object class="DynamicPropertyFloat3">
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_offset"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="3818514852"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="false"/>
-                                                <Property type="Float3" name="m_value" flags="Optional" x="148" y="16" z="0"/>
-                                            </Object>
-                                        </Property>
-                                    </Object>
-                                    <Object class="DynamicPropertyList">
                                         <Property type="String" name="m_name" flags="NotVisible" value="New UIImageComponent"/>
                                         <Property type="Uint32" name="m_uid" flags="" value="1247048370"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
@@ -574,22 +535,6 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
                                                 <Property type="String" name="m_value" flags="Optional" value="data/Textures/Romeo/Romeo_Logo.png"/>
-                                            </Object>
-                                        </Property>
-                                    </Object>
-                                    <Object class="DynamicPropertyList">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New UICanvasComponent"/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="2069112256"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                        <Property type="ObjectPtrVector" name="m_properties">
-                                            <Object class="DynamicPropertyU8">
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_canvas.m_viewIndex"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="165065989"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
-                                                <Property type="Uint8" name="m_value" flags="Optional" value="1"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -617,22 +562,6 @@
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_dynamicProperties">
                                     <Object class="DynamicPropertyList">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New UITextComponent"/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="431654339"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                        <Property type="ObjectPtrVector" name="m_properties">
-                                            <Object class="DynamicPropertyString">
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_text"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="2275027812"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
-                                                <Property type="String" name="m_value" flags="Optional" value="Benualdo"/>
-                                            </Object>
-                                        </Property>
-                                    </Object>
-                                    <Object class="DynamicPropertyList">
                                         <Property type="String" name="m_name" flags="NotVisible" value="New UIImageComponent"/>
                                         <Property type="Uint32" name="m_uid" flags="" value="1247048370"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
@@ -645,22 +574,6 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
                                                 <Property type="String" name="m_value" flags="Optional" value="data/Textures/Benualdo/Benualdo_Logo.png"/>
-                                            </Object>
-                                        </Property>
-                                    </Object>
-                                    <Object class="DynamicPropertyList">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New UICanvasComponent"/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="2069112256"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                        <Property type="ObjectPtrVector" name="m_properties">
-                                            <Object class="DynamicPropertyU8">
-                                                <Property type="String" name="m_name" flags="NotVisible" value="m_canvas.m_viewIndex"/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="1233312099"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
-                                                <Property type="Uint8" name="m_value" flags="Optional" value="2"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -2389,7 +2302,7 @@
                         <Property type="String" name="m_name" value="Objects"/>
                         <Property type="Uint32" name="m_uid" flags="" value="1002808616"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -2624,7 +2537,7 @@
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="KatanaRomeo"/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="3522727584"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -2636,7 +2549,7 @@
                                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                                             <Object class="PrefabResource">
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="4120659821"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/KatanaRomeo.prefab"/>
@@ -2652,7 +2565,7 @@
                         <Property type="String" name="m_name" value="Players"/>
                         <Property type="Uint32" name="m_uid" flags="" value="2277101686"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>

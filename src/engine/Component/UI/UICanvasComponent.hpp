@@ -17,8 +17,8 @@ namespace vg::engine
         registerPropertyEx(UICanvasComponent, m_canvas.m_viewportIndex, "Viewport", PropertyFlags::ReadOnly);
         setPropertyDescription(UICanvasComponent, m_canvas.m_viewportIndex, "Target viewport index");
 
-        registerOptionalProperty(UICanvasComponent, m_canvas.m_useViewIndex, m_canvas.m_viewIndex, "View");
-        setPropertyDescription(UICanvasComponent, m_canvas.m_viewIndex, "Render UI to a specific view. Full viewport is used if not specified");
+        registerOptionalPropertyEnumBitfield(UICanvasComponent, m_canvas.m_useViewMask, gfx::ViewMask, m_canvas.m_viewMask, "Views");
+        setPropertyDescription(UICanvasComponent, m_canvas.m_viewMask, "Select the views to render UI to. Disable to render fullscreen.");
 
         registerProperty(UICanvasComponent, m_canvas.m_resolution, "Resolution");
         setPropertyDescription(UICanvasComponent, m_canvas.m_resolution, "Reference resolution of UI elements");
@@ -45,7 +45,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void UICanvasComponent::SetViewIndex(core::uint _viewIndex)
     {
-        m_canvas.m_viewIndex = _viewIndex;
+        m_canvas.m_viewMask = (gfx::ViewMask)(1<<_viewIndex);
     }
 
     //--------------------------------------------------------------------------------------

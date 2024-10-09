@@ -1526,7 +1526,7 @@ namespace vg::core
                                                         {
                                                             for (uint i = 0; i < prop->GetEnumCount(); ++i)
                                                             {
-                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i)))
+                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i).c_str()))
                                                                 {
                                                                     IResource * pResource = ref ? *prop->GetPropertyResourcePtr(_object, i) : prop->GetPropertyResource(_object, i);
                                                                     serializeResourceFromXML(pResource, xmlPropElemValue);
@@ -1753,7 +1753,7 @@ namespace vg::core
                                                         {
                                                             for (uint i = 0; i < prop->GetEnumCount(); ++i)
                                                             {
-                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i)))
+                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i).c_str()))
                                                                 {
                                                                     if (const XMLAttribute * xmlValue = xmlPropElemValue->FindAttribute("value"))
                                                                     {
@@ -1823,7 +1823,7 @@ namespace vg::core
                                                         {
                                                             for (uint i = 0; i < prop->GetEnumCount(); ++i)
                                                             {
-                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i)))
+                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i).c_str()))
                                                                 {
                                                                     u32 * pUint = prop->GetPropertyUintN(_object, componentCount, i);
                                                                     serializeUintNFromXML(pUint, xmlPropElemValue, componentCount);
@@ -1874,7 +1874,7 @@ namespace vg::core
                                                         {
                                                             for (uint i = 0; i < prop->GetEnumCount(); ++i)
                                                             {
-                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i)))
+                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i).c_str()))
                                                                 {
                                                                     i32 * pInt = prop->GetPropertyIntN(_object, componentCount, i);
                                                                     serializeIntNFromXML(pInt, xmlPropElemValue, componentCount);
@@ -1925,7 +1925,7 @@ namespace vg::core
                                                         {
                                                             for (uint i = 0; i < prop->GetEnumCount(); ++i)
                                                             {
-                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i)))
+                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i).c_str()))
                                                                 {
                                                                     float * pFloat = prop->GetPropertyFloatN(_object, componentCount, i);
                                                                     serializeFloatNFromXML(pFloat, xmlPropElemValue, componentCount);
@@ -1974,7 +1974,7 @@ namespace vg::core
                                                         {
                                                             for (uint i = 0; i < prop->GetEnumCount(); ++i)
                                                             {
-                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i)))
+                                                                if (!strcmp(xmlValueName->Value(), prop->GetEnumName(i).c_str()))
                                                                 {
                                                                     serializeIntegerPropertyFromXML<u8>(_object, prop, xmlPropElemValue, i);
                                                                     break;
@@ -2161,7 +2161,7 @@ namespace vg::core
                             XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
                             {
                                 auto enumValueName = prop->GetEnumName(i);
-                                xmlPropElemChild->SetAttribute("name", enumValueName);
+                                xmlPropElemChild->SetAttribute("name", enumValueName.c_str());
                                 serializeIntegerPropertyToXML<u8>(_object, prop, xmlPropElemChild, i);
                             }
                             xmlPropElem->InsertEndChild(xmlPropElemChild);
@@ -2209,7 +2209,7 @@ namespace vg::core
                             XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
                             {
                                 auto enumValueName = prop->GetEnumName(i);
-                                xmlPropElemChild->SetAttribute("name", enumValueName);
+                                xmlPropElemChild->SetAttribute("name", enumValueName.c_str());
                                 IObject * pResource = ref ? *prop->GetPropertyResourcePtr(_object, i) : prop->GetPropertyResource(_object, i);
                                 SerializeToXML(pResource, _xmlDoc, xmlPropElemChild);
                             }
@@ -2305,7 +2305,7 @@ namespace vg::core
                                 XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
                                 {
                                     auto enumValueName = prop->GetEnumName(i);
-                                    xmlPropElemChild->SetAttribute("name", enumValueName);
+                                    xmlPropElemChild->SetAttribute("name", enumValueName.c_str());
 
                                     xmlPropElemChild->SetAttribute("value", pString->c_str());
                                 }
@@ -2369,7 +2369,7 @@ namespace vg::core
                             XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
                             {
                                 auto enumValueName = prop->GetEnumName(i);
-                                xmlPropElemChild->SetAttribute("name", enumValueName);
+                                xmlPropElemChild->SetAttribute("name", enumValueName.c_str());
                                 const uint * value = prop->GetPropertyUintN(_object, componentCount, i);
                                 serializeUintNToXML(xmlPropElemChild, value, componentCount);
                             }
@@ -2416,7 +2416,7 @@ namespace vg::core
                             XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
                             {
                                 auto enumValueName = prop->GetEnumName(i);
-                                xmlPropElemChild->SetAttribute("name", enumValueName);
+                                xmlPropElemChild->SetAttribute("name", enumValueName.c_str());
                                 const i32 * value = prop->GetPropertyIntN(_object, componentCount, i);
                                 serializeIntNToXML(xmlPropElemChild, value, componentCount);
                             }
@@ -2463,7 +2463,7 @@ namespace vg::core
                             XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Value");
                             {
                                 auto enumValueName = prop->GetEnumName(i);
-                                xmlPropElemChild->SetAttribute("name", enumValueName);
+                                xmlPropElemChild->SetAttribute("name", enumValueName.c_str());
                                 const float * value = prop->GetPropertyFloatN(_object, componentCount, i);
                                 serializeFloatNToXML(xmlPropElemChild, value, componentCount);
                             }
@@ -2621,7 +2621,7 @@ namespace vg::core
             const auto val = xmlValue->Value();
             for (uint i = 0; i < _prop->GetEnumCount(); ++i)
             {
-                if (!strcmp(val, _prop->GetEnumName(i)))
+                if (!strcmp(val, _prop->GetEnumName(i).c_str()))
                     *pEnum = (T) (scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(i) : _prop->GetUnsignedEnumValue(i));
             }
         }
@@ -2636,7 +2636,7 @@ namespace vg::core
             T temp = (T)(scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(i) : _prop->GetUnsignedEnumValue(i));
             if (*pEnum == temp)
             {
-                _xmlElem->SetAttribute("value", _prop->GetEnumName(i));
+                _xmlElem->SetAttribute("value", _prop->GetEnumName(i).c_str());
                 break;
             }
         }
@@ -2672,7 +2672,7 @@ namespace vg::core
                     auto name = _prop->GetEnumName(e);
                     auto value = scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(e) : _prop->GetUnsignedEnumValue(e);
 
-                    if (!strcmp(name, temp))
+                    if (!strcmp(name.c_str(), temp))
                     {
                         enumVal |= value;
                         break;

@@ -42,8 +42,8 @@
                                 <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
                                 <Property type="EnumU8" name="m_canvas.m_viewportTarget" flags="ReadOnly" value="Game"/>
                                 <Property type="Uint8" name="m_canvas.m_viewportIndex" flags="ReadOnly" value="0"/>
-                                <Property type="Bool" name="m_canvas.m_useViewIndex" flags="NotVisible" value="true"/>
-                                <Property type="Uint8" name="m_canvas.m_viewIndex" flags="Optional" value="0"/>
+                                <Property type="Bool" name="m_canvas.m_useViewMask" flags="NotVisible" value="true"/>
+                                <Property type="EnumFlagsU32" name="m_canvas.m_viewMask" flags="" value="View_0|View_1|View_2|View_3|View_4|View_5|View_6|View_7|View_8|View_9|View_10|View_11|View_12|View_13|View_14|View_15"/>
                                 <Property type="Uint2" name="m_canvas.m_resolution" x="1280" y="720"/>
                                 <Property type="EnumU8" name="m_canvas.m_canvasType" value="CanvasType_2D"/>
                             </Object>

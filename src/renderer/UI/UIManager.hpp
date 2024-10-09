@@ -43,16 +43,20 @@ namespace vg::renderer
         {
             if (auto * viewport = renderer->GetViewport(gfx::ViewportID(canvas->m_viewportTarget, canvas->m_viewportIndex)))
             {
-                if (canvas->m_useViewIndex)
+                if (canvas->m_useViewMask)
                 {
                     const auto & views = viewport->GetViewIDs();
-                    auto it = views.find(canvas->m_viewIndex);
-                    if (views.end() != it)
+                    for (const auto & pairs : views)
                     {
-                        if (auto * view = renderer->GetView(it->second))
+                        const auto index = pairs.first;
+
+                        if (asBool(((gfx::ViewMask)(1 << index)) & canvas->m_viewMask))
                         {
-                            if (view->IsRender()  && view->GetWorld() == _world)
-                                view->GetUIRenderer()->Add(_elem);
+                            if (auto * view = renderer->GetView(pairs.second))
+                            {
+                                if (view->IsRender() && view->GetWorld() == _world)
+                                    view->GetUIRenderer()->Add(_elem);
+                            }
                         }
                     }
                 }

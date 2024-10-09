@@ -48,7 +48,7 @@ namespace vg::core
         const char *                    GetEnumTypeName                 () const final override;
         u32                             GetEnumCount                    () const final override;
         void                            SetEnumName                     (uint index, core::string _name) final override;
-        const char *                    GetEnumName                     (uint index) const final override;
+        const core::string &            GetEnumName                     (uint index) const final override;
         u64                             GetUnsignedEnumValue            (uint index) const final override;
         i64                             GetSignedEnumValue              (uint index) const final override;
 

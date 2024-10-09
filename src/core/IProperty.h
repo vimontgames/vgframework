@@ -135,7 +135,7 @@ namespace vg::core
         virtual const char *                    GetEnumTypeName                 () const = 0;
         virtual u32                             GetEnumCount                    () const = 0;
         virtual void                            SetEnumName                     (uint index, core::string _name) = 0;
-        virtual const char *                    GetEnumName                     (uint index) const = 0;
+        virtual const core::string &            GetEnumName                     (uint index) const = 0;
         virtual u64                             GetUnsignedEnumValue            (uint index) const = 0;
         virtual i64                             GetSignedEnumValue              (uint index) const = 0;
 

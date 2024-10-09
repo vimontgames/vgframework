@@ -265,9 +265,9 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const char * Property::GetEnumName(uint index) const
+    const core::string & Property::GetEnumName(uint index) const
     {
-        return enums[index].name.c_str();
+        return enums[index].name;
     }
 
     //--------------------------------------------------------------------------------------

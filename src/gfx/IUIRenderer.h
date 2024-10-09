@@ -75,8 +75,8 @@ namespace vg::gfx
         ViewportTarget          m_viewportTarget    = ViewportTarget::Game;
         ViewportIndex           m_viewportIndex     = (ViewportIndex)0;
         CanvasType              m_canvasType        = CanvasType::CanvasType_2D;
-        bool                    m_useViewIndex      = true;
-        core::u8                m_viewIndex         = 0;
+        bool                    m_useViewMask       = true;
+        gfx::ViewMask           m_viewMask          = gfx::ViewMask_All;
         core::uint2             m_resolution        = core::uint2(1280, 720);
     };
 
