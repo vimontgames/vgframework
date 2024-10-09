@@ -127,6 +127,8 @@ namespace vg::engine
     void AnimationComponent::OnEnable()
     {
         super::OnEnable();
+        m_primaryIndex = -1;
+        m_secondaryIndex = -1;
         m_animations.OnEnable();
     }
 
