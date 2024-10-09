@@ -2,7 +2,7 @@
 
 #include "core/IPlugin.h"
 #include "Renderer_consts.h"
-#include "gfx/IView.h"      // TODO: remove
+#include "gfx/IView.h"      
 #include "gfx/IViewport.h"
 
 namespace vg
@@ -40,6 +40,7 @@ namespace vg
         class IRendererOptions;
         class ILightInstance;
         class ILightDesc;
+        class IUIManager;
         
         struct RendererCreationParams;
 
@@ -74,7 +75,7 @@ namespace vg
             virtual const core::vector<gfx::IViewport*>&GetViewports            (gfx::ViewportTarget _target) const = 0;
 
             // TODO: remove or move to IViewport (?)
-            virtual gfx::IView *                        CreateView              (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags = (gfx::IView::Flags)0) = 0;
+            virtual gfx::IView *                        CreateView              (gfx::CreateViewParams _params, const core::string & _name, gfx::ViewFlags _flags = (gfx::ViewFlags)0) = 0;
             virtual gfx::ViewID                         AddView                 (gfx::IView * _view) = 0;
             virtual void                                RemoveView              (gfx::ViewID _viewID) = 0;
             virtual gfx::ViewIndex                      GetFreeViewIndex        (gfx::ViewTarget _target) const = 0;
@@ -104,6 +105,7 @@ namespace vg
             virtual gfx::IShaderManager *               GetShaderManager        () const = 0;
             virtual IPicking *                          GetPicking              () const = 0;
             virtual IDebugDraw *                        GetDebugDraw            () const = 0;
+            virtual IUIManager *                        GetUIManager            () const = 0;
 
             virtual bool                                cookMeshModel           (const core::string & _file) = 0;
             virtual IMeshModel *                        loadMeshModel           (const core::string & _file) = 0;

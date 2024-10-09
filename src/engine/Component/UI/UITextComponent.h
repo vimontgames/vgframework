@@ -15,8 +15,8 @@ namespace vg::engine
         void    Update      (const Context & _context) final override;
 
     private:
-        renderer::Font  m_font = renderer::Font::UbuntuMono;
+        renderer::Font      m_font = renderer::Font::UbuntuMono;
         renderer::FontStyle m_style = renderer::FontStyle::Regular;
-        core::string    m_text;
+        core::string        m_text;
     };
 }

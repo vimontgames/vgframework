@@ -1,10 +1,4 @@
 #include "UICanvasComponent.h"
-#include "editor/Editor_Consts.h"
-#include "core/IGameObject.h"
-#include "gfx/IUIRenderer.h"
-#include "renderer/IRenderer.h"
-#include "engine/Engine.h"
-#include "engine/EngineOptions.h"
 
 using namespace vg::core;
 
@@ -28,6 +22,9 @@ namespace vg::engine
 
         registerProperty(UICanvasComponent, m_canvas.m_resolution, "Resolution");
         setPropertyDescription(UICanvasComponent, m_canvas.m_resolution, "Reference resolution of UI elements");
+
+        registerPropertyEnum(UICanvasComponent, gfx::CanvasType, m_canvas.m_canvasType, "Type");
+        setPropertyDescription(UICanvasComponent, m_canvas.m_canvasType, "Use either 2D screen positions or 3D world positions for the canvas and its contents");
 
         return true;
     }
@@ -55,7 +52,8 @@ namespace vg::engine
     void UICanvasComponent::Update(const Context & _context)
     {
         m_canvas.m_pickingID = m_pickingID;
-        m_canvas.m_matrix = _context.m_gameObject->GetGlobalMatrix();
+        m_canvas.m_matrix = getMatrix();
+        m_canvas.m_offset = m_offset;
         m_canvas.m_size = m_size;
         m_canvas.m_alignX = m_horizontal;
         m_canvas.m_alignY = m_vertical;
@@ -64,10 +62,6 @@ namespace vg::engine
 
         m_canvas.m_resolution = m_canvas.m_resolution;
 
-        if (auto * gui = getGUI(_context.m_world))
-        {
-            auto desc = gfx::UIItem(m_pickingID, getMatrix(), m_size, m_horizontal, m_vertical, getColor(), m_UIFlags);
-            gui->AddCanvas(&m_canvas, desc);
-        }
+        getUIManager()->AddCanvas(&m_canvas, getUIItem(), _context.m_world);
     }
 }

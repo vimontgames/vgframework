@@ -1,6 +1,6 @@
 #include "FinalBlitPass.h"
 #include "shaders/system/rootConstants2D.hlsli"
-#include "renderer/View/UIRenderer.h"
+#include "renderer/UI/UIRenderer.h"
 #include "shaders/driver/driver.hlsl.h"
 
 namespace vg::renderer

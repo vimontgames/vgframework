@@ -1,7 +1,13 @@
 #include "engine/Precomp.h"
 #include "UIComponent.h"
-#include "renderer/IPicking.h"
+#include "core/IGameObject.h"
 #include "gfx/IUIRenderer.h"
+#include "gfx/ITexture.h"
+#include "renderer/IRenderer.h"
+#include "renderer/IUIManager.h"
+#include "renderer/IPicking.h"
+#include "engine/Engine.h"
+#include "editor/Editor_Consts.h"
 
 #if !VG_ENABLE_INLINE
 #include "UIComponent.inl"
@@ -46,8 +52,9 @@ namespace vg::engine
         m_useColor(false),
         m_color(1, 1, 1, 1)
     {
-        auto * picking = Engine::get()->GetRenderer()->GetPicking();
-        m_pickingID = picking->CreatePickingID(this);
+        auto * renderer = Engine::get()->GetRenderer();
+        m_pickingID = renderer->GetPicking()->CreatePickingID(this);
+        m_uiManager = renderer->GetUIManager();
     }
 
     //--------------------------------------------------------------------------------------
@@ -58,51 +65,16 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IUIRenderer * UIComponent::getGUI(const core::IWorld * _world) const
-    {
-        auto * renderer = Engine::get()->GetRenderer();
-        auto * canvas = getCanvas();
-
-        if (canvas)
-        {
-            if (auto * viewport = renderer->GetViewport(gfx::ViewportID(canvas->m_viewportTarget, canvas->m_viewportIndex)))
-            {
-                if (canvas->m_useViewIndex)
-                {
-                    const auto & views = viewport->GetViewIDs();
-                    auto it = views.find(canvas->m_viewIndex);
-                    if (views.end() != it)
-                    {
-                        if (auto * view = renderer->GetView(it->second))
-                        {
-                            if (view->IsRender() && view->GetWorld() == _world)
-                                return view->GetUIRenderer();
-                        }
-                    }
-                }
-                else
-                {
-                    if (auto * uiRenderer = viewport->GetUIRenderer())
-                        return uiRenderer;
-                }
-
-                // Prefab preview mode
-                if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Editor, _world))
-                {
-                    if (view->IsRender() && view->GetWorld() == _world && asBool(gfx::IView::Flags::Prefab & view->GetFlags()))
-                        return view->GetUIRenderer();
-                }
-            }            
-        }
-
-        return nullptr;
-    }
-
-    //--------------------------------------------------------------------------------------
     const gfx::UICanvas * UIComponent::getCanvas() const
     {
         if (auto * canvas = GetGameObject()->GetComponentInParentsT<UICanvasComponent>())
             return &canvas->getGfxCanvas();
         return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::UIItem UIComponent::getUIItem() const
+    {
+        return gfx::UIItem(m_pickingID, getMatrix(), getOffset(), m_size, m_horizontal, m_vertical, getColor(), m_UIFlags);
     }
 }

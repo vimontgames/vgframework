@@ -51,6 +51,9 @@
     <ClCompile Include="Viewport\Viewport.cpp">
       <Filter>Viewport</Filter>
     </ClCompile>
+    <ClCompile Include="UI\UI.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -436,6 +439,22 @@
     <ClInclude Include="Importer\BodyPartFlags.h">
       <Filter>Importer</Filter>
     </ClInclude>
+    <ClInclude Include="IUIManager.h" />
+    <ClInclude Include="UI\UIRenderer.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIRenderer.hpp">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIManager.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIManager.hpp">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIElement.h">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -602,6 +621,9 @@
     </Filter>
     <Filter Include="Pass\ImGui\Extensions\Font">
       <UniqueIdentifier>{3bb83f65-0c3f-470f-928f-9a8fe5d6b449}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{171b5c22-1141-4f6e-8070-9a2074953dd4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

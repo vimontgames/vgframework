@@ -64,7 +64,7 @@ namespace vg::renderer
         const core::vector<gfx::IViewport *> &  GetViewports                (gfx::ViewportTarget _target) const final override;
 
         // TODO: remove
-        gfx::IView *                            CreateView                  (gfx::CreateViewParams _params, const core::string & _name, gfx::IView::Flags _flags = (gfx::IView::Flags)0) final override;
+        gfx::IView *                            CreateView                  (gfx::CreateViewParams _params, const core::string & _name, gfx::ViewFlags _flags = (gfx::ViewFlags)0) final override;
         gfx::ViewID                             AddView                     (gfx::IView * _view) final override;
         void                                    RemoveView                  (gfx::ViewID _viewID) final override;
         gfx::ViewIndex                          GetFreeViewIndex            (gfx::ViewTarget _target) const final override;
@@ -90,6 +90,7 @@ namespace vg::renderer
         gfx::IShaderManager *                   GetShaderManager            () const final override;
         IPicking *                              GetPicking                  () const final override;
         IDebugDraw *                            GetDebugDraw                () const final override;
+        IUIManager *                            GetUIManager                () const final override;
 
         bool                                    cookMeshModel               (const core::string & _file) final override;
         IMeshModel *                            loadMeshModel               (const core::string & _file) final override;

@@ -12,16 +12,18 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     VG_INLINE core::float4x4 UIComponent::getMatrix() const
     {
-        core::float4x4 matrix = GetGameObject()->GetGlobalMatrix();
-
-        matrix[3].xyz += getOffset();
-
-        return matrix;
+        return GetGameObject()->GetGlobalMatrix();
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE core::float4 UIComponent::getColor() const
     {
         return m_useColor ? m_color : core::float4(1,1,1,1);
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE renderer::IUIManager * UIComponent::getUIManager() const
+    {
+        return m_uiManager;
     }
 }

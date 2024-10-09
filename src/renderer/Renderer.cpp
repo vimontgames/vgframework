@@ -40,6 +40,7 @@
 #include "renderer/RayTracing/RayTracingManager.h"
 #include "renderer/Instance/Light/Directional/DirectionalLightInstance.h"
 #include "renderer/Instance/Light/Omni/OmniLightInstance.h"
+#include "renderer/UI/UIManager.h"
 
 #if !VG_ENABLE_INLINE
 #include "Renderer.inl"
@@ -197,8 +198,11 @@ namespace vg::renderer
 
         registerShaders();
 
-        // Debug draw (singleton)
-        DebugDraw * dbgDraw = new DebugDraw();
+        // Create Debug draw singleton
+        new DebugDraw();
+
+        // Create UIManager singleton
+        new UIManager();
 
         // Create passes not bound to a View
         m_gpuDebugUpdatePass = new GPUDebugUpdatePass();
@@ -271,6 +275,9 @@ namespace vg::renderer
 
         RendererOptions * options = RendererOptions::get();
         VG_SAFE_DELETE(options);
+
+        UIManager * uiManager = (UIManager*)GetUIManager();
+        VG_SAFE_RELEASE(uiManager);
 
         DebugDraw * dbgDraw = getDebugDraw();
         VG_SAFE_RELEASE(dbgDraw);
@@ -697,7 +704,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IView * Renderer::CreateView(gfx::CreateViewParams _params, const core::string & _name, IView::Flags _flags)
+    gfx::IView * Renderer::CreateView(gfx::CreateViewParams _params, const core::string & _name, ViewFlags _flags)
     {
         View * view = nullptr;
 
@@ -1051,6 +1058,12 @@ namespace vg::renderer
     DebugDraw * Renderer::getDebugDraw() const
     {
         return DebugDraw::get();
+    }
+
+    //--------------------------------------------------------------------------------------
+    IUIManager * Renderer::GetUIManager() const
+    {
+        return UIManager::get();
     }
 
     //--------------------------------------------------------------------------------------

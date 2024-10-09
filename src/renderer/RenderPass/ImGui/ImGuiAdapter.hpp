@@ -628,7 +628,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::PushFont(vg::renderer::Font _font, vg::renderer::FontStyle _style)
     {
-        ImGui::PushFont(GetFont(_font, _style));
+        auto * font = GetFont(_font, _style);
+        ImGui::PushFont(font);
         m_currentFont = _font;
         m_currentFontStyle = _style;
     }

@@ -1,25 +1,25 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    VG_INLINE void View::setFlags(Flags _flagsToSet, Flags _flagsToRemove)
+    VG_INLINE void View::setFlags(gfx::ViewFlags _flagsToSet, gfx::ViewFlags _flagsToRemove)
     {
-        m_flags = (Flags)((std::underlying_type<Flags>::type(m_flags) & ~std::underlying_type<Flags>::type(_flagsToRemove)) | (std::underlying_type<Flags>::type(_flagsToSet)));
+        m_flags = (m_flags & ~_flagsToRemove) | _flagsToSet;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void View::setFlag(Flags _flag, bool _value)
+    VG_INLINE void View::setFlag(gfx::ViewFlags _flag, bool _value)
     {
-        setFlags(_value ? _flag : (Flags)0x0, !_value ? _flag : (Flags)0x0);
+        setFlags(_value ? _flag : (gfx::ViewFlags)0x0, !_value ? _flag : (gfx::ViewFlags)0x0);
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE View::Flags View::getFlags() const
+    VG_INLINE gfx::ViewFlags View::getFlags() const
     {
         return m_flags;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE bool View::testFlag(Flags _flag) const
+    VG_INLINE bool View::testFlag(gfx::ViewFlags _flag) const
     {
         return asBool(_flag & getFlags());
     }
@@ -27,13 +27,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     VG_INLINE void View::setIsAdditionalView(bool _isAdditionalView) 
     { 
-        setFlag(Flags::Additional, _isAdditionalView);
+        setFlag(gfx::ViewFlags::Additional, _isAdditionalView);
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE bool View::isAdditionalView() const 
     { 
-        return testFlag(Flags::Additional);
+        return testFlag(gfx::ViewFlags::Additional);
     }
 
     //--------------------------------------------------------------------------------------

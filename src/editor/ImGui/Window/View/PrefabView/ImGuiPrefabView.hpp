@@ -142,9 +142,9 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IView::Flags ImGuiPrefabView::GetViewFlags() const
+    gfx::ViewFlags ImGuiPrefabView::GetViewFlags() const
     {
-        return super::GetViewFlags() | gfx::IView::Flags::Prefab | gfx::IView::Flags::Render;
+        return super::GetViewFlags() | gfx::ViewFlags::Prefab | gfx::ViewFlags::Render;
     }
 
     //--------------------------------------------------------------------------------------

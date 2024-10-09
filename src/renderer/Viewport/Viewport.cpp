@@ -2,7 +2,7 @@
 #include "Viewport.h"
 #include "renderer/View/View.h"
 #include "renderer/Renderer.h"
-#include "renderer/View/UIRenderer.h"
+#include "renderer/UI/UIRenderer.h"
 #include "gfx/FrameGraph/FrameGraph.h"
 
 using namespace vg::core;

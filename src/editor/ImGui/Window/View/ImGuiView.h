@@ -36,7 +36,7 @@ namespace vg::editor
         virtual bool                    ShowTitlebarMenu    () const { return false;};
         virtual void                    DrawTitlebarMenu    () {};
 
-        virtual gfx::IView::Flags       GetViewFlags        () const; 
+        virtual gfx::ViewFlags       GetViewFlags        () const; 
         virtual core::IWorld*           GetWorld            () const;
         virtual void                    OnCloseWindow       ();
         virtual bool                    UpdateScene         () { return true; };

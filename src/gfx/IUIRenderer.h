@@ -5,9 +5,10 @@
 // This is not ideal, maybe those values should be part of the interface or just passe opaque index type?
 namespace vg::renderer
 {
-    using PickingID = core::uint;
+    struct UIElement;
     enum class Font : core::u8;
     enum class FontStyle : core::u8;
+    using PickingID = core::uint;
 }
 
 namespace vg::gfx
@@ -31,15 +32,21 @@ namespace vg::gfx
         KeepAspectRatio = 0x00000002
     );    
 
+    vg_enum_class(CanvasType, core::u8,
+        CanvasType_2D = 0x00000002,
+        CanvasType_3D = 0x00000003
+    );
+
     struct UIItem
     {
         UIItem()
         {
         }
 
-        UIItem(renderer::PickingID _pickingID, const core::float4x4 & _matrix, const core::uint2 & _size, HorizontalAligment _alignX, VerticalAligment _alignY, const core::float4 & _color, UIItemFlags _flags) :
+        UIItem(renderer::PickingID _pickingID, const core::float4x4 & _matrix, const core::float3 & _offset, const core::uint2 & _size, HorizontalAligment _alignX, VerticalAligment _alignY, const core::float4 & _color, UIItemFlags _flags) :
             m_pickingID(_pickingID),
             m_matrix(_matrix),
+            m_offset(_offset),
             m_size(_size),
             m_alignX(_alignX),
             m_alignY(_alignY),
@@ -51,6 +58,7 @@ namespace vg::gfx
 
         renderer::PickingID     m_pickingID         = (renderer::PickingID)0;
         core::float4x4          m_matrix            = core::float4x4::identity();
+        core::float3            m_offset            = core::float3(0,0,0);
         core::uint2             m_size              = core::uint2(16, 16);
         HorizontalAligment      m_alignX            = HorizontalAligment::Left;
         VerticalAligment        m_alignY            = VerticalAligment::Top;
@@ -66,6 +74,7 @@ namespace vg::gfx
         
         ViewportTarget          m_viewportTarget    = ViewportTarget::Game;
         ViewportIndex           m_viewportIndex     = (ViewportIndex)0;
+        CanvasType              m_canvasType        = CanvasType::CanvasType_2D;
         bool                    m_useViewIndex      = true;
         core::u8                m_viewIndex         = 0;
         core::uint2             m_resolution        = core::uint2(1280, 720);
@@ -76,9 +85,7 @@ namespace vg::gfx
     public:
         virtual ~IUIRenderer() {};
 
-        virtual void AddCanvas          (const UICanvas * _canvas, const UIItem & _desc) = 0;
-        virtual void AddText            (const UICanvas * _canvas, const UIItem & _desc, const core::string & _text, renderer::Font _font, renderer::FontStyle _style) = 0;
-        virtual void AddImage           (const UICanvas * _canvas, const UIItem & _desc, const gfx::ITexture * _texture) = 0;
+        virtual void Add                (const renderer::UIElement & _desc) = 0;
 
         virtual void Clear              () = 0;
 

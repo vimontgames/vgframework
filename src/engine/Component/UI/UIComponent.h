@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Component/Component.h"
+#include "gfx/IUIRenderer.h"
 
 namespace vg::gfx
 {
@@ -14,6 +15,7 @@ namespace vg::gfx
 
 namespace vg::renderer
 {
+    class IUIManager;
     using PickingID = core::uint;
 }
 
@@ -27,28 +29,27 @@ namespace vg::engine
         UIComponent(const core::string & _name, core::IObject * _parent);
         ~UIComponent();
 
-        VG_INLINE core::float3      getOffset   () const;
-        VG_INLINE core::float4x4    getMatrix   () const; 
-        VG_INLINE core::float4      getColor    () const;
+        VG_INLINE core::float3              getOffset       () const;
+        VG_INLINE core::float4x4            getMatrix       () const; 
+        VG_INLINE core::float4              getColor        () const;
+        VG_INLINE renderer::IUIManager *    getUIManager    () const;
 
-        gfx::IUIRenderer *             getGUI      (const core::IWorld * _world) const;
-        const gfx::UICanvas *       getCanvas   () const;
+        const gfx::UICanvas *               getCanvas       () const;
+        gfx::UIItem                         getUIItem       () const;
+
+    private:
+        renderer::IUIManager *              m_uiManager     = nullptr;
 
     protected:
-        renderer::PickingID         m_pickingID;
-
-        gfx::UIItemFlags            m_UIFlags = (gfx::UIItemFlags)0x0;
-
-        gfx::HorizontalAligment     m_horizontal;
-        gfx::VerticalAligment       m_vertical;
-
-        core::uint2                 m_size = core::uint2(16, 16);
-
-        bool                        m_useOffset;
-        core::float3                m_offset;
-
-        bool                        m_useColor;
-        core::float4                m_color;
+        renderer::PickingID                 m_pickingID;
+        gfx::UIItemFlags                    m_UIFlags = (gfx::UIItemFlags)0x0;
+        gfx::HorizontalAligment             m_horizontal;
+        gfx::VerticalAligment               m_vertical;
+        core::uint2                         m_size = core::uint2(16, 16);
+        bool                                m_useOffset;
+        core::float3                        m_offset;
+        bool                                m_useColor;
+        core::float4                        m_color;
     };
 }
 

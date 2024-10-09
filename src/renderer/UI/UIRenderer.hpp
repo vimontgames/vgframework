@@ -1,9 +1,15 @@
 #include "UIRenderer.h"
-#include "renderer/RenderPass/ImGui/ImGui.h"
+#include "gfx/ITexture.h"
 #include "renderer/IImGuiAdapter.h"
-#include "Shaders/system/packing.hlsli"
-#include "editor/ImGui/Extensions/imGuiExtensions.h" 
+#include "renderer/Renderer.h"
+#include "renderer/Options/RendererOptions.h"
+#include "renderer/RenderPass/ImGui/ImGui.h"
 #include "renderer/RenderPass/ImGui/Extensions/FontStyle/ImGuiFontStyleExtension.h"
+#include "editor/ImGui/Extensions/imGuiExtensions.h" 
+#include "Shaders/system/packing.hlsli"
+#include "Shaders/system/picking.hlsli"
+
+using namespace vg::gfx;
 
 namespace vg::renderer
 {
@@ -22,21 +28,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void UIRenderer::AddCanvas(const gfx::UICanvas * _canvas, const UIItem & _desc)
+    void UIRenderer::Add(const UIElement & _desc)
     {
-        m_uiElements.push_back(UIElement(_canvas, _desc));
-    }
-
-    //--------------------------------------------------------------------------------------
-    void UIRenderer::AddText(const gfx::UICanvas * _canvas, const UIItem & _desc, const core::string & _text, Font _font, FontStyle _style)
-    {
-        m_uiElements.push_back(UIElement(_canvas, _desc, _text, _font, _style));
-    }
-
-    //--------------------------------------------------------------------------------------
-    void UIRenderer::AddImage(const gfx::UICanvas * _canvas, const UIItem & _desc, const gfx::ITexture * _texture)
-    {
-        m_uiElements.push_back(UIElement(_canvas, _desc, _texture));
+        m_uiElements.push_back(_desc);
     }
 
     //--------------------------------------------------------------------------------------
@@ -99,6 +93,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void UIRenderer::render()
     {
+        VG_PROFILE_CPU("UIRenderer");
+
         sort(m_uiElements.begin(), m_uiElements.end(), [](UIElement & a, UIElement & b)
         {
             return a.m_item.m_matrix[3].z > b.m_item.m_matrix[3].z;
@@ -122,15 +118,30 @@ namespace vg::renderer
 
         ImGui::PushClipRect(clipOffset, clipOffset + viewClipSize, true);
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0, 0, 0, 0));
+
+        float4x4 viewProj = float4x4::identity();
+        if (m_view)
+            viewProj = mul(m_view->GetViewInvMatrix(), m_view->GetProjectionMatrix());
   
         for (uint i = 0; i < m_uiElements.size(); ++i)
         {
-            const auto elem = m_uiElements[i];            
+            const auto & elem = m_uiElements[i];            
 
             UICanvas canvas;
+            float4 worldPos = (float4)0.0f;
+
             if (elem.m_canvas)
             {
                 canvas = *elem.m_canvas;
+
+                if (canvas.m_canvasType == CanvasType::CanvasType_3D)
+                {
+                    worldPos = mul(float4(canvas.m_matrix[3].xyz + canvas.m_offset.xyz, 1.0f), viewProj);
+                    worldPos.xyz = worldPos.xyz / worldPos.w;
+                    worldPos.xy = worldPos.xy * float2(0.5f, -0.5f) + float2(0.5f, 0.5f);
+                    worldPos.xy *= viewSizeInPixels.xy; 
+                    //VG_INFO("[UI] worldPos = (%.2f, %.2f)", (float)worldPos.x, (float)worldPos.y);
+                }
             }
             else
             {
@@ -148,58 +159,71 @@ namespace vg::renderer
             }                
 
             float2 winOffset = ImVec2ToFloat2(GImGui->CurrentWindow->Pos) + windowOffset;
-            float2 offset = canvas.m_matrix[3].xy + float2(1, 1);
+            float2 canvasOffset = canvas.m_matrix[3].xy + float2(1, 1);
 
             // Align canvas
-            switch (canvas.m_alignX)
+            if (canvas.m_canvasType == CanvasType::CanvasType_3D)
             {
-                default:
-                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(canvas.m_alignX);
-                    break;
-                
-                case HorizontalAligment::Left:
-                    offset.x += 0;
-                    break;
-                
-                case HorizontalAligment::Center:
-                    offset.x += viewSizeInPixels.x * 0.5f - canvasSizeInPixel.x * 0.5f;
-                    break;
-                
-                case HorizontalAligment::Right:
-                    offset.x += viewSizeInPixels.x - canvasSizeInPixel.x;
-                    break;
+                canvasOffset.xy += worldPos.xy - canvasSizeInPixel.xy * 0.5f;
             }
-                
-            switch (canvas.m_alignY)
+            else
             {
-                default:
-                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(canvas.m_alignX);
-                    break;
+                switch (canvas.m_alignX)
+                {
+                    default:
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(canvas.m_alignX);
+                        break;
 
-                case VerticalAligment::Top:
-                    offset.y += 0;
-                    break;
+                    case HorizontalAligment::Left:
+                        canvasOffset.x += 0;
+                        break;
 
-                case VerticalAligment::Center:
-                    offset.y += viewSizeInPixels.y * 0.5f - canvasSizeInPixel.y * 0.5f;
-                    break;
+                    case HorizontalAligment::Center:
+                        canvasOffset.x += viewSizeInPixels.x * 0.5f - canvasSizeInPixel.x * 0.5f;
+                        break;
 
-                case VerticalAligment::Bottom:
-                    offset.y += viewSizeInPixels.y - canvasSizeInPixel.y;
-                    break;
+                    case HorizontalAligment::Right:
+                        canvasOffset.x += viewSizeInPixels.x - canvasSizeInPixel.x;
+                        break;
+                }
+
+                switch (canvas.m_alignY)
+                {
+                    default:
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(canvas.m_alignX);
+                        break;
+
+                    case VerticalAligment::Top:
+                        canvasOffset.y += 0;
+                        break;
+
+                    case VerticalAligment::Center:
+                        canvasOffset.y += viewSizeInPixels.y * 0.5f - canvasSizeInPixel.y * 0.5f;
+                        break;
+
+                    case VerticalAligment::Bottom:
+                        canvasOffset.y += viewSizeInPixels.y - canvasSizeInPixel.y;
+                        break;
+                }
             }
 
             float2 canvasRect[2] =
             {
-                offset,
-                offset + canvasSizeInPixel
+                canvasOffset,
+                canvasOffset + canvasSizeInPixel
             };
 
-            if (debugUI)
-                ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset+canvasRect[0]), float2ToImVec2(winOffset+canvasRect[1]), packRGBA8(canvas.m_color));
+            if (debugUI && elem.m_type == UIElementType::Canvas)
+            {
+                ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + canvasRect[0]), float2ToImVec2(winOffset + canvasRect[1]), packRGBA8(canvas.m_color));
+                continue;
+            }
 
             float2 elemSize = elem.m_item.m_size;
-            float2 elemPos = offset + elem.m_item.m_matrix[3].xy;
+            float2 elemPos = canvasOffset;
+
+            //if (canvas.m_canvasType != CanvasType::CanvasType_3D)
+                elemPos += elem.m_item.m_offset.xy;
 
             switch (elem.m_type)
             {
@@ -307,7 +331,7 @@ namespace vg::renderer
                         {
                             PickingHit hit;
                             hit.m_id = elem.m_item.m_pickingID;
-                            hit.m_pos = float4(elemPos.xy, 0, 1);
+                            hit.m_pos = float4(elemPos.xy + elemSize.xy, 0, 1); // TODO: pass mouse position instead?
                             m_view->AddPickingHit(hit);
                         }
                     }

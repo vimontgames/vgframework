@@ -1,9 +1,4 @@
 #include "UITextComponent.h"
-#include "editor/Editor_Consts.h"
-#include "engine/Engine.h"
-#include "renderer/IRenderer.h"
-#include "core/IGameObject.h"
-#include "gfx/IUIRenderer.h"
 
 using namespace vg::core;
 
@@ -16,7 +11,8 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumEx(UITextComponent, renderer::Font, m_font, "Font", PropertyFlags::AlphabeticalOrder);
+        //registerPropertyEnumEx(UITextComponent, renderer::Font, m_font, "Font", PropertyFlags::AlphabeticalOrder);
+        registerPropertyEnum(UITextComponent, renderer::Font, m_font, "Font");
         registerPropertyEnum(UITextComponent, renderer::FontStyle, m_style, "Style");
         registerProperty(UITextComponent, m_text, "Text");
 
@@ -45,7 +41,6 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void UITextComponent::Update(const Context & _context)
     {
-        if (auto * gui = getGUI(_context.m_world))
-            gui->AddText(getCanvas(), gfx::UIItem(m_pickingID, getMatrix(), m_size, m_horizontal, m_vertical, getColor(), m_UIFlags), m_text, m_font, m_style);
+        getUIManager()->AddText(getCanvas(), getUIItem(), m_text, m_font, m_style, _context.m_world);
     }
 }

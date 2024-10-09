@@ -80,6 +80,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="RenderPass\ImGui\ImGuiPass.cpp" />
     <ClCompile Include="RenderPass\RenderPass.cpp" />
+    <ClCompile Include="UI\UI.cpp" />
     <ClCompile Include="Viewport\Viewport.cpp" />
     <ClCompile Include="View\View.cpp" />
   </ItemGroup>
@@ -147,6 +148,7 @@
     <ClInclude Include="IRenderer.h" />
     <ClInclude Include="ISkeletalAnimation.h" />
     <ClInclude Include="ISkeleton.h" />
+    <ClInclude Include="IUIManager.h" />
     <ClInclude Include="Job\Culling\GraphicInstanceList.h" />
     <ClInclude Include="Job\Culling\ViewCullingJob.h" />
     <ClInclude Include="Job\Culling\ViewCullingJob.hpp" />
@@ -217,6 +219,11 @@
     <ClInclude Include="RenderPass\Update\UpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.h" />
     <ClInclude Include="RenderPass\Update\ViewConstants\ViewConstantsUpdatePass.hpp" />
+    <ClInclude Include="UI\UIElement.h" />
+    <ClInclude Include="UI\UIManager.h" />
+    <ClInclude Include="UI\UIManager.hpp" />
+    <ClInclude Include="UI\UIRenderer.h" />
+    <ClInclude Include="UI\UIRenderer.hpp" />
     <ClInclude Include="Viewport\Viewport.h" />
     <ClInclude Include="View\Frustum.h" />
     <ClInclude Include="View\Frustum.hpp" />

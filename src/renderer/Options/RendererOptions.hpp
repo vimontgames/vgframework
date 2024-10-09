@@ -27,7 +27,8 @@ namespace vg::renderer
         registerPropertyEnum(RendererOptions, LightingMode, m_lightingMode, "Lighting");
         setPropertyDescription(LightDesc, m_lightingMode, "Lighting monde will affect how lights are computed.\nIn \"Forward\" mode lighting is computed on the fly in pixel shader\nIn \"Defered\" mode lighting is computed in screen-space");
 
-        registerPropertyEnumEx(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug", PropertyFlags::AlphabeticalOrder);
+        //registerPropertyEnumEx(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug", PropertyFlags::AlphabeticalOrder);
+        registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug");
         registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Flags");
 
         registerPropertyGroupBegin(RendererOptions, "Advanced");

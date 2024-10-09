@@ -235,9 +235,9 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IView::Flags ImGuiView::GetViewFlags() const
+    gfx::ViewFlags ImGuiView::GetViewFlags() const
     {
-        return (gfx::IView::Flags)0x0;
+        return (gfx::ViewFlags)0x0;
     }
 
     //--------------------------------------------------------------------------------------
@@ -417,7 +417,7 @@ namespace vg::editor
                 string viewName = asString(viewParams.target) + "View";
             
                 // Create a view
-                gfx::IView::Flags viewFlags = GetViewFlags();
+                gfx::ViewFlags viewFlags = GetViewFlags();
             
                 if (auto * view = renderer->CreateView(viewParams, viewName, viewFlags))
                 {

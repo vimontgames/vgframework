@@ -8,7 +8,7 @@
 #include "renderer/Renderer.h"
 #include "renderer/Job/Culling/ViewCullingJob.h"
 #include "renderer/RenderPass/Update/ViewConstants/ViewConstantsUpdatePass.h"
-#include "renderer/View/UIRenderer.h"
+#include "renderer/UI/UIRenderer.h"
 
 #if !VG_ENABLE_INLINE
 #include "View.inl"
@@ -17,7 +17,6 @@
 #include "Lit/LitView.hpp"
 #include "Shadow/ShadowView.hpp"
 #include "Frustum.hpp"
-#include "UIRenderer.hpp"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -102,7 +101,7 @@ namespace vg::renderer
     {
         const auto options = RendererOptions::get();
         const auto target = getViewID().target;
-        return  gfx::ViewTarget::Editor == target || (gfx::ViewTarget::Game == target && options->isToolModeEnabled());
+        return  ViewTarget::Editor == target || (ViewTarget::Game == target && options->isToolModeEnabled());
     }
 
     //--------------------------------------------------------------------------------------
@@ -237,13 +236,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetFlags(Flags _flagsToSet, Flags _flagsToRemove)
+    void View::SetFlags(ViewFlags _flagsToSet, ViewFlags _flagsToRemove)
     {
         setFlags(_flagsToSet, _flagsToRemove);
     }
 
     //--------------------------------------------------------------------------------------
-    View::Flags View::GetFlags() const
+    ViewFlags View::GetFlags() const
     {
         return getFlags();
     }
@@ -324,7 +323,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IViewport * View::GetViewport() const 
+    IViewport * View::GetViewport() const 
     {
         return m_viewport;
     }
@@ -344,40 +343,40 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void View::SetFocused(bool _active)
     {
-        if (testFlag(IView::Flags::Focus) != _active)
-            setFlag(IView::Flags::Focus, _active);
+        if (testFlag(ViewFlags::Focus) != _active)
+            setFlag(ViewFlags::Focus, _active);
     }
     
     //--------------------------------------------------------------------------------------
     bool View::IsFocused() const
     {
-        return testFlag(IView::Flags::Focus);
+        return testFlag(ViewFlags::Focus);
     }
 
     //--------------------------------------------------------------------------------------
     void View::SetVisible(bool _visible)
     {
-        if (testFlag(IView::Flags::Visible) != _visible)
-            setFlag(IView::Flags::Visible, _visible);
+        if (testFlag(ViewFlags::Visible) != _visible)
+            setFlag(ViewFlags::Visible, _visible);
     }
 
     //--------------------------------------------------------------------------------------
     bool View::IsVisible() const
     {
-        return testFlag(IView::Flags::Visible) && all(GetRenderTargetSize() > 1);
+        return testFlag(ViewFlags::Visible) && all(GetRenderTargetSize() > 1);
     }
 
     //--------------------------------------------------------------------------------------
     void View::SetRender(bool _render)
     {
-        if (testFlag(IView::Flags::Render) != _render)
-            setFlag(IView::Flags::Render, _render);
+        if (testFlag(ViewFlags::Render) != _render)
+            setFlag(ViewFlags::Render, _render);
     }
 
     //--------------------------------------------------------------------------------------
     bool View::IsRender() const
     {
-        return IsVisible() && testFlag(IView::Flags::Render);
+        return IsVisible() && testFlag(ViewFlags::Render);
     }     
 
     //--------------------------------------------------------------------------------------
@@ -423,14 +422,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool View::IsOrtho() const 
     {
-        return testFlag(IView::Flags::Ortho);
+        return testFlag(ViewFlags::Ortho);
     }
 
     //--------------------------------------------------------------------------------------
     void View::setOrtho(bool _ortho)
     {
-        if (testFlag(IView::Flags::Ortho) != _ortho)
-            setFlag(IView::Flags::Ortho, _ortho);
+        if (testFlag(ViewFlags::Ortho) != _ortho)
+            setFlag(ViewFlags::Ortho, _ortho);
     }
 
     //--------------------------------------------------------------------------------------
@@ -453,7 +452,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::setTLAS(gfx::TLAS * _tlas)
+    void View::setTLAS(TLAS * _tlas)
     {
         if (_tlas != m_tlas)
         {
@@ -463,20 +462,20 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::TLAS * View::getTLAS() const
+    TLAS * View::getTLAS() const
     {
         return m_tlas;
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::BindlessTLASHandle View::getTLASHandle() const
+    BindlessTLASHandle View::getTLASHandle() const
     {
         TLAS * tlas = getTLAS();
-        return tlas ? tlas->getHandle() : gfx::BindlessTLASHandle(BINDLESS_TLAS_INVALID);
+        return tlas ? tlas->getHandle() : BindlessTLASHandle(BINDLESS_TLAS_INVALID);
     }
 
     //--------------------------------------------------------------------------------------
-    void View::RegisterFrameGraph(const gfx::RenderPassContext & _rc, gfx::FrameGraph & _frameGraph)
+    void View::RegisterFrameGraph(const RenderPassContext & _rc, FrameGraph & _frameGraph)
     {
         _frameGraph.addUserPass(_rc, m_viewConstantsUpdatePass, "View Constants Update");
     }
@@ -547,7 +546,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::ViewCullingStats View::GetViewCullingStats() const
+    ViewCullingStats View::GetViewCullingStats() const
     {
         ViewCullingStats stats;
 
@@ -584,8 +583,8 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IUIRenderer * View::GetUIRenderer() const
+    IUIRenderer * View::GetUIRenderer() const
     {
-        return VG_SAFE_STATIC_CAST(gfx::IUIRenderer, m_viewGUI);
+        return VG_SAFE_STATIC_CAST(IUIRenderer, m_viewGUI);
     }
 }

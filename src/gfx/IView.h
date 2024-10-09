@@ -91,18 +91,18 @@ namespace vg::gfx
         core::uint spot         = 0;
     };
 
+    vg_enum_class(ViewFlags, core::u32,
+        Visible     = 0x00000001,
+        Render      = 0x00000002,
+        Focus       = 0x00000004,
+        Ortho       = 0x00000008,
+        Prefab      = 0x00000010,
+        Additional  = 0x00000020
+    );
+
     class IView : public core::Object
     {
     public:
-        enum class Flags : core::u32
-        {
-            Visible     = 0x00000001,
-            Render      = 0x00000002,
-            Focus       = 0x00000004,
-            Ortho       = 0x00000008,
-            Prefab      = 0x00000010,
-            Additional  = 0x00000020
-        };
 
         IView() {};
         virtual ~IView() = default;
@@ -110,8 +110,8 @@ namespace vg::gfx
         virtual void                    SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale) = 0;
         virtual void                    SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) = 0;
 
-        virtual void                    SetFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0) = 0;
-        virtual Flags                   GetFlags                    () const = 0;
+        virtual void                    SetFlags                    (ViewFlags _flagsToSet, ViewFlags _flagsToRemove = (ViewFlags)0) = 0;
+        virtual ViewFlags               GetFlags                    () const = 0;
 
         virtual const core::float4x4 &  GetViewInvMatrix            () const = 0;
         virtual const core::float4x4 &  GetProjectionMatrix         () const = 0;

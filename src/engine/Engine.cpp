@@ -450,7 +450,7 @@ namespace vg::engine
             {
                 if (view)
                 {
-                    if (!asBool(gfx::IView::Flags::Prefab & view->GetFlags()))
+                    if (!asBool(gfx::ViewFlags::Prefab & view->GetFlags()))
                         view->SetWorld(world);
                 }
             }
@@ -460,7 +460,7 @@ namespace vg::engine
             {
                 if (view)
                 {
-                    if (!asBool(gfx::IView::Flags::Prefab & view->GetFlags()))
+                    if (!asBool(gfx::ViewFlags::Prefab & view->GetFlags()))
                         view->SetWorld(world);
                 }
             }

@@ -1,10 +1,4 @@
 #include "UIImageComponent.h"
-#include "editor/Editor_Consts.h"
-#include "engine/Engine.h"
-#include "renderer/IRenderer.h"
-#include "gfx/ITexture.h"
-#include "core/IGameObject.h"
-#include "gfx/IUIRenderer.h"
 
 using namespace vg::core;
 
@@ -59,7 +53,6 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void UIImageComponent::Update(const Context & _context)
     {
-        if (auto * gui = getGUI(_context.m_world))
-            gui->AddImage(getCanvas(), gfx::UIItem(m_pickingID, getMatrix(), m_size, m_horizontal, m_vertical, getColor(), m_UIFlags), m_texture);
+        getUIManager()->AddImage(getCanvas(), getUIItem(), m_texture, _context.m_world);
     }
 }

@@ -48,8 +48,8 @@ namespace vg::renderer
         void                                SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale) override;
         void                                SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) override;
 
-        void                                SetFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0) override;
-        Flags                               GetFlags                    () const override;
+        void                                SetFlags                    (gfx::ViewFlags _flagsToSet, gfx::ViewFlags _flagsToRemove = (gfx::ViewFlags)0) override;
+        gfx::ViewFlags                      GetFlags                    () const override;
 
         const core::float4x4 &              GetViewInvMatrix            () const override;
         const core::float4x4 &              GetProjectionMatrix         () const override;
@@ -143,10 +143,10 @@ namespace vg::renderer
 
         VG_INLINE ViewCullingJob *          getCullingJob               () const;
 
-        VG_INLINE void                      setFlags                    (Flags _flagsToSet, Flags _flagsToRemove = (Flags)0);
-        VG_INLINE void                      setFlag                     (Flags _flag, bool _value);
-        VG_INLINE Flags                     getFlags                    () const;
-        VG_INLINE bool                      testFlag                    (Flags _flag) const;
+        VG_INLINE void                      setFlags                    (gfx::ViewFlags _flagsToSet, gfx::ViewFlags _flagsToRemove = (gfx::ViewFlags)0);
+        VG_INLINE void                      setFlag                     (gfx::ViewFlags _flag, bool _value);
+        VG_INLINE gfx::ViewFlags            getFlags                    () const;
+        VG_INLINE bool                      testFlag                    (gfx::ViewFlags _flag) const;
 
         bool                                isToolmode                  () const;
 
@@ -168,7 +168,7 @@ namespace vg::renderer
     private:
         gfx::IViewport *                    m_viewport                  = nullptr;
         gfx::ViewID                         m_viewID;
-        Flags                               m_flags                     = (Flags)0;
+        gfx::ViewFlags                      m_flags                     = (gfx::ViewFlags)0;
         gfx::Texture *                      m_renderTarget              = nullptr;   // Assume backbuffer if nullptr
         core::uint2                         m_renderTargetSize          = core::uint2(0, 0);
         core::uint2                         m_size                      = core::uint2(0, 0);

@@ -2563,7 +2563,9 @@ namespace vg::editor
             auto cursorPosX = GetCursorPosX();
             const ImGuiStyle & style = ImGui::GetStyle();
             ImGui::SetCursorPosX(availableWidth - style::label::PixelWidth - ImGui::GetFrameHeight() + ImGui::GetStyle().ItemSpacing.y + cursorPosX - style.FramePadding.x - style.ItemSpacing.x);
+            ImGui::BeginDisabled(_propContext.m_readOnly);
             edited = ImGui::Checkbox(getPropertyLabel(label).c_str(), &temp);
+            ImGui::EndDisabled();
         }
 
         EditingState editingState = undoRedoBeforeEdit<bool>(edited, _propContext, _object, _prop, &temp, pBool, InteractionType::Single);

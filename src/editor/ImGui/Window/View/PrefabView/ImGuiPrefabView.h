@@ -18,7 +18,7 @@ namespace vg::editor
         ImGuiPrefabView(const core::IResource * _prefabRes);
         ~ImGuiPrefabView();
 
-        gfx::IView::Flags           GetViewFlags        () const final override;
+        gfx::ViewFlags           GetViewFlags        () const final override;
 
         bool                        ShowToolbar         () const final override;
         void                        DrawToolbar         () final override;
