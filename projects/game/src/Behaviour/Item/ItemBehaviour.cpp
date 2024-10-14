@@ -1,6 +1,10 @@
 #include "Precomp.h"
 #include "ItemBehaviour.h"
 
+#if !VG_ENABLE_INLINE
+#include "ItemBehaviour.inl"
+#endif
+
 #include "Ball/BallBehaviour.hpp"
 #include "Weapon/WeaponBehaviour.hpp"
 
@@ -24,6 +28,10 @@ ItemBehaviour::~ItemBehaviour()
 bool ItemBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
+
+    registerProperty(ItemBehaviour, m_damage, "Damage");
+    setPropertyRange(ItemBehaviour, m_damage, float2(0, 100));
+    setPropertyDescription(ItemBehaviour, m_damage, "Amount of damage inflicted");
 
     registerPropertyEx(ItemBehaviour, m_owner, "Owner", vg::core::PropertyFlags::NotSaved);
 

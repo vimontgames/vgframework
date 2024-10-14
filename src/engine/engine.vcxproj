@@ -89,6 +89,8 @@
     <ClInclude Include="ISoundComponent.h" />
     <ClInclude Include="ISoundResource.h" />
     <ClInclude Include="IUICanvasComponent.h" />
+    <ClInclude Include="IUIComponent.h" />
+    <ClInclude Include="IUIImageComponent.h" />
     <ClInclude Include="IUITextComponent.h" />
     <ClInclude Include="Resource\Audio\SoundResource.h" />
     <ClInclude Include="Resource\Audio\SoundResource.hpp" />

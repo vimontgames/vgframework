@@ -77,8 +77,9 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="New WeaponBehaviour"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="684624813"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Float" name="m_damage" flags="HasRange" value="40"/>
                             </Object>
                             <Object class="AttachToNodeComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New AttachToNodeComponent"/>

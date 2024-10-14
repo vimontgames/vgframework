@@ -34,6 +34,7 @@
     <ClInclude Include="Behaviour\Camera\GameCameraManagerBehaviour.h" />
     <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.hpp" />
     <ClCompile Include="Behaviour\Goal\GoalBehaviour.cpp" />
+    <ClCompile Include="Behaviour\HealthBar\HealthBarBehaviour.cpp" />
     <ClCompile Include="Behaviour\Item\ItemBehaviour.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Precomp.cpp">
@@ -51,6 +52,7 @@
     <ClInclude Include="Behaviour\Character\Enemy\EnemyBehaviour.hpp" />
     <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.h" />
     <ClInclude Include="Behaviour\Goal\GoalBehaviour.h" />
+    <ClInclude Include="Behaviour\HealthBar\HealthBarBehaviour.h" />
     <ClInclude Include="Behaviour\Item\Ball\BallBehaviour.h" />
     <ClInclude Include="Behaviour\Item\Ball\BallBehaviour.hpp" />
     <ClInclude Include="Behaviour\Item\ItemBehaviour.h" />
@@ -63,6 +65,7 @@
   <ItemGroup>
     <None Include="Behaviour\Character\CharacterBehaviour.inl" />
     <None Include="Behaviour\Character\Player\PlayerBehaviour.inl" />
+    <None Include="Behaviour\Item\ItemBehaviour.inl" />
     <None Include="Game.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

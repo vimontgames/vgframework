@@ -1,5 +1,4 @@
 #include "WeaponBehaviour.h"
-#include "editor/Editor_Consts.h"
 #include "Game.h"
 #include "Behaviour/Character/Player/PlayerBehaviour.h"
 #include "engine/IAttachToNodeComponent.h"

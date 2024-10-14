@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Component/Component.h"
+#include "engine/IUIComponent.h"
 #include "gfx/IUIRenderer.h"
 
 namespace vg::gfx
@@ -21,18 +21,25 @@ namespace vg::renderer
 
 namespace vg::engine
 {
-    class UIComponent : public core::Component
+    class UIComponent : public IUIComponent
     {
     public:
-        VG_CLASS_DECL(UIComponent, core::Component);
+        VG_CLASS_DECL(UIComponent, IUIComponent);
 
         UIComponent(const core::string & _name, core::IObject * _parent);
         ~UIComponent();
+
+        core::uint2                         GetSize         () const override;
+        void                                SetSize         (const core::uint2 _size) override;
+
+        VG_INLINE core::uint2               getSize         () const;
+        VG_INLINE void                      setSize         (core::uint2 _size);
 
         VG_INLINE core::float3              getOffset       () const;
         VG_INLINE core::float4x4            getMatrix       () const; 
         VG_INLINE core::float4              getColor        () const;
         VG_INLINE renderer::IUIManager *    getUIManager    () const;
+        VG_INLINE core::float2              getCenter       () const;
 
         const gfx::UICanvas *               getCanvas       () const;
         gfx::UIItem                         getUIItem       () const;
@@ -46,6 +53,8 @@ namespace vg::engine
         gfx::HorizontalAligment             m_horizontal;
         gfx::VerticalAligment               m_vertical;
         core::uint2                         m_size = core::uint2(16, 16);
+        bool                                m_useCenter = false;
+        core::float2                        m_center = core::float2(0.5f, 0.5f);
         bool                                m_useOffset;
         core::float3                        m_offset;
         bool                                m_useColor;

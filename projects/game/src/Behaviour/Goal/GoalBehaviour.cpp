@@ -1,6 +1,5 @@
 #include "Precomp.h"
 #include "GoalBehaviour.h"
-#include "editor/Editor_Consts.h"
 #include "Game.h"
 #include "Behaviour/Item/Ball/BallBehaviour.h"
 #include "Behaviour/Character/Player/PlayerBehaviour.h"

@@ -3,6 +3,18 @@
 namespace vg::engine
 {
     //--------------------------------------------------------------------------------------
+    VG_INLINE core::uint2 UIComponent::getSize() const
+    {
+        return m_size;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void UIComponent::setSize(core::uint2 _size)
+    {
+        m_size = _size;
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE core::float3 UIComponent::getOffset() const
     {
         return m_useOffset ? m_offset : core::float3(0, 0, 0);
@@ -25,5 +37,11 @@ namespace vg::engine
     VG_INLINE renderer::IUIManager * UIComponent::getUIManager() const
     {
         return m_uiManager;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::float2 UIComponent::getCenter() const
+    {
+        return m_useCenter ? m_center : core::float2(0.5f, 0.5f);
     }
 }

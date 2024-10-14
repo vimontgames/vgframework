@@ -125,7 +125,7 @@ namespace vg::renderer
   
         for (uint i = 0; i < m_uiElements.size(); ++i)
         {
-            const auto & elem = m_uiElements[i];            
+            const UIElement & elem = m_uiElements[i];
 
             UICanvas canvas;
             float4 worldPos = (float4)0.0f;
@@ -247,6 +247,8 @@ namespace vg::renderer
                 }
             }
 
+            float2 center = elem.m_item.m_center * elemSize;
+
             switch (elem.m_item.m_alignX)
             {
                 default:
@@ -254,15 +256,15 @@ namespace vg::renderer
                     break;
 
                 case HorizontalAligment::Left:
-                    elemPos.x += 0;
+                    elemPos.x += center.x - elemSize.x * 0.5f;
                     break;
 
                 case HorizontalAligment::Center:
-                    elemPos.x += canvasSizeInPixel.x * 0.5f - elemSize.x * 0.5f;
+                    elemPos.x += canvasSizeInPixel.x * 0.5f - center.x;
                     break;
 
                 case HorizontalAligment::Right:
-                    elemPos.x += canvasSizeInPixel.x - elemSize.x;
+                    elemPos.x += canvasSizeInPixel.x - center.x;
                     break;
             }
 
@@ -273,22 +275,22 @@ namespace vg::renderer
                     break;
 
                 case VerticalAligment::Top:
-                    elemPos.y += 0;
+                    elemPos.y += center.y - elemSize.y * 0.5f;
                     break;
 
                 case VerticalAligment::Center:
-                    elemPos.y += canvasSizeInPixel.y * 0.5f - elemSize.y * 0.5f;
+                    elemPos.y += canvasSizeInPixel.y * 0.5f - center.y * 0.5f;
                     break;
 
                 case VerticalAligment::Bottom:
-                    elemPos.y += canvasSizeInPixel.y - elemSize.y;
+                    elemPos.y += canvasSizeInPixel.y - center.y;
                     break;
             }
 
             float2 elemRect[2] =
             {
                 elemPos,
-                elemPos + elemSize
+                elemPos + center
             };
 
             switch (elem.m_type)
@@ -297,7 +299,7 @@ namespace vg::renderer
                 {
                     if (elem.m_texture)
                     {
-                        ImGui::SetCursorPos(float2ToImVec2(elemPos.xy - 0*elemSize * 0.5f + windowOffset));
+                        ImGui::SetCursorPos(float2ToImVec2(elemPos.xy + windowOffset));
                         ImTextureID texID = imGuiAdapter->GetTextureID(elem.m_texture);
 
                         ImGui::Image(texID, float2ToImVec2(elemSize), ImVec2(0, 0), ImVec2(1, 1), float4ToImVec4(elem.m_item.m_color));
@@ -321,7 +323,7 @@ namespace vg::renderer
 
                 case UIElementType::Text:
                 {
-                    ImGui::SetCursorPos(float2ToImVec2(elemPos.xy + windowOffset - 0*elemSize * 0.5f));
+                    ImGui::SetCursorPos(float2ToImVec2(elemPos.xy + windowOffset));
                     ImGui::TextColored(float4ToImVec4(elem.m_item.m_color), elem.m_text.c_str());
                     
                     // Picking on Viewport not supported yet
@@ -331,7 +333,7 @@ namespace vg::renderer
                         {
                             PickingHit hit;
                             hit.m_id = elem.m_item.m_pickingID;
-                            hit.m_pos = float4(elemPos.xy + elemSize.xy, 0, 1); // TODO: pass mouse position instead?
+                            hit.m_pos = float4(elemPos.xy + center.xy, 0, 1); // TODO: pass mouse position instead?
                             m_view->AddPickingHit(hit);
                         }
                     }
@@ -344,13 +346,13 @@ namespace vg::renderer
             {
                 switch (elem.m_type)
                 {
-                case UIElementType::Image:
-                    ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + elemRect[0] - 0*elemSize * 0.5f), float2ToImVec2(winOffset + elemRect[1] - 0*elemSize * 0.5f), packRGBA8(elem.m_item.m_color * 0.5f));
-                    break;
+                    case UIElementType::Image:
+                        ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + elemRect[0]), float2ToImVec2(winOffset + elemRect[1]), packRGBA8(elem.m_item.m_color * 0.5f));
+                        break;
 
-                case UIElementType::Text:
-                    ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + elemRect[0] - 0*float2(elemSize.x * 0.5f,elemSize.y * 0.5f)), float2ToImVec2(winOffset + elemRect[1] - 0*float2(elemSize.x * 0.5f, elemSize.y * 0.5f)), packRGBA8(elem.m_item.m_color*0.5f));
-                    break;
+                    case UIElementType::Text:
+                        ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + elemRect[0]), float2ToImVec2(winOffset + elemRect[1]), packRGBA8(elem.m_item.m_color*0.5f));
+                        break;
                 }
             }
         }

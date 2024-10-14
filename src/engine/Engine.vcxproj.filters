@@ -366,6 +366,8 @@
       <Filter>Component\Physics\Object</Filter>
     </ClInclude>
     <ClInclude Include="ISoundResource.h" />
+    <ClInclude Include="IUIImageComponent.h" />
+    <ClInclude Include="IUIComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

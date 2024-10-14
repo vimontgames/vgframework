@@ -43,11 +43,12 @@ namespace vg::gfx
         {
         }
 
-        UIItem(renderer::PickingID _pickingID, const core::float4x4 & _matrix, const core::float3 & _offset, const core::uint2 & _size, HorizontalAligment _alignX, VerticalAligment _alignY, const core::float4 & _color, UIItemFlags _flags) :
+        UIItem(renderer::PickingID _pickingID, const core::float4x4 & _matrix, const core::float3 & _offset, const core::uint2 & _size, const core::float2 & _center, HorizontalAligment _alignX, VerticalAligment _alignY, const core::float4 & _color, UIItemFlags _flags) :
             m_pickingID(_pickingID),
             m_matrix(_matrix),
             m_offset(_offset),
             m_size(_size),
+            m_center(_center),
             m_alignX(_alignX),
             m_alignY(_alignY),
             m_color(_color),
@@ -60,6 +61,7 @@ namespace vg::gfx
         core::float4x4          m_matrix            = core::float4x4::identity();
         core::float3            m_offset            = core::float3(0,0,0);
         core::uint2             m_size              = core::uint2(16, 16);
+        core::float2            m_center            = core::float2(0.5f, 0.5f);
         HorizontalAligment      m_alignX            = HorizontalAligment::Left;
         VerticalAligment        m_alignY            = VerticalAligment::Top;
         core::float4            m_color             = core::float4(1,1,1,1);

@@ -2,7 +2,6 @@
 #include "Game.h"
 #include "core/GameObject/GameObject.h"
 #include "Behaviour/Character/Player/PlayerBehaviour.h"
-#include "editor/Editor_Consts.h"
 
 using namespace vg::core;
 using namespace vg::engine;

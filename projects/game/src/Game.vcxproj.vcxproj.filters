@@ -15,6 +15,9 @@
     <ClCompile Include="Behaviour\Camera\GameCameraManagerBehaviour.cpp">
       <Filter>Behaviour\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Behaviour\HealthBar\HealthBarBehaviour.cpp">
+      <Filter>Behaviour\HealthBar</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -62,6 +65,9 @@
     <ClInclude Include="Behaviour\Camera\GameCameraBehaviour.hpp">
       <Filter>Behaviour\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="Behaviour\HealthBar\HealthBarBehaviour.h">
+      <Filter>Behaviour\HealthBar</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviour">
@@ -91,6 +97,9 @@
     <Filter Include="Behaviour\Item\Weapon">
       <UniqueIdentifier>{1301a258-7b69-47a0-9e4a-1cdf0b98dd4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Behaviour\HealthBar">
+      <UniqueIdentifier>{c5aa9b00-32c5-409d-b6d9-89829a238e36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Game.def" />
@@ -99,6 +108,9 @@
     </None>
     <None Include="Behaviour\Character\CharacterBehaviour.inl">
       <Filter>Behaviour\Character</Filter>
+    </None>
+    <None Include="Behaviour\Item\ItemBehaviour.inl">
+      <Filter>Behaviour\Item</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -11,14 +11,21 @@ public:
     ItemBehaviour(const vg::core::string & _name, vg::core::IObject * _parent, ItemType _itemType);
     ~ItemBehaviour();
 
-    void                                    OnPlay() override;
-    void                                    OnStop() override;
+    void                                    OnPlay      () override;
+    void                                    OnStop      () override;
 
-    virtual void                            SetOwner(vg::core::IGameObject * _object);
-    virtual const vg::core::ObjectHandle &  GetOwner() const;
-    virtual bool                            CanPick() const;
+    virtual void                            SetOwner    (vg::core::IGameObject * _object);
+    virtual const vg::core::ObjectHandle &  GetOwner    () const;
+    virtual bool                            CanPick     () const;
+
+    VG_INLINE float                         getDamage   () const;
 
 private:
+    float                                   m_damage = 10.0f;
     ItemType                                m_itemType;
     vg::core::ObjectHandle                  m_owner;
 };
+
+#if VG_ENABLE_INLINE
+#include "ItemBehaviour.inl"
+#endif

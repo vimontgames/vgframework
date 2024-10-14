@@ -1,13 +1,14 @@
 #pragma once
-#include "engine/Component/UI/UIComponent.h"
+#include "engine/IUIImageComponent.h"
 #include "engine/Resource/Texture/TextureResource.h"
 
 namespace vg::engine
 {
-    class UIImageComponent : public UIComponent
+    class UIImageComponent : public IUIImageComponent
     {
     public:
-        VG_CLASS_DECL(UIImageComponent, UIComponent);
+        VG_CLASS_DECL(UIImageComponent, IUIImageComponent);
+
         UIImageComponent(const core::string & _name, core::IObject * _parent);
         ~UIImageComponent();
 

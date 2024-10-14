@@ -1,20 +1,5 @@
 #include "Precomp.h"
 #include "PlayerBehaviour.h"
-#include "Game.h"
-#include "Behaviour/Item/Ball/BallBehaviour.h"
-#include "Behaviour/Item/Weapon/WeaponBehaviour.h"
-#include "engine/ICharacterControllerComponent.h"
-#include "engine/IUITextComponent.h"
-#include "engine/IPhysicsBodyComponent.h"
-#include "engine/IPhysicsShapeComponent.h"
-#include "engine/ISoundComponent.h"
-#include "engine/IUICanvasComponent.h"
-#include "engine/IEngineOptions.h"
-#include "editor/Editor_Consts.h"
-#include "core/GameObject/GameObject.h"
-#include "core/IWorld.h"
-#include "core/Math/Math.h"
-#include "core/string/string.h"
 
 #if !VG_ENABLE_INLINE
 #include "PlayerBehaviour.inl"
@@ -106,19 +91,19 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 break;
 
             case MoveState::Idle:
-                PlayMoveAnim(MoveState::Idle, true);
+                playMoveAnim(MoveState::Idle, true);
             break;
 
             case MoveState::Walk:
-                PlayMoveAnim(MoveState::Walk, true);
+                playMoveAnim(MoveState::Walk, true);
                 break;
 
             case MoveState::Run:
-                PlayMoveAnim(MoveState::Run, true);
+                playMoveAnim(MoveState::Run, true);
                 break;     
 
             case MoveState::Jump:
-                PlayMoveAnim(MoveState::Jump, true);
+                playMoveAnim(MoveState::Jump, true);
                 break;
         }
 
@@ -269,7 +254,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     if (FightState::None == m_fightState)
                     {
                         m_fightState = FightState::Hit;
-                        PlayFightAnim(FightState::Hit, false);
+                        playFightAnim(FightState::Hit, false);
 
                         // Play sound
                         if (auto * soundComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
@@ -284,7 +269,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 {
                     if (anim->IsFinished())
                     {
-                        StopFightAnim(FightState::Hit);
+                        stopFightAnim(FightState::Hit);
                         m_fightState = FightState::None;
                     }
                 }

@@ -3,6 +3,7 @@
 #include "core/Component/Behaviour/Behaviour.h"
 
 class ItemBehaviour;
+class HealthBarBehaviour;
 
 class CharacterBehaviour : public vg::core::Behaviour
 {
@@ -29,12 +30,16 @@ public:
     VG_INLINE FightState    getFightState() const;
 
 protected:
-    void                    PlayMoveAnim(MoveState _state, bool _loop = false);
+    void                    initAnimations();
+    void                    initSounds();
+    void                    initHealthBar();
 
-    void                    PlayFightAnim(FightState _state, bool _loop = false);
-    void                    StopFightAnim(FightState _state);
+    void                    playMoveAnim(MoveState _state, bool _loop = false);
 
-    void                    PlaySound(SoundState _sound);
+    void                    playFightAnim(FightState _state, bool _loop = false);
+    void                    stopFightAnim(FightState _state);
+
+    void                    playSound(SoundState _sound);
 
 protected:
     bool                    m_isActive = false;
@@ -67,6 +72,8 @@ protected:
     float                   m_rotationSmoothdamp = 0.0f;
 
     vg::core::float3        m_startPos = (vg::core::float3)0.0f; 
+
+    HealthBarBehaviour *    m_healthBar = nullptr;
 };
 
 #if VG_ENABLE_INLINE

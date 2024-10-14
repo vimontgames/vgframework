@@ -1,9 +1,23 @@
 #include "Precomp.h"
 #include "CharacterBehaviour.h"
-#include "Game.h"
-#include "engine/ICharacterControllerComponent.h"
-#include "editor/Editor_Consts.h"
+#include "core/IWorld.h"
+#include "core/Math/Math.h"
+#include "core/string/string.h"
 #include "core/GameObject/GameObject.h"
+#include "renderer/IRenderer.h"
+#include "renderer/IDebugDraw.h"
+#include "engine/ICharacterControllerComponent.h"
+#include "engine/IPhysicsBodyComponent.h"
+#include "engine/IPhysicsShapeComponent.h"
+#include "engine/ISoundComponent.h"
+#include "engine/IUICanvasComponent.h"
+#include "engine/IUITextComponent.h"
+#include "engine/IUIImageComponent.h"
+#include "engine/IEngineOptions.h"
+#include "Behaviour/Item/Ball/BallBehaviour.h"
+#include "Behaviour/Item/Weapon/WeaponBehaviour.h"
+#include "Behaviour/HealthBar/HealthBarBehaviour.h"
+#include "Game.h"
 
 #if !VG_ENABLE_INLINE
 #include "CharacterBehaviour.inl"
@@ -76,6 +90,14 @@ void CharacterBehaviour::OnEnable()
 {
     super::OnEnable();
 
+    initAnimations();
+    initSounds();
+    initHealthBar();
+}
+
+//--------------------------------------------------------------------------------------
+void CharacterBehaviour::initAnimations()
+{
     if (IAnimationComponent * animation = GetGameObject()->GetComponentT<IAnimationComponent>())
     {
         for (uint i = 0; i < enumCount<MoveState>(); ++i)
@@ -85,32 +107,36 @@ void CharacterBehaviour::OnEnable()
         {
             switch ((FightState)i)
             {
-                case FightState::None:
-                    break;
+            case FightState::None:
+                break;
 
-                default:
-                    m_fightAnim[i] = animation->GetAnimationIndex(asString((FightState)i));
-                    break;
+            default:
+                m_fightAnim[i] = animation->GetAnimationIndex(asString((FightState)i));
+                break;
             }
         }
-    }  
+    }
     else
     {
         VG_WARNING("[Animation] Character \"%s\" has no Animation component", GetGameObject()->GetName().c_str());
     }
+}
 
+//--------------------------------------------------------------------------------------
+void CharacterBehaviour::initSounds()
+{
     if (ISoundComponent * sound = GetGameObject()->GetComponentT<ISoundComponent>())
     {
         for (uint i = 0; i < enumCount<SoundState>(); ++i)
         {
             switch ((SoundState)i)
             {
-                case SoundState::None:
-                    break;
+            case SoundState::None:
+                break;
 
-                default:
-                    m_sound[i] = sound->GetSoundIndex(asString((SoundState)i));
-                    break;
+            default:
+                m_sound[i] = sound->GetSoundIndex(asString((SoundState)i));
+                break;
             }
         }
     }
@@ -118,6 +144,13 @@ void CharacterBehaviour::OnEnable()
     {
         VG_WARNING("[Sound] Character \"%s\" has no Sound component", GetGameObject()->GetName().c_str());
     }
+}
+
+//--------------------------------------------------------------------------------------
+void CharacterBehaviour::initHealthBar()
+{
+    if (auto * healthBar = GetGameObject()->GetComponentInChildrenT<HealthBarBehaviour>())
+        healthBar->init(m_hp);
 }
 
 //--------------------------------------------------------------------------------------
@@ -142,28 +175,28 @@ void CharacterBehaviour::OnStop()
 }
 
 //--------------------------------------------------------------------------------------
-void CharacterBehaviour::PlayMoveAnim(MoveState _state, bool _loop)
+void CharacterBehaviour::playMoveAnim(MoveState _state, bool _loop)
 {
     if (IAnimationComponent * animationComponent = GetGameObject()->GetComponentT<IAnimationComponent>())
         animationComponent->PlayAnimation(m_moveAnim[asInteger(_state)], _loop);
 }
 
 //--------------------------------------------------------------------------------------
-void CharacterBehaviour::PlayFightAnim(FightState _state, bool _loop)
+void CharacterBehaviour::playFightAnim(FightState _state, bool _loop)
 {
     if (IAnimationComponent * animationComponent = GetGameObject()->GetComponentT<IAnimationComponent>())
         animationComponent->PlayAnimation(m_fightAnim[asInteger(_state)], _loop);
 }
 
 //--------------------------------------------------------------------------------------
-void CharacterBehaviour::StopFightAnim(FightState _state)
+void CharacterBehaviour::stopFightAnim(FightState _state)
 {
     if (IAnimationComponent * animationComponent = GetGameObject()->GetComponentT<IAnimationComponent>())
         animationComponent->StopAnimation(m_fightAnim[asInteger(_state)]);
 }
 
 //--------------------------------------------------------------------------------------
-void CharacterBehaviour::PlaySound(SoundState _sound)
+void CharacterBehaviour::playSound(SoundState _sound)
 {
     if (auto * soundComponent = GetGameObject()->GetComponentT<ISoundComponent>())
     {
@@ -209,14 +242,57 @@ bool CharacterBehaviour::takeHit(CharacterBehaviour * _attacker, ItemBehaviour *
 {
     if (m_moveState != MoveState::Hurt)
     {
+        if (m_moveState == MoveState::Die)
+            return false;
+
+        auto * go = GetGameObject();
+        auto attackerGO = _attacker->GetGameObject();
+
         if (_weapon)
-            VG_WARNING("[Enemy] \"%s\" was hit by \"%s\" with \"%s\"", this->GetGameObject()->GetName().c_str(), _attacker->GetGameObject()->GetName().c_str(), _weapon->GetGameObject()->GetName().c_str());
+            VG_WARNING("[Enemy] \"%s\" was hit by \"%s\" with \"%s\"", go->GetName().c_str(), attackerGO->GetName().c_str(), _weapon->GetGameObject()->GetName().c_str());
         else
-            VG_WARNING("[Enemy] \"%s\" was hit by \"%s\"", this->GetGameObject()->GetName().c_str(), _attacker->GetGameObject()->GetName().c_str());
+            VG_WARNING("[Enemy] \"%s\" was hit by \"%s\"", go->GetName().c_str(), attackerGO->GetName().c_str());
 
-        PlaySound(SoundState::TakeDamage);
+        float damage = _weapon ? _weapon->getDamage() : 0.0f;
+        m_hp = max(0.0f, m_hp - damage);
 
-        m_moveState = MoveState::Hurt;
+        if (damage > 0.0f)
+        {
+            if (auto * healthBar = GetGameObject()->GetComponentInChildrenT<HealthBarBehaviour>())
+                healthBar->setHP(m_hp);
+
+            //if (auto * hpGO = go->GetChildGameObject("HP"))    // TODO: cache?
+            //{
+            //    if (auto * hpText = hpGO->GetComponentT<IUITextComponent>())
+            //        hpText->SetText(fmt::sprintf("%.0f HP", m_hp));
+            //}
+            //
+            //if (auto * lifebarGO = go->GetChildGameObject("Lifebar"))
+            //{
+            //    if (auto * lifebarImage = lifebarGO->GetComponentT<IUIImageComponent>())
+            //    {
+            //
+            //    }
+            //}
+
+            if (m_hp > 0)
+            {
+                if (auto * characterController = go->GetComponentT<ICharacterControllerComponent>())
+                {
+                    float3 delta = normalize(go->GetGlobalMatrix()[3].xyz - attackerGO->GetGlobalMatrix()[3].xyz) * 25.0f;
+                    characterController->SetVelocity(characterController->GetVelocity() + delta);
+                }
+
+                m_moveState = MoveState::Hurt;
+                playSound(SoundState::TakeDamage);
+            }
+            else
+            {
+                // TODO: play another sound for death
+                m_moveState = MoveState::Die;
+            }
+        }
+
         return true; // hit was taken
     }
 

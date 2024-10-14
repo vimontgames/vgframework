@@ -1,11 +1,5 @@
 #include "Precomp.h"
 #include "EnemyBehaviour.h"
-#include "Game.h"
-#include "editor/Editor_Consts.h"
-#include "core/GameObject/GameObject.h"
-#include "core/IWorld.h"
-#include "renderer/IRenderer.h"
-#include "renderer/IDebugDraw.h"
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -181,19 +175,19 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
         switch (m_moveState)
         {
             case MoveState::Idle:
-                PlayMoveAnim(MoveState::Idle, true);
+                playMoveAnim(MoveState::Idle, true);
                 break;
 
             case MoveState::Walk:
-                PlayMoveAnim(MoveState::Walk, true);
+                playMoveAnim(MoveState::Walk, true);
                 break;
 
             case MoveState::Run:
-                PlayMoveAnim(MoveState::Run, true);
+                playMoveAnim(MoveState::Run, true);
                 break;
 
             case MoveState::Hurt:
-                PlayMoveAnim(MoveState::Hurt, false);
+                playMoveAnim(MoveState::Hurt, false);
                 break;
         }
     }
