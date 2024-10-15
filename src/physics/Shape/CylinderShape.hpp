@@ -64,7 +64,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    void CylinderShape::Draw(const core::IWorld * _world, const core::float4x4 & _matrix)
+    void CylinderShape::Draw(const core::IWorld * _world, const core::float4x4 & _matrix) const
     {
         float4x4 matrix = mul(m_transform, getMatrixWithoutScale(_matrix));
         getDebugDraw()->AddCylinder(_world, m_radius, m_height, m_color, matrix);

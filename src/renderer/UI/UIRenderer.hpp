@@ -264,7 +264,7 @@ namespace vg::renderer
                     break;
 
                 case HorizontalAligment::Right:
-                    elemPos.x += canvasSizeInPixel.x - center.x;
+                    elemPos.x += canvasSizeInPixel.x - center.x * 2.0f;
                     break;
             }
 
@@ -283,7 +283,7 @@ namespace vg::renderer
                     break;
 
                 case VerticalAligment::Bottom:
-                    elemPos.y += canvasSizeInPixel.y - center.y;
+                    elemPos.y += canvasSizeInPixel.y - center.y * 2.0f;
                     break;
             }
 

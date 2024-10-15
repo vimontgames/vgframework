@@ -25,7 +25,8 @@ vg_enum_class(FightState, vg::core::u8,
 
 vg_enum_class(SoundState, vg::core::u8,
     None = 0,
-    TakeDamage
+    Hit,
+    Die
 );
 
 vg_enum_class(ItemType, vg::core::u8,

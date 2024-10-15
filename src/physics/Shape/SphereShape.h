@@ -19,7 +19,7 @@ namespace vg::physics
 
         SphereShape(const SphereShapeDesc & _desc);
         ShapeType GetShapeType() const final override { return ShapeType::Sphere; }
-        void Draw(const core::IWorld * _world, const core::float4x4 & _matrix) final override;
+        void Draw(const core::IWorld * _world, const core::float4x4 & _matrix) const final override;
         float m_radius = 0.5f;
     };
 }

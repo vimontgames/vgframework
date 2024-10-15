@@ -19,7 +19,7 @@ namespace vg::physics
 
         BoxShape(const BoxShapeDesc & _desc);
         ShapeType GetShapeType() const final override { return ShapeType::Box; }
-        void Draw(const core::IWorld * _world, const core::float4x4 & _matrix) final override;
+        void Draw(const core::IWorld * _world, const core::float4x4 & _matrix) const final override;
         core::float3 m_size = core::float3(1, 1, 1);
     };
 }

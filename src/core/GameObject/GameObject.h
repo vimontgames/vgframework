@@ -74,7 +74,7 @@ namespace vg::core
         template <class T> inline T *                   GetComponentInChildrenT     () const                { return super::GetComponentInChildrenT<T>(); }
 
         template <class T> inline core::vector<T *>     GetComponentsByTypeT        () const { return super::GetComponentsT<T>(); }
-        template <class T> inline core::vector<T *>     GetComponentsInChildrenT    () const { return super::GetComponentsT<T>(); }
+        template <class T> inline core::vector<T *>     GetComponentsInChildrenT    () const { return super::GetComponentsInChildrenT<T>(); }
 
         void                                            EnableTags                  (Tag _tags, bool _enabled) final override;
         Tag                                             GetTags                     () const final override;

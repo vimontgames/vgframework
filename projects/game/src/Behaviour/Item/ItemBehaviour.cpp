@@ -33,6 +33,10 @@ bool ItemBehaviour::registerProperties(IClassDesc & _desc)
     setPropertyRange(ItemBehaviour, m_damage, float2(0, 100));
     setPropertyDescription(ItemBehaviour, m_damage, "Amount of damage inflicted");
 
+    registerProperty(ItemBehaviour, m_push, "Push");
+    setPropertyRange(ItemBehaviour, m_push, float2(0, 100));
+    setPropertyDescription(ItemBehaviour, m_damage, "Amount of force applied in the direction of the hit");
+
     registerPropertyEx(ItemBehaviour, m_owner, "Owner", vg::core::PropertyFlags::NotSaved);
 
     return true;

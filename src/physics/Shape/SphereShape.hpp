@@ -54,7 +54,7 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    void SphereShape::Draw(const core::IWorld * _world, const core::float4x4 & _matrix)
+    void SphereShape::Draw(const core::IWorld * _world, const core::float4x4 & _matrix) const
     {
         core::float4x4 matrix = mul(m_transform, getMatrixWithoutScale(_matrix));
         const float radius = m_radius;

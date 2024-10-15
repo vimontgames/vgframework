@@ -209,11 +209,21 @@
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                         <Property type="ResourceVector" name="m_resources" flags="Resource">
                                             <Object class="SoundResource">
-                                                <Property type="String" name="m_name" value="TakeDamage"/>
+                                                <Property type="String" name="m_name" value="Hit"/>
                                                 <Property type="Uint32" name="m_uid" flags="" value="758274351"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Sounds/GJ/arg.wav"/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Sounds/GJ/hit.wav"/>
+                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" flags="Bitfield" value=""/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" flags="HasRange" value="1"/>
+                                                <Property type="Float" name="m_soundSettings.m_delay" flags="HasRange" value="0"/>
+                                            </Object>
+                                            <Object class="SoundResource">
+                                                <Property type="String" name="m_name" value="Die"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Sounds/GJ/die.wav"/>
                                                 <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" flags="Bitfield" value=""/>
                                                 <Property type="Float" name="m_soundSettings.m_volume" flags="HasRange" value="1"/>
                                                 <Property type="Float" name="m_soundSettings.m_delay" flags="HasRange" value="0"/>
@@ -260,7 +270,7 @@
                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
                             <Object class="PrefabGameObject">
                                 <Property type="String" name="m_name" value="HealthBar"/>
-                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="2982878408"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
@@ -272,7 +282,7 @@
                                 <Property type="Resource" name="m_prefabResource" flags="Resource">
                                     <Object class="PrefabResource">
                                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="3482621814"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/HealthBar.prefab"/>

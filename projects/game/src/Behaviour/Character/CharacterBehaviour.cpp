@@ -261,35 +261,26 @@ bool CharacterBehaviour::takeHit(CharacterBehaviour * _attacker, ItemBehaviour *
             if (auto * healthBar = GetGameObject()->GetComponentInChildrenT<HealthBarBehaviour>())
                 healthBar->setHP(m_hp);
 
-            //if (auto * hpGO = go->GetChildGameObject("HP"))    // TODO: cache?
-            //{
-            //    if (auto * hpText = hpGO->GetComponentT<IUITextComponent>())
-            //        hpText->SetText(fmt::sprintf("%.0f HP", m_hp));
-            //}
-            //
-            //if (auto * lifebarGO = go->GetChildGameObject("Lifebar"))
-            //{
-            //    if (auto * lifebarImage = lifebarGO->GetComponentT<IUIImageComponent>())
-            //    {
-            //
-            //    }
-            //}
+            float push = _weapon ? _weapon->getPush() : 0.0f;
 
             if (m_hp > 0)
             {
-                if (auto * characterController = go->GetComponentT<ICharacterControllerComponent>())
-                {
-                    float3 delta = normalize(go->GetGlobalMatrix()[3].xyz - attackerGO->GetGlobalMatrix()[3].xyz) * 25.0f;
-                    characterController->SetVelocity(characterController->GetVelocity() + delta);
-                }
-
                 m_moveState = MoveState::Hurt;
-                playSound(SoundState::TakeDamage);
+                playSound(SoundState::Hit);
             }
             else
             {
-                // TODO: play another sound for death
                 m_moveState = MoveState::Die;
+                playSound(SoundState::Hit);
+            }
+
+            if (push > 0)
+            {
+                if (auto * characterController = go->GetComponentT<ICharacterControllerComponent>())
+                {
+                    float3 delta = normalize(go->GetGlobalMatrix()[3].xyz - attackerGO->GetGlobalMatrix()[3].xyz) * push;
+                    characterController->SetVelocity(characterController->GetVelocity() + delta);
+                }
             }
         }
 

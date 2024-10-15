@@ -77,6 +77,30 @@ namespace vg::engine
                     }
                 }
             }
+
+            const auto * engineOptions = EngineOptions::get();
+            if (engineOptions->isAnyBodyVisible())
+            {
+                const auto shapes = GetGameObject()->GetComponentsT<PhysicsShapeComponent>();
+                if (shapes.size() > 0)
+                {
+                    float totalMass = 0.0f;
+                    for (uint i = 0; i < shapes.size(); ++i)
+                    {
+                        const auto * shape = shapes[i];
+                        if (shape && shape->isEnabled())
+                        {
+                            const auto * physicsShape = shape->getPhysicsShape();
+                            if (engineOptions->isBodyVisible(physicsShape->GetShapeType()))
+                                physicsShape->Draw(_context.m_world, _context.m_gameObject->getGlobalMatrix());
+                        }
+                    }
+                }
+                else
+                {
+                    VG_WARNING("[Physics] PhysicsBodyComponent in GameObject \"%s\" has no physics shape", _context.m_gameObject->GetName().c_str());
+                }
+            }
         }
     }
 

@@ -21,7 +21,7 @@ namespace vg::physics
 
         CylinderShape(const CylinderShapeDesc & _desc);
         ShapeType GetShapeType() const final override { return ShapeType::Cylinder; }
-        void Draw(const core::IWorld * _world, const core::float4x4 & _matrix) final override;
+        void Draw(const core::IWorld * _world, const core::float4x4 & _matrix) const final override;
 
         float m_radius = 0.5f;
         float m_height = 1.0f;

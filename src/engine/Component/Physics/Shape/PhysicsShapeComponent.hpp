@@ -29,15 +29,7 @@ namespace vg::engine
     PhysicsShapeComponent::PhysicsShapeComponent(const core::string & _name, IObject * _parent) :
         super(_name, _parent)
     {
-        if (_parent)
-        {
-            // Because of the way Undo/Redo works, the shape desc should not be created here
-            //if (m_shapeDesc == nullptr)
-            //    createShapeDesc();
-            //
-            //if (m_shape == nullptr)
-            //    createShape();
-        }
+        EnableUpdateFlags(UpdateFlags::Update, false);
     }
 
     //--------------------------------------------------------------------------------------
@@ -64,28 +56,6 @@ namespace vg::engine
 
         if (m_shapeDesc)
             m_shapeDesc->RegisterUID();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void PhysicsShapeComponent::Update(const Context & _context)
-    {
-        if (isEnabled())
-        {
-            if (nullptr == _context.m_world)
-                return;
-
-            auto shape = getPhysicsShape();            
-
-            if (shape)
-            {
-                if (EngineOptions::get()->isBodyVisible(shape->GetShapeType()))
-                    shape->Draw(_context.m_world, _context.m_gameObject->getGlobalMatrix());
-            }
-            else
-            {
-                VG_WARNING("[Physics] PhysicsShapeComponent in GameObject \"%s\" has no physics shape", _context.m_gameObject->GetName().c_str());
-            }
-        }
     }
 
     //--------------------------------------------------------------------------------------

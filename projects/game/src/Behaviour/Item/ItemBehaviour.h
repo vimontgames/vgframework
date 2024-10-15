@@ -19,9 +19,11 @@ public:
     virtual bool                            CanPick     () const;
 
     VG_INLINE float                         getDamage   () const;
+    VG_INLINE float                         getPush     () const;
 
 private:
     float                                   m_damage = 10.0f;
+    float                                   m_push = 10.0f;
     ItemType                                m_itemType;
     vg::core::ObjectHandle                  m_owner;
 };

@@ -77,4 +77,10 @@ void HealthBarBehaviour::setHP(float _currentHP)
         if (auto * lifeText = lifeGO->GetComponentT<IUITextComponent>())
             lifeText->SetText(vg::core::fmt::sprintf("%.0f HP", m_currentHP));
     }
+
+    if (auto * lifeGO = GetGameObject()->GetChildGameObject("Background"))
+    {
+        if (auto * backgroundImage = lifeGO->GetComponentT<IUIImageComponent>())
+            backgroundImage->SetSize(uint2(((float)m_currentHP / (float)m_maxHP) * (float)m_width, backgroundImage->GetSize().y));
+    }
 }
