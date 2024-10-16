@@ -338,7 +338,7 @@ namespace vg::editor
         if (active)
             ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGui::GetStyleColorVec4(ImGuiCol_TabActive));
 
-        if (ImGui::Begin(title.c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavInputs))
+        if (ImGui::Begin(title.c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoScrollbar))
         {
             // Menu
             if (ShowTitlebarMenu())

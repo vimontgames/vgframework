@@ -342,7 +342,10 @@ namespace vg::editor
         ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 
         if (fullscreen)
+        {
             dockspaceFlags |= ImGuiDockNodeFlags_NoDockingOverCentralNode;
+            windowFlags |= ImGuiWindowFlags_NoScrollbar;
+        }
 
         bool showUI = true;
         static bool showImGuiDemo = false;

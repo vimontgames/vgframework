@@ -47,7 +47,7 @@ namespace vg::renderer
 
         #if !VG_ENABLE_EDITOR
         // if not rendered from inside dock the ImGui::Begin part is needed!
-        ImGui::Begin("ViewGUI", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+        ImGui::Begin("ViewGUI", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
         #endif
         {
             ImGui::SetCursorScreenPos(ImVec2(0, 0));
@@ -357,6 +357,7 @@ namespace vg::renderer
             }
         }
 
+        ImGui::SetCursorPos(float2ToImVec2(windowOffset));
         ImGui::PopStyleColor();
         ImGui::PopClipRect();
         m_uiElements.clear();
