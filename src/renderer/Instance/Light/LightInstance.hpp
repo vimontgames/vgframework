@@ -27,16 +27,22 @@ namespace vg::renderer
         registerPropertyOptionalGroupBegin(LightDesc, m_shadow, "Shadow Settings");
         {
             registerProperty(LightDesc, m_shadowRange, "Range");
-            setPropertyRange(LightDesc, m_shadowRange, float2(0.0f, 256.0f));
+            setPropertyRange(LightDesc, m_shadowRange, float2(0.0f, 1000.0f));
+            setPropertyDescription(LightDesc, m_shadowRange, "Max shadow distance");
 
             registerProperty(LightDesc, m_shadowBias, "Bias");
-            setPropertyRange(LightDesc, m_shadowBias, float2(0.0001f, 0.01f));
+            setPropertyRange(LightDesc, m_shadowBias, float2(0.0f, 1.0f));
+            setPropertyDescription(LightDesc, m_shadowBias, "Bias shadow distance");
 
             registerProperty(LightDesc, m_shadowSize, "Size");
+            setPropertyDescription(LightDesc, m_shadowSize, "Shadow map size in world-space");
+
             registerProperty(LightDesc, m_shadowResolution, "Resolution");
+            setPropertyDescription(LightDesc, m_shadowResolution, "Shadow map resolution in pixels");
 
             registerProperty(LightDesc, m_shadowIntensity, "Shadow Intensity");
             setPropertyRange(LightDesc, m_shadowIntensity, float2(0.0f, 1.0f));
+            setPropertyDescription(LightDesc, m_shadowIntensity, "Amound of light occluded in shadowed areas");
         }
         registerPropertyOptionalGroupEnd(LightDesc);
 
@@ -72,7 +78,7 @@ namespace vg::renderer
     {
         m_shadow = _lightDesc->m_shadow;
         m_shadowRange = _lightDesc->m_shadowRange;
-        m_shadowBias = _lightDesc->m_shadowBias;
+        m_shadowBias = _lightDesc->m_shadowBias * 0.01f;
         m_shadowSize = _lightDesc->m_shadowSize;
         m_shadowResolution = _lightDesc->m_shadowResolution;
         m_shadowIntensity = m_shadow ? _lightDesc->m_shadowIntensity : 0.0f;

@@ -12,7 +12,7 @@ namespace vg::renderer
 
         bool            m_shadow            = false;
         core::float2    m_shadowRange       = core::float2(0.1f, 100.0f);
-        float           m_shadowBias        = 0.001f;
+        float           m_shadowBias        = 0.01f;
         core::uint2     m_shadowSize        = core::uint2(16, 16);
         core::uint2     m_shadowResolution  = core::uint2(1024, 1024);
         float           m_shadowIntensity   = 1.0f;
