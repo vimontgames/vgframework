@@ -8,8 +8,26 @@ name: "ARM64EC Vulkan Final  "
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - '**/*.sln'
+      - '**/*.vcxproj'
+      - '**/*.h'
+      - '**/*.hpp'
+      - '**/*.c'
+      - '**/*.cpp'
+      - '**/*.inl'
+      - '**/*.fxh'
   pull_request:
     branches: [ "master" ]
+    paths:
+      - '**/*.sln'
+      - '**/*.vcxproj'
+      - '**/*.h'
+      - '**/*.hpp'
+      - '**/*.c'
+      - '**/*.cpp'
+      - '**/*.inl'
+      - '**/*.fxh'
 
 env:
   # Path to the solution file relative to the root of the project.
