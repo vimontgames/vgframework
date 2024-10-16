@@ -933,9 +933,12 @@ namespace vg::editor
         if (asBool(PropertyFlags::EulerAngle & flags))
             return 5.0f;
 
-        //if (asBool(PropertyFlags::HasRange & _prop->getFlags()))
-        //    return (_prop->getRange().y - _prop->getRange().x) / 1000.0f;
-        //else
+        if (asBool(PropertyFlags::HasRange & flags))
+        {
+            const auto range = _prop->GetRange();
+            return (range.y - range.x) / 1000.0f;
+        }
+        else
             return 0.05f;
     }
 

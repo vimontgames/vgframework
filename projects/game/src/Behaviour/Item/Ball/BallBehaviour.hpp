@@ -1,6 +1,7 @@
 #include "BallBehaviour.h"
 #include "Game.h"
 #include "Behaviour/Character/Player/PlayerBehaviour.h"
+#include "Behaviour/Character/Enemy/EnemyBehaviour.h"
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -46,8 +47,11 @@ void BallBehaviour::OnCollisionEnter(vg::core::IGameObject * _other)
         {
             m_lastOwnerCharacter = player;
             SetOwner(player->GetGameObject());
-            GetGameObject()->SetColor(player->getCustomColor());
         }
+    }
+    else if (auto * enemy = _other->GetComponentT<EnemyBehaviour>())
+    {
+        enemy->takeHit(nullptr, this);
     }
 }
 

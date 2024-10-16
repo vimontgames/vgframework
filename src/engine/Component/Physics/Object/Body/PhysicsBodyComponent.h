@@ -56,5 +56,6 @@ namespace vg::engine
     private:
         physics::IBodyDesc *                    m_bodyDesc  = nullptr;
         physics::IBody *                        m_body      = nullptr;
+        core::float3                            m_velocity  = (core::float3)0.0f;
     };
 }

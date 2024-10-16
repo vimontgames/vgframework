@@ -18,7 +18,7 @@ namespace vg::physics
     class Shape;
     class PhysicsWorld;
 
-    class Body : public IBody
+    class Body final : public IBody
     {
     public:
         VG_CLASS_DECL(Body, IBody);
@@ -35,6 +35,7 @@ namespace vg::physics
         void            SetMatrix               (core::float4x4 _world)  final override;
 
         void            AddImpulse              (const core::float3 & _impulse) final override;
+        core::float3    GetVelocity             () const final override;
 
     private:
         void            createBodyFromJoltShape (PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, JPH::Shape * _joltShape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent);

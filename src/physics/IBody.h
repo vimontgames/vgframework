@@ -43,5 +43,6 @@ namespace vg::physics
         virtual void            SetMatrix   (core::float4x4 _world) = 0;
 
         virtual void            AddImpulse  (const core::float3 & _impulse) = 0;
+        virtual core::float3    GetVelocity () const = 0;
     };
 }

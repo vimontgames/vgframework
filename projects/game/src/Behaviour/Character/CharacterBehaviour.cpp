@@ -246,12 +246,25 @@ bool CharacterBehaviour::takeHit(CharacterBehaviour * _attacker, ItemBehaviour *
             return false;
 
         auto * go = GetGameObject();
-        auto attackerGO = _attacker->GetGameObject();
+        float3 hitDir;
 
-        if (_weapon)
-            VG_WARNING("[Enemy] \"%s\" was hit by \"%s\" with \"%s\"", go->GetName().c_str(), attackerGO->GetName().c_str(), _weapon->GetGameObject()->GetName().c_str());
+        if (nullptr != _attacker)
+        {
+            auto attackerGO = _attacker->GetGameObject();
+            hitDir = normalize(go->GetGlobalMatrix()[3].xyz - attackerGO->GetGlobalMatrix()[3].xyz);
+
+            if (_weapon)
+                VG_INFO("[Character] \"%s\" was hit by \"%s\" with \"%s\"", go->GetName().c_str(), attackerGO->GetName().c_str(), _weapon->GetGameObject()->GetName().c_str());
+            else
+                VG_INFO("[Character] \"%s\" was hit by \"%s\"", go->GetName().c_str(), attackerGO->GetName().c_str());
+        }
         else
-            VG_WARNING("[Enemy] \"%s\" was hit by \"%s\"", go->GetName().c_str(), attackerGO->GetName().c_str());
+        {
+            auto weaponGO = _weapon->GetGameObject();
+            hitDir = normalize(go->GetGlobalMatrix()[3].xyz - weaponGO->GetGlobalMatrix()[3].xyz);
+
+            VG_INFO("[Character] \"%s\" was hit by \"%s\"", go->GetName().c_str(), weaponGO->GetName().c_str());
+        }
 
         float damage = _weapon ? _weapon->getDamage() : 0.0f;
         m_hp = max(0.0f, m_hp - damage);
@@ -277,10 +290,7 @@ bool CharacterBehaviour::takeHit(CharacterBehaviour * _attacker, ItemBehaviour *
             if (push > 0)
             {
                 if (auto * characterController = go->GetComponentT<ICharacterControllerComponent>())
-                {
-                    float3 delta = normalize(go->GetGlobalMatrix()[3].xyz - attackerGO->GetGlobalMatrix()[3].xyz) * push;
-                    characterController->SetVelocity(characterController->GetVelocity() + delta);
-                }
+                    characterController->SetVelocity(characterController->GetVelocity() + hitDir * push);
             }
         }
 

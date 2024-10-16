@@ -24,6 +24,8 @@ namespace vg::engine
 
         registerPropertyObjectPtrEx(PhysicsBodyComponent, m_bodyDesc, "Body", PropertyFlags::Flatten);
 
+        registerPropertyEx(PhysicsBodyComponent, m_velocity, "Velocity", PropertyFlags::Debug);
+
         return true;
     }
 
@@ -102,6 +104,11 @@ namespace vg::engine
                 }
             }
         }
+
+        if (m_body)
+            m_velocity = m_body->GetVelocity();
+        else
+            m_velocity = (core::float3)0.0f;
     }
 
     //--------------------------------------------------------------------------------------

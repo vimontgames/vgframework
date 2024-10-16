@@ -156,4 +156,10 @@ namespace vg::physics
     {
         m_physicsWorld->getBodyInterface().AddImpulse(m_bodyID, getJoltVec3(_impulse));
     }
+
+    //--------------------------------------------------------------------------------------
+    core::float3 Body::GetVelocity() const
+    {
+        return fromJoltVec3(m_physicsWorld->getBodyInterface().GetLinearVelocity(m_bodyID));
+    }
 }
