@@ -209,7 +209,7 @@
                         <Property type="String" name="m_name" value="UI"/>
                         <Property type="Uint32" name="m_uid" flags="" value="1177627180"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -259,6 +259,8 @@
                                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
                                                 <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value=""/>
                                                 <Property type="Uint2" name="m_size" x="64" y="74"/>
+                                                <Property type="Bool" name="m_useCenter" flags="NotVisible" value="false"/>
+                                                <Property type="Float2" name="m_center" flags="" x="0.5" y="0.5"/>
                                                 <Property type="Bool" name="m_useOffset" flags="NotVisible" value="false"/>
                                                 <Property type="Float3" name="m_offset" flags="Optional" x="0" y="0" z="0"/>
                                                 <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
@@ -292,6 +294,8 @@
                                                         <Property type="EnumU8" name="m_vertical" value="Top"/>
                                                         <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useCenter" flags="NotVisible" value="false"/>
+                                                        <Property type="Float2" name="m_center" flags="" x="0.5" y="0.5"/>
                                                         <Property type="Bool" name="m_useOffset" flags="NotVisible" value="false"/>
                                                         <Property type="Float3" name="m_offset" flags="Optional" x="0" y="0" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
@@ -323,6 +327,8 @@
                                                         <Property type="EnumU8" name="m_vertical" value="Top"/>
                                                         <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useCenter" flags="NotVisible" value="false"/>
+                                                        <Property type="Float2" name="m_center" flags="" x="0.5" y="0.5"/>
                                                         <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
                                                         <Property type="Float3" name="m_offset" flags="Optional" x="0" y="14" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
@@ -354,6 +360,8 @@
                                                         <Property type="EnumU8" name="m_vertical" value="Top"/>
                                                         <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useCenter" flags="NotVisible" value="false"/>
+                                                        <Property type="Float2" name="m_center" flags="" x="0.5" y="0.5"/>
                                                         <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
                                                         <Property type="Float3" name="m_offset" flags="Optional" x="0" y="32" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
@@ -385,6 +393,8 @@
                                                         <Property type="EnumU8" name="m_vertical" value="Top"/>
                                                         <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useCenter" flags="NotVisible" value="false"/>
+                                                        <Property type="Float2" name="m_center" flags="" x="0.5" y="0.5"/>
                                                         <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
                                                         <Property type="Float3" name="m_offset" flags="Optional" x="0" y="46" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
@@ -416,6 +426,8 @@
                                                         <Property type="EnumU8" name="m_vertical" value="Top"/>
                                                         <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useCenter" flags="NotVisible" value="false"/>
+                                                        <Property type="Float2" name="m_center" flags="" x="0.5" y="0.5"/>
                                                         <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
                                                         <Property type="Float3" name="m_offset" flags="Optional" x="0" y="64" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
@@ -447,6 +459,8 @@
                                                         <Property type="EnumU8" name="m_vertical" value="Top"/>
                                                         <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
                                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useCenter" flags="NotVisible" value="false"/>
+                                                        <Property type="Float2" name="m_center" flags="" x="0.5" y="0.5"/>
                                                         <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
                                                         <Property type="Float3" name="m_offset" flags="Optional" x="0" y="78" z="0"/>
                                                         <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
@@ -1731,7 +1745,7 @@
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.9238795" Iy="-0.38268346" Iz="0" Iw="0" Jx="0.27046573" Jy="0.65296203" Jz="0.70745158" Jw="0" Kx="-0.27073002" Ky="-0.65360004" Kz="0.706761" Kw="0" Tx="3.0335252e-06" Ty="-2.8610229e-06" Tz="16" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.9238795" Iy="-0.38268346" Iz="0" Iw="0" Jx="0.27046573" Jy="0.65296203" Jz="0.70745158" Jw="0" Kx="-0.27073002" Ky="-0.65360004" Kz="0.706761" Kw="0" Tx="2.8586799e-06" Ty="-4.0000029" Tz="16" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="LightComponent">
@@ -1749,7 +1763,7 @@
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                         <Property type="Bool" name="m_shadow" value="true"/>
                                                         <Property type="Float2" name="m_shadowRange" flags="HasRange" x="0.1" y="100"/>
-                                                        <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.001"/>
+                                                        <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.1"/>
                                                         <Property type="Uint2" name="m_shadowSize" x="50" y="50"/>
                                                         <Property type="Uint2" name="m_shadowResolution" x="4096" y="4096"/>
                                                         <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="0.5"/>
@@ -1979,7 +1993,7 @@
                                 <Property type="String" name="m_name" value="Billboards"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="2532357560"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
