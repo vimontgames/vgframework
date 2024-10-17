@@ -18,7 +18,7 @@
                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                 <Property type="EnumU8" name="m_surfaceType" value="AlphaBlend"/>
-                <Property type="EnumU8" name="m_cullMode" value="Back"/>
+                <Property type="EnumU8" name="m_cullMode" value="None"/>
                 <Property type="EnumU32" name="m_UVSource" value="UV0"/>
                 <Property type="Float2" name="m_tiling" flags="HasRange" x="1" y="1"/>
                 <Property type="Resource" name="m_albedoMap" flags="Resource">
