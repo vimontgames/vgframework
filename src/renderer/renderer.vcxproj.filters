@@ -526,9 +526,6 @@
     <Filter Include="Pass\RenderObjects\Deferred">
       <UniqueIdentifier>{c90f923e-91e0-4faf-80b5-f84eb948d565}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pass\RenderObjects\Shadow">
-      <UniqueIdentifier>{9fc25072-a5c0-49c2-84e8-7a264654e71e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Importer\FBX\UFBXImporter">
       <UniqueIdentifier>{25a0abb5-62e6-44ad-af17-83344db2afb1}</UniqueIdentifier>
     </Filter>

@@ -18,7 +18,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ShadowMapPass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
-        const auto size = _renderPassContext.m_view->GetSize();
+        const auto size = _renderPassContext.getView()->GetSize();
 
         FrameGraphTextureResourceDesc shadowMapDesc = {};
         shadowMapDesc.format = PixelFormat::D32S8;
@@ -31,5 +31,11 @@ namespace vg::renderer
         const auto shadowMapID = _renderPassContext.getFrameGraphIDEx("ShadowMap");
         createDepthStencil(shadowMapID, shadowMapDesc);
         writeDepthStencil(shadowMapID);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ShadowMapPass::Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const
+    {
+        super::Render(_renderPassContext, _cmdList);
     }
 }

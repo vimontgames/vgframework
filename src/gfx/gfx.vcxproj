@@ -316,6 +316,8 @@
     <ClCompile Include="Profiler\Profiler.cpp" />
     <ClCompile Include="Raytracing\RayTracing.cpp" />
     <ClCompile Include="Resource\Resource.cpp" />
+    <ClInclude Include="FrameGraph\RenderPassContext.h" />
+    <ClInclude Include="FrameGraph\RenderPassContext.hpp" />
     <ClInclude Include="FrameGraph\ResourceTransition.h" />
     <ClInclude Include="IImporter.h" />
     <ClInclude Include="Importer\Importer.h" />
@@ -514,6 +516,7 @@
     <None Include="CommandList\CommandList.inl" />
     <None Include="Device\Device.inl" />
     <None Include="Device\vulkan\Device_vulkan.inl" />
+    <None Include="FrameGraph\RenderPassContext.inl" />
     <None Include="FrameGraph\UserPass.inl" />
     <None Include="PipelineState\Compute\dx12\ComputePipelineState_dx12.inl" />
     <None Include="PipelineState\Compute\vulkan\ComputePipelineState_vulkan.inl" />

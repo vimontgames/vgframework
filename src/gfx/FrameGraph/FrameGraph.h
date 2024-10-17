@@ -3,8 +3,7 @@
 #include "core/Object/Object.h"
 #include "FrameGraph_consts.h"
 #include "FrameGraphResource.h"
-#include "gfx/IView.h"
-#include "gfx/IViewport.h"
+#include "RenderPassContext.h"
 #include "core/string/string.h"
 
 namespace vg::gfx
@@ -19,37 +18,6 @@ namespace vg::gfx
     class CommandList;
 
 	enum class PixelFormat : core::u8;
-
-    struct RenderPassContext
-    {
-        IView * m_view = nullptr;
-        IView * m_parent = nullptr;
-
-		const core::string getFrameGraphID(const core::string & _name) const
-		{
-			return MakeFrameGraphID(_name, m_view->GetViewID());
-		}
-
-        const core::string getFrameGraphIDEx(const core::string & _name) const
-        {
-            return MakeFrameGraphIDEx(_name, m_view->GetViewID(), m_parent->GetViewID());
-        }
-
-        static const core::string MakeFrameGraphID(const core::string & _name, ViewID _viewID)
-        {
-            return fmt::sprintf("%s - %s %u", _name , core::asString(_viewID.target), _viewID.index);
-        }
-
-        static const core::string MakeFrameGraphIDEx(const core::string & _name, ViewID _viewID, ViewID _parentViewID)
-        {
-            return fmt::sprintf("%s %u - %s %u", _name, _viewID.index, core::asString(_parentViewID.target), _parentViewID.index);
-        }
-
-        static const core::string MakeFrameGraphID(const core::string & _name, ViewportID _viewportID)
-        {
-            return fmt::sprintf("%s - %s %u", _name, core::asString(_viewportID.target), _viewportID.index);
-        }
-    };
 
 	class FrameGraph : public core::Object
 	{

@@ -23,4 +23,10 @@ namespace vg::renderer
 
         readRWBuffer("SkinningRWBuffer");
     }   
+
+    //--------------------------------------------------------------------------------------
+    void DepthPrePass::Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const
+    {
+        super::Render(_renderPassContext, _cmdList);
+    }
 }

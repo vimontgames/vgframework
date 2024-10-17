@@ -32,14 +32,14 @@ namespace vg::renderer
         
         readRWBuffer("SkinningRWBuffer");
 
-        View * view = (View *)_renderPassContext.m_view;
+        const View * view = static_cast<const View*>(_renderPassContext.getView());
         readDepthStencil(view->getShadowMaps());
     }
 
     //--------------------------------------------------------------------------------------
     void ForwardOpaquePass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
-        const View * view = (const View *)_renderPassContext.m_view;
+        const View * view = static_cast<const View *>(_renderPassContext.getView());
         const auto options = RendererOptions::get();
 
         RenderContext renderContext;
@@ -62,19 +62,7 @@ namespace vg::renderer
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);
 
-        // Render full opaque then alphatest
-        const GraphicInstanceListType opaqueLists[] =
-        {
-            GraphicInstanceListType::Opaque,
-            GraphicInstanceListType::AlphaTest
-        };
-
-        for (uint i = 0; i < countof(opaqueLists); ++i)
-        {
-            const auto list = (GraphicInstanceListType)opaqueLists[i];            
-            const GraphicInstanceList & instances = view->getCullingJobResult().get(list);
-            renderContext.m_alphatest = (GraphicInstanceListType::AlphaTest == list) ? true : false;
-            DrawGraphicInstances(renderContext, _cmdList, instances);
-        }
+        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Opaque);
+        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::AlphaTest);
     }   
 }

@@ -38,16 +38,17 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void EditorPass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
-        DebugDraw::get()->update((View*)_renderPassContext.m_view, _cmdList);
+        DebugDraw::get()->update(static_cast<const View*>(_renderPassContext.getView()), _cmdList);
     }
 
     //--------------------------------------------------------------------------------------
     void EditorPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
-        const View * view = (const View *)_renderPassContext.m_view;
+        const View * view = static_cast<const View *>(_renderPassContext.getView());
         const auto options = RendererOptions::get();
 
         RenderContext renderContext;
+        renderContext.m_renderPass = &_renderPassContext;
         renderContext.m_view = view->getViewMatrix();
         renderContext.m_proj = view->getProjMatrix();
         renderContext.m_toolmode = view->isToolmode();
@@ -62,8 +63,6 @@ namespace vg::renderer
         // Draw AABBs
         {
             bool opaque = true;
-
-            const GraphicInstanceList & allInstances = view->getCullingJobResult().get(GraphicInstanceListType::All);
 
             // Default pass states
             RasterizerState rs(FillMode::Solid, CullMode::None, Orientation::ClockWise, DepthClip::Enable, DepthBias::None);
@@ -82,12 +81,13 @@ namespace vg::renderer
             if (options->isWireframeEnabled() || wireframeSelection)
             {
                 renderContext.m_wireframe = true;
-                DrawGraphicInstances(renderContext, _cmdList, allInstances);
+                DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::All);
             }
 
             bool boudingBoxSelection = true;
             if (options->isAABBEnabled() || boudingBoxSelection)
             {
+                const GraphicInstanceList & allInstances = view->getCullingJobResult().get(GraphicInstanceListType::All);
                 for (uint i = 0; i < allInstances.m_instances.size(); ++i)
                 {
                     auto * instance = (GraphicInstance*)allInstances.m_instances[i];
@@ -103,7 +103,7 @@ namespace vg::renderer
         }
 
         // Other Debug draw
-        dbgDraw->render((View *)_renderPassContext.m_view, _cmdList);
+        dbgDraw->render(static_cast<const View *>(_renderPassContext.getView()), _cmdList);
     }
 
     //--------------------------------------------------------------------------------------
@@ -129,7 +129,7 @@ namespace vg::renderer
         {
             const ToolmodeRWBufferData * data = (ToolmodeRWBufferData *)result.data;
             const PickingData * pickingData = &data->m_picking;
-            _renderPassContext.m_view->SetPickingData(*pickingData);
+            _renderPassContext.getViewMutable()->SetPickingData(*pickingData);
         }
         m_toolmodeRWBufferStaging->getResource().unmap();
     }

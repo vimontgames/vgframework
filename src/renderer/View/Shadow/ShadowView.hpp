@@ -39,8 +39,8 @@ namespace vg::renderer
         VG_ASSERT(isUsingShadowMap());
 
         RenderPassContext rc;
-        rc.m_view = (IView *)this;
-        rc.m_parent = (IView *)_view;
+        rc.setView(this);
+        rc.setParentView(_view);
 
         return rc.getFrameGraphIDEx("ShadowMap");
     }
@@ -52,11 +52,11 @@ namespace vg::renderer
 
         if (isUsingShadowMap())
         {
-            _frameGraph.pushPassGroup(fmt::sprintf("Shadow #%u", _renderPassContext.m_view->GetViewID().index));
+            _frameGraph.pushPassGroup(fmt::sprintf("Shadow #%u", _renderPassContext.getView()->GetViewID().index));
 
             gfx::RenderPassContext rc = _renderPassContext;
-            rc.m_view = this;
-            rc.m_parent = _renderPassContext.m_view;
+            rc.setView(this);
+            rc.setParentView(_renderPassContext.getView());
 
             super::RegisterFrameGraph(rc, _frameGraph);
 

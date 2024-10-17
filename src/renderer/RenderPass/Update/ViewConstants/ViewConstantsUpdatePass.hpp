@@ -52,7 +52,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ViewConstantsUpdatePass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
-        if (_renderPassContext.m_view->IsToolmode())
+        if (_renderPassContext.getView()->IsToolmode())
         {
             FrameGraphBufferResourceDesc toolmodeRWBufferDesc;
             toolmodeRWBufferDesc.elementSize = sizeof(ToolmodeRWBufferData);
@@ -68,16 +68,16 @@ namespace vg::renderer
     void ViewConstantsUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
         const auto options = RendererOptions::get();
+        auto * view = static_cast<const View *>(_renderPassContext.getView());
 
         u16 toolmodeRWBufferID = -1;
-        if (_renderPassContext.m_view->IsToolmode())
+        if (view->IsToolmode())
         {
             Buffer * toolmodeRWBuffer = getRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"));
             toolmodeRWBufferID = toolmodeRWBuffer->getRWBufferHandle();
             _cmdList->clearRWBuffer(toolmodeRWBuffer, 0x0);
         }
 
-        View * view = (View *)_renderPassContext.m_view;
         const uint2 viewSize = view->GetSize();
 
         ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer, sizeof(ViewConstants)).data;
@@ -96,12 +96,12 @@ namespace vg::renderer
             constants->setProjInv(view->getProjInvMatrix());
             constants->setTLASHandle(view->getTLASHandle());
 
-            //if (_renderPassContext.m_view->IsToolmode())
+            //if (view->IsToolmode())
             //    VG_INFO("[Picking %s] RelativeMousePos = %i %i OVER = %s", _renderPassContext.m_view->getName().c_str(), (uint)constants->getMousePos().x, (uint)constants->getMousePos().y, _renderPassContext.m_view->IsMouseOverView() ? "true" : "false");
         }
         _cmdList->unmap(s_ViewConstantsBuffer);
 
-        if (_renderPassContext.m_view->IsLit())
+        if (view->IsLit())
             updateLightsConstants(_renderPassContext, _cmdList);
     }
     
@@ -110,7 +110,7 @@ namespace vg::renderer
     {
         VG_PROFILE_CPU("Lights");
 
-        const auto view = (View *)_renderPassContext.m_view; 
+        const auto view = static_cast<const View *>(_renderPassContext.getView()); 
         const ViewCullingJobOutput & culling = view->getCullingJobResult();
 
         const auto & directionals = culling.get(LightType::Directional).m_instances;
@@ -208,7 +208,7 @@ namespace vg::renderer
                 constants->setShadowBias(omni->m_shadowBias);
                 constants->setShadowInstensity(omni->m_shadowIntensity);
 
-                auto shadowMapID = ((View *)_renderPassContext.m_view)->findShadowMapID(omnis[i]);
+                //auto shadowMapID = static_cast<const View *>(_renderPassContext.m_view)->findShadowMapID(omnis[i]);
 
                 offset += sizeof(OmniLightConstants);
             }            

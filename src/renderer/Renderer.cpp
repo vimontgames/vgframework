@@ -464,7 +464,7 @@ namespace vg::renderer
 
                 // Register passes not linked to views (e.g. skinning, or BLAS updates)
                 RenderPassContext mainViewRenderPassContext;
-                                  mainViewRenderPassContext.m_view = nullptr;
+                                  mainViewRenderPassContext.setView(nullptr);
 
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_gpuDebugUpdatePass, "GPU Debug");
 
@@ -518,15 +518,14 @@ namespace vg::renderer
                                 continue;
 
                             gfx::RenderPassContext rc;
-                                                   rc.m_view = view;
+                                                   rc.setView(view);
 
                             view->RegisterFrameGraph(rc, m_frameGraph);
                         }
                     }
                 }
 
-                //if (!m_fullscreen)
-                    m_frameGraph.addUserPass(mainViewRenderPassContext, m_imguiPass, "ImGui");
+                m_frameGraph.addUserPass(mainViewRenderPassContext, m_imguiPass, "ImGui");
 
                 if (hdrOutput)
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_hdrOutputPass, "HDROutput");

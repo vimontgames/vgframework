@@ -45,23 +45,23 @@ namespace vg::renderer
         const auto colorID = _renderPassContext.getFrameGraphID("Color");
         writeRWTexture(colorID);
 
-        View * view = (View *)_renderPassContext.m_view;
+        const View * view = static_cast<const View *>(_renderPassContext.getView());
         readDepthStencil(view->getShadowMaps());
     }
 
     //--------------------------------------------------------------------------------------
     void ComputeDeferredLightingPass::Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const
     {
-        auto size = _renderPassContext.m_view->GetSize();
+        auto size = _renderPassContext.getView()->GetSize();
         auto threadGroupSize = uint2(DEFERRED_LIGHTING_THREADGROUP_SIZE_X, DEFERRED_LIGHTING_THREADGROUP_SIZE_Y);
         auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.y + threadGroupSize.y - 1) / threadGroupSize.y, 1);
         
         ComputeShaderKey shaderKey = m_computeDeferredLightingShaderKey;
         
-        if (_renderPassContext.m_view->IsToolmode())
+        if (_renderPassContext.getView()->IsToolmode())
             shaderKey.setFlags(gfx::DeferredLightingHLSLDesc::Toolmode);
 
-        if (_renderPassContext.m_view->IsUsingRayTracing())
+        if (_renderPassContext.getView()->IsUsingRayTracing())
             shaderKey.setFlags(gfx::DeferredLightingHLSLDesc::RayTracing);
         
         _cmdList->setComputeRootSignature(m_computeDeferredLightingRootSignature);

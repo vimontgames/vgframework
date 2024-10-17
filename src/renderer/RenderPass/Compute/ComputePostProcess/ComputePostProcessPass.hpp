@@ -38,7 +38,7 @@ namespace vg::renderer
 
         auto * device = Device::get();
 
-        auto size = _renderPassContext.m_view->GetSize();
+        auto size = _renderPassContext.getView()->GetSize();
 
         FrameGraphTextureResourceDesc uavDesc;
         uavDesc.format = PixelFormat::R16G16B16A16_float;
@@ -55,17 +55,17 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ComputePostProcessPass::Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const
     {
-        auto size = _renderPassContext.m_view->GetSize();
+        auto size = _renderPassContext.getView()->GetSize();
         auto threadGroupSize = uint2(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y);
         auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.y + threadGroupSize.y - 1) / threadGroupSize.y, 1);
 
         ComputeShaderKey shaderKey = m_computePostProcessShaderKey;
 
-        if (_renderPassContext.m_view->IsToolmode())
+        if (_renderPassContext.getView()->IsToolmode())
         {
             shaderKey.setFlags(gfx::PostProcessHLSLDesc::Toolmode);
 
-            if (_renderPassContext.m_view->IsUsingRayTracing())
+            if (_renderPassContext.getView()->IsUsingRayTracing())
                 shaderKey.setFlags(gfx::PostProcessHLSLDesc::RayTracing);
         }
 

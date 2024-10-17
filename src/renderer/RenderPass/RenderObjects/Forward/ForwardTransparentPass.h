@@ -8,12 +8,14 @@ namespace vg::renderer
     class ForwardTransparentPass : public RenderObjectsPass
     {
     public:
-        const char * GetClassName() const final { return "ForwardTransparentPass"; }
+        VG_CLASS_DECL(ForwardTransparentPass, RenderObjectsPass);
 
         ForwardTransparentPass();
         ~ForwardTransparentPass();
 
         void Setup(const gfx::RenderPassContext & _renderPassContext) override;
         void Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const override;
+
+
     };
 }

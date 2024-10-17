@@ -677,6 +677,12 @@
     <ClInclude Include="..\..\extern\optick\src\optick_gpu.d3d12.cpp">
       <Filter>Profiler\Optick\dx12</Filter>
     </ClInclude>
+    <ClInclude Include="FrameGraph\RenderPassContext.h">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\RenderPassContext.hpp">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -866,6 +872,9 @@
     </None>
     <None Include="Device\Device.inl">
       <Filter>Device</Filter>
+    </None>
+    <None Include="FrameGraph\RenderPassContext.inl">
+      <Filter>FrameGraph</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -16,7 +16,7 @@ namespace vg::core
 namespace vg::gfx
 {
     struct CreateViewParams;
-    struct RenderPassContext;
+    class RenderPassContext;
     class FrameGraph;
     class Buffer;
     class TLAS;

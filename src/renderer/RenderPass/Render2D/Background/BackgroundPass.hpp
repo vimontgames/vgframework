@@ -38,7 +38,7 @@ namespace vg::renderer
     {
         auto * device = Device::get();
 
-        const auto size = _renderPassContext.m_view->GetSize();
+        const auto size = _renderPassContext.getView()->GetSize();
         const auto options = RendererOptions::get();
 
         auto clearColor = m_useFastClear ? pow(options->getBackgroundColor(), 2.2f) : defaultOptimizedClearColor;

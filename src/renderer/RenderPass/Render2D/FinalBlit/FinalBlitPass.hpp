@@ -39,12 +39,12 @@ namespace vg::renderer
         const auto * renderer = Renderer::get();
         const auto options = RendererOptions::get();
 
-        if (_renderPassContext.m_view->IsComputePostProcessNeeded())
+        if (_renderPassContext.getView()->IsComputePostProcessNeeded())
             readRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"));
         else
             readRenderTarget(_renderPassContext.getFrameGraphID("Color"));        
 
-        if (!_renderPassContext.m_view->GetRenderTarget() || renderer->IsFullscreen())
+        if (!_renderPassContext.getView()->GetRenderTarget() || renderer->IsFullscreen())
         {
             if (HDR::None != renderer->GetHDR())
                 writeRenderTarget(0, "HDROutput");
@@ -53,7 +53,7 @@ namespace vg::renderer
         }
         else
         {
-            writeRenderTarget(0, _renderPassContext.MakeFrameGraphID("Dest", _renderPassContext.m_view->GetViewport()->GetViewportID()));
+            writeRenderTarget(0, _renderPassContext.MakeFrameGraphID("Dest", _renderPassContext.getView()->GetViewport()->GetViewportID()));
         }
     }
 
@@ -82,11 +82,11 @@ namespace vg::renderer
 
         RootConstants2D root2D;
 
-        root2D.quad.posOffsetScale = float4(_renderPassContext.m_view->GetViewportOffset(), _renderPassContext.m_view->GetViewportScale());
+        root2D.quad.posOffsetScale = float4(_renderPassContext.getView()->GetViewportOffset(), _renderPassContext.getView()->GetViewportScale());
         root2D.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
 
         // When Compute post-process is enabled then we blit from the PostProcessUAV read as Shader Resource
-        if (_renderPassContext.m_view->IsComputePostProcessNeeded())
+        if (_renderPassContext.getView()->IsComputePostProcessNeeded())
             root2D.texID = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getTextureHandle();
         else
             root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getTextureHandle();       
@@ -98,7 +98,7 @@ namespace vg::renderer
         // When no editor we render game UI directly to backbuffer
         if (Renderer::get()->IsFullscreen())
         {
-            if (auto * viewGUI = VG_SAFE_STATIC_CAST(UIRenderer, _renderPassContext.m_view->GetUIRenderer()))
+            if (auto * viewGUI = VG_SAFE_STATIC_CAST(UIRenderer, _renderPassContext.getView()->GetUIRenderer()))
                 viewGUI->RenderFullscreen();
         }
         #endif

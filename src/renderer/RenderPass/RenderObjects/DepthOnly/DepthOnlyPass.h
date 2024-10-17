@@ -7,6 +7,8 @@ namespace vg::renderer
     class DepthOnlyPass : public RenderObjectsPass
     {
     public:
+        VG_CLASS_DECL(DepthOnlyPass, RenderObjectsPass);
+
         DepthOnlyPass(const core::string & _name);
         ~DepthOnlyPass();
 

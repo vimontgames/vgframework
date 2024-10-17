@@ -26,7 +26,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DeferredOpaquePass::Setup(const gfx::RenderPassContext & _renderContext)
     {
-        auto size = _renderContext.m_view->GetSize();
+        auto size = _renderContext.getView()->GetSize();
 
         // Albedo
         {
@@ -78,10 +78,11 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DeferredOpaquePass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
-        const View * view = (const View *)_renderPassContext.m_view;
+        const View * view = static_cast<const View *>(_renderPassContext.getView());
         const auto options = RendererOptions::get();
 
         RenderContext renderContext;
+        renderContext.m_renderPass = &_renderPassContext;
         renderContext.m_view = view->getViewMatrix();
         renderContext.m_proj = view->getProjMatrix();
         renderContext.m_toolmode = view->getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
@@ -100,19 +101,7 @@ namespace vg::renderer
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);
 
-        // Render full opaque then alphatest
-        const GraphicInstanceListType opaqueLists[] =
-        {
-            GraphicInstanceListType::Opaque,
-            GraphicInstanceListType::AlphaTest
-        };
-
-        for (uint i = 0; i < countof(opaqueLists); ++i)
-        {
-            const auto list = (GraphicInstanceListType)opaqueLists[i];
-            const GraphicInstanceList & instances = view->getCullingJobResult().get(list);
-            renderContext.m_alphatest = (GraphicInstanceListType::AlphaTest == list) ? true : false;
-            DrawGraphicInstances(renderContext, _cmdList, instances);
-        }
+        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Opaque);
+        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::AlphaTest);
     }
 }

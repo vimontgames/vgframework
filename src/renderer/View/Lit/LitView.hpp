@@ -58,7 +58,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void LitView::RegisterFrameGraph(const gfx::RenderPassContext & _renderPassContext, FrameGraph & _frameGraph)
     {
-        _frameGraph.pushPassGroup(_renderPassContext.m_view->GetName());
+        const auto * view = _renderPassContext.getView();
+        _frameGraph.pushPassGroup(view->GetName());
 
         // If the view does not belong to a viewport then it must register its target
         if (!GetViewport())
@@ -70,10 +71,10 @@ namespace vg::renderer
 
         const RendererOptions * options = RendererOptions::get();
 
-        const bool toolmode = _renderPassContext.m_view->IsToolmode();
-        const bool computePostProcess = _renderPassContext.m_view->IsComputePostProcessNeeded();
+        const bool toolmode = _renderPassContext.getView()->IsToolmode();
+        const bool computePostProcess = view->IsComputePostProcessNeeded();
 
-        if (_renderPassContext.m_view->IsUsingRayTracing())
+        if (view->IsUsingRayTracing())
             _frameGraph.addUserPass(_renderPassContext, m_TLASUpdatePass, "TLAS Update");
 
         // Render shadow maps
@@ -125,7 +126,7 @@ namespace vg::renderer
             _frameGraph.addUserPass(_renderPassContext, m_editorPass, "Editor");
 
         // Apply PostProcess from "Color" and "DepthStencil" to "PostProcessUAV"
-        if (_renderPassContext.m_view->IsComputePostProcessNeeded())
+        if (view->IsComputePostProcessNeeded())
             _frameGraph.addUserPass(_renderPassContext, m_computePostProcessPass, "PostProcess");
 
         // Read from "Color" (postprocess OFF) or "PostProcessUAV" (postprocess ON) to final dest

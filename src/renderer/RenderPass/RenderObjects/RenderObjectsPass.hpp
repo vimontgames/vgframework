@@ -26,10 +26,24 @@ namespace vg::renderer
     }          
 
     //--------------------------------------------------------------------------------------
-    void RenderObjectsPass::DrawGraphicInstances(const RenderContext & _renderContext, CommandList * _cmdList, const GraphicInstanceList & _graphicInstancesList) const
+    void RenderObjectsPass::DrawGraphicInstances(const RenderContext & _renderContext, gfx::CommandList * _cmdList, GraphicInstanceListType _list) const
     {
-        const auto & list = _graphicInstancesList.m_instances;
+        const auto * view = static_cast<const View *>(_renderContext.m_renderPass->getView());
+        const auto & list = view->getCullingJobResult().get(_list).m_instances;
+
         bool wireframeSelection = false; // TODO: expose option for selection
+
+        RenderContext renderContext = _renderContext;
+
+        switch (_list)
+        {
+            default:
+                break;
+
+            case GraphicInstanceListType::AlphaTest:
+                renderContext.m_alphatest = true;
+                break;
+        }
 
         for (uint i = 0; i < list.size(); ++i)
         {
@@ -41,7 +55,7 @@ namespace vg::renderer
                     continue;
             }
 
-            instance->Draw(_renderContext, _cmdList);
+            instance->Draw(renderContext, _cmdList);
         }
-    }
+    }    
 }

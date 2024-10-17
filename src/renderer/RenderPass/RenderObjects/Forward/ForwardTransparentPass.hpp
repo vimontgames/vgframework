@@ -32,24 +32,23 @@ namespace vg::renderer
 
         readRWBuffer("SkinningRWBuffer");
 
-        View * view = (View *)_renderPassContext.m_view;
+        const View * view = static_cast<const View *>(_renderPassContext.getView());
         readDepthStencil(view->getShadowMaps());
     }
 
     //--------------------------------------------------------------------------------------
     void ForwardTransparentPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
-        const View * view = (const View *)_renderPassContext.m_view;
+        const View * view = static_cast<const View *>(_renderPassContext.getView());
         const auto options = RendererOptions::get();
 
         RenderContext renderContext;
+        renderContext.m_renderPass = &_renderPassContext;
         renderContext.m_view = view->getViewMatrix();
         renderContext.m_proj = view->getProjMatrix();
         renderContext.m_toolmode = view->getViewID().target == gfx::ViewTarget::Editor || options->isToolModeEnabled();
         renderContext.m_raytracing = view->IsUsingRayTracing();
         renderContext.m_shaderPass = ShaderPass::Transparent;
-
-        const GraphicInstanceList & transparentInstances = view->getCullingJobResult().get(GraphicInstanceListType::Transparent);
 
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
@@ -63,6 +62,6 @@ namespace vg::renderer
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);
 
-        DrawGraphicInstances(renderContext, _cmdList, transparentInstances);
+        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Transparent);
     }
 }
