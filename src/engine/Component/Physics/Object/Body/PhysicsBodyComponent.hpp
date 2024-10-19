@@ -93,7 +93,7 @@ namespace vg::engine
                         if (shape && shape->isEnabled())
                         {
                             const auto * physicsShape = shape->getPhysicsShape();
-                            if (engineOptions->isBodyVisible(physicsShape->GetShapeType()))
+                            if (physicsShape && engineOptions->isBodyVisible(physicsShape->GetShapeType()))
                                 physicsShape->Draw(_context.m_world, _context.m_gameObject->getGlobalMatrix());
                         }
                     }
