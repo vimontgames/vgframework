@@ -8,14 +8,16 @@
 #include "Ball/BallBehaviour.hpp"
 #include "Weapon/WeaponBehaviour.hpp"
 
-VG_REGISTER_ABSTRACT_CLASS(ItemBehaviour, "ItemBehaviour");
+VG_REGISTER_COMPONENT_CLASS(ItemBehaviour, "Item", "Game", "Basic game item", vg::editor::style::icon::Script, 0);
 
 //--------------------------------------------------------------------------------------
 ItemBehaviour::ItemBehaviour(const vg::core::string & _name, vg::core::IObject * _parent, ItemType _itemType) :
     super(_name, _parent),
     m_itemType(_itemType)
 {
-
+    // Default item does not implement update
+    // Child classes derived from 'Item' should explicitely enable 'Update' if needed
+    EnableUpdateFlags(UpdateFlags::Update, false);
 }
 
 //--------------------------------------------------------------------------------------
@@ -70,7 +72,32 @@ const vg::core::ObjectHandle & ItemBehaviour::GetOwner() const
 }
 
 //--------------------------------------------------------------------------------------
+CharacterBehaviour * ItemBehaviour::GetOwnerCharacter() const
+{
+    if (auto * owner = m_owner.get<IGameObject>())
+        return owner->GetComponentT<CharacterBehaviour>();
+  
+    return nullptr;
+}
+
+//--------------------------------------------------------------------------------------
 bool ItemBehaviour::CanPick() const
 {
     return nullptr != m_owner.getObject();
+}
+
+//--------------------------------------------------------------------------------------
+// When player collides with the ball, then is become the new most recent player
+//--------------------------------------------------------------------------------------
+void ItemBehaviour::OnCollisionEnter(vg::core::IGameObject * _other)
+{
+    if (auto * player = _other->GetComponentT<PlayerBehaviour>())
+    {
+        if (player->isActive())
+             SetOwner(player->GetGameObject());
+    }
+    else if (auto * enemy = _other->GetComponentT<EnemyBehaviour>())
+    {
+        enemy->takeHit(nullptr, this);
+    }
 }

@@ -907,6 +907,8 @@ namespace vg::renderer
     void ImGuiAdapter::onGUIThemeChanged()
     {
         m_textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+        m_unsavedPropertyColor = ImGui::GetStyleColorVec4(ImGuiCol_TextLink);
+        m_prefabOverridePropertyColor = ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive);
 
         // update alternating row colors
         ImVec4 bgColor = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);

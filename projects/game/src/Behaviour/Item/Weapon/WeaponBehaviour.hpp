@@ -57,9 +57,10 @@ void WeaponBehaviour::OnTriggerEnter(vg::core::IGameObject * _other)
 }
 
 //--------------------------------------------------------------------------------------
-void WeaponBehaviour::Update(const Context & _context)
+void WeaponBehaviour::OnCollisionEnter(vg::core::IGameObject * _other)
 {
-
+    // Weapons do not set owner on touch but only when picked
+   //super::OnCollisionEnter(_object);
 }
 
 //--------------------------------------------------------------------------------------

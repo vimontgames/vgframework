@@ -56,31 +56,23 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
 {
     super::registerProperties(_desc);
 
-    registerPropertyGroupBegin(CharacterBehaviour, "Character");
-    {
-        registerProperty(CharacterBehaviour, m_life, "Life");
-        registerProperty(CharacterBehaviour, m_hp, "HP");
-        registerProperty(CharacterBehaviour, m_score, "Score");
+    registerProperty(CharacterBehaviour, m_life, "Life");
+    registerProperty(CharacterBehaviour, m_hp, "HP");
+    registerProperty(CharacterBehaviour, m_score, "Score");
 
-        registerProperty(CharacterBehaviour, m_walkSpeed, "Walk");
-        registerProperty(CharacterBehaviour, m_runSpeed, "Run");
-        registerProperty(CharacterBehaviour, m_jumpSpeed, "Small Jump");
-        registerProperty(CharacterBehaviour, m_runJumpSpeed, "Big Jump");
+    registerProperty(CharacterBehaviour, m_walkSpeed, "Walk");
+    registerProperty(CharacterBehaviour, m_runSpeed, "Run");
+    registerProperty(CharacterBehaviour, m_jumpSpeed, "Small Jump");
+    registerProperty(CharacterBehaviour, m_runJumpSpeed, "Big Jump");
 
-        //registerPropertyGroupBegin(CharacterBehaviour, "Debug");
-        {
-            registerPropertyEx(CharacterBehaviour, m_isActive, "Active", vg::core::PropertyFlags::NotSaved);
-            registerPropertyEx(CharacterBehaviour, m_speedCurrent, "Speed", vg::core::PropertyFlags::NotSaved);
-            registerPropertyEx(CharacterBehaviour, m_velocityNorm, "Velocity", vg::core::PropertyFlags::NotSaved);
-            registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rotation", vg::core::PropertyFlags::NotSaved);
+    registerPropertyEx(CharacterBehaviour, m_isActive, "Active", vg::core::PropertyFlags::NotSaved);
+    registerPropertyEx(CharacterBehaviour, m_speedCurrent, "Speed", vg::core::PropertyFlags::NotSaved);
+    registerPropertyEx(CharacterBehaviour, m_velocityNorm, "Velocity", vg::core::PropertyFlags::NotSaved);
+    registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rotation", vg::core::PropertyFlags::NotSaved);
 
-            registerPropertyEnumEx(CharacterBehaviour, MoveState, m_moveState, "Move", vg::core::PropertyFlags::NotSaved);
-            registerPropertyEnumEx(CharacterBehaviour, FightState, m_fightState, "Fight", vg::core::PropertyFlags::NotSaved);
-            registerPropertyEnumEx(CharacterBehaviour, SoundState, m_soundState, "Sound", vg::core::PropertyFlags::NotSaved);
-        }
-        //registerPropertyGroupEnd(CharacterBehaviour);
-    }
-    registerPropertyGroupEnd(CharacterBehaviour);
+    registerPropertyEnumEx(CharacterBehaviour, MoveState, m_moveState, "Move", vg::core::PropertyFlags::NotSaved);
+    registerPropertyEnumEx(CharacterBehaviour, FightState, m_fightState, "Fight", vg::core::PropertyFlags::NotSaved);
+    registerPropertyEnumEx(CharacterBehaviour, SoundState, m_soundState, "Sound", vg::core::PropertyFlags::NotSaved);
 
     return true;
 }

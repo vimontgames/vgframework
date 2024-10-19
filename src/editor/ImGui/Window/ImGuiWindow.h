@@ -24,6 +24,7 @@ namespace vg::engine
 namespace vg::renderer
 {
     class IRenderer;
+    class IImGuiAdapter;
 }
 
 namespace vg::gfx
@@ -99,7 +100,9 @@ namespace vg::editor
         static core::string                     getPropertyLabel    (const core::string & _label, core::uint _index = 0);
         static ImVec4                           getPropertyColor    (const PropertyContext & _propContext);
         static void                             drawPropertyLabel   (const PropertyContext & _propContext, const core::IProperty * _prop, core::uint _index = 0);
-        static void                             drawPropertyLabel   (const PropertyContext & _propContext, const char * _label, const char * _tooltip, core::uint _index = 0);
+        static void                             drawPropertyLabel   (const PropertyContext & _propContext, const char * _label, const char * _description, core::uint _index = 0);
+
+        static renderer::IImGuiAdapter *        getImGuiAdapter     ();
 
     protected:
         core::string                            m_icon;

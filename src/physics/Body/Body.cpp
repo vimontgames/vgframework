@@ -154,7 +154,9 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void Body::AddImpulse(const core::float3 & _impulse)
     {
-        m_physicsWorld->getBodyInterface().AddImpulse(m_bodyID, getJoltVec3(_impulse));
+        const float mass = m_bodyDesc->GetMass();
+        VG_ASSERT(mass > 0.0f);
+        m_physicsWorld->getBodyInterface().AddImpulse(m_bodyID, getJoltVec3(_impulse) / mass);
     }
 
     //--------------------------------------------------------------------------------------

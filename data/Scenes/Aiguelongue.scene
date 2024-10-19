@@ -599,7 +599,7 @@
                         <Property type="String" name="m_name" value="Level"/>
                         <Property type="Uint32" name="m_uid" flags="" value="1093025436"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="-4.3711388e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-4.3711388e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999994" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -1630,7 +1630,7 @@
                                 <Property type="String" name="m_name" value="Cones"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="1793450953"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -1719,6 +1719,50 @@
                                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
                                                 <Property type="Uint32" name="m_uid" flags="" value="3404118001"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="715815347"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Cone_09"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="2306833116"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="3272850991"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.99999923" Ty="7" Tz="0.24999583" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="Cone_09"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="3112262011"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="980693466"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                    </Object>
+                                    <Object class="PrefabGameObject">
+                                        <Property type="String" name="m_name" value="Cone_10"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="2680027860"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="3272850991"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="2.5000007" Ty="5.5" Tz="0.24999653" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                        <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                            <Object class="PrefabResource">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="Cone_10"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="3085785500"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="980693466"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Cone.prefab"/>
                                             </Object>
@@ -2316,7 +2360,7 @@
                         <Property type="String" name="m_name" value="Objects"/>
                         <Property type="Uint32" name="m_uid" flags="" value="1002808616"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -2534,7 +2578,7 @@
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.92401159" Iy="0" Iz="-0.38236445" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0.38236445" Ky="0" Kz="0.92401159" Kw="0" Tx="-2" Ty="2.5" Tz="1.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.92401159" Iy="0" Iz="-0.38236445" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0.38236445" Ky="0" Kz="0.92401159" Kw="0" Tx="-4" Ty="5.5" Tz="0.5" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                                         <Property type="ObjectPtrVector" name="m_components"/>
                                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -2733,7 +2777,7 @@
                         <Property type="String" name="m_name" value="Ennemies"/>
                         <Property type="Uint32" name="m_uid" flags="" value="1638339078"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -2841,7 +2885,7 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="5" Tz="0.60000002" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="4.5" Tz="0.60000002" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>

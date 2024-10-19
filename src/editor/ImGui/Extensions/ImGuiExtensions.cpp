@@ -463,30 +463,36 @@ namespace ImGui
         imGuiAdapter->PopFontStyle();
     }
 
-    static bool g_isFakeDisabled = false;
     static float g_backupAlpha;
+    static vector<bool> g_disabledStack;
 
     //--------------------------------------------------------------------------------------
-    void BeginDisabledStyle(bool _disabled)
+    void ApplyDisabledStyle(bool _disabled)
     {
-        if (!g_isFakeDisabled)
-        {
-            //ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
-            ImGuiContext & g = *GImGui;
-            g_backupAlpha = g.Style.Alpha;
-            g.Style.Alpha *= g.Style.DisabledAlpha;
-            g_isFakeDisabled = true;
-        }
+        if (_disabled)
+            GImGui->Style.Alpha = g_backupAlpha * GImGui->Style.DisabledAlpha;
+        else
+            GImGui->Style.Alpha = g_backupAlpha;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PushDisabledStyle(bool _disabled)
+    {
+        if (g_disabledStack.size() == 0)
+            g_backupAlpha = GImGui->Style.Alpha;
+
+        ApplyDisabledStyle(_disabled);
+
+        g_disabledStack.push_back(_disabled);
     }
     //--------------------------------------------------------------------------------------
-    void EndDisabledStyle()
+    void PopDisabledStyle()
     {
-        if (g_isFakeDisabled)
-        {
-            //ImGui::PopStyleColor();
-            ImGuiContext & g = *GImGui;
-            g.Style.Alpha = g_backupAlpha;
-            g_isFakeDisabled = false;
-        }
+        VG_ASSERT(g_disabledStack.size() > 0);
+        g_disabledStack.pop_back();
+
+        bool disabled = g_disabledStack.size() > 0 && g_disabledStack.back();
+
+        ApplyDisabledStyle(disabled);        
     }
 }

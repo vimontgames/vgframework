@@ -68,6 +68,12 @@ namespace vg::editor
     const char * g_editIntFormat = "%i";
 
     //--------------------------------------------------------------------------------------
+    renderer::IImGuiAdapter * ImGuiWindow::getImGuiAdapter()
+    {
+        return Editor::get()->getRenderer()->GetImGuiAdapter();
+    }
+
+    //--------------------------------------------------------------------------------------
     core::string ImGuiWindow::getFileBrowserExt(const core::IResource * _resource)
     {
         VG_ASSERT(_resource);
@@ -432,13 +438,8 @@ namespace vg::editor
 
         VG_ASSERT(!asBool(PropertyFlags::Color & flags) || (count == 3 || count == 4));
 
-        if (uid)
-        {
-            auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
-
-            if (invalidUID)
-                ImGui::PushStyleColor(ImGuiCol_Text, imGuiAdapter->GetErrorColor());
-        }
+        if (uid && invalidUID)
+            ImGui::PushStyleColor(ImGuiCol_Text, ImGuiWindow::getImGuiAdapter()->GetErrorColor());
 
         if (_propContext.m_readOnly)
             ImGui::BeginDisabled(true);
@@ -582,7 +583,7 @@ namespace vg::editor
 
         const bool readonly = asBool(PropertyFlags::ReadOnly & flags);
         if (readonly)
-            BeginDisabledStyle(true);
+            PushDisabledStyle(true);
 
         T * pEnum = (T *)(uint_ptr(_object) + offset);
         int enumVal = (int)*pEnum;
@@ -644,7 +645,7 @@ namespace vg::editor
         }
 
         if (readonly)
-            EndDisabledStyle();
+            PopDisabledStyle();
 
         drawPropertyLabel(_propContext, _prop);
         
@@ -660,7 +661,7 @@ namespace vg::editor
 
         const bool readonly = asBool(PropertyFlags::ReadOnly & flags);
         if (readonly)
-            BeginDisabledStyle(true);
+            PushDisabledStyle(true);
 
         T * pEnum = (T*)(uint_ptr(_object) + offset); 
         T enumVal = (T)*pEnum;
@@ -740,7 +741,7 @@ namespace vg::editor
         drawPropertyLabel(_propContext, _prop);
 
         if (readonly)
-            EndDisabledStyle();
+            PopDisabledStyle();
 
         return changed;
     }
@@ -870,17 +871,17 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     ImVec4 ImGuiWindow::getPropertyColor(const PropertyContext & _propContext)
     {
-        auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+        auto * imGuiAdapter = getImGuiAdapter();
 
         if (asBool(PropertyFlags::NotSaved & _propContext.m_originalProp->GetFlags()))
-        {
-            return ImGui::GetStyleColorVec4(ImGuiCol_TextLink);
-        }
+            return imGuiAdapter->GetUnsavedPropertyColor();
 
-        if (_propContext.m_isPrefabInstance)
+        if (_propContext.m_isPrefabInstance) 
         {
             if (_propContext.m_isPrefabOverride)
-                return ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive);
+                return imGuiAdapter->GetPrefabOverridePropertyColor();
+            if (_propContext.m_readOnly)
+                return ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
             else if (_propContext.m_canPrefabOverride)
                 return imGuiAdapter->GetTextColor();
             else
@@ -902,8 +903,10 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiWindow::drawPropertyLabel(const PropertyContext & _propContext, const char * _label, const char * _tooltip, core::uint _index)
+    void ImGuiWindow::drawPropertyLabel(const PropertyContext & _propContext, const char * _label, const char * _description, core::uint _index)
     {
+        auto * imGuiAdapter = getImGuiAdapter();
+
         // ugly workaround
         auto x = ImGui::GetCursorPosX();
         ImGui::SameLine();
@@ -921,8 +924,55 @@ namespace vg::editor
             ImGui::Text(_label);
         }
 
-        if (_tooltip && _tooltip[0] != '\0' && ImGui::IsItemHovered())
-            ImGui::SetTooltip(_tooltip);
+        if (ImGui::IsItemHovered())
+        {
+            if (BeginTooltipEx(ImGuiTooltipFlags_OverridePrevious, ImGuiWindowFlags_None))
+            {
+                PushDisabledStyle(false);
+                ImGui::PushStyleColor(ImGuiCol_Text, imGuiAdapter->GetTextColor());
+                ImGui::Text("(%s)%s::%s", asString(_propContext.m_originalProp->GetType()).c_str(), _propContext.m_originalProp->GetClassName(), _propContext.m_originalProp->GetName());
+
+                imGuiAdapter->PushFontStyle(renderer::FontStyle::Italic);
+                imGuiAdapter->PopFontStyle();
+
+                if (asBool(PropertyFlags::NotSaved & _propContext.m_originalProp->GetFlags()))
+                {
+                    if (_propContext.m_readOnly)
+                        ImGui::TextColored(imGuiAdapter->GetUnsavedPropertyColor(), "This property is not saved and read-only");
+                    else
+                        ImGui::TextColored(imGuiAdapter->GetUnsavedPropertyColor(), "This property is not saved");
+                }
+                else if (_propContext.m_isPrefabInstance)
+                {
+                    if (_propContext.m_isPrefabOverride)
+                        ImGui::TextColored(imGuiAdapter->GetPrefabOverridePropertyColor(), "This property is overriden");
+                    else if (_propContext.m_readOnly)
+                        ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "This property cannot be overriden and is read-only");
+                    else if (_propContext.m_canPrefabOverride)
+                        ImGui::TextColored(imGuiAdapter->GetTextColor(), "This property can be overriden"); 
+                    else
+                        ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "This property cannot be overriden");
+                }
+                else
+                {
+                    if (_propContext.m_readOnly)
+                        ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "This property is read-only");
+                    //else
+                    //    ImGui::TextColored(imGuiAdapter->GetTextColor(), ");
+                }
+
+                if (_description && '\0' != _description[0])
+                {
+                    imGuiAdapter->PushFontStyle(renderer::FontStyle::Italic);
+                    ImGui::Text("\n%s", _description);
+                    imGuiAdapter->PopFontStyle();
+                }
+
+                ImGui::PopStyleColor();
+                PopDisabledStyle();
+                EndTooltip();
+            }
+        }
     };
 
     //--------------------------------------------------------------------------------------
@@ -1096,7 +1146,7 @@ namespace vg::editor
                         optional = true;
 
                         if (!*b)
-                            ImGui::BeginDisabledStyle(true);
+                            ImGui::PushDisabledStyle(true);
                     }
                 }                
             }
@@ -1121,7 +1171,7 @@ namespace vg::editor
         const bool isEnumArray = asBool(PropertyFlags::EnumArray & flags);
         const auto enumArrayTreeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
 
-        auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+        auto * imGuiAdapter = getImGuiAdapter();
 
         ImGui::PushStyleColor(ImGuiCol_Text, getPropertyColor(propContext));
 
@@ -2020,7 +2070,7 @@ namespace vg::editor
                 ImGui::PopItemWidth();
                 bool * b = propContext.m_optionalProp->GetPropertyBool(propContext.m_optionalObject);
                 if (!*b)
-                    ImGui::EndDisabledStyle();
+                    ImGui::PopDisabledStyle();
             }
         }
 
@@ -2901,7 +2951,7 @@ namespace vg::editor
         string preview = pBitMask->toString();
 
         if (_propContext.m_readOnly)
-            ImGui::BeginDisabledStyle(true);
+            ImGui::PushDisabledStyle(true);
 
         if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
         {
@@ -2941,7 +2991,7 @@ namespace vg::editor
         }
 
         if (_propContext.m_readOnly)
-            ImGui::EndDisabledStyle();
+            ImGui::PopDisabledStyle();
 
         return changed;
     }

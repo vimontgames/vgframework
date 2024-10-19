@@ -42,6 +42,8 @@ namespace vg::engine
         MaterialResourceData * parent = dynamic_cast<MaterialResourceData *>(GetParent());
         VG_ASSERT(parent);
         renderer::IMaterialModel * materialModel = parent->m_materialModel;
+        if (nullptr == materialModel)
+            materialModel = parent->m_materialModel;
         VG_ASSERT(materialModel);
         return materialModel;
     }

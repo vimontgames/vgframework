@@ -13,6 +13,7 @@
                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                 <Property type="ObjectPtrVector" name="m_components"/>
                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
                     <Object class="GameObject">
@@ -23,6 +24,7 @@
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="PhysicsBodyComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #9"/>
@@ -30,6 +32,9 @@
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="EnumU8" name="m_category" value="Default"/>
+                                <Property type="Bool" name="m_useCollisionMask" flags="NotVisible" value="false"/>
+                                <Property type="EnumFlagsU64" name="m_collisionMask" flags="" value=""/>
                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                     <Object class="PhysicsBodyDesc">
                                         <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyDesc #8"/>
@@ -42,7 +47,7 @@
                                         <Property type="EnumU8" name="m_motion" value="Dynamic"/>
                                         <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
                                         <Property type="Bool" name="m_overrideMass" flags="NotVisible" value="true"/>
-                                        <Property type="Float" name="m_mass" flags="Optional" value="10"/>
+                                        <Property type="Float" name="m_mass" flags="Optional" value="1"/>
                                         <Property type="Float" name="m_friction" flags="HasRange" value="0.69999999"/>
                                         <Property type="Float" name="m_restitution" flags="HasRange" value="0.30000001"/>
                                     </Object>
@@ -88,6 +93,15 @@
                                         <Property type="Float3" name="m_size" flags="HasRange" x="0.40000001" y="0.40000001" z="0.5"/>
                                     </Object>
                                 </Property>
+                            </Object>
+                            <Object class="ItemBehaviour">
+                                <Property type="String" name="m_name" flags="NotVisible" value="New ItemBehaviour"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="3203977606"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Float" name="m_damage" flags="HasRange" value="5"/>
+                                <Property type="Float" name="m_push" flags="HasRange" value="1"/>
                             </Object>
                             <Object class="MeshComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #9"/>

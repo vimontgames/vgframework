@@ -18,7 +18,6 @@ public:
     void                    onGoalScored        (CharacterType _team);
 
 private:
-    CharacterBehaviour *    m_lastOwnerCharacter = nullptr;
     vg::core::float3        m_startPos;
     bool                    m_scored = false;
     float                   m_scoredTime = -1.0f;

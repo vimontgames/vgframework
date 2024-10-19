@@ -97,7 +97,7 @@ namespace vg::editor
                                     }
                                 }
 
-                                ImGui::BeginDisabledStyle(true);
+                                ImGui::PushDisabledStyle(true);
 
                                 if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_None))
                                 {
@@ -119,7 +119,7 @@ namespace vg::editor
                                     ImGui::EndCombo();
                                 }
 
-                                ImGui::EndDisabledStyle();
+                                ImGui::PopDisabledStyle();
                             }
 
                             ImGui::TreePop();

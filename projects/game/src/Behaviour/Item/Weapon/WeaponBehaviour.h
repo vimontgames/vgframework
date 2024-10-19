@@ -11,11 +11,11 @@ public:
     WeaponBehaviour(const vg::core::string & _name, vg::core::IObject * _parent);
     ~WeaponBehaviour();
 
-    void                OnPlay          () final override;
-    void                OnTriggerEnter  (vg::core::IGameObject * _other) final override;
-    void                Update          (const Context & _context) override;
-    void                SetOwner        (vg::core::IGameObject * _object) final override;
+    void                OnPlay              () final override;
+    void                OnTriggerEnter      (vg::core::IGameObject * _other) final override;
+    void                OnCollisionEnter    (vg::core::IGameObject * _other) final override;
+    void                SetOwner            (vg::core::IGameObject * _object) final override;
 
 private:
-    vg::core::Tag       m_ennemyTag     = (vg::core::Tag)0x0;
+    vg::core::Tag       m_ennemyTag         = (vg::core::Tag)0x0;
 };

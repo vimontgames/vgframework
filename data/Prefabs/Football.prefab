@@ -30,7 +30,7 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #1"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="202547355"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="EnumU8" name="m_category" value="Default"/>
                                 <Property type="Bool" name="m_useCollisionMask" flags="NotVisible" value="false"/>
@@ -52,7 +52,6 @@
                                         <Property type="Float" name="m_restitution" flags="HasRange" value="0.75"/>
                                     </Object>
                                 </Property>
-                                <Property type="Float3" name="m_velocity" flags="Debug" x="0" y="0" z="0"/>
                             </Object>
                             <Object class="PhysicsShapeComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>

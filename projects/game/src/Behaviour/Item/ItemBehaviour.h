@@ -3,23 +3,29 @@
 #include "core/Object/ObjectHandle.h"
 #include "core/Component/Behaviour/Behaviour.h"
 
+class CharacterBehaviour;
+
 class ItemBehaviour : public vg::core::Behaviour
 {
 public:
     VG_CLASS_DECL(ItemBehaviour, vg::core::Behaviour);
 
-    ItemBehaviour(const vg::core::string & _name, vg::core::IObject * _parent, ItemType _itemType);
+    ItemBehaviour(const vg::core::string & _name, vg::core::IObject * _parent, ItemType _itemType = ItemType::Default);
     ~ItemBehaviour();
 
-    void                                    OnPlay      () override;
-    void                                    OnStop      () override;
+    void                                    OnPlay              () override;
+    void                                    OnStop              () override;
 
-    virtual void                            SetOwner    (vg::core::IGameObject * _object);
-    virtual const vg::core::ObjectHandle &  GetOwner    () const;
-    virtual bool                            CanPick     () const;
+    void                                    OnCollisionEnter    (vg::core::IGameObject * _other) override;
 
-    VG_INLINE float                         getDamage   () const;
-    VG_INLINE float                         getPush     () const;
+    virtual void                            SetOwner            (vg::core::IGameObject * _object);
+    virtual const vg::core::ObjectHandle &  GetOwner            () const;
+    virtual bool                            CanPick             () const;
+
+    virtual CharacterBehaviour *            GetOwnerCharacter   () const;
+
+    VG_INLINE float                         getDamage           () const;
+    VG_INLINE float                         getPush             () const;
 
 private:
     float                                   m_damage = 10.0f;

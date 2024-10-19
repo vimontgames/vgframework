@@ -24,7 +24,7 @@ namespace vg::engine
 
         registerPropertyObjectPtrEx(PhysicsBodyComponent, m_bodyDesc, "Body", PropertyFlags::Flatten);
 
-        registerPropertyEx(PhysicsBodyComponent, m_velocity, "Velocity", PropertyFlags::Debug);
+        registerPropertyEx(PhysicsBodyComponent, m_velocity, "Velocity", PropertyFlags::NotSaved | PropertyFlags::ReadOnly);
 
         return true;
     }
@@ -286,7 +286,8 @@ namespace vg::engine
 
         if (physicsShapes.size() > 0)
         {
-            m_bodyDesc->SetMass(totalMass);
+            if (!m_bodyDesc->IsMassOverriden())
+                m_bodyDesc->SetMass(totalMass);
 
             if (m_bodyDesc->GetMotionType() != physics::MotionType::Static || !EngineOptions::get()->mergeStaticBodies())
                 m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, physicsShapes, GetGameObject()->GetGlobalMatrix(), GetGameObject()->GetName() + "_PhysicsBody", this);

@@ -17,14 +17,14 @@ namespace vg::engine
         registerPropertyGroupBegin(EngineOptions, "Project");
         {
             registerPropertyEx(EngineOptions, m_gamePath, "Game Path", PropertyFlags::IsFolder);
-            setPropertyDescription(EngineOptions, m_gamePath, "Game root folder (used to load game library)");
+            setPropertyDescription(EngineOptions, m_gamePath, "Game root folder used to load game library");
 
             registerPropertyEx(EngineOptions, m_startWorld, "Start World", PropertyFlags::IsFile);
             setPropertyDescription(EngineOptions, m_startWorld, "Default world to load at startup");
             setPropertyDefaultFolder(EngineOptions, m_startWorld, "data/Worlds")
 
             registerPropertyEnumArray(EngineOptions, string, core::Tag, m_gameObjectTags, "GameObject Tags");
-            setPropertyDescription(EngineOptions, m_gameObjectTags, "Use GameObject Tags to categorize object (e.g. Player, Ennemy ...)")
+            setPropertyDescription(EngineOptions, m_gameObjectTags, "Use GameObject Tags to categorize objects (e.g. Player, Ennemy ...)")
         }
         registerPropertyGroupEnd(EngineOptions);
 

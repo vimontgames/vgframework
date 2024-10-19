@@ -31,24 +31,20 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
-    registerPropertyGroupBegin(PlayerBehaviour, "Player");
-    {
-        registerPropertyEnum(PlayerBehaviour, InputType, m_controllerType, "Input");
-        setPropertyDescription(PlayerBehaviour, m_controllerType, "Input type used by player");
+    registerPropertyEnum(PlayerBehaviour, InputType, m_controllerType, "Input");
+    setPropertyDescription(PlayerBehaviour, m_controllerType, "Input type used by player");
 
-        registerProperty(PlayerBehaviour, m_controllerIndex, "Index");
-        setPropertyDescription(PlayerBehaviour, m_controllerIndex, "Input index used to differenciate different inputs (e.g. Joypads)");
+    registerProperty(PlayerBehaviour, m_controllerIndex, "Index");
+    setPropertyDescription(PlayerBehaviour, m_controllerIndex, "Input index used to differenciate different inputs (e.g. Joypads)");
 
-        registerPropertyEx(PlayerBehaviour, m_customColor, "Custom Color", PropertyFlags::Color);
-        setPropertyDescription(PlayerBehaviour, m_customColor, "Custom color used for elements controller by this player");
+    registerPropertyEx(PlayerBehaviour, m_customColor, "Custom Color", PropertyFlags::Color);
+    setPropertyDescription(PlayerBehaviour, m_customColor, "Custom color used for elements controller by this player");
 
-        registerProperty(PlayerBehaviour, m_UI, "UI");
-        setPropertyDescription(PlayerBehaviour, m_UI, "Player UI Prefab instance linked");
+    registerProperty(PlayerBehaviour, m_UI, "UI");
+    setPropertyDescription(PlayerBehaviour, m_UI, "Player UI Prefab instance linked");
 
-        registerPropertyEx(PlayerBehaviour, m_viewIndex, "View", vg::core::PropertyFlags::NotSaved | vg::core::PropertyFlags::ReadOnly);
-        setPropertyDescription(PlayerBehaviour, m_viewIndex, "Index of the View used by this player");
-    }
-    registerPropertyGroupEnd(PlayerBehaviour);
+    registerPropertyEx(PlayerBehaviour, m_viewIndex, "View", vg::core::PropertyFlags::NotSaved | vg::core::PropertyFlags::ReadOnly);
+    setPropertyDescription(PlayerBehaviour, m_viewIndex, "Index of the View used by this player");
     
     return true;
 }
@@ -231,21 +227,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                         m_rightHandItem = closestWeaponBehaviour;
 
                         if (auto * physicsBody = closestWeaponGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
-                        {
                             physicsBody->SetTrigger(true);
-
-                            //// Weapon still collides with other physic objects but is moved by code
-                            //physicsBody->SetMotionType(vg::physics::MotionType::Kinematic);
-                            //
-                            //// Weapon should collide with everything but the players
-                            //auto player1Cat = Game::get()->Engine().GetOptions()->GetPhysicsCategory("Player 1");
-                            //auto mask = (vg::physics::CategoryFlag)0x0;
-                            //for (uint i = 0; i < 4; ++i)
-                            //    mask |= (vg::physics::CategoryFlag)(1ULL << ((u64)player1Cat + i));
-                            //physicsBody->SetCollisionMask(~mask);
-                            //
-                            //physicsBody->EnableCollisionMask(true);
-                        }
                     }
                 }
                 else
@@ -277,28 +259,43 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
             if (input.IsJoyButtonJustPressed(joyID, JoyButton::B))
             {
-                // Kick close balls
-                auto & balls = Game::get()->getBalls();
-                for (uint i = 0; i < balls.size(); ++i)
+                // Kick default all ball items
+                for (uint j = 0; j < enumCount<ItemType>(); ++j)
                 {
-                    auto * ballBehaviour = balls[i];
-                    auto * ballGO = ballBehaviour->GetGameObject();
+                    const auto itemType = (ItemType)j;
 
-                    float3 delta = ballGO->GetGlobalMatrix()[3].xyz - playerPos;
-                    float dist = length(delta);
-                    if (dist < pickupDist)
+                    switch (itemType)
                     {
-                        float3 dir = normalize(delta);
-                        ballBehaviour->SetOwner(ballGO);
-                        if (auto * physicsBody = ballGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
-                        {
-                            //VG_INFO("[Player] Kick ball %u (dist = %.2f, dir = %.2f, %.2f, %.2f)", i, dist, dir.x, dir.y, dir.z);
-                            float kickStrength = lerp(250.0f, 400.0f, runAmount);
-                            physicsBody->AddImpulse(dir * kickStrength);
+                        default:
+                            continue;
 
-                            // Play sound
-                            if (auto * soundComponent = ballGO->GetComponentT<vg::engine::ISoundComponent>())
-                                soundComponent->Play(0);
+                        case ItemType::Default:
+                        case ItemType::Ball:
+                            break;
+                    }
+
+                    auto & balls = Game::get()->getItem(itemType);
+                    for (uint i = 0; i < balls.size(); ++i)
+                    {
+                        auto * ballBehaviour = balls[i];
+                        auto * ballGO = ballBehaviour->GetGameObject();
+
+                        float3 delta = ballGO->GetGlobalMatrix()[3].xyz - playerPos;
+                        float dist = length(delta);
+                        if (dist < pickupDist)
+                        {
+                            float3 dir = normalize(delta);
+                            ballBehaviour->SetOwner(ballGO);
+                            if (auto * physicsBody = ballGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
+                            {
+                                //VG_INFO("[Player] Kick ball %u (dist = %.2f, dir = %.2f, %.2f, %.2f)", i, dist, dir.x, dir.y, dir.z);
+                                float kickStrength = lerp(3.0f, 4.5f, runAmount);
+                                physicsBody->AddImpulse(dir * kickStrength);
+
+                                // Play sound
+                                if (auto * soundComponent = ballGO->GetComponentT<vg::engine::ISoundComponent>())
+                                    soundComponent->Play(0);
+                            }
                         }
                     }
                 }
