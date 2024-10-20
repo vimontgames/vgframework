@@ -107,9 +107,10 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/Pablo/Pablo_idle_anim.fbx"/>
                                                 <Property type="Bool" name="m_play" flags="" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="" value="false"/>
-                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                                <Property type="Uint32" name="m_layer" flags="HasRange" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" flags="NotVisible" value="false"/>
                                                 <Property type="EnumFlagsU32" name="m_bodyParts" flags="" value=""/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" value="Hello"/>
@@ -119,9 +120,10 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/Pablo/Pablo_hello_anim.fbx"/>
                                                 <Property type="Bool" name="m_play" flags="" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="" value="false"/>
-                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                                <Property type="Uint32" name="m_layer" flags="HasRange" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" flags="NotVisible" value="false"/>
                                                 <Property type="EnumFlagsU32" name="m_bodyParts" flags="" value=""/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" value="Walk"/>
@@ -131,9 +133,10 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/Pablo/Pablo_walking_anim.fbx"/>
                                                 <Property type="Bool" name="m_play" flags="" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="" value="false"/>
-                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                                <Property type="Uint32" name="m_layer" flags="HasRange" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" flags="NotVisible" value="false"/>
                                                 <Property type="EnumFlagsU32" name="m_bodyParts" flags="" value=""/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" value="Run"/>
@@ -143,9 +146,10 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/Pablo/Pablo_running_anim.fbx"/>
                                                 <Property type="Bool" name="m_play" flags="" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="" value="false"/>
-                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                                <Property type="Uint32" name="m_layer" flags="HasRange" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" flags="NotVisible" value="false"/>
                                                 <Property type="EnumFlagsU32" name="m_bodyParts" flags="" value=""/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" value="Jump"/>
@@ -155,9 +159,10 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/Pablo/Pablo_jump_anim.fbx"/>
                                                 <Property type="Bool" name="m_play" flags="" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="" value="false"/>
-                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                                <Property type="Uint32" name="m_layer" flags="HasRange" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" flags="NotVisible" value="false"/>
                                                 <Property type="EnumFlagsU32" name="m_bodyParts" flags="" value=""/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" value="Hit"/>
@@ -167,9 +172,10 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/Pablo/Pablo_sword_hit.fbx"/>
                                                 <Property type="Bool" name="m_play" flags="" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="" value="false"/>
-                                                <Property type="Float" name="m_speed" flags="HasRange" value="1.5"/>
+                                                <Property type="Uint32" name="m_layer" flags="HasRange" value="1"/>
                                                 <Property type="Bool" name="m_useBodyParts" flags="NotVisible" value="true"/>
                                                 <Property type="EnumFlagsU32" name="m_bodyParts" flags="" value="UpperBody"/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                             <Object class="AnimationResource">
                                                 <Property type="String" name="m_name" value="Kick"/>
@@ -179,9 +185,23 @@
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/Pablo/pablo_kick_ball.fbx"/>
                                                 <Property type="Bool" name="m_play" flags="" value="false"/>
                                                 <Property type="Bool" name="m_loop" flags="" value="false"/>
-                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                                <Property type="Uint32" name="m_layer" flags="HasRange" value="2"/>
                                                 <Property type="Bool" name="m_useBodyParts" flags="NotVisible" value="true"/>
                                                 <Property type="EnumFlagsU32" name="m_bodyParts" flags="" value="LowerBody"/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                            </Object>
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" value="Shoot"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="1780208172"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/Pablo/Pablo_shooting_anim.fbx"/>
+                                                <Property type="Bool" name="m_play" flags="" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="" value="false"/>
+                                                <Property type="Uint32" name="m_layer" flags="HasRange" value="1"/>
+                                                <Property type="Bool" name="m_useBodyParts" flags="NotVisible" value="true"/>
+                                                <Property type="EnumFlagsU32" name="m_bodyParts" flags="" value="UpperBody"/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
                                         </Property>
                                     </Object>

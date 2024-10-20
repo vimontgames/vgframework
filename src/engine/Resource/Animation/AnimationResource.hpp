@@ -7,6 +7,10 @@
 #include "renderer/IMeshInstance.h"
 #include "renderer/Importer/BodyPartFlags.h"
 
+#if !VG_ENABLE_INLINE
+#include "AnimationResource.inl"
+#endif
+
 using namespace vg::core;
 using namespace vg::renderer;
 
@@ -37,17 +41,18 @@ namespace vg::engine
 
         setPropertyFlag(AnimationResource, m_name, PropertyFlags::NotVisible, false);
 
-        registerPropertyEx(AnimationResource, m_time, "Time", PropertyFlags::NotSaved);
-
-        registerProperty(AnimationResource, m_speed, "Speed");
-        setPropertyRange(AnimationResource, m_speed, float2(0.0f, 10.0f));
-
-        registerPropertyEx(AnimationResource, m_weight, "Weight", PropertyFlags::NotSaved);
-        setPropertyRange(AnimationResource, m_weight, float2(0.0f, 1.0f));
+        registerProperty(AnimationResource, m_layer, "Layer");
+        setPropertyRange(AnimationResource, m_layer, uint2(0, 8));
+        setPropertyDescription(AnimationResource, m_layer, "Each animation layer is normalized separately, use for additive animations");
 
         registerOptionalPropertyEnumBitfield(AnimationResource, m_useBodyParts, renderer::BodyPartFlags, m_bodyParts, "Mask");
         setPropertyDescription(AnimationResource, m_bodyParts, "Body parts of the mesh that will use this animation");
+        registerProperty(AnimationResource, m_speed, "Speed");
+        setPropertyRange(AnimationResource, m_speed, float2(0.0f, 10.0f));
 
+        registerPropertyEx(AnimationResource, m_time, "Time", PropertyFlags::NotSaved);
+        registerPropertyEx(AnimationResource, m_weight, "Weight", PropertyFlags::NotSaved);
+        setPropertyRange(AnimationResource, m_weight, float2(0.0f, 1.0f));
         registerResizeVectorFunc(AnimationResource, ResizeAnimationResourceVector);
 
         return true;
@@ -215,10 +220,14 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void AnimationResource::OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
-        if (!strcmp(_prop.GetName(), "m_time"))
+        if (!strcmp(_prop.GetName(), VG_STRINGIFY(m_time)))
             setTime(m_time);
-        else if (!strcmp(_prop.GetName(), "m_weight"))
+        else if (!strcmp(_prop.GetName(), VG_STRINGIFY(m_weight)))
             setWeight(m_weight);
+        else if (!strcmp(_prop.GetName(), VG_STRINGIFY(m_layer)))
+            setLayer(m_layer);
+        else if (!strcmp(_prop.GetName(), VG_STRINGIFY(m_bodyParts)))
+            setBodyParts(m_bodyParts);
     }
 
     //--------------------------------------------------------------------------------------
@@ -266,4 +275,28 @@ namespace vg::engine
                 meshInstance->SetAnimationWeight((ISkeletalAnimation *)anim, m_weight);
         }
     }    
+
+    //--------------------------------------------------------------------------------------
+    void AnimationResource::setLayer(core::uint _layer)
+    {
+        m_layer = _layer;
+
+        if (IAnimation * anim = (IAnimation *)GetObject())
+        {
+            if (IMeshInstance * meshInstance = getMeshInstance())
+                meshInstance->SetAnimationLayer((ISkeletalAnimation *)anim, m_layer);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void AnimationResource::setBodyParts(renderer::BodyPartFlags _flags)
+    {
+        m_bodyParts = _flags;
+
+        if (IAnimation * anim = (IAnimation *)GetObject())
+        {
+            if (IMeshInstance * meshInstance = getMeshInstance())
+                meshInstance->SetAnimationBodyParts((ISkeletalAnimation *)anim, m_bodyParts);
+        }
+    }
 }

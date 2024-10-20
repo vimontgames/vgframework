@@ -26,6 +26,9 @@ bool BallBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
+    registerPropertyEnum(BallBehaviour, BallType, m_ballType, "Type");
+    setPropertyDescription(BallBehaviour, m_ballType, "Ball type");
+
     return true;
 }
 

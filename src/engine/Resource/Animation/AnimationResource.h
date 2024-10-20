@@ -47,21 +47,25 @@ namespace vg::engine
         float                                   GetLength               () const final override;
         float                                   GetWeight               () const final override;
 
-        VG_INLINE const renderer::IAnimation *  getAnimation            () const { return (renderer::IAnimation *)m_object; }
-        VG_INLINE renderer::IAnimation *        getAnimation            () { return (renderer::IAnimation *)m_object; }
-
-        VG_INLINE bool                          isPlaying               () const { return m_play; }
-        VG_INLINE float                         getTime                 () const { return m_time; }
-        VG_INLINE float                         getWeight               () const { return m_weight; }
-        VG_INLINE float                         getSpeed                () const { return m_speed; }
-        VG_INLINE bool                          isAdditive              () const { return m_useBodyParts; }
-
         void                                    setTime                 (float _time);
         void                                    setWeight               (float _weight);
+        void                                    setLayer                (core::uint _layer);
+        void                                    setBodyParts            (renderer::BodyPartFlags _flags);
 
         renderer::IMeshInstance *               getMeshInstance         ();
-        VG_INLINE void                          setPlay                 (bool _play) { m_play = _play; }
-        VG_INLINE void                          setLoop                 (bool _loop) { m_loop = _loop; }
+
+        VG_INLINE const renderer::IAnimation *  getAnimation            () const;
+        VG_INLINE renderer::IAnimation *        getAnimation            () ;
+
+        VG_INLINE bool                          isPlaying               () const;
+        VG_INLINE float                         getTime                 () const;
+        VG_INLINE float                         getWeight               () const;
+        VG_INLINE float                         getSpeed                () const;
+
+        VG_INLINE void                          setPlay                 (bool _play);
+        VG_INLINE void                          setLoop                 (bool _loop);
+        VG_INLINE core::uint                    getLayer                () const;
+        VG_INLINE renderer::BodyPartFlags       getBodyParts            () const;
 
     private:
         void                                    reset                   ();
@@ -75,7 +79,12 @@ namespace vg::engine
         float                                   m_time          = 0.0f;
         float                                   m_weight        = 0.0f;
         float                                   m_speed         = 1.0f;
+        core::uint                              m_layer         = 0;
         bool                                    m_useBodyParts  = false;
         renderer::BodyPartFlags                 m_bodyParts     = (renderer::BodyPartFlags)0x0;
     };
 }
+
+#if VG_ENABLE_INLINE
+#include "AnimationResource.inl"
+#endif

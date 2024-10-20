@@ -410,72 +410,121 @@ namespace vg::renderer
             Skeleton & skeleton = *m_instanceSkeleton;
             core::vector<MeshImporterNode> & skeletonNodes = skeleton.getNodes();
 
-            // normalize weights
-            float weightSum = 0.0f;
-            for (uint j = 0; j < m_animationBindings.size(); ++j)
-            {
-                weightSum += m_animationBindings[j].m_animationState.m_weight;
-            }
-            float tPoseWeight;
+            // Compute T-Pose weight for each layer
+            float sum[MaxAnimationLayerCount];
 
-            if (weightSum > 1.0f)
+            for (uint iLayer = 0; iLayer < MaxAnimationLayerCount; ++iLayer)
             {
-                tPoseWeight = 0.0f;
-                const float invWeightSum = 1.0f / weightSum;
+                sum[iLayer] = 0.0f;
+
                 for (uint j = 0; j < m_animationBindings.size(); ++j)
-                    m_animationBindings[j].m_normalizedWeight = m_animationBindings[j].m_animationState.m_weight * invWeightSum;
+                {
+                    if (m_animationBindings[j].m_layer == iLayer)
+                        sum[iLayer] += m_animationBindings[j].m_animationState.m_weight;
+                }
             }
-            else
+
+            float tPoseWeight[MaxAnimationLayerCount];
+            for (uint iLayer = 0; iLayer < MaxAnimationLayerCount; ++iLayer)
             {
-                tPoseWeight = 1.0f - weightSum;
-                for (uint j = 0; j < m_animationBindings.size(); ++j)
-                    m_animationBindings[j].m_normalizedWeight = m_animationBindings[j].m_animationState.m_weight;
+                if (sum[iLayer] > 1.0f)
+                    tPoseWeight[iLayer] = 0.0f;
+                else
+                    tPoseWeight[iLayer] = 1.0f - sum[iLayer];
             }
+
+            for (uint iLayer = 0; iLayer < MaxAnimationLayerCount; ++iLayer)
+            {
+                for (uint j = 0; j < m_animationBindings.size(); ++j)
+                {
+                    if (sum[iLayer] > 1.0f)
+                        m_animationBindings[j].m_normalizedWeight = m_animationBindings[j].m_animationState.m_weight / sum[iLayer];
+                    else
+                        m_animationBindings[j].m_normalizedWeight = m_animationBindings[j].m_animationState.m_weight;
+                }
+            }
+
+            bool forceTPose = false;
+            float sumLayers = 0.0f;
+            for (uint iLayer = 0; iLayer < MaxAnimationLayerCount; ++iLayer)
+                sumLayers += sum[iLayer];
+            if (sumLayers <= 0.0f)
+                forceTPose = true;
 
             // Update animations and blend
             for (size_t i = 0; i < skeletonNodes.size(); i++)
             {
                 MeshImporterNode & skeletonNode = skeletonNodes[i];
 
-                quaternion rot = skeletonNode.rot * tPoseWeight;
-                float3 pos = skeletonNode.pos * tPoseWeight;
-                float3 scale = skeletonNode.scale * tPoseWeight;
+                float3 translation = (float3)0.0f;
+                quaternion rotation = quaternion::identity();
+                float3 scale = (float3)1.0f;
 
-                for (uint j = 0; j < m_animationBindings.size(); ++j)
+                for (uint iLayer = 0; iLayer < MaxAnimationLayerCount; ++iLayer)
                 {
-                    AnimationBinding & animationBinding = m_animationBindings[j];
-                    const SkeletalAnimation * animation = animationBinding.m_animation;
-                    const AnimImporterData & anim = animation->getAnimationData();
+                    if (sum[iLayer] <= 0.0f && !forceTPose)
+                        continue;
 
-                    const float time = animationBinding.m_animationState.m_time;
+                    float3 lTranslation = skeletonNode.pos * tPoseWeight[iLayer];
+                    quaternion lRotation = skeletonNode.rot * tPoseWeight[iLayer];
+                    float3 lScale = skeletonNode.scale * tPoseWeight[iLayer];
 
-                    float frame_time = (time - anim.time_begin) * anim.framerate;
-                    uint f0 = min((uint)frame_time + 0, anim.num_frames - 1);
-                    uint f1 = min((uint)frame_time + 1, anim.num_frames - 1);
-                    float t = min(frame_time - (float)f0, 1.0f);
+                    bool applyLayer = forceTPose && iLayer == 0;
 
-                    // index in animation
-                    const int index = animationBinding.m_skeletonToAnimIndex[i];
-
-                    if (-1 != index)
+                    for (uint j = 0; j < m_animationBindings.size(); ++j)
                     {
-                        if (animationBinding.m_normalizedWeight > 0.0f)
+                        AnimationBinding & animationBinding = m_animationBindings[j];
+
+                        if (animationBinding.m_layer != iLayer)
+                            continue;
+
+                        if (!asBool(skeletonNode.flags & animationBinding.m_bodyParts))
+                            continue;
+
+                        const SkeletalAnimation * animation = animationBinding.m_animation;
+                        const AnimImporterData & anim = animation->getAnimationData();
+
+                        const float time = animationBinding.m_animationState.m_time;
+
+                        float frame_time = (time - anim.time_begin) * anim.framerate;
+                        uint f0 = min((uint)frame_time + 0, anim.num_frames - 1);
+                        uint f1 = min((uint)frame_time + 1, anim.num_frames - 1);
+                        float t = min(frame_time - (float)f0, 1.0f);
+
+                        // index in animation
+                        const int index = animationBinding.m_skeletonToAnimIndex[i];
+
+                        if (-1 != index)
                         {
-                            const AnimNodeData & animNode = anim.animNodes[index];
+                            if (animationBinding.m_normalizedWeight > 0.0f)
+                            {
+                                const AnimNodeData & animNode = anim.animNodes[index];
 
-                            const quaternion animRot = animNode.rot.size() > 0 ? lerp(animNode.rot[f0], animNode.rot[f1], t) : animNode.const_rot;
-                            const float3 animPos = animNode.pos.size() > 0 ? lerp(animNode.pos[f0], animNode.pos[f1], t) : animNode.const_pos;
-                            const float3 animScale = animNode.scale.size() > 0 ? lerp(animNode.scale[f0], animNode.scale[f1], t) : animNode.const_scale;
+                                const float3 aTranslation = animNode.pos.size() > 0 ? lerp(animNode.pos[f0], animNode.pos[f1], t) : animNode.const_pos;
+                                const quaternion aRotation = animNode.rot.size() > 0 ? lerp(animNode.rot[f0], animNode.rot[f1], t) : animNode.const_rot;
+                                const float3 aScale = animNode.scale.size() > 0 ? lerp(animNode.scale[f0], animNode.scale[f1], t) : animNode.const_scale;
 
-                            rot += animRot * animationBinding.m_normalizedWeight;
-                            pos += animPos * animationBinding.m_normalizedWeight;
-                            scale += animScale * animationBinding.m_normalizedWeight;
+                                lTranslation += aTranslation * animationBinding.m_normalizedWeight;
+                                lRotation += aRotation * animationBinding.m_normalizedWeight;
+                                lScale += aScale * animationBinding.m_normalizedWeight;
+
+                                applyLayer = true;
+                            }
                         }
+                    }
+
+                    // Blend & mask
+                    if (applyLayer)
+                    {
+                        const float layerWeight = forceTPose ? 1.0f : saturate(sum[iLayer]);
+                        translation = translation * (1.0f - layerWeight) + lTranslation * layerWeight;
+                        rotation = rotation * (1.0f - layerWeight) + lRotation * layerWeight;
+                        scale = scale * (1.0f - layerWeight) + lScale * layerWeight;
                     }
                 }
 
                 // Update skeleton node
-                skeletonNode.node_to_parent = TRSToFloat4x4(pos, rot, scale);
+                skeletonNode.node_to_parent = TRSToFloat4x4(translation, rotation, scale);
 
                 if (-1 != skeletonNode.parent_index)
                     skeletonNode.node_to_world = mul(skeletonNodes[skeletonNode.parent_index].node_to_world, skeletonNode.node_to_parent);
@@ -585,32 +634,66 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::SetAnimationTime(ISkeletalAnimation * _animation, float _time)
+    AnimationBinding * MeshInstance::getAnimationBinding(ISkeletalAnimation * _animation)
     {
         for (uint i = 0; i < m_animationBindings.size(); ++i)
         {
             AnimationBinding & animationBinding = m_animationBindings[i];
             if (_animation == animationBinding.m_animation)
-            {
-                animationBinding.m_animationState.m_time = _time;
-                return true;
-            }
+                return &animationBinding;
         }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::SetAnimationLayer(ISkeletalAnimation * _animation, core::uint _layer)
+    {
+        VG_ASSERT(_layer < MaxAnimationLayerCount);
+        _layer = min(_layer, MaxAnimationLayerCount-1);
+
+        if (auto * animationBinding = getAnimationBinding(_animation))
+        {
+            animationBinding->m_layer = _layer;
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::SetAnimationBodyParts(ISkeletalAnimation * _animation, BodyPartFlags _flags)
+    {
+        if (auto * animationBinding = getAnimationBinding(_animation))
+        {
+            animationBinding->m_bodyParts = _flags;
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::SetAnimationTime(ISkeletalAnimation * _animation, float _time)
+    {
+        if (auto * animationBinding = getAnimationBinding(_animation))
+        {
+            animationBinding->m_animationState.m_time = _time;
+            return true;
+        }
+
         return false;
     }
 
     //--------------------------------------------------------------------------------------
     bool MeshInstance::SetAnimationWeight(ISkeletalAnimation * _animation, float _weight)
     {
-        for (uint i = 0; i < m_animationBindings.size(); ++i)
+        if (auto * animationBinding = getAnimationBinding(_animation))
         {
-            AnimationBinding & animationBinding = m_animationBindings[i];
-            if (_animation == animationBinding.m_animation)
-            {
-                animationBinding.m_animationState.m_weight = _weight;
-                return true;
-            }
+            animationBinding->m_animationState.m_weight = _weight;
+            return true;
         }
+
         return false;
     }
 

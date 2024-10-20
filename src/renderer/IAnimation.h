@@ -9,7 +9,7 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL_ABSTRACT(IAnimation, core::Model)
 
-        virtual float GetLength() const = 0;
-        virtual float GetFramerate() const = 0;
+        virtual float       GetLength       () const = 0;
+        virtual float       GetFramerate    () const = 0;
     };
 }

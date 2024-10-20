@@ -111,6 +111,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
             case FightState::None:
             case FightState::Hit:
+            case FightState::Shoot:
             case FightState::Kick:
                 break;
         }
@@ -235,23 +236,36 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     // HIT
                     if (FightState::None == m_fightState)
                     {
-                        m_fightState = FightState::Hit;
-                        playFightAnim(FightState::Hit, false);
+                        if (auto * weaponBehaviour = dynamic_cast<WeaponBehaviour *>(m_rightHandItem))
+                        {
+                            switch (weaponBehaviour->getWeaponType())
+                            {
+                                case WeaponType::Melee:
+                                    m_fightState = FightState::Hit;
+                                    playFightAnim(FightState::Hit, false);
+                                    break;
 
-                        // Play sound
-                        if (auto * soundComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
-                            soundComponent->Play(0);
+                                case WeaponType::Pistol:
+                                    m_fightState = FightState::Shoot;
+                                    playFightAnim(FightState::Shoot, false);
+                                    break;
+                            };                            
+
+                            // Play sound
+                            if (auto * soundComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
+                                soundComponent->Play(0);
+                        }
                     }
                 }
             }
 
-            if (FightState::Hit == m_fightState)
+            if (FightState::Hit == m_fightState || FightState::Shoot == m_fightState)
             {
-                if (IAnimationResource * anim = animationComponent->GetAnimation(m_fightAnim[asInteger(FightState::Hit)]))
+                if (IAnimationResource * anim = animationComponent->GetAnimation(m_fightAnim[asInteger(m_fightState)]))
                 {
-                    if (anim->IsFinished())
+                    if (!anim->IsPlaying() || anim->IsFinished())
                     {
-                        stopFightAnim(FightState::Hit);
+                        stopFightAnim(m_fightState);
                         m_fightState = FightState::None;
                     }
                 }

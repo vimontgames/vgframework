@@ -27,6 +27,9 @@ bool WeaponBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
+    registerPropertyEnum(WeaponBehaviour, WeaponType, m_weaponType, "Type");
+    setPropertyDescription(WeaponBehaviour, m_weaponType, "Weapon type");
+
     return true;
 }
 

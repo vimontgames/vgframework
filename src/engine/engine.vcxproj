@@ -114,6 +114,7 @@
     <None Include="Component\UI\UIComponent.inl" />
     <None Include="Engine.def" />
     <None Include="Engine.inl" />
+    <None Include="Resource\Animation\AnimationResource.inl" />
     <None Include="World\World.inl" />
   </ItemGroup>
   <ItemGroup>

@@ -19,8 +19,9 @@ vg_enum_class(MoveState, vg::core::u8,
 
 vg_enum_class(FightState, vg::core::u8,
     None = 0,
-    Hit,
-    Kick
+    Hit,        // Upper body: Hitting with melee weapon (TODO: rename?)
+    Shoot,      // Upper body: Shooting with pisol
+    Kick        // Lower body: Kicking the ball
 );
 
 vg_enum_class(SoundState, vg::core::u8,
@@ -33,4 +34,14 @@ vg_enum_class(ItemType, vg::core::u8,
     Default = 0,
     Ball,
     Weapon
+);
+
+vg_enum_class(BallType, vg::core::u8,
+    Football,
+    Rugby
+);
+
+vg_enum_class(WeaponType, vg::core::u8,
+    Melee,
+    Pistol
 );

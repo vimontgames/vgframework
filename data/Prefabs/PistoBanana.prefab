@@ -57,7 +57,7 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="2016837011"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="EnumU8" name="m_shapeType" value="Box"/>
                                 <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
@@ -76,16 +76,17 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="New WeaponBehaviour"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="831193518"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float" name="m_damage" flags="HasRange" value="10"/>
                                 <Property type="Float" name="m_push" flags="HasRange" value="10"/>
+                                <Property type="EnumU8" name="m_weaponType" value="Pistol"/>
                             </Object>
                             <Object class="AttachToNodeComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New AttachToNodeComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="4133633331"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Bool" name="m_useTarget" flags="NotVisible" value="false"/>
                                 <Property type="ObjectHandle" name="m_target" flags="Optional" value="0"/>

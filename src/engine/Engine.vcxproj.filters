@@ -82,6 +82,9 @@
     <None Include="Component\Physics\Object\PhysicsObjectComponent.inl">
       <Filter>Component\Physics\Object</Filter>
     </None>
+    <None Include="Resource\Animation\AnimationResource.inl">
+      <Filter>Resource\Animation</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEngine.h" />

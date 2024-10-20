@@ -17,8 +17,11 @@ public:
 
     void                    onGoalScored        (CharacterType _team);
 
+protected:
+    BallType                m_ballType          = BallType::Football;
+
 private:
-    vg::core::float3        m_startPos;
-    bool                    m_scored = false;
-    float                   m_scoredTime = -1.0f;
+    vg::core::float3        m_startPos          = (vg::core::float3)0.0f;
+    bool                    m_scored            = false;
+    float                   m_scoredTime        = -1.0f;
 };

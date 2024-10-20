@@ -30,7 +30,7 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyComponent #1"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="1913598529"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="EnumU8" name="m_category" value="Default"/>
                                 <Property type="Bool" name="m_useCollisionMask" flags="NotVisible" value="false"/>
@@ -57,7 +57,7 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="32418824"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="EnumU8" name="m_shapeType" value="Capsule"/>
                                 <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
@@ -79,16 +79,17 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="New BallBehaviour"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="2990436319"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float" name="m_damage" flags="HasRange" value="10"/>
                                 <Property type="Float" name="m_push" flags="HasRange" value="10"/>
+                                <Property type="EnumU8" name="m_ballType" value="Rugby"/>
                             </Object>
                             <Object class="SoundComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New SoundComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="3560114777"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Object" name="m_sounds">
                                     <Object class="SoundResourceList">
@@ -115,7 +116,7 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="MeshComponent #1"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="903542910"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource" flags="Resource">
                                     <Object class="MeshResource">

@@ -26,6 +26,23 @@ namespace vg::renderer
     class SkeletalAnimation;
     class MeshModel;
 
+    struct AnimationState
+    {
+        float m_time = 0.0f;
+        float m_weight = 0.0f;
+    };
+
+    struct AnimationBinding
+    {
+        SkeletalAnimation *     m_animation = nullptr;
+        core::uint              m_layer = 0;
+        BodyPartFlags           m_bodyParts = (BodyPartFlags)0x0;
+        AnimationState          m_animationState;
+        core::vector<core::i16> m_animToSkeletonIndex;
+        core::vector<core::i16> m_skeletonToAnimIndex;
+        float                   m_normalizedWeight = 0.0f;
+    };
+
     class MeshInstance : public IMeshInstance
     {
     public:
@@ -43,6 +60,9 @@ namespace vg::renderer
 
         bool                            AddAnimation                (ISkeletalAnimation * _animation) final override;
         bool                            RemoveAnimation             (ISkeletalAnimation * _animation) final override;
+
+        bool                            SetAnimationLayer           (ISkeletalAnimation * _animation, core::uint _layer) final override;
+        bool                            SetAnimationBodyParts       (ISkeletalAnimation * _animation, BodyPartFlags _flags) final override;
 
         bool                            SetAnimationTime            (ISkeletalAnimation * _animation, float _time) final override;
         bool                            SetAnimationWeight          (ISkeletalAnimation * _animation, float _weight) final override;
@@ -71,26 +91,14 @@ namespace vg::renderer
         gfx::BLASVariantKey             computeBLASVariantKey       () const;
         bool                            updateInstanceBLAS          ();
 
+    protected:
+        AnimationBinding *              getAnimationBinding         (ISkeletalAnimation * _animation);
+
     private:
         Skeleton *                      m_instanceSkeleton = nullptr;
         const gfx::Buffer *             m_skinnedMeshBuffer = nullptr;
         core::uint                      m_skinnedMeshBufferOffset = 0;
         gfx::BLAS *                     m_instanceBLAS = nullptr;
-
-        struct AnimationState
-        {
-            float m_time = 0.0f;
-            float m_weight = 0.0f;
-        };
-
-        struct AnimationBinding
-        {
-            SkeletalAnimation *         m_animation = nullptr;
-            AnimationState              m_animationState;
-            core::vector<core::i16>     m_animToSkeletonIndex;
-            core::vector<core::i16>     m_skeletonToAnimIndex;
-            float                       m_normalizedWeight = 0.0f;
-        };
         core::vector<AnimationBinding>  m_animationBindings;
     };
 }

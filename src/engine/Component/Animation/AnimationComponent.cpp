@@ -6,6 +6,7 @@
 #include "engine/Engine.h"
 #include "renderer/IMeshInstance.h"
 #include "renderer/IAnimation.h"
+#include "renderer/ISkeletalAnimation.h"
 #include "editor/Editor_Consts.h"
 #include "core/Math/Math.h"
 #include "core/IWorld.h"
@@ -32,7 +33,7 @@ namespace vg::engine
         super(_name, _parent),
         m_animations(_name, this)
     {
-
+        resetCurrentLayerAnimations();
     }
 
     //--------------------------------------------------------------------------------------
@@ -42,61 +43,80 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void AnimationComponent::resetCurrentLayerAnimations()
+    {
+        for (uint i = 0; i < MaxAnimationLayerCount; ++i)
+            m_currentLayerAnimationIndex[i] = -1;
+    }
+
+    //--------------------------------------------------------------------------------------
     void AnimationComponent::Update(const Context & _context)
     {
         auto & animResources = m_animations.getResources();
 
         if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused()) // TODO: check if running from prefab world using context instead? Or include play/stop/paused state in context maybe?
         {
-            if (-1 != m_primaryIndex || -1 != m_secondaryIndex)
+            float amount = _context.m_dt * 4.0f;    // Animation blending speed should be exposed (in 'PlayAnimation'?)
+
+            float sum[MaxAnimationLayerCount];
+
+            for (uint layerIndex = 0; layerIndex < MaxAnimationLayerCount; ++layerIndex)
             {
-                float amount = _context.m_dt * 4.0f;
+                const auto currentLayerAnimIndex = m_currentLayerAnimationIndex[layerIndex];
+                sum[layerIndex] = 0.0f;
 
-                //if (currentWeight < 1.0f)
+                // Update animation time
+                for (uint i = 0; i < animResources.size(); ++i)
                 {
-                    for (uint i = 0; i < animResources.size(); ++i)
-                    {
-                        auto & anim = animResources[i];
+                    auto & anim = animResources[i];
+                    float weight = anim.getWeight();
+                    const auto layer = anim.getLayer();
 
-                        if ((i == m_primaryIndex || i == m_secondaryIndex) && anim.isPlaying())
+                    if (layerIndex == layer)
+                    {
+                        if (currentLayerAnimIndex == i && anim.isPlaying())
                         {
-                            float weight = anim.getWeight();
+                            // Increase weight if animation is playing
                             weight = saturate(weight + amount);
                             anim.setWeight(weight);
                         }
                         else
                         {
-                            float weight = anim.getWeight();
-                            weight = saturate(weight - amount);
-                            anim.setWeight(weight);
-
-                            if (weight == 0.0f)
+                            if (weight > 0.0f)
+                            {
+                                // Decrease weight if animation if no more playing
+                                weight = saturate(weight - amount);
+                                anim.setWeight(weight);
+                            }
+                            else
+                            {
                                 anim.setTime(0.0f);
+                            }
                         }
+
+                        // Sum weights per layer
+                        sum[layerIndex] += weight;
                     }
                 }
+            }
 
-                float sumAdd = 0.0f;
-                float sumBlend = 0.0f;
+            float invSum[MaxAnimationLayerCount];
+            for (uint layerIndex = 0; layerIndex < MaxAnimationLayerCount; ++layerIndex)
+                invSum[layerIndex] = 1.0f / sum[layerIndex];
 
+            // Normalize layer weights
+            for (uint layerIndex = 0; layerIndex < MaxAnimationLayerCount; ++layerIndex)
+            {                
                 for (uint i = 0; i < animResources.size(); ++i)
                 {
                     auto & anim = animResources[i];
-                    const float weight = anim.getWeight();
-                    if (anim.isAdditive())
-                        sumAdd += weight;
-                    else
-                        sumBlend += weight;
-                }
-                //VG_ASSERT(sumBlend > 0.0f);
+                    const auto layer = anim.getLayer();
 
-                for (uint i = 0; i < animResources.size(); ++i)
-                {
-                    auto & anim = animResources[i];
-                    const float weight = anim.getWeight();
-
-                    if (!anim.isAdditive())
-                        anim.setWeight(sumBlend > 0 ? weight / sumBlend : 0);
+                    if (layerIndex == layer && layerIndex == 0)
+                    {
+                        const float weight = anim.getWeight();
+                        anim.setWeight(weight * invSum[layerIndex]);
+                    }
                 }
             }
         }
@@ -127,8 +147,7 @@ namespace vg::engine
     void AnimationComponent::OnEnable()
     {
         super::OnEnable();
-        m_primaryIndex = -1;
-        m_secondaryIndex = -1;
+        resetCurrentLayerAnimations();
         m_animations.OnEnable();
     }
 
@@ -157,7 +176,12 @@ namespace vg::engine
             {
                 AnimationResource & animRes = animResources[i];
                 if (renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)animRes.GetObject())
-                    meshComponent->getMeshInstance()->AddAnimation(anim);
+                {
+                    auto * meshInstance = meshComponent->getMeshInstance();
+                    meshInstance->AddAnimation(anim);
+                    meshInstance->SetAnimationLayer(anim, animRes.getLayer());
+                    meshInstance->SetAnimationBodyParts(anim, animRes.getBodyParts());
+                }
             }
         }
     }
@@ -168,8 +192,14 @@ namespace vg::engine
         MeshComponent * meshComponent = getMeshComponent();
         if (meshComponent)
         {
-            renderer::ISkeletalAnimation * anim = (renderer::ISkeletalAnimation *)_resource->GetObject();
-            meshComponent->getMeshInstance()->AddAnimation(anim);
+            AnimationResource * animRes = VG_SAFE_STATIC_CAST(AnimationResource, _resource);
+            if (renderer::ISkeletalAnimation * anim = VG_SAFE_STATIC_CAST(renderer::ISkeletalAnimation, animRes->GetObject()))
+            {
+                auto * meshInstance = meshComponent->getMeshInstance();
+                meshInstance->AddAnimation(anim);
+                meshInstance->SetAnimationLayer(anim, animRes->getLayer());
+                meshInstance->SetAnimationBodyParts(anim, animRes->getBodyParts());
+            }
         }
     }
 
@@ -221,36 +251,21 @@ namespace vg::engine
         {
             auto & anims = m_animations.getResources();
             auto & anim = anims[_index];
+            const auto layer = anim.getLayer();
 
-            if (anim.isAdditive())
+            if (_index != m_currentLayerAnimationIndex[layer] || !anim.isPlaying())
             {
-                //if (_index != m_secondaryIndex)
+                if (!anim.isPlaying())
                 {
                     anim.setTime(0.0f);
                     anim.setPlay(true);
                     anim.setLoop(_loop);
-
-                    m_secondaryIndex = _index;
-
-                    return true;
                 }
-            }
-            else
-            {
-                if (_index != m_primaryIndex)
-                {
-                    if (!anim.isPlaying())
-                    {
-                        anim.setTime(0.0f);
-                        anim.setPlay(true);
-                        anim.setLoop(_loop);
-                    }
 
-                    m_primaryIndex = _index;
+                m_currentLayerAnimationIndex[layer] = _index;
 
-                    return true;
-                }
-            }            
+                return true;
+            }        
         }
 
         return false;
@@ -263,22 +278,12 @@ namespace vg::engine
         {
             auto & anims = m_animations.getResources();
             auto & anim = anims[_index];
+            const auto layer = anim.getLayer();
 
-            if (anim.isAdditive())
+            if (_index == m_currentLayerAnimationIndex[layer])
             {
-                if (_index == m_secondaryIndex)
-                {
-                    anim.setPlay(false);
-                    return true;
-                }
-            }
-            else
-            {
-                if (_index == m_primaryIndex)
-                {
-                    anim.setPlay(false);
-                    return true;
-                }
+                anim.setPlay(false);
+                return true;
             }
         }
 
