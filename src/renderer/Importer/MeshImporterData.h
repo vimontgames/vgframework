@@ -11,13 +11,19 @@ namespace vg::renderer
 {
     using MeshImporterVertex = renderer::FatVertex;
 
+    struct BonesNamingConvention
+    {
+        core::string name;
+        BodyPartFlags flags;
+    };
+
     class MeshImporterNode 
     {
     public:
         bool read(core::io::Buffer & _buffer);
         bool write(core::io::Buffer & _buffer) const;
 
-        void computeBodyPartFlags();
+        bool computeBodyPartFlags();
 
         bool                selected = false;
 

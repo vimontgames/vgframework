@@ -1,3 +1,7 @@
+#include "core/string/string.h"
+#include "NamingConvention/MixamoBonesNamingConvention.h"
+#include "NamingConvention/CharacterStudioBipedNamingConvention.h"
+
 using namespace vg::core;
 
 namespace vg::renderer
@@ -5,99 +9,42 @@ namespace vg::renderer
     // Cooked mesh version
     static const u32 MeshImporterDataVersion = 14;
 
-    // Use unordered_map for the flags
-    static const std::unordered_map<std::string, BodyPartFlags> g_mixamoBoneFlags =
+    //--------------------------------------------------------------------------------------
+    bool findBodyPartFlagsFromNamingConvention(const core::string & _name, const vector<BonesNamingConvention> & _namingConvention, BodyPartFlags & _flags)
     {
-        {"mixamorig:Hips",               BodyPartFlags::LowerBody},
-        {"mixamorig:Spine",              BodyPartFlags::UpperBody},
-        {"mixamorig:Spine1",             BodyPartFlags::UpperBody},
-        {"mixamorig:Spine2",             BodyPartFlags::UpperBody},
-        {"mixamorig:Neck",               BodyPartFlags::UpperBody},
-        {"mixamorig:Head",               BodyPartFlags::UpperBody},
+        for (uint i = 0; i < _namingConvention.size(); ++i)
+        {
+            if (endsWith(_name, _namingConvention[i].name))
+            {
+                _flags = _namingConvention[i].flags;
+                return true;
+            }
+        }
 
-        // Left Arm and Hand
-        {"mixamorig:LeftShoulder",       BodyPartFlags::UpperBody},
-        {"mixamorig:LeftArm",            BodyPartFlags::UpperBody},
-        {"mixamorig:LeftForeArm",        BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHand",           BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandThumb1",     BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandThumb2",     BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandThumb3",     BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandIndex1",     BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandIndex2",     BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandIndex3",     BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandIndex_End",  BodyPartFlags::UpperBody},
-
-        // Left Hand Fingers
-        {"mixamorig:LeftHandMiddle1",    BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandMiddle2",    BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandMiddle3",    BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandMiddle_End", BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandRing1",      BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandRing2",      BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandRing3",      BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandRing_End",   BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandPinky1",     BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandPinky2",     BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandPinky3",     BodyPartFlags::UpperBody},
-        {"mixamorig:LeftHandPinky_End",  BodyPartFlags::UpperBody},
-
-        // Right Arm and Hand
-        {"mixamorig:RightShoulder",      BodyPartFlags::UpperBody},
-        {"mixamorig:RightArm",           BodyPartFlags::UpperBody},
-        {"mixamorig:RightForeArm",       BodyPartFlags::UpperBody},
-        {"mixamorig:RightHand",          BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandThumb1",    BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandThumb2",    BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandThumb3",    BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandIndex1",    BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandIndex2",    BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandIndex3",    BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandIndex_End", BodyPartFlags::UpperBody},
-
-        // Right Hand Fingers
-        {"mixamorig:RightHandMiddle1",   BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandMiddle2",   BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandMiddle3",   BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandMiddle_End",BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandRing1",     BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandRing2",     BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandRing3",     BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandRing_End",  BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandPinky1",    BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandPinky2",    BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandPinky3",    BodyPartFlags::UpperBody},
-        {"mixamorig:RightHandPinky_End", BodyPartFlags::UpperBody},
-
-        // Left Leg Bones
-        {"mixamorig:LeftUpLeg",          BodyPartFlags::LowerBody},
-        {"mixamorig:LeftLeg",            BodyPartFlags::LowerBody},
-        {"mixamorig:LeftFoot",           BodyPartFlags::LowerBody},
-        {"mixamorig:LeftToeBase",        BodyPartFlags::LowerBody},
-        {"mixamorig:LeftToe_End",        BodyPartFlags::LowerBody},
-
-        // Right Leg Bones
-        {"mixamorig:RightUpLeg",         BodyPartFlags::LowerBody},
-        {"mixamorig:RightLeg",           BodyPartFlags::LowerBody},
-        {"mixamorig:RightFoot",          BodyPartFlags::LowerBody},
-        {"mixamorig:RightToeBase",       BodyPartFlags::LowerBody},
-        {"mixamorig:RightToe_End",       BodyPartFlags::LowerBody},
-
-        // Additional Bones
-        {"mixamorig:LeftEye",            BodyPartFlags::UpperBody},
-        {"mixamorig:RightEye",           BodyPartFlags::UpperBody},
-        {"mixamorig:Jaw",                BodyPartFlags::UpperBody},
-        {"mixamorig:Spine3",             BodyPartFlags::UpperBody},
-        {"mixamorig:Spine4",             BodyPartFlags::UpperBody}
-    };
+        return false;
+    }
 
     //--------------------------------------------------------------------------------------
-    void MeshImporterNode::computeBodyPartFlags()
+    bool MeshImporterNode::computeBodyPartFlags()
     {
-        auto it = g_mixamoBoneFlags.find(name);
-            
-        if (g_mixamoBoneFlags.end() != it)
-            flags |= it->second;
+        BodyPartFlags namingFlags;
+
+        if (findBodyPartFlagsFromNamingConvention(name, g_mixamoBoneFlags, namingFlags))
+        {
+            flags = namingFlags;
+            return true;
+        }
+
+        if (findBodyPartFlagsFromNamingConvention(name, g_characterStudioBoneFlags, namingFlags))
+        {
+            flags = namingFlags;
+            return true;
+        }
+
+        // If bone is not matching any naming convention, assume it belongs to all categories
+        flags = (BodyPartFlags)-1;
+        VG_WARNING("[Import] Could not find naming convention for node \"%s\"", name.c_str());
+        return false;
     }
 
     //--------------------------------------------------------------------------------------

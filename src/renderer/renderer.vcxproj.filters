@@ -455,6 +455,12 @@
     <ClInclude Include="UI\UIElement.h">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="Importer\NamingConvention\MixamoBonesNamingConvention.h">
+      <Filter>Importer\Naming</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer\NamingConvention\CharacterStudioBipedNamingConvention.h">
+      <Filter>Importer\Naming</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -621,6 +627,9 @@
     </Filter>
     <Filter Include="UI">
       <UniqueIdentifier>{171b5c22-1141-4f6e-8070-9a2074953dd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Importer\Naming">
+      <UniqueIdentifier>{cffc7eb4-22f5-4658-9b8e-8f7c9fcd7407}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

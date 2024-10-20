@@ -755,15 +755,19 @@ namespace vg::renderer
                 // YUp skeleton displayed as ZUp
                 float4x4 boneMatrix = mul(transpose(node.node_to_world), matrix);
 
-                const u32 selectedColor = 0xFF00FF00;
-                const u32 unselectedColor = 0x7FFFFFFF;
+                u32 color = 0x7F3F3F3F;
 
-                u32 color = unselectedColor;
+                if (asBool(node.flags & renderer::BodyPartFlags::UpperBody))
+                    color |= 0x7F0000FF;
+
+                if (asBool(node.flags & renderer::BodyPartFlags::LowerBody))
+                    color |= 0x7F00FF00;
+
                 float3 boxSize = float3(0.01f, 0.01f, 0.01f);
 
                 if (skeleton->IsNodeSelected(j))
                 {
-                    color = selectedColor;
+                    color |= 0xCFCFCFCF;
                     boxSize *= 1.5f;
                 }
 
@@ -773,7 +777,7 @@ namespace vg::renderer
                 {
                     const MeshImporterNode & parentNode = nodes[node.parent_index];
                     float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), matrix);
-                    dbgDraw->AddLine(_world, boneMatrix[3].xyz, parentBoneMatrix[3].xyz, unselectedColor);
+                    dbgDraw->AddLine(_world, boneMatrix[3].xyz, parentBoneMatrix[3].xyz, color);
                 }
             }
 
