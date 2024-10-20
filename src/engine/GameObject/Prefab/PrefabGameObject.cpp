@@ -602,14 +602,41 @@ namespace vg::engine
                             default:
                                 break;
 
-                            case PropertyType::ObjectPtrVector:
-                            {
-                                const auto vec = prop->GetPropertyObjectPtrVector(_object);
-                                for (uint j = 0; j < vec->size(); ++j)
-                                {
-                                    Object * obj = (Object*)(*vec)[j];
+                            case PropertyType::ResourcePtr:
+                            case PropertyType::ResourcePtrVector:
+                                VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
+                            break;
 
+                            case PropertyType::Object:
+                            {
+                                Object * obj = (Object *)prop->GetPropertyObject(_object);
+                                if (nullptr != obj)
+                                {
                                     if (auto * found = find(obj, _uid))
+                                        return found;
+                                }
+                            }
+                            break;
+
+                            case PropertyType::Resource:
+                            {
+                                Object * res = (Object *)prop->GetPropertyResource(_object);
+                                if (nullptr != res)
+                                {
+                                    if (auto * found = find(res, _uid))
+                                        return found;
+                                }
+                            }
+                            break;
+
+                            case PropertyType::ResourceVector:
+                            {
+                                const auto count = prop->GetPropertyResourceVectorCount(_object);
+                                for (uint j = 0; j < count; ++j)
+                                {
+                                    Resource * res = (Resource *)prop->GetPropertyResourceVectorElement(_object, j);
+
+                                    if (auto * found = find(res, _uid))
                                         return found;
                                 }
                             }
@@ -621,6 +648,19 @@ namespace vg::engine
                                 if (nullptr != *obj)
                                 {
                                     if (auto * found = find(*obj, _uid))
+                                        return found;
+                                }
+                            }
+                            break;
+
+                            case PropertyType::ObjectPtrVector:
+                            {
+                                const auto vec = prop->GetPropertyObjectPtrVector(_object);
+                                for (uint j = 0; j < vec->size(); ++j)
+                                {
+                                    Object * obj = (Object*)(*vec)[j];
+
+                                    if (auto * found = find(obj, _uid))
                                         return found;
                                 }
                             }
@@ -637,9 +677,11 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void PrefabGameObject::OverrideGameObjectProperties(IGameObject * _gameObject, const IDynamicProperty * _dynProp)
     {        
-        for (uint i = 0; i < m_dynamicProperties.size(); ++i)
+        bool found = false;
+
+        for (uint j = 0; j < m_dynamicProperties.size(); ++j)
         {
-            auto & propList = m_dynamicProperties[i];
+            auto & propList = m_dynamicProperties[j];
 
             //VG_INFO("[Prefab] Override %u properties for GameObject \"%s\" in Prefab \"%s\"", propList->m_properties.size(), _gameObject->getName().c_str(), getName().c_str());
             
@@ -652,8 +694,6 @@ namespace vg::engine
                 for (uint i = 0; i < propList->m_properties.size(); ++i)
                 {
                     auto & overrideProp = propList->m_properties[i];
-
-                    bool found = true;
 
                     if (nullptr == _dynProp || _dynProp->GetProperty() == overrideProp->GetProperty())
                     {
@@ -670,10 +710,7 @@ namespace vg::engine
                             obj->OnPropertyChanged(obj, *origProp, true);
                             found = true;
                         }
-                    }
-
-                    if (!found)
-                        VG_WARNING("[Prefab] Could not find property \"%s\" in Prefab \"%s\"", overrideProp->GetName().c_str(), m_prefabResource.GetResourcePath().c_str());
+                    }                    
                 }
             }
             else
@@ -681,6 +718,9 @@ namespace vg::engine
                 VG_WARNING("[Prefab] Could not find GUID %u (0x%08X) in Prefab \"%s\"", propList->GetUID(), propList->GetUID(), m_prefabResource.GetResourcePath().c_str());
             }
         }
+
+        if (nullptr != _dynProp && !found)
+            VG_WARNING("[Prefab] Could not find property \"%s\" in Prefab \"%s\"", _dynProp->GetName().c_str(), m_prefabResource.GetResourcePath().c_str());
     }
 
     //--------------------------------------------------------------------------------------

@@ -2028,12 +2028,7 @@ namespace vg::editor
                 break;
             }
         }
-        //ImGui::EndDisabled();
-
         ImGui::PopStyleColor();
-
-        //ImGui::SameLine();
-        //ImGui::Text(label.c_str());
 
         if (optionalChanged)
         {
@@ -2074,8 +2069,6 @@ namespace vg::editor
             }
         }
 
-        //VG_SAFE_DELETE(previousValue);
-
         if (propContext.m_isPrefabInstance && propContext.m_canPrefabOverride && !propContext.m_readOnly)
         {
             const auto saveCurY = ImGui::GetCursorPosY();
@@ -2087,49 +2080,12 @@ namespace vg::editor
             auto availableWidth2 = window->Size.x - window->WindowPadding.x - (window->ScrollbarY ? ImGui::GetStyle().ScrollbarSize : 0);
             availableWidth2 = max(availableWidth, availableWidth2);
 
-            //ImGui::SameLine();
-            //ImGui::SetCursorPosX(availableWidth2 - style::button::SizeSmall.x);
-            //ImGui::SetCursorPosY(cursorPosY);
-            //
-            //bool checked = context.isPrefabOverride && context.propOverride->IsEnable();
-            ////ImGui::BeginDisabled(context.);
-            //if (ImGui::Checkbox(getObjectLabel("", "Override", _prop).c_str(), &checked))
-            //{
-            //    if (checked)
-            //        context.prefab->ToggleOverride(context.originalObject, context.originalProp, true);
-            //    else
-            //        context.prefab->ToggleOverride(context.originalObject, context.originalProp, false);
-            //
-            //    if (context.optionalPropOverride)
-            //        context.optionalPropOverride->Enable(checked);
-            //}
-            ////ImGui::EndDisabled();
-            //ImGui::SetCursorPosY(cursorPosY + deltaY);
-
-            //if (ImGui::IsItemHovered())
-            //{
-            //    if (context.isPrefabOverride)
-            //        ImGui::SetTooltip("Property \"%s\" is overridden", _prop->getName());
-            //    else if (context.canPrefabOverride)
-            //        ImGui::SetTooltip("Property \"%s\" can be overriden", _prop->getName());
-            //    else
-            //        ImGui::SetTooltip("Property \"%s\" cannot be overriden", _prop->getName());
-            //}
-
             if (ImGui::BeginPopupContextItem(getObjectLabel("Menu", "Override", _prop).c_str()))
             {
                 ImGui::BeginDisabled(!propContext.m_canPrefabOverride);
 
                 bool overriden = propContext.m_isPrefabOverride;
                 bool notOverriden = !overriden;
-                //if (ImGui::MenuItem(overriden ? "Use original value" : "Use override value"))
-                //{
-                //    context.prefab->ToggleOverride(context.originalObject, context.originalProp, !overriden);
-                //    //if (overriden)
-                //    //    context.prefab->ToggleOverride(context.originalObject, context.originalProp, true);
-                //    //else
-                //    //    context.prefab->ToggleOverride(context.originalObject, context.originalProp, false);
-                //}
 
                 ImGui::MenuItem("Prefab override", nullptr, false, false);
                 ImGui::Separator();
@@ -2145,12 +2101,6 @@ namespace vg::editor
                 ImGui::EndPopup();
             }
         }
-
-        //if (isPrefabInstance)
-        //    ImGui::PopStyleColor();
-
-        //if (readOnly /* || isPrefabOverride*/)
-        //    ImGui::PopStyleColor();
 
         return changed | optionalChanged;
     }
