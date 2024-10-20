@@ -24,6 +24,7 @@ namespace vg::engine
         bool Add() override
         {
             T & res = m_resources.emplace_back();
+            res.RegisterUID();
 
             for (auto & res : m_resources)
                 res.SetParent(this);

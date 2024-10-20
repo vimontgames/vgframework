@@ -8,7 +8,7 @@ namespace vg::core
         if (nullptr != _object)
         {
             m_objectUID = _object->GetUID(false);
-            VG_ASSERT(m_objectUID);
+            VG_ASSERT(m_objectUID, "(%s)\"%s\" has no UID", _object->GetClassName(), _object->GetShortName().c_str());
 
             m_objectName = _object->GetName();
         }
