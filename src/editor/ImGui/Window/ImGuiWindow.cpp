@@ -595,7 +595,7 @@ namespace vg::editor
         {
             enumPairs[e].name = _prop->GetEnumName(e);
 
-            if (enumPairs[e].name._Starts_with(enumTypeName))
+            if (enumPairs[e].name._Starts_with(enumTypeName + "_"))
                 enumPairs[e].name = enumPairs[e].name.substr(enumTypeName.length()+1);
 
             enumPairs[e].value = scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(e) : _prop->GetUnsignedEnumValue(e);
