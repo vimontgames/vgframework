@@ -52,7 +52,7 @@ namespace vg::gfx
         }
 
         VG_INLINE bool isValidFlagIndex(core::uint _index) const;
-        VG_INLINE bool isValidFlagValue(core::uint _index, core::uint _value) const;
+        bool isValidFlagValue(core::uint _index, core::uint _value) const;
 
         ShaderKey::VS declVS(const core::string & _vsEntryPoint);
         ShaderKey::HS declHS(const core::string & _hsEntryPoint);

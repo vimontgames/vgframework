@@ -225,4 +225,14 @@ namespace vg::gfx
         for (auto & pair : m_variants)
             VG_SAFE_RELEASE(pair.second);
     }
+
+    //--------------------------------------------------------------------------------------
+    bool HLSLDesc::isValidFlagValue(core::uint _index, core::uint _value) const
+    {
+        const uint bits = _value ? (uint)log2(_value) + 1 : 1;
+        if (m_flagDescs[_index].m_bits < bits)
+            return false;
+
+        return true;
+    }
 }
