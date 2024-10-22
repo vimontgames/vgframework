@@ -235,7 +235,7 @@ namespace vg::gfx
 
         if (shader) 
         {
-            string msg = fmt::sprintf("[Shader] Successfully compiled %s Shader \"%s\"", asString(_stage).c_str(), _entryPoint.c_str());
+            string msg = fmt::sprintf("[Shader] Compiled %s Shader \"%s\"", asString(_stage).c_str(), _entryPoint.c_str());
 
             if (_macros.size() > 0)
             {

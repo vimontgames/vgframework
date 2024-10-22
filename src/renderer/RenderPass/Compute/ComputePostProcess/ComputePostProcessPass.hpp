@@ -2,6 +2,8 @@
 #include "Shaders/postprocess/postprocess.hlsli"
 #include "Shaders/postprocess/postprocess.hlsl.h"
 
+using namespace vg::gfx;
+
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
@@ -28,7 +30,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ComputePostProcessPass::Setup(const gfx::RenderPassContext & _renderPassContext)
+    void ComputePostProcessPass::Setup(const RenderPassContext & _renderPassContext)
     {
         const auto colorID = _renderPassContext.getFrameGraphID("Color");
         readRenderTarget(colorID);
@@ -53,7 +55,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ComputePostProcessPass::Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const
+    void ComputePostProcessPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         auto size = _renderPassContext.getView()->GetSize();
         auto threadGroupSize = uint2(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y);
@@ -63,10 +65,29 @@ namespace vg::renderer
 
         if (_renderPassContext.getView()->IsToolmode())
         {
-            shaderKey.setFlags(gfx::PostProcessHLSLDesc::Toolmode);
+            shaderKey.setFlag(PostProcessHLSLDesc::Toolmode, true);
 
             if (_renderPassContext.getView()->IsUsingRayTracing())
-                shaderKey.setFlags(gfx::PostProcessHLSLDesc::RayTracing);
+                shaderKey.setFlag(PostProcessHLSLDesc::RayTracing, true);
+        }
+
+        const auto * options = RendererOptions::get();
+        const auto aaMode = options->GetAliasing();
+        switch (aaMode)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(aaMode);
+
+            case AntiAliasing::None:
+                break;
+
+            case AntiAliasing::FXAA:
+                shaderKey.setFlag(PostProcessHLSLDesc::AntiAliasingMode, (uint)AntiAliasing::FXAA);
+                break;
+
+            case AntiAliasing::SMAA:
+                shaderKey.setFlag(PostProcessHLSLDesc::AntiAliasingMode, (uint)AntiAliasing::SMAA);
+                break;
         }
 
         _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);

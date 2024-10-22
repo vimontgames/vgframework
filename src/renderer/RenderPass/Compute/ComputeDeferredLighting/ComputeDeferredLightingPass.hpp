@@ -59,10 +59,10 @@ namespace vg::renderer
         ComputeShaderKey shaderKey = m_computeDeferredLightingShaderKey;
         
         if (_renderPassContext.getView()->IsToolmode())
-            shaderKey.setFlags(gfx::DeferredLightingHLSLDesc::Toolmode);
+            shaderKey.setFlag(gfx::DeferredLightingHLSLDesc::Toolmode, true);
 
         if (_renderPassContext.getView()->IsUsingRayTracing())
-            shaderKey.setFlags(gfx::DeferredLightingHLSLDesc::RayTracing);
+            shaderKey.setFlag(gfx::DeferredLightingHLSLDesc::RayTracing, true);
         
         _cmdList->setComputeRootSignature(m_computeDeferredLightingRootSignature);
         _cmdList->setComputeShader(shaderKey);

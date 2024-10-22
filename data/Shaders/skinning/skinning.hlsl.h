@@ -16,11 +16,11 @@ namespace vg::gfx
         {
             setFile("skinning/skinning.hlsl");
 
-			auto csSkinningMain = addCS("CS_Skinning");
+			auto csSkinningMain = declCS("CS_Skinning");
 
-            auto & skinning = addTechnique("SkinningCS");
+            auto & skinning = declTechnique("SkinningCS");
             {
-                skinning.cs = addVS("CS_Skinning");
+                skinning.cs = declVS("CS_Skinning");
             }
         }
     };

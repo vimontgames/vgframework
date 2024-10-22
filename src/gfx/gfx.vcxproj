@@ -524,6 +524,7 @@
     <None Include="PipelineState\Graphic\vulkan\GraphicPipelineState_vulkan.inl" />
     <None Include="Resource\Buffer.inl" />
     <None Include="Resource\Texture.inl" />
+    <None Include="Shader\HLSLDesc.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

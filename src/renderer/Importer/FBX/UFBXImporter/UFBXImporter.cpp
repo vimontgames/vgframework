@@ -43,6 +43,9 @@ namespace vg::renderer
 
         if (nullptr != scene)
         {
+            if (scene->settings.unit_meters != 1.0f)
+                VG_WARNING("[FBX] The unit of the file \"%s\" is not meters (scale = %f)", _path.c_str(), scene->settings.unit_meters);
+
             const auto meshCount = (uint)scene->meshes.count;
             for (uint i = 0; i < meshCount; ++i)
             {

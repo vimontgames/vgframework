@@ -57,7 +57,7 @@ namespace vg::renderer
         m_shaderKey[asInteger(ShaderPass::Deferred)] = ShaderKey(shaderFile, "Deferred");
 
         m_shaderKey[asInteger(ShaderPass::Transparent)] = ShaderKey(shaderFile, "Forward");
-        m_shaderKey[asInteger(ShaderPass::Transparent)].setFlags(DefaultHLSLDesc::AlphaBlend, true);
+        m_shaderKey[asInteger(ShaderPass::Transparent)].setFlag(DefaultHLSLDesc::AlphaBlend, true);
     }
 
     //--------------------------------------------------------------------------------------

@@ -91,8 +91,8 @@ namespace vg::renderer
                 BlendState bs(BlendFactor::Zero, BlendFactor::Zero, BlendOp::Add, (ColorWrite)0x0);
                 _cmdList->setBlendState(bs);
 
-                key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
-                key.setFlags(gfx::DefaultHLSLDesc::ZOnly, true);
+                key.setFlag(gfx::DefaultHLSLDesc::Toolmode, false);
+                key.setFlag(gfx::DefaultHLSLDesc::ZOnly, true);
             }
             break;
 
@@ -107,7 +107,7 @@ namespace vg::renderer
                 _cmdList->setBlendState(bs);
 
                 if (_renderContext.m_raytracing)
-                    key.setFlags(gfx::DefaultHLSLDesc::RayTracing, true);
+                    key.setFlag(gfx::DefaultHLSLDesc::RayTracing, true);
 
                 if (_renderContext.m_toolmode)
                 {
@@ -117,11 +117,11 @@ namespace vg::renderer
                         _root3D->setFlags(RootConstantsFlags::Wireframe);
                     }
 
-                    key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);
+                    key.setFlag(gfx::DefaultHLSLDesc::Toolmode, true);
                 }
                 else
                 {
-                    key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
+                    key.setFlag(gfx::DefaultHLSLDesc::Toolmode, false);
                 }
             }
             break;
@@ -134,9 +134,9 @@ namespace vg::renderer
                 VG_ASSERT(!_renderContext.m_wireframe);
 
                 if (_renderContext.m_toolmode)
-                    key.setFlags(gfx::DefaultHLSLDesc::Toolmode, true);
+                    key.setFlag(gfx::DefaultHLSLDesc::Toolmode, true);
                 else
-                    key.setFlags(gfx::DefaultHLSLDesc::Toolmode, false);
+                    key.setFlag(gfx::DefaultHLSLDesc::Toolmode, false);
             }
             break;
         }       
@@ -163,7 +163,7 @@ namespace vg::renderer
         _cmdList->setRasterizerState(rs);
 
         if (_renderContext.m_alphatest)
-            key.setFlags(gfx::DefaultHLSLDesc::AlphaTest);
+            key.setFlag(gfx::DefaultHLSLDesc::AlphaTest, true);
 
         _cmdList->setShader(key);
     }

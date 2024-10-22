@@ -17,12 +17,12 @@ namespace vg::gfx
 
             setFile("lighting/deferredLighting.hlsl");
 
-            addFlag(RayTracing, ShaderStageFlags::CS, "_RAYTRACING");
-            addFlag(Toolmode, ShaderStageFlags::CS, "_TOOLMODE");
+            declFlag(RayTracing, ShaderStageFlags::CS, "_RAYTRACING");
+            declFlag(Toolmode, ShaderStageFlags::CS, "_TOOLMODE");
 
-            auto & deferredLightingTech = addTechnique("DeferredLightingCS");
+            auto & deferredLightingTech = declTechnique("DeferredLightingCS");
             {
-                deferredLightingTech.cs = addCS("CS_DeferredLighting");
+                deferredLightingTech.cs = declCS("CS_DeferredLighting");
                 deferredLightingTech.flags = (Flags)0;
             }
         }

@@ -18,19 +18,19 @@ namespace vg::gfx
 
             setFile("driver/driver.hlsl");
 
-            addFlag(Gamma, ShaderStageFlags::PS, "_GAMMA");
-            addFlag(HDR10, ShaderStageFlags::PS, "_HDR10");
-            addFlag(HDR16, ShaderStageFlags::PS, "_HDR16");
+            declFlag(Gamma, ShaderStageFlags::PS, "_GAMMA");
+            declFlag(HDR10, ShaderStageFlags::PS, "_HDR10");
+            declFlag(HDR16, ShaderStageFlags::PS, "_HDR16");
 
-            auto vsQuad = addVS("VS_Quad");
-            auto psQuad = addPS("PS_Quad");
-            auto psCopy = addPS("PS_Copy");
+            auto vsQuad = declVS("VS_Quad");
+            auto psQuad = declPS("PS_Quad");
+            auto psCopy = declPS("PS_Copy");
 
-            auto & quad = addTechnique("Quad", vsQuad, psQuad);
-            auto & copy = addTechnique("Copy", vsQuad, psCopy);
-            auto & gamma = addTechnique("Gamma", vsQuad, psCopy, Flags::Gamma);
-            auto & hdr10 = addTechnique("HDR10", vsQuad, psCopy, Flags::HDR10);
-            auto & hdr16 = addTechnique("HDR16", vsQuad, psCopy, Flags::HDR16);
+            auto & quad = declTechnique("Quad", vsQuad, psQuad);
+            auto & copy = declTechnique("Copy", vsQuad, psCopy);
+            auto & gamma = declTechnique("Gamma", vsQuad, psCopy, Flags::Gamma);
+            auto & hdr10 = declTechnique("HDR10", vsQuad, psCopy, Flags::HDR10);
+            auto & hdr16 = declTechnique("HDR16", vsQuad, psCopy, Flags::HDR16);
         }
     };
 }

@@ -1,5 +1,9 @@
 #pragma once
 
+#if VG_ENABLE_ASSERT
+#define VG_VERIFY_SHADERKEY_FLAGS 1
+#endif
+
 namespace vg::gfx
 {
     class ShaderKey
@@ -23,8 +27,16 @@ namespace vg::gfx
         void clear();
         void init(const core::string & _file, const core::string & _technique);
 
-        inline void setFlags(core::uint _index, bool _enable = true)
+        #if VG_VERIFY_SHADERKEY_FLAGS
+        void verifyShaderKeyFlags(core::uint _index, core::uint _value);
+        #endif
+
+        inline void setFlag(core::uint _index, bool _enable)
         {
+            #if VG_VERIFY_SHADERKEY_FLAGS
+            verifyShaderKeyFlags(_index, 1);
+            #endif
+
             const ShaderKey::Flags value = (ShaderKey::Flags)(1 << _index);
 
             if (_enable)
@@ -32,6 +44,8 @@ namespace vg::gfx
             else
                 flags &= ~value;
         }
+
+        void setFlag(core::uint _index, core::uint _value);
 
         union
         {

@@ -16,10 +16,10 @@ namespace vg::gfx
 
             setFile("background/background.hlsl");
 
-            auto vsQuad = addVS("VS_Background");
-            auto psQuad = addPS("PS_Gradient");
+            auto vsQuad = declVS("VS_Background");
+            auto psQuad = declPS("PS_Gradient");
 
-            auto & quad = addTechnique("Gradient");
+            auto & quad = declTechnique("Gradient");
             {
                 quad.vs = vsQuad;
                 quad.ps = psQuad;

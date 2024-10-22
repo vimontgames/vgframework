@@ -45,6 +45,9 @@ namespace vg::renderer
             registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
             setPropertyDescription(LightDesc, m_VSync, "Sync display frequency with monitor refresh rate");
 
+            registerPropertyEnum(RendererOptions, gfx::AntiAliasing, m_antiAliasing, "Anti-Aliasing");
+            setPropertyDescription(LightDesc, m_antiAliasing, "Screen-space anti-aliasing technique");
+
             registerPropertyEnum(RendererOptions, gfx::HDR, m_HDRmode, "HDR");
             setPropertyDescription(LightDesc, m_HDRmode, "High-dynamic range display mode");
 
@@ -127,6 +130,24 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    gfx::AntiAliasing RendererOptions::GetAliasing() const
+    {
+        return m_antiAliasing;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool RendererOptions::SetAliasing(const gfx::AntiAliasing & _aa)
+    {
+        if (m_antiAliasing != _aa)
+        {
+            m_antiAliasing = _aa;
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     gfx::HDR RendererOptions::GetHDR() const
     {
         return m_HDRmode;
@@ -135,9 +156,14 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool RendererOptions::SetHDR(const gfx::HDR & _hdr)
     {
-        m_HDRmode = _hdr;
-        ApplyHDR(m_hdrProp);
-        return true;
+        if (m_HDRmode != _hdr)
+        {
+            m_HDRmode = _hdr;
+            ApplyHDR(m_hdrProp);
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------

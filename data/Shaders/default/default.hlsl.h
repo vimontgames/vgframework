@@ -21,29 +21,29 @@ namespace vg::gfx
         {
             setFile("default/default.hlsl");
 
-            addFlag(AlphaBlend, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ALPHABLEND");
-            addFlag(AlphaTest, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ALPHATEST");
-            addFlag(ZOnly, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ZONLY");
-            addFlag(RayTracing, ShaderStageFlags::VS | ShaderStageFlags::PS, "_RAYTRACING");
-            addFlag(Toolmode, ShaderStageFlags::VS | ShaderStageFlags::PS, "_TOOLMODE");
+            declFlag(AlphaBlend, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ALPHABLEND");
+            declFlag(AlphaTest, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ALPHATEST");
+            declFlag(ZOnly, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ZONLY");
+            declFlag(RayTracing, ShaderStageFlags::VS | ShaderStageFlags::PS, "_RAYTRACING");
+            declFlag(Toolmode, ShaderStageFlags::VS | ShaderStageFlags::PS, "_TOOLMODE");
 
-            auto & zonly = addTechnique("ZOnly");
+            auto & zonly = declTechnique("ZOnly");
             {
-                zonly.vs = addVS("VS_Forward");
-                zonly.ps = addPS("PS_Forward");
-                zonly.addFlag(Flags::ZOnly);
+                zonly.vs = declVS("VS_Forward");
+                zonly.ps = declPS("PS_Forward");
+                zonly.setFlag(Flags::ZOnly);
             }
 
-            auto & forward = addTechnique("Forward");
+            auto & forward = declTechnique("Forward");
             {
-                forward.vs = addVS("VS_Forward");
-                forward.ps = addPS("PS_Forward");
+                forward.vs = declVS("VS_Forward");
+                forward.ps = declPS("PS_Forward");
             }
 
-            auto & deferred = addTechnique("Deferred");
+            auto & deferred = declTechnique("Deferred");
             {
-                deferred.vs = addVS("VS_Deferred");
-                deferred.ps = addPS("PS_Deferred");
+                deferred.vs = declVS("VS_Deferred");
+                deferred.ps = declPS("PS_Deferred");
             }
         }
     };

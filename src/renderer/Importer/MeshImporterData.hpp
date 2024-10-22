@@ -43,7 +43,7 @@ namespace vg::renderer
 
         // If bone is not matching any naming convention, assume it belongs to all categories
         flags = (BodyPartFlags)-1;
-        VG_WARNING("[Import] Could not find naming convention for node \"%s\"", name.c_str());
+        VG_WARNING("[FBX] Could not find naming convention for node \"%s\"", name.c_str());
         return false;
     }
 

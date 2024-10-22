@@ -67,5 +67,4 @@ DECL_DESCRIPTOR_RANGE_RO(RaytracingAccelerationStructure, g_TLASTable, BINDLESS_
 //
 //RaytracingAccelerationStructure getTLAS(uint _handle)   { return g_TLASTable[_handle - BINDLESS_TLAS_START]; }
 
-
 #endif // __cplusplus

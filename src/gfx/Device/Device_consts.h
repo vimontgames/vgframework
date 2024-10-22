@@ -26,6 +26,12 @@ namespace vg::gfx
         VSync_4
     );
 
+    vg_enum_class(AntiAliasing, core::u8,
+        None = 0,
+        FXAA,
+        SMAA
+    );
+
     vg_enum_class(HDR, core::u8,
         None = 0,
         HDR10,

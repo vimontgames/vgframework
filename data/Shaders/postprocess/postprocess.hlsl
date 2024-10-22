@@ -2,6 +2,7 @@
 #include "system/bindless.hlsli"
 #include "system/samplers.hlsli"
 #include "system/view.hlsli"
+#include "system/depthstencil.hlsli"
 
 #if _TOOLMODE
 #if _RAYTRACING
@@ -159,20 +160,18 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         int3 address = int3(dispatchThreadID.xy, 0);
 
         float4 color = getTexture2D(postProcessConstants.getColor()).Load(address);
-
-        // Red contains depth.
-        float depth = getTexture2D(postProcessConstants.getDepth()).Load(address).r;
-        
-        #ifdef VG_VULKAN
-        // Vulkan : Red contains stencil
-        uint stencil = getTexture2D_UInt2(postProcessConstants.getStencil()).Load(address).r;
-        #else
-        // DX12 : Green contains stencil
-        uint stencil = getTexture2D_UInt2(postProcessConstants.getStencil()).Load(address).g;
-        #endif
+        float depth = loadDepth(postProcessConstants.getDepth(), address); 
+        uint stencil = loadStencil(postProcessConstants.getStencil(), address);
 
         ViewConstants viewConstants;
         viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+
+        // Test multiple keywords
+        #if _FXAA
+        color.rgb = color.rgg;
+        #elif _SMAA
+        color.rgb = color.bba;
+        #endif
 
         #if _TOOLMODE
 

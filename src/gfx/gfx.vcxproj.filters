@@ -876,5 +876,8 @@
     <None Include="FrameGraph\RenderPassContext.inl">
       <Filter>FrameGraph</Filter>
     </None>
+    <None Include="Shader\HLSLDesc.inl">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

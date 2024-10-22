@@ -1,5 +1,9 @@
 #include "HLSLDesc.h"
 
+#if !VG_ENABLE_INLINE
+#include "HLSLDesc.inl"
+#endif
+
 namespace vg::gfx
 {
     //--------------------------------------------------------------------------------------
@@ -30,21 +34,39 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    ShaderKey::VS HLSLDesc::addVS(const core::string & _vsEntryPoint)
+    ShaderKey::VS HLSLDesc::declVS(const core::string & _vsEntryPoint)
     {
-        return (ShaderKey::VS)addShader(ShaderStage::Vertex, _vsEntryPoint);
+        return (ShaderKey::VS)declShader(ShaderStage::Vertex, _vsEntryPoint);
     }
 
     //--------------------------------------------------------------------------------------
-    ShaderKey::PS HLSLDesc::addPS(const core::string & _psEntryPoint)
+    ShaderKey::HS HLSLDesc::declHS(const core::string & _hsEntryPoint)
     {
-        return (ShaderKey::PS)addShader(ShaderStage::Pixel, _psEntryPoint);
+        return (ShaderKey::HS)declShader(ShaderStage::Hull, _hsEntryPoint);
     }
 
     //--------------------------------------------------------------------------------------
-    ComputeShaderKey::CS HLSLDesc::addCS(const core::string & _csEntryPoint)
+    ShaderKey::DS HLSLDesc::declDS(const core::string & _dsEntryPoint)
     {
-        return (ComputeShaderKey::CS)addShader(ShaderStage::Compute, _csEntryPoint);
+        return (ShaderKey::DS)declShader(ShaderStage::Domain, _dsEntryPoint);
+    }
+
+    //--------------------------------------------------------------------------------------
+    ShaderKey::GS HLSLDesc::declGS(const core::string & _gsEntryPoint)
+    {
+        return (ShaderKey::GS)declShader(ShaderStage::Geometry, _gsEntryPoint);
+    }
+
+    //--------------------------------------------------------------------------------------
+    ShaderKey::PS HLSLDesc::declPS(const core::string & _psEntryPoint)
+    {
+        return (ShaderKey::PS)declShader(ShaderStage::Pixel, _psEntryPoint);
+    }
+
+    //--------------------------------------------------------------------------------------
+    ComputeShaderKey::CS HLSLDesc::declCS(const core::string & _csEntryPoint)
+    {
+        return (ComputeShaderKey::CS)declShader(ShaderStage::Compute, _csEntryPoint);
     }
 
     //--------------------------------------------------------------------------------------
@@ -78,7 +100,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    ShaderKey::EntryPoint HLSLDesc::addShader(ShaderStage _stage, const core::string & _entryPoint)
+    ShaderKey::EntryPoint HLSLDesc::declShader(ShaderStage _stage, const core::string & _entryPoint)
     {
         auto & stageEntryPoints = m_entryPoint[asInteger(_stage)];
         
@@ -124,12 +146,27 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void HLSLDesc::addFlag(uint _index, ShaderStageFlags _stages, const core::string & _define)
+    void HLSLDesc::declFlag(uint _index, ShaderStageFlags _stages, const core::string & _define)
     {
         VG_ASSERT(_index < countof(m_flagDescs));
         auto & desc = m_flagDescs[_index];
-        VG_ASSERT((ShaderStageFlags)0x0 == desc.m_stages);
+        VG_ASSERT(!desc.isInitialized(), "Index %u for shader \"%s\" is already used", _index, m_file.c_str());
         desc = ShaderFlagDesc(_stages, _define);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void HLSLDesc::declFlags(core::uint _startIndex, ShaderStageFlags _stages, const core::vector<core::string> & _defines)
+    {
+        VG_ASSERT(_defines.size() > 0);
+        const uint bits = (uint)log2(_defines.size()) + 1;
+
+        VG_ASSERT((_startIndex + bits - 1) < countof(m_flagDescs));
+
+        for (uint i = _startIndex; i < _startIndex + bits; ++i)
+            VG_ASSERT(!m_flagDescs[i].isInitialized(), "Bit %u for shader \"%s\" is already used", i, m_file.c_str());
+
+        auto & desc = m_flagDescs[_startIndex];
+        desc = ShaderFlagDesc(_stages, _defines);
     }
 
     //--------------------------------------------------------------------------------------
@@ -139,23 +176,24 @@ namespace vg::gfx
     {
         core::vector<core::pair<core::string, core::uint>> macros;
 
-        u32 value = (u32)_flags;
-        u32 ctlz = core::clz(value);
-        u32 index = 0;
-        while (ctlz < 32)
+        for (uint i = 0; i < countof(m_flagDescs); ++i)
         {
-            index = 32-ctlz-1;
-            const auto & desc = m_flagDescs[index];
-            macros.push_back({ desc.m_define, 1 });
-            value &= ~(1<<index);
-            ctlz = core::clz(value);
+            const auto & desc = m_flagDescs[i];
+            if (desc.isInitialized())
+            {
+                const uint mask = desc.getBitMask();
+                const uint value = (_flags >> i) & mask;
+                VG_ASSERT(value < desc.m_defines.size());
+                if (!desc.m_defines[value].empty())
+                     macros.push_back({ desc.m_defines[value], 1});
+            }
         }
         
         return macros;
     }
 
     //--------------------------------------------------------------------------------------
-    HLSLDesc::Technique & HLSLDesc::addTechnique(const core::string & _name)
+    HLSLDesc::Technique & HLSLDesc::declTechnique(const core::string & _name)
     {
         m_techniques.push_back({});
         Technique & technique = m_techniques.back();
@@ -164,13 +202,13 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    HLSLDesc::Technique & HLSLDesc::addTechnique(const core::string & _name, ShaderKey::VS _vs, ShaderKey::PS _ps, ShaderKey::Flags _flag)
+    HLSLDesc::Technique & HLSLDesc::declTechnique(const core::string & _name, ShaderKey::VS _vs, ShaderKey::PS _ps, ShaderKey::Flags _flag)
     {
-        auto & technique = addTechnique(_name);
+        auto & technique = declTechnique(_name);
         {
             technique.vs = _vs;
             technique.ps = _ps;
-            technique.addFlag(_flag);
+            technique.setFlag(_flag);
         }
         return technique;
     }
