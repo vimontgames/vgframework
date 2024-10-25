@@ -1,9 +1,13 @@
 # changelog
 
+## 0.34
+Animation layers\
+FXAA
+
 ## 0.33
 **Undo/Redo**\
 Update hlslpp from 3.4 to 3.5.2\
-Update Vulkan SDK to 1.3.290.0\
+Update Vulkan SDK to 1.3.290.0
 
 
 ## 0.32
