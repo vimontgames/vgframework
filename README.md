@@ -135,7 +135,8 @@ The external libraries are included with the sources for convenience.
 | Dear ImGui - Docking       | 1.91.2        | https://github.com/ocornut/imgui/tree/docking                          
 | DirectXShaderCompiler      | August 2023   | https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308 
 | Dirent                     | 1.23.2        | https://github.com/tronkko/dirent                                                            
-| fmt                        | 10.1.1        | https://github.com/fmtlib/fmt/releases/tag/10.1.1                         
+| fmt                        | 10.1.1        | https://github.com/fmtlib/fmt/releases/tag/10.1.1    
+| FXAA                       | 3.11          | https://github.com/GameTechDev/CMAA2/blob/master/Projects/CMAA2/FXAA/Fxaa3_11.h
 | hlslpp                     | 3.5.2         | https://github.com/redorav/hlslpp/releases/tag/3.5.2                       
 | IconFontCppHeaders         |               | https://github.com/juliettef/IconFontCppHeaders                                                     
 | ImGuiFileDialog            | 0.6.7         | https://github.com/aiekick/ImGuiFileDialog

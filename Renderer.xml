@@ -8,13 +8,14 @@
         <Property type="Bool" name="m_rayTracing" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_postProcess" flags="SingleLine" value="true"/>
         <Property type="EnumU8" name="m_lightingMode" value="Deferred"/>
-        <Property type="EnumU32" name="m_debugDisplayMode" flags="AlphabeticalOrder" value="None"/>
+        <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
         <Property type="EnumFlagsU32" name="m_displayFlags" flags="Bitfield" value="AlbedoMap|NormalMap"/>
         <Property type="Bool" name="m_wireframe" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_aabb" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_debugUI" flags="SingleLine" value="false"/>
         <Property type="EnumU8" name="m_VSync" value="VSync_1"/>
-        <Property type="EnumU8" name="m_HDRmode" value="None"/>
+        <Property type="EnumU8" name="m_antiAliasing" value="FXAA"/>
+        <Property type="EnumU8" name="m_HDRmode" value="HDR16"/>
         <Property type="Float4" name="m_backgroundColor" flags="Color" x="0.48101264" y="0.7895999" z="1" w="0"/>
         <Property type="EnumFlagsU32" name="m_renderPassFlags" flags="Bitfield" value="ZPrepass|Opaque|Transparency"/>
     </Object>

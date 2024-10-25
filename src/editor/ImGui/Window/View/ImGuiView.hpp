@@ -97,7 +97,7 @@ namespace vg::editor
                     else if (input->IsKeyJustPressed(Key::S))
                         options->setGizmoType(GizmoType::Scale);
                     else if (input->IsKeyJustPressed(Key::A))
-                        options->setSnap(options->getSnap());
+                        options->setSnap(!options->getSnap());
                 }
 
                 if (alt)

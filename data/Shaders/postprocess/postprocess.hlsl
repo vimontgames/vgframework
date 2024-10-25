@@ -4,6 +4,12 @@
 #include "system/view.hlsli"
 #include "system/depthstencil.hlsli"
 
+#if _FXAA
+#include "FXAA.hlsli"
+#elif _SMAA
+#include "SMAA.hlsli"
+#endif
+
 #if _TOOLMODE
 #if _RAYTRACING
 float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants viewConstants)
@@ -153,25 +159,28 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
     uint2 screenSize = postProcessConstants.getScreenSize();    
 
     int2 coords = dispatchThreadID;
-    float2 uv = dispatchThreadID.xy / (float2)screenSize;
+    float2 uv = ((float2)dispatchThreadID.xy + 0.5) / (float2)screenSize.xy;
 
     if (all(dispatchThreadID.xy < screenSize))
     {
         int3 address = int3(dispatchThreadID.xy, 0);
 
-        float4 color = getTexture2D(postProcessConstants.getColor()).Load(address);
+        float4 color;
+
+        // Select Anti-Aliasing mode
+        #if _FXAA
+        color = FXAA(getTexture2D(postProcessConstants.getColor()), uv);
+        #elif _SMAA
+        color = SMAA(getTexture2D(postProcessConstants.getColor()), address);
+        #else
+        color = getTexture2D(postProcessConstants.getColor()).Load(address);
+        #endif
+
         float depth = loadDepth(postProcessConstants.getDepth(), address); 
         uint stencil = loadStencil(postProcessConstants.getStencil(), address);
 
         ViewConstants viewConstants;
         viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
-
-        // Test multiple keywords
-        #if _FXAA
-        color.rgb = color.rgg;
-        #elif _SMAA
-        color.rgb = color.bba;
-        #endif
 
         #if _TOOLMODE
 

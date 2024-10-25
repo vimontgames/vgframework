@@ -20,6 +20,7 @@ namespace vg::gfx
 
         // TODO: read dir to root folders names used #include ?
         m_shaderRootFolders.push_back("system");
+        m_shaderRootFolders.push_back("extern");
     
         m_shaderCompiler = new ShaderCompiler();
     }
@@ -373,11 +374,14 @@ namespace vg::gfx
             if (file.isFolder)
             {
                 if (file.name != "." && file.name != "..")
-                    getHLSLFilesInFolder(_hlslFiles, _root, _subFolder + file.name);
+                {
+                    string newPath = _subFolder.empty() ? file.name : _subFolder + "/" + file.name;
+                    getHLSLFilesInFolder(_hlslFiles, _root, newPath);
+                }
             }
             else
             {
-                if (io::fileHasExtension(file.name, ".hlsl") || io::fileHasExtension(file.name, ".hlsli"))
+                if (io::fileHasExtension(file.name, ".hlsl") || io::fileHasExtension(file.name, ".hlsli")  || io::fileHasExtension(file.name, ".h"))
                 {
                     auto & hlslFile = _hlslFiles.emplace_back();
                     hlslFile.name = file.name;

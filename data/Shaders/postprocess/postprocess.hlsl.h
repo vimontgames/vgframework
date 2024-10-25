@@ -10,12 +10,11 @@ namespace vg::gfx
         enum Flags : ShaderKey::Flags
         {
             // Bits 0..1 for AA mode
-            AntiAliasingMode = 0,
+            AntiAliasingMode    = 0,
 
             // Flags 13..15 are reserved and should be common for all shaders 
-            //ZOnly             = HLSLDesc::Flags::ZOnly,
-            RayTracing = HLSLDesc::Flags::RayTracing,
-            Toolmode = HLSLDesc::Flags::Toolmode
+            RayTracing          = HLSLDesc::Flags::RayTracing,
+            Toolmode            = HLSLDesc::Flags::Toolmode
         };
 
         PostProcessHLSLDesc()
