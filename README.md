@@ -1,23 +1,24 @@
-| Platform | gfxAPI | Debug                                                                                                                        | Release                                                                                                                          | Final 												
-| -------- | ------ | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
-| ARM64EC  | DX12   | ![ARM64EC_DX12_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_DX12_Debug.yml/badge.svg)     | ![ARM64EC_DX12_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_DX12_Release.yml/badge.svg)     | ![ARM64EC_DX12_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_DX12_Final.yml/badge.svg)
-| ARM64EC  | Vulkan | ![ARM64EC_Vulkan_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_Vulkan_Debug.yml/badge.svg) | ![ARM64EC_Vulkan_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_Vulkan_Release.yml/badge.svg) | ![ARM64EC_Vulkan_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_Vulkan_Final.yml/badge.svg)
-| Win64    | DX12   | ![Win64_DX12_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_DX12_Debug.yml/badge.svg)         | ![Win64_DX12_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_DX12_Release.yml/badge.svg)         | ![Win64_DX12_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_DX12_Final.yml/badge.svg)
-| Win64    | Vulkan | ![Win64_Vulkan_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Debug.yml/badge.svg)     | ![Win64_Vulkan_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Release.yml/badge.svg)     | ![Win64_Vulkan_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Final.yml/badge.svg)
-
+![Language](https://img.shields.io/badge/Language-C%2B%2B17-lightgrey)
+![Platform Win64](https://img.shields.io/badge/Platform-Win64-0078d4)
+![Platform ARM64EC](https://img.shields.io/badge/Platform-ARM64EC-FFB13B)
+![DirectX 12](https://img.shields.io/badge/Graphics_API-DirectX%2012-0078d4)
+![Vulkan](https://img.shields.io/badge/Graphics_API-Vulkan-AC162C)
 
 # vgframework
 Yes, yet another work-in-progress game and graphic engine project :)
 
-[news](#news)\
-[build](#build)\
+| Platform | Graphics API | Debug                                                                                                                        | Release                                                                                                                          | Final 												
+| -------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
+| ARM64EC  | DX12         | ![ARM64EC_DX12_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_DX12_Debug.yml/badge.svg)     | ![ARM64EC_DX12_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_DX12_Release.yml/badge.svg)     | ![ARM64EC_DX12_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_DX12_Final.yml/badge.svg)
+| ARM64EC  | Vulkan       | ![ARM64EC_Vulkan_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_Vulkan_Debug.yml/badge.svg) | ![ARM64EC_Vulkan_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_Vulkan_Release.yml/badge.svg) | ![ARM64EC_Vulkan_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_Vulkan_Final.yml/badge.svg)
+| Win64    | DX12         | ![Win64_DX12_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_DX12_Debug.yml/badge.svg)         | ![Win64_DX12_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_DX12_Release.yml/badge.svg)         | ![Win64_DX12_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_DX12_Final.yml/badge.svg)
+| Win64    | Vulkan       | ![Win64_Vulkan_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Debug.yml/badge.svg)     | ![Win64_Vulkan_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Release.yml/badge.svg)     | ![Win64_Vulkan_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Final.yml/badge.svg)
+
 [description](#description)\
-[changelog](#changelog)\
 [getting started](#getting-started)\
+[changelog](#changelog)\
 [extern libs](#extern-libs)\
 [disclaimer](#disclaimer)
-
-![Screenshot](doc/img/v32.gif)
 
 # description
 
@@ -26,14 +27,6 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 * All the interface is made to encourage using only push constants and bindless buffers/textures, not updating tables constantly as if we were still emulating DX9.
 * You can't access the command lists without using the framegraph that is part of the graphic driver layer. Go framegraph or do not render anything.
 * Apart from the number of root constants, all shaders are sharing the same root signatures.
-
-# news
-<small>07/17/24</small>
-Experimental ARM64EC support by [Onduril](https://github.com/vimontgames/vgframework/tree/arm64EC)
-
-# changelog
-
-Moved [changelog](CHANGELOG.md) to a separate file.
 
 # getting started
 
@@ -184,6 +177,10 @@ The external libraries are included with the sources for convenience.
 | FX - Swoosh - normal | bolkmar              | https://freesound.org/people/bolkmar/sounds/451127/
 | Large sword swing    | Luis0413             | https://freesound.org/people/Luis0413/sounds/737748/
 | Tally Dub            | Brotheration Records | https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/  
+
+# changelog
+
+Moved [changelog](CHANGELOG.md) to a separate file.
 
 # misc
 
