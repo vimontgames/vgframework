@@ -538,11 +538,16 @@ namespace vg::editor
         }
         else
         {
+            auto enumVal = (T)enumPairs[_index].value;
+            const bool disabled = asBool(EnumValueFlags::Disabled & _prop->GetEnumValueFlags(enumVal));
+
+            if (disabled)
+                PushDisabledStyle(true);
+
             if (ImGui::Selectable(_enumName.c_str()))
             {
-                if (!_propContext.m_readOnly)
+                if (!_propContext.m_readOnly && !disabled)
                 {
-                    auto enumVal = (T)enumPairs[_index].value;
                     bool edited = true;
                     auto editingState = undoRedoBeforeEdit<T>(edited, _propContext, _object, _prop, (T *)&enumVal, _pEnum, InteractionType::Single);
 
@@ -553,6 +558,9 @@ namespace vg::editor
                     }
                 }
             }
+
+            if (disabled)
+                PopDisabledStyle();
         }
 
         return changed;

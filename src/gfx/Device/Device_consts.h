@@ -26,7 +26,12 @@ namespace vg::gfx
         VSync_4
     );
 
-    vg_enum_class(AntiAliasing, core::u8,
+    vg_enum_class(MSAA, core::u8,
+        None = 0,
+        MSAA4X
+    );
+
+    vg_enum_class(AAPostProcess, core::u8,
         None = 0,
         FXAA,
         SMAA

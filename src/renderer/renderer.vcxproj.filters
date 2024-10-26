@@ -461,6 +461,12 @@
     <ClInclude Include="Importer\NamingConvention\CharacterStudioBipedNamingConvention.h">
       <Filter>Importer\Naming</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\ImGui\ImGuiSettings.h">
+      <Filter>Pass\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\ImGui\ImGuiSettings.hpp">
+      <Filter>Pass\ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

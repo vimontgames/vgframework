@@ -5,7 +5,7 @@ namespace vg::gfx
 {
     enum class VSync : core::u8;
     enum class HDR : core::u8;
-    enum class AntiAliasing : core::u8;
+    enum class AAPostProcess : core::u8;
 }
 
 namespace vg::renderer
@@ -21,8 +21,8 @@ namespace vg::renderer
         virtual gfx::VSync          GetVSync            () const = 0;
         virtual bool                SetVSync            (const gfx::VSync & _vsync) = 0;
 
-        virtual gfx::AntiAliasing   GetAliasing         () const = 0;
-        virtual bool                SetAliasing         (const gfx::AntiAliasing & _aa) = 0;
+        virtual gfx::AAPostProcess  GetAAPostProcess    () const = 0;
+        virtual bool                SetAAPostProcess    (const gfx::AAPostProcess & _aa) = 0;
 
         virtual gfx::HDR            GetHDR              () const = 0;
         virtual bool                SetHDR              (const gfx::HDR & _hdr) = 0;

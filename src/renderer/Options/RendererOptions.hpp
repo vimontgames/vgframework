@@ -15,23 +15,62 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerPropertyEx(RendererOptions, m_toolMode, "Toolmode", PropertyFlags::SingleLine);
+        registerProperty(RendererOptions, m_toolMode, "Toolmode");
         setPropertyDescription(LightDesc, m_toolMode, "Enable Toolmode in Game views");
-
-        registerPropertyEx(RendererOptions, m_rayTracing, "RayTracing", PropertyFlags::SingleLine);
-        setPropertyDescription(LightDesc, m_rayTracing, "Enable Ray-Tracing features");
-
-        registerPropertyEx(RendererOptions, m_postProcess, "PostProcess", PropertyFlags::SingleLine);
-        setPropertyDescription(RendererOptions, m_postProcess, "Enable Post-Process features");
-
-        registerPropertyEnum(RendererOptions, LightingMode, m_lightingMode, "Lighting");
-        setPropertyDescription(LightDesc, m_lightingMode, "Lighting monde will affect how lights are computed.\nIn \"Forward\" mode lighting is computed on the fly in pixel shader\nIn \"Defered\" mode lighting is computed in screen-space");
 
         //registerPropertyEnumEx(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug", PropertyFlags::AlphabeticalOrder);
         registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug");
-        registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Flags");
 
-        registerPropertyGroupBegin(RendererOptions, "Advanced");
+        registerPropertyGroupBegin(RendererOptions, "Lighting");
+        {
+            registerPropertyEnum(RendererOptions, LightingMode, m_lightingMode, "Mode");
+            setPropertyDescription(LightDesc, m_lightingMode, "Lighting monde will affect how lights are computed.\nIn \"Forward\" mode lighting is computed on the fly in pixel shader\nIn \"Defered\" mode lighting is computed in screen-space");
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
+        registerPropertyGroupBegin(RendererOptions, "Presentation");
+        {
+            registerPropertyEnum(RendererOptions, gfx::HDR, m_HDRmode, "HDR");
+            setPropertyDescription(LightDesc, m_HDRmode, "High-dynamic range display mode");
+
+            registerPropertyEnumEx(RendererOptions, gfx::MSAA, m_msaa, "MSAA", PropertyFlags::ReadOnly);
+            setPropertyDescription(LightDesc, m_msaa, "Multisample anti-aliasing");
+
+            registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
+            setPropertyDescription(LightDesc, m_VSync, "Sync display frequency with monitor refresh rate");
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
+        registerPropertyGroupBegin(RendererOptions, "Raytracing");
+        {
+            registerProperty(RendererOptions, m_rayTracing, "Enable");
+            setPropertyDescription(LightDesc, m_rayTracing, "Enable Raytracing");
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
+        registerPropertyGroupBegin(RendererOptions, "Post-process");
+        {
+            registerProperty(RendererOptions, m_postProcess, "Enable");
+            setPropertyDescription(RendererOptions, m_postProcess, "Enable Post-Process");
+
+            registerPropertyEnum(RendererOptions, gfx::AAPostProcess, m_aaPostProcess, "Anti-aliasing");
+            setPropertyDescription(LightDesc, m_aaPostProcess, "Post-Process anti-aliasing");
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
+        registerPropertyGroupBegin(RendererOptions, "Framegraph");
+        {
+            registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
+        registerPropertyGroupBegin(RendererOptions, "Materials");
+        {
+            registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Features");
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
+        registerPropertyGroupBegin(RendererOptions, "Misc");
         {
             registerPropertyEx(RendererOptions, m_wireframe, "Wireframe", PropertyFlags::SingleLine);
             setPropertyDescription(LightDesc, m_wireframe, "Show Wireframe");
@@ -42,19 +81,8 @@ namespace vg::renderer
             registerPropertyEx(RendererOptions, m_debugUI, "Debug UI", PropertyFlags::SingleLine);
             setPropertyDescription(LightDesc, m_debugUI, "Show UI debug");
 
-            registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
-            setPropertyDescription(LightDesc, m_VSync, "Sync display frequency with monitor refresh rate");
-
-            registerPropertyEnum(RendererOptions, gfx::AntiAliasing, m_antiAliasing, "Anti-Aliasing");
-            setPropertyDescription(LightDesc, m_antiAliasing, "Screen-space anti-aliasing technique");
-
-            registerPropertyEnum(RendererOptions, gfx::HDR, m_HDRmode, "HDR");
-            setPropertyDescription(LightDesc, m_HDRmode, "High-dynamic range display mode");
-
             registerPropertyEx(RendererOptions, m_backgroundColor, "Background", PropertyFlags::Color);
             setPropertyDescription(LightDesc, m_backgroundColor, "Scene background color");
-
-            registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
         }
         registerPropertyGroupEnd(RendererOptions);
 
@@ -76,6 +104,10 @@ namespace vg::renderer
 
         m_hdrProp = GetClassDesc()->GetPropertyByName("m_HDRmode");
         m_vsyncProp = GetClassDesc()->GetPropertyByName("m_VSync"); 
+        m_aaPostProcessProp = GetClassDesc()->GetPropertyByName("m_aaPostProcess");
+
+        // Temp: disable SMAA
+        m_aaPostProcessProp->SetEnumValueFlags((u64)gfx::AAPostProcess::SMAA, EnumValueFlags::Disabled, true);
     }
 
     //--------------------------------------------------------------------------------------
@@ -130,17 +162,17 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::AntiAliasing RendererOptions::GetAliasing() const
+    gfx::AAPostProcess RendererOptions::GetAAPostProcess() const
     {
-        return m_antiAliasing;
+        return m_aaPostProcess;
     }
 
     //--------------------------------------------------------------------------------------
-    bool RendererOptions::SetAliasing(const gfx::AntiAliasing & _aa)
+    bool RendererOptions::SetAAPostProcess(const gfx::AAPostProcess & _aa)
     {
-        if (m_antiAliasing != _aa)
+        if (m_aaPostProcess != _aa)
         {
-            m_antiAliasing = _aa;
+            m_aaPostProcess = _aa;
             return true;
         }
 

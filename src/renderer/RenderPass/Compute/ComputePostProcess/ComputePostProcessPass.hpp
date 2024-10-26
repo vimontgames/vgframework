@@ -72,21 +72,21 @@ namespace vg::renderer
         }
 
         const auto * options = RendererOptions::get();
-        const auto aaMode = options->GetAliasing();
+        const auto aaMode = options->GetAAPostProcess();
         switch (aaMode)
         {
             default:
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(aaMode);
 
-            case AntiAliasing::None:
+            case AAPostProcess::None:
                 break;
 
-            case AntiAliasing::FXAA:
-                shaderKey.setFlag(PostProcessHLSLDesc::AntiAliasingMode, (uint)AntiAliasing::FXAA);
+            case AAPostProcess::FXAA:
+                shaderKey.setFlag(PostProcessHLSLDesc::AAPostProcess, (uint)AAPostProcess::FXAA);
                 break;
 
-            case AntiAliasing::SMAA:
-                shaderKey.setFlag(PostProcessHLSLDesc::AntiAliasingMode, (uint)AntiAliasing::SMAA);
+            case AAPostProcess::SMAA:
+                shaderKey.setFlag(PostProcessHLSLDesc::AAPostProcess, (uint)AAPostProcess::SMAA);
                 break;
         }
 

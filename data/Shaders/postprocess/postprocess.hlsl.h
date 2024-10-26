@@ -10,18 +10,18 @@ namespace vg::gfx
         enum Flags : ShaderKey::Flags
         {
             // Bits 0..1 for AA mode
-            AntiAliasingMode    = 0,
+            AAPostProcess   = 0,
 
-            // Flags 13..15 are reserved and should be common for all shaders 
-            RayTracing          = HLSLDesc::Flags::RayTracing,
-            Toolmode            = HLSLDesc::Flags::Toolmode
+            // Last flags are common for all shaders 
+            RayTracing      = HLSLDesc::Flags::RayTracing,
+            Toolmode        = HLSLDesc::Flags::Toolmode
         };
 
         PostProcessHLSLDesc()
         {
             setFile("postprocess/postprocess.hlsl");
 
-            declFlags(AntiAliasingMode, ShaderStageFlags::CS, { "", "_FXAA", "_SMAA" } );
+            declFlags(AAPostProcess, ShaderStageFlags::CS, { "", "_FXAA", "_SMAA" } );
             declFlag(RayTracing, ShaderStageFlags::CS, "_RAYTRACING");
             declFlag(Toolmode, ShaderStageFlags::CS, "_TOOLMODE");
 

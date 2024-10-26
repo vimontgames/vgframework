@@ -14,7 +14,7 @@
         <Property type="Bool" name="m_aabb" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_debugUI" flags="SingleLine" value="false"/>
         <Property type="EnumU8" name="m_VSync" value="VSync_1"/>
-        <Property type="EnumU8" name="m_antiAliasing" value="FXAA"/>
+        <Property type="EnumU8" name="m_aaPostProcess" value="FXAA"/>
         <Property type="EnumU8" name="m_HDRmode" value="HDR16"/>
         <Property type="Float4" name="m_backgroundColor" flags="Color" x="0.48101264" y="0.7895999" z="1" w="0"/>
         <Property type="EnumFlagsU32" name="m_renderPassFlags" flags="Bitfield" value="ZPrepass|Opaque|Transparency"/>

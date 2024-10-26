@@ -119,7 +119,8 @@ namespace vg::renderer
                 break;
         }      
 
-        _frameGraph.addUserPass(_renderPassContext, m_forwardTransparentPass, "ForwardTransparent");
+        if (options->isTransparencyEnabled())
+            _frameGraph.addUserPass(_renderPassContext, m_forwardTransparentPass, "ForwardTransparent");
 
         // Render editor display to "Color"
         if (toolmode)

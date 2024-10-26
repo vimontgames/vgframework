@@ -36,8 +36,8 @@ namespace vg::renderer
         gfx::VSync              GetVSync                    () const final override;
         bool                    SetVSync                    (const gfx::VSync & _vsync) final override;
 
-        gfx::AntiAliasing       GetAliasing                 () const final override;
-        bool                    SetAliasing                 (const gfx::AntiAliasing & _aa) final override;
+        gfx::AAPostProcess       GetAAPostProcess                 () const final override;
+        bool                    SetAAPostProcess                 (const gfx::AAPostProcess & _aa) final override;
 
         gfx::HDR                GetHDR                      () const final override;
         bool                    SetHDR                      (const gfx::HDR & _hdr) final override;
@@ -88,7 +88,8 @@ namespace vg::renderer
         bool                    m_postProcess               = true;
         bool                    m_rayTracing                = false;
         gfx::HDR                m_HDRmode                   = gfx::HDR::None;
-        gfx::AntiAliasing       m_antiAliasing              = gfx::AntiAliasing::None;
+        gfx::MSAA               m_msaa                      = gfx::MSAA::None;
+        gfx::AAPostProcess      m_aaPostProcess             = gfx::AAPostProcess::None;
         gfx::VSync              m_VSync                     = gfx::VSync::VSync_1;
         LightingMode            m_lightingMode              = LightingMode::Forward;
         DisplayMode	            m_debugDisplayMode          = DisplayMode::None;
@@ -97,5 +98,6 @@ namespace vg::renderer
 
         core::IProperty *       m_hdrProp                   = nullptr;
         core::IProperty *       m_vsyncProp                 = nullptr;
+        core::IProperty *       m_aaPostProcessProp         = nullptr;
     };
 }
