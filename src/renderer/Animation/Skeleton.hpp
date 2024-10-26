@@ -80,6 +80,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void Skeleton::setScale(float _scale)
+    {
+        m_scale = _scale;
+    }
+
+    //--------------------------------------------------------------------------------------
     void Skeleton::setNodes(const core::vector<MeshImporterNode> & _nodes)
     {
         m_nodes = _nodes;

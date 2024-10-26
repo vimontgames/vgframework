@@ -58,7 +58,7 @@ namespace vg::renderer
             for (uint i = 0; i < animCount; ++i)
             {
                 AnimImporterData animImporterData;
-                if (loadFBXAnim(scene, scene->anim_stacks[i], animImporterData))
+                if (loadFBXAnim(scene, scene->anim_stacks[i], animImporterData, scene->settings.unit_meters))
                     _data.anims.push_back(animImporterData);
             }
 
@@ -141,6 +141,8 @@ namespace vg::renderer
     {
         const auto start = Timer::getTick();
 
+        _data.animScale = (float)_scale;
+
         string name = _UFbxMesh->name.data;
         if (_UFbxMesh->instances.count > 0)
             name = _UFbxMesh->instances.data[0]->name.data;
@@ -192,6 +194,9 @@ namespace vg::renderer
                 node.rot = UFBXQuatToQuat(transform.rotation);
                 node.pos = UFBXVec3ToFloat3(transform.translation);
                 node.scale = UFBXVec3ToFloat3(transform.scale);
+
+                if (UFBXNode == _UFBXScene->root_node)
+                    node.scale /= _scale;
 
                 node.computeBodyPartFlags();
             }
@@ -445,7 +450,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool UFBXImporter::loadFBXAnim(const ufbx_scene * _UFBXScene, const ufbx_anim_stack * _UFBXAnimStack, AnimImporterData & _animData)
+    bool UFBXImporter::loadFBXAnim(const ufbx_scene * _UFBXScene, const ufbx_anim_stack * _UFBXAnimStack, AnimImporterData & _animData, double _scale)
     {
         const float target_framerate = 60.0f;
         const uint max_frames = 65535;

@@ -383,6 +383,8 @@ namespace vg::renderer
             if (nullptr == m_instanceSkeleton)
                 m_instanceSkeleton = new Skeleton("InstanceSkeleton", this);
 
+            // TODO: copy ctor?
+            m_instanceSkeleton->setScale(_skeleton->getScale());
             m_instanceSkeleton->setNodes(_skeleton->getNodes());
             m_instanceSkeleton->setBoneIndices(_skeleton->getBoneIndices());
             m_instanceSkeleton->setBoneMatrices(_skeleton->getBoneMatrices());                
@@ -743,6 +745,7 @@ namespace vg::renderer
         {
             const auto & nodes = skeleton->getNodes();
             const auto & boneIndices = skeleton->getBoneIndices();
+            const float scale = skeleton->getScale();
 
             for (uint j = 0; j < boneIndices.size(); ++j)
             {
@@ -752,8 +755,11 @@ namespace vg::renderer
 
                 const float4x4 matrix = getGlobalMatrix();
 
+                float4x4 nodeMatrix = transpose(node.node_to_world);
+                nodeMatrix[3].xyz *= scale;
+
                 // YUp skeleton displayed as ZUp
-                float4x4 boneMatrix = mul(transpose(node.node_to_world), matrix);
+                float4x4 boneMatrix = mul(nodeMatrix, matrix) ;
 
                 u32 color = 0x7F3F3F3F;
 
@@ -776,7 +782,9 @@ namespace vg::renderer
                 if (-1 != node.parent_index)
                 {
                     const MeshImporterNode & parentNode = nodes[node.parent_index];
-                    float4x4 parentBoneMatrix = mul(transpose(parentNode.node_to_world), matrix);
+                    float4x4 parentNodeMatrix = transpose(parentNode.node_to_world);
+                    parentNodeMatrix[3].xyz *= scale;
+                    float4x4 parentBoneMatrix = mul(parentNodeMatrix, matrix) ;
                     dbgDraw->AddLine(_world, boneMatrix[3].xyz, parentBoneMatrix[3].xyz, color);
                 }
             }

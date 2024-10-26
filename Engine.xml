@@ -27,6 +27,6 @@
         <Property type="Float" name="m_maxDT" flags="" value="16.666666"/>
         <Property type="Bool" name="m_useFixedDT" flags="NotVisible" value="false"/>
         <Property type="Float" name="m_fixedDT" flags="" value="16.666666"/>
-        <Property type="EnumFlagsU32" name="m_animationOptionFlags" flags="Bitfield" value="Jobs"/>
+        <Property type="EnumFlagsU32" name="m_animationOptionFlags" flags="Bitfield" value="Jobs|Skeleton"/>
     </Object>
 </Root>

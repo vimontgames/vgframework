@@ -30,4 +30,10 @@ namespace vg::renderer
     {
         return m_nodes;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE float Skeleton::getScale() const
+    {
+        return m_scale;
+    }
 }
