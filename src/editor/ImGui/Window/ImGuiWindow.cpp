@@ -1208,16 +1208,19 @@ namespace vg::editor
                             {
                                 if (_objectContext.m_treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->GetParent()))
                                 {
-                                    auto & newInfo = _objectContext.m_treeNodes.emplace_back();
+                                    if (_objectContext.m_treeNodes.back().treeNodeOpen)
+                                    {
+                                        auto & newInfo = _objectContext.m_treeNodes.emplace_back();
 
-                                    newInfo.treeNodeOpen = ImGui::TreeNodeEx(ImGui::getObjectLabel(_prop->GetDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
-                                    newInfo.treeNodeIsCollapsingHeader = false;
+                                        newInfo.treeNodeOpen = ImGui::PersistentTreeNode(_object, _prop);
+                                        newInfo.treeNodeIsCollapsingHeader = false;
+                                    }
                                 }
                                 else
                                 {
                                     auto & newInfo = _objectContext.m_treeNodes.emplace_back();
 
-                                    newInfo.treeNodeOpen = ImGui::CollapsingHeader(ImGui::getObjectLabel(_prop->GetDisplayName(), _prop).c_str(), ImGuiTreeNodeFlags_DefaultOpen);
+                                    newInfo.treeNodeOpen = ImGui::PersistentCollapsingHeader(_object, _prop);
                                     newInfo.treeNodeIsCollapsingHeader = true;
                                 }
                             }

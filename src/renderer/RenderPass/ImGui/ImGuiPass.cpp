@@ -19,6 +19,7 @@
 #include "editor/IEditor.h"
 
 #include "ImGui.hpp"
+#include "ImGuiSettings.hpp"
 #include "ImGuiAdapter.hpp"
 
 using namespace vg::core;

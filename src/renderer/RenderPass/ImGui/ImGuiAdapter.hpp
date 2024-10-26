@@ -29,10 +29,12 @@ namespace vg::renderer
         m_currentFont(s_defaultFont),
         m_currentFontStyle(s_defaultFontStyle),
         m_currentFontSize(s_defaultFontSize)
-    {
+    {        
         ImGui::CreateContext();
         ImGuiIO & io = ImGui::GetIO();
         io.ConfigWindowsMoveFromTitleBarOnly = true;
+
+        m_settingsHandler.init();
 
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigDockingTransparentPayload = true;
@@ -949,5 +951,11 @@ namespace vg::renderer
 
         fileDialog->SetFileStyle(IGFD_FileStyleByTypeDir, "", textColor, editor::style::icon::Folder);
         fileDialog->SetFileStyle(IGFD_FileStyleByTypeFile, "", textColor, editor::style::icon::File);
+    }
+
+    //--------------------------------------------------------------------------------------
+    CustomImGuiData & ImGuiAdapter::GetCustomData(const core::string & _name)
+    {
+        return m_settingsHandler.getCustomData(_name);
     }
 }

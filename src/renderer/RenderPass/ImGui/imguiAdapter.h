@@ -2,6 +2,7 @@
 
 #include "renderer/IImGuiAdapter.h"
 #include "gfx/BindlessTable/BindlessTable_consts.h"
+#include "ImGuiSettings.h"
 
 typedef void * ImTextureID;
 
@@ -61,6 +62,8 @@ namespace vg
 
             void                PushFontStyle                   (vg::renderer::FontStyle _style) final override;
             void                PopFontStyle                    () final override;
+
+            CustomImGuiData &   GetCustomData                   (const core::string & _name) final override;
 
         protected:
             ImTextureID         getTextureID                    (const gfx::Texture * _texture);
@@ -135,6 +138,8 @@ namespace vg
                 ImFont * ptr    = nullptr;
             };
             ImFontInfo                          m_imGuiFont[core::enumCount<Font>()][core::enumCount<FontStyle>()];
+
+            ImGuiSettings                       m_settingsHandler;
         };
     }
 }

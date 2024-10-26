@@ -15,6 +15,25 @@ using namespace vg::renderer;
 namespace ImGui
 {
     //--------------------------------------------------------------------------------------
+    bool PersistentTreeNode(vg::core::IObject * _object, const vg::core::IProperty * _prop, ImGuiTreeNodeFlags _flags)
+    {
+        const auto label = ImGui::getObjectPropertyLabel(_object, _prop);
+
+        auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
+        auto & customData = imGuiAdapter->GetCustomData(label);
+
+        customData.isOpen = ImGui::TreeNodeEx(label.c_str(), _flags | (customData.isOpen ? ImGuiTreeNodeFlags_DefaultOpen : 0));
+        
+        return customData.isOpen;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool PersistentCollapsingHeader(vg::core::IObject * _object, const vg::core::IProperty * _prop)
+    {
+        return PersistentTreeNode(_object, _prop, ImGuiTreeNodeFlags_CollapsingHeader);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool IconBegin(const char * icon, const char * name, bool * p_open, ImGuiWindowFlags flags)
     {
         char temp[1024];
@@ -323,6 +342,12 @@ namespace ImGui
     {
         return fmt::sprintf("%s###%s_%p", _label.c_str(), _subLabel.c_str(), _object);
     }    
+
+    //--------------------------------------------------------------------------------------
+    vg::core::string getObjectPropertyLabel(const vg::core::IObject * _object, const vg::core::IProperty * _prop)
+    {
+        return fmt::sprintf("%s###%s_%u", _prop->GetDisplayName(), _prop->GetName(), (uint_ptr)_object->GetUID());
+    }
 
     //--------------------------------------------------------------------------------------
     ImVec2 GetWindowContentRegionSize()
