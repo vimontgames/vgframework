@@ -1097,6 +1097,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool Renderer::IsMSAASupported(gfx::MSAA _mode) const
+    {
+        return m_device.getDeviceCaps().msaa.isSupported(_mode);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool Renderer::IsVSyncSupported(gfx::VSync _mode) const
     {
         return m_device.isVSyncSupported(_mode);
@@ -1112,5 +1118,11 @@ namespace vg::renderer
     double Renderer::GetGpuWaitTime() const
     {
         return m_device.getGpuWaitTime();
+    }
+
+    //--------------------------------------------------------------------------------------
+    const gfx::DeviceCaps & Renderer::getDeviceCaps() const
+    {
+        return m_device.getDeviceCaps();
     }
 }

@@ -17,6 +17,15 @@ namespace vg::gfx
     );
 }
 
+namespace vg::gfx::base
+{
+    class DeviceCaps : public core::Object
+    {
+    public:
+        VG_CLASS_DECL(DeviceCaps, core::Object);
+    };
+}
+
 #include VG_GFXAPI_HEADER(DeviceCaps)
 
 namespace vg::gfx
@@ -27,40 +36,42 @@ namespace vg::gfx
     class DeviceCaps : public VG_GFXAPI::DeviceCaps
     {
     public:
-        DeviceCaps();
+        VG_CLASS_DECL(DeviceCaps, VG_GFXAPI::DeviceCaps);
+
+        DeviceCaps(const core::string & _name = "DeviceCaps", core::IObject * _parent = nullptr);
 
 		void init();
+
+        core::string    gpuName;
 
         ShaderModel     shaderModel = (ShaderModel)0;
 
         // RayTracing
-        bool            rayTracing = false;
-        core::uint      rayTracingAccelerationStructureScratchOffsetAlignment = 0;
+        struct RayTracingCaps
+        {
+            bool            supported = false;
+        };
+        RayTracingCaps rayTracing;
+
+        // MSAA
+        struct MSAACaps
+        {
+            bool isSupported(MSAA _mode) const { return core::asBool(core::operator &(_mode, modes)); }
+            MSAA modes = (MSAA)0x0;
+        };
+        MSAACaps msaa;
 
         // HDR
         struct HDRCaps
         {
-            HDRCaps()
-            {
-                for (auto i = 0; i < core::enumCount<HDR>(); ++i)
-                    mode[i] = false;
-                mode[core::asInteger(HDR::None)] = true;
-            }
-
             bool operator != (const HDRCaps & _other)
             {
-                for (auto i = 0; i < core::enumCount<HDR>(); ++i)
-                {
-                    if (mode[i] != _other.mode[i])
-                        return true;
-                }
-
-                return minLuminance != _other.minLuminance || maxLuminance != _other.maxLuminance || enableST2084 != _other.enableST2084 || referenceWhiteNits != _other.referenceWhiteNits;
+                return modes != _other.modes || minLuminance != _other.minLuminance || maxLuminance != _other.maxLuminance || enableST2084 != _other.enableST2084 || referenceWhiteNits != _other.referenceWhiteNits;
             }
 
-            bool isSupported(HDR _mode) const { return mode[core::asInteger(_mode)]; }
+            bool isSupported(HDR _mode) const { return core::asBool(core::operator &(_mode, modes)); }
 
-            bool            mode[core::enumCount<HDR>()];
+            HDR             modes = (HDR)0x0;
             float           minLuminance = 0.0f;
             float           maxLuminance = 400.0f;
             bool            enableST2084 = false;

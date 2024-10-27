@@ -52,7 +52,7 @@ namespace vg::core
         u64                             GetUnsignedEnumValue            (uint index) const final override;
         i64                             GetSignedEnumValue              (uint index) const final override;
 
-        bool *                          GetPropertyBool                 (const IObject * _object) const final override;
+        bool *                          GetPropertyBool                 (const IObject * _object, uint _index = 0) const final override;
 
         i8 *                            GetPropertyInt8                 (const IObject * _object) const final override;
         i16 *                           GetPropertyInt16                (const IObject * _object) const final override;

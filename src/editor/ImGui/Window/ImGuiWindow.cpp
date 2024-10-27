@@ -352,7 +352,7 @@ namespace vg::editor
             UndoRedoTarget undoRedoTarget(_object, _prop);
             auto * undoRedoManager = Kernel::getUndoRedoManager();
 
-            if (edited)
+            if (edited && !_propContext.m_readOnly)
             {
                 bool recordUndoRedoBeginValue = false;
                 if (InteractionType::Continuous == _interactionType)
@@ -680,7 +680,9 @@ namespace vg::editor
         bool first = true, found = false, allBitsSet = _prop->GetEnumCount() > 0;
         for (uint e = 0; e < _prop->GetEnumCount(); ++e)
         {
-            if (enumVal & (T(1) << T(e)))
+            const auto bit = scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(e) : _prop->GetUnsignedEnumValue(e);
+
+            if (enumVal & bit)
             {
                 string name = _prop->GetEnumName(e);
                 std::replace(name.begin(), name.end(), '_', ' ');
@@ -702,17 +704,20 @@ namespace vg::editor
                 allBitsSet = false;
             }
         }
-        if (allBitsSet)
-            preview = "All";
-        else if (!found)
-            preview = "";
+
+        //if (allBitsSet)
+        //    preview = "All";
+        //else if (!found)
+        //    preview = "";
 
         string enumLabel = ImGui::getObjectLabel("", _prop->GetDisplayName(), _prop);
         if (ImGui::BeginCombo(getPropertyLabel(enumLabel).c_str(), preview.c_str(), ImGuiComboFlags_None))
         {
             for (uint e = 0; e < _prop->GetEnumCount(); ++e)
             {
-                bool value = ((enumVal >> e) & 1) ? true : false;
+                const auto bit = scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(e) : _prop->GetUnsignedEnumValue(e);
+
+                bool value = (bit & enumVal) ? true : false;
                 string name = _prop->GetEnumName(e);
 
                 if (!name.empty())
@@ -724,9 +729,9 @@ namespace vg::editor
                         if (!readonly)
                         {
                             if (value)
-                                enumVal |= T(1) << T(e);
+                                enumVal |= bit;
                             else
-                                enumVal &= ~(T(1) << T(e));
+                                enumVal &= ~bit;
                         }
                         edited = true;
                     }
@@ -1272,8 +1277,24 @@ namespace vg::editor
 
                 case PropertyType::Bool:
                 {
-                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
-                    changed |= editBool(_object, _prop, propContext, label, availableWidth, singleLine);
+                    if (isEnumArray)
+                    {
+                        char temp[1024];
+                        sprintf_s(temp, "%s (%u)", label.c_str(), _prop->GetEnumCount());
+                        if (ImGui::TreeNodeEx(temp, enumArrayTreeNodeFlags))
+                        {
+                            for (uint e = 0; e < _prop->GetEnumCount(); ++e)
+                            {
+                                const string enumLabel = ImGui::getObjectLabel(_prop->GetEnumName(e), _prop + e);
+                                changed |= editBool(_object, _prop, propContext, enumLabel, availableWidth, singleLine, e);
+                            }
+                            ImGui::TreePop();
+                        }
+                    }
+                    else
+                    {
+                        changed |= editBool(_object, _prop, propContext, label, availableWidth, singleLine);
+                    }
                 };
                 break;
 
@@ -2567,11 +2588,11 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::editBool(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & label, float availableWidth, bool singleLine)
+    bool ImGuiWindow::editBool(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & label, float availableWidth, bool singleLine, core::uint _index)
     {
         bool changed = false;
 
-        bool * pBool = _prop->GetPropertyBool(_object);
+        bool * pBool = _prop->GetPropertyBool(_object, _index);
         bool temp = *pBool;
 
         bool edited;
@@ -2599,7 +2620,7 @@ namespace vg::editor
             if (storeProperty<bool>(pBool, temp, _object, _prop, _propContext, editingState))
                 changed = true;
         }
-        drawPropertyLabel(_propContext, _prop);
+        drawPropertyLabel(_propContext, _prop, _index);
         return changed;
     }
 

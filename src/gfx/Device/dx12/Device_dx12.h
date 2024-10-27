@@ -59,6 +59,8 @@ namespace vg::gfx::dx12
 			bool							isDeveloperModeEnabled		() const;
 			bool							setStablePowerState			();
 
+			bool							checkMSAASupport			(DXGI_FORMAT _format, UINT _sampleCount) const;
+
         private:
             D3D12Device *					m_d3d12device				= nullptr;
 			ID3D12Debug *					m_d3d12debug				= nullptr;

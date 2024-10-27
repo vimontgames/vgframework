@@ -109,20 +109,44 @@ namespace vg::gfx::dx12
 		D3D12_FEATURE_DATA_D3D12_OPTIONS5 options5 = {};
         if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &options5, sizeof(options5))))
         {
-            m_caps.rayTracing = false;
+            m_caps.rayTracing.supported = false;
             m_caps.d3d12.raytracier_tier = D3D12_RAYTRACING_TIER_NOT_SUPPORTED;
         }
         else
 		{
-			m_caps.rayTracing = options5.RaytracingTier >= D3D12_RAYTRACING_TIER_1_0;
+			m_caps.rayTracing.supported = options5.RaytracingTier >= D3D12_RAYTRACING_TIER_1_0;
 			m_caps.d3d12.raytracier_tier = options5.RaytracingTier;
 		}
 
         m_caps.hdr = DXGIHelper::getHDRCaps((HWND)m_deviceParams.window, m_dxgiFactory);
 
+        // check MSAA support
+        {
+            string supportedMSAAModes = "";
+            bool first = true;
+            for (uint i = 0; i < enumCount<MSAA>(); ++i)
+            {
+                const auto msaa = enumValue<MSAA>(i);
+                if (checkMSAASupport(Texture::getd3d12SurfaceFormat(PixelFormat::R16G16B16A16_float), (uint)msaa))
+                {
+                    m_caps.msaa.modes |= msaa;
+
+                    if (!first)
+                        supportedMSAAModes += " | ";
+                    
+                    supportedMSAAModes += fmt::sprintf("%s", asString(msaa));
+
+                    first = false;
+                }                
+            }
+            VG_INFO("[Device] Supported MSAA modes: %s", supportedMSAAModes.c_str());
+        }
+
+        m_caps.gpuName = description;
+
         uint major = (m_caps.d3d12.featureLevel & 0xF000) >> 12;
         uint minor = (m_caps.d3d12.featureLevel & 0x0F00) >> 8;
-        VG_INFO("[Device] Init DX%u.%u %sdevice (SDK %u) - %s - %s", major, minor, m_d3d12debug ? "debug " : "", D3D12_SDK_VERSION, asString(m_caps.shaderModel).c_str(), description);
+        VG_INFO("[Device] Init DX%u.%u %sdevice (SDK %u) - %s - %s", major, minor, m_d3d12debug ? "debug " : "", D3D12_SDK_VERSION, asString(m_caps.shaderModel).c_str(), m_caps.gpuName.c_str());
 
         m_memoryAllocator = new gfx::MemoryAllocator();
 
@@ -167,6 +191,25 @@ namespace vg::gfx::dx12
 
         m_bindlessTable = new gfx::BindlessTable();
 	}
+
+    //--------------------------------------------------------------------------------------
+    bool Device::checkMSAASupport(DXGI_FORMAT _format, UINT _sampleCount) const
+    {
+        if (_sampleCount == 1)
+            return true;
+
+        D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msaaQualityLevels = {};
+        msaaQualityLevels.Format = _format;
+        msaaQualityLevels.SampleCount = _sampleCount;
+        msaaQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
+
+        if (SUCCEEDED(m_d3d12device->CheckFeatureSupport(D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &msaaQualityLevels, sizeof(msaaQualityLevels))))
+        {
+            if (msaaQualityLevels.NumQualityLevels > 0)
+                return true;
+        }
+        return false;
+    }
 
     //--------------------------------------------------------------------------------------
     // https://learn.microsoft.com/en-us/samples/microsoft/directx-graphics-samples/d3d12-hdr-sample-win32/

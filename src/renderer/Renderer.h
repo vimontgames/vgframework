@@ -7,6 +7,7 @@
 namespace vg::gfx
 {
 	class Device;
+    class DeviceCaps;
 	class Texture;
 	class Buffer;
 	class FrameGraph;
@@ -118,10 +119,13 @@ namespace vg::renderer
 
         bool                                    IsVSyncSupported            (gfx::VSync _mode) const final override;
         bool                                    IsHDRSupported              (gfx::HDR _mode) const final override;
+        bool                                    IsMSAASupported             (gfx::MSAA _mode) const final override;
 
         core::JobSync *                         GetJobSync                  (RendererJobType _jobSync) final override { return &m_jobSync[core::asInteger(_jobSync)]; }
         double                                  GetGpuFrameTime             () const final override;
         double                                  GetGpuWaitTime              () const  final override;
+
+        const gfx::DeviceCaps &                 getDeviceCaps               () const;
 
     public: // internal
         gfx::Texture *                          getBackbuffer               () const;
@@ -139,8 +143,7 @@ namespace vg::renderer
 
         void                                    cullViews                   ();
 
-	//private:
-    public:
+	private:
 		gfx::Device &		                    m_device;
         gfx::FrameGraph &                       m_frameGraph;
         gfx::Texture *                          m_hdrOutput                 = nullptr;

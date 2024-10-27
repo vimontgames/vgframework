@@ -5,9 +5,10 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     // Vulkan-specific caps
     //--------------------------------------------------------------------------------------
-    class DeviceCaps
+    class DeviceCaps : public base::DeviceCaps
     {
     public:
-        bool deviceAddress = false;
+        bool        deviceAddress = false;
+        core::uint  rayTracingAccelerationStructureScratchOffsetAlignment = 0;
     };
 }

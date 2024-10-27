@@ -27,8 +27,11 @@ namespace vg::gfx
     );
 
     vg_enum_class(MSAA, core::u8,
-        None = 0,
-        MSAA4X
+        None    = 0x01,
+        MSAA2X  = 0x02,
+        MSAA4X  = 0x04,
+        MSAA8X  = 0x08,
+        MSAA16X = 0x10
     );
 
     vg_enum_class(AAPostProcess, core::u8,
@@ -38,9 +41,9 @@ namespace vg::gfx
     );
 
     vg_enum_class(HDR, core::u8,
-        None = 0,
-        HDR10,
-        HDR16
+        None    = 0x01,
+        HDR10   = 0x0a,
+        HDR16   = 0x10
     );
 
     vg_enum_class(ColorSpace, core::u8,

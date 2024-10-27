@@ -512,17 +512,20 @@ namespace vg::gfx::vulkan
 				}
 			}
 
+			m_caps.hdr.modes = HDR::None;
+
 			if (m_vkPhysicalDevice)
 			{
-				m_caps.hdr.mode[asInteger(HDR::HDR10)] = hdr10;
-				m_caps.hdr.mode[asInteger(HDR::HDR16)] = hdr16;
+				if (hdr10)
+					m_caps.hdr.modes |= HDR::HDR10;
+
+                if (hdr16)
+                    m_caps.hdr.modes |= HDR::HDR16;
 			}
 			else
 			{
 				// If no HDR device found, pick the 1st one
 				m_vkPhysicalDevice = physicalDevices[0];
-				m_caps.hdr.mode[asInteger(HDR::HDR10)] = false;
-				m_caps.hdr.mode[asInteger(HDR::HDR16)] = false;
 			}
 
 			free(physicalDevices);
@@ -535,9 +538,9 @@ namespace vg::gfx::vulkan
 
 		// Update device caps according to extensions
         if (m_KHR_Ray_Tracing_Pipeline.isEnabled())
-            m_caps.rayTracing = true;
+            m_caps.rayTracing.supported = true;
         else
-            m_caps.rayTracing = false;
+            m_caps.rayTracing.supported = false;
 
 		if (m_KHR_Buffer_Device_Address.isEnabled())
 			m_caps.deviceAddress = true;
@@ -547,6 +550,21 @@ namespace vg::gfx::vulkan
         #endif
 
 		vkGetPhysicalDeviceProperties(m_vkPhysicalDevice, &m_vkPhysicalDeviceProperties);
+
+		// Check MSAA support
+		{
+			m_caps.msaa.modes = MSAA::None;
+
+			VkSampleCountFlags colorSampleCounts = m_vkPhysicalDeviceProperties.limits.framebufferColorSampleCounts;
+			VkSampleCountFlags depthSampleCounts = m_vkPhysicalDeviceProperties.limits.framebufferDepthSampleCounts;
+
+			for (uint i = 1; i < enumCount<MSAA>(); ++i)
+			{
+				const auto bit = enumValue<MSAA>(i);
+				if (((uint)bit & colorSampleCounts) && ((uint)bit & depthSampleCounts))
+					m_caps.msaa.modes |= bit;
+			}
+		}
 
 		// Query feature support for this device
 		VkPhysicalDeviceFeatures physDevFeatures;
@@ -575,7 +593,7 @@ namespace vg::gfx::vulkan
 			// SM 6_4 : VK_KHR_fragment_shading_rate
 
 			// SM 6_5 : DXR1.1 (KHR ray tracing), Mesh and Amplification shaders, additional Wave intrinsics
-            if (m_caps.rayTracing)
+            if (m_caps.rayTracing.supported)
                 m_caps.shaderModel = ShaderModel::SM_6_3;
 
 			// SM 6_6 : VK_NV_compute_shader_derivatives, VK_KHR_shader_atomic_int64
@@ -592,7 +610,9 @@ namespace vg::gfx::vulkan
         u32 patch = VK_VERSION_PATCH(instanceVersion);
         u32 header = VK_HEADER_VERSION;
 
-        VG_INFO("[Device] Init Vulkan %sdevice (SDK %u.%u.%u) - %s - %s", validationLayer ? "debug " : "", major, minor, header, asString(m_caps.shaderModel).c_str(), m_vkPhysicalDeviceProperties.deviceName);
+        m_caps.gpuName = m_vkPhysicalDeviceProperties.deviceName;
+
+        VG_INFO("[Device] Init Vulkan %sdevice (SDK %u.%u.%u) - %s - %s", validationLayer ? "debug " : "", major, minor, header, asString(m_caps.shaderModel).c_str(), m_caps.gpuName.c_str());
 
 		VkWin32SurfaceCreateInfoKHR createInfo;
 									createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
@@ -1180,7 +1200,7 @@ namespace vg::gfx::vulkan
 		vkGetPhysicalDeviceProperties2(m_vkPhysicalDevice, &physicalDeviceProps);
 
 		// Query RayTracing acceleration structure alignment
-        if (m_caps.rayTracing)
+        if (m_caps.rayTracing.supported)
             m_caps.rayTracingAccelerationStructureScratchOffsetAlignment = accelerationStructureProps.minAccelerationStructureScratchOffsetAlignment;
 
         VkPhysicalDeviceRayQueryFeaturesKHR rayQueryFeatures = {};
@@ -1224,7 +1244,7 @@ namespace vg::gfx::vulkan
         CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, bufferDeviceAddress, true);
         CheckVulkanFeature(vulkan12SupportedFeatures, vulkan12Features, hostQueryReset, true);
 
-        if (m_caps.rayTracing)
+        if (m_caps.rayTracing.supported)
         {
             CheckVulkanFeature(accelerationStructureSupportedFeatures, accelerationStructureFeatures, accelerationStructure, true);
             CheckVulkanFeature(accelerationStructureSupportedFeatures, accelerationStructureFeatures, descriptorBindingAccelerationStructureUpdateAfterBind, true);

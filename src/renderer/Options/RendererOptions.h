@@ -10,6 +10,11 @@ namespace vg::core
     class IFactory;
 }
 
+namespace vg::gfx
+{
+    class DeviceCaps;
+}
+
 namespace vg::renderer
 {
     vg_enum_class(RenderPassFlags, core::u32,
@@ -36,8 +41,8 @@ namespace vg::renderer
         gfx::VSync              GetVSync                    () const final override;
         bool                    SetVSync                    (const gfx::VSync & _vsync) final override;
 
-        gfx::AAPostProcess       GetAAPostProcess                 () const final override;
-        bool                    SetAAPostProcess                 (const gfx::AAPostProcess & _aa) final override;
+        gfx::AAPostProcess      GetAAPostProcess            () const final override;
+        bool                    SetAAPostProcess            (const gfx::AAPostProcess & _aa) final override;
 
         gfx::HDR                GetHDR                      () const final override;
         bool                    SetHDR                      (const gfx::HDR & _hdr) final override;
@@ -95,9 +100,11 @@ namespace vg::renderer
         DisplayMode	            m_debugDisplayMode          = DisplayMode::None;
         DisplayFlags            m_displayFlags              = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap;
         RenderPassFlags         m_renderPassFlags;
+        const gfx::DeviceCaps * m_deviceCaps                = nullptr;
 
         core::IProperty *       m_hdrProp                   = nullptr;
         core::IProperty *       m_vsyncProp                 = nullptr;
+        core::IProperty *       m_msaaProp                  = nullptr;
         core::IProperty *       m_aaPostProcessProp         = nullptr;
     };
 }

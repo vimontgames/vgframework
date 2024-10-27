@@ -48,4 +48,6 @@ namespace vg::core
 
     template <> struct scalarTraits<float>  { static const bool is_signed = true;  static const bool is_integer = false; };
     template <> struct scalarTraits<double> { static const bool is_signed = true;  static const bool is_integer = false; };
+
+    template <> struct scalarTraits<bool>   { static const bool is_signed = false;  static const bool is_integer = false; };
 }

@@ -51,7 +51,7 @@ namespace vg::gfx::vulkan
 
         if (_bufDesc.testBindFlags(BindFlags::RaytracingAccelerationStruct))
             vkBufferCreate.usage |= VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR;
-        else if (device->getDeviceCaps().rayTracing)
+        else if (device->getDeviceCaps().rayTracing.supported)
             vkBufferCreate.usage |= VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
 
         if (device->getDeviceCaps().deviceAddress)

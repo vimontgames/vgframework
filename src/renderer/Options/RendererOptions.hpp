@@ -1,6 +1,7 @@
 #include "RendererOptions.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Object/EnumHelper.h"
+#include "gfx/Device/DeviceCaps.h"
 #include "renderer/Renderer.h"
 #include "renderer/RayTracing/RayTracingManager.h"
 
@@ -28,12 +29,12 @@ namespace vg::renderer
         }
         registerPropertyGroupEnd(RendererOptions);
 
-        registerPropertyGroupBegin(RendererOptions, "Presentation");
+        registerPropertyGroupBegin(RendererOptions, "Presentation"); 
         {
             registerPropertyEnum(RendererOptions, gfx::HDR, m_HDRmode, "HDR");
             setPropertyDescription(LightDesc, m_HDRmode, "High-dynamic range display mode");
 
-            registerPropertyEnumEx(RendererOptions, gfx::MSAA, m_msaa, "MSAA", PropertyFlags::ReadOnly);
+            registerPropertyEnum(RendererOptions, gfx::MSAA, m_msaa, "MSAA");
             setPropertyDescription(LightDesc, m_msaa, "Multisample anti-aliasing");
 
             registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
@@ -86,6 +87,12 @@ namespace vg::renderer
         }
         registerPropertyGroupEnd(RendererOptions);
 
+        registerPropertyGroupBegin(RendererOptions, "Device");
+        {
+            registerPropertyObjectPtrEx(RendererOptions, m_deviceCaps, "Device Caps", PropertyFlags::Flatten | PropertyFlags::NotSaved);
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
         return true;
     }
 
@@ -102,12 +109,38 @@ namespace vg::renderer
         renderer->SetHDR(m_HDRmode);
         RayTracingManager::get()->enableRayTracing(m_rayTracing);
 
-        m_hdrProp = GetClassDesc()->GetPropertyByName("m_HDRmode");
-        m_vsyncProp = GetClassDesc()->GetPropertyByName("m_VSync"); 
-        m_aaPostProcessProp = GetClassDesc()->GetPropertyByName("m_aaPostProcess");
+        auto * classDesc = GetClassDesc();
+        m_hdrProp = classDesc->GetPropertyByName("m_HDRmode");
+        m_vsyncProp = classDesc->GetPropertyByName("m_VSync");
+        m_msaaProp = classDesc->GetPropertyByName("m_msaa");
+        m_aaPostProcessProp = classDesc->GetPropertyByName("m_aaPostProcess");
 
-        // Temp: disable SMAA
+        // Disable incompatible MSAA modes
+        for (uint i = 0; i < enumCount<gfx::MSAA>(); ++i)
+        {
+            const auto msaa = enumValue<gfx::MSAA>(i);
+            if (renderer->IsMSAASupported(msaa))
+                m_msaaProp->SetEnumValueFlags((u64)msaa, EnumValueFlags::Disabled, false);
+            else
+                m_msaaProp->SetEnumValueFlags((u64)msaa, EnumValueFlags::Disabled, true);
+        }
+
+        // SMAA not yet implemented
         m_aaPostProcessProp->SetEnumValueFlags((u64)gfx::AAPostProcess::SMAA, EnumValueFlags::Disabled, true);
+
+        m_deviceCaps = &renderer->getDeviceCaps();
+
+        // User-friendly names for shader model
+        if (auto * shaderModelProp = m_deviceCaps->GetClassDesc()->GetPropertyByName("shaderModel"))
+        {
+            for (uint i = 0; i < enumCount<gfx::ShaderModel>(); ++i)
+            {
+                string name = asString(enumValue<gfx::ShaderModel>(i));
+                name.replace(0, 3, "");
+                name.replace(1, 1, ".");
+                shaderModelProp->SetEnumName(i, name);
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------

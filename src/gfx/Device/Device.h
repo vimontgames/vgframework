@@ -92,7 +92,7 @@ namespace vg::gfx
             gfx::PixelFormat                                getBackbufferFormat         () const { return m_backbufferFormat; }
             gfx::ShaderManager *                            getShaderManager            () { return m_shaderManager;}
 
-            const DeviceCaps &                              getDeviceCaps               () const { return m_caps; }
+            const gfx::DeviceCaps &                         getDeviceCaps               () const { return m_caps; }
 
             PixelFormat                                     getHDRBackbufferFormat      (HDR _mode) const;
             ColorSpace                                      getHDRColorSpace            (HDR _mode) const;
@@ -109,7 +109,7 @@ namespace vg::gfx
             void                                            endWaitGPU                  ();
 
 		protected:
-            DeviceCaps                                      m_caps;
+            gfx::DeviceCaps                                 m_caps;
 			gfx::CommandQueue*				                m_commandQueue[core::enumCount<CommandQueueType>()];
 			FrameContext									m_frameContext[max_frame_latency];
             UploadBuffer *                                  m_uploadBuffer = nullptr;

@@ -99,6 +99,15 @@ namespace vg
         }
 
         //--------------------------------------------------------------------------------------
+        template <typename E> inline constexpr auto enumValue(uint _index)
+        {
+            const auto & members = getEnumMembers<E>();
+            if (_index < members.size())
+                return members[_index].value;
+            return (E)0;
+        }
+
+        //--------------------------------------------------------------------------------------
         template <typename E> inline constexpr auto isEnumValue(E e)
         {
             const auto & members = getEnumMembers<E>();

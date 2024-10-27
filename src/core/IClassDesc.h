@@ -92,13 +92,14 @@ namespace vg::core
         virtual void                        RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, i32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i32 * _enumValues, PropertyFlags _flags) = 0;
         virtual void                        RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, i64 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i64 * _enumValues, PropertyFlags _flags) = 0;
 
+        virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, bool * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) = 0;
         virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, core::string * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) = 0;
         virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, core::u8 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) = 0;
         virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, float4 * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) = 0;
         virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, IResource * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) = 0;
         virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, IObject * _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) = 0;
         virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) = 0;
-
+        
         virtual void                        RegisterResizeVectorFunc    (const char * _className, IClassDesc::ResizeVectorFunc _func) = 0;
         virtual void *                      ResizeVector                (core::IObject * _parent, core::uint _offset, core::uint _count, core::uint & _elementSize) const = 0;
 

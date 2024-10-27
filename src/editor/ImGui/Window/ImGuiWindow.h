@@ -68,7 +68,7 @@ namespace vg::editor
 
         static bool                             displayResource     (core::IResource * _resource, const core::IProperty * _prop, core::uint _index, PropertyContext & _propContext);
 
-        static bool                             editBool            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & _label, float _availableWidth, bool _singleLine);
+        static bool                             editBool            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & _label, float _availableWidth, bool _singleLine, core::uint _index = 0);
         static bool                             editFloat4x4        (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
         static bool                             editString          (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & _label, core::uint _index = 0);
         static bool                             editObjectHandle    (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);

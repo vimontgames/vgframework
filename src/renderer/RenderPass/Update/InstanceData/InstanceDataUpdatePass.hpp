@@ -28,7 +28,10 @@ namespace vg::renderer
     void InstanceDataUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
         auto renderer = Renderer::get();
-        const auto & instances = renderer->getSharedCullingJobOutput()->m_instances;
+        const auto * cullingJobOutput = renderer->getSharedCullingJobOutput();
+        VG_ASSERT(nullptr != cullingJobOutput);
+
+        const auto & instances = cullingJobOutput->m_instances;
         const auto * defaultMaterial = renderer->getDefaultMaterial();
         VG_ASSERT(defaultMaterial);
 

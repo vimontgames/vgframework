@@ -139,7 +139,7 @@ namespace vg::core
         virtual u64                             GetUnsignedEnumValue            (uint index) const = 0;
         virtual i64                             GetSignedEnumValue              (uint index) const = 0;
 
-        virtual bool *                          GetPropertyBool                 (const IObject * _object) const = 0;
+        virtual bool *                          GetPropertyBool                 (const IObject * _object, uint _index = 0) const = 0;
 
         virtual i8 *                            GetPropertyInt8                 (const IObject * _object) const = 0;
         virtual i16 *                           GetPropertyInt16                (const IObject * _object) const = 0;

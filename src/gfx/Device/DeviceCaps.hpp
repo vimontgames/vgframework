@@ -1,7 +1,34 @@
 namespace vg::gfx
 {
     //--------------------------------------------------------------------------------------
-	DeviceCaps::DeviceCaps()
+	VG_REGISTER_OBJECT_CLASS(DeviceCaps, "DeviceCaps");
+    //--------------------------------------------------------------------------------------
+ 
+    //--------------------------------------------------------------------------------------
+    bool DeviceCaps::registerProperties(IClassDesc & _desc)
+    {
+        //super::registerProperties(_desc);
+
+        registerPropertyEx(DeviceCaps, gpuName, "GPU", PropertyFlags::ReadOnly);
+        setPropertyDescription(DeviceCaps, gpuName, "GPU model name");
+
+		registerPropertyEnumEx(DeviceCaps, ShaderModel, shaderModel, "Shaders", PropertyFlags::ReadOnly);
+		setPropertyDescription(DeviceCaps, shaderModel, "Highest shader model available");
+
+        registerPropertyEx(DeviceCaps, rayTracing.supported, "RayTracing", PropertyFlags::ReadOnly);
+        setPropertyDescription(DeviceCaps, rayTracing.supported, "Is ray tracing supported on hardware");
+
+		registerPropertyEnumBitfieldEx(DeviceCaps, MSAA, msaa.modes, "MSAA", PropertyFlags::ReadOnly);
+		setPropertyDescription(DeviceCaps, msaa.modes, "Supported multisampling modes");
+
+        registerPropertyEnumBitfieldEx(DeviceCaps, HDR, hdr.modes, "HDR", PropertyFlags::ReadOnly);
+        setPropertyDescription(DeviceCaps, hdr.modes, "Supported HDR modes");
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+	DeviceCaps::DeviceCaps(const string & _name, IObject * _parent)
 	{
         
 	}
@@ -10,7 +37,7 @@ namespace vg::gfx
 	void DeviceCaps::init()
 	{
 		#if VG_ENABLE_RAYTRACING
-		if (rayTracing)
+		if (rayTracing.supported)
 			VG_INFO("[Device] Raytracing is supported");
 		else
 			VG_WARNING("[Device] Raytracing is not supported");

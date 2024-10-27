@@ -21,6 +21,10 @@ namespace vg::core
                     VG_ASSERT(_enumCount == 0, "Property of Type \"%s\" does not support Enum/EnumArray", asString(_type).c_str());
                     break;
 
+            case PropertyType::Bool:
+                    initEnum<bool>(_enumCount, _enumNames, _enumValues);
+                    break;
+
                 case PropertyType::EnumU8:
                 case PropertyType::EnumFlagsU8:
                     initEnum<u8>(_enumCount, _enumNames, _enumValues);
@@ -261,7 +265,9 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Property::SetEnumName(uint index, core::string _name)
     {
-        enums[index].name = _name;
+        VG_ASSERT(index < enums.size());
+        if (index < enums.size())
+            enums[index].name = _name;
     }
 
     //--------------------------------------------------------------------------------------
@@ -345,11 +351,11 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool * Property::GetPropertyBool(const IObject * _object) const
+    bool * Property::GetPropertyBool(const IObject * _object, uint _index) const
     {
         VG_ASSERT(nullptr != _object);
         VG_ASSERT(PropertyType::Bool == GetType() || (PropertyType::LayoutElement == GetType() && asBool(PropertyFlags::Optional & GetFlags())));
-        return (bool*)(uint_ptr(_object) + offset);
+        return (bool*)(uint_ptr(_object) + offset + _index * sizeof(bool));
     }
 
     //--------------------------------------------------------------------------------------

@@ -125,6 +125,7 @@ namespace vg
 
             virtual bool                                IsHDRSupported          (gfx::HDR _mode) const = 0;
             virtual bool                                IsVSyncSupported        (gfx::VSync _mode) const = 0;
+            virtual bool                                IsMSAASupported         (gfx::MSAA _mode) const = 0;
 
             virtual core::JobSync *                     GetJobSync              (RendererJobType _jobSync) = 0;
 
