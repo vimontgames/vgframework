@@ -27,6 +27,8 @@ namespace vg::gfx::dx12
         static DXGI_FORMAT                              getd3d12ShaderResourceViewFormat    (PixelFormat _format, bool _stencil = false);
         static D3D12_RESOURCE_DIMENSION                 getd3d12ResourceDimension           (TextureType _texType);
         static D3D12_SRV_DIMENSION                      getd3d12ShaderResourceViewDimension (TextureType _texType);
+        static D3D12_RTV_DIMENSION                      getd3d12RenderTargetViewDimension   (TextureType _texType);
+        static D3D12_DSV_DIMENSION                      getd3d12DepthStencilViewDimension   (TextureType _texType);
         static D3D12_RESOURCE_DESC                      getd3d12ResourceDesc                (const TextureDesc & _texDesc);
 
         static PixelFormat                              getPixelFormat                      (DXGI_FORMAT _d3d12Format);

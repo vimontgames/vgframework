@@ -3,6 +3,8 @@
 #include "renderer/Options/RendererOptions.h"
 #include "gfx/IView.h"
 
+using namespace vg::gfx;
+
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
@@ -34,7 +36,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Create main color and depth buffers and prepare for write
     //--------------------------------------------------------------------------------------
-    void BackgroundPass::Setup(const gfx::RenderPassContext & _renderPassContext)
+    void BackgroundPass::Setup(const RenderPassContext & _renderPassContext)
     {
         auto * device = Device::get();
 
@@ -43,12 +45,16 @@ namespace vg::renderer
 
         auto clearColor = m_useFastClear ? pow(options->getBackgroundColor(), 2.2f) : defaultOptimizedClearColor;
 
+        const auto msaa = options->GetMSAA();
+
         FrameGraphTextureResourceDesc colorDesc = {};
+                                      colorDesc.type = (MSAA::None == msaa) ? TextureType::Texture2D : TextureType::Texture2DMS;
                                       colorDesc.format = PixelFormat::R16G16B16A16_float;
                                       colorDesc.width = size.x;
                                       colorDesc.height = size.y;
                                       colorDesc.clearColor = clearColor;
                                       colorDesc.initState = FrameGraphResource::InitState::Clear;
+                                      colorDesc.msaa = msaa;
 
         if (options->getLightingMode() == LightingMode::Deferred)
             colorDesc.uav = true;
@@ -58,12 +64,14 @@ namespace vg::renderer
         writeRenderTarget(0, colorID);
 
         FrameGraphTextureResourceDesc depthStencilDesc = {};
+                                      depthStencilDesc.type = (MSAA::None == msaa) ? TextureType::Texture2D : TextureType::Texture2DMS;
                                       depthStencilDesc.format = PixelFormat::D32S8;
                                       depthStencilDesc.width = size.x;
                                       depthStencilDesc.height = size.y;
                                       depthStencilDesc.clearDepth = defaultOptimizedClearDepth;
                                       depthStencilDesc.clearStencil = defaultOptimizedClearStencil;
                                       depthStencilDesc.initState = FrameGraphResource::InitState::Clear;
+                                      depthStencilDesc.msaa = msaa;
 
         const auto depthStencilID = _renderPassContext.getFrameGraphID("DepthStencil");
         createDepthStencil(depthStencilID, depthStencilDesc);

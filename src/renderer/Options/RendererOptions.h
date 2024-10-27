@@ -3,6 +3,7 @@
 #include "renderer/IRendererOptions.h"
 #include "core/Singleton/Singleton.h"
 #include "gfx/Device/Device_consts.h"
+#include "gfx/Resource/Texture_consts.h"
 #include "Shaders/system/displaymodes.hlsli"
 
 namespace vg::core
@@ -38,14 +39,17 @@ namespace vg::renderer
         bool                    IsToolModeEnabled           () const final override { return isToolModeEnabled(); };
         bool                    IsRayTracingEnabled         () const final override { return isRayTracingEnabled(); };
 
-        gfx::VSync              GetVSync                    () const final override;
-        bool                    SetVSync                    (const gfx::VSync & _vsync) final override;
+        gfx::MSAA               GetMSAA                     () const final override;
+        bool                    SetMSAA                     (gfx::MSAA _msaa) final override;
+        
+        gfx::HDR                GetHDR                      () const final override;
+        bool                    SetHDR                      (gfx::HDR _hdr) final override;
 
         gfx::AAPostProcess      GetAAPostProcess            () const final override;
-        bool                    SetAAPostProcess            (const gfx::AAPostProcess & _aa) final override;
+        bool                    SetAAPostProcess            (gfx::AAPostProcess _aa) final override;
 
-        gfx::HDR                GetHDR                      () const final override;
-        bool                    SetHDR                      (const gfx::HDR & _hdr) final override;
+        gfx::VSync              GetVSync                    () const final override;
+        bool                    SetVSync                    (gfx::VSync _vsync) final override;
 
         void                    OnPropertyChanged           (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
@@ -81,8 +85,9 @@ namespace vg::renderer
         void                    update                      () const;
 
     protected:
-        void                    ApplyVSync                  (const core::IProperty * _prop);
-        void                    ApplyHDR                    (const core::IProperty * _prop);
+        void                    applyVSync                  (const core::IProperty * _prop);
+        void                    applyHDR                    (const core::IProperty * _prop);
+        void                    applyMSAA                   (const core::IProperty * _prop);
 
     private:
         core::float4		    m_backgroundColor           = core::float4(0, 0, 0, 0);

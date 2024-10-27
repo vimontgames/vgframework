@@ -34,10 +34,18 @@ namespace vg::gfx
         DepthStencil    = 0x00000004
 	);
 
+	vg_enum_class(MSAA, core::u8,
+        None    = 0x01,
+        MSAA2X  = 0x02,
+        MSAA4X  = 0x04,
+        MSAA8X  = 0x08,
+        MSAA16X = 0x10
+    );
+
 	class TextureDesc
 	{
 	public:
-		TextureDesc(Usage _usage = Usage::Default, BindFlags _bindFlags = BindFlags::ShaderResource, CPUAccessFlags _cpuAccessFlags = CPUAccessFlags::None, TextureType _type = TextureType::Texture2D, PixelFormat _format = PixelFormat::R8G8B8A8_unorm, TextureFlags _flags = TextureFlags::None, core::u16 _width = 1, core::u16 _height = 1, core::u16 _depth = 1, core::u8 _mipmaps = 1) :
+		TextureDesc(Usage _usage = Usage::Default, BindFlags _bindFlags = BindFlags::ShaderResource, CPUAccessFlags _cpuAccessFlags = CPUAccessFlags::None, TextureType _type = TextureType::Texture2D, PixelFormat _format = PixelFormat::R8G8B8A8_unorm, TextureFlags _flags = TextureFlags::None, core::u16 _width = 1, core::u16 _height = 1, core::u16 _depth = 1, core::u8 _mipmaps = 1, MSAA _msaa = MSAA::None) :
             resource(_usage, _bindFlags, _cpuAccessFlags),
             width(_width),
 			height(_height),
@@ -45,7 +53,8 @@ namespace vg::gfx
 			mipmaps(_mipmaps),
 			type(_type),
 			format(_format),
-			flags(_flags)
+			flags(_flags),
+			msaa(_msaa)
 		{
 
 		}
@@ -58,8 +67,9 @@ namespace vg::gfx
 		TextureType		type;
 		PixelFormat		format;
 		TextureFlags	flags;
+		MSAA			msaa;
 
-		VG_INLINE bool testTextureFlags		(TextureFlags _flags) const { return 0 != (std::underlying_type<TextureFlags>::type(_flags) & std::underlying_type<TextureFlags>::type(flags)); }
+		VG_INLINE bool testTextureFlags		(TextureFlags _flags) const { return core::asBool(core::operator & (_flags,flags)); }
 
         VG_INLINE bool isBackbuffer			() const { return testTextureFlags(TextureFlags::Backbuffer); }
         VG_INLINE bool isRenderTarget		() const { return testTextureFlags(TextureFlags::RenderTarget); }

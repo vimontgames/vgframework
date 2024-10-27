@@ -78,15 +78,15 @@ namespace vg::gfx
         void buildNode(UserPassInfoNode & _node);
         void renderNode(UserPassInfoNode & _node, gfx::CommandList * _cmdList);
 
-        Texture * createRenderTargetFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc);
-        Texture * createDepthStencilFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc);
-		Texture * createRWTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc);
+        Texture * createRenderTargetFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc);
+        Texture * createDepthStencilFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc);
+		Texture * createRWTextureFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc);
 
-        Texture * createTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _renderTarget, bool _depthStencil, bool _uav);
+        Texture * createTextureFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _renderTarget, bool _depthStencil, bool _uav);
         void releaseTextureFromPool(Texture *& _tex);
 
-        Buffer * createRWBufferFromPool(const FrameGraphBufferResourceDesc & _bufferResourceDesc);
-        Buffer * createBufferFromPool(const FrameGraphBufferResourceDesc & _bufferResourceDesc, bool _uav);
+        Buffer * createRWBufferFromPool(const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc);
+        Buffer * createBufferFromPool(const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc, bool _uav);
         void releaseBufferFromPool(Buffer *& _buffer);
 
         void cleanup();

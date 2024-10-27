@@ -58,7 +58,7 @@ namespace vg::gfx::dx12
         switch (_texType)
         {
             default:
-                VG_ASSERT(false, "Unhandled TextureType \"%s\"", asString(_texType).c_str());
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_texType);
 
             case TextureType::Texture2D:
             case TextureType::Texture2DArray:
@@ -83,25 +83,108 @@ namespace vg::gfx::dx12
         switch (_texType)
         {
             default:
-                VG_ASSERT(false, "Unhandled TextureType \"%s\" (%u)", asString(_texType).c_str(), _texType);
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_texType);
+
             case TextureType::Texture2D:
                 return D3D12_SRV_DIMENSION_TEXTURE2D;
+
             case TextureType::Texture2DArray:
                 return D3D12_SRV_DIMENSION_TEXTURE2DARRAY;
+
             case TextureType::TextureCube:
                 return D3D12_SRV_DIMENSION_TEXTURECUBE;
+
             case TextureType::TextureCubeArray:
                 return D3D12_SRV_DIMENSION_TEXTURECUBEARRAY;
+
             case TextureType::Texture2DMS:
                 return D3D12_SRV_DIMENSION_TEXTURE2DMS;
+
             case TextureType::Texture2DMSArray:
                 return D3D12_SRV_DIMENSION_TEXTURE2DMSARRAY;
+
             case TextureType::Texture3D:
                 return D3D12_SRV_DIMENSION_TEXTURE3D;
+
             case TextureType::Texture1D:
                 return D3D12_SRV_DIMENSION_TEXTURE1D;
+
             case TextureType::Texture1DArray:
                 return D3D12_SRV_DIMENSION_TEXTURE1DARRAY;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    D3D12_RTV_DIMENSION Texture::getd3d12RenderTargetViewDimension(TextureType _texType)
+    {
+        switch (_texType)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_texType);
+
+            case TextureType::Texture2D:
+                return D3D12_RTV_DIMENSION_TEXTURE2D;
+
+            case TextureType::Texture2DArray:
+                return D3D12_RTV_DIMENSION_TEXTURE2DARRAY;
+
+            //case TextureType::TextureCube:
+            //    return D3D12_RTV_DIMENSION_TEXTURECUBE;
+            //
+            //case TextureType::TextureCubeArray:
+            //    return D3D12_RTV_DIMENSION_TEXTURECUBEARRAY;
+
+            case TextureType::Texture2DMS:
+                return D3D12_RTV_DIMENSION_TEXTURE2DMS;
+
+            case TextureType::Texture2DMSArray:
+                return D3D12_RTV_DIMENSION_TEXTURE2DMSARRAY;
+
+            case TextureType::Texture3D:
+                return D3D12_RTV_DIMENSION_TEXTURE3D;
+
+            case TextureType::Texture1D:
+                return D3D12_RTV_DIMENSION_TEXTURE1D;
+
+            case TextureType::Texture1DArray:
+                return D3D12_RTV_DIMENSION_TEXTURE1DARRAY;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    D3D12_DSV_DIMENSION Texture::getd3d12DepthStencilViewDimension(TextureType _texType)
+    {
+        switch (_texType)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_texType);
+
+            case TextureType::Texture2D:
+                return D3D12_DSV_DIMENSION_TEXTURE2D;
+
+            case TextureType::Texture2DArray:
+                return D3D12_DSV_DIMENSION_TEXTURE2DARRAY;
+
+            //case TextureType::TextureCube:
+            //    return D3D12_DSV_DIMENSION_TEXTURECUBE;
+
+            //case TextureType::TextureCubeArray:
+            //    return D3D12_DSV_DIMENSION_TEXTURECUBEARRAY;
+
+            case TextureType::Texture2DMS:
+                return D3D12_DSV_DIMENSION_TEXTURE2DMS;
+
+            case TextureType::Texture2DMSArray:
+                return D3D12_DSV_DIMENSION_TEXTURE2DMSARRAY;
+
+            //case TextureType::Texture3D:
+            //    return D3D12_DSV_DIMENSION_TEXTURE3D;
+
+            case TextureType::Texture1D:
+                return D3D12_DSV_DIMENSION_TEXTURE1D;
+
+            case TextureType::Texture1DArray:
+                return D3D12_DSV_DIMENSION_TEXTURE1DARRAY;
         }
     }
 
@@ -110,12 +193,12 @@ namespace vg::gfx::dx12
     {
         switch (_d3d12Format)
         {
-        case DXGI_FORMAT_R8G8B8A8_UNORM:
-            return PixelFormat::R8G8B8A8_unorm;
+            case DXGI_FORMAT_R8G8B8A8_UNORM:
+                return PixelFormat::R8G8B8A8_unorm;
 
-        default:
-            VG_ASSERT(false, "Unhandled DXGI_FORMAT %u", _d3d12Format);
-            return PixelFormat::Unknow;
+            default:
+                VG_ASSERT(false, "Unhandled DXGI_FORMAT %u", _d3d12Format);
+                return PixelFormat::Unknow;
         }
     }
 
@@ -140,6 +223,25 @@ namespace vg::gfx::dx12
 
         if (asBool(TextureFlags::DepthStencil & _texDesc.flags))
             resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+
+        switch (_texDesc.msaa)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_texDesc.msaa);
+
+            case MSAA::None:
+                break;
+
+            case MSAA::MSAA2X:
+            case MSAA::MSAA4X:
+            case MSAA::MSAA8X:
+            case MSAA::MSAA16X:
+            {
+                resourceDesc.SampleDesc.Count = (uint)_texDesc.msaa;
+                resourceDesc.SampleDesc.Quality = 0;
+            }
+            break;
+        }
 
         return resourceDesc;
     }
@@ -239,6 +341,10 @@ namespace vg::gfx::dx12
                         srvDesc.Texture2D.PlaneSlice = _stencil ? 1 : 0;
                         srvDesc.Texture2D.ResourceMinLODClamp = 0;
                         break;
+
+                    case TextureType::Texture2DMS:
+                        srvDesc.Texture2DMS;
+                        break;
                 }
 
                 VG_ASSERT(m_resource.getd3d12TextureResource());
@@ -267,7 +373,7 @@ namespace vg::gfx::dx12
         {
             D3D12_RENDER_TARGET_VIEW_DESC viewDesc;
                                           viewDesc.Format = d3d12PixFmt;
-                                          viewDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+                                          viewDesc.ViewDimension = getd3d12RenderTargetViewDimension(_texDesc.type);
                                           viewDesc.Texture2D.MipSlice = 0;  // TODO: alloc RTV for every mip available
                                           viewDesc.Texture2D.PlaneSlice = 0;
 
@@ -280,7 +386,7 @@ namespace vg::gfx::dx12
             D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
                                           depthStencilViewDesc.Format = getd3d12SurfaceFormat(_texDesc.format); 
                                           depthStencilViewDesc.Flags = D3D12_DSV_FLAG_NONE;
-                                          depthStencilViewDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+                                          depthStencilViewDesc.ViewDimension = getd3d12DepthStencilViewDimension(_texDesc.type);
                                           depthStencilViewDesc.Texture2D.MipSlice = 0;  // TODO: alloc DSV for every mip available
 
             VG_ASSERT(m_resource.getd3d12TextureResource());

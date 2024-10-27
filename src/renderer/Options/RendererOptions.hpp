@@ -149,11 +149,15 @@ namespace vg::renderer
         const char * name = _prop.GetName();
         if (!strcmp(name, "m_VSync"))
         {
-            ApplyVSync(&_prop);
+            applyVSync(&_prop);
         }
-        if (!strcmp(name, "m_HDRmode"))
+        else if (!strcmp(name, "m_HDRmode"))
         {
-            ApplyHDR(&_prop);
+            applyHDR(&_prop);
+        }
+        else if (!strcmp(name, "m_msaa"))
+        {
+            applyMSAA(&_prop);
         }
         else if (!strcmp(name, "m_backgroundColor"))
         {
@@ -187,11 +191,33 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool RendererOptions::SetVSync(const gfx::VSync & _vsync)
+    bool RendererOptions::SetVSync(gfx::VSync _vsync)
     {
-        m_VSync = _vsync;
-        ApplyVSync(m_vsyncProp);
-        return true;
+        if (m_VSync != _vsync)
+        {
+            m_VSync = _vsync;
+            applyVSync(m_vsyncProp);
+            return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::MSAA RendererOptions::GetMSAA() const
+    {
+        return m_msaa;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool RendererOptions::SetMSAA(gfx::MSAA _msaa)
+    {
+        if (m_msaa != _msaa)
+        {
+            m_msaa = _msaa;
+            applyMSAA(m_msaaProp);
+            return true;
+        }
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -201,7 +227,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool RendererOptions::SetAAPostProcess(const gfx::AAPostProcess & _aa)
+    bool RendererOptions::SetAAPostProcess(gfx::AAPostProcess _aa)
     {
         if (m_aaPostProcess != _aa)
         {
@@ -219,12 +245,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool RendererOptions::SetHDR(const gfx::HDR & _hdr)
+    bool RendererOptions::SetHDR(gfx::HDR _hdr)
     {
         if (m_HDRmode != _hdr)
         {
             m_HDRmode = _hdr;
-            ApplyHDR(m_hdrProp);
+            applyHDR(m_hdrProp);
             return true;
         }
 
@@ -232,7 +258,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void RendererOptions::ApplyVSync(const core::IProperty * _prop)
+    void RendererOptions::applyVSync(const core::IProperty * _prop)
     {
         if (nullptr != _prop)
         {
@@ -242,7 +268,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void RendererOptions::ApplyHDR(const core::IProperty * _prop)
+    void RendererOptions::applyHDR(const core::IProperty * _prop)
     {
         if (nullptr != _prop)
         {
@@ -250,6 +276,16 @@ namespace vg::renderer
             Renderer::get()->SetHDR(value);
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    void RendererOptions::applyMSAA(const core::IProperty * _prop)
+    {
+        if (nullptr != _prop)
+        {
+            auto value = *_prop->GetPropertyEnum<gfx::MSAA>(this);
+            //Renderer::get()->SetMSAA(value);
+        }
+    }    
 
     //--------------------------------------------------------------------------------------
     bool RendererOptions::anyRayTracingDebugDisplay() const

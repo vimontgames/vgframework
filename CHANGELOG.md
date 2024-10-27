@@ -1,5 +1,11 @@
 # changelog
 
+## 0.36
+MSAA (wip)
+
+## 0.35
+Fix anim import scale
+
 ## 0.34
 Animation layers\
 FXAA

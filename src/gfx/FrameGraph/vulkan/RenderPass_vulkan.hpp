@@ -20,7 +20,7 @@ namespace vg::gfx::vulkan
 	}
 
     //--------------------------------------------------------------------------------------
-    bool RenderPass::createVulkanAttachmentDesc(PixelFormat _format, const ResourceTransitionDesc & _info, VkAttachmentDescription * _att)
+    bool RenderPass::createVulkanAttachmentDesc(PixelFormat _format, MSAA _msaa, const ResourceTransitionDesc & _info, VkAttachmentDescription * _att)
     {
         if (PixelFormat::Unknow == _format)
             return false;
@@ -33,7 +33,7 @@ namespace vg::gfx::vulkan
         _att->format = Texture::getVulkanPixelFormat(_format);
 
         // TODO: RenderPassKey flags for initial/final state for each attachment
-        _att->samples = VK_SAMPLE_COUNT_1_BIT;
+        _att->samples = (VkSampleCountFlagBits)_msaa;
 
         if (asBool(ResourceTransitionFlags::Clear & _info.flags))
             _att->loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
@@ -121,7 +121,7 @@ namespace vg::gfx::vulkan
             
             VkAttachmentDescription att;
 
-            if (createVulkanAttachmentDesc(format, info, &att))
+            if (createVulkanAttachmentDesc(format, _key.m_msaa, info, &att))
                 vkAttachmentDescriptions.push_back(att);
         }
 
@@ -131,7 +131,7 @@ namespace vg::gfx::vulkan
 
         VkAttachmentDescription att;
 
-        if (createVulkanAttachmentDesc(format, info, &att))
+        if (createVulkanAttachmentDesc(format, _key.m_msaa, info, &att))
             vkAttachmentDescriptions.push_back(att);
 
         // Add subpass descriptions

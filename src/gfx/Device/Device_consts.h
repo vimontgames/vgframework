@@ -26,14 +26,6 @@ namespace vg::gfx
         VSync_4
     );
 
-    vg_enum_class(MSAA, core::u8,
-        None    = 0x01,
-        MSAA2X  = 0x02,
-        MSAA4X  = 0x04,
-        MSAA8X  = 0x08,
-        MSAA16X = 0x10
-    );
-
     vg_enum_class(AAPostProcess, core::u8,
         None = 0,
         FXAA,

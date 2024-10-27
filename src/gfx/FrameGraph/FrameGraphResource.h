@@ -3,14 +3,14 @@
 #include "FrameGraph_consts.h"
 #include "gfx/CommandList/CommandList_consts.h"
 #include "ResourceTransition.h"
+#include "gfx/Resource/Texture_consts.h"
+#include "gfx/Device/Device_consts.h"
 
 namespace vg::gfx
 {
     class Texture;
     class Buffer;
     class UserPass;
-
-    enum class PixelFormat : core::u8;
 
     vg_enum_class(FrameGraphResourceType, core::u8,
         Buffer = 0,
@@ -76,7 +76,7 @@ namespace vg::gfx
         ResourceState getCurrentState() const;
 
     private:
-        FrameGraphResourceType                            m_type;
+        FrameGraphResourceType          m_type;
         core::string                    m_name;
         core::vector<PassRWAccess>		m_readWrite;
         ResourceState                   m_state = ResourceState::Undefined;
@@ -90,9 +90,12 @@ namespace vg::gfx
         }
 
         FrameGraphTextureResourceDesc(const FrameGraphTextureResourceDesc & _other) :
+            type(_other.type),
             width(_other.width),
             height(_other.height),
+            depth(_other.depth),
             format(_other.format),
+            msaa(_other.msaa),
             initState(_other.initState),
             clearColor(_other.clearColor),
             transient(_other.transient),
@@ -104,9 +107,12 @@ namespace vg::gfx
 
         FrameGraphTextureResourceDesc & operator=(const FrameGraphTextureResourceDesc & _other)
         {
+            type = _other.type;
             width = _other.width;
             height = _other.height;
+            depth = _other.depth;
             format = _other.format;
+            msaa = _other.msaa;
             initState = _other.initState;
             clearColor = _other.clearColor;
             transient = _other.transient;
@@ -116,10 +122,13 @@ namespace vg::gfx
             return *this;
         }
 
-        core::u16			            width = 0;
-        core::u16			            height = 0;
-        PixelFormat			            format = (PixelFormat)0;
-        FrameGraphResource::InitState   initState = FrameGraphResource::InitState::Discard;
+        TextureType                     type        = TextureType::Texture2D;
+        core::u16			            width       = 0;
+        core::u16			            height      = 0;
+        core::u16                       depth       = 0;
+        PixelFormat			            format      = PixelFormat::R8G8B8A8_unorm;
+        MSAA                            msaa        = MSAA::None;
+        FrameGraphResource::InitState   initState   = FrameGraphResource::InitState::Discard;
         union
         {
             core::float4		        clearColor = defaultOptimizedClearColor;
@@ -142,6 +151,7 @@ namespace vg::gfx
                 && width == _other.width
                 && height == _other.height
                 && format == _other.format          // TODO: alias textures of the same size but different format (store format, init state, clear color elsewhere ?)
+                && msaa == _other.msaa
                 && initState == _other.initState
                 && hlslpp::all(clearColor == _other.clearColor);
         }

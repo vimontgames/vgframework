@@ -19,7 +19,7 @@ namespace vg::gfx::vulkan
         void end(CommandList * _cmdList);
 
     private:
-        static bool createVulkanAttachmentDesc(PixelFormat _format, const ResourceTransitionDesc & _info, VkAttachmentDescription * _att);
+        static bool createVulkanAttachmentDesc(PixelFormat _format, MSAA _msaa, const ResourceTransitionDesc & _info, VkAttachmentDescription * _att);
 
 	private:
         VkFramebufferCreateInfo                 m_vkFrameBufferInfo;

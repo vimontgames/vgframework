@@ -142,7 +142,7 @@ namespace vg::gfx::vulkan
                               imgDesc.extent = { _texDesc.width, _texDesc.height, _texDesc.depth };
                               imgDesc.mipLevels = _texDesc.mipmaps;
                               imgDesc.arrayLayers = 1;
-                              imgDesc.samples = VK_SAMPLE_COUNT_1_BIT;
+                              imgDesc.samples = (VkSampleCountFlagBits)_texDesc.msaa;
                               imgDesc.flags = 0;
                               
 

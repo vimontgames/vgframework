@@ -290,6 +290,7 @@ namespace vg::gfx
             }
 
             auto & renderTargets = userPass->getRenderTargets();
+            renderPassKey.m_msaa = (MSAA)0x0;
             for (uint i = 0; i < renderTargets.size(); ++i)
             {
                 FrameGraphTextureResource * res = renderTargets[i];
@@ -297,6 +298,9 @@ namespace vg::gfx
 
                 renderPassKey.m_colorFormat[i] = textureResourceDesc.format;
 
+                VG_ASSERT(renderPassKey.m_msaa == (MSAA)0x0 || renderPassKey.m_msaa == textureResourceDesc.msaa, "\"%s\" uses MSAA::%s but another RenderTarget is using MSAA:%s", res->getName().c_str(), asString(textureResourceDesc.msaa).c_str(), asString(renderPassKey.m_msaa).c_str());
+                renderPassKey.m_msaa = textureResourceDesc.msaa;
+    
                 // add or get index of attachment
                 uint attachmentIndex = -1;
 
@@ -385,8 +389,10 @@ namespace vg::gfx
         if (depthStencilRes)
         {
             FrameGraphTextureResource * res = userPass->getDepthStencil();
-
             const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+
+            VG_ASSERT(renderPassKey.m_msaa == (MSAA)0x0 || renderPassKey.m_msaa == textureResourceDesc.msaa, "\"%s\" uses MSAA::%s but another RenderTarget is using MSAA:%s", res->getName().c_str(), asString(textureResourceDesc.msaa).c_str(), asString(renderPassKey.m_msaa).c_str());
+            renderPassKey.m_msaa = textureResourceDesc.msaa;
 
             renderPassKey.m_depthStencilFormat = textureResourceDesc.format;
 
@@ -464,25 +470,25 @@ namespace vg::gfx
 	}
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createRenderTargetFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc)
+    Texture * FrameGraph::createRenderTargetFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc)
     {
-        return createTextureFromPool(_textureResourceDesc, true, false, false);
+        return createTextureFromPool(_name, _textureResourceDesc, true, false, false);
     }
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createDepthStencilFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc)
+    Texture * FrameGraph::createDepthStencilFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc)
     {
-        return createTextureFromPool(_textureResourceDesc, false, true, false);
+        return createTextureFromPool(_name, _textureResourceDesc, false, true, false);
     }
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createRWTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc)
+    Texture * FrameGraph::createRWTextureFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc)
     {
-        return createTextureFromPool(_textureResourceDesc, false, false, true);
+        return createTextureFromPool(_name, _textureResourceDesc, false, false, true);
     }
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createTextureFromPool(const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _renderTarget, bool _depthStencil, bool _uav)
+    Texture * FrameGraph::createTextureFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _renderTarget, bool _depthStencil, bool _uav)
     {
         VG_ASSERT(_depthStencil == Texture::isDepthStencilFormat(_textureResourceDesc.format));
 
@@ -520,24 +526,44 @@ namespace vg::gfx
         Device * device = Device::get();
        
         TextureDesc desc;
+                    desc.type = _textureResourceDesc.type;
                     desc.format = _textureResourceDesc.format;
                     desc.width = _textureResourceDesc.width;
                     desc.height = _textureResourceDesc.height;
+                    desc.depth = 1;
+                    desc.msaa = _textureResourceDesc.msaa;
+                    desc.flags = (TextureFlags)0x0;
 
-                    if (_renderTarget)
-                        desc.flags = TextureFlags::RenderTarget;
-                    else if (_depthStencil)
-                        desc.flags = TextureFlags::DepthStencil;
-                    else
-                        desc.flags = (TextureFlags)0x0;
+        switch (desc.type)
+        {
+            case TextureType::Texture1D:
+            case TextureType::Texture2D:
+            case TextureType::Texture3D:
+            case TextureType::TextureCube:
+            case TextureType::Texture1DArray:
+            case TextureType::Texture2DArray:
+            case TextureType::TextureCubeArray:
+                VG_ASSERT(MSAA::None == desc.msaa, "\"%s\" has TextureType::%s but is using MSAA::%s", _name.c_str(), asString(desc.type).c_str(), asString(desc.msaa).c_str());
+                break;
+
+            case TextureType::Texture2DMS:
+            case TextureType::Texture2DMSArray:
+                VG_ASSERT(MSAA::None!= desc.msaa, "\"%s\" has TextureType::%s but is using MSAA::%s", _name.c_str(), asString(desc.type).c_str(), asString(desc.msaa).c_str());
+                break;
+        }
+
+        if (_renderTarget)
+            desc.flags |= TextureFlags::RenderTarget;
+        else if (_depthStencil)
+            desc.flags |= TextureFlags::DepthStencil;
                     
-                    if (_uav)
-                        desc.resource.m_bindFlags = BindFlags::ShaderResource | BindFlags::UnorderedAccess; // What about "UAV-only" textures?
-                    else
-                        desc.resource.m_bindFlags = BindFlags::ShaderResource;
+        if (_uav)
+            desc.resource.m_bindFlags = BindFlags::ShaderResource | BindFlags::UnorderedAccess; // What about "UAV-only" textures?
+        else
+            desc.resource.m_bindFlags = BindFlags::ShaderResource;
 
-                    desc.resource.m_cpuAccessFlags = CPUAccessFlags::None;
-                    desc.resource.m_usage = Usage::Default;
+        desc.resource.m_cpuAccessFlags = CPUAccessFlags::None;
+        desc.resource.m_usage = Usage::Default;
 
         string name = "Temp";
 
@@ -584,13 +610,13 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    Buffer * FrameGraph::createRWBufferFromPool(const FrameGraphBufferResourceDesc & _bufferResourceDesc)
+    Buffer * FrameGraph::createRWBufferFromPool(const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc)
     {
-        return createBufferFromPool(_bufferResourceDesc, true);
+        return createBufferFromPool(_name, _bufferResourceDesc, true);
     }
 
     //--------------------------------------------------------------------------------------
-    Buffer * FrameGraph::createBufferFromPool(const FrameGraphBufferResourceDesc & _bufferResourceDesc, bool _uav)
+    Buffer * FrameGraph::createBufferFromPool(const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc, bool _uav)
     {
         VG_ASSERT(_uav == _bufferResourceDesc.uav);
 
@@ -689,7 +715,7 @@ namespace vg::gfx
                 {
                     if (res->isFirstWrite(userPass))
                     {
-                        Texture * tex = createRWTextureFromPool(textureResourceDesc);
+                        Texture * tex = createRWTextureFromPool(res->getName(), textureResourceDesc);
                         res->setTexture(tex);
                     }
                 }
@@ -705,7 +731,7 @@ namespace vg::gfx
                 {
                     if (res->isFirstWrite(userPass))
                     {
-                        Buffer * buffer = createRWBufferFromPool(bufferResourceDesc);
+                        Buffer * buffer = createRWBufferFromPool(res->getName(), bufferResourceDesc);
                         res->setBuffer(buffer);
                     }
                 }
@@ -721,7 +747,7 @@ namespace vg::gfx
                 {
                     if (res->isFirstWrite(userPass))
                     {
-                        Texture * tex = createRenderTargetFromPool(textureResourceDesc);
+                        Texture * tex = createRenderTargetFromPool(res->getName(), textureResourceDesc);
                         res->setTexture(tex);
                     }
                 }
@@ -737,7 +763,7 @@ namespace vg::gfx
                 {
                     if (res->isFirstWrite(userPass))
                     {
-                        Texture * tex = createDepthStencilFromPool(textureResourceDesc);
+                        Texture * tex = createDepthStencilFromPool(res->getName(), textureResourceDesc);
                         res->setTexture(tex);
                     }
                 }

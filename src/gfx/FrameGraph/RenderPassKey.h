@@ -69,11 +69,12 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     // Descriptor for a RenderPass and its subPasses
     //--------------------------------------------------------------------------------------
-    struct RenderPassKey
+    struct RenderPassKey 
     {
         RenderPassKey() :
             m_depthStencilFormat(PixelFormat::Unknow),
-            m_subPassCount(0)
+            m_subPassCount(0),
+            m_msaa(MSAA::None)
         {
             for (core::uint i = 0; i < maxRenderTarget; ++i)
                 m_colorFormat[i] = PixelFormat::Unknow;
@@ -82,10 +83,14 @@ namespace vg::gfx
         PixelFormat m_colorFormat[maxRenderTarget];
         PixelFormat m_depthStencilFormat;
         SubPassKey  m_subPassKeys[maxSubPassPerRenderPass];
-        core::u8    m_subPassCount;
+        core::u8    m_subPassCount  : 4;
+        MSAA        m_msaa          : 4;
 
         inline bool operator == (const RenderPassKey & _other) const
         {
+            if (_other.m_msaa != m_msaa)
+                return false;
+
             for (core::uint i = 0; i < maxRenderTarget; ++i)
                 if (_other.m_colorFormat[i] != m_colorFormat[i])
                     return false;
@@ -111,7 +116,7 @@ namespace vg::gfx
                 for (core::uint i = 0; i < maxSubPassPerRenderPass; ++i)
                     ret ^= SubPassKey::hash()(_this.m_subPassKeys[i]);
 
-                ret ^= core::hash<core::u8>()(_this.m_subPassCount);
+                ret ^= core::hash<core::u8>()(_this.m_subPassCount | (core::u8(_this.m_msaa)<<4));
 
                 return ret;
             }

@@ -96,7 +96,7 @@ namespace vg::gfx::vulkan
         VkPipelineMultisampleStateCreateInfo ms = {};
         ms.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
         ms.pSampleMask = nullptr;
-        ms.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
+        ms.rasterizationSamples = (VkSampleCountFlagBits)_key.m_renderPassKey.m_msaa;
         vkPipelineDesc.pMultisampleState = &ms;
 
         // Shaders

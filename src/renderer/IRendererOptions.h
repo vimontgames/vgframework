@@ -3,9 +3,10 @@
 
 namespace vg::gfx
 {
-    enum class VSync : core::u8;
+    enum class MSAA : core::u8;
     enum class HDR : core::u8;
     enum class AAPostProcess : core::u8;
+    enum class VSync : core::u8;
 }
 
 namespace vg::renderer
@@ -18,13 +19,19 @@ namespace vg::renderer
         virtual bool                IsToolModeEnabled   () const = 0;
         virtual bool                IsRayTracingEnabled () const = 0;
 
-        virtual gfx::VSync          GetVSync            () const = 0;
-        virtual bool                SetVSync            (const gfx::VSync & _vsync) = 0;
-
-        virtual gfx::AAPostProcess  GetAAPostProcess    () const = 0;
-        virtual bool                SetAAPostProcess    (const gfx::AAPostProcess & _aa) = 0;
+        virtual gfx::MSAA           GetMSAA             () const = 0;
+        virtual bool                SetMSAA             (gfx::MSAA _msaa) = 0;
 
         virtual gfx::HDR            GetHDR              () const = 0;
-        virtual bool                SetHDR              (const gfx::HDR & _hdr) = 0;
+        virtual bool                SetHDR              (gfx::HDR _hdr) = 0;
+
+
+        virtual gfx::AAPostProcess  GetAAPostProcess    () const = 0;
+        virtual bool                SetAAPostProcess    (gfx::AAPostProcess _aa) = 0;
+
+        virtual gfx::VSync          GetVSync            () const = 0;
+        virtual bool                SetVSync            (gfx::VSync _vsync) = 0;
+
+
     };
 }
