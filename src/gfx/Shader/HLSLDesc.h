@@ -35,6 +35,7 @@ namespace vg::gfx
             ShaderKey::Flags        flags = 0x0000;
 
             VG_INLINE void setFlag(ShaderKey::Flags _flag, bool _enable = true);
+            VG_INLINE void setFlags(ShaderKey::Flags _flag, core::uint _value);
             VG_INLINE bool operator == (const Technique & _other) const;
         };
 
@@ -72,7 +73,7 @@ namespace vg::gfx
         Shader * getShader(API _api, ShaderStage _stage, ShaderKey::EntryPoint _index, ShaderKey::Flags _flags);
 
         Technique & declTechnique(const core::string & _name);
-        Technique & declTechnique(const core::string & _name, ShaderKey::VS _vs, ShaderKey::PS _ps, ShaderKey::Flags _flag = (ShaderKey::Flags)0x0);
+        Technique & declTechnique(const core::string & _name, ShaderKey::VS _vs, ShaderKey::PS _ps);
         const core::vector<Technique> & getTechniques() const;
 
         core::u64 getCRC() const { return m_crc; }
@@ -111,6 +112,8 @@ namespace vg::gfx
                 return m_bits < other.m_bits;
             }
         };
+
+        VariantKey computeVariantKey(ShaderStage _stage, ShaderKey::EntryPoint _index, ShaderKey::Flags _flags) const;
 
         using VariantCollection = core::map<VariantKey, Shader *>;
 

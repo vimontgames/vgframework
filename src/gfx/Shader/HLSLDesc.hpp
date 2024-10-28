@@ -122,9 +122,9 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     Shader * HLSLDesc::getShader(API _api, ShaderStage _stage, ShaderKey::EntryPoint _index, ShaderKey::Flags _flags)
     {
-        auto & entryPoint = m_entryPoint[asInteger(_stage)][_index];
+        auto & entryPoint = m_entryPoint[asInteger(_stage)][_index]; 
         
-        VariantKey key(_stage, _index, _flags);
+        VariantKey key = computeVariantKey(_stage, _index, _flags);
 
         auto it = m_variants.find(key);
 
@@ -136,7 +136,7 @@ namespace vg::gfx
 
         auto * sm = ShaderManager::get();
 
-        const auto & macros = getShaderMacros(_stage, _flags);
+        const auto & macros = getShaderMacros(_stage, key.m_flags);
 
         auto * shader = sm->compile(_api, m_file, entryPoint, _stage, macros);
 
@@ -170,6 +170,27 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    // Keep only the flags that are relevant for the shader stage
+    //--------------------------------------------------------------------------------------
+    HLSLDesc::VariantKey HLSLDesc::computeVariantKey(ShaderStage _stage, ShaderKey::EntryPoint _index, ShaderKey::Flags _flags) const
+    {
+        ShaderKey::Flags flags = 0x0;
+        for (uint i = 0; i < countof(m_flagDescs); ++i)
+        {
+            const auto & desc = m_flagDescs[i];
+            if (desc.isInitialized())
+            {
+                const uint mask = desc.getBitMask();
+
+                if (asBool(desc.m_stages & ShaderStageFlags(1 << (uint)_stage)))
+                    flags |= _flags & (mask<<i);
+            }
+        }
+
+        return VariantKey(_stage, _index, flags);
+    }
+
+    //--------------------------------------------------------------------------------------
     // Build macros from shader key flags
     //--------------------------------------------------------------------------------------
     core::vector<core::pair<core::string, core::uint>> HLSLDesc::getShaderMacros(ShaderStage _stage, ShaderKey::Flags _flags) const
@@ -185,7 +206,10 @@ namespace vg::gfx
                 const uint value = (_flags >> i) & mask;
                 VG_ASSERT(value < desc.m_defines.size());
                 if (!desc.m_defines[value].empty())
-                     macros.push_back({ desc.m_defines[value], 1});
+                {
+                    VG_ASSERT(asBool(desc.m_stages & ShaderStageFlags(1 << (uint)_stage)), "#define \"%s\" shall not be used at %s stage", desc.m_defines[value].c_str(), asString(_stage).c_str());
+                    macros.push_back({ desc.m_defines[value], 1 });
+                }
             }
         }
         
@@ -202,13 +226,12 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    HLSLDesc::Technique & HLSLDesc::declTechnique(const core::string & _name, ShaderKey::VS _vs, ShaderKey::PS _ps, ShaderKey::Flags _flag)
+    HLSLDesc::Technique & HLSLDesc::declTechnique(const core::string & _name, ShaderKey::VS _vs, ShaderKey::PS _ps)
     {
         auto & technique = declTechnique(_name);
         {
             technique.vs = _vs;
             technique.ps = _ps;
-            technique.setFlag(_flag);
         }
         return technique;
     }

@@ -3,6 +3,7 @@
 #include "Render2D/Background/BackgroundPass.hpp"
 #include "Render2D/FinalBlit/FinalBlitPass.hpp"
 #include "Render2D/HDROutput/HDROutputPass.hpp"
+#include "Render2D/ResolveDeferredMSAA/ResolveDeferredMSAAPass.hpp"
 
 namespace vg::renderer
 {

@@ -86,7 +86,7 @@ namespace vg::renderer
                 break;
 
             case AAPostProcess::SMAA:
-                shaderKey.setFlag(PostProcessHLSLDesc::AAPostProcess, (uint)AAPostProcess::SMAA);
+                shaderKey.setFlags(PostProcessHLSLDesc::AAPostProcess, (uint)AAPostProcess::SMAA);
                 break;
         }
 

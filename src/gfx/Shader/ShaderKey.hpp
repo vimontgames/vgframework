@@ -54,7 +54,7 @@ namespace vg::gfx
     #endif
 
     //--------------------------------------------------------------------------------------
-    void ShaderKey::setFlag(core::uint _index, core::uint _value)
+    void ShaderKey::setFlags(core::uint _index, core::uint _value)
     {
         #if VG_VERIFY_SHADERKEY_FLAGS
         verifyShaderKeyFlags(_index, _value);
@@ -65,7 +65,7 @@ namespace vg::gfx
         if (desc)
         {
             const uint mask = desc->getBitMask(_index);
-            flags = (flags & ~mask) | _value;
+            flags = (flags & ~(mask << _index)) | _value << _index;
         }
     }
 

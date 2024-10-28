@@ -15,6 +15,14 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE void HLSLDesc::Technique::setFlags(ShaderKey::Flags _flag, uint _value)
+    {
+        // rem: this is really unsafe to do it from here without checking for overflow
+        // If Technique knew the HLSLDesc or file index then it could perform the same checks as [Compute]ShaderKey::setFlags
+        flags |= _value << _flag;
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE bool HLSLDesc::Technique::operator == (const Technique & _other) const
     {
         return vs == _other.vs && hs == _other.hs && ds == _other.ds && gs == _other.gs && ps == _other.ps && _other.cs == cs && flags == _other.flags && 0 == name.compare(_other.name);

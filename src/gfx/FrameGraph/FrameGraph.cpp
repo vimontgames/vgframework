@@ -240,6 +240,7 @@ namespace vg::gfx
         auto userPassInfo = *_node.m_userPass;
 
         const auto * userPass = userPassInfo.m_userPass;
+        auto & renderTargets = userPass->getRenderTargets();
 
         core::vector<FrameGraphTextureResource *> colorAttachments;
 
@@ -248,6 +249,8 @@ namespace vg::gfx
 
         vector<FrameGraphResourceTransitionDesc> resourceTransitions;
 
+        bool invalidMSAAState = false;
+
         // build all list with attachments from all passes
         // for (...)
         {
@@ -255,6 +258,25 @@ namespace vg::gfx
             for (uint i = 0; i < rwTextures.size(); ++i)
             {
                 FrameGraphTextureResource * res = rwTextures[i];
+
+                #ifdef VG_VULKAN
+                // On Vulkan, we have to init UAV in the "Undefined" state, so we need to initialize them to "UnorderedAccess" before 1st use
+                //if (res->getCurrentState() == ResourceState::Undefined)
+                {
+                    if (res->isFirstWrite(userPass))
+                    {
+                        FrameGraphResourceTransitionDesc resTrans;
+                        resTrans.m_resource = res;
+                        resTrans.m_transitionDesc.flags = (ResourceTransitionFlags)0;
+                        resTrans.m_transitionDesc.begin = ResourceState::Undefined;
+                        resTrans.m_transitionDesc.end = ResourceState::UnorderedAccess;
+
+                        resourceTransitions.push_back(resTrans);
+                        res->setCurrentState(ResourceState::UnorderedAccess);
+                    }
+                }
+                #endif
+
                 bool read = res->needsWriteToReadTransition(userPass);
 
                 if (read)
@@ -291,6 +313,7 @@ namespace vg::gfx
 
             auto & renderTargets = userPass->getRenderTargets();
             renderPassKey.m_msaa = (MSAA)0x0;
+
             for (uint i = 0; i < renderTargets.size(); ++i)
             {
                 FrameGraphTextureResource * res = renderTargets[i];
@@ -298,18 +321,12 @@ namespace vg::gfx
 
                 renderPassKey.m_colorFormat[i] = textureResourceDesc.format;
 
-                VG_ASSERT(renderPassKey.m_msaa == (MSAA)0x0 || renderPassKey.m_msaa == textureResourceDesc.msaa, "\"%s\" uses MSAA::%s but another RenderTarget is using MSAA:%s", res->getName().c_str(), asString(textureResourceDesc.msaa).c_str(), asString(renderPassKey.m_msaa).c_str());
+                if ((MSAA)0x0  != renderPassKey.m_msaa && renderPassKey.m_msaa != textureResourceDesc.msaa)
+                    invalidMSAAState = true;
                 renderPassKey.m_msaa = textureResourceDesc.msaa;
     
                 // add or get index of attachment
                 uint attachmentIndex = -1;
-
-                // what if the same render targets are reused but in a different order in a sub-pass?
-                //for (uint i = 0; i < colorAttachments.size(); ++i)
-                //{
-                //    if (colorAttachments[i]->getTextureResourceDesc() == textureResourceDesc)
-                //        attachmentIndex = i;
-                //}
 
                 if ((uint)-1 == attachmentIndex)
                 {
@@ -391,7 +408,8 @@ namespace vg::gfx
             FrameGraphTextureResource * res = userPass->getDepthStencil();
             const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
 
-            VG_ASSERT(renderPassKey.m_msaa == (MSAA)0x0 || renderPassKey.m_msaa == textureResourceDesc.msaa, "\"%s\" uses MSAA::%s but another RenderTarget is using MSAA:%s", res->getName().c_str(), asString(textureResourceDesc.msaa).c_str(), asString(renderPassKey.m_msaa).c_str());
+            if ((MSAA)0x0 != renderPassKey.m_msaa && renderPassKey.m_msaa != textureResourceDesc.msaa)
+                invalidMSAAState = true;
             renderPassKey.m_msaa = textureResourceDesc.msaa;
 
             renderPassKey.m_depthStencilFormat = textureResourceDesc.format;
@@ -434,6 +452,28 @@ namespace vg::gfx
             res->setCurrentState(info.end);
 
             depthStencilAttachment = res;
+        }
+
+        if (invalidMSAAState)
+        {
+            string invalidMSAAStateMsg = "RenderTarget(s)/DepthStencil are using incompatible MSAA:\n";
+
+            for (uint i = 0; i < renderTargets.size(); ++i)
+            {
+                const FrameGraphTextureResourceDesc & textureResourceDesc = renderTargets[i]->getTextureResourceDesc();
+                invalidMSAAStateMsg += fmt::sprintf("RenderTarget[%u]: %s (\"%s\")", i, asString(textureResourceDesc.msaa).c_str(), renderTargets[i]->getName().c_str());
+
+                if (depthStencilRes || i + 1 < renderTargets.size())
+                    invalidMSAAStateMsg += "\n";
+            }
+
+            if (depthStencilRes)
+            {
+                const FrameGraphTextureResourceDesc & textureResourceDesc = userPass->getDepthStencil()->getTextureResourceDesc();
+                invalidMSAAStateMsg += fmt::sprintf("DepthStencil:: %s (\"%s\")", asString(textureResourceDesc.msaa).c_str(), userPass->getDepthStencil()->getName().c_str());
+            }
+
+            VG_ASSERT(!invalidMSAAState, invalidMSAAStateMsg.c_str());
         }
 
         RenderPass * renderPass = new RenderPass(userPass->getUserPassType(), renderPassKey);

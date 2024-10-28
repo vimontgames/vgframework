@@ -303,7 +303,7 @@ namespace vg::renderer
             // Update HDR
             for (uint i = 0; i < enumCount<gfx::HDR>(); ++i)
             {
-                auto mode = (gfx::HDR)i;
+                auto mode = enumValue<gfx::HDR>(i);
                 bool supported = renderer->IsHDRSupported(mode);
 
                 if (m_hdrProp->SetEnumValueFlags(m_hdrProp->GetUnsignedEnumValue(i), EnumValueFlags::Disabled, !supported))
@@ -317,7 +317,7 @@ namespace vg::renderer
         {
             for (uint i = 0; i < enumCount<gfx::VSync>(); ++i)
             {
-                auto mode = (gfx::VSync)i;
+                auto mode = enumValue<gfx::VSync>(i);
                 bool supported = renderer->IsVSyncSupported(mode);
 
                 if (m_vsyncProp->SetEnumValueFlags(m_vsyncProp->GetUnsignedEnumValue(i), EnumValueFlags::Disabled, !supported))

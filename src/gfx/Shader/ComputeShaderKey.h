@@ -41,7 +41,7 @@ namespace vg::gfx
                 flags &= value;
         }
 
-        void setFlag(core::uint _index, core::uint _value);
+        void setFlags(core::uint _index, core::uint _value);
 
         union
         {

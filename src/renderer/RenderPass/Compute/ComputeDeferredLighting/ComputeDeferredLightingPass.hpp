@@ -2,6 +2,8 @@
 #include "Shaders/lighting/deferredLighting.hlsli"
 #include "Shaders/lighting/deferredLighting.hlsl.h"
 
+using namespace vg::gfx;
+
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
@@ -28,7 +30,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ComputeDeferredLightingPass::Setup(const gfx::RenderPassContext & _renderPassContext)
+    void ComputeDeferredLightingPass::Setup(const RenderPassContext & _renderPassContext)
     {
         const auto albedoGBufferID = _renderPassContext.getFrameGraphID("AlbedoGBuffer");
         readRenderTarget(albedoGBufferID);
@@ -42,16 +44,64 @@ namespace vg::renderer
         const auto depthStencilID = _renderPassContext.getFrameGraphID("DepthStencil");
         readDepthStencil(depthStencilID);
 
-        const auto colorID = _renderPassContext.getFrameGraphID("Color");
-        writeRWTexture(colorID);
-
         const View * view = static_cast<const View *>(_renderPassContext.getView());
         readDepthStencil(view->getShadowMaps());
+
+        const RendererOptions * options = RendererOptions::get();
+        const MSAA msaa = options->GetMSAA();
+        if (MSAA::None != msaa)
+        {
+            const auto colorID = _renderPassContext.getFrameGraphID("Color");
+            const FrameGraphTextureResourceDesc * colorResourceDesc = getTextureResourceDesc(colorID);
+
+            uint width = colorResourceDesc->width;
+            uint height = colorResourceDesc->height;
+
+            switch (msaa)
+            {
+                case MSAA::MSAA2X:
+                    width *= 2;
+                    break;
+
+                case MSAA::MSAA4X:
+                    width *= 2;
+                    height *= 2;
+                    break;
+
+                case MSAA::MSAA8X:
+                    width *= 4;
+                    height *= 2;
+                    break;
+
+                case MSAA::MSAA16X:
+                    width *= 4;
+                    height *= 4;
+                    break;
+            }
+
+            FrameGraphTextureResourceDesc resolvedDesc = *colorResourceDesc;
+                                          resolvedDesc.type = TextureType::Texture2D;
+                                          resolvedDesc.width = width;
+                                          resolvedDesc.height = height;
+                                          resolvedDesc.msaa = MSAA::None;
+
+            const auto resolveID = _renderPassContext.getFrameGraphID("ResolveDeferredMSAA");
+            createRWTexture(resolveID, resolvedDesc);
+            writeRWTexture(resolveID);
+        }
+        else
+        {
+            const auto colorID = _renderPassContext.getFrameGraphID("Color");
+            writeRWTexture(colorID);
+        }
     }
 
     //--------------------------------------------------------------------------------------
-    void ComputeDeferredLightingPass::Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const
+    void ComputeDeferredLightingPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
+        const auto options = RendererOptions::get();
+        const auto msaa = options->GetMSAA();
+
         auto size = _renderPassContext.getView()->GetSize();
         auto threadGroupSize = uint2(DEFERRED_LIGHTING_THREADGROUP_SIZE_X, DEFERRED_LIGHTING_THREADGROUP_SIZE_Y);
         auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.y + threadGroupSize.y - 1) / threadGroupSize.y, 1);
@@ -59,10 +109,35 @@ namespace vg::renderer
         ComputeShaderKey shaderKey = m_computeDeferredLightingShaderKey;
         
         if (_renderPassContext.getView()->IsToolmode())
-            shaderKey.setFlag(gfx::DeferredLightingHLSLDesc::Toolmode, true);
+            shaderKey.setFlag(DeferredLightingHLSLDesc::Flags::Toolmode, true);
 
         if (_renderPassContext.getView()->IsUsingRayTracing())
-            shaderKey.setFlag(gfx::DeferredLightingHLSLDesc::RayTracing, true);
+            shaderKey.setFlag(DeferredLightingHLSLDesc::Flags::RayTracing, true);
+
+        switch (msaa)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(msaa);
+
+            case MSAA::None:
+                break;
+
+            case MSAA::MSAA2X:
+                shaderKey.setFlags(DeferredLightingHLSLDesc::Flags::MSAA, 1);
+                break;
+
+            case MSAA::MSAA4X:
+                shaderKey.setFlags(DeferredLightingHLSLDesc::Flags::MSAA, 2);
+                break;
+
+            case MSAA::MSAA8X:
+                shaderKey.setFlags(DeferredLightingHLSLDesc::Flags::MSAA, 3);
+                break;
+
+            case MSAA::MSAA16X:
+                shaderKey.setFlags(DeferredLightingHLSLDesc::Flags::MSAA, 4);
+                break;
+        }
         
         _cmdList->setComputeRootSignature(m_computeDeferredLightingRootSignature);
         _cmdList->setComputeShader(shaderKey);
@@ -75,11 +150,23 @@ namespace vg::renderer
         auto depthID = depthstencilTex->getDepthTextureHandle();
         auto stencilID = depthstencilTex->getStencilTextureHandle();
 
-        auto colorTex = getRWTexture(_renderPassContext.getFrameGraphID("Color"));
-        auto colorID = colorTex->getRWTextureHandle();
+        Texture * dstTex = nullptr;
+        BindlessRWTextureHandle dstHandle;
 
-        // Transition "Color" in UAV state for write
-        _cmdList->transitionResource(colorTex, ResourceState::RenderTarget, ResourceState::UnorderedAccess);
+        if (msaa == MSAA::None)
+        {
+            // main color buffer is UAV we can directly write to it
+            dstTex = getRWTexture(_renderPassContext.getFrameGraphID("Color"));
+
+            // As it's also used as RT, we need to transition to UAV state for write
+            _cmdList->transitionResource(dstTex, ResourceState::RenderTarget, ResourceState::UnorderedAccess);
+        }
+        else
+        {
+            // as we cant render to MSAA RT from CS, we need to copy to an intermediate non-MSAA "Resolve" target
+            const auto resolveID = _renderPassContext.getFrameGraphID("ResolveDeferredMSAA");
+            dstTex = getRWTexture(resolveID);
+        }
         
         DeferredLightingConstants deferredLighting;
         deferredLighting.setScreenSize(size.xy);
@@ -88,14 +175,17 @@ namespace vg::renderer
         deferredLighting.setPBRGBuffer(pbrID);
         deferredLighting.setDepth(depthID);
         deferredLighting.setStencil(stencilID);
-        deferredLighting.setRWBufferOut(colorID);
+        deferredLighting.setRWBufferOut(dstTex->getRWTextureHandle());
         _cmdList->setComputeRootConstants(0, (u32 *)&deferredLighting, DeferredLightingConstantsCount);
         
         _cmdList->dispatch(threadGroupCount);
 
-        _cmdList->addRWTextureBarrier(colorTex);
+        _cmdList->addRWTextureBarrier(dstTex);
 
-        // Transition "Color" back to RT state
-        _cmdList->transitionResource(colorTex, ResourceState::UnorderedAccess, ResourceState::RenderTarget);
+        if (msaa == MSAA::None)
+        {
+            // Destination UAV will be used as RT from now
+            _cmdList->transitionResource(dstTex, ResourceState::UnorderedAccess, ResourceState::RenderTarget);
+        }
     }
 }

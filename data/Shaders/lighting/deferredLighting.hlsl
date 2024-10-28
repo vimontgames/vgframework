@@ -3,7 +3,7 @@
 #include "system/samplers.hlsli"
 #include "system/view.hlsli"
 #include "system/lighting.hlsli"
-
+#include "system/msaa.hlsli"
 
 [numthreads(DEFERRED_LIGHTING_THREADGROUP_SIZE_X, DEFERRED_LIGHTING_THREADGROUP_SIZE_Y, 1)]
 void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
@@ -20,7 +20,12 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
 
         int3 address = int3(dispatchThreadID.xy, 0);
 
+        #if SAMPLE_COUNT > 1
+        uint sampleIndex = 0;
+        float depth = getTexture2DMS(deferredLightingConstants.getDepth()).Load((int2)address, sampleIndex).r;
+        #else
         float depth = getTexture2D(deferredLightingConstants.getDepth()).Load(address).r;
+        #endif
 
         #if VG_GFX_REVERSE_DEPTH
         depth = 1.0f - depth;
@@ -29,9 +34,15 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
         if (depth >= 1.0f)
             return;
 
+        #if SAMPLE_COUNT > 1
+        float4 albedo = getTexture2DMS(deferredLightingConstants.getAlbedoGBuffer()).Load((int2)address, sampleIndex);
+        float4 normal = getTexture2DMS(deferredLightingConstants.getNormalGBuffer()).Load((int2)address, sampleIndex);
+        float4 pbr = getTexture2DMS(deferredLightingConstants.getPBRGBuffer()).Load((int2)address, sampleIndex);   
+        #else
         float4 albedo = getTexture2D(deferredLightingConstants.getAlbedoGBuffer()).Load(address);
         float4 normal = getTexture2D(deferredLightingConstants.getNormalGBuffer()).Load(address);
         float4 pbr = getTexture2D(deferredLightingConstants.getPBRGBuffer()).Load(address);        
+        #endif
 
         float3 worldPos = viewConstants.getWorldPos(uv, depth);
         float3 camPos = viewConstants.getCameraPos();

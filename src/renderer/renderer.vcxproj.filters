@@ -467,6 +467,12 @@
     <ClInclude Include="RenderPass\ImGui\ImGuiSettings.hpp">
       <Filter>Pass\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\ResolveDeferredMSAA\ResolveDeferredMSAAPass.h">
+      <Filter>Pass\Render2D\ResolveDeferredMSAA</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\ResolveDeferredMSAA\ResolveDeferredMSAAPass.hpp">
+      <Filter>Pass\Render2D\ResolveDeferredMSAA</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -636,6 +642,9 @@
     </Filter>
     <Filter Include="Importer\Naming">
       <UniqueIdentifier>{cffc7eb4-22f5-4658-9b8e-8f7c9fcd7407}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Render2D\ResolveDeferredMSAA">
+      <UniqueIdentifier>{b24c4826-b8f2-4533-bf6e-dc74fb3320ca}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

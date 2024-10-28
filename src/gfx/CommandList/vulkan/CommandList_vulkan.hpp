@@ -62,6 +62,35 @@ namespace vg::gfx::vulkan
                 VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
                 break;
 
+            case ResourceState::Undefined:
+            {
+                switch (_after)
+                {
+                    default:
+                        VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
+                        break;
+
+                    case ResourceState::UnorderedAccess:
+                    {
+                        // Undefined to UnorderedAccess transition
+                        imageMemoryBarrier.srcAccessMask = 0; // No previous access as the layout is undefined
+                        imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_WRITE_BIT; // For UAV writes
+
+                        imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+                        imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_GENERAL;
+
+                        // Synchronize at top of pipe since the image is being initialized
+                        VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+                        VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT; // or ALL_GRAPHICS_BIT if used in graphics
+
+
+                        vkCmdPipelineBarrier(m_vkCommandBuffer, srcStageMask, dstStageMask, 0, 0, NULL, 0, NULL, 1, &imageMemoryBarrier);
+                    }
+                    break;
+                }
+            }
+            break;
+
             case ResourceState::RenderTarget:
             {
                 switch (_after)

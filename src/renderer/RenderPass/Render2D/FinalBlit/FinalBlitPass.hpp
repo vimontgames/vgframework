@@ -68,10 +68,10 @@ namespace vg::renderer
 
         ShaderKey postProcessShaderKey;
 
-        if (HDR::None == Renderer::get()->GetHDR())
+        //if (HDR::None == Renderer::get()->GetHDR())
             postProcessShaderKey = m_postProcessShaderKeyGamma;
-        else
-            postProcessShaderKey = m_postProcessShaderKeyCopy;
+        //else
+        //    postProcessShaderKey = m_postProcessShaderKeyCopy;
 
         _cmdList->setGraphicRootSignature(m_postProcessRootSignature);
         _cmdList->setShader(postProcessShaderKey);

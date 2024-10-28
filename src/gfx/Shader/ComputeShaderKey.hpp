@@ -50,7 +50,7 @@ namespace vg::gfx
     #endif
 
     //--------------------------------------------------------------------------------------
-    void ComputeShaderKey::setFlag(core::uint _index, core::uint _value)
+    void ComputeShaderKey::setFlags(core::uint _index, core::uint _value)
     {
         #if VG_VERIFY_COMPUTESHADERKEY_FLAGS
         verifyComputeShaderKeyFlags(_index, _value);
@@ -61,7 +61,7 @@ namespace vg::gfx
         if (desc)
         {
             const uint mask = desc->getBitMask(_index);
-            flags = (flags & ~mask) | _value;
+            flags = (flags & ~(mask<<_index)) | _value<<_index;
         }
     }
 }

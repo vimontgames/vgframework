@@ -4,6 +4,8 @@
 #include "system/gamma.hlsli"
 #include "system/rootConstants2D.hlsli"
 #include "system/color.hlsli"
+#include "system/view.hlsli" 
+#include "system/msaa.hlsli"
 
 struct VS_Output_Quad
 {
@@ -21,12 +23,22 @@ VS_Output_Quad VS_Quad(uint _vertexID : VertexID)
     return output;
 }
 
+struct PS_Input_Quad
+{
+    float4 pos  : Position;
+    float2 uv   : Texcoord0;
+
+    #if SAMPLE_COUNT > 1
+    uint sampleIndex : SV_SampleIndex; 
+    #endif
+};
+
 struct PS_Output_Quad
 {
     float4 color0 : Color0;
 };
 
-PS_Output_Quad PS_Quad(VS_Output_Quad _input)
+PS_Output_Quad PS_Quad(PS_Input_Quad _input)
 {
     PS_Output_Quad output;
     float2 uv = _input.uv;
@@ -62,7 +74,7 @@ float3 LinearToST2048PQ(float3 color)
     return pow(numerator / denominator, M2);
 }
 
-PS_Output_Quad PS_Copy(VS_Output_Quad _input)
+PS_Output_Quad PS_Copy(PS_Input_Quad _input)
 {
     PS_Output_Quad output;
     float2 uv = _input.uv;
@@ -92,6 +104,33 @@ PS_Output_Quad PS_Copy(VS_Output_Quad _input)
 
     #if _HDR16
     output.color0.rgb = SRGBToLinear(output.color0.rgb) * hdrBoost;
+    #endif
+
+    #if _MSAA4X
+    ViewConstants viewConstants;
+    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+
+    output.color0 = getTexture2DMS(rootConstants2D.texID).Load((int2)(uv * viewConstants.getScreenSize().xy), 0);
+
+    switch(_input.sampleIndex)
+    {
+        case 0:
+            output.color0.rgb = float3(1,0,0);
+            break;
+
+        case 1:
+            output.color0.rgb = float3(0,1,0);
+            break;
+
+        case 2:
+            output.color0.rgb = float3(0,0,1);
+            break;
+
+        case 3:
+            output.color0.rgb = float3(1,1,0); 
+            break;
+    }
+
     #endif
 
     output.color0.a = 1;

@@ -26,11 +26,16 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DeferredOpaquePass::Setup(const gfx::RenderPassContext & _renderContext)
     {
-        auto size = _renderContext.getView()->GetSize();
+        const auto size = _renderContext.getView()->GetSize();
+        const auto options = RendererOptions::get();
+        const auto msaa = options->GetMSAA();
+        const TextureType texType = (MSAA::None == msaa) ? TextureType::Texture2D : TextureType::Texture2DMS;
 
         // Albedo
         {
             FrameGraphTextureResourceDesc albedoGBufferDesc;
+                                          albedoGBufferDesc.type = texType;
+                                          albedoGBufferDesc.msaa = msaa;
                                           albedoGBufferDesc.format = PixelFormat::R16G16B16A16_float;
                                           albedoGBufferDesc.width = size.x;
                                           albedoGBufferDesc.height = size.y;
@@ -45,6 +50,8 @@ namespace vg::renderer
         // Normal
         {
             FrameGraphTextureResourceDesc normalGBufferDesc;
+                                          normalGBufferDesc.type = texType;
+                                          normalGBufferDesc.msaa = msaa;
                                           normalGBufferDesc.format = PixelFormat::R16G16B16A16_float;
                                           normalGBufferDesc.width = size.x;
                                           normalGBufferDesc.height = size.y;
@@ -59,6 +66,8 @@ namespace vg::renderer
         // PBR
         {
             FrameGraphTextureResourceDesc pbrGBufferDesc;
+                                          pbrGBufferDesc.type = texType;
+                                          pbrGBufferDesc.msaa = msaa;
                                           pbrGBufferDesc.format = PixelFormat::R16G16B16A16_float;
                                           pbrGBufferDesc.width = size.x;
                                           pbrGBufferDesc.height = size.y;

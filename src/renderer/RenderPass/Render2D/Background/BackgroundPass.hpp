@@ -46,9 +46,10 @@ namespace vg::renderer
         auto clearColor = m_useFastClear ? pow(options->getBackgroundColor(), 2.2f) : defaultOptimizedClearColor;
 
         const auto msaa = options->GetMSAA();
+        const TextureType texType = (MSAA::None == msaa) ? TextureType::Texture2D : TextureType::Texture2DMS;
 
         FrameGraphTextureResourceDesc colorDesc = {};
-                                      colorDesc.type = (MSAA::None == msaa) ? TextureType::Texture2D : TextureType::Texture2DMS;
+                                      colorDesc.type = texType;
                                       colorDesc.format = PixelFormat::R16G16B16A16_float;
                                       colorDesc.width = size.x;
                                       colorDesc.height = size.y;
@@ -56,7 +57,8 @@ namespace vg::renderer
                                       colorDesc.initState = FrameGraphResource::InitState::Clear;
                                       colorDesc.msaa = msaa;
 
-        if (options->getLightingMode() == LightingMode::Deferred)
+        // This is only possible when not using MSAA, because DX12 does not allow an MSAA RenderTarget to alias with an UAV
+        if (options->getLightingMode() == LightingMode::Deferred && msaa == MSAA::None)
             colorDesc.uav = true;
 
         const auto colorID = _renderPassContext.getFrameGraphID("Color");
@@ -64,7 +66,7 @@ namespace vg::renderer
         writeRenderTarget(0, colorID);
 
         FrameGraphTextureResourceDesc depthStencilDesc = {};
-                                      depthStencilDesc.type = (MSAA::None == msaa) ? TextureType::Texture2D : TextureType::Texture2DMS;
+                                      depthStencilDesc.type = texType;
                                       depthStencilDesc.format = PixelFormat::D32S8;
                                       depthStencilDesc.width = size.x;
                                       depthStencilDesc.height = size.y;

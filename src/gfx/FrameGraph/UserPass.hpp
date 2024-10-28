@@ -47,6 +47,24 @@ namespace vg::gfx
 	}
 
     //--------------------------------------------------------------------------------------
+    const FrameGraphTextureResourceDesc * UserPass::getTextureResourceDesc(const FrameGraphResourceID & _resID) const
+    {
+        if (const auto * res = m_frameGraph->getTextureResource(_resID))
+            return &res->getTextureResourceDesc();
+        else
+            return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const FrameGraphBufferResourceDesc * UserPass::getBufferResourceDesc(const FrameGraphResourceID & _resID) const
+    {
+        if (const auto * res = m_frameGraph->getBufferResource(_resID))
+            return &res->getBufferResourceDesc();
+        else
+            return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
     // If resource already exist, it must have exactly the same descriptor
     //--------------------------------------------------------------------------------------
     FrameGraphTextureResource * UserPass::createTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
@@ -76,7 +94,8 @@ namespace vg::gfx
     void UserPass::createRWTexture(const FrameGraphResourceID & _resID, FrameGraphTextureResourceDesc & _resDesc)
     {
         _resDesc.uav = true;
-        createTexture(_resID, _resDesc);
+        FrameGraphTextureResource * res = createTexture(_resID, _resDesc);
+        res->setCurrentState(ResourceState::UnorderedAccess);
     }
 
     //--------------------------------------------------------------------------------------

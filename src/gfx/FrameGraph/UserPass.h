@@ -36,6 +36,10 @@ namespace vg::gfx
         // Called after exiting RenderPass (e.g. read buffer from GPU to the CPU)
         virtual void	AfterRender		(const RenderPassContext & _renderContext, CommandList * _cmdList) {};
 
+		// Descriptor for framegraph texture/buffer
+		const FrameGraphTextureResourceDesc * getTextureResourceDesc(const FrameGraphResourceID & _resID) const;
+		const FrameGraphBufferResourceDesc * getBufferResourceDesc(const FrameGraphResourceID & _resID) const;
+
 		// Textures being bound as color buffers
 		VG_INLINE const core::vector<FrameGraphTextureResource *> & getRenderTargets() const;
 

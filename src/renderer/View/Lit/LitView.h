@@ -10,6 +10,7 @@ namespace vg::renderer
     class ForwardTransparentPass;
     class DeferredOpaquePass;
     class ComputeDeferredLightingPass;
+    class ResolveDeferredMSAAPass;
     class EditorPass;
     class RayTracingDebugPass;
     class ComputePostProcessPass;
@@ -39,6 +40,7 @@ namespace vg::renderer
         ForwardTransparentPass *        m_forwardTransparentPass    = nullptr;
         DeferredOpaquePass *            m_deferredOpaquePass        = nullptr;
         ComputeDeferredLightingPass *   m_deferredLightingPass      = nullptr;
+        ResolveDeferredMSAAPass *       m_resolveDeferredMSAAPass   = nullptr;
         EditorPass *                    m_editorPass                = nullptr;
         TLASUpdatePass *                m_TLASUpdatePass            = nullptr;
         ComputePostProcessPass *        m_computePostProcessPass    = nullptr;
