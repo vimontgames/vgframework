@@ -4,6 +4,12 @@
 namespace vg::gfx
 {
     //--------------------------------------------------------------------------------------
+    VG_INLINE void CommandList::enablePerSampleShading(bool _perSampleShading)
+    {
+        super::enablePerSampleShading(_perSampleShading);
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::setGraphicRootSignature(const RootSignatureHandle & _rsHandle)
     {
         super::setGraphicRootSignature(_rsHandle);

@@ -23,7 +23,6 @@ namespace vg::gfx
             declFlags(MSAA, ShaderStageFlags::PS, { "", "_MSAA2X", "_MSAA4X", "_MSAA8X", "_MSAA16X" });
 
             auto vsQuad = declVS("VS_Quad");
-            auto psQuad = declPS("PS_Quad");
             auto psCopy = declPS("PS_Copy");
 
             auto & copy = declTechnique("Copy", vsQuad, psCopy);

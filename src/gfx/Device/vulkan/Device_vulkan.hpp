@@ -1255,6 +1255,7 @@ namespace vg::gfx::vulkan
         CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fillModeNonSolid, true);
         CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fragmentStoresAndAtomics, true);
         //CheckVulkanFeature(supportedFeatures.features, enabledFeatures, textureCompressionETC2, true);
+		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, sampleRateShading, true);
 
 		VkDeviceCreateInfo deviceCreateInfo; 
 						   deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;

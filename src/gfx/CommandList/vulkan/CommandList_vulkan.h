@@ -22,12 +22,14 @@ namespace vg::gfx::vulkan
 		void								beginSubPass                (core::uint _subPassIndex, gfx::SubPass * _subPass);
 		void								endSubPass                  ();
 
+        void                                enablePerSampleShading      (bool _perSampleShading);
+
         void                                bindGraphicRootSignature    (gfx::RootSignature * _rootSig);
         void                                bindGraphicPipelineState    (gfx::GraphicPipelineState * _pso);
         void                                bindStencilRefValue         (core::u8 _stencilRef);
         void                                bindViewport                (const core::uint4 & _viewport);
         void                                bindScissor                 (const core::uint4 & _scissor);
-        void                                bindGraphicRootConstants           (core::uint(&_constants)[max_root_constants]);
+        void                                bindGraphicRootConstants    (core::uint(&_constants)[max_root_constants]);
         void                                bindIndexBuffer             (gfx::Buffer * _ib);
 
         void								clear                       (const core::float4 & _color);

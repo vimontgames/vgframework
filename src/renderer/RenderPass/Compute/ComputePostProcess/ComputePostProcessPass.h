@@ -17,6 +17,7 @@ namespace vg::renderer
 
     private:
         gfx::RootSignatureHandle    m_computePostProcessRootSignature;
+        gfx::ComputeShaderKey       m_computeResolveMSAAShaderKey;
         gfx::ComputeShaderKey       m_computePostProcessShaderKey;
     };
 }

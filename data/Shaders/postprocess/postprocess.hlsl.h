@@ -12,6 +12,9 @@ namespace vg::gfx
             // Bits 0..1 for AA mode
             AAPostProcess   = 0,
 
+            // Bits 2..4 for MSAA
+            MSAA            = 2,
+
             // Last flags are common for all shaders 
             RayTracing      = HLSLDesc::Flags::RayTracing,
             Toolmode        = HLSLDesc::Flags::Toolmode
@@ -21,16 +24,23 @@ namespace vg::gfx
         {
             setFile("postprocess/postprocess.hlsl");
 
+            declFlags(MSAA, ShaderStageFlags::CS, { "", "_MSAA2X", "_MSAA4X", "_MSAA8X", "_MSAA16X" });
             declFlags(AAPostProcess, ShaderStageFlags::CS, { "", "_FXAA", "_SMAA" } );
             declFlag(RayTracing, ShaderStageFlags::CS, "_RAYTRACING");
             declFlag(Toolmode, ShaderStageFlags::CS, "_TOOLMODE");
 
-            auto csPostProcessMain = declCS("CS_PostProcessMain");
-
-            auto & quad = declTechnique("PostProcessMainCS");
+            auto csResolveMSAA = declCS("CS_ResolveMSAA");
+            auto & resolveMSAA = declTechnique("ResolveMSAACS");
             {
-                quad.cs = csPostProcessMain;
-                quad.flags = (Flags)0;
+                resolveMSAA.cs = csResolveMSAA;
+                resolveMSAA.flags = (Flags)0;
+            }
+
+            auto csPostProcessMain = declCS("CS_PostProcessMain");
+            auto & postProcessMain = declTechnique("PostProcessMainCS");
+            {
+                postProcessMain.cs = csPostProcessMain;
+                postProcessMain.flags = (Flags)0;
             }
         }
     };

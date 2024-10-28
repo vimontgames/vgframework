@@ -25,8 +25,8 @@ VS_Output_Quad VS_Quad(uint _vertexID : VertexID)
 
 struct PS_Input_Quad
 {
-    float4 pos  : Position;
-    float2 uv   : Texcoord0;
+    linear noperspective float4 pos         : Position;
+    linear noperspective centroid float2 uv : Texcoord0;    // using centroid here ensures we have the same result on both DX12 and Vulkan
 
     #if SAMPLE_COUNT > 1
     uint sampleIndex : SV_SampleIndex; 
@@ -37,26 +37,6 @@ struct PS_Output_Quad
 {
     float4 color0 : Color0;
 };
-
-PS_Output_Quad PS_Quad(PS_Input_Quad _input)
-{
-    PS_Output_Quad output;
-    float2 uv = _input.uv;
-    output.color0 = float4(uv, 0, 1);
-
-    // RO texture
-    //output.color0.rgb = getTexture1D(rootConstants2D.texID).Sample(nearestClamp, uv.x).rgb;
-    output.color0.rgba = getTexture2D(rootConstants2D.texID).Sample(nearestRepeat, uv).rgba;
-    //output.color0.rgb = getTexture3D(rootConstants2D.texID).Sample(nearestClamp, float3(uv,0)).rgb;
-
-    // Uniform buffer
-    //output.color0 = asfloat(BufferTable[rootConstants.cbID].Load4(0));
-
-    // Read-Write texture
-    //output.color0 = RWTexture2DTable[0].Load(0);
-
-    return output;
-}
 
 // Constants for PQ curve
 static const float M1 = 2610.0 / 16384.0;
@@ -78,10 +58,24 @@ PS_Output_Quad PS_Copy(PS_Input_Quad _input)
 {
     PS_Output_Quad output;
     float2 uv = _input.uv;
-    output.color0 = float4(uv, 0, 1);
+
+    #if SAMPLE_COUNT > 1    
+
+    ViewConstants viewConstants;
+    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+
+    int2 scale = viewConstants.getScreenSize().xy * getMSAASampleScale(SAMPLE_COUNT);
+    int2 offset = getMSAASampleOffset(SAMPLE_COUNT, _input.sampleIndex);
+
+    output.color0 = getTexture2D(rootConstants2D.texID).Load(int3(uv * scale + offset, 0)); 
+    
+    #else
 
     output.color0.rgba = getTexture2D(rootConstants2D.texID).Sample(nearestRepeat, uv).rgba;
 
+    #endif
+
+    // Apply HDR
     float standardNits = 80; // temp
     const float st2084max = 10000.0;
     const float hdrScalar = standardNits / st2084max;
@@ -89,7 +83,7 @@ PS_Output_Quad PS_Copy(PS_Input_Quad _input)
 
     #if _GAMMA
     output.color0.rgb = Linear2sRGB(output.color0.rgb);
-    #endif
+    #endif // _GAMMA
 
     #if _HDR10
     output.color0.rgb = SRGBToLinear(output.color0.rgb) * hdrBoost;
@@ -100,38 +94,11 @@ PS_Output_Quad PS_Copy(PS_Input_Quad _input)
     // Apply the ST.2084 curve to the scene.
     output.color0.rgb = LinearToST2084(output.color0.rgb * hdrScalar);    
 
-    #endif
+    #endif // _HDR10
 
     #if _HDR16
     output.color0.rgb = SRGBToLinear(output.color0.rgb) * hdrBoost;
-    #endif
-
-    #if _MSAA4X
-    ViewConstants viewConstants;
-    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
-
-    output.color0 = getTexture2DMS(rootConstants2D.texID).Load((int2)(uv * viewConstants.getScreenSize().xy), 0);
-
-    switch(_input.sampleIndex)
-    {
-        case 0:
-            output.color0.rgb = float3(1,0,0);
-            break;
-
-        case 1:
-            output.color0.rgb = float3(0,1,0);
-            break;
-
-        case 2:
-            output.color0.rgb = float3(0,0,1);
-            break;
-
-        case 3:
-            output.color0.rgb = float3(1,1,0); 
-            break;
-    }
-
-    #endif
+    #endif // _HDR16
 
     output.color0.a = 1;
 

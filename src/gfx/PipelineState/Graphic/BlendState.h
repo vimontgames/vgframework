@@ -72,7 +72,7 @@ namespace vg::gfx
             BlendState() :
                 m_flags((BlendStateFlags)0x0)
             {
-                for (core::uint i = 0; i < maxRenderTarget; ++i)
+                for (core::uint i = 0; i < core::countof(m_bits); ++i)
                     m_bits[i] = 0x0;
             }
             
@@ -163,7 +163,7 @@ namespace vg::gfx
 
         inline bool operator == (const BlendState & _other) const
         {
-            for (core::uint i = 0; i < maxRenderTarget+1; ++i)
+            for (core::uint i = 0; i < core::countof(m_bits); ++i)
             {
                 if (m_bits[i] != _other.m_bits[i])
                     return false;
@@ -174,7 +174,7 @@ namespace vg::gfx
 
         inline bool operator != (const BlendState & _other) const
         {
-            for (core::uint i = 0; i < maxRenderTarget+1; ++i)
+            for (core::uint i = 0; i < core::countof(m_bits); ++i)
             {
                 if (m_bits[i] != _other.m_bits[i])
                     return true;
@@ -191,7 +191,7 @@ namespace vg::gfx
 
                 core::size_t hashVal = 0;
 
-                for (core::uint i = 0; i < maxRenderTarget+1; ++i)
+                for (core::uint i = 0; i < core::countof(_this.m_bits); ++i)
                     hashVal ^= std::hash<core::u64>()(_this.m_bits[i]);
 
                 return hashVal; 

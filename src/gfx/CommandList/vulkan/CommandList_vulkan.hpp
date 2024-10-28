@@ -728,6 +728,16 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
+    void CommandList::enablePerSampleShading(bool _perSampleShading)
+    {
+        if (_perSampleShading != m_graphicStateCache.m_graphicPipelineKey.m_perSampleShading)
+        {
+            m_graphicStateCache.m_dirtyFlags |= GraphicPipelineStateCache::DirtyFlags::PipelineState;
+            m_graphicStateCache.m_graphicPipelineKey.m_perSampleShading = _perSampleShading;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     // KHR_Acceleration_Structure extension device funcs
     //--------------------------------------------------------------------------------------
     

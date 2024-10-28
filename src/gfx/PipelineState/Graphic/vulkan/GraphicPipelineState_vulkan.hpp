@@ -95,6 +95,15 @@ namespace vg::gfx::vulkan
         // Multisample
         VkPipelineMultisampleStateCreateInfo ms = {};
         ms.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+
+        // This should only be enabled when manually writing to individual MSAA samples (e.g. MSAA resolve)
+        if (_key.m_perSampleShading)
+        {
+            VG_ASSERT(_key.m_renderPassKey.m_msaa != MSAA::None, "Per-sample shading should only be enabled with MSAA");
+            ms.sampleShadingEnable = VK_TRUE;
+            ms.minSampleShading = 1.0f;
+        }
+
         ms.pSampleMask = nullptr;
         ms.rasterizationSamples = (VkSampleCountFlagBits)_key.m_renderPassKey.m_msaa;
         vkPipelineDesc.pMultisampleState = &ms;

@@ -19,6 +19,7 @@ namespace vg::renderer
         rsDesc.addTable(bindlessTable);
 
         m_computePostProcessRootSignature = device->addRootSignature(rsDesc);
+        m_computeResolveMSAAShaderKey.init("postprocess/postprocess.hlsl", "ResolveMSAACS");
         m_computePostProcessShaderKey.init("postprocess/postprocess.hlsl", "PostProcessMainCS");
     }
 
@@ -57,6 +58,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ComputePostProcessPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
+        const auto * options = RendererOptions::get();
+
         auto size = _renderPassContext.getView()->GetSize();
         auto threadGroupSize = uint2(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y);
         auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.y + threadGroupSize.y - 1) / threadGroupSize.y, 1);
@@ -71,7 +74,34 @@ namespace vg::renderer
                 shaderKey.setFlag(PostProcessHLSLDesc::RayTracing, true);
         }
 
-        const auto * options = RendererOptions::get();
+        // When MSAA is enabled, we will first resolve the MSAA color buffer to a non-MSAA UAV then use it as input for the next pass
+        const auto msaa = options->GetMSAA();
+        if (msaa != MSAA::None)
+        {
+            switch (msaa)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(msaa);
+                    break;
+
+                case MSAA::MSAA2X:
+                    shaderKey.setFlags(PostProcessHLSLDesc::MSAA, 1);   // TODO: separate MSAA vs MSAAFlags enums
+                    break;
+
+                case MSAA::MSAA4X:
+                    shaderKey.setFlags(PostProcessHLSLDesc::MSAA, 2);   
+                    break;
+
+                case MSAA::MSAA8X:
+                    shaderKey.setFlags(PostProcessHLSLDesc::MSAA, 3);
+                    break;
+
+                case MSAA::MSAA16X:
+                    shaderKey.setFlags(PostProcessHLSLDesc::MSAA, 4);
+                    break;
+            }
+        }
+
         const auto aaMode = options->GetAAPostProcess();
         switch (aaMode)
         {

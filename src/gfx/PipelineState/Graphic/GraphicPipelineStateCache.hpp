@@ -4,6 +4,13 @@
 namespace vg::gfx
 {
     //--------------------------------------------------------------------------------------
+    GraphicPipelineStateCache::GraphicPipelineStateCache() : 
+        PipelineStateCache()
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
     void GraphicPipelineStateCache::clear()
     {
         super::clear();
@@ -18,7 +25,7 @@ namespace vg::gfx
     {
         super::reset();
 
-        memset(&m_graphicPipelineKey, -1, sizeof(GraphicPipelineStateKey));
+        m_graphicPipelineKey.reset();
         m_viewport = uint4(0, 0, 0, 0);
         m_indexBuffer = nullptr;
         m_stencilRef = 0x0;

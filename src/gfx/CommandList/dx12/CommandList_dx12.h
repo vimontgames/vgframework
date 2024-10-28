@@ -22,6 +22,8 @@ namespace vg::gfx::dx12
 		void								endSubPass                  ();
 
 		// Graphic
+        void								enablePerSampleShading		(bool _perSampleShading) { /*This is a no-op under DX12 and is only required for Vulkan*/ }
+
         void                                bindGraphicRootSignature	(gfx::RootSignature * _rootSig);
         void                                bindGraphicPipelineState    (gfx::GraphicPipelineState * _pso);
 		void                                bindStencilRefValue			(core::u8 _stencilRef);

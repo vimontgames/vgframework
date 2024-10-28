@@ -6,12 +6,12 @@
         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
         <Property type="Bool" name="m_toolMode" value="true"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
-        <Property type="EnumU8" name="m_lightingMode" value="Deferred"/>
+        <Property type="EnumU8" name="m_lightingMode" value="Forward"/>
         <Property type="EnumU8" name="m_HDRmode" value="HDR16"/>
         <Property type="EnumU8" name="m_msaa" value="None"/>
         <Property type="EnumU8" name="m_VSync" value="VSync_1"/>
         <Property type="Bool" name="m_rayTracing" value="false"/>
-        <Property type="Bool" name="m_postProcess" value="false"/>
+        <Property type="Bool" name="m_postProcess" value="true"/>
         <Property type="EnumU8" name="m_aaPostProcess" value="None"/>
         <Property type="EnumFlagsU32" name="m_renderPassFlags" flags="Bitfield" value="ZPrepass|Opaque|Transparency"/>
         <Property type="EnumFlagsU32" name="m_displayFlags" flags="Bitfield" value="AlbedoMap|NormalMap"/>

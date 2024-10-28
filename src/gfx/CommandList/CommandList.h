@@ -114,6 +114,7 @@ namespace vg::gfx
         VG_INLINE void                  setScissor                  (const core::uint4 & _scissor);
         VG_INLINE void                  setGraphicRootConstants     (core::uint _startOffset, core::u32 * _values, core::uint _count);
         VG_INLINE void                  setIndexBuffer              (gfx::Buffer * _ib);
+        VG_INLINE void                  enablePerSampleShading      (bool _perSampleShading);
 
         bool                            applyGraphicPipelineState   ();
 

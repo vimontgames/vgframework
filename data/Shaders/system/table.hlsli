@@ -54,7 +54,8 @@
 
 #define BINDLESS_TEXTURE_BINDING_1D              10  
 #define BINDLESS_TEXTURE_BINDING_2D              20  
-#define BINDLESS_TEXTURE_BINDING_2D_UINT2        21  
+#define BINDLESS_TEXTURE_BINDING_2DMS            21  
+#define BINDLESS_TEXTURE_BINDING_2D_UINT2        22  
 #define BINDLESS_TEXTURE_BINDING_3D              30  
 
 #define BINDLESS_RWTEXTURE_BINDING_1D           210 
@@ -65,6 +66,7 @@
 
 #define BINDLESS_TEXTURE_BINDING_1D               0 // <=> BINDLESS_TEXTURE_BINDING
 #define BINDLESS_TEXTURE_BINDING_2D               0   
+#define BINDLESS_TEXTURE_BINDING_2DMS             0  
 #define BINDLESS_TEXTURE_BINDING_2D_UINT2         0   
 #define BINDLESS_TEXTURE_BINDING_3D               0   
 

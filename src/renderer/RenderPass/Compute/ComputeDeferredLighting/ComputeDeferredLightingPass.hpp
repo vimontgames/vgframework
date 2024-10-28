@@ -1,6 +1,7 @@
 #include "ComputeDeferredLightingPass.h"
 #include "Shaders/lighting/deferredLighting.hlsli"
 #include "Shaders/lighting/deferredLighting.hlsl.h"
+#include "Shaders/system/msaa.hlsli"
 
 using namespace vg::gfx;
 
@@ -54,30 +55,10 @@ namespace vg::renderer
             const auto colorID = _renderPassContext.getFrameGraphID("Color");
             const FrameGraphTextureResourceDesc * colorResourceDesc = getTextureResourceDesc(colorID);
 
-            uint width = colorResourceDesc->width;
-            uint height = colorResourceDesc->height;
+            int2 msaaScale = getMSAASampleScale((uint)msaa);
 
-            switch (msaa)
-            {
-                case MSAA::MSAA2X:
-                    width *= 2;
-                    break;
-
-                case MSAA::MSAA4X:
-                    width *= 2;
-                    height *= 2;
-                    break;
-
-                case MSAA::MSAA8X:
-                    width *= 4;
-                    height *= 2;
-                    break;
-
-                case MSAA::MSAA16X:
-                    width *= 4;
-                    height *= 4;
-                    break;
-            }
+            const uint width = colorResourceDesc->width * msaaScale.x;
+            const uint height = colorResourceDesc->height * msaaScale.y;
 
             FrameGraphTextureResourceDesc resolvedDesc = *colorResourceDesc;
                                           resolvedDesc.type = TextureType::Texture2D;

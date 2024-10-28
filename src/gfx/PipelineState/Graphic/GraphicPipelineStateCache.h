@@ -14,7 +14,7 @@ namespace vg::gfx
         using super = PipelineStateCache;
         using GraphicPipelineStateHash = core::unordered_map<gfx::GraphicPipelineStateKey, gfx::GraphicPipelineState *, gfx::GraphicPipelineStateKey::hash>;
 
-        GraphicPipelineStateCache() = default;
+        GraphicPipelineStateCache();
 
         void clear();
         void reset();

@@ -3,6 +3,7 @@
 #include "system/samplers.hlsli"
 #include "system/view.hlsli"
 #include "system/depthstencil.hlsli"
+#include "system/msaa.hlsli"
 
 #if _FXAA
 #include "FXAA.hlsli"
@@ -153,6 +154,10 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
 #endif // _RAYTRACING
 #endif // _TOOLMODE
 
+#if SAMPLE_COUNT > 1
+groupshared float4 localData[POSTPROCESS_THREADGROUP_SIZE_X*POSTPROCESS_THREADGROUP_SIZE_Y];
+#endif
+
 [numthreads(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y, 1)]
 void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
 {   
@@ -165,7 +170,17 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
     {
         int3 address = int3(dispatchThreadID.xy, 0);
 
-        float4 color;
+        float4 color = 0;
+
+        #if SAMPLE_COUNT > 0
+        [unroll]
+        for (uint i = 0; i < SAMPLE_COUNT; ++i)
+            color += getTexture2DMS(postProcessConstants.getColor()).Load(coords, i);
+        color /= (float)SAMPLE_COUNT;           
+
+        getRWTexture2D(postProcessConstants.getRWBufferOut())[coords] = color;
+        return;
+        #endif
 
         // Select Anti-Aliasing mode
         #if _FXAA
@@ -221,3 +236,19 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         getRWTexture2D(postProcessConstants.getRWBufferOut())[coords] = color;
     }
 }
+
+/*
+[numthreads(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y, 1)]
+void CS_ResolveMSAA(int2 dispatchThreadID : SV_DispatchThreadID)
+{   
+    uint2 screenSize = postProcessConstants.getScreenSize();    
+
+    int2 coords = dispatchThreadID;
+    float2 uv = ((float2)dispatchThreadID.xy + 0.5) / (float2)screenSize.xy;
+
+    if (all(dispatchThreadID.xy < screenSize))
+    {
+
+    }
+}
+*/

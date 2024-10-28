@@ -13,7 +13,10 @@ namespace vg::gfx
 {
     struct GraphicPipelineStateKey
     {
-        GraphicPipelineStateKey() 
+        GraphicPipelineStateKey() :
+            m_subPassIndex(0),
+            m_perSampleShading(false),
+            m_primitiveTopology(PrimitiveTopology::TriangleList)
         {
            
         }
@@ -25,10 +28,17 @@ namespace vg::gfx
         ShaderKey               m_shaderKey;
         RenderPassKey           m_renderPassKey;
 
-        core::u8                m_subPassIndex = 0;
-        PrimitiveTopology       m_primitiveTopology = PrimitiveTopology::TriangleList;
+        core::u8                m_subPassIndex : 7;
+        bool                    m_perSampleShading : 1;
+        PrimitiveTopology       m_primitiveTopology;
 
         PrimitiveType getPrimitiveType() const;
+
+        void reset()
+        {
+            memset(this, -1, sizeof(*this));
+            m_perSampleShading = false;
+        }
 
         bool operator == (const GraphicPipelineStateKey & _other) const
         {
@@ -39,6 +49,7 @@ namespace vg::gfx
                 && _other.m_shaderKey         == m_shaderKey 
                 && _other.m_renderPassKey     == m_renderPassKey
                 && _other.m_subPassIndex      == m_subPassIndex
+                && _other.m_perSampleShading  == m_perSampleShading
                 && _other.m_primitiveTopology == m_primitiveTopology;
         }
 
@@ -58,6 +69,7 @@ namespace vg::gfx
                      ^ ShaderKey::hash()(_this.m_shaderKey)
                      ^ RenderPassKey::hash()(_this.m_renderPassKey)
                      ^ core::hash<core::u8>()(_this.m_subPassIndex)
+                     ^ core::hash<core::u8>()(_this.m_perSampleShading <<7)
                      ^ core::hash<std::underlying_type<PrimitiveTopology>::type>()(std::underlying_type<PrimitiveTopology>::type(_this.m_primitiveTopology));
             }
         };

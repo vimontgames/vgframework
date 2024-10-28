@@ -43,16 +43,42 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ResolveDeferredMSAAPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
+        const auto * options = RendererOptions::get();
+        const auto msaa = options->GetMSAA();
+
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
         DepthStencilState ds(false);
 
         _cmdList->setGraphicRootSignature(m_resolveDeferredMSAARootSignature);
-        _cmdList->setShader(m_resolveDeferredMSAA4XShaderKey);
+
+        switch (msaa)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(msaa);
+
+            case MSAA::MSAA2X:
+                _cmdList->setShader(m_resolveDeferredMSAA2XShaderKey);
+                break;
+
+            case MSAA::MSAA4X:
+                _cmdList->setShader(m_resolveDeferredMSAA4XShaderKey);
+                break;
+
+            case MSAA::MSAA8X:
+                _cmdList->setShader(m_resolveDeferredMSAA8XShaderKey);
+                break;
+
+            case MSAA::MSAA16X:
+                _cmdList->setShader(m_resolveDeferredMSAA16XShaderKey);
+                break;
+        }
+
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleStrip);
         _cmdList->setRasterizerState(rs);
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);
+        _cmdList->enablePerSampleShading(true);
 
         RootConstants2D root2D;
 
@@ -62,5 +88,6 @@ namespace vg::renderer
 
         _cmdList->setGraphicRootConstants(0, (u32 *)&root2D, RootConstants2DCount);
         _cmdList->draw(4);
+        _cmdList->enablePerSampleShading(false);
     }
 }
