@@ -15,7 +15,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void HLSLDesc::Technique::setFlags(ShaderKey::Flags _flag, uint _value)
+    VG_INLINE void HLSLDesc::Technique::setFlags(ShaderKey::Flags _flag, core::uint _value)
     {
         // rem: this is really unsafe to do it from here without checking for overflow
         // If Technique knew the HLSLDesc or file index then it could perform the same checks as [Compute]ShaderKey::setFlags
