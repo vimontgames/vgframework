@@ -56,7 +56,6 @@ namespace vg::renderer
         core::vector<MaterialImporterData>  materials;
         u8                                  maxBonesCountPerVertex;
         core::vector<MeshImporterNode>      nodes;
-        float                               animScale;
         core::vector<core::u32>             bonesIndices;
         core::vector<core::float4x4>        bonesMatrices;
     };

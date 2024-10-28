@@ -101,6 +101,7 @@ namespace vg::editor
         static ImVec4                           getPropertyColor    (const PropertyContext & _propContext);
         static void                             drawPropertyLabel   (const PropertyContext & _propContext, const core::IProperty * _prop, core::uint _index = 0);
         static void                             drawPropertyLabel   (const PropertyContext & _propContext, const char * _label, const char * _description, core::uint _index = 0);
+        static void                             drawPropertyTooltip (const PropertyContext & _propContext, const char * _description, core::uint _index = 0);
 
         static renderer::IImGuiAdapter *        getImGuiAdapter     ();
 

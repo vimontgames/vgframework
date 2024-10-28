@@ -102,20 +102,23 @@ namespace vg::engine
 
             float invSum[MaxAnimationLayerCount];
             for (uint layerIndex = 0; layerIndex < MaxAnimationLayerCount; ++layerIndex)
-                invSum[layerIndex] = 1.0f / sum[layerIndex];
+                invSum[layerIndex] = sum[layerIndex] != 0.0f ? 1.0f / sum[layerIndex] : 0.0f;
 
             // Normalize layer weights
             for (uint layerIndex = 0; layerIndex < MaxAnimationLayerCount; ++layerIndex)
-            {                
-                for (uint i = 0; i < animResources.size(); ++i)
+            {               
+                if (invSum[layerIndex] != 0.0f)
                 {
-                    auto & anim = animResources[i];
-                    const auto layer = anim.getLayer();
-
-                    if (layerIndex == layer && layerIndex == 0)
+                    for (uint i = 0; i < animResources.size(); ++i)
                     {
-                        const float weight = anim.getWeight();
-                        anim.setWeight(weight * invSum[layerIndex]);
+                        auto & anim = animResources[i];
+                        const auto layer = anim.getLayer();
+
+                        if (layerIndex == layer && layerIndex == 0)
+                        {
+                            const float weight = anim.getWeight();
+                            anim.setWeight(weight * invSum[layerIndex]);
+                        }
                     }
                 }
             }

@@ -6,6 +6,7 @@
 #include "engine/Component/Mesh/MeshComponent.h"
 #include "renderer/IMeshInstance.h"
 #include "renderer/Importer/BodyPartFlags.h"
+#include "editor/Editor_Consts.h"
 
 #if !VG_ENABLE_INLINE
 #include "AnimationResource.inl"
@@ -33,8 +34,11 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyCallbackEx(AnimationResource, playAnim, "Play", PropertyFlags::SingleLine);
-        registerPropertyCallbackEx(AnimationResource, stopAnim, "Stop", PropertyFlags::SingleLine);
+        registerPropertyCallbackEx(AnimationResource, playAnim, editor::style::icon::Play, PropertyFlags::SingleLine);
+        setPropertyDescription(AnimationResource, playAnim, "Play animation");
+
+        registerPropertyCallbackEx(AnimationResource, stopAnim, editor::style::icon::Stop, PropertyFlags::SingleLine);
+        setPropertyDescription(AnimationResource, stopAnim, "Stop animation");
 
         registerPropertyEx(AnimationResource, m_play, "Play", PropertyFlags::SingleLine | PropertyFlags::Debug);
         registerPropertyEx(AnimationResource, m_loop, "Loop", PropertyFlags::SingleLine | PropertyFlags::Debug);
@@ -95,7 +99,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool AnimationResource::playAnim(IObject * _object)
     {
-        return ((AnimationResource *)_object)->PlayOnce();
+        return ((AnimationResource *)_object)->PlayLoop();
     }
 
     //--------------------------------------------------------------------------------------

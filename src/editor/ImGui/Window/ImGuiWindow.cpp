@@ -937,10 +937,18 @@ namespace vg::editor
             ImGui::Text(_label);
         }
 
+        drawPropertyTooltip(_propContext, _description, _index);
+    };
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiWindow::drawPropertyTooltip(const PropertyContext & _propContext, const char * _description, core::uint _index)
+    {
         if (ImGui::IsItemHovered())
         {
             if (BeginTooltipEx(ImGuiTooltipFlags_OverridePrevious, ImGuiWindowFlags_None))
             {
+                auto * imGuiAdapter = getImGuiAdapter();
+
                 PushDisabledStyle(false);
                 ImGui::PushStyleColor(ImGuiCol_Text, imGuiAdapter->GetTextColor());
                 ImGui::Text("(%s)%s::%s", asString(_propContext.m_originalProp->GetType()).c_str(), _propContext.m_originalProp->GetClassName(), _propContext.m_originalProp->GetName());
@@ -948,30 +956,36 @@ namespace vg::editor
                 imGuiAdapter->PushFontStyle(renderer::FontStyle::Italic);
                 imGuiAdapter->PopFontStyle();
 
-                if (asBool(PropertyFlags::NotSaved & _propContext.m_originalProp->GetFlags()))
+                if (_propContext.m_originalProp->GetType() != core::PropertyType::Callback)
                 {
-                    if (_propContext.m_readOnly)
-                        ImGui::TextColored(imGuiAdapter->GetUnsavedPropertyColor(), "This property is not saved and read-only");
+                    if (asBool(PropertyFlags::NotSaved & _propContext.m_originalProp->GetFlags()))
+                    {
+                        ImGui::TextColored(imGuiAdapter->GetUnsavedPropertyColor(), "Not saved");
+
+                        if (_propContext.m_readOnly)
+                        {
+                            ImGui::SameLine();
+                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), " Read-only");
+                        }                            
+                    }
+                    else if (_propContext.m_isPrefabInstance)
+                    {
+                        if (_propContext.m_isPrefabOverride)
+                            ImGui::TextColored(imGuiAdapter->GetPrefabOverridePropertyColor(), "Overriden");
+                        else if (_propContext.m_readOnly)
+                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
+                        else if (_propContext.m_canPrefabOverride)
+                        {
+                            //ImGui::TextColored(imGuiAdapter->GetTextColor(), "This property can be overriden");
+                        }
+                        else
+                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Cannot override");
+                    }
                     else
-                        ImGui::TextColored(imGuiAdapter->GetUnsavedPropertyColor(), "This property is not saved");
-                }
-                else if (_propContext.m_isPrefabInstance)
-                {
-                    if (_propContext.m_isPrefabOverride)
-                        ImGui::TextColored(imGuiAdapter->GetPrefabOverridePropertyColor(), "This property is overriden");
-                    else if (_propContext.m_readOnly)
-                        ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "This property cannot be overriden and is read-only");
-                    else if (_propContext.m_canPrefabOverride)
-                        ImGui::TextColored(imGuiAdapter->GetTextColor(), "This property can be overriden"); 
-                    else
-                        ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "This property cannot be overriden");
-                }
-                else
-                {
-                    if (_propContext.m_readOnly)
-                        ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "This property is read-only");
-                    //else
-                    //    ImGui::TextColored(imGuiAdapter->GetTextColor(), ");
+                    {
+                        if (_propContext.m_readOnly)
+                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
+                    }
                 }
 
                 if (_description && '\0' != _description[0])
@@ -986,7 +1000,7 @@ namespace vg::editor
                 EndTooltip();
             }
         }
-    };
+    }
 
     //--------------------------------------------------------------------------------------
     float ImGuiWindow::getDragSpeedFloat(const IProperty * _prop) 
@@ -1221,7 +1235,7 @@ namespace vg::editor
                             {
                                 if (_objectContext.m_treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->GetParent()))
                                 {
-                                    if (_objectContext.m_treeNodes.back().treeNodeOpen)
+                                    if (_objectContext.m_treeNodes.size() == 0 || _objectContext.m_treeNodes.back().treeNodeOpen)
                                     {
                                         auto & newInfo = _objectContext.m_treeNodes.emplace_back();
 
@@ -1592,11 +1606,7 @@ namespace vg::editor
                     if (ImGui::Button(displayName, ImVec2(buttonWidth,0)))
                         pFunc(_object);
 
-                    if (auto * desc = _prop->GetDescription())
-                    {
-                        if (ImGui::IsItemHovered())
-                            ImGui::SetTooltip(desc);
-                    }
+                    drawPropertyTooltip(propContext, _prop->GetDescription());
                 }
                 break;
 

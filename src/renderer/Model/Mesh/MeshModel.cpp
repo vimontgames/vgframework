@@ -224,7 +224,6 @@ namespace vg::renderer
         if (_data.bonesIndices.size() > 0)
         {
             meshSkeleton = new Skeleton("Skeleton", meshModel);
-            meshSkeleton->setScale(_data.animScale);
             meshSkeleton->setNodes(_data.nodes);
             meshSkeleton->setBoneIndices(_data.bonesIndices);
             meshSkeleton->setBoneMatrices(_data.bonesMatrices);
