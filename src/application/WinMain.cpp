@@ -14,40 +14,13 @@
 
 #include "resource.h"
 #include "application.h"
-
-#define TEST_META_ENUM 0
-
-#if TEST_META_ENUM
-#include "core/Types/Enum/Enum_meta.h"
-#endif
+#include "version.h"
 
 HINSTANCE hInst;
 HWND g_hWnd;
 
 using namespace vg;
 engine::IEngine * g_engine = nullptr;
-
-#if TEST_META_ENUM
-
-vg_enum(Color, vg::core::u32, 
-	Red		= 0x000000FF, 
-	Green	= 0x0000FF00, 
-	Blue	= 0x00FF0000
-);
-
-void TestMetaEnum()
-{
-	VG_DEBUGPRINT("%s\n", ((vg::core::string)Color_meta.string).c_str());
-
-	const auto & pairs = meta::enumPairs<Color>();
-	for (auto i = 0; i < pairs.size(); ++i)
-	{
-		const auto & pair = pairs[i];
-        VG_DEBUGPRINT("[#%u] %s = %u\n", i, pair.second.c_str(), pair.first);
-	}
-}
-
-#endif
 
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -268,9 +241,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     Application * app = new Application(*g_engine);
 	const auto version = app->GetVersion();
 
-	core::string title = "VG Framework " + core::to_string(version.major) + "." + core::to_string(version.minor) + " " + core::Plugin::getPlatform() + "|" + core::Plugin::getConfiguration() + " - " + core::asString(engineParams.renderer.device.api);
+	core::string title = fmt::sprintf("VGFramework %s|%s - %s", core::Plugin::getPlatform(), core::Plugin::getConfiguration(), core::asString(engineParams.renderer.device.api));
     if (engineParams.renderer.device.debugDevice)
         title += " (debug device)";
+
+	title += fmt::sprintf(" - Version %u.%u", version.major, version.minor);
+	
+	#ifdef GIT_REVISION
+	title += fmt::sprintf(" commit %s", GIT_REVISION);
+	#endif
 
 	SetWindowTextA(g_hWnd, title.c_str());
 
