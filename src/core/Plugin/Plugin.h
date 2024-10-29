@@ -10,7 +10,7 @@ namespace vg::core
 		using CreateFunc = IPlugin * (*)();
 
 	public:
-		template <class T> static T *	create(const string & _name, string _suffix = "") { return dynamic_cast<T*>(createInternal(_name, _suffix)); }
+		template <class T> static T *	create(const string & _name, string _configSuffix = "") { return dynamic_cast<T*>(createInternal(_name, _configSuffix)); }
 
 		static string					getPlatform		();
 		static string					getConfiguration();
@@ -21,6 +21,6 @@ namespace vg::core
 										~Plugin			();
 
 	private:
-		static IPlugin *				createInternal	(const string & _name, const string & _suffix);
+		static IPlugin *				createInternal	(const string & _name, const string & _configSuffix);
 	};
 }

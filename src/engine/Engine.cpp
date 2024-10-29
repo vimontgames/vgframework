@@ -239,9 +239,9 @@ namespace vg::engine
         if (_path.length() > 0)
         {
             auto folderNameBegin = _path.find_last_of('/');
-            string gameDLLPath = _path + _path.substr(folderNameBegin);
+            string gameDLLName = _path.substr(folderNameBegin);
 
-            m_game = Plugin::create<IGame>(gameDLLPath);
+            m_game = Plugin::create<IGame>(gameDLLName);
 
             if (nullptr != m_game)
                 m_game->Init(*this, Kernel::getSingletons());

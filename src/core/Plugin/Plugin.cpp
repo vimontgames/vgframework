@@ -1,6 +1,7 @@
 #include "core/Precomp.h"
 #include "Plugin.h"
 #include "core/Kernel.h"
+#include "core/string/string.h"
 
 namespace vg::core
 {
@@ -28,14 +29,14 @@ namespace vg::core
 #endif
 
 	//--------------------------------------------------------------------------------------
-	IPlugin * Plugin::createInternal(const string & _name, const string & _suffix)
+	IPlugin * Plugin::createInternal(const string & _name, const string & _configSuffix)
 	{
 		string filename;
 
-		if (_suffix.empty()) 
-			filename = _name + "_" + getPlatform() + "_" + getConfiguration() + "." + getExtension();
+		if (_configSuffix.empty())
+			filename = fmt::sprintf("bin/%s/%s/%s.%s", getPlatform(), getConfiguration(), _name, getExtension());
 		else
-			filename = _name + "_" + getPlatform() + "_" + getConfiguration() + "_" + _suffix  + "." + getExtension();
+			filename = fmt::sprintf("bin/%s/%s_%s/%s.%s", getPlatform(), getConfiguration(), _configSuffix, _name,  getExtension());
 		
 		IPlugin * instance = nullptr;
 

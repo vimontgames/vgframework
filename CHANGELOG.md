@@ -1,7 +1,13 @@
 # changelog
 
+## 0.37
+Editor.exe (Release, DX12) and Game.exe (Final, DX12) binaries
+
 ## 0.36
-MSAA (wip)
+MSAA 
+Fix animation weights normalization
+Better "Play" animation button
+Clean importer scale
 
 ## 0.35
 Fix anim import scale

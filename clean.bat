@@ -16,6 +16,7 @@ del *.ilk
 del *.pdb
 del *.opt
 rmdir profile /S /Q
+rmdir bin /S /Q
 rmdir lib /S /Q
 rmdir tmp /S /Q
 rmdir .vs /S /Q

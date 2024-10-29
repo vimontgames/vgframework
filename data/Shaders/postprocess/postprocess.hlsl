@@ -172,7 +172,7 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
 
         float4 color = 0;
 
-        #if SAMPLE_COUNT > 0
+        #if SAMPLE_COUNT > 1
         [unroll]
         for (uint i = 0; i < SAMPLE_COUNT; ++i)
             color += getTexture2DMS(postProcessConstants.getColor()).Load(coords, i);
