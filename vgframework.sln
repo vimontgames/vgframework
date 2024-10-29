@@ -154,14 +154,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{7C17C1
 		.gitignore = .gitignore
 		CHANGELOG.md = CHANGELOG.md
 		README.md = README.md
+		src\version.h = src\version.h
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A6056C5D-D628-4DFE-945D-0938671C5BA8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D0B49AF3-70DB-42E7-AF6D-45C0620C439A}"
-	ProjectSection(SolutionItems) = preProject
-		TODO.txt = TODO.txt
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio", "src\audio\audio.vcxproj", "{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}"
 	ProjectSection(ProjectDependencies) = postProject

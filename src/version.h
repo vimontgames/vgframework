@@ -1,2 +1,2 @@
-// This file is generated automatically 
-#define GIT_REVISION "70d9c2af" 
+// This file is generated automatically during build
+

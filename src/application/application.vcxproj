@@ -285,6 +285,10 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+call "generate_version_header.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|ARM64EC'">
     <ClCompile>
@@ -309,6 +313,10 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+call "generate_version_header.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|x64'">
     <ClCompile>
@@ -334,6 +342,10 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+call "generate_version_header.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug_Vulkan|ARM64EC'">
     <ClCompile>
@@ -358,6 +370,10 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+call "generate_version_header.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX12|x64'">
     <ClCompile>
@@ -392,6 +408,10 @@
     <PostBuildEvent>
       <Message>Copy "Editor.exe"</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+call "generate_version_header.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX12|ARM64EC'">
     <ClCompile>
@@ -425,6 +445,10 @@
     <PostBuildEvent>
       <Message>Copy "Editor.exe"</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+call "generate_version_header.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Final_DX12|x64'">
     <ClCompile>
@@ -459,6 +483,10 @@
     <PostBuildEvent>
       <Message>Copy "Game.exe"</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+call "generate_version_header.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Final_DX12|ARM64EC'">
     <ClCompile>
@@ -492,6 +520,10 @@
     <PostBuildEvent>
       <Message>Copy "Game.exe"</Message>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+call "generate_version_header.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|x64'">
     <ClCompile>
@@ -520,6 +552,10 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+call "generate_version_header.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|ARM64EC'">
     <ClCompile>
@@ -547,6 +583,10 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+call "generate_version_header.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Final_Vulkan|x64'">
     <ClCompile>
@@ -575,6 +615,10 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+call "generate_version_header.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Final_Vulkan|ARM64EC'">
     <ClCompile>
@@ -602,6 +646,10 @@
     <ProjectReference>
       <LinkLibraryDependencies>false</LinkLibraryDependencies>
     </ProjectReference>
+    <PreBuildEvent>
+      <Command>cd $(SolutionDir)
+call "generate_version_header.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
