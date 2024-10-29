@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: "Win64 DX12 Build"
+name: "Build Win64 DX12"
 
 on:
   push:
@@ -56,7 +56,7 @@ jobs:
 
       - name: Build
         working-directory: ${{ env.GITHUB_WORKSPACE }}
-        run: msbuild /m /p:Configuration=${{ matrix.config }} /p:Platform='"Win64 DX12"' ${{ env.SOLUTION_FILE_PATH }}
+        run: msbuild /m /p:Configuration=${{ matrix.config }} /p:Platform="Win64 DX12" ${{ env.SOLUTION_FILE_PATH }}
 
       - name: Collect binaries
         id: collect_binaries
