@@ -61,14 +61,6 @@ jobs:
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
 
-      - name: Generate version header
-        working-directory: ${{ env.GITHUB_WORKSPACE }}/src
-        run: |
-          GIT_REVISION=$(git rev-parse --short HEAD)
-          echo "// This file is generated automatically" > version.h
-          echo "#define GIT_REVISION \"$GIT_REVISION\"" >> version.h
-        shell: bash
-
       - name: Build
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         # Add additional options to the MSBuild command line here (like platform or verbosity level).
