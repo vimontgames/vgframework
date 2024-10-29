@@ -86,15 +86,24 @@ jobs:
           git config --global user.name "VGF_Boy"
           git config --global user.email "VGF_Boy@users.noreply.github.com"
 
-          # Stage .exe and .dll files
-          git add -f $EXE_PATH_EDITOR
-          git add -f $EXE_PATH_GAME
+          # Stage Editor files
+          git add -f "Editor.exe"
+          git add -f "bin\x64\Release\audio.dll"
+          git add -f "bin\x64\Release\editor.dll"
+          git add -f "bin\x64\Release\engine.dll"
+          git add -f "bin\x64\Release\game.dll"
+          git add -f "bin\x64\Release\physics.dll"
+          git add -f "bin\x64\Release_DX12\renderer.dll"
+          
+          # Stage Game files
+          git add -f "Game.exe"
+          git add -f "bin\x64\Final\audio.dll"
+          git add -f "bin\x64\Final\engine.dll"
+          git add -f "bin\x64\Final\game.dll"
+          git add -f "bin\x64\Final\physics.dll"
+          git add -f "bin\x64\Final_DX12\renderer.dll"
 
-          foreach ($dll in $DLL_PATHS) {
-              git add -f $dll
-          }
-
-          git commit -m "New editor and game builds available"
+          git commit -m "Editor and game builds"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
