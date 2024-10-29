@@ -79,6 +79,9 @@ jobs:
           # Configure Git
           git config --global user.name "VGF_Boy"
           git config --global user.email "VGF_Boy@users.noreply.github.com"
+
+          # Pull remote changes and rebase
+          git pull origin master --rebase
       
           # Stage .exe and .dll files
           git add $EXE_PATH $DLL_PATH_1 $DLL_PATH_2

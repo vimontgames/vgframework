@@ -34,11 +34,3 @@ enc_temp_folder/*
 !extern/JoltPhysics/Lib/x64/Debug/*
 !extern/JoltPhysics/Lib/x64/Release/*
 !extern/JoltPhysics/Lib/x64/Distribution/*
-
-!Editor.exe
-!bin/x64/Release/*.dll
-!bin/x64/Release_DX12/*.dll
-
-!Game.exe
-!bin/x64/Final/*.dll
-!bin/x64/Final_DX12/*.dll
