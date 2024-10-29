@@ -67,7 +67,7 @@ jobs:
         # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
         run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
 
-      - name: Push binaries to repository
+      - name: Push editor binaries to repository
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         if: success()
         run: |
@@ -77,12 +77,12 @@ jobs:
           $DLL_PATH_2 = Get-ChildItem "bin\x64\Release_DX12\*.dll" -ErrorAction SilentlyContinue
 
           # Configure Git
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "VGF_Boy"
+          git config --global user.email "VGF_Boy@users.noreply.github.com"
 
           # Stage .exe and .dll files
           git add $EXE_PATH $DLL_PATH_1 $DLL_PATH_2
-          git commit -m "Update Editor.exe"
+          git commit -m "Update Editor binaries"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

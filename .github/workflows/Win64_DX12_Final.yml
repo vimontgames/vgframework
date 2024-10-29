@@ -28,6 +28,7 @@ on:
       - '**/*.cpp'
       - '**/*.inl'
       - '**/*.fxh'
+  workflow_dispatch:  # This line allows manual triggering
 
 env:
   # Path to the solution file relative to the root of the project.
@@ -65,3 +66,23 @@ jobs:
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:Platform=${{env.BUILD_PLATFORM}} ${{env.SOLUTION_FILE_PATH}}
+
+    - name: Push game binaries to repository
+      working-directory: ${{ env.GITHUB_WORKSPACE }}
+      if: success()
+      run: |
+          # Define paths for the .exe and .dll files
+          $EXE_PATH = "Game.exe"
+          $DLL_PATH_1 = Get-ChildItem "bin\x64\Final\*.dll" -ErrorAction SilentlyContinue
+          $DLL_PATH_2 = Get-ChildItem "bin\x64\Final_DX12\*.dll" -ErrorAction SilentlyContinue
+      
+          # Configure Git
+          git config --global user.name "VGF_Boy"
+          git config --global user.email "VGF_Boy@users.noreply.github.com"
+      
+          # Stage .exe and .dll files
+          git add $EXE_PATH $DLL_PATH_1 $DLL_PATH_2
+          git commit -m "Update Game binaries"
+          git push
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
