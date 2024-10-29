@@ -70,9 +70,9 @@ jobs:
         if: success()
         run: |
           # Define paths for the .exe and .dll files
-          EXE_PATH="${{ env.GITHUB_WORKSPACE }}/Editor.exe"
-          DLL_PATH_1="${{ env.GITHUB_WORKSPACE }}/bin/x64/Release/*.dll"  
-          DLL_PATH_2="${{ env.GITHUB_WORKSPACE }}/bin/x64/Release_DX12/*.dll"
+          $EXE_PATH = "${{ env.GITHUB_WORKSPACE }}\Editor.exe"
+          $DLL_PATH_1 = Get-ChildItem "${{ env.GITHUB_WORKSPACE }}\bin\x64\Release\*.dll" -ErrorAction SilentlyContinue
+          $DLL_PATH_2 = Get-ChildItem "${{ env.GITHUB_WORKSPACE }}\bin\x64\Release_DX12\*.dll" -ErrorAction SilentlyContinue
 
           # Configure Git
           git config --global user.name "github-actions[bot]"
