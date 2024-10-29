@@ -11,7 +11,7 @@ on:
 env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: vgframework.sln
-  BUILD_PLATFORM: "Win64 DX12" 
+  BUILD_PLATFORM: '"Win64 DX12"'  # When command-line arguments contain spaces, they must be enclosed in quotes.
 
 permissions:
   contents: write
@@ -39,7 +39,6 @@ jobs:
       - name: Build Final
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: msbuild /m /p:Configuration=Final /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
-
 
       - name: Push binaries to repository
         working-directory: ${{ env.GITHUB_WORKSPACE }}
