@@ -9,7 +9,6 @@ on:
   push:
     branches: [ "master" ]
     paths:
-      - '**/*.sln'
       - '**/*.vcxproj'
       - '**/*.h'
       - '**/*.hpp'
@@ -20,7 +19,6 @@ on:
   pull_request:
     branches: [ "master" ]
     paths:
-      - '**/*.sln'
       - '**/*.vcxproj'
       - '**/*.h'
       - '**/*.hpp'
@@ -28,7 +26,6 @@ on:
       - '**/*.cpp'
       - '**/*.inl'
       - '**/*.fxh'
-  workflow_dispatch:  # This line allows manual triggering
 
 env:
   # Path to the solution file relative to the root of the project.
@@ -43,7 +40,7 @@ env:
   BUILD_PLATFORM: '"Win64 DX12"'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
@@ -66,40 +63,3 @@ jobs:
         # Add additional options to the MSBuild command line here (like platform or verbosity level).
         # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
         run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
-
-      - name: Push editor binaries to repository
-        working-directory: ${{ env.GITHUB_WORKSPACE }}
-        if: success()
-        run: |
-          # Define paths for the .exe and .dll files
-          $EXE_PATH = "Editor.exe"
-          $DLL_PATH_1 = Get-ChildItem "bin\x64\Release\*.dll" -ErrorAction SilentlyContinue
-          $DLL_PATH_2 = Get-ChildItem "bin\x64\Release_DX12\*.dll" -ErrorAction SilentlyContinue
-
-          # Configure Git
-          git config --global user.name "VGF_Boy"
-          git config --global user.email "VGF_Boy@users.noreply.github.com"
-
-          # Check for unstaged changes
-          Write-Host "Checking for unstaged changes..."
-          $UNSTAGED_CHANGES = git status --porcelain
-          
-          if ($UNSTAGED_CHANGES) {
-              Write-Host "Unstaged changes detected:"
-              git status
-              Write-Host "Differences:"
-              git diff
-              exit 1  # Exit with a non-zero status to stop the job if there are unstaged changes
-          } else {
-              Write-Host "No unstaged changes."
-          }
-
-          # Pull remote changes and rebase
-          git pull origin master --rebase
-
-          # Stage .exe and .dll files
-          git add $EXE_PATH $DLL_PATH_1 $DLL_PATH_2
-          git commit -m "Editor build"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,100 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: "Win64 DX12 Build"
+
+on:
+  push:
+    branches: [ "master" ]
+    paths:
+      - '**/*.vcxproj'
+      - '**/*.h'
+      - '**/*.hpp'
+      - '**/*.c'
+      - '**/*.cpp'
+      - '**/*.inl'
+      - '**/*.fxh'
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - '**/*.vcxproj'
+      - '**/*.h'
+      - '**/*.hpp'
+      - '**/*.c'
+      - '**/*.cpp'
+      - '**/*.inl'
+      - '**/*.fxh'
+  workflow_dispatch:  # This line allows manual triggering
+
+env:
+  # Path to the solution file relative to the root of the project.
+  SOLUTION_FILE_PATH: vgframework.sln
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        config: [Release, Final]  # Define multiple configurations here
+
+    steps:
+      - uses: actions/checkout@v4
+  
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: '[17.11.2, 18.0.0)'
+
+      - name: Restore NuGet packages
+        working-directory: ${{ env.GITHUB_WORKSPACE }}
+        run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
+
+      - name: Build
+        working-directory: ${{ env.GITHUB_WORKSPACE }}
+        run: msbuild /m /p:Configuration=${{ matrix.config }} /p:Platform='"Win64 DX12"' ${{ env.SOLUTION_FILE_PATH }}
+
+      - name: Collect binaries
+        id: collect_binaries
+        run: |
+          # Define paths for the .exe and .dll files
+          $EXE_PATH_EDITOR = "Editor.exe"
+          $EXE_PATH_GAME = "Game.exe"
+          $DLL_PATHS = @()
+
+          # Collect DLL paths for both configurations
+          foreach ($config in @("Release", "Final")) {
+              $DLL_PATHS += Get-ChildItem "bin\x64\$config\*.dll" -ErrorAction SilentlyContinue
+              $DLL_PATHS += Get-ChildItem "bin\x64\$config_DX12\*.dll" -ErrorAction SilentlyContinue
+          }
+
+          # Prepare the output for later use
+          $DLL_PATHS -join ";" | Out-File -FilePath dll_paths.txt -Encoding utf8
+
+      - name: Push binaries to repository
+        working-directory: ${{ env.GITHUB_WORKSPACE }}
+        if: success()
+        run: |
+          # Read the DLL paths collected in the previous step
+          $DLL_PATHS = Get-Content dll_paths.txt -Encoding utf8
+
+          # Configure Git
+          git config --global user.name "VGF_Boy"
+          git config --global user.email "VGF_Boy@users.noreply.github.com"
+
+          # Stage .exe and .dll files
+          git add -f $EXE_PATH_EDITOR
+          git add -f $EXE_PATH_GAME
+
+          foreach ($dll in $DLL_PATHS) {
+              git add -f $dll
+          }
+
+          git commit -m "New editor and game builds available"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

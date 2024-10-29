@@ -9,7 +9,6 @@ on:
   push:
     branches: [ "master" ]
     paths:
-      - '**/*.sln'
       - '**/*.vcxproj'
       - '**/*.h'
       - '**/*.hpp'
@@ -20,7 +19,6 @@ on:
   pull_request:
     branches: [ "master" ]
     paths:
-      - '**/*.sln'
       - '**/*.vcxproj'
       - '**/*.h'
       - '**/*.hpp'
