@@ -42,7 +42,7 @@ env:
   BUILD_PLATFORM: '"Win64 DX12"'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
