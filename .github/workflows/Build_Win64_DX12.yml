@@ -6,31 +6,12 @@
 name: "Build Win64 DX12"
 
 on:
-  push:
-    branches: [ "master" ]
-    paths:
-      - '**/*.vcxproj'
-      - '**/*.h'
-      - '**/*.hpp'
-      - '**/*.c'
-      - '**/*.cpp'
-      - '**/*.inl'
-      - '**/*.fxh'
-  pull_request:
-    branches: [ "master" ]
-    paths:
-      - '**/*.vcxproj'
-      - '**/*.h'
-      - '**/*.hpp'
-      - '**/*.c'
-      - '**/*.cpp'
-      - '**/*.inl'
-      - '**/*.fxh'
   workflow_dispatch:  # This line allows manual triggering
 
 env:
   # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: vgframework.sln
+  BUILD_PLATFORM: "Win64 DX12" 
 
 permissions:
   contents: write
@@ -51,13 +32,14 @@ jobs:
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
 
-      - name: Build Editor (Win64 Release DX12)
+      - name: Build Release
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: msbuild /m /p:Configuration=Release /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
 
-      - name: Build Game (Win64 Final DX12)
+      - name: Build Final
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: msbuild /m /p:Configuration=Final /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
+
 
       - name: Push binaries to repository
         working-directory: ${{ env.GITHUB_WORKSPACE }}
