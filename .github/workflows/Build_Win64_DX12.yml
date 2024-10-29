@@ -40,13 +40,20 @@ jobs:
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: msbuild /m /p:Configuration=Final /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
 
+      - name: Read version.h content
+        id: read_version
+        working-directory: ${{ env.GITHUB_WORKSPACE }}
+        run: |
+          # Read the content of version.h and set it as an output variable
+          echo "VERSION_CONTENT=$(cat src/version.h)" >> $GITHUB_ENV
+
       - name: Push binaries to repository
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         if: success()
         run: |
           # Configure Git
-          git config --global user.name "VGF_Boy"
-          git config --global user.email "VGF_Boy@users.noreply.github.com"
+          git config user.name "VGF_Boy"
+          git config user.email "VGF_Boy@users.noreply.github.com"
 
           # Stage Editor files
           git add -f "Editor.exe"
@@ -65,7 +72,10 @@ jobs:
           git add -f "bin\x64\Final\physics.dll"
           git add -f "bin\x64\Final_DX12\renderer.dll"
 
-          git commit -m "Editor and game builds"
+          # Generate a commit message from the version content
+          COMMIT_MESSAGE="Editor and Game binaries - $VERSION_CONTENT"
+
+          git commit -m "$COMMIT_MESSAGE"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
