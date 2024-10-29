@@ -38,9 +38,6 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        config: [Release, Final]  # Define multiple configurations here
 
     steps:
       - uses: actions/checkout@v4
@@ -54,34 +51,18 @@ jobs:
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
 
-      - name: Build
+      - name: Build Editor (Win64 Release DX12)
         working-directory: ${{ env.GITHUB_WORKSPACE }}
-        run: msbuild /m /p:Configuration=${{ matrix.config }} /p:Platform="Win64 DX12" ${{ env.SOLUTION_FILE_PATH }}
+        run: msbuild /m /p:Configuration=Release /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
 
-      - name: Collect binaries
-        id: collect_binaries
-        run: |
-          # Define paths for the .exe and .dll files
-          $EXE_PATH_EDITOR = "Editor.exe"
-          $EXE_PATH_GAME = "Game.exe"
-          $DLL_PATHS = @()
-
-          # Collect DLL paths for both configurations
-          foreach ($config in @("Release", "Final")) {
-              $DLL_PATHS += Get-ChildItem "bin\x64\$config\*.dll" -ErrorAction SilentlyContinue
-              $DLL_PATHS += Get-ChildItem "bin\x64\$config_DX12\*.dll" -ErrorAction SilentlyContinue
-          }
-
-          # Prepare the output for later use
-          $DLL_PATHS -join ";" | Out-File -FilePath dll_paths.txt -Encoding utf8
+      - name: Build Game (Win64 Final DX12)
+        working-directory: ${{ env.GITHUB_WORKSPACE }}
+        run: msbuild /m /p:Configuration=Final /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
 
       - name: Push binaries to repository
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         if: success()
         run: |
-          # Read the DLL paths collected in the previous step
-          $DLL_PATHS = Get-Content dll_paths.txt -Encoding utf8
-
           # Configure Git
           git config --global user.name "VGF_Boy"
           git config --global user.email "VGF_Boy@users.noreply.github.com"
