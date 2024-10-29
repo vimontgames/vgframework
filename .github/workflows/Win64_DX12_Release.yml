@@ -82,7 +82,7 @@ jobs:
 
           # Stage .exe and .dll files
           git add $EXE_PATH $DLL_PATH_1 $DLL_PATH_2
-          git commit -m "Update Editor binaries"
+          git commit -m "Editor build"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
