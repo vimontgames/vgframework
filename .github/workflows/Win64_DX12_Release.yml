@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: "Win64 DX12 Release    "
+name: "Win64 DX12 Release"
 
 on:
   push:
@@ -49,19 +49,38 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
   
-    - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v2
-      with:
-        vs-version: '[17.11.2, 18.0.0)'
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: '[17.11.2, 18.0.0)'
 
-    - name: Restore NuGet packages
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      run: nuget restore ${{env.SOLUTION_FILE_PATH}}
+      - name: Restore NuGet packages
+        working-directory: ${{ env.GITHUB_WORKSPACE }}
+        run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
 
-    - name: Build
-      working-directory: ${{env.GITHUB_WORKSPACE}}
-      # Add additional options to the MSBuild command line here (like platform or verbosity level).
-      # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} /p:Platform=${{env.BUILD_PLATFORM}} ${{env.SOLUTION_FILE_PATH}}
+      - name: Build
+        working-directory: ${{ env.GITHUB_WORKSPACE }}
+        # Add additional options to the MSBuild command line here (like platform or verbosity level).
+        # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
+        run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
+
+      - name: Push binaries to repository
+        if: success()
+        run: |
+          # Define paths for the .exe and .dll files
+          EXE_PATH="${{ env.GITHUB_WORKSPACE }}/Editor.exe"
+          DLL_PATH_1="${{ env.GITHUB_WORKSPACE }}/bin/x64/Release/*.dll"  
+          DLL_PATH_2="${{ env.GITHUB_WORKSPACE }}/bin/x64/Release_DX12/*.dll"
+
+          # Configure Git
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Stage .exe and .dll files
+          git add $EXE_PATH $DLL_PATH_1 $DLL_PATH_2
+          git commit -m "Update Editor.exe"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
