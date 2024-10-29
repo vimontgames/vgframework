@@ -28,6 +28,7 @@ on:
       - '**/*.cpp'
       - '**/*.inl'
       - '**/*.fxh'
+  workflow_dispatch:  # This line allows manual triggering
 
 env:
   # Path to the solution file relative to the root of the project.
