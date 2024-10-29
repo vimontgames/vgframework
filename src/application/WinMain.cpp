@@ -249,8 +249,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 	#ifdef GIT_REVISION
 	title += fmt::sprintf(" (commit %s)", GIT_REVISION);
-	#else
-	title += " (custom build)";
 	#endif
 
 	SetWindowTextA(g_hWnd, title.c_str());

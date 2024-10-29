@@ -1,4 +1,6 @@
+src/version.h
 lib/*
+bin/
 tmp/*
 cache/*
 .vs/*

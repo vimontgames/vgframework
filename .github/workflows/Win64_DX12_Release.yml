@@ -80,6 +80,20 @@ jobs:
           git config --global user.name "VGF_Boy"
           git config --global user.email "VGF_Boy@users.noreply.github.com"
 
+          # Check for unstaged changes
+          echo "Checking for unstaged changes..."
+          UNSTAGED_CHANGES=$(git status --porcelain)
+          
+          if [ -n "$UNSTAGED_CHANGES" ]; then
+              echo "Unstaged changes detected:"
+              git status
+              echo "Differences:"
+              git diff
+              exit 1  # Exit with a non-zero status to stop the job if there are unstaged changes
+          else
+              echo "No unstaged changes."
+          fi
+
           # Pull remote changes and rebase
           git pull origin master --rebase
 
