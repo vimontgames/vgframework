@@ -108,7 +108,7 @@ jobs:
           git add -f "bin\x64\Final_DX12\renderer.dll"
 
           # Generate a commit message from the version content
-          COMMIT_MESSAGE="Editor and Game binaries $VERSION_CONTENT"
+          $COMMIT_MESSAGE = "Editor and Game binaries $env:VERSION_CONTENT"
 
           # Commit changes with the generated commit message
           git commit -m "$COMMIT_MESSAGE"
