@@ -15,7 +15,6 @@ namespace vg
         Application(vg::engine::IEngine & _engine);
         ~Application();
 
-        core::IPlugin::Version GetVersion() const;
         bool Update();
 
     private:

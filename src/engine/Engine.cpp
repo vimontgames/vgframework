@@ -40,9 +40,6 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-#define VG_ENGINE_VERSION_MAJOR 0
-#define VG_ENGINE_VERSION_MINOR 1
-
 //--------------------------------------------------------------------------------------
 IEngine * CreateNew()
 {
@@ -52,12 +49,6 @@ IEngine * CreateNew()
 //--------------------------------------------------------------------------------------
 namespace vg::engine
 {
-	//--------------------------------------------------------------------------------------
-	IPlugin::Version Engine::GetVersion() const
-	{
-		return { VG_ENGINE_VERSION_MAJOR, VG_ENGINE_VERSION_MINOR };
-	}
-
     #ifdef _WIN32
     //--------------------------------------------------------------------------------------
     LRESULT CALLBACK Engine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

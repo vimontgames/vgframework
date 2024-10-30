@@ -10,9 +10,6 @@
 using namespace vg::core;
 using namespace vg::audio;
 
-#define VG_AUDIO_VERSION_MAJOR 0
-#define VG_AUDIO_VERSION_MINOR 0
-
 //--------------------------------------------------------------------------------------
 IAudio * CreateNew()
 {
@@ -22,12 +19,6 @@ IAudio * CreateNew()
 //--------------------------------------------------------------------------------------
 namespace vg::audio
 {
-	//--------------------------------------------------------------------------------------
-	IPlugin::Version Audio::GetVersion() const
-	{
-		return { VG_AUDIO_VERSION_MAJOR, VG_AUDIO_VERSION_MINOR };
-	}
-
 	//--------------------------------------------------------------------------------------
     Audio::Audio(const string & _name, IObject * _parent) :
         super(_name, _parent)

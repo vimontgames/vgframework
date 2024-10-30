@@ -1,4 +1,4 @@
-src/version.h
+src/commit.h
 Game.exe
 Editor.exe
 lib/*

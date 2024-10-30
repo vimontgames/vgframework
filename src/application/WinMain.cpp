@@ -15,6 +15,7 @@
 #include "resource.h"
 #include "application.h"
 #include "version.h"
+#include "commit.h"
 
 HINSTANCE hInst;
 HWND g_hWnd;
@@ -235,23 +236,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     if (cmdLine.getBool("attachDebugger", attachDebugger) && attachDebugger)
         vg::core::messageBox(vg::core::MessageBoxIcon::Info, vg::core::MessageBoxType::OK, "attach=true", "You can attach debugger now");
 
-    core::Singletons singletons;
-    g_engine->Init(engineParams, singletons);
-
-    Application * app = new Application(*g_engine);
-	const auto version = app->GetVersion();
-
 	core::string title = fmt::sprintf("VGFramework %s|%s - %s", core::Plugin::getPlatform(), core::Plugin::getConfiguration(), core::asString(engineParams.renderer.device.api));
     if (engineParams.renderer.device.debugDevice)
         title += " (debug device)";
 
-	title += fmt::sprintf(" - Version %u.%u", version.major, version.minor);
+	title += fmt::sprintf(" - Version %u.%u.%u", VG_FRAMEWORK_VERSION_MAJOR, VG_FRAMEWORK_VERSION_MINOR, VG_FRAMEWORK_VERSION_PATCH);
 	
 	#ifdef GIT_REVISION
 	title += fmt::sprintf(" (commit %s)", GIT_REVISION);
 	#endif
 
 	SetWindowTextA(g_hWnd, title.c_str());
+
+    core::Singletons singletons;
+    g_engine->Init(engineParams, singletons);
+
+    Application * app = new Application(*g_engine);
 
     // Start in play mode?
 	#if VG_FINAL

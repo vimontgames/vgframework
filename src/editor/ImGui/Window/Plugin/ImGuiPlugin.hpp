@@ -23,7 +23,6 @@ namespace vg::editor
             {
                 ImGui::TableSetupScrollFreeze(0, 1); // Make top row always visible
                 ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_DefaultSort);
-                ImGui::TableSetupColumn("Version", ImGuiTableColumnFlags_None);
                 ImGui::TableSetupColumn("Path", ImGuiTableColumnFlags_None);
                 ImGui::TableHeadersRow();
 
@@ -41,10 +40,6 @@ namespace vg::editor
                     ImGui::Text(pluginDesc->GetClassName());
 
                     ImGui::TableSetColumnIndex(1);
-                    if (plugin != nullptr)
-                        ImGui::Text((to_string(plugin->GetVersion().major) + "." + to_string(plugin->GetVersion().minor)).c_str());
-
-                    ImGui::TableSetColumnIndex(2);
                     if (plugin != nullptr)
                         ImGui::Text(plugin->GetName().c_str());
                 }

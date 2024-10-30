@@ -38,8 +38,6 @@ namespace vg::renderer
 	public:
         using super = IRenderer;
 
-		IPlugin::Version		                GetVersion			        () const override;
-
 								                Renderer			        (const core::string & _name, core::IObject * _parent);
 								                ~Renderer			        ();
 

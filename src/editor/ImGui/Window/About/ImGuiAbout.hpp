@@ -1,5 +1,6 @@
 #include "ImguiAbout.h"
 #include "renderer/ImGui_consts.h"
+#include "version.h"
 
 namespace vg::editor
 {
@@ -59,7 +60,7 @@ namespace vg::editor
             ImGui::PushDefaultFont();
 
             ImGui::PushStyle(renderer::FontStyle::Bold);
-            Text("VG Framework");
+            Text("VG Framework %u.%u.%u", VG_FRAMEWORK_VERSION_MAJOR, VG_FRAMEWORK_VERSION_MINOR, VG_FRAMEWORK_VERSION_PATCH);
             Text("");
             ImGui::PopStyle();
 

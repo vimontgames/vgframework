@@ -50,9 +50,6 @@ using namespace vg::core;
 using namespace vg::editor;
 using namespace ImGui;
 
-#define VG_EDITOR_VERSION_MAJOR 0
-#define VG_EDITOR_VERSION_MINOR 14
-
 //--------------------------------------------------------------------------------------
 IEditor * CreateNew()
 {
@@ -62,12 +59,6 @@ IEditor * CreateNew()
 //--------------------------------------------------------------------------------------
 namespace vg::editor
 {
-	//--------------------------------------------------------------------------------------
-	IPlugin::Version Editor::GetVersion() const
-	{
-		return { VG_EDITOR_VERSION_MAJOR, VG_EDITOR_VERSION_MINOR };
-	}
-
     #ifdef _WIN32
     //--------------------------------------------------------------------------------------
     LRESULT CALLBACK Editor::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

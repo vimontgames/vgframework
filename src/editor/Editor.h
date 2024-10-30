@@ -36,8 +36,6 @@ namespace vg
             Editor(const core::string & _name, core::IObject * _parent);
             ~Editor();
 
-			IPlugin::Version				    GetVersion() const final override;
-
 			bool								RegisterClasses		() final override;
 			bool								UnregisterClasses	() final override;
 

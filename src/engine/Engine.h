@@ -49,8 +49,6 @@ namespace vg::engine
 	public:
         using super = IEngine;
 
-		IPlugin::Version				        GetVersion	        () const final override;
-
 										        Engine		        (const core::string & _name, core::IObject * _parent);
 										        ~Engine		        ();
 

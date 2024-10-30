@@ -40,14 +40,14 @@ jobs:
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: msbuild /m /p:Configuration=Final /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
 
-      - name: Read GIT_REVISION from version.h
+      - name: Read GIT_REVISION from commit.h and VERSION from version.h
         id: read_version
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: |
-          # Check if the version.h file exists
-          if (Test-Path "src/version.h") {
+          # Check if the commit.h file exists
+          if (Test-Path "src/commit.h") {
             # Read the content line by line
-            $versionContent = Get-Content "src/version.h"
+            $versionContent = Get-Content "src/commit.h"
 
             # Initialize an empty variable for git revision
             $gitRevision = ""
@@ -64,12 +64,42 @@ jobs:
               }
             }
 
-            # Check if gitRevision was found and set it in the environment
+            # Check if gitRevision was found
             if ($gitRevision) {
-              echo "VERSION_CONTENT=${gitRevision}" >> $GITHUB_ENV
+              echo "GIT_REVISION=${gitRevision}" >> $GITHUB_ENV
               Write-Host "GIT_REVISION extracted: $gitRevision"
             } else {
-              Write-Error "GIT_REVISION not found in version.h"
+              Write-Error "GIT_REVISION not found in commit.h"
+              exit 1
+            }
+          } else {
+            Write-Error "commit.h file not found!"
+            exit 1
+          }
+
+          # Read the version components from version.h
+          if (Test-Path "src/version.h") {
+            $versionContent = Get-Content "src/version.h"
+            $major = ""
+            $minor = ""
+            $patch = ""
+
+            foreach ($line in $versionContent) {
+              if ($line -match '#define VG_FRAMEWORK_VERSION_MAJOR (\d+)') {
+                $major = $matches[1]
+              } elseif ($line -match '#define VG_FRAMEWORK_VERSION_MINOR (\d+)') {
+                $minor = $matches[1]
+              } elseif ($line -match '#define VG_FRAMEWORK_VERSION_PATCH (\d+)') {
+                $patch = $matches[1]
+              }
+            }
+
+            if ($major -and $minor -and $patch) {
+              $fullVersion = "$major.$minor.$patch"
+              echo "VERSION=$fullVersion" >> $GITHUB_ENV
+              Write-Host "Full version extracted: $fullVersion"
+            } else {
+              Write-Error "Version components not found in version.h"
               exit 1
             }
           } else {
@@ -108,7 +138,7 @@ jobs:
           git add -f "bin\x64\Final_DX12\renderer.dll"
 
           # Generate a commit message from the version content
-          $COMMIT_MESSAGE = "Editor and Game binaries $($env:VERSION_CONTENT)"  # Wrap in $()
+          $COMMIT_MESSAGE = "Editor and Game $($env:VERSION) (Commit: $($env:GIT_REVISION))"  # Wrap in $()
 
           # Commit changes with the generated commit message
           git commit -m "$COMMIT_MESSAGE"

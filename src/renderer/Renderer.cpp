@@ -79,9 +79,6 @@ IRenderer * CreateNew()
 //--------------------------------------------------------------------------------------
 namespace vg::renderer
 {
-	#define VG_RENDERER_VERSION_MAJOR 0
-	#define VG_RENDERER_VERSION_MINOR 1
-
     #ifdef _WIN32
     //--------------------------------------------------------------------------------------
     LRESULT CALLBACK Renderer::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -112,12 +109,6 @@ namespace vg::renderer
     {
         return ShaderManager::get();
     }
-
-	//--------------------------------------------------------------------------------------
-	core::IPlugin::Version Renderer::GetVersion() const
-	{
-		return { VG_RENDERER_VERSION_MAJOR, VG_RENDERER_VERSION_MINOR };
-	}
 
 	//--------------------------------------------------------------------------------------
 	Renderer::Renderer(const core::string & _name, core::IObject * _parent) :

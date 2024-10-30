@@ -29,7 +29,6 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
          Game        ();
          ~Game       ();
 
-        vg::core::IPlugin::Version                      GetVersion              () const final override;
         bool                                            RegisterClasses         () final override;
         bool                                            UnregisterClasses       ();
 

@@ -34,15 +34,6 @@ Game::~Game()
 // vg::core::IPlugin overrides
 //--------------------------------------------------------------------------------------
 
-#define GAME_VERSION_MAJOR 0
-#define GAME_VERSION_MINOR 1
-
-//--------------------------------------------------------------------------------------
-IPlugin::Version Game::GetVersion() const
-{
-    return { GAME_VERSION_MAJOR, GAME_VERSION_MINOR };
-}
-
 //--------------------------------------------------------------------------------------
 bool Game::registerProperties(IClassDesc & _desc)
 {

@@ -13,7 +13,6 @@ namespace vg::audio
                                             Audio		                (const core::string & _name, core::IObject * _parent);
                                             ~Audio                      ();
 
-		IPlugin::Version				    GetVersion	                () const final override;
         const char *						GetClassName		        () const final override { return "Audio"; }
 
         bool                                RegisterClasses		        () final override;

@@ -29,7 +29,6 @@ namespace vg::physics
                                                 Physics		                (const core::string & _name, core::IObject * _parent);
                                                 ~Physics                    ();
 
-		IPlugin::Version				        GetVersion	                () const final override;
         const char *						    GetClassName		        () const final override { return "Physics"; }
 
         bool                                    RegisterClasses		        () final override;

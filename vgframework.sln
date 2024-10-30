@@ -154,7 +154,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{7C17C1
 		.gitignore = .gitignore
 		CHANGELOG.md = CHANGELOG.md
 		README.md = README.md
-		src\version.h = src\version.h
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A6056C5D-D628-4DFE-945D-0938671C5BA8}"
@@ -213,6 +212,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FXAA", "FXAA", "{C1DE9EC7-954C-4C24-9956-879DDFE9A748}"
 	ProjectSection(SolutionItems) = preProject
 		data\Shaders\extern\FXAA\Fxaa3_11.h = data\Shaders\extern\FXAA\Fxaa3_11.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Version", "Version", "{5BE32959-4B91-416E-A612-81A5A1FC923A}"
+	ProjectSection(SolutionItems) = preProject
+		src\commit.h = src\commit.h
+		src\version.h = src\version.h
 	EndProjectSection
 EndProject
 Global

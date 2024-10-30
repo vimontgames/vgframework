@@ -37,12 +37,6 @@ IPhysics * CreateNew()
 namespace vg::physics
 {
 	//--------------------------------------------------------------------------------------
-	IPlugin::Version Physics::GetVersion() const
-	{
-		return { VG_PHYSICS_VERSION_MAJOR, VG_PHYSICS_VERSION_MINOR };
-	}
-
-	//--------------------------------------------------------------------------------------
     Physics::Physics(const string & _name, IObject * _parent) :
         super(_name, _parent)
 	{
