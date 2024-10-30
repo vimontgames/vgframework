@@ -1,3 +1,5 @@
+cd..
+
 del *.lib
 del *.ipdb
 del *.iobj
@@ -20,6 +22,7 @@ rmdir lib /S /Q
 rmdir tmp /S /Q
 rmdir .vs /S /Q
 rmdir cache /S /Q
+rmdir build /S /Q
 del extern/JoltPhysics/Build/VS2022_CL /S /Q
 cd projects
 cd game

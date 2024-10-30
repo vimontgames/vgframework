@@ -2,6 +2,7 @@
 #include "Plugin.h"
 #include "core/Kernel.h"
 #include "core/string/string.h"
+#include "core/File/File.h"
 
 namespace vg::core
 {
@@ -33,10 +34,20 @@ namespace vg::core
 	{
 		string filename;
 
+		// First, look for the locally compiled version in the "build" folder
 		if (_configSuffix.empty())
-			filename = fmt::sprintf("bin/%s/%s/%s.%s", getPlatform(), getConfiguration(), _name, getExtension());
+			filename = fmt::sprintf("build/bin/%s/%s/%s.%s", getPlatform(), getConfiguration(), _name, getExtension());
 		else
-			filename = fmt::sprintf("bin/%s/%s_%s/%s.%s", getPlatform(), getConfiguration(), _configSuffix, _name,  getExtension());
+			filename = fmt::sprintf("build/bin/%s/%s_%s/%s.%s", getPlatform(), getConfiguration(), _configSuffix, _name,  getExtension());
+
+		// If it does not exist, then use the prebuilt version
+		if (!io::exists(filename))
+		{
+            if (_configSuffix.empty())
+                filename = fmt::sprintf("bin/%s/%s/%s.%s", getPlatform(), getConfiguration(), _name, getExtension());
+            else
+                filename = fmt::sprintf("bin/%s/%s_%s/%s.%s", getPlatform(), getConfiguration(), _configSuffix, _name, getExtension());
+		}
 		
 		IPlugin * instance = nullptr;
 

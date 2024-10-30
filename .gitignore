@@ -1,4 +1,6 @@
 src/version.h
+Game.exe
+Editor.exe
 lib/*
 bin/*
 tmp/*

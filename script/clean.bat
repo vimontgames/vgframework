@@ -1,4 +1,6 @@
-del *.exe
+cd..
+
+del VGFramework*.exe
 del *.lib
 ren dxcompiler.dll dxcompiler.dll.bak
 ren dxil.dll dxil.dll.bak
@@ -16,6 +18,7 @@ del *.ilk
 del *.pdb
 del *.opt
 rmdir profile /S /Q
+rmdir build /S /Q
 rmdir bin /S /Q
 rmdir lib /S /Q
 rmdir tmp /S /Q

@@ -46,17 +46,28 @@ jobs:
         run: |
           # Check if the version.h file exists
           if (Test-Path "src/version.h") {
-            # Use PowerShell to extract the GIT_REVISION value from version.h
+            # Read the content line by line
             $versionContent = Get-Content "src/version.h"
 
-            # Output the content for debugging
-            Write-Host "Version file content:"
-            Write-Host $versionContent
+            # Initialize an empty variable for git revision
+            $gitRevision = ""
 
-            # Attempt to match the pattern with flexible whitespace handling
-            if ($versionContent -match '#define\s+GIT_REVISION\s+"([^"]+)"') {
-              $gitRevision = $matches[1]
+            # Loop through each line and find the GIT_REVISION line
+            foreach ($line in $versionContent) {
+              if ($line -like '*#define GIT_REVISION*') {
+                # Split the line by double quotes and get the part between them
+                $parts = $line -split '"'
+                if ($parts.Length -ge 2) {
+                  $gitRevision = $parts[1]
+                  break
+                }
+              }
+            }
+
+            # Check if gitRevision was found and set it in the environment
+            if ($gitRevision) {
               echo "VERSION_CONTENT=${gitRevision}" >> $GITHUB_ENV
+              Write-Host "GIT_REVISION extracted: $gitRevision"
             } else {
               Write-Error "GIT_REVISION not found in version.h"
               exit 1
@@ -65,6 +76,11 @@ jobs:
             Write-Error "version.h file not found!"
             exit 1
           }
+
+      # Run the batch file to create client file copies
+      - name: Copy client files
+        working-directory: ${{ env.GITHUB_WORKSPACE }}/script
+        run: cmd /c copy_client_files.bat
 
       - name: Push binaries to repository
         working-directory: ${{ env.GITHUB_WORKSPACE }}
