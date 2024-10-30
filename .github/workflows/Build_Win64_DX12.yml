@@ -44,10 +44,27 @@ jobs:
         id: read_version
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: |
-          # Use PowerShell to extract the GIT_REVISION value from version.h
-          $versionContent = Get-Content src/version.h
-          $gitRevision = ($versionContent -match '#define GIT_REVISION "(.*)"') ? $matches[1] : ""
-          echo "VERSION_CONTENT=${gitRevision}" >> $GITHUB_ENV
+          # Check if the version.h file exists
+          if (Test-Path "src/version.h") {
+            # Use PowerShell to extract the GIT_REVISION value from version.h
+            $versionContent = Get-Content "src/version.h"
+
+            # Output the content for debugging
+            Write-Host "Version file content:"
+            Write-Host $versionContent
+
+            # Attempt to match the pattern
+            if ($versionContent -match '#define GIT_REVISION "(.*)"') {
+              $gitRevision = $matches[1]
+              echo "VERSION_CONTENT=${gitRevision}" >> $GITHUB_ENV
+            } else {
+              Write-Error "GIT_REVISION not found in version.h"
+              exit 1
+            }
+          } else {
+            Write-Error "version.h file not found!"
+            exit 1
+          }
 
       - name: Push binaries to repository
         working-directory: ${{ env.GITHUB_WORKSPACE }}
