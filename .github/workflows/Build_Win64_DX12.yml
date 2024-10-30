@@ -53,8 +53,8 @@ jobs:
             Write-Host "Version file content:"
             Write-Host $versionContent
 
-            # Attempt to match the pattern
-            if ($versionContent -match '#define GIT_REVISION "(.*)"') {
+            # Attempt to match the pattern with flexible whitespace handling
+            if ($versionContent -match '#define\s+GIT_REVISION\s+"(.*?)"') {
               $gitRevision = $matches[1]
               echo "VERSION_CONTENT=${gitRevision}" >> $GITHUB_ENV
             } else {
