@@ -30,20 +30,21 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 
 # getting started
 
-You have two possibilities depending on if you want to build from source or just use the provided executables:
+You have two options depending on whether you want to build from source or use the provided executables:
 
 ## using precompiled binaries (users)
 
-Run Editor.exe to run the editor.
-Run Game.exe to run the game.
+- Run **Editor.exe** to launch the editor.
+- Run **Game.exe** to start the game.
 
 ## building from sources (programmers)
 
-By default, VGFramework will use the precompiled binaries Editor.exe and Game.exe, and the DLLs under the /bin/ folder. 
-When you build locally it will create executable files for Editor.exe/Game.exe and in the /build/ folder.
-These files will be used if present, or the program will fallback to the precompiled binaries.
+By default, VGFramework uses the precompiled binaries: Editor.exe, Game.exe, and the DLLs located in the /bin/ folder. 
 
-To build from sources: 
+When you build locally, executable files for Editor.exe and Game.exe will be created in your /build/ folder.\
+The program will use these locally built files if they are present; otherwise, it will fallback to the precompiled binaries.
+
+### To build from sources: 
 
 - Sync the depot.
 - Install the required SDKs and configure the environment variables.

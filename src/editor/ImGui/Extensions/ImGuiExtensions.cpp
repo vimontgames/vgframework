@@ -415,7 +415,7 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    bool CollapsingHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, IObject * _object, const char * _icon, const string & _tooltip, vg::core::uint _index, ImVec4 * _buttonColor)
+    bool CollapsingHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, IObject * _object, const char * _icon, const string & _tooltip, vg::core::uint _index, const ImVec4 * _buttonColor)
     {
         auto collapsedButtonSize = style::button::SizeSmall;
         const ImGuiStyle & style = ImGui::GetStyle();

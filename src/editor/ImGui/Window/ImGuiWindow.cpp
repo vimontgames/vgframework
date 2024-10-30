@@ -2240,8 +2240,18 @@ namespace vg::editor
 
         auto availableWidth = GetContentRegionAvail().x;
         ImGui::PushItemWidth(availableWidth - style::label::PixelWidth - buttonWidth - style.ItemSpacing.x);
+
+        ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
+
+        bool exists = io::exists(buffer);
+        //if (!exists)
+        //    ImGui::PushStyleColor(ImGuiCol_FrameBg, getImGuiAdapter()->GetErrorColor());
+
         if (ImGui::InputText(label.c_str(), buffer, countof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
             storePath(buffer);
+
+        //if (!exists)
+        //    ImGui::PopStyleColor();
 
         ImGui::PopItemWidth();
 
@@ -2347,6 +2357,11 @@ namespace vg::editor
 
         if (_propContext.m_readOnly)
             ImGui::EndDisabled();
+
+        availableWidth = ImGui::GetContentRegionAvail().x + GetCursorPosX() - style.FramePadding.x;
+
+        if (!exists)
+            ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _resource, style::icon::Warning, "File does not exist on disk", _index, &getImGuiAdapter()->GetErrorColor());
 
         // build extension list
         string ext = getFileBrowserExt(_resource);

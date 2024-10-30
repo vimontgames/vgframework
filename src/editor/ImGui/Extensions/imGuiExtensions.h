@@ -49,7 +49,7 @@ namespace ImGui
 
     void CollapsingHeaderLabel(const ImVec2 & _headerPos, const vg::core::string & _label, bool _enabled);
     bool CollapsingHeaderCheckbox(const ImVec2 & _headerPos, bool _enabled, vg::core::IObject * _object, const char * _iconTrue, const char * _iconFalse, const vg::core::string & _tooltip);
-    bool CollapsingHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, vg::core::IObject * _object, const char * _icon, const vg::core::string & _tooltip, vg::core::uint _index = 0, ImVec4 * _buttonColor = nullptr);
+    bool CollapsingHeaderIconButton(const ImVec2 & _headerPos, float _availableWidth, vg::core::IObject * _object, const char * _icon, const vg::core::string & _tooltip, vg::core::uint _index = 0, const ImVec4 * _buttonColor = nullptr);
 
     void PushDefaultFont();
     void PushFont(vg::renderer::Font _font);

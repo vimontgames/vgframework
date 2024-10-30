@@ -199,11 +199,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vulkan", "Vulkan", "{A5BEB8
 		.github\workflows\ARM64EC_Vulkan_Release.yml = .github\workflows\ARM64EC_Vulkan_Release.yml
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "batch", "batch", "{4E477101-4D7A-4D13-AE06-9F27F1965883}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "script", "script", "{4E477101-4D7A-4D13-AE06-9F27F1965883}"
 	ProjectSection(SolutionItems) = preProject
-		build_all.bat = build_all.bat
-		clean.bat = clean.bat
-		package.bat = package.bat
+		script\build_all.bat = script\build_all.bat
+		script\clean.bat = script\clean.bat
+		script\copy_client_files.bat = script\copy_client_files.bat
+		script\generate_version_header.bat = script\generate_version_header.bat
+		script\package.bat = script\package.bat
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "extern", "extern", "{204113B2-C64F-4F4C-9C7A-49F562C088B3}"
