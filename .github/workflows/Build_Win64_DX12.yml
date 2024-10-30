@@ -79,8 +79,8 @@ jobs:
 
       # Run the batch file to create client file copies
       - name: Copy client files
-        working-directory: ${{ env.GITHUB_WORKSPACE }}/script
-        run: cmd /c copy_client_files.bat
+        working-directory: ${{ env.GITHUB_WORKSPACE }}
+        run: cmd /c script\copy_client_files.bat
 
       - name: Push binaries to repository
         working-directory: ${{ env.GITHUB_WORKSPACE }}
