@@ -71,6 +71,7 @@ namespace vg::editor
             inline static const char * EditorView           = ICON_FA_DESKTOP;
             inline static const char * Engine               = ICON_FA_GEAR;
             inline static const char * Error                = ICON_FA_BUG;
+            inline static const char * Environment          = ICON_FA_CLOUD_MOON;
             inline static const char * File                 = ICON_FA_FILE;
             inline static const char * Font                 = ICON_FA_FONT;
             inline static const char * FPS                  = ICON_FA_STOPWATCH;

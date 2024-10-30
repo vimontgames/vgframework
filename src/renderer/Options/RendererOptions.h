@@ -36,6 +36,8 @@ namespace vg::renderer
 
 							    RendererOptions			    (const core::string & _name, core::IObject * _parent = nullptr);
 
+        const core::float4 &    GetDefaultClearColor        () const { return m_defaultClearColor; }
+
         bool                    IsToolModeEnabled           () const final override { return isToolModeEnabled(); };
         bool                    IsRayTracingEnabled         () const final override { return isRayTracingEnabled(); };
 
@@ -79,8 +81,8 @@ namespace vg::renderer
         bool                    isAlbedoMapsEnabled         () const { return 0 != (DisplayFlags::AlbedoMap & m_displayFlags); }
         bool                    isNormalMapsEnabled         () const { return 0 != (DisplayFlags::NormalMap & m_displayFlags); }
         
-        void                    setBackgroundColor          (const core::float4 & _backgroundColor);
-        core::float4		    getBackgroundColor		    () const { return m_backgroundColor; }
+        void                    setDefaultClearColor        (const core::float4 & _backgroundColor);
+        core::float4		    getDefaultClearColor        () const { return m_defaultClearColor; }
 
         void                    update                      () const;
 
@@ -90,7 +92,7 @@ namespace vg::renderer
         void                    applyMSAA                   (const core::IProperty * _prop);
 
     private:
-        core::float4		    m_backgroundColor           = core::float4(0, 0, 0, 0);
+        core::float4		    m_defaultClearColor         = core::float4(0, 0, 0, 0);
         bool				    m_toolMode                  = true;
         bool                    m_aabb                      = false;
         bool				    m_wireframe                 = false;

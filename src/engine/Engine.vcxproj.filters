@@ -60,6 +60,9 @@
     <ClCompile Include="Component\Audio\AudioComponent.cpp">
       <Filter>Component\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="Component\Environment\EnvironmentComponent.cpp">
+      <Filter>Component\Environment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -371,6 +374,9 @@
     <ClInclude Include="ISoundResource.h" />
     <ClInclude Include="IUIImageComponent.h" />
     <ClInclude Include="IUIComponent.h" />
+    <ClInclude Include="Component\Environment\EnvironmentComponent.h">
+      <Filter>Component\Environment</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -495,6 +501,9 @@
     </Filter>
     <Filter Include="Component\Physics\Object\MergeStaticCollider">
       <UniqueIdentifier>{d9f8099c-01ad-4620-a7c6-40d04d5b256b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Environment">
+      <UniqueIdentifier>{c10d46fe-9dd2-4ad6-af98-be48d90ee89d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

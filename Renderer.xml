@@ -7,17 +7,17 @@
         <Property type="Bool" name="m_toolMode" value="false"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
         <Property type="EnumU8" name="m_lightingMode" value="Forward"/>
-        <Property type="EnumU8" name="m_HDRmode" value="HDR16"/>
-        <Property type="EnumU8" name="m_msaa" value="None"/>
+        <Property type="EnumU8" name="m_HDRmode" value="None"/>
+        <Property type="EnumU8" name="m_msaa" value="MSAA4X"/>
         <Property type="EnumU8" name="m_VSync" value="VSync_1"/>
         <Property type="Bool" name="m_rayTracing" value="false"/>
         <Property type="Bool" name="m_postProcess" value="true"/>
-        <Property type="EnumU8" name="m_aaPostProcess" value="FXAA"/>
+        <Property type="EnumU8" name="m_aaPostProcess" value="None"/>
         <Property type="EnumFlagsU32" name="m_renderPassFlags" flags="Bitfield" value="ZPrepass|Opaque|Transparency"/>
         <Property type="EnumFlagsU32" name="m_displayFlags" flags="Bitfield" value="AlbedoMap|NormalMap"/>
         <Property type="Bool" name="m_wireframe" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_aabb" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_debugUI" flags="SingleLine" value="false"/>
-        <Property type="Float4" name="m_backgroundColor" flags="Color" x="0.48101264" y="0.7895999" z="1" w="0"/>
+        <Property type="Float4" name="m_defaultClearColor" flags="Color" x="0.50196081" y="0.50196081" z="0.50196081" w="1"/>
     </Object>
 </Root>

@@ -14,13 +14,12 @@ namespace vg::core
     class IWorld;
     class IGameObject;
 
-    struct GameObjectUpdateContext
+    struct WorldUpdateContext
     {
-        GameObjectUpdateContext(bool _playing, bool _paused, float _dt, IWorld * _world) :
+        WorldUpdateContext(bool _playing, bool _paused, float _dt) :
             m_playing(_playing),
             m_paused(_paused),
-            m_dt(_dt),
-            m_world(_world)
+            m_dt(_dt)
         {
 
         }
@@ -28,6 +27,17 @@ namespace vg::core
         bool            m_playing : 1;
         bool            m_paused : 1;
         float           m_dt;
+    };
+
+    struct GameObjectUpdateContext : public WorldUpdateContext
+    {
+        GameObjectUpdateContext(const WorldUpdateContext & _context, IWorld * _world) :
+            WorldUpdateContext(_context),
+            m_world(_world)
+        {
+
+        }
+        
         IWorld *        m_world;
     };
 

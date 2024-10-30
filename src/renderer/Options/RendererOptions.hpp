@@ -82,8 +82,8 @@ namespace vg::renderer
             registerPropertyEx(RendererOptions, m_debugUI, "Debug UI", PropertyFlags::SingleLine);
             setPropertyDescription(LightDesc, m_debugUI, "Show UI debug");
 
-            registerPropertyEx(RendererOptions, m_backgroundColor, "Background", PropertyFlags::Color);
-            setPropertyDescription(LightDesc, m_backgroundColor, "Scene background color");
+            registerPropertyEx(RendererOptions, m_defaultClearColor, "Background color", PropertyFlags::Color);
+            setPropertyDescription(LightDesc, m_defaultClearColor, "Scene default background clear color");
         }
         registerPropertyGroupEnd(RendererOptions);
 
@@ -159,11 +159,11 @@ namespace vg::renderer
         {
             applyMSAA(&_prop);
         }
-        else if (!strcmp(name, "m_backgroundColor"))
+        else if (!strcmp(name, "m_defaultClearColor"))
         {
-            const auto backgroundColor = m_backgroundColor;
-            m_backgroundColor = (float4)0.0f;
-            setBackgroundColor(backgroundColor);
+            const auto backgroundColor = m_defaultClearColor;
+            m_defaultClearColor = (float4)0.0f;
+            setDefaultClearColor(backgroundColor);
         }
         else if (!strcmp(name, "m_rayTracing"))
         {
@@ -174,13 +174,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Clear color is part of the RenderTarget descriptor, thus we need to reset the pool when changing it
     //--------------------------------------------------------------------------------------
-    void RendererOptions::setBackgroundColor(const core::float4 & _backgroundColor)
+    void RendererOptions::setDefaultClearColor(const core::float4 & _backgroundColor)
     {
-        if (any(_backgroundColor != m_backgroundColor))
+        if (any(_backgroundColor != m_defaultClearColor))
         {
             auto * renderer = Renderer::get();
             renderer->SetResized();
-            m_backgroundColor = _backgroundColor;
+            m_defaultClearColor = _backgroundColor;
         }
     }
 

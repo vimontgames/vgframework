@@ -15,7 +15,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     // A "World" is a container for a list of scenes
     //--------------------------------------------------------------------------------------
-    class World : public core::IWorld
+    class World final : public core::IWorld
     {
     public:
         VG_CLASS_DECL(World, core::IWorld);
@@ -30,6 +30,9 @@ namespace vg::engine
         void                                OnStop                  () final override;
         void                                OnPause                 () final override;
         void                                OnResume                () final override;
+
+        void                                BeforeUpdate            (const Context & _context) final override;
+        void                                AfterUpdate             (const Context & _context) final override;
 
         bool                                SetActiveScene          (core::IBaseScene * _scene, core::BaseSceneType _sceneType) final override;
         core::IBaseScene *                  GetActiveScene          (core::BaseSceneType _sceneType) const final override;
@@ -51,6 +54,9 @@ namespace vg::engine
 
         bool                                IsPrefabWorld           () const final override;
 
+        void                                SetEnvironmentColor     (const core::float4 & _environmentColor) final override;
+        core::float4                        GetEnvironmentColor     () const final override;
+
     protected:
         void                                mergeStaticBodies       ();
         void                                clearUI                 ();
@@ -61,6 +67,9 @@ namespace vg::engine
         core::IDebugDrawData *              m_debugDrawData = nullptr;
         core::IPhysicsWorld *               m_physicsWorld = nullptr;
         core::vector<physics::IBody *>      m_staticColliders;
+
+        core::float4                        m_currentEnvironmentColor = (core::float4)0.0f;
+        core::float4                        m_nextEnvironmentColor = (core::float4)0.0f;
     };
 }
 

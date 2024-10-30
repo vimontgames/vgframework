@@ -14,6 +14,7 @@
 #include "core/Math/Math.h"
 #include "gfx/IUIRenderer.h"
 #include "renderer/IRenderer.h"
+#include "renderer/IRendererOptions.h"
 #include "renderer/IDebugDraw.h"
 
 #if !VG_ENABLE_INLINE
@@ -399,5 +400,35 @@ namespace vg::engine
                 }
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::BeforeUpdate(const Context & _context)
+    {
+        // Use default background clear color from options if not overriden by environment
+        m_nextEnvironmentColor = Engine::get()->GetRenderer()->GetOptions()->GetDefaultClearColor();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetEnvironmentColor(const core::float4 & _environmentColor)
+    {
+        m_nextEnvironmentColor = _environmentColor;        
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::AfterUpdate(const Context & _context)
+    {
+        if (any(m_nextEnvironmentColor != m_currentEnvironmentColor))
+        {
+            // We must reset the render target pool when clear color actually changed
+            Engine::get()->GetRenderer()->SetResized();
+            m_currentEnvironmentColor = m_nextEnvironmentColor;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float4 World::GetEnvironmentColor() const
+    {
+        return m_currentEnvironmentColor;
     }
 }

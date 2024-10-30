@@ -40,10 +40,13 @@ namespace vg::renderer
     {
         auto * device = Device::get();
 
+        const IWorld * world = _renderPassContext.getView()->GetWorld();
+        const auto environmentColor = world->GetEnvironmentColor();
+
         const auto size = _renderPassContext.getView()->GetSize();
         const auto options = RendererOptions::get();
 
-        auto clearColor = m_useFastClear ? pow(options->getBackgroundColor(), 2.2f) : defaultOptimizedClearColor;
+        auto clearColor = m_useFastClear ? float4(pow(environmentColor.rgb, 2.2f), environmentColor.a) : defaultOptimizedClearColor;
 
         const auto msaa = options->GetMSAA();
         const TextureType texType = (MSAA::None == msaa) ? TextureType::Texture2D : TextureType::Texture2DMS;
@@ -85,6 +88,9 @@ namespace vg::renderer
     {
         if (!m_useFastClear)
         {
+            const IWorld * world = _renderPassContext.getView()->GetWorld();
+            const auto environmentColor = world->GetEnvironmentColor();
+
             RasterizerState rs(FillMode::Solid, CullMode::None);
             BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
             DepthStencilState ds(false);
@@ -98,7 +104,7 @@ namespace vg::renderer
 
             BackgroundRootConstants root;
             root.reset();
-            root.color = pow(RendererOptions::get()->getBackgroundColor(), 2.2f);
+            root.color = float4(pow(environmentColor.xyz, 2.2f), environmentColor.a);
 
             _cmdList->setGraphicRootConstants(0, (u32 *)&root, sizeof(BackgroundRootConstants) / sizeof(u32));
 

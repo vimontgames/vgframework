@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Object/Object.h"
+#include "core/Object/Update.h"
 
 namespace vg::core
 {
@@ -41,6 +42,10 @@ namespace vg::core
         virtual void                OnPause                 () = 0;
         virtual void                OnResume                () = 0;
 
+        using Context = WorldUpdateContext;
+        virtual void                BeforeUpdate            (const Context & _context) = 0;
+        virtual void                AfterUpdate             (const Context & _context) = 0;
+
         virtual bool                SetActiveScene          (IBaseScene * _scene, BaseSceneType _sceneType) = 0;
         virtual core::IBaseScene *  GetActiveScene          (BaseSceneType _sceneType) const = 0;
 
@@ -58,5 +63,8 @@ namespace vg::core
         virtual IPhysicsWorld *     GetPhysicsWorld         () const = 0;
 
         virtual bool                IsPrefabWorld           () const = 0;
+
+        virtual void                SetEnvironmentColor     (const core::float4 & _environmentColor) = 0;
+        virtual core::float4        GetEnvironmentColor     () const = 0;
     };
 }

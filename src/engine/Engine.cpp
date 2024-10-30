@@ -813,7 +813,8 @@ namespace vg::engine
             VG_PROFILE_CPU("FixedUpdate");
             for (IWorld * world : GetWorlds())
             {
-                GameObject::Context gameObjectUpdateContext(playing, paused, getWorldDeltaTime(world), world);
+                const World::Context worldUpdateContext(playing, paused, getWorldDeltaTime(world));
+                const GameObject::Context gameObjectUpdateContext(worldUpdateContext, world);
 
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
@@ -837,7 +838,10 @@ namespace vg::engine
             VG_PROFILE_CPU("Update");
             for (IWorld * world : GetWorlds())
             {
-                GameObject::Context gameObjectUpdateContext(playing, paused, getWorldDeltaTime(world), world);
+                const World::Context worldUpdateContext(playing, paused, getWorldDeltaTime(world));
+                world->BeforeUpdate(worldUpdateContext);
+
+                const GameObject::Context gameObjectUpdateContext(worldUpdateContext, world);
 
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
@@ -846,6 +850,8 @@ namespace vg::engine
                     if (root && asBool(UpdateFlags::Update & root->getUpdateFlags()))
                         root->Update(gameObjectUpdateContext);
                 }
+
+                world->AfterUpdate(worldUpdateContext);
             }
         }
 
@@ -861,7 +867,8 @@ namespace vg::engine
             VG_PROFILE_CPU("LateUpdate");
             for (IWorld * world : GetWorlds())
             {
-                GameObject::Context gameObjectUpdateContext(playing, paused, getWorldDeltaTime(world), world);
+                const World::Context worldUpdateContext(playing, paused, getWorldDeltaTime(world));
+                const GameObject::Context gameObjectUpdateContext(worldUpdateContext, world);
 
                 for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
                 {
