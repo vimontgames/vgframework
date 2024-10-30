@@ -12,7 +12,7 @@
         <Property type="EnumU8" name="m_VSync" value="VSync_1"/>
         <Property type="Bool" name="m_rayTracing" value="false"/>
         <Property type="Bool" name="m_postProcess" value="true"/>
-        <Property type="EnumU8" name="m_aaPostProcess" value="None"/>
+        <Property type="EnumU8" name="m_aaPostProcess" value="FXAA"/>
         <Property type="EnumFlagsU32" name="m_renderPassFlags" flags="Bitfield" value="ZPrepass|Opaque|Transparency"/>
         <Property type="EnumFlagsU32" name="m_displayFlags" flags="Bitfield" value="AlbedoMap|NormalMap"/>
         <Property type="Bool" name="m_wireframe" flags="SingleLine" value="false"/>

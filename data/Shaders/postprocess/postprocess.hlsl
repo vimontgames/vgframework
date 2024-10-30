@@ -11,6 +11,27 @@
 #include "SMAA.hlsli"
 #endif
 
+[numthreads(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y, 1)]
+void CS_ResolveMSAA(int2 dispatchThreadID : SV_DispatchThreadID)
+{   
+    uint2 screenSize = postProcessConstants.getScreenSize();    
+
+    int2 coords = dispatchThreadID;
+    float2 uv = ((float2)dispatchThreadID.xy + 0.5) / (float2)screenSize.xy;
+
+    if (all(dispatchThreadID.xy < screenSize))
+    {
+        float4 color = (float4)0.0;
+
+        [unroll]
+        for (uint i = 0; i < SAMPLE_COUNT; ++i)
+            color += getTexture2DMS(postProcessConstants.getColor()).Load(coords, i);
+        color /= (float)SAMPLE_COUNT;           
+
+        getRWTexture2D(postProcessConstants.getRWBufferOut())[coords] = color;
+    }
+}
+
 #if _TOOLMODE
 #if _RAYTRACING
 float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants viewConstants)
@@ -170,17 +191,7 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
     {
         int3 address = int3(dispatchThreadID.xy, 0);
 
-        float4 color = 0;
-
-        #if SAMPLE_COUNT > 1
-        [unroll]
-        for (uint i = 0; i < SAMPLE_COUNT; ++i)
-            color += getTexture2DMS(postProcessConstants.getColor()).Load(coords, i);
-        color /= (float)SAMPLE_COUNT;           
-
-        getRWTexture2D(postProcessConstants.getRWBufferOut())[coords] = color;
-        return;
-        #endif
+        float4 color;
 
         // Select Anti-Aliasing mode
         #if _FXAA
@@ -236,19 +247,3 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         getRWTexture2D(postProcessConstants.getRWBufferOut())[coords] = color;
     }
 }
-
-/*
-[numthreads(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y, 1)]
-void CS_ResolveMSAA(int2 dispatchThreadID : SV_DispatchThreadID)
-{   
-    uint2 screenSize = postProcessConstants.getScreenSize();    
-
-    int2 coords = dispatchThreadID;
-    float2 uv = ((float2)dispatchThreadID.xy + 0.5) / (float2)screenSize.xy;
-
-    if (all(dispatchThreadID.xy < screenSize))
-    {
-
-    }
-}
-*/
