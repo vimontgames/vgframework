@@ -44,9 +44,10 @@ jobs:
         id: read_version
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: |
-          # Extract the GIT_REVISION value from version.h
-          GIT_REVISION=$(grep -oP '#define GIT_REVISION "\K[^"]+' src/version.h)
-          echo "VERSION_CONTENT=${GIT_REVISION}" >> $GITHUB_ENV
+          # Use PowerShell to extract the GIT_REVISION value from version.h
+          $versionContent = Get-Content src/version.h
+          $gitRevision = ($versionContent -match '#define GIT_REVISION "(.*)"') ? $matches[1] : ""
+          echo "VERSION_CONTENT=${gitRevision}" >> $GITHUB_ENV
 
       - name: Push binaries to repository
         working-directory: ${{ env.GITHUB_WORKSPACE }}
