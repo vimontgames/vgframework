@@ -1,17 +1,14 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: "Build Win64 DX12"
 
 on:
-  workflow_dispatch:  # This line allows manual triggering
+  workflow_dispatch:  # Allows manual triggering
+  push:
+    paths:
+      - "src/version.h"  # Automatically triggers when version.h changes
 
 env:
-  # Path to the solution file relative to the root of the project.
   SOLUTION_FILE_PATH: vgframework.sln
-  BUILD_PLATFORM: '"Win64 DX12"'  # When command-line arguments contain spaces, they must be enclosed in quotes.
+  BUILD_PLATFORM: '"Win64 DX12"'  # Quoted for spaces
 
 permissions:
   contents: write
@@ -40,22 +37,16 @@ jobs:
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: msbuild /m /p:Configuration=Final /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
 
-      - name: Read GIT_REVISION from commit.h and VERSION from version.h
-        id: read_version
+      - name: Read version, copy client files, and push binaries
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: |
-          # Check if the commit.h file exists
+          # Read GIT_REVISION from commit.h
           if (Test-Path "src/commit.h") {
-            # Read the content line by line
             $versionContent = Get-Content "src/commit.h"
-
-            # Initialize an empty variable for git revision
             $gitRevision = ""
 
-            # Loop through each line and find the GIT_REVISION line
             foreach ($line in $versionContent) {
               if ($line -like '*#define GIT_REVISION*') {
-                # Split the line by double quotes and get the part between them
                 $parts = $line -split '"'
                 if ($parts.Length -ge 2) {
                   $gitRevision = $parts[1]
@@ -64,11 +55,7 @@ jobs:
               }
             }
 
-            # Check if gitRevision was found
-            if ($gitRevision) {
-              echo "GIT_REVISION=${gitRevision}" >> $GITHUB_ENV
-              Write-Host "GIT_REVISION extracted: $gitRevision"
-            } else {
+            if (-not $gitRevision) {
               Write-Error "GIT_REVISION not found in commit.h"
               exit 1
             }
@@ -77,7 +64,7 @@ jobs:
             exit 1
           }
 
-          # Read the version components from version.h
+          # Read version from version.h
           if (Test-Path "src/version.h") {
             $versionContent = Get-Content "src/version.h"
             $major = ""
@@ -96,8 +83,8 @@ jobs:
 
             if ($major -and $minor -and $patch) {
               $fullVersion = "$major.$minor.$patch"
-              echo "VERSION=$fullVersion" >> $GITHUB_ENV
-              Write-Host "Full version extracted: $fullVersion"
+              $commitMessage = "Editor and Game $fullVersion ($gitRevision)"
+              Write-Host "Commit message: $commitMessage"
             } else {
               Write-Error "Version components not found in version.h"
               exit 1
@@ -107,19 +94,14 @@ jobs:
             exit 1
           }
 
-      # Run the batch file to create client file copies
-      - name: Copy client files
-        working-directory: ${{ env.GITHUB_WORKSPACE }}
-        run: cmd /c script\copy_client_files.bat
+          # Run the batch file to create client file copies
+          cmd /c script\copy_client_files.bat
 
-      - name: Push binaries to repository
-        working-directory: ${{ env.GITHUB_WORKSPACE }}
-        if: success()
-        run: |
-          # Configure Git
+          # Configure Git and push changes
           git config user.name "VGF_Boy"
           git config user.email "VGF_Boy@users.noreply.github.com"
 
+         
           # Stage Editor files
           git add -f "Editor.exe"
           git add -f "bin\x64\Release\audio.dll"
@@ -137,11 +119,7 @@ jobs:
           git add -f "bin\x64\Final\physics.dll"
           git add -f "bin\x64\Final_DX12\renderer.dll"
 
-          # Generate a commit message from the version content
-          $COMMIT_MESSAGE = "Editor and Game $($env:VERSION) (Commit: $($env:GIT_REVISION))"  # Wrap in $()
-
-          # Commit changes with the generated commit message
-          git commit -m "$COMMIT_MESSAGE"
+          git commit -m "$commitMessage"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
