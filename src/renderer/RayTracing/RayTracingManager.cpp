@@ -252,6 +252,8 @@ namespace vg::renderer
                         blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, (gfx::SurfaceType::Opaque == surfaceType) ? true : false);
                     }
 
+                    //VG_INFO("[Renderer] Update BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
+
                     blas->update(_cmdList);
                 }
 

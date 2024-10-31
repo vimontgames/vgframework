@@ -366,7 +366,7 @@ namespace vg::engine
         else
         {
             if (!_newPath.empty())
-                VG_ERROR("[Resource] Could not find file \"%s\"", _newPath.c_str());
+                VG_ERROR("[Resource] Could not find %s file \"%s\" referenced by GameObject \"%s\"", _resource->GetClassName(), _newPath.c_str(), _resource->GetParentGameObject()->GetName().c_str());
         }
     }
 

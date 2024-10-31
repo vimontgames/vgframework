@@ -12,6 +12,6 @@ namespace vg::gfx::vulkan
         ~Buffer();
 
     private:
-        VkBufferView    m_vkBufferView;
+        VkBufferView    m_vkBufferView = VK_NULL_HANDLE;
     };
 }

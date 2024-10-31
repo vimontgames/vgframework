@@ -83,55 +83,53 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
             
             color[i].rgb = applyLighting(gbufferSamples[i].albedo.rgb, lighting, viewConstants.getDisplayMode());
 
-            //
-            //#if _TOOLMODE
-            //switch(viewConstants.getDisplayMode())
-            //{
-            //    case DisplayMode::None:
-            //        break;
-            //
-            //    case DisplayMode::Lighting_Diffuse:
-            //    case DisplayMode::Lighting_Specular:
-            //    case DisplayMode::Lighting_RayCount:
-            //        break;
-            //
-            //    default:
-            //        color = float4(albedo.rgb, 1.0f);
-            //        break;
-            //
-            //    case DisplayMode::Deferred_GBuffer0_Albedo:
-            //        color = float4(albedo.rgb, 1.0f);
-            //        break;
-            //
-            //    //case DisplayMode::Deferred_GBuffer0_A:
-            //    //    color = float4(albedo.aaa, 1.0f);
-            //    //    break;
-            //
-            //    case DisplayMode::Deferred_GBuffer1_Normal:
-            //        color = float4(normal.rgb*0.5f+0.5f, 1.0f);
-            //        break;
-            //
-            //    //case DisplayMode::Deferred_GBuffer1_A:
-            //    //    color = float4(normal.aaa, 1.0f);
-            //    //    break;
-            //
-            //    case DisplayMode::Deferred_GBuffer2_Occlusion:
-            //        color = float4(pbr.rrr, 1.0f);
-            //        break;
-            //
-            //    case DisplayMode::Deferred_GBuffer2_Roughness:
-            //        color = float4(pbr.ggg, 1.0f);
-            //        break;
-            //
-            //    case DisplayMode::Deferred_GBuffer2_Metalness:
-            //        color = float4(pbr.bbb, 1.0f);
-            //        break;
-            //
-            //    //case DisplayMode::Deferred_GBuffer1_A:
-            //    //    color = float4(normal.aaa, 1.0f);
-            //    //    break;
-            //}
-            //#endif
+            #if _TOOLMODE
+            switch(viewConstants.getDisplayMode())
+            {
+                case DisplayMode::None:
+                    break;
+            
+                case DisplayMode::Lighting_Diffuse:
+                case DisplayMode::Lighting_Specular:
+                case DisplayMode::Lighting_RayCount:
+                    break;
+            
+                default:
+                    break;
+            
+                case DisplayMode::Deferred_GBuffer0_Albedo:
+                    color[i].rgb = gbufferSamples[i].albedo.rgb;
+                    break;
+            
+                //case DisplayMode::Deferred_GBuffer0_A:
+                //    color[i].rgb = gbufferSamples[i].albedo.aaa;
+                //    break;
+            
+                case DisplayMode::Deferred_GBuffer1_Normal:
+                    color[i].rgb = gbufferSamples[i].normal.rgb*0.5f+0.5f;
+                    break;
+            
+                //case DisplayMode::Deferred_GBuffer1_A:
+                //    color[i].rgb = gbufferSamples[i].normal.aaa;
+                //    break;
+            
+                case DisplayMode::Deferred_GBuffer2_Occlusion:
+                    color[i].rgb = gbufferSamples[i].pbr.rrr;
+                    break;
+            
+                case DisplayMode::Deferred_GBuffer2_Roughness:
+                    color[i].rgb = gbufferSamples[i].pbr.ggg;
+                    break;
+            
+                case DisplayMode::Deferred_GBuffer2_Metalness:
+                    color[i].rgb = gbufferSamples[i].pbr.bbb;
+                    break;
+            
+                //case DisplayMode::Deferred_GBuffer1_A:
+                //    color[i].rgb = gbufferSamples[i].normal.aaa;
+                //    break;
+            }
+            #endif
         }
 
         // Store

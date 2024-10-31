@@ -270,12 +270,11 @@ namespace vg::gfx::vulkan
 				ignore = true;
 		}
 
-        if (ignore)
+        if (!ignore)
         {
-            VG_SAFE_FREE(message);
-        }
-        else
-        {
+			string msg = (string)message;
+			msg = msg.substr(0, msg.find("\n"));
+
 			switch (severity)
 			{
 				case Severity::Error:
@@ -295,11 +294,15 @@ namespace vg::gfx::vulkan
 					break;
 			}
 
-            VG_SAFE_FREE(message);
+			if (deviceParams.breakOnErrors)
+				VG_ASSERT(Severity::Error != severity, msg.c_str());
 
-            if ((Severity::Error == severity && deviceParams.breakOnErrors) || (Severity::Warning == severity && deviceParams.breakOnWarnings))
-                DebugBreak();
+			if (deviceParams.breakOnWarnings)
+				VG_ASSERT(Severity::Warning != severity, msg.c_str());
         }
+
+		VG_SAFE_FREE(message);
+
 		return false;
 	}
 

@@ -65,7 +65,7 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void BLAS::init(bool _update)
     {
-        gfx::Device * device = gfx::Device::get();
+        gfx::Device * device = gfx::Device::get(); 
         const gfx::DeviceCaps & caps = device->getDeviceCaps();
 
         // BLAS build Info
@@ -150,11 +150,24 @@ namespace vg::gfx::vulkan
         desc.buffer = m_resultBuffer->getResource().getVulkanBuffer();
         desc.size = sizeInfo.accelerationStructureSize;
         desc.type = VK_ACCELERATION_STRUCTURE_TYPE_BOTTOM_LEVEL_KHR;
+
+        if (_update)
+        {
+            m_VKRTAccelStructInputs.srcAccelerationStructure = src;
+            m_VKRTAccelStructInputs.dstAccelerationStructure = m_VKBLAS;
+
+            VG_ASSERT(m_VKRTAccelStructInputs.srcAccelerationStructure == m_VKRTAccelStructInputs.dstAccelerationStructure);
+        }
+        else
+        {
+            VG_VERIFY_VULKAN(device->createAccelerationStructure(&desc, nullptr, &m_VKBLAS));
+
+            m_VKRTAccelStructInputs.srcAccelerationStructure = VK_NULL_HANDLE;
+            m_VKRTAccelStructInputs.dstAccelerationStructure = m_VKBLAS;
+
+            VG_ASSERT(m_VKRTAccelStructInputs.srcAccelerationStructure != m_VKRTAccelStructInputs.dstAccelerationStructure);
+        }
         
-        VG_VERIFY_VULKAN(device->createAccelerationStructure(&desc, nullptr, &m_VKBLAS));
-        
-        m_VKRTAccelStructInputs.srcAccelerationStructure = src;
-        m_VKRTAccelStructInputs.dstAccelerationStructure = m_VKBLAS;
         m_VKRTAccelStructInputs.scratchData.deviceAddress = m_scratchBuffer->getResource().getVulkanDeviceAddress();
     }
 
