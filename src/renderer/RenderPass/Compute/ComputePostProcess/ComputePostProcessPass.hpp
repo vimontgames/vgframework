@@ -75,6 +75,7 @@ namespace vg::renderer
         auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.y + threadGroupSize.y - 1) / threadGroupSize.y, 1);
 
         const auto msaa = options->GetMSAA();
+        Texture * resolveUAVTex = nullptr;
         if (msaa != MSAA::None)
         {
             VG_PROFILE_GPU("ResolveMSAA");
@@ -119,7 +120,7 @@ namespace vg::renderer
             auto depthstencil = getDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
             auto depth = depthstencil->getDepthTextureHandle();
             auto stencil = depthstencil->getStencilTextureHandle();
-            auto * resolveUAVTex = getRWTexture(_renderPassContext.getFrameGraphID("ResolveColorUAV"));
+            resolveUAVTex = getRWTexture(_renderPassContext.getFrameGraphID("ResolveColorUAV"));
             auto dst = resolveUAVTex->getRWTextureHandle();
 
             PostProcessConstants postProcess;
@@ -133,6 +134,7 @@ namespace vg::renderer
             _cmdList->dispatch(threadGroupCount);
 
             _cmdList->addRWTextureBarrier(resolveUAVTex);
+            _cmdList->transitionResource(resolveUAVTex, ResourceState::UnorderedAccess, ResourceState::ShaderResource);
         }       
 
         ComputeShaderKey shaderKey = m_computePostProcessShaderKey;
@@ -182,5 +184,8 @@ namespace vg::renderer
         _cmdList->setComputeRootConstants(0, (u32*) &postProcess, PostProcessConstantsCount);
 
         _cmdList->dispatch(threadGroupCount);
+
+        if (MSAA::None != msaa)
+            _cmdList->transitionResource(resolveUAVTex, ResourceState::ShaderResource, ResourceState::UnorderedAccess);
     }
 }
