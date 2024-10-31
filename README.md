@@ -15,9 +15,11 @@ Yes, yet another work-in-progress game and graphic engine project :)
 | Win64    | Vulkan       | ![Win64_Vulkan_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Debug.yml/badge.svg)     | ![Win64_Vulkan_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Release.yml/badge.svg)     | ![Win64_Vulkan_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Final.yml/badge.svg)
 
 [description](#description)\
-[getting started](#getting-started)\
 [changelog](#changelog)\
+[getting started](#getting-started)\
 [extern libs](#extern-libs)\
+[data](#data)\
+[useful tools](#useful-tools)\
 [disclaimer](#disclaimer)
 
 # description
@@ -27,6 +29,10 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 * All the interface is made to encourage using only push constants and bindless buffers/textures, not updating tables constantly as if we were still emulating DX9.
 * You can't access the command lists without using the framegraph that is part of the graphic driver layer. Go framegraph or do not render anything.
 * Apart from the number of root constants, all shaders are sharing the same root signatures.
+
+# changelog
+
+Moved [changelog](CHANGELOG.md) to a separate file.
 
 # getting started
 
@@ -194,9 +200,15 @@ The external libraries are included with the sources for convenience.
 | Large sword swing    | Luis0413             | https://freesound.org/people/Luis0413/sounds/737748/
 | Tally Dub            | Brotheration Records | https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/  
 
-# changelog
 
-Moved [changelog](CHANGELOG.md) to a separate file.
+# useful tools
+
+These tools are not mandatory but can be useful for development.
+
+| Name				     | Description               | URL												
+| ---------------------- | ------------------------- | ------------------------------------------------------------- 
+| Radeon Developer Panel | GPU debugging & profiling | https://gpuopen.com/rdp/
+| RenderDoc              | GPU debugging             | https://renderdoc.org/
 
 # misc
 

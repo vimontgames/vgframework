@@ -17,7 +17,7 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    void BLAS::addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, bool _opaque)
+    void BLAS::addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, const core::uint _batchIndexOffset, core::uint _batchIndexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, bool _opaque)
     {
         const BufferDesc & vbDesc = _vb->getBufDesc();
         const BufferDesc & ibDesc = _ib->getBufDesc();
@@ -38,7 +38,7 @@ namespace vg::gfx::vulkan
         desc.pNext = nullptr;
         desc.geometry.triangles.vertexFormat = VK_FORMAT_R32G32B32_SFLOAT;
 
-        desc.geometry.triangles.indexData.deviceAddress = _ib->getResource().getVulkanDeviceAddress();
+        desc.geometry.triangles.indexData.deviceAddress = _ib->getResource().getVulkanDeviceAddress() + _ibOffset + _batchIndexOffset * ibDesc.getElementSize();
 
         if (ibDesc.getElementSize() == 2)
             desc.geometry.triangles.indexType = VK_INDEX_TYPE_UINT16;
@@ -46,13 +46,13 @@ namespace vg::gfx::vulkan
             desc.geometry.triangles.indexType = VK_INDEX_TYPE_UINT32;
 
         VkAccelerationStructureBuildRangeInfoKHR buildRangeInfo = {};
-        buildRangeInfo.primitiveCount = ibDesc.getElementCount() / 3;
-        buildRangeInfo.primitiveOffset = 0;
+        buildRangeInfo.primitiveCount = _batchIndexCount / 3;
+        buildRangeInfo.primitiveOffset = 0;// _batchIndexOffset * ibDesc.getElementSize();// (_batchIndexOffset / 3) * ibDesc.getElementSize();
         buildRangeInfo.firstVertex = 0;
         buildRangeInfo.transformOffset = 0;
 
         m_VKRTBuildRangeInfos.push_back(buildRangeInfo);
-        m_VKRTMaxPrimitives.push_back(ibDesc.getElementCount() / 3);
+        m_VKRTMaxPrimitives.push_back(_batchIndexCount / 3);
         m_VKRTGeometries.push_back(desc);
     }
 

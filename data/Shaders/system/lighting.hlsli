@@ -203,7 +203,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 				ray.Origin    = _worldPos;
 				ray.Direction = lightDir;
 				ray.TMin      = 0.0325f;
-				ray.TMax      = 10;
+				ray.TMax      = 100;
 
 				RayQuery<RAY_FLAG_NONE> query;
 				query.TraceRayInline(tlas, RAY_FLAG_NONE, 0xff, ray);
@@ -217,10 +217,11 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 				{
 					switch(query.CandidateType())
 					{
-						//case CANDIDATE_PROCEDURAL_PRIMITIVE:
-						//break;
+						default:
+						break;
 				
 						case CANDIDATE_NON_OPAQUE_TRIANGLE:
+						shadow = 0.5f;
 						break;
 					}
 				}
@@ -232,11 +233,8 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 					break;
 
 					case COMMITTED_TRIANGLE_HIT:
-					shadow = 0;
+					shadow = 0.0f;
 					break;
-
-					//case COMMITTED_PROCEDURAL_PRIMITIVE_HIT:
-					//break;
 				}
 				
 				#else // _RAYTRACING

@@ -2243,15 +2243,10 @@ namespace vg::editor
 
         ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
-        bool exists = io::exists(buffer);
-        //if (!exists)
-        //    ImGui::PushStyleColor(ImGuiCol_FrameBg, getImGuiAdapter()->GetErrorColor());
+        const bool fileDoesNotExist = buffer[0] != '\0' && !io::exists(buffer);
 
         if (ImGui::InputText(label.c_str(), buffer, countof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
             storePath(buffer);
-
-        //if (!exists)
-        //    ImGui::PopStyleColor();
 
         ImGui::PopItemWidth();
 
@@ -2360,7 +2355,7 @@ namespace vg::editor
 
         availableWidth = ImGui::GetContentRegionAvail().x + GetCursorPosX() - style.FramePadding.x;
 
-        if (!exists)
+        if (fileDoesNotExist)
             ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _resource, style::icon::Warning, "File does not exist on disk", _index, &getImGuiAdapter()->GetErrorColor());
 
         // build extension list

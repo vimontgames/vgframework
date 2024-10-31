@@ -17,7 +17,7 @@ namespace vg::gfx::vulkan
         BLAS(BLASUpdateType _blasUpdateType, gfx::BLASVariantKey _key);
         ~BLAS();
 
-        void addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, bool _opaque);
+        void addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, const core::uint _batchIndexOffset, core::uint _batchIndexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, bool _opaque);
         void clear();
         void init(bool _update = false);
         void update(gfx::CommandList * _cmdList);

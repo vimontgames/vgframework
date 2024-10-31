@@ -16,7 +16,7 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void BLAS::addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, core::uint _indexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, bool _opaque)
+    void BLAS::addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, const core::uint _batchIndexOffset, core::uint _batchIndexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, bool _opaque)
     {
         D3D12_RAYTRACING_GEOMETRY_DESC desc{};
         desc.Type = D3D12_RAYTRACING_GEOMETRY_TYPE_TRIANGLES;
@@ -32,14 +32,14 @@ namespace vg::gfx::dx12
         desc.Triangles.VertexBuffer.StrideInBytes = _vbStride;
         desc.Triangles.VertexCount = _vertexCount;
         desc.Triangles.VertexFormat = DXGI_FORMAT_R32G32B32_FLOAT;
-        desc.Triangles.IndexBuffer = _ib->getResource().getd3d12BufferResource()->GetGPUVirtualAddress();
+        desc.Triangles.IndexBuffer = _ib->getResource().getd3d12BufferResource()->GetGPUVirtualAddress() + _ibOffset + _batchIndexOffset * ibDesc.getElementSize();
 
         if (ibDesc.getElementSize() == 2)
             desc.Triangles.IndexFormat = DXGI_FORMAT_R16_UINT;
         else
             desc.Triangles.IndexFormat = DXGI_FORMAT_R32_UINT;
 
-        desc.Triangles.IndexCount = ibDesc.getElementCount();
+        desc.Triangles.IndexCount = _batchIndexCount;
         desc.Triangles.Transform3x4 = 0;
 
         m_DXRGeometries.push_back(desc);

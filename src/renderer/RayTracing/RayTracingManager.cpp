@@ -182,7 +182,7 @@ namespace vg::renderer
 
                             const Batch & batch = batches[m];
                             VG_ASSERT(blas);
-                            blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, modelVB, 0, modelVB->getBufDesc().getElementCount(), vertexStride, (gfx::SurfaceType::Opaque == surfaceType) ? true : false);
+                            blas->addIndexedGeometry(ib, ibOffset, batch.offset, batch.count, modelVB, 0, modelVB->getBufDesc().getElementCount(), vertexStride, (gfx::SurfaceType::Opaque == surfaceType) ? true : false);
                         }
 
                         blas->update(_cmdList);
@@ -249,7 +249,7 @@ namespace vg::renderer
                             surfaceType = mat->getSurfaceType();
 
                         const Batch & batch = batches[m];
-                        blas->addIndexedGeometry(ib, ibOffset + batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, (gfx::SurfaceType::Opaque == surfaceType) ? true : false);
+                        blas->addIndexedGeometry(ib, ibOffset, batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, (gfx::SurfaceType::Opaque == surfaceType) ? true : false);
                     }
 
                     //VG_INFO("[Renderer] Update BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
