@@ -1,0 +1,9 @@
+<Root>
+    <Object class="TextureResourceMeta">
+        <Property type="String" name="m_name" flags="NotVisible" value="GrosCovid_PBR.tga.meta"/>
+        <Property type="EnumU8" name="m_importSettings.m_importerFormat" value="Automatic"/>
+        <Property type="Bool" name="m_importSettings.m_sRGB" value="false"/>
+        <Property type="EnumU8" name="m_importSettings.m_mipLevelCount" value="Automatic"/>
+        <Property type="EnumU8" name="m_importSettings.m_downscale" value="None"/>
+    </Object>
+</Root>
