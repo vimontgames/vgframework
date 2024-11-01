@@ -62,6 +62,8 @@ void HealthBarBehaviour::init(float _maxHP)
         if (auto * lifeImage = lifeGO->GetComponentT<IUIImageComponent>())
             m_width = (float)lifeImage->GetSize().x;
     }
+
+    setHP(m_currentHP);
 }
 
 //--------------------------------------------------------------------------------------

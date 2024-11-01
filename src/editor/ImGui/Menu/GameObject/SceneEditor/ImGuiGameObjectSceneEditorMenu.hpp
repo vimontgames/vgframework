@@ -456,6 +456,7 @@ namespace vg::editor
 
                         auto newName = io::getFileNameWithoutExt(prefabPath);
                         IGameObject * newPrefabObject = (IGameObject *)CreateFactoryObject(PrefabGameObject, newName.c_str(), gameObject);
+                        newPrefabObject->RegisterUID();
                         auto * prefabRes = newPrefabObject->GetPrefabResource();
 
                         switch (selected)

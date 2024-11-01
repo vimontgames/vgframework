@@ -30,12 +30,12 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="New EnemyBehaviour"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="794804662"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Uint32" name="m_life" value="1"/>
-                                <Property type="Float" name="m_hp" value="200"/>
+                                <Property type="Float" name="m_hp" value="50"/>
                                 <Property type="Int32" name="m_score" value="0"/>
-                                <Property type="Float" name="m_walkSpeed" value="1.5"/>
+                                <Property type="Float" name="m_walkSpeed" value="2"/>
                                 <Property type="Float" name="m_runSpeed" value="3"/>
                                 <Property type="Float" name="m_jumpSpeed" value="3"/>
                                 <Property type="Float" name="m_runJumpSpeed" value="4"/>

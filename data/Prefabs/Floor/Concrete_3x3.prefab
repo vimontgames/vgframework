@@ -13,6 +13,7 @@
                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                 <Property type="ObjectPtrVector" name="m_components"/>
                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
                     <Object class="GameObject">
@@ -23,13 +24,17 @@
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled|Static"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="3" Iy="0" Iz="0" Iw="0" Jx="0" Jy="3" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.125" Kw="0" Tx="0" Ty="0" Tz="0.125" Tw="1"/>
+                        <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="PhysicsBodyComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New RigidBodyComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="2471751639"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="EnumU8" name="m_category" value="Default"/>
+                                <Property type="Bool" name="m_useCollisionMask" flags="NotVisible" value="false"/>
+                                <Property type="EnumFlagsU64" name="m_collisionMask" flags="" value=""/>
                                 <Property type="ObjectPtr" name="m_bodyDesc" flags="Flatten">
                                     <Object class="PhysicsBodyDesc">
                                         <Property type="String" name="m_name" flags="NotVisible" value="RigidBodyDesc #13"/>
@@ -48,13 +53,25 @@
                                     </Object>
                                 </Property>
                             </Object>
+                            <Object class="SnapComponent">
+                                <Property type="String" name="m_name" flags="NotVisible" value="New SnapComponent"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="1056013465"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Bool" name="m_snapTranslation" flags="NotVisible" value="true"/>
+                                <Property type="Float3" name="m_translation" flags="Optional" x="3" y="3" z="3"/>
+                                <Property type="Bool" name="m_snapRotation" flags="NotVisible" value="true"/>
+                                <Property type="Float" name="m_rotation" flags="Optional" value="90"/>
+                                <Property type="Bool" name="m_snapScale" flags="NotVisible" value="false"/>
+                                <Property type="Float" name="m_scale" flags="Optional" value="1"/>
+                            </Object>
                             <Object class="MeshComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="4034055609"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Bool" name="m_displayBones" value="false"/>
                                 <Property type="Resource" name="m_meshResource" flags="Resource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>

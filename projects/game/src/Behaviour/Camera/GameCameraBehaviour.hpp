@@ -74,8 +74,8 @@ void GameCameraBehaviour::Update(const Context & _context)
             {
                 auto matrix = _context.m_gameObject->getGlobalMatrix();
                 float3 pos = player->getGameObject()->getGlobalMatrix()[3].xyz;
-                m_targetPosition.xy = pos.xy + m_offset.xy;
-                matrix[3].xy = smoothdamp(matrix[3].xy, m_targetPosition.xy, (float2 &)m_targetVelocity.xy, m_delay, _context.m_dt);
+                m_targetPosition.xyz = pos.xyz + m_offset.xyz;
+                matrix[3].xyz = smoothdamp(matrix[3].xyz, m_targetPosition, m_targetVelocity, m_delay, _context.m_dt);
                 _context.m_gameObject->setGlobalMatrix(matrix);
             }
         }
