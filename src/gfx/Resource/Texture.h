@@ -30,6 +30,8 @@ namespace vg::gfx
 
             static core::u32								getPixelFormatSize		(PixelFormat _format);
 			VG_INLINE static bool							isDepthStencilFormat	(PixelFormat _format);
+
+			static core::u16								computeMaxMip			(core::uint _dim);
             static core::u32								computeMaxMipmapCount	(const TextureDesc & _texDesc);
 			
         protected:

@@ -30,7 +30,7 @@ namespace vg::gfx
         }
 
         //--------------------------------------------------------------------------------------
-        core::u16 computeMaxMip(core::uint _dim)
+        core::u16 Texture::computeMaxMip(core::uint _dim)
         {
             auto count = log2((float)_dim)+1;
             return (core::uint)count;
@@ -52,7 +52,7 @@ namespace vg::gfx
                     return computeMaxMip(min(_texDesc.width, _texDesc.height));
 
                 case TextureType::Texture3D:
-                    return computeMaxMip(min(min(_texDesc.width, _texDesc.height), _texDesc.depth));
+                    return computeMaxMip(min(min(_texDesc.width, _texDesc.height), _texDesc.slices));
 
                 default:
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(_texDesc.type);

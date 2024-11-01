@@ -13,6 +13,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
+        registerPropertyEnum(TextureResourceMeta, gfx::TextureImporterType, m_importSettings.m_importerType, "Type");
         registerPropertyEnum(TextureResourceMeta, gfx::TextureImporterFormat, m_importSettings.m_importerFormat, "Format");
         registerProperty(TextureResourceMeta, m_importSettings.m_sRGB, "sRGB");
         registerPropertyEnum(TextureResourceMeta, gfx::MipLevelCount, m_importSettings.m_mipLevelCount, "Mipmaps");

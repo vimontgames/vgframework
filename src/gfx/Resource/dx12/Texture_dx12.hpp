@@ -210,7 +210,7 @@ namespace vg::gfx::dx12
                             resourceDesc.Alignment = 0;
                             resourceDesc.Width = _texDesc.width;
                             resourceDesc.Height = _texDesc.height;
-                            resourceDesc.DepthOrArraySize = _texDesc.depth;
+                            resourceDesc.DepthOrArraySize = _texDesc.slices;
                             resourceDesc.MipLevels = _texDesc.mipmaps;
                             resourceDesc.Format = getd3d12ResourceFormat(_texDesc.format);
                             resourceDesc.SampleDesc.Count = 1;
@@ -443,7 +443,7 @@ namespace vg::gfx::dx12
             const auto fmtSize = getPixelFormatSize(_texDesc.format);
             if (-1 != fmtSize)
             {
-                const u32 subResourceCount = _texDesc.mipmaps * _texDesc.depth;
+                const u32 subResourceCount = _texDesc.mipmaps * _texDesc.slices;
 
                 vector<D3D12_SUBRESOURCE_DATA> subResource(subResourceCount);
                 vector<D3D12_PLACED_SUBRESOURCE_FOOTPRINT> footprint(subResourceCount);

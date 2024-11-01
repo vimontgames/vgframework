@@ -139,7 +139,7 @@ namespace vg::gfx::vulkan
                               imgDesc.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
                               imgDesc.imageType = getVulkanImageType(_texDesc.type);
                               imgDesc.format = getVulkanPixelFormat(_texDesc.format);
-                              imgDesc.extent = { _texDesc.width, _texDesc.height, _texDesc.depth };
+                              imgDesc.extent = { _texDesc.width, _texDesc.height, _texDesc.slices };
                               imgDesc.mipLevels = _texDesc.mipmaps;
                               imgDesc.arrayLayers = 1;
                               imgDesc.samples = (VkSampleCountFlagBits)_texDesc.msaa;

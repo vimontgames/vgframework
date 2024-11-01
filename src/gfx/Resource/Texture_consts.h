@@ -45,11 +45,11 @@ namespace vg::gfx
 	class TextureDesc
 	{
 	public:
-		TextureDesc(Usage _usage = Usage::Default, BindFlags _bindFlags = BindFlags::ShaderResource, CPUAccessFlags _cpuAccessFlags = CPUAccessFlags::None, TextureType _type = TextureType::Texture2D, PixelFormat _format = PixelFormat::R8G8B8A8_unorm, TextureFlags _flags = TextureFlags::None, core::u16 _width = 1, core::u16 _height = 1, core::u16 _depth = 1, core::u8 _mipmaps = 1, MSAA _msaa = MSAA::None) :
+		TextureDesc(Usage _usage = Usage::Default, BindFlags _bindFlags = BindFlags::ShaderResource, CPUAccessFlags _cpuAccessFlags = CPUAccessFlags::None, TextureType _type = TextureType::Texture2D, PixelFormat _format = PixelFormat::R8G8B8A8_unorm, TextureFlags _flags = TextureFlags::None, core::u16 _width = 1, core::u16 _height = 1, core::u16 _slices = 1, core::u8 _mipmaps = 1, MSAA _msaa = MSAA::None) :
             resource(_usage, _bindFlags, _cpuAccessFlags),
             width(_width),
 			height(_height),
-			depth(_depth),
+			slices(_slices),
 			mipmaps(_mipmaps),
 			type(_type),
 			format(_format),
@@ -62,7 +62,7 @@ namespace vg::gfx
         ResourceDesc    resource;
 		core::u16		width;
 		core::u16		height;
-		core::u16		depth;
+		core::u16		slices;
 		core::u8		mipmaps;
 		TextureType		type;
 		PixelFormat		format;
@@ -77,6 +77,6 @@ namespace vg::gfx
 
 		VG_INLINE bool isShaderResource		() const { return resource.testBindFlags(BindFlags::ShaderResource); }
 
-		VG_INLINE bool operator != (const TextureDesc & _other) const { return resource != _other.resource || width != _other.width || height != _other.height || depth != _other.depth || mipmaps != _other.mipmaps || type != _other.type || format != _other.format || flags != _other.flags; }
+		VG_INLINE bool operator != (const TextureDesc & _other) const { return resource != _other.resource || width != _other.width || height != _other.height || slices != _other.slices || mipmaps != _other.mipmaps || type != _other.type || format != _other.format || flags != _other.flags; }
 	};
 }

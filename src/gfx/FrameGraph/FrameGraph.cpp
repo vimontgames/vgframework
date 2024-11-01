@@ -570,7 +570,7 @@ namespace vg::gfx
                     desc.format = _textureResourceDesc.format;
                     desc.width = _textureResourceDesc.width;
                     desc.height = _textureResourceDesc.height;
-                    desc.depth = 1;
+                    desc.slices = 1;
                     desc.msaa = _textureResourceDesc.msaa;
                     desc.flags = (TextureFlags)0x0;
 

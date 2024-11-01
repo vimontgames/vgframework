@@ -2,15 +2,24 @@
 
 namespace vg::gfx
 {
-    vg_enum_class(TextureImporterFormat, core::u8,
-        Automatic = 0,
+    vg_enum_class(TextureImporterType, core::u8,
+        Automatic   = 0,
 
-        R8G8B8A8            = (core::u8)gfx::PixelFormat::R8G8B8A8_unorm_sRGB,
-        R16G16B16A16_float  = (core::u8)gfx::PixelFormat::R16G16B16A16_float
+        Texture1D   = 1,
+        Texture2D   = 2,
+        Texture3D   = 3,
+        Cubemap     = 4
+    );
+
+    vg_enum_class(TextureImporterFormat, core::u8,
+        Automatic   = 0,
+
+        RGBA8       = 1
     );
 
     vg_enum_class(MipLevelCount, core::u8,
         Automatic           = 0,
+
         MipLevelCount_1     = 1,
         MipLevelCount_2     = 2,
         MipLevelCount_3     = 3,
@@ -18,7 +27,14 @@ namespace vg::gfx
         MipLevelCount_5     = 5,
         MipLevelCount_6     = 6,
         MipLevelCount_7     = 7,
-        MipLevelCount_8     = 8
+        MipLevelCount_8     = 8,
+        MipLevelCount_9     = 9,
+        MipLevelCount_10    = 10,
+        MipLevelCount_11    = 11,
+        MipLevelCount_12    = 12,
+        MipLevelCount_13    = 13,
+        MipLevelCount_14    = 14,
+        MipLevelCount_15    = 15
     );
 
     vg_enum_class(Downscale , core::u8,
@@ -32,6 +48,7 @@ namespace vg::gfx
 
     struct TextureImporterSettings
     {
+        TextureImporterType     m_importerType = TextureImporterType::Automatic;
         TextureImporterFormat   m_importerFormat = TextureImporterFormat::Automatic;
         bool                    m_sRGB = true;
         MipLevelCount           m_mipLevelCount = MipLevelCount::Automatic;

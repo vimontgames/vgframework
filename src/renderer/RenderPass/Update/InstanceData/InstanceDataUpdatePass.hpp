@@ -74,7 +74,7 @@ namespace vg::renderer
 
                 for (uint i = 0; i < instances.size(); ++i)
                 {
-                    VG_PROFILE_CPU("GPUInstanceData");
+                    //VG_PROFILE_CPU("GPUInstanceData");
 
                     GraphicInstance * instance = instances[i];
                     const auto & materials = instance->getMaterials();
@@ -91,7 +91,7 @@ namespace vg::renderer
                     
                     // Materials
                     {
-                        VG_PROFILE_CPU("GPUMaterialData");
+                        //VG_PROFILE_CPU("GPUMaterialData");
                         for (uint m = 0; m < materialCount; ++m)
                         {
                             GPUMaterialData * matData = (GPUMaterialData *)(data + offset);
