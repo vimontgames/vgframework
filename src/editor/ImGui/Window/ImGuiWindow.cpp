@@ -517,6 +517,20 @@ namespace vg::editor
     };
 
     //--------------------------------------------------------------------------------------
+    std::string camelCaseToSpaces(const std::string & _camelCaseString) 
+    {
+        std::string result;
+        for (size_t i = 0; i < _camelCaseString.size(); ++i) 
+        {
+            if (i > 0 && ((std::isupper(_camelCaseString[i]) && std::islower(_camelCaseString[i - 1])) || (std::isupper(_camelCaseString[i]) && i + 1 < _camelCaseString.size() && std::islower(_camelCaseString[i + 1])))) 
+                result += ' ';
+
+            result += _camelCaseString[i];
+        }
+        return result;
+    }
+
+    //--------------------------------------------------------------------------------------
     template <typename T> bool editEnum_Recur(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const vector<EnumPair<T>> & enumPairs, string _enumName, uint _index, T * _pEnum)
     {
         bool changed = false;
@@ -544,7 +558,7 @@ namespace vg::editor
             if (disabled)
                 PushDisabledStyle(true);
 
-            if (ImGui::Selectable(_enumName.c_str()))
+            if (ImGui::Selectable(camelCaseToSpaces(_enumName).c_str()))
             {
                 if (!_propContext.m_readOnly && !disabled)
                 {
@@ -633,7 +647,7 @@ namespace vg::editor
 
                 auto it = preview.find_last_of("_");
                 if (string::npos != it && it != preview.length())
-                    preview = preview.substr(it+1);
+                    preview = camelCaseToSpaces(preview.substr(it+1));
 
                 break;
             }
@@ -696,7 +710,7 @@ namespace vg::editor
                     else
                         preview += "|";
 
-                    preview += name;
+                    preview += camelCaseToSpaces(name);
                 }
             }
             else
@@ -724,7 +738,7 @@ namespace vg::editor
                 {
                     std::replace(name.begin(), name.end(), '_', ' ');
 
-                    if (ImGui::Checkbox(name.c_str(), &value))
+                    if (ImGui::Checkbox(camelCaseToSpaces(name).c_str(), &value))
                     {
                         if (!readonly)
                         {

@@ -43,6 +43,80 @@ struct GBufferSample
     }
 };
 
+float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, float2 _uv, ViewConstants _viewConstants)
+{
+    if (_depthStencil.depth >= 1.0f)
+    {
+        float3 envColor = _viewConstants.getEnvironmentColor();
+        return envColor;       
+    }
+
+    float3 worldPos = _viewConstants.getWorldPos(_uv, _depthStencil.depth);
+    float3 camPos = _viewConstants.getCameraPos();
+                        
+    LightingResult lighting = computeDirectLighting(_viewConstants, camPos, worldPos, _gbuffer.albedo.xyz, _gbuffer.normal.xyz, _gbuffer.pbr);
+            
+    float3 color = applyLighting(_gbuffer.albedo.rgb, lighting, _viewConstants.getDisplayMode());
+
+    #if _TOOLMODE
+    switch(_viewConstants.getDisplayMode())
+    {
+        case DisplayMode::None:
+            break;
+            
+        case DisplayMode::Lighting_Diffuse:
+        case DisplayMode::Lighting_Specular:
+        case DisplayMode::Lighting_RayCount:
+            break;
+            
+        default:
+            break;
+            
+        case DisplayMode::Deferred_GBuffer0_Albedo:
+            color = _gbuffer.albedo.rgb;
+            break;
+            
+        //case DisplayMode::Deferred_GBuffer0_A:
+        //    color = _gbuffer.albedo.aaa;
+        //    break;
+            
+        case DisplayMode::Deferred_GBuffer1_Normal:
+            color = _gbuffer.normal.rgb*0.5f+0.5f;
+            break;
+            
+        //case DisplayMode::Deferred_GBuffer1_A:
+        //    color = _gbuffer.normal.aaa;
+        //    break;
+            
+        case DisplayMode::Deferred_GBuffer2_Occlusion:
+            color = _gbuffer.pbr.rrr;
+            break;
+            
+        case DisplayMode::Deferred_GBuffer2_Roughness:
+            color = _gbuffer.pbr.ggg;
+            break;
+            
+        case DisplayMode::Deferred_GBuffer2_Metalness:
+            color = _gbuffer.pbr.bbb;
+            break;
+            
+        //case DisplayMode::Deferred_GBuffer1_A:
+        //    color = _gbuffer.normal.aaa;
+        //    break;
+
+        case DisplayMode::Deferred_MSAAEdges:
+            // Handled in CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
+            break;
+
+        case DisplayMode::PostProcess_FXAAEdges:
+            // Handled in float3 FXAA(Texture2D src, float2 uv, DisplayMode _displayMode) in FXAA.hlsli
+            break;
+    }
+    #endif
+
+    return color;
+}
+
 [numthreads(DEFERRED_LIGHTING_THREADGROUP_SIZE_X, DEFERRED_LIGHTING_THREADGROUP_SIZE_Y, 1)]
 void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
 {   
@@ -62,7 +136,7 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
         for (uint i = 0; i < SAMPLE_COUNT; ++i)
             depthStencilSamples[i].Load(coords, i);
 
-        // TODO: early out if all depth samples >= 1.0f
+        // TODO: early out if all depth samples >= 1.0f or keep early-out per-sample?
         //if (depth >= 1.0f)
         //    return;
 
@@ -74,66 +148,42 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
         // Deferred shading result
         float3 color[SAMPLE_COUNT];
 
-        for (uint i = 0; i < SAMPLE_COUNT; ++i)
+        // Shade sample 0
+        color[0] = shadeSample(gbufferSamples[0], depthStencilSamples[0], uv, viewConstants);
+
+        #if SAMPLE_COUNT > 1
+
+        bool isMSAAEdge = false;
+        for (uint i = 1; i < SAMPLE_COUNT; ++i)
+        {        
+            if (any(gbufferSamples[i].normal.xyz != gbufferSamples[0].normal.xyz))
+            {
+                isMSAAEdge = true;
+                break;
+            }
+        }
+
+        [branch]
+        if (isMSAAEdge)
         {
-            float3 worldPos = viewConstants.getWorldPos(uv, depthStencilSamples[i].depth);
-            float3 camPos = viewConstants.getCameraPos();
-                        
-            LightingResult lighting = computeDirectLighting(viewConstants, camPos, worldPos, gbufferSamples[i].albedo.xyz, gbufferSamples[i].normal.xyz, gbufferSamples[i].pbr);
-            
-            color[i].rgb = applyLighting(gbufferSamples[i].albedo.rgb, lighting, viewConstants.getDisplayMode());
+            // shade other MSAA samples 
+            for (uint i = 1; i < SAMPLE_COUNT; ++i)
+                 color[i] = shadeSample(gbufferSamples[i], depthStencilSamples[i], uv, viewConstants);
 
             #if _TOOLMODE
-            switch(viewConstants.getDisplayMode())
+            if (DisplayMode::Deferred_MSAAEdges == viewConstants.getDisplayMode())
             {
-                case DisplayMode::None:
-                    break;
-            
-                case DisplayMode::Lighting_Diffuse:
-                case DisplayMode::Lighting_Specular:
-                case DisplayMode::Lighting_RayCount:
-                    break;
-            
-                default:
-                    break;
-            
-                case DisplayMode::Deferred_GBuffer0_Albedo:
-                    color[i].rgb = gbufferSamples[i].albedo.rgb;
-                    break;
-            
-                //case DisplayMode::Deferred_GBuffer0_A:
-                //    color[i].rgb = gbufferSamples[i].albedo.aaa;
-                //    break;
-            
-                case DisplayMode::Deferred_GBuffer1_Normal:
-                    color[i].rgb = gbufferSamples[i].normal.rgb*0.5f+0.5f;
-                    break;
-            
-                //case DisplayMode::Deferred_GBuffer1_A:
-                //    color[i].rgb = gbufferSamples[i].normal.aaa;
-                //    break;
-            
-                case DisplayMode::Deferred_GBuffer2_Occlusion:
-                    color[i].rgb = gbufferSamples[i].pbr.rrr;
-                    break;
-            
-                case DisplayMode::Deferred_GBuffer2_Roughness:
-                    color[i].rgb = gbufferSamples[i].pbr.ggg;
-                    break;
-            
-                case DisplayMode::Deferred_GBuffer2_Metalness:
-                    color[i].rgb = gbufferSamples[i].pbr.bbb;
-                    break;
-            
-                //case DisplayMode::Deferred_GBuffer1_A:
-                //    color[i].rgb = gbufferSamples[i].normal.aaa;
-                //    break;
+                for (uint i = 1; i < SAMPLE_COUNT; ++i)
+                    color[i] = float3(1,0,0);
             }
             #endif
         }
-
-        // Store
-        #if SAMPLE_COUNT > 1
+        else
+        {
+            [unroll]
+            for (uint i = 1; i < SAMPLE_COUNT; ++i)
+                color[i] = color[0];
+        }
 
         [unroll]
         for (uint i = 0; i < SAMPLE_COUNT; ++i)
@@ -141,6 +191,7 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
 
         #else
 
+        // When no MSAA, there's always only one sample to store
         getRWTexture2D(deferredLightingConstants.getRWBufferOut())[coords] = float4(color[0],1);
 
         #endif

@@ -32,6 +32,7 @@ vg_enum_class(DisplayMode, uint,
     Deferred_GBuffer2_Occlusion,
     Deferred_GBuffer2_Roughness,
     Deferred_GBuffer2_Metalness,
+    Deferred_MSAAEdges,
 
     Lighting_Diffuse,
     Lighting_Specular,
@@ -44,8 +45,9 @@ vg_enum_class(DisplayMode, uint,
     RayTracing_PrimitiveIndex,  
 
     PostProcess_Depth,
-    PostProcess_Stencil,
     PostProcess_LinearDepth,
+    PostProcess_Stencil,
+    PostProcess_FXAAEdges,
     PostProcess_WorldPos
 );
 

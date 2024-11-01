@@ -95,6 +95,7 @@ namespace vg::renderer
             constants->setProj(view->getProjMatrix());
             constants->setProjInv(view->getProjInvMatrix());
             constants->setTLASHandle(view->getTLASHandle());
+            constants->setEnvironmentColor(pow(view->GetWorld()->GetEnvironmentColor().rgb, 2.2f));
 
             //if (view->IsToolmode())
             //    VG_INFO("[Picking %s] RelativeMousePos = %i %i OVER = %s", _renderPassContext.m_view->getName().c_str(), (uint)constants->getMousePos().x, (uint)constants->getMousePos().y, _renderPassContext.m_view->IsMouseOverView() ? "true" : "false");

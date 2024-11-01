@@ -33,52 +33,11 @@ struct ViewConstants
         m_projInv[1]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_projInv[2]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_projInv[3]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+
+        m_environmentColor        = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
     }
     #endif
-    
-    // m_screenSizeAndMousePos
-    void            setScreenSize           (uint2 _screenSize)     { m_screenSizeAndMousePos.xy = _screenSize; }
-    uint2           getScreenSize           ()                      { return m_screenSizeAndMousePos.xy; }
-    
-    void            setMousePos             (uint2 _mousePos)       { m_screenSizeAndMousePos.zw = _mousePos; }
-    uint2           getMousePos             ()                      { return m_screenSizeAndMousePos.zw; }
-    
-    // m_debugDisplay.x
-    // DisplayMode      : 16
-    // DisplayFlags     : 16
-    void            setDisplayMode          (DisplayMode _mode)         { m_debugDisplay.x = packUint16low(m_debugDisplay.x, (uint)_mode); }
-    DisplayMode     getDisplayMode          ()                          { return (DisplayMode)unpackUint16low(m_debugDisplay.x); }
-    
-    void            setDisplayFlags         (DisplayFlags _flags)       { m_debugDisplay.x = packUint16high(m_debugDisplay.x, (uint)_flags); }
-    DisplayFlags    getDisplayFlags         ()                          { return (DisplayFlags)unpackUint16high(m_debugDisplay.x); }
-    
-    void            setToolmodeRWBufferID   (uint _id)                  { m_debugDisplay.z = (m_debugDisplay.z & ~0x0000FFFF) | _id; }
-    uint            getToolmodeRWBufferID   ()                          { return m_debugDisplay.z & 0x0000FFFF; }
 
-    // m_camera
-    void            setCameraNearFar        (float2 _nearFar)           { m_camera.xy = _nearFar; }
-    void            setCameraFieldOfView    (float _fov)                { m_camera.z = _fov; }
-    void            setCameraAspectRatio    (float _ar)                 { m_camera.w = _ar; }
-
-    float2          getCameraNearFar           ()                       { return m_camera.xy; }
-    float           getCameraFieldOfView    ()                          { return m_camera.z; }
-    float           getCameraAspectRatio    ()                          { return m_camera.w; }
-    
-    void            setView                 (float4x4 _view)            { m_view = _view; }
-    float4x4        getView                 ()                          { return m_view; }
-
-    void            setViewInv              (float4x4 _viewInv)         { m_viewInv = _viewInv; }
-    float4x4        getViewInv              ()                          { return m_viewInv; }
-    
-    void            setProj                 (float4x4 _proj)            { m_proj = _proj; }
-    float4x4        getProj                 ()                          { return m_proj; }
-
-    void            setProjInv              (float4x4 _projInv)         { m_projInv = _projInv; }
-    float4x4        getProjInv              ()                          { return m_projInv; }
-
-    void            setTLASHandle           (uint _value)               { m_rayTracing.x = (m_rayTracing.x & ~0x0000FFFFUL) | (_value & 0xFFFF); }
-    uint            getTLASHandle           ()                          { return 0xFFFF & m_rayTracing.x; }
-    
     uint4           m_screenSizeAndMousePos;    // { size.x, size.y, mouse.x, mouse.y }
     uint4           m_debugDisplay;             // 0xFFFFFFFF 0x00000000 0x0000FFFF 0x00000000
     float4          m_camera;                   // { near, far, fov, ar }
@@ -87,44 +46,59 @@ struct ViewConstants
     float4x4        m_proj;
     float4x4        m_viewInv;
     float4x4        m_projInv;
+    float4          m_environmentColor;
+    
+    // Screen and mouse constants
+    void            setScreenSize           (uint2 _screenSize)                 { m_screenSizeAndMousePos.xy = _screenSize; }
+    uint2           getScreenSize           ()                                  { return m_screenSizeAndMousePos.xy; }
+    
+    void            setMousePos             (uint2 _mousePos)                   { m_screenSizeAndMousePos.zw = _mousePos; }
+    uint2           getMousePos             ()                                  { return m_screenSizeAndMousePos.zw; }
+    
+    // Debug display constants
+    void            setDisplayMode          (DisplayMode _mode)                 { m_debugDisplay.x = packUint16low(m_debugDisplay.x, (uint)_mode); }
+    DisplayMode     getDisplayMode          ()                                  { return (DisplayMode)unpackUint16low(m_debugDisplay.x); }
+    
+    void            setDisplayFlags         (DisplayFlags _flags)               { m_debugDisplay.x = packUint16high(m_debugDisplay.x, (uint)_flags); }
+    DisplayFlags    getDisplayFlags         ()                                  { return (DisplayFlags)unpackUint16high(m_debugDisplay.x); }
+    
+    void            setToolmodeRWBufferID   (uint _id)                          { m_debugDisplay.z = (m_debugDisplay.z & ~0x0000FFFF) | _id; }
+    uint            getToolmodeRWBufferID   ()                                  { return m_debugDisplay.z & 0x0000FFFF; }
 
-    float getLinearDepth(float _zBufferDepth)
-    {
-        float n = getCameraNearFar().x;
-        float f = getCameraNearFar().y;
-        return (2.0f * n) / (f + n - _zBufferDepth * (f - n));
-    }
+    // Camera constants
+    void            setCameraNearFar        (float2 _nearFar)                   { m_camera.xy = _nearFar; }
+    void            setCameraFieldOfView    (float _fov)                        { m_camera.z = _fov; }
+    void            setCameraAspectRatio    (float _ar)                         { m_camera.w = _ar; }
 
-    float3 getViewPos(float2 _screenPos, float _zBufferDepth)
-    {
-        float4 clipPos = float4(float2(_screenPos.x, 1-_screenPos.y) * 2.0f - 1.0f, _zBufferDepth, 1.0f);
-        float4 viewPos = mul(clipPos, getProjInv());
-        return viewPos.xyz / viewPos.w;
-    }
+    float2          getCameraNearFar           ()                               { return m_camera.xy; }
+    float           getCameraFieldOfView    ()                                  { return m_camera.z; }
+    float           getCameraAspectRatio    ()                                  { return m_camera.w; }
+    
+    void            setView                 (float4x4 _view)                    { m_view = _view; }
+    float4x4        getView                 ()                                  { return m_view; }
 
-    float3 getWorldPos(float2 _screenPos, float _zBufferDepth)
-    {
-        float3 viewPos = getViewPos(_screenPos, _zBufferDepth);
-        return mul(float4(viewPos.xyz,1.0f), getViewInv()).xyz;
-    }
+    void            setViewInv              (float4x4 _viewInv)                 { m_viewInv = _viewInv; }
+    float4x4        getViewInv              ()                                  { return m_viewInv; }
+    
+    void            setProj                 (float4x4 _proj)                    { m_proj = _proj; }
+    float4x4        getProj                 ()                                  { return m_proj; }
 
-    float3 getCameraRight()
-    {
-        return -m_viewInv[0].xyz;
-    }
+    void            setProjInv              (float4x4 _projInv)                 { m_projInv = _projInv; }
+    float4x4        getProjInv              ()                                  { return m_projInv; }
+    
+    float           getLinearDepth          (float _zBuffer)                    { float n = getCameraNearFar().x; float f = getCameraNearFar().y;  return (2.0f * n) / (f + n - _zBuffer * (f - n)); }
+    float3          getViewPos              (float2 _screenPos, float _zBuffer) { float4 clipPos = float4(float2(_screenPos.x, 1-_screenPos.y) * 2.0f - 1.0f, _zBuffer, 1.0f); float4 viewPos = mul(clipPos, getProjInv()); return viewPos.xyz / viewPos.w; }
+    float3          getWorldPos             (float2 _screenPos, float _zBuffer) { float3 viewPos = getViewPos(_screenPos, _zBuffer); return mul(float4(viewPos.xyz,1.0f), getViewInv()).xyz; }
+    float3          getCameraRight          ()                                  {  return -m_viewInv[0].xyz; }
+    float3          getCameraUp             ()                                  { return -m_viewInv[1].xyz; }
+    float3          getCameraForward        ()                                  { return -m_viewInv[2].xyz; }
+    float3          getCameraPos            ()                                  { return m_viewInv[3].xyz; }
 
-    float3 getCameraUp()
-    {
-        return -m_viewInv[1].xyz;
-    }
+    // Raytracing constants
+    void            setTLASHandle           (uint _value)                       { m_rayTracing.x = (m_rayTracing.x & ~0x0000FFFFUL) | (_value & 0xFFFF); }
+    uint            getTLASHandle           ()                                  { return 0xFFFF & m_rayTracing.x; }
 
-    float3 getCameraForward()
-    {
-        return -m_viewInv[2].xyz;
-    }
-
-    float3 getCameraPos()
-    {
-        return m_viewInv[3].xyz;
-    }
+    // Environment constants
+    void            setEnvironmentColor     (float3 _environmentColor)          { m_environmentColor.rgb = _environmentColor; } 
+    float3          getEnvironmentColor     ()                                  { return m_environmentColor.rgb; }
 };

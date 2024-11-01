@@ -189,13 +189,16 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
 
     if (all(dispatchThreadID.xy < screenSize))
     {
+        ViewConstants viewConstants;
+        viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+
         int3 address = int3(dispatchThreadID.xy, 0);
 
         float4 color;
 
         // Select Anti-Aliasing mode
         #if _FXAA
-        color = FXAA(getTexture2D(postProcessConstants.getColor()), uv);
+        color = FXAA(getTexture2D(postProcessConstants.getColor()), uv, viewConstants.getDisplayMode());
         #elif _SMAA
         color = SMAA(getTexture2D(postProcessConstants.getColor()), address);
         #else
@@ -204,10 +207,7 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
 
         float depth = loadDepth(postProcessConstants.getDepth(), address); 
         uint stencil = loadStencil(postProcessConstants.getStencil(), address);
-
-        ViewConstants viewConstants;
-        viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
-
+        
         #if _TOOLMODE
 
         #if _RAYTRACING
