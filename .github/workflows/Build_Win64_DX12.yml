@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 jobs:
-  build_release:
+  build_editor:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,7 +30,22 @@ jobs:
       - name: Build Release
         run: msbuild /m /p:Configuration=Release /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
 
-  build_final:
+      - name: Upload Release Artifacts
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-artifacts
+          path: |
+            src/commit.h
+            VGFramework_x64_Release_DX12.exe
+            build\bin\x64\Release\audio.dll
+            build\bin\x64\Release\editor.dll
+            build\bin\x64\Release\engine.dll
+            build\bin\x64\Release\game.dll
+            build\bin\x64\Release\physics.dll
+            build\bin\x64\Release_DX12\renderer.dll
+
+  build_game:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -46,68 +61,70 @@ jobs:
       - name: Build Final
         run: msbuild /m /p:Configuration=Final /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
 
+      - name: Upload Final Artifacts
+        if: success()
+        uses: actions/upload-artifact@v3
+        with:
+          name: final-artifacts
+          path: |
+            src/commit.h
+            VGFramework_x64_Final_DX12.exe
+            build\bin\x64\Final\audio.dll
+            build\bin\x64\Final\engine.dll
+            build\bin\x64\Final\game.dll
+            build\bin\x64\Final\physics.dll
+            build\bin\x64\Final_DX12\renderer.dll
+
   submit_binaries:
     runs-on: windows-latest
-    needs: [build_release, build_final]
+    needs: [build_editor, build_game]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Download Release Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: release-artifacts
+          path: ${{ env.GITHUB_WORKSPACE }}
+
+      - name: Download Final Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: final-artifacts
+          path: ${{ env.GITHUB_WORKSPACE }}
 
       - name: Read version, copy client files, and push binaries
         working-directory: ${{ env.GITHUB_WORKSPACE }}
         run: |
           # Read GIT_REVISION from commit.h
-          if (Test-Path "src/commit.h") {
-            $versionContent = Get-Content "src/commit.h"
-            $gitRevision = ""
+          $versionContent = Get-Content "src/commit.h"
+          $gitRevision = ""
 
-            foreach ($line in $versionContent) {
-              if ($line -like '*#define GIT_REVISION*') {
-                $parts = $line -split '"'
-                if ($parts.Length -ge 2) {
-                  $gitRevision = $parts[1]
-                  break
-                }
-              }
+          foreach ($line in $versionContent) {
+            if ($line -like '*#define GIT_REVISION*') {
+              $parts = $line -split '"'
+              $gitRevision = $parts[1]
+              break
             }
-
-            if (-not $gitRevision) {
-              Write-Error "GIT_REVISION not found in commit.h"
-              exit 1
-            }
-          } else {
-            Write-Error "commit.h file not found!"
-            exit 1
           }
 
           # Read version from version.h
-          if (Test-Path "src/version.h") {
-            $versionContent = Get-Content "src/version.h"
-            $major = ""
-            $minor = ""
-            $patch = ""
+          $versionContent = Get-Content "src/version.h"
+          $major, $minor, $patch = "", "", ""
 
-            foreach ($line in $versionContent) {
-              if ($line -match '#define VG_FRAMEWORK_VERSION_MAJOR (\d+)') {
-                $major = $matches[1]
-              } elseif ($line -match '#define VG_FRAMEWORK_VERSION_MINOR (\d+)') {
-                $minor = $matches[1]
-              } elseif ($line -match '#define VG_FRAMEWORK_VERSION_PATCH (\d+)') {
-                $patch = $matches[1]
-              }
+          foreach ($line in $versionContent) {
+            if ($line -match '#define VG_FRAMEWORK_VERSION_MAJOR (\d+)') {
+              $major = $matches[1]
+            } elseif ($line -match '#define VG_FRAMEWORK_VERSION_MINOR (\d+)') {
+              $minor = $matches[1]
+            } elseif ($line -match '#define VG_FRAMEWORK_VERSION_PATCH (\d+)') {
+              $patch = $matches[1]
             }
-
-            if ($major -and $minor -and $patch) {
-              $fullVersion = "$major.$minor.$patch"
-              $commitMessage = "Editor and Game $fullVersion ($gitRevision)"
-              Write-Host "Commit message: $commitMessage"
-            } else {
-              Write-Error "Version components not found in version.h"
-              exit 1
-            }
-          } else {
-            Write-Error "version.h file not found!"
-            exit 1
           }
+
+          $fullVersion = "$major.$minor.$patch"
+          $commitMessage = "Editor and Game $fullVersion ($gitRevision)"
+          Write-Host "Commit message: $commitMessage"
 
           # Run the batch file to create client file copies
           cmd /c script\copy_client_files.bat
