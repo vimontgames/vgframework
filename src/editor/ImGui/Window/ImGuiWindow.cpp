@@ -2468,8 +2468,8 @@ namespace vg::editor
                             {
                                 if (ImGuiWindow::displayObject(meta))
                                 {
-                                    meta->Save(_resource->GetResourcePath());
-                                    rm->UpdateResources();
+                                    //meta->Save(_resource->GetResourcePath());
+                                    //rm->UpdateResources();
                                 }
                                 ImGui::TreePop();
                             }

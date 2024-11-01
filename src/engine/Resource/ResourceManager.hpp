@@ -122,9 +122,14 @@ namespace vg::engine
         {
             if (_meta != it->second)
             {
-                //VG_SAFE_INCREASE_REFCOUNT(_meta);
+                auto uid = nullptr != it->second ? it->second->GetUID() : 0;
                 VG_SAFE_RELEASE(it->second);
                 it->second = _meta;
+                if (uid)
+                {
+                    _meta->SetUID(uid);
+                    _meta->RegisterUID();
+                }
             }
         }
         else

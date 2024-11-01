@@ -12,6 +12,8 @@ namespace vg::core
         bool                Load                (const core::string & _resourcePath) final override;
         bool                Save                (const core::string & _resourcePath) final override;
 
+        void                OnPropertyChanged   (IObject * _object, const IProperty & _prop, bool _notifyParent);
+
         io::FileAccessTime  GetLastWriteTime    () const final override;
         void                SetLastWriteTime    (io::FileAccessTime _lastWriteTime) final override;
 

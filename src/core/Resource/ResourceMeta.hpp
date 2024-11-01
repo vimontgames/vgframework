@@ -39,6 +39,20 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void ResourceMeta::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
+    {
+        // Save .meta when any property changes
+        if (const auto * factory = Kernel::getFactory())
+            factory->SaveToXML(this, GetFile());
+
+        // And reimport resources that depend on it
+        auto rm = Kernel::getResourceManager();
+        rm->UpdateResources();
+
+        super::OnPropertyChanged(_object, _prop, _notifyParent);
+    }
+
+    //--------------------------------------------------------------------------------------
     io::FileAccessTime ResourceMeta::GetLastWriteTime() const
     {
         return m_lastWriteTime;
