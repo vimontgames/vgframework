@@ -82,10 +82,24 @@ namespace vg::editor
                             ImGui::PushID(i);
                             auto obj = prop->GetPropertyResourceVectorElement(_object, i);
 
-                            string itemLabel = fmt::sprintf("[%u] %s", i, obj->GetResourcePath().empty() ? "Empty" : io::getFileName(obj->GetResourcePath()));
+                            string itemLabel;
+
+                            if (!obj->GetName().empty())
+                                itemLabel = obj->GetName();
+
+                            string itemPath = io::getFileName(obj->GetResourcePath());
+
+                            if (itemPath.empty())
+                                ImGui::PushDisabledStyle(true);                                
+
                             itemLabel += "###" + to_string((uint_ptr)obj);
 
-                            if (ImGui::TreeNodeEx(itemLabel.c_str(), ImGuiTreeNodeFlags_None))
+                            bool open = ImGui::TreeNodeEx(itemLabel.c_str(), ImGuiTreeNodeFlags_None);
+
+                            if (itemPath.empty())
+                                ImGui::PopDisabledStyle();
+
+                            if (open)
                             {
                                 changed |= ImGuiWindow::displayResource(obj, prop, i, propContext);
                                 ImGui::TreePop();

@@ -245,6 +245,7 @@ namespace vg::editor
                                 if (comp)
                                 {
                                     comp->SetObjectFlags(ObjectFlags::Opened, true);
+                                    comp->RegisterUID();
                                     gameObject->AddComponent(comp);
                                     comp->Release();
                                     status = Status::Success;
