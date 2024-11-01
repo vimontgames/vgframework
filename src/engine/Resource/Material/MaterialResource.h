@@ -29,8 +29,5 @@ namespace vg::engine
 
         bool                                CanCreateFile                   () const final override { return true; };
         bool                                CanSaveFile                     () const final override { return true; };
-
-    private:
-        static void *                       ResizeMaterialResourceVector    (core::IObject * _parent, core::uint _offset, core::uint _count, core::uint & _elementSize);
     };
 }

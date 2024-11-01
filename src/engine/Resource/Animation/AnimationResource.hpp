@@ -20,12 +20,11 @@ namespace vg::engine
     VG_REGISTER_RESOURCE_CLASS(AnimationResource, "Animation");
 
     //--------------------------------------------------------------------------------------
-    void * ResizeAnimationResourceVector(IObject * _parent, uint _offset, uint _count, uint & _elementSize)
+    void * ResizeAnimationResourceVector(IObject * _parent, uint _offset, uint _count)
     {
         auto vec = (core::vector<AnimationResource> *)(uint_ptr(_parent) + _offset);
         vec->clear();
         vec->resize(_count);
-        _elementSize = sizeof(AnimationResource);
         return vec->data();
     }
 

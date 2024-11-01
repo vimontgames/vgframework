@@ -16,8 +16,5 @@ namespace vg::engine
         core::IObject*                      Load                        (const core::string & _path) final override;
         bool                                CreateFile                  (const core::string & _path, core::IObject * _data = nullptr) override;
         bool                                SaveFile                    (const core::string & _path) const override;
-
-    private:
-        static void *                       ResizePrefabResourceVector  (core::IObject* _parent, core::uint _offset, core::uint _count, core::uint & _elementSize);
     };
 }

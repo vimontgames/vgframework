@@ -777,7 +777,7 @@ namespace vg::editor
     bool ImGuiWindow::displayObject(core::IObject * _object)
     {
         ObjectContext objectContext;
-        return displayObject(_object, objectContext);
+        return displayObject(_object, objectContext, nullptr);
     }
 
     //--------------------------------------------------------------------------------------
@@ -790,7 +790,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     // Returns 'true' if any object property has changed
     //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::displayObject(core::IObject * _object, ObjectContext & _objectContext)
+    bool ImGuiWindow::displayObject(core::IObject * _object, ObjectContext & _objectContext, const PropertyContext * _propContext)
     {
         const char * className = _object->GetClassName();
 
@@ -820,7 +820,7 @@ namespace vg::editor
         auto customDisplayHandler = ImGuiObjectHandler::Find(_object->GetClassName());
         if (nullptr != customDisplayHandler)
         {
-            changed = customDisplayHandler->displayObject(_object, _objectContext);
+            changed = customDisplayHandler->displayObject(_object, _objectContext, _propContext);
         }
         else
         {
@@ -1888,11 +1888,9 @@ namespace vg::editor
 
                                     auto y = GetCursorPosY();
 
-                                    auto buttonColor = GetStyleColorVec4(ImGuiCol_PlotLinesHovered);
-
                                     ImGui::PushID(i);
 
-                                    if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos - ImVec2(0,4), availableWidth - 1, _object, style::icon::Destroy, fmt::sprintf("Remove element %u", i), 0, &buttonColor))
+                                    if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos - ImVec2(0,4), availableWidth - 1, _object, style::icon::Trashcan, fmt::sprintf("Remove element %u", i)))
                                         removeAt = i;
 
                                     ImGui::PopID();
@@ -1983,19 +1981,15 @@ namespace vg::editor
                     }
                     else
                     {
-                        ImGui::PushStyleColor(ImGuiCol_Text, imGuiAdapter->GetTextColor());
-
-                        auto treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
-
                         if (nullptr != pObject)
                         {
+                            ImGui::PushStyleColor(ImGuiCol_Text, imGuiAdapter->GetTextColor());
+                            auto treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen;
+
                             auto classDesc = pObject->GetClassDesc();
                             if (classDesc && asBool(ClassDescFlags::Component & classDesc->GetFlags()))
                                 treeNodeFlags |= ImGuiTreeNodeFlags_Leaf;
-                        }
 
-                        ImGui::BeginDisabled(pObject == nullptr);
-                        {
                             bool needTreeNode = strcmp(_prop->GetName(), "m_object") && ref && !flatten;
                             bool treenNodeOpen = !needTreeNode || ImGui::TreeNodeEx(treeNodeName.c_str(), treeNodeFlags);
 
@@ -2005,15 +1999,13 @@ namespace vg::editor
                             if (treenNodeOpen)
                             {
                                 if (pObject)
-                                    displayObject(pObject);
+                                    displayObject(pObject, _objectContext, &propContext);
 
                                 if (needTreeNode)
                                     ImGui::TreePop();
                             }
-                        }
-                        ImGui::EndDisabled();
-
-                        ImGui::PopStyleColor();
+                            ImGui::PopStyleColor();
+                        }                        
                     }
                 }
                 break;

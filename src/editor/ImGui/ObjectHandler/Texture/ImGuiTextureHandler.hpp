@@ -15,7 +15,7 @@ namespace vg::editor
         //--------------------------------------------------------------------------------------
         // Texture preview
         //--------------------------------------------------------------------------------------
-        bool displayObject(IObject * _object, ObjectContext & _objectContext) final
+        bool displayObject(IObject * _object, ObjectContext & _objectContext, const PropertyContext * _propContext) final override
         {
             bool changed = false;
             auto * tex = dynamic_cast<gfx::ITexture*>(_object);

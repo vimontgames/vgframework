@@ -895,8 +895,7 @@ namespace vg::core
                 VG_ASSERT(elemClassDesc);
                 if (elemClassDesc)
                 {
-                    uint elementSize;
-                    void * data = elemClassDesc->ResizeVector(_dstObj, (uint)_srcProp->GetOffset(), (uint)srcCount, elementSize);
+                    void * data = elemClassDesc->ResizeVector(_dstObj, (uint)_srcProp->GetOffset(), (uint)srcCount);
 
                     for (uint i = 0; i < srcCount; ++i)
                     {
@@ -1153,10 +1152,7 @@ namespace vg::core
                     const IClassDesc * elemClassDesc = GetClassDescriptor(className);
                     VG_ASSERT(elemClassDesc);
                     if (count != _prop->GetPropertyResourceVectorCount(_object))
-                    {
-                        uint elementSize;
-                        elemClassDesc->ResizeVector(_object, (uint)_prop->GetOffset(), (uint)count, elementSize);
-                    }
+                        elemClassDesc->ResizeVector(_object, (uint)_prop->GetOffset(), (uint)count);
 
                     for (uint i = 0; i < count; ++i)
                     {
@@ -1615,8 +1611,8 @@ namespace vg::core
 
                                                 } while (xmlObjectRef != nullptr);
 
-                                                uint elemSize = 0;
-                                                void * data = classDesc->ResizeVector(_object, (uint)offset, count, elemSize);
+                                                const uint sizeOf = prop->GetSizeOf();
+                                                void * data = classDesc->ResizeVector(_object, (uint)offset, count);
                                                 VG_ASSERT(nullptr != data);
 
                                                 if (nullptr != data)
@@ -1633,7 +1629,7 @@ namespace vg::core
                                                             const auto * classDescRef = GetClassDescriptor(classNameRef);
                                                             if (nullptr != classDescRef)
                                                             {
-                                                                IResource * pResource = (IResource *)(uint_ptr(data) + index * elemSize);
+                                                                IResource * pResource = (IResource *)(uint_ptr(data) + index * sizeOf);
                                                                 if (SerializeFromXML(pResource, xmlObjectRef))
                                                                 {
                                                                     pResource->SetParent(_object);

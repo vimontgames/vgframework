@@ -514,10 +514,11 @@ namespace ImGui
     void PopDisabledStyle()
     {
         VG_ASSERT(g_disabledStack.size() > 0);
-        g_disabledStack.pop_back();
-
-        bool disabled = g_disabledStack.size() > 0 && g_disabledStack.back();
-
-        ApplyDisabledStyle(disabled);        
+        if (g_disabledStack.size() > 0)
+        {
+            g_disabledStack.pop_back();
+            bool disabled = g_disabledStack.size() > 0 && g_disabledStack.back();
+            ApplyDisabledStyle(disabled);
+        }
     }
 }

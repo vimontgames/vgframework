@@ -10,10 +10,10 @@ namespace vg::editor
     class ImGuiResourceListHandler : public ImGuiObjectHandler
     {
     public:
-        bool displayObject(IObject * _object, ObjectContext & _objectContext) = 0;
+        bool displayObject(IObject * _object, ObjectContext & _objectContext, const PropertyContext * _propContext) = 0;
 
         //--------------------------------------------------------------------------------------
-        bool displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName)
+        bool displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName, const PropertyContext * _propContext)
         {
             bool changed = false;
 
@@ -47,19 +47,29 @@ namespace vg::editor
             bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
             ImGui::PopID();
 
-            ImGui::BeginDisabled(false);
-            ImGui::CollapsingHeaderLabel(collapsingHeaderPos, label.c_str(), true);            
-            ImGui::EndDisabled();
+            const bool readOnly = _propContext && _propContext->m_readOnly;
 
+            if (readOnly)
+                ImGui::PushDisabledStyle(true);
+
+            ImGui::CollapsingHeaderLabel(collapsingHeaderPos, label.c_str(), true);            
+            
             bool remove = false;
 
-            if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Plus, fmt::sprintf("Add %s", _label), 0))
-                list->Add();
+            ImGui::BeginDisabled(readOnly);
+            {
+                if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Plus, fmt::sprintf("Add %s", _label), 0))
+                    list->Add();
 
-            ImGui::BeginDisabled(list->Size() == 0);
-            if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Minus, fmt::sprintf("Remove %s", _label), 1))
-                remove = true;    
+                ImGui::BeginDisabled(list->Size() == 0);
+                if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Minus, fmt::sprintf("Remove %s", _label), 1))
+                    remove = true;
+                ImGui::EndDisabled();
+            }
             ImGui::EndDisabled();
+
+            if (readOnly)
+                ImGui::PopDisabledStyle();
 
             ImGui::PopStyleColor(6);
 
@@ -77,17 +87,24 @@ namespace vg::editor
 
                         resourceCount = prop->GetPropertyResourceVectorCount(_object);
 
+                        int removeAt = -1;
+
                         for (uint i = 0; i < resourceCount; ++i)
                         {
+                            collapsingHeaderPos.y = ImGui::GetCursorPos().y;
+                            availableWidth = ImGui::GetContentRegionAvail().x + ImGui::GetCursorPosX() - style.FramePadding.x;
+
                             ImGui::PushID(i);
                             auto obj = prop->GetPropertyResourceVectorElement(_object, i);
 
                             string itemLabel;
 
+                            string itemPath = io::getFileName(obj->GetResourcePath());
+
                             if (!obj->GetName().empty())
                                 itemLabel = obj->GetName();
-
-                            string itemPath = io::getFileName(obj->GetResourcePath());
+                            else
+                                itemLabel = itemPath;
 
                             if (itemPath.empty())
                                 ImGui::PushDisabledStyle(true);                                
@@ -99,6 +116,13 @@ namespace vg::editor
                             if (itemPath.empty())
                                 ImGui::PopDisabledStyle();
 
+                            ImGui::BeginDisabled(readOnly);
+                            {
+                                if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos - ImVec2(0, 4), availableWidth - 1, _object, style::icon::Trashcan, fmt::sprintf("Remove element %u", i)))
+                                    removeAt = i;
+                            }
+                            ImGui::EndDisabled();
+
                             if (open)
                             {
                                 changed |= ImGuiWindow::displayResource(obj, prop, i, propContext);
@@ -106,6 +130,12 @@ namespace vg::editor
                             }
 
                             ImGui::PopID();
+                        }
+
+                        if (removeAt >= 0)
+                        {
+                            list->RemoveAt(removeAt);
+                            changed = true;
                         }
                     }
                     else
@@ -120,7 +150,7 @@ namespace vg::editor
             }
 
             if (remove)
-                list->Remove();
+                list->Pop();
 
             return changed;
         }        

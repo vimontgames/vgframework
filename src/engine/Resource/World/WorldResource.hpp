@@ -10,12 +10,11 @@ namespace vg::engine
     VG_REGISTER_RESOURCE_CLASS(WorldResource, "Scene");
 
     //--------------------------------------------------------------------------------------
-    void * WorldResource::ResizeWorldResourceVector(IObject * _parent, uint _offset, uint _count, uint & _elementSize)
+    void * ResizeWorldResourceVector(IObject * _parent, uint _offset, uint _count)
     {
         auto vec = (core::vector<WorldResource> *)(uint_ptr(_parent) + _offset);
         vec->clear();
         vec->resize(_count);
-        _elementSize = sizeof(WorldResource);
         return vec->data();
     }
 

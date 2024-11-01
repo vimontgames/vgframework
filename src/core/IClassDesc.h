@@ -32,7 +32,7 @@ namespace vg::core
     public:
         using Func              = std::function<IObject*(const string &, class IObject *)>;
         using SingletonFunc     = std::function<IObject*()>;
-        using ResizeVectorFunc  = std::function<void * (core::IObject *, core::uint, core::uint, core::uint &)>;
+        using ResizeVectorFunc  = std::function<void * (core::IObject *, core::uint, core::uint)>;
         using Priority          = core::i16;
 
         virtual                             ~IClassDesc  () {}
@@ -101,7 +101,7 @@ namespace vg::core
         virtual void                        RegisterEnumArray           (const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) = 0;
         
         virtual void                        RegisterResizeVectorFunc    (const char * _className, IClassDesc::ResizeVectorFunc _func) = 0;
-        virtual void *                      ResizeVector                (core::IObject * _parent, core::uint _offset, core::uint _count, core::uint & _elementSize) const = 0;
+        virtual void *                      ResizeVector                (core::IObject * _parent, core::uint _offset, core::uint _count) const = 0;
 
         virtual const char *                GetClassName                () const = 0;
         virtual const char *                GetParentClassName          () const = 0;

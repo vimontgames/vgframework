@@ -33,15 +33,22 @@ namespace vg::engine
         }
 
         //--------------------------------------------------------------------------------------
-        bool Remove() override
+        bool Pop() override
         {
             if (m_resources.size() > 0)
             {
                 m_resources.pop_back();
+                return true;
+            }
+            return false;
+        }
 
-                for (auto & res : m_resources)
-                    res.SetParent(this);
-
+        //--------------------------------------------------------------------------------------
+        bool RemoveAt(core::size_t _index) override
+        {
+            if (_index < m_resources.size())
+            {
+                m_resources.erase(m_resources.begin() + _index);
                 return true;
             }
             return false;

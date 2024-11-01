@@ -11,12 +11,11 @@ namespace vg::engine
     VG_REGISTER_RESOURCE_CLASS(MaterialResource, "Material");
 
     //--------------------------------------------------------------------------------------
-    void * MaterialResource::ResizeMaterialResourceVector(IObject * _parent, uint _offset, uint _count, uint & _elementSize)
+    void * ResizeMaterialResourceVector(IObject * _parent, uint _offset, uint _count)
     {
         auto vec = (core::vector<MaterialResource> *)(uint_ptr(_parent) + _offset);
         vec->clear();
         vec->resize(_count);
-        _elementSize = sizeof(MaterialResource);
         return vec->data();
     }
 

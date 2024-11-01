@@ -9,8 +9,9 @@ namespace vg::engine
     public:
         VG_CLASS_DECL_ABSTRACT(IResourceList, core::Object)
 
-        virtual bool Add() = 0;
-        virtual bool Remove() = 0;
-        virtual size_t Size() const = 0;
+        virtual bool    Add         () = 0;
+        virtual bool    Pop         () = 0;
+        virtual bool    RemoveAt    (core::size_t _index) = 0;
+        virtual size_t  Size        () const = 0;
     };
 }

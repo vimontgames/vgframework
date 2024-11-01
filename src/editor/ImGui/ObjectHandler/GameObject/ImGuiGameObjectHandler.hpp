@@ -16,7 +16,7 @@ namespace vg::editor
     {
     public:
         //--------------------------------------------------------------------------------------
-        bool displayObject(IObject * _object, ObjectContext & _objectContext) final
+        bool displayObject(IObject * _object, ObjectContext & _objectContext, const PropertyContext * _propContext) final override
         {
             bool changed = false;
 

@@ -69,7 +69,7 @@ namespace vg::core
         void                                RegisterEnumArray           (const char * _className, const char * _propertyName, IObject ** _offset, const char * _displayName, uint _enumCount, uint _elementSize, const char * _enumNames, const void * _enumValues, PropertyFlags _flags, uint _enumSizeOf) final override;
 
         void                                RegisterResizeVectorFunc    (const char * _className, IClassDesc::ResizeVectorFunc _func) final override;
-        void *                              ResizeVector                (core::IObject * _parent, core::uint _offset, core::uint _count, core::uint & _elementSize) const final override;
+        void *                              ResizeVector                (core::IObject * _parent, core::uint _offset, core::uint _count) const final override;
 
         const char *                        GetClassName                () const final override;
         const char *                        GetParentClassName          () const final override;

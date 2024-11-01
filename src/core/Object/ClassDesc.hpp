@@ -568,10 +568,10 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void * ClassDesc::ResizeVector(core::IObject * _parent, core::uint _offset, core::uint _count, core::uint & _elementSize) const
+    void * ClassDesc::ResizeVector(core::IObject * _parent, core::uint _offset, core::uint _count) const
     {
         if (nullptr != resizeVectorFunc)
-            return resizeVectorFunc(_parent, _offset, _count, _elementSize);
+            return resizeVectorFunc(_parent, _offset, _count);
         
         VG_ASSERT(nullptr != resizeVectorFunc, "Class \"%s\" has no 'ResizeVector' callback registered", name);
         return nullptr;
