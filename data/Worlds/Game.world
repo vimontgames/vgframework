@@ -24,24 +24,10 @@
         <Property type="ResourcePtrVector" name="m_prefabsResources" flags="Resource">
             <Object class="PrefabResource">
                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                <Property type="Uint32" name="m_uid" flags="" value="3859190754"/>
-                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/HealthBar.prefab"/>
-            </Object>
-            <Object class="PrefabResource">
-                <Property type="String" name="m_name" flags="NotVisible" value=""/>
                 <Property type="Uint32" name="m_uid" flags="" value="3318094887"/>
                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/GJ.prefab"/>
-            </Object>
-            <Object class="PrefabResource">
-                <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                <Property type="Uint32" name="m_uid" flags="" value="2904634693"/>
-                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/Pablo.prefab"/>
             </Object>
             <Object class="PrefabResource">
                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
@@ -52,7 +38,7 @@
             </Object>
             <Object class="PrefabResource">
                 <Property type="String" name="m_name" flags="NotVisible" value="GrosCovid"/>
-                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                <Property type="Uint32" name="m_uid" flags="" value="2063802256"/>
                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/GrosCovid.prefab"/>

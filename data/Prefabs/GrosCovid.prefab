@@ -20,12 +20,68 @@
                         <Property type="String" name="m_name" value="GrosCovid"/>
                         <Property type="Uint32" name="m_uid" flags="" value="2601455960"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                        <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
+                        <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value="Enemy|"/>
                         <Property type="ObjectPtrVector" name="m_components">
+                            <Object class="EnemyBehaviour">
+                                <Property type="String" name="m_name" flags="NotVisible" value="New EnemyBehaviour"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="794804662"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Uint32" name="m_life" value="1"/>
+                                <Property type="Float" name="m_hp" value="200"/>
+                                <Property type="Int32" name="m_score" value="0"/>
+                                <Property type="Float" name="m_walkSpeed" value="1.5"/>
+                                <Property type="Float" name="m_runSpeed" value="3"/>
+                                <Property type="Float" name="m_jumpSpeed" value="3"/>
+                                <Property type="Float" name="m_runJumpSpeed" value="4"/>
+                            </Object>
+                            <Object class="CharacterControllerComponent">
+                                <Property type="String" name="m_name" flags="NotVisible" value="New CharacterControllerComponent"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="849115195"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="EnumU8" name="m_category" value="Default"/>
+                                <Property type="Bool" name="m_useCollisionMask" flags="NotVisible" value="false"/>
+                                <Property type="EnumFlagsU64" name="m_collisionMask" flags="" value=""/>
+                                <Property type="EnumU8" name="m_characterType" flags="ReadOnly" value="Rigid"/>
+                                <Property type="ObjectPtr" name="m_characterDesc" flags="Flatten">
+                                    <Object class="RigidCharacterDesc">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="RigidCharacterDesc #13"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="224776012"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                        <Property type="Float" name="m_mass" value="75"/>
+                                        <Property type="Float" name="m_friction" flags="HasRange" value="0.5"/>
+                                        <Property type="Float" name="m_maxSlopeAngle" flags="HasRange" value="45"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
+                                    <Object class="CapsuleShapeDesc">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="CapsuleShapeDesc #24"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="3877217471"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                        <Property type="Float3" name="m_rotation" flags="EulerAngle" x="0" y="0" z="0"/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0.80000001"/>
+                                        <Property type="Bool" name="m_tapered" flags="NotVisible" value="true"/>
+                                        <Property type="Float" name="m_topRadius" flags="" value="0.55000001"/>
+                                        <Property type="Float" name="m_bottomRadius" flags="HasRange" value="0.44999999"/>
+                                        <Property type="Float" name="m_height" flags="HasRange" value="1.8"/>
+                                    </Object>
+                                </Property>
+                                <Property type="Uint8" name="m_delayState" flags="">
+                                    <Value name="Grounded" value="0"/>
+                                    <Value name="Blocked" value="0"/>
+                                    <Value name="Touching" value="0"/>
+                                    <Value name="InAir" value="0"/>
+                                </Property>
+                            </Object>
                             <Object class="AnimationComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New AnimationComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="3886946172"/>
@@ -52,6 +108,45 @@
                                                 <Property type="EnumFlagsU32" name="m_bodyParts" flags="" value=""/>
                                                 <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
                                             </Object>
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" value="Idle"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="2627576850"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/GrosCovid/GrosCovid_idle.fbx"/>
+                                                <Property type="Bool" name="m_play" flags="" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="" value="false"/>
+                                                <Property type="Uint32" name="m_layer" flags="HasRange" value="0"/>
+                                                <Property type="Bool" name="m_useBodyParts" flags="NotVisible" value="false"/>
+                                                <Property type="EnumFlagsU32" name="m_bodyParts" flags="" value=""/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                            </Object>
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" value="Die"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="395766795"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/GrosCovid/GrosCovid_Die.fbx"/>
+                                                <Property type="Bool" name="m_play" flags="" value="true"/>
+                                                <Property type="Bool" name="m_loop" flags="" value="true"/>
+                                                <Property type="Uint32" name="m_layer" flags="HasRange" value="0"/>
+                                                <Property type="Bool" name="m_useBodyParts" flags="NotVisible" value="false"/>
+                                                <Property type="EnumFlagsU32" name="m_bodyParts" flags="" value=""/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                            </Object>
+                                            <Object class="AnimationResource">
+                                                <Property type="String" name="m_name" value="Hurt"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="1645856165"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Animations/GrosCovid/GrosCovid_Hurt.fbx"/>
+                                                <Property type="Bool" name="m_play" flags="" value="false"/>
+                                                <Property type="Bool" name="m_loop" flags="" value="true"/>
+                                                <Property type="Uint32" name="m_layer" flags="HasRange" value="0"/>
+                                                <Property type="Bool" name="m_useBodyParts" flags="NotVisible" value="false"/>
+                                                <Property type="EnumFlagsU32" name="m_bodyParts" flags="" value=""/>
+                                                <Property type="Float" name="m_speed" flags="HasRange" value="1"/>
+                                            </Object>
                                         </Property>
                                     </Object>
                                 </Property>
@@ -60,7 +155,7 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="2191689049"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource" flags="Resource">
                                     <Object class="MeshResource">
@@ -91,7 +186,30 @@
                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                             </Object>
                         </Property>
-                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
+                            <Object class="PrefabGameObject">
+                                <Property type="String" name="m_name" value="HealthBar"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="3887202093"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components"/>
+                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                <Property type="Resource" name="m_prefabResource" flags="Resource">
+                                    <Object class="PrefabResource">
+                                        <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="2204098009"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/HealthBar.prefab"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                            </Object>
+                        </Property>
                     </Object>
                 </Property>
             </Object>
