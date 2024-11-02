@@ -631,31 +631,33 @@ namespace vg::gfx::dx12
         const TextureDesc & texDesc = _dst->getTexDesc();
         const auto fmtSize = Texture::getPixelFormatSize(texDesc.format);
 
-        for (uint i = 0; i < texDesc.mipmaps; ++i)
+        for (uint s = 0; s < texDesc.slices; ++s)
         {
-            D3D12_SUBRESOURCE_FOOTPRINT pitchedDesc = {};
-                                        pitchedDesc.Format = Texture::getd3d12ResourceFormat(texDesc.format);
-                                        pitchedDesc.Width = texDesc.width>>i;
-                                        pitchedDesc.Height = texDesc.height>>i;
-                                        pitchedDesc.Depth = 1;
-                                        pitchedDesc.RowPitch = (uint)alignUp((uint)(pitchedDesc.Width * fmtSize), (uint)D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+            for (uint i = 0; i < texDesc.mipmaps; ++i)
+            {
+                D3D12_SUBRESOURCE_FOOTPRINT pitchedDesc = {};
+                pitchedDesc.Format = Texture::getd3d12ResourceFormat(texDesc.format);
+                pitchedDesc.Width = texDesc.width >> i;
+                pitchedDesc.Height = texDesc.height >> i;
+                pitchedDesc.Depth = 1;
+                pitchedDesc.RowPitch = (uint)alignUp((uint)(pitchedDesc.Width * fmtSize), (uint)D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 
-            D3D12_TEXTURE_COPY_LOCATION dst = {};
-                                        dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
-                                        dst.SubresourceIndex = i;
-                                        dst.pResource = _dst->getResource().getd3d12TextureResource();
+                D3D12_TEXTURE_COPY_LOCATION dst = {};
+                dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+                dst.SubresourceIndex = i + s * texDesc.mipmaps;
+                dst.pResource = _dst->getResource().getd3d12TextureResource();
 
-            D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedTexture2D = {};
-                                               placedTexture2D.Offset = _srcOffset + _dst->getSubResourceData(i).offset;
-                                               placedTexture2D.Footprint = pitchedDesc; 
+                D3D12_PLACED_SUBRESOURCE_FOOTPRINT placedTexture2D = {};
+                placedTexture2D.Offset = _srcOffset + _dst->getSubResourceData(i + s * texDesc.mipmaps).offset;
+                placedTexture2D.Footprint = pitchedDesc;
 
-            D3D12_TEXTURE_COPY_LOCATION src = {};
-                                        src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
-                                        src.PlacedFootprint = placedTexture2D;
-                                        src.pResource = device->getUploadBuffer()->getBuffer()->getResource().getd3d12BufferResource();
+                D3D12_TEXTURE_COPY_LOCATION src = {};
+                src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+                src.PlacedFootprint = placedTexture2D;
+                src.pResource = device->getUploadBuffer()->getBuffer()->getResource().getd3d12BufferResource();
 
-                                    
-            m_d3d12graphicsCmdList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
+                m_d3d12graphicsCmdList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
+            }
         }
 
         D3D12_RESOURCE_BARRIER barrier;

@@ -93,6 +93,7 @@ namespace vg::engine
             {
                 // Or create
                 rm->SetResourceMeta(path, meta);
+                meta->RegisterUID();
                 meta->Save(path);
             }
 

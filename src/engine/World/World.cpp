@@ -13,6 +13,7 @@
 #include "core/Timer/Timer.h"
 #include "core/Math/Math.h"
 #include "gfx/IUIRenderer.h"
+#include "gfx/ITexture.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IRendererOptions.h"
 #include "renderer/IDebugDraw.h"
@@ -50,7 +51,7 @@ namespace vg::engine
         Engine::get()->unregisterWorld(this);
 
         VG_SAFE_RELEASE(m_physicsWorld);
-
+        VG_SAFE_RELEASE(m_environmentCubemap);
         VG_SAFE_DELETE(m_debugDrawData);
 
         for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
@@ -405,8 +406,16 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void World::BeforeUpdate(const Context & _context)
     {
+        const auto * options = Engine::get()->GetRenderer()->GetOptions();
+
         // Use default background clear color from options if not overriden by environment
-        m_nextEnvironmentColor = Engine::get()->GetRenderer()->GetOptions()->GetDefaultClearColor();
+        m_nextEnvironmentColor = options->GetDefaultClearColor();
+
+        // Reset cubemap
+        VG_SAFE_RELEASE(m_environmentCubemap);
+
+        // Use default ambient
+        m_environmentAmbientIntensity = options->GetDefaultAmbientIntensity();
     }
 
     //--------------------------------------------------------------------------------------
@@ -430,5 +439,34 @@ namespace vg::engine
     core::float4 World::GetEnvironmentColor() const
     {
         return m_currentEnvironmentColor;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetEnvironmentCubemap(gfx::ITexture * _texture)
+    {
+        if (_texture != m_environmentCubemap)
+        {
+            VG_SAFE_RELEASE(m_environmentCubemap);
+            m_environmentCubemap = _texture;
+            m_environmentCubemap->AddRef();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::ITexture * World::GetEnvironmentCubemap() const
+    {
+        return m_environmentCubemap;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetEnvironmentAmbientIntensity(float _ambientIntensity)
+    {
+        m_environmentAmbientIntensity = _ambientIntensity;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float World::GetEnvironmentAmbientIntensity() const
+    {
+        return m_environmentAmbientIntensity;
     }
 }

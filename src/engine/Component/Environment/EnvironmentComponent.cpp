@@ -18,6 +18,8 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerPropertyEx(EnvironmentComponent, m_environmentColor, "Color", PropertyFlags::Color);
+        registerOptionalPropertyResource(EnvironmentComponent, m_useEnvironmentCubemap, m_environmentCubemap, "Cubemap");
+        registerProperty(EnvironmentComponent, m_environmentAmbientIntensity, "Ambient intensity");
 
         return true;
     }
@@ -26,7 +28,7 @@ namespace vg::engine
     EnvironmentComponent::EnvironmentComponent(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
-
+        m_environmentCubemap.SetParent(this);
     }
 
     //--------------------------------------------------------------------------------------
@@ -42,6 +44,13 @@ namespace vg::engine
         if (auto * world = _context.m_gameObject->GetWorld())
         {
             world->SetEnvironmentColor(m_environmentColor);
+
+            if (m_useEnvironmentCubemap)
+                world->SetEnvironmentCubemap(m_environmentCubemap.getTexture());
+            else
+                world->SetEnvironmentCubemap(nullptr);
+
+            world->SetEnvironmentAmbientIntensity(m_environmentAmbientIntensity);
         }
     }
 }

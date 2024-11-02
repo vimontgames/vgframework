@@ -34,9 +34,12 @@ vg_enum_class(DisplayMode, uint,
     Deferred_GBuffer2_Metalness,
     Deferred_MSAAEdges,
 
+    Lighting_Ambient,
     Lighting_Diffuse,
     Lighting_Specular,
     Lighting_RayCount,
+
+    Environment_Cubemap,
 
     RayTracing_Hit,
     RayTracing_Barycentrics,

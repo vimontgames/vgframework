@@ -19,6 +19,7 @@
 // Read-only textures
 DECL_DESCRIPTOR_RANGE_RO(Texture1D,             g_Texture1DTable,       BINDLESS_TEXTURE_BINDING_1D, BINDLESS_TEXTURE_START);
 DECL_DESCRIPTOR_RANGE_RO(Texture2D,             g_Texture2DTable,       BINDLESS_TEXTURE_BINDING_2D, BINDLESS_TEXTURE_START);
+DECL_DESCRIPTOR_RANGE_RO(TextureCube,           g_TextureCubeTable,     BINDLESS_TEXTURE_BINDING_CUBE, BINDLESS_TEXTURE_START);
 DECL_DESCRIPTOR_RANGE_RO(Texture2DMS<float4>,   g_Texture2DMSTable,     BINDLESS_TEXTURE_BINDING_2DMS, BINDLESS_TEXTURE_START);
 DECL_DESCRIPTOR_RANGE_RO(Texture2D<uint2>,      g_Texture2DTable_UInt2, BINDLESS_TEXTURE_BINDING_2D_UINT2, BINDLESS_TEXTURE_START);
 DECL_DESCRIPTOR_RANGE_RO(Texture3D,             g_Texture3DTable,       BINDLESS_TEXTURE_BINDING_3D, BINDLESS_TEXTURE_START);
@@ -44,6 +45,7 @@ DECL_DESCRIPTOR_RANGE_RO(RaytracingAccelerationStructure, g_TLASTable, BINDLESS_
 
 #define getTexture1D(_handle)       (g_Texture1DTable[_handle - BINDLESS_TEXTURE_START])
 #define getTexture2D(_handle)       (g_Texture2DTable[_handle - BINDLESS_TEXTURE_START])
+#define getTextureCube(_handle)     (g_TextureCubeTable[_handle - BINDLESS_TEXTURE_START])
 #define getTexture2DMS(_handle)     (g_Texture2DMSTable[_handle - BINDLESS_TEXTURE_START])
 #define getTexture2D_UInt2(_handle) (g_Texture2DTable_UInt2[_handle - BINDLESS_TEXTURE_START])
 #define getTexture3D(_handle)       (g_Texture3DTable[_handle - BINDLESS_TEXTURE_START])

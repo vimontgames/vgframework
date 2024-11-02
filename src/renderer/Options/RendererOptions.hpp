@@ -17,7 +17,7 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         registerProperty(RendererOptions, m_toolMode, "Toolmode");
-        setPropertyDescription(LightDesc, m_toolMode, "Enable Toolmode in Game views");
+        setPropertyDescription(RendererOptions, m_toolMode, "Enable Toolmode in Game views");
 
         //registerPropertyEnumEx(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug", PropertyFlags::AlphabeticalOrder);
         registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug");
@@ -25,27 +25,27 @@ namespace vg::renderer
         registerPropertyGroupBegin(RendererOptions, "Lighting");
         {
             registerPropertyEnum(RendererOptions, LightingMode, m_lightingMode, "Mode");
-            setPropertyDescription(LightDesc, m_lightingMode, "Lighting monde will affect how lights are computed.\nIn \"Forward\" mode lighting is computed on the fly in pixel shader\nIn \"Defered\" mode lighting is computed in screen-space");
+            setPropertyDescription(RendererOptions, m_lightingMode, "Lighting monde will affect how lights are computed.\nIn \"Forward\" mode lighting is computed on the fly in pixel shader\nIn \"Defered\" mode lighting is computed in screen-space");
         }
         registerPropertyGroupEnd(RendererOptions);
 
         registerPropertyGroupBegin(RendererOptions, "Presentation"); 
         {
             registerPropertyEnum(RendererOptions, gfx::HDR, m_HDRmode, "HDR");
-            setPropertyDescription(LightDesc, m_HDRmode, "High-dynamic range display mode");
+            setPropertyDescription(RendererOptions, m_HDRmode, "High-dynamic range display mode");
 
             registerPropertyEnum(RendererOptions, gfx::MSAA, m_msaa, "MSAA");
-            setPropertyDescription(LightDesc, m_msaa, "Multisample anti-aliasing");
+            setPropertyDescription(RendererOptions, m_msaa, "Multisample anti-aliasing");
 
             registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
-            setPropertyDescription(LightDesc, m_VSync, "Sync display frequency with monitor refresh rate");
+            setPropertyDescription(RendererOptions, m_VSync, "Sync display frequency with monitor refresh rate");
         }
         registerPropertyGroupEnd(RendererOptions);
 
         registerPropertyGroupBegin(RendererOptions, "Raytracing");
         {
             registerProperty(RendererOptions, m_rayTracing, "Enable");
-            setPropertyDescription(LightDesc, m_rayTracing, "Enable Raytracing");
+            setPropertyDescription(RendererOptions, m_rayTracing, "Enable Raytracing");
         }
         registerPropertyGroupEnd(RendererOptions);
 
@@ -55,7 +55,7 @@ namespace vg::renderer
             setPropertyDescription(RendererOptions, m_postProcess, "Enable Post-Process");
 
             registerPropertyEnum(RendererOptions, gfx::AAPostProcess, m_aaPostProcess, "Anti-aliasing");
-            setPropertyDescription(LightDesc, m_aaPostProcess, "Post-Process anti-aliasing");
+            setPropertyDescription(RendererOptions, m_aaPostProcess, "Post-Process anti-aliasing");
         }
         registerPropertyGroupEnd(RendererOptions);
 
@@ -74,16 +74,19 @@ namespace vg::renderer
         registerPropertyGroupBegin(RendererOptions, "Misc");
         {
             registerPropertyEx(RendererOptions, m_wireframe, "Wireframe", PropertyFlags::SingleLine);
-            setPropertyDescription(LightDesc, m_wireframe, "Show Wireframe");
+            setPropertyDescription(RendererOptions, m_wireframe, "Show Wireframe");
 
             registerPropertyEx(RendererOptions, m_aabb, "Bounding Box", PropertyFlags::SingleLine);
-            setPropertyDescription(LightDesc, m_aabb, "Show Bounding Boxes");
+            setPropertyDescription(RendererOptions, m_aabb, "Show Bounding Boxes");
 
             registerPropertyEx(RendererOptions, m_debugUI, "Debug UI", PropertyFlags::SingleLine);
-            setPropertyDescription(LightDesc, m_debugUI, "Show UI debug");
+            setPropertyDescription(RendererOptions, m_debugUI, "Show UI debug");
 
-            registerPropertyEx(RendererOptions, m_defaultClearColor, "Background color", PropertyFlags::Color);
-            setPropertyDescription(LightDesc, m_defaultClearColor, "Scene default background clear color");
+            registerPropertyEx(RendererOptions, m_defaultClearColor, "Clear color", PropertyFlags::Color);
+            setPropertyDescription(RendererOptions, m_defaultClearColor, "Scene default background clear color");
+
+            registerProperty(RendererOptions, m_defaultAmbient, "Ambient");
+            setPropertyDescription(RendererOptions, m_defaultAmbient, "Scene default ambient intensity");
         }
         registerPropertyGroupEnd(RendererOptions);
 

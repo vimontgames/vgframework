@@ -111,6 +111,10 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
         case DisplayMode::PostProcess_FXAAEdges:
             // Handled in float3 FXAA(Texture2D src, float2 uv, DisplayMode _displayMode) in FXAA.hlsli
             break;
+
+        case DisplayMode::Environment_Cubemap:
+            color = getTextureCube(_viewConstants.getEnvironmentTextureHandle()).SampleLevel(linearClamp, normalize(_gbuffer.normal.rgb), 0).rgb;
+            break;
     }
     #endif
 

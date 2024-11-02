@@ -6,7 +6,12 @@
 
 struct ViewConstants
 {
-    #ifndef __cplusplus
+    #ifdef __cplusplus
+    ViewConstants()
+    {
+        
+    }
+    #else 
     void Load(ByteAddressBuffer _buffer, uint _offset = 0)
     {       
         m_screenSizeAndMousePos   = _buffer.Load<uint4>(_offset);   _offset += sizeof(uint4);
@@ -35,6 +40,7 @@ struct ViewConstants
         m_projInv[3]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
 
         m_environmentColor        = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+        m_textures                = _buffer.Load<uint4>(_offset);  _offset += sizeof(uint4);
     }
     #endif
 
@@ -47,6 +53,7 @@ struct ViewConstants
     float4x4        m_viewInv;
     float4x4        m_projInv;
     float4          m_environmentColor;
+    uint4           m_textures;
     
     // Screen and mouse constants
     void            setScreenSize           (uint2 _screenSize)                 { m_screenSizeAndMousePos.xy = _screenSize; }
@@ -70,7 +77,7 @@ struct ViewConstants
     void            setCameraFieldOfView    (float _fov)                        { m_camera.z = _fov; }
     void            setCameraAspectRatio    (float _ar)                         { m_camera.w = _ar; }
 
-    float2          getCameraNearFar           ()                               { return m_camera.xy; }
+    float2          getCameraNearFar        ()                                  { return m_camera.xy; }
     float           getCameraFieldOfView    ()                                  { return m_camera.z; }
     float           getCameraAspectRatio    ()                                  { return m_camera.w; }
     
@@ -101,4 +108,7 @@ struct ViewConstants
     // Environment constants
     void            setEnvironmentColor     (float3 _environmentColor)          { m_environmentColor.rgb = _environmentColor; } 
     float3          getEnvironmentColor     ()                                  { return m_environmentColor.rgb; }
+
+    void            setEnvironmentTextureHandle(uint _value)                    { m_textures.x = packUint16low(m_textures.x, _value);  }
+    uint            getEnvironmentTextureHandle()                               { return unpackUint16low(m_textures.x); }
 };

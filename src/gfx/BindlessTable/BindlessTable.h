@@ -80,6 +80,7 @@ namespace vg::gfx
         void updateBindlessTLASHandle(const BindlessTLASHandle & _handle, const gfx::TLAS * _tlas);
 
     private:
-        gfx::Texture *   m_defaultTexture = nullptr;
+        gfx::Texture *  m_defaultTexture2D = nullptr;
+        gfx::Texture *  m_defaultTextureCube = nullptr;
     };
 }

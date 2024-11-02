@@ -345,6 +345,12 @@ namespace vg::gfx::dx12
                     case TextureType::Texture2DMS:
                         srvDesc.Texture2DMS;
                         break;
+
+                    case TextureType::TextureCube:
+                        srvDesc.TextureCube.MipLevels = _texDesc.mipmaps;
+                        srvDesc.TextureCube.MostDetailedMip = 0;
+                        srvDesc.TextureCube.ResourceMinLODClamp = 0;
+                        break;
                 }
 
                 VG_ASSERT(m_resource.getd3d12TextureResource());
@@ -451,23 +457,29 @@ namespace vg::gfx::dx12
                 vector<u64> strides(subResourceCount);
 
                 u8 * mipInitData = (u8 *)_initData;
-                u32 index = 0;
 
-                auto w = _texDesc.width;
-                auto h = _texDesc.height;
+                const uint width = _texDesc.width;
+                const uint height = _texDesc.height;
 
-                for (uint m = 0; m < _texDesc.mipmaps; ++m)
+                // Subresource Index=MipLevel+(ArrayLayer×MipLevels)
+                for (uint s = 0; s < _texDesc.slices; ++s)
                 {
-                    subResource[index].pData = mipInitData;
-                    subResource[index].RowPitch = w * Texture::getPixelFormatSize(_texDesc.format);    // TODO: compute pitch in bits>>3 from format and width to handle compressed formats
-                    subResource[index].SlicePitch = subResource[index].RowPitch * h;
+                    uint mipWidth = width;
+                    uint mipHeight = height;
 
-                    mipInitData += subResource[index].SlicePitch;
+                    for (uint m = 0; m < _texDesc.mipmaps; ++m)
+                    {
+                        const uint subResourceIndex = s * _texDesc.mipmaps + m;
 
-                    w >>= 1;
-                    h >>= 1;
+                        subResource[subResourceIndex].pData = mipInitData;
+                        subResource[subResourceIndex].RowPitch = mipWidth * fmtSize;    // TODO: compute pitch in bits>>3 from format and width to handle compressed formats
+                        subResource[subResourceIndex].SlicePitch = subResource[subResourceIndex].RowPitch * mipHeight;
 
-                    index++;
+                        mipInitData += subResource[subResourceIndex].SlicePitch;
+
+                        mipWidth >>= 1;
+                        mipHeight >>= 1;
+                    }
                 }
 
                 size_t d3d12TotalSizeInBytes = 0;

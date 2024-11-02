@@ -19,6 +19,6 @@ namespace vg::gfx
 
     private:
         core::u32 computeMaxMipmapCount(TextureImporterType _type, core::uint _width, core::uint _height, core::uint _depth);
-        core::uint generateMipmaps(const core::u8 * _src, const TextureDesc & _desc, core::vector<core::u8> & _buffer, TextureImporterType _type, TextureImporterFormat _format, core::uint _mipmapCount);
+        bool generateMipmaps(const core::u8 * _src, const TextureDesc & _desc, core::vector<core::u8> & _buffer);
     };
 }

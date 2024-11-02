@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Component/Component.h"
+#include "engine/Resource/Texture/TextureResource.h"
 
 namespace vg::engine
 {
@@ -14,6 +15,9 @@ namespace vg::engine
         void Update(const Context & _context) final override;
 
     private:
-        core::float4 m_environmentColor = core::float4(0.1f, 0.1f, 0.1f, 1.0f);
+        core::float4    m_environmentColor = core::float4(0.1f, 0.1f, 0.1f, 1.0f);
+        bool            m_useEnvironmentCubemap = false;
+        TextureResource m_environmentCubemap;
+        float           m_environmentAmbientIntensity = 0.1f;
     };
 }

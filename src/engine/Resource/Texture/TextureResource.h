@@ -24,7 +24,6 @@ namespace vg::engine
 
         core::IResourceMeta *               CreateResourceMeta      (const core::string & _path) const final override;
 
-    private:
         gfx::ITexture *                     getTexture              () const { return (gfx::ITexture*)m_object; }
     };
 }

@@ -139,12 +139,14 @@ namespace vg::gfx::vulkan
                               imgDesc.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
                               imgDesc.imageType = getVulkanImageType(_texDesc.type);
                               imgDesc.format = getVulkanPixelFormat(_texDesc.format);
-                              imgDesc.extent = { _texDesc.width, _texDesc.height, _texDesc.slices };
+                              imgDesc.extent = { _texDesc.width, _texDesc.height, 1 }; // TODO: Texture3D
                               imgDesc.mipLevels = _texDesc.mipmaps;
-                              imgDesc.arrayLayers = 1;
+                              imgDesc.arrayLayers = _texDesc.slices;
                               imgDesc.samples = (VkSampleCountFlagBits)_texDesc.msaa;
                               imgDesc.flags = 0;
-                              
+
+            if (_texDesc.type == TextureType::TextureCube || _texDesc.type == TextureType::TextureCubeArray)
+                imgDesc.flags |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
 
             if (_texDesc.isRenderTarget())
             {
@@ -217,7 +219,7 @@ namespace vg::gfx::vulkan
                 vkImageViewDesc.subresourceRange.baseMipLevel = 0;
                 vkImageViewDesc.subresourceRange.levelCount = _texDesc.mipmaps;
                 vkImageViewDesc.subresourceRange.baseArrayLayer = 0;
-                vkImageViewDesc.subresourceRange.layerCount = 1;
+                vkImageViewDesc.subresourceRange.layerCount = _texDesc.slices; // TODO: Texture3D
 
                 vkImageViewDesc.viewType = getVulkanImageViewType(_texDesc.type);
                 vkImageViewDesc.flags = 0;
@@ -278,16 +280,20 @@ namespace vg::gfx::vulkan
                 if (nullptr != dst)
                 {
                     uint_ptr currentOffset = 0;
-                    for (uint i = 0; i < _texDesc.mipmaps; ++i)
+
+                    for (uint s = 0; s < _texDesc.slices; ++s)
                     {
-                        const uint w = _texDesc.width >> i;
-                        const uint h = _texDesc.height >> i;
+                        for (uint i = 0; i < _texDesc.mipmaps; ++i)
+                        {
+                            const uint w = _texDesc.width >> i;
+                            const uint h = _texDesc.height >> i;
 
-                        // Copy to upload buffer line by line
-                        for (uint y = 0; y < h; ++y)
-                            memcpy(currentOffset + dst + y * w * fmtSize, currentOffset + &((u8*)_initData)[y * w * fmtSize], fmtSize * w);
+                            // Copy to upload buffer line by line
+                            for (uint y = 0; y < h; ++y)
+                                memcpy(currentOffset + dst + y * w * fmtSize, currentOffset + &((u8 *)_initData)[y * w * fmtSize], fmtSize * w);
 
-                        currentOffset += w * h * fmtSize;
+                            currentOffset += w * h * fmtSize;
+                        }
                     }
                 }
                 uploadBuffer->unmap(static_cast<gfx::Texture*>(this), dst/*, uploadBufferSize*/);

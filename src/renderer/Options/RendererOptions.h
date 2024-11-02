@@ -37,6 +37,7 @@ namespace vg::renderer
 							    RendererOptions			    (const core::string & _name, core::IObject * _parent = nullptr);
 
         const core::float4 &    GetDefaultClearColor        () const { return m_defaultClearColor; }
+        float                   GetDefaultAmbientIntensity  () const { return m_defaultAmbient; }
 
         bool                    IsToolModeEnabled           () const final override { return isToolModeEnabled(); };
         bool                    IsRayTracingEnabled         () const final override { return isRayTracingEnabled(); };
@@ -93,6 +94,7 @@ namespace vg::renderer
 
     private:
         core::float4		    m_defaultClearColor         = core::float4(0, 0, 0, 0);
+        float                   m_defaultAmbient            = 0.1f;
         bool				    m_toolMode                  = true;
         bool                    m_aabb                      = false;
         bool				    m_wireframe                 = false;

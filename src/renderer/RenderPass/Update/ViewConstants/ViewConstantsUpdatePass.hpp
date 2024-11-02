@@ -80,6 +80,10 @@ namespace vg::renderer
 
         const uint2 viewSize = view->GetSize();
 
+        // TODO: 'Environment' class?
+        const auto * world = view->GetWorld();
+        const Texture * envMap = (Texture *)world->GetEnvironmentCubemap();
+
         ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer, sizeof(ViewConstants)).data;
         {
             constants->setScreenSize(viewSize);
@@ -95,7 +99,8 @@ namespace vg::renderer
             constants->setProj(view->getProjMatrix());
             constants->setProjInv(view->getProjInvMatrix());
             constants->setTLASHandle(view->getTLASHandle());
-            constants->setEnvironmentColor(pow(view->GetWorld()->GetEnvironmentColor().rgb, 2.2f));
+            constants->setEnvironmentColor(pow(world->GetEnvironmentColor().rgb, 2.2f));
+            constants->setEnvironmentTextureHandle(envMap ? envMap->getTextureHandle() : ReservedSlot::InvalidTextureCube);
 
             //if (view->IsToolmode())
             //    VG_INFO("[Picking %s] RelativeMousePos = %i %i OVER = %s", _renderPassContext.m_view->getName().c_str(), (uint)constants->getMousePos().x, (uint)constants->getMousePos().y, _renderPassContext.m_view->IsMouseOverView() ? "true" : "false");

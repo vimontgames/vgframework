@@ -271,6 +271,9 @@ namespace vg::core
 #define registerOptionalPropertyEnumBitfield(className, boolpropertyname, enumClassName, propertyName, displayName)     registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::NotVisible); \
                                                                                                                         registerPropertyEnumEx(className, enumClassName, propertyName, displayName, vg::core::PropertyFlags::Bitfield | vg::core::PropertyFlags::Optional) 
 
+#define registerOptionalPropertyResource(className, boolpropertyname, propertyName, displayName)            registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::NotVisible); \
+                                                                                                            registerPropertyResourceEx(className, propertyName, displayName, vg::core::PropertyFlags::Optional)    
+
 //--------------------------------------------------------------------------------------
 // Modify existing class properties macros
 //--------------------------------------------------------------------------------------

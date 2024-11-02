@@ -555,6 +555,7 @@ namespace vg::editor
                     if (ImGui::Button("Add", style::button::SizeMedium) || enterPressed)
                     {
                         IGameObject * newGameObject = (IGameObject *)CreateFactoryObject(GameObject, newName.c_str(), gameObject);
+                        newGameObject->RegisterUID();
 
                         switch (selected)
                         {

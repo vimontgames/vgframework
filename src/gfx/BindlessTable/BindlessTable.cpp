@@ -27,6 +27,7 @@ namespace vg::gfx
             #else
             m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_1D,        BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
             m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_2D,        BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
+            m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_CUBE,      BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
             m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_2DMS,      BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
             m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_2D_UINT2,  BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
             m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_3D,        BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_COUNT);
@@ -167,7 +168,8 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     BindlessTable::~BindlessTable()
     {
-        VG_SAFE_RELEASE(m_defaultTexture);
+        VG_SAFE_RELEASE(m_defaultTexture2D);
+        VG_SAFE_RELEASE(m_defaultTextureCube);
     }
 
     //--------------------------------------------------------------------------------------
@@ -175,22 +177,76 @@ namespace vg::gfx
     {
         auto * device = gfx::Device::get();
         
-        const uint w = 16;
-        const uint h = 16;
-        TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, w, h);
-        u32 texInitData[h][w];
-        for (u32 j = 0; j < h; ++j)
-            for (u32 i = 0; i < w; ++i)
-                texInitData[j][i] = ((i>>3) & 1) != ((j>>3) & 1) ? 0xFFFF00FF : 0x7F7F007F;
-        
-        // create default texture at slot 'invalidBindlessTextureHandle'
-        m_defaultTexture = device->createTexture(texDesc, "DefaultTex2D", (void*)texInitData, ReservedSlot(BINDLESS_TEXTURE_INVALID));
-        VG_ASSERT(m_defaultTexture->getTextureHandle() == BINDLESS_TEXTURE_INVALID);
+        // create default texture 2D
+        {
+            const uint w = 16;
+            const uint h = 16;
+            TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, w, h);
+            u32 texInitData[h][w];
+            for (uint j = 0; j < h; ++j)
+                for (uint i = 0; i < w; ++i)
+                    texInitData[j][i] = ((i >> 3) & 1) != ((j >> 3) & 1) ? 0xFFFF00FF : 0x7F7F007F;
+
+            m_defaultTexture2D = device->createTexture(texDesc, "Default_Texture2D", (void *)texInitData, ReservedSlot::InvalidTexture2D);
+            VG_ASSERT(m_defaultTexture2D->getTextureHandle() == BINDLESS_TEXTURE_INVALID);
+        }
         
         // copy texture to all 'texture' slots
         for (uint i = BINDLESS_TEXTURE_START; i < BINDLESS_TEXTURE_COUNT; ++i)
             if (BINDLESS_TEXTURE_INVALID != i)
-                copyTextureHandle(i, m_defaultTexture);
+                copyTextureHandle(i, m_defaultTexture2D);
+
+        // create default cubemap
+        {
+            const uint w = 16;
+            const uint h = 16;
+            TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::TextureCube, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, w, h, 6);
+
+            u32 texInitData[6][h][w];
+            for (uint f = 0; f < 6; ++f)
+            {
+                u32 color[2];
+                switch ((CubemapFace)f)
+                {
+                    case CubemapFace::PositiveX:
+                        color[0] = 0xFF0000FF;
+                        color[1] = 0xFF00007F;
+                        break;
+
+                    case CubemapFace::NegativeX:
+                        color[0] = 0xFF00007F;
+                        color[1] = 0xFF00003F;
+                        break;
+
+                    case CubemapFace::PositiveY:
+                        color[0] = 0xFF00FF00;
+                        color[1] = 0xFF007F00;
+                        break;
+
+                    case CubemapFace::NegativeY:
+                        color[0] = 0xFF007F00;
+                        color[1] = 0xFF003F00;
+                        break;
+
+                    case CubemapFace::PositiveZ:
+                        color[0] = 0xFFFF0000;
+                        color[1] = 0xFF7F0000;
+                        break;
+
+                    case CubemapFace::NegativeZ:
+                        color[0] = 0xFF7F0000;
+                        color[1] = 0xFF3F0000;
+                        break;
+                }
+
+                for (u32 j = 0; j < h; ++j)
+                    for (u32 i = 0; i < w; ++i)
+                        texInitData[f][j][i] = ((i >> 2) & 1) != ((j >> 2) & 1) ? color[0] : color[1];
+            }
+
+            m_defaultTextureCube = device->createTexture(texDesc, "Default_Cube", (void *)texInitData, ReservedSlot::InvalidTextureCube);
+            VG_ASSERT(m_defaultTextureCube->getTextureHandle() == BINDLESS_TEXTURE_INVALID - 1);
+        }
 
         // TODO: initialize other buffer types?
     }

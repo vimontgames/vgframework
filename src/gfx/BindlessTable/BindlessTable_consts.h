@@ -25,6 +25,12 @@ namespace vg::gfx
 
     struct BindlessTextureHandle : public BindlessHandle
     {
+        BindlessTextureHandle(ReservedSlot _slot) :
+            BindlessHandle((Type)_slot)
+        {
+            VG_ASSERT((core::uint)ReservedSlot::FirstTexture <= (core::uint)_slot && (core::uint)_slot <= (core::uint)ReservedSlot::LastTexture, "Texture %u (0x%08X) is not in the [%u..%u] range", (core::uint)_slot, (core::uint)_slot, (core::uint)ReservedSlot::FirstTexture, (core::uint)ReservedSlot::LastTexture);
+        }
+
         explicit BindlessTextureHandle(Type _value = BINDLESS_TEXTURE_INVALID) : 
             BindlessHandle(_value) 
         { 
@@ -35,6 +41,12 @@ namespace vg::gfx
 
     struct BindlessBufferHandle : public BindlessHandle
     {
+        BindlessBufferHandle(ReservedSlot _slot) :
+            BindlessHandle((Type)_slot)
+        {
+            VG_ASSERT((core::uint)ReservedSlot::FirstBuffer <= (core::uint)_slot && (core::uint)_slot <= (core::uint)ReservedSlot::LastBuffer, "Buffer %u (0x%08X) is not in the [%u..%u] range", (core::uint)_slot, (core::uint)_slot, (core::uint)ReservedSlot::FirstBuffer, (core::uint)ReservedSlot::LastBuffer);
+        }
+
         explicit BindlessBufferHandle(Type _value = BINDLESS_BUFFER_INVALID) :
             BindlessHandle(_value) 
         {
@@ -45,6 +57,12 @@ namespace vg::gfx
 
     struct BindlessRWTextureHandle : public BindlessHandle
     {
+        BindlessRWTextureHandle(ReservedSlot _slot) :
+            BindlessHandle((Type)_slot)
+        {
+            VG_ASSERT((core::uint)ReservedSlot::FirstTexture <= (core::uint)_slot && (core::uint)_slot <= (core::uint)ReservedSlot::LastRWTexture, "RWTexture %u (0x%08X) is not in the [%u..%u] range", (core::uint)_slot, (core::uint)_slot, (core::uint)ReservedSlot::FirstTexture, (core::uint)ReservedSlot::LastRWTexture);
+        }
+
         explicit BindlessRWTextureHandle(Type _value = BINDLESS_RWTEXTURE_INVALID) :
             BindlessHandle(_value) 
         {  
@@ -55,6 +73,12 @@ namespace vg::gfx
 
     struct BindlessRWBufferHandle : public BindlessHandle
     {
+        BindlessRWBufferHandle(ReservedSlot _slot) :
+            BindlessHandle((Type)_slot)
+        {
+            VG_ASSERT((core::uint)ReservedSlot::FirstRWBuffer <= (core::uint)_slot && (core::uint)_slot <= (core::uint)ReservedSlot::LastRWBuffer, "RWBuffer %u (0x%08X) is not in the [%u..%u] range", (core::uint)_slot, (core::uint)_slot, (core::uint)ReservedSlot::FirstRWBuffer, (core::uint)ReservedSlot::LastRWBuffer);
+        }
+
         explicit BindlessRWBufferHandle(Type _value = BINDLESS_RWBUFFER_INVALID) :
             BindlessHandle(_value) 
         { 
@@ -71,27 +95,5 @@ namespace vg::gfx
         }
         static core::uint2 getValidRange() { return core::uint2(BINDLESS_TLAS_START, (BINDLESS_TLAS_START + BINDLESS_TLAS_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
-    };
-
-    // Allocate fixed Textures/Buffers SRVs/UAVs slots top-down (dynamic slots are allocated bottom-up)
-    enum class ReservedSlot : core::u32
-    {
-        // Texture SRV
-        DefaultPBRTexSrv        = RESERVEDSLOT_TEXSRV_DEFAULT_PBR,
-        DefaultNormalTexSrv     = RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL,
-        DefaultAlbedoTexSrv     = RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO,
-        ImGuiFontTexSrv         = RESERVEDSLOT_TEXSRV_IMGUIFONTTEX,
-
-        // Buffer SRV
-        InstanceDataBufSrv      = RESERVEDSLOT_BUFSRV_INSTANCEDATA,
-        SkinningMatricesBufSrv  = RESERVEDSLOT_BUFSRV_SKINNINGMATRICES,
-        LightsConstantBufSrv    = RESERVEDSLOT_BUFSRV_LIGHTSCONSTANTS,
-        ViewConstantsBufSrv     = RESERVEDSLOT_BUFSRV_VIEWCONSTANTS,
-
-        // RWBuffer 
-        GPUDebugBufRW           = RESERVEDSLOT_RWBUFFER_GPUDEBUG,
-        
-        // Dynamic
-        None                    = 0x80000000
     };
 }

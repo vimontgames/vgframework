@@ -1,4 +1,7 @@
-#pragma once
+#ifndef _TABLE_HLSLI_
+#define _TABLE_HLSLI_
+
+#include "types.hlsli"
 
 // Bindless resource ranges (must be litteral constants)
 #define BINDLESS_TEXTURE_START      0       // [0..16383]       (14 bits)
@@ -33,7 +36,46 @@
 
 // Allocate fixed Textures/Buffers SRVs/UAVs slots top-down (dynamic slots are allocated bottom-up)
 
-// Texture SRV
+vg_enum_class(ReservedSlot, uint,
+    // Texture
+    ImGuiFontTexSrv         = BINDLESS_TEXTURE_INVALID - 5,
+    DefaultPBRTexSrv        = BINDLESS_TEXTURE_INVALID - 4,
+    DefaultNormalTexSrv     = BINDLESS_TEXTURE_INVALID - 3,
+    DefaultAlbedoTexSrv     = BINDLESS_TEXTURE_INVALID - 2,
+    InvalidTextureCube      = BINDLESS_TEXTURE_INVALID - 1,
+    InvalidTexture2D        = BINDLESS_TEXTURE_INVALID,
+
+    FirstTexture            = ImGuiFontTexSrv,
+    LastTexture             = InvalidTexture2D,
+
+    // Buffer
+    InstanceDataBufSrv      = BINDLESS_BUFFER_INVALID - 4,
+    SkinningMatricesBufSrv  = BINDLESS_BUFFER_INVALID - 3,
+    LightsConstantBufSrv    = BINDLESS_BUFFER_INVALID - 2,
+    ViewConstantsBufSrv     = BINDLESS_BUFFER_INVALID - 1,
+    InvalidBuffer           = BINDLESS_BUFFER_INVALID,
+
+    FirstBuffer             = InstanceDataBufSrv,
+    LastBuffer              = InvalidBuffer,
+
+    // RWTexture
+    InvalidRWTexture2D      = BINDLESS_RWTEXTURE_INVALID,
+
+    FirstRWTexture          = InvalidRWTexture2D,
+    LastRWTexture           = InvalidRWTexture2D,
+
+    // RWBuffer
+    GPUDebugBufRW           = BINDLESS_RWBUFFER_INVALID - 1,
+    InvalidRWBuffer         = BINDLESS_RWBUFFER_INVALID,
+
+    FirstRWBuffer           = GPUDebugBufRW,
+    LastRWBuffer            = InvalidRWBuffer,
+
+    // Automatic
+    None                    = 0x80000000
+);
+
+//// Texture SRV
 #define RESERVEDSLOT_TEXSRV_DEFAULT_PBR         (BINDLESS_TEXTURE_INVALID - 4)
 #define RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL      (BINDLESS_TEXTURE_INVALID - 3)
 #define RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO      (BINDLESS_TEXTURE_INVALID - 2)
@@ -56,6 +98,7 @@
 #define BINDLESS_TEXTURE_BINDING_2D              20  
 #define BINDLESS_TEXTURE_BINDING_2DMS            21  
 #define BINDLESS_TEXTURE_BINDING_2D_UINT2        22  
+#define BINDLESS_TEXTURE_BINDING_CUBE            23   
 #define BINDLESS_TEXTURE_BINDING_3D              30  
 
 #define BINDLESS_RWTEXTURE_BINDING_1D           210 
@@ -66,6 +109,7 @@
 
 #define BINDLESS_TEXTURE_BINDING_1D               0 // <=> BINDLESS_TEXTURE_BINDING
 #define BINDLESS_TEXTURE_BINDING_2D               0   
+#define BINDLESS_TEXTURE_BINDING_CUBE             0   
 #define BINDLESS_TEXTURE_BINDING_2DMS             0  
 #define BINDLESS_TEXTURE_BINDING_2D_UINT2         0   
 #define BINDLESS_TEXTURE_BINDING_3D               0   
@@ -75,3 +119,5 @@
 #define BINDLESS_RWTEXTURE_BINDING_2D_UINT2       2 
 #define BINDLESS_RWTEXTURE_BINDING_3D             2 
 #endif
+
+#endif // _TABLE_HLSLI_
