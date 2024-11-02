@@ -109,6 +109,9 @@ struct ViewConstants
     void            setEnvironmentColor     (float3 _environmentColor)          { m_environmentColor.rgb = _environmentColor; } 
     float3          getEnvironmentColor     ()                                  { return m_environmentColor.rgb; }
 
+    void            setEnvironmentAmbientIntensity(float _intensity)            { m_environmentColor.a = _intensity; }
+    float           getEnvironmentAmbientIntensity()                            { return m_environmentColor.a; }
+
     void            setEnvironmentTextureHandle(uint _value)                    { m_textures.x = packUint16low(m_textures.x, _value);  }
     uint            getEnvironmentTextureHandle()                               { return unpackUint16low(m_textures.x); }
 };

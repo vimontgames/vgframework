@@ -51,9 +51,7 @@ namespace vg::renderer
 
         registerProperty(LightDesc, m_intensity, "Intensity");
         setPropertyDescription(LightDesc, m_intensity, "Direct Light intensity multiplier");
-
-        registerPropertyEx(LightDesc, m_ambient, "Ambient", PropertyFlags::Color | PropertyFlags::HDR);
-        setPropertyDescription(LightDesc, m_ambient, "Ambient Light color");
+        setPropertyRange(LightDesc, m_intensity, float2(0.0f, 100.0f));
 
         return true;
     }
@@ -66,8 +64,6 @@ namespace vg::renderer
     bool LightInstance::registerProperties(core::IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-
-
 
         return true;
     }
@@ -84,7 +80,6 @@ namespace vg::renderer
         m_shadowIntensity = m_shadow ? _lightDesc->m_shadowIntensity : 0.0f;
 
         setColor(_lightDesc->m_color);
-        SetAmbient(_lightDesc->m_ambient);
         m_intensity = _lightDesc->m_intensity;
     }
 
@@ -92,18 +87,6 @@ namespace vg::renderer
     LightInstance::~LightInstance()
     {
         
-    }
-
-    //--------------------------------------------------------------------------------------
-    void LightInstance::SetAmbient(const float3 & _ambient)
-    {
-        setAmbient(_ambient);
-    }
-
-    //--------------------------------------------------------------------------------------
-    const core::float3 & LightInstance::GetAmbient() const
-    {
-        return getAmbient();
     }
 
     //--------------------------------------------------------------------------------------

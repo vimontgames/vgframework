@@ -37,13 +37,9 @@ struct OmniLightConstants
 	float4		m_position;
 	float4x4	m_shadowMatrix;
 	uint4		m_shadow; 
-	float4		m_ambient;
 
 	void		setColor					(float3 _color)		{ m_color.rgb = _color; }
 	float3		getColor					()					{ return m_color.rgb;}
-
-	void		setAmbient					(float3 _ambient)	{ m_ambient.rgb = _ambient; }
-	float3		getAmbient					()					{ return m_ambient.rgb;}
 	
 	void		setPosition					(float3 _position)	{ m_position.xyz = _position;}
 	float3		getPosition					()					{ return m_position.xyz; }
@@ -70,13 +66,9 @@ struct DirectionalLightConstants
 	float4		m_direction;
 	float4x4	m_shadowMatrix;
 	uint4		m_shadow; 
-	float4		m_ambient;
 
 	void		setColor					(float3 _color)		{ m_color.rgb = _color; }
 	float3		getColor					()					{ return m_color.rgb;}
-
-	void		setAmbient					(float3 _ambient)	{ m_ambient.rgb = _ambient; }
-	float3		getAmbient					()					{ return m_ambient.rgb;}
 	
 	void		setDirection				(float3 _direction)	{ m_direction.xyz = _direction; }
 	float3		getDirection				()					{ return m_direction.xyz; }

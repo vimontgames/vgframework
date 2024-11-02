@@ -64,8 +64,10 @@ float3 fresnelSchlick(float3 F0, float cosTheta)
 //--------------------------------------------------------------------------------------
 struct LightingResult
 {
-    float3 diffuse;
-    float3 specular;
+	float3 envDiffuse;
+	float3 envSpecular;
+    float3 directLightDiffuse;
+    float3 directLightSpecular;
 
 	void addLightContribution(float3 Lo, float cosLo, float _cosLi, float3 Lr, float3 F0, float3 Li, float3 Lradiance, float3 _worldNormal, float roughness, float metalness)
 	{
@@ -98,8 +100,8 @@ struct LightingResult
 		// Cook-Torrance specular microfacet BRDF.
 		float3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * cosLo);
 
-		diffuse += diffuseBRDF * Lradiance * cosLi;
-		specular += specularBRDF * Lradiance * cosLi;
+		directLightDiffuse += diffuseBRDF * Lradiance * cosLi;
+		directLightSpecular += specularBRDF * Lradiance * cosLi;
 	}
 };
 
@@ -178,6 +180,42 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 	#ifdef _TOOLMODE
 	uint rayCount = 0;
 	#endif
+
+	// Environment diffuse and specular diffuse
+	uint ambientCubemapTexHandle = _viewConstants.getEnvironmentTextureHandle();
+	float ambientIntensity = _viewConstants.getEnvironmentAmbientIntensity();
+
+	if (ReservedSlot::InvalidTextureCube != (ReservedSlot)ambientCubemapTexHandle)
+	{
+		TextureCube cubemap = getTextureCube(ambientCubemapTexHandle);
+		uint width, height, mipLevels;
+		cubemap.GetDimensions(0, width, height, mipLevels);
+
+		// environment diffuse
+
+		// Calculate Fresnel term for ambient lighting.
+		// Since we use pre-filtered cubemap(s) and irradiance is coming from many directions
+		// use cosLo instead of angle with light's half-vector (cosLh above).
+		// See: https://seblagarde.wordpress.com/2011/08/17/hello-world/
+		float3 F = fresnelSchlick(F0, cosLo);
+
+		// Get diffuse contribution factor (as with direct lighting).
+		float3 kd = lerp(1.0 - F, 0.0, metalness);
+
+		output.envDiffuse = kd * cubemap.SampleLevel(linearClamp, normalize(_worldNormal.rgb), mipLevels-1).rgb * ambientIntensity;
+
+		// environment specular
+		float mipLevel = roughness * (mipLevels - 1);
+		output.envSpecular = F * cubemap.SampleLevel(linearClamp, Lr, mipLevel).rgb * ambientIntensity;
+	}
+	else
+	{
+		// environment diffuse
+		output.envDiffuse = _viewConstants.getEnvironmentColor() * ambientIntensity;
+
+		// environment specular
+		output.envSpecular = _viewConstants.getEnvironmentColor() * ambientIntensity;
+	}
 
 	for(uint i=0; i < lightsHeader.getDirectionalCount(); ++i)
 	{
@@ -259,7 +297,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		}
 
 		// cheap ambient
-		output.diffuse += directional.getAmbient();
+		//output.diffuse += directional.getAmbient();
 	}	
 
 	for(uint i=0; i < lightsHeader.getOmniCount(); ++i)
@@ -315,7 +353,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 			}
 
 			// cheap ambient
-			output.diffuse += att * omni.getAmbient();
+			//output.diffuse += att * omni.getAmbient();
 		}
     }	
 
@@ -326,7 +364,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 			break;
 		
 		case DisplayMode::Lighting_RayCount:
-			output.diffuse = heatmapGradient(rayCount, 1.0f, 3.0f, 6.0f);
+			output.directLightDiffuse = heatmapGradient(rayCount, 1.0f, 3.0f, 6.0f);
 			break;
 	}
 	#endif
@@ -343,14 +381,28 @@ float3 applyLighting(float3 _albedo, LightingResult _lighting, DisplayMode _disp
 		default:
 			break;
 
-		case DisplayMode::Lighting_RayCount:
+		case DisplayMode::Lighting_EnvironmentDiffuse:
+			return _lighting.envDiffuse.rgb;
+
+		case DisplayMode::Lighting_EnvironmentSpecular:
+			return _lighting.envSpecular.rgb;
+
+		case DisplayMode::Lighting_DirectLightDiffuse:
+			return _lighting.directLightDiffuse.rgb;
+
+		case DisplayMode::Lighting_DirectLightSpecular:
+			return _lighting.directLightSpecular.rgb;
+
 		case DisplayMode::Lighting_Diffuse:
-			return _lighting.diffuse.rgb;
+			return _lighting.envDiffuse.rgb + _lighting.directLightDiffuse.rgb;
 
 		case DisplayMode::Lighting_Specular:
-			return _lighting.specular;
+			return _lighting.envSpecular.rgb + _lighting.directLightSpecular.rgb;
+
+		case DisplayMode::Lighting_RayCount:
+			return _lighting.directLightDiffuse.rgb;
 	}
 	#endif
 
-    return _albedo.rgb * _lighting.diffuse + _lighting.specular;
+    return (_lighting.envDiffuse + _lighting.directLightDiffuse) * _albedo.rgb + (_lighting.envSpecular.rgb + _lighting.directLightSpecular.rgb);
 }

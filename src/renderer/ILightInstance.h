@@ -30,8 +30,5 @@ namespace vg::renderer
 
         virtual LightType               GetLightType    () const = 0;
         virtual bool                    IsCastShadow    () const = 0;
-
-        virtual void                    SetAmbient      (const core::float3 & _ambient) = 0;
-        virtual const core::float3 &    GetAmbient      () const = 0;
     };
 }

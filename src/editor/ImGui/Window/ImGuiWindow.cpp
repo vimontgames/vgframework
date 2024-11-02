@@ -2464,7 +2464,7 @@ namespace vg::editor
                         {
                             const string metaLabel = fmt::sprintf("Metadata###%s", _resource->GetResourcePath());
 
-                            if (ImGui::TreeNodeEx(metaLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+                            if (ImGui::TreeNodeEx(metaLabel.c_str(), ImGuiTreeNodeFlags_None))
                             {
                                 if (ImGuiWindow::displayObject(meta))
                                 {

@@ -100,6 +100,7 @@ namespace vg::renderer
             constants->setProjInv(view->getProjInvMatrix());
             constants->setTLASHandle(view->getTLASHandle());
             constants->setEnvironmentColor(pow(world->GetEnvironmentColor().rgb, 2.2f));
+            constants->setEnvironmentAmbientIntensity(world->GetEnvironmentAmbientIntensity());
             constants->setEnvironmentTextureHandle(envMap ? envMap->getTextureHandle() : ReservedSlot::InvalidTextureCube);
 
             //if (view->IsToolmode())
@@ -160,7 +161,6 @@ namespace vg::renderer
                 DirectionalLightConstants * constants = (DirectionalLightConstants *)(data + offset);
 
                 constants->setColor(float3(0.95f, 0.95f, 0.95f));
-                constants->setAmbient(float3(0.05f, 0.05f, 0.05f));
                 constants->setDirection(normalize(float3(0.5f,-0.75f,1)));
                 constants->setShadowBias(0);
                 constants->setShadowInstensity(0);
@@ -178,7 +178,6 @@ namespace vg::renderer
                 DirectionalLightConstants * constants = (DirectionalLightConstants *)(data + offset);
 
                 constants->setColor(directional->getColor().rgb * directional->getIntensity());
-                constants->setAmbient(directional->getAmbient().rgb * directional->getIntensity());
                 constants->setDirection(directional->getGlobalMatrix()[2].xyz);
                 constants->setShadowBias(directional->m_shadowBias);
                 constants->setShadowInstensity(directional->m_shadowIntensity);
@@ -208,7 +207,6 @@ namespace vg::renderer
                 OmniLightConstants * constants = (OmniLightConstants *)(data + offset);
 
                 constants->setColor(omni->getColor().rgb * omni->getIntensity());
-                constants->setAmbient(omni->getAmbient().rgb * omni->getIntensity());
                 constants->setPosition(omni->getGlobalMatrix()[3].xyz);
                 constants->setRadius(omni->getMaxRadius());
                 constants->setShadowBias(omni->m_shadowBias);

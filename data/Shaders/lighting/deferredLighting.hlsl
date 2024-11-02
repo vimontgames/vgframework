@@ -64,6 +64,11 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
         case DisplayMode::None:
             break;
             
+        // Handled in applyLighting
+        case DisplayMode::Lighting_EnvironmentDiffuse:
+        case DisplayMode::Lighting_EnvironmentSpecular:
+        case DisplayMode::Lighting_DirectLightDiffuse:
+        case DisplayMode::Lighting_DirectLightSpecular:
         case DisplayMode::Lighting_Diffuse:
         case DisplayMode::Lighting_Specular:
         case DisplayMode::Lighting_RayCount:
