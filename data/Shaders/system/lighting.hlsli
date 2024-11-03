@@ -204,7 +204,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		output.envDiffuse = kd * cubemap.SampleLevel(linearClamp, normalize(_worldNormal.rgb), diffuseEnvMip).rgb * ambientIntensity;
 
 		// environment specular using split-sum approximation factors for Cook-Torrance specular BRDF.
-		float2 specularBRDF = getTexture2D((uint)ReservedSlot::CookTorranceBRDF).Sample(linearClamp, float2(cosLo, roughness)).rg;
+		float2 specularBRDF = getTexture2D((uint)ReservedSlot::CookTorranceBRDF).SampleLevel(linearClamp, float2(cosLo, roughness), 0).rg;
 		float specularEnvMip = roughness * (mipLevels - 1);
 		output.envSpecular = (F0 * specularBRDF.x + specularBRDF.y) * cubemap.SampleLevel(linearClamp, Lr, specularEnvMip).rgb * ambientIntensity;
 	}
