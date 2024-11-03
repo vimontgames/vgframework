@@ -129,7 +129,7 @@ namespace vg::renderer
 
         if (fontPath)
         {
-            string fontFullPath = fmt::sprintf("data/Fonts/%s", fontPath);
+            string fontFullPath = fmt::sprintf("data/Engine/Fonts/%s", fontPath);
 
             ImGuiIO & io = ImGui::GetIO();
             io.Fonts->AddFontFromFileTTF(fontFullPath.c_str(), editor::style::font::DefaultFontHeight);
@@ -143,7 +143,7 @@ namespace vg::renderer
             icons_config.MergeMode = true;
             icons_config.PixelSnapH = true;
             icons_config.GlyphMinAdvanceX = iconFontSize;
-            slot.ptr = io.Fonts->AddFontFromFileTTF("data/Fonts/Font-Awesome-6.x/" FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
+            slot.ptr = io.Fonts->AddFontFromFileTTF("data/Engine/Fonts/Font-Awesome-6.x/" FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
         }
 
         return nullptr != slot.ptr;
