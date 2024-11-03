@@ -37,9 +37,9 @@ namespace vg::renderer
 							    RendererOptions			        (const core::string & _name, core::IObject * _parent = nullptr);
                                 ~RendererOptions                ();
 
-        const core::float4 &    GetDefaultClearColor            () const final override { return m_defaultClearColor; }
+        const core::float4 &    GetDefaultClearColor            () const final override { return m_defaultEnvironmentColor; }
         gfx::ITexture *         GetDefaultCubemap               () const final override;
-        float                   GetDefaultAmbientIntensity      () const final override { return m_defaultAmbient; }
+        float                   GetDefaultAmbientIntensity      () const final override { return m_defaultEnvironmentIntensity; }
 
         bool                    IsToolModeEnabled               () const final override { return isToolModeEnabled(); };
         bool                    IsRayTracingEnabled             () const final override { return isRayTracingEnabled(); };
@@ -85,7 +85,7 @@ namespace vg::renderer
         bool                    isNormalMapsEnabled             () const { return 0 != (DisplayFlags::NormalMap & m_displayFlags); }
         
         void                    setDefaultClearColor            (const core::float4 & _backgroundColor);
-        core::float4		    getDefaultClearColor            () const { return m_defaultClearColor; }
+        core::float4		    getDefaultClearColor            () const { return m_defaultEnvironmentColor; }
 
         void                    update                          () const;
 
@@ -98,10 +98,10 @@ namespace vg::renderer
         void                    applyMSAA                       (const core::IProperty * _prop);
 
     private:
-        core::float4		    m_defaultClearColor             = core::float4(0, 0, 0, 0);
+        core::float4		    m_defaultEnvironmentColor       = core::float4(0.1f, 0.1f, 0.1f, 1.0f);
         bool                    m_useDefaultEnvironmentCubemap  = false;
-        core::IResource *       m_defaultCubemap                = nullptr;
-        float                   m_defaultAmbient                = 0.1f;
+        core::IResource *       m_defaultEnvironmentCubemap     = nullptr;
+        float                   m_defaultEnvironmentIntensity   = 0.1f;
         bool				    m_toolMode                      = true;
         bool                    m_aabb                          = false;
         bool				    m_wireframe                     = false;
@@ -117,7 +117,6 @@ namespace vg::renderer
         DisplayFlags            m_displayFlags                  = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap;
         RenderPassFlags         m_renderPassFlags;
         const gfx::DeviceCaps * m_deviceCaps                    = nullptr;
-
         core::IProperty *       m_hdrProp                       = nullptr;
         core::IProperty *       m_vsyncProp                     = nullptr;
         core::IProperty *       m_msaaProp                      = nullptr;

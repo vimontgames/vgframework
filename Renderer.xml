@@ -5,7 +5,7 @@
         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
         <Property type="Bool" name="m_toolMode" value="false"/>
-        <Property type="EnumU32" name="m_debugDisplayMode" value="Lighting_EnvironmentDiffuse"/>
+        <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
         <Property type="EnumU8" name="m_lightingMode" value="Deferred"/>
         <Property type="EnumU8" name="m_HDRmode" value="None"/>
         <Property type="EnumU8" name="m_msaa" value="MSAA4X"/>
@@ -15,9 +15,9 @@
         <Property type="EnumU8" name="m_aaPostProcess" value="FXAA"/>
         <Property type="EnumFlagsU32" name="m_renderPassFlags" flags="Bitfield" value="ZPrepass|Opaque|Transparency"/>
         <Property type="EnumFlagsU32" name="m_displayFlags" flags="Bitfield" value="AlbedoMap|NormalMap"/>
-        <Property type="Float4" name="m_defaultClearColor" flags="Color" x="0.50196081" y="0.50196081" z="0.50196081" w="1"/>
+        <Property type="Float4" name="m_defaultEnvironmentColor" flags="Color" x="0.1" y="0.1" z="0.1" w="1"/>
         <Property type="Bool" name="m_useDefaultEnvironmentCubemap" flags="NotVisible" value="true"/>
-        <Property type="ResourcePtr" name="m_defaultCubemap" flags="">
+        <Property type="ResourcePtr" name="m_defaultEnvironmentCubemap" flags="">
             <Object class="TextureResource">
                 <Property type="String" name="m_name" flags="NotVisible" value="TextureResource #0"/>
                 <Property type="Uint32" name="m_uid" flags="" value="0"/>
@@ -26,7 +26,7 @@
                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/EnvMaps/Default.psd"/>
             </Object>
         </Property>
-        <Property type="Float" name="m_defaultAmbient" value="0.1"/>
+        <Property type="Float" name="m_defaultEnvironmentIntensity" value="0.15000001"/>
         <Property type="Bool" name="m_wireframe" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_aabb" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_debugUI" flags="SingleLine" value="false"/>

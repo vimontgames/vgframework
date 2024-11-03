@@ -23,7 +23,6 @@ Yes, yet another work-in-progress game and graphic engine project :)
 [Getting started](#Getting-started)\
 [Extern libs](#Extern-libs)\
 [Assets](#Assets)\
-[Changelog](#Changelog)\
 [Misc](#Misc)
 
 # License
@@ -44,14 +43,14 @@ You have two options depending on whether you want to build from source or use t
 
 ## Using precompiled binaries (users)
 
-- Run **Editor.exe** to launch the editor.
-- Run **Game.exe** to start the game.
+- Run `Editor.exe` to launch the editor.
+- Run `Game.exe` to start the game.
 
 ## Building from sources (programmers)
 
-By default, VGFramework uses the precompiled binaries: Editor.exe, Game.exe, and the DLLs located in the /bin/ folder. 
+By default, VGFramework uses the precompiled binaries: `Editor.exe`, `Game.exe`, and the DLLs located in the `bin/` folder. 
 
-When you build locally, executable files for Editor.exe and Game.exe will be created in your /build/ folder.\
+When you build locally, executable files will be created in your `build/` folder.\
 The program will use these locally built files if they are present; otherwise, it will fallback to the precompiled binaries.
 
 ### To build from sources: 
@@ -177,15 +176,15 @@ The external libraries are included with the sources for convenience.
 
 ## Assets with usage restrictions
 
-The assets in **these folders** are licensed under the Creative Commons Non-Commercial (CC BY-NC 4.0) License, with the additional restriction that **they may only be used within the context of VGFramework development**.
+The assets in **the following folders** are licensed under the Creative Commons Non-Commercial (CC BY-NC 4.0) License, with the additional restriction that **they may only be used within the context of VGFramework development**.
 
 Please refer to the [ASSETS_LICENSE.md](ASSETS_LICENSE.md) for more details.
 
-| Name		| Author                            | Files											   | Preview	
-| --------- | --------------------------------- | -------------------------------------------------| ----------- 
-| GJ        | [JOYxt](https://github.com/Joyxt) | data/Meshes/GJ<br>data/Textures/GJ               | <img src="doc/img/GJ.png" alt="GJ" title="GJ" align="center" /> 
-| VGF_Boy   | [JOYxt](https://github.com/Joyxt) | data/Meshes/VGF_Boy<br>data/Textures/VGF_Boy     | <img src="doc/img/VGF_Boy.png" alt="VGF_Boy" title="VGF_Boy" align="center"  /> 
-| GrosCovid | [JOYxt](https://github.com/Joyxt) | data/Meshes/GrosCovid<br>data/Textures/GrosCovid | <img src="doc/img/GrosCovid.png" alt="GrosCovid" title="GrosCovid" align="center" />  
+| Name		| Author                            | Folders											   | Preview	
+| --------- | --------------------------------- | -------------------------------------------------- | ----------- 
+| GJ        | [JOYxt](https://github.com/Joyxt) | `data/Meshes/GJ`<br>`data/Textures/GJ`               | <img src="doc/img/GJ.png" alt="GJ" title="GJ" align="center" /> 
+| VGF_Boy   | [JOYxt](https://github.com/Joyxt) | `data/Meshes/VGF_Boy`<br>`data/Textures/VGF_Boy`     | <img src="doc/img/VGF_Boy.png" alt="VGF_Boy" title="VGF_Boy" align="center"  /> 
+| GrosCovid | [JOYxt](https://github.com/Joyxt) | `data/Meshes/GrosCovid`<br>`data/Textures/GrosCovid` | <img src="doc/img/GrosCovid.png" alt="GrosCovid" title="GrosCovid" align="center" />  
 
 ## Other assets
 
@@ -223,10 +222,6 @@ The following assets are provided under permissive licenses. Please follow the p
 ### Others
 
 Used https://github.com/Nadrin/PBR as reference for PBR lighting equations (MIT licence)
-
-# Changelog
-
-[Changelog](CHANGELOG.md) has been moved to a separate file.
 
 
 # Misc

@@ -18,6 +18,6 @@ namespace vg::engine
         core::float4    m_environmentColor = core::float4(0.1f, 0.1f, 0.1f, 1.0f);
         bool            m_useEnvironmentCubemap = false;
         TextureResource m_environmentCubemap;
-        float           m_environmentAmbientIntensity = 0.1f;
+        float           m_environmentIntensity = 0.1f;
     };
 }
