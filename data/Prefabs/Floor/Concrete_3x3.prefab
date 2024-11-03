@@ -30,7 +30,7 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="New RigidBodyComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="2471751639"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="EnumU8" name="m_category" value="Default"/>
                                 <Property type="Bool" name="m_useCollisionMask" flags="NotVisible" value="false"/>
@@ -65,6 +65,25 @@
                                 <Property type="Float" name="m_rotation" flags="Optional" value="90"/>
                                 <Property type="Bool" name="m_snapScale" flags="NotVisible" value="false"/>
                                 <Property type="Float" name="m_scale" flags="Optional" value="1"/>
+                            </Object>
+                            <Object class="PhysicsShapeComponent">
+                                <Property type="String" name="m_name" flags="NotVisible" value="New PhysicsShapeComponent"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="2988319238"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="EnumU8" name="m_shapeType" value="Box"/>
+                                <Property type="ObjectPtr" name="m_shapeDesc" flags="Flatten">
+                                    <Object class="BoxShapeDesc">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="BoxShapeDesc #86"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="3944313381"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                        <Property type="Float3" name="m_rotation" flags="EulerAngle" x="0" y="0" z="0"/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                        <Property type="Float3" name="m_size" flags="HasRange" x="3" y="3" z="0.14"/>
+                                    </Object>
+                                </Property>
                             </Object>
                             <Object class="MeshComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>

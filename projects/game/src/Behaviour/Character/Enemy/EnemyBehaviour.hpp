@@ -24,8 +24,15 @@ bool EnemyBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
-    registerPropertyEx(EnemyBehaviour, m_targetPosNew, "TargetPosNew", PropertyFlags::NotSaved);
-    registerPropertyEx(EnemyBehaviour, m_targetPosSmooth, "TargetPosSmooth", PropertyFlags::NotSaved);
+    registerProperty(EnemyBehaviour, m_detectionRadius, "Detection radius");
+    setPropertyDescription(EnemyBehaviour, m_detectionRadius, "If a player is detected in this radius, it will be detected");
+
+    registerPropertyGroupBegin(EnemyBehaviour, "Enemy debug");
+    {
+        registerPropertyEx(EnemyBehaviour, m_targetPosNew, "Target position", PropertyFlags::NotSaved);
+        registerPropertyEx(EnemyBehaviour, m_targetPosSmooth, "Target position (smoothed)", PropertyFlags::NotSaved);
+    }
+    registerPropertyGroupEnd(EnemyBehaviour);
 
     return true;
 }
@@ -107,7 +114,7 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                 closestPlayerInfo = activePlayersInfos[0];
                 vg::renderer::IDebugDraw * dbgDraw = Game::Engine().GetRenderer()->GetDebugDraw();
 
-                bool isClose = closestPlayerInfo.distance < 4.0f;
+                const bool isClose = closestPlayerInfo.distance < m_detectionRadius;
 
                 //dbgDraw->AddLine(world, pos, closestPlayerInfo.position, m_isActive ? 0xFF0000FF : 0xFF00FF00);
 

@@ -43,8 +43,12 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
     registerProperty(PlayerBehaviour, m_UI, "UI");
     setPropertyDescription(PlayerBehaviour, m_UI, "Player UI Prefab instance linked");
 
-    registerPropertyEx(PlayerBehaviour, m_viewIndex, "View", vg::core::PropertyFlags::NotSaved | vg::core::PropertyFlags::ReadOnly);
-    setPropertyDescription(PlayerBehaviour, m_viewIndex, "Index of the View used by this player");
+    registerPropertyGroupBegin(PlayerBehaviour, "Player debug");
+    {
+        registerPropertyEx(PlayerBehaviour, m_viewIndex, "View", vg::core::PropertyFlags::NotSaved | vg::core::PropertyFlags::ReadOnly);
+        setPropertyDescription(PlayerBehaviour, m_viewIndex, "Index of the View used by this player");
+    }
+    registerPropertyGroupEnd(PlayerBehaviour);
     
     return true;
 }

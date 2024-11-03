@@ -14,6 +14,8 @@ Yes, yet another work-in-progress game and graphic engine project :)
 | Win64    | DX12         | ![Win64_DX12_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_DX12_Debug.yml/badge.svg)         | ![Win64_DX12_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_DX12_Release.yml/badge.svg)         | ![Win64_DX12_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_DX12_Final.yml/badge.svg)
 | Win64    | Vulkan       | ![Win64_Vulkan_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Debug.yml/badge.svg)     | ![Win64_Vulkan_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Release.yml/badge.svg)     | ![Win64_Vulkan_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Final.yml/badge.svg)
 
+![Screenshot](doc/img/0.39.png)
+
 [description](#description)\
 [changelog](#changelog)\
 [getting started](#getting-started)\

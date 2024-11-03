@@ -78,30 +78,30 @@ namespace vg::engine
                         _context.m_gameObject->setGlobalMatrix(matrix);
                     }
                 }
-            }
+            }            
+        }
 
-            const auto * engineOptions = EngineOptions::get();
-            if (engineOptions->isAnyBodyVisible())
+        const auto * engineOptions = EngineOptions::get();
+        if (engineOptions->isAnyBodyVisible())
+        {
+            const auto shapes = GetGameObject()->GetComponentsT<PhysicsShapeComponent>();
+            if (shapes.size() > 0)
             {
-                const auto shapes = GetGameObject()->GetComponentsT<PhysicsShapeComponent>();
-                if (shapes.size() > 0)
+                float totalMass = 0.0f;
+                for (uint i = 0; i < shapes.size(); ++i)
                 {
-                    float totalMass = 0.0f;
-                    for (uint i = 0; i < shapes.size(); ++i)
+                    const auto * shape = shapes[i];
+                    if (shape && shape->isEnabled())
                     {
-                        const auto * shape = shapes[i];
-                        if (shape && shape->isEnabled())
-                        {
-                            const auto * physicsShape = shape->getPhysicsShape();
-                            if (physicsShape && engineOptions->isBodyVisible(physicsShape->GetShapeType()))
-                                physicsShape->Draw(_context.m_world, _context.m_gameObject->getGlobalMatrix());
-                        }
+                        const auto * physicsShape = shape->getPhysicsShape();
+                        if (physicsShape && engineOptions->isBodyVisible(physicsShape->GetShapeType()))
+                            physicsShape->Draw(_context.m_world, _context.m_gameObject->getGlobalMatrix());
                     }
                 }
-                else
-                {
-                    VG_WARNING("[Physics] PhysicsBodyComponent in GameObject \"%s\" has no physics shape", _context.m_gameObject->GetName().c_str());
-                }
+            }
+            else
+            {
+                VG_WARNING("[Physics] PhysicsBodyComponent in GameObject \"%s\" has no physics shape", _context.m_gameObject->GetName().c_str());
             }
         }
 

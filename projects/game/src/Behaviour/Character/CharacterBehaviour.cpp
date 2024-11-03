@@ -58,21 +58,24 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
 
     registerProperty(CharacterBehaviour, m_life, "Life");
     registerProperty(CharacterBehaviour, m_hp, "HP");
-    registerProperty(CharacterBehaviour, m_score, "Score");
 
     registerProperty(CharacterBehaviour, m_walkSpeed, "Walk");
     registerProperty(CharacterBehaviour, m_runSpeed, "Run");
-    registerProperty(CharacterBehaviour, m_jumpSpeed, "Small Jump");
-    registerProperty(CharacterBehaviour, m_runJumpSpeed, "Big Jump");
+    registerProperty(CharacterBehaviour, m_jumpSpeed, "Jump (small)");
+    registerProperty(CharacterBehaviour, m_runJumpSpeed, "Jump (big)");
 
-    registerPropertyEx(CharacterBehaviour, m_isActive, "Active", vg::core::PropertyFlags::NotSaved);
-    registerPropertyEx(CharacterBehaviour, m_speedCurrent, "Speed", vg::core::PropertyFlags::NotSaved);
-    registerPropertyEx(CharacterBehaviour, m_velocityNorm, "Velocity", vg::core::PropertyFlags::NotSaved);
-    registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rotation", vg::core::PropertyFlags::NotSaved);
-
-    registerPropertyEnumEx(CharacterBehaviour, MoveState, m_moveState, "Move", vg::core::PropertyFlags::NotSaved);
-    registerPropertyEnumEx(CharacterBehaviour, FightState, m_fightState, "Fight", vg::core::PropertyFlags::NotSaved);
-    registerPropertyEnumEx(CharacterBehaviour, SoundState, m_soundState, "Sound", vg::core::PropertyFlags::NotSaved);
+    registerPropertyGroupBegin(CharacterBehaviour, "Character debug");
+    {
+        registerPropertyEx(CharacterBehaviour, m_isActive, "Active", vg::core::PropertyFlags::NotSaved);
+        registerPropertyEx(CharacterBehaviour, m_score, "Score", vg::core::PropertyFlags::NotSaved);
+        registerPropertyEnumEx(CharacterBehaviour, MoveState, m_moveState, "Move", vg::core::PropertyFlags::NotSaved);
+        registerPropertyEnumEx(CharacterBehaviour, FightState, m_fightState, "Fight", vg::core::PropertyFlags::NotSaved);
+        registerPropertyEnumEx(CharacterBehaviour, SoundState, m_soundState, "Sound", vg::core::PropertyFlags::NotSaved);
+        registerPropertyEx(CharacterBehaviour, m_speedCurrent, "Speed", vg::core::PropertyFlags::NotSaved);
+        registerPropertyEx(CharacterBehaviour, m_velocityNorm, "Velocity", vg::core::PropertyFlags::NotSaved);
+        registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rotation", vg::core::PropertyFlags::NotSaved);
+    }
+    registerPropertyGroupEnd(CharacterBehaviour);
 
     return true;
 }
@@ -271,12 +274,12 @@ bool CharacterBehaviour::takeHit(CharacterBehaviour * _attacker, ItemBehaviour *
             if (m_hp > 0)
             {
                 m_moveState = MoveState::Hurt;
-                playSound(SoundState::Hit);
+                playSound(SoundState::Hurt);
             }
             else
             {
                 m_moveState = MoveState::Die;
-                playSound(SoundState::Hit);
+                playSound(SoundState::Die);
             }
 
             if (push > 0)

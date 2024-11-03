@@ -81,6 +81,7 @@
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float" name="m_damage" flags="HasRange" value="40"/>
                                 <Property type="Float" name="m_push" flags="HasRange" value="3"/>
+                                <Property type="EnumU8" name="m_weaponType" value="Melee"/>
                             </Object>
                             <Object class="AttachToNodeComponent">
                                 <Property type="String" name="m_name" flags="NotVisible" value="New AttachToNodeComponent"/>
@@ -97,7 +98,7 @@
                                 <Property type="String" name="m_name" flags="NotVisible" value="New SoundComponent"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="4220320259"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Object" name="m_sounds">
                                     <Object class="SoundResourceList">
@@ -113,7 +114,7 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Sounds/Weapons/swoosh_sword.wav"/>
                                                 <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" flags="Bitfield" value=""/>
-                                                <Property type="Float" name="m_soundSettings.m_volume" flags="HasRange" value="0.5"/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" flags="HasRange" value="1"/>
                                                 <Property type="Float" name="m_soundSettings.m_delay" flags="HasRange" value="1"/>
                                             </Object>
                                         </Property>
