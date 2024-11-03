@@ -20,11 +20,10 @@ Yes, yet another work-in-progress game and graphic engine project :)
 ![Screenshot](doc/img/0.39.png)
 
 [Licence](#Licence)\
-[Description](#Description)\
-[Changelog](#Changelog)\
 [Getting started](#Getting-started)\
 [Extern libs](#Extern-libs)\
 [Assets](#Assets)\
+[Changelog](#Changelog)\
 [Misc](#Misc)
 
 # License
@@ -41,18 +40,6 @@ Please follow the provided links in the [Extern libs](#Extern-libs) section for 
 
 Most assets are provided under permissive licenses, while some are restricted to use only within the context of VGFramework development. \
 Please refer to the [Assets](#Assets) section for more details about the licenses used.
-
-# Description
-
-Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would also like to support Metal the day I got and Apple device) so it can be 100% bindless from the very beginning and do strong choices in that direction:  
-* instanciating and writing into GPU tables is not even exposed: You have to do all the rendering stuff the modern, bindless way. 
-* All the interface is made to encourage using only push constants and bindless buffers/textures, not updating tables constantly as if we were still emulating DX9.
-* You can't access the command lists without using the framegraph that is part of the graphic driver layer. Go framegraph or do not render anything.
-* Apart from the number of root constants, all shaders are sharing the same root signatures.
-
-# Changelog
-
-Moved [changelog](CHANGELOG.md) to a separate file.
 
 # Getting started
 
@@ -198,7 +185,7 @@ These assets in these folders are licensed under the Creative Commons Non-Commer
 Please refer to the [ASSETS_LICENSE.md](ASSETS_LICENSE.md) for more details.
 
 | Name		| Author                            | Files											   | Preview	
-| --------- | --------------------------------- | ------------------------------------------------------------- 
+| --------- | --------------------------------- | -------------------------------------------------| ----------- 
 | GJ        | [JOYxt](https://github.com/Joyxt) | data/Meshes/GJ<br>data/Textures/GJ               | <img src="doc/img/GJ.png" alt="GJ" title="GJ" align="center" /> 
 | VGF_Boy   | [JOYxt](https://github.com/Joyxt) | data/Meshes/VGF_Boy<br>data/Textures/VGF_Boy     | <img src="doc/img/VGF_Boy.png" alt="VGF_Boy" title="VGF_Boy" align="center"  /> 
 | GrosCovid | [JOYxt](https://github.com/Joyxt) | data/Meshes/GrosCovid<br>data/Textures/GrosCovid | <img src="doc/img/GrosCovid.png" alt="GrosCovid" title="GrosCovid" align="center" />  
@@ -239,6 +226,11 @@ The following assets are provided under permissive licenses. Please follow the p
 ### Others
 
 Used https://github.com/Nadrin/PBR as reference for PBR lighting equations (MIT licence)
+
+# Changelog
+
+[Changelog](CHANGELOG.md) has been moved to a separate file.
+
 
 # Misc
 
