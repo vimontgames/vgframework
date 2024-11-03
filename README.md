@@ -5,7 +5,7 @@
 ![DirectX 12](https://img.shields.io/badge/Graphics_API-DirectX%2012-0078d4)
 ![Vulkan](https://img.shields.io/badge/Graphics_API-Vulkan-AC162C)
 
-<img src="doc/img/vgframework64.png" alt="VGFramework logo" title="VGFramework" align="right" height="64" />
+<img src="doc/img/covidboyicon.png" alt="VGFramework logo" title="VGFramework" align="right" height="64" />
 
 # VGFramework 0.4
 Yes, yet another work-in-progress game and graphic engine project :)
@@ -30,16 +30,13 @@ Yes, yet another work-in-progress game and graphic engine project :)
 
 ## Code
 
-The code in this repository is licensed under the **MIT License**. \
-Please refer to [LICENCE.md](LICENCE.md) for more details. 
+The code in this repository is licensed under the **MIT License**. Please refer to [LICENCE.md](LICENCE.md) for more details. 
 
-External libraries referenced in the `extern` folder use permissive licenses. \
-Please follow the provided links in the [Extern libs](#Extern-libs) section for details about the licenses used.
+External libraries referenced in the `extern` folder use permissive licenses. Please follow the provided links in the [Extern libs](#Extern-libs) section for details about the licenses used.
 
 ## Data
 
-Most assets are using permissive licenses, while some are restricted to use only within the context of **VGFramework** development. \
-Please refer to the [Assets](#Assets) section for more details about the licenses used.
+Most assets are using permissive licenses, while some are restricted to use only within the context of **VGFramework** development. Please refer to the [Assets](#Assets) section for more details about the licenses used.
 
 # Getting started
 
@@ -180,7 +177,7 @@ The external libraries are included with the sources for convenience.
 
 ## Assets with usage restrictions
 
-These assets in these folders are licensed under the Creative Commons Non-Commercial (CC BY-NC 4.0) License, with the additional restriction that **they may only be used within the context of VGFramework development**.
+The assets in **these folders** are licensed under the Creative Commons Non-Commercial (CC BY-NC 4.0) License, with the additional restriction that **they may only be used within the context of VGFramework development**.
 
 Please refer to the [ASSETS_LICENSE.md](ASSETS_LICENSE.md) for more details.
 
