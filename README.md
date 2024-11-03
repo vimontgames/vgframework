@@ -1,10 +1,13 @@
+![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B17-lightgrey)
 ![Platform Win64](https://img.shields.io/badge/Platform-Win64-0078d4)
-![Platform ARM64EC](https://img.shields.io/badge/Platform-ARM64EC-FFB13B)
+![Platform ARM64EC](https://img.shields.io/badge/Target-ARM64EC-green.svg)
 ![DirectX 12](https://img.shields.io/badge/Graphics_API-DirectX%2012-0078d4)
 ![Vulkan](https://img.shields.io/badge/Graphics_API-Vulkan-AC162C)
 
-# vgframework
+<img src="doc/img/vgframework64.png" alt="VGFramework logo" title="VGFramework" align="right" height="64" />
+
+# VGFramework 0.4
 Yes, yet another work-in-progress game and graphic engine project :)
 
 | Platform | Graphics API | Debug                                                                                                                        | Release                                                                                                                          | Final 												
@@ -16,15 +19,30 @@ Yes, yet another work-in-progress game and graphic engine project :)
 
 ![Screenshot](doc/img/0.39.png)
 
-[description](#description)\
-[changelog](#changelog)\
-[getting started](#getting-started)\
-[extern libs](#extern-libs)\
-[data](#data)\
-[useful tools](#useful-tools)\
-[disclaimer](#disclaimer)
+[Licence](#Licence)\
+[Description](#Description)\
+[Changelog](#Changelog)\
+[Getting started](#Getting-started)\
+[Extern libs](#Extern-libs)\
+[Assets](#Assets)\
+[Misc](#Misc)
 
-# description
+# License
+
+## Code
+
+The code in this repository is licensed under the **MIT License**. \
+Please refer to [LICENSE.md](LICENSE.md) for more details. 
+
+External libraries referenced in the `extern` folder use permissive licenses. \
+Please follow the provided links in the [Extern libs](#Extern-libs) section for details about the licenses used.
+
+## Assets
+
+Most assets are provided under permissive licenses, while some are restricted to use only within the context of VGFramework development. \
+Please refer to the [Assets](#Assets) section for more details about the licenses used.
+
+# Description
 
 Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would also like to support Metal the day I got and Apple device) so it can be 100% bindless from the very beginning and do strong choices in that direction:  
 * instanciating and writing into GPU tables is not even exposed: You have to do all the rendering stuff the modern, bindless way. 
@@ -32,20 +50,20 @@ Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would a
 * You can't access the command lists without using the framegraph that is part of the graphic driver layer. Go framegraph or do not render anything.
 * Apart from the number of root constants, all shaders are sharing the same root signatures.
 
-# changelog
+# Changelog
 
 Moved [changelog](CHANGELOG.md) to a separate file.
 
-# getting started
+# Getting started
 
 You have two options depending on whether you want to build from source or use the provided executables:
 
-## using precompiled binaries (users)
+## Using precompiled binaries (users)
 
 - Run **Editor.exe** to launch the editor.
 - Run **Game.exe** to start the game.
 
-## building from sources (programmers)
+## Building from sources (programmers)
 
 By default, VGFramework uses the precompiled binaries: Editor.exe, Game.exe, and the DLLs located in the /bin/ folder. 
 
@@ -66,7 +84,7 @@ Press F5 to enter game mode and F11 to maximize game view and press ESC to go ba
 
 First run might take a few seconds because files are cooking.
  
-## command-line args
+## Command-line args
 
 | Argument		  | Type | Default	 | Description													
 | --------------  | ---- | --------- | ------------------------------------------------------------- 
@@ -79,7 +97,7 @@ First run might take a few seconds because files are cooking.
 
 (*) **debugDevice** is enabled by default on **debug** builds
 
-## keyboard shortcuts
+## Keyboard shortcuts
 
 | Key			   | Description	 												
 | ---------------- | ------------------------------------------------------------- 
@@ -109,7 +127,7 @@ First run might take a few seconds because files are cooking.
 
 (*) You can also keep shift pressed while moving objects to duplicate
 
-## ide
+## IDE
 VS Studio 2022 Community\
 https://visualstudio.microsoft.com/fr/vs/community/
 
@@ -141,7 +159,7 @@ The SDKs are not included with the sources. You need to install them.
 
 (*) Only required to build Vulkan version. **$(VULKAN_SDK)** should point the Vulkan SDK installation dir (i.e. **"C:\SDK\Vulkan\1.3.290.0"**)
 
-# extern libs
+# Extern libs
 
 The external libraries are included with the sources for convenience.
 
@@ -171,9 +189,25 @@ The external libraries are included with the sources for convenience.
 
 (*) *You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0*
 
-# data
+# Assets
 
-## fonts
+## Assets with usage restrictions
+
+These assets in these folders are licensed under the Creative Commons Non-Commercial (CC BY-NC 4.0) License, with the additional restriction that **they may only be used within the context of VGFramework development**.
+
+Please refer to the [ASSETS_LICENSE.md](ASSETS_LICENSE.md) for more details.
+
+| Name		| Author                            | Files											   | Preview	
+| --------- | --------------------------------- | ------------------------------------------------------------- 
+| GJ        | [JOYxt](https://github.com/Joyxt) | data/Meshes/GJ<br>data/Textures/GJ               | <img src="doc/img/GJ.png" alt="GJ" title="GJ" align="center" /> 
+| VGF_Boy   | [JOYxt](https://github.com/Joyxt) | data/Meshes/VGF_Boy<br>data/Textures/VGF_Boy     | <img src="doc/img/VGF_Boy.png" alt="VGF_Boy" title="VGF_Boy" align="center"  /> 
+| GrosCovid | [JOYxt](https://github.com/Joyxt) | data/Meshes/GrosCovid<br>data/Textures/GrosCovid | <img src="doc/img/GrosCovid.png" alt="GrosCovid" title="GrosCovid" align="center" />  
+
+## Other assets
+
+The following assets are provided under permissive licenses. Please follow the provided links for details about those licenses:
+
+### Fonts
 
 | Font						 | Author        | URL												
 | -------------------------- | ------------- | ------------------------------------------------------------- 
@@ -182,7 +216,7 @@ The external libraries are included with the sources for convenience.
 | RubikMonoOne               |               | https://fonts.google.com/specimen/Rubik+Mono+One
 | UbuntuMono                 | 1.0           | https://fonts.google.com/specimen/Ubuntu+Mono
 
-## models
+### Models
 
 | Model				   | Author             | URL												
 | -------------------- | ------------------ | ------------------------------------------------------------- 
@@ -194,7 +228,7 @@ The external libraries are included with the sources for convenience.
 | Traffic Cone 	       | hinndia            | https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c
 | Soccergoal           | NorbertVarga       | https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894
 
-## sound
+### Sound
 
 | Sound		           | Author               | URL												
 | -------------------- | -------------------- | ------------------------------------------------------------- 
@@ -202,8 +236,11 @@ The external libraries are included with the sources for convenience.
 | Large sword swing    | Luis0413             | https://freesound.org/people/Luis0413/sounds/737748/
 | Tally Dub            | Brotheration Records | https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/  
 
+### Others
 
-# useful tools
+Used https://github.com/Nadrin/PBR as reference for PBR lighting equations (MIT licence)
+
+# Misc
 
 These tools are not mandatory but can be useful for development.
 
@@ -212,9 +249,3 @@ These tools are not mandatory but can be useful for development.
 | Radeon Developer Panel | GPU debugging & profiling | https://gpuopen.com/rdp/
 | RenderDoc              | GPU debugging             | https://renderdoc.org/
 
-# misc
-
-Used https://github.com/Nadrin/PBR as reference for PBR lighting equations (MIT licence)
-
-# disclaimer
-Everything is heavily "Work-in-Progress" and 0% in an usable state, and I would not recommend anyone to use it yet.
