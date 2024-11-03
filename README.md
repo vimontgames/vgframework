@@ -31,14 +31,14 @@ Yes, yet another work-in-progress game and graphic engine project :)
 ## Code
 
 The code in this repository is licensed under the **MIT License**. \
-Please refer to [LICENSE.md](LICENSE.md) for more details. 
+Please refer to [LICENCE.md](LICENCE.md) for more details. 
 
 External libraries referenced in the `extern` folder use permissive licenses. \
 Please follow the provided links in the [Extern libs](#Extern-libs) section for details about the licenses used.
 
-## Assets
+## Data
 
-Most assets are provided under permissive licenses, while some are restricted to use only within the context of VGFramework development. \
+Most assets are using permissive licenses, while some are restricted to use only within the context of **VGFramework** development. \
 Please refer to the [Assets](#Assets) section for more details about the licenses used.
 
 # Getting started
