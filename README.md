@@ -7,7 +7,7 @@
 
 <img src="doc/img/covidboyicon.png" alt="VGFramework logo" title="VGFramework" align="right" height="64" />
 
-# VGFramework 0.4
+# VGFramework 0.40
 Yes, yet another work-in-progress game and graphic engine project :)
 
 | Platform | Graphics API | Debug                                                                                                                        | Release                                                                                                                          | Final 												
@@ -29,9 +29,9 @@ Yes, yet another work-in-progress game and graphic engine project :)
 
 ## Code
 
-The code in this repository is licensed under the **MIT License**. Please refer to [LICENCE.md](LICENCE.md) for more details. 
+The code in `src` folder is licensed under the **MIT License**. Please refer to [LICENCE.md](LICENCE.md) for more details. 
 
-External libraries referenced in the `extern` folder use permissive licenses. Please follow the provided links in the [Extern libs](#Extern-libs) section for details about the licenses used.
+External libraries in the `extern` folder use permissive licenses. Please refer to the [Extern libs](#Extern-libs) section for details about the licenses used.
 
 ## Data
 
@@ -57,7 +57,7 @@ The program will use these locally built files if they are present; otherwise, i
 
 - Sync the depot.
 - Install the required SDKs and configure the environment variables.
-- Open the "vgframework.sln" solution in Visual Studio 2022 Community IDE.
+- Open the `vgframework.sln` solution in Visual Studio 2022 Community IDE.
 - Build & Run
 
 **Debug** and **Release** versions will start with the editor:
@@ -140,7 +140,7 @@ The SDKs are not included with the sources. You need to install them.
 | Win10 SDK		 | 10.0.22621.0  | https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/	
 | Vulkan SDK (*) | 1.3.290.0     | https://vulkan.lunarg.com/sdk/home 
 
-(*) Only required to build Vulkan version. **$(VULKAN_SDK)** should point the Vulkan SDK installation dir (i.e. **"C:\SDK\Vulkan\1.3.290.0"**)
+(*) Only required to build Vulkan version. **$(VULKAN_SDK)** should point the Vulkan SDK installation dir (i.e. `C:\SDK\Vulkan\1.3.290.0`)
 
 # Extern libs
 
