@@ -58,8 +58,10 @@ namespace vg
 
             }
 
-            virtual void	                            init                    (const RendererCreationParams & _params, core::Singletons & _singletons) = 0;
-            virtual void	                            deinit                  () = 0;
+            virtual void	                            Init                    (const RendererCreationParams & _params, core::Singletons & _singletons) = 0;
+            virtual void	                            Deinit                  () = 0;
+
+            virtual void	                            ReleaseResources        () = 0;
 
             virtual void	                            RunOneFrame             () = 0;
 

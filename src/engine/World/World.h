@@ -76,6 +76,7 @@ namespace vg::engine
 
         core::float4                        m_currentEnvironmentColor = (core::float4)0.0f;
         core::float4                        m_nextEnvironmentColor = (core::float4)0.0f;
+        gfx::ITexture *                     m_defaultEnvironmentCubemap = nullptr;
         gfx::ITexture *                     m_environmentCubemap = nullptr;
         float                               m_environmentAmbientIntensity = 0.0f;
     };

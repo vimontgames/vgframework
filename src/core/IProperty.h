@@ -274,6 +274,9 @@ namespace vg::core
 #define registerOptionalPropertyResource(className, boolpropertyname, propertyName, displayName)            registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::NotVisible); \
                                                                                                             registerPropertyResourceEx(className, propertyName, displayName, vg::core::PropertyFlags::Optional)    
 
+#define registerOptionalPropertyResourcePtr(className, boolpropertyname, propertyName, displayName)         registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::NotVisible); \
+                                                                                                            registerPropertyResourcePtrEx(className, propertyName, displayName, vg::core::PropertyFlags::Optional)  
+
 //--------------------------------------------------------------------------------------
 // Modify existing class properties macros
 //--------------------------------------------------------------------------------------

@@ -19,5 +19,8 @@ namespace vg::core
 		virtual bool    UnregisterClasses	() = 0;
 
 		virtual void	Update				(float _dt) {};
+
+		virtual void	CreateResources		() {};
+		virtual void	ReleaseResources	() {};
 	};
 }

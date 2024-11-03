@@ -619,7 +619,7 @@
                                         <Property type="Uint32" name="m_uid" flags="" value="1541629070"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/EnvMaps/Default.psd"/>
+                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/EnvMaps/Scene.psd"/>
                                     </Object>
                                 </Property>
                                 <Property type="Float" name="m_environmentAmbientIntensity" flags="HasRange" value="0.15000001"/>

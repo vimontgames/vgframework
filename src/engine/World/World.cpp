@@ -408,8 +408,13 @@ namespace vg::engine
     {
         const auto * options = Engine::get()->GetRenderer()->GetOptions();
 
-        // Use default background clear color from options if not overriden by environment
+        // Use default cubemap/background clear color from options if not overridden by environment
         m_nextEnvironmentColor = options->GetDefaultClearColor();
+
+        if (auto defaultCubemap = options->GetDefaultCubemap())
+            m_defaultEnvironmentCubemap = defaultCubemap;
+        else
+            m_defaultEnvironmentCubemap = nullptr;
 
         // Reset cubemap
         VG_SAFE_RELEASE(m_environmentCubemap);
@@ -455,7 +460,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     gfx::ITexture * World::GetEnvironmentCubemap() const
     {
-        return m_environmentCubemap;
+        return m_environmentCubemap ? m_environmentCubemap : m_defaultEnvironmentCubemap;
     }
 
     //--------------------------------------------------------------------------------------
