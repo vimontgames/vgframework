@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _VIEW__HLSLI_
+#define _VIEW__HLSLI_
 
 #include "types.hlsli"
 #include "packing.hlsli"
@@ -115,3 +116,5 @@ struct ViewConstants
     void            setEnvironmentTextureHandle(uint _value)                    { m_textures.x = packUint16low(m_textures.x, _value);  }
     uint            getEnvironmentTextureHandle()                               { return unpackUint16low(m_textures.x); }
 };
+
+#endif // _VIEW__HLSLI_

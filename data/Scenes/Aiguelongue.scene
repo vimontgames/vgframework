@@ -622,7 +622,7 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/EnvMaps/Default.psd"/>
                                     </Object>
                                 </Property>
-                                <Property type="Float" name="m_environmentAmbientIntensity" flags="HasRange" value="0.25"/>
+                                <Property type="Float" name="m_environmentAmbientIntensity" flags="HasRange" value="0.15000001"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
@@ -655,8 +655,8 @@
                                                 <Property type="Uint2" name="m_shadowSize" x="50" y="50"/>
                                                 <Property type="Uint2" name="m_shadowResolution" x="4096" y="4096"/>
                                                 <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
-                                                <Property type="Float4" name="m_color" flags="" x="0.94999999" y="0.94999999" z="0.89999998" w="0.412"/>
-                                                <Property type="Float" name="m_intensity" flags="HasRange" value="0.85000002"/>
+                                                <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
+                                                <Property type="Float" name="m_intensity" flags="HasRange" value="1"/>
                                             </Object>
                                         </Property>
                                     </Object>

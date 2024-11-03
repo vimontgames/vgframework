@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _BINDLESS__HLSLI_
+#define _BINDLESS__HLSLI_
 
 #ifdef __cplusplus
 #error bindless.hlsli should not be included from C++
@@ -72,3 +73,5 @@ DECL_DESCRIPTOR_RANGE_RO(RaytracingAccelerationStructure, g_TLASTable, BINDLESS_
 //RaytracingAccelerationStructure getTLAS(uint _handle)   { return g_TLASTable[_handle - BINDLESS_TLAS_START]; }
 
 #endif // __cplusplus
+
+#endif // _BINDLESS__HLSLI_

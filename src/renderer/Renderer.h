@@ -164,6 +164,8 @@ namespace vg::renderer
 
         // TODO : remove
         core::vector<View *>                    m_views[core::enumCount<gfx::ViewTarget>()];
+
+        gfx::Texture *                          m_cookTorranceBRDF          = nullptr;
 	};
 }
 

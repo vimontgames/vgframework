@@ -4,6 +4,7 @@
 #include "system/view.hlsli"
 #include "system/lighting.hlsli"
 #include "system/msaa.hlsli"
+#include "system/environment.hlsli"
 
 struct DepthStencilSample
 {
@@ -45,11 +46,10 @@ struct GBufferSample
 
 float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, float2 _uv, ViewConstants _viewConstants)
 {
+    #if SAMPLE_COUNT > 1
     if (_depthStencil.depth >= 1.0f)
-    {
-        float3 envColor = _viewConstants.getEnvironmentColor();
-        return envColor;       
-    }
+        return getEnvironmentBackgroundColor(_uv, _viewConstants);  
+    #endif  
 
     float3 worldPos = _viewConstants.getWorldPos(_uv, _depthStencil.depth);
     float3 camPos = _viewConstants.getCameraPos();
@@ -156,6 +156,11 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
 
         // Deferred shading result
         float3 color[SAMPLE_COUNT];
+
+        #if SAMPLE_COUNT == 1
+        if (depthStencilSamples[0].depth >= 1.0f)
+            return;  
+        #endif  
 
         // Shade sample 0
         color[0] = shadeSample(gbufferSamples[0], depthStencilSamples[0], uv, viewConstants);

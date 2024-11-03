@@ -58,7 +58,13 @@ float gaSchlickGGX(float cosLi, float cosLo, float roughness)
 //-------------------------------------------------------------------------------------- 
 float3 fresnelSchlick(float3 F0, float cosTheta)
 {
-	return F0 + (1.0f - F0) * pow(1.0f - cosTheta, 4.0f);
+	return F0 + (1.0f - F0) * pow(1.0f - cosTheta, 5.0f);
+}
+
+//-------------------------------------------------------------------------------------- 
+float3 fresnelSchlickRoughness(float3 F0, float cosTheta, float roughness)
+{
+    return F0 + (max(float3(1.0 - roughness, 1.0 - roughness, 1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
 //--------------------------------------------------------------------------------------
@@ -75,7 +81,7 @@ struct LightingResult
 		float3 Lh = normalize(Li + Lo);
 
         // Calculate angles between surface normal and various light vectors.
-		float cosLi = _cosLi; //max(0.0f, dot(_worldNormal, Li));
+		float cosLi = _cosLi;
 		float cosLh = max(0.0f, dot(_worldNormal, Lh));
 
         // Calculate Fresnel term for direct lighting. 
@@ -95,7 +101,7 @@ struct LightingResult
 		// Lambert diffuse BRDF.
 		// We don't scale by 1/PI for lighting & material units to be more convenient.
 		// See: https://seblagarde.wordpress.com/2012/01/08/pi-or-not-to-pi-in-game-lighting-equation/
-		float3 diffuseBRDF = kd;// * _albedo;
+		float3 diffuseBRDF = kd;
 
 		// Cook-Torrance specular microfacet BRDF.
 		float3 specularBRDF = (F * D * G) / max(Epsilon, 4.0 * cosLi * cosLo);
@@ -192,21 +198,15 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		cubemap.GetDimensions(0, width, height, mipLevels);
 
 		// environment diffuse
-
-		// Calculate Fresnel term for ambient lighting.
-		// Since we use pre-filtered cubemap(s) and irradiance is coming from many directions
-		// use cosLo instead of angle with light's half-vector (cosLh above).
-		// See: https://seblagarde.wordpress.com/2011/08/17/hello-world/
 		float3 F = fresnelSchlick(F0, cosLo);
-
-		// Get diffuse contribution factor (as with direct lighting).
 		float3 kd = lerp(1.0 - F, 0.0, metalness);
+		float diffuseEnvMip = mipLevels-1;
+		output.envDiffuse = kd * cubemap.SampleLevel(linearClamp, normalize(_worldNormal.rgb), diffuseEnvMip).rgb * ambientIntensity;
 
-		output.envDiffuse = kd * cubemap.SampleLevel(linearClamp, normalize(_worldNormal.rgb), mipLevels-1).rgb * ambientIntensity;
-
-		// environment specular
-		float mipLevel = roughness * (mipLevels - 1);
-		output.envSpecular = F * cubemap.SampleLevel(linearClamp, Lr, mipLevel).rgb * ambientIntensity;
+		// environment specular using split-sum approximation factors for Cook-Torrance specular BRDF.
+		float2 specularBRDF = getTexture2D((uint)ReservedSlot::CookTorranceBRDF).Sample(linearClamp, float2(cosLo, roughness)).rg;
+		float specularEnvMip = roughness * (mipLevels - 1);
+		output.envSpecular = (F0 * specularBRDF.x + specularBRDF.y) * cubemap.SampleLevel(linearClamp, Lr, specularEnvMip).rgb * ambientIntensity;
 	}
 	else
 	{
@@ -216,6 +216,9 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		// environment specular
 		output.envSpecular = _viewConstants.getEnvironmentColor() * ambientIntensity;
 	}
+
+	output.envDiffuse *= occlusion;
+	output.envSpecular *= occlusion;
 
 	for(uint i=0; i < lightsHeader.getDirectionalCount(); ++i)
 	{

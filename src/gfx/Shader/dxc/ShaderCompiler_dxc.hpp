@@ -39,7 +39,7 @@ public:
         {
             const string shaderIncludeFolder = rootFolders[i];
 
-            auto lastShaderFolder = tolower(path).rfind(shaderIncludeFolder);
+            auto lastShaderFolder = tolower(path).rfind(shaderIncludeFolder+"/");
             if (string::npos != lastShaderFolder)
             {
                 lastShaderFolder += shaderIncludeFolder.length() + 1;

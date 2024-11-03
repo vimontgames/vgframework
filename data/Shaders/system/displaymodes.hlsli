@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _DISPLAY_MODES__HLSLI_
+#define _DISPLAY_MODES__HLSLI_
 
 #include "types.hlsli"
 
@@ -61,3 +62,5 @@ vg_enum(DisplayFlags, uint,
     AlbedoMap = 0x00000001,
     NormalMap = 0x00000002
 );
+
+#endif

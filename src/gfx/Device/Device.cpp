@@ -15,6 +15,7 @@
 #include "gfx/Profiler/Profiler.h"
 #include "gfx/Importer/TextureImporter.h"
 #include "gfx/RingBuffer/Upload/UploadBuffer.h"
+#include "gfx/Importer/TextureImporterSettings.h"
 
 #if !VG_ENABLE_INLINE
 #include "Device.inl"
@@ -443,22 +444,26 @@ namespace vg::gfx
 	}
 
     //--------------------------------------------------------------------------------------
-    //Texture * Device::createTexture(const core::string & _path, ReservedSlot _reservedSlot)
-    //{
-    //    TextureDesc texDesc;
-    //    core::vector<u8> texData;
-    //
-    //    if (m_textureImporter->importTextureData(_path, texDesc, texData))
-    //    {
-    //        Texture * tex = createTexture(texDesc, _path, texData.data(), _reservedSlot);
-    //        return tex;
-    //    }
-    //    else
-    //    {
-    //        VG_ERROR("[Device] Failed to create texture from \"%s\"", _path.c_str());
-    //    }
-    //    return nullptr;
-    //}
+    Texture * Device::createTexture(const core::string & _path, ReservedSlot _reservedSlot)
+    {
+        TextureDesc texDesc;
+        core::vector<u8> texData;
+    
+        TextureImporterSettings settings;
+        settings.m_mipLevelCount = (TextureImporterMipLevelCount)1;
+        settings.m_sRGB = false;
+
+        if (m_textureImporter->importTextureData(_path, texDesc, texData, &settings))
+        {
+            Texture * tex = createTexture(texDesc, _path, texData.data(), _reservedSlot);
+            return tex;
+        }
+        else
+        {
+            VG_ERROR("[Device] Failed to create texture from \"%s\"", _path.c_str());
+        }
+        return nullptr;
+    }
 
     //--------------------------------------------------------------------------------------
     Buffer * Device::createBuffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot)

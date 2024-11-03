@@ -17,7 +17,7 @@ namespace vg::gfx
         RGBA8       = 1
     );
 
-    vg_enum_class(MipLevelCount, core::u8,
+    vg_enum_class(TextureImporterMipLevelCount, core::u8,
         Automatic           = 0,
 
         MipLevelCount_1     = 1,
@@ -51,7 +51,7 @@ namespace vg::gfx
         TextureImporterType     m_importerType = TextureImporterType::Automatic;
         TextureImporterFormat   m_importerFormat = TextureImporterFormat::Automatic;
         bool                    m_sRGB = true;
-        MipLevelCount           m_mipLevelCount = MipLevelCount::Automatic;
+        TextureImporterMipLevelCount           m_mipLevelCount = TextureImporterMipLevelCount::Automatic;
         Downscale               m_downscale = Downscale::None;
     };
 }

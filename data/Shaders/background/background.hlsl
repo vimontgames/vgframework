@@ -1,4 +1,9 @@
 #include "system/semantics.hlsli"
+#include "system/table.hlsli"
+#include "system/view.hlsli"
+#include "system/bindless.hlsli"
+#include "system/samplers.hlsli"
+#include "system/environment.hlsli"
 #include "background.hlsli"
 
 struct VS_Output_Quad
@@ -26,7 +31,13 @@ PS_Output_Quad PS_Gradient(VS_Output_Quad _input)
 {
     PS_Output_Quad output;
     float2 uv = _input.uv;
-    output.color0 = rootConstants.color;
+
+    //output.color0 = rootConstants.color;
+
+    ViewConstants viewConstants;
+    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+    output.color0 = float4(getEnvironmentBackgroundColor(uv, viewConstants), 1);
+
     return output;
 }
 

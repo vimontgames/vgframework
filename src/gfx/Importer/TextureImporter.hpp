@@ -67,7 +67,7 @@ namespace vg::gfx
                     }                    
 
                     // recompute mipmap count
-                    if (_importSettings && MipLevelCount::Automatic != _importSettings->m_mipLevelCount)
+                    if (_importSettings && TextureImporterMipLevelCount::Automatic != _importSettings->m_mipLevelCount)
                     {
                         const uint maxMipCount = computeMaxMipmapCount(type, width, height, slices);
                         mipmapCount = min((uint)_importSettings->m_mipLevelCount, maxMipCount);
@@ -86,7 +86,7 @@ namespace vg::gfx
                 sRGB = false;
             }
 
-            if (nullptr == _importSettings || MipLevelCount::Automatic == _importSettings->m_mipLevelCount)
+            if (nullptr == _importSettings || TextureImporterMipLevelCount::Automatic == _importSettings->m_mipLevelCount)
             {
                 const uint maxMipCount = computeMaxMipmapCount(type, width, height, slices);
                 mipmapCount = maxMipCount;                
@@ -103,7 +103,7 @@ namespace vg::gfx
 
                 sRGB = _importSettings->m_sRGB;
 
-                if (MipLevelCount::Automatic != _importSettings->m_mipLevelCount)
+                if (TextureImporterMipLevelCount::Automatic != _importSettings->m_mipLevelCount)
                 {
                     const uint maxMipCount = computeMaxMipmapCount(type, width, height, slices);
                     mipmapCount = min((uint)_importSettings->m_mipLevelCount, maxMipCount);

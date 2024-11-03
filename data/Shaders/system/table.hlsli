@@ -38,6 +38,7 @@
 
 vg_enum_class(ReservedSlot, uint,
     // Texture
+    CookTorranceBRDF        = BINDLESS_TEXTURE_INVALID - 6,
     ImGuiFontTexSrv         = BINDLESS_TEXTURE_INVALID - 5,
     DefaultPBRTexSrv        = BINDLESS_TEXTURE_INVALID - 4,
     DefaultNormalTexSrv     = BINDLESS_TEXTURE_INVALID - 3,

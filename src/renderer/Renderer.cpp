@@ -234,6 +234,8 @@ namespace vg::renderer
 
             VG_SAFE_RELEASE(gameViewport);
         }
+
+        m_cookTorranceBRDF = m_device.createTexture("data/Engine/BRDF/CookTorrance.png", ReservedSlot::CookTorranceBRDF);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -256,6 +258,7 @@ namespace vg::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::deinit()
 	{
+        VG_SAFE_RELEASE(m_cookTorranceBRDF);
         VG_SAFE_DELETE(m_sharedCullingJobOutput);
         VG_SAFE_RELEASE(m_hdrOutput);
 
