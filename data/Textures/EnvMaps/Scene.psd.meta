@@ -3,7 +3,7 @@
         <Property type="String" name="m_name" flags="NotVisible" value="Scene.psd.meta"/>
         <Property type="EnumU8" name="m_importSettings.m_importerType" value="Cubemap"/>
         <Property type="EnumU8" name="m_importSettings.m_importerFormat" value="Automatic"/>
-        <Property type="Bool" name="m_importSettings.m_sRGB" value="false"/>
+        <Property type="Bool" name="m_importSettings.m_sRGB" value="true"/>
         <Property type="EnumU8" name="m_importSettings.m_mipLevelCount" value="Automatic"/>
         <Property type="EnumU8" name="m_importSettings.m_downscale" value="None"/>
     </Object>

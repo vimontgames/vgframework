@@ -622,7 +622,7 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/EnvMaps/Scene.psd"/>
                                     </Object>
                                 </Property>
-                                <Property type="Float" name="m_environmentIntensity" flags="HasRange" value="0.15000001"/>
+                                <Property type="Float" name="m_environmentIntensity" flags="HasRange" value="1"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
