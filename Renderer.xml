@@ -20,13 +20,13 @@
         <Property type="ResourcePtr" name="m_defaultEnvironmentCubemap" flags="">
             <Object class="TextureResource">
                 <Property type="String" name="m_name" flags="NotVisible" value="TextureResource #0"/>
-                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                <Property type="Uint32" name="m_uid" flags="" value="2526968992"/>
                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/EnvMaps/Default.psd"/>
             </Object>
         </Property>
-        <Property type="Float" name="m_defaultEnvironmentIntensity" value="0.15000001"/>
+        <Property type="Float" name="m_defaultEnvironmentIntensity" flags="HasRange" value="0.15000001"/>
         <Property type="Bool" name="m_wireframe" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_aabb" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_debugUI" flags="SingleLine" value="false"/>
