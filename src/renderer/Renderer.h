@@ -33,7 +33,7 @@ namespace vg::renderer
 
     enum class MaterialTextureType : core::u8;
 
-	class Renderer : public IRenderer, public core::Singleton<Renderer>
+	class Renderer final : public IRenderer, public core::Singleton<Renderer>
 	{
 	public:
         using super = IRenderer;
@@ -41,15 +41,18 @@ namespace vg::renderer
 								                Renderer			        (const core::string & _name, core::IObject * _parent);
 								                ~Renderer			        ();
 
-        const char *                            GetClassName                () const final { return "Renderer"; }
-        bool                                    RegisterClasses             () override;
+        const char *                            GetClassName                () const final override { return "Renderer"; }
+        bool                                    RegisterClasses             () final override;
         bool                                    UnregisterClasses           ();
         static bool                             registerProperties          (core::IClassDesc & _desc);
  
-		void					                init				        (const RendererCreationParams & _params, core::Singletons & _singletons) override;
-		void					                deinit				        () override;
+		void					                Init				        (const RendererCreationParams & _params, core::Singletons & _singletons) final override;
+		void					                Deinit				        () final override;
 
-        void					                RunOneFrame			        () override;
+        void	                                CreateResources             () final override;
+        void	                                ReleaseResources            () final override;
+
+        void					                RunOneFrame			        () final override;
 
         const gfx::DeviceParams &               GetDeviceCreationParams     () const final override;
         renderer::IRendererOptions *            GetOptions                  () final override;

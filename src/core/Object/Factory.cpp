@@ -2207,7 +2207,8 @@ namespace vg::core
                                 auto enumValueName = prop->GetEnumName(i);
                                 xmlPropElemChild->SetAttribute("name", enumValueName.c_str());
                                 IObject * pResource = ref ? *prop->GetPropertyResourcePtr(_object, i) : prop->GetPropertyResource(_object, i);
-                                SerializeToXML(pResource, _xmlDoc, xmlPropElemChild);
+                                if(nullptr != pResource)
+                                    SerializeToXML(pResource, _xmlDoc, xmlPropElemChild);
                             }
                             xmlPropElem->InsertEndChild(xmlPropElemChild);
                         }
@@ -2215,7 +2216,8 @@ namespace vg::core
                     else
                     {
                         IObject * pResource = ref ? *prop->GetPropertyResourcePtr(_object) : prop->GetPropertyResource(_object);
-                        SerializeToXML(pResource, _xmlDoc, xmlPropElem);
+                        if (nullptr != pResource)
+                            SerializeToXML(pResource, _xmlDoc, xmlPropElem);
                     }
                 }
                 break;
@@ -2230,7 +2232,8 @@ namespace vg::core
                     for (uint i = 0; i < count; ++i)
                     {
                         IObject * pObject = (IObject *)(data + sizeOf * i);
-                        SerializeToXML(pObject, _xmlDoc, xmlPropElem);
+                        if (nullptr != pObject)
+                            SerializeToXML(pObject, _xmlDoc, xmlPropElem);
                     }
                 }
                 break;
@@ -2239,7 +2242,8 @@ namespace vg::core
                 {
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     IObject * pObject = prop->GetPropertyObject(_object);
-                    SerializeToXML(pObject, _xmlDoc, xmlPropElem);
+                    if (nullptr != pObject)
+                        SerializeToXML(pObject, _xmlDoc, xmlPropElem);
                 }
                 break;
 
@@ -2262,7 +2266,8 @@ namespace vg::core
                     for (uint i = 0; i < count; ++i)
                     {
                         IObject * pObject = (IObject *)(data + sizeOf * i);
-                        SerializeToXML(pObject, _xmlDoc, xmlPropElem);
+                        if (nullptr != pObject)
+                            SerializeToXML(pObject, _xmlDoc, xmlPropElem);
                     }
                 }
                 break;
@@ -2273,7 +2278,11 @@ namespace vg::core
                     auto * vector = prop->GetPropertyResourcePtrVector(_object);
                     const auto count = vector->size();
                     for (auto i = 0; i < count; ++i)
-                        SerializeToXML((*vector)[i], _xmlDoc, xmlPropElem);
+                    {
+                        IResource * pResource = (*vector)[i];
+                        if (nullptr != pResource)
+                            SerializeToXML(pResource, _xmlDoc, xmlPropElem);
+                    }
                 }
                 break;
 
@@ -2283,7 +2292,11 @@ namespace vg::core
                     auto * vector = prop->GetPropertyObjectPtrVector(_object);
                     const auto count = vector->size();
                     for (auto i = 0; i < count; ++i)
-                        SerializeToXML((*vector)[i], _xmlDoc, xmlPropElem);
+                    {
+                        IObject * pObject = (*vector)[i];
+                        if (nullptr != pObject)
+                            SerializeToXML(pObject, _xmlDoc, xmlPropElem);
+                    }
                 }
                 break;
 

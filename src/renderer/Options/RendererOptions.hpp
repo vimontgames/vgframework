@@ -1,6 +1,8 @@
 #include "RendererOptions.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Object/EnumHelper.h"
+#include "core/IResource.h"
+#include "gfx/ITexture.h"
 #include "gfx/Device/DeviceCaps.h"
 #include "renderer/Renderer.h"
 #include "renderer/RayTracing/RayTracingManager.h"
@@ -71,6 +73,25 @@ namespace vg::renderer
         }
         registerPropertyGroupEnd(RendererOptions);
 
+        registerPropertyGroupBegin(RendererOptions, "Default environment");
+        {
+            registerPropertyEx(RendererOptions, m_defaultEnvironmentColor, "Color", PropertyFlags::Color);
+            setPropertyDescription(RendererOptions, m_defaultEnvironmentColor, "Default environment color is used as fallback when no environment cubemap is provided");
+
+            // We cannot use 'TextureResource' to reference cubemap file from Renderer
+            //registerOptionalPropertyResource(RendererOptions, m_useDefaultEnvironmentCubemap, m_defaultCubemap, "Cubemap");
+            //setPropertyDescription(RendererOptions, m_defaultCubemap, "Default environment cubemap to use for ambient diffuse and specular lighting");
+
+            // Se we need to use a 'ResourcePtr' here and create the 'TextureResource' using the factory
+            registerOptionalPropertyResourcePtr(RendererOptions, m_useDefaultEnvironmentCubemap, m_defaultEnvironmentCubemap, "Cubemap");
+            setPropertyDescription(RendererOptions, m_defaultEnvironmentCubemap, "Default environment cubemap to use for ambient diffuse and specular lighting");
+
+            registerProperty(RendererOptions, m_defaultEnvironmentIntensity, "Ambient");
+            setPropertyRange(RendererOptions, m_defaultEnvironmentIntensity, float2(0, 10));
+            setPropertyDescription(RendererOptions, m_defaultEnvironmentIntensity, "Default environment ambient intensity");
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
         registerPropertyGroupBegin(RendererOptions, "Misc");
         {
             registerPropertyEx(RendererOptions, m_wireframe, "Wireframe", PropertyFlags::SingleLine);
@@ -81,12 +102,6 @@ namespace vg::renderer
 
             registerPropertyEx(RendererOptions, m_debugUI, "Debug UI", PropertyFlags::SingleLine);
             setPropertyDescription(RendererOptions, m_debugUI, "Show UI debug");
-
-            registerPropertyEx(RendererOptions, m_defaultClearColor, "Clear color", PropertyFlags::Color);
-            setPropertyDescription(RendererOptions, m_defaultClearColor, "Scene default background clear color");
-
-            registerProperty(RendererOptions, m_defaultAmbient, "Ambient");
-            setPropertyDescription(RendererOptions, m_defaultAmbient, "Scene default ambient intensity");
         }
         registerPropertyGroupEnd(RendererOptions);
 
@@ -105,6 +120,16 @@ namespace vg::renderer
         m_renderPassFlags(RenderPassFlags::ZPrepass | RenderPassFlags::Opaque | RenderPassFlags::Transparency)
     {
         SetFile("Renderer.xml");
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RendererOptions::createResources()
+    {
+        // Must be created before load
+        const auto * factory = Kernel::getFactory();
+        m_defaultEnvironmentCubemap = (core::IResource *)factory->CreateObject("TextureResource");
+        m_defaultEnvironmentCubemap->SetParent(this);
+
         Load();
 
         auto * renderer = Renderer::get();
@@ -147,6 +172,30 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void RendererOptions::releaseResources()
+    {
+        VG_SAFE_RELEASE(m_defaultEnvironmentCubemap);
+    }
+
+    //--------------------------------------------------------------------------------------
+    RendererOptions::~RendererOptions()
+    {
+        
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::ITexture * RendererOptions::GetDefaultCubemap() const
+    {
+        if (m_useDefaultEnvironmentCubemap && m_defaultEnvironmentCubemap)
+        {
+            if (auto * cubemap = VG_SAFE_STATIC_CAST(gfx::ITexture, m_defaultEnvironmentCubemap->GetObject()))
+                return cubemap;
+        }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
     void RendererOptions::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
         const char * name = _prop.GetName();
@@ -164,8 +213,8 @@ namespace vg::renderer
         }
         else if (!strcmp(name, "m_defaultClearColor"))
         {
-            const auto backgroundColor = m_defaultClearColor;
-            m_defaultClearColor = (float4)0.0f;
+            const auto backgroundColor = m_defaultEnvironmentColor;
+            m_defaultEnvironmentColor = (float4)0.0f;
             setDefaultClearColor(backgroundColor);
         }
         else if (!strcmp(name, "m_rayTracing"))
@@ -179,11 +228,11 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void RendererOptions::setDefaultClearColor(const core::float4 & _backgroundColor)
     {
-        if (any(_backgroundColor != m_defaultClearColor))
+        if (any(_backgroundColor != m_defaultEnvironmentColor))
         {
             auto * renderer = Renderer::get();
             renderer->SetResized();
-            m_defaultClearColor = _backgroundColor;
+            m_defaultEnvironmentColor = _backgroundColor;
         }
     }
 

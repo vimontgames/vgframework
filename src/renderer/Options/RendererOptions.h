@@ -34,86 +34,92 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL(RendererOptions, IRendererOptions);
 
-							    RendererOptions			    (const core::string & _name, core::IObject * _parent = nullptr);
+							    RendererOptions			        (const core::string & _name, core::IObject * _parent = nullptr);
+                                ~RendererOptions                ();
 
-        const core::float4 &    GetDefaultClearColor        () const { return m_defaultClearColor; }
-        float                   GetDefaultAmbientIntensity  () const { return m_defaultAmbient; }
+        const core::float4 &    GetDefaultClearColor            () const final override { return m_defaultEnvironmentColor; }
+        gfx::ITexture *         GetDefaultCubemap               () const final override;
+        float                   GetDefaultAmbientIntensity      () const final override { return m_defaultEnvironmentIntensity; }
 
-        bool                    IsToolModeEnabled           () const final override { return isToolModeEnabled(); };
-        bool                    IsRayTracingEnabled         () const final override { return isRayTracingEnabled(); };
+        bool                    IsToolModeEnabled               () const final override { return isToolModeEnabled(); };
+        bool                    IsRayTracingEnabled             () const final override { return isRayTracingEnabled(); };
 
-        gfx::MSAA               GetMSAA                     () const final override;
-        bool                    SetMSAA                     (gfx::MSAA _msaa) final override;
+        gfx::MSAA               GetMSAA                         () const final override;
+        bool                    SetMSAA                         (gfx::MSAA _msaa) final override;
         
-        gfx::HDR                GetHDR                      () const final override;
-        bool                    SetHDR                      (gfx::HDR _hdr) final override;
+        gfx::HDR                GetHDR                          () const final override;
+        bool                    SetHDR                          (gfx::HDR _hdr) final override;
 
-        gfx::AAPostProcess      GetAAPostProcess            () const final override;
-        bool                    SetAAPostProcess            (gfx::AAPostProcess _aa) final override;
+        gfx::AAPostProcess      GetAAPostProcess                () const final override;
+        bool                    SetAAPostProcess                (gfx::AAPostProcess _aa) final override;
 
-        gfx::VSync              GetVSync                    () const final override;
-        bool                    SetVSync                    (gfx::VSync _vsync) final override;
+        gfx::VSync              GetVSync                        () const final override;
+        bool                    SetVSync                        (gfx::VSync _vsync) final override;
 
-        void                    OnPropertyChanged           (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+        void                    OnPropertyChanged               (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
-        bool				    isToolModeEnabled           () const { return m_toolMode; }
+        bool				    isToolModeEnabled               () const { return m_toolMode; }
 
-        LightingMode            getLightingMode             () const { return m_lightingMode; }
+        LightingMode            getLightingMode                 () const { return m_lightingMode; }
 
-        DisplayMode             getDisplayMode              () const { return m_debugDisplayMode; }
-        DisplayFlags            getDisplayFlags             () const { return m_displayFlags; }
+        DisplayMode             getDisplayMode                  () const { return m_debugDisplayMode; }
+        DisplayFlags            getDisplayFlags                 () const { return m_displayFlags; }
 
-        bool				    isAABBEnabled               () const { return m_aabb; }
-        bool				    isWireframeEnabled          () const { return m_wireframe; }
-        bool				    isDebugUIEnabled            () const { return m_debugUI; }
+        bool				    isAABBEnabled                   () const { return m_aabb; }
+        bool				    isWireframeEnabled              () const { return m_wireframe; }
+        bool				    isDebugUIEnabled                () const { return m_debugUI; }
 
-        bool                    isZPrepassEnabled           () const { return core::asBool(RenderPassFlags::ZPrepass & m_renderPassFlags); }
-        bool				    isOpaqueEnabled			    () const { return core::asBool(RenderPassFlags::Opaque & m_renderPassFlags); }
-        bool				    isTransparencyEnabled       () const { return core::asBool(RenderPassFlags::Transparency & m_renderPassFlags); }
+        bool                    isZPrepassEnabled               () const { return core::asBool(RenderPassFlags::ZPrepass & m_renderPassFlags); }
+        bool				    isOpaqueEnabled			        () const { return core::asBool(RenderPassFlags::Opaque & m_renderPassFlags); }
+        bool				    isTransparencyEnabled           () const { return core::asBool(RenderPassFlags::Transparency & m_renderPassFlags); }
 
-        bool                    isPostProcessEnabled        () const { return m_postProcess; }
-        bool                    isRayTracingEnabled         () const { return m_rayTracing; }
-        bool                    anyRayTracingDebugDisplay   () const;
+        bool                    isPostProcessEnabled            () const { return m_postProcess; }
+        bool                    isRayTracingEnabled             () const { return m_rayTracing; }
+        bool                    anyRayTracingDebugDisplay       () const;
 
-        bool                    isDisplayMatIDEnabled       () const { return DisplayMode::Forward_MatID    == m_debugDisplayMode;}
-        bool				    isDisplayNormalEnabled	    () const { return DisplayMode::Forward_VSNormal == m_debugDisplayMode; }
-		bool				    isDisplayUV0Enabled		    () const { return DisplayMode::Forward_UV0      == m_debugDisplayMode; }
+        bool                    isDisplayMatIDEnabled           () const { return DisplayMode::Forward_MatID    == m_debugDisplayMode;}
+        bool				    isDisplayNormalEnabled	        () const { return DisplayMode::Forward_VSNormal == m_debugDisplayMode; }
+		bool				    isDisplayUV0Enabled		        () const { return DisplayMode::Forward_UV0      == m_debugDisplayMode; }
 
-        bool                    isAlbedoMapsEnabled         () const { return 0 != (DisplayFlags::AlbedoMap & m_displayFlags); }
-        bool                    isNormalMapsEnabled         () const { return 0 != (DisplayFlags::NormalMap & m_displayFlags); }
+        bool                    isAlbedoMapsEnabled             () const { return 0 != (DisplayFlags::AlbedoMap & m_displayFlags); }
+        bool                    isNormalMapsEnabled             () const { return 0 != (DisplayFlags::NormalMap & m_displayFlags); }
         
-        void                    setDefaultClearColor        (const core::float4 & _backgroundColor);
-        core::float4		    getDefaultClearColor        () const { return m_defaultClearColor; }
+        void                    setDefaultClearColor            (const core::float4 & _backgroundColor);
+        core::float4		    getDefaultClearColor            () const { return m_defaultEnvironmentColor; }
 
-        void                    update                      () const;
+        void                    update                          () const;
+
+        void                    createResources                 ();
+        void                    releaseResources                ();
 
     protected:
-        void                    applyVSync                  (const core::IProperty * _prop);
-        void                    applyHDR                    (const core::IProperty * _prop);
-        void                    applyMSAA                   (const core::IProperty * _prop);
+        void                    applyVSync                      (const core::IProperty * _prop);
+        void                    applyHDR                        (const core::IProperty * _prop);
+        void                    applyMSAA                       (const core::IProperty * _prop);
 
     private:
-        core::float4		    m_defaultClearColor         = core::float4(0, 0, 0, 0);
-        float                   m_defaultAmbient            = 0.1f;
-        bool				    m_toolMode                  = true;
-        bool                    m_aabb                      = false;
-        bool				    m_wireframe                 = false;
-        bool                    m_debugUI                   = false;
-        bool                    m_postProcess               = true;
-        bool                    m_rayTracing                = false;
-        gfx::HDR                m_HDRmode                   = gfx::HDR::None;
-        gfx::MSAA               m_msaa                      = gfx::MSAA::None;
-        gfx::AAPostProcess      m_aaPostProcess             = gfx::AAPostProcess::None;
-        gfx::VSync              m_VSync                     = gfx::VSync::VSync_1;
-        LightingMode            m_lightingMode              = LightingMode::Forward;
-        DisplayMode	            m_debugDisplayMode          = DisplayMode::None;
-        DisplayFlags            m_displayFlags              = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap;
+        core::float4		    m_defaultEnvironmentColor       = core::float4(0.1f, 0.1f, 0.1f, 1.0f);
+        bool                    m_useDefaultEnvironmentCubemap  = false;
+        core::IResource *       m_defaultEnvironmentCubemap     = nullptr;
+        float                   m_defaultEnvironmentIntensity   = 0.1f;
+        bool				    m_toolMode                      = true;
+        bool                    m_aabb                          = false;
+        bool				    m_wireframe                     = false;
+        bool                    m_debugUI                       = false;
+        bool                    m_postProcess                   = true;
+        bool                    m_rayTracing                    = false;
+        gfx::HDR                m_HDRmode                       = gfx::HDR::None;
+        gfx::MSAA               m_msaa                          = gfx::MSAA::None;
+        gfx::AAPostProcess      m_aaPostProcess                 = gfx::AAPostProcess::None;
+        gfx::VSync              m_VSync                         = gfx::VSync::VSync_1;
+        LightingMode            m_lightingMode                  = LightingMode::Forward;
+        DisplayMode	            m_debugDisplayMode              = DisplayMode::None;
+        DisplayFlags            m_displayFlags                  = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap;
         RenderPassFlags         m_renderPassFlags;
-        const gfx::DeviceCaps * m_deviceCaps                = nullptr;
-
-        core::IProperty *       m_hdrProp                   = nullptr;
-        core::IProperty *       m_vsyncProp                 = nullptr;
-        core::IProperty *       m_msaaProp                  = nullptr;
-        core::IProperty *       m_aaPostProcessProp         = nullptr;
+        const gfx::DeviceCaps * m_deviceCaps                    = nullptr;
+        core::IProperty *       m_hdrProp                       = nullptr;
+        core::IProperty *       m_vsyncProp                     = nullptr;
+        core::IProperty *       m_msaaProp                      = nullptr;
+        core::IProperty *       m_aaPostProcessProp             = nullptr;
     };
 }

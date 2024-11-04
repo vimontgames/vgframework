@@ -167,7 +167,7 @@ namespace vg::renderer
     core::WinHandle g_winHandle = nullptr;
 
 	//--------------------------------------------------------------------------------------
-	void Renderer::init(const RendererCreationParams & _params, core::Singletons & _singletons)
+	void Renderer::Init(const RendererCreationParams & _params, core::Singletons & _singletons)
 	{
         Timer::init();
 
@@ -256,7 +256,7 @@ namespace vg::renderer
     }
 
 	//--------------------------------------------------------------------------------------
-	void Renderer::deinit()
+	void Renderer::Deinit()
 	{
         VG_SAFE_RELEASE(m_cookTorranceBRDF);
         VG_SAFE_DELETE(m_sharedCullingJobOutput);
@@ -311,6 +311,18 @@ namespace vg::renderer
 
         VG_SAFE_RELEASE(m_picking);
 	}
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::CreateResources()
+    {
+        RendererOptions::get()->createResources();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::ReleaseResources()
+    {
+        RendererOptions::get()->releaseResources();
+    }
 
     //--------------------------------------------------------------------------------------
     void Renderer::SetResized()

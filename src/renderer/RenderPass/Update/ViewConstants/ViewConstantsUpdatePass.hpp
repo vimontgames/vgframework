@@ -83,6 +83,9 @@ namespace vg::renderer
         // TODO: 'Environment' class?
         const auto * world = view->GetWorld();
         const Texture * envMap = (Texture *)world->GetEnvironmentCubemap();
+        
+        if (envMap && envMap->getTexDesc().type != gfx::TextureType::TextureCube)
+            VG_WARNING("[Environment] Texture \"%s\" used as environment map should use the \"Cubemap\" texture type", envMap->GetName().c_str());
 
         ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer, sizeof(ViewConstants)).data;
         {

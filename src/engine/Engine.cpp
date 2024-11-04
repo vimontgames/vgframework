@@ -81,7 +81,7 @@ namespace vg::engine
                 break;
 
             case WM_PAINT:
-                RunOneFrame();
+                //RunOneFrame();
                 break;
 
             case WM_KEYDOWN:
@@ -349,7 +349,7 @@ namespace vg::engine
 
         // Load Renderer DLL
 		m_renderer = Plugin::create<renderer::IRenderer>("renderer", api);
-		m_renderer->init(_params.renderer, _singletons);
+		m_renderer->Init(_params.renderer, _singletons);
 
         // Profiler has to be created by the renderer to be able to also profile the GPU
         Kernel::setProfiler(_singletons.profiler);
@@ -359,6 +359,9 @@ namespace vg::engine
         m_resourceManager = new ResourceManager("Resource Manager", this);
         _singletons.resourceManager = m_resourceManager;
         Kernel::setResourceManager(_singletons.resourceManager);
+
+        // Post-init to init resources after the Resource manager has been created
+        m_renderer->CreateResources();
 
         // Register worker threads, it will be useful to get worker thread names in profiler
         _singletons.scheduler->RegisterWorkerThreads();
@@ -593,6 +596,9 @@ namespace vg::engine
         // ~dtor time is too late to unload world resource we have to use ptr so as to do it manually before the ResourceMananger shutdowns
         VG_SAFE_RELEASE(m_worldResource);
 
+        // Release resources directly referenced by the renderer before releasing the resource manager
+        m_renderer->ReleaseResources();
+
         // Resource Manager should be deleted before renderer because the shared resource must be released to avoid GPU memory leak checked in gfx::Device deinit
         VG_SAFE_DELETE(m_resourceManager);
 
@@ -602,7 +608,7 @@ namespace vg::engine
         m_audio->Deinit();
         VG_SAFE_RELEASE(m_audio);
 
-		m_renderer->deinit();
+		m_renderer->Deinit();
         VG_SAFE_RELEASE(m_renderer);
 
         VG_SAFE_DELETE(factory);
@@ -689,6 +695,7 @@ namespace vg::engine
 
         m_time.m_enlapsedTimeSinceStartReal += m_time.m_realDeltaTime;
         m_time.m_enlapsedTimeSinceStartScaled += m_time.m_scaledDeltaTime;
+
         m_time.m_gpu = (float)m_renderer->GetGpuFrameTime();
         m_time.m_gpuWait = (float)m_renderer->GetGpuWaitTime();
 

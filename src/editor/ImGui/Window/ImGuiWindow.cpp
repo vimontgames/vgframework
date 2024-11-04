@@ -2070,7 +2070,8 @@ namespace vg::editor
                     else
                     {
                         IResource * pResource = ref ? *propContext.m_originalProp->GetPropertyResourcePtr(propContext.m_originalObject) : propContext.m_originalProp->GetPropertyResource(propContext.m_originalObject);
-                        changed |= displayResource(pResource, _prop, 0, propContext);
+                        if (nullptr != pResource)
+                            changed |= displayResource(pResource, _prop, 0, propContext);
                     }
                 }
                 break;

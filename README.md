@@ -1,115 +1,208 @@
+﻿![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B17-lightgrey)
 ![Platform Win64](https://img.shields.io/badge/Platform-Win64-0078d4)
-![Platform ARM64EC](https://img.shields.io/badge/Platform-ARM64EC-FFB13B)
+![Platform ARM64EC](https://img.shields.io/badge/Target-ARM64EC-green.svg)
 ![DirectX 12](https://img.shields.io/badge/Graphics_API-DirectX%2012-0078d4)
 ![Vulkan](https://img.shields.io/badge/Graphics_API-Vulkan-AC162C)
 
-# vgframework
-Yes, yet another work-in-progress game and graphic engine project :)
+![Build Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Debug.yml?branch=master&label=)
 
-| Platform | Graphics API | Debug                                                                                                                        | Release                                                                                                                          | Final 												
-| -------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
-| ARM64EC  | DX12         | ![ARM64EC_DX12_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_DX12_Debug.yml/badge.svg)     | ![ARM64EC_DX12_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_DX12_Release.yml/badge.svg)     | ![ARM64EC_DX12_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_DX12_Final.yml/badge.svg)
-| ARM64EC  | Vulkan       | ![ARM64EC_Vulkan_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_Vulkan_Debug.yml/badge.svg) | ![ARM64EC_Vulkan_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_Vulkan_Release.yml/badge.svg) | ![ARM64EC_Vulkan_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/ARM64EC_Vulkan_Final.yml/badge.svg)
-| Win64    | DX12         | ![Win64_DX12_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_DX12_Debug.yml/badge.svg)         | ![Win64_DX12_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_DX12_Release.yml/badge.svg)         | ![Win64_DX12_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_DX12_Final.yml/badge.svg)
-| Win64    | Vulkan       | ![Win64_Vulkan_Debug.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Debug.yml/badge.svg)     | ![Win64_Vulkan_Release.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Release.yml/badge.svg)     | ![Win64_Vulkan_Final.yml](https://github.com/vimontgames/vgframework/actions/workflows/Win64_Vulkan_Final.yml/badge.svg)
+<img src="doc/img/covidboyicon.png" alt="VGFramework logo" title="VGFramework" align="right" height="64" />
+
+# VGFramework 0.40
+Yes, yet another work-in-progress game and graphic engine project.
+
+| Platform | API    | Debug                                                                                                                                                | Release                                                                                                                                                  | Final 												
+| -------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
+| ARM64EC  | DX12   | ![ARM64EC DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Debug.yml?branch=master)     | ![ARM64EC DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Release.yml?branch=master)     | ![ARM64EC DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Final.yml?branch=master)
+| ARM64EC  | Vulkan | ![ARM64EC Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Debug.yml?branch=master) | ![ARM64EC Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Release.yml?branch=master) | ![ARM64EC Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Final.yml?branch=master)
+| Win64    | DX12   | ![Win64 DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Debug.yml?branch=master)         | ![Win64 DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Release.yml?branch=master)         | ![Win64 DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Final.yml?branch=master)
+| Win64    | Vulkan | ![Win64 Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Debug.yml?branch=master)     | ![Win64 Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Release.yml?branch=master)     | ![Win64 Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Final.yml?branch=master)
 
 ![Screenshot](doc/img/0.39.png)
 
-[description](#description)\
-[changelog](#changelog)\
-[getting started](#getting-started)\
-[extern libs](#extern-libs)\
-[data](#data)\
-[useful tools](#useful-tools)\
-[disclaimer](#disclaimer)
+[Licence](#Licence)\
+[Features](#Features)\
+[Getting started](#Getting-started)\
+[Extern libs](#Extern-libs)\
+[Assets](#Assets)\
+[Misc](#Misc)
 
-# description
+# License
 
-Its renderer only uses modern graphics APIs like DirectX12 and Vulkan (I would also like to support Metal the day I got and Apple device) so it can be 100% bindless from the very beginning and do strong choices in that direction:  
-* instanciating and writing into GPU tables is not even exposed: You have to do all the rendering stuff the modern, bindless way. 
-* All the interface is made to encourage using only push constants and bindless buffers/textures, not updating tables constantly as if we were still emulating DX9.
-* You can't access the command lists without using the framegraph that is part of the graphic driver layer. Go framegraph or do not render anything.
-* Apart from the number of root constants, all shaders are sharing the same root signatures.
+## Code
 
-# changelog
+The code in `src` folder is licensed under the **MIT License**. Please refer to [LICENCE.md](LICENCE.md) for more details. 
 
-Moved [changelog](CHANGELOG.md) to a separate file.
+External libraries in the `extern` folder use permissive licenses. Please refer to the [Extern libs](#Extern-libs) section for details about the licenses used.
 
-# getting started
+## Data
+
+Most assets are using permissive licenses, while some are restricted to use only within the context of **VGFramework** development. Please refer to the [Assets](#Assets) section for more details about the licenses used.
+
+# Features
+
+## vg::editor
+Editor GUI is implemented using Dear ImGUI.
+
+Feature<img width=256/>                  | <img width=16/> 
+---------------------------------------- | ------      
+EditorGUI integration                    | ✅     
+Support multiple editor viewports        | ✅     
+Basic texture and sound preview          | ✅     
+Advanced texture preview (e.g. cubemaps) | ❌      
+
+## vg::core lib
+Core library shared by all projects.
+
+Feature<img width=256/>                  | <img width=16/> 
+---------------------------------------- | ------      
+Serialize objects to/from XML & binary   | ✅     
+Autodetect memory leaks                  | ✅     
+Error/Warning/Info runtime log           | ✅     
+CPU & GPU profiler integration           | ✅   
+Cross-DLL shared singletons              | ✅   
+
+## vg::engine
+Engine dynamic library.
+
+Feature<img width=256/>                  | <img width=16/> 
+---------------------------------------- | ------    
+Windows 64-bits support                  | ✅  
+Windows 11 on ARM support                | ✅  
+Linux support                            | ❌ 
+Mac support                              | ❌ 
+Amiga support                            | ❌ 
+Cooking and sharing resources            | ✅     
+Reimport modified resources              | ✅     
+GameObject/Components system             | ✅     
+Prefabs & nested prefabs                 | ✅     
+Jobs scheduler using px_shed             | ✅     
+
+## vg::gfx
+Low-level cross-API interface for graphics.
+
+Feature<img width=256/>                  | <img width=16/> 
+---------------------------------------- | ------     
+DirectX12 backend                        | ✅     
+Metal backend                            | ❌     
+Vulkan backend                           | ✅     
+PIX performance markers                  | ✅     
+Compressed texture formats support       | ❌     
+Compress meshes at import                | ❌     
+Precompiled PSOs                         | ❌  
+Exclusive fullscreen                     | ❌  
+
+## vg::renderer
+Renderer dynamic library implemented using the cross-API vg::gfx library.
+
+Feature<img width=256/>                  | <img width=16/> 
+---------------------------------------- | ------       
+MSAA & FXAA                              | ✅     
+Deferred & forward shading               | ✅     
+Shadow maps and raytraced shadows        | ✅  
+Diffuse & specular environment maps      | ✅ 
+Inline ray tracing pipeline              | ✅     
+Import meshes & animations using UFBX    | ✅     
+Import textures using stb_image          | ✅     
+Drive Dear ImGUI using Components/Canvas | ✅    
+Realtime global illumination             | ❌   
+Configurable post-processing pipeline    | ❌   
+Terrain engin                            | ❌  
+
+## vg::physics
+Physics engine implemented using the Jolt library.
+
+Feature<img width=256/>                  | <img width=16/> 
+---------------------------------------- | ------      
+Physics engine integration               | ✅     
+Rigid static & dynamic bodies            | ✅     
+Jolt character controller                | ✅     
+Ragdolls system                          | ❌ 
+
+## vg::sound
+Sound engine implemented using the SoLoud library.
+
+Feature<img width=256/>                  | <img width=16/> 
+---------------------------------------- | ------      
+Sound engine integration                 | ✅   
+Spatialized sounds                       | ❌  
+
+# Getting started
 
 You have two options depending on whether you want to build from source or use the provided executables:
 
-## using precompiled binaries (users)
+## Using precompiled binaries (users)
 
-- Run **Editor.exe** to launch the editor.
-- Run **Game.exe** to start the game.
+- Run `Editor.exe` to launch the editor.
+- Run `Game.exe` to start the game.
 
-## building from sources (programmers)
+## Building from sources (programmers)
 
-By default, VGFramework uses the precompiled binaries: Editor.exe, Game.exe, and the DLLs located in the /bin/ folder. 
+By default, VGFramework uses the precompiled binaries: `Editor.exe`, `Game.exe`, and the DLLs located in the `bin/` folder. 
 
-When you build locally, executable files for Editor.exe and Game.exe will be created in your /build/ folder.\
+When you build locally, executable files will be created in your `build/` folder.\
 The program will use these locally built files if they are present; otherwise, it will fallback to the precompiled binaries.
 
 ### To build from sources: 
 
 - Sync the depot.
 - Install the required SDKs and configure the environment variables.
-- Open the "vgframework.sln" solution in Visual Studio 2022 Community IDE.
+- Open the `vgframework.sln` solution in Visual Studio 2022 Community IDE.
 - Build & Run
 
 **Debug** and **Release** versions will start with the editor:
-Press F5 to enter game mode and F11 to maximize game view and press ESC to go back Editor mode.
+Press `F5` to enter game mode and `F11` to maximize game view and press `ESC` to go back Editor mode.
 
 **Final** versions are compiled without the editor, they will start directly in game mode and maximized.
 
 First run might take a few seconds because files are cooking.
  
-## command-line args
+## Command-line args
 
-| Argument		  | Type | Default	 | Description													
-| --------------  | ---- | --------- | ------------------------------------------------------------- 
-| attachDebugger  | bool | false	 | MessageBox at application start to let attach a debugger
-| breakOnErrors   | bool | true	     | Break on graphics API errors (with **debugDevice**)
-| breakOnWarnings | bool | false	 | Break on graphics API warnings (with **debugDevice**)
-| debugDevice	  | bool | false (*) | Enable the graphics API debug layer	
-| fullscreen	  | bool | false	 | Start application with game view maximized instead of editor	
-| play			  | bool | false	 | Start application with play mode running	
+| Name<img width=100/>| Description<img width=360/>													
+| ------------------- | ------------------------------------------------------------- 
+| `attachDebugger`    | MessageBox at application start to let attach a debugger
+| `breakOnErrors`     | Break on graphics API errors (with **debugDevice**)
+| `breakOnWarnings`   | Break on graphics API warnings (with **debugDevice**)
+| `debugDevice`	      | Enable the graphics API debug layer ✨
+| `fullscreen`	      | Start application with game view maximized instead of editor	
+| `play`		      | Start application with play mode running	
+                      
+✨ **debugDevice** is enabled by default on **debug** builds
 
-(*) **debugDevice** is enabled by default on **debug** builds
+## Keyboard shortcuts
 
-## keyboard shortcuts
+| Name<img width=100/>| Description<img width=360/>		 												
+| ------------------- | ------------------------------------------------------------- 
+| `A`                 | Toggle snap
+| `F`                 | Focus Selection
+| `H`                 | Toggle HDR modes (None, HDR10, HDR16)
+| `V`                 | Toggle VSync mode (None, 1 VBL, 2 VBL, 3 VBL, 4 VBL)
+| `UP`                | Move editor camera forward
+| `LEFT`              | Move editor camere left
+| `DOWN`              | Move editor camera backward
+| `RIGHT`             | Move editor camere right
+| `F1`                | Start/stop profiler capture	
+| `F2`                | Rename selected Object
+| `F6`                | Hot reload shaders
+| `F7`                | Hot reload resources				
+| `F5`                | Enter Play mode
+| `Shift-F5`          | Restart Play mode
+| `PAUSE`             | Pause/resume Play mode
+| `F11`               | Maximize Game view (fullscreen)
+| `ESCAPE`            | Exit Play mode and go back to Editor mode
+| `DELETE`            | Delete selected objects
+| `Ctrl+Mouse Wheel`  | Toggle Translation/Rotation/Scale gizmo
+| `Ctrl+D`            | Duplicate selected objects ✨
+| `Ctrl+S`            | Save
+| `Ctrl+U`            | Save Prefab & Update
+| `Ctrl+Shift-Q`      | Quit application
 
-| Key			   | Description	 												
-| ---------------- | ------------------------------------------------------------- 
-| A                | Toggle snap
-| F                | Focus Selection
-| H                | Toggle HDR modes (None, HDR10, HDR16)
-| V                | Toggle VSync mode (None, 1 VBL, 2 VBL, 3 VBL, 4 VBL)
-| UP               | Move editor camera forward
-| LEFT             | Move editor camere left
-| DOWN             | Move editor camera backward
-| RIGHT            | Move editor camere right
-| F1               | Start/stop profiler capture	
-| F2               | Rename selected Object
-| F6               | Hot reload shaders
-| F7               | Hot reload resources				
-| F5               | Enter Play mode
-| Shift-F5         | Restart Play mode
-| PAUSE            | Pause/resume Play mode
-| F11              | Maximize Game view (fullscreen)
-| ESCAPE           | Exit Play mode and go back to Editor mode
-| DELETE           | Delete selected objects
-| Ctrl+Mouse Wheel | Toggle Translation/Rotation/Scale gizmo
-| Ctrl+D           | Duplicate selected objects (*)
-| Ctrl+S           | Save
-| Ctrl+U           | Save Prefab & Update
-| Ctrl+Shift-Q     | Quit application
+✨ You can keep **shift** pressed while moving objects to duplicate them.
 
-(*) You can also keep shift pressed while moving objects to duplicate
 
-## ide
+## IDE
 VS Studio 2022 Community\
 https://visualstudio.microsoft.com/fr/vs/community/
 
@@ -134,87 +227,100 @@ Also don't forget to set the *working directory* to **$(SolutionDir)**.
 
 The SDKs are not included with the sources. You need to install them.
 
-| SDK			 | Version       | URL												
-| -------------- | ------------- | ------------------------------------------------------------- 
-| Win10 SDK		 | 10.0.22621.0  | https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/	
-| Vulkan SDK (*) | 1.3.290.0     | https://vulkan.lunarg.com/sdk/home 
+| Name <img width=200/>			                                                    | Version <img width=140/>       
+| --------------------------------------------------------------------------------- | -------------  
+| [Win10 SDK](https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/) | 10.0.22621.0
+| [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) ✨                               | 1.3.290.0 
 
-(*) Only required to build Vulkan version. **$(VULKAN_SDK)** should point the Vulkan SDK installation dir (i.e. **"C:\SDK\Vulkan\1.3.290.0"**)
+✨ Only required to build Vulkan version. **$(VULKAN_SDK)** should point the Vulkan SDK installation dir (e.g.: `C:\SDK\Vulkan\1.3.290.0`).
 
-# extern libs
+# Extern libs
 
-The external libraries are included with the sources for convenience.
+The external libraries are included with the sources for convenience. Follow the link for details about the licence used.
 
-| Name                       | Version       | URL                                                                       
-| -------------------------- | ------------- | ------------------------------------------------------------------------- 
-| D3D12 Memory Allocator     |               | https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator    
-| D3D12 HDR Sample           |               | https://github.com/microsoft/directx-graphics-samples/tree/master/Samples/Desktop/D3D12HDR
-| Dear ImGui - Docking       | 1.91.2        | https://github.com/ocornut/imgui/tree/docking                          
-| DirectXShaderCompiler      | August 2023   | https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308 
-| Dirent                     | 1.23.2        | https://github.com/tronkko/dirent                                                            
-| fmt                        | 10.1.1        | https://github.com/fmtlib/fmt/releases/tag/10.1.1    
-| FXAA                       | 3.11          | https://github.com/GameTechDev/CMAA2/blob/master/Projects/CMAA2/FXAA/Fxaa3_11.h
-| hlslpp                     | 3.5.2         | https://github.com/redorav/hlslpp/releases/tag/3.5.2                       
-| IconFontCppHeaders         |               | https://github.com/juliettef/IconFontCppHeaders                                                     
-| ImGuiFileDialog            | 0.6.7         | https://github.com/aiekick/ImGuiFileDialog
-| ImGuizmo                   | 1.83          | https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83             
-| JoltPhysics                | 5.0.0         | https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0                   
-| meta_enum_lite             |               | https://github.com/vimontgames/meta_enum_lite         
-| optick (*)                 | 1.3.1         | https://github.com/bombomby/optick                                        
-| px_sched                   |               | https://github.com/pplux/px   
-| SoLoud                     | August 2024   | https://github.com/jarikomppa/soloud   
-| stb                        |               | https://github.com/nothings/stb                                           
-| tinyXML2                   | 10.0.0        | https://github.com/leethomason/tinyxml2/releases/tag/10.0.0               
-| UFBX                       | 0.14.3        | https://github.com/ufbx/ufbx                                              
-| Vulkan Memory Allocator    | 3.0.1         | https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator         
-| WinPixEventRuntime         | 1.0.231030001 | https://www.nuget.org/packages/WinPixEventRuntime                         
+| Name <img width=200/>			                                                                                        | Version <img width=140/>   
+| --------------------------------------------------------------------------------------------------------------------- | ------------- 
+| [D3D12 Memory Allocator](  https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator                           )    |               
+| [D3D12 HDR Sample](        https://github.com/microsoft/directx-graphics-samples/tree/master/Samples/Desktop/D3D12HDR )    |               
+| [Dear ImGui - Docking](    https://github.com/ocornut/imgui/tree/docking                                              )    | 1.91.2                          
+| [DirectXShaderCompiler](   https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308                  )    | August 2023    
+| [Dirent](                  https://github.com/tronkko/dirent                                                          )    | 1.23.2                                                                   
+| [fmt](                     https://github.com/fmtlib/fmt/releases/tag/10.1.1                                          )    | 10.1.1            
+| [FXAA](                    https://github.com/GameTechDev/CMAA2/blob/master/Projects/CMAA2/FXAA/Fxaa3_11.h            )    | 3.11           
+| [hlslpp](                  https://github.com/redorav/hlslpp/releases/tag/3.5.2                                       )    | 3.5.2                              
+| [IconFontCppHeaders](      https://github.com/juliettef/IconFontCppHeaders                                            )    |                                                                     
+| [ImGuiFileDialog](         https://github.com/aiekick/ImGuiFileDialog                                                 )    | 0.6.7          
+| [ImGuizmo](                https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83                              )    | 1.83                       
+| [JoltPhysics](             https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0                                  )    | 5.0.0                            
+| [meta_enum_lite](          https://github.com/vimontgames/meta_enum_lite                                              )    |                       
+| [optick](                  https://github.com/bombomby/optick                                                         ) ✨ | 1.3.1                                                  
+| [px_sched](                https://github.com/pplux/px                                                                )    |                
+| [SoLoud](                  https://github.com/jarikomppa/soloud                                                       )    | August 2024    
+| [stb](                     https://github.com/nothings/stb                                                            )    |                                                           
+| [tinyXML2](                https://github.com/leethomason/tinyxml2/releases/tag/10.0.0                                )    | 10.0.0                     
+| [UFBX](                    https://github.com/ufbx/ufbx                                                               )    | 0.14.3                                                      
+| [Vulkan Memory Allocator]( https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator                          )    | 3.0.1                   
+| [WinPixEventRuntime](      https://www.nuget.org/packages/WinPixEventRuntime                                          )    | 1.0.231030001                          
 
-(*) *You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0*
+✨ You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0
 
-# data
+# Assets
 
-## fonts
+## Assets with usage restrictions
 
-| Font						 | Author        | URL												
-| -------------------------- | ------------- | ------------------------------------------------------------- 
-| Font-Awesome               | 6.x           | https://github.com/FortAwesome/Font-Awesome/tree/6.x   
-| Rowdies                    |               | https://github.com/magictype/rowdy 
-| RubikMonoOne               |               | https://fonts.google.com/specimen/Rubik+Mono+One
-| UbuntuMono                 | 1.0           | https://fonts.google.com/specimen/Ubuntu+Mono
+The assets in **the following folders** are licensed under the Creative Commons Non-Commercial (CC BY-NC 4.0) License, with the additional restriction that **they may only be used within the context of VGFramework development**.
 
-## models
+Please refer to the [ASSETS_LICENSE.md](ASSETS_LICENSE.md) for more details.
 
-| Model				   | Author             | URL												
-| -------------------- | ------------------ | ------------------------------------------------------------- 
-| 3D Football          | prabath-weerapana  | https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball
-| Baseball Bat         | sepandjahrominejad | https://www.cgtrader.com/free-3d-models/military/melee/baseball-bat-5c0d0b8c-0ff9-40f8-b49d-779978a2801b
-| FootBall american    | orsbone            | https://www.cgtrader.com/free-3d-models/sports/equipment/football-91c641b9-d246-4d71-a31c-d687762dd94f
-| Katana samurai sword | kizaru             | https://www.cgtrader.com/free-3d-models/military/melee/katana-low-poly-59c307a4-5eaf-480d-b2a3-841d8d8c7240
-| Luigi                | Anthony Yanez      | https://www.turbosquid.com/3d-models/luigi-super-model-1308288 
-| Traffic Cone 	       | hinndia            | https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c
-| Soccergoal           | NorbertVarga       | https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894
+| Name		| Author                            | Folders											   | Preview	
+| --------- | --------------------------------- | ---------------------------------------------------- | ----------- 
+| GJ        | [JOYxt](https://github.com/Joyxt) | `data/Meshes/GJ`<br>`data/Textures/GJ`               | <img src="doc/img/GJ.png" alt="GJ" title="GJ" align="center" /> 
+| VGF_Boy   | [JOYxt](https://github.com/Joyxt) | `data/Meshes/VGF_Boy`<br>`data/Textures/VGF_Boy`     | <img src="doc/img/VGF_Boy.png" alt="VGF_Boy" title="VGF_Boy" align="center"  /> 
+| GrosCovid | [JOYxt](https://github.com/Joyxt) | `data/Meshes/GrosCovid`<br>`data/Textures/GrosCovid` | <img src="doc/img/GrosCovid.png" alt="GrosCovid" title="GrosCovid" align="center" />  
 
-## sound
+## Other assets
 
-| Sound		           | Author               | URL												
-| -------------------- | -------------------- | ------------------------------------------------------------- 
-| FX - Swoosh - normal | bolkmar              | https://freesound.org/people/bolkmar/sounds/451127/
-| Large sword swing    | Luis0413             | https://freesound.org/people/Luis0413/sounds/737748/
-| Tally Dub            | Brotheration Records | https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/  
+The following assets are provided under permissive licenses. Please follow the provided links for details about those licenses:
 
+### Fonts
 
-# useful tools
+| Name<img width=140/>                                                   | Info<img width=200/> 											
+| ---------------------------------------------------------------------- | -------------
+| [Font-Awesome]( https://github.com/FortAwesome/Font-Awesome/tree/6.x ) | 6.x   
+| [Rowdies](      https://github.com/magictype/rowdy                   ) |      
+| [RubikMonoOne]( https://fonts.google.com/specimen/Rubik+Mono+One     ) |      
+| [UbuntuMono](   https://fonts.google.com/specimen/Ubuntu+Mono        ) | 1.0  
 
-These tools are not mandatory but can be useful for development.
+### Models
 
-| Name				     | Description               | URL												
-| ---------------------- | ------------------------- | ------------------------------------------------------------- 
-| Radeon Developer Panel | GPU debugging & profiling | https://gpuopen.com/rdp/
-| RenderDoc              | GPU debugging             | https://renderdoc.org/
+| Name<img width=140/>                                                                                                                         | Info<img width=200/>								
+| -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- 
+| [3D Football](          https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball                                                   ) | prabath-weerapana
+| [Baseball Bat](         https://www.cgtrader.com/free-3d-models/military/melee/baseball-bat-5c0d0b8c-0ff9-40f8-b49d-779978a2801b           ) | sepandjahrominejad
+| [FootBall american](    https://www.cgtrader.com/free-3d-models/sports/equipment/football-91c641b9-d246-4d71-a31c-d687762dd94f             ) | orsbone             
+| [Katana samurai sword]( https://www.cgtrader.com/free-3d-models/military/melee/katana-low-poly-59c307a4-5eaf-480d-b2a3-841d8d8c7240        ) | kizaru              
+| [Luigi](                https://www.turbosquid.com/3d-models/luigi-super-model-1308288                                                     ) | Anthony Yanez       
+| [Traffic Cone](         https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c ) | hinndia             
+| [Soccergoal](           https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894                                                   ) | NorbertVarga        
 
-# misc
+### Sounds
+
+| Name<img width=140/>                                                                                      | Info<img width=200/> 	            											
+| --------------------------------------------------------------------------------------------------------- | ------------------- 
+| [FX - Swoosh - normal]( https://freesound.org/people/bolkmar/sounds/451127/                             ) | bolkmar               
+| [Large sword swing](    https://freesound.org/people/Luis0413/sounds/737748/                            ) | Luis0413              
+| [Tally Dub](            https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/ ) | Brotheration Records   
+
+### Others
 
 Used https://github.com/Nadrin/PBR as reference for PBR lighting equations (MIT licence)
 
-# disclaimer
-Everything is heavily "Work-in-Progress" and 0% in an usable state, and I would not recommend anyone to use it yet.
+
+# Misc
+
+These tools are not mandatory but can be useful for development.
+
+| Name<img width=140/>                                 | Info<img width=200/>              
+| ---------------------------------------------------- | ------------------------- 
+| [Radeon Developer Panel]( https://gpuopen.com/rdp/ ) | GPU debugging & profiling 
+| [RenderDoc](              https://renderdoc.org/   ) | GPU debugging 
