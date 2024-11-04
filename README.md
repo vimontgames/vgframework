@@ -1,23 +1,14 @@
-﻿![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
-![Language](https://img.shields.io/badge/Language-C%2B%2B17-lightgrey)
-![Platform Win64](https://img.shields.io/badge/Platform-Win64-0078d4)
-![Platform ARM64EC](https://img.shields.io/badge/Target-ARM64EC-green.svg)
-![DirectX 12](https://img.shields.io/badge/Graphics_API-DirectX%2012-0078d4)
-![Vulkan](https://img.shields.io/badge/Graphics_API-Vulkan-AC162C)
-
-![Build Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Debug.yml?branch=master&label=)
-
-<img src="doc/img/covidboyicon.png" alt="VGFramework logo" title="VGFramework" align="right" height="64" />
+﻿<img src="doc/img/covidboyicon.png" alt="VGFramework logo" title="VGFramework" align="right" height="64" />
 
 # VGFramework 0.40
 Yes, yet another work-in-progress game and graphic engine project.
 
-| Platform | API    | Debug                                                                                                                                                | Release                                                                                                                                                  | Final 												
-| -------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
-| ARM64EC  | DX12   | ![ARM64EC DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Debug.yml?branch=master)     | ![ARM64EC DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Release.yml?branch=master)     | ![ARM64EC DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Final.yml?branch=master)
-| ARM64EC  | Vulkan | ![ARM64EC Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Debug.yml?branch=master) | ![ARM64EC Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Release.yml?branch=master) | ![ARM64EC Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Final.yml?branch=master)
-| Win64    | DX12   | ![Win64 DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Debug.yml?branch=master)         | ![Win64 DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Release.yml?branch=master)         | ![Win64 DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Final.yml?branch=master)
-| Win64    | Vulkan | ![Win64 Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Debug.yml?branch=master)     | ![Win64 Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Release.yml?branch=master)     | ![Win64 Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Final.yml?branch=master)
+| Configuration                                                                              | Debug                                                                                                                                                       | Release                                                                                                                                                         | Final 												
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
+| ![Arm64](https://img.shields.io/badge/Arm64-FF6F20?style=&label=&color=FF6F20)  ![DX12](https://img.shields.io/badge/DirectX12-00B140?style=&label=&color=0078D6)     | ![ARM64EC DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Debug.yml?branch=master&label=)     | ![ARM64EC DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Release.yml?branch=master&label=)     | ![ARM64EC DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Final.yml?branch=master&label=)
+| ![Arm64](https://img.shields.io/badge/Arm64-FF6F20?style=&label=&color=FF6F20)  ![Vulkan](https://img.shields.io/badge/Vulkan-0078d6?style=&label=&color=E03C31) | ![ARM64EC Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Debug.yml?branch=master&label=) | ![ARM64EC Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Release.yml?branch=master&label=) | ![ARM64EC Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Final.yml?branch=master&label=)
+| ![Win64](https://img.shields.io/badge/Win64-0078D6?style=&label=&color=0078D6)  ![DX12](https://img.shields.io/badge/DirectX12-00B140?style=&label=&color=0078D6)     | ![Win64 DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Debug.yml?branch=master&label=)         | ![Win64 DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Release.yml?branch=master&label=)         | ![Win64 DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Final.yml?branch=master&label=)
+| ![Win64](https://img.shields.io/badge/Win64-0078D6?style=&label=&color=0078D6)  ![Vulkan](https://img.shields.io/badge/Vulkan-0078d6?style=&label=&color=E03C31) | ![Win64 Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Debug.yml?branch=master&label=)     | ![Win64 Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Release.yml?branch=master&label=)     | ![Win64 Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Final.yml?branch=master&label=)
 
 ![Screenshot](doc/img/0.39.png)
 
@@ -242,8 +233,8 @@ The external libraries are included with the sources for convenience. Follow the
 | --------------------------------------------------------------------------------------------------------------------- | ------------- 
 | [D3D12 Memory Allocator](  https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator                           )    |               
 | [D3D12 HDR Sample](        https://github.com/microsoft/directx-graphics-samples/tree/master/Samples/Desktop/D3D12HDR )    |               
-| [Dear ImGui - Docking](    https://github.com/ocornut/imgui/tree/docking                                              )    | 1.91.2                          
-| [DirectXShaderCompiler](   https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308                  )    | August 2023    
+| [Dear ImGui](              https://github.com/ocornut/imgui/tree/docking                                              )    | 1.91.2                          
+| [DirectX ShaderCompiler](  https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.7.2308                  )    | August 2023    
 | [Dirent](                  https://github.com/tronkko/dirent                                                          )    | 1.23.2                                                                   
 | [fmt](                     https://github.com/fmtlib/fmt/releases/tag/10.1.1                                          )    | 10.1.1            
 | [FXAA](                    https://github.com/GameTechDev/CMAA2/blob/master/Projects/CMAA2/FXAA/Fxaa3_11.h            )    | 3.11           
@@ -264,6 +255,7 @@ The external libraries are included with the sources for convenience. Follow the
 
 ✨ You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0
 
+
 # Assets
 
 ## Assets with usage restrictions
@@ -272,11 +264,11 @@ The assets in **the following folders** are licensed under the Creative Commons 
 
 Please refer to the [ASSETS_LICENSE.md](ASSETS_LICENSE.md) for more details.
 
-| Name		| Author                            | Folders											   | Preview	
-| --------- | --------------------------------- | ---------------------------------------------------- | ----------- 
-| GJ        | [JOYxt](https://github.com/Joyxt) | `data/Meshes/GJ`<br>`data/Textures/GJ`               | <img src="doc/img/GJ.png" alt="GJ" title="GJ" align="center" /> 
-| VGF_Boy   | [JOYxt](https://github.com/Joyxt) | `data/Meshes/VGF_Boy`<br>`data/Textures/VGF_Boy`     | <img src="doc/img/VGF_Boy.png" alt="VGF_Boy" title="VGF_Boy" align="center"  /> 
-| GrosCovid | [JOYxt](https://github.com/Joyxt) | `data/Meshes/GrosCovid`<br>`data/Textures/GrosCovid` | <img src="doc/img/GrosCovid.png" alt="GrosCovid" title="GrosCovid" align="center" />  
+| Asset		                                                                            | Author                            | Files											   
+| ------------------------------------------------------------------------------------- | --------------------------------- | ---------------------------------------------------- 
+| <img src="doc/img/GJ.png" alt="GJ" title="GJ" align="center" />                       | [JOYxt](https://github.com/Joyxt) | `data/Meshes/GJ/*.*`<br>`data/Textures/GJ/*.*`                 
+| <img src="doc/img/VGF_Boy.png" alt="VGF_Boy" title="VGF_Boy" align="center"  />       | [JOYxt](https://github.com/Joyxt) | `data/Meshes/VGF_Bo/*.*y`<br>`data/Textures/VGF_Boy/*.*`      
+| <img src="doc/img/GrosCovid.png" alt="GrosCovid" title="GrosCovid" align="center" />  | [JOYxt](https://github.com/Joyxt) | `data/Meshes/GrosCovid/*.*`<br>`data/Textures/GrosCovid/*.*`   
 
 ## Other assets
 
@@ -310,10 +302,6 @@ The following assets are provided under permissive licenses. Please follow the p
 | [FX - Swoosh - normal]( https://freesound.org/people/bolkmar/sounds/451127/                             ) | bolkmar               
 | [Large sword swing](    https://freesound.org/people/Luis0413/sounds/737748/                            ) | Luis0413              
 | [Tally Dub](            https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/ ) | Brotheration Records   
-
-### Others
-
-Used https://github.com/Nadrin/PBR as reference for PBR lighting equations (MIT licence)
 
 
 # Misc
