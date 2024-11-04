@@ -1,4 +1,4 @@
-![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
+﻿![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B17-lightgrey)
 ![Platform Win64](https://img.shields.io/badge/Platform-Win64-0078d4)
 ![Platform ARM64EC](https://img.shields.io/badge/Target-ARM64EC-green.svg)
@@ -8,7 +8,7 @@
 <img src="doc/img/covidboyicon.png" alt="VGFramework logo" title="VGFramework" align="right" height="64" />
 
 # VGFramework 0.40
-Yes, yet another work-in-progress game and graphic engine project :)
+Yes, yet another work-in-progress game and graphic engine project.
 
 | Platform | Graphics API | Debug                                                                                                                        | Release                                                                                                                          | Final 												
 | -------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | -----------------------------------------------------------------------------------------------------------------------
@@ -20,6 +20,7 @@ Yes, yet another work-in-progress game and graphic engine project :)
 ![Screenshot](doc/img/0.39.png)
 
 [Licence](#Licence)\
+[Features](#Features)\
 [Getting started](#Getting-started)\
 [Extern libs](#Extern-libs)\
 [Assets](#Assets)\
@@ -36,6 +37,93 @@ External libraries in the `extern` folder use permissive licenses. Please refer 
 ## Data
 
 Most assets are using permissive licenses, while some are restricted to use only within the context of **VGFramework** development. Please refer to the [Assets](#Assets) section for more details about the licenses used.
+
+# Features
+
+## vg::editor
+Editor GUI is implemented using Dear ImGUI.
+
+| Name<img width=128/>   | Description<img width=256/>              | <img width=16/> 
+|----------------------- | ---------------------------------------- | ------      
+| Editor GUI             | GUI integration                          | ✅     
+| Viewports              | Support multiple editor viewports        | ✅     
+| Preview (basic)        | Basic texture and sound preview          | ✅     
+| Preview (custom)       | Texture channels, cubemaps ...           | ❌      
+
+## vg::core lib
+Core library shared by all projects.
+
+| Name<img width=128/>   | Description<img width=256/>              | <img width=16/>
+|----------------------- | ---------------------------------------- | ------      
+| Serialization          | Serialize objects to/from XML & binary   | ✅     
+| Leak detection         | Warn about memory leaks                  | ✅     
+| Log                    | Error/Warning/Info runtime log           | ✅     
+| Profiler               | CPU & GPU profiler integration           | ✅   
+| "Kernel" singletons    | Cross-DLL shared singletons              | ✅   
+
+## vg::engine
+Engine dynamic library.
+
+| Name<img width=128/>   | Description<img width=256/>              | <img width=16/>
+|----------------------- | ---------------------------------------- | ------    
+| Win64                  | Windows 64-bits support                  | ✅  
+| ARM64EC                | Windows 11 on ARM support                | ✅  
+| Linux                  | Linux support                            | ❌ 
+| Mac                    | Mac support                              | ❌ 
+| Amiga                  | Amiga support                            | ❌ 
+| Cooking                | Cooking and sharing resources            | ✅     
+| Resources hot-reload   | Reimport modified resources              | ✅     
+| Entities               | GameObject/Components system             | ✅     
+| Prefabs                | Prefabs & nested prefabs                 | ✅     
+| Jobs                   | Jobs scheduler using px_shed             | ✅     
+
+## vg::gfx
+Low-level cross-API interface for graphics.
+
+| Name<img width=128/>   | Description<img width=256/>              | <img width=16/> 
+|----------------------- | ---------------------------------------- | ------     
+| DirectX12              | DirectX12 backend                        | ✅     
+| Metal                  | Metal backend                            | ❌     
+| Vulkan                 | Vulkan backend                           | ✅     
+| GPU markers            | PIX performance markers                  | ✅     
+| Texture compression    | Compressed texture formats support       | ❌     
+| Mesh compression       | Compress meshes at import                | ❌     
+| PSOs                   | Precompile PSOs                          | ❌  
+| Fullscreen             | Exclusive fullscreen                     | ❌  
+
+## vg::renderer
+Renderer dynamic library implemented using the cross-API vg::gfx library.
+
+| Name<img width=128/>   | Description<img width=256/>              | <img width=16/> 
+|----------------------- | ---------------------------------------- | ------       
+| Anti-Aliasing          | MSAA & FXAA                              | ✅     
+| Lighting               | Deferred & forward shading               | ✅     
+| Shadows                | Shadow maps and raytraced shadows        | ✅  
+| Image-based ligthing   | Diffuse & specular environment maps      | ✅ 
+| Ray tracing            | Inline ray tracing pipeline              | ✅     
+| FBX import             | Import meshes & animations using UFBX    | ✅     
+| Texture import         | Import textures using stb_image          | ✅     
+| In-game UI             | Drive Dear ImGUI using Components/Canvas | ✅    
+| Realtime GI            | Realtime global illumination             | ❌   
+| Post-processing        | Configurable post-processing pipeline    | ❌   
+
+## vg::physics
+Physics engine implemented using the Jolt library.
+
+| Name<img width=128/>   | Description<img width=256/>              | <img width=16/> 
+|----------------------- | ---------------------------------------- | ------      
+| Physics engine         | Physics engine integration               | ✅     
+| Bodies                 | Rigid static & dynamic bodies            | ✅     
+| Character              | Jolt character controller                | ✅     
+| Ragdolls               |                                          | ❌ 
+
+## vg::sound
+Sound engine implemented using the SoLoud library.
+
+| Name<img width=128/>   | Description<img width=256/>              | <img width=16/> 
+|----------------------- | ---------------------------------------- | ------      
+| Sound engine           | Sound engine integration                 | ✅   
+| Spacialization         | Spatialized sounds                       | ❌  
 
 # Getting started
 
@@ -61,7 +149,7 @@ The program will use these locally built files if they are present; otherwise, i
 - Build & Run
 
 **Debug** and **Release** versions will start with the editor:
-Press F5 to enter game mode and F11 to maximize game view and press ESC to go back Editor mode.
+Press `F5` to enter game mode and `F11` to maximize game view and press ESC to go back Editor mode.
 
 **Final** versions are compiled without the editor, they will start directly in game mode and maximized.
 
@@ -74,41 +162,42 @@ First run might take a few seconds because files are cooking.
 | attachDebugger  | bool | false	 | MessageBox at application start to let attach a debugger
 | breakOnErrors   | bool | true	     | Break on graphics API errors (with **debugDevice**)
 | breakOnWarnings | bool | false	 | Break on graphics API warnings (with **debugDevice**)
-| debugDevice	  | bool | false (*) | Enable the graphics API debug layer	
+| debugDevice	  | bool | false ✨  | Enable the graphics API debug layer	
 | fullscreen	  | bool | false	 | Start application with game view maximized instead of editor	
 | play			  | bool | false	 | Start application with play mode running	
 
-(*) **debugDevice** is enabled by default on **debug** builds
+✨ **debugDevice** is enabled by default on **debug** builds
 
 ## Keyboard shortcuts
 
-| Key			   | Description	 												
-| ---------------- | ------------------------------------------------------------- 
-| A                | Toggle snap
-| F                | Focus Selection
-| H                | Toggle HDR modes (None, HDR10, HDR16)
-| V                | Toggle VSync mode (None, 1 VBL, 2 VBL, 3 VBL, 4 VBL)
-| UP               | Move editor camera forward
-| LEFT             | Move editor camere left
-| DOWN             | Move editor camera backward
-| RIGHT            | Move editor camere right
-| F1               | Start/stop profiler capture	
-| F2               | Rename selected Object
-| F6               | Hot reload shaders
-| F7               | Hot reload resources				
-| F5               | Enter Play mode
-| Shift-F5         | Restart Play mode
-| PAUSE            | Pause/resume Play mode
-| F11              | Maximize Game view (fullscreen)
-| ESCAPE           | Exit Play mode and go back to Editor mode
-| DELETE           | Delete selected objects
-| Ctrl+Mouse Wheel | Toggle Translation/Rotation/Scale gizmo
-| Ctrl+D           | Duplicate selected objects (*)
-| Ctrl+S           | Save
-| Ctrl+U           | Save Prefab & Update
-| Ctrl+Shift-Q     | Quit application
+| Key			     | Description	 												
+| ------------------ | ------------------------------------------------------------- 
+| `A`                | Toggle snap
+| `F`                | Focus Selection
+| `H`                | Toggle HDR modes (None, HDR10, HDR16)
+| `V`                | Toggle VSync mode (None, 1 VBL, 2 VBL, 3 VBL, 4 VBL)
+| `UP`               | Move editor camera forward
+| `LEFT`             | Move editor camere left
+| `DOWN`             | Move editor camera backward
+| `RIGHT`            | Move editor camere right
+| `F1`               | Start/stop profiler capture	
+| `F2`               | Rename selected Object
+| `F6`               | Hot reload shaders
+| `F7`               | Hot reload resources				
+| `F5`               | Enter Play mode
+| `Shift-F5`         | Restart Play mode
+| `PAUSE`            | Pause/resume Play mode
+| `F11`              | Maximize Game view (fullscreen)
+| `ESCAPE`           | Exit Play mode and go back to Editor mode
+| `DELETE`           | Delete selected objects
+| `Ctrl+Mouse Wheel` | Toggle Translation/Rotation/Scale gizmo
+| `Ctrl+D`           | Duplicate selected objects ✨
+| `Ctrl+S`           | Save
+| `Ctrl+U`           | Save Prefab & Update
+| `Ctrl+Shift-Q`     | Quit application
 
-(*) You can also keep shift pressed while moving objects to duplicate
+✨ You can keep **shift** pressed while moving objects to duplicate them.
+
 
 ## IDE
 VS Studio 2022 Community\
@@ -138,9 +227,9 @@ The SDKs are not included with the sources. You need to install them.
 | SDK			 | Version       | URL												
 | -------------- | ------------- | ------------------------------------------------------------- 
 | Win10 SDK		 | 10.0.22621.0  | https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/	
-| Vulkan SDK (*) | 1.3.290.0     | https://vulkan.lunarg.com/sdk/home 
+| Vulkan SDK ✨ | 1.3.290.0     | https://vulkan.lunarg.com/sdk/home 
 
-(*) Only required to build Vulkan version. **$(VULKAN_SDK)** should point the Vulkan SDK installation dir (i.e. `C:\SDK\Vulkan\1.3.290.0`)
+✨ Only required to build Vulkan version. **$(VULKAN_SDK)** should point the Vulkan SDK installation dir (e.g.: `C:\SDK\Vulkan\1.3.290.0`).
 
 # Extern libs
 
@@ -161,7 +250,7 @@ The external libraries are included with the sources for convenience.
 | ImGuizmo                   | 1.83          | https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83             
 | JoltPhysics                | 5.0.0         | https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0                   
 | meta_enum_lite             |               | https://github.com/vimontgames/meta_enum_lite         
-| optick (*)                 | 1.3.1         | https://github.com/bombomby/optick                                        
+| optick ✨                 | 1.3.1         | https://github.com/bombomby/optick                                        
 | px_sched                   |               | https://github.com/pplux/px   
 | SoLoud                     | August 2024   | https://github.com/jarikomppa/soloud   
 | stb                        |               | https://github.com/nothings/stb                                           
@@ -170,7 +259,7 @@ The external libraries are included with the sources for convenience.
 | Vulkan Memory Allocator    | 3.0.1         | https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator         
 | WinPixEventRuntime         | 1.0.231030001 | https://www.nuget.org/packages/WinPixEventRuntime                         
 
-(*) *You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0*
+✨ You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0
 
 # Assets
 
