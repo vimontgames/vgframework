@@ -24,6 +24,38 @@ struct VS_Output
 };
 
 //--------------------------------------------------------------------------------------
+float4 getVertexColorOut(float4 _vertexColor, float4 _materialColor, float4 _instanceColor, DisplayFlags _flags)
+{
+    float4 color = 1;
+
+    #if _TOOLMODE
+    if (0 != (DisplayFlags::VertexColor & _flags)) 
+    #endif
+    {
+        color.rgb *= _vertexColor.rgb;
+    }
+    color.a *= _vertexColor.a;
+
+    #if _TOOLMODE
+    if (0 != (DisplayFlags::MaterialColor & _flags)) 
+    #endif
+    {
+        color.rgb *= _materialColor.rgb;
+    }
+    color.a *= _materialColor.a;
+
+    #if _TOOLMODE
+    if (0 != (DisplayFlags::InstanceColor & _flags)) 
+    #endif
+    {
+        color.rgb *= _instanceColor.rgb;
+    }
+    color.a *= _instanceColor.a;
+
+    return color;
+}
+
+//--------------------------------------------------------------------------------------
 VS_Output VS_Forward(uint _vertexID : VertexID)
 {
     VS_Output output;
@@ -37,6 +69,9 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
 
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+
+    DisplayFlags flags = viewConstants.getDisplayFlags();
+
     float4x4 view = viewConstants.getView();
     float4x4 proj = viewConstants.getProj();
     
@@ -44,7 +79,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = vert.getColor() * materialData.getAlbedoColor() * instanceDataHeader.getInstanceColor();
+    output.col = getVertexColorOut(vert.getColor(), materialData.getAlbedoColor(), instanceDataHeader.getInstanceColor(), flags);
     
     float3 modelPos = vert.getPos();
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
@@ -74,7 +109,7 @@ float4 getAlbedo(GPUMaterialData _materialData, float2 _uv, float4 _vertexColor,
 
     #if _TOOLMODE
     if (0 == (DisplayFlags::AlbedoMap & _flags))
-        albedo = pow(0.5, 0.45);
+        albedo.rgb = pow(0.5, 0.45);
     #endif
 
     albedo *= _vertexColor;
@@ -175,9 +210,6 @@ PS_Output PS_Forward(VS_Output _input)
 #endif
 {
     PS_Output output = (PS_Output)0;
-
-    //output.color0 = float4(frac(_input.pos.xyz*100),1);
-    //return output;
     
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
@@ -265,6 +297,9 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
 
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+
+    DisplayFlags flags = viewConstants.getDisplayFlags();
+
     float4x4 view = viewConstants.getView();
     float4x4 proj = viewConstants.getProj();
     
@@ -272,7 +307,7 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = vert.getColor() * materialData.getAlbedoColor() * instanceDataHeader.getInstanceColor();
+    output.col = getVertexColorOut(vert.getColor(), materialData.getAlbedoColor(), instanceDataHeader.getInstanceColor(), flags);
     
     float3 modelPos = vert.getPos();
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;

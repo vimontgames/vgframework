@@ -14,7 +14,7 @@
         <Property type="Bool" name="m_postProcess" value="true"/>
         <Property type="EnumU8" name="m_aaPostProcess" value="FXAA"/>
         <Property type="EnumFlagsU32" name="m_renderPassFlags" flags="Bitfield" value="ZPrepass|Opaque|Transparency"/>
-        <Property type="EnumFlagsU32" name="m_displayFlags" flags="Bitfield" value="AlbedoMap|NormalMap"/>
+        <Property type="EnumFlagsU32" name="m_displayFlags" flags="Bitfield" value="AlbedoMap|NormalMap|VertexColor"/>
         <Property type="Float4" name="m_defaultEnvironmentColor" flags="Color" x="0.1" y="0.1" z="0.1" w="1"/>
         <Property type="Bool" name="m_useDefaultEnvironmentCubemap" flags="NotVisible" value="true"/>
         <Property type="ResourcePtr" name="m_defaultEnvironmentCubemap" flags="">

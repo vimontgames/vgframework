@@ -59,8 +59,11 @@ vg_enum_class(DisplayMode, uint,
 );
 
 vg_enum(DisplayFlags, uint,
-    AlbedoMap = 0x00000001,
-    NormalMap = 0x00000002
+    AlbedoMap       = 0x00000001,
+    NormalMap       = 0x00000002,
+    VertexColor     = 0x00000004,
+    MaterialColor   = 0x00000008,
+    InstanceColor   = 0x00000010 
 );
 
 #endif
