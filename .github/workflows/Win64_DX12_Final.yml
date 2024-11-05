@@ -15,7 +15,8 @@ on:
       - '**/*.c'
       - '**/*.cpp'
       - '**/*.inl'
-      - '**/*.fxh'
+      - '**/*.hlsli'
+      - '**/*.hlsl.h'
   pull_request:
     branches: [ "master" ]
     paths:
@@ -25,7 +26,8 @@ on:
       - '**/*.c'
       - '**/*.cpp'
       - '**/*.inl'
-      - '**/*.fxh'
+      - '**/*.hlsli'
+      - '**/*.hlsl.h'
 
 env:
   # Path to the solution file relative to the root of the project.
