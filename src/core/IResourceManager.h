@@ -55,14 +55,8 @@ namespace vg::core
         // Add or update ResourceMeta
         virtual void SetResourceMeta(const string & _resourcePath, IResourceMeta * _meta) = 0;
 
-        // Register extension for resource type
-        //virtual void RegisterExtension(const core::string & _className, const core::string & _extension) = 0;
-
-        // Reimport resource meta
-        virtual uint UpdateMeta() = 0;
-
         // Reimport modified resources
-        virtual uint UpdateResources() = 0;
+        virtual void UpdateResources(bool _async = true) = 0;
 
         // Force reimport specific resource
         virtual void Reimport(IResource * _res) = 0;

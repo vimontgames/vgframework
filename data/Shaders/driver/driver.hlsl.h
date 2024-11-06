@@ -7,15 +7,15 @@ namespace vg::gfx
     class DriverHLSLDesc : public HLSLDesc
     {
     public:
+        enum Flags : ShaderKey::Flags
+        {
+            Gamma = 0,
+            HDR = 1,  // 2 bits
+            MSAA = 3   // 3 bits
+        };
+
         DriverHLSLDesc()
         {
-            enum Flags : ShaderKey::Flags
-            {
-                Gamma = 0,
-                HDR   = 1,
-                MSAA  = 3
-            };
-
             setFile("driver/driver.hlsl");
 
             declFlag(Gamma, ShaderStageFlags::PS, "_GAMMA");

@@ -47,8 +47,7 @@ namespace vg::engine
         core::IResourceMeta *       GetResourceMeta             (const core::string & _resourcePath) const final override;
         void                        SetResourceMeta             (const core::string & _resourcePath, core::IResourceMeta * _meta) final override;
 
-        core::uint                  UpdateMeta                  () final override;
-        core::uint                  UpdateResources             () final override;
+        void                        UpdateResources             (bool _async = true) final override;
         void                        Reimport                    (core::IResource * _res) final override;
 
         void                        LoadResourceAsync           (core::IResource * _resource, const core::string & _oldPath, const core::string & _path) final override;
@@ -58,18 +57,21 @@ namespace vg::engine
         void                        flushPendingLoading         ();
 
         bool                        isLoadingThreadRunning      () const { return m_isLoadingThreadRunning; }
+        void                        flushUpdateResource();
 
     protected:
         static void                 loading                     (ResourceManager * _this);
-        static CookStatus         needsCook                   (const ResourceInfo & _info);
+        static CookStatus           needsCook                   (const ResourceInfo & _info);
 
         void                        updateLoading               (bool _async);
         void                        loadOneResource             (ResourceInfo & _info);
-        void                        updateMeta                  (const core::string & _folder, core::uint & _counter);
+
+        core::uint                  updateResources             ();
 
     private:
         std::thread                                             m_loadingThread;
         core::atomic<bool>                                      m_isLoadingThreadRunning = true;
+        core::atomic<bool>                                      m_needUpdateResource = false;
 
         core::dictionary<ResourceInfo*>                         m_resourceInfosMap;
         core::dictionary<core::IResourceMeta *>                 m_resourceMeta;

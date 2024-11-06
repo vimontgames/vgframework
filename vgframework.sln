@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "driver", "driver", "{F9214E
 	ProjectSection(SolutionItems) = preProject
 		data\Shaders\driver\driver.hlsl = data\Shaders\driver\driver.hlsl
 		data\Shaders\driver\driver.hlsl.h = data\Shaders\driver\driver.hlsl.h
+		data\Shaders\driver\driver.hlsli = data\Shaders\driver\driver.hlsli
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "background", "background", "{06052575-08B6-41A6-9E38-E1171229FF9C}"
@@ -227,6 +228,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "readme", "readme", "{BB4EDF
 		CHANGELOG.md = CHANGELOG.md
 		LICENCE.md = LICENCE.md
 		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "preview", "preview", "{35BFEE77-154C-40F6-90F6-D378EC135F20}"
+	ProjectSection(SolutionItems) = preProject
+		data\Shaders\preview\preview.hlsl = data\Shaders\preview\preview.hlsl
+		data\Shaders\preview\preview.hlsl.h = data\Shaders\preview\preview.hlsl.h
+		data\Shaders\preview\preview.hlsli = data\Shaders\preview\preview.hlsli
 	EndProjectSection
 EndProject
 Global
@@ -482,6 +490,7 @@ Global
 		{204113B2-C64F-4F4C-9C7A-49F562C088B3} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{C1DE9EC7-954C-4C24-9956-879DDFE9A748} = {204113B2-C64F-4F4C-9C7A-49F562C088B3}
 		{B1CB0197-0173-4609-BD8A-D007E1B67333} = {A6056C5D-D628-4DFE-945D-0938671C5BA8}
+		{35BFEE77-154C-40F6-90F6-D378EC135F20} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}

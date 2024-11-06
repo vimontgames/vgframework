@@ -599,6 +599,10 @@ namespace vg::engine
         // Release resources directly referenced by the renderer before releasing the resource manager
         m_renderer->ReleaseResources();
 
+        // Flush async delete before releasing resources
+        //for (uint i = 0; i < 2; ++i)
+        //    Kernel::getFactory()->FlushReleaseAsync();
+
         // Resource Manager should be deleted before renderer because the shared resource must be released to avoid GPU memory leak checked in gfx::Device deinit
         VG_SAFE_DELETE(m_resourceManager);
 
@@ -786,6 +790,7 @@ namespace vg::engine
             }
         }
 
+        m_resourceManager->flushUpdateResource();
         m_resourceManager->updateLoading();
 
         const float scaledDeltaTime = m_time.m_scaledDeltaTime;

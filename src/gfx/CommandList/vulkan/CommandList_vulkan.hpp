@@ -101,6 +101,22 @@ namespace vg::gfx::vulkan
                         VG_ASSERT(false, "transitionResource from '%s' to '%s' is not implemented", asString(_before).c_str(), asString(_after).c_str());
                         break;
 
+                    case ResourceState::ShaderResource:
+                    {
+                        // RenderTarget to ShaderResource transition
+                        imageMemoryBarrier.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+                        imageMemoryBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+                        imageMemoryBarrier.oldLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+                        imageMemoryBarrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+
+                        VkPipelineStageFlags srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+                        VkPipelineStageFlags dstStageMask = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+
+                        vkCmdPipelineBarrier(m_vkCommandBuffer, srcStageMask, dstStageMask, 0, 0, nullptr, 0, nullptr, 1, &imageMemoryBarrier);
+                    }
+                    break;
+
                     case ResourceState::UnorderedAccess:
                     {
                         // RenderTarget to UnorderedAccess transition

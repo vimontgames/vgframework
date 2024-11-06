@@ -30,6 +30,12 @@ namespace vg::gfx
         }
 
         //--------------------------------------------------------------------------------------
+        TextureType Texture::GetTextureType() const
+        {
+            return m_texDesc.type;
+        }
+
+        //--------------------------------------------------------------------------------------
         core::u16 Texture::computeMaxMip(core::uint _dim)
         {
             auto count = log2((float)_dim)+1;

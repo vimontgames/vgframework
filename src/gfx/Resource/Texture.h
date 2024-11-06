@@ -18,7 +18,8 @@ namespace vg::gfx
 
 			core::u16										GetWidth				() const final override;
 			core::u16										GetHeight				() const final override;
-			gfx::PixelFormat								GetPixelFormat			() const final override;
+            PixelFormat										GetPixelFormat			() const final override;
+            TextureType										GetTextureType			() const final override;
 
 			VG_INLINE const TextureDesc &					getTexDesc				() const;
 			VG_INLINE const gfx::Resource &					getResource				() const;
@@ -58,7 +59,7 @@ namespace vg::gfx
 {
     class TextureImporterData;
 
-	class Texture : public VG_GFXAPI::Texture
+	class Texture final : public VG_GFXAPI::Texture
 	{
 	public:
 		VG_CLASS_DECL_PASSTHROUGH(Texture, VG_GFXAPI::Texture);

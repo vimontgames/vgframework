@@ -10,6 +10,7 @@ namespace vg::editor
 
 #include "GameObject/ImGuiGameObjectHandler.hpp"
 #include "Texture/ImGuiTextureHandler.hpp"
+#include "Texture/ImGuiTextureResourceHandler.hpp"
 #include "Material/ImGuiMaterialModelTypeHandler.hpp"
 
 #include "ImGuiResourceListHandler.hpp"

@@ -59,6 +59,8 @@ namespace vg
             virtual void                PopFontStyle                    () = 0;
 
             virtual CustomImGuiData &   GetCustomData                   (const core::string & _name) = 0;
+
+            virtual gfx::ITexture *     GetPreviewTexture               (gfx::ITexture * _originalTex) = 0;
         };
     }
 }

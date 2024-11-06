@@ -25,6 +25,7 @@
 #include "renderer/RenderPass/Compute/ComputeSkinning/ComputeSkinningPass.h"
 #include "renderer/RenderPass/Update/BLAS/BLASUpdatePass.h"
 #include "renderer/RenderPass/Render2D/HDROutput/HDROutputPass.h"
+#include "renderer/RenderPass/Render2D/Preview/Texture/TexturePreviewPass.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Animation/SkeletalAnimation.h"
@@ -54,6 +55,7 @@
 #include "shaders/postprocess/postprocess.hlsl.h"
 #include "shaders/skinning/skinning.hlsl.h"
 #include "shaders/lighting/deferredLighting.hlsl.h"
+#include "shaders/preview/preview.hlsl.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -220,18 +222,6 @@ namespace vg::renderer
         if (auto gameViewport = (Viewport *)CreateViewport(gameViewportParams, "Game"))
         {
             AddViewport(gameViewport);
-
-            // Add one "Game" view the size of the viewport by default
-            //auto gameView0Params = gfx::CreateViewParams(gfx::ViewTarget::Game, getBackbufferSize());
-            //gameView0Params.viewport = m_viewport;
-            //if (auto gameView = (View *)CreateView(gameView0Params, "GameView"))
-            //{   
-            //    AddView(gameView);
-            //    gameViewport->AddView(0, gameView->GetViewID());
-            //    gameView->setName("Game View #0");
-            //    VG_SAFE_RELEASE(gameView);
-            //}
-
             VG_SAFE_RELEASE(gameViewport);
         }
 
@@ -251,6 +241,7 @@ namespace vg::renderer
         sm->registerHLSL(PostProcessHLSLDesc());
         sm->registerHLSL(SkinningHLSLDesc());
         sm->registerHLSL(DeferredLightingHLSLDesc());
+        sm->registerHLSL(PreviewHLSLDesc());
 
         sm->update(true);
     }
@@ -530,6 +521,9 @@ namespace vg::renderer
                         }
                     }
                 }
+
+                // Additional preview passes
+                m_imgui->RegisterFrameGraph(mainViewRenderPassContext, m_frameGraph);
 
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_imguiPass, "ImGui");
 

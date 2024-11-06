@@ -289,6 +289,9 @@
     <ClInclude Include="ImGui\Window\UndoRedo\ImGuiUndoRedo.hpp">
       <Filter>ImGui\Window\UndoRedo</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\ObjectHandler\Texture\ImGuiTextureResourceHandler.hpp">
+      <Filter>ImGui\ObjectHandler\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />

@@ -29,7 +29,7 @@ namespace vg::engine
         super(_name, _parent),
         m_loadingThread(loading, this)
     {
-        UpdateMeta();
+ 
     }
 
     //--------------------------------------------------------------------------------------
@@ -140,45 +140,17 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    uint ResourceManager::UpdateMeta()
+    void ResourceManager::UpdateResources(bool _async)
     {
-        //uint count = 0;
-        //
-        //updateMeta("data", count);
-        //
-        //VG_INFO("[Resource] %u Resource meta have been modified", count);
-
-        return 0;
+        if (_async)
+            m_needUpdateResource = true;
+        else
+            updateResources();
     }
 
     //--------------------------------------------------------------------------------------
-    void ResourceManager::updateMeta(const core::string & _folder, core::uint & _counter)
+    core::uint ResourceManager::updateResources()
     {
-        //auto files = io::getFilesInFolder(_folder);
-        //for (auto & info : files)
-        //{
-        //    if (info.name == "." || info.name == "..")
-        //        continue;
-        //
-        //    if (info.isFolder)
-        //    {
-        //        string childFolder = _folder + "/" + info.name;
-        //        updateMeta(childFolder, _counter);
-        //        continue;
-        //    }
-        //
-        //    if (endsWith(info.name, ".meta"))
-        //    {
-        //        _counter++;
-        //    }
-        //}
-    }
-
-    //--------------------------------------------------------------------------------------
-    uint ResourceManager::UpdateResources()
-    {
-        UpdateMeta();
-
         uint count = 0;
 
         // Unloading resources will remove entries in the resourceMap so we need to copy the existing resources to iterate over
@@ -289,6 +261,16 @@ namespace vg::engine
             Sleep(1);
         }
         #endif
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceManager::flushUpdateResource()
+    {
+        if (m_needUpdateResource)
+        {
+            updateResources();
+            m_needUpdateResource = false;
+        }
     }
 
     //--------------------------------------------------------------------------------------

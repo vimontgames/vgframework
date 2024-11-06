@@ -22,7 +22,7 @@ namespace vg::editor
             bool enabled = rm != nullptr && !rm->HasResourceLoading();
 
             if (ImGui::TooltipButton(fmt::sprintf("%s Reload Resources", style::icon::Reload).c_str(), enabled, enabled, "Reload Resources (F7)", style::button::SizeLarge))
-                rm->UpdateResources();   
+                rm->UpdateResources();
 
             ImGui::Separator();
 

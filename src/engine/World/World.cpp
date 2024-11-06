@@ -417,7 +417,7 @@ namespace vg::engine
             m_defaultEnvironmentCubemap = nullptr;
 
         // Reset cubemap
-        VG_SAFE_RELEASE(m_environmentCubemap);
+        VG_SAFE_RELEASE_ASYNC(m_environmentCubemap);
 
         // Use default ambient
         m_environmentAmbientIntensity = options->GetDefaultAmbientIntensity();

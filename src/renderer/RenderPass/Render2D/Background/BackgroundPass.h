@@ -19,6 +19,6 @@ namespace vg::renderer
     private:
         gfx::RootSignatureHandle    m_backgroundRootSignatureHandle;
         gfx::ShaderKey              m_backgroundShaderKey;
-        bool                        m_useFastClear = true;
+        bool                        m_useFastClear = false;
     };
 }

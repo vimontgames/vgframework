@@ -191,6 +191,9 @@
     <ClInclude Include="RenderPass\Render2D\FinalBlit\FinalBlitPass.hpp" />
     <ClInclude Include="RenderPass\Render2D\HDROutput\HDROutputPass.h" />
     <ClInclude Include="RenderPass\Render2D\HDROutput\HDROutputPass.hpp" />
+    <ClInclude Include="RenderPass\Render2D\Preview\Texture\TexturePreview.h" />
+    <ClInclude Include="RenderPass\Render2D\Preview\Texture\TexturePreviewPass.h" />
+    <ClInclude Include="RenderPass\Render2D\Preview\Texture\TexturePreviewPass.hpp" />
     <ClInclude Include="RenderPass\Render2D\Render2DPass.h" />
     <ClInclude Include="RenderPass\Render2D\Render2DPass.hpp" />
     <ClInclude Include="RenderPass\Render2D\ResolveDeferredMSAA\ResolveDeferredMSAAPass.h" />

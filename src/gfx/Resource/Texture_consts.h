@@ -87,5 +87,6 @@ namespace vg::gfx
 		VG_INLINE bool isShaderResource		() const { return resource.testBindFlags(BindFlags::ShaderResource); }
 
 		VG_INLINE bool operator != (const TextureDesc & _other) const { return resource != _other.resource || width != _other.width || height != _other.height || slices != _other.slices || mipmaps != _other.mipmaps || type != _other.type || format != _other.format || flags != _other.flags; }
+		VG_INLINE bool operator == (const TextureDesc & _other) const { return !(_other != *this); }
 	};
 }

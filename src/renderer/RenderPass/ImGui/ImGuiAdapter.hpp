@@ -10,6 +10,7 @@
 #include "ImGuiFileDialog/ImGuiFileDialog.cpp"
 #include "IconFont/IconsFontAwesome6.h"
 #include "renderer/Model/Material/Material_Consts.h"
+#include "renderer/RenderPass/Render2D/Preview/Texture/TexturePreviewPass.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -345,6 +346,8 @@ namespace vg::renderer
     {
         gfx::Device * device = Device::get();
         device->waitGPUIdle();
+
+        clearPreviewTextures();
 
         BindlessTable * bindlessTable = device->getBindlessTable();
         bindlessTable->freeBindlessTextureHandle(m_fontTexHandle);
@@ -957,5 +960,73 @@ namespace vg::renderer
     CustomImGuiData & ImGuiAdapter::GetCustomData(const core::string & _name)
     {
         return m_settingsHandler.getCustomData(_name);
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::ITexture * ImGuiAdapter::GetPreviewTexture(ITexture * _originalTex)
+    {
+        const TexturePreviewKey key = { (Texture *)_originalTex };
+        auto it = m_previewTextures.find(key);
+        if (m_previewTextures.end() == it)
+        {
+            gfx::Device * device = Device::get();
+            gfx::TextureDesc previewDesc = ((Texture*)_originalTex)->getTexDesc();
+            previewDesc.type = gfx::TextureType::Texture2D;
+            previewDesc.slices = 1;
+            previewDesc.mipmaps = 1;
+            previewDesc.flags |= gfx::TextureFlags::RenderTarget;
+            previewDesc.format = gfx::PixelFormat::R8G8B8A8_unorm;
+
+            TexturePreviewData data;
+            data.m_previewTex = device->createTexture(previewDesc, "[Preview]" + _originalTex->GetName());
+            data.m_previewPass = new TexturePreviewPass("TexturePreview");
+        
+            m_previewTextures.insert({ key, data });
+            return nullptr;
+        }
+        else
+        {
+            it->second.m_dirty = true; // redraw every frame
+            return it->second.m_previewTex;
+        }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::RegisterFrameGraph(const gfx::RenderPassContext & _renderPassContext, FrameGraph & _frameGraph)
+    {
+        uint index = 0;
+        for (auto & pair : m_previewTextures)
+        {
+            if (pair.second.m_dirty)
+            {
+                string name = fmt::sprintf("TexturePreview #%u", index);
+
+                const auto previewTex = pair.second.m_previewTex;
+                const auto previewPass = pair.second.m_previewPass;
+
+                previewPass->setSourceTexture(pair.first.m_texture, index, pair.second.m_firstUse);
+
+                _frameGraph.importRenderTarget(name, previewTex, float4(0, 0, 0, 1), FrameGraphResource::InitState::Clear);
+                _frameGraph.addUserPass(_renderPassContext, previewPass, name);
+
+                index++;
+
+                pair.second.m_dirty = false;
+                pair.second.m_firstUse = false;
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::clearPreviewTextures()
+    {
+        for (auto & pair : m_previewTextures)
+        {
+            VG_SAFE_RELEASE(pair.second.m_previewTex);
+            VG_SAFE_RELEASE(pair.second.m_previewPass);
+        }
+        m_previewTextures.clear();
     }
 }

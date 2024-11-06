@@ -18,26 +18,45 @@ namespace vg::editor
         bool displayObject(IObject * _object, ObjectContext & _objectContext, const PropertyContext * _propContext) final override
         {
             bool changed = false;
-            auto * tex = dynamic_cast<gfx::ITexture*>(_object);
-            if (tex)
+            auto * originalTex = dynamic_cast<gfx::ITexture*>(_object);
+            if (originalTex)
             {
                 auto imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
-                ImTextureID texID = imGuiAdapter->GetTextureID(tex);
                 {
                     auto availableWidth = ImGui::GetContentRegionAvail().x;
+                    auto texturePreviewSize = ImGuiWindow::getImGuiPreviewSize();
 
-                    // Anti-flickering hack
-                    if (ImGui::GetScrollMaxY() == 0.0f)
-                        availableWidth -= ImGui::GetStyle().ScrollbarSize;
-
-                    auto texturePreviewSize = ImVec2(availableWidth - style::label::PixelWidth, availableWidth - style::label::PixelWidth);
                     ImGui::PushItemWidth(availableWidth);
                     {
-                        ImGui::Image(texID, texturePreviewSize);
+                        gfx::ITexture * texture = nullptr;
+
+                        if (originalTex->GetTextureType() == gfx::TextureType::Texture2D)
+                        {
+                            // Texture can be displayed directly
+                            texture = originalTex;
+                        }
+                        else
+                        {
+                            // TODO
+                            texture = imGuiAdapter->GetPreviewTexture(originalTex);
+                        }
+
+                        if (texture != nullptr)
+                        {
+                            ImTextureID texID = imGuiAdapter->GetTextureID(texture);
+                            ImGui::Image(texID, texturePreviewSize);
+                            imGuiAdapter->ReleaseTextureID(texture); 
+                        }
+                        else
+                        {
+                            ImDrawList * draw_list = ImGui::GetWindowDrawList();
+                            ImVec2 cursor_pos = ImGui::GetCursorScreenPos();
+                            draw_list->AddRectFilled(cursor_pos, cursor_pos + texturePreviewSize, IM_COL32(0, 0, 0, 255));
+                            ImGui::Dummy(texturePreviewSize);
+                        }
                     }
                     ImGui::PopItemWidth();
                 }
-                imGuiAdapter->ReleaseTextureID(tex);
             }
 
             return changed;

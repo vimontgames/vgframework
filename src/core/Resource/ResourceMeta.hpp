@@ -48,8 +48,6 @@ namespace vg::core
         // And reimport resources that depend on it
         auto rm = Kernel::getResourceManager();
         rm->UpdateResources();
-
-        super::OnPropertyChanged(_object, _prop, _notifyParent);
     }
 
     //--------------------------------------------------------------------------------------

@@ -79,6 +79,7 @@
     <ClInclude Include="ImGui\ObjectHandler\Material\ImGuiMaterialListHandler.hpp" />
     <ClInclude Include="ImGui\ObjectHandler\ImGuiResourceListHandler.hpp" />
     <ClInclude Include="ImGui\ObjectHandler\Texture\ImGuiTextureHandler.hpp" />
+    <ClInclude Include="ImGui\ObjectHandler\Texture\ImGuiTextureResourceHandler.hpp" />
     <ClInclude Include="ImGui\PropertyHandler\ImGuiPropertyHandler.h" />
     <ClInclude Include="ImGui\Toolbar\ImGuiToolbar.h" />
     <ClInclude Include="ImGui\Toolbar\Main\ImGuiMainToolbar.h" />

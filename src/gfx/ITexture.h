@@ -18,6 +18,7 @@ namespace vg::gfx
 
         virtual core::u16           GetWidth        () const = 0;
         virtual core::u16           GetHeight       () const = 0;
-        virtual gfx::PixelFormat    GetPixelFormat  () const = 0;
+        virtual PixelFormat         GetPixelFormat  () const = 0;
+        virtual TextureType         GetTextureType  () const = 0;
     };
 }

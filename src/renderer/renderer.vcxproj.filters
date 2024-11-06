@@ -473,6 +473,15 @@
     <ClInclude Include="RenderPass\Render2D\ResolveDeferredMSAA\ResolveDeferredMSAAPass.hpp">
       <Filter>Pass\Render2D\ResolveDeferredMSAA</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\Preview\Texture\TexturePreviewPass.h">
+      <Filter>Pass\Render2D\Preview\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\Preview\Texture\TexturePreviewPass.hpp">
+      <Filter>Pass\Render2D\Preview\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\Preview\Texture\TexturePreview.h">
+      <Filter>Pass\Render2D\Preview\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -645,6 +654,12 @@
     </Filter>
     <Filter Include="Pass\Render2D\ResolveDeferredMSAA">
       <UniqueIdentifier>{b24c4826-b8f2-4533-bf6e-dc74fb3320ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Render2D\Preview">
+      <UniqueIdentifier>{eb6565cc-2f4e-4113-ab33-d87dc5e6c876}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Render2D\Preview\Texture">
+      <UniqueIdentifier>{bae5a9f8-aae4-442e-85ea-b0eacf8518f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

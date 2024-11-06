@@ -74,6 +74,21 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    ImVec2 ImGuiWindow::getImGuiPreviewSize()
+    {
+        float width = ImGui::GetContentRegionAvail().x;
+
+        // Anti-flickering hack
+        if (ImGui::GetScrollMaxY() == 0.0f)
+            width -= ImGui::GetStyle().ScrollbarSize;
+
+        width -= style::label::PixelWidth;
+        width = min(width, 128.0f);
+
+        return ImVec2(width, width);
+    }
+
+    //--------------------------------------------------------------------------------------
     core::string ImGuiWindow::getFileBrowserExt(const core::IResource * _resource)
     {
         VG_ASSERT(_resource);
@@ -823,9 +838,7 @@ namespace vg::editor
             changed = customDisplayHandler->displayObject(_object, _objectContext, _propContext);
         }
         else
-        {
-            const char * classDisplayName = classDesc->GetClassDisplayName();
-        
+        {        
             for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
             {
                 const IProperty * prop = classDesc->GetPropertyByIndex(i);
@@ -2200,12 +2213,12 @@ namespace vg::editor
             auto availableWidth = GetContentRegionAvail().x;
             ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
 
-            auto customDisplayHandler = ImGuiObjectHandler::Find(_resource->GetClassName());
-            if (nullptr != customDisplayHandler)
-            {
-                changed = customDisplayHandler->displayObject(_resource, objectContext);
-            }
-            else
+            //auto customDisplayHandler = ImGuiObjectHandler::Find(_resource->GetClassName());
+            //if (nullptr != customDisplayHandler)
+            //{
+            //    changed = customDisplayHandler->displayObject(_resource, objectContext);
+            //}
+            //else
             {
                 const char * classDisplayName = classDesc->GetClassDisplayName();
 
@@ -2429,60 +2442,32 @@ namespace vg::editor
             ImGui::CloseFileDialog();
         }
 
-        // Display all properties of the resource object
-        IObject * resourceObject = _resource->GetObject();
-        if (resourceObject)
+        auto customDisplayHandler = ImGuiObjectHandler::Find(_resource->GetClassName());
+        if (nullptr != customDisplayHandler)
         {
-            bool anyVisibleProperty = false;
-            auto * objectClassDesc = factory->GetClassDescriptor(resourceObject->GetClassName());
+            changed = customDisplayHandler->displayObject(_resource, objectContext, &_propContext);
+        }
+        else
+        {
+            // Default display
+            IObject * resourceObject = _resource->GetObject();
+            IResourceMeta * resourceMeta = nullptr;
 
-            for (uint i = 0; i < objectClassDesc->GetPropertyCount(); ++i)
+            if (resourceObject)
             {
-                const IProperty * prop = objectClassDesc->GetPropertyByIndex(i);
-
-                if (isPropertyVisible(prop->GetFlags()) && strcmp(prop->GetName(), "m_object"))
+                ImGuiWindow::displayObject(resourceObject);
+                if (IResourceMeta * resourceMeta = rm->GetOrCreateResourceMeta(_resource))
                 {
-                    anyVisibleProperty = true;
-                    break;
+                    const string metaLabel = fmt::sprintf("Metadata###%u", _resource->GetUID());
+                    if (ImGui::TreeNodeEx(metaLabel.c_str(), ImGuiTreeNodeFlags_None))
+                    {
+                        changed |= ImGuiWindow::displayObject(resourceMeta);
+                        ImGui::TreePop();
+                    }
                 }
             }
-
-            if (!strcmp(_resource->GetClassName(), "PrefabResource"))
-                anyVisibleProperty = false;
-
-            //if (anyVisibleProperty)
-            {
-                const string resourceLabel = fmt::sprintf("%s###%s", _prop->GetDisplayName(), _resource->GetResourcePath());
-
-                //if (ImGui::TreeNodeEx(resourceLabel.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-                {
-                    ImGuiWindow::displayObject(resourceObject);
-
-                    // Display meta
-                    if (!_resource->GetResourcePath().empty())
-                    {
-                        if (auto * meta = rm->GetOrCreateResourceMeta(_resource))
-                        {
-                            const string metaLabel = fmt::sprintf("Metadata###%s", _resource->GetResourcePath());
-
-                            if (ImGui::TreeNodeEx(metaLabel.c_str(), ImGuiTreeNodeFlags_None))
-                            {
-                                if (ImGuiWindow::displayObject(meta))
-                                {
-                                    //meta->Save(_resource->GetResourcePath());
-                                    //rm->UpdateResources();
-                                }
-                                ImGui::TreePop();
-                            }
-                        }
-                    }
-
-                    ImGui::Spacing();
-
-                    //ImGui::TreePop();
-                }
-            }            
         }
+
         ImGui::PopItemWidth();
 
         ImGui::PopID(); // _resource;

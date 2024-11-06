@@ -104,6 +104,7 @@ namespace vg::editor
         static void                             drawPropertyTooltip (const PropertyContext & _propContext, const char * _description, core::uint _index = 0);
 
         static renderer::IImGuiAdapter *        getImGuiAdapter     ();
+        static ImVec2                           getImGuiPreviewSize ();
 
     protected:
         core::string                            m_icon;
