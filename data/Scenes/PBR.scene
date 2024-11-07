@@ -71,7 +71,7 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/EnvMaps/hilly_terrain_01_1k.tga"/>
                                     </Object>
                                 </Property>
-                                <Property type="Float" name="m_environmentIntensity" flags="HasRange" value="0.1"/>
+                                <Property type="Float" name="m_environmentIntensity" flags="HasRange" value="1"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
