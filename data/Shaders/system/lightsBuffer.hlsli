@@ -8,6 +8,10 @@
 
 static float lightEps = 0.01f;
 
+//--------------------------------------------------------------------------------------
+// *WARNING*: The C++ struct will be 32-bytes aligned because of the float4x4 matrix, so the HLSL sizeof should match!
+//--------------------------------------------------------------------------------------
+
 struct LightsConstantsHeader
 {
 	#ifndef __cplusplus
@@ -37,6 +41,7 @@ struct OmniLightConstants
 	float4		m_position;
 	float4x4	m_shadowMatrix;
 	uint4		m_shadow; 
+	uint4		_pad;	
 
 	void		setColor					(float3 _color)		{ m_color.rgb = _color; }
 	float3		getColor					()					{ return m_color.rgb;}
@@ -66,6 +71,7 @@ struct DirectionalLightConstants
 	float4		m_direction;
 	float4x4	m_shadowMatrix;
 	uint4		m_shadow; 
+	uint4		_pad;	
 
 	void		setColor					(float3 _color)		{ m_color.rgb = _color; }
 	float3		getColor					()					{ return m_color.rgb;}
