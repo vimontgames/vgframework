@@ -24,8 +24,8 @@ namespace vg::engine
 
         TextureResource             m_pbrMap;       
         float                       m_occlusion         = 1.0f;
-        float                       m_roughness         = 0.25f;
-        float                       m_metalness         = 0.0f;
+        float                       m_roughness         = 1.0f;
+        float                       m_metalness         = 1.0f;
         core::float2                m_tiling            = core::float2(1, 1);
     };
 }
