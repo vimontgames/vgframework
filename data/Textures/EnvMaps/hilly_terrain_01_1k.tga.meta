@@ -1,7 +1,7 @@
 <Root>
     <Object class="TextureResourceMeta">
         <Property type="String" name="m_name" flags="NotVisible" value="hilly_terrain_01_1k.tga.meta"/>
-        <Property type="EnumU8" name="m_importSettings.m_importerType" value="Automatic"/>
+        <Property type="EnumU8" name="m_importSettings.m_importerType" value="Cubemap"/>
         <Property type="EnumU8" name="m_importSettings.m_importerFormat" value="Automatic"/>
         <Property type="Bool" name="m_importSettings.m_sRGB" value="false"/>
         <Property type="EnumU8" name="m_importSettings.m_mipLevelCount" value="Automatic"/>
