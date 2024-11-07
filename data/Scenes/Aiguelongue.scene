@@ -622,7 +622,8 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/EnvMaps/Scene.psd"/>
                                     </Object>
                                 </Property>
-                                <Property type="Float" name="m_environmentIntensity" flags="HasRange" value="1"/>
+                                <Property type="Float" name="m_irradiance" flags="HasRange" value="1"/>
+                                <Property type="Float" name="m_specularReflection" flags="HasRange" value="1"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
@@ -1855,7 +1856,7 @@
                                 <Property type="String" name="m_name" value="PBR"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="346625437"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened|Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="2" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="2" Kw="0" Tx="4" Ty="14" Tz="2.5" Tw="1"/>
@@ -3693,7 +3694,7 @@
                         <Property type="String" name="m_name" value="Objects"/>
                         <Property type="Uint32" name="m_uid" flags="" value="1002808616"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -4154,7 +4155,7 @@
                         <Property type="String" name="m_name" value="Ennemies"/>
                         <Property type="Uint32" name="m_uid" flags="" value="1638339078"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>

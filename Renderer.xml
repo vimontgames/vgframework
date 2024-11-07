@@ -7,14 +7,7 @@
         <Property type="Bool" name="m_toolMode" value="false"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
         <Property type="EnumU8" name="m_lightingMode" value="Deferred"/>
-        <Property type="EnumU8" name="m_HDRmode" value="None"/>
-        <Property type="EnumU8" name="m_msaa" value="MSAA4X"/>
-        <Property type="EnumU8" name="m_VSync" value="VSync_1"/>
-        <Property type="Bool" name="m_rayTracing" value="false"/>
-        <Property type="Bool" name="m_postProcess" value="true"/>
-        <Property type="EnumU8" name="m_aaPostProcess" value="FXAA"/>
-        <Property type="EnumFlagsU32" name="m_renderPassFlags" flags="Bitfield" value="ZPrepass|Opaque|Transparency"/>
-        <Property type="EnumFlagsU32" name="m_displayFlags" flags="Bitfield" value="AlbedoMap|NormalMap|VertexColor|MaterialColor|InstanceColor"/>
+        <Property type="EnumFlagsU32" name="m_pbrFlags" flags="Bitfield" value=""/>
         <Property type="Float4" name="m_defaultEnvironmentColor" flags="Color" x="0.1" y="0.1" z="0.1" w="1"/>
         <Property type="Bool" name="m_useDefaultEnvironmentCubemap" flags="NotVisible" value="true"/>
         <Property type="ResourcePtr" name="m_defaultEnvironmentCubemap" flags="">
@@ -26,7 +19,16 @@
                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/EnvMaps/Default.psd"/>
             </Object>
         </Property>
-        <Property type="Float" name="m_defaultEnvironmentIntensity" flags="HasRange" value="0.15000001"/>
+        <Property type="Float" name="m_defaultIrradianceIntensity" flags="HasRange" value="1"/>
+        <Property type="Float" name="m_defaultSpecularReflectionIntensity" flags="HasRange" value="1"/>
+        <Property type="EnumU8" name="m_HDRmode" value="None"/>
+        <Property type="EnumU8" name="m_msaa" value="MSAA4X"/>
+        <Property type="EnumU8" name="m_VSync" value="VSync_1"/>
+        <Property type="Bool" name="m_rayTracing" value="false"/>
+        <Property type="Bool" name="m_postProcess" value="true"/>
+        <Property type="EnumU8" name="m_aaPostProcess" value="FXAA"/>
+        <Property type="EnumFlagsU32" name="m_renderPassFlags" flags="Bitfield" value="ZPrepass|Opaque|Transparency"/>
+        <Property type="EnumFlagsU32" name="m_displayFlags" flags="Bitfield" value="AlbedoMap|NormalMap|VertexColor|MaterialColor|InstanceColor"/>
         <Property type="Bool" name="m_wireframe" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_aabb" flags="SingleLine" value="false"/>
         <Property type="Bool" name="m_debugUI" flags="SingleLine" value="false"/>

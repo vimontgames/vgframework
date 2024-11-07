@@ -43,8 +43,6 @@ vg_enum_class(DisplayMode, uint,
     Lighting_Specular,
     Lighting_RayCount,
 
-    Environment_Cubemap,
-
     RayTracing_Hit,
     RayTracing_Barycentrics,
     RayTracing_InstanceID,

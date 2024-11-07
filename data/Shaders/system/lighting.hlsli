@@ -187,38 +187,48 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 	uint rayCount = 0;
 	#endif
 
-	// Environment diffuse and specular diffuse
-	uint ambientCubemapTexHandle = _viewConstants.getEnvironmentTextureHandle();
-	float ambientIntensity = _viewConstants.getEnvironmentAmbientIntensity();
+	// IBL
 
-	if (ReservedSlot::InvalidTextureCube != (ReservedSlot)ambientCubemapTexHandle)
+	// environment diffuse
+	uint irrandianceCubemapHandle = _viewConstants.getIrradianceCubemap();
+	if (ReservedSlot::InvalidTextureCube != (ReservedSlot)irrandianceCubemapHandle)
 	{
-		TextureCube cubemap = getTextureCube(ambientCubemapTexHandle);
-		uint width, height, mipLevels;
-		cubemap.GetDimensions(0, width, height, mipLevels);
+		TextureCube irradianceCubemap = getTextureCube(irrandianceCubemapHandle);
+		{
+			uint width, height, mipLevels;
+			irradianceCubemap.GetDimensions(0, width, height, mipLevels);
 
-		// environment diffuse
-		float3 F = fresnelSchlick(F0, cosLo);
-		float3 kd = lerp(1.0 - F, 0.0, metalness);
-		float diffuseEnvMip = mipLevels-1;
-		output.envDiffuse = kd * cubemap.SampleLevel(linearClamp, normalize(_worldNormal.rgb), diffuseEnvMip).rgb * ambientIntensity;
-
-		// environment specular using split-sum approximation factors for Cook-Torrance specular BRDF.
-		float2 specularBRDF = getTexture2D((uint)ReservedSlot::CookTorranceBRDF).SampleLevel(linearClamp, float2(cosLo, 1-roughness), 0).rg;
-		float specularEnvMip = roughness * (mipLevels - 1);
-		output.envSpecular = (F0 * specularBRDF.x + specularBRDF.y) * cubemap.SampleLevel(linearClamp, Lr, specularEnvMip).rgb * ambientIntensity;
+			float3 F = fresnelSchlick(F0, cosLo);
+			float3 kd = lerp(1.0 - F, 0.0, metalness);
+			float diffuseEnvMip = mipLevels-1;
+			output.envDiffuse = kd * irradianceCubemap.SampleLevel(linearClamp, normalize(_worldNormal.rgb), diffuseEnvMip).rgb;
+		}
 	}
 	else
 	{
-		// environment diffuse
-		output.envDiffuse = _viewConstants.getEnvironmentColor() * ambientIntensity;
-
-		// environment specular
-		output.envSpecular = _viewConstants.getEnvironmentColor() * ambientIntensity;
+		output.envDiffuse = _viewConstants.getEnvironmentColor();
 	}
 
-	output.envDiffuse *= occlusion;
-	output.envSpecular *= occlusion;
+	// environment specular 
+	uint specularReflectionCubemapHandle = _viewConstants.getSpecularReflectionCubemap();
+	if (ReservedSlot::InvalidTextureCube != (ReservedSlot)specularReflectionCubemapHandle)
+	{
+		TextureCube specularReflectionCubemap = getTextureCube(specularReflectionCubemapHandle);
+		uint width, height, mipLevels;
+		specularReflectionCubemap.GetDimensions(0, width, height, mipLevels);
+
+		Texture2D specularBRDF = getTexture2D(_viewConstants.getSpecularBRDF());
+		float2 FG = specularBRDF.SampleLevel(linearClamp, float2(cosLo, 1-roughness), 0).rg;
+		float specularEnvMip = roughness * (mipLevels - 1);
+		output.envSpecular = (F0 * FG.x + FG.y) * specularReflectionCubemap.SampleLevel(linearClamp, Lr, specularEnvMip).rgb;
+	}
+	else
+	{
+		output.envSpecular = _viewConstants.getEnvironmentColor();
+	}
+
+	output.envDiffuse *= occlusion * _viewConstants.getIrradianceIntensity();
+	output.envSpecular *= occlusion * _viewConstants.getSpecularReflectionIntensity();
 
 	for(uint i=0; i < lightsHeader.getDirectionalCount(); ++i)
 	{
@@ -298,9 +308,6 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 
 			output.addLightContribution(Lo, cosLo, cosLi, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
 		}
-
-		// cheap ambient
-		//output.diffuse += directional.getAmbient();
 	}	
 
 	for(uint i=0; i < lightsHeader.getOmniCount(); ++i)
@@ -354,9 +361,6 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 
 				output.addLightContribution(Lo, cosLo, cosLi, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
 			}
-
-			// cheap ambient
-			//output.diffuse += att * omni.getAmbient();
 		}
     }	
 

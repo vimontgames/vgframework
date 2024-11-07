@@ -28,6 +28,28 @@ namespace vg::renderer
         {
             registerPropertyEnum(RendererOptions, LightingMode, m_lightingMode, "Mode");
             setPropertyDescription(RendererOptions, m_lightingMode, "Lighting monde will affect how lights are computed.\nIn \"Forward\" mode lighting is computed on the fly in pixel shader\nIn \"Defered\" mode lighting is computed in screen-space");
+
+            registerPropertyEnumBitfield(RendererOptions, PBRFlags, m_pbrFlags, "PBR"); 
+            setPropertyDescription(RendererOptions, m_pbrFlags, "PBR lighting flags");
+
+            registerPropertyGroupBegin(RendererOptions, "Default environment");
+            {
+                registerPropertyEx(RendererOptions, m_defaultEnvironmentColor, "Color", PropertyFlags::Color);
+                setPropertyDescription(RendererOptions, m_defaultEnvironmentColor, "Default environment color is used as fallback when no environment cubemap is provided");
+
+                // We cannot use 'TextureResource' to reference cubemap file from Renderer, so we need to use a 'ResourcePtr' here and create the 'TextureResource' using the factory
+                registerOptionalPropertyResourcePtr(RendererOptions, m_useDefaultEnvironmentCubemap, m_defaultEnvironmentCubemap, "Cubemap");
+                setPropertyDescription(RendererOptions, m_defaultEnvironmentCubemap, "Default environment cubemap to use for ambient diffuse and specular lighting");
+
+                registerProperty(RendererOptions, m_defaultIrradianceIntensity, "Irradiance");
+                setPropertyRange(RendererOptions, m_defaultIrradianceIntensity, float2(0, 10));
+                setPropertyDescription(RendererOptions, m_defaultIrradianceIntensity, "Default irradiance intensity\nAdjusts the intensity of ambient light reaching surfaces from all directions");
+
+                registerProperty(RendererOptions, m_defaultSpecularReflectionIntensity, "Reflection");
+                setPropertyRange(RendererOptions, m_defaultSpecularReflectionIntensity, float2(0, 10));
+                setPropertyDescription(RendererOptions, m_defaultSpecularReflectionIntensity, "Default specular reflection intensity\nAdjusts the strength of reflections on shiny surfaces");
+            }
+            registerPropertyGroupEnd(RendererOptions);
         }
         registerPropertyGroupEnd(RendererOptions);
 
@@ -70,25 +92,6 @@ namespace vg::renderer
         registerPropertyGroupBegin(RendererOptions, "Materials");
         {
             registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Features");
-        }
-        registerPropertyGroupEnd(RendererOptions);
-
-        registerPropertyGroupBegin(RendererOptions, "Default environment");
-        {
-            registerPropertyEx(RendererOptions, m_defaultEnvironmentColor, "Color", PropertyFlags::Color);
-            setPropertyDescription(RendererOptions, m_defaultEnvironmentColor, "Default environment color is used as fallback when no environment cubemap is provided");
-
-            // We cannot use 'TextureResource' to reference cubemap file from Renderer
-            //registerOptionalPropertyResource(RendererOptions, m_useDefaultEnvironmentCubemap, m_defaultCubemap, "Cubemap");
-            //setPropertyDescription(RendererOptions, m_defaultCubemap, "Default environment cubemap to use for ambient diffuse and specular lighting");
-
-            // Se we need to use a 'ResourcePtr' here and create the 'TextureResource' using the factory
-            registerOptionalPropertyResourcePtr(RendererOptions, m_useDefaultEnvironmentCubemap, m_defaultEnvironmentCubemap, "Cubemap");
-            setPropertyDescription(RendererOptions, m_defaultEnvironmentCubemap, "Default environment cubemap to use for ambient diffuse and specular lighting");
-
-            registerProperty(RendererOptions, m_defaultEnvironmentIntensity, "Ambient");
-            setPropertyRange(RendererOptions, m_defaultEnvironmentIntensity, float2(0, 10));
-            setPropertyDescription(RendererOptions, m_defaultEnvironmentIntensity, "Default environment ambient intensity");
         }
         registerPropertyGroupEnd(RendererOptions);
 

@@ -247,9 +247,6 @@ PS_Output PS_Forward(VS_Output _input)
 
     output.color0 = forwardDebugDisplay(output.color0, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz);
 
-    if (DisplayMode::Environment_Cubemap == viewConstants.getDisplayMode())
-        output.color0.rgb = getTextureCube(viewConstants.getEnvironmentTextureHandle()).SampleLevel(linearClamp, normalize(worldNormal.rgb), 0).rgb;
-
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
         output.color0 = float4(0,1,0,1);
 

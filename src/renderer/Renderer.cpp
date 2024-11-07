@@ -225,7 +225,7 @@ namespace vg::renderer
             VG_SAFE_RELEASE(gameViewport);
         }
 
-        m_cookTorranceBRDF = m_device.createTexture("data/Engine/BRDF/CookTorrance.png", ReservedSlot::CookTorranceBRDF);
+        m_bakedSpecularBRDF = m_device.createTexture("data/Engine/BRDF/CookTorrance.png");
 	}
 
     //--------------------------------------------------------------------------------------
@@ -249,7 +249,8 @@ namespace vg::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::Deinit()
 	{
-        VG_SAFE_RELEASE(m_cookTorranceBRDF);
+        VG_SAFE_RELEASE(m_bakedSpecularBRDF);
+        VG_SAFE_RELEASE(m_generatedSpecularBRDF);
         VG_SAFE_DELETE(m_sharedCullingJobOutput);
         VG_SAFE_RELEASE(m_hdrOutput);
 
@@ -1124,5 +1125,14 @@ namespace vg::renderer
     const gfx::DeviceCaps & Renderer::getDeviceCaps() const
     {
         return m_device.getDeviceCaps();
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::Texture * Renderer::getSpecularBRDF() const
+    {
+        if (asBool(PBRFlags::GenerateSpecularBRDF & RendererOptions::get()->getPBRFlags()))
+            return m_generatedSpecularBRDF;
+        else
+            return m_bakedSpecularBRDF;
     }
 }

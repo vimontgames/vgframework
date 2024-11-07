@@ -76,7 +76,16 @@ namespace vg::core
         virtual void                SetEnvironmentCubemap           (gfx::ITexture * _texture) = 0;
         virtual gfx::ITexture *     GetEnvironmentCubemap           () const = 0;
 
-        virtual void                SetEnvironmentAmbientIntensity  (float _ambientIntensity) = 0;
-        virtual float               GetEnvironmentAmbientIntensity  () const = 0;
+        virtual void                SetIrradianceCubemap            (gfx::ITexture * _texture) = 0;
+        virtual gfx::ITexture *     GetIrradianceCubemap            () const = 0;
+
+        virtual void                SetSpecularReflectionCubemap    (gfx::ITexture * _texture) = 0;
+        virtual gfx::ITexture *     GetSpecularReflectionCubemap    () const = 0;
+
+        virtual void                SetIrradianceIntensity          (float _value) = 0;
+        virtual float               GetIrradianceIntensity          () const = 0;
+         
+        virtual void                SetSpecularReflectionIntensity  (float _value) = 0;
+        virtual float               GetSpecularReflectionIntensity  () const = 0;
     };
 }

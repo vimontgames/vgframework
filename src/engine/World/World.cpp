@@ -418,9 +418,12 @@ namespace vg::engine
 
         // Reset cubemap
         VG_SAFE_RELEASE_ASYNC(m_environmentCubemap);
+        VG_SAFE_RELEASE_ASYNC(m_irradianceCubemap);
+        VG_SAFE_RELEASE_ASYNC(m_specularReflectionCubemap);
 
         // Use default ambient
-        m_environmentAmbientIntensity = options->GetDefaultAmbientIntensity();
+        m_irradianceIntensity = options->GetDefaultIrradianceIntensity();
+        m_specularReflectionIntensity = options->GetDefaultSpecularReflectionIntensity();
     }
 
     //--------------------------------------------------------------------------------------
@@ -464,14 +467,60 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void World::SetEnvironmentAmbientIntensity(float _ambientIntensity)
+    void World::SetIrradianceCubemap(gfx::ITexture * _texture)
     {
-        m_environmentAmbientIntensity = _ambientIntensity;
+        if (m_irradianceCubemap != _texture)
+        {
+            VG_SAFE_RELEASE(m_irradianceCubemap);
+            m_irradianceCubemap = _texture;
+            VG_SAFE_INCREASE_REFCOUNT(m_irradianceCubemap);
+        }
     }
 
     //--------------------------------------------------------------------------------------
-    float World::GetEnvironmentAmbientIntensity() const
+    gfx::ITexture * World::GetIrradianceCubemap() const
     {
-        return m_environmentAmbientIntensity;
+        return m_irradianceCubemap;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetSpecularReflectionCubemap(gfx::ITexture * _texture)
+    {
+        if (m_specularReflectionCubemap != _texture)
+        {
+            VG_SAFE_RELEASE(m_specularReflectionCubemap);
+            m_specularReflectionCubemap = _texture;
+            VG_SAFE_INCREASE_REFCOUNT(m_specularReflectionCubemap);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::ITexture * World::GetSpecularReflectionCubemap() const
+    {
+        return m_specularReflectionCubemap;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetIrradianceIntensity(float _value)
+    {
+        m_irradianceIntensity = _value;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float World::GetIrradianceIntensity() const
+    {
+        return m_irradianceIntensity;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void World::SetSpecularReflectionIntensity(float _value) 
+    {
+        m_specularReflectionIntensity = _value;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float World::GetSpecularReflectionIntensity() const 
+    {
+        return m_specularReflectionIntensity;
     }
 }

@@ -60,8 +60,17 @@ namespace vg::engine
         void                                SetEnvironmentCubemap           (gfx::ITexture * _texture) final override;
         gfx::ITexture *                     GetEnvironmentCubemap           () const final override;
 
-        void                                SetEnvironmentAmbientIntensity  (float _ambientIntensity) final override;
-        float                               GetEnvironmentAmbientIntensity  () const final override;
+        void                                SetIrradianceCubemap            (gfx::ITexture * _texture) final override;
+        gfx::ITexture *                     GetIrradianceCubemap            () const  final override;
+
+        void                                SetSpecularReflectionCubemap    (gfx::ITexture * _texture) final override;
+        gfx::ITexture *                     GetSpecularReflectionCubemap    () const final override;
+
+        void                                SetIrradianceIntensity          (float _value) final override;
+        float                               GetIrradianceIntensity          () const final override;
+
+        void                                SetSpecularReflectionIntensity  (float _value) final override;
+        float                               GetSpecularReflectionIntensity  () const final override;
 
     protected:
         void                                mergeStaticBodies               ();
@@ -78,7 +87,10 @@ namespace vg::engine
         core::float4                        m_nextEnvironmentColor = (core::float4)0.0f;
         gfx::ITexture *                     m_defaultEnvironmentCubemap = nullptr;
         gfx::ITexture *                     m_environmentCubemap = nullptr;
-        float                               m_environmentAmbientIntensity = 0.0f;
+        gfx::ITexture *                     m_irradianceCubemap = nullptr;
+        gfx::ITexture *                     m_specularReflectionCubemap = nullptr;
+        float                               m_irradianceIntensity = 0.0f;
+        float                               m_specularReflectionIntensity = 0.0f;
     };
 }
 

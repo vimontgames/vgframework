@@ -67,7 +67,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ViewConstantsUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
-        const auto options = RendererOptions::get();
+        const auto * renderer = Renderer::get();
+        const auto * options = RendererOptions::get();
         auto * view = static_cast<const View *>(_renderPassContext.getView());
 
         u16 toolmodeRWBufferID = -1;
@@ -82,10 +83,36 @@ namespace vg::renderer
 
         // TODO: 'Environment' class?
         const auto * world = view->GetWorld();
-        const Texture * envMap = (Texture *)world->GetEnvironmentCubemap();
+
+        // Get PBR textures
+
+        // BRDF Cook-Torrance split-sum LUT
+        const Texture * specularBRDF = renderer->getSpecularBRDF();
+
+        // Unfiltered cubemap
+        const Texture * cubemap = (Texture *)world->GetEnvironmentCubemap();
+        {
+            if (cubemap && cubemap->getTexDesc().type != gfx::TextureType::TextureCube)
+                VG_WARNING("[Environment] Texture \"%s\" used as environment map should use the \"Cubemap\" texture type", cubemap->GetName().c_str());
+        }
+
+        // Irradiance cubemap (fallback to unfiltered cubemap)
+        const Texture * irradianceCubemap = nullptr; 
+        {
+            if (asBool(PBRFlags::GenerateIrradianceCubemap & options->getPBRFlags()))
+                irradianceCubemap = (Texture *)world->GetIrradianceCubemap();
+            else
+                irradianceCubemap = cubemap;
+        }
         
-        if (envMap && envMap->getTexDesc().type != gfx::TextureType::TextureCube)
-            VG_WARNING("[Environment] Texture \"%s\" used as environment map should use the \"Cubemap\" texture type", envMap->GetName().c_str());
+        // Specular reflection cubemap (fallback to unfiltered cubemap)
+        const Texture * specularReflectionCubemap = nullptr;
+        {
+            if (asBool(PBRFlags::GenerateSpecularReflectionCubemap & options->getPBRFlags()))
+                specularReflectionCubemap = (Texture *)world->GetSpecularReflectionCubemap();
+            else
+                specularReflectionCubemap = cubemap;
+        }
 
         ViewConstants * constants = (ViewConstants*)_cmdList->map(s_ViewConstantsBuffer, sizeof(ViewConstants)).data;
         {
@@ -103,8 +130,12 @@ namespace vg::renderer
             constants->setProjInv(view->getProjInvMatrix());
             constants->setTLASHandle(view->getTLASHandle());
             constants->setEnvironmentColor(pow(world->GetEnvironmentColor().rgb, 2.2f));
-            constants->setEnvironmentAmbientIntensity(world->GetEnvironmentAmbientIntensity());
-            constants->setEnvironmentTextureHandle(envMap ? envMap->getTextureHandle() : ReservedSlot::InvalidTextureCube);
+            constants->setEnvironmentCubemap(cubemap ? cubemap->getTextureHandle() : ReservedSlot::InvalidTextureCube);
+            constants->setSpecularBRDF(specularBRDF ? specularBRDF->getTextureHandle() : ReservedSlot::InvalidTexture2D);
+            constants->setIrradianceCubemap(irradianceCubemap ? irradianceCubemap->getTextureHandle() : ReservedSlot::InvalidTextureCube);
+            constants->setSpecularReflectionCubemap(specularReflectionCubemap ? specularReflectionCubemap->getTextureHandle() : ReservedSlot::InvalidTextureCube);
+            constants->setIrradianceIntensity(world->GetIrradianceIntensity());
+            constants->setSpecularReflectionIntensity(world->GetSpecularReflectionIntensity());
 
             //if (view->IsToolmode())
             //    VG_INFO("[Picking %s] RelativeMousePos = %i %i OVER = %s", _renderPassContext.m_view->getName().c_str(), (uint)constants->getMousePos().x, (uint)constants->getMousePos().y, _renderPassContext.m_view->IsMouseOverView() ? "true" : "false");

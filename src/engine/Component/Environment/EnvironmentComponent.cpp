@@ -23,9 +23,13 @@ namespace vg::engine
         registerOptionalPropertyResource(EnvironmentComponent, m_useEnvironmentCubemap, m_environmentCubemap, "Cubemap");
         setPropertyDescription(EnvironmentComponent, m_environmentCubemap, "Environment cubemap to use for ambient diffuse and specular lighting");
 
-        registerProperty(EnvironmentComponent, m_environmentIntensity, "Ambient");
-        setPropertyRange(EnvironmentComponent, m_environmentIntensity, float2(0, 10));
-        setPropertyDescription(EnvironmentComponent, m_environmentIntensity, "Environment ambient intensity");
+        registerProperty(EnvironmentComponent, m_irradiance, "Irradiance");
+        setPropertyRange(EnvironmentComponent, m_irradiance, float2(0, 10));
+        setPropertyDescription(EnvironmentComponent, m_irradiance, "Irradiance intensity\nAdjusts the intensity of ambient light reaching surfaces from all directions");
+
+        registerProperty(EnvironmentComponent, m_specularReflection, "Reflection");
+        setPropertyRange(EnvironmentComponent, m_specularReflection, float2(0, 10));
+        setPropertyDescription(EnvironmentComponent, m_specularReflection, "Reflection intensity.\nAdjusts the strength of reflections on shiny surfaces.");
 
         return true;
     }
@@ -56,7 +60,8 @@ namespace vg::engine
             else
                 world->SetEnvironmentCubemap(nullptr);
 
-            world->SetEnvironmentAmbientIntensity(m_environmentIntensity);
+            world->SetIrradianceIntensity(m_irradiance);
+            world->SetSpecularReflectionIntensity(m_specularReflection);
         }
     }
 }

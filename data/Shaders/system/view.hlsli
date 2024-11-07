@@ -10,7 +10,34 @@ struct ViewConstants
     #ifdef __cplusplus
     ViewConstants()
     {
-        
+        m_screenSizeAndMousePos = (uint4)0;
+        m_debugDisplay          = (uint4)0;
+        m_camera                = (float4)0.0;
+        m_rayTracing            = (uint4)0;
+
+        m_view[0]               = (float4)0.0;
+        m_view[1]               = (float4)0.0;
+        m_view[2]               = (float4)0.0;
+        m_view[3]               = (float4)0.0;
+
+        m_proj[0]               = (float4)0.0;
+        m_proj[1]               = (float4)0.0;
+        m_proj[2]               = (float4)0.0;
+        m_proj[3]               = (float4)0.0;
+
+        m_viewInv[0]            = (float4)0.0;
+        m_viewInv[1]            = (float4)0.0;
+        m_viewInv[2]            = (float4)0.0;
+        m_viewInv[3]            = (float4)0.0;
+
+        m_projInv[0]            = (float4)0.0;
+        m_projInv[1]            = (float4)0.0;
+        m_projInv[2]            = (float4)0.0;
+        m_projInv[3]            = (float4)0.0;
+
+        m_environmentColor      = (float4)0.0f;
+        m_pbr                   = (float4)0.0f;
+        m_textures              = (uint4)0;
     }
     #else 
     void Load(ByteAddressBuffer _buffer, uint _offset = 0)
@@ -41,6 +68,7 @@ struct ViewConstants
         m_projInv[3]              = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
 
         m_environmentColor        = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
+        m_pbr                     = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_textures                = _buffer.Load<uint4>(_offset);  _offset += sizeof(uint4);
     }
     #endif
@@ -54,7 +82,8 @@ struct ViewConstants
     float4x4        m_viewInv;
     float4x4        m_projInv;
     float4          m_environmentColor;
-    uint4           m_textures;
+    float4          m_pbr;
+    uint4           m_textures;                 // .x: EnvMap (low) + specularBRDF (high) | .y: IrradianceEnvmap (low) + SpecularReflectionMap (hight)
     
     // Screen and mouse constants
     void            setScreenSize           (uint2 _screenSize)                 { m_screenSizeAndMousePos.xy = _screenSize; }
@@ -110,11 +139,23 @@ struct ViewConstants
     void            setEnvironmentColor     (float3 _environmentColor)          { m_environmentColor.rgb = _environmentColor; } 
     float3          getEnvironmentColor     ()                                  { return m_environmentColor.rgb; }
 
-    void            setEnvironmentAmbientIntensity(float _intensity)            { m_environmentColor.a = _intensity; }
-    float           getEnvironmentAmbientIntensity()                            { return m_environmentColor.a; }
+    void            setEnvironmentCubemap   (uint _texCubeHandle)               { m_textures.x = packUint16low(m_textures.x, _texCubeHandle); }
+    uint            getEnvironmentCubemap   ()                                  { return unpackUint16low(m_textures.x); }
 
-    void            setEnvironmentTextureHandle(uint _value)                    { m_textures.x = packUint16low(m_textures.x, _value);  }
-    uint            getEnvironmentTextureHandle()                               { return unpackUint16low(m_textures.x); }
+    void            setSpecularBRDF         (uint _tex2DHandle)                 { m_textures.x = packUint16high(m_textures.x, _tex2DHandle); }
+    uint            getSpecularBRDF         ()                                  { return unpackUint16high(m_textures.x); }
+
+    void            setIrradianceCubemap    (uint _texCubeHandle)               { m_textures.y = packUint16low(m_textures.y, _texCubeHandle); }
+    uint            getIrradianceCubemap    ()                                  { return unpackUint16low(m_textures.y); }
+
+    void            setSpecularReflectionCubemap(uint _texCubeHandle)           { m_textures.y = packUint16high(m_textures.y, _texCubeHandle); }
+    uint            getSpecularReflectionCubemap()                              { return unpackUint16high(m_textures.y); }
+
+    void            setIrradianceIntensity  (float _intensity)                  { m_pbr.x = _intensity; }
+    float           getIrradianceIntensity  ()                                  { return m_pbr.x; }
+
+    void            setSpecularReflectionIntensity(float _intensity)            { m_pbr.y = _intensity; }
+    float           getSpecularReflectionIntensity()                            { return m_pbr.y; }
 };
 
 #endif // _VIEW__HLSLI_
