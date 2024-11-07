@@ -37,7 +37,6 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MaterialResourceData::CreateRendererMaterial()
     {
-        VG_ASSERT(m_data);
         if (m_data)
         {
             VG_SAFE_RELEASE(m_materialModel);
