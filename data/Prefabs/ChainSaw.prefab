@@ -45,6 +45,16 @@
                             </Object>
                         </Property>
                     </Object>
+                    <Object class="WeaponBehaviour">
+                        <Property type="String" name="m_name" flags="NotVisible" value="New WeaponBehaviour"/>
+                        <Property type="Uint32" name="m_uid" flags="" value="1745265215"/>
+                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                        <Property type="Float" name="m_damage" flags="HasRange" value="10"/>
+                        <Property type="Float" name="m_push" flags="HasRange" value="10"/>
+                        <Property type="EnumU8" name="m_weaponType" value="Pistol"/>
+                    </Object>
                     <Object class="MeshComponent">
                         <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
                         <Property type="Uint32" name="m_uid" flags="" value="3267885333"/>
