@@ -453,7 +453,7 @@ namespace vg::engine
         {
             VG_SAFE_RELEASE(m_environmentCubemap);
             m_environmentCubemap = _texture;
-            m_environmentCubemap->AddRef();
+            VG_SAFE_INCREASE_REFCOUNT(m_environmentCubemap);
         }
     }
 
