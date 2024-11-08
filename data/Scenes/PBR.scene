@@ -48,7 +48,7 @@
                         <Property type="String" name="m_name" value="Environment"/>
                         <Property type="Uint32" name="m_uid" flags="" value="2118999711"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -83,14 +83,14 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.9238795" Iy="0" Iz="0.38268346" Iw="0" Jx="0.14644663" Jy="0.9238795" Jz="-0.35355341" Jw="0" Kx="-0.35355341" Ky="0.38268346" Kz="0.85355335" Kw="0" Tx="0" Ty="0" Tz="2" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.92090529" Iy="-0.074080594" Iz="0.38268369" Iw="0" Jx="-0.12128442" Jy="0.87858117" Jz="0.46194068" Jw="0" Kx="-0.37043908" Ky="-0.4718169" Kz="0.80010468" Kw="0" Tx="0" Ty="0" Tz="2" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="LightComponent">
                                         <Property type="String" name="m_name" flags="NotVisible" value="New LightComponent"/>
                                         <Property type="Uint32" name="m_uid" flags="" value="1800330117"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="EnumU8" name="m_lightType" value="Directional"/>
                                         <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
