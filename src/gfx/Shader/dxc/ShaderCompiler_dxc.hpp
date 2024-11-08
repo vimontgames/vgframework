@@ -28,7 +28,15 @@ public:
             VG_VERIFY_SUCCEEDED(DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(m_dxcUtils.GetAddressOf())));
 
         ComPtr<IDxcBlobEncoding> pEncoding;
+
+        // wstring to string
         std::string path = string_convert(pFilename);
+
+        // Behaviour changed in DirectShaderCompiler 1.8.2405.17:
+        // include paths are now passed to IDxcIncludeHandler::LoadSource normalized to the operating system's path style. 
+        // i.e. On Windows "/" is replaced with "\".
+        // https://github.com/microsoft/DirectXShaderCompiler/issues/6669
+        std::replace(path.begin(), path.end(), '\\', '/');
 
         const auto shaderManager = ShaderManager::get();
         const auto & shaderFolder = shaderManager->getShaderRootPath();
@@ -40,6 +48,7 @@ public:
             const string shaderIncludeFolder = rootFolders[i];
 
             auto lastShaderFolder = tolower(path).rfind(shaderIncludeFolder+"/");
+
             if (string::npos != lastShaderFolder)
             {
                 lastShaderFolder += shaderIncludeFolder.length() + 1;
