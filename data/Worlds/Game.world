@@ -22,7 +22,7 @@
             </Object>
             <Object class="SceneResource">
                 <Property type="String" name="m_name" flags="NotVisible" value="PBR"/>
-                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                <Property type="Uint32" name="m_uid" flags="" value="3887152833"/>
                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Scenes/PBR.scene"/>
@@ -52,17 +52,17 @@
             </Object>
             <Object class="PrefabResource">
                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                <Property type="Uint32" name="m_uid" flags="" value="3098918009"/>
-                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/ChainSaw.prefab"/>
-            </Object>
-            <Object class="PrefabResource">
-                <Property type="String" name="m_name" flags="NotVisible" value=""/>
                 <Property type="Uint32" name="m_uid" flags="" value="1577489832"/>
                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/PBR.prefab"/>
+            </Object>
+            <Object class="PrefabResource">
+                <Property type="String" name="m_name" flags="NotVisible" value=""/>
+                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/ChainSaw.prefab"/>
             </Object>
         </Property>
     </Object>
