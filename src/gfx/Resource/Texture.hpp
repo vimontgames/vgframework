@@ -79,7 +79,11 @@ namespace vg::gfx
                     return -1;
                 case PixelFormat::R8G8B8A8_unorm:
                 case PixelFormat::R8G8B8A8_unorm_sRGB:
-                    return 4;
+                    return sizeof(u8) * 4;
+
+                case PixelFormat::R32G32B32A32_float:
+                    return sizeof(float) * 4;
+                    break;
             }
         }
 

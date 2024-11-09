@@ -65,6 +65,7 @@ namespace vg::gfx
                 case PixelFormat::R10G10B10A2_unorm:
                 case PixelFormat::R16G16B16A16_float:
                 case PixelFormat::R16G16_float:
+                case PixelFormat::R32G32B32A32_float:
                     return false;
 
                 case PixelFormat::D32S8:

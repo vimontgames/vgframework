@@ -45,7 +45,13 @@ namespace vg::editor
                         {
                             ImTextureID texID = imGuiAdapter->GetTextureID(texture);
                             ImGui::Image(texID, texturePreviewSize);
-                            imGuiAdapter->ReleaseTextureID(texture); 
+                            imGuiAdapter->ReleaseTextureID(texture);
+
+                            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                            {
+                                string tooltip = fmt::sprintf("%s", asString(originalTex->GetPixelFormat()));
+                                ImGui::SetTooltip(tooltip.c_str());
+                            }
                         }
                         else
                         {

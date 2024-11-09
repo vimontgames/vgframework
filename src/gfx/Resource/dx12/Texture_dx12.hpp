@@ -24,6 +24,9 @@ namespace vg::gfx::dx12
             case PixelFormat::R16G16_float:
                 return DXGI_FORMAT_R16G16_FLOAT;
 
+            case PixelFormat::R32G32B32A32_float:
+                return DXGI_FORMAT_R32G32B32A32_FLOAT;
+
             case PixelFormat::D32S8:
                 return DXGI_FORMAT_R32G8X24_TYPELESS;
         }

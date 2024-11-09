@@ -25,6 +25,7 @@ namespace vg::gfx
 		R10G10B10A2_unorm,
         R16G16B16A16_float,
 		R16G16_float,
+		R32G32B32A32_float,
         D32S8
 	);
 

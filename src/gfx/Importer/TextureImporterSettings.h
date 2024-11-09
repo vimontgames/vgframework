@@ -14,7 +14,8 @@ namespace vg::gfx
     vg_enum_class(TextureImporterFormat, core::u8,
         Automatic   = 0,
 
-        RGBA8       = 1
+        RGBA8,
+        RGBA32f
     );
 
     vg_enum_class(TextureImporterMipLevelCount, core::u8,

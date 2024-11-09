@@ -30,6 +30,9 @@ namespace vg::gfx::vulkan
             case PixelFormat::R16G16_float:
                 return VK_FORMAT_R16G16_SFLOAT;
 
+            case PixelFormat::R32G32B32A32_float:
+                return VK_FORMAT_R32G32B32A32_SFLOAT;
+
             case PixelFormat::D32S8:
                 return VK_FORMAT_D32_SFLOAT_S8_UINT;
         }

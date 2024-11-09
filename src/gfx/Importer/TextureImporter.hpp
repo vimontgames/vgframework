@@ -9,11 +9,26 @@ using namespace vg::core;
 namespace vg::gfx
 {
     //--------------------------------------------------------------------------------------
-    bool TextureImporter::importTextureData(const core::string & _path, TextureDesc & _desc, vector<u8> & _buffer, const TextureImporterSettings * _importSettings)
+    bool TextureImporter::importTextureData(const core::string & _path, TextureDesc & _desc, vector<u8> & _finalBuffer, const TextureImporterSettings * _importSettings)
     {
         // TODO: support Texture3D/Array loading?
         int srcWidth, srcHeight, srcChannels;
-        stbi_uc * data = stbi_load(_path.c_str(), &srcWidth, &srcHeight, &srcChannels, 4);
+
+        const bool is16bits = stbi_is_16_bit(_path.c_str());
+        const bool isHDR = stbi_is_hdr(_path.c_str());
+
+        void * data = nullptr;
+        TextureImporterFormat srcFormat, dstFormat;
+        if (is16bits)
+        {
+            data = (u8 *)stbi_loadf(_path.c_str(), &srcWidth, &srcHeight, &srcChannels, 4);
+            srcFormat = TextureImporterFormat::RGBA32f;
+        }
+        else
+        {
+            data = (u8 *)stbi_load(_path.c_str(), &srcWidth, &srcHeight, &srcChannels, 4);
+            srcFormat = TextureImporterFormat::RGBA8;
+        }
 
         if (nullptr != data)
         {
@@ -82,7 +97,10 @@ namespace vg::gfx
             if (nullptr == _importSettings || TextureImporterFormat::Automatic == _importSettings->m_importerFormat)
             {
                 // TODO: determine the best format automatically
-                format = TextureImporterFormat::RGBA8;
+                if (is16bits)
+                    format = TextureImporterFormat::RGBA32f;
+                else
+                    format = TextureImporterFormat::RGBA8;
                 sRGB = false;
             }
 
@@ -91,10 +109,6 @@ namespace vg::gfx
                 const uint maxMipCount = computeMaxMipmapCount(type, width, height, slices);
                 mipmapCount = maxMipCount;                
             }
-
-            // TEMP HACK, TODO: cubemap mipmaps
-            //if (type == TextureImporterType::Cubemap)
-            //    mipmapCount = 1;
             
             if (_importSettings)
             {
@@ -121,6 +135,12 @@ namespace vg::gfx
                         _desc.format = PixelFormat::R8G8B8A8_unorm_sRGB;
                     else
                         _desc.format = PixelFormat::R8G8B8A8_unorm;
+                    dstFormat = TextureImporterFormat::RGBA8;
+                    break;
+
+                case TextureImporterFormat::RGBA32f:
+                    _desc.format = PixelFormat::R32G32B32A32_float;
+                    dstFormat = TextureImporterFormat::RGBA32f;
                     break;
             }
 
@@ -129,11 +149,66 @@ namespace vg::gfx
             _desc.slices = slices;
             _desc.mipmaps = mipmapCount;
 
-            generateMipmaps(data, _desc, _buffer);
+            bool success = true;
+
+            switch (srcFormat)
+            {
+                case TextureImporterFormat::RGBA8:
+                {
+                    vector<u8> tempBuffer;
+                    switch (dstFormat)
+                    {
+                        case TextureImporterFormat::RGBA8:
+                        {
+                            success |= generateMipmaps<TextureImporterFormat::RGBA8>((u8*)data, _desc, tempBuffer);
+                            success |= convert<TextureImporterFormat::RGBA8, TextureImporterFormat::RGBA8>(_desc, tempBuffer, _finalBuffer);
+                        }
+                        break;
+
+                        case TextureImporterFormat::RGBA32f:
+                        {
+                            success |= generateMipmaps<TextureImporterFormat::RGBA8>((u8 *)data, _desc, tempBuffer);
+                            success |= convert<TextureImporterFormat::RGBA8, TextureImporterFormat::RGBA32f>(_desc, tempBuffer, _finalBuffer);
+                        }
+                        break;
+
+                        default:
+                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(dstFormat);
+                            success = false;
+                            break;
+                    }
+                }
+                break;
+
+                case TextureImporterFormat::RGBA32f:
+                {
+                    vector<float> tempBuffer;
+                    switch (dstFormat)
+                    {
+                        case TextureImporterFormat::RGBA32f:
+                        {
+                            success |= generateMipmaps<TextureImporterFormat::RGBA32f>((float *)data, _desc, tempBuffer);
+                            success |= convert<TextureImporterFormat::RGBA32f, TextureImporterFormat::RGBA32f>(_desc, tempBuffer, _finalBuffer);
+                        }
+                        break;
+
+                        default:
+                            success |= generateMipmaps<TextureImporterFormat::RGBA32f>((float *)data, _desc, tempBuffer);
+                            success |= convert<TextureImporterFormat::RGBA32f, TextureImporterFormat::RGBA8>(_desc, tempBuffer, _finalBuffer);
+                            break;
+                    }
+                }
+                break;
+
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(srcFormat);
+                    success = false;
+                    break;
+            }
 
             VG_SAFE_FREE(data);
 
-            return true;
+            return success;
         }        
 
         return false;
@@ -170,55 +245,54 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    bool TextureImporter::generateMipmaps(const core::u8 * _src, const TextureDesc & _desc, vector<u8> & _buffer)
+    size_t computeTotalSize(uint _width, uint _height, uint _slices, uint _mipmaps, uint _fmtSize)
     {
-        uint maxMipCount = Texture::computeMaxMipmapCount(_desc);
-        VG_ASSERT(_desc.mipmaps <= maxMipCount);
-
-        const uint width = _desc.width;
-        const uint height = _desc.height;
-
-        const auto fmtSize = Texture::getPixelFormatSize(_desc.format);
-
         size_t totalSize = 0;
-        for (uint s = 0; s < _desc.slices; ++s)
+        for (uint s = 0; s < _slices; ++s)
         {
-            uint mipWidth = width;
-            uint mipHeight = height;
+            uint mipWidth = _width;
+            uint mipHeight = _height;
 
-            for (uint m = 0; m < _desc.mipmaps; ++m)
+            for (uint m = 0; m < _mipmaps; ++m)
             {
-                const auto mipSize = mipWidth * mipHeight * fmtSize;
+                const auto mipSize = mipWidth * mipHeight * _fmtSize;
                 totalSize += mipSize;
                 mipWidth >>= 1;
                 mipHeight >>= 1;
             }
         }
+        return totalSize;
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <TextureImporterFormat SrcFmt> bool TextureImporter::generateMipmaps(const typename TextureImporterFormatTraits<SrcFmt>::type * _src, const TextureDesc & _desc, core::vector<typename TextureImporterFormatTraits<SrcFmt>::type> & _buffer)
+    {
+        uint maxMipCount = Texture::computeMaxMipmapCount(_desc);
+        VG_ASSERT(_desc.mipmaps <= maxMipCount);
+
+        using SrcType = typename TextureImporterFormatTraits<SrcFmt>::type;
+
+        const uint width = _desc.width;
+        const uint height = _desc.height;
+
+        const auto fmtSize = sizeof(SrcType) * 4; // Texture::getPixelFormatSize(_desc.format);
+
+        size_t totalSize = computeTotalSize(_desc.width, _desc.height, _desc.slices, _desc.mipmaps, sizeof(SrcType)*4);
         _buffer.resize(totalSize);
 
-        u8 * dst = _buffer.data();
-
-        const u32 mipColor[] =
-        {
-            0xFF0000FF,
-            0xFF00FF00,
-            0xFF00FFFF,
-            0xFFFF0000,
-            0xFFFF00FF,
-            0xFFFFFF00
-        };
+        SrcType * dst = _buffer.data();
 
         for (uint s = 0; s < _desc.slices; ++s)
         {
             uint mipWidth = width;
             uint mipHeight = height;
 
-            const u8 * src = _src;
+            const SrcType * src = _src;
             uint sliceSize = 0;
 
             for (uint m = 0; m < _desc.mipmaps; ++m)
             {
-                const auto mipSize = mipWidth * mipHeight * fmtSize;
+                const auto mipSize = mipWidth * mipHeight * (uint)fmtSize;
 
                 if (m == 0)
                 {
@@ -333,6 +407,74 @@ namespace vg::gfx
 
                 mipWidth >>= 1;
                 mipHeight >>= 1;
+            }
+        }
+
+        return true;
+    }
+
+    template <TextureImporterFormat SrcFmt, TextureImporterFormat DstFmt> typename TextureImporterFormatTraits<DstFmt>::type store(const typename TextureImporterFormatTraits<SrcFmt>::type & _src);
+
+    // Copy without conversion
+    template <> typename u8 store<TextureImporterFormat::RGBA8, TextureImporterFormat::RGBA8>(const u8 & _src)      { return _src; }
+    template <> typename float store<TextureImporterFormat::RGBA32f, TextureImporterFormat::RGBA32f>(const float & _src)  { return _src; }
+
+    // float to ubyte
+    template <> typename u8 store<TextureImporterFormat::RGBA32f, TextureImporterFormat::RGBA8>(const float & _src) 
+    {
+        return clamp((u8)(_src * 255.5f), (u8)0, (u8)255); 
+    }
+
+    // ubyte to float
+    template <> typename float store<TextureImporterFormat::RGBA8, TextureImporterFormat::RGBA32f>(const u8 & _src) 
+    {
+        return _src / 255.5f;
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <TextureImporterFormat SrcFmt, TextureImporterFormat DstFmt> bool TextureImporter::convert(const TextureDesc & _desc, const core::vector<typename TextureImporterFormatTraits<SrcFmt>::type> & _in, core::vector<u8> & _out)
+    {
+        const uint width = _desc.width;
+        const uint height = _desc.height;
+        const uint slices = _desc.slices;
+        const uint mipmaps = _desc.mipmaps;
+
+        using SrcType = typename TextureImporterFormatTraits<SrcFmt>::type;
+        const auto srcComponents = TextureImporterFormatTraits<SrcFmt>::components;
+        const SrcType * pSrc = _in.data();
+
+        using DstType = typename TextureImporterFormatTraits<DstFmt>::type;
+        const auto dstComponents = TextureImporterFormatTraits<SrcFmt>::components;
+
+        const auto totalSize = computeTotalSize(width, height, slices, mipmaps, sizeof(DstType) * dstComponents);
+        _out.resize(totalSize);
+        DstType * pDst = (DstType*)_out.data();
+
+        for (uint s = 0; s < slices; ++s)
+        {
+            uint mipWidth = width;
+            uint mipHeight = height;
+
+            for (uint m = 0; m < mipmaps; ++m)
+            {
+                for (uint y = 0; y < mipHeight; ++y)
+                {
+                    for (uint x = 0; x < mipWidth; ++x)
+                    {
+                        for (uint c = 0; c < dstComponents && c < dstComponents; ++c)
+                        {
+                            const SrcType & src = pSrc[(x + y * mipWidth)* srcComponents +c];
+                            DstType & dst = pDst[(x + y * mipWidth)* dstComponents +c];
+                            dst = store<SrcFmt, DstFmt>(src);
+                        }
+                    }
+                }
+
+                pSrc += mipWidth * mipHeight * srcComponents;
+                pDst += mipWidth * mipHeight * dstComponents;
+
+                mipWidth >>= 1;
+                mipHeight >>= 1;                
             }
         }
 
