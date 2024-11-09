@@ -15,6 +15,7 @@ namespace vg::gfx
         Automatic   = 0,
 
         RGBA8,
+        RGBA16,
         RGBA32f
     );
 
