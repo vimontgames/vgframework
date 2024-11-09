@@ -126,7 +126,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "postprocess", "postprocess"
 		data\Shaders\postprocess\SMAA.hlsli = data\Shaders\postprocess\SMAA.hlsli
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DebugDraw", "DebugDraw", "{A78F21EC-5A7B-4D8A-AF8F-6E8D9B36EBCE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "debugdraw", "debugdraw", "{A78F21EC-5A7B-4D8A-AF8F-6E8D9B36EBCE}"
 	ProjectSection(SolutionItems) = preProject
 		data\Shaders\debugdraw\debugdraw.hlsl = data\Shaders\debugdraw\debugdraw.hlsl
 		data\Shaders\debugdraw\debugdraw.hlsl.h = data\Shaders\debugdraw\debugdraw.hlsl.h
@@ -150,6 +150,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lighting", "lighting", "{4A
 		data\Shaders\lighting\deferredLighting.hlsl = data\Shaders\lighting\deferredLighting.hlsl
 		data\Shaders\lighting\deferredLighting.hlsl.h = data\Shaders\lighting\deferredLighting.hlsl.h
 		data\Shaders\lighting\deferredLighting.hlsli = data\Shaders\lighting\deferredLighting.hlsli
+		data\Shaders\lighting\PrecomputeIBL.hlsl = data\Shaders\lighting\PrecomputeIBL.hlsl
+		data\Shaders\lighting\PrecomputeIBL.hlsl.h = data\Shaders\lighting\PrecomputeIBL.hlsl.h
+		data\Shaders\lighting\PrecomputeIBL.hlsli = data\Shaders\lighting\PrecomputeIBL.hlsli
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{7C17C12C-1875-4215-8A0B-C4FBC50907FE}"

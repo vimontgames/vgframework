@@ -41,6 +41,7 @@ vg_enum_class(DisplayMode, uint,
     Lighting_DirectLightSpecular,
     Lighting_Diffuse,
     Lighting_Specular,
+    Lighting_SpecularBRDF,
     Lighting_RayCount,
 
     RayTracing_Hit,

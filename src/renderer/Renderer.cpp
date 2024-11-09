@@ -26,6 +26,7 @@
 #include "renderer/RenderPass/Update/BLAS/BLASUpdatePass.h"
 #include "renderer/RenderPass/Render2D/HDROutput/HDROutputPass.h"
 #include "renderer/RenderPass/Render2D/Preview/Texture/TexturePreviewPass.h"
+#include "renderer/RenderPass/Compute/ComputeSpecularBRDF/ComputeSpecularBRDFPass.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Animation/SkeletalAnimation.h"
@@ -56,6 +57,7 @@
 #include "shaders/skinning/skinning.hlsl.h"
 #include "shaders/lighting/deferredLighting.hlsl.h"
 #include "shaders/preview/preview.hlsl.h"
+#include "shaders/lighting/PrecomputeIBL.hlsl.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -201,6 +203,7 @@ namespace vg::renderer
         m_gpuDebugUpdatePass = new GPUDebugUpdatePass();
         m_instanceDataUpdatePass = new InstanceDataUpdatePass();
         m_computeSkinningPass = new ComputeSkinningPass();
+        m_computeSpecularBRDFPass = new ComputeSpecularBRDFPass();
         m_BLASUpdatePass = new BLASUpdatePass();
         m_imguiPass = new ImGuiPass();
         m_hdrOutputPass = new HDROutputPass();
@@ -242,6 +245,10 @@ namespace vg::renderer
         sm->registerHLSL(SkinningHLSLDesc());
         sm->registerHLSL(DeferredLightingHLSLDesc());
         sm->registerHLSL(PreviewHLSLDesc());
+        sm->registerHLSL(PrecomputeIBLHLSLDesc());
+
+        // Register callback for after shader updates
+        m_device.getShaderManager()->setOnShadersUpdatedCallback(onShadersUpdated);
 
         sm->update(true);
     }
@@ -292,6 +299,7 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_gpuDebugUpdatePass);
         VG_SAFE_RELEASE(m_instanceDataUpdatePass);
         VG_SAFE_DELETE(m_computeSkinningPass);
+        VG_SAFE_DELETE(m_computeSpecularBRDFPass);
         VG_SAFE_DELETE(m_BLASUpdatePass);
         VG_SAFE_DELETE(m_imguiPass);
         VG_SAFE_DELETE(m_imgui);
@@ -367,9 +375,20 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    // Because shader update is asynchronous, we pass a callback function to get notified about shaders being updated
+    //--------------------------------------------------------------------------------------
     void Renderer::UpdateShaders()
     {
         m_device.getShaderManager()->update();
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Release specular BRDF to force recompute after shader update
+    //--------------------------------------------------------------------------------------
+    void Renderer::onShadersUpdated(bool _success)
+    {
+        auto * _this = Renderer::get();
+        _this->releaseSpecularBRDF();
     }
 
     //--------------------------------------------------------------------------------------
@@ -471,6 +490,23 @@ namespace vg::renderer
 
                 if (options->isRayTracingEnabled())
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_BLASUpdatePass, "BLAS Update");
+
+                if (asBool(PBRFlags::GenerateSpecularBRDF & options->getPBRFlags()))
+                {
+                    // Generate specular BRDF LUT if dirty
+                    if (nullptr == m_generatedSpecularBRDF)
+                    {
+                        TextureDesc specularBRDFDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource | BindFlags::UnorderedAccess, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R16G16_float, TextureFlags::None, 256, 256, 1, 1, MSAA::None);
+                        m_generatedSpecularBRDF = m_device.createTexture(specularBRDFDesc, "SpecularBRDF_LUT");
+
+                        m_computeSpecularBRDFPass->setSpecularBRDFTexture(m_generatedSpecularBRDF);
+                        m_frameGraph.addUserPass(mainViewRenderPassContext, m_computeSpecularBRDFPass, "Compute Specular BRDF LUT");
+                    }
+                }
+                else
+                {
+                    releaseSpecularBRDF();
+                }
 
                 // Register viewports 
                 for (uint j = 0; j < core::enumCount<gfx::ViewportTarget>(); ++j)
@@ -1134,5 +1170,13 @@ namespace vg::renderer
             return m_generatedSpecularBRDF;
         else
             return m_bakedSpecularBRDF;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::releaseSpecularBRDF()
+    {
+        VG_SAFE_RELEASE(m_generatedSpecularBRDF);
+        if (m_computeSpecularBRDFPass)
+            m_computeSpecularBRDFPass->setSpecularBRDFTexture(nullptr);
     }
 }

@@ -1,8 +1,10 @@
 #pragma once
 
-#include "shaders/system/lightsBuffer.hlsli"
-#include "shaders/system/shared_consts.hlsli"
+#include "system/lightsBuffer.hlsli"
+#include "system/shared_consts.hlsli"
+#include "system/pbr.hlsli"
 
+//--------------------------------------------------------------------------------------
 float3 heatmapGradient(float x, float _green, float _yellow, float _red)
 {
     float3 color = 0;
@@ -13,58 +15,6 @@ float3 heatmapGradient(float x, float _green, float _yellow, float _red)
 	else 
 		return lerp(float3(1,1,0), float3(1,0,0), saturate((x-_yellow)/(_red-_yellow)));
 	return color;
-}
-
-//--------------------------------------------------------------------------------------
-// https://github.com/Nadrin/PBR/blob/master/data/shaders/hlsl/pbr.hlsl 
-//--------------------------------------------------------------------------------------
-
-static const float3 Fdielectric = 0.04f;	
-static const float PI = 3.141592f;
-static const float Epsilon = 0.00001f;
-
-//--------------------------------------------------------------------------------------
-// GGX/Towbridge-Reitz normal distribution function. Uses Disney's reparametrization of alpha = roughness^2.
-//--------------------------------------------------------------------------------------
-float ndfGGX(float cosLh, float roughness)
-{
-	float alpha   = roughness * roughness;
-	float alphaSq = alpha * alpha;
-
-	float denom = (cosLh * cosLh) * (alphaSq - 1.0f) + 1.0f;
-	return alphaSq / (PI * denom * denom);
-}
-
-//--------------------------------------------------------------------------------------
-// Single term for separable Schlick-GGX below.
-//--------------------------------------------------------------------------------------
-float gaSchlickG1(float cosTheta, float k)
-{
-	return cosTheta / (cosTheta * (1.0f - k) + k);
-}
-
-//--------------------------------------------------------------------------------------
-// Schlick-GGX approximation of geometric attenuation function using Smith's method.
-//--------------------------------------------------------------------------------------
-float gaSchlickGGX(float cosLi, float cosLo, float roughness)
-{
-	float r = roughness + 1.0f;
-	float k = (r * r) / 8.0f; 
-	return gaSchlickG1(cosLi, k) * gaSchlickG1(cosLo, k);
-}
-
-//--------------------------------------------------------------------------------------
-// Shlick's approximation of the Fresnel factor.
-//-------------------------------------------------------------------------------------- 
-float3 fresnelSchlick(float3 F0, float cosTheta)
-{
-	return F0 + (1.0f - F0) * pow(1.0f - cosTheta, 5.0f);
-}
-
-//-------------------------------------------------------------------------------------- 
-float3 fresnelSchlickRoughness(float3 F0, float cosTheta, float roughness)
-{
-    return F0 + (max(float3(1.0 - roughness, 1.0 - roughness, 1.0 - roughness), F0) - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
 //--------------------------------------------------------------------------------------
@@ -89,9 +39,11 @@ struct LightingResult
 
 		// Calculate normal distribution for specular BRDF.
 		float D = ndfGGX(cosLh, roughness);
+		//float D = GeometrySchlickGGX(cosLi, roughness);
 
 		// Calculate geometric attenuation for specular BRDF.
 		float G = gaSchlickGGX(cosLi, cosLo, roughness);
+		//float G = GeometrySmith(roughness, cosLi, cosLo);
 
 		// Diffuse scattering happens due to light being refracted multiple times by a dielectric medium.
 		// Metals on the other hand either reflect or absorb energy, so diffuse contribution is always zero.
@@ -221,6 +173,8 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		float2 FG = specularBRDF.SampleLevel(linearClamp, float2(cosLo, 1-roughness), 0).rg;
 		float specularEnvMip = roughness * (mipLevels - 1);
 		output.envSpecular = (F0 * FG.x + FG.y) * specularReflectionCubemap.SampleLevel(linearClamp, Lr, specularEnvMip).rgb;
+
+		//output.envSpecular = float3(FG.xxx);
 	}
 	else
 	{

@@ -5,7 +5,7 @@
 #include "gfx/Device/Device_consts.h"
 #include "gfx/Resource/Texture_consts.h"
 #include "Shaders/system/displaymodes.hlsli"
-#include "renderer/RenderPass/Render2D/PBR/PBR_Consts.h"
+#include "renderer/PBR/PBR_Consts.h"
 
 namespace vg::core
 {

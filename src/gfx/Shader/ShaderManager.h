@@ -15,12 +15,16 @@ namespace vg::gfx
     public:
         const char * GetClassName() const final { return "ShaderManager"; }
 
+        using OnShadersUpdatedCallbackFunc = void(*)(bool);
+
         ShaderManager(const core::string & _shaderRootPath);
         ~ShaderManager();
 
         core::uint                          GetShaderCompiledCount      () const final override;
         core::uint                          GetShaderWarningCount       () const final override;
         core::uint                          GetShaderErrorCount         () const final override;
+
+        void                                setOnShadersUpdatedCallback (OnShadersUpdatedCallbackFunc _onShadersUpdatedCallback);
 
         void                                update                      (bool _forceUpdate = false);
         void                                applyUpdate                 (bool _forceUpdate = false);
@@ -61,5 +65,7 @@ namespace vg::gfx
         core::unordered_map<core::uint, core::string>   m_shaderFileIDToPath;
         core::uint                                      m_shaderFilesCounter = 0;
         #endif
+
+        OnShadersUpdatedCallbackFunc        m_onShadersUpdatedCallbackFunc = nullptr;
     };
 }

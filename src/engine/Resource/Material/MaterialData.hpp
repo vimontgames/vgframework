@@ -44,7 +44,6 @@ namespace vg::engine
         renderer::IMaterialModel * materialModel = parent->m_materialModel;
         if (nullptr == materialModel)
             materialModel = parent->m_materialModel;
-        VG_ASSERT(materialModel);
         return materialModel;
     }
 
@@ -102,12 +101,13 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MaterialData::OnResourceLoaded(core::IResource * _resource)
     {
-        auto material = getMaterialModel();
-
-        if (auto * matProp = findTextureResourceProperty(_resource))
+        if (auto material = getMaterialModel())
         {
-            if (material)
-                material->SetTexture(matProp->GetName(), (gfx::ITexture *)_resource->GetObject());
+            if (auto * matProp = findTextureResourceProperty(_resource))
+            {
+                if (material)
+                    material->SetTexture(matProp->GetName(), (gfx::ITexture *)_resource->GetObject());
+            }
         }
     }
 

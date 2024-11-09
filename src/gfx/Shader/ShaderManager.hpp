@@ -351,6 +351,12 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    void ShaderManager::setOnShadersUpdatedCallback(OnShadersUpdatedCallbackFunc _onShadersUpdatedCallback)
+    {
+        m_onShadersUpdatedCallbackFunc = _onShadersUpdatedCallback;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ShaderManager::update(bool _forceUpdate)
     {
         if (_forceUpdate)
@@ -599,7 +605,13 @@ namespace vg::gfx
                 }
             }
 
-            VG_INFO("[Shader] %u/%u shader file(s) changed", updated, m_shaderFileDescriptors.size());
+            if (updated > 0)
+            {
+                VG_INFO("[Shader] %u/%u shader file(s) changed", updated, m_shaderFileDescriptors.size());
+
+                if (nullptr != m_onShadersUpdatedCallbackFunc)
+                    m_onShadersUpdatedCallbackFunc(m_errorCount == 0);
+            }
         }
 
         m_updateNeeded = false;

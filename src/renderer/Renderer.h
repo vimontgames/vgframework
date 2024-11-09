@@ -21,6 +21,7 @@ namespace vg::renderer
     class InstanceDataUpdatePass;
     class ComputeSkinningPass;
     class BLASUpdatePass;
+    class ComputeSpecularBRDFPass;
     class ImGuiPass;
     class HDROutputPass;
     class MeshModel;
@@ -137,6 +138,7 @@ namespace vg::renderer
 
     private:
         void                                    registerShaders             ();
+        static void                             onShadersUpdated            (bool _success);
 
         void                                    initDefaultTextures         ();
         void                                    deinitDefaultTextures       ();
@@ -145,6 +147,8 @@ namespace vg::renderer
         void                                    deinitDefaultMaterials      ();
 
         void                                    cullViews                   ();
+
+        void                                    releaseSpecularBRDF         ();
 
 	private:
 		gfx::Device &		                    m_device;
@@ -156,6 +160,7 @@ namespace vg::renderer
         InstanceDataUpdatePass *                m_instanceDataUpdatePass    = nullptr;
         ComputeSkinningPass *                   m_computeSkinningPass       = nullptr;
         BLASUpdatePass *                        m_BLASUpdatePass            = nullptr;
+        ComputeSpecularBRDFPass *               m_computeSpecularBRDFPass   = nullptr;
         ImGuiPass *                             m_imguiPass                 = nullptr; 
         HDROutputPass *                         m_hdrOutputPass             = nullptr;
         IPicking *                              m_picking                   = nullptr;

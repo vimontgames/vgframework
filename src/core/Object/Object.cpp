@@ -61,6 +61,7 @@ namespace vg::core
 	//--------------------------------------------------------------------------------------
 	Object::~Object()
 	{
+        VG_ASSERT(m_refCount <= 1, "An object is being deleted with a RefCount of %u\nUse VG_SAFE_RELEASE for refcounted objects", m_refCount.load());
         if (m_uid)
         {
             IFactory * factory = Kernel::getFactory();

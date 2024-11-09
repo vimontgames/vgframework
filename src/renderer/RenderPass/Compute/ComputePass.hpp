@@ -3,6 +3,7 @@
 #include "Compute/ComputePostProcess/ComputePostProcessPass.hpp"
 #include "Compute/ComputeSkinning/ComputeSkinningPass.hpp"
 #include "Compute/ComputeDeferredLighting/ComputeDeferredLightingPass.hpp"
+#include "Compute/ComputeSpecularBRDF/ComputeSpecularBRDFPass.hpp"
 
 namespace vg::renderer
 {

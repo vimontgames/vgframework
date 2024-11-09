@@ -482,8 +482,14 @@
     <ClInclude Include="RenderPass\Render2D\Preview\Texture\TexturePreview.h">
       <Filter>Pass\Render2D\Preview\Texture</Filter>
     </ClInclude>
-    <ClInclude Include="RenderPass\Render2D\PBR\PBR_Consts.h">
-      <Filter>Pass\Render2D\PBR</Filter>
+    <ClInclude Include="RenderPass\Compute\ComputeSpecularBRDF\ComputeSpecularBRDFPass.h">
+      <Filter>Pass\Compute\ComputeSpecularBRDF</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Compute\ComputeSpecularBRDF\ComputeSpecularBRDFPass.hpp">
+      <Filter>Pass\Compute\ComputeSpecularBRDF</Filter>
+    </ClInclude>
+    <ClInclude Include="PBR\PBR_Consts.h">
+      <Filter>PBR</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -664,17 +670,11 @@
     <Filter Include="Pass\Render2D\Preview\Texture">
       <UniqueIdentifier>{bae5a9f8-aae4-442e-85ea-b0eacf8518f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pass\Render2D\PBR">
-      <UniqueIdentifier>{a50422ed-17d5-432e-afbd-ee49df4234eb}</UniqueIdentifier>
+    <Filter Include="Pass\Compute\ComputeSpecularBRDF">
+      <UniqueIdentifier>{ca8abb78-730b-4bb1-a458-d87f482f6f40}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pass\Render2D\PBR\SpecularBRDF">
-      <UniqueIdentifier>{47806021-77d8-41cb-a46c-cb42b979e9e9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Pass\Render2D\PBR\IrradianceMap">
-      <UniqueIdentifier>{cc0b4dd1-9896-45cc-9d06-40e79c47d48e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Pass\Render2D\PBR\SpecularReflectionMap">
-      <UniqueIdentifier>{9431b110-7499-4abe-b0c7-26abed6f0c5f}</UniqueIdentifier>
+    <Filter Include="PBR">
+      <UniqueIdentifier>{cc1f3035-e8b6-4001-92a7-96fdc4086861}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
