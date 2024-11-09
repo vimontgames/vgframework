@@ -17,16 +17,17 @@ namespace vg::gfx
 	);
 
 	vg_enum_class(PixelFormat, core::u8,
-        Unknow = 0,		
-        R8G8B8A8_unorm,
-        R8G8B8A8_unorm_sRGB,
-        B8G8R8A8_unorm,
-        B8G8R8A8_unorm_sRGB,
+		Unknow = 0,		
+		R8G8B8A8_unorm,
+		R8G8B8A8_unorm_sRGB,
+		B8G8R8A8_unorm,
+		B8G8R8A8_unorm_sRGB,
 		R10G10B10A2_unorm,
-        R16G16B16A16_float,
+		R16G16B16A16_unorm,
+		R16G16B16A16_float,
 		R16G16_float,
 		R32G32B32A32_float,
-        D32S8
+		D32S8
 	);
 
 	vg_enum_class(TextureFlags, core::u32,

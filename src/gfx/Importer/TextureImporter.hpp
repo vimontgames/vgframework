@@ -14,15 +14,20 @@ namespace vg::gfx
         // TODO: support Texture3D/Array loading?
         int srcWidth, srcHeight, srcChannels;
 
-        const bool is16bits = stbi_is_16_bit(_path.c_str());
         const bool isHDR = stbi_is_hdr(_path.c_str());
+        const bool is16bits = stbi_is_16_bit(_path.c_str());
 
         void * data = nullptr;
         TextureImporterFormat srcFormat, dstFormat;
-        if (is16bits)
+        if (isHDR)
         {
             data = (u8 *)stbi_loadf(_path.c_str(), &srcWidth, &srcHeight, &srcChannels, 4);
             srcFormat = TextureImporterFormat::RGBA32f;
+        }
+        else if (is16bits)
+        {
+            data = (u16 *)stbi_load_16(_path.c_str(), &srcWidth, &srcHeight, &srcChannels, 4);
+            srcFormat = TextureImporterFormat::RGBA16;
         }
         else
         {
@@ -97,8 +102,10 @@ namespace vg::gfx
             if (nullptr == _importSettings || TextureImporterFormat::Automatic == _importSettings->m_importerFormat)
             {
                 // TODO: determine the best format automatically
-                if (is16bits)
+                if (isHDR)
                     format = TextureImporterFormat::RGBA32f;
+                else if (is16bits)
+                    format = TextureImporterFormat::RGBA16;
                 else
                     format = TextureImporterFormat::RGBA8;
                 sRGB = false;
@@ -138,6 +145,11 @@ namespace vg::gfx
                     dstFormat = TextureImporterFormat::RGBA8;
                     break;
 
+                case TextureImporterFormat::RGBA16:
+                    _desc.format = PixelFormat::R16G16B16A16_unorm;
+                    dstFormat = TextureImporterFormat::RGBA16;
+                    break;
+
                 case TextureImporterFormat::RGBA32f:
                     _desc.format = PixelFormat::R32G32B32A32_float;
                     dstFormat = TextureImporterFormat::RGBA32f;
@@ -155,20 +167,54 @@ namespace vg::gfx
             {
                 case TextureImporterFormat::RGBA8:
                 {
-                    vector<u8> tempBuffer;
+                    vector<UByte4> tempBuffer;
                     switch (dstFormat)
                     {
                         case TextureImporterFormat::RGBA8:
                         {
-                            success |= generateMipmaps<TextureImporterFormat::RGBA8>((u8*)data, _desc, tempBuffer);
-                            success |= convert<TextureImporterFormat::RGBA8, TextureImporterFormat::RGBA8>(_desc, tempBuffer, _finalBuffer);
+                            success |= generateMipmaps<UByte4>((UByte4 *)data, _desc, tempBuffer);
+                            success |= convert<UByte4, UByte4>(_desc, tempBuffer, _finalBuffer);
                         }
                         break;
 
                         case TextureImporterFormat::RGBA32f:
                         {
-                            success |= generateMipmaps<TextureImporterFormat::RGBA8>((u8 *)data, _desc, tempBuffer);
-                            success |= convert<TextureImporterFormat::RGBA8, TextureImporterFormat::RGBA32f>(_desc, tempBuffer, _finalBuffer);
+                            success |= generateMipmaps<UByte4>((UByte4 *)data, _desc, tempBuffer);
+                            success |= convert<UByte4, float4>(_desc, tempBuffer, _finalBuffer);
+                        }
+                        break;
+
+                        default:
+                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(dstFormat);
+                            success = false;
+                            break;
+                    }
+                }
+                break;
+
+                case TextureImporterFormat::RGBA16:
+                {
+                    vector<UShort4> tempBuffer;
+                    switch (dstFormat)
+                    {
+                        case TextureImporterFormat::RGBA32f:
+                        {
+                            success |= generateMipmaps<UShort4>((UShort4 *)data, _desc, tempBuffer);
+                            success |= convert<UShort4, float4>(_desc, tempBuffer, _finalBuffer);
+                        }
+                        break;
+
+                        case TextureImporterFormat::RGBA16:
+                        {
+                            success |= generateMipmaps<UShort4>((UShort4 *)data, _desc, tempBuffer);
+                            success |= convert<UShort4, UShort4>(_desc, tempBuffer, _finalBuffer);
+                        }
+                        break;
+
+                        case TextureImporterFormat::RGBA8:
+                        {
+                            success |= generateMipmaps<UShort4>((UShort4 *)data, _desc, tempBuffer);
+                            success |= convert<UShort4, UByte4>(_desc, tempBuffer, _finalBuffer);
                         }
                         break;
 
@@ -182,19 +228,19 @@ namespace vg::gfx
 
                 case TextureImporterFormat::RGBA32f:
                 {
-                    vector<float> tempBuffer;
+                    vector<float4> tempBuffer;
                     switch (dstFormat)
                     {
                         case TextureImporterFormat::RGBA32f:
                         {
-                            success |= generateMipmaps<TextureImporterFormat::RGBA32f>((float *)data, _desc, tempBuffer);
-                            success |= convert<TextureImporterFormat::RGBA32f, TextureImporterFormat::RGBA32f>(_desc, tempBuffer, _finalBuffer);
+                            success |= generateMipmaps<float4>((float4 *)data, _desc, tempBuffer);
+                            success |= convert<float4, float4>(_desc, tempBuffer, _finalBuffer);
                         }
                         break;
 
                         default:
-                            success |= generateMipmaps<TextureImporterFormat::RGBA32f>((float *)data, _desc, tempBuffer);
-                            success |= convert<TextureImporterFormat::RGBA32f, TextureImporterFormat::RGBA8>(_desc, tempBuffer, _finalBuffer);
+                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(dstFormat);
+                            success = false;
                             break;
                     }
                 }
@@ -265,34 +311,30 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    template <TextureImporterFormat SrcFmt> bool TextureImporter::generateMipmaps(const typename TextureImporterFormatTraits<SrcFmt>::type * _src, const TextureDesc & _desc, core::vector<typename TextureImporterFormatTraits<SrcFmt>::type> & _buffer)
+    template <typename SourceFormat> bool TextureImporter::generateMipmaps(const SourceFormat * _src, const TextureDesc & _desc, core::vector<SourceFormat> & _buffer)
     {
         uint maxMipCount = Texture::computeMaxMipmapCount(_desc);
         VG_ASSERT(_desc.mipmaps <= maxMipCount);
 
-        using SrcType = typename TextureImporterFormatTraits<SrcFmt>::type;
-
         const uint width = _desc.width;
         const uint height = _desc.height;
 
-        const auto fmtSize = sizeof(SrcType) * 4; // Texture::getPixelFormatSize(_desc.format);
-
-        size_t totalSize = computeTotalSize(_desc.width, _desc.height, _desc.slices, _desc.mipmaps, sizeof(SrcType)*4);
+        size_t totalSize = computeTotalSize(_desc.width, _desc.height, _desc.slices, _desc.mipmaps, sizeof(SourceFormat));
         _buffer.resize(totalSize);
 
-        SrcType * dst = _buffer.data();
+        SourceFormat * dst = _buffer.data();
 
         for (uint s = 0; s < _desc.slices; ++s)
         {
             uint mipWidth = width;
             uint mipHeight = height;
 
-            const SrcType * src = _src;
+            const SourceFormat * src = _src;
             uint sliceSize = 0;
 
             for (uint m = 0; m < _desc.mipmaps; ++m)
             {
-                const auto mipSize = mipWidth * mipHeight * (uint)fmtSize;
+                const uint mipSize = mipWidth * mipHeight;
 
                 if (m == 0)
                 {
@@ -302,8 +344,8 @@ namespace vg::gfx
                         {
                             for (uint i = 0; i < mipWidth; ++i)
                             {
-                                const u32 * in = (u32*)_src;
-                                u32 * out = (u32*)dst;
+                                const SourceFormat * in = _src;
+                                SourceFormat * out = dst;
 
                                 uint faceOffsetX, faceOffsetY;
                                 uint dstX, dstY;
@@ -364,7 +406,10 @@ namespace vg::gfx
                                         break;
                                 }
 
-                                out[dstX + dstY * mipWidth] = in[i + faceOffsetX * mipWidth + (j + faceOffsetY * mipHeight) * mipWidth * 4];
+                                out[dstX + dstY * mipWidth].r = in[i + faceOffsetX * mipWidth + (j + faceOffsetY * mipHeight) * mipWidth * 4].r; // * 4 because we're using a 4x3 cross pattern
+                                out[dstX + dstY * mipWidth].g = in[i + faceOffsetX * mipWidth + (j + faceOffsetY * mipHeight) * mipWidth * 4].g; // * 4 because we're using a 4x3 cross pattern
+                                out[dstX + dstY * mipWidth].b = in[i + faceOffsetX * mipWidth + (j + faceOffsetY * mipHeight) * mipWidth * 4].b; // * 4 because we're using a 4x3 cross pattern
+                                out[dstX + dstY * mipWidth].a = in[i + faceOffsetX * mipWidth + (j + faceOffsetY * mipHeight) * mipWidth * 4].a; // * 4 because we're using a 4x3 cross pattern
                             }
                         }
                     }
@@ -374,7 +419,7 @@ namespace vg::gfx
                         VG_ASSERT(_desc.slices == 1);
 
                         src = _src;
-                        memcpy(dst, src, mipSize);
+                        memcpy(dst, src, mipSize * sizeof(SourceFormat));
                     }
                 }
                 else
@@ -383,20 +428,20 @@ namespace vg::gfx
                     {
                         for (uint i = 0; i < mipWidth; ++i)
                         {
-                            const u32 * in = (u32 *)src;
-                            u32 * out = (u32 *)dst;
+                            const SourceFormat * in = (SourceFormat *)src;
+                            SourceFormat * out = dst;
 
-                            const u32 tex00 = in[((i << 1) + 0) + ((j << 1) + 0) * (mipWidth << 1)];
-                            const u32 tex01 = in[((i << 1) + 0) + ((j << 1) + 1) * (mipWidth << 1)];
-                            const u32 tex10 = in[((i << 1) + 1) + ((j << 1) + 0) * (mipWidth << 1)];
-                            const u32 tex11 = in[((i << 1) + 1) + ((j << 1) + 1) * (mipWidth << 1)];
+                            const SourceFormat & tex00 = in[((i << 1) + 0) + ((j << 1) + 0) * (mipWidth << 1)];
+                            const SourceFormat & tex01 = in[((i << 1) + 0) + ((j << 1) + 1) * (mipWidth << 1)];
+                            const SourceFormat & tex10 = in[((i << 1) + 1) + ((j << 1) + 0) * (mipWidth << 1)];
+                            const SourceFormat & tex11 = in[((i << 1) + 1) + ((j << 1) + 1) * (mipWidth << 1)];
 
-                            const u16 r = (((tex00 >> 0) & 0xFF) + ((tex01 >> 0) & 0xFF) + ((tex10 >> 0) & 0xFF) + ((tex11 >> 0) & 0xFF)) >> 2;
-                            const u16 g = (((tex00 >> 8) & 0xFF) + ((tex01 >> 8) & 0xFF) + ((tex10 >> 8) & 0xFF) + ((tex11 >> 8) & 0xFF)) >> 2;
-                            const u16 b = (((tex00 >> 16) & 0xFF) + ((tex01 >> 16) & 0xFF) + ((tex10 >> 16) & 0xFF) + ((tex11 >> 16) & 0xFF)) >> 2;
-                            const u16 a = (((tex00 >> 24) & 0xFF) + ((tex01 >> 24) & 0xFF) + ((tex10 >> 24) & 0xFF) + ((tex11 >> 24) & 0xFF)) >> 2;
+                            using scalarType = typename vectorTraits<SourceFormat>::type;
 
-                            out[i + j * mipWidth] = (a << 24) | (b << 16) | (g << 8) | (r);
+                            out[i + j * mipWidth].r = (tex00.r + tex01.r + tex10.r + tex11.r) / (scalarType)4;
+                            out[i + j * mipWidth].g = (tex00.g + tex01.g + tex10.g + tex11.g) / (scalarType)4;
+                            out[i + j * mipWidth].b = (tex00.b + tex01.b + tex10.b + tex11.b) / (scalarType)4;
+                            out[i + j * mipWidth].a = (tex00.a + tex01.a + tex10.a + tex11.a) / (scalarType)4;
                         }
                     }
                 }
@@ -413,42 +458,81 @@ namespace vg::gfx
         return true;
     }
 
-    template <TextureImporterFormat SrcFmt, TextureImporterFormat DstFmt> typename TextureImporterFormatTraits<DstFmt>::type store(const typename TextureImporterFormatTraits<SrcFmt>::type & _src);
+    template <typename SourceFormat, typename DestFormat> typename DestFormat store(const typename SourceFormat & _src);
 
     // Copy without conversion
-    template <> typename u8 store<TextureImporterFormat::RGBA8, TextureImporterFormat::RGBA8>(const u8 & _src)      { return _src; }
-    template <> typename float store<TextureImporterFormat::RGBA32f, TextureImporterFormat::RGBA32f>(const float & _src)  { return _src; }
+    template <> typename UByte4 store<UByte4, UByte4>(const UByte4 & _src)      { return _src; }
+    template <> typename UShort4 store<UShort4, UShort4>(const UShort4 & _src)  { return _src; }
+    template <> typename float4 store<float4, float4>(const float4 & _src)      { return _src; }
 
-    // float to ubyte
-    template <> typename u8 store<TextureImporterFormat::RGBA32f, TextureImporterFormat::RGBA8>(const float & _src) 
+    // float4 to UByte4
+    template <> typename UByte4 store<float4, UByte4>(const float4 & _src)
     {
-        return clamp((u8)(_src * 255.5f), (u8)0, (u8)255); 
+        UByte4 value;
+        value.r = clamp((u8)(_src.r * 255.0f), (u8)0, (u8)255); 
+        value.g = clamp((u8)(_src.g * 255.0f), (u8)0, (u8)255);
+        value.b = clamp((u8)(_src.b * 255.0f), (u8)0, (u8)255);
+        value.a = clamp((u8)(_src.a * 255.0f), (u8)0, (u8)255);
+        return value;
     }
 
-    // ubyte to float
-    template <> typename float store<TextureImporterFormat::RGBA8, TextureImporterFormat::RGBA32f>(const u8 & _src) 
+    // float4 to UShort4
+    template <> typename UShort4 store<float4, UShort4>(const float4 & _src)
     {
-        return _src / 255.5f;
+        UShort4 value;
+        value.r = clamp((u16)(_src.r * 65535.0f), (u16)0, (u16)65535);
+        value.g = clamp((u16)(_src.g * 65535.0f), (u16)0, (u16)65535);
+        value.b = clamp((u16)(_src.b * 65535.0f), (u16)0, (u16)65535);
+        value.a = clamp((u16)(_src.a * 65535.0f), (u16)0, (u16)65535);
+        return value;
+    }
+
+    // UShort4 to UByte4
+    template <> typename UByte4 store<UShort4, UByte4>(const UShort4 & _src)
+    {
+        UByte4 value;
+        value.r = _src.r >> 8;
+        value.g = _src.g >> 8;
+        value.b = _src.b >> 8;
+        value.a = _src.a >> 8;
+        return value;
+    }
+
+    // UShort4 to float4
+    template <> typename float4 store<UShort4, float4>(const UShort4 & _src)
+    {
+        float4 value;
+        value.r = (float)_src.r / 65535.0f;
+        value.g = (float)_src.g / 65535.0f;
+        value.b = (float)_src.b / 65535.0f;
+        value.a = (float)_src.a / 65535.0f;
+        return value;
+    }
+
+    // ubyte4 to float4
+    template <> typename float4 store<UByte4, float4>(const UByte4 & _src)
+    {
+        float4 value;
+        value.r = (float)_src.r / 255.0f;
+        value.g = (float)_src.g / 255.0f;
+        value.b = (float)_src.b / 255.0f;
+        value.a = (float)_src.a / 255.0f;
+        return value;
     }
 
     //--------------------------------------------------------------------------------------
-    template <TextureImporterFormat SrcFmt, TextureImporterFormat DstFmt> bool TextureImporter::convert(const TextureDesc & _desc, const core::vector<typename TextureImporterFormatTraits<SrcFmt>::type> & _in, core::vector<u8> & _out)
+    template <typename SourceFormat, typename DestFormat> bool TextureImporter::convert(const TextureDesc & _desc, const core::vector<SourceFormat> & _in, core::vector<u8> & _out)
     {
         const uint width = _desc.width;
         const uint height = _desc.height;
         const uint slices = _desc.slices;
         const uint mipmaps = _desc.mipmaps;
 
-        using SrcType = typename TextureImporterFormatTraits<SrcFmt>::type;
-        const auto srcComponents = TextureImporterFormatTraits<SrcFmt>::components;
-        const SrcType * pSrc = _in.data();
+        const SourceFormat * pSrc = _in.data();
 
-        using DstType = typename TextureImporterFormatTraits<DstFmt>::type;
-        const auto dstComponents = TextureImporterFormatTraits<SrcFmt>::components;
-
-        const auto totalSize = computeTotalSize(width, height, slices, mipmaps, sizeof(DstType) * dstComponents);
+        const auto totalSize = computeTotalSize(width, height, slices, mipmaps, sizeof(DestFormat));
         _out.resize(totalSize);
-        DstType * pDst = (DstType*)_out.data();
+        DestFormat * pDst = (DestFormat *)_out.data();
 
         for (uint s = 0; s < slices; ++s)
         {
@@ -461,17 +545,14 @@ namespace vg::gfx
                 {
                     for (uint x = 0; x < mipWidth; ++x)
                     {
-                        for (uint c = 0; c < dstComponents && c < dstComponents; ++c)
-                        {
-                            const SrcType & src = pSrc[(x + y * mipWidth)* srcComponents +c];
-                            DstType & dst = pDst[(x + y * mipWidth)* dstComponents +c];
-                            dst = store<SrcFmt, DstFmt>(src);
-                        }
+                        const SourceFormat & src = pSrc[(x + y * mipWidth)];
+                        DestFormat & dst = pDst[(x + y * mipWidth)];
+                        dst = store<SourceFormat, DestFormat>(src);
                     }
                 }
 
-                pSrc += mipWidth * mipHeight * srcComponents;
-                pDst += mipWidth * mipHeight * dstComponents;
+                pSrc += mipWidth * mipHeight;
+                pDst += mipWidth * mipHeight;
 
                 mipWidth >>= 1;
                 mipHeight >>= 1;                
