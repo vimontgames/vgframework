@@ -142,6 +142,11 @@ namespace vg::editor
 
             drawLibraryDescriptionList("Models", models, (uint)countof(models));
 
+            LibraryDescription environmentMaps[] =
+            {
+                { "Free HDR Map 779",          "hdri-skies.com",  "https://hdri-skies.com/free-hdris/hdr-map-779/" }
+            };
+
             LibraryDescription sound[] =
             {
                 { "FX - Swoosh - normal", "bolkmar",              "https://freesound.org/people/bolkmar/sounds/451127/" },

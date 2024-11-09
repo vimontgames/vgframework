@@ -68,11 +68,11 @@
                                         <Property type="Uint32" name="m_uid" flags="" value="2193914723"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/EnvMaps/hilly_terrain_01_1k.tga"/>
+                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/EnvMaps/779-hdri-skies-com.hdr"/>
                                     </Object>
                                 </Property>
-                                <Property type="Float" name="m_irradiance" flags="HasRange" value="1"/>
-                                <Property type="Float" name="m_specularReflection" flags="HasRange" value="1"/>
+                                <Property type="Float" name="m_irradiance" flags="HasRange" value="0.5"/>
+                                <Property type="Float" name="m_specularReflection" flags="HasRange" value="0.5"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
@@ -83,14 +83,14 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.92090529" Iy="-0.074080594" Iz="0.38268369" Iw="0" Jx="-0.12128442" Jy="0.87858117" Jz="0.46194068" Jw="0" Kx="-0.37043908" Ky="-0.4718169" Kz="0.80010468" Kw="0" Tx="0" Ty="0" Tz="2" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.77756" Iy="0.060900792" Iz="0.62585479" Iw="0" Jx="0.26460093" Jy="0.87120998" Jz="-0.41351587" Jw="0" Kx="-0.57043129" Ky="0.48713475" Kz="0.66130227" Kw="0" Tx="0" Ty="0" Tz="4.5" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="LightComponent">
                                         <Property type="String" name="m_name" flags="NotVisible" value="New LightComponent"/>
                                         <Property type="Uint32" name="m_uid" flags="" value="1800330117"/>
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                         <Property type="EnumU8" name="m_lightType" value="Directional"/>
                                         <Property type="ObjectPtr" name="m_lightDesc" flags="Flatten">
@@ -106,7 +106,7 @@
                                                 <Property type="Uint2" name="m_shadowResolution" x="2048" y="2048"/>
                                                 <Property type="Float" name="m_shadowIntensity" flags="HasRange" value="1"/>
                                                 <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float" name="m_intensity" flags="HasRange" value="1"/>
+                                                <Property type="Float" name="m_intensity" flags="HasRange" value="3"/>
                                             </Object>
                                         </Property>
                                     </Object>

@@ -310,6 +310,13 @@ The following assets are provided under permissive licenses. Please follow the p
 | [Traffic Cone](         https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c ) | hinndia             
 | [Soccergoal](           https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894                                                   ) | NorbertVarga        
 
+### Environment maps
+
+| Name<img width=140/>                                                                                      | Info<img width=200/> 	            											
+| --------------------------------------------------------------------------------------------------------- | ------------------- 
+| [Free HDR Map 779](     https://hdri-skies.com/free-hdris/hdr-map-779/           )                        | [hdri-skies.com](hdri-skies.com)               
+
+
 ### Sounds
 
 | Name<img width=140/>                                                                                      | Info<img width=200/> 	            											
@@ -317,6 +324,7 @@ The following assets are provided under permissive licenses. Please follow the p
 | [FX - Swoosh - normal]( https://freesound.org/people/bolkmar/sounds/451127/                             ) | bolkmar               
 | [Large sword swing](    https://freesound.org/people/Luis0413/sounds/737748/                            ) | Luis0413              
 | [Tally Dub](            https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/ ) | Brotheration Records   
+
 
 
 # Misc

@@ -21,7 +21,7 @@ namespace vg::gfx
         TextureImporterFormat srcFormat, dstFormat;
         if (isHDR)
         {
-            data = (u8 *)stbi_loadf(_path.c_str(), &srcWidth, &srcHeight, &srcChannels, 4);
+            data = (float *)stbi_loadf(_path.c_str(), &srcWidth, &srcHeight, &srcChannels, 4);
             srcFormat = TextureImporterFormat::RGBA32f;
         }
         else if (is16bits)
@@ -231,6 +231,20 @@ namespace vg::gfx
                     vector<float4> tempBuffer;
                     switch (dstFormat)
                     {
+                        case TextureImporterFormat::RGBA8:
+                        {
+                            success |= generateMipmaps<float4>((float4 *)data, _desc, tempBuffer);
+                            success |= convert<float4, UByte4>(_desc, tempBuffer, _finalBuffer);
+                        }
+                        break;
+
+                        case TextureImporterFormat::RGBA16:
+                        {
+                            success |= generateMipmaps<float4>((float4 *)data, _desc, tempBuffer);
+                            success |= convert<float4, UShort4>(_desc, tempBuffer, _finalBuffer);
+                        }
+                        break;
+
                         case TextureImporterFormat::RGBA32f:
                         {
                             success |= generateMipmaps<float4>((float4 *)data, _desc, tempBuffer);
@@ -311,6 +325,13 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    template <typename SourceFormat> bool isHDR(const SourceFormat & _value);
+
+    template <> bool isHDR(const UByte4 & _value) { return false; }
+    template <> bool isHDR(const UShort4 & _value) { return false; }
+    template <> bool isHDR(const float4 & _value) { return any(_value > 1.0f); }
+
+    //--------------------------------------------------------------------------------------
     template <typename SourceFormat> bool TextureImporter::generateMipmaps(const SourceFormat * _src, const TextureDesc & _desc, core::vector<SourceFormat> & _buffer)
     {
         uint maxMipCount = Texture::computeMaxMipmapCount(_desc);
@@ -323,6 +344,8 @@ namespace vg::gfx
         _buffer.resize(totalSize);
 
         SourceFormat * dst = _buffer.data();
+
+        bool hdrValuesFound = false;
 
         for (uint s = 0; s < _desc.slices; ++s)
         {
@@ -406,10 +429,22 @@ namespace vg::gfx
                                         break;
                                 }
 
-                                out[dstX + dstY * mipWidth].r = in[i + faceOffsetX * mipWidth + (j + faceOffsetY * mipHeight) * mipWidth * 4].r; // * 4 because we're using a 4x3 cross pattern
-                                out[dstX + dstY * mipWidth].g = in[i + faceOffsetX * mipWidth + (j + faceOffsetY * mipHeight) * mipWidth * 4].g; // * 4 because we're using a 4x3 cross pattern
-                                out[dstX + dstY * mipWidth].b = in[i + faceOffsetX * mipWidth + (j + faceOffsetY * mipHeight) * mipWidth * 4].b; // * 4 because we're using a 4x3 cross pattern
-                                out[dstX + dstY * mipWidth].a = in[i + faceOffsetX * mipWidth + (j + faceOffsetY * mipHeight) * mipWidth * 4].a; // * 4 because we're using a 4x3 cross pattern
+                                const auto & srcTexel = in[i + faceOffsetX * mipWidth + (j + faceOffsetY * mipHeight) * mipWidth * 4]; // * 4 because we're using a 4x3 cross pattern
+                                auto & dstTexel = out[dstX + dstY * mipWidth];
+
+                                if (!hdrValuesFound)
+                                {
+                                    if (isHDR(srcTexel))
+                                    {
+                                        VG_WARNING("[Import] At least one HDR value has been found importing cubemap file");
+                                        hdrValuesFound = true;
+                                    }
+                                }
+
+                                dstTexel.r = srcTexel.r; 
+                                dstTexel.g = srcTexel.g; 
+                                dstTexel.b = srcTexel.b; 
+                                dstTexel.a = srcTexel.a; 
                             }
                         }
                     }
