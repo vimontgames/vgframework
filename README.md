@@ -262,7 +262,7 @@ The external libraries are included with the sources for convenience. Follow the
 | [optick](                  https://github.com/bombomby/optick                                                         ) ✨ | 1.3.1                                                  
 | [px_sched](                https://github.com/pplux/px                                                                )    |                
 | [SoLoud](                  https://github.com/jarikomppa/soloud                                                       )    | August 2024    
-| [stb](                     https://github.com/nothings/stb                                                            )    |                                                           
+| [stb](                     https://github.com/nothings/stb                                                            )    | 2.30                                                          
 | [tinyXML2](                https://github.com/leethomason/tinyxml2/releases/tag/10.0.0                                )    | 10.0.0                     
 | [UFBX](                    https://github.com/ufbx/ufbx                                                               )    | 0.14.3                                                      
 | [Vulkan Memory Allocator]( https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator                          )    | 3.0.1                   

@@ -110,7 +110,7 @@ namespace vg::editor
                 { "optick",                 "1.3.1",            "https://github.com/bombomby/optick" },
                 { "px_sched",               "",                 "https://github.com/pplux/px" },
                 { "SoLoud",                 "August 2024",      "https://github.com/jarikomppa/soloud" },
-                { "stb_image",              "",                 "https://github.com/nothings/stb" },
+                { "stb_image",              "2.30",             "https://github.com/nothings/stb" },
                 { "tinyXML2",               "10.0.0",           "https://github.com/leethomason/tinyxml2" },
                 { "UFBX",                   "0.14.3",           "https://github.com/ufbx/ufbx" },
                 { "VulkanMemoryAllocator",  "3.0.1",            "https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator" },

@@ -1,9 +1,22 @@
+#define STB_IMAGE_WRITE_STATIC
+#define STBIWDEF static inline
+
+#include "stb_image.h"
+#include "stb_rect_pack.h"
+#include "stb_truetype.h"
+#include "stb_image_write.h"
+#include "stb_c_lexer.h"
+#include "stb_perlin.h"
+#include "stb_dxt.h"
+#include "stb_divide.h"
+#include "stb_herringbone_wang_tile.h"
+#include "stb_ds.h"
+#include "stb_hexwave.h"
+
 #include "stb_sprintf.h"
 #define STB_SPRINTF_IMPLEMENTATION
 #include "stb_sprintf.h"
 
-#define STB_IMAGE_WRITE_STATIC
-#define STBIWDEF static inline
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_TRUETYPE_IMPLEMENTATION
@@ -16,6 +29,7 @@
 #define STB_RECT_PACK_IMPLEMENTATION
 #define STB_VOXEL_RENDER_IMPLEMENTATION
 #define STB_CONNECTED_COMPONENTS_IMPLEMENTATION
+#define STB_HEXWAVE_IMPLEMENTATION
 #define STB_DS_IMPLEMENTATION
 #define STBDS_UNIT_TESTS
 
@@ -33,10 +47,10 @@ void my_free(void *) { }
 #include "stb_image_write.h"
 #include "stb_perlin.h"
 #include "stb_dxt.h"
-#include "stb_c_lexer.h"
 #include "stb_divide.h"
 #include "stb_herringbone_wang_tile.h"
 #include "stb_ds.h"
+#include "stb_hexwave.h"
 
 #define STBCC_GRID_COUNT_X_LOG2  10
 #define STBCC_GRID_COUNT_Y_LOG2  10
@@ -56,7 +70,7 @@ void my_free(void *) { }
 #include "stb_leakcheck.h"
 
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
-#include "stb_image_resize.h"
+#include "stb_image_resize2.h"
 
 //#include "stretchy_buffer.h"  // deprecating
 
@@ -168,3 +182,5 @@ void dummy3(void)
   stb_textedit_initialize_state(0,0);
   stb_textedit_paste(0,0,0,0);
 }
+
+#include "stb_c_lexer.h"
