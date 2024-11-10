@@ -154,9 +154,10 @@ jobs:
           git push
 
       - name: Send Discord Notification
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        shell: pwsh          
         run: |
+          $DISCORD_WEBHOOK_URL = "${{ secrets.DISCORD_WEBHOOK_URL }}"
+
           $versionContent = Get-Content "src/version.h"
           $major, $minor, $patch = "", "", ""
 
