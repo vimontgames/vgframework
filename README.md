@@ -324,7 +324,7 @@ The following assets are provided under permissive licenses. Please follow the p
 | [FX - Swoosh - normal]( https://freesound.org/people/bolkmar/sounds/451127/                             ) | bolkmar               
 | [Large sword swing](    https://freesound.org/people/Luis0413/sounds/737748/                            ) | Luis0413              
 | [Tally Dub](            https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/ ) | Brotheration Records   
-
+| [Chainsaw](             https://freesound.org/people/pblzr/sounds/512875/                               ) | [pblzr](https://freesound.org/people/pblzr/)
 
 
 # Misc
