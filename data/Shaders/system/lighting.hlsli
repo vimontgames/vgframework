@@ -348,10 +348,10 @@ float3 applyLighting(float3 _albedo, LightingResult _lighting, DisplayMode _disp
 		case DisplayMode::Lighting_EnvironmentSpecular:
 			return _lighting.envSpecular.rgb;
 
-		case DisplayMode::Lighting_DirectLightDiffuse:
+		case DisplayMode::Lighting_DirectDiffuse:
 			return _lighting.directLightDiffuse.rgb;
 
-		case DisplayMode::Lighting_DirectLightSpecular:
+		case DisplayMode::Lighting_DirectSpecular:
 			return _lighting.directLightSpecular.rgb;
 
 		case DisplayMode::Lighting_Diffuse:

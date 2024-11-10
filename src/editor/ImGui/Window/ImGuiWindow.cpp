@@ -83,7 +83,8 @@ namespace vg::editor
             width -= ImGui::GetStyle().ScrollbarSize;
 
         width -= style::label::PixelWidth;
-        width = min(width, 128.0f);
+        width -= style::button::SizeSmall.x;
+        //width = min(width, 96.0f);
 
         return ImVec2(width, width);
     }

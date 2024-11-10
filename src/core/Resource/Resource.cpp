@@ -19,9 +19,8 @@ namespace vg::core
         registerPropertyEx(Resource, m_resourcePath, "Path", PropertyFlags::NotVisible);
         setPropertyDescription(Resource, m_resourcePath, "Resource file relative path");
 
-        // This is used for the inspector but not serialized
+        // This is used for the inspector to display resource preview, but not serialized
         registerPropertyObjectPtrEx(Resource, m_object, "Object", PropertyFlags::NotSaved);
-        //registerPropertyObjectPtrEx(Resource, m_meta, "Metadata", PropertyFlags::NotVisible);
 
         return true;
     }

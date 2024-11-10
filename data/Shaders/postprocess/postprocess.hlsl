@@ -241,7 +241,7 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
             color.rgb = stencil / 255.0f;
             break;
 
-            case DisplayMode::Lighting_SpecularBRDF:
+            case DisplayMode::Lighting_EnvironmentSpecularBRDF:
             color.rgb = getTexture2D(viewConstants.getSpecularBRDF()).SampleLevel(nearestClamp, uv, 0).rgb;
             break;
         }

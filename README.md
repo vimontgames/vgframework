@@ -1,6 +1,6 @@
 ﻿<img src="doc/img/covidboyicon.png" alt="VGFramework logo" title="VGFramework" align="right" height="64" />
 
-# VGFramework 0.40
+# VGFramework 0.41
 Yet another work-in-progress game and graphic engine project.
 
 # Table of contents

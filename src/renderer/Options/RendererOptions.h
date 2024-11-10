@@ -80,9 +80,9 @@ namespace vg::renderer
         bool                    isRayTracingEnabled                     () const { return m_rayTracing; }
         bool                    anyRayTracingDebugDisplay               () const;
 
-        bool                    isDisplayMatIDEnabled                   () const { return DisplayMode::Forward_MatID    == m_debugDisplayMode;}
-        bool				    isDisplayNormalEnabled	                () const { return DisplayMode::Forward_VSNormal == m_debugDisplayMode; }
-		bool				    isDisplayUV0Enabled		                () const { return DisplayMode::Forward_UV0      == m_debugDisplayMode; }
+        bool                    isDisplayMatIDEnabled                   () const { return DisplayMode::Geometry_MaterialID    == m_debugDisplayMode;}
+        bool				    isDisplayNormalEnabled	                () const { return DisplayMode::Geometry_VertexNormal == m_debugDisplayMode; }
+		bool				    isDisplayUV0Enabled		                () const { return DisplayMode::Geometry_UV0      == m_debugDisplayMode; }
 
         bool                    isAlbedoMapsEnabled                     () const { return 0 != (DisplayFlags::AlbedoMap & m_displayFlags); }
         bool                    isNormalMapsEnabled                     () const { return 0 != (DisplayFlags::NormalMap & m_displayFlags); }

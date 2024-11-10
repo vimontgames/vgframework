@@ -24,6 +24,12 @@ namespace vg::gfx
         }
 
         //--------------------------------------------------------------------------------------
+        core::u16 Texture::GetSlices() const
+        {
+            return m_texDesc.slices;
+        }
+
+        //--------------------------------------------------------------------------------------
         gfx::PixelFormat Texture::GetPixelFormat() const
         {
             return m_texDesc.format;
@@ -33,6 +39,12 @@ namespace vg::gfx
         TextureType Texture::GetTextureType() const
         {
             return m_texDesc.type;
+        }
+
+        //--------------------------------------------------------------------------------------
+        core::u16 Texture::GetMipmapCount() const 
+        {
+            return m_texDesc.mipmaps;
         }
 
         //--------------------------------------------------------------------------------------

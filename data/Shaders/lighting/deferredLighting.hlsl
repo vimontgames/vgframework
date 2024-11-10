@@ -67,47 +67,58 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
         // Handled in applyLighting
         case DisplayMode::Lighting_EnvironmentDiffuse:
         case DisplayMode::Lighting_EnvironmentSpecular:
-        case DisplayMode::Lighting_DirectLightDiffuse:
-        case DisplayMode::Lighting_DirectLightSpecular:
+        case DisplayMode::Lighting_DirectDiffuse:
+        case DisplayMode::Lighting_DirectSpecular:
         case DisplayMode::Lighting_Diffuse:
         case DisplayMode::Lighting_Specular:
         case DisplayMode::Lighting_RayCount:
+            break;
+
+        case DisplayMode::Forward_SurfaceType:
+        case DisplayMode::Geometry_MaterialID:
+	    case DisplayMode::Geometry_VertexNormal:
+        case DisplayMode::Geometry_VertexTangent:
+        case DisplayMode::Geometry_VertexBinormal:
+        case DisplayMode::Geometry_VertexColor:
+	    case DisplayMode::Geometry_UV0:
+        case DisplayMode::Geometry_UV1:
+        case DisplayMode::Material_Albedo:
+        case DisplayMode::Material_AmbientOcclusion:
+        case DisplayMode::Material_Roughness:
+        case DisplayMode::Material_Metalness:
+        case DisplayMode::Material_NormalMap:
+        case DisplayMode::Forward_WorldNormal:
+        case DisplayMode::Forward_WorldPosition:
+        case DisplayMode::Forward_ScreenPos:
+            color = _gbuffer.albedo.rgb;
             break;
             
         default:
             break;
             
-        case DisplayMode::Deferred_GBuffer0_Albedo:
+        case DisplayMode::Deferred_Albedo:
             color = _gbuffer.albedo.rgb;
             break;
-            
-        //case DisplayMode::Deferred_GBuffer0_A:
-        //    color = _gbuffer.albedo.aaa;
-        //    break;
-            
-        case DisplayMode::Deferred_GBuffer1_Normal:
+
+        case DisplayMode::Deferred_AlbedoAlpha:
+            color = _gbuffer.albedo.aaa;
+            break;
+                        
+        case DisplayMode::Deferred_Normal:
             color = _gbuffer.normal.rgb*0.5f+0.5f;
             break;
             
-        //case DisplayMode::Deferred_GBuffer1_A:
-        //    color = _gbuffer.normal.aaa;
-        //    break;
-            
-        case DisplayMode::Deferred_GBuffer2_Occlusion:
-            color = _gbuffer.pbr.rrr;
+        case DisplayMode::Deferred_NormalAlpha:
+            color = _gbuffer.normal.aaa;
             break;
             
-        case DisplayMode::Deferred_GBuffer2_Roughness:
-            color = _gbuffer.pbr.ggg;
+        case DisplayMode::Deferred_PBR:
+            color = _gbuffer.pbr.rgb;
             break;
-            
-        case DisplayMode::Deferred_GBuffer2_Metalness:
-            color = _gbuffer.pbr.bbb;
+                        
+        case DisplayMode::Deferred_PBRAlpha:
+            color = _gbuffer.pbr.aaa;
             break;
-            
-        //case DisplayMode::Deferred_GBuffer1_A:
-        //    color = _gbuffer.normal.aaa;
-        //    break;
 
         case DisplayMode::Deferred_MSAAEdges:
             // Handled in CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)

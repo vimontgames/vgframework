@@ -18,8 +18,10 @@ namespace vg::gfx
 
 			core::u16										GetWidth				() const final override;
 			core::u16										GetHeight				() const final override;
+			core::u16										GetSlices				() const final override;
             PixelFormat										GetPixelFormat			() const final override;
             TextureType										GetTextureType			() const final override;
+			core::u16										GetMipmapCount			() const final override;
 
 			VG_INLINE const TextureDesc &					getTexDesc				() const;
 			VG_INLINE const gfx::Resource &					getResource				() const;

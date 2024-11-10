@@ -45,13 +45,33 @@ namespace vg::editor
                         {
                             ImTextureID texID = imGuiAdapter->GetTextureID(texture);
                             ImGui::Image(texID, texturePreviewSize);
-                            imGuiAdapter->ReleaseTextureID(texture);
 
                             if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
                             {
-                                string tooltip = fmt::sprintf("%s", asString(originalTex->GetPixelFormat()));
-                                ImGui::SetTooltip(tooltip.c_str());
+                                if (ImGui::BeginTooltipEx(ImGuiTooltipFlags_OverridePrevious, ImGuiWindowFlags_None))
+                                {
+                                    string tooltip;
+                                    
+                                    switch (originalTex->GetTextureType())
+                                    {
+                                        default:
+                                        case gfx::TextureType::Texture2D:
+                                            tooltip = fmt::sprintf("%ux%u\n", originalTex->GetWidth(), originalTex->GetHeight());
+                                            break;
+
+                                        case gfx::TextureType::TextureCube:
+                                            tooltip = fmt::sprintf("%ux%ux%u\n", originalTex->GetWidth(), originalTex->GetHeight(), originalTex->GetSlices());
+                                            break;
+                                    }
+
+                                    tooltip += fmt::sprintf("%s\n%u mip levels(s)", asString(originalTex->GetPixelFormat()), originalTex->GetMipmapCount());
+                                    
+                                    ImGui::Text(tooltip.c_str());
+                                    ImGui::EndTooltip();
+                                }
                             }
+
+                            imGuiAdapter->ReleaseTextureID(texture);
                         }
                         else
                         {
