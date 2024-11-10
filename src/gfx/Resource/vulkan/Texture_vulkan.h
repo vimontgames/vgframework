@@ -19,6 +19,7 @@ namespace vg::gfx::vulkan
         static VkImageViewType  getVulkanImageViewType	(TextureType _texType);
 
 	private:
-		VkImageView			    m_vkImageView;
+		VkImageView			    m_vkImageView;	// This is the default image view with all slices/mipmaps (used for ShaderResourceView)
+		core::vector<core::vector<VkImageView>> m_vkSliceMipImageViews; // Separate image view for each slice/mip level (used for RWTextures)
 	};
 }

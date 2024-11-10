@@ -49,8 +49,9 @@ namespace vg::gfx
 					gfx::BindlessTextureHandle				m_stencilTextureHandle;
 				};
 			};
-			
-			gfx::BindlessRWTextureHandle					m_rwTextureHandle;
+
+			// [slice][mip]
+			core::vector<core::vector<gfx::BindlessRWTextureHandle>> m_rwTextureHandles;
 		};
 	}
 }

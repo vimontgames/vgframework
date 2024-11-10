@@ -52,6 +52,8 @@ namespace vg::engine
 
         VG_SAFE_RELEASE(m_physicsWorld);
         VG_SAFE_RELEASE(m_environmentCubemap);
+        VG_SAFE_RELEASE(m_irradianceCubemap);
+        VG_SAFE_RELEASE(m_specularReflectionCubemap);
         VG_SAFE_DELETE(m_debugDrawData);
 
         for (uint j = 0; j < enumCount<BaseSceneType>(); ++j)
@@ -419,8 +421,8 @@ namespace vg::engine
 
         // Reset cubemap
         VG_SAFE_RELEASE_ASYNC(m_environmentCubemap);
-        VG_SAFE_RELEASE_ASYNC(m_irradianceCubemap);
-        VG_SAFE_RELEASE_ASYNC(m_specularReflectionCubemap);
+        //VG_SAFE_RELEASE_ASYNC(m_irradianceCubemap);
+        //VG_SAFE_RELEASE_ASYNC(m_specularReflectionCubemap);
 
         // Use default ambient
         m_irradianceIntensity = options->GetDefaultIrradianceIntensity();

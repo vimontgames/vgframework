@@ -473,7 +473,7 @@ namespace vg::renderer
                     if (nullptr == m_hdrOutput || m_hdrOutput->getTexDesc() != hdrOutputDesc)
                     {
                         VG_SAFE_RELEASE(m_hdrOutput);
-                        m_hdrOutput = (Texture*)CreateTexture(hdrOutputDesc, "HDROutput");
+                        m_hdrOutput = (Texture *)CreateTexture(hdrOutputDesc, "HDROutput");
                     }
 
                     m_frameGraph.importRenderTarget("HDROutput", m_hdrOutput, float4(0, 0, 0, 1), FrameGraphResource::InitState::Clear);
@@ -481,7 +481,7 @@ namespace vg::renderer
 
                 // Register passes not linked to views (e.g. skinning, or BLAS updates)
                 RenderPassContext mainViewRenderPassContext;
-                                  mainViewRenderPassContext.setView(nullptr);
+                mainViewRenderPassContext.setView(nullptr);
 
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_gpuDebugUpdatePass, "GPU Debug");
 
@@ -497,6 +497,7 @@ namespace vg::renderer
                     if (nullptr == m_generatedSpecularBRDF)
                     {
                         TextureDesc specularBRDFDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource | BindFlags::UnorderedAccess, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R16G16_float, TextureFlags::None, 256, 256, 1, 1, MSAA::None);
+                        //specularBRDFDesc.mipmaps = 2; // test
                         m_generatedSpecularBRDF = m_device.createTexture(specularBRDFDesc, "SpecularBRDF_LUT");
 
                         m_computeSpecularBRDFPass->setSpecularBRDFTexture(m_generatedSpecularBRDF);
@@ -531,6 +532,9 @@ namespace vg::renderer
                     }
                 }
 
+                // Gather worlds from all visible views
+                vector<IWorld *> visibleWorlds;
+
                 // Register view passes
                 for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
                 {
@@ -545,16 +549,45 @@ namespace vg::renderer
                     auto & views = m_views[j];
                     for (uint i = 0; i < views.size(); ++i)
                     {
-                        auto * view = (View*)views[i];
+                        auto * view = (View *)views[i];
                         if (nullptr != view)
                         {
                             if (!view->IsRender())
                                 continue;
 
                             gfx::RenderPassContext rc;
-                                                   rc.setView(view);
+                            rc.setView(view);
+
+                            if (IWorld * world = view->GetWorld())
+                            {
+                                if (!vector_helper::exists(visibleWorlds, world))
+                                    visibleWorlds.push_back(world);
+                            }
 
                             view->RegisterFrameGraph(rc, m_frameGraph);
+                        }
+                    }
+                }
+
+                if (asBool((PBRFlags::GenerateIrradianceCubemap | PBRFlags::GenerateSpecularReflectionCubemap) & options->getPBRFlags()))
+                {
+                    for (uint i = 0; i < visibleWorlds.size(); ++i)
+                    {
+                        auto * world = visibleWorlds[i];
+
+                        Texture * environmentCubemap = (Texture*)world->GetEnvironmentCubemap();
+                        if (nullptr != environmentCubemap)
+                        {
+                            Texture * irradianceCubemap = (Texture *)world->GetIrradianceCubemap();
+                            if (nullptr == irradianceCubemap)
+                            {
+                                TextureDesc irradianceCubemapDesc = environmentCubemap->getTexDesc();
+                                irradianceCubemapDesc.resource.m_bindFlags = BindFlags::ShaderResource | BindFlags::UnorderedAccess;
+                                irradianceCubemapDesc.format = PixelFormat::R16G16B16A16_float;
+                                irradianceCubemap = m_device.createTexture(irradianceCubemapDesc, "Irradiance_Cubemap");
+                                world->SetIrradianceCubemap(irradianceCubemap);
+                                VG_SAFE_RELEASE(irradianceCubemap);
+                            }
                         }
                     }
                 }

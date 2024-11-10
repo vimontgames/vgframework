@@ -186,7 +186,14 @@ namespace vg::gfx
                 bindlessTable->freeBindlessTextureHandle(m_textureHandle);
         }       
 
-        if (m_rwTextureHandle.isValid())
-            bindlessTable->freeBindlessRWTextureHandle(m_rwTextureHandle);
+        for (uint s = 0; s < m_rwTextureHandles.size(); ++s)
+        {
+            for (uint m = 0; m < m_rwTextureHandles[s].size(); ++m)
+            {
+                auto & rwTextureHandle = m_rwTextureHandles[s][m];
+                if (rwTextureHandle.isValid())
+                    bindlessTable->freeBindlessRWTextureHandle(rwTextureHandle);
+            }
+        }   
 	}
 }

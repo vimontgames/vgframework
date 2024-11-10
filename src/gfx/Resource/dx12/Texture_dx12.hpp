@@ -433,19 +433,57 @@ namespace vg::gfx::dx12
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(_texDesc.type);
                     break;
 
+                case TextureType::TextureCube:
+                {
+                    VG_ASSERT(_texDesc.slices == 6);
+
+                    m_rwTextureHandles.resize(_texDesc.slices); 
+                    for (uint s = 0; s < _texDesc.slices; ++s)
+                        m_rwTextureHandles[s].resize(_texDesc.mipmaps);
+
+                    for (uint s = 0; s < _texDesc.slices; ++s)
+                    {
+                        for (uint m = 0; m < _texDesc.mipmaps; ++m)
+                        {
+                            BindlessTable * bindlessTable = device->getBindlessTable();
+                            auto rwTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
+                            D3D12_CPU_DESCRIPTOR_HANDLE d3d12RWTextureDescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(rwTextureHandle);
+
+                            D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+                            uavDesc.Format = getd3d12ResourceFormat(_texDesc.format);
+                            uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+                            uavDesc.Texture2D.MipSlice = m;
+                            uavDesc.Texture2D.PlaneSlice = 0;
+                            d3d12device->CreateUnorderedAccessView(m_resource.getd3d12TextureResource(), nullptr, &uavDesc, d3d12RWTextureDescriptorHandle);
+                            bindlessTable->updated3d12descriptor(rwTextureHandle);
+
+                            m_rwTextureHandles[s][m] = rwTextureHandle;
+                        }
+                    }
+                }
+                break;
+
                 case TextureType::Texture2D:
                 {
-                    BindlessTable * bindlessTable = device->getBindlessTable();
-                    m_rwTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
-                    D3D12_CPU_DESCRIPTOR_HANDLE d3d12RWTextureDescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_rwTextureHandle);
+                    m_rwTextureHandles.resize(1); // 1 slice
+                    m_rwTextureHandles[0].resize(_texDesc.mipmaps);
 
-                    D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc;
-                    uavDesc.Format = getd3d12ResourceFormat(_texDesc.format);
-                    uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
-                    uavDesc.Texture2D.MipSlice = 0;
-                    uavDesc.Texture2D.PlaneSlice = 0;
-                    d3d12device->CreateUnorderedAccessView(m_resource.getd3d12TextureResource(), nullptr, &uavDesc, d3d12RWTextureDescriptorHandle);
-                    bindlessTable->updated3d12descriptor(getRWTextureHandle());
+                    for (uint m = 0; m < _texDesc.mipmaps; ++m)
+                    {
+                        BindlessTable * bindlessTable = device->getBindlessTable();
+                        auto rwTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
+                        D3D12_CPU_DESCRIPTOR_HANDLE d3d12RWTextureDescriptorHandle = bindlessTable->getd3d12CPUDescriptorHandle(rwTextureHandle);
+
+                        D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+                        uavDesc.Format = getd3d12ResourceFormat(_texDesc.format);
+                        uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
+                        uavDesc.Texture2D.MipSlice = m;
+                        uavDesc.Texture2D.PlaneSlice = 0;
+                        d3d12device->CreateUnorderedAccessView(m_resource.getd3d12TextureResource(), nullptr, &uavDesc, d3d12RWTextureDescriptorHandle);
+                        bindlessTable->updated3d12descriptor(rwTextureHandle);
+
+                        m_rwTextureHandles[0][m] = rwTextureHandle;
+                    }
                 }
                 break;
             }            

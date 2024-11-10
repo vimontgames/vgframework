@@ -47,8 +47,9 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         VG_INLINE const gfx::BindlessRWTextureHandle Texture::getRWTextureHandle() const
         { 
-            VG_ASSERT(m_rwTextureHandle.isValid());
-            return m_rwTextureHandle; 
+            const auto & rwTextureHandle = m_rwTextureHandles[0][0];
+            VG_ASSERT(rwTextureHandle.isValid());
+            return rwTextureHandle;
         }
 
         //--------------------------------------------------------------------------------------

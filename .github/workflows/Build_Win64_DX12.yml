@@ -152,3 +152,63 @@ jobs:
 
           git commit -m "$commitMessage"
           git push
+
+      - name: Send Discord Notification
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          $versionContent = Get-Content "src/version.h"
+          $major, $minor, $patch = "", "", ""
+
+          foreach ($line in $versionContent) {
+            if ($line -match '#define VG_FRAMEWORK_VERSION_MAJOR (\d+)') {
+              $major = $matches[1]
+            } elseif ($line -match '#define VG_FRAMEWORK_VERSION_MINOR (\d+)') {
+              $minor = $matches[1]
+            } elseif ($line -match '#define VG_FRAMEWORK_VERSION_PATCH (\d+)') {
+              $patch = $matches[1]
+            }
+          }
+
+          $fullVersion = "$major.$minor.$patch"
+
+          $commitContent = Get-Content "src/commit.h"
+          $gitRevision = ""
+
+          foreach ($line in $commitContent) {
+            if ($line -like '*#define GIT_REVISION*') {
+              $parts = $line -split '"'
+              $gitRevision = $parts[1]
+              break
+            }
+          }
+                    
+          $jsonPayload = @"
+          {
+            "username": "GitHub",
+            "content": "",
+            "embeds": [
+              {
+                "type": "rich",
+                "title": "VGFramework $fullVersion ($gitRevision)",
+                "description": "A new version is available",
+                "color": 15579707,
+                "thumbnail": {
+                  "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/newversion.png?raw=true"
+                },
+                "author": {
+                  "name": "$($env:GITHUB_ACTOR)",
+                  "url": "https://github.com/$($env:GITHUB_ACTOR)",
+                  "icon_url": "https://avatars.githubusercontent.com/u/$($env:GITHUB_ACTOR_ID)?v=4"
+                },
+                "url": "https://github.com/vimontgames/vgframework"
+              }
+            ]
+          }
+          "@
+
+          # Send the notification using curl
+          $RESPONSE = curl -H "Content-Type: application/json" -X POST -d $jsonPayload $DISCORD_WEBHOOK_URL
+
+          # Output the response from the server
+          Write-Output "Webhook server response: $RESPONSE"
