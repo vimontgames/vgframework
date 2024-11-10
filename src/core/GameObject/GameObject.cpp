@@ -468,6 +468,10 @@ namespace vg::core
                 m_components.insert(m_components.begin() + _index, _component);
 
             _component->SetParent(this); 
+
+            if (!_component->HasValidUID())
+                _component->RegisterUID();
+
             recomputeUpdateFlags();
             sortComponents();
         }
