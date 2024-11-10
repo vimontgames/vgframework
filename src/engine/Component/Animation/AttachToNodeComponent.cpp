@@ -77,7 +77,7 @@ namespace vg::engine
 
             if (m_skeleton)
             {
-                if (m_nodeIndex < (int)m_skeleton->GetNodeCount())
+                if (m_nodeIndex != -1 && m_nodeIndex < (int)m_skeleton->GetNodeCount())
                 {
                     float4x4 mBone = transpose(m_skeleton->GetNodeWorldMatrix(m_nodeIndex));
                     float4x4 mGlobal = mul(mBone, m_gameObject->GetGlobalMatrix());

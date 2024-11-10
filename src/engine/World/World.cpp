@@ -286,7 +286,8 @@ namespace vg::engine
         size_t totalMergedCount = 0;
 
         // Foreach scene, look if a MergeStaticObjectComponent is available
-        for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
+        const auto sceneCount = GetSceneCount(BaseSceneType::Scene);
+        for (uint i = 0; i < sceneCount; ++i)
         {
             const IBaseScene * scene = GetScene(i, BaseSceneType::Scene);
             if (nullptr != scene)
