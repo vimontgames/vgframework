@@ -637,8 +637,8 @@ namespace vg::gfx::dx12
             {
                 D3D12_SUBRESOURCE_FOOTPRINT pitchedDesc = {};
                 pitchedDesc.Format = Texture::getd3d12ResourceFormat(texDesc.format);
-                pitchedDesc.Width = texDesc.width >> i;
-                pitchedDesc.Height = texDesc.height >> i;
+                pitchedDesc.Width = max(texDesc.width >> i, 1);
+                pitchedDesc.Height = max(texDesc.height >> i, 1);
                 pitchedDesc.Depth = 1;
                 pitchedDesc.RowPitch = (uint)alignUp((uint)(pitchedDesc.Width * fmtSize), (uint)D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 

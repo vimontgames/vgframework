@@ -291,8 +291,8 @@ namespace vg::gfx::vulkan
                     {
                         for (uint i = 0; i < _texDesc.mipmaps; ++i)
                         {
-                            const uint w = _texDesc.width >> i;
-                            const uint h = _texDesc.height >> i;
+                            const uint w = max((uint)_texDesc.width >> i, 1U);
+                            const uint h = max((uint)_texDesc.height >> i, 1U);
 
                             // Copy to upload buffer line by line
                             for (uint y = 0; y < h; ++y)

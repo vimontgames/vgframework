@@ -52,7 +52,14 @@ namespace vg::gfx
             {
                 default:
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                    //break;
+                    break;
+
+                case TextureImporterType::Texture1D:
+                    _desc.type = TextureType::Texture1D;
+                    width = srcWidth;
+                    height = 1;
+                    slices = 1;
+                    break;
 
                 case TextureImporterType::Texture2D:
                     _desc.type = TextureType::Texture2D;
@@ -317,8 +324,8 @@ namespace vg::gfx
             {
                 const auto mipSize = mipWidth * mipHeight * _fmtSize;
                 totalSize += mipSize;
-                mipWidth >>= 1;
-                mipHeight >>= 1;
+                mipWidth = max(1U, mipWidth / 2);
+                mipHeight = max(1U, mipHeight / 2);
             }
         }
         return totalSize;
@@ -466,17 +473,44 @@ namespace vg::gfx
                             const SourceFormat * in = (SourceFormat *)src;
                             SourceFormat * out = dst;
 
-                            const SourceFormat & tex00 = in[((i << 1) + 0) + ((j << 1) + 0) * (mipWidth << 1)];
-                            const SourceFormat & tex01 = in[((i << 1) + 0) + ((j << 1) + 1) * (mipWidth << 1)];
-                            const SourceFormat & tex10 = in[((i << 1) + 1) + ((j << 1) + 0) * (mipWidth << 1)];
-                            const SourceFormat & tex11 = in[((i << 1) + 1) + ((j << 1) + 1) * (mipWidth << 1)];
-
                             using scalarType = typename vectorTraits<SourceFormat>::type;
 
-                            out[i + j * mipWidth].r = (tex00.r + tex01.r + tex10.r + tex11.r) / (scalarType)4;
-                            out[i + j * mipWidth].g = (tex00.g + tex01.g + tex10.g + tex11.g) / (scalarType)4;
-                            out[i + j * mipWidth].b = (tex00.b + tex01.b + tex10.b + tex11.b) / (scalarType)4;
-                            out[i + j * mipWidth].a = (tex00.a + tex01.a + tex10.a + tex11.a) / (scalarType)4;
+                            if (mipWidth >= 2 && mipHeight >= 2)
+                            {
+                                const SourceFormat & tex00 = in[((i << 1) + 0) + ((j << 1) + 0) * (mipWidth << 1)];
+                                const SourceFormat & tex01 = in[((i << 1) + 1) + ((j << 1) + 0) * (mipWidth << 1)];
+                                const SourceFormat & tex10 = in[((i << 1) + 0) + ((j << 1) + 1) * (mipWidth << 1)];
+                                const SourceFormat & tex11 = in[((i << 1) + 1) + ((j << 1) + 1) * (mipWidth << 1)];
+
+                                out[i + j * mipWidth].r = (tex00.r + tex01.r + tex10.r + tex11.r) / (scalarType)4;
+                                out[i + j * mipWidth].g = (tex00.g + tex01.g + tex10.g + tex11.g) / (scalarType)4;
+                                out[i + j * mipWidth].b = (tex00.b + tex01.b + tex10.b + tex11.b) / (scalarType)4;
+                                out[i + j * mipWidth].a = (tex00.a + tex01.a + tex10.a + tex11.a) / (scalarType)4;
+                            }
+                            else if (mipHeight == 1)
+                            {
+                                const SourceFormat & tex00 = in[((i << 1) + 0) + ((j << 1) + 0) * (mipWidth << 1)];
+                                const SourceFormat & tex01 = in[((i << 1) + 1) + ((j << 1) + 0) * (mipWidth << 1)];
+   
+                                out[i + j * mipWidth].r = (tex00.r + tex01.r) / (scalarType)2;
+                                out[i + j * mipWidth].g = (tex00.g + tex01.g) / (scalarType)2;
+                                out[i + j * mipWidth].b = (tex00.b + tex01.b) / (scalarType)2;
+                                out[i + j * mipWidth].a = (tex00.a + tex01.a) / (scalarType)2;
+                            }
+                            else if (mipWidth == 1)
+                            {
+                                const SourceFormat & tex00 = in[((i << 1) + 0) + ((j << 1) + 0) * (mipWidth << 1)];
+                                const SourceFormat & tex10 = in[((i << 1) + 0) + ((j << 1) + 1) * (mipWidth << 1)];
+
+                                out[i + j * mipWidth].r = (tex00.r + tex10.r ) / (scalarType)2;
+                                out[i + j * mipWidth].g = (tex00.g + tex10.g ) / (scalarType)2;
+                                out[i + j * mipWidth].b = (tex00.b + tex10.b ) / (scalarType)2;
+                                out[i + j * mipWidth].a = (tex00.a + tex10.a ) / (scalarType)2;
+                            }
+                            else
+                            {
+                                VG_ASSERT(mipWidth >= 2 || mipHeight >= 2);
+                            }
                         }
                     }
                 }
@@ -485,8 +519,8 @@ namespace vg::gfx
                 dst += mipSize;
                 sliceSize += mipSize;
 
-                mipWidth >>= 1;
-                mipHeight >>= 1;
+                mipWidth = max(1U, mipWidth/2);
+                mipHeight = max(1U, mipHeight/2);
             }
         }
 
@@ -589,8 +623,8 @@ namespace vg::gfx
                 pSrc += mipWidth * mipHeight;
                 pDst += mipWidth * mipHeight;
 
-                mipWidth >>= 1;
-                mipHeight >>= 1;                
+                mipWidth = max(1U, mipWidth / 2);
+                mipHeight = max(1U, mipHeight / 2);
             }
         }
 

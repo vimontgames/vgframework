@@ -638,8 +638,8 @@ namespace vg::gfx::vulkan
         {
             for (uint i = 0; i < desc.mipmaps; ++i)
             {
-                const uint w = desc.width >> i;
-                const uint h = desc.height >> i;
+                const uint w = max((uint)desc.width >> i, 1U); 
+                const uint h = max((uint)desc.height >> i, 1U);
 
                 VkBufferImageCopy vkBufImgCopy = {};
                 vkBufImgCopy.bufferOffset = currentOffset;
