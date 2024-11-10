@@ -30,12 +30,12 @@ namespace vg::editor
                     {
                         gfx::ITexture * texture = nullptr;
 
-                        if (originalTex->GetTextureType() == gfx::TextureType::Texture2D)
-                        {
-                            // Texture can be displayed directly
-                            texture = originalTex;
-                        }
-                        else
+                        //if (originalTex->GetTextureType() == gfx::TextureType::Texture2D)
+                        //{
+                        //    // Texture can be displayed directly
+                        //    texture = originalTex;
+                        //}
+                        //else
                         {
                             // TODO
                             texture = imGuiAdapter->GetPreviewTexture(originalTex);

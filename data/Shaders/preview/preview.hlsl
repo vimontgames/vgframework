@@ -40,28 +40,9 @@ PS_Output PS_Preview(PS_Input _input)
     float2 uv = _input.uv;
 
     #if _TEXCUBE
+
     float2 delta = float2(uv.x-0.5, 1-uv.y-0.5);
     float dist = length(delta);
-    
-    //if (dist < 0.5)
-    //{
-    //    float theta = atan2(delta.y, delta.x);
-    //    float phi = acos(dist / 0.5);
-    //
-    //    // Calculate the direction vector in view space
-    //    float3 uvw;
-    //    uvw.x = sin(phi) * cos(theta);
-    //    uvw.y = cos(phi);
-    //    uvw.z = sin(phi) * sin(theta);
-    //
-    //    ps_out.color0 = getTextureCube(rootConstants2D.texID).SampleLevel(linearRepeat, uvw, 0).rgba;
-    //
-    //}
-    //else
-    //{
-    //    ps_out.color0 = float4(0,0,0,1);
-    //}
-
     float2 ndc = _input.uv * 2.0f - 1.0f;
     float3 uvw;
     uint face = 0;
@@ -75,7 +56,9 @@ PS_Output PS_Preview(PS_Input _input)
     ps_out.color0 = getTextureCube(rootConstants2D.texID).SampleLevel(linearRepeat, uvw, 0).rgba;
 
     #else
-    ps_out.color0 = 0;
+
+    ps_out.color0 = getTexture2D(rootConstants2D.texID).SampleLevel(linearRepeat, uv, 0).rgba;
+
     #endif
 
     ps_out.color0.rgb = Linear2sRGB( ps_out.color0.rgb);
