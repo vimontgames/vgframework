@@ -156,7 +156,7 @@ jobs:
       - name: Send Discord Notification
         shell: pwsh          
         run: |
-          $DISCORD_WEBHOOK_URL = "${{ secrets.DISCORD_WEBHOOK_URL }}"
+          $DISCORD_RELEASE_WEBHOOK_URL = "${{ secrets.DISCORD_RELEASE_WEBHOOK_URL }}"
 
           $versionContent = Get-Content "src/version.h"
           $major, $minor, $patch = "", "", ""
@@ -192,7 +192,7 @@ jobs:
               {
                 "type": "rich",
                 "title": "VGFramework $fullVersion ($gitRevision)",
-                "description": "A new version is available",
+                "description": "A new version of VGFramework is available",
                 "color": 15579707,
                 "thumbnail": {
                   "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/newversion.png?raw=true"
@@ -209,7 +209,7 @@ jobs:
           "@
 
           # Send the notification using curl
-          $RESPONSE = curl -H "Content-Type: application/json" -X POST -d $jsonPayload $DISCORD_WEBHOOK_URL
+          $RESPONSE = curl -H "Content-Type: application/json" -X POST -d $jsonPayload $DISCORD_RELEASE_WEBHOOK_URL
 
           # Output the response from the server
           Write-Output "Webhook server response: $RESPONSE"

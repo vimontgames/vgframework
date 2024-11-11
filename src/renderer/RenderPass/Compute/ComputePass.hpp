@@ -4,6 +4,7 @@
 #include "Compute/ComputeSkinning/ComputeSkinningPass.hpp"
 #include "Compute/ComputeDeferredLighting/ComputeDeferredLightingPass.hpp"
 #include "Compute/ComputeSpecularBRDF/ComputeSpecularBRDFPass.hpp"
+#include "Compute/ComputeIBLCubemaps/ComputeIBLCubemapsPass.hpp"
 
 namespace vg::renderer
 {

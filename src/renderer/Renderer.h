@@ -22,6 +22,7 @@ namespace vg::renderer
     class ComputeSkinningPass;
     class BLASUpdatePass;
     class ComputeSpecularBRDFPass;
+    class ComputeIBLCubemapsPass;
     class ImGuiPass;
     class HDROutputPass;
     class MeshModel;
@@ -161,6 +162,7 @@ namespace vg::renderer
         ComputeSkinningPass *                   m_computeSkinningPass       = nullptr;
         BLASUpdatePass *                        m_BLASUpdatePass            = nullptr;
         ComputeSpecularBRDFPass *               m_computeSpecularBRDFPass   = nullptr;
+        ComputeIBLCubemapsPass *                m_computeIBLCubemapsPass    = nullptr;
         ImGuiPass *                             m_imguiPass                 = nullptr; 
         HDROutputPass *                         m_hdrOutputPass             = nullptr;
         IPicking *                              m_picking                   = nullptr;

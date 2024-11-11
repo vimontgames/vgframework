@@ -29,7 +29,7 @@ namespace vg::gfx
 			VG_INLINE const gfx::BindlessTextureHandle		getTextureHandle		() const;
 			VG_INLINE const gfx::BindlessTextureHandle		getDepthTextureHandle	() const;
 			VG_INLINE const gfx::BindlessTextureHandle		getStencilTextureHandle	() const;
-			VG_INLINE const gfx::BindlessRWTextureHandle	getRWTextureHandle		() const;
+			VG_INLINE const gfx::BindlessRWTextureHandle	getRWTextureHandle		(uint _mipLevel = 0) const;
 
             static core::u32								getPixelFormatSize		(PixelFormat _format);
 			VG_INLINE static bool							isDepthStencilFormat	(PixelFormat _format);
@@ -50,8 +50,7 @@ namespace vg::gfx
 				};
 			};
 
-			// [slice][mip]
-			core::vector<core::vector<gfx::BindlessRWTextureHandle>> m_rwTextureHandles;
+			core::vector<gfx::BindlessRWTextureHandle>		m_rwTextureMipHandles;
 		};
 	}
 }

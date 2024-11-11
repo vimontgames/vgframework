@@ -72,6 +72,8 @@ namespace vg::gfx
 
                     if (!_technique.compare(technique.name))
                     {
+                        VG_ASSERT((ShaderKey::VS)-1 != technique.vs || (ShaderKey::HS)-1 != technique.hs || (ShaderKey::DS)-1 != technique.ds || (ShaderKey::GS)-1 != technique.gs || (ShaderKey::PS)-1 != technique.ps, "Shader technique \"%s\" from file \"%s\" has no valid VS, HS, DS, GS, or PS entry point", _technique.c_str(), _file.c_str());
+
                         _key.vs = technique.vs;
                         _key.hs = technique.hs;
                         _key.ds = technique.ds;
@@ -110,6 +112,8 @@ namespace vg::gfx
 
                     if (!_technique.compare(technique.name))
                     {
+                        VG_ASSERT((ComputeShaderKey::CS)-1 != technique.cs, "Compute shader technique \"%s\" from file \"%s\" has no valid CS entry point", _technique.c_str(), _file.c_str());
+
                         _key.cs = technique.cs;
                         _key.flags = technique.flags;
 

@@ -171,6 +171,8 @@
     <ClInclude Include="Renderer_consts.h" />
     <ClInclude Include="RenderPass\Compute\ComputeDeferredLighting\ComputeDeferredLightingPass.h" />
     <ClInclude Include="RenderPass\Compute\ComputeDeferredLighting\ComputeDeferredLightingPass.hpp" />
+    <ClInclude Include="RenderPass\Compute\ComputeIBLCubemaps\ComputeIBLCubemapsPass.h" />
+    <ClInclude Include="RenderPass\Compute\ComputeIBLCubemaps\ComputeIBLCubemapsPass.hpp" />
     <ClInclude Include="RenderPass\Compute\ComputePass.h" />
     <ClInclude Include="RenderPass\Compute\ComputePass.hpp" />
     <ClInclude Include="RenderPass\Compute\ComputePostProcess\ComputePostProcessPass.h" />

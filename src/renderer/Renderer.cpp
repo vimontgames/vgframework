@@ -27,6 +27,7 @@
 #include "renderer/RenderPass/Render2D/HDROutput/HDROutputPass.h"
 #include "renderer/RenderPass/Render2D/Preview/Texture/TexturePreviewPass.h"
 #include "renderer/RenderPass/Compute/ComputeSpecularBRDF/ComputeSpecularBRDFPass.h"
+#include "renderer/RenderPass/Compute/ComputeIBLCubemaps/ComputeIBLCubemapsPass.h"
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Animation/SkeletalAnimation.h"
@@ -204,6 +205,7 @@ namespace vg::renderer
         m_instanceDataUpdatePass = new InstanceDataUpdatePass();
         m_computeSkinningPass = new ComputeSkinningPass();
         m_computeSpecularBRDFPass = new ComputeSpecularBRDFPass();
+        m_computeIBLCubemapsPass = new ComputeIBLCubemapsPass();
         m_BLASUpdatePass = new BLASUpdatePass();
         m_imguiPass = new ImGuiPass();
         m_hdrOutputPass = new HDROutputPass();
@@ -300,6 +302,7 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_instanceDataUpdatePass);
         VG_SAFE_DELETE(m_computeSkinningPass);
         VG_SAFE_DELETE(m_computeSpecularBRDFPass);
+        VG_SAFE_DELETE(m_computeIBLCubemapsPass);
         VG_SAFE_DELETE(m_BLASUpdatePass);
         VG_SAFE_DELETE(m_imguiPass);
         VG_SAFE_DELETE(m_imgui);
@@ -534,6 +537,7 @@ namespace vg::renderer
 
                 // Gather worlds from all visible views
                 vector<IWorld *> visibleWorlds;
+                vector<IView *> visibleViews;
 
                 // Register view passes
                 for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
@@ -555,41 +559,94 @@ namespace vg::renderer
                             if (!view->IsRender())
                                 continue;
 
-                            gfx::RenderPassContext rc;
-                            rc.setView(view);
-
                             if (IWorld * world = view->GetWorld())
                             {
                                 if (!vector_helper::exists(visibleWorlds, world))
                                     visibleWorlds.push_back(world);
                             }
 
-                            view->RegisterFrameGraph(rc, m_frameGraph);
+                            visibleViews.push_back(view);
                         }
                     }
                 }
 
-                if (asBool((PBRFlags::GenerateIrradianceCubemap | PBRFlags::GenerateSpecularReflectionCubemap) & options->getPBRFlags()))
+                // TODO: detect the source envmap used to compute irradiance/specular cubemaps changed and compute it only once
+                const PBRFlags pbrFlags = options->getPBRFlags();
+                if (asBool((PBRFlags::GenerateIrradianceCubemap | PBRFlags::GenerateSpecularReflectionCubemap) & pbrFlags))
                 {
                     for (uint i = 0; i < visibleWorlds.size(); ++i)
                     {
                         auto * world = visibleWorlds[i];
 
                         Texture * environmentCubemap = (Texture*)world->GetEnvironmentCubemap();
+
                         if (nullptr != environmentCubemap)
                         {
-                            Texture * irradianceCubemap = (Texture *)world->GetIrradianceCubemap();
-                            if (nullptr == irradianceCubemap)
+                            Texture * irradianceCubemap = nullptr;
+
+                            if (asBool(PBRFlags::GenerateIrradianceCubemap & pbrFlags))
                             {
+                                irradianceCubemap = (Texture *)world->GetIrradianceCubemap();
+
                                 TextureDesc irradianceCubemapDesc = environmentCubemap->getTexDesc();
                                 irradianceCubemapDesc.resource.m_bindFlags = BindFlags::ShaderResource | BindFlags::UnorderedAccess;
                                 irradianceCubemapDesc.format = PixelFormat::R16G16B16A16_float;
-                                irradianceCubemap = m_device.createTexture(irradianceCubemapDesc, "Irradiance_Cubemap");
-                                world->SetIrradianceCubemap(irradianceCubemap);
-                                VG_SAFE_RELEASE(irradianceCubemap);
+                                irradianceCubemapDesc.width = 32;
+                                irradianceCubemapDesc.height = 32;
+                                irradianceCubemapDesc.mipmaps = 1;
+
+                                if (nullptr != irradianceCubemap && irradianceCubemapDesc != irradianceCubemap->getTexDesc())
+                                {
+                                    world->SetIrradianceCubemap(nullptr); // release
+                                    irradianceCubemap = nullptr;
+                                }
+
+                                if (nullptr == irradianceCubemap)
+                                {
+                                    irradianceCubemap = m_device.createTexture(irradianceCubemapDesc, "Irradiance cubemap");
+                                    world->SetIrradianceCubemap(irradianceCubemap);
+                                    VG_SAFE_RELEASE(irradianceCubemap);
+                                }
                             }
+
+                            Texture * specularReflectionCubemap = nullptr;
+                            if (asBool(PBRFlags::GenerateSpecularReflectionCubemap & pbrFlags))
+                            {
+                                specularReflectionCubemap = (Texture *)world->GetSpecularReflectionCubemap();
+
+                                TextureDesc specularReflectionCubemapDesc = environmentCubemap->getTexDesc();
+                                specularReflectionCubemapDesc.resource.m_bindFlags = BindFlags::ShaderResource | BindFlags::UnorderedAccess;
+                                specularReflectionCubemapDesc.format = PixelFormat::R16G16B16A16_float;
+
+                                if (nullptr != specularReflectionCubemap && specularReflectionCubemapDesc != specularReflectionCubemap->getTexDesc())
+                                {
+                                    world->SetSpecularReflectionCubemap(nullptr); // release
+                                    specularReflectionCubemap = nullptr;
+                                }
+
+                                if (nullptr == specularReflectionCubemap)
+                                {
+                                    specularReflectionCubemap = m_device.createTexture(specularReflectionCubemapDesc, "Specular Reflection cubemap");
+                                    world->SetSpecularReflectionCubemap(specularReflectionCubemap);
+                                    VG_SAFE_RELEASE(specularReflectionCubemap);
+                                }
+                            }
+                         
+                            m_computeIBLCubemapsPass->add(environmentCubemap, irradianceCubemap, specularReflectionCubemap);
                         }
                     }
+
+                    m_frameGraph.addUserPass(mainViewRenderPassContext, m_computeIBLCubemapsPass, "Compute IBL Cubemaps");
+                }
+
+                for (uint i = 0; i < visibleViews.size(); ++i)
+                {
+                    View * view = (View *)visibleViews[i];
+
+                    gfx::RenderPassContext rc;
+                                           rc.setView(view);
+
+                    view->RegisterFrameGraph(rc, m_frameGraph);
                 }
 
                 // Additional preview passes

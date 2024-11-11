@@ -103,6 +103,8 @@ vg_enum_class(ReservedSlot, uint,
 
 #define BINDLESS_RWTEXTURE_BINDING_1D           210 
 #define BINDLESS_RWTEXTURE_BINDING_2D           220 
+#define BINDLESS_RWTEXTURE_BINDING_2D_FLOAT2    221 
+#define BINDLESS_RWTEXTURE_BINDING_2D_ARRAY     222
 #define BINDLESS_RWTEXTURE_BINDING_3D           230 
 
 #elif defined(VG_VULKAN)
@@ -116,7 +118,8 @@ vg_enum_class(ReservedSlot, uint,
 
 #define BINDLESS_RWTEXTURE_BINDING_1D             2 // <=> BINDLESS_RWTEXTURE_BINDING
 #define BINDLESS_RWTEXTURE_BINDING_2D             2 
-#define BINDLESS_RWTEXTURE_BINDING_2D_UINT2       2 
+#define BINDLESS_RWTEXTURE_BINDING_2D_FLOAT2      2 
+#define BINDLESS_RWTEXTURE_BINDING_2D_ARRAY       2
 #define BINDLESS_RWTEXTURE_BINDING_3D             2 
 #endif
 

@@ -59,8 +59,8 @@ namespace vg::renderer
 
         PrecomputeIBLConstants precomputeIBLConstants;
         {
-            precomputeIBLConstants.setSpecularBRDF(m_specularBRDFTexture->getRWTextureHandle());
-            precomputeIBLConstants.setSize(uint2(texDesc.width, texDesc.height));
+            precomputeIBLConstants.setDestination(m_specularBRDFTexture->getRWTextureHandle());
+            precomputeIBLConstants.setDestinationSize(uint2(texDesc.width, texDesc.height));
         }
         _cmdList->setComputeRootConstants(0, (u32 *)&precomputeIBLConstants, PrecomputeIBLConstantsCount);
 

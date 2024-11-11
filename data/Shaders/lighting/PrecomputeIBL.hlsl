@@ -61,10 +61,10 @@ float2 IntegrateBRDF(float NdotV, float roughness)
 }
 
 //--------------------------------------------------------------------------------------
-[numthreads(PRECOMPUTE_IBL_THREADGROUP_SIZE_X, PRECOMPUTE_IBL_THREADGROUP_SIZE_X, 1)]
+[numthreads(PRECOMPUTE_IBL_THREADGROUP_SIZE_X, PRECOMPUTE_IBL_THREADGROUP_SIZE_Y, PRECOMPUTE_IBL_THREADGROUP_SIZE_Z)]
 void CS_GenerateSpecularBRDF(int2 dispatchThreadID : SV_DispatchThreadID)
 {   
-    const int2 size = precomputeIBLConstants.getSize();
+    const int2 size = precomputeIBLConstants.getDestinationSize();
 
     float cosLo = (float)(dispatchThreadID.x) / (float)(size.x-1);
 	float roughness = (float)(size.y-dispatchThreadID.y-1) / (float)(size.y-1);
@@ -72,5 +72,24 @@ void CS_GenerateSpecularBRDF(int2 dispatchThreadID : SV_DispatchThreadID)
 	// clamp cosLo to avoid NaN
 	cosLo = max(cosLo, 0.001);
 
-	getRWTexture2D_float2(precomputeIBLConstants.getSpecularBRDF())[dispatchThreadID.xy] = IntegrateBRDF(cosLo, roughness);
+	getRWTexture2D_float2(precomputeIBLConstants.getDestination())[dispatchThreadID.xy] = IntegrateBRDF(cosLo, roughness);
 }
+
+//--------------------------------------------------------------------------------------
+[numthreads(PRECOMPUTE_IBL_THREADGROUP_SIZE_X, PRECOMPUTE_IBL_THREADGROUP_SIZE_Y, PRECOMPUTE_IBL_THREADGROUP_SIZE_Z)]
+void CS_GenerateIrradianceCubemap(int3 dispatchThreadID : SV_DispatchThreadID)
+{   
+    const int2 size = precomputeIBLConstants.getDestinationSize();
+
+	getRWTexture2DArray(precomputeIBLConstants.getDestination())[dispatchThreadID.xyz] = float4(1,0,1,1);
+}
+
+//--------------------------------------------------------------------------------------
+[numthreads(PRECOMPUTE_IBL_THREADGROUP_SIZE_X, PRECOMPUTE_IBL_THREADGROUP_SIZE_Y, PRECOMPUTE_IBL_THREADGROUP_SIZE_Z)]
+void CS_GenerateSpecularReflectionCubemap(int3 dispatchThreadID : SV_DispatchThreadID)
+{   
+    const int2 size = precomputeIBLConstants.getDestinationSize();
+
+	getRWTexture2DArray(precomputeIBLConstants.getDestination())[dispatchThreadID.xyz] = float4(size / 256.0, (float)dispatchThreadID.z / 6.0f, 1);
+}
+

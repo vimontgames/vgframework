@@ -316,61 +316,51 @@ namespace vg::gfx::vulkan
                     case TextureType::TextureCube:
                     {
                         VG_ASSERT(_texDesc.slices == 6);
+      
+                        m_vkMipImageViews.resize(_texDesc.mipmaps);
+                        m_rwTextureMipHandles.resize(_texDesc.mipmaps);
 
-                        m_vkSliceMipImageViews.resize(_texDesc.slices);
-                        m_rwTextureHandles.resize(_texDesc.slices);
-
-                        for (uint s = 0; s < _texDesc.slices; ++s)
+                        for (uint m = 0; m < _texDesc.mipmaps; ++m)
                         {
-                            m_vkSliceMipImageViews[s].resize(_texDesc.mipmaps);
-                            m_rwTextureHandles[s].resize(_texDesc.mipmaps);
-                        }
+                            BindlessTable * bindlessTable = device->getBindlessTable();
 
-                        for (uint s = 0; s < _texDesc.slices; ++s)
-                        {
-                            for (uint m = 0; m < _texDesc.mipmaps; ++m)
-                            {
-                                BindlessTable * bindlessTable = device->getBindlessTable();
-                                auto rwTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
+                            // TODO: batch allocations
+                            auto rwTextureHandle = bindlessTable->allocBindlessRWTextureHandle(static_cast<gfx::Texture *>(this));
 
-                                VkImageViewCreateInfo vkMipImageViewDesc = vkImageViewDesc;
-                                vkMipImageViewDesc.viewType = VK_IMAGE_VIEW_TYPE_2D;
-                                vkMipImageViewDesc.subresourceRange.baseMipLevel = m;
-                                vkMipImageViewDesc.subresourceRange.levelCount = 1;
-                                vkMipImageViewDesc.subresourceRange.baseArrayLayer = s;
-                                vkMipImageViewDesc.subresourceRange.layerCount = 1;
+                            VkImageViewCreateInfo vkMipImageViewDesc = vkImageViewDesc;
+                            vkMipImageViewDesc.subresourceRange.baseMipLevel = m;
+                            vkMipImageViewDesc.subresourceRange.levelCount = 1;
+                            vkMipImageViewDesc.subresourceRange.baseArrayLayer = 0;
+                            vkMipImageViewDesc.subresourceRange.layerCount = _texDesc.slices;
 
-                                VG_VERIFY_VULKAN(vkCreateImageView(device->getVulkanDevice(), &vkMipImageViewDesc, nullptr, &m_vkSliceMipImageViews[s][m]));
+                            VG_VERIFY_VULKAN(vkCreateImageView(device->getVulkanDevice(), &vkMipImageViewDesc, nullptr, &m_vkMipImageViews[m]));
 
-                                VkDescriptorImageInfo tex_descs = {};
-                                tex_descs.imageView = m_vkSliceMipImageViews[s][m];
-                                tex_descs.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
-                                tex_descs.sampler = nullptr;
+                            VkDescriptorImageInfo tex_descs = {};
+                            tex_descs.imageView = m_vkMipImageViews[m];
+                            tex_descs.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
+                            tex_descs.sampler = nullptr;
 
-                                VkWriteDescriptorSet writes = {};
-                                writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                                writes.dstBinding = BINDLESS_RWTEXTURE_BINDING;
-                                writes.descriptorCount = 1;
-                                writes.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
-                                writes.pImageInfo = &tex_descs;
-                                writes.dstSet = device->getVulkanBindlessDescriptors();
-                                writes.dstArrayElement = rwTextureHandle - BINDLESS_RWTEXTURE_START;
+                            VkWriteDescriptorSet writes = {};
+                            writes.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                            writes.dstBinding = BINDLESS_RWTEXTURE_BINDING;
+                            writes.descriptorCount = 1;
+                            writes.descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+                            writes.pImageInfo = &tex_descs;
+                            writes.dstSet = device->getVulkanBindlessDescriptors();
+                            writes.dstArrayElement = rwTextureHandle - BINDLESS_RWTEXTURE_START;
 
-                                vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
+                            // TODO: batch descriptor updates
+                            vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
 
-                                m_rwTextureHandles[s][m] = rwTextureHandle;
-                            }
+                            m_rwTextureMipHandles[m] = rwTextureHandle;
                         }
                     }
                     break;
 
                     case TextureType::Texture2D:
                     {
-                        m_vkSliceMipImageViews.resize(1);
-                        m_vkSliceMipImageViews[0].resize(_texDesc.mipmaps);
-
-                        m_rwTextureHandles.resize(1);
-                        m_rwTextureHandles[0].resize(_texDesc.mipmaps);
+                        m_vkMipImageViews.resize(_texDesc.mipmaps);
+                        m_rwTextureMipHandles.resize(_texDesc.mipmaps);
 
                         for (uint m = 0; m < _texDesc.mipmaps; ++m)
                         {
@@ -381,10 +371,10 @@ namespace vg::gfx::vulkan
                                                   vkMipImageViewDesc.subresourceRange.baseMipLevel = m;
                                                   vkMipImageViewDesc.subresourceRange.levelCount = 1;
                             
-                            VG_VERIFY_VULKAN(vkCreateImageView(device->getVulkanDevice(), &vkMipImageViewDesc, nullptr, &m_vkSliceMipImageViews[0][m]));
+                            VG_VERIFY_VULKAN(vkCreateImageView(device->getVulkanDevice(), &vkMipImageViewDesc, nullptr, &m_vkMipImageViews[m]));
 
                             VkDescriptorImageInfo tex_descs = {};
-                            tex_descs.imageView = m_vkSliceMipImageViews[0][m];
+                            tex_descs.imageView = m_vkMipImageViews[m];
                             tex_descs.imageLayout = VK_IMAGE_LAYOUT_GENERAL;
                             tex_descs.sampler = nullptr;
 
@@ -399,7 +389,7 @@ namespace vg::gfx::vulkan
 
                             vkUpdateDescriptorSets(device->getVulkanDevice(), 1, &writes, 0, nullptr);
 
-                            m_rwTextureHandles[0][m] = rwTextureHandle;
+                            m_rwTextureMipHandles[m] = rwTextureHandle;
                         }
                     }
                     break;
@@ -419,11 +409,8 @@ namespace vg::gfx::vulkan
         {
             vkDestroyImageView(vkDevice, m_vkImageView, nullptr);
 
-            for (uint s = 0; s < m_vkSliceMipImageViews.size(); ++s)
-            {
-                for (uint m = 0; m < m_vkSliceMipImageViews[s].size(); ++m)
-                    vkDestroyImageView(vkDevice, m_vkSliceMipImageViews[s][m], nullptr);
-            }
+            for (uint m = 0; m < m_vkMipImageViews.size(); ++m)
+                vkDestroyImageView(vkDevice, m_vkMipImageViews[m], nullptr);
         }
 	}
 }

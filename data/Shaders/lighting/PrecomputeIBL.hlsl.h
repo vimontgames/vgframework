@@ -21,7 +21,16 @@ namespace vg::gfx
             auto & generateSpecularBRDFTech = declTechnique("GenerateSpecularBRDF");
             {
                 generateSpecularBRDFTech.cs = declCS("CS_GenerateSpecularBRDF");
-                generateSpecularBRDFTech.flags = (Flags)0;
+            }
+
+            auto & generateIrradianceCubemapTech = declTechnique("GenerateIrradianceCubemap");
+            {
+                generateIrradianceCubemapTech.cs = declCS("CS_GenerateIrradianceCubemap");
+            }
+
+            auto & generateSpecularReflectionCubemapTech = declTechnique("GenerateSpecularReflectionCubemap");
+            {
+                generateSpecularReflectionCubemapTech.cs = declCS("CS_GenerateSpecularReflectionCubemap");
             }
         }
     };

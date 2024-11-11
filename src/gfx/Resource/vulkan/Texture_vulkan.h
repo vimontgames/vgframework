@@ -11,15 +11,15 @@ namespace vg::gfx::vulkan
 		Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot);
 		~Texture();
 
-        VkImageView             getVulkanImageView		() const { return m_vkImageView; }
+        VkImageView					getVulkanImageView		() const { return m_vkImageView; }
 
-		static VkFormat         getVulkanPixelFormat    (PixelFormat _format);
-        static PixelFormat      getPixelFormat          (VkFormat _vkFormat);
-        static VkImageType      getVulkanImageType		(TextureType _texType);
-        static VkImageViewType  getVulkanImageViewType	(TextureType _texType);
+		static VkFormat				getVulkanPixelFormat    (PixelFormat _format);
+        static PixelFormat			getPixelFormat          (VkFormat _vkFormat);
+        static VkImageType			getVulkanImageType		(TextureType _texType);
+        static VkImageViewType		getVulkanImageViewType	(TextureType _texType);
 
 	private:
-		VkImageView			    m_vkImageView;	// This is the default image view with all slices/mipmaps (used for ShaderResourceView)
-		core::vector<core::vector<VkImageView>> m_vkSliceMipImageViews; // Separate image view for each slice/mip level (used for RWTextures)
+		VkImageView					m_vkImageView;		// This is the default image view with all slices/mipmaps (used for ShaderResourceView)
+		core::vector<VkImageView>	m_vkMipImageViews;	// Separate image view for each mip level (e.g. used for RWTextures)
 	};
 }

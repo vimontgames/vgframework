@@ -491,6 +491,12 @@
     <ClInclude Include="PBR\PBR_Consts.h">
       <Filter>PBR</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\Compute\ComputeIBLCubemaps\ComputeIBLCubemapsPass.h">
+      <Filter>Pass\Compute\ComputeIrradianceCubemap</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Compute\ComputeIBLCubemaps\ComputeIBLCubemapsPass.hpp">
+      <Filter>Pass\Compute\ComputeIrradianceCubemap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -675,6 +681,9 @@
     </Filter>
     <Filter Include="PBR">
       <UniqueIdentifier>{cc1f3035-e8b6-4001-92a7-96fdc4086861}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Compute\ComputeIrradianceCubemap">
+      <UniqueIdentifier>{5557cf22-dc6c-4619-ab24-5164c9d8934b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

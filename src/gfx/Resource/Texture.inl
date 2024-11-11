@@ -45,9 +45,10 @@ namespace vg::gfx
         }
 
         //--------------------------------------------------------------------------------------
-        VG_INLINE const gfx::BindlessRWTextureHandle Texture::getRWTextureHandle() const
+        VG_INLINE const gfx::BindlessRWTextureHandle Texture::getRWTextureHandle(uint _mipLevel) const
         { 
-            const auto & rwTextureHandle = m_rwTextureHandles[0][0];
+            VG_ASSERT(_mipLevel < m_rwTextureMipHandles.size());
+            const auto & rwTextureHandle = m_rwTextureMipHandles[_mipLevel];
             VG_ASSERT(rwTextureHandle.isValid());
             return rwTextureHandle;
         }
