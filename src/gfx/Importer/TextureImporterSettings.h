@@ -3,7 +3,7 @@
 namespace vg::gfx
 {
     vg_enum_class(TextureImporterType, core::u8,
-        Automatic   = 0,
+        Auto        = 0,
 
         Texture1D   = 1,
         Texture2D   = 2,
@@ -12,31 +12,31 @@ namespace vg::gfx
     );
 
     vg_enum_class(TextureImporterFormat, core::u8,
-        Automatic   = 0,
+        Auto   = 0,
 
         RGBA8,
         RGBA16,
         RGBA32f
     );
 
-    vg_enum_class(TextureImporterMipLevelCount, core::u8,
-        Automatic           = 0,
+    vg_enum_class(TextureImporterMip, core::u8,
+        TextureImporterMip_Auto = 0,
 
-        MipLevelCount_1     = 1,
-        MipLevelCount_2     = 2,
-        MipLevelCount_3     = 3,
-        MipLevelCount_4     = 4,
-        MipLevelCount_5     = 5,
-        MipLevelCount_6     = 6,
-        MipLevelCount_7     = 7,
-        MipLevelCount_8     = 8,
-        MipLevelCount_9     = 9,
-        MipLevelCount_10    = 10,
-        MipLevelCount_11    = 11,
-        MipLevelCount_12    = 12,
-        MipLevelCount_13    = 13,
-        MipLevelCount_14    = 14,
-        MipLevelCount_15    = 15
+        TextureImporterMip_1    = 1,
+        TextureImporterMip_2    = 2,
+        TextureImporterMip_3    = 3,
+        TextureImporterMip_4    = 4,
+        TextureImporterMip_5    = 5,
+        TextureImporterMip_6    = 6,
+        TextureImporterMip_7    = 7,
+        TextureImporterMip_8    = 8,
+        TextureImporterMip_9    = 9,
+        TextureImporterMip_10   = 10,
+        TextureImporterMip_11   = 11,
+        TextureImporterMip_12   = 12,
+        TextureImporterMip_13   = 13,
+        TextureImporterMip_14   = 14,
+        TextureImporterMip_15   = 15
     );
 
     vg_enum_class(Downscale , core::u8,
@@ -50,10 +50,10 @@ namespace vg::gfx
 
     struct TextureImporterSettings
     {
-        TextureImporterType     m_importerType = TextureImporterType::Automatic;
-        TextureImporterFormat   m_importerFormat = TextureImporterFormat::Automatic;
-        bool                    m_sRGB = true;
-        TextureImporterMipLevelCount           m_mipLevelCount = TextureImporterMipLevelCount::Automatic;
-        Downscale               m_downscale = Downscale::None;
+        TextureImporterType             m_importerType = TextureImporterType::Auto;
+        TextureImporterFormat           m_importerFormat = TextureImporterFormat::Auto;
+        bool                            m_sRGB = true;
+        TextureImporterMip              m_mipLevelCount = TextureImporterMip::TextureImporterMip_Auto;
+        Downscale                       m_downscale = Downscale::None;
     };
 }

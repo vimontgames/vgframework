@@ -450,7 +450,7 @@ namespace vg::gfx
         core::vector<u8> texData;
     
         TextureImporterSettings settings;
-        settings.m_mipLevelCount = (TextureImporterMipLevelCount)1;
+        settings.m_mipLevelCount = (TextureImporterMip)1;
         settings.m_sRGB = false;
 
         if (m_textureImporter->importTextureData(_path, texDesc, texData, &settings))

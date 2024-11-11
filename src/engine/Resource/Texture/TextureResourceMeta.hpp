@@ -16,7 +16,7 @@ namespace vg::engine
         registerPropertyEnum(TextureResourceMeta, gfx::TextureImporterType, m_importSettings.m_importerType, "Type");
         registerPropertyEnum(TextureResourceMeta, gfx::TextureImporterFormat, m_importSettings.m_importerFormat, "Format");
         registerProperty(TextureResourceMeta, m_importSettings.m_sRGB, "sRGB");
-        registerPropertyEnum(TextureResourceMeta, gfx::TextureImporterMipLevelCount, m_importSettings.m_mipLevelCount, "Mipmaps");
+        registerPropertyEnum(TextureResourceMeta, gfx::TextureImporterMip, m_importSettings.m_mipLevelCount, "Mipmaps");
         registerPropertyEnum(TextureResourceMeta, gfx::Downscale, m_importSettings.m_downscale, "Downscale");
 
         return true;

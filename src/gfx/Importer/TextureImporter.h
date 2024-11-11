@@ -3,8 +3,12 @@
 #include "Importer.h"
 #include "core/Singleton/Singleton.h"
 #include "gfx/Resource/Texture_consts.h"
-#include "gfx/Importer/TextureImporterSettings.h"
 #include "core/Types/Traits.h"
+
+namespace vg::gfx
+{
+    enum class TextureImporterType : core::u8;
+}
 
 namespace vg::core
 {

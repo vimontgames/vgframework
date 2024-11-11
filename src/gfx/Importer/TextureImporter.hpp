@@ -45,7 +45,7 @@ namespace vg::gfx
             core::uint mipmapCount;
             uint width, height, slices;
 
-            if (_importSettings && TextureImporterType::Automatic != _importSettings->m_importerType)
+            if (_importSettings && TextureImporterType::Auto != _importSettings->m_importerType)
                 type = _importSettings->m_importerType;
             else
                 type = TextureImporterType::Texture2D; 
@@ -96,7 +96,7 @@ namespace vg::gfx
                     }                    
 
                     // recompute mipmap count
-                    if (_importSettings && TextureImporterMipLevelCount::Automatic != _importSettings->m_mipLevelCount)
+                    if (_importSettings && TextureImporterMip::TextureImporterMip_Auto != _importSettings->m_mipLevelCount)
                     {
                         const uint maxMipCount = computeMaxMipmapCount(type, width, height, slices);
                         mipmapCount = min((uint)_importSettings->m_mipLevelCount, maxMipCount);
@@ -108,7 +108,7 @@ namespace vg::gfx
                     break;
             }
 
-            if (nullptr == _importSettings || TextureImporterFormat::Automatic == _importSettings->m_importerFormat)
+            if (nullptr == _importSettings || TextureImporterFormat::Auto == _importSettings->m_importerFormat)
             {
                 // TODO: determine the best format automatically
                 if (isHDR)
@@ -120,7 +120,7 @@ namespace vg::gfx
                 sRGB = false;
             }
 
-            if (nullptr == _importSettings || TextureImporterMipLevelCount::Automatic == _importSettings->m_mipLevelCount)
+            if (nullptr == _importSettings || TextureImporterMip::TextureImporterMip_Auto == _importSettings->m_mipLevelCount)
             {
                 const uint maxMipCount = computeMaxMipmapCount(type, width, height, slices);
                 mipmapCount = maxMipCount;                
@@ -128,12 +128,12 @@ namespace vg::gfx
             
             if (_importSettings)
             {
-                if (TextureImporterFormat::Automatic != _importSettings->m_importerFormat)
+                if (TextureImporterFormat::Auto != _importSettings->m_importerFormat)
                     format = _importSettings->m_importerFormat;
 
                 sRGB = _importSettings->m_sRGB;
 
-                if (TextureImporterMipLevelCount::Automatic != _importSettings->m_mipLevelCount)
+                if (TextureImporterMip::TextureImporterMip_Auto != _importSettings->m_mipLevelCount)
                 {
                     const uint maxMipCount = computeMaxMipmapCount(type, width, height, slices);
                     mipmapCount = min((uint)_importSettings->m_mipLevelCount, maxMipCount);
