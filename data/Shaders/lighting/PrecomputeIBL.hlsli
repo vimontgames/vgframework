@@ -1,7 +1,7 @@
 #pragma once
 
-#define PRECOMPUTE_IBL_THREADGROUP_SIZE_X 16
-#define PRECOMPUTE_IBL_THREADGROUP_SIZE_Y 16
+#define PRECOMPUTE_IBL_THREADGROUP_SIZE_X 8
+#define PRECOMPUTE_IBL_THREADGROUP_SIZE_Y 8
 #define PRECOMPUTE_IBL_THREADGROUP_SIZE_Z 1
 
 #include "system/constants.hlsli"
@@ -12,21 +12,31 @@ struct PrecomputeIBLConstants
     #ifdef __cplusplus
     PrecomputeIBLConstants()
     {
-        src_dst = 0x0;
+        handle = 0;
+        mips = 0;
     }
     #endif
 
-    void setSource              (uint _tex2D)       { src_dst = packUint16low(src_dst, _tex2D); }
-    uint getSource              ()                  { return unpackUint16low(src_dst); }
+    void setSource                      (uint _tex2D)       { handle = packUint16low(handle, _tex2D); }
+    uint getSource                      ()                  { return unpackUint16low(handle); }
 
-    void setDestination         (uint _rwtex2D)     { src_dst = packUint16high(src_dst, _rwtex2D); }
-    uint getDestination         ()                  { return unpackUint16high(src_dst); }
+    void setSourceMipLevel              (uint _mipLevel)    { mips = packR8(mips, _mipLevel); }
+    uint getSourceMipLevel              ()                  { return unpackR8(mips); }    
+            
+    void setSourceMipLevelCount         (uint _count)       { mips = packG8(mips, _count); }
+    uint getSourceMipLevelCount         ()                  { return unpackG8(mips); }  
 
-    void setDestinationSize     (uint2 _size)       { size = _size.x | (_size.y << 16); }
-    uint2 getDestinationSize    ()                  { return uint2(size & 0xFFFF, size >> 16); }
+    void setDestination                 (uint _rwtex2D)     { handle = packUint16high(handle, _rwtex2D); }
+    uint getDestination                 ()                  { return unpackUint16high(handle); }
 
-    uint src_dst;
-    uint size;
+    void setDestinationMipLevel         (uint _mipLevel)    { mips = packB8(mips, _mipLevel); }
+    uint getDestinationMipLevel         ()                  { return unpackB8(mips); }    
+
+    void setDestinationMipLevelCount    (uint _count)       { mips = packA8(mips, _count); }
+    uint getDestinationMipLevelCount    ()                  { return unpackA8(mips); }  
+
+    uint handle;
+    uint mips;
 };
 
 #define PrecomputeIBLConstantsCount sizeof(PrecomputeIBLConstants)/sizeof(u32)

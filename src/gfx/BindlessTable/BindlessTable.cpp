@@ -6,6 +6,8 @@
 #include "gfx/Resource/Buffer.h"
 #include "core/Math/Math.h"
 
+#include "shaders/system/cubemap.hlsli"
+
 using namespace vg::core;
 
 #include VG_GFXAPI_IMPL(BindlessTable)

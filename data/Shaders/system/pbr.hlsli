@@ -6,6 +6,7 @@
 static const float3 Fdielectric = 0.04f;	
 static const float PI = 3.141592f;
 static const float Epsilon = 0.00001f;
+static const float HDRMax = 1024.0f;
 
 //--------------------------------------------------------------------------------------
 // Importance sample GGX normal distribution function for a fixed roughness value.

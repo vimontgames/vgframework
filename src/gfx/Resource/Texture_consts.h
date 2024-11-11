@@ -45,15 +45,6 @@ namespace vg::gfx
         MSAA16X = 0x10
     );
 
-	vg_enum_class(CubemapFace, core::u8,
-		PositiveX = 0,
-		NegativeX,
-		PositiveY,
-		NegativeY,
-        PositiveZ,
-        NegativeZ
-	);
-
 	class TextureDesc
 	{
 	public:

@@ -67,25 +67,32 @@ namespace vg::renderer
     {
         VG_PROFILE_GPU("IrradianceCubemap");
 
-        const auto & dstTexDesc = _sourceEnvironmentCubemap->getTexDesc();
+        const auto & srcTexDesc = _sourceEnvironmentCubemap->getTexDesc();
+        const auto & dstTexDesc = _destinationIrradianceCubemap->getTexDesc();
         auto threadGroupSize = uint3(PRECOMPUTE_IBL_THREADGROUP_SIZE_X, PRECOMPUTE_IBL_THREADGROUP_SIZE_Y, PRECOMPUTE_IBL_THREADGROUP_SIZE_Z);
         auto threadGroupCount = uint3((dstTexDesc.width + threadGroupSize.x - 1) / threadGroupSize.x, (dstTexDesc.height + threadGroupSize.y - 1) / threadGroupSize.y, (6 + threadGroupSize.z - 1) / threadGroupSize.z);
         
         _cmdList->setComputeRootSignature(m_computeIrradianceCubemapRootSignature);
         _cmdList->setComputeShader(m_computeIrradianceCubemapShaderKey);
+
+        // precompute the sample mip level so that source size = destination size
+        const uint mipLevel = (uint)log(max(srcTexDesc.width / dstTexDesc.width, 1)) + 1;
         
         PrecomputeIBLConstants precomputeIBLConstants;
         {
             precomputeIBLConstants.setSource(_sourceEnvironmentCubemap->getTextureHandle());
+            precomputeIBLConstants.setSourceMipLevel(mipLevel);
+            precomputeIBLConstants.setSourceMipLevelCount(srcTexDesc.mipmaps);
+
             precomputeIBLConstants.setDestination(_destinationIrradianceCubemap->getRWTextureHandle());
-            precomputeIBLConstants.setDestinationSize(uint2(dstTexDesc.width, dstTexDesc.height));
+            precomputeIBLConstants.setDestinationMipLevel(1);
+            precomputeIBLConstants.setDestinationMipLevelCount(dstTexDesc.mipmaps);
         }
         _cmdList->setComputeRootConstants(0, (u32 *)&precomputeIBLConstants, PrecomputeIBLConstantsCount);
         
         _cmdList->dispatch(threadGroupCount);
         
-        // texture will be read-only from now on
-        //_cmdList->transitionResource(m_specularBRDFTexture, ResourceState::UnorderedAccess, ResourceState::ShaderResource);
+        _cmdList->transitionResource(_destinationIrradianceCubemap, ResourceState::UnorderedAccess, ResourceState::ShaderResource);
     }
 
     //--------------------------------------------------------------------------------------
@@ -93,7 +100,8 @@ namespace vg::renderer
     {
         VG_PROFILE_GPU("SpecularReflectionCubemap");
 
-        const auto & dstTexDesc = _sourceEnvironmentCubemap->getTexDesc();
+        const auto & srcTexDesc = _sourceEnvironmentCubemap->getTexDesc();
+        const auto & dstTexDesc = _destinationSpecularReflectionCubemap->getTexDesc();
         auto threadGroupSize = uint3(PRECOMPUTE_IBL_THREADGROUP_SIZE_X, PRECOMPUTE_IBL_THREADGROUP_SIZE_Y, PRECOMPUTE_IBL_THREADGROUP_SIZE_Z);
         
         _cmdList->setComputeRootSignature(m_computeIrradianceCubemapRootSignature);
@@ -109,8 +117,12 @@ namespace vg::renderer
             PrecomputeIBLConstants precomputeIBLConstants;
             {
                 precomputeIBLConstants.setSource(_sourceEnvironmentCubemap->getTextureHandle());
+                precomputeIBLConstants.setSourceMipLevel(0);
+                precomputeIBLConstants.setSourceMipLevelCount(srcTexDesc.mipmaps);
+
                 precomputeIBLConstants.setDestination(_destinationSpecularReflectionCubemap->getRWTextureHandle(m));
-                precomputeIBLConstants.setDestinationSize(uint2(width, height));
+                precomputeIBLConstants.setDestinationMipLevel(m);
+                precomputeIBLConstants.setDestinationMipLevelCount(dstTexDesc.mipmaps);
             }
             _cmdList->setComputeRootConstants(0, (u32 *)&precomputeIBLConstants, PrecomputeIBLConstantsCount);
 
@@ -119,5 +131,7 @@ namespace vg::renderer
             width >>= 1;
             height >>= 1;
         }
+
+        _cmdList->transitionResource(_destinationSpecularReflectionCubemap, ResourceState::UnorderedAccess, ResourceState::ShaderResource);
     }
 }

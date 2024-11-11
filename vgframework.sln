@@ -81,6 +81,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "system", "system", "{34ABDE
 	ProjectSection(SolutionItems) = preProject
 		data\Shaders\system\bindless.hlsli = data\Shaders\system\bindless.hlsli
 		data\Shaders\system\constants.hlsli = data\Shaders\system\constants.hlsli
+		data\Shaders\system\cubemap.hlsli = data\Shaders\system\cubemap.hlsli
 		data\Shaders\system\debug.hlsli = data\Shaders\system\debug.hlsli
 		data\Shaders\system\debugdisplay.hlsli = data\Shaders\system\debugdisplay.hlsli
 		data\Shaders\system\depthbias.hlsli = data\Shaders\system\depthbias.hlsli

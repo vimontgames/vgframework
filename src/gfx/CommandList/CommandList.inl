@@ -96,25 +96,33 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::transitionResource(gfx::Texture * _texture, ResourceState _before, ResourceState _after)
     {
-        super::transitionResource(_texture, _before, _after);
+        VG_ASSERT(_texture);
+        if (_texture)
+            super::transitionResource(_texture, _before, _after);
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::transitionResource(gfx::Buffer * _buffer, ResourceState _before, ResourceState _after)
     {
-        super::transitionResource(_buffer, _before, _after);
+        VG_ASSERT(_buffer);
+        if (_buffer)
+            super::transitionResource(_buffer, _before, _after);
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::addRWTextureBarrier(gfx::Texture * _texture)
     {
-        super::addRWTextureBarrier(_texture);
+        VG_ASSERT(_texture);
+        if (_texture)
+            super::addRWTextureBarrier(_texture);
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::addRWBufferBarrier(gfx::Buffer * _buffer)
     {
-        super::addRWBufferBarrier(_buffer);
+        VG_ASSERT(_buffer);
+        if (_buffer)
+            super::addRWBufferBarrier(_buffer);
     }
 
     //--------------------------------------------------------------------------------------

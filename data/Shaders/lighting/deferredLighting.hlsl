@@ -72,6 +72,9 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
         case DisplayMode::Lighting_Diffuse:
         case DisplayMode::Lighting_Specular:
         case DisplayMode::Lighting_RayCount:
+        case DisplayMode::Environment_Cubemap:
+        case DisplayMode::Environment_IrradianceCubemap:
+        case DisplayMode::Environment_SpecularReflectionCubemap: 
             break;
 
         case DisplayMode::Forward_SurfaceType:

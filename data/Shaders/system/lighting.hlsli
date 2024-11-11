@@ -168,13 +168,11 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		TextureCube specularReflectionCubemap = getTextureCube(specularReflectionCubemapHandle);
 		uint width, height, mipLevels;
 		specularReflectionCubemap.GetDimensions(0, width, height, mipLevels);
+		float specularEnvMip = roughness * (mipLevels - 1);
 
 		Texture2D specularBRDF = getTexture2D(_viewConstants.getSpecularBRDF());
 		float2 FG = specularBRDF.SampleLevel(linearClamp, float2(cosLo, 1-roughness), 0).rg;
-		float specularEnvMip = roughness * (mipLevels - 1);
 		output.envSpecular = (F0 * FG.x + FG.y) * specularReflectionCubemap.SampleLevel(linearClamp, Lr, specularEnvMip).rgb;
-
-		//output.envSpecular = float3(FG.xxx);
 	}
 	else
 	{
@@ -322,6 +320,34 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 	switch(_viewConstants.getDisplayMode())
 	{
 		default:
+			break;
+
+        case DisplayMode::Environment_Cubemap:
+			output = (LightingResult)0;
+			output.envSpecular = getTextureCube(_viewConstants.getEnvironmentCubemap()).SampleLevel(linearClamp, Lr, 0).rgb;
+			break;
+
+        case DisplayMode::Environment_IrradianceCubemap:
+			{
+				// The generated irradiance cubemap has no mip levels so we can always sample the last level :)
+				TextureCube irradianceCubemap = getTextureCube(_viewConstants.getIrradianceCubemap());
+				uint width, height, mipLevels;
+				irradianceCubemap.GetDimensions(0, width, height, mipLevels);
+				output = (LightingResult)0;
+				output.envSpecular = irradianceCubemap.SampleLevel(linearClamp, Lr, mipLevels-1).rgb * _viewConstants.getIrradianceIntensity();
+			}
+			break;
+
+        case DisplayMode::Environment_SpecularReflectionCubemap: 
+			{	
+				TextureCube specularReflectionCubemap = getTextureCube(specularReflectionCubemapHandle);
+				uint width, height, mipLevels;
+				specularReflectionCubemap.GetDimensions(0, width, height, mipLevels);
+				float specularEnvMip = roughness * (mipLevels - 1);
+
+				output = (LightingResult)0;
+				output.envSpecular = specularReflectionCubemap.SampleLevel(linearClamp, Lr, specularEnvMip).rgb * _viewConstants.getSpecularReflectionIntensity();
+			}
 			break;
 		
 		case DisplayMode::Lighting_RayCount:

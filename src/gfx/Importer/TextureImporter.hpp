@@ -4,6 +4,8 @@
 #include "gfx/Resource/Texture.h"
 #include "gfx/Importer/TextureImporterSettings.h"
 
+#include "Shaders/system/cubemap.hlsli"
+
 using namespace vg::core;
 
 namespace vg::gfx

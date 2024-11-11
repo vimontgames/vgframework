@@ -28,7 +28,11 @@ vg_enum_class(DisplayMode, uint,
     Forward_SurfaceType,  
     Forward_WorldPosition,   
     Forward_WorldNormal,    
-    Forward_ScreenPos,      
+    Forward_ScreenPos,     
+
+    Environment_Cubemap,
+    Environment_IrradianceCubemap,
+    Environment_SpecularReflectionCubemap, 
 
     Deferred_Albedo,
     Deferred_AlbedoAlpha,
