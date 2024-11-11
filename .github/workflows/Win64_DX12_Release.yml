@@ -45,7 +45,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build_win64_dx12_release:
     runs-on: windows-latest
 
     steps:
@@ -79,8 +79,8 @@ jobs:
               {
                 "type": "rich",
                 "title": "Win64 DX12 Release",
-                "description": "The build succeeded",
-                "color": 2674853,
+                "description": "Build succeeded",
+                "color": 38912,
                 "thumbnail": {
                   "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/buildsuccess.png?raw=true"
                 },
@@ -111,8 +111,8 @@ jobs:
               {
                 "type": "rich",
                 "title": "Win64 DX12 Release",
-                "description": "The build has failed",
-                "color": 14473477,
+                "description": "Build failed",
+                "color": 16515049,
                 "thumbnail": {
                   "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/buildfailed.png?raw=true"
                 },
