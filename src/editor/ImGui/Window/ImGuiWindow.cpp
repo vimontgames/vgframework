@@ -1683,7 +1683,7 @@ namespace vg::editor
                                 {
                                     ImGui::SetCursorPosY(ImGui::GetCursorPosY() - style::draganddrop::interlineSize.y - 1);
 
-                                    string label = fmt::sprintf("###%s %s", asString(type), component->GetName().c_str());
+                                    string label = fmt::sprintf("###%s %u", asString(type), component->GetUID(false) ? (uint_ptr)component->GetUID() : (uint_ptr)component);
                                     ImGui::InvisibleButton(label.c_str(), style::draganddrop::interlineSize);
 
                                     // debug
@@ -1787,12 +1787,6 @@ namespace vg::editor
                                 const bool debugInspector = EditorOptions::get()->IsDebugInspector();
                                 if (debugInspector)
                                     componentShortName += fmt::sprintf(" (0x%016X)", (u64)pComponent);
-
-                                //if (auto * nameProp = pComponent->GetClassDesc()->GetPropertyByName("m_name"))
-                                //{
-                                //    if (!asBool(core::PropertyFlags::NotVisible & nameProp->GetFlags()))
-                                //        componentShortName += " - " + *nameProp->GetPropertyString(pComponent);
-                                //}
 
                                 ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
@@ -2213,13 +2207,6 @@ namespace vg::editor
         {
             auto availableWidth = GetContentRegionAvail().x;
             ImGui::PushItemWidth(availableWidth - style::label::PixelWidth);
-
-            //auto customDisplayHandler = ImGuiObjectHandler::Find(_resource->GetClassName());
-            //if (nullptr != customDisplayHandler)
-            //{
-            //    changed = customDisplayHandler->displayObject(_resource, objectContext);
-            //}
-            //else
             {
                 const char * classDisplayName = classDesc->GetClassDisplayName();
 

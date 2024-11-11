@@ -195,7 +195,7 @@ jobs:
                 "description": "A new version of VGFramework is available",
                 "color": 15579707,
                 "thumbnail": {
-                  "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/newversion.png?raw=true"
+                  "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/version.png?raw=true"
                 },
                 "author": {
                   "name": "$($env:GITHUB_ACTOR)",
