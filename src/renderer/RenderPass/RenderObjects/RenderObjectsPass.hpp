@@ -28,8 +28,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void RenderObjectsPass::DrawGraphicInstances(const RenderContext & _renderContext, gfx::CommandList * _cmdList, GraphicInstanceListType _list) const
     {
-        VG_PROFILE_GPU(asString(_list).c_str());
-
         const auto * view = static_cast<const View *>(_renderContext.m_renderPass->getView());
         const auto & list = view->getCullingJobResult().get(_list).m_instances;
 
