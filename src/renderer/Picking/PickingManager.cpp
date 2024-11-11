@@ -59,6 +59,48 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool PickingManager::decodePickingHit(const PickingHit & _hit, PickingHitInfo & _info) const
+    {
+        bool isValidPicking = false;
+
+        const uint4 id = _hit.m_id;
+        const float4 pos = _hit.m_pos;
+
+        if (0 != id.x && id.x < m_pickingID.size())
+        {
+            _info.m_object = m_pickingID[id.x];
+            if (nullptr != _info.m_object)
+            {
+                _info.m_component = dynamic_cast<IComponent *>(_info.m_object);
+
+                if (nullptr != _info.m_component)
+                {
+                    IObject * parent = _info.m_component->GetParent();
+                    _info.m_gameObject = dynamic_cast<IGameObject *>(parent);
+                    if (nullptr != _info.m_gameObject)
+                    {
+                        auto * parentPrefab = _info.m_gameObject->GetParentPrefab();
+                        if (parentPrefab)
+                        {
+                            auto * selection = Kernel::getSelection();
+                            bool prefabSelected = selection->IsSelectedObject(parentPrefab);
+
+                            if (!prefabSelected)
+                            {
+                                _info.m_gameObject = parentPrefab;
+                                _info.m_isPrefab = true;
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     void PickingManager::Update(const gfx::IView * _view, bool & _showTooltip, core::string & _tooltipMsg, core::string & _tooltipDbg)
     {
         if (_view->IsMouseOverView())
@@ -76,68 +118,45 @@ namespace vg::renderer
                 const uint4 id = pickingHit.m_id;
                 const float4 pos = pickingHit.m_pos;
 
-                if (0 != id.x && id.x < m_pickingID.size())
+                PickingHitInfo info;
+                if (decodePickingHit(pickingHit, info))
                 {
-                    IObject * object = m_pickingID[id.x];
-                    if (nullptr != object)
+                    if (nullptr != info.m_gameObject)
                     {
-                        IComponent * component = dynamic_cast<IComponent *>(object);
-
-                        if (nullptr != component)
+                        if (info.m_isPrefab)
                         {
-                            IObject * parent = component->GetParent();
-                            IGameObject * go = dynamic_cast<IGameObject *>(parent);
-                            if (nullptr != go)
+                            if (_showTooltip)
+                                _tooltipMsg = fmt::sprintf("%s %s", editor::style::icon::Prefab, info.m_gameObject->GetName());
+                        }
+                        else
+                        {
+                            if (_showTooltip)
                             {
-                                bool autoSelectParentPrefab = false;
-                                auto * parentPrefab = go->GetParentPrefab();
-                                if (parentPrefab)
-                                {
-                                    bool prefabSelected = selection->IsSelectedObject(parentPrefab);
+                                _tooltipMsg = fmt::sprintf("%s %s", editor::style::icon::GameObject, info.m_gameObject->GetName());
 
-                                    if (!prefabSelected)
-                                    {
-                                        go = parentPrefab;
-                                        autoSelectParentPrefab = true;
-                                    }
-                                }
+                                string subObjectName = info.m_component->GetSubObjectName((uint)id.y);
+                                if (!subObjectName.empty())
+                                    _tooltipMsg += fmt::sprintf(", %s", subObjectName);
+                            }
+                        }
 
-                                if (autoSelectParentPrefab)
-                                {
-                                    if (_showTooltip)
-                                        _tooltipMsg = fmt::sprintf("%s %s", editor::style::icon::Prefab, go->GetName());
-                                }
+                        if (_showTooltip)
+                            _tooltipDbg = fmt::sprintf("\n\n%s \"%s\" (ID %u, %u)\nCounter = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", info.m_component->GetClassName(), info.m_component->GetName().c_str(), (uint)id.x, (uint)id.y, _view->GetPickingRequestedHitCount(), (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
+
+                        if (input->IsMouseButtonJustPressed(MouseButton::Left))
+                        {
+                            isValidPicking = true;
+
+                            if (ctrl)
+                            {
+                                if (selection->IsSelectedObject(info.m_gameObject))
+                                    selection->Remove(info.m_gameObject);
                                 else
-                                {
-                                    if (_showTooltip)
-                                    {
-                                        _tooltipMsg = fmt::sprintf("%s %s", editor::style::icon::GameObject, go->GetName());
-
-                                        string subObjectName = component->GetSubObjectName((uint)id.y);
-                                        if (!subObjectName.empty())
-                                            _tooltipMsg += fmt::sprintf(", %s", subObjectName);
-                                    }
-                                }
-
-                                if (_showTooltip)
-                                    _tooltipDbg = fmt::sprintf("\n\n%s \"%s\" (ID %u, %u)\nCounter = %u\nWorldPos = (%.2f, %.2f, %.2f) Depth = %f", component->GetClassName(), component->GetName().c_str(), (uint)id.x, (uint)id.y, _view->GetPickingRequestedHitCount(), (float)pos.x, (float)pos.y, (float)pos.z, (float)pos.w);
-
-                                if (input->IsMouseButtonJustPressed(MouseButton::Left))
-                                {
-                                    isValidPicking = true;
-
-                                    if (ctrl)
-                                    {
-                                        if (selection->IsSelectedObject(go))
-                                            selection->Remove(go);
-                                        else
-                                            selection->Add(go);
-                                    }
-                                    else
-                                    {
-                                        selection->SetSelectedObject(go);
-                                    }
-                                }
+                                    selection->Add(info.m_gameObject);
+                            }
+                            else
+                            {
+                                selection->SetSelectedObject(info.m_gameObject);
                             }
                         }
                     }

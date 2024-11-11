@@ -9,6 +9,7 @@
 #include "renderer/Job/Culling/ViewCullingJob.h"
 #include "renderer/RenderPass/Update/ViewConstants/ViewConstantsUpdatePass.h"
 #include "renderer/UI/UIRenderer.h"
+#include "renderer/Picking/PickingManager.h"
 
 #if !VG_ENABLE_INLINE
 #include "View.inl"
@@ -504,6 +505,19 @@ namespace vg::renderer
             #endif
         }
         );
+
+        if (counter > PICKING_MAX_HITS)
+        {
+            VG_ASSERT(counter <= PICKING_MAX_HITS, "Picking hit %u pixels but buffer limit is %u. Please increase PICKING_MAX_HITS fix this error.", counter, PICKING_MAX_HITS);
+
+            const PickingManager * pickingManager = PickingManager::get();
+            for (uint i = 0; i < m_pickingHits.size(); ++i)
+            {
+                PickingHitInfo info;
+                if (pickingManager->decodePickingHit(m_pickingHits[i], info))
+                    VG_DEBUGPRINT("Hit %u: %s\n", i, info.m_gameObject->GetName().c_str());
+            }
+        }
      }
 
     //--------------------------------------------------------------------------------------

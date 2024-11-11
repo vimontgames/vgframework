@@ -2,7 +2,7 @@
 
 #include "types.hlsli"
 
-#define PICKING_MAX_HITS 16
+#define PICKING_MAX_HITS 64
 
 struct PickingHit
 {

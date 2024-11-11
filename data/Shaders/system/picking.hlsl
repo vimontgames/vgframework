@@ -14,8 +14,6 @@ bool ProcessPicking(uint _rwBufferID, uint _offset, uint2 _inputPos, float _dept
             // Get index to store picking hit
             uint index;
             rwBuffer.InterlockedAdd(_offset, 1, index);
-
-            VG_ASSERT(index < PICKING_MAX_HITS, "Please increase PICKING_MAX_HITS (%u)", (uint)PICKING_MAX_HITS);
             
             // Store picking hit
             if (index < PICKING_MAX_HITS)
