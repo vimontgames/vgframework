@@ -12,7 +12,8 @@ namespace vg::engine
         DefaultMaterialData(const core::string & _name = "", IObject * _parent = nullptr);
         ~DefaultMaterialData();
 
-        renderer::IMaterialModel *  CreateRendererMaterialModel() const final override;
+        bool                        RegisterUID                 () override;
+        renderer::IMaterialModel *  CreateRendererMaterialModel () const final override;
 
     private:
         UVSource                    m_UVSource          = UVSource::UV0;

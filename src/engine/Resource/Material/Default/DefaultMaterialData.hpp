@@ -86,4 +86,16 @@ namespace vg::engine
         
         return material;
     }   
+
+    //--------------------------------------------------------------------------------------
+    bool DefaultMaterialData::RegisterUID()
+    {
+        bool result = super::RegisterUID();
+
+        result &= m_albedoMap.RegisterUID();
+        result &= m_normalMap.RegisterUID();
+        result &= m_pbrMap.RegisterUID();
+
+        return result;
+    }
 }

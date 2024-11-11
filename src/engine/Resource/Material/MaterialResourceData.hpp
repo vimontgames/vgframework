@@ -57,6 +57,7 @@ namespace vg::engine
             {
                 // TODO : abstract factory using 'shader' string
                 m_data = new DefaultMaterialData("Default", this); 
+                m_data->RegisterUID();
                 CreateRendererMaterial();
             }
         }
