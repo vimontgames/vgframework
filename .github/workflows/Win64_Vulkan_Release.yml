@@ -86,7 +86,7 @@ jobs:
             {
               "type": "rich",
               "title": "Win64 Vulkan Release build succeeded",
-              "description": "$commitMessage",
+              "description": "${{ github.event.head_commit.message }}",
               "color": 38912,
               "thumbnail": {
                 "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/buildsuccess.png?raw=true"
@@ -96,7 +96,7 @@ jobs:
                 "url": "https://github.com/$($env:GITHUB_ACTOR)",
                 "icon_url": "https://avatars.githubusercontent.com/u/$($env:GITHUB_ACTOR_ID)?v=4"
               },
-              "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              "url": "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs"
             }
           ]
         }
@@ -118,7 +118,7 @@ jobs:
             {
               "type": "rich",
               "title": "Win64 Vulkan Release build failed",
-              "description": "$commitMessage",
+              "description": "${{ github.event.head_commit.message }}",
               "color": 16515049,
               "thumbnail": {
                 "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/buildfailed.png?raw=true"
@@ -128,7 +128,7 @@ jobs:
                 "url": "https://github.com/$($env:GITHUB_ACTOR)",
                 "icon_url": "https://avatars.githubusercontent.com/u/$($env:GITHUB_ACTOR_ID)?v=4"
               },
-              "url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+              "url": "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs"
             }
           ]
         }
