@@ -363,9 +363,9 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
-    output.albedo = float4(albedo.rgb, 0.0f);
-    output.normal = float4(worldNormal.xyz, 0.0f);
-    output.pbr = float4(pbr.rgb, 0.0f);
+    output.albedo = albedo.rgba;
+    output.normal = float4(worldNormal.xyz, 0.0);
+    output.pbr = float4(pbr.rgb, 0.0);
 
     #if _TOOLMODE && !_ZONLY
     // If any 'Forward' debug display mode is enabled then its result is stored into the 'Albedo' buffer
@@ -381,12 +381,16 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
         uint4 pickingID = uint4(rootConstants3D.getPickingID(), rootConstants3D.getMatID(), 0, 0);
     
         if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, depth, worldPos, mousePos, screenSize, pickingID))
-            output.albedo = lerp(output.albedo, float4(0,1,0,1), 0.25f);
+            output.albedo = lerp(output.albedo, float4(0,1,0,1), 0.25);
     }
     #endif // _TOOLMODE && !_ZONLY
 
     #if _ALPHATEST
-    clip(output.albedo.a-0.5f); 
+    clip(output.albedo.a - 0.5); 
+    #endif
+
+    #if !_ALPHABLEND
+    output.albedo.a = 1;
     #endif
 
     #if _ZONLY
