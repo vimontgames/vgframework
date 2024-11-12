@@ -45,17 +45,22 @@ namespace vg::renderer
                 break;
         }
 
-        for (uint i = 0; i < list.size(); ++i)
+        if (list.size() > 0)
         {
-            const GraphicInstance * instance = list[i];
+            VG_PROFILE_GPU(asCString(_list)); 
 
-            if (_renderContext.m_wireframe && wireframeSelection)
+            for (uint i = 0; i < list.size(); ++i)
             {
-                if (!asBool(ObjectFlags::Selected & instance->getObjectFlags()))
-                    continue;
-            }
+                const GraphicInstance * instance = list[i];
 
-            instance->Draw(renderContext, _cmdList);
+                if (_renderContext.m_wireframe && wireframeSelection)
+                {
+                    if (!asBool(ObjectFlags::Selected & instance->getObjectFlags()))
+                        continue;
+                }
+
+                instance->Draw(renderContext, _cmdList);
+            }
         }
     }    
 }

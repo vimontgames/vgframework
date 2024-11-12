@@ -282,6 +282,18 @@ template <typename Type> constexpr const std::string getEnumString(Type e)
     return std::string{};
 }
 
+template <typename Type> constexpr const char * getEnumCString(Type e)
+{
+    const auto & members = getEnumMembers<Type>();
+    for (auto i = 0; i < members.size(); ++i)
+    {
+        const auto & member = members[i];
+        if (member.value == e)
+            return member.name.data();
+    }
+    return nullptr;
+}
+
 template <typename Type> constexpr Type getEnumValue(unsigned int index)
 {
     const auto & members = getEnumMembers<Type>();

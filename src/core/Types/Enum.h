@@ -125,6 +125,12 @@ namespace vg
         {
             return getEnumString(e);
         }
+
+        //--------------------------------------------------------------------------------------
+        template <typename E> inline constexpr const char * asCString(E e)
+        {
+            return getEnumCString(e);
+        }
     }
 }
   
