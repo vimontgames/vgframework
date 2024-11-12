@@ -1,7 +1,6 @@
 #include "ImguiAbout.h"
 #include "renderer/ImGui_consts.h"
 #include "version.h"
-#include "commit.h"
 
 namespace vg::editor
 {
@@ -60,14 +59,8 @@ namespace vg::editor
         {
             ImGui::PushDefaultFont();
 
-            string title = fmt::sprintf("VG Framework %u.%u.%u", VG_FRAMEWORK_VERSION_MAJOR, VG_FRAMEWORK_VERSION_MINOR, VG_FRAMEWORK_VERSION_PATCH);
-
-            #ifdef GIT_REVISION
-            title += fmt::sprintf(" (commit %s)", GIT_REVISION);
-            #endif
-
             ImGui::PushStyle(renderer::FontStyle::Bold);
-            Text(title.c_str());
+            Text("VG Framework %u.%u.%u", VG_FRAMEWORK_VERSION_MAJOR, VG_FRAMEWORK_VERSION_MINOR, VG_FRAMEWORK_VERSION_PATCH);
             Text("");
             ImGui::PopStyle();
 

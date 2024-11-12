@@ -77,7 +77,9 @@ jobs:
       if: ${{ success() }}
       run: |
         $DISCORD_BUILD_WEBHOOK_URL = "${{ secrets.DISCORD_BUILD_WEBHOOK_URL }}"
-                  
+        $commitMessage = "${{ github.event.head_commit.message }}"
+        $jobUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" 
+        
         $jsonPayload = @"
         {
           "username": "GitHub",
@@ -86,7 +88,7 @@ jobs:
             {
               "type": "rich",
               "title": "Win64 Vulkan Release build succeeded",
-              "description": "${{ github.event.head_commit.message }}",
+              "description": "$commitMessage",
               "color": 38912,
               "thumbnail": {
                 "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/buildsuccess.png?raw=true"
@@ -96,7 +98,7 @@ jobs:
                 "url": "https://github.com/$($env:GITHUB_ACTOR)",
                 "icon_url": "https://avatars.githubusercontent.com/u/$($env:GITHUB_ACTOR_ID)?v=4"
               },
-              "url": "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs"
+              "url": "$jobUrl"
             }
           ]
         }
@@ -109,7 +111,9 @@ jobs:
       if: ${{ failure() }}
       run: |
         $DISCORD_BUILD_WEBHOOK_URL = "${{ secrets.DISCORD_BUILD_WEBHOOK_URL }}"
-                  
+        $commitMessage = "${{ github.event.head_commit.message }}"
+        $jobUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" 
+        
         $jsonPayload = @"
         {
           "username": "GitHub",
@@ -118,7 +122,7 @@ jobs:
             {
               "type": "rich",
               "title": "Win64 Vulkan Release build failed",
-              "description": "${{ github.event.head_commit.message }}",
+              "description": "$commitMessage",
               "color": 16515049,
               "thumbnail": {
                 "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/buildfailed.png?raw=true"
@@ -128,7 +132,7 @@ jobs:
                 "url": "https://github.com/$($env:GITHUB_ACTOR)",
                 "icon_url": "https://avatars.githubusercontent.com/u/$($env:GITHUB_ACTOR_ID)?v=4"
               },
-              "url": "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs"
+              "url": "$jobUrl"
             }
           ]
         }
