@@ -21,6 +21,7 @@ jobs:
           $repo = "${{ github.repository }}"
           $commitSha = "${{ github.sha }}"
           $shortCommitSha = $commitSha.Substring(0, 7)  # Get the first 7 characters of the commit hash
+          $title = "New submit $shortCommitSha"
           $commitUrl = "https://github.com/$repo/commit/$commitSha"
           
           $jsonPayload = @"
@@ -30,7 +31,7 @@ jobs:
             "embeds": [
               {
                 "type": "rich",
-                "title": "Submit $shortCommitSha",
+                "title": "$title",
                 "description": "$commitMessage",
                 "color": 38912,
                 "thumbnail": {
