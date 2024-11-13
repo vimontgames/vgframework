@@ -27,7 +27,7 @@ jobs:
           Write-Output "Commit message: $commitMessage"
 
           # Escape commitMessage to ensure it works within JSON
-          $escapedCommitMessage = $commitMessage -replace '"', '\"'
+          $escapedCommitMessage = $commitMessage -replace '"', '\"' -replace "`r`n", '\n' -replace "`n", '\n'
 
           Write-Output "Escaped commit message: $escapedCommitMessage"
           
