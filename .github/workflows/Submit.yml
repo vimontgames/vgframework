@@ -33,7 +33,11 @@ jobs:
           # Split commit message into summary and description
           $commitLines = $commitMessage -split "`n", 2
           $summary = $commitLines[0]
+          $summary = $summary -replace '"', '\"' -replace "`r`n", '\n' -replace "`n", '\n'
+
           $description = if ($commitLines.Length -gt 1) { $commitLines[1] } else { "" }
+          $description = $description -replace '"', '\"' -replace "`r`n", '\n' -replace "`n", '\n'
+
           $title = "$summary ($shortCommitSha)"
 
           Write-Output "Summary: $summary"
