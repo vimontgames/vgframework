@@ -31,12 +31,9 @@ jobs:
           Write-Output "Escaped commit message: $escapedCommitMessage"
 
           # Split commit message into summary and description
-          $commitLines = $commitMessage -split "`n", 2
-          $summary = $commitLines[0]
-          $summary = $summary -replace '"', '\"' -replace "`r`n", '\n' -replace "`n", '\n'
-
-          $description = if ($commitLines.Length -gt 1) { $commitLines[1] } else { "" }
-          $description = $description -replace '"', '\"' -replace "`r`n", '\n' -replace "`n", '\n'
+          $splitMessage = $escapedCommitMessage -split '\n\n', 2
+          $summary = $splitMessage[0]
+          $description = if ($splitMessage.Length -gt 1) { $splitMessage[1] } else { "" }
 
           $title = "$summary ($shortCommitSha)"
 
@@ -45,7 +42,7 @@ jobs:
           
           $jsonPayload = @"
           {
-            "username": "Clown",
+            "username": "Freaky clown",
             "content": "",
             "embeds": [
               {
