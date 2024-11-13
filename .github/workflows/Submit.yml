@@ -35,7 +35,7 @@ jobs:
               {
                 "type": "rich",
                 "title": "$title",
-                "description": "$commitMessage",
+                "description": "$escapedCommitMessage",
                 "color": 38912,
                 "thumbnail": {
                   "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/newsubmit.png?raw=true"
