@@ -18,7 +18,9 @@ jobs:
         run: |
           # Set webhook URL and other variables
           $DISCORD_SUBMIT_WEBHOOK_URL = "${{ secrets.DISCORD_SUBMIT_WEBHOOK_URL }}"
-          $commitMessage = "${{ github.event.head_commit.message }}"
+          $commitMessage = @"
+          ${{ github.event.head_commit.message }}
+          "@
           $repo = "${{ github.repository }}"
           $commitSha = "${{ github.sha }}"
           $shortCommitSha = $commitSha.Substring(0, 7)
