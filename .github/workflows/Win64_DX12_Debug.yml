@@ -6,6 +6,7 @@
 name: "Win64 DX12 Debug      "
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "master" ]
     paths:
@@ -71,7 +72,10 @@ jobs:
       run: |
         $DISCORD_BUILD_WEBHOOK_URL = "${{ secrets.DISCORD_BUILD_WEBHOOK_URL }}"
         $commitMessage = "${{ github.event.head_commit.message }}"
-        $jobUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" 
+
+        # Construct the URL for the jobs API and get the job ID
+        $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs | ConvertFrom-Json).jobs | Where-Object { $_.name -eq ${{ github.job }} } | Select-Object -ExpandProperty id
+        $jobUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/job/$jobId" 
                   
         $jsonPayload = @"
         {
