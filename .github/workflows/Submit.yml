@@ -23,6 +23,9 @@ jobs:
           $shortCommitSha = $commitSha.Substring(0, 7)
           $title = "New submit $shortCommitSha"
           $commitUrl = "https://github.com/$repo/commit/$commitSha"
+
+          # Escape commitMessage to ensure it works within JSON
+          $escapedCommitMessage = $commitMessage -replace '"', '\"'
           
           $jsonPayload = @"
           {
