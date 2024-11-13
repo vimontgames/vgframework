@@ -24,8 +24,12 @@ jobs:
           $title = "New submit $shortCommitSha"
           $commitUrl = "https://github.com/$repo/commit/$commitSha"
 
+          Write-Output "Commit message: $commitMessage"
+
           # Escape commitMessage to ensure it works within JSON
           $escapedCommitMessage = $commitMessage -replace '"', '\"'
+
+          Write-Output "Escaped commit message: $escapedCommitMessage"
           
           $jsonPayload = @"
           {
@@ -50,6 +54,8 @@ jobs:
             ]
           }
           "@
+
+          Write-Output "JSON playload: $jsonPayload"
       
           $RESPONSE = curl -H "Content-Type: application/json" -X POST -d $jsonPayload $DISCORD_SUBMIT_WEBHOOK_URL
           Write-Output "Webhook server response: $RESPONSE"
