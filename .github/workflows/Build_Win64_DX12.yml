@@ -17,33 +17,33 @@ jobs:
   build_editor:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+     - uses: actions/checkout@v4
 
-      - name: Add MSBuild to PATH
-        uses: microsoft/setup-msbuild@v2
-        with:
-          vs-version: '[17.11.2, 18.0.0)'
+     - name: Add MSBuild to PATH
+       uses: microsoft/setup-msbuild@v2
+       with:
+         vs-version: '[17.11.2, 18.0.0)'
 
-      - name: Restore NuGet packages
-        run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
+     - name: Restore NuGet packages
+       run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
 
-      - name: Build Release
-        run: msbuild /m /p:Configuration=Release /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
+     - name: Build Release
+       run: msbuild /m /p:Configuration=Release /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
 
-      - name: Upload Release Artifacts
-        if: success()
-        uses: actions/upload-artifact@v3
-        with:
-          name: release-artifacts
-          path: |
-            src/commit.h
-            VGFramework_x64_Release_DX12.exe
-            build\bin\x64\Release\audio.dll
-            build\bin\x64\Release\editor.dll
-            build\bin\x64\Release\engine.dll
-            build\bin\x64\Release\game.dll
-            build\bin\x64\Release\physics.dll
-            build\bin\x64\Release_DX12\renderer.dll
+     - name: Upload Release Artifacts
+       if: success()
+       uses: actions/upload-artifact@v3
+       with:
+         name: release-artifacts
+         path: |
+           src/commit.h
+           VGFramework_x64_Release_DX12.exe
+           build\bin\x64\Release\audio.dll
+           build\bin\x64\Release\editor.dll
+           build\bin\x64\Release\engine.dll
+           build\bin\x64\Release\game.dll
+           build\bin\x64\Release\physics.dll
+           build\bin\x64\Release_DX12\renderer.dll
 
   build_game:
     runs-on: windows-latest
@@ -157,7 +157,13 @@ jobs:
         shell: pwsh          
         run: |
           $DISCORD_RELEASE_WEBHOOK_URL = "${{ secrets.DISCORD_RELEASE_WEBHOOK_URL }}"
-          $jobUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" 
+          $jobName = "${{ github.job }}"
+          $runId = "${{ github.run_id }}"
+          $repo = "${{ github.repository }}"
+          $serverUrl = "${{ github.server_url }}"
+          $jobsApiUrl = "https://api.github.com/repos/$repo/actions/runs/$runId/jobs"
+          $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl | ConvertFrom-Json).jobs | Where-Object { $_.name -eq $jobName } | Select-Object -ExpandProperty id
+          $jobUrl = "$serverUrl/$repo/actions/runs/$runId/job/$jobId" 
 
           $versionContent = Get-Content "src/version.h"
           $major, $minor, $patch = "", "", ""
