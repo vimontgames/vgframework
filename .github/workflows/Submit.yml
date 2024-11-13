@@ -20,7 +20,7 @@ jobs:
           $commitMessage = "${{ github.event.head_commit.message }}"
           $repo = "${{ github.repository }}"
           $commitSha = "${{ github.sha }}"
-          $shortCommitSha = $commitSha.Substring(0, 7)  # Get the first 7 characters of the commit hash
+          $shortCommitSha = $commitSha.Substring(0, 7)
           $title = "New submit $shortCommitSha"
           $commitUrl = "https://github.com/$repo/commit/$commitSha"
           
