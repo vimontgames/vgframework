@@ -10,7 +10,7 @@
                 <Property type="Uint32" name="m_uid" flags="" value="3905710596"/>
                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
-                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
+                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                 <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                 <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
@@ -130,10 +130,10 @@
                                 <Property type="String" name="m_name" value="PBR"/>
                                 <Property type="Uint32" name="m_uid" flags="" value="1776653567"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened|Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="8.9406953e-08" Jy="7.1054274e-15" Jz="-1.0000001" Jw="0" Kx="-1.0000001" Ky="-5.9604645e-08" Kz="-8.9406967e-08" Kw="0" Tx="2" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-5.9604645e-08" Jz="0" Jw="0" Kx="1.4210855e-14" Ky="-1.7763575e-15" Kz="1.0000001" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -146,7 +146,24 @@
                                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/PBR.prefab"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                    <Object class="DynamicPropertyList">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="PBR"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="3722998517"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_properties">
+                                            <Object class="DynamicPropertyFloat4x4">
+                                                <Property type="String" name="m_name" flags="NotVisible" value="m_local"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="3579665105"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="Bool" name="m_enable" flags="NotVisible" value="true"/>
+                                                <Property type="Float4x4" name="m_value" flags="Optional" Ix="0.00083339214" Iy="-0.99999958" Iz="0" Iw="0" Jx="0.99999958" Jy="0.00083339214" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999988" Kw="0" Tx="1" Ty="0" Tz="0" Tw="1"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
                             </Object>
                             <Object class="PrefabGameObject">
                                 <Property type="String" name="m_name" value="PBR 9x9"/>
