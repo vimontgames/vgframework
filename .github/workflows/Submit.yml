@@ -22,7 +22,7 @@ jobs:
           $commitSha = "${{ github.sha }}"
           $shortCommitSha = $commitSha.Substring(0, 7)
           $title = "New submit $shortCommitSha"
-          $commitUrl = "https://github.com/$repo/commit/$commitSha" 
+          $commitUrl = "https://github.com/$repo/commit/$commitSha"
           
           $jsonPayload = @"
           {
