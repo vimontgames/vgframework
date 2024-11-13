@@ -72,11 +72,14 @@ jobs:
       run: |
         $DISCORD_BUILD_WEBHOOK_URL = "${{ secrets.DISCORD_BUILD_WEBHOOK_URL }}"
         $commitMessage = "${{ github.event.head_commit.message }}"
+        $jobName = "${{ github.job }}"
+        $runId = "${{ github.run_id }}"
+        $repo = "${{ github.repository }}"
+        $serverUrl = "${{ github.server_url }}"
+        $jobsApiUrl = "https://api.github.com/repos/$repo/actions/runs/$runId/jobs"
+        $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl | ConvertFrom-Json).jobs | Where-Object { $_.name -eq $jobName } | Select-Object -ExpandProperty id
+        $jobUrl = "$serverUrl/$repo/actions/runs/$runId/job/$jobId"
 
-        # Construct the URL for the jobs API and get the job ID
-        $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs | ConvertFrom-Json).jobs | Where-Object { $_.name -eq ${{ github.job }} } | Select-Object -ExpandProperty id
-        $jobUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/job/$jobId" 
-                  
         $jsonPayload = @"
         {
           "username": "GitHub",
