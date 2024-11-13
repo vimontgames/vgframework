@@ -21,7 +21,7 @@ jobs:
           $repo = "${{ github.repository }}"
           $commitSha = "${{ github.sha }}"
           $shortCommitSha = $commitSha.Substring(0, 7)
-          $title = "New submit $shortCommitSha"
+          $title = "New submit"
           $commitUrl = "https://github.com/$repo/commit/$commitSha"
 
           Write-Output "Commit message: $commitMessage"
@@ -51,7 +51,7 @@ jobs:
                 },
                 "commit": {
                   "name": "$shortCommitSha",
-                  "url": "$commitUrl",
+                  "url": "$commitUrl"
                 },
                 "url": "$commitUrl"
               }
