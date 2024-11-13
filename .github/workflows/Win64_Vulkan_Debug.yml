@@ -89,7 +89,7 @@ jobs:
         
         $jsonPayload = @"
         {
-          "username": "GitHub",
+          "username": "Gros Covid",
           "content": "",
           "embeds": [
             {
@@ -129,7 +129,7 @@ jobs:
         
         $jsonPayload = @"
         {
-          "username": "GitHub",
+          "username": "Gros Covid",
           "content": "",
           "embeds": [
             {

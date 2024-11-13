@@ -193,7 +193,7 @@ jobs:
                     
           $jsonPayload = @"
           {
-            "username": "GitHub",
+            "username": "VGF_Boy",
             "content": "",
             "embeds": [
               {

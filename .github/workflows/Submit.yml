@@ -20,16 +20,17 @@ jobs:
           $commitMessage = "${{ github.event.head_commit.message }}"
           $repo = "${{ github.repository }}"
           $commitSha = "${{ github.sha }}"
+          $shortCommitSha = $commitSha.Substring(0, 7)  # Get the first 7 characters of the commit hash
           $commitUrl = "https://github.com/$repo/commit/$commitSha"
           
           $jsonPayload = @"
           {
-            "username": "GitHub",
+            "username": "Clown",
             "content": "",
             "embeds": [
               {
                 "type": "rich",
-                "title": "New Submit",
+                "title": "Submit $shortCommitSha",
                 "description": "$commitMessage",
                 "color": 38912,
                 "thumbnail": {
