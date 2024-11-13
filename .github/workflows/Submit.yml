@@ -16,6 +16,7 @@ jobs:
       - name: Submit Notification
         if: ${{ success() }}
         run: |
+          # Set webhook URL and other variables
           $DISCORD_SUBMIT_WEBHOOK_URL = "${{ secrets.DISCORD_SUBMIT_WEBHOOK_URL }}"
           $commitMessage = "${{ github.event.head_commit.message }}"
           $repo = "${{ github.repository }}"
@@ -23,33 +24,28 @@ jobs:
           $shortCommitSha = $commitSha.Substring(0, 7)
           $commitUrl = "https://github.com/$repo/commit/$commitSha"
 
-          Write-Output "Commit message: $commitMessage"
-
-          # Escape commitMessage to ensure it works within JSON
-          $escapedCommitMessage = $commitMessage -replace '"', '\"' -replace "`r`n", '\n' -replace "`n", '\n'
-
-          Write-Output "Escaped commit message: $escapedCommitMessage"
-
-          # Split the commit message into summary and description based on \n\n
-          $splitMessage = $escapedCommitMessage -split '\n{2,}', 2
-          
-          # Ensure summary and description are handled correctly
+          # Split the commit message on double newlines (\r?\n\r?\n) to separate the summary and description
+          $splitMessage = $commitMessage -split '\r?\n\r?\n', 2
           $summary = $splitMessage[0]
           $description = if ($splitMessage.Length -gt 1) { $splitMessage[1] } else { "" }
 
-          Write-Output "Summary: $summary"
-          Write-Output "Description: $description"
-          
+          # Clean and escape strings to make them JSON-safe
+          $escapedSummary = $summary -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
+          $escapedDescription = $description -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
+
+          $title = "$escapedSummary ($shortCommitSha)"
+
+          # Prepare the JSON payload
           $jsonPayload = @"
           {
-            "username": "Freaky clown",
+            "username": "Clown",
             "content": "",
             "embeds": [
               {
                 "type": "rich",
-                "title": "$summary ($shortCommitSha)",
-                "description": "$description",
-                "color": 7542970,
+                "title": "$title",
+                "description": "$escapedDescription",
+                "color": 7506394, 
                 "thumbnail": {
                   "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/newsubmit.png?raw=true"
                 },
@@ -64,7 +60,6 @@ jobs:
           }
           "@
 
-          Write-Output "JSON playload: $jsonPayload"
-      
+          # Send the webhook
           $RESPONSE = curl -H "Content-Type: application/json" -X POST -d $jsonPayload $DISCORD_SUBMIT_WEBHOOK_URL
           Write-Output "Webhook server response: $RESPONSE"
