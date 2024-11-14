@@ -164,6 +164,8 @@ jobs:
           $jobsApiUrl = "https://api.github.com/repos/$repo/actions/runs/$runId/jobs"
           $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl | ConvertFrom-Json).jobs | Where-Object { $_.name -eq $jobName } | Select-Object -ExpandProperty id
           $jobUrl = "$serverUrl/$repo/actions/runs/$runId/job/$jobId" 
+          $commitSha = "${{ github.sha }}"
+          $shortCommitSha = $commitSha.Substring(0, 7)
 
           $versionContent = Get-Content "src/version.h"
           $major, $minor, $patch = "", "", ""
@@ -198,7 +200,7 @@ jobs:
             "embeds": [
               {
                 "type": "rich",
-                "title": "VGFramework $fullVersion ($gitRevision)",
+                "title": "VGFramework $fullVersion `$gitRevision`",
                 "description": "A new version of VGFramework is available",
                 "color": 15579707,
                 "thumbnail": {

@@ -26,16 +26,14 @@ jobs:
           $shortCommitSha = $commitSha.Substring(0, 7)
           $commitUrl = "https://github.com/$repo/commit/$commitSha"
 
-          # Split the commit message on double newlines (\r?\n\r?\n) to separate the summary and description
+          # Split the commit message on double newlines (\r?\n\r?\n) to separate the summary and description. Clean and escape strings to make them JSON-safe
           $splitMessage = $commitMessage -split '\r?\n\r?\n', 2
           $summary = $splitMessage[0]
           $description = if ($splitMessage.Length -gt 1) { $splitMessage[1] } else { "" }
-
-          # Clean and escape strings to make them JSON-safe
           $escapedSummary = $summary -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
           $escapedDescription = $description -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
 
-          $title = "$escapedSummary ($shortCommitSha)"
+          $title = "$escapedSummary `$shortCommitSha`"
 
           # Prepare the JSON payload
           $jsonPayload = @"

@@ -81,7 +81,16 @@ jobs:
           $jobsApiUrl = "https://api.github.com/repos/$repo/actions/runs/$runId/jobs"
           $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl | ConvertFrom-Json).jobs | Where-Object { $_.name -eq $jobName } | Select-Object -ExpandProperty id
           $jobUrl = "$serverUrl/$repo/actions/runs/$runId/job/$jobId"  
-          
+          $commitSha = "${{ github.sha }}"
+          $shortCommitSha = $commitSha.Substring(0, 7)
+
+          # Split the commit message on double newlines (\r?\n\r?\n) to separate the summary and description. Clean and escape strings to make them JSON-safe
+          $splitMessage = $commitMessage -split '\r?\n\r?\n', 2
+          $summary = $splitMessage[0]
+          $description = if ($splitMessage.Length -gt 1) { $splitMessage[1] } else { "" }
+          $escapedSummary = $summary -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
+          $escapedDescription = $description -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
+
           $jsonPayload = @"
           {
             "username": "Gros Covid",
@@ -89,8 +98,8 @@ jobs:
             "embeds": [
               {
                 "type": "rich",
-                "title": "Win64 DX12 Final build succeeded",
-                "description": "$commitMessage",
+                "title": "Win64 DX12 Final build succeeded `$shortCommitSha`",
+                "description": "$escapedSummary",
                 "color": 38912,
                 "thumbnail": {
                   "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/buildsuccess.png?raw=true"
@@ -123,7 +132,16 @@ jobs:
           $jobsApiUrl = "https://api.github.com/repos/$repo/actions/runs/$runId/jobs"
           $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl | ConvertFrom-Json).jobs | Where-Object { $_.name -eq $jobName } | Select-Object -ExpandProperty id
           $jobUrl = "$serverUrl/$repo/actions/runs/$runId/job/$jobId"
-          
+          $commitSha = "${{ github.sha }}"
+          $shortCommitSha = $commitSha.Substring(0, 7)
+
+          # Split the commit message on double newlines (\r?\n\r?\n) to separate the summary and description. Clean and escape strings to make them JSON-safe
+          $splitMessage = $commitMessage -split '\r?\n\r?\n', 2
+          $summary = $splitMessage[0]
+          $description = if ($splitMessage.Length -gt 1) { $splitMessage[1] } else { "" }
+          $escapedSummary = $summary -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
+          $escapedDescription = $description -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
+
           $jsonPayload = @"
           {
             "username": "Gros Covid",
@@ -131,8 +149,8 @@ jobs:
             "embeds": [
               {
                 "type": "rich",
-                "title": "Win64 DX12 Final build failed",
-                "description": "$commitMessage",
+                "title": "Win64 DX12 Final build failed `$shortCommitSha`",
+                "description": "$escapedSummary",
                 "color": 16515049,
                 "thumbnail": {
                   "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/buildfailed.png?raw=true"
