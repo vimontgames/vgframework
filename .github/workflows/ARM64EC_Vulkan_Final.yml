@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: "ARM64EC Vulkan Final  "
+name: "ARM64EC Vulkan Final"
 
 on:
   workflow_dispatch:
