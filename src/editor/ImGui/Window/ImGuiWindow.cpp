@@ -25,8 +25,6 @@
 #include "editor/imgui/Extensions/FileDialog/ImGuiFileDialog.h"
 #include "ImGuiWindow.h"
 
-#include "D:\GitHub\vimontgames\vgframework\extern\imgui\imgui_internal.h"
-
 #if !VG_ENABLE_INLINE
 #include "ImGuiWindow.inl"
 #endif
