@@ -510,6 +510,7 @@ namespace ImGui
 
         g_disabledStack.push_back(_disabled);
     }
+
     //--------------------------------------------------------------------------------------
     void PopDisabledStyle()
     {
@@ -520,5 +521,68 @@ namespace ImGui
             bool disabled = g_disabledStack.size() > 0 && g_disabledStack.back();
             ApplyDisabledStyle(disabled);
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    // A custom version of ImGui::DragScalarN that do not return 'true" when value is entered using keyboard
+    //--------------------------------------------------------------------------------------
+    bool CustomDragScalarN(InteractionType & _interactionType, const char * label, ImGuiDataType data_type, void * p_data, int components, float v_speed, const void * p_min, const void * p_max, const char * format, ImGuiSliderFlags flags)
+    {
+        auto * window = GetCurrentWindow();
+        if (window->SkipItems)
+            return false;
+
+        _interactionType = InteractionType::Continuous;
+
+        ImGuiContext & g = *GImGui;
+        bool value_changed = false;
+        BeginGroup();
+        PushID(label);
+        PushMultiItemsWidths(components, CalcItemWidth());
+        size_t type_size = DataTypeGetInfo(data_type)->Size;
+        for (int i = 0; i < components; i++)
+        {
+            PushID(i);
+            if (i > 0)
+                SameLine(0, g.Style.ItemInnerSpacing.x);
+            value_changed |= DragScalar("", data_type, p_data, v_speed, p_min, p_max, format, flags);
+
+            const ImGuiID id = ImGui::GetCurrentWindow()->GetID("");
+            if (ImGui::TempInputIsActive(id))
+                value_changed = false;
+
+            if (ImGui::IsItemDeactivatedAfterEdit())
+            {
+                value_changed = true;
+                _interactionType = InteractionType::Single;
+            }
+
+            PopID();
+            PopItemWidth();
+            p_data = (void *)((char *)p_data + type_size);
+        }
+        PopID();
+
+        const char * label_end = FindRenderedTextEnd(label);
+        if (label != label_end)
+        {
+            SameLine(0, g.Style.ItemInnerSpacing.x);
+            TextEx(label, label_end);
+        }
+
+        EndGroup();
+        return value_changed;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool CustomDragFloat3(InteractionType & _interactionType, const char * label, float v[3], float v_speed, float v_min, float v_max, const char * format, ImGuiSliderFlags flags)
+    {
+        return CustomDragScalarN(_interactionType, label, ImGuiDataType_Float, v, 3, v_speed, &v_min, &v_max, format, flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool CustomDragFloat4(InteractionType & _interactionType, const char * label, float v[4], float v_speed, float v_min, float v_max, const char * format, ImGuiSliderFlags flags)
+    {
+        return CustomDragScalarN(_interactionType, label, ImGuiDataType_Float, v, 4, v_speed, &v_min, &v_max, format, flags);
     }
 }

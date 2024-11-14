@@ -25,6 +25,8 @@
 #include "editor/imgui/Extensions/FileDialog/ImGuiFileDialog.h"
 #include "ImGuiWindow.h"
 
+#include "D:\GitHub\vimontgames\vgframework\extern\imgui\imgui_internal.h"
+
 #if !VG_ENABLE_INLINE
 #include "ImGuiWindow.inl"
 #endif
@@ -332,11 +334,6 @@ namespace vg::editor
 
     template <> struct ImGuiDataTypeInfo<float> { static const ImGuiDataType_ type = ImGuiDataType_Float; };
 
-    vg_enum_class(InteractionType, core::u8,
-        Single = 0,
-        Continuous
-    );
-
     template <typename T> EditingState undoRedoBeforeEdit(bool & edited, PropertyContext & _propContext, IObject * _object, const IProperty * _prop, typename vectorTraits<T>::type * temp,  typename vectorTraits<T>::type * _ptr, InteractionType _interactionType, bool _itemActive = false, bool _itemAfterEdit = false)
     {
         constexpr auto count = vectorTraits<T>::count;
@@ -460,6 +457,8 @@ namespace vg::editor
         if (_propContext.m_readOnly)
             ImGui::BeginDisabled(true);
 
+        InteractionType interactionType = InteractionType::Continuous;
+
         if (asBool(PropertyFlags::Color & flags) && (count == 3 || count == 4))
         {
             ImGuiColorEditFlags colorEditFlags = 0;
@@ -481,15 +480,15 @@ namespace vg::editor
         else
         {
             if (asBool(PropertyFlags::HasRange & flags))
-                edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, &minRange, &maxRange, editFormat);
+                edited = CustomDragScalarN(interactionType, ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, &minRange, &maxRange, editFormat, ImGuiSliderFlags_NoRoundToFormat);
             else
-                edited = ImGui::DragScalarN(ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, nullptr, nullptr, editFormat);
+                edited = CustomDragScalarN(interactionType, ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, nullptr, nullptr, editFormat, ImGuiSliderFlags_NoRoundToFormat);
         }
 
         if (_propContext.m_readOnly)
             edited = false;
 
-        EditingState editingState = undoRedoBeforeEdit<T>(edited, _propContext, _object, _prop, (S*)&temp[0], _ptr, InteractionType::Continuous);
+        EditingState editingState = undoRedoBeforeEdit<T>(edited, _propContext, _object, _prop, (S*)&temp[0], _ptr, interactionType);
 
         if (_propContext.m_readOnly)
             ImGui::EndDisabled();
@@ -2713,6 +2712,7 @@ namespace vg::editor
                 ImGui::BeginDisabled();
 
             bool itemActive = false, itemAfterEdit = false;
+            InteractionType interactionType = InteractionType::Continuous;
 
             //if (useTRS)
             {
@@ -2731,19 +2731,19 @@ namespace vg::editor
                 float prevRot[3] = { rotation[0], rotation[1], rotation[2] };
                 float prevScale[3] = { scale[0], scale[1], scale[2] };
 
-                edited |= ImGui::DragFloat3(getPropertyLabel("T").c_str(), (float *)&translation, getDragSpeedFloat(_prop) * 90.0f/8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-                itemActive = ImGui::IsItemActive();
-                itemAfterEdit = ImGui::IsItemDeactivatedAfterEdit();
+                edited |= CustomDragFloat3(interactionType, getPropertyLabel("T").c_str(), (float *)&translation, getDragSpeedFloat(_prop) * 90.0f/8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                itemActive = ImGui::IsItemActive() || InteractionType::Single == interactionType;
+                itemAfterEdit = ImGui::IsItemDeactivatedAfterEdit() || InteractionType::Single == interactionType;
                 drawPropertyLabel(_propContext, TLabel.c_str(), "Represents the translation part of the matrix");
 
-                edited |= ImGui::DragFloat3(getPropertyLabel("R").c_str(), (float *)&rotation, getDragSpeedFloat(_prop) * 90.0f / 8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-                itemActive |= ImGui::IsItemActive();
-                itemAfterEdit |= ImGui::IsItemDeactivatedAfterEdit();
+                edited |= CustomDragFloat3(interactionType, getPropertyLabel("R").c_str(), (float *)&rotation, getDragSpeedFloat(_prop) * 90.0f / 8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                itemActive |= ImGui::IsItemActive() || InteractionType::Single == interactionType;
+                itemAfterEdit |= ImGui::IsItemDeactivatedAfterEdit() || InteractionType::Single == interactionType;
                 drawPropertyLabel(_propContext, RLabel.c_str(), "Represents the rotation part of the matrix");
 
-                edited |= ImGui::DragFloat3(getPropertyLabel("S").c_str(), (float *)&scale, getDragSpeedFloat(_prop) * 90.0f / 8.0f, 0.01f, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-                itemActive |= ImGui::IsItemActive();
-                itemAfterEdit |= ImGui::IsItemDeactivatedAfterEdit();
+                edited |= CustomDragFloat3(interactionType, getPropertyLabel("S").c_str(), (float *)&scale, getDragSpeedFloat(_prop) * 90.0f / 8.0f, 0.01f, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                itemActive |= ImGui::IsItemActive() || InteractionType::Single == interactionType;
+                itemAfterEdit |= ImGui::IsItemDeactivatedAfterEdit() || InteractionType::Single == interactionType;
                 drawPropertyLabel(_propContext, SLabel.c_str(), "Represents the scale part of the matrix");
 
                 if (edited)
@@ -2817,35 +2817,35 @@ namespace vg::editor
             }
 
             if (EditingState::Unknown == editingState)
-                editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous, itemActive, itemAfterEdit);
+                editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, interactionType, itemActive, itemAfterEdit);
 
             //else
-            if (false && ImGui::TreeNode(getObjectLabel("(float4x4) " + (string)displayName, _propContext.m_originalProp).c_str()))
-            {
-                ImGui::Spacing();
-
-                edited |= ImGui::DragFloat4(getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-                if (EditingState::Unknown == editingState)
-                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
-                drawPropertyLabel(_propContext, LabelI.c_str(), "Represents the x-axis in the transformed space");
-
-                edited |= ImGui::DragFloat4(getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-                if (EditingState::Unknown == editingState)
-                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
-                drawPropertyLabel(_propContext, LabelJ.c_str(), "Represents the y-axis in the transformed space");
-
-                edited |= ImGui::DragFloat4(getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-                if (EditingState::Unknown == editingState)
-                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
-                drawPropertyLabel(_propContext, LabelK.c_str(), "Represents the z-axis in the transformed space");
-
-                edited |= ImGui::DragFloat4(getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
-                if (EditingState::Unknown == editingState)
-                    editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, InteractionType::Continuous);
-                drawPropertyLabel(_propContext, LabelT.c_str(), "Represents the translation component"); 
-
-                ImGui::TreePop();
-            }
+            //if (false && ImGui::TreeNode(getObjectLabel("(float4x4) " + (string)displayName, _propContext.m_originalProp).c_str()))
+            //{
+            //    ImGui::Spacing();
+            //
+            //    edited |= ImGui::CustomDragFloat4(interactionType, getPropertyLabel("I").c_str(), (float *)&temp[0], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+            //    if (EditingState::Unknown == editingState || InteractionType::Single == interactionType)
+            //        editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, interactionType);
+            //    drawPropertyLabel(_propContext, LabelI.c_str(), "Represents the x-axis in the transformed space");
+            //
+            //    edited |= ImGui::CustomDragFloat4(interactionType, getPropertyLabel("J").c_str(), (float *)&temp[4], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+            //    if (EditingState::Unknown == editingState || InteractionType::Single == interactionType)
+            //        editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, interactionType);
+            //    drawPropertyLabel(_propContext, LabelJ.c_str(), "Represents the y-axis in the transformed space");
+            //
+            //    edited |= ImGui::CustomDragFloat4(interactionType, getPropertyLabel("K").c_str(), (float *)&temp[8], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+            //    if (EditingState::Unknown == editingState || InteractionType::Single == interactionType)
+            //        editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, interactionType);
+            //    drawPropertyLabel(_propContext, LabelK.c_str(), "Represents the z-axis in the transformed space");
+            //
+            //    edited |= ImGui::CustomDragFloat4(interactionType, getPropertyLabel("T").c_str(), (float *)&temp[12], getDragSpeedFloat(_prop), -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+            //    if (EditingState::Unknown == editingState || InteractionType::Single == interactionType)
+            //        editingState = undoRedoBeforeEdit<float4x4>(edited, _propContext, _object, _prop, (float *)&temp[0], pFloat, interactionType);
+            //    drawPropertyLabel(_propContext, LabelT.c_str(), "Represents the translation component"); 
+            //
+            //    ImGui::TreePop();
+            //}
             
             if (_propContext.m_readOnly)
                 ImGui::EndDisabled();

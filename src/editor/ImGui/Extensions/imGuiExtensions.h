@@ -18,6 +18,11 @@ namespace vg::renderer
 
 namespace ImGui
 {
+    vg_enum_class(InteractionType, vg::core::u8,
+        Single = 0,
+        Continuous
+    );
+
     ImVec4 getDisabledButtonColor();
     ImVec4 getDisabledTextColor();
 
@@ -61,4 +66,8 @@ namespace ImGui
 
     void PushDisabledStyle(bool _disabled);
     void PopDisabledStyle();
+
+    bool CustomDragScalarN(InteractionType & _interactionType, const char * label, ImGuiDataType data_type, void * p_data, int components, float v_speed = 1.0f, const void * p_min = NULL, const void * p_max = NULL, const char * format = NULL, ImGuiSliderFlags flags = 0);
+    bool CustomDragFloat3(InteractionType & _interactionType, const char * label, float v[3], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char * format = "%.3f", ImGuiSliderFlags flags = 0);
+    bool CustomDragFloat4(InteractionType & _interactionType, const char * label, float v[2], float v_speed = 1.0f, float v_min = 0.0f, float v_max = 0.0f, const char * format = "%.3f", ImGuiSliderFlags flags = 0);
 }
