@@ -200,7 +200,7 @@ jobs:
             "embeds": [
               {
                 "type": "rich",
-                "title": "VGFramework $fullVersion `$gitRevision`",
+                "title": "VGFramework $fullVersion ``$gitRevision``",
                 "description": "A new version of VGFramework is available",
                 "color": 15579707,
                 "thumbnail": {

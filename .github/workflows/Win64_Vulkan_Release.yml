@@ -107,7 +107,7 @@ jobs:
             "embeds": [
               {
                 "type": "rich",
-                "title": $title,
+                "title": "$title",
                 "description": "$escapedSummary",
                 "color": 38912,
                 "thumbnail": {
@@ -160,7 +160,7 @@ jobs:
             "embeds": [
               {
                 "type": "rich",
-                "title": $title,
+                "title": "$title",
                 "description": "$escapedSummary",
                 "color": 16515049,
                 "thumbnail": {
