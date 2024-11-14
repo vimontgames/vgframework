@@ -98,6 +98,8 @@ jobs:
           $escapedSummary = $summary -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
           $escapedDescription = $description -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
 
+          $title = "${{ github.workflow }} build succeeded ``$shortCommitSha``"
+
           $jsonPayload = @"
           {
             "username": "Gros Covid",
@@ -105,7 +107,7 @@ jobs:
             "embeds": [
               {
                 "type": "rich",
-                "title": "Win64 Vulkan Release build succeeded `$shortCommitSha`",
+                "title": $title,
                 "description": "$escapedSummary",
                 "color": 38912,
                 "thumbnail": {
@@ -149,6 +151,8 @@ jobs:
           $escapedSummary = $summary -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
           $escapedDescription = $description -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
 
+          $title = "${{ github.workflow }} build failed ``$shortCommitSha``"
+
           $jsonPayload = @"
           {
             "username": "Gros Covid",
@@ -156,7 +160,7 @@ jobs:
             "embeds": [
               {
                 "type": "rich",
-                "title": "Win64 Vulkan Release build failed `$shortCommitSha`",
+                "title": $title,
                 "description": "$escapedSummary",
                 "color": 16515049,
                 "thumbnail": {

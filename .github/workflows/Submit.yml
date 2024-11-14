@@ -33,7 +33,7 @@ jobs:
           $escapedSummary = $summary -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
           $escapedDescription = $description -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
 
-          $title = "$escapedSummary `$shortCommitSha`"
+          $title = "$escapedSummary ``$shortCommitSha``"
 
           # Prepare the JSON payload
           $jsonPayload = @"

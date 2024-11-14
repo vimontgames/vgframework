@@ -90,6 +90,8 @@ jobs:
           $description = if ($splitMessage.Length -gt 1) { $splitMessage[1] } else { "" }
           $escapedSummary = $summary -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
           $escapedDescription = $description -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
+
+          $title = "${{ github.workflow }} build succeeded ``$shortCommitSha``"
       
           $jsonPayload = @"
           {
@@ -98,7 +100,7 @@ jobs:
             "embeds": [
               {
                 "type": "rich",
-                "title": "ARM64EC DX12 Debug build succeeded `$shortCommitSha`",
+                "title": $title,
                 "description": "$escapedSummary",
                 "color": 38912,
                 "thumbnail": {
@@ -142,6 +144,8 @@ jobs:
           $escapedSummary = $summary -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
           $escapedDescription = $description -replace '"', '\"' -replace "`r`n", ' ' -replace "`n", ' '
           
+          $title = "${{ github.workflow }} build failed ``$shortCommitSha``"
+
           $jsonPayload = @"
           {
             "username": "Gros Covid",
@@ -149,7 +153,7 @@ jobs:
             "embeds": [
               {
                 "type": "rich",
-                "title": "ARM64EC DX12 Debug build failed `$shortCommitSha`",
+                "title": $title,
                 "description": "$escapedSummary",
                 "color": 16515049,
                 "thumbnail": {
