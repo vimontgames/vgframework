@@ -171,19 +171,47 @@ namespace vg::engine
 
                 case core::Scene:
                 {
-                    SceneResource * sceneRes = new SceneResource();
-                    sceneRes->SetParent(worldResData);
-                    sceneRes->SetResourcePath(_file);
-                    worldResData->m_sceneResources.push_back(sceneRes);
+                    auto it = std::find_if(worldResData->m_sceneResources.begin(), worldResData->m_sceneResources.end(), 
+                        [&_file](const SceneResource * _res) 
+                        {
+                            return 0 == _res->GetResourcePath().compare(io::getRelativePath(_file));
+                        }
+                    );
+
+                    if (it == worldResData->m_sceneResources.end())
+                    {
+                        SceneResource * sceneRes = new SceneResource();
+                        sceneRes->SetParent(worldResData);
+                        sceneRes->SetResourcePath(_file);
+                        worldResData->m_sceneResources.push_back(sceneRes);
+                    }
+                    else
+                    {
+                        VG_WARNING("[World] Scene \"%s\" is already loaded", _file.c_str());
+                    }                    
                 }
                 break;
 
                 case core::Prefab:
                 {
-                    PrefabResource * prefabRes = new PrefabResource();
-                    prefabRes->SetParent(worldResData);
-                    prefabRes->SetResourcePath(_file);
-                    worldResData->m_prefabsResources.push_back(prefabRes);
+                    auto it = std::find_if(worldResData->m_prefabsResources.begin(), worldResData->m_prefabsResources.end(),
+                        [&_file](const PrefabResource * _res) 
+                        {
+                            return 0 == _res->GetResourcePath().compare(io::getRelativePath(_file));
+                        }
+                    );
+
+                    if (it == worldResData->m_prefabsResources.end())
+                    {
+                        PrefabResource * prefabRes = new PrefabResource();
+                        prefabRes->SetParent(worldResData);
+                        prefabRes->SetResourcePath(_file);
+                        worldResData->m_prefabsResources.push_back(prefabRes);
+                    }
+                    else
+                    {
+                        VG_WARNING("[World] Prefab \"%s\" is already loaded", _file.c_str());
+                    }
                 }
                 break;
             }
