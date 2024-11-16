@@ -51,10 +51,10 @@ float4 forwardDebugDisplay(float4 _color, DisplayMode _mode, uint _matID, float3
             return _col;
         
         case DisplayMode::Geometry_UV0:
-            return sRGBA2Linear(float4(_uv0.xy, 0, 1));
+            return sRGBA2Linear(float4(frac(_uv0.xy), any(saturate(_uv0) != _uv0) ? 1 : 0, 1));
         
         case DisplayMode::Geometry_UV1:
-            return sRGBA2Linear(float4(_uv1.xy, 0, 1));
+            return sRGBA2Linear(float4(frac(_uv1.xy), any(saturate(_uv0) != _uv0) ? 1 : 0, 1));
         
         case DisplayMode::Material_Albedo:
             return float4(_albedo.rgb, 1);
