@@ -38,24 +38,27 @@ namespace vg
 
         public:
 
-            const char *                GetClassName            () const = 0;
+            const char *                    GetClassName            () const = 0;
 
-            static bool                 registerProperties      (core::IClassDesc & _desc);
+            static bool                     registerProperties      (core::IClassDesc & _desc);
 
-                                        MaterialModel           (const core::string & _name, core::IObject * _parent = nullptr);
-                                        ~MaterialModel          ();
+                                            MaterialModel           (const core::string & _name, core::IObject * _parent = nullptr);
+                                            ~MaterialModel          ();
 
-            virtual void                FillGPUMaterialData     (GPUMaterialData * _data) const = 0;
+            virtual void                    FillGPUMaterialData     (GPUMaterialData * _data) const = 0;
 
-            virtual void                Setup                   (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3DConstants, core::uint _index) const = 0;
+            virtual void                    Setup                   (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3DConstants, core::uint _index) const = 0;
 
-            VG_INLINE gfx::SurfaceType  getSurfaceType          () const { return m_surfaceType; }
+            VG_INLINE gfx::SurfaceType      getSurfaceType          () const { return m_surfaceType; }
+            VG_INLINE MaterialDataGPUHandle getMaterialDataGPUHandle() const { return m_gpuDataHandle; }
 
         protected:
-            gfx::SurfaceType            m_surfaceType;
-            gfx::CullMode               m_cullMode;
-            gfx::RootSignatureHandle    m_rootSignature;
-            gfx::ShaderKey              m_shaderKey[core::enumCount<ShaderPass>()];
+
+            MaterialDataGPUHandle           m_gpuDataHandle = (MaterialDataGPUHandle)-1;
+            gfx::SurfaceType                m_surfaceType;
+            gfx::CullMode                   m_cullMode;
+            gfx::RootSignatureHandle        m_rootSignature;
+            gfx::ShaderKey                  m_shaderKey[core::enumCount<ShaderPass>()];
         };
     }
 }

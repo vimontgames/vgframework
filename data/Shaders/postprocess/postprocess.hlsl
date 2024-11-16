@@ -4,6 +4,7 @@
 #include "system/view.hlsli"
 #include "system/depthstencil.hlsli"
 #include "system/msaa.hlsli"
+#include "system/instancedata.hlsli"
 
 #if _FXAA
 #include "FXAA.hlsli"
@@ -149,6 +150,19 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
                 {
                     uint primitiveIndex = query.CommittedPrimitiveIndex();
                     color.rgb = float3(frac(primitiveIndex.xxx / 256.0f));
+                }
+                break;
+                
+                case DisplayMode::RayTracing_Material:
+                {
+                    uint instanceDataOffset = query.CommittedInstanceID();
+                    GPUInstanceData instanceDataHeader = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
+                    float4 instanceColor = instanceDataHeader.getInstanceColor();
+
+                    GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, query.CommittedGeometryIndex());
+                    float4 materialColor = materialData.getAlbedoColor();                
+
+                    color.rgb = instanceColor.rgb * materialColor.rgb;
                 }
                 break;
             }

@@ -1,6 +1,7 @@
 #include "DefaultMaterialModel.h"
 #include "Shaders/default/default.hlsl.h"
-#include "Shaders/system/instancedata.hlsli"
+#include "Shaders/system/materialdata.hlsli"
+#include "renderer/Model/Material/MaterialManager.h"
 
 namespace vg::renderer
 {
@@ -39,13 +40,15 @@ namespace vg::renderer
     DefaultMaterialModel::DefaultMaterialModel(const core::string & _name, IObject * _parent) :
         MaterialModel(_name, _parent)
     {
-
+        // Register slot for material GPU data
+        m_gpuDataHandle = Renderer::get()->getMaterialManager()->allocMaterialDataGPUHandle(this);
     }
 
     //--------------------------------------------------------------------------------------
     DefaultMaterialModel::~DefaultMaterialModel()
     {
-
+        // Unregister slot for material GPU data
+        Renderer::get()->getMaterialManager()->freeMaterialDataGPUHandle(m_gpuDataHandle);
     }
 
     //--------------------------------------------------------------------------------------

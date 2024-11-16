@@ -15,10 +15,10 @@ VS_Output VS_DebugDraw(uint _vertexID : VertexID)
 {
     VS_Output output = (VS_Output) 0;
 
-    ByteAddressBuffer buf = getBuffer(debugDrawRootConstants3D.getBufferHandle());
+    ByteAddressBuffer buf = getBuffer(debugDrawRootConstants3D.getVertexBufferHandle());
         
     Vertex vert;
-           vert.Load(buf, debugDrawRootConstants3D.getVertexFormat(), _vertexID, debugDrawRootConstants3D.getBufferOffset());
+           vert.Load(buf, debugDrawRootConstants3D.getVertexFormat(), _vertexID, debugDrawRootConstants3D.getVertexBufferOffset());
     
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));

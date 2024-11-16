@@ -49,6 +49,7 @@ vg_enum_class(ReservedSlot, uint,
     LastTexture             = InvalidTexture2D,
 
     // Buffer
+    MaterialDataBufSrv      = BINDLESS_BUFFER_INVALID - 5,
     InstanceDataBufSrv      = BINDLESS_BUFFER_INVALID - 4,
     SkinningMatricesBufSrv  = BINDLESS_BUFFER_INVALID - 3,
     LightsConstantBufSrv    = BINDLESS_BUFFER_INVALID - 2,
@@ -82,6 +83,7 @@ vg_enum_class(ReservedSlot, uint,
 #define RESERVEDSLOT_TEXSRV_IMGUIFONTTEX        (BINDLESS_TEXTURE_INVALID - 1)
 
 // Buffer SRV
+#define RESERVEDSLOT_BUFSRV_MATERIALDATA        (BINDLESS_BUFFER_INVALID - 5)
 #define RESERVEDSLOT_BUFSRV_INSTANCEDATA        (BINDLESS_BUFFER_INVALID - 4)
 #define RESERVEDSLOT_BUFSRV_SKINNINGMATRICES    (BINDLESS_BUFFER_INVALID - 3)
 #define RESERVEDSLOT_BUFSRV_LIGHTSCONSTANTS     (BINDLESS_BUFFER_INVALID - 2)

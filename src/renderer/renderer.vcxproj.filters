@@ -54,6 +54,9 @@
     <ClCompile Include="UI\UI.cpp">
       <Filter>UI</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Material\MaterialManager.cpp">
+      <Filter>Model\Material</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -497,6 +500,15 @@
     <ClInclude Include="RenderPass\Compute\ComputeIBLCubemaps\ComputeIBLCubemapsPass.hpp">
       <Filter>Pass\Compute\ComputeIrradianceCubemap</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\Update\MaterialData\MaterialDataUpdatePass.h">
+      <Filter>Pass\Update\MaterialData</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Update\MaterialData\MaterialDataUpdatePass.hpp">
+      <Filter>Pass\Update\MaterialData</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Material\MaterialManager.h">
+      <Filter>Model\Material</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -684,6 +696,9 @@
     </Filter>
     <Filter Include="Pass\Compute\ComputeIrradianceCubemap">
       <UniqueIdentifier>{5557cf22-dc6c-4619-ab24-5164c9d8934b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Update\MaterialData">
+      <UniqueIdentifier>{bafa5eb6-d76f-4359-a079-bbc20e7b6743}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

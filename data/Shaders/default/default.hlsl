@@ -65,7 +65,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
 
     Vertex vert;
-           vert.Load(getBuffer(rootConstants3D.getBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getBufferOffset());
+           vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
 
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
@@ -290,7 +290,7 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
     GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
 
     Vertex vert;
-           vert.Load(getBuffer(rootConstants3D.getBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getBufferOffset());
+           vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
 
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));

@@ -19,6 +19,7 @@ namespace vg::renderer
     class FBXImporter;
     class GPUDebugUpdatePass;
     class InstanceDataUpdatePass;
+    class MaterialDataUpdatePass;
     class ComputeSkinningPass;
     class BLASUpdatePass;
     class ComputeSpecularBRDFPass;
@@ -30,6 +31,7 @@ namespace vg::renderer
     class View;
     class Viewport;
     class DebugDraw;
+    class MaterialManager;
 
     struct SharedCullingJobOutput;
 
@@ -134,8 +136,10 @@ namespace vg::renderer
 
     public: // internal
         gfx::Texture *                          getBackbuffer               () const;
-        ImGuiAdapter *                          getImGuiAdapter             () const { return m_imgui; }
-        SharedCullingJobOutput *                getSharedCullingJobOutput   () const { return m_sharedCullingJobOutput; }
+
+        VG_INLINE ImGuiAdapter *                getImGuiAdapter             () const;
+        VG_INLINE SharedCullingJobOutput *      getSharedCullingJobOutput   () const;
+        VG_INLINE MaterialManager *             getMaterialManager          () const;
 
     private:
         void                                    registerShaders             ();
@@ -159,6 +163,7 @@ namespace vg::renderer
         FBXImporter *                           m_fbxImporter               = nullptr;
         GPUDebugUpdatePass *                    m_gpuDebugUpdatePass        = nullptr;
         InstanceDataUpdatePass *                m_instanceDataUpdatePass    = nullptr;
+        MaterialDataUpdatePass *                m_materialDataUpdatePass    = nullptr;
         ComputeSkinningPass *                   m_computeSkinningPass       = nullptr;
         BLASUpdatePass *                        m_BLASUpdatePass            = nullptr;
         ComputeSpecularBRDFPass *               m_computeSpecularBRDFPass   = nullptr;
@@ -179,6 +184,8 @@ namespace vg::renderer
 
         gfx::Texture *                          m_bakedSpecularBRDF         = nullptr;
         gfx::Texture *                          m_generatedSpecularBRDF     = nullptr;
+
+        MaterialManager *                       m_materialManager           = nullptr;
 	};
 }
 

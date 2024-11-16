@@ -1,14 +1,32 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    gfx::Texture * Renderer::getDefaultTexture(MaterialTextureType _type) const
+    VG_INLINE gfx::Texture * Renderer::getDefaultTexture(MaterialTextureType _type) const
     {
         return m_defaultTextures[core::asInteger(_type)];
     }
 
     //--------------------------------------------------------------------------------------
-    MaterialModel * Renderer::getDefaultMaterial() const
+    VG_INLINE MaterialModel * Renderer::getDefaultMaterial() const
     {
         return m_defaultMaterial;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE ImGuiAdapter * Renderer::getImGuiAdapter() const
+    {
+        return m_imgui; 
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE SharedCullingJobOutput * Renderer::getSharedCullingJobOutput() const
+    {
+        return m_sharedCullingJobOutput; 
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE MaterialManager * Renderer::getMaterialManager() const
+    {
+        return m_materialManager;
     }
 }

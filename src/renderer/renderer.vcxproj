@@ -58,6 +58,7 @@
     <ClCompile Include="Importer\ImporterData.cpp" />
     <ClCompile Include="Instance\GraphicInstance.cpp" />
     <ClCompile Include="Job\Job.cpp" />
+    <ClCompile Include="Model\Material\MaterialManager.cpp" />
     <ClCompile Include="Model\Material\MaterialModel.cpp" />
     <ClCompile Include="Model\Mesh\MeshModel.cpp" />
     <ClCompile Include="Options\Options.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Job\Culling\ViewCullingJob.hpp" />
     <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.h" />
     <ClInclude Include="Model\Material\DefaultMaterial\DefaultMaterialModel.hpp" />
+    <ClInclude Include="Model\Material\MaterialManager.h" />
     <ClInclude Include="Model\Material\MaterialModel.h" />
     <ClInclude Include="Model\Material\Material_Consts.h" />
     <ClInclude Include="Model\Mesh\MeshModel.h" />
@@ -227,6 +229,8 @@
     <ClInclude Include="RenderPass\Update\GPUDebug\GPUDebugUpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\InstanceData\InstanceDataUpdatePass.h" />
     <ClInclude Include="RenderPass\Update\InstanceData\InstanceDataUpdatePass.hpp" />
+    <ClInclude Include="RenderPass\Update\MaterialData\MaterialDataUpdatePass.h" />
+    <ClInclude Include="RenderPass\Update\MaterialData\MaterialDataUpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\TLAS\TLASUpdatePass.h" />
     <ClInclude Include="RenderPass\Update\TLAS\TLASUpdatePass.hpp" />
     <ClInclude Include="RenderPass\Update\UpdatePass.h" />

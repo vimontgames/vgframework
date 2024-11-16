@@ -500,7 +500,7 @@ namespace vg::renderer
         DebugDrawRootConstants3D debugDraw3D;
         {
             debugDraw3D.setWorldMatrix(transpose(aabbMatrixWS));
-            debugDraw3D.setBufferHandle(m_box->getVertexBuffer()->getBufferHandle(), m_box->getVertexBufferOffset());
+            debugDraw3D.setVertexBufferHandle(m_box->getVertexBuffer()->getBufferHandle(), m_box->getVertexBufferOffset());
             debugDraw3D.setVertexFormat(VertexFormat::DebugDraw);
         }
 
@@ -564,7 +564,7 @@ namespace vg::renderer
         DebugDrawRootConstants3D debugDrawRoot3D;
 
         debugDrawRoot3D.setWorldMatrix(float4x4::identity());
-        debugDrawRoot3D.setBufferHandle(m_gridVB->getBufferHandle());
+        debugDrawRoot3D.setVertexBufferHandle(m_gridVB->getBufferHandle());
         debugDrawRoot3D.setVertexFormat(VertexFormat::DebugDraw);
         debugDrawRoot3D.setColor(float4(1, 1, 1, 1));
 
@@ -587,7 +587,7 @@ namespace vg::renderer
         DebugDrawRootConstants3D debugDrawRoot3D;
 
         debugDrawRoot3D.setWorldMatrix(float4x4::identity());
-        debugDrawRoot3D.setBufferHandle(m_axisVB->getBufferHandle());
+        debugDrawRoot3D.setVertexBufferHandle(m_axisVB->getBufferHandle());
         debugDrawRoot3D.setVertexFormat(VertexFormat::DebugDraw);
         debugDrawRoot3D.setColor(float4(1, 1, 1, 1));
 
@@ -854,7 +854,7 @@ namespace vg::renderer
             // Root constants
             DebugDrawRootConstants3D debugDrawRoot3D;
             debugDrawRoot3D.setWorldMatrix(float4x4::identity());
-            debugDrawRoot3D.setBufferHandle(drawData.m_debugDrawVB->getBufferHandle(), drawData.m_linesVBOffset);
+            debugDrawRoot3D.setVertexBufferHandle(drawData.m_debugDrawVB->getBufferHandle(), drawData.m_linesVBOffset);
             debugDrawRoot3D.setVertexFormat(VertexFormat::DebugDraw);
             debugDrawRoot3D.setColor(float4(1, 1, 1, 1));
 
@@ -934,7 +934,7 @@ namespace vg::renderer
 
         // Root constants
         DebugDrawRootConstants3D debugDraw3D;
-        debugDraw3D.setBufferHandle(_geometry->getVertexBuffer()->getBufferHandle());
+        debugDraw3D.setVertexBufferHandle(_geometry->getVertexBuffer()->getBufferHandle());
         debugDraw3D.setVertexFormat(VertexFormat::DebugDraw);
 
         // Transparent

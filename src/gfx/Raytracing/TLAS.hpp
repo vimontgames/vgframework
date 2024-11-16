@@ -65,6 +65,6 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void TLAS::addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID)
     {
-        super::addInstance(_blas, _world, 0/*_instanceID*/);
+        super::addInstance(_blas, _world, _instanceID);
     }
 }

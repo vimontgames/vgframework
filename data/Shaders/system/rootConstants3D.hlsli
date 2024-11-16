@@ -52,21 +52,21 @@ struct RootConstants3D
         return instanceDataOffset;
     }
 
-    // buffer
+    // vertex buffer
     // stream0 address : 16;
     // stream0 offset  : 16
-    void setBufferHandle(uint _stream0, uint _offset = 0)
+    void setVertexBufferHandle(uint _stream0, uint _offset = 0)
     {
         stream0 = packUint16low(stream0, _stream0);
         stream0Offset = _offset;
     }
 
-    uint getBufferHandle()
+    uint getVertexBufferHandle()
     {
         return unpackUint16low(stream0);
     }
     
-    uint getBufferOffset()
+    uint getVertexBufferOffset()
     {
         return stream0Offset;
     }

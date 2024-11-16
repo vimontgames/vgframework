@@ -5,6 +5,9 @@
 
 namespace vg::renderer
 {
+    static const auto s_MaxMaterialCount = 65536;
+    using MaterialDataGPUHandle = u16;
+
     vg_enum_class(MaterialTextureType, core::u8,
         Albedo = 0,
         Normal,

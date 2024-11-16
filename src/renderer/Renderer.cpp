@@ -22,6 +22,7 @@
 #include "renderer/RenderPass/ImGui/imguiAdapter.h"
 #include "renderer/RenderPass/Update/GPUDebug/GPUDebugUpdatePass.h"
 #include "renderer/RenderPass/Update/InstanceData/InstanceDataUpdatePass.h"
+#include "renderer/RenderPass/Update/MaterialData/MaterialDataUpdatePass.h"
 #include "renderer/RenderPass/Compute/ComputeSkinning/ComputeSkinningPass.h"
 #include "renderer/RenderPass/Update/BLAS/BLASUpdatePass.h"
 #include "renderer/RenderPass/Render2D/HDROutput/HDROutputPass.h"
@@ -44,6 +45,7 @@
 #include "renderer/Instance/Light/Directional/DirectionalLightInstance.h"
 #include "renderer/Instance/Light/Omni/OmniLightInstance.h"
 #include "renderer/UI/UIManager.h"
+#include "renderer/Model/Material/MaterialManager.h"
 
 #if !VG_ENABLE_INLINE
 #include "Renderer.inl"
@@ -203,6 +205,7 @@ namespace vg::renderer
         // Create passes not bound to a View
         m_gpuDebugUpdatePass = new GPUDebugUpdatePass();
         m_instanceDataUpdatePass = new InstanceDataUpdatePass();
+        m_materialDataUpdatePass = new MaterialDataUpdatePass();
         m_computeSkinningPass = new ComputeSkinningPass();
         m_computeSpecularBRDFPass = new ComputeSpecularBRDFPass();
         m_computeIBLCubemapsPass = new ComputeIBLCubemapsPass();
@@ -215,6 +218,8 @@ namespace vg::renderer
         RayTracingManager * rtManager = new RayTracingManager();
 
         RendererOptions * options = new RendererOptions("Renderer Options", this);
+
+        m_materialManager = new MaterialManager();
 
         initDefaultTextures();
         initDefaultMaterials();        
@@ -300,6 +305,7 @@ namespace vg::renderer
 
         VG_SAFE_RELEASE(m_gpuDebugUpdatePass);
         VG_SAFE_RELEASE(m_instanceDataUpdatePass);
+        VG_SAFE_RELEASE(m_materialDataUpdatePass);
         VG_SAFE_DELETE(m_computeSkinningPass);
         VG_SAFE_DELETE(m_computeSpecularBRDFPass);
         VG_SAFE_DELETE(m_computeIBLCubemapsPass);
@@ -309,9 +315,10 @@ namespace vg::renderer
         VG_SAFE_DELETE(m_hdrOutputPass);
 
         m_frameGraph.Release();
-
+        
 		m_device.deinit();
 
+        VG_SAFE_DELETE(m_materialManager);
         VG_SAFE_RELEASE(m_picking);
 	}
 
@@ -489,6 +496,7 @@ namespace vg::renderer
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_gpuDebugUpdatePass, "GPU Debug");
 
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_instanceDataUpdatePass, "Instance Data");
+                m_frameGraph.addUserPass(mainViewRenderPassContext, m_materialDataUpdatePass, "Material Data");
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_computeSkinningPass, "Skinning");
 
                 if (options->isRayTracingEnabled())
@@ -1121,6 +1129,7 @@ namespace vg::renderer
     {
         VG_ASSERT(nullptr == m_defaultMaterial);
         m_defaultMaterial = new DefaultMaterialModel("Default Material", this);
+        VG_ASSERT(m_defaultMaterial->getMaterialDataGPUHandle() == 0);
     }
 
     //--------------------------------------------------------------------------------------
@@ -1285,4 +1294,6 @@ namespace vg::renderer
         if (m_computeSpecularBRDFPass)
             m_computeSpecularBRDFPass->setSpecularBRDFTexture(nullptr);
     }
+
+
 }

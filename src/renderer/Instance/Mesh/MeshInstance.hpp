@@ -235,7 +235,10 @@ namespace vg::renderer
         auto * tlas = _view->getTLAS();
 
         if (const auto * blas = getInstanceBLAS())
-            tlas->addInstance(blas, getGlobalMatrix(), _index);
+        {
+            u32 rayTracingID = getGPUInstanceDataOffset();
+            tlas->addInstance(blas, getGlobalMatrix(), rayTracingID);
+        }
 
         return true;
     }
@@ -260,9 +263,9 @@ namespace vg::renderer
             root3D.setGPUInstanceDataOffset(getGPUInstanceDataOffset());
 
             if (IsSkinned())
-                root3D.setBufferHandle(m_skinnedMeshBuffer->getBufferHandle(), m_skinnedMeshBufferOffset);
+                root3D.setVertexBufferHandle(m_skinnedMeshBuffer->getBufferHandle(), m_skinnedMeshBufferOffset);
             else
-                root3D.setBufferHandle(geo->getVertexBuffer()->getBufferHandle(), geo->getVertexBufferOffset());
+                root3D.setVertexBufferHandle(geo->getVertexBuffer()->getBufferHandle(), geo->getVertexBufferOffset());
             
             u16 flags = 0;
             root3D.setFlags(flags);

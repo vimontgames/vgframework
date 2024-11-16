@@ -21,6 +21,6 @@ namespace vg::renderer
         void	BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
 
     private:
-        gfx::Buffer * m_InstanceDataConstantsBuffer = nullptr;
+        gfx::Buffer * m_instanceDataBuffer = nullptr;
     };
 }
