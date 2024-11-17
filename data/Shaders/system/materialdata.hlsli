@@ -125,18 +125,22 @@ struct GPUMaterialData
     }
 
     //--------------------------------------------------------------------------------------
+    float4 sampleTexture2D(uint _handle, sampler _sampler, float2 _uv, bool _nonUniform = false)
+    {
+        #if _PS
+        return _nonUniform? getNonUniformTexture2D(_handle).Sample(_sampler, _uv).rgba : getTexture2D(_handle).Sample(_sampler, _uv).rgba;
+        #else
+        return _nonUniform? getNonUniformTexture2D(_handle).SampleLevel(_sampler, _uv, 0).rgba : getTexture2D(_handle).SampleLevel(_sampler, _uv, 0).rgba;
+        #endif
+    }
+
+    //--------------------------------------------------------------------------------------
     // If the texture may have different value in different threads from a wave, 
     // then '_nonUniform' shall be 'true' to avoid rendering artifacts in AMD cards.
     //--------------------------------------------------------------------------------------
     float4 getAlbedo(float2 _uv, float4 _vertexColor, DisplayFlags _flags, bool _nonUniform = false)
-    {   
-        Texture2D albedoTex = _nonUniform ? getNonUniformTexture2D(getAlbedoTextureHandle()) : getTexture2D(getAlbedoTextureHandle());
-        
-        #if _PS
-        float4 albedo = albedoTex.Sample(linearRepeat, _uv).rgba;
-        #else
-        float4 albedo = albedoTex.SampleLevel(linearRepeat, _uv, 0).rgba;
-        #endif
+    {                 
+        float4 albedo = sampleTexture2D(getAlbedoTextureHandle(), linearRepeat, _uv, _nonUniform);
 
         #if _TOOLMODE
         if (0 == (DisplayFlags::AlbedoMap & _flags))
