@@ -20,7 +20,7 @@
                         <Property type="String" name="m_name" value="Road"/>
                         <Property type="Uint32" name="m_uid" flags="" value="692223656"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="3" Iy="0" Iz="0" Iw="0" Jx="-0.0026932589" Jy="5.9999995" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.125" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -113,6 +113,53 @@
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Materials/Asphalt/Asphalt.mat"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                            </Object>
+                        </Property>
+                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                    </Object>
+                    <Object class="GameObject">
+                        <Property type="String" name="m_name" value="Decal"/>
+                        <Property type="Uint32" name="m_uid" flags="" value="224258019"/>
+                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_local" flags="Flatten" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999028" Kw="0" Tx="0.89999998" Ty="2.4974346e-05" Tz="0.064999998" Tw="0.99999028"/>
+                        <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
+                        <Property type="ObjectPtrVector" name="m_components">
+                            <Object class="MeshComponent">
+                                <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="4279470837"/>
+                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="Resource" name="m_meshResource" flags="Resource">
+                                    <Object class="MeshResource">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="2779403698"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Meshes/Decal/Sign-Street/Decal_Road_Sign_Line.fbx"/>
+                                    </Object>
+                                </Property>
+                                <Property type="Object" name="m_meshMaterials" flags="Flatten">
+                                    <Object class="MaterialResourceList">
+                                        <Property type="String" name="m_name" flags="NotVisible" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" flags="" value="893927466"/>
+                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                        <Property type="ResourceVector" name="m_resources" flags="Resource">
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Road decals"/>
+                                                <Property type="Uint32" name="m_uid" flags="" value="2398495871"/>
+                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Materials/Decal/RoadDecals.mat"/>
                                             </Object>
                                         </Property>
                                     </Object>

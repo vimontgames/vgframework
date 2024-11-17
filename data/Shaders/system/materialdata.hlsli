@@ -151,5 +151,31 @@ struct GPUMaterialData
     
         return albedo;
     }
+
+    //--------------------------------------------------------------------------------------
+    float4 getNormal(float2 _uv, DisplayFlags _flags, bool _nonUniform = false)
+    {
+        float4 normal = sampleTexture2D(getNormalTextureHandle(), linearRepeat, _uv, _nonUniform);
+
+        #if _TOOLMODE
+        if (0 == (DisplayFlags::NormalMap & _flags))
+            normal.xyz = float3(0.5, 0.5, 1.0);
+        #endif
+
+        return float4((normal.xy*2-1) * getNormalStrength(), normal.z, normal.w);
+    }
+
+    //--------------------------------------------------------------------------------------
+    float4 getPBR(float2 _uv, bool _nonUniform = false)
+    {
+        float4 pbr = sampleTexture2D(getPBRTextureHandle(), linearRepeat, _uv, _nonUniform);
+
+        pbr.r = lerp(1.0f, pbr.r, getOcclusion());
+        pbr.g *= getRoughness();
+        pbr.b *= getMetalness();
+
+        return pbr;
+    }
+
     #endif // !__cplusplus
 };

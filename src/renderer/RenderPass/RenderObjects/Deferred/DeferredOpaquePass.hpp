@@ -112,5 +112,6 @@ namespace vg::renderer
 
         DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Opaque);
         DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::AlphaTest);
+        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Decal);
     }
 }

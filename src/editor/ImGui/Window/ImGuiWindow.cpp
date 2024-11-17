@@ -63,7 +63,7 @@ using namespace ImGui;
 
 namespace vg::editor
 {
-    const char * g_editFloatFormat = "%.2f";
+    const char * g_editFloatFormat = "%.3f";
     const char * g_editUIntFormat = "%u";
     const char * g_editIntFormat = "%i";
 

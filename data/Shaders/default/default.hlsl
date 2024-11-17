@@ -72,35 +72,6 @@ struct PS_Output
 };
 
 //--------------------------------------------------------------------------------------
-float4 getNormal(GPUMaterialData _materialData, float2 _uv, DisplayFlags _flags)
-{
-    float4 normal = getTexture2D(_materialData.getNormalTextureHandle()).Sample(linearRepeat, _uv);
-
-    #if _TOOLMODE
-    if (0 == (DisplayFlags::NormalMap & _flags))
-        normal.xyz = float3(0.5, 0.5, 1.0);
-    #endif
-
-    return float4((normal.xy*2-1) * _materialData.getNormalStrength(), normal.z, normal.w);
-}
-
-//--------------------------------------------------------------------------------------
-float4 getPBR(GPUMaterialData _materialData, float2 _uv)
-{
-    float4 pbr = getTexture2D(_materialData.getPBRTextureHandle()).Sample(linearRepeat, _uv);
-
-    pbr.r = lerp(1.0f, pbr.r, _materialData.getOcclusion());
-    pbr.g *= _materialData.getRoughness();
-    pbr.b *= _materialData.getMetalness();
-
-    //pbr.r = 1;
-    //pbr.g = 0.3f;
-    //pbr.b = 0;
-
-    return pbr;
-}
-
-//--------------------------------------------------------------------------------------
 // TODO: move to HLSL math header?
 //--------------------------------------------------------------------------------------
 float4x4 getMatrixWithoutScale(float4x4 _matrix)
@@ -157,8 +128,8 @@ PS_Output PS_Forward(VS_Output _input)
     float2 uv1 = _input.uv.zw;
 
     float4 albedo = materialData.getAlbedo(uv0, _input.col, flags);
-    float3 normal = getNormal(materialData, uv0, flags).xyz;
-    float4 pbr = getPBR(materialData, uv0);
+    float3 normal = materialData.getNormal(uv0, flags).xyz;
+    float4 pbr = materialData.getPBR(uv0);
 
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
@@ -194,7 +165,7 @@ PS_Output PS_Forward(VS_Output _input)
     clip(output.color0.a-0.5f); 
     #endif
     
-    #if !_ALPHABLEND
+    #if !_ALPHABLEND && !_DECAL
     output.color0.a = 1.0f;           
     #endif 
 
@@ -283,14 +254,14 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     float2 uv1 = _input.uv.zw;
 
     float4 albedo = materialData.getAlbedo(uv0, _input.col, flags);
-    float3 normal = getNormal(materialData, uv0, flags).xyz;
-    float4 pbr = getPBR(materialData, uv0);
+    float4 normal = materialData.getNormal(uv0, flags);
+    float4 pbr = materialData.getPBR(uv0);
     
-    float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
+    float3 worldNormal = getWorldNormal(normal.xyz, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
     output.albedo = albedo.rgba;
-    output.normal = float4(worldNormal.xyz, 0.0);
-    output.pbr = float4(pbr.rgb, 0.0);
+    output.normal = float4(worldNormal.xyz, albedo.a);
+    output.pbr = float4(pbr.rgb, albedo.a);
 
     #if _TOOLMODE && !_ZONLY
     // If any 'Forward' debug display mode is enabled then its result is stored into the 'Albedo' buffer
@@ -314,8 +285,10 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     clip(output.albedo.a - 0.5); 
     #endif
 
-    #if !_ALPHABLEND
+    #if !_ALPHABLEND && !_DECAL
     output.albedo.a = 1;
+    output.normal.a = 1;
+    output.pbr.a = 1;
     #endif
 
     #if _ZONLY

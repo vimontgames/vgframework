@@ -13,8 +13,8 @@ namespace vg::gfx
         enum Flags : ShaderKey::Flags
         {
             // Flags 11..15 are reserved and should be common for all shaders 
-            AlphaBlend  = 11,
-            AlphaTest   = 12,
+            Surface     = 11, // 2 bits
+
             ZOnly       = 13, 
             RayTracing  = 14,           
             Toolmode    = 15
@@ -137,7 +137,7 @@ namespace vg::gfx
             {
                 VG_ASSERT(_defines.size() > 0);
                 m_defines = _defines;
-                m_bits = (core::uint)log2(_defines.size())+1;
+                m_bits = computeBitCount((uint)_defines.size());
             }
 
             inline void clear()
@@ -155,6 +155,11 @@ namespace vg::gfx
             inline core::uint getBitMask() const
             {
                 return (1 << m_bits) - 1;
+            }
+
+            inline static core::uint computeBitCount(core::uint _size)
+            {
+                return (core::uint)log2(_size - 1) + 1;
             }
 
             ShaderStageFlags            m_stages = (ShaderStageFlags)0x0;

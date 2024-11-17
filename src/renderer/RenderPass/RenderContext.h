@@ -3,6 +3,7 @@
 namespace vg::gfx
 {
     class RenderPassContext;
+    enum class SurfaceType: core::u8;
 }
 
 namespace vg::renderer
@@ -19,8 +20,7 @@ namespace vg::renderer
             m_shaderPass((ShaderPass)0),
             m_toolmode(false),
             m_raytracing(false),
-            m_wireframe(false),
-            m_alphatest(false)
+            m_wireframe(false)
         {
 
         }
@@ -32,6 +32,6 @@ namespace vg::renderer
         bool                            m_toolmode     : 1;
         bool                            m_raytracing   : 1;
         bool                            m_wireframe    : 1;
-        bool                            m_alphatest    : 1;
+        gfx::SurfaceType                m_surfaceType = (gfx::SurfaceType)-1;
     };
 }

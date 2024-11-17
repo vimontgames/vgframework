@@ -1101,12 +1101,12 @@ namespace vg::renderer
                     break;
 
                 case MaterialTextureType::Normal:
-                    data = 0xFFFF7F7F;
+                    data = 0x00FF7F7F;
                     reservedSlot = ReservedSlot::DefaultNormalTexSrv;
                     break;
 
                 case MaterialTextureType::PBR:
-                    data = 0x00FFFFFF;    // Blue: Metalness Green: Roughness Red: Occlusion (will be multiplied by material constants)
+                    data = 0x007F7FFF;    // Blue: Metalness Green: Roughness Red: Occlusion 
                     reservedSlot = ReservedSlot::DefaultPBRTexSrv;
                     break;
             }

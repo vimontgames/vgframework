@@ -82,7 +82,6 @@ namespace vg::renderer
         _cmdList->setGraphicRootSignature(m_rootSignature);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
 
-
         switch (_renderContext.m_shaderPass)
         {
             default:
@@ -103,7 +102,7 @@ namespace vg::renderer
             case ShaderPass::Transparent:
             {
                 BlendState bs;
-                if (_renderContext.m_shaderPass == ShaderPass::Forward)
+                if (_renderContext.m_shaderPass == ShaderPass::Forward && _renderContext.m_surfaceType != SurfaceType::Decal)
                     bs = BlendState(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
                 else
                     bs = BlendState(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
@@ -131,7 +130,12 @@ namespace vg::renderer
 
             case ShaderPass::Deferred:
             {
-                BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+                BlendState bs;
+                if (_renderContext.m_surfaceType == SurfaceType::Decal)
+                    bs = BlendState(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
+                else
+                    bs = BlendState(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+                    
                 _cmdList->setBlendState(bs);
 
                 VG_ASSERT(!_renderContext.m_wireframe);
@@ -165,8 +169,7 @@ namespace vg::renderer
 
         _cmdList->setRasterizerState(rs);
 
-        if (_renderContext.m_alphatest)
-            key.setFlag(gfx::DefaultHLSLDesc::AlphaTest, true);
+        key.setFlags(gfx::DefaultHLSLDesc::Surface, (uint)m_surfaceType);
 
         _cmdList->setShader(key);
     }

@@ -5,7 +5,8 @@ namespace vg::gfx
     vg_enum_class(SurfaceType, core::u8,
         Opaque = 0,
         AlphaTest,
-        AlphaBlend
+        AlphaBlend,
+        Decal
     );
 
     vg_enum_class(BLASUpdateType, core::u8,

@@ -98,6 +98,7 @@ namespace vg::renderer
                 bool hasOpaque = false;
                 bool hasAlphaTest = false;
                 bool hasAlphaBlend = false;
+                bool hasDecal = false;
 
                 auto materials = getMaterials();
                 if (materials.size() > 0)
@@ -121,6 +122,10 @@ namespace vg::renderer
                                 case SurfaceType::AlphaBlend:
                                     hasAlphaBlend = true;
                                     break;
+
+                                case SurfaceType::Decal:
+                                    hasDecal = true;
+                                    break;
                             }
                         }
                         else
@@ -143,6 +148,9 @@ namespace vg::renderer
 
                 if (hasAlphaBlend)
                     _cullingResult->m_output->add(GraphicInstanceListType::Transparent, this);
+
+                if (hasDecal)
+                    _cullingResult->m_output->add(GraphicInstanceListType::Decal, this);
 
                 if (setAtomicFlags(GraphicInstance::AtomicFlags::Instance))
                     _cullingResult->m_sharedOutput->m_instances.push_back_atomic(this);
@@ -393,44 +401,28 @@ namespace vg::renderer
 
                     auto surfaceType = material->getSurfaceType();
 
+                    if (_renderContext.m_surfaceType != surfaceType)
+                        continue;
+
                     switch (_renderContext.m_shaderPass)
                     {
-                    default:
-                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderContext.m_shaderPass);
-                        break;
+                        default:
+                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderContext.m_shaderPass);
+                            continue;
 
-                    case ShaderPass::ZOnly:
-                    case ShaderPass::Forward:
-                    case ShaderPass::Deferred:
-                    {
-                        // Do not render transparent material in opaque passes
-                        if (SurfaceType::AlphaBlend != surfaceType)
-                        {
-                            if (_renderContext.m_alphatest == (SurfaceType::AlphaTest == surfaceType))
-                            {
-                                material->Setup(_renderContext, _cmdList, &root3D, i);
-                                draw = true;
-                            }
-                        }
-                    }
-                    break;
-
-                    case ShaderPass::Transparent:
-                    {
-                        if (SurfaceType::AlphaBlend == surfaceType)
-                        {
+                        case ShaderPass::ZOnly:
+                        case ShaderPass::Forward:
+                        case ShaderPass::Deferred:
                             material->Setup(_renderContext, _cmdList, &root3D, i);
-                            draw = true;
-                        }
-                    }
-                    break;
+                            break;
+
+                        case ShaderPass::Transparent:
+                            material->Setup(_renderContext, _cmdList, &root3D, i);
+                            break;
                     }
 
-                    if (draw)
-                    {
-                        _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
-                        _cmdList->drawIndexed(batch.count, batch.offset);
-                    }
+                    _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
+                    _cmdList->drawIndexed(batch.count, batch.offset);
                 }
             }
         }

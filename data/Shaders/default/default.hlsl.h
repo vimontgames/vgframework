@@ -9,8 +9,8 @@ namespace vg::gfx
     public:
         enum Flags : ShaderKey::Flags
         {
-
             // Last flags are common for all shaders 
+            Surface     = HLSLDesc::Flags::Surface,
             ZOnly       = HLSLDesc::Flags::ZOnly,
             RayTracing  = HLSLDesc::Flags::RayTracing,
             Toolmode    = HLSLDesc::Flags::Toolmode
@@ -18,10 +18,10 @@ namespace vg::gfx
 
         DefaultHLSLDesc()
         {
-            setFile("default/default.hlsl");
+            setFile("default/default.hlsl"); 
 
-            declFlag(AlphaBlend, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ALPHABLEND");
-            declFlag(AlphaTest, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ALPHATEST");
+            declFlags(Surface, ShaderStageFlags::VS | ShaderStageFlags::PS, { "", "_ALPHATEST", "_ALPHABLEND", "_DECAL"});
+
             declFlag(ZOnly, ShaderStageFlags::VS | ShaderStageFlags::PS, "_ZONLY");
             declFlag(RayTracing, ShaderStageFlags::VS | ShaderStageFlags::PS, "_RAYTRACING");
             declFlag(Toolmode, ShaderStageFlags::VS | ShaderStageFlags::PS, "_TOOLMODE");

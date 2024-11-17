@@ -158,7 +158,7 @@ namespace vg::gfx
     void HLSLDesc::declFlags(core::uint _startIndex, ShaderStageFlags _stages, const core::vector<core::string> & _defines)
     {
         VG_ASSERT(_defines.size() > 0);
-        const uint bits = (uint)log2(_defines.size()) + 1;
+        const uint bits = ShaderFlagDesc::computeBitCount((uint)_defines.size());
 
         VG_ASSERT((_startIndex + bits - 1) < countof(m_flagDescs));
 

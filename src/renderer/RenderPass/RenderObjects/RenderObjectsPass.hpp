@@ -31,17 +31,28 @@ namespace vg::renderer
         const auto * view = static_cast<const View *>(_renderContext.m_renderPass->getView());
         const auto & list = view->getCullingJobResult().get(_list).m_instances;
 
-        bool wireframeSelection = false; // TODO: expose option for selection
-
         RenderContext renderContext = _renderContext;
 
         switch (_list)
         {
             default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_list);
+                break;
+
+            case GraphicInstanceListType::Opaque:
+                renderContext.m_surfaceType = gfx::SurfaceType::Opaque;
+                break;
+
+            case GraphicInstanceListType::Transparent:
+                renderContext.m_surfaceType = gfx::SurfaceType::AlphaBlend;
                 break;
 
             case GraphicInstanceListType::AlphaTest:
-                renderContext.m_alphatest = true;
+                renderContext.m_surfaceType = gfx::SurfaceType::AlphaTest;
+                break;
+
+            case GraphicInstanceListType::Decal:
+                renderContext.m_surfaceType = gfx::SurfaceType::Decal;
                 break;
         }
 
@@ -52,13 +63,6 @@ namespace vg::renderer
             for (uint i = 0; i < list.size(); ++i)
             {
                 const GraphicInstance * instance = list[i];
-
-                if (_renderContext.m_wireframe && wireframeSelection)
-                {
-                    if (!asBool(ObjectFlags::Selected & instance->getObjectFlags()))
-                        continue;
-                }
-
                 instance->Draw(renderContext, _cmdList);
             }
         }

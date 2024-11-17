@@ -436,6 +436,14 @@ namespace vg::renderer
         
         _data.batches = std::move(batches);
         _data.materials = std::move(materials);
+
+        // Ensure AABB has a finite volume
+        const float3 m = aabb.m_min;
+        const float3 M = aabb.m_max;
+        const float3 eps = (float3)0.001f;
+        aabb.m_min = min(aabb.m_min, M - eps);
+        aabb.m_max = max(aabb.m_max, m + eps);
+
         _data.aabb = std::move(aabb);
 
         VG_SAFE_DELETE(triangleIndexTmp);

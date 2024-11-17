@@ -85,6 +85,8 @@ float4 forwardDebugDisplay(float4 _color, DisplayMode _mode, uint _matID, float3
             return sRGBA2Linear(float4(1,0,0, 1));
             #elif _ALPHATEST
             return sRGBA2Linear(float4(1,1,0, 0));
+            #elif _DECAL
+            return sRGBA2Linear(float4(0,0,1, 0));
             #else
             return sRGBA2Linear(float4(0,1,0, 1));
             #endif
