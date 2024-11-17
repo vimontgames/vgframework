@@ -1,6 +1,6 @@
-﻿<img src="doc/img/covidboyicon.png" alt="VGFramework logo" title="VGFramework" align="right" height="64" />
+﻿<img src="doc/img/version.png" alt="VGF boy" title="VGF boy" align="right" height="74" />
 
-# VGFramework 0.41
+# VGFramework 0.42
 Yet another work-in-progress game and graphic engine project.
 
 # Table of contents
@@ -55,8 +55,9 @@ Feature<img width=256/>                  | <img width=16/>
 ---------------------------------------- | ------      
 EditorGUI integration                    | ✅     
 Support multiple editor viewports        | ✅     
-Basic texture and sound preview          | ✅     
-Advanced texture preview (e.g. cubemaps) | ❌      
+Basic texture and sound preview          | ✅   
+Cubemap texture preview                  | ✅     
+Texture channels preview                 | ❌      
 
 ## vg::core lib
 Core library shared by all projects.
