@@ -58,4 +58,94 @@ struct GPUMaterialData
 
     void        setTiling               (float2 _value) { tiling.xy = _value; }
     float2      getTiling               ()              { return tiling.xy; }
+
+    #ifndef __cplusplus
+    //--------------------------------------------------------------------------------------
+    float4 getVertexColorOut(float4 _vertexColor, float4 _instanceColor, DisplayFlags _flags)
+    {
+        float4 color = 1;
+
+        #if _TOOLMODE
+        if (0 != (DisplayFlags::VertexColor & _flags)) 
+        #endif
+        {
+            color.rgb *= _vertexColor.rgb;
+        }
+        color.a *= _vertexColor.a;
+
+        float4 _materialColor = getAlbedoColor();
+        #if _TOOLMODE
+        if (0 != (DisplayFlags::MaterialColor & _flags)) 
+        #endif
+        {
+            color.rgb *= _materialColor.rgb;
+        }
+        color.a *= _materialColor.a;
+
+        #if _TOOLMODE
+        if (0 != (DisplayFlags::InstanceColor & _flags)) 
+        #endif
+        {
+            color.rgb *= _instanceColor.rgb;
+        }
+        color.a *= _instanceColor.a;
+
+        return color;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float2 GetUV0(float2 _uv0, float2 _uv1, float3 _worldPos)
+    {
+        float2 uv;
+        switch(getUVSource())
+        {
+            default:
+            case UVSource::UV0:
+            uv = _uv0;
+            break;
+
+            case UVSource::UV1:
+            uv = _uv1;
+            break;
+
+            case UVSource::PlanarX:
+            uv = _worldPos.yz;
+            break;
+
+            case UVSource::PlanarY:
+            uv = _worldPos.xz;
+            break;
+
+            case UVSource::PlanarZ:
+            uv = _worldPos.xy;
+            break;
+        }
+
+        return uv * getTiling();
+    }
+
+    //--------------------------------------------------------------------------------------
+    // If the texture may have different value in different threads from a wave, 
+    // then '_nonUniform' shall be 'true' to avoid rendering artifacts in AMD cards.
+    //--------------------------------------------------------------------------------------
+    float4 getAlbedo(float2 _uv, float4 _vertexColor, DisplayFlags _flags, bool _nonUniform = false)
+    {   
+        Texture2D albedoTex = _nonUniform ? getNonUniformTexture2D(getAlbedoTextureHandle()) : getTexture2D(getAlbedoTextureHandle());
+        
+        #if _PS
+        float4 albedo = albedoTex.Sample(linearRepeat, _uv).rgba;
+        #else
+        float4 albedo = albedoTex.SampleLevel(linearRepeat, _uv, 0).rgba;
+        #endif
+
+        #if _TOOLMODE
+        if (0 == (DisplayFlags::AlbedoMap & _flags))
+            albedo.rgb = pow(0.5, 0.45);
+        #endif
+
+        albedo *= _vertexColor;
+    
+        return albedo;
+    }
+    #endif // !__cplusplus
 };

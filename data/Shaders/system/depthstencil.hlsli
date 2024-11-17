@@ -6,7 +6,7 @@
 //--------------------------------------------------------------------------------------
 #define loadDepth(depthTex, address) getTexture2D(depthTex).Load(address).r;
         
-#ifdef VG_VULKAN
+#ifdef _VULKAN
 #define loadStencil(stencilTex, address) getTexture2D_UInt2(stencilTex).Load(address).r;
 #else
 #define loadStencil(stencilTex, address) getTexture2D_UInt2(stencilTex).Load(address).g;

@@ -1,7 +1,10 @@
-#pragma once
+#ifndef _VERTEX__HLSLI_
+#define _VERTEX__HLSLI_
 
 #include "types.hlsli"
 #include "packing.hlsli"
+
+#define GPU_VERTEXBUFFER_OFFSET_ALIGNMENT 4
 
 // List every vertex format here (max 255 because it's serialized as u8 and 0xFF stands for "invalid vertex format")
 vg_enum_class(VertexFormat, uint,
@@ -125,11 +128,8 @@ inline bool hasSkinning(VertexFormat _format)
 struct Vertex
 {    
 #ifndef __cplusplus
-    void Load(ByteAddressBuffer _buffer, VertexFormat _format, uint _vertexID, uint _offset = 0)
+    void Clear()
     {
-        uint offset = _offset + _vertexID * getVertexFormatStride(_format);
-        
-        // "memset"
         pos = float3(0, 0, 0);
         nrm = float3(0, 0, 1);
         bin = float3(0, 1, 0);
@@ -137,6 +137,13 @@ struct Vertex
         uv[0] = float2(0, 0);
         uv[1] = float2(1, 1);
         color = 0xFFFFFFFF;
+    }
+    
+    void Load(ByteAddressBuffer _buffer, VertexFormat _format, uint _vertexID, uint _offset = 0)
+    {
+        uint offset = _offset + _vertexID * getVertexFormatStride(_format);    
+
+        Clear();    
 
         pos.xyz = _buffer.Load<float3>(offset); 
         offset += 3 * sizeof(float);
@@ -195,7 +202,6 @@ struct Vertex
             skinWeights[3] = tempW.a;
             offset += 4;
         }
-
     }
     
     void Store(RWByteAddressBuffer _rwbuffer, VertexFormat _format, uint _vertexID, uint _offset = 0)
@@ -241,6 +247,21 @@ struct Vertex
             offset += 4;
         }
     }
+
+    template<typename T> T Interpolate(T _v0, T _v1, T _v2, float3 _bary)    {  return _v0 * _bary.x + _v1 * _bary.y + _v2 * _bary.z; }
+
+    void Interpolate(Vertex verts[3], float3 _bary)
+    {
+        Clear();
+
+        pos = Interpolate(verts[0].getPos(), verts[1].getPos(), verts[2].getPos(), _bary);
+        nrm = Interpolate(verts[0].getNrm(), verts[1].getNrm(), verts[2].getNrm(), _bary);
+        bin = Interpolate(verts[0].getBin(), verts[1].getBin(), verts[2].getBin(), _bary);
+        tan = Interpolate(verts[0].getTan(), verts[1].getTan(), verts[2].getTan(), _bary);
+        uv[0] = Interpolate(verts[0].getUV(0), verts[1].getUV(0), verts[2].getUV(0), _bary);
+        uv[1] = Interpolate(verts[0].getUV(1), verts[1].getUV(1), verts[2].getUV(1), _bary);
+        color = packRGBA8(Interpolate(verts[0].getColor(), verts[1].getColor(), verts[2].getColor(), _bary));
+    }
     #endif
 
     float3 getPos()             { return pos; }
@@ -259,3 +280,5 @@ struct Vertex
     uint skinIndices[4];
     float skinWeights[4];
 };
+
+#endif // _VERTEX__HLSLI_

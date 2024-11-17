@@ -92,7 +92,7 @@ vg_enum_class(ReservedSlot, uint,
 // RWBuffer
 #define RESERVEDSLOT_RWBUFFER_GPUDEBUG          (BINDLESS_RWBUFFER_INVALID - 1)
 
-#ifdef VG_DX12
+#ifdef _DX12
 
 // DX12 requires aliasing texture types to use different spaces
 
@@ -109,7 +109,7 @@ vg_enum_class(ReservedSlot, uint,
 #define BINDLESS_RWTEXTURE_BINDING_2D_ARRAY     222
 #define BINDLESS_RWTEXTURE_BINDING_3D           230 
 
-#elif defined(VG_VULKAN)
+#elif defined(_VULKAN)
 
 #define BINDLESS_TEXTURE_BINDING_1D               0 // <=> BINDLESS_TEXTURE_BINDING
 #define BINDLESS_TEXTURE_BINDING_2D               0   

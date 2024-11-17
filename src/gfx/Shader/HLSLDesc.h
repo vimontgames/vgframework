@@ -82,7 +82,7 @@ namespace vg::gfx
         void reset();
 
     protected:
-        core::vector<core::pair<core::string, core::uint>> getShaderMacros(ShaderStage _stage, ShaderKey::Flags _flags) const;
+        core::vector<core::pair<core::string, core::uint>> getShaderMacros(API _api, ShaderStage _stage, ShaderKey::Flags _flags) const;
 
     private:
 

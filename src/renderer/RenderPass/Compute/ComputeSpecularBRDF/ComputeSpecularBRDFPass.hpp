@@ -50,22 +50,26 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ComputeSpecularBRDFPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
-        const auto & texDesc = m_specularBRDFTexture->getTexDesc();
-        auto threadGroupSize = uint2(PRECOMPUTE_IBL_THREADGROUP_SIZE_X, PRECOMPUTE_IBL_THREADGROUP_SIZE_Y);
-        auto threadGroupCount = uint3((texDesc.width + threadGroupSize.x - 1) / threadGroupSize.x, (texDesc.height + threadGroupSize.y - 1) / threadGroupSize.y, 1);
-
-        _cmdList->setComputeRootSignature(m_computeSpecularBRDFRootSignature);
-        _cmdList->setComputeShader(m_computeSpecularBRDFShaderKey);
-
-        PrecomputeIBLConstants precomputeIBLConstants;
+        VG_ASSERT(m_specularBRDFTexture);
+        if (nullptr != m_specularBRDFTexture)
         {
-            precomputeIBLConstants.setDestination(m_specularBRDFTexture->getRWTextureHandle());            
+            const auto & texDesc = m_specularBRDFTexture->getTexDesc();
+            auto threadGroupSize = uint2(PRECOMPUTE_IBL_THREADGROUP_SIZE_X, PRECOMPUTE_IBL_THREADGROUP_SIZE_Y);
+            auto threadGroupCount = uint3((texDesc.width + threadGroupSize.x - 1) / threadGroupSize.x, (texDesc.height + threadGroupSize.y - 1) / threadGroupSize.y, 1);
+
+            _cmdList->setComputeRootSignature(m_computeSpecularBRDFRootSignature);
+            _cmdList->setComputeShader(m_computeSpecularBRDFShaderKey);
+
+            PrecomputeIBLConstants precomputeIBLConstants;
+            {
+                precomputeIBLConstants.setDestination(m_specularBRDFTexture->getRWTextureHandle());
+            }
+            _cmdList->setComputeRootConstants(0, (u32 *)&precomputeIBLConstants, PrecomputeIBLConstantsCount);
+
+            _cmdList->dispatch(threadGroupCount);
+
+            // texture will be read-only from now on
+            _cmdList->transitionResource(m_specularBRDFTexture, ResourceState::UnorderedAccess, ResourceState::ShaderResource);
         }
-        _cmdList->setComputeRootConstants(0, (u32 *)&precomputeIBLConstants, PrecomputeIBLConstantsCount);
-
-        _cmdList->dispatch(threadGroupCount);
-
-        // texture will be read-only from now on
-        _cmdList->transitionResource(m_specularBRDFTexture, ResourceState::UnorderedAccess, ResourceState::ShaderResource);
     }
 }

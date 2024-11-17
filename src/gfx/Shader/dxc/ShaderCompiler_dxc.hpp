@@ -265,18 +265,50 @@ namespace vg::gfx::dxc
             switch (_api)
             {
                 case API::Vulkan:
-                    macros.push_back({ "VG_VULKAN", 1 });
+                    macros.push_back({ "_VULKAN", 1 });
                     args.push_back((wchar_t *)L"-spirv");
                     args.push_back((wchar_t *)L"-fvk-use-dx-layout");
                     args.push_back((wchar_t *)L"-fvk-use-dx-position-w");
                     break;
 
                 case API::DirectX12:
-                    macros.push_back({ "VG_DX12", 1 });
+                    macros.push_back({ "_DX12", 1 });
                     break;
                 default:
 
                     VG_ASSERT(false, "Unhandled API \"%s\" (%u)", asString(_api), _api);
+                    break;
+            }
+
+            // Add shader stage #define (e.g. "_PS" for pixel shaders etc...)
+            switch (_stage)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_stage);
+                    break;
+
+                case ShaderStage::Vertex:
+                    macros.push_back({ "_VS", 1 });
+                    break;
+
+                case ShaderStage::Hull:
+                    macros.push_back({ "_HS", 1 });
+                    break;
+
+                case ShaderStage::Domain:
+                    macros.push_back({ "_DS", 1 });
+                    break;
+
+                case ShaderStage::Geometry:
+                    macros.push_back({ "_GS", 1 });
+                    break;
+
+                case ShaderStage::Pixel:
+                    macros.push_back({ "_PS", 1 });
+                    break;
+
+                case ShaderStage::Compute:
+                    macros.push_back({ "_CS", 1 });
                     break;
             }
 

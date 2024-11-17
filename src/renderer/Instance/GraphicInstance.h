@@ -3,9 +3,16 @@
 #include "renderer/IGraphicInstance.h"
 #include "core/Misc/BitMask/BitMask.h"
 
+enum class VertexFormat : vg::core::uint;
+
 namespace vg::core
 {
     class AABB;
+}
+
+namespace vg::gfx
+{
+    struct BindlessBufferHandle;
 }
 
 namespace vg::renderer
@@ -54,14 +61,19 @@ namespace vg::renderer
         VG_INLINE core::uint                            getGPUInstanceDataOffset    () const;
         VG_INLINE const core::BitMask &                 getBatchMask                () const;
 
-        //virtual bool                                    TryGetAABB                  (core::AABB & _aabb) const = 0;
         virtual bool                                    Cull                        (CullingResult * _cullingResult, View * _view) = 0;
         virtual void                                    OnMaterialChanged           (core::uint _index) {}
         virtual bool                                    OnUpdateRayTracing          (gfx::CommandList * _cmdList, View * _view, core::uint _index) = 0;
 
+        virtual bool                                    GetIndexBuffer              (gfx::BindlessBufferHandle & _vb, core::uint & _offset, core::uint & _indexSize) const { return false; }
+        virtual bool                                    GetVertexBuffer             (gfx::BindlessBufferHandle & _vb, core::uint & _offset) const { return false; }
+        virtual bool                                    GetVertexFormat             (VertexFormat & _vertexFormat) const { return false; }
+        virtual core::uint                              GetBatchCount               () const { return 1; }
+        virtual core::uint                              GetBatchOffset              (core::uint _index) const { return 0; }
+
     private:
         core::atomic<core::u32>                         m_atomicFlags;
-        core::uint                                      m_shaderInstanceDataOffset = -1;
+        core::uint                                      m_gpuInstanceDataHandle = -1;
         PickingID                                       m_pickingID;
         core::vector<MaterialModel *>                   m_materials;
         core::BitMask                                   m_batchMask;

@@ -345,7 +345,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool RendererOptions::anyRayTracingDebugDisplay() const
     {
-        return asInteger(m_debugDisplayMode) >= asInteger(DisplayMode::RayTracing_Hit) && asInteger(m_debugDisplayMode) < asInteger(DisplayMode::PostProcess_Depth);
+        return asInteger(m_debugDisplayMode) >= asInteger(DisplayMode::RayTracing_Committed_Hit) && asInteger(m_debugDisplayMode) < asInteger(DisplayMode::PostProcess_Depth);
     }
 
     //--------------------------------------------------------------------------------------

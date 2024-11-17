@@ -6,7 +6,7 @@
 // Should match enum in "SamplerState_consts.h"
 //--------------------------------------------------------------------------------------
 
-#ifdef VG_DX12
+#ifdef _DX12
 
 sampler nearestClamp  : register(s0, space0);
 sampler nearestRepeat : register(s1, space0);
@@ -15,7 +15,7 @@ sampler linearRepeat  : register(s3, space0);
 
 SamplerComparisonState shadowcmp     : register(s4, space0);
 
-#elif defined(VG_VULKAN)
+#elif defined(_VULKAN)
 
 [[vk::binding(0, 1)]] sampler vkSamplerArray[5]  : register(s0, space1);
 #define nearestClamp  vkSamplerArray[0]

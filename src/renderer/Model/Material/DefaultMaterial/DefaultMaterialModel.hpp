@@ -41,14 +41,14 @@ namespace vg::renderer
         MaterialModel(_name, _parent)
     {
         // Register slot for material GPU data
-        m_gpuDataHandle = Renderer::get()->getMaterialManager()->allocMaterialDataGPUHandle(this);
+        m_gpuMaterialDataIndex = Renderer::get()->getMaterialManager()->allocMaterialDataGPUIndex(this);
     }
 
     //--------------------------------------------------------------------------------------
     DefaultMaterialModel::~DefaultMaterialModel()
     {
         // Unregister slot for material GPU data
-        Renderer::get()->getMaterialManager()->freeMaterialDataGPUHandle(m_gpuDataHandle);
+        Renderer::get()->getMaterialManager()->freeMaterialDataGPUIndex(m_gpuMaterialDataIndex);
     }
 
     //--------------------------------------------------------------------------------------

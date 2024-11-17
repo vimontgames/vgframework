@@ -10,13 +10,13 @@ namespace vg::renderer
     class MaterialManager : public core::Singleton<MaterialManager>
     {
     public:
-        MaterialDataGPUHandle   allocMaterialDataGPUHandle  (MaterialModel * _material);
-        void                    freeMaterialDataGPUHandle   (MaterialDataGPUHandle & _handle);
+        GPUMaterialDataIndex   allocMaterialDataGPUIndex  (MaterialModel * _material);
+        void                    freeMaterialDataGPUIndex   (GPUMaterialDataIndex & _handle);
 
         VG_INLINE const core::vector<MaterialModel *> getMaterials() const { return m_materials; }
 
     private:
-        core::IndexPool<MaterialDataGPUHandle, s_MaxMaterialCount>  m_handles;
+        core::IndexPool<GPUMaterialDataIndex, s_MaxMaterialCount>  m_handles;
         core::vector<MaterialModel*>                                m_materials;
     };
 }

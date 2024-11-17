@@ -1,12 +1,12 @@
 <Root>
     <Object class="MaterialResourceData">
-        <Property type="Uint32" name="m_uid" flags="" value="3288293331"/>
+        <Property type="Uint32" name="m_uid" flags="" value="2357241802"/>
         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
         <Property type="Object" name="m_materialModelType">
             <Object class="MaterialModelType">
                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                <Property type="Uint32" name="m_uid" flags="" value="2434141812"/>
+                <Property type="Uint32" name="m_uid" flags="" value="1140557864"/>
                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                 <Property type="String" name="m_shader" value="Default"/>
@@ -14,40 +14,40 @@
         </Property>
         <Property type="ObjectPtr" name="m_data" flags="Flatten">
             <Object class="DefaultMaterialData">
-                <Property type="Uint32" name="m_uid" flags="" value="1689021143"/>
+                <Property type="Uint32" name="m_uid" flags="" value="3963507992"/>
                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                 <Property type="EnumU8" name="m_surfaceType" value="Opaque"/>
                 <Property type="EnumU8" name="m_cullMode" value="Back"/>
-                <Property type="EnumU32" name="m_UVSource" value="PlanarZ"/>
-                <Property type="Float2" name="m_tiling" flags="HasRange" x="0.33000001" y="0.33000001"/>
+                <Property type="EnumU32" name="m_UVSource" value="UV0"/>
+                <Property type="Float2" name="m_tiling" flags="HasRange" x="1" y="1"/>
                 <Property type="Resource" name="m_albedoMap" flags="Resource">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                        <Property type="Uint32" name="m_uid" flags="" value="4207691677"/>
+                        <Property type="Uint32" name="m_uid" flags="" value="53333658"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/Road/Asphalt_alb.tga"/>
+                        <Property type="String" name="m_resourcePath" flags="NotVisible" value=""/>
                     </Object>
                 </Property>
                 <Property type="Float4" name="m_albedoColor" flags="Color" x="1" y="1" z="1" w="1"/>
                 <Property type="Resource" name="m_normalMap" flags="Resource">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                        <Property type="Uint32" name="m_uid" flags="" value="4215829298"/>
+                        <Property type="Uint32" name="m_uid" flags="" value="1102812504"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/Road/Asphalt_nm.tga"/>
+                        <Property type="String" name="m_resourcePath" flags="NotVisible" value=""/>
                     </Object>
                 </Property>
                 <Property type="Float" name="m_normalStrength" flags="HasRange" value="1"/>
                 <Property type="Resource" name="m_pbrMap" flags="Resource">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                        <Property type="Uint32" name="m_uid" flags="" value="1459425903"/>
+                        <Property type="Uint32" name="m_uid" flags="" value="1837904158"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                        <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/Road/Asphalt_pbr.tga"/>
+                        <Property type="String" name="m_resourcePath" flags="NotVisible" value=""/>
                     </Object>
                 </Property>
                 <Property type="Float" name="m_occlusion" flags="HasRange" value="1"/>

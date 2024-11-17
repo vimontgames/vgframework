@@ -495,9 +495,11 @@ namespace vg::renderer
 
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_gpuDebugUpdatePass, "GPU Debug");
 
+                // Skinning shall be computed before instances so that instances can store the vertex data offset in GPUInstanceData
+                m_frameGraph.addUserPass(mainViewRenderPassContext, m_computeSkinningPass, "Skinning");
+
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_instanceDataUpdatePass, "Instance Data");
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_materialDataUpdatePass, "Material Data");
-                m_frameGraph.addUserPass(mainViewRenderPassContext, m_computeSkinningPass, "Skinning");
 
                 if (options->isRayTracingEnabled())
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_BLASUpdatePass, "BLAS Update");
@@ -1129,7 +1131,7 @@ namespace vg::renderer
     {
         VG_ASSERT(nullptr == m_defaultMaterial);
         m_defaultMaterial = new DefaultMaterialModel("Default Material", this);
-        VG_ASSERT(m_defaultMaterial->getMaterialDataGPUHandle() == 0);
+        VG_ASSERT(m_defaultMaterial->getGPUMaterialDataIndex() == 0);
     }
 
     //--------------------------------------------------------------------------------------

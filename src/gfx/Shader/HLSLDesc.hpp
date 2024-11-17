@@ -136,7 +136,7 @@ namespace vg::gfx
 
         auto * sm = ShaderManager::get();
 
-        const auto & macros = getShaderMacros(_stage, key.m_flags);
+        const auto & macros = getShaderMacros(_api, _stage, key.m_flags);
 
         auto * shader = sm->compile(_api, m_file, entryPoint, _stage, macros);
 
@@ -193,7 +193,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     // Build macros from shader key flags
     //--------------------------------------------------------------------------------------
-    core::vector<core::pair<core::string, core::uint>> HLSLDesc::getShaderMacros(ShaderStage _stage, ShaderKey::Flags _flags) const
+    core::vector<core::pair<core::string, core::uint>> HLSLDesc::getShaderMacros(API _api, ShaderStage _stage, ShaderKey::Flags _flags) const
     {
         core::vector<core::pair<core::string, core::uint>> macros;
 

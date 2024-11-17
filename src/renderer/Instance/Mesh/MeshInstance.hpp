@@ -236,11 +236,108 @@ namespace vg::renderer
 
         if (const auto * blas = getInstanceBLAS())
         {
-            u32 rayTracingID = getGPUInstanceDataOffset();
+            u32 rayTracingID = getGPUInstanceDataOffset() / GPU_INSTANCE_DATA_ALIGNMENT;
             tlas->addInstance(blas, getGlobalMatrix(), rayTracingID);
         }
 
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::GetIndexBuffer(gfx::BindlessBufferHandle & _vb, core::uint & _offset, core::uint & _indexSize) const
+    {
+        const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
+        VG_ASSERT(model);
+
+        if (nullptr != model)
+        {
+            const MeshGeometry * geo = model->getGeometry();
+            VG_ASSERT(geo);
+            const Buffer * ib = geo->getIndexBuffer();
+            _vb = ib->getBufferHandle();
+            _offset = 0;
+            _indexSize = ib->getBufDesc().elementSize;
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::GetVertexBuffer(gfx::BindlessBufferHandle & _vb, core::uint & _offset) const
+    {
+        const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
+        VG_ASSERT(model);
+
+        if (nullptr != model)
+        {
+            const MeshGeometry * geo = model->getGeometry();
+            VG_ASSERT(geo);
+
+            if (IsSkinned())
+            {
+                _vb = m_skinnedMeshBuffer->getBufferHandle();
+                _offset = m_skinnedMeshBufferOffset;
+            }
+            else
+            {
+                _vb = geo->getVertexBuffer()->getBufferHandle();
+                _offset = geo->getVertexBufferOffset();
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::GetVertexFormat(VertexFormat & _vertexFormat) const
+    {
+        const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
+        VG_ASSERT(model);
+
+        if (nullptr != model)
+        {
+            const MeshGeometry * geo = model->getGeometry();
+            VG_ASSERT(geo);
+            _vertexFormat = geo->getVertexFormat();
+            return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint MeshInstance::GetBatchCount() const
+    {
+        const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
+        VG_ASSERT(model);
+
+        if (nullptr != model)
+        {
+            const MeshGeometry * geo = model->getGeometry();
+            VG_ASSERT(geo);
+            return (uint)geo->batches().size();
+        }
+        
+        return 1;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint MeshInstance::GetBatchOffset(core::uint _index) const
+    {
+        const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
+        VG_ASSERT(model);
+
+        if (nullptr != model)
+        {
+            const MeshGeometry * geo = model->getGeometry();
+            VG_ASSERT(geo);
+            if (_index < geo->batches().size())
+                return geo->batches()[_index].offset;
+        }
+
+        return 0;
     }
 
     //--------------------------------------------------------------------------------------
@@ -262,15 +359,17 @@ namespace vg::renderer
 
             root3D.setGPUInstanceDataOffset(getGPUInstanceDataOffset());
 
-            if (IsSkinned())
-                root3D.setVertexBufferHandle(m_skinnedMeshBuffer->getBufferHandle(), m_skinnedMeshBufferOffset);
-            else
-                root3D.setVertexBufferHandle(geo->getVertexBuffer()->getBufferHandle(), geo->getVertexBufferOffset());
-            
+            BindlessBufferHandle vbHandle;
+            uint vbOffset;
+            VG_VERIFY(GetVertexBuffer(vbHandle, vbOffset));
+                        
+            root3D.setVertexBufferHandle(vbHandle, vbOffset);
+
             u16 flags = 0;
             root3D.setFlags(flags);
 
-            VertexFormat vertexFormat = geo->getVertexFormat();
+            VertexFormat vertexFormat;
+            VG_VERIFY(GetVertexFormat(vertexFormat));
             root3D.setVertexFormat(vertexFormat);
 
             auto pickingID = GetPickingID();

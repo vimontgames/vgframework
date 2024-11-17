@@ -22,13 +22,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     VG_INLINE void GraphicInstance::setGPUInstanceDataOffset(core::uint _offset)
     {
-        m_shaderInstanceDataOffset = _offset;
+        m_gpuInstanceDataHandle = _offset;
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE core::uint GraphicInstance::getGPUInstanceDataOffset() const
     {
-        return m_shaderInstanceDataOffset;
+        return m_gpuInstanceDataHandle;
     }  
 
     //--------------------------------------------------------------------------------------

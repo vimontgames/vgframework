@@ -50,11 +50,11 @@ namespace vg
             virtual void                    Setup                   (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3DConstants, core::uint _index) const = 0;
 
             VG_INLINE gfx::SurfaceType      getSurfaceType          () const { return m_surfaceType; }
-            VG_INLINE MaterialDataGPUHandle getMaterialDataGPUHandle() const { return m_gpuDataHandle; }
+            VG_INLINE GPUMaterialDataIndex  getGPUMaterialDataIndex () const { return m_gpuMaterialDataIndex; }
 
         protected:
 
-            MaterialDataGPUHandle           m_gpuDataHandle = (MaterialDataGPUHandle)-1;
+            GPUMaterialDataIndex            m_gpuMaterialDataIndex = (GPUMaterialDataIndex)-1;
             gfx::SurfaceType                m_surfaceType;
             gfx::CullMode                   m_cullMode;
             gfx::RootSignatureHandle        m_rootSignature;

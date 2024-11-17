@@ -4,9 +4,9 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    MaterialDataGPUHandle MaterialManager::allocMaterialDataGPUHandle(MaterialModel * _material)
+    GPUMaterialDataIndex MaterialManager::allocMaterialDataGPUIndex(MaterialModel * _material)
     {
-        MaterialDataGPUHandle handle = m_handles.alloc();
+        GPUMaterialDataIndex handle = m_handles.alloc();
         if (m_materials.size() < handle + 1)
             m_materials.resize(handle + 1);
         m_materials[handle] = _material;
@@ -14,7 +14,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialManager::freeMaterialDataGPUHandle(MaterialDataGPUHandle & _handle)
+    void MaterialManager::freeMaterialDataGPUIndex(GPUMaterialDataIndex & _handle)
     {
         m_materials[_handle] = nullptr;
         m_handles.dealloc(_handle);

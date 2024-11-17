@@ -18,7 +18,7 @@ VS_Output VS_DebugDraw(uint _vertexID : VertexID)
     ByteAddressBuffer buf = getBuffer(debugDrawRootConstants3D.getVertexBufferHandle());
         
     Vertex vert;
-           vert.Load(buf, debugDrawRootConstants3D.getVertexFormat(), _vertexID, debugDrawRootConstants3D.getVertexBufferOffset());
+           vert.Load(buf, debugDrawRootConstants3D.getVertexFormat(), _vertexID, debugDrawRootConstants3D.getVertexBufferBytesOffset());
     
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));

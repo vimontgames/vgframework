@@ -120,6 +120,8 @@ namespace vg::core
 #define VG_STATIC_ASSERT(condition, message) static_assert(condition, message)
 #define VG_STATIC_ASSERT_NOT_IMPLEMENTED() VG_STATIC_ASSERT(false, "Function is not implemented")
 
+#define VG_STATIC_ASSERT_IS_ALIGNED(address, alignment, message) VG_STATIC_ASSERT(0 == (uint_ptr(address) & (alignment-1)), message)
+
 #if VG_ENABLE_ASSERT
 	namespace vg::core
 	{

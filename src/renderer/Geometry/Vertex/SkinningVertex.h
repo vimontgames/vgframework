@@ -61,5 +61,6 @@ namespace vg::renderer
     // VertexFormat enum to VertexFormat struct traits 
     template <> struct VertexStorage<VertexFormat::Skinning_4Bones> { using type = SkinningVertex_4Bones; };
     VG_STATIC_ASSERT(sizeof(SkinningVertex_4Bones) == getVertexFormatStride(VertexFormat::Skinning_4Bones), "SkinningVertex_4Bones struct size does not match HLSL stride");
+    VG_STATIC_ASSERT_IS_ALIGNED(sizeof(SkinningVertex_4Bones), GPU_VERTEXBUFFER_OFFSET_ALIGNMENT, "SkinningVertex_4Bones struct size does not match GPU_VERTEXBUFFER_OFFSET_ALIGNMENT");
 }
 

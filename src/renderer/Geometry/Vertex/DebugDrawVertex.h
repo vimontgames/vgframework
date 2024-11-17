@@ -47,4 +47,5 @@ namespace vg::renderer
     // VertexFormat enum to VertexFormat struct traits 
     template <> struct VertexStorage<VertexFormat::DebugDraw> { using type = DebugDrawVertex; };
     VG_STATIC_ASSERT(sizeof(DebugDrawVertex) == getVertexFormatStride(VertexFormat::DebugDraw), "DebugDrawVertex struct size does not match HLSL stride");
+    VG_STATIC_ASSERT_IS_ALIGNED(sizeof(DebugDrawVertex), GPU_VERTEXBUFFER_OFFSET_ALIGNMENT, "DebugDrawVertex struct size does not match GPU_VERTEXBUFFER_OFFSET_ALIGNMENT");
 }

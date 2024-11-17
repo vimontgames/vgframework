@@ -24,48 +24,17 @@ struct VS_Output
 };
 
 //--------------------------------------------------------------------------------------
-float4 getVertexColorOut(float4 _vertexColor, float4 _materialColor, float4 _instanceColor, DisplayFlags _flags)
-{
-    float4 color = 1;
-
-    #if _TOOLMODE
-    if (0 != (DisplayFlags::VertexColor & _flags)) 
-    #endif
-    {
-        color.rgb *= _vertexColor.rgb;
-    }
-    color.a *= _vertexColor.a;
-
-    #if _TOOLMODE
-    if (0 != (DisplayFlags::MaterialColor & _flags)) 
-    #endif
-    {
-        color.rgb *= _materialColor.rgb;
-    }
-    color.a *= _materialColor.a;
-
-    #if _TOOLMODE
-    if (0 != (DisplayFlags::InstanceColor & _flags)) 
-    #endif
-    {
-        color.rgb *= _instanceColor.rgb;
-    }
-    color.a *= _instanceColor.a;
-
-    return color;
-}
-
-//--------------------------------------------------------------------------------------
 VS_Output VS_Forward(uint _vertexID : VertexID)
 {
     VS_Output output;
 
     uint instanceDataOffset = rootConstants3D.getGPUInstanceDataOffset(); 
-    GPUInstanceData instanceDataHeader = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
-    GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
+    GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
+    GPUMaterialData materialData = instanceData.loadGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
 
     Vertex vert;
            vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
+           //vert.Load(getBuffer(instanceData.getVertexBufferHandle()), instanceData.getVertexFormat(), _vertexID, instanceData.getVertexBufferOffset());
 
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
@@ -79,7 +48,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = getVertexColorOut(vert.getColor(), materialData.getAlbedoColor(), instanceDataHeader.getInstanceColor(), flags);
+    output.col = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags);
     
     float3 modelPos = vert.getPos();
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
@@ -101,21 +70,6 @@ struct PS_Output
 {
     float4 color0 : Color0;
 };
-
-//--------------------------------------------------------------------------------------
-float4 getAlbedo(GPUMaterialData _materialData, float2 _uv, float4 _vertexColor, DisplayFlags _flags)
-{
-    float4 albedo = getTexture2D(_materialData.getAlbedoTextureHandle()).Sample(linearRepeat, _uv).rgba;
-
-    #if _TOOLMODE
-    if (0 == (DisplayFlags::AlbedoMap & _flags))
-        albedo.rgb = pow(0.5, 0.45);
-    #endif
-
-    albedo *= _vertexColor;
-    
-    return albedo;
-}
 
 //--------------------------------------------------------------------------------------
 float4 getNormal(GPUMaterialData _materialData, float2 _uv, DisplayFlags _flags)
@@ -171,36 +125,7 @@ float3 getWorldNormal(float3 _normal, float3 _vertexTangent, float3 _vertexBinor
     return worldNormal;
 }
 
-//--------------------------------------------------------------------------------------
-float2 GetUV0(float2 _uv0, float2 _uv1, float3 _worldPos, GPUMaterialData _materialData)
-{
-    float2 uv;
-    switch(_materialData.getUVSource())
-    {
-        default:
-        case UVSource::UV0:
-        uv = _uv0;
-        break;
 
-        case UVSource::UV1:
-        uv = _uv1;
-        break;
-
-        case UVSource::PlanarX:
-        uv = _worldPos.yz;
-        break;
-
-        case UVSource::PlanarY:
-        uv = _worldPos.xz;
-        break;
-
-        case UVSource::PlanarZ:
-        uv = _worldPos.xy;
-        break;
-    }
-
-    return uv * _materialData.getTiling();
-}
 
 //--------------------------------------------------------------------------------------
 #if _ZONLY
@@ -223,15 +148,15 @@ PS_Output PS_Forward(VS_Output _input)
 
     // Get texture handles from instance data. If no instance data specified, offset is 0 and default instance data is used
     uint instanceDataOffset = rootConstants3D.getGPUInstanceDataOffset(); 
-    GPUInstanceData instanceDataHeader = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
+    GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
 
     // Material entries are only present once material is loaded, if matIndex is above limit then use the default material
-    GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
+    GPUMaterialData materialData = instanceData.loadGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
 
-    float2 uv0 = GetUV0(_input.uv.xy,_input.uv.zw, worldPos, materialData);
+    float2 uv0 = materialData.GetUV0(_input.uv.xy,_input.uv.zw, worldPos);
     float2 uv1 = _input.uv.zw;
 
-    float4 albedo = getAlbedo(materialData, uv0, _input.col, flags);
+    float4 albedo = materialData.getAlbedo(uv0, _input.col, flags);
     float3 normal = getNormal(materialData, uv0, flags).xyz;
     float4 pbr = getPBR(materialData, uv0);
 
@@ -286,8 +211,8 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
     VS_Output output;
 
     uint instanceDataOffset = rootConstants3D.getGPUInstanceDataOffset(); 
-    GPUInstanceData instanceDataHeader = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
-    GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
+    GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
+    GPUMaterialData materialData = instanceData.loadGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
 
     Vertex vert;
            vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
@@ -304,7 +229,7 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = getVertexColorOut(vert.getColor(), materialData.getAlbedoColor(), instanceDataHeader.getInstanceColor(), flags);
+    output.col = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags);
     
     float3 modelPos = vert.getPos();
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
@@ -349,15 +274,15 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
 
     // Get texture handles from instance data. If no instance data specified, offset is 0 and default instance data is used
     uint instanceDataOffset = rootConstants3D.getGPUInstanceDataOffset(); 
-    GPUInstanceData instanceDataHeader = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
+    GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
 
     // Material entries are only present once material is loaded, if matIndex is above limit then use the default material
-    GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
+    GPUMaterialData materialData = instanceData.loadGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
 
-    float2 uv0 = GetUV0(_input.uv.xy,_input.uv.zw, worldPos, materialData);
+    float2 uv0 = materialData.GetUV0(_input.uv.xy,_input.uv.zw, worldPos);
     float2 uv1 = _input.uv.zw;
 
-    float4 albedo = getAlbedo(materialData, uv0, _input.col, flags);
+    float4 albedo = materialData.getAlbedo(uv0, _input.col, flags);
     float3 normal = getNormal(materialData, uv0, flags).xyz;
     float4 pbr = getPBR(materialData, uv0);
     

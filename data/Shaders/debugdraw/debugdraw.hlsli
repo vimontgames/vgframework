@@ -57,7 +57,7 @@ struct DebugDrawRootConstants3D
     void setVertexBufferHandle(uint _stream0, uint _offset = 0)
     {
         stream0 = packUint16low(stream0, _stream0);
-        stream0Offset = _offset;
+        stream0Offset = _offset / GPU_VERTEXBUFFER_OFFSET_ALIGNMENT;
     }
 
     uint getVertexBufferHandle()
@@ -65,9 +65,9 @@ struct DebugDrawRootConstants3D
         return unpackUint16low(stream0);
     }
     
-    uint getVertexBufferOffset()
+    uint getVertexBufferBytesOffset()
     {
-        return stream0Offset;
+        return stream0Offset * GPU_VERTEXBUFFER_OFFSET_ALIGNMENT;
     }
 
     void setVertexFormat(VertexFormat _value)

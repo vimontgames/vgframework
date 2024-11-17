@@ -5,6 +5,7 @@
 #include "system/depthstencil.hlsli"
 #include "system/msaa.hlsli"
 #include "system/instancedata.hlsli"
+#include "system/gamma.hlsli"
 
 #if _FXAA
 #include "FXAA.hlsli"
@@ -76,8 +77,6 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
     float3 nearDir = nearTopLeft * w00 + nearTopRight * w01 + nearBottomLeft * w10 + nearBottomRight * w11;
     float3 farDir = farTopLeft * w00 + farTopRight * w01 + farBottomLeft * w10 + farBottomRight * w11;
     float3 dir = normalize(farDir - nearDir);
-
-    #define tlas getTLAS(viewConstants.getTLASHandle())
         
     RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
     RayDesc ray;
@@ -85,7 +84,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
     ray.Direction = dir;
     ray.TMin      = nearDist;
     ray.TMax      = farDist;
-    query.TraceRayInline(tlas, 0, 0xff, ray);
+    query.TraceRayInline(getTLAS(viewConstants.getTLASHandle()), 0, 0xff, ray);
     query.Proceed();
 
     DisplayMode mode = viewConstants.getDisplayMode();
@@ -109,7 +108,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
                 default:
                 break;
 
-                case DisplayMode::RayTracing_Hit:
+                case DisplayMode::RayTracing_Committed_Hit:
                 color.rgb = lerp(color.rgb, float3(1,0,0), 0.5f);
                 break;
             }
@@ -124,45 +123,121 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
                 default:
                 break;
 
-                case DisplayMode::RayTracing_Hit:
+                case DisplayMode::RayTracing_Committed_Hit:
                 color.rgb = lerp(color.rgb, float3(0,1,0), 0.5f);
                 break;
 
-                case DisplayMode::RayTracing_Barycentrics:
-                color.rgb = float3(query.CommittedTriangleBarycentrics(), 0);
-                break;
-
-                case DisplayMode::RayTracing_InstanceID:
+                case DisplayMode::RayTracing_Committed_InstanceID:
                 {
                     uint instanceID = query.CommittedInstanceID();
                     color.rgb = float3(colors[instanceID % 6]);
                 }
                 break;
 
-                case DisplayMode::RayTracing_GeometryIndex:
+                case DisplayMode::RayTracing_Committed_GeometryIndex:
                 {
                     uint geoIndex = query.CommittedGeometryIndex();
                     color.rgb = float3(frac(geoIndex.xxx / 16.0f));
                 }
                 break;
 
-                case DisplayMode::RayTracing_PrimitiveIndex:
+                case DisplayMode::RayTracing_Committed_PrimitiveIndex:
                 {
                     uint primitiveIndex = query.CommittedPrimitiveIndex();
                     color.rgb = float3(frac(primitiveIndex.xxx / 256.0f));
                 }
                 break;
+
+                case DisplayMode::RayTracing_Committed_Barycentrics:
+                color.rgb = float3(query.CommittedTriangleBarycentrics(), 0);
+                break;
                 
-                case DisplayMode::RayTracing_Material:
+                case DisplayMode::RayTracing_Committed_WorldPosition:
+                case DisplayMode::RayTracing_Attributes_UV0:
+                case DisplayMode::RayTracing_Attributes_Albedo:
                 {
-                    uint instanceDataOffset = query.CommittedInstanceID();
-                    GPUInstanceData instanceDataHeader = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
-                    float4 instanceColor = instanceDataHeader.getInstanceColor();
-
-                    GPUMaterialData materialData = instanceDataHeader.getGPUMaterialData(instanceDataOffset, query.CommittedGeometryIndex());
+                    uint instanceDataOffset = query.CommittedInstanceID() * GPU_INSTANCE_DATA_ALIGNMENT;
+                    GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
+                    float4 instanceColor = instanceData.getInstanceColor();
+                    
+                    uint batchIndex = query.CommittedGeometryIndex();                  
+                    GPUBatchData batchData = instanceData.loadGPUBatchData(instanceDataOffset, batchIndex);
+                    GPUMaterialData materialData = batchData.loadGPUMaterialData();
                     float4 materialColor = materialData.getAlbedoColor();                
+                    
+                    uint primitiveIndex = query.CommittedPrimitiveIndex();
+                    ByteAddressBuffer ib = getNonUniformBuffer(instanceData.getIndexBufferHandle());
+                    uint index[3];
+                    uint triangleStartIndex = primitiveIndex*3 + batchData.getStartIndex();
+                    
+                    if (instanceData.getIndexSize() == 2)
+                    {
+                        uint load0 = ib.Load( ((triangleStartIndex & ~1)<<1) + 0);
+                        uint load1 = ib.Load( ((triangleStartIndex & ~1)<<1) + 4);
+                        if (triangleStartIndex & 1)
+                        {
+                            index[0] = load0 >> 16;
+                            index[1] = load1 & 0xFFFF;
+                            index[2] = load1 >> 16;
+                        }
+                        else    
+                        {
+                            index[0] = load0 & 0xFFFF;
+                            index[1] = load0 >> 16;
+                            index[2] = load1 & 0xFFFF;
+                        }
+                    }
+                    else
+                    {
+                         index[0] = ib.Load((triangleStartIndex<<2) + 0);
+                         index[1] = ib.Load((triangleStartIndex<<2) + 4);
+                         index[2] = ib.Load((triangleStartIndex<<2) + 8);
+                    }
 
-                    color.rgb = instanceColor.rgb * materialColor.rgb;
+                    ByteAddressBuffer vb = getNonUniformBuffer(instanceData.getVertexBufferHandle());
+                    uint vbOffset = instanceData.getVertexBufferOffset();
+                    VertexFormat vertexFormat = instanceData.getVertexFormat();
+
+                    Vertex verts[3];
+                    verts[0].Load(vb, vertexFormat, index[0], vbOffset);
+                    verts[1].Load(vb, vertexFormat, index[1], vbOffset);
+                    verts[2].Load(vb, vertexFormat, index[2], vbOffset);
+
+                    float3 bary = float3(0, query.CommittedTriangleBarycentrics());
+                           bary.x = (1-bary.y-bary.z);
+                    
+                    Vertex vert;
+                    vert.Interpolate(verts, bary);
+
+                    DisplayFlags flags = viewConstants.getDisplayFlags();
+
+                    float3 rayOrigin = query.WorldRayOrigin();        
+                    float3 rayDirection = query.WorldRayDirection();  
+                    float hitDistance = query.CommittedRayT();        
+                    float3 worldPosition = rayOrigin + hitDistance * rayDirection;
+
+                    float2 uv0 = materialData.GetUV0(vert.uv[0], vert.uv[1], worldPosition);
+                    
+                    float4 vertexColor = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags);
+                    float4 albedo = materialData.getAlbedo(uv0, vertexColor, flags, true);
+
+                    switch(mode)
+                    {
+                        default:
+                        break;
+
+                        case DisplayMode::RayTracing_Committed_WorldPosition:
+                        color.rgb = /*sRGB2Linear*/(float3(frac(worldPosition)));
+                        break;
+                        
+                        case DisplayMode::RayTracing_Attributes_UV0:
+                        color.rgb = sRGB2Linear(float3(frac(uv0), any(saturate(uv0) != uv0) ? 1 : 0));
+                        break;
+                        
+                        case DisplayMode::RayTracing_Attributes_Albedo:
+                        color.rgb = albedo.rgb;
+                        break;
+                    }
                 }
                 break;
             }
@@ -176,7 +251,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
                 default:
                 break;
 
-                case DisplayMode::RayTracing_Hit:
+                case DisplayMode::RayTracing_Committed_Hit:
                 color.rgb = lerp(color.rgb, float3(0,0,1), 0.5f);
                 break;
             }

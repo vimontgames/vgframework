@@ -112,7 +112,7 @@
                                                 <Property type="Uint32" name="m_uid" flags="" value="2547414883"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Materials/Road/Asphalt.mat"/>
+                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Materials/Asphalt/Asphalt.mat"/>
                                             </Object>
                                         </Property>
                                     </Object>

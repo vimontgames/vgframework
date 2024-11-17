@@ -206,7 +206,7 @@ namespace vg::renderer
             Buffer * vb = device->createBuffer(vbDesc, "IcoSphereVB", vertices.data());
 
             const uint indiceCount = (uint)triangles.size() * 3;
-            BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
+            BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer | BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
             Buffer * ib = device->createBuffer(ibDesc, "IcoSphereIB", triangles.data());
 
             m_icoSphere = new MeshGeometry("IcoSphere", this);
@@ -267,7 +267,7 @@ namespace vg::renderer
             Buffer * vb = device->createBuffer(vbDesc, "HemiSphereVB", hemiVertices.data());
 
             const uint indiceCount = (uint)hemiTriangles.size() * 3;
-            BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
+            BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer | BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
             Buffer * ib = device->createBuffer(ibDesc, "HemiSphereIB", hemiTriangles.data());
 
             m_hemiSphere = new MeshGeometry("HemiSphere", this);
@@ -346,7 +346,7 @@ namespace vg::renderer
         Buffer * vb = device->createBuffer(vbDesc, "CylinderVB", vertices.data());
 
         const uint indiceCount = (uint)triangles.size() * 3;
-        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
+        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer | BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
         Buffer * ib = device->createBuffer(ibDesc, "CylinderIB", triangles.data());
 
         m_cylinder = new MeshGeometry("Cylinder", this);
@@ -411,7 +411,7 @@ namespace vg::renderer
         };
 
         const uint indiceCount = (uint)countof(indices);
-        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
+        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer | BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
         Buffer * ib = device->createBuffer(ibDesc, "BoxIB", indices);
 
         m_box = new MeshGeometry("Box", this);

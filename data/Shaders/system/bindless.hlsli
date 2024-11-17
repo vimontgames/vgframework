@@ -8,10 +8,10 @@
 
 #define PASTE(a,b) a##b
 
-#ifdef VG_DX12
+#ifdef _DX12
 #define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) type name[] : register(PASTE(t, offset), PASTE(space, bind));
 #define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) type name[] : register(PASTE(u, offset), PASTE(space, bind));
-#elif defined(VG_VULKAN)
+#elif defined(_VULKAN)
 
 #define DECL_DESCRIPTOR_RANGE_RO(type, name, bind, offset) type name[] : register(PASTE(t, bind));
 #define DECL_DESCRIPTOR_RANGE_RW(type, name, bind, offset) type name[] : register(PASTE(u, bind));
@@ -48,12 +48,14 @@ DECL_DESCRIPTOR_RANGE_RO(RaytracingAccelerationStructure, g_TLAS, BINDLESS_TLAS_
 
 #define getTexture1D(_handle)           (g_Texture1D[_handle - BINDLESS_TEXTURE_START])
 #define getTexture2D(_handle)           (g_Texture2D[_handle - BINDLESS_TEXTURE_START])
+#define getNonUniformTexture2D(_handle) (g_Texture2D[NonUniformResourceIndex(_handle - BINDLESS_TEXTURE_START)])
 #define getTextureCube(_handle)         (g_TextureCube[_handle - BINDLESS_TEXTURE_START])
 #define getTexture2DMS(_handle)         (g_Texture2DMS[_handle - BINDLESS_TEXTURE_START])
 #define getTexture2D_UInt2(_handle)     (g_Texture2D_UInt2[_handle - BINDLESS_TEXTURE_START])
 #define getTexture3D(_handle)           (g_Texture3D[_handle - BINDLESS_TEXTURE_START])
 
 #define getBuffer(_handle)              (g_Buffer[_handle - BINDLESS_BUFFER_START])
+#define getNonUniformBuffer(_handle)    (g_Buffer[NonUniformResourceIndex(_handle - BINDLESS_BUFFER_START)])
 
 #define getRWTexture1D(_handle)         (g_RWTexture1D[_handle - BINDLESS_RWTEXTURE_START])
 #define getRWTexture2D(_handle)         (g_RWTexture2D[_handle - BINDLESS_RWTEXTURE_START])

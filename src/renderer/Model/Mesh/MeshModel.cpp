@@ -161,7 +161,7 @@ namespace vg::renderer
             ibData = _data.indices.data();
         }
 
-        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, use32BitIndices ? sizeof(u32) : sizeof(u16), indexCount);
+        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer | BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, use32BitIndices ? sizeof(u32) : sizeof(u16), indexCount);
         Buffer * ib = device->createBuffer(ibDesc, "IndexBuffer", ibData);
 
         Buffer * vb = nullptr;
@@ -231,31 +231,8 @@ namespace vg::renderer
         meshModel->setSkeleton(meshSkeleton);
         VG_SAFE_RELEASE(meshSkeleton);
 
-        //const auto matCount = _data.materials.size();
-        //for (auto m = 0; m < matCount; ++m)
-        //{
-        //    MaterialModel * matModel = MaterialModel::createFromImporterData(_data.materials[m]);
-        //    meshModel->m_materials.push_back(matModel);
-        //}
-
         RayTracingManager::get()->addMeshModel(meshModel);
 
         return meshModel;
     }
-
-    //--------------------------------------------------------------------------------------
-    //void MeshModel::setBLAS(BLAS * _blas)
-    //{
-    //    if (m_blas != _blas)
-    //    {
-    //        VG_SAFE_RELEASE(m_blas);
-    //        m_blas = _blas;
-    //    }
-    //}
-    //
-    ////--------------------------------------------------------------------------------------
-    //gfx::BLAS * MeshModel::getBLAS() const 
-    //{ 
-    //    return m_blas; 
-    //}
 }

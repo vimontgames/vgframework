@@ -3,7 +3,7 @@
 
 namespace vg::renderer
 {
-    static const uint s_InstanceDataBufferSize = 16 * 1024;
+    static const uint s_InstanceDataBufferSize = sizeof(GPUInstanceData) * 16384;
 
     //--------------------------------------------------------------------------------------
     InstanceDataUpdatePass::InstanceDataUpdatePass() :
@@ -31,65 +31,83 @@ namespace vg::renderer
         const auto & instances = cullingJobOutput->m_instances;
         const auto * defaultMaterial = renderer->getDefaultMaterial();
         VG_ASSERT(defaultMaterial);
-        const auto defaultMaterialHandle = defaultMaterial->getMaterialDataGPUHandle();
-        VG_ASSERT(defaultMaterialHandle == 0);
+        const auto defaultMaterialIndex = defaultMaterial->getGPUMaterialDataIndex();
+        VG_ASSERT(defaultMaterialIndex == 0);
 
         size_t mapSize = 0;
-
-        mapSize += sizeof(GPUInstanceData);
 
         for (uint i = 0; i < instances.size(); ++i)
         {
             GraphicInstance * instance = instances[i];
-            const uint materialCount = (uint)instance->getMaterials().size();
+            const uint batchCount = instance->GetBatchCount();
 
-            mapSize += sizeof(GPUInstanceData);
+            mapSize += sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData);
 
             // clear atomic flag after processing
             instance->removeAtomicFlags(GraphicInstance::AtomicFlags::Instance);
         }
+
+        VG_ASSERT_IS_ALIGNED(sizeof(GPUInstanceData), GPU_INSTANCE_DATA_ALIGNMENT);
 
         if (mapSize > 0)
         {
             uint offset = 0;
             const u8 * data = (const u8 *)_cmdList->map(m_instanceDataBuffer, mapSize).data;
             {
-                // Whenever an instance data or material data is missing default instance/material data can be used instead
-                {
-                    GPUInstanceData * defaultInstanceData = (GPUInstanceData *)(data + offset);
-                    {
-                        defaultInstanceData->setMaterialCount(1);
-                        defaultInstanceData->setInstanceColor(float4(1,1,1,1));
-                        defaultInstanceData->setMaterialHandle(0, defaultMaterialHandle);
-                    }
-                    offset += sizeof(GPUInstanceData);
-                }
-
                 for (uint i = 0; i < instances.size(); ++i)
                 {
                     GraphicInstance * instance = instances[i];
                     const auto & materials = instance->getMaterials();
-
-                    VG_ASSERT(materials.size() < MAX_MATERIAL_PER_INSTANCE);
-                    const uint materialCount = min((uint)materials.size(), (uint)MAX_MATERIAL_PER_INSTANCE);
+                    const uint batchCount = instance->GetBatchCount();
+                    const uint materialCount = (uint)materials.size();
 
                     instance->setGPUInstanceDataOffset(offset);
 
                     GPUInstanceData * instanceData = (GPUInstanceData *)(data + offset);
                     {
+                        VertexFormat vertexFormat;
+                        if (instance->GetVertexFormat(vertexFormat))
+                            instanceData->setVertexFormat(vertexFormat);
+                        else
+                            instanceData->setVertexFormat((VertexFormat)-1);
+
                         instanceData->setMaterialCount(materialCount);
                         instanceData->setInstanceColor(instance->getColor());
 
-                        for (uint m = 0; m < materialCount; ++m)
+                        BindlessBufferHandle ib;
+                        uint ibOffset, indexSize;
+
+                        if (instance->GetIndexBuffer(ib, ibOffset, indexSize))
+                            instanceData->setIndexBuffer(ib, indexSize, ibOffset);
+                        else
+                            instanceData->setIndexBuffer(-1);
+
+                        BindlessBufferHandle vb;
+                        uint vbOffset;
+                        if (instance->GetVertexBuffer(vb, vbOffset))
+                            instanceData->setVertexBuffer(vb, vbOffset);
+                        else
+                            instanceData->setVertexBuffer(-1);
+
+                        for (uint b = 0; b < batchCount; ++b)
                         {
-                            const MaterialModel * mat = materials[m];
-                            if (nullptr != mat)
-                                instanceData->setMaterialHandle(m, mat->getMaterialDataGPUHandle());
-                            else
-                                instanceData->setMaterialHandle(m, defaultMaterialHandle);
+                            GPUBatchData * batchData = (GPUBatchData *)(data + offset + sizeof(GPUInstanceData) + b * sizeof(GPUBatchData));
+
+                            if (b < materialCount)
+                            {
+                                const MaterialModel * mat = materials[b];
+                                if (nullptr != mat)
+                                {
+                                    batchData->setMaterialIndex(mat->getGPUMaterialDataIndex());
+                                    batchData->setStartIndex(instance->GetBatchOffset(b));
+                                    continue;
+                                }
+                            }
+                            
+                            batchData->setMaterialIndex(defaultMaterialIndex);
                         }
                     }
-                    offset += sizeof(GPUInstanceData);
+                    offset += sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData);
                 }
             }
             _cmdList->unmap(m_instanceDataBuffer);

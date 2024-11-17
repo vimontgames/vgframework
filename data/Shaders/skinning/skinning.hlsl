@@ -25,7 +25,7 @@ void CS_Skinning(int dispatchThreadID : SV_DispatchThreadID)
                             + skinMatricesBuffer.Load<float4x4>(boneMatrixOffset + vertex.skinIndices[2] * sizeof(float4x4)) * vertex.skinWeights[2]
                             + skinMatricesBuffer.Load<float4x4>(boneMatrixOffset + vertex.skinIndices[3] * sizeof(float4x4)) * vertex.skinWeights[3];
 
-        #if VG_VULKAN
+        #if _VULKAN
         boneMatrix = transpose(boneMatrix);
         #endif                    
 

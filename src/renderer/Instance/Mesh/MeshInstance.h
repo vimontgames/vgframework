@@ -76,6 +76,12 @@ namespace vg::renderer
 
         void                            Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
+        bool                            GetIndexBuffer              (gfx::BindlessBufferHandle & _vb, core::uint & _offset, core::uint & _indexSize) const final override;
+        bool                            GetVertexBuffer             (gfx::BindlessBufferHandle & _vb, core::uint & _offset) const final override;
+        bool                            GetVertexFormat             (VertexFormat & _vertexFormat) const final override;
+        core::uint                      GetBatchCount               () const final override;
+        core::uint                      GetBatchOffset              (core::uint _index) const final override;
+
         bool                            setInstanceSkeleton         (const Skeleton * _skeleton);
         VG_INLINE const Skeleton *      getInstanceSkeleton         () const;
         const MeshModel *               getMeshModel                (core::Lod _lod) const;

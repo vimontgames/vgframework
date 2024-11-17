@@ -3,6 +3,7 @@
 
 #include "constants.hlsli"
 #include "displaymodes.hlsli"
+#include "instancedata.hlsli"
 
 enum RootConstantsFlags : uint
 {
@@ -17,7 +18,7 @@ struct RootConstants3D
     uint stream0Offset;         // stream0 offset (might need more than 16 bits because of skinning)
     uint picking;               // PickingID
     uint misc;                  // flags (16) | format (8) | matID (8)
-    uint instanceDataOffset;    // Offset in Buffer RESERVEDSLOT_BUFSRV_INSTANCEDATA with Instance data (slot 0 holds default instance data)
+    uint instanceDataIndex;     // Instance offset in Buffer RESERVEDSLOT_BUFSRV_INSTANCEDATA with Instance data (slot 0 holds default instance data)
 
     #ifdef __cplusplus
     RootConstants3D() :
@@ -26,7 +27,7 @@ struct RootConstants3D
         stream0Offset(0),
         picking(0),
         misc(0),
-        instanceDataOffset(0)
+        instanceDataIndex(0)
     {
 
     }
@@ -44,12 +45,12 @@ struct RootConstants3D
 
     void setGPUInstanceDataOffset(uint _offset)
     {
-        instanceDataOffset = _offset;
+        instanceDataIndex = _offset / GPU_INSTANCE_DATA_ALIGNMENT;
     }
 
     uint getGPUInstanceDataOffset()
     {
-        return instanceDataOffset;
+        return instanceDataIndex * GPU_INSTANCE_DATA_ALIGNMENT;
     }
 
     // vertex buffer
@@ -58,7 +59,7 @@ struct RootConstants3D
     void setVertexBufferHandle(uint _stream0, uint _offset = 0)
     {
         stream0 = packUint16low(stream0, _stream0);
-        stream0Offset = _offset;
+        stream0Offset = _offset / GPU_VERTEXBUFFER_OFFSET_ALIGNMENT;
     }
 
     uint getVertexBufferHandle()
@@ -68,7 +69,7 @@ struct RootConstants3D
     
     uint getVertexBufferOffset()
     {
-        return stream0Offset;
+        return stream0Offset * GPU_VERTEXBUFFER_OFFSET_ALIGNMENT;
     }
     
     // picking
