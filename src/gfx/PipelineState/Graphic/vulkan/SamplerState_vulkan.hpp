@@ -14,8 +14,37 @@ namespace vg::gfx::vulkan
                             samplerCreateInfo.addressModeV = getVulkanAddressMode(samplerState.address);    // VK_SAMPLER_ADDRESS_MODE_REPEAT;
                             samplerCreateInfo.addressModeW = getVulkanAddressMode(samplerState.address);    // VK_SAMPLER_ADDRESS_MODE_REPEAT;
                             samplerCreateInfo.mipLodBias = 0.0;
-                            samplerCreateInfo.anisotropyEnable = VK_FALSE;
-                            samplerCreateInfo.maxAnisotropy = 1;
+
+                            switch (samplerState.anisotropy)
+                            {
+                                default:
+                                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(samplerState.anisotropy);
+
+                                case Anisotropy::Anisotropy_None:
+                                    samplerCreateInfo.anisotropyEnable = VK_FALSE;
+                                    samplerCreateInfo.maxAnisotropy = 1;
+                                    break;
+
+                                case Anisotropy::Anisotropy_2X:
+                                    samplerCreateInfo.anisotropyEnable = VK_TRUE;
+                                    samplerCreateInfo.maxAnisotropy = 2;
+                                    break;
+
+                                case Anisotropy::Anisotropy_4X:
+                                    samplerCreateInfo.anisotropyEnable = VK_TRUE;
+                                    samplerCreateInfo.maxAnisotropy = 4;
+                                    break;
+
+                                case Anisotropy::Anisotropy_8X:
+                                    samplerCreateInfo.anisotropyEnable = VK_TRUE;
+                                    samplerCreateInfo.maxAnisotropy = 8;
+                                    break;
+
+                                case Anisotropy::Anisotropy_16X:
+                                    samplerCreateInfo.anisotropyEnable = VK_TRUE;
+                                    samplerCreateInfo.maxAnisotropy = 16;
+                                    break;
+                            }
 
                             if (samplerState.filter == Filter::DepthCmp)
                             {

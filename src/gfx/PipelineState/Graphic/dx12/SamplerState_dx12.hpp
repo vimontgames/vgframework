@@ -13,8 +13,37 @@ namespace vg::gfx::dx12
         desc.AddressV = getd3d12Adress(samplerState.address);
         desc.AddressW = getd3d12Adress(samplerState.address);
 
-        desc.MaxAnisotropy = 1;
-        desc.MipLODBias = 0;
+        switch (samplerState.anisotropy)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(samplerState.anisotropy);
+
+            case Anisotropy::Anisotropy_None:
+                desc.MaxAnisotropy = 1;
+                break;
+
+            case Anisotropy::Anisotropy_2X:
+                desc.MaxAnisotropy = 2;
+                desc.Filter = D3D12_FILTER_ANISOTROPIC;
+                break;
+
+            case Anisotropy::Anisotropy_4X:
+                desc.MaxAnisotropy = 4;
+                desc.Filter = D3D12_FILTER_ANISOTROPIC;
+                break;
+
+            case Anisotropy::Anisotropy_8X:
+                desc.MaxAnisotropy = 8;
+                desc.Filter = D3D12_FILTER_ANISOTROPIC;
+                break;
+
+            case Anisotropy::Anisotropy_16X:
+                desc.MaxAnisotropy = 16;
+                desc.Filter = D3D12_FILTER_ANISOTROPIC;
+                break;
+        }
+
+        desc.MipLODBias = 0; 
         desc.MinLOD = 0;
         desc.MaxLOD = D3D12_FLOAT32_MAX;        
 

@@ -4,6 +4,24 @@
 #include "system/table.hlsli"
 #include "system/material_consts.hlsli"
 
+#if 1
+#define albedoSampler anisotropicRepeat 
+#else
+#define albedoSampler linearRepeat 
+#endif
+
+#if 0
+#define normalSampler anisotropicRepeat 
+#else
+#define normalSampler linearRepeat 
+#endif
+
+#if 0
+#define pbrSampler anisotropicRepeat 
+#else
+#define pbrSampler linearRepeat 
+#endif
+
 struct GPUMaterialData
 {
     #ifdef __cplusplus
@@ -140,7 +158,7 @@ struct GPUMaterialData
     //--------------------------------------------------------------------------------------
     float4 getAlbedo(float2 _uv, float4 _vertexColor, DisplayFlags _flags, bool _nonUniform = false)
     {                 
-        float4 albedo = sampleTexture2D(getAlbedoTextureHandle(), linearRepeat, _uv, _nonUniform);
+        float4 albedo = sampleTexture2D(getAlbedoTextureHandle(), albedoSampler, _uv, _nonUniform);
 
         #if _TOOLMODE
         if (0 == (DisplayFlags::AlbedoMap & _flags))
@@ -155,7 +173,7 @@ struct GPUMaterialData
     //--------------------------------------------------------------------------------------
     float4 getNormal(float2 _uv, DisplayFlags _flags, bool _nonUniform = false)
     {
-        float4 normal = sampleTexture2D(getNormalTextureHandle(), linearRepeat, _uv, _nonUniform);
+        float4 normal = sampleTexture2D(getNormalTextureHandle(), normalSampler, _uv, _nonUniform);
 
         #if _TOOLMODE
         if (0 == (DisplayFlags::NormalMap & _flags))
@@ -168,7 +186,7 @@ struct GPUMaterialData
     //--------------------------------------------------------------------------------------
     float4 getPBR(float2 _uv, bool _nonUniform = false)
     {
-        float4 pbr = sampleTexture2D(getPBRTextureHandle(), linearRepeat, _uv, _nonUniform);
+        float4 pbr = sampleTexture2D(getPBRTextureHandle(), pbrSampler, _uv, _nonUniform);
 
         pbr.r = lerp(1.0f, pbr.r, getOcclusion());
         pbr.g *= getRoughness();

@@ -1184,7 +1184,7 @@ namespace vg::gfx::vulkan
 
         VkPhysicalDeviceFeatures2 supportedFeatures = {};
 		supportedFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-		supportedFeatures.pNext = &vulkan12SupportedFeatures;
+		supportedFeatures.pNext = &vulkan12SupportedFeatures; 
 
         vkGetPhysicalDeviceFeatures2(m_vkPhysicalDevice, &supportedFeatures);
 
@@ -1257,8 +1257,8 @@ namespace vg::gfx::vulkan
         VkPhysicalDeviceFeatures enabledFeatures = {};
         CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fillModeNonSolid, true);
         CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fragmentStoresAndAtomics, true);
-        //CheckVulkanFeature(supportedFeatures.features, enabledFeatures, textureCompressionETC2, true);
 		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, sampleRateShading, true);
+        CheckVulkanFeature(supportedFeatures.features, enabledFeatures, samplerAnisotropy, true);
 
 		VkDeviceCreateInfo deviceCreateInfo; 
 						   deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;

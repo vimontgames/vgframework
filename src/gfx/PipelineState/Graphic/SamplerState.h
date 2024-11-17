@@ -16,6 +16,14 @@ namespace vg::gfx
         Mirror
     );
 
+    vg_enum_class(Anisotropy, core::u8,
+        Anisotropy_None,
+        Anisotropy_2X,
+        Anisotropy_4X,
+        Anisotropy_8X,
+        Anisotropy_16X
+    );
+
     namespace base
     {
         class SamplerState
@@ -31,9 +39,9 @@ namespace vg::gfx
             {
                 struct
                 {
-                    Filter      filter  : 4;
-                    Address     address : 4;
-
+                    Filter      filter     : 2;
+                    Address     address    : 3;
+                    Anisotropy  anisotropy : 3;
                 };
                 core::u8 bits;
             };
@@ -52,7 +60,7 @@ namespace vg::gfx
     public:
 
         SamplerState(Sampler _sampler);
-        SamplerState(Filter  _filter = Filter::Nearest, Address _address = Address::Repeat);
+        SamplerState(Filter  _filter = Filter::Nearest, Address _address = Address::Repeat, Anisotropy _anisotropy = Anisotropy::Anisotropy_None);
 
         inline bool operator == (const SamplerState & _other) const
         {

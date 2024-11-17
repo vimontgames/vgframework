@@ -26,6 +26,14 @@ namespace vg::gfx
                 *this = SamplerState(Filter::Linear, Address::Repeat);
                 break;
 
+            case Sampler::AnisotropicClamp:
+                *this = SamplerState(Filter::Linear, Address::Clamp, Anisotropy::Anisotropy_16X);
+                break;
+
+            case Sampler::AnisotropicRepeat:
+                *this = SamplerState(Filter::Linear, Address::Repeat, Anisotropy::Anisotropy_16X);
+                break;
+
             case Sampler::ShadowCmp:
                 *this = SamplerState(Filter::DepthCmp, Address::Clamp);
                 break;
@@ -33,9 +41,10 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    SamplerState::SamplerState(Filter  _filter, Address _address)
+    SamplerState::SamplerState(Filter  _filter, Address _address, Anisotropy _anisotropy)
     {
         filter = _filter;
         address = _address;
+        anisotropy = _anisotropy;
     }
 }

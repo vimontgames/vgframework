@@ -8,6 +8,8 @@ namespace vg::gfx
         NearestRepeat,
         LinearClamp,
         LinearRepeat,
+        AnisotropicClamp,
+        AnisotropicRepeat,
         ShadowCmp
     );
 }
