@@ -40,7 +40,7 @@
                         <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/Decal/Sign-Street/Road_Sign01_nm.tga"/>
                     </Object>
                 </Property>
-                <Property type="Float" name="m_normalStrength" flags="HasRange" value="1"/>
+                <Property type="Float" name="m_normalStrength" flags="HasRange" value="2"/>
                 <Property type="Resource" name="m_pbrMap" flags="Resource">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" flags="NotVisible" value=""/>
