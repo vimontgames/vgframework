@@ -101,17 +101,24 @@ namespace vg::renderer
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
 
-        const bool depthWrite = options->isZPrepassEnabled() ? false : true;
-
-        DepthStencilState ds(true, depthWrite, ComparisonFunc::LessEqual);
-
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
         _cmdList->setRasterizerState(rs);
         _cmdList->setBlendState(bs);
-        _cmdList->setDepthStencilState(ds);
 
-        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Opaque);
-        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::AlphaTest);
-        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Decal);
+        // Enable depth writes for opaque if no ZPrepass
+        {
+            const bool depthWrite = options->isZPrepassEnabled() ? false : true;
+            DepthStencilState ds(true, depthWrite, ComparisonFunc::LessEqual);
+            _cmdList->setDepthStencilState(ds);
+            DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Opaque);
+            DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::AlphaTest);
+        }
+
+        // Always disable depth writes when rendering decals
+        {
+            DepthStencilState ds(true, false, ComparisonFunc::LessEqual);
+            _cmdList->setDepthStencilState(ds);
+            DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Decal);
+        }
     }
 }
