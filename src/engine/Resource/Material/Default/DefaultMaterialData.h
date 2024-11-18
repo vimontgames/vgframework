@@ -17,12 +17,15 @@ namespace vg::engine
 
     private:
         UVSource                    m_UVSource          = UVSource::UV0;
+        bool                        m_enableAlbedo      = true;
         TextureResource             m_albedoMap;
         core::float4                m_albedoColor       = core::float4(1, 1, 1, 1);
 
+        bool                        m_enableNormal      = true;
         TextureResource             m_normalMap;
         float                       m_normalStrength    = 1.0f;
 
+        bool                        m_enablePbr         = true;
         TextureResource             m_pbrMap;       
         float                       m_occlusion         = 1.0f;
         float                       m_roughness         = 1.0f;

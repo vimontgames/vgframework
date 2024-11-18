@@ -59,8 +59,11 @@ namespace vg::engine
 
         if (auto * dstProp = dstClassDesc->GetPropertyByName(_prop.GetName()))
         {
-            if (factory->CanCopyProperty(&_prop, dstProp))
-                factory->CopyProperty(&_prop, this, dstProp, material);
+            if (_prop.GetType() != PropertyType::LayoutElement)
+            {
+                if (factory->CanCopyProperty(&_prop, dstProp))
+                    factory->CopyProperty(&_prop, this, dstProp, material);
+            }
         }
 
         super::OnPropertyChanged(_object, _prop, _notifyParent);

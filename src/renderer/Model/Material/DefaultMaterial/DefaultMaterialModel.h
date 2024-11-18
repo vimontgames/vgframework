@@ -29,12 +29,15 @@ namespace vg::renderer
         UVSource                m_UVSource          = UVSource::UV0;
         core::float2            m_tiling            = core::float2(1,1);
 
+        bool                    m_enableAlbedo      = true;
         gfx::Texture *          m_albedoMap         = nullptr;
         core::float4            m_albedoColor       = core::float4(1,1,1,1);
 
+        bool                    m_enableNormal      = true;
         gfx::Texture *          m_normalMap         = nullptr;
         float                   m_normalStrength    = 1.0f;
 
+        bool                    m_enablePbr         = true;
         gfx::Texture *          m_pbrMap            = nullptr;
         float                   m_occlusion         = 1.0f;
         float                   m_roughness         = 1.0f;

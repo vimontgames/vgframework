@@ -10,7 +10,11 @@ namespace vg::gfx
         SrcAlpha,
         OneMinusSrcAlpha,
         SrcColor,
-        OneMinusSrcColor
+        OneMinusSrcColor,
+        DstAlpha,
+        OneMinusDstAlpha,
+        DstColor,
+        OneMinusDstColor
     );
 
     vg_enum_class(BlendOp, core::u32,
@@ -155,10 +159,10 @@ namespace vg::gfx
 
         static bool isBlendEnabled(const RenderTargetBlend & _renderTargetBlend)
         {
-            if (_renderTargetBlend.srcBlend != BlendFactor::Zero && _renderTargetBlend.dstBlend != BlendFactor::Zero)
-                return true;
+            if (_renderTargetBlend.srcBlend == BlendFactor::One && _renderTargetBlend.dstBlend == BlendFactor::Zero)
+                return false;
 
-            return false;
+            return true;
         }
 
         inline bool operator == (const BlendState & _other) const

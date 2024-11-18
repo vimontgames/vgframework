@@ -25,6 +25,18 @@ namespace vg::gfx::dx12
 
             case BlendFactor::OneMinusSrcColor:
                 return D3D12_BLEND_INV_SRC_COLOR;
+
+            case BlendFactor::DstAlpha:
+                return D3D12_BLEND_DEST_ALPHA;
+
+            case BlendFactor::OneMinusDstAlpha:
+                return D3D12_BLEND_INV_DEST_ALPHA;
+
+            case BlendFactor::DstColor:
+                return D3D12_BLEND_DEST_COLOR;
+
+            case BlendFactor::OneMinusDstColor:
+                return D3D12_BLEND_INV_DEST_COLOR;
         }
     }
 

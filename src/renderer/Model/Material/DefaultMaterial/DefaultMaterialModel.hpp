@@ -2,6 +2,7 @@
 #include "Shaders/default/default.hlsl.h"
 #include "Shaders/system/materialdata.hlsli"
 #include "renderer/Model/Material/MaterialManager.h"
+#include "renderer/Options/RendererOptions.h"
 
 namespace vg::renderer
 {
@@ -18,13 +19,16 @@ namespace vg::renderer
         registerPropertyEx(DefaultMaterialModel, m_tiling, "Tiling", PropertyFlags::NotSaved);
         setPropertyRange(DefaultMaterialModel, m_tiling, float2(0, 16));
 
+        registerPropertyEx(DefaultMaterialModel, m_enableAlbedo, "Enable Albedo", PropertyFlags::NotSaved);
         registerPropertyObjectEx(DefaultMaterialModel, m_albedoMap, "Albedo Map", PropertyFlags::NotSaved);
         registerPropertyEx(DefaultMaterialModel, m_albedoColor, "Albedo Color", PropertyFlags::Color);
 
+        registerPropertyEx(DefaultMaterialModel, m_enableNormal, "Enable Normal", PropertyFlags::NotSaved);
         registerPropertyObjectEx(DefaultMaterialModel, m_normalMap, "Normal Map", PropertyFlags::NotSaved);
         registerPropertyEx(DefaultMaterialModel, m_normalStrength, "Normal Strength", PropertyFlags::NotSaved);
         setPropertyRange(DefaultMaterialModel, m_normalStrength, float2(0.0f, 1.0f));
 
+        registerPropertyEx(DefaultMaterialModel, m_enablePbr, "Enable PBR", PropertyFlags::NotSaved);
         registerPropertyObjectEx(DefaultMaterialModel, m_pbrMap, "PBR Map", PropertyFlags::NotSaved);
         registerPropertyEx(DefaultMaterialModel, m_occlusion, "Occlusion", PropertyFlags::NotSaved);
         setPropertyRange(DefaultMaterialModel, m_occlusion, float2(0.0f, 1.0f));
@@ -57,13 +61,16 @@ namespace vg::renderer
         _data->setUVSource(m_UVSource);
         _data->setTiling(m_tiling);
 
-        _data->setAlbedoTextureHandle(m_albedoMap ? m_albedoMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO);
+        //const auto lightingMode = RendererOptions::get()->getLightingMode();
+        const bool enableAlbedo = (/*LightingMode::Deferred == lightingMode && */ SurfaceType::Decal == m_surfaceType) | m_enableAlbedo;
+
+        _data->setAlbedoTextureHandle(enableAlbedo && m_albedoMap ? m_albedoMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO);
         _data->setAlbedoColor(m_albedoColor);
 
-        _data->setNormalTextureHandle(m_normalMap ? m_normalMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
+        _data->setNormalTextureHandle(m_enableNormal && m_normalMap ? m_normalMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
         _data->setNormalStrength(m_normalStrength);
 
-        _data->setPBRTextureHandle(m_pbrMap ? m_pbrMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
+        _data->setPBRTextureHandle(m_enablePbr && m_pbrMap ? m_pbrMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
         _data->setOcclusion(m_occlusion);
         _data->setRoughness(m_roughness);
         _data->setMetalness(m_metalness);
@@ -106,6 +113,14 @@ namespace vg::renderer
                     bs = BlendState(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
                 else
                     bs = BlendState(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
+
+                // TODO: find a blend mode + shader output to modulate luminosity?
+                //if (SurfaceType::Decal == m_surfaceType)
+                //{
+                //    if (!m_enableAlbedo)
+                //        bs = BlendState(BlendFactor::SrcAlpha, BlendFactor::One, BlendOp::Mul);
+                //}
+
                 _cmdList->setBlendState(bs);
 
                 if (_renderContext.m_raytracing)
@@ -135,6 +150,27 @@ namespace vg::renderer
                     bs = BlendState(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
                 else
                     bs = BlendState(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+
+                if (SurfaceType::Decal == m_surfaceType)
+                {
+                    if (!m_enableAlbedo)
+                    {
+                        bs.m_renderTargetBlend[0].colorWrite = (gfx::ColorWrite)0x0;
+                        bs.m_flags = gfx::BlendStateFlags::IndependantBlend;
+                    }
+
+                    //if (!m_enableNormal)
+                    //{
+                    //    bs.m_renderTargetBlend[1].colorWrite = (gfx::ColorWrite)0x0;
+                    //    bs.m_flags = gfx::BlendStateFlags::IndependantBlend;
+                    //}
+                    //
+                    //if (!m_enablePbr)
+                    //{
+                    //    bs.m_renderTargetBlend[2].colorWrite = (gfx::ColorWrite)0x0;
+                    //    bs.m_flags = gfx::BlendStateFlags::IndependantBlend;
+                    //}
+                }
                     
                 _cmdList->setBlendState(bs);
 

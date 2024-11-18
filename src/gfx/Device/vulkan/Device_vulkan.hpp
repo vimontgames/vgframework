@@ -1259,6 +1259,7 @@ namespace vg::gfx::vulkan
         CheckVulkanFeature(supportedFeatures.features, enabledFeatures, fragmentStoresAndAtomics, true);
 		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, sampleRateShading, true);
         CheckVulkanFeature(supportedFeatures.features, enabledFeatures, samplerAnisotropy, true);
+		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, independentBlend, true);
 
 		VkDeviceCreateInfo deviceCreateInfo; 
 						   deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;

@@ -44,11 +44,11 @@ namespace ImGui
     vg::core::string getObjectLabel(const vg::core::string & _label, const vg::core::string & _subLabel, const void * _object);
 
     // This version uses UID to generate a persistent ID
-    vg::core::string getObjectPropertyLabel(const vg::core::IObject * _object, const vg::core::IProperty * _prop);
+    vg::core::string getObjectPropertyPersistentLabel(const vg::core::string & _displayName, const vg::core::IObject * _object, const vg::core::IProperty * _prop);
 
     // These versions save the "opened" state in the imgui.ini file
-    bool PersistentTreeNode(vg::core::IObject * _object, const vg::core::IProperty * _prop, ImGuiTreeNodeFlags _flags = 0);
-    bool PersistentCollapsingHeader(vg::core::IObject * _object, const vg::core::IProperty * _prop);
+    bool PersistentTreeNode(vg::core::IObject * _object, const vg::core::IProperty * _prop, bool * _toggle = nullptr, ImGuiTreeNodeFlags _flags = 0);
+    bool PersistentCollapsingHeader(vg::core::IObject * _object, const vg::core::IProperty * _prop, bool * _toggle = nullptr);
 
     ImVec2 GetWindowContentRegionSize();
 

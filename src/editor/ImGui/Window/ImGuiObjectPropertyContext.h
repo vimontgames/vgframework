@@ -19,6 +19,7 @@ namespace vg::editor
         {
             bool treeNodeIsCollapsingHeader = false;
             bool treeNodeOpen = false;
+            bool treeNodeContentDisabled = false;
         };
 
         float                           m_availableWidth = 0.0f;

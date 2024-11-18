@@ -84,6 +84,7 @@ namespace vg::editor
 
             if (open)
             {
+                ImGui::Indent();
                 for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
                 {
                     const IProperty * prop = classDesc->GetPropertyByIndex(i);
@@ -100,6 +101,7 @@ namespace vg::editor
                             changed |= ImGuiWindow::displayProperty(go, prop);
                     }
                 }
+                ImGui::Unindent();
             }
 
             for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)

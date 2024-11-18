@@ -15,12 +15,13 @@ namespace vg::editor
         //--------------------------------------------------------------------------------------
         bool displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName, const PropertyContext * _propContext)
         {
+            ImGuiStyle & style = ImGui::GetStyle();
             bool changed = false;
 
             const auto * factory = Kernel::getFactory();
             const auto * classDesc = factory->GetClassDescriptor(_object->GetClassName());
             auto list = dynamic_cast<engine::IResourceList *>(_object);
-            auto availableWidth = ImGui::GetContentRegionAvail().x;
+            auto availableWidth = ImGui::GetContentRegionAvail().x + ImGui::GetCursorPosX() - style.FramePadding.x *2 +1;
 
             uint resourceCount = 0;
             for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
@@ -34,14 +35,12 @@ namespace vg::editor
 
             string label = fmt::sprintf("%ss (%u)", _label.c_str(), resourceCount);
 
-            ImGuiStyle & style = ImGui::GetStyle();
-
-            ImGui::PushStyleColor(ImGuiCol_Header, style.Colors[ImGuiCol_WindowBg]);
-            ImGui::PushStyleColor(ImGuiCol_HeaderActive, style.Colors[ImGuiCol_ButtonActive]);
-            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, style.Colors[ImGuiCol_ButtonHovered]);
-            ImGui::PushStyleColor(ImGuiCol_Button, style.Colors[ImGuiCol_Header]);
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, style.Colors[ImGuiCol_HeaderActive]);
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, style.Colors[ImGuiCol_HeaderHovered]);
+            //ImGui::PushStyleColor(ImGuiCol_Header, style.Colors[ImGuiCol_WindowBg]);
+            //ImGui::PushStyleColor(ImGuiCol_HeaderActive, style.Colors[ImGuiCol_ButtonActive]);
+            //ImGui::PushStyleColor(ImGuiCol_HeaderHovered, style.Colors[ImGuiCol_ButtonHovered]);
+            //ImGui::PushStyleColor(ImGuiCol_Button, style.Colors[ImGuiCol_Header]);
+            //ImGui::PushStyleColor(ImGuiCol_ButtonActive, style.Colors[ImGuiCol_HeaderActive]);
+            //ImGui::PushStyleColor(ImGuiCol_ButtonHovered, style.Colors[ImGuiCol_HeaderHovered]);
 
             ImGui::PushID("CollapsingHeader");
             bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
@@ -54,6 +53,9 @@ namespace vg::editor
 
             ImGui::CollapsingHeaderLabel(collapsingHeaderPos, label.c_str(), true);            
             
+            if (open)
+                ImGui::Indent();
+
             bool remove = false;
 
             ImGui::BeginDisabled(readOnly);
@@ -71,11 +73,11 @@ namespace vg::editor
             if (readOnly)
                 ImGui::PopDisabledStyle();
 
-            ImGui::PopStyleColor(6);
+            //ImGui::PopStyleColor(6);
 
             if (open)
             {
-                ImGui::Indent();
+                //ImGui::Indent();
 
                 for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
                 {

@@ -1250,43 +1250,70 @@ namespace vg::editor
 
                         case PropertyLayoutElement::GroupBegin:
                         {
-                            if (asBool(PropertyFlags::Optional & flags))
+                            //if (asBool(PropertyFlags::Optional & flags) && !asBool(PropertyFlags::NotVisible & propContext.m_optionalProp->GetFlags()))
+                            //{
+                            //    // optional group
+                            //    VG_ASSERT(_prop->GetOffset() != 0);
+                            //    ImGui::BeginDisabled(!*_prop->GetPropertyBool(_object));
+                            //}
+                            //else
                             {
-                                // optional group
-                                VG_ASSERT(_prop->GetOffset() != 0);
-                                ImGui::BeginDisabled(!*_prop->GetPropertyBool(_object));
-                            }
-                            else
-                            {
-                                if (_objectContext.m_treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->GetParent()))
+                                //if (_objectContext.m_treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->GetParent()))
+                                //{
+                                //    if (_objectContext.m_treeNodes.size() == 0 || _objectContext.m_treeNodes.back().treeNodeOpen)
+                                //    {
+                                //        auto & newInfo = _objectContext.m_treeNodes.emplace_back();
+                                //
+                                //        newInfo.treeNodeOpen = ImGui::PersistentTreeNode(_object, _prop);
+                                //        newInfo.treeNodeIsCollapsingHeader = false;
+                                //    }
+                                //}
+                                //else
                                 {
                                     if (_objectContext.m_treeNodes.size() == 0 || _objectContext.m_treeNodes.back().treeNodeOpen)
                                     {
                                         auto & newInfo = _objectContext.m_treeNodes.emplace_back();
 
-                                        newInfo.treeNodeOpen = ImGui::PersistentTreeNode(_object, _prop);
-                                        newInfo.treeNodeIsCollapsingHeader = false;
+                                        bool * toggle = nullptr;
+                                        bool previous;
+                                        if (asBool(PropertyFlags::Optional & flags))
+                                        {
+                                            toggle = _prop->GetPropertyBool(_object);
+                                            previous = *toggle;
+                                        }
+
+                                        newInfo.treeNodeOpen = ImGui::PersistentCollapsingHeader(_object, _prop, toggle);
+                                        newInfo.treeNodeIsCollapsingHeader = true;
+
+                                        if (toggle)
+                                        {
+                                            if (*toggle != previous)
+                                                optionalChanged = true;
+
+                                            if (!*toggle)
+                                            {
+                                                ImGui::PushDisabledStyle(true);
+                                                newInfo.treeNodeContentDisabled = true;
+                                            }
+                                        }
                                     }
                                 }
-                                else
-                                {
-                                    auto & newInfo = _objectContext.m_treeNodes.emplace_back();
 
-                                    newInfo.treeNodeOpen = ImGui::PersistentCollapsingHeader(_object, _prop);
-                                    newInfo.treeNodeIsCollapsingHeader = true;
-                                }
+                                ImGui::Indent();
                             }
                         }
                         break;
 
                         case PropertyLayoutElement::GroupEnd:
                         {
-                            if (asBool(PropertyFlags::Optional & flags))
+                            //if (asBool(PropertyFlags::Optional & flags) && !asBool(PropertyFlags::NotVisible & propContext.m_optionalProp->GetFlags()))
+                            //{
+                            //    ImGui::EndDisabled();
+                            //}
+                            //else
                             {
-                                ImGui::EndDisabled();
-                            }
-                            else
-                            {
+                                ImGui::Unindent();
+
                                 if (_objectContext.m_treeNodes.size() > 0)
                                 {
                                     auto & nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
@@ -1295,7 +1322,12 @@ namespace vg::editor
                                     {
                                         if (!nodeInfo.treeNodeIsCollapsingHeader)
                                             ImGui::TreePop();
+
+                                        ImGui::Spacing();
                                     }
+
+                                    if (nodeInfo.treeNodeContentDisabled)
+                                        ImGui::PopDisabledStyle();                           
 
                                     _objectContext.m_treeNodes.erase(_objectContext.m_treeNodes.begin() + _objectContext.m_treeNodes.size() - 1);
                                 }
@@ -1829,7 +1861,11 @@ namespace vg::editor
                                 dragAndDropInterline(pComponent, style::draganddrop::AfterNode);                        
 
                                 if (open)
+                                {
+                                    ImGui::Indent();
                                     displayArrayObject(pComponent, i, nullptr);
+                                    ImGui::Unindent();
+                                }
                             }
                         }
                         else

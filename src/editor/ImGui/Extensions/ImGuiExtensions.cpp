@@ -15,22 +15,38 @@ using namespace vg::renderer;
 namespace ImGui
 {
     //--------------------------------------------------------------------------------------
-    bool PersistentTreeNode(vg::core::IObject * _object, const vg::core::IProperty * _prop, ImGuiTreeNodeFlags _flags)
+    bool PersistentTreeNode(vg::core::IObject * _object, const vg::core::IProperty * _prop, bool * _toggle, ImGuiTreeNodeFlags _flags)
     {
-        const auto label = ImGui::getObjectPropertyLabel(_object, _prop);
+        const auto label = ImGui::getObjectPropertyPersistentLabel("",_object, _prop);
 
         auto * imGuiAdapter = Editor::get()->getRenderer()->GetImGuiAdapter();
         auto & customData = imGuiAdapter->GetCustomData(label);
 
-        customData.isOpen = ImGui::TreeNodeEx(label.c_str(), _flags | (customData.isOpen ? ImGuiTreeNodeFlags_DefaultOpen : 0));
-        
+        ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
+        customData.isOpen = ImGui::TreeNodeEx(label.c_str(), _flags | ImGuiTreeNodeFlags_AllowItemOverlap | (customData.isOpen ? ImGuiTreeNodeFlags_DefaultOpen : 0));
+
+        bool enabled = true;
+
+        if (_toggle)
+            enabled = *_toggle;
+
+        ImGui::CollapsingHeaderLabel(collapsingHeaderPos, _prop->GetDisplayName(), enabled);
+
+        if (_toggle)
+        {
+            ImGui::PushID((int)((uint_ptr)_object+(uint_ptr)_prop));
+            if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, enabled, _object, style::icon::Checked, style::icon::Unchecked, ""))
+                *_toggle = !enabled;
+            ImGui::PopID();
+        }
+
         return customData.isOpen;
     }
 
     //--------------------------------------------------------------------------------------
-    bool PersistentCollapsingHeader(vg::core::IObject * _object, const vg::core::IProperty * _prop)
+    bool PersistentCollapsingHeader(vg::core::IObject * _object, const vg::core::IProperty * _prop, bool * _toggle)
     {
-        return PersistentTreeNode(_object, _prop, ImGuiTreeNodeFlags_CollapsingHeader);
+        return PersistentTreeNode(_object, _prop, _toggle, ImGuiTreeNodeFlags_CollapsingHeader);
     }
 
     //--------------------------------------------------------------------------------------
@@ -344,9 +360,9 @@ namespace ImGui
     }    
 
     //--------------------------------------------------------------------------------------
-    vg::core::string getObjectPropertyLabel(const vg::core::IObject * _object, const vg::core::IProperty * _prop)
+    vg::core::string getObjectPropertyPersistentLabel(const vg::core::string & _displayName, const vg::core::IObject * _object, const vg::core::IProperty * _prop)
     {
-        return fmt::sprintf("%s###%s_%u", _prop->GetDisplayName(), _prop->GetName(), (uint_ptr)_object->GetUID());
+        return fmt::sprintf("%s###%s_%u", _displayName, _prop->GetName(), (uint_ptr)_object->GetUID());
     }
 
     //--------------------------------------------------------------------------------------
@@ -364,7 +380,7 @@ namespace ImGui
     void CollapsingHeaderLabel(const ImVec2 & _headerPos, const string & _label, bool _enabled)
     {
         ImGui::SameLine();
-        ImGui::SetCursorPos(ImVec2(ImGui::GetStyle().FramePadding.x * 2 + style::button::SizeSmall.x, _headerPos.y));
+        ImGui::SetCursorPos(ImVec2(GetCurrentWindow()->DC.Indent.x + ImGui::GetStyle().FramePadding.x * 2 + (style::button::SizeSmall.x ), _headerPos.y));
         ImGui::BeginDisabled(!_enabled);
         ImGui::Text(_label.c_str());
         ImGui::EndDisabled();
@@ -383,7 +399,7 @@ namespace ImGui
 
         // begin of line
         auto scrollY = ImGui::GetScrollY();
-        auto pos = ImVec2(ImGui::GetStyle().FramePadding.x, _headerPos.y);
+        auto pos = ImVec2(_headerPos.x, _headerPos.y);
         ImGui::SetCursorPos(pos);
 
         ImGuiStyle & style = ImGui::GetStyle();
@@ -391,7 +407,7 @@ namespace ImGui
 
         // Draw the rectangle
         ImVec2 windowPos = ImGui::GetWindowPos();
-        ImGui::GetWindowDrawList()->AddRectFilled(windowPos + ImVec2(6, 4 + pos.y - scrollY), windowPos + collapsedButtonSize + ImVec2(-3, -5 + pos.y - scrollY), ImGui::GetColorU32(bgColor), 0.0f, ImDrawListFlags_None); // 
+        ImGui::GetWindowDrawList()->AddRectFilled(windowPos + ImVec2(5 + _headerPos.x, 6 + pos.y - scrollY), windowPos + collapsedButtonSize + ImVec2(-7 + _headerPos.x, -6 + pos.y - scrollY), ImGui::GetColorU32(bgColor), 0.0f, ImDrawListFlags_None); // 
 
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(bgColor.x, bgColor.y, bgColor.z, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0);
@@ -424,7 +440,7 @@ namespace ImGui
 
         ImGui::SameLine();
 
-        ImGui::SetCursorPos(ImVec2(_availableWidth - (_index+1)*style::button::SizeSmall.x + style.FramePadding.x + 4, _headerPos.y));
+        ImGui::SetCursorPos(ImVec2(_availableWidth - (_index+1)*(style::button::SizeSmall.x- style.FramePadding.x) + 4, _headerPos.y));
 
         auto bgColor = style.Colors[ImGuiCol_Header];
 

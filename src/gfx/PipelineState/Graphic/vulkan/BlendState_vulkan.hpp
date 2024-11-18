@@ -25,6 +25,18 @@ namespace vg::gfx::vulkan
 
             case BlendFactor::OneMinusSrcColor:
                 return VK_BLEND_FACTOR_ONE_MINUS_SRC_COLOR;
+
+            case BlendFactor::DstAlpha:
+                return VK_BLEND_FACTOR_DST_ALPHA;
+
+            case BlendFactor::OneMinusDstAlpha:
+                return VK_BLEND_FACTOR_ONE_MINUS_DST_ALPHA;
+
+            case BlendFactor::DstColor:
+                return VK_BLEND_FACTOR_DST_COLOR;
+
+            case BlendFactor::OneMinusDstColor:
+                return VK_BLEND_FACTOR_ONE_MINUS_DST_COLOR;
         }
     }
 
