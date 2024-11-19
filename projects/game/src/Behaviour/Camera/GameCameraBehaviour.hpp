@@ -48,14 +48,6 @@ void GameCameraBehaviour::setTarget(const IGameObject * _target)
 void GameCameraBehaviour::OnEnable()
 {
     super::OnEnable();
-    //m_offset = getGameObject()->getGlobalMatrix()[3].xyz;
-    //
-    //auto * target = m_target.get<IGameObject>();
-    //if (target)
-    //{
-    //    if (auto * player = target->GetComponentInChildrenT<CharacterBehaviour>())
-    //        m_offset -= player->getGameObject()->GetGlobalMatrix()[3].xyz;
-    //}
 }
 
 //--------------------------------------------------------------------------------------

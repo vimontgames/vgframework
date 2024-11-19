@@ -509,6 +509,9 @@
     <ClInclude Include="Model\Material\MaterialManager.h">
       <Filter>Model\Material</Filter>
     </ClInclude>
+    <ClInclude Include="PBR\PhysicalCameraSettings.h">
+      <Filter>PBR</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

@@ -45,8 +45,9 @@ namespace vg::renderer
                                             View                        (const gfx::CreateViewParams & _params);
                                             ~View                       ();
 
-        void                                SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale) override;
-        void                                SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) override;
+        void                                SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale) final override;
+        void                                SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) final override;
+        void                                SetupPhysicalCamera         (const core::float4x4 & _cameraWorldMatrix, float _focalLength, core::float2 _sensorSize, gfx::GateFitMode _gateFitMode, float _near, float _far, core::float2 _viewportOffset, core::float2 _viewportScale) final override;
 
         void                                SetFlags                    (gfx::ViewFlags _flagsToSet, gfx::ViewFlags _flagsToRemove = (gfx::ViewFlags)0) override;
         gfx::ViewFlags                      GetFlags                    () const override;

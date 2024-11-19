@@ -31,7 +31,7 @@
                         <Property type="String" name="m_name" value="Cameras"/>
                         <Property type="Uint32" name="m_uid" flags="" value="114612410"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -67,7 +67,7 @@
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                        <Property type="ObjectHandle" name="m_target" value="3910194299"/>
+                                        <Property type="ObjectHandle" name="m_target" value="0"/>
                                         <Property type="Float3" name="m_offset" x="0" y="-11" z="8.5"/>
                                         <Property type="Float" name="m_delay" value="0.1"/>
                                     </Object>
@@ -77,14 +77,18 @@
                                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                        <Property type="EnumU8" name="m_target" flags="ReadOnly" value="Game"/>
+                                        <Property type="EnumU8" name="m_target" flags="" value="Game"/>
                                         <Property type="Uint8" name="m_viewportIndex" flags="" value="0"/>
                                         <Property type="Uint8" name="m_viewIndex" flags="HasRange" value="0"/>
-                                        <Property type="Float" name="m_fovY" flags="HasRange" value="0.69999999"/>
-                                        <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
-                                        <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
                                         <Property type="Float2" name="m_viewportOffset" flags="HasRange" x="0" y="0"/>
                                         <Property type="Float2" name="m_viewportScale" flags="HasRange" x="1" y="1"/>
+                                        <Property type="Float" name="m_physicalCameraSettings.m_focalLength" flags="HasRange" value="35"/>
+                                        <Property type="EnumU8" name="m_physicalCameraSettings.m_sensor" value="FullFrame"/>
+                                        <Property type="Bool" name="m_physicalCameraSettings.m_useCustomSensorSize" flags="NotVisible" value="false"/>
+                                        <Property type="Float2" name="m_physicalCameraSettings.m_customSensorSize" flags="" x="36" y="24"/>
+                                        <Property type="EnumU8" name="m_physicalCameraSettings.m_gateFitMode" value="Vertical"/>
+                                        <Property type="Float" name="m_physicalCameraSettings.m_near" flags="HasRange" value="0.1"/>
+                                        <Property type="Float" name="m_physicalCameraSettings.m_far" flags="HasRange" value="1000"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -96,7 +100,7 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.99999994" Iy="-0.00040713145" Iz="-1.9879371e-07" Iw="0" Jx="0.00024372329" Jy="0.59824407" Jz="0.80131358" Jw="0" Kx="-0.00032612117" Ky="-0.80131358" Kz="0.59824407" Kw="0" Tx="-11" Ty="-9" Tz="14.5" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.99999994" Iy="-0.00040713145" Iz="-1.9879371e-07" Iw="0" Jx="0.00024372329" Jy="0.59824407" Jz="0.80131358" Jw="0" Kx="-0.00032612117" Ky="-0.80131358" Kz="0.59824407" Kw="0" Tx="-11" Ty="-9" Tz="9" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="GameCameraBehaviour">
@@ -105,7 +109,7 @@
                                         <Property type="Uint32" name="m_originalUID" flags="" value="1740531556"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                        <Property type="ObjectHandle" name="m_target" value="481891842"/>
+                                        <Property type="ObjectHandle" name="m_target" value="0"/>
                                         <Property type="Float3" name="m_offset" x="0" y="-11" z="8.5"/>
                                         <Property type="Float" name="m_delay" value="0.1"/>
                                     </Object>
@@ -115,14 +119,18 @@
                                         <Property type="Uint32" name="m_originalUID" flags="" value="1553686324"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                        <Property type="EnumU8" name="m_target" flags="ReadOnly" value="Game"/>
+                                        <Property type="EnumU8" name="m_target" flags="" value="Game"/>
                                         <Property type="Uint8" name="m_viewportIndex" flags="" value="0"/>
                                         <Property type="Uint8" name="m_viewIndex" flags="HasRange" value="1"/>
-                                        <Property type="Float" name="m_fovY" flags="HasRange" value="0.69999999"/>
-                                        <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
-                                        <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
                                         <Property type="Float2" name="m_viewportOffset" flags="HasRange" x="0.5" y="0"/>
                                         <Property type="Float2" name="m_viewportScale" flags="HasRange" x="0.5" y="1"/>
+                                        <Property type="Float" name="m_physicalCameraSettings.m_focalLength" flags="HasRange" value="35"/>
+                                        <Property type="EnumU8" name="m_physicalCameraSettings.m_sensor" value="FullFrame"/>
+                                        <Property type="Bool" name="m_physicalCameraSettings.m_useCustomSensorSize" flags="NotVisible" value="false"/>
+                                        <Property type="Float2" name="m_physicalCameraSettings.m_customSensorSize" flags="" x="36" y="24"/>
+                                        <Property type="EnumU8" name="m_physicalCameraSettings.m_gateFitMode" value="Vertical"/>
+                                        <Property type="Float" name="m_physicalCameraSettings.m_near" flags="HasRange" value="0.1"/>
+                                        <Property type="Float" name="m_physicalCameraSettings.m_far" flags="HasRange" value="1000"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -134,7 +142,7 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.99999994" Iy="-0.00040713145" Iz="-1.9879371e-07" Iw="0" Jx="0.00024372329" Jy="0.59824407" Jz="0.80131358" Jw="0" Kx="-0.00032612117" Ky="-0.80131358" Kz="0.59824407" Kw="0" Tx="-11" Ty="-7" Tz="14.5" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.99999994" Iy="-0.00040713145" Iz="-1.9879371e-07" Iw="0" Jx="0.00024372329" Jy="0.59824407" Jz="0.80131358" Jw="0" Kx="-0.00032612117" Ky="-0.80131358" Kz="0.59824407" Kw="0" Tx="-11" Ty="-7" Tz="9" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="GameCameraBehaviour">
@@ -143,7 +151,7 @@
                                         <Property type="Uint32" name="m_originalUID" flags="" value="1740531556"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                        <Property type="ObjectHandle" name="m_target" value="3145165694"/>
+                                        <Property type="ObjectHandle" name="m_target" value="0"/>
                                         <Property type="Float3" name="m_offset" x="0" y="-11" z="8.5"/>
                                         <Property type="Float" name="m_delay" value="0.1"/>
                                     </Object>
@@ -153,14 +161,18 @@
                                         <Property type="Uint32" name="m_originalUID" flags="" value="1553686324"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                        <Property type="EnumU8" name="m_target" flags="ReadOnly" value="Game"/>
+                                        <Property type="EnumU8" name="m_target" flags="" value="Game"/>
                                         <Property type="Uint8" name="m_viewportIndex" flags="" value="0"/>
                                         <Property type="Uint8" name="m_viewIndex" flags="HasRange" value="2"/>
-                                        <Property type="Float" name="m_fovY" flags="HasRange" value="0.69999999"/>
-                                        <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
-                                        <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
                                         <Property type="Float2" name="m_viewportOffset" flags="HasRange" x="0" y="0.5"/>
                                         <Property type="Float2" name="m_viewportScale" flags="HasRange" x="0.5" y="0.5"/>
+                                        <Property type="Float" name="m_physicalCameraSettings.m_focalLength" flags="HasRange" value="35"/>
+                                        <Property type="EnumU8" name="m_physicalCameraSettings.m_sensor" value="FullFrame"/>
+                                        <Property type="Bool" name="m_physicalCameraSettings.m_useCustomSensorSize" flags="NotVisible" value="false"/>
+                                        <Property type="Float2" name="m_physicalCameraSettings.m_customSensorSize" flags="" x="36" y="24"/>
+                                        <Property type="EnumU8" name="m_physicalCameraSettings.m_gateFitMode" value="Vertical"/>
+                                        <Property type="Float" name="m_physicalCameraSettings.m_near" flags="HasRange" value="0.1"/>
+                                        <Property type="Float" name="m_physicalCameraSettings.m_far" flags="HasRange" value="1000"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -172,7 +184,7 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value=""/>
                                 <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.99999994" Iy="-0.00040713151" Iz="4.467438e-08" Iw="0" Jx="0.00024372329" Jy="0.59872311" Jz="0.80095565" Jw="0" Kx="-0.00032612117" Ky="-0.80095565" Kz="0.59872311" Kw="0" Tx="-11" Ty="-7" Tz="14.5" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.99999994" Iy="-0.00040713151" Iz="4.467438e-08" Iw="0" Jx="0.00024372329" Jy="0.59872311" Jz="0.80095565" Jw="0" Kx="-0.00032612117" Ky="-0.80095565" Kz="0.59872311" Kw="0" Tx="-11" Ty="-5" Tz="9" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="GameCameraBehaviour">
@@ -181,7 +193,7 @@
                                         <Property type="Uint32" name="m_originalUID" flags="" value="1740531556"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                        <Property type="ObjectHandle" name="m_target" value="3145165694"/>
+                                        <Property type="ObjectHandle" name="m_target" value="0"/>
                                         <Property type="Float3" name="m_offset" x="0" y="-11" z="8.5"/>
                                         <Property type="Float" name="m_delay" value="0.1"/>
                                     </Object>
@@ -191,14 +203,18 @@
                                         <Property type="Uint32" name="m_originalUID" flags="" value="1553686324"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                        <Property type="EnumU8" name="m_target" flags="ReadOnly" value="Game"/>
+                                        <Property type="EnumU8" name="m_target" flags="" value="Game"/>
                                         <Property type="Uint8" name="m_viewportIndex" flags="" value="0"/>
                                         <Property type="Uint8" name="m_viewIndex" flags="HasRange" value="3"/>
-                                        <Property type="Float" name="m_fovY" flags="HasRange" value="0.69999999"/>
-                                        <Property type="Float" name="m_near" flags="HasRange" value="0.1"/>
-                                        <Property type="Float" name="m_far" flags="HasRange" value="1024"/>
                                         <Property type="Float2" name="m_viewportOffset" flags="HasRange" x="0" y="0.5"/>
                                         <Property type="Float2" name="m_viewportScale" flags="HasRange" x="0.5" y="0.5"/>
+                                        <Property type="Float" name="m_physicalCameraSettings.m_focalLength" flags="HasRange" value="35"/>
+                                        <Property type="EnumU8" name="m_physicalCameraSettings.m_sensor" value="FullFrame"/>
+                                        <Property type="Bool" name="m_physicalCameraSettings.m_useCustomSensorSize" flags="NotVisible" value="false"/>
+                                        <Property type="Float2" name="m_physicalCameraSettings.m_customSensorSize" flags="" x="36" y="24"/>
+                                        <Property type="EnumU8" name="m_physicalCameraSettings.m_gateFitMode" value="Vertical"/>
+                                        <Property type="Float" name="m_physicalCameraSettings.m_near" flags="HasRange" value="0.1"/>
+                                        <Property type="Float" name="m_physicalCameraSettings.m_far" flags="HasRange" value="1000"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
@@ -650,7 +666,7 @@
                                                 <Property type="Uint32" name="m_uid" flags="" value="4007917555"/>
                                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                                <Property type="Bool" name="m_shadow" value="true"/>
+                                                <Property type="Bool" name="m_shadow" flags="NotVisible" value="true"/>
                                                 <Property type="Float2" name="m_shadowRange" flags="HasRange" x="0.1" y="100"/>
                                                 <Property type="Float" name="m_shadowBias" flags="HasRange" value="0.1"/>
                                                 <Property type="Uint2" name="m_shadowSize" x="50" y="50"/>
@@ -670,7 +686,7 @@
                         <Property type="String" name="m_name" value="Level"/>
                         <Property type="Uint32" name="m_uid" flags="" value="1093025436"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="-4.3711388e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-4.3711388e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999994" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -3656,7 +3672,7 @@
                         <Property type="String" name="m_name" value="SideWalkLedge"/>
                         <Property type="Uint32" name="m_uid" flags="" value="646510791"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened|Prefab"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.0005979538" Iy="-0.99999982" Iz="0" Iw="0" Jx="0.99999982" Jy="0.0005979538" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="3.5" Ty="10.604424" Tz="0.14261842" Tw="1"/>
@@ -3666,7 +3682,7 @@
                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                             <Object class="PrefabResource">
                                 <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="1381216094"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/SideWalkLedge.prefab"/>
@@ -3678,7 +3694,7 @@
                         <Property type="String" name="m_name" value="SideWalkLedge_01"/>
                         <Property type="Uint32" name="m_uid" flags="" value="582573253"/>
                         <Property type="Uint32" name="m_originalUID" flags="" value="646510791"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened|Prefab"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Prefab"/>
                         <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
                         <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" flags="Flatten" Ix="0.0005979538" Iy="-0.99999982" Iz="0" Iw="0" Jx="0.99999982" Jy="0.0005979538" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0.5" Ty="10.604424" Tz="0.14261842" Tw="1"/>
@@ -3688,7 +3704,7 @@
                         <Property type="Resource" name="m_prefabResource" flags="Resource">
                             <Object class="PrefabResource">
                                 <Property type="String" name="m_name" flags="NotVisible" value="SideWalkLedge_01"/>
-                                <Property type="Uint32" name="m_uid" flags="" value="0"/>
+                                <Property type="Uint32" name="m_uid" flags="" value="1463279328"/>
                                 <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
                                 <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Prefabs/SideWalkLedge.prefab"/>

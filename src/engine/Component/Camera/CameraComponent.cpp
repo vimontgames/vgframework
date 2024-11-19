@@ -23,36 +23,54 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumEx(CameraComponent, gfx::ViewportTarget, m_target, "Target", PropertyFlags::ReadOnly);
-        setPropertyDescription(CameraComponent, m_target, "Camera target");
+        registerPropertyGroupBegin(CameraComponent, "Target");
+        {
+            registerPropertyEnumEx(CameraComponent, gfx::ViewportTarget, m_target, "Target", PropertyFlags::ReadOnly | PropertyFlags::NotVisible);
+            setPropertyDescription(CameraComponent, m_target, "Camera target");
 
-        registerPropertyEx(CameraComponent, m_viewportIndex, "Viewport", PropertyFlags::ReadOnly);
-        setPropertyRange(CameraComponent, m_viewportIndex, float2(0, 15));
-        setPropertyDescription(CameraComponent, m_viewportIndex, "Viewport index");
+            registerPropertyEx(CameraComponent, m_viewportIndex, "Viewport", PropertyFlags::ReadOnly | PropertyFlags::NotVisible);
+            setPropertyRange(CameraComponent, m_viewportIndex, float2(0, 15));
+            setPropertyDescription(CameraComponent, m_viewportIndex, "Viewport index");
 
-        registerProperty(CameraComponent, m_viewIndex, "View");
-        setPropertyRange(CameraComponent, m_viewIndex, float2(0, 15));
-        setPropertyDescription(CameraComponent, m_viewIndex, "View index in current viewport");
+            registerProperty(CameraComponent, m_viewIndex, "Index");
+            setPropertyRange(CameraComponent, m_viewIndex, float2(0, 15));
+            setPropertyDescription(CameraComponent, m_viewIndex, "View index in current viewport");
 
-        registerProperty(CameraComponent, m_fovY, "FOV");
-        setPropertyRange(CameraComponent, m_fovY, float2(PI / 8.0f, PI / 2.0f));
-        setPropertyDescription(CameraComponent, m_fovY, "Horizontal Field-Of-View");
+            registerProperty(CameraComponent, m_viewportOffset, "Offset");
+            setPropertyRange(CameraComponent, m_viewportOffset, float2(0.0f, 1.0f));
+            setPropertyDescription(CameraComponent, m_viewportOffset, "Viewport offset");
 
-        registerProperty(CameraComponent, m_near, "Near");
-        setPropertyRange(CameraComponent, m_near, float2(0.0f, 10.0f));
-        setPropertyDescription(CameraComponent, m_near, "Camera near distance");
+            registerProperty(CameraComponent, m_viewportScale, "Scale");
+            setPropertyRange(CameraComponent, m_viewportScale, float2(0.0f, 1.0f));
+            setPropertyDescription(CameraComponent, m_viewportScale, "Viewport scale");
+        };
+        registerPropertyGroupEnd(CameraComponent);
 
-        registerProperty(CameraComponent, m_far, "Far");
-        setPropertyRange(CameraComponent, m_far, float2(0.0f, 10000.0f));
-        setPropertyDescription(CameraComponent, m_far, "Camera far distance");
+        registerPropertyGroupBegin(CameraComponent, "Physical camera");
+        {
+            registerProperty(CameraComponent, m_physicalCameraSettings.m_focalLength, "Focal length");
+            setPropertyRange(CameraComponent, m_physicalCameraSettings.m_focalLength, float2(20.0f, 200.0f));
+            setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_focalLength, "Focal length in millimeters");
 
-        registerProperty(CameraComponent, m_viewportOffset, "Offset");
-        setPropertyRange(CameraComponent, m_viewportOffset, float2(0.0f, 1.0f));
-        setPropertyDescription(CameraComponent, m_viewportOffset, "Viewport offset");
+            registerPropertyEnum(CameraComponent, renderer::Sensor, m_physicalCameraSettings.m_sensor, "Sensor");
+            setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_sensor, "Physical dimensions of the sensor, determining field of view, aspect ratio, and depth of field");
 
-        registerProperty(CameraComponent, m_viewportScale, "Scale");
-        setPropertyRange(CameraComponent, m_viewportScale, float2(0.0f, 1.0f));
-        setPropertyDescription(CameraComponent, m_viewportScale, "Viewport scale");
+            registerOptionalProperty(CameraComponent, m_physicalCameraSettings.m_useCustomSensorSize, m_physicalCameraSettings.m_customSensorSize, "Sensor size");
+            setPropertyRange(CameraComponent, m_physicalCameraSettings.m_customSensorSize, float2(10.0f, 70.0f));
+            setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_customSensorSize, "Custom sensor size");
+
+            registerPropertyEnum(CameraComponent, gfx::GateFitMode, m_physicalCameraSettings.m_gateFitMode, "Gate Fit");
+            setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_gateFitMode, "Determines how the camera aligns its field of view to fit the sensor");
+
+            registerProperty(CameraComponent, m_physicalCameraSettings.m_near, "Near");
+            setPropertyRange(CameraComponent, m_physicalCameraSettings.m_near, float2(0.0f, 10.0f));
+            setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_near, "Camera near distance");
+
+            registerProperty(CameraComponent, m_physicalCameraSettings.m_far, "Far");
+            setPropertyRange(CameraComponent, m_physicalCameraSettings.m_far, float2(0.0f, 10000.0f));
+            setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_far, "Camera far distance");
+        };
+        registerPropertyGroupEnd(CameraComponent);
 
         return true;
     }
@@ -64,10 +82,7 @@ namespace vg::engine
         m_viewportIndex((gfx::ViewportIndex)0),
         m_viewIndex((gfx::ViewIndex)0),
         m_viewportOffset(float2(0, 0)),
-        m_viewportScale(float2(1, 1)),
-        m_fovY(PI / 4.0f),
-        m_near(0.1f),
-        m_far(1024.0f)
+        m_viewportScale(float2(1, 1))
     {
 
     }
@@ -143,10 +158,9 @@ namespace vg::engine
 
             view->SetRender(true);
             const float4x4 & matrix = getGameObject()->GetGlobalMatrix();
-            view->SetupPerspectiveCamera(matrix, float2(m_near, m_far), m_fovY, m_viewportOffset, m_viewportScale);
+            view->SetupPhysicalCamera(matrix, m_physicalCameraSettings.m_focalLength, m_physicalCameraSettings.getSensorSize(), m_physicalCameraSettings.m_gateFitMode, m_physicalCameraSettings.m_near, m_physicalCameraSettings.m_far, m_viewportOffset, m_viewportScale);
         }      
     }
-
 
     //--------------------------------------------------------------------------------------
     void CameraComponent::SetViewportOffsetAndScale(core::float2 _offset, const core::float2 & _scale)

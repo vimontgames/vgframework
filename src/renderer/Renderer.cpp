@@ -337,6 +337,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void Renderer::SetResized()
     {
+        VG_DEBUGPRINT("SetResized\n");
         m_frameGraph.setResized();
     }
 

@@ -85,7 +85,7 @@ namespace vg::gfx
         {
             if (_invalid != _handle)
             {
-                _pool.dealloc(_handle);
+                _pool.dealloc(_handle - _offset);
                 _resources[_handle - _offset] = nullptr;
                 _handle = H(_invalid);
             }

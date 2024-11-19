@@ -31,9 +31,6 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     ImGuiView::EditorCamera::EditorCamera() :
         m_matrix(core::float4x4::identity()),
-        m_fovY(core::PI / 4.0f),
-        m_near(0.01f),
-        m_far(1024.0f),
         m_moveSpeed(1.0f),
         m_rotSpeed(1.0f),
         m_panXYSpeed(1.0f),
@@ -230,7 +227,7 @@ namespace vg::editor
                 }
             }
 
-            view->SetupPerspectiveCamera(editorCam.m_matrix, float2(editorCam.m_near, editorCam.m_far), editorCam.m_fovY, float2(0,0), float2(1,1));
+            view->SetupPhysicalCamera(editorCam.m_matrix, editorCam.m_physicalCameraSettings.m_focalLength, editorCam.m_physicalCameraSettings.getSensorSize(), editorCam.m_physicalCameraSettings.m_gateFitMode, editorCam.m_physicalCameraSettings.m_near, editorCam.m_physicalCameraSettings.m_far);
         }
     }
 

@@ -121,6 +121,12 @@ namespace vg::gfx
         core::uint spot         = 0;
     };
 
+    vg_enum_class(GateFitMode, core::u8,
+        //None,
+        Horizontal,
+        Vertical
+    );
+
     class IView : public core::Object
     {
     public:
@@ -128,8 +134,9 @@ namespace vg::gfx
         IView() {};
         virtual ~IView() = default;
 
-        virtual void                    SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale) = 0;
+        virtual void                    SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset = core::float2(0, 0), core::float2 _viewportScale = core::float2(1, 1)) = 0;
         virtual void                    SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) = 0;
+        virtual void                    SetupPhysicalCamera         (const core::float4x4 & _cameraWorldMatrix, float _focalLength, core::float2 _sensorSize, GateFitMode _gateFitMode, float _near, float _far, core::float2 _viewportOffset = core::float2(0, 0), core::float2 _viewportScale = core::float2(1, 1)) = 0;
 
         virtual void                    SetFlags                    (ViewFlags _flagsToSet, ViewFlags _flagsToRemove = (ViewFlags)0) = 0;
         virtual ViewFlags               GetFlags                    () const = 0;

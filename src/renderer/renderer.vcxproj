@@ -166,6 +166,7 @@
     <ClInclude Include="Options\Options.h" />
     <ClInclude Include="Pass\Pass.h" />
     <ClInclude Include="PBR\PBR_Consts.h" />
+    <ClInclude Include="PBR\PhysicalCameraSettings.h" />
     <ClInclude Include="Picking\PickingManager.h" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="RayTracing\RayTracingManager.h" />

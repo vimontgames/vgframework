@@ -10,6 +10,7 @@
 #include "renderer/RenderPass/Update/ViewConstants/ViewConstantsUpdatePass.h"
 #include "renderer/UI/UIRenderer.h"
 #include "renderer/Picking/PickingManager.h"
+#include "renderer/Renderer_consts.h"
 
 #if !VG_ENABLE_INLINE
 #include "View.inl"
@@ -187,6 +188,63 @@ namespace vg::renderer
         m_cameraNearFar = _nearFar;
 
         m_proj = setOrthoProjectionRH((float)_size.x, (float)_size.y, _nearFar.x, _nearFar.y);
+
+        m_projInv = inverse(m_proj);
+        m_viewProj = mul(m_view, m_proj);
+
+        computeCameraFrustum();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetupPhysicalCamera(const core::float4x4 & _cameraWorldMatrix, float _focalLength, core::float2 _sensorSize, gfx::GateFitMode _gateFitMode, float _near, float _far, core::float2 _viewportOffset, core::float2 _viewportScale)
+    {
+        float fovX, fovY;
+
+        // Aspect ratio based on the screen size
+        const float2 screenSize = (float2)GetSize();
+        const float screenAspectRatio = screenSize.x / screenSize.y;
+        const float sensorAspectRatio = _sensorSize.x / _sensorSize.y;
+
+        switch (_gateFitMode)
+        {
+            //case gfx::GateFitMode::None:
+            //    if (screenAspectRatio > sensorAspectRatio)
+            //    {
+            //        fovY = 2.0f * std::atan(_sensorSize.y / (2.0f * _focalLength));
+            //        fovX = 2.0f * std::atan(std::tan(fovY / 2.0f) * screenAspectRatio);
+            //    }
+            //    else
+            //    {
+            //        fovX = 2.0f * std::atan(_sensorSize.x / (2.0f * _focalLength));
+            //        fovY = 2.0f * std::atan(std::tan(fovX / 2.0f) / screenAspectRatio);
+            //    }
+            //    break;
+
+            case gfx::GateFitMode::Horizontal:
+                fovX = 2.0f * std::atan(_sensorSize.x / (2.0f * _focalLength));
+                fovY = 2.0f * std::atan((_sensorSize.x / screenAspectRatio) / (2.0f * _focalLength)); 
+                break;
+
+            case gfx::GateFitMode::Vertical:
+                fovY = 2.0f * std::atan(_sensorSize.y / (2.0f * _focalLength));
+                fovX = 2.0f * std::atan((_sensorSize.y * screenAspectRatio) / (2.0f * _focalLength)); 
+                break;
+
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_gateFitMode);
+                break;
+        }
+
+        m_viewportOffset = _viewportOffset;
+        m_viewportScale = _viewportScale;
+
+        m_viewInv = _cameraWorldMatrix;
+        m_view = inverse(_cameraWorldMatrix);
+        m_cameraNearFar = float2(_near, _far);
+
+        m_cameraFovY = fovY;
+
+        m_proj = setPerspectiveProjectionRH(fovY, screenAspectRatio, _near, _far);
 
         m_projInv = inverse(m_proj);
         m_viewProj = mul(m_view, m_proj);

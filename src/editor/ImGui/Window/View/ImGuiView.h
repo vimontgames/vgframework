@@ -1,7 +1,8 @@
 #pragma once
 
-#include "editor/ImGui/Window/ImGuiWindow.h"
 #include "gfx/IViewport.h"
+#include "renderer/PBR/PhysicalCameraSettings.h"
+#include "editor/ImGui/Window/ImGuiWindow.h"
 
 namespace vg::core
 {
@@ -36,8 +37,8 @@ namespace vg::editor
         virtual bool                    ShowTitlebarMenu    () const { return false;};
         virtual void                    DrawTitlebarMenu    () {};
 
-        virtual gfx::ViewFlags       GetViewFlags        () const; 
-        virtual core::IWorld*           GetWorld            () const;
+        virtual gfx::ViewFlags          GetViewFlags        () const; 
+        virtual core::IWorld *          GetWorld            () const;
         virtual void                    OnCloseWindow       ();
         virtual bool                    UpdateScene         () { return true; };
 
@@ -66,21 +67,16 @@ namespace vg::editor
         {
             EditorCamera();
 
-            core::float4x4          m_matrix;
+            core::float4x4                      m_matrix;
+            renderer::PhysicalCameraSettings    m_physicalCameraSettings;
+            float                               m_moveSpeed;
+            float                               m_rotSpeed;
+            float                               m_panXYSpeed;
+            float                               m_zoomSpeed;
 
-            float                   m_fovY;
-
-            float                   m_near;
-            float                   m_far;
-
-            float                   m_moveSpeed;
-            float                   m_rotSpeed;
-            float                   m_panXYSpeed;
-            float                   m_zoomSpeed;
-
-            bool                    m_panning;
-            core::float4            m_panWorldPosStart;
-            core::uint2             m_pan2DPosStart;
+            bool                                m_panning;
+            core::float4                        m_panWorldPosStart;
+            core::uint2                         m_pan2DPosStart;
         };
         EditorCamera            m_editorCam;
     };

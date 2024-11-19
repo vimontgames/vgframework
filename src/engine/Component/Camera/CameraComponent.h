@@ -2,6 +2,7 @@
 
 #include "engine/ICameraComponent.h"
 #include "gfx/IView.h"
+#include "renderer/PBR/PhysicalCameraSettings.h"
 
 namespace vg::core
 {
@@ -38,7 +39,6 @@ namespace vg::engine
         VG_INLINE gfx::ViewportTarget           getViewportTarget           () const;
         gfx::ViewID                             getViewID                   () const;
 
-        VG_INLINE float                         getFovY                     () const;
         VG_INLINE float                         getNear                     () const;
         VG_INLINE float                         getFar                      () const;
 
@@ -46,9 +46,7 @@ namespace vg::engine
         gfx::ViewportTarget                     m_target;
         gfx::ViewportIndex                      m_viewportIndex;
         gfx::ViewIndex                          m_viewIndex;
-        float                                   m_fovY;
-        float                                   m_near;
-        float                                   m_far;
+        renderer::PhysicalCameraSettings        m_physicalCameraSettings;
         core::float2                            m_viewportOffset;
         core::float2                            m_viewportScale;
         core::float2                            m_previousViewportScale = core::float2(0, 0);
