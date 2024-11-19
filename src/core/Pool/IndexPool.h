@@ -37,6 +37,7 @@ namespace vg::core
         bool isAvailable(T _index)
         {
             const uint pageIndex = _index / elemCountPerPage;
+            VG_ASSERT(pageIndex < pageCount);
             const uint localIndex = _index - (pageIndex * elemCountPerPage);
             return (elemMask(1) << localIndex) & m_pages[pageIndex].mask;
         }
@@ -44,6 +45,7 @@ namespace vg::core
         void dealloc(T _index)
         {
             const uint pageIndex = _index / elemCountPerPage;
+            VG_ASSERT(pageIndex < pageCount);
             const uint localIndex = _index - (pageIndex * elemCountPerPage);
             m_pages[pageIndex].mask |= elemMask(1) << localIndex;
             --m_used;
