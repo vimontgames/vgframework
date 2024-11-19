@@ -22,9 +22,9 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerProperty(LightDesc, m_shadow, "Cast Shadows");
+        registerPropertyEx(LightDesc, m_shadow, "Cast Shadows", PropertyFlags::NotVisible);
 
-        registerPropertyOptionalGroupBegin(LightDesc, m_shadow, "Shadow Settings");
+        registerPropertyOptionalGroupBegin(LightDesc, m_shadow, "Shadows");
         {
             registerProperty(LightDesc, m_shadowRange, "Range");
             setPropertyRange(LightDesc, m_shadowRange, float2(0.0f, 1000.0f));
