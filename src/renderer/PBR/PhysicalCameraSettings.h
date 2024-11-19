@@ -16,7 +16,7 @@ namespace vg::renderer
         Sensor              m_sensor = Sensor::FullFrame;
         bool                m_useCustomSensorSize = false;
         core::float2        m_customSensorSize = core::float2(36.0f, 24.0f);
-        gfx::GateFitMode    m_gateFitMode = gfx::GateFitMode::Horizontal;
+        gfx::GateFitMode    m_gateFitMode = gfx::GateFitMode::Vertical;
         float               m_near = 0.1f;
         float               m_far = 1000.0f;
 
