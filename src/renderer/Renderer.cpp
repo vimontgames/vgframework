@@ -569,13 +569,15 @@ namespace vg::renderer
                             if (!view->IsRender())
                                 continue;
 
-                            if (IWorld * world = view->GetWorld())
+                            auto * world = view->GetWorld();
+
+                            if (nullptr != world)
                             {
                                 if (!vector_helper::exists(visibleWorlds, world))
                                     visibleWorlds.push_back(world);
-                            }
 
-                            visibleViews.push_back(view);
+                                visibleViews.push_back(view);
+                            }                            
                         }
                     }
                 }
