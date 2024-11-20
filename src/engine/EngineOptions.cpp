@@ -59,8 +59,15 @@ namespace vg::engine
 
         registerPropertyGroupBegin(EngineOptions, "Animation");
         {
-            registerPropertyEnumBitfield(EngineOptions, AnimationOptionFlags, m_animationOptionFlags, "Options");
-            setPropertyDescription(EngineOptions, m_animationOptionFlags, "Options for animations");
+            registerPropertyEnumBitfield(EngineOptions, AnimationOptionFlags, m_animationOptionFlags, "Flags");
+            setPropertyDescription(EngineOptions, m_animationOptionFlags, "Option flags for animations");
+        }
+        registerPropertyGroupEnd(EngineOptions);
+
+        registerPropertyGroupBegin(EngineOptions, "Loading");
+        {
+            registerPropertyEnumBitfield(EngineOptions, LoadingOptionFlags, m_loadingOptionFlags, "Flags");
+            setPropertyDescription(EngineOptions, m_loadingOptionFlags, "Option flags for loading");
         }
         registerPropertyGroupEnd(EngineOptions);
 

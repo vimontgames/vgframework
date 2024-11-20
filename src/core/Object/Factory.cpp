@@ -2089,12 +2089,13 @@ namespace vg::core
             xmlPropElem->SetAttribute("type", asString(type).c_str());
             xmlPropElem->SetAttribute("name", name);
 
-            string flagsString = "";
-            if (asBool(flags))
-            {
-                flagsString += asString(flags);
-                xmlPropElem->SetAttribute("flags", flagsString.c_str());
-            }
+            // Property flags are defined by ClassDesc in code, no need to save them and we do not read them anyway
+            //string flagsString = "";
+            //if (asBool(flags))
+            //{
+            //    flagsString += asString(flags);
+            //    xmlPropElem->SetAttribute("flags", flagsString.c_str());
+            //}
 
             bool skipAttribute = false;
 

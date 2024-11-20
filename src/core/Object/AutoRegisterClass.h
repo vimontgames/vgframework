@@ -31,7 +31,18 @@
                                                                                                     }
 
 #define VG_REGISTER_OBJECT_CLASS(className, displayName)                                            VG_REGISTER_OBJECT_CLASS_EX(className, displayName, vg::core::ClassDescFlags::None)
-#define VG_REGISTER_RESOURCE_CLASS(className, displayName)                                          VG_REGISTER_OBJECT_CLASS_EX(className, displayName, vg::core::ClassDescFlags::Resource)
+
+#define VG_REGISTER_RESOURCE_CLASS(className, displayName, priority)                                vg::core::AutoRegisterObjectClassHelper<className> autoRegister##className(#className, className::registerClass);                   \
+                                                                                                    bool className::registerClass(vg::core::IFactory & _factory)                                                                        \
+                                                                                                    {                                                                                                                                   \
+                                                                                                        if (vg::core::IClassDesc * desc = _factory.registerClassHelper(className, displayName, vg::core::ClassDescFlags::Resource))     \
+                                                                                                        {                                                                                                                               \
+                                                                                                            registerProperties(*desc);                                                                                                  \
+                                                                                                            desc->SetPriority(priority);                                                                                                \
+                                                                                                            return true;                                                                                                                \
+                                                                                                        }                                                                                                                               \
+                                                                                                        return false;                                                                                                                   \
+                                                                                                    }
 
 #define VG_REGISTER_COMPONENT_CLASS(className, displayName, category, description, icon, priority)  vg::core::AutoRegisterObjectClassHelper<className> autoRegister##className(#className, className::registerClass);                   \
                                                                                                     bool className::registerClass(vg::core::IFactory & _factory)                                                                        \

@@ -7,7 +7,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_RESOURCE_CLASS(WorldResource, "Scene");
+    VG_REGISTER_RESOURCE_CLASS(WorldResource, "World", -1000);
 
     //--------------------------------------------------------------------------------------
     void * ResizeWorldResourceVector(IObject * _parent, uint _offset, uint _count)

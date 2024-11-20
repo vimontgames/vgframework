@@ -5,6 +5,7 @@
 #include "core/Scheduler/Scheduler.h"
 #include "core/string/string.h"
 #include "core/IResourceMeta.h"
+#include "engine/EngineOptions.h"
 
 using namespace vg::core;
 
@@ -308,6 +309,8 @@ namespace vg::engine
         VG_ASSERT(_resource->GetResourcePath() == _newPath); // TODO: get rid of the '_newPath' parameter?
         lock_guard<recursive_mutex> lock(m_addResourceToLoadRecursiveMutex);
 
+        const auto * options = EngineOptions::get();
+
         // unload previous
         {
             auto it = m_resourceInfosMap.find(_oldPath);
@@ -348,7 +351,48 @@ namespace vg::engine
                 info->m_object = nullptr;
 
                 m_resourceInfosMap.insert(make_pair(_newPath, info));
-                m_resourcesToLoad.emplace_back(_resource);
+
+                if (options->useResourceLoadingPriority())
+                {
+                    const Priority priority = _resource->GetClassDesc()->GetPriority();
+                    uint index = -1;
+                    for (uint i = 0; i < m_resourcesToLoad.size(); ++i)
+                    {
+                        const auto * res = m_resourcesToLoad[i];
+                        if (priority < res->GetClassDesc()->GetPriority())
+                        {
+                            m_resourcesToLoad.insert(m_resourcesToLoad.begin() + i, _resource);
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (-1 == index)
+                    {
+                        m_resourcesToLoad.emplace_back(_resource);
+                        index = (uint)(m_resourcesToLoad.size() - 1);
+                    }
+
+                    #if VG_DEBUG
+                    VG_DEBUGPRINT("\n");
+                    VG_DEBUGPRINT("NEW | INDEX | PRIORITY | TYPE      | PATH\n", m_resourcesToLoad.size());
+                    VG_DEBUGPRINT("----+-------+----------+-----------+---------------------------------\n");
+                    for (uint i = 0; i < m_resourcesToLoad.size(); ++i)
+                    {
+                        const auto * res = m_resourcesToLoad[i];
+                        string shortTypeName = res->GetClassDesc()->GetClassName();
+                        auto resPos = shortTypeName.find("Resource");
+                        if (-1 != resPos)
+                            shortTypeName = shortTypeName.substr(0, resPos);
+                        VG_DEBUGPRINT("%s | %5u | %8i | %9s | \"%s\"\n", res == _resource ? "==>" : "   ", i, res->GetClassDesc()->GetPriority(), shortTypeName.c_str(), res->GetResourcePath().c_str());
+                    }
+                    VG_DEBUGPRINT("\n");
+                    #endif
+
+                }
+                else
+                {
+                    m_resourcesToLoad.emplace_back(_resource);
+                }
             }
         }
         else

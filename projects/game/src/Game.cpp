@@ -153,7 +153,7 @@ void Game::addItem(ItemType _type, ItemBehaviour * _item)
     auto & items = m_items[vg::core::asInteger(_type)];
     VG_ASSERT(!vector_helper::exists(items, _item));
     items.push_back(_item);
-    VG_INFO("[Game] Add %s Item \"%s\"", asString(_type).c_str(), _item->GetName().c_str());
+    //VG_INFO("[Game] Add %s Item \"%s\"", asString(_type).c_str(), _item->GetName().c_str());
 }
 
 //--------------------------------------------------------------------------------------
@@ -162,7 +162,7 @@ void Game::removeItem(ItemType _type, ItemBehaviour * _item)
     auto & items = m_items[vg::core::asInteger(_type)];
     VG_ASSERT(vector_helper::exists(items, _item));
     vector_helper::remove(items, _item);
-    VG_INFO("[Game] Remove %s Item \"%s\"", asString(_type).c_str(), _item->GetName().c_str());
+    //VG_INFO("[Game] Remove %s Item \"%s\"", asString(_type).c_str(), _item->GetName().c_str());
 }
 
 //--------------------------------------------------------------------------------------

@@ -6,14 +6,10 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    //VG_REGISTER_RESOURCE_CLASS(ObjectHierarchyResource, "ObjectHierarchy");
-
     //--------------------------------------------------------------------------------------
     bool BaseSceneResource::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-
-        //registerProperty(BaseSceneResource, m_name, "Name");
 
         return true;
     }

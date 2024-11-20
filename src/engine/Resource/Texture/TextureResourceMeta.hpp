@@ -6,7 +6,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_RESOURCE_CLASS(TextureResourceMeta, "TextureResourceMeta");
+    VG_REGISTER_RESOURCE_CLASS(TextureResourceMeta, "TextureResourceMeta", 199);
 
     //--------------------------------------------------------------------------------------
     bool TextureResourceMeta::registerProperties(IClassDesc & _desc)

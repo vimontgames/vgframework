@@ -1,36 +1,36 @@
 <Root>
     <Object class="RendererOptions">
-        <Property type="String" name="m_name" flags="NotVisible" value="Renderer Options"/>
-        <Property type="Uint32" name="m_uid" flags="" value="4100248654"/>
-        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
+        <Property type="String" name="m_name" value="Renderer Options"/>
+        <Property type="Uint32" name="m_uid" value="4100248654"/>
+        <Property type="Uint32" name="m_originalUID" value="0"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
         <Property type="Bool" name="m_toolMode" value="false"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
         <Property type="EnumU8" name="m_lightingMode" value="Deferred"/>
-        <Property type="EnumFlagsU32" name="m_pbrFlags" flags="Bitfield" value="GenerateIrradianceCubemap|GenerateSpecularReflectionCubemap|GenerateSpecularBRDF"/>
-        <Property type="Float4" name="m_defaultEnvironmentColor" flags="Color" x="0.1" y="0.1" z="0.1" w="1"/>
-        <Property type="Bool" name="m_useDefaultEnvironmentCubemap" flags="NotVisible" value="true"/>
-        <Property type="ResourcePtr" name="m_defaultEnvironmentCubemap" flags="">
+        <Property type="EnumFlagsU32" name="m_pbrFlags" value="GenerateIrradianceCubemap|GenerateSpecularReflectionCubemap|GenerateSpecularBRDF"/>
+        <Property type="Float4" name="m_defaultEnvironmentColor" x="0.1" y="0.1" z="0.1" w="1"/>
+        <Property type="Bool" name="m_useDefaultEnvironmentCubemap" value="true"/>
+        <Property type="ResourcePtr" name="m_defaultEnvironmentCubemap">
             <Object class="TextureResource">
-                <Property type="String" name="m_name" flags="NotVisible" value="TextureResource #0"/>
-                <Property type="Uint32" name="m_uid" flags="" value="2526968992"/>
-                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/EnvMaps/Default.psd"/>
+                <Property type="String" name="m_name" value="TextureResource #0"/>
+                <Property type="Uint32" name="m_uid" value="2526968992"/>
+                <Property type="Uint32" name="m_originalUID" value="0"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                <Property type="String" name="m_resourcePath" value="data/Textures/EnvMaps/Default.psd"/>
             </Object>
         </Property>
-        <Property type="Float" name="m_defaultIrradianceIntensity" flags="HasRange" value="1"/>
-        <Property type="Float" name="m_defaultSpecularReflectionIntensity" flags="HasRange" value="1"/>
+        <Property type="Float" name="m_defaultIrradianceIntensity" value="1"/>
+        <Property type="Float" name="m_defaultSpecularReflectionIntensity" value="1"/>
         <Property type="EnumU8" name="m_HDRmode" value="None"/>
         <Property type="EnumU8" name="m_msaa" value="MSAA4X"/>
         <Property type="EnumU8" name="m_VSync" value="VSync_1"/>
         <Property type="Bool" name="m_rayTracing" value="false"/>
         <Property type="Bool" name="m_postProcess" value="true"/>
         <Property type="EnumU8" name="m_aaPostProcess" value="FXAA"/>
-        <Property type="EnumFlagsU32" name="m_renderPassFlags" flags="Bitfield" value="ZPrepass|Opaque|Transparency"/>
-        <Property type="EnumFlagsU32" name="m_displayFlags" flags="Bitfield" value="AlbedoMap|NormalMap|VertexColor|MaterialColor|InstanceColor"/>
-        <Property type="Bool" name="m_wireframe" flags="SingleLine" value="false"/>
-        <Property type="Bool" name="m_aabb" flags="SingleLine" value="false"/>
-        <Property type="Bool" name="m_debugUI" flags="SingleLine" value="false"/>
+        <Property type="EnumFlagsU32" name="m_renderPassFlags" value="ZPrepass|Opaque|Transparency"/>
+        <Property type="EnumFlagsU32" name="m_displayFlags" value="AlbedoMap|NormalMap|VertexColor|MaterialColor|InstanceColor"/>
+        <Property type="Bool" name="m_wireframe" value="false"/>
+        <Property type="Bool" name="m_aabb" value="false"/>
+        <Property type="Bool" name="m_debugUI" value="false"/>
     </Object>
 </Root>

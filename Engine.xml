@@ -1,32 +1,33 @@
 <Root>
     <Object class="EngineOptions">
-        <Property type="String" name="m_name" flags="NotVisible" value="EngineOptions"/>
-        <Property type="Uint32" name="m_uid" flags="" value="1488493778"/>
-        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-        <Property type="String" name="m_gamePath" flags="IsFolder" value="projects/game"/>
-        <Property type="String" name="m_startWorld" flags="IsFile" value="data/Worlds/Game.world"/>
-        <Property type="String" name="m_gameObjectTags" flags="EnumArray">
+        <Property type="String" name="m_name" value="EngineOptions"/>
+        <Property type="Uint32" name="m_uid" value="1488493778"/>
+        <Property type="Uint32" name="m_originalUID" value="0"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="String" name="m_gamePath" value="projects/game"/>
+        <Property type="String" name="m_startWorld" value="data/Worlds/Game.world"/>
+        <Property type="String" name="m_gameObjectTags">
             <Value name="Tag_0" value="Player"/>
             <Value name="Tag_1" value="Enemy"/>
             <Value name="Tag_2" value="Weapon"/>
         </Property>
-        <Property type="Bool" name="m_showRigidBodies" flags="NotVisible" value="false"/>
-        <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" flags="" value="Sphere|Box|Capsule|Cylinder"/>
+        <Property type="Bool" name="m_showRigidBodies" value="false"/>
+        <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" value="Sphere|Box|Capsule|Cylinder"/>
         <Property type="Bool" name="m_mergeStaticBodies" value="true"/>
-        <Property type="String" name="m_physicsCategories" flags="EnumArray">
+        <Property type="String" name="m_physicsCategories">
             <Value name="Category_0" value="Default"/>
             <Value name="Category_1" value="Player 1"/>
             <Value name="Category_2" value="Player 2"/>
             <Value name="Category_3" value="Player 3"/>
             <Value name="Category_4" value="Player 4"/>
         </Property>
-        <Property type="Bool" name="m_useTimeScale" flags="NotVisible" value="false"/>
-        <Property type="Float" name="m_timeScale" flags="" value="1"/>
-        <Property type="Bool" name="m_useMaxDT" flags="NotVisible" value="true"/>
-        <Property type="Float" name="m_maxDT" flags="" value="16.666666"/>
-        <Property type="Bool" name="m_useFixedDT" flags="NotVisible" value="false"/>
-        <Property type="Float" name="m_fixedDT" flags="" value="16.666666"/>
-        <Property type="EnumFlagsU32" name="m_animationOptionFlags" flags="Bitfield" value="Jobs"/>
+        <Property type="Bool" name="m_useTimeScale" value="false"/>
+        <Property type="Float" name="m_timeScale" value="1"/>
+        <Property type="Bool" name="m_useMaxDT" value="true"/>
+        <Property type="Float" name="m_maxDT" value="16.666666"/>
+        <Property type="Bool" name="m_useFixedDT" value="false"/>
+        <Property type="Float" name="m_fixedDT" value="16.666666"/>
+        <Property type="EnumFlagsU32" name="m_animationOptionFlags" value="AnimationJobs"/>
+        <Property type="EnumFlagsU32" name="m_loadingOptionFlags" value="ResourcePriority"/>
     </Object>
 </Root>

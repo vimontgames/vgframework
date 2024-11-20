@@ -13,8 +13,12 @@ namespace vg::physics
 namespace vg::engine
 {
     vg_enum_class(AnimationOptionFlags, core::u32,
-        Jobs        = 0x00000001,
-        Skeleton    = 0x00000002
+        AnimationJobs = 0x00000001,
+        ShowSkeletons = 0x00000002        
+    );
+
+    vg_enum_class(LoadingOptionFlags, core::u32,
+        ResourcePriority = 0x00000001
     );
 
     class EngineOptions final : public IEngineOptions, public core::Singleton<EngineOptions>
@@ -24,27 +28,29 @@ namespace vg::engine
 
         EngineOptions(const core::string & _name, core::IObject * _parent = nullptr);
 
-        const core::string &        GetProjectPath          () const final override;
-        const core::string &        GetStartWorld           () const final override;
-        float                       TryGetTimeScale         (float & _timescale) const final override;
-        bool                        TryGetFixedDT           (float & _fixedDT) const final override;
-        bool                        TryGetMaxDT             (float & _maxDT) const final override;
-        void                        OnPropertyChanged       (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+        const core::string &        GetProjectPath              () const final override;
+        const core::string &        GetStartWorld               () const final override;
+        float                       TryGetTimeScale             (float & _timescale) const final override;
+        bool                        TryGetFixedDT               (float & _fixedDT) const final override;
+        bool                        TryGetMaxDT                 (float & _maxDT) const final override;
+        void                        OnPropertyChanged           (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
-        core::Tag                   GetGameObjectTag        (const core::string & _name) const final override;
-        physics::Category           GetPhysicsCategory      (const core::string & _name) const final override;
+        core::Tag                   GetGameObjectTag            (const core::string & _name) const final override;
+        physics::Category           GetPhysicsCategory          (const core::string & _name) const final override;
 
-        core::vector<core::string>  getPhysicsCategoryNames () const;
+        core::vector<core::string>  getPhysicsCategoryNames     () const;
 
-        VG_INLINE bool              useAnimationJobs        () const { return (core::u32)AnimationOptionFlags::Jobs & (core::u32)m_animationOptionFlags; }
-        VG_INLINE bool              isShowSkeleton          () const { return (core::u32)AnimationOptionFlags::Skeleton & (core::u32)m_animationOptionFlags; }
+        VG_INLINE bool              useAnimationJobs            () const { return core::asBool(core::operator & (AnimationOptionFlags::AnimationJobs, m_animationOptionFlags)); }
+        VG_INLINE bool              isShowSkeleton              () const { return core::asBool(core::operator & (AnimationOptionFlags::ShowSkeletons, m_animationOptionFlags)); }
 
-        VG_INLINE bool              isAnyBodyVisible        () const { return 0 != m_showRigidBodies; }
-        VG_INLINE bool              isBodyVisible           (physics::ShapeType _shape) const { return m_showRigidBodies && ((1 << (core::u32)_shape) & (core::u32)m_showRigidBodiesMask); }
-        VG_INLINE bool              mergeStaticBodies       () const { return m_mergeStaticBodies; }
+        VG_INLINE bool              isAnyBodyVisible            () const { return 0 != m_showRigidBodies; }
+        VG_INLINE bool              isBodyVisible               (physics::ShapeType _shape) const { return m_showRigidBodies && ((1 << (core::u32)_shape) & (core::u32)m_showRigidBodiesMask); }
+        VG_INLINE bool              mergeStaticBodies           () const { return m_mergeStaticBodies; }
+
+        VG_INLINE bool              useResourceLoadingPriority  () const { return core::asBool(core::operator & (LoadingOptionFlags::ResourcePriority, m_loadingOptionFlags)); }
 
     private:
-        void                        updateDynamicEnum       (const core::IProperty & _prop);
+        void                        updateDynamicEnum           (const core::IProperty & _prop);
 
     private:
         // Project
@@ -60,13 +66,16 @@ namespace vg::engine
 
         // Time
         bool                        m_useTimeScale = false;
-        float                       m_timeScale = 1.0f;
-        bool                        m_useMaxDT = false;
-        float                       m_maxDT = 1000.0f / 60.0f;
-        bool                        m_useFixedDT = false;
-        float                       m_fixedDT = 1000.0f / 60.0f;
+        float                       m_timeScale    = 1.0f;
+        bool                        m_useMaxDT     = false;
+        float                       m_maxDT        = 1000.0f / 60.0f;
+        bool                        m_useFixedDT   = false;
+        float                       m_fixedDT      = 1000.0f / 60.0f;
 
         // Animation
-        AnimationOptionFlags        m_animationOptionFlags = AnimationOptionFlags::Jobs;
+        AnimationOptionFlags        m_animationOptionFlags = AnimationOptionFlags::AnimationJobs;
+
+        // Loading
+        LoadingOptionFlags          m_loadingOptionFlags = LoadingOptionFlags::ResourcePriority;
     };
 }

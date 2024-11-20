@@ -414,7 +414,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    ClassDesc::Priority ClassDesc::GetPriority() const
+    Priority ClassDesc::GetPriority() const
     {
         return priority;
     }

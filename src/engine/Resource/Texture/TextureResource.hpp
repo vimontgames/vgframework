@@ -8,7 +8,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_RESOURCE_CLASS(TextureResource, "Texture");
+    VG_REGISTER_RESOURCE_CLASS(TextureResource, "Texture", 200);
 
     //--------------------------------------------------------------------------------------
     bool TextureResource::registerProperties(IClassDesc & _desc)

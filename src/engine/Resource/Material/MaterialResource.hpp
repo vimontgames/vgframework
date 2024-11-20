@@ -8,7 +8,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_RESOURCE_CLASS(MaterialResource, "Material");
+    VG_REGISTER_RESOURCE_CLASS(MaterialResource, "Material", 150);
 
     //--------------------------------------------------------------------------------------
     void * ResizeMaterialResourceVector(IObject * _parent, uint _offset, uint _count)
