@@ -102,6 +102,8 @@
     <ClInclude Include="Resource\BaseScene\Prefab\PrefabResource.hpp" />
     <ClInclude Include="Resource\BaseScene\Scene\SceneResource.h" />
     <ClInclude Include="Resource\BaseScene\Scene\SceneResource.hpp" />
+    <ClInclude Include="Resource\Lens\LensResource.h" />
+    <ClInclude Include="Resource\Lens\LensResource.hpp" />
     <ClInclude Include="Resource\ResourceList.h" />
     <ClInclude Include="Resource\Texture\TextureResourceMeta.h" />
     <ClInclude Include="Resource\Texture\TextureResourceMeta.hpp" />

@@ -5,6 +5,7 @@
 #include "core/string/string.h"
 #include "gfx/IView.h"
 #include "renderer/IRenderer.h"
+#include "renderer/ICameraLens.h"
 #include "engine/Engine.h"
 #include "editor/Editor_Consts.h"
 
@@ -19,59 +20,80 @@ namespace vg::engine
     VG_REGISTER_COMPONENT_CLASS(CameraComponent, "Camera", "Renderer", "Setup camera settings for a View", editor::style::icon::Camera, 1);
 
     //--------------------------------------------------------------------------------------
+    float2 getFocalLengthRange(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const auto * camera = ((CameraComponent *)_object);
+        const renderer::ICameraLens * lens = camera->getCameraLens();
+        return lens->GetFocalLengthRange();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float2 getFocusDistanceRange(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const auto * camera = ((CameraComponent *)_object);
+        const renderer::ICameraLens * lens = camera->getCameraLens();
+        
+        return float2(lens->GetMinFocusDistance(camera->getFocalLength()), 1000.0f);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float2 getApertureRange(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const auto * camera = ((CameraComponent *)_object);
+        const renderer::ICameraLens * lens = camera->getCameraLens();
+        const float focalLength = camera->getFocalLength();
+        return float2(lens->GetMaxAperture(focalLength), lens->GetMinAperture(focalLength));
+    }
+
+    //--------------------------------------------------------------------------------------
     bool CameraComponent::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        registerPropertyGroupBegin(CameraComponent, "Target");
-        {
-            registerPropertyEnumEx(CameraComponent, gfx::ViewportTarget, m_target, "Target", PropertyFlags::ReadOnly | PropertyFlags::NotVisible);
-            setPropertyDescription(CameraComponent, m_target, "Camera target");
+        registerPropertyEnumEx(CameraComponent, gfx::ViewportTarget, m_target, "Target", PropertyFlags::ReadOnly | PropertyFlags::NotVisible);
+        setPropertyDescription(CameraComponent, m_target, "Camera target");
 
-            registerPropertyEx(CameraComponent, m_viewportIndex, "Viewport", PropertyFlags::ReadOnly | PropertyFlags::NotVisible);
-            setPropertyRange(CameraComponent, m_viewportIndex, float2(0, 15));
-            setPropertyDescription(CameraComponent, m_viewportIndex, "Viewport index");
+        registerPropertyEx(CameraComponent, m_viewportIndex, "Viewport", PropertyFlags::ReadOnly | PropertyFlags::NotVisible);
+        setPropertyRange(CameraComponent, m_viewportIndex, float2(0, 15));
+        setPropertyDescription(CameraComponent, m_viewportIndex, "Viewport index");
 
-            registerProperty(CameraComponent, m_viewIndex, "Index");
-            setPropertyRange(CameraComponent, m_viewIndex, float2(0, 15));
-            setPropertyDescription(CameraComponent, m_viewIndex, "View index in current viewport");
+        registerProperty(CameraComponent, m_viewIndex, "Index");
+        setPropertyRange(CameraComponent, m_viewIndex, float2(0, 15));
+        setPropertyDescription(CameraComponent, m_viewIndex, "View index in current viewport");
 
-            registerProperty(CameraComponent, m_viewportOffset, "Offset");
-            setPropertyRange(CameraComponent, m_viewportOffset, float2(0.0f, 1.0f));
-            setPropertyDescription(CameraComponent, m_viewportOffset, "Viewport offset");
+        registerProperty(CameraComponent, m_viewportOffset, "Offset");
+        setPropertyRange(CameraComponent, m_viewportOffset, float2(0.0f, 1.0f));
+        setPropertyDescription(CameraComponent, m_viewportOffset, "Viewport offset");
 
-            registerProperty(CameraComponent, m_viewportScale, "Scale");
-            setPropertyRange(CameraComponent, m_viewportScale, float2(0.0f, 1.0f));
-            setPropertyDescription(CameraComponent, m_viewportScale, "Viewport scale");
-        };
-        registerPropertyGroupEnd(CameraComponent);
+        registerProperty(CameraComponent, m_viewportScale, "Scale");
+        setPropertyRange(CameraComponent, m_viewportScale, float2(0.0f, 1.0f));
+        setPropertyDescription(CameraComponent, m_viewportScale, "Viewport scale");
 
-        registerPropertyGroupBegin(CameraComponent, "Physical camera");
-        {
-            registerProperty(CameraComponent, m_physicalCameraSettings.m_focalLength, "Focal length");
-            setPropertyRange(CameraComponent, m_physicalCameraSettings.m_focalLength, float2(20.0f, 200.0f));
-            setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_focalLength, "Focal length in millimeters");
+        registerPropertyResource(CameraComponent, m_lensRes, "Lens");
 
-            registerPropertyEnum(CameraComponent, renderer::Sensor, m_physicalCameraSettings.m_sensor, "Sensor");
-            setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_sensor, "Physical dimensions of the sensor, determining field of view, aspect ratio, and depth of field");
+        registerProperty(CameraComponent, m_physicalCameraSettings.m_focalLength, "Focal length");
+        setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_focalLength, "Focal length in millimeters");
+        setPropertyRangeCallback(CameraComponent, m_physicalCameraSettings.m_focalLength, getFocalLengthRange); // Range depends on the lens used
 
-            registerOptionalProperty(CameraComponent, m_physicalCameraSettings.m_useCustomSensorSize, m_physicalCameraSettings.m_customSensorSize, "Sensor size");
-            setPropertyRange(CameraComponent, m_physicalCameraSettings.m_customSensorSize, float2(10.0f, 70.0f));
-            setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_customSensorSize, "Custom sensor size");
+        registerProperty(CameraComponent, m_focusDistance, "Focus distance");
+        setPropertyDescription(CameraComponent, m_focusDistance, "The distance in meters between the lens and the subject that is in sharp focus");
+        setPropertyRangeCallback(CameraComponent, m_focusDistance, getFocusDistanceRange); // Range depends on the lens used and focal length
 
-            registerPropertyEnum(CameraComponent, gfx::GateFitMode, m_physicalCameraSettings.m_gateFitMode, "Gate Fit");
-            setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_gateFitMode, "Determines how the camera aligns its field of view to fit the sensor");
+        registerProperty(CameraComponent, m_aperture, "f/Aperture");
+        setPropertyDescription(CameraComponent, m_aperture, "A higher f-stop (e.g., f/16) means a smaller aperture that lets in less light, creating a deeper depth of field");
+        setPropertyRangeCallback(CameraComponent, m_aperture, getApertureRange); // Range depends on the lens used and focal length
 
-            registerProperty(CameraComponent, m_physicalCameraSettings.m_near, "Near");
-            setPropertyRange(CameraComponent, m_physicalCameraSettings.m_near, float2(0.0f, 10.0f));
-            setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_near, "Camera near distance");
+        registerPropertyEnum(CameraComponent, gfx::GateFitMode, m_physicalCameraSettings.m_gateFitMode, "Gate Fit");
+        setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_gateFitMode, "Determines how the camera aligns its field of view to fit the sensor");
 
-            registerProperty(CameraComponent, m_physicalCameraSettings.m_far, "Far");
-            setPropertyRange(CameraComponent, m_physicalCameraSettings.m_far, float2(0.0f, 10000.0f));
-            setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_far, "Camera far distance");
-        };
-        registerPropertyGroupEnd(CameraComponent);
+        registerProperty(CameraComponent, m_physicalCameraSettings.m_near, "Near");
+        setPropertyRange(CameraComponent, m_physicalCameraSettings.m_near, float2(0.0f, 10.0f));
+        setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_near, "Camera near distance");
 
+        registerProperty(CameraComponent, m_physicalCameraSettings.m_far, "Far");
+        setPropertyRange(CameraComponent, m_physicalCameraSettings.m_far, float2(0.0f, 10000.0f));
+        setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_far, "Camera far distance");
+  
         return true;
     }
 
@@ -84,7 +106,7 @@ namespace vg::engine
         m_viewportOffset(float2(0, 0)),
         m_viewportScale(float2(1, 1))
     {
-
+        m_lensRes.SetParent(this);
     }
 
     //--------------------------------------------------------------------------------------
@@ -106,6 +128,24 @@ namespace vg::engine
 
         VG_WARNING("[Camera] Camera \"%s\" could not get ViewID for %s target at index %u", GetName().c_str(), asString(m_target).c_str(), m_viewportIndex);
         return {};
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CameraComponent::OnLoad()
+    {
+        updateLensConstraints();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CameraComponent::OnPropertyChanged(vg::core::IObject * _object, const vg::core::IProperty & _prop, bool _notifyParent)
+    {
+        updateLensConstraints();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CameraComponent::updateLensConstraints()
+    {
+        
     }
 
     //--------------------------------------------------------------------------------------
@@ -158,8 +198,17 @@ namespace vg::engine
 
             view->SetRender(true);
             const float4x4 & matrix = getGameObject()->GetGlobalMatrix();
-            view->SetupPhysicalCamera(matrix, m_physicalCameraSettings.m_focalLength, m_physicalCameraSettings.getSensorSize(), m_physicalCameraSettings.m_gateFitMode, m_physicalCameraSettings.m_near, m_physicalCameraSettings.m_far, m_viewportOffset, m_viewportScale);
+            view->SetupPhysicalCamera(matrix, m_physicalCameraSettings.m_focalLength, getCameraLens()->GetSensorSize(), m_physicalCameraSettings.m_gateFitMode, m_physicalCameraSettings.m_near, m_physicalCameraSettings.m_far, m_viewportOffset, m_viewportScale);
         }      
+    }
+
+    //--------------------------------------------------------------------------------------
+    const renderer::ICameraLens * CameraComponent::getCameraLens() const
+    {
+        if (auto * camLens = VG_SAFE_STATIC_CAST(renderer::ICameraLens, m_lensRes.GetObject()))
+            return camLens;
+        else
+            return Engine::get()->GetRenderer()->GetDefaultCameraLens();
     }
 
     //--------------------------------------------------------------------------------------

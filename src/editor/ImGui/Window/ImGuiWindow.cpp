@@ -421,12 +421,9 @@ namespace vg::editor
         for (int i = 0; i < count; ++i)
             temp[i] = _ptr[i];
 
-        const S minRange = (S)_prop->GetRange().x;
-        const S maxRange = (S)_prop->GetRange().y;
-
         bool edited = false;
 
-        const auto dragSpeed = scalarTraits<S>::is_integer ? ImGuiWindow::getDragSpeedInt(_prop) : ImGuiWindow::getDragSpeedFloat(_prop);
+        const auto dragSpeed = scalarTraits<S>::is_integer ? ImGuiWindow::getDragSpeedInt(_object, _prop) : ImGuiWindow::getDragSpeedFloat(_object, _prop);
         const auto flags = _prop->GetFlags();
 
         auto editFormat = scalarTraits<S>::is_integer ? (scalarTraits<S>::is_signed ? g_editIntFormat : g_editUIntFormat) : g_editFloatFormat;
@@ -478,9 +475,15 @@ namespace vg::editor
         else
         {
             if (asBool(PropertyFlags::HasRange & flags))
+            {
+                const S minRange = (S)_prop->GetRange(_object).x;
+                const S maxRange = (S)_prop->GetRange(_object).y;
                 edited = CustomDragScalarN(interactionType, ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, &minRange, &maxRange, editFormat, ImGuiSliderFlags_NoRoundToFormat);
+            }
             else
+            {
                 edited = CustomDragScalarN(interactionType, ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, nullptr, nullptr, editFormat, ImGuiSliderFlags_NoRoundToFormat);
+            }
         }
 
         if (_propContext.m_readOnly)
@@ -1028,7 +1031,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    float ImGuiWindow::getDragSpeedFloat(const IProperty * _prop) 
+    float ImGuiWindow::getDragSpeedFloat(const core::IObject * _object, const IProperty * _prop)
     {
         const auto flags = _prop->GetFlags();
 
@@ -1037,7 +1040,7 @@ namespace vg::editor
 
         if (asBool(PropertyFlags::HasRange & flags))
         {
-            const auto range = _prop->GetRange();
+            const auto range = _prop->GetRange(_object);
             return (range.y - range.x) / 1000.0f;
         }
         else
@@ -1045,7 +1048,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    float ImGuiWindow::getDragSpeedInt(const IProperty * _prop)
+    float ImGuiWindow::getDragSpeedInt(const core::IObject * _object, const IProperty * _prop)
     {
         //if (asBool(PropertyFlags::HasRange & _prop->getFlags()))
         //    return (_prop->getRange().y - _prop->getRange().x) / 1000.0f;
@@ -1458,7 +1461,7 @@ namespace vg::editor
                                 u8 * pU8 = _prop->GetPropertyUint8(_object, e);
                                 i32 temp = (u8)*pU8;
                                 if (asBool(PropertyFlags::HasRange & flags))
-                                    changed |= ImGui::SliderInt(enumLabel.c_str(), &temp, max((int)0, (int)_prop->GetRange().x), min((int)255, (int)_prop->GetRange().y), "%d", imguiInputTextflags);
+                                    changed |= ImGui::SliderInt(enumLabel.c_str(), &temp, max((int)0, (int)_prop->GetRange(_object).x), min((int)255, (int)_prop->GetRange(_object).y), "%d", imguiInputTextflags);
                                 else
                                     changed |= ImGui::InputInt(enumLabel.c_str(), &temp, 1, 16, imguiInputTextflags);
                                 if (changed)
@@ -2463,6 +2466,7 @@ namespace vg::editor
             ImGui::CloseFileDialog();
         }
 
+        ImGui::Indent();
         auto customDisplayHandler = ImGuiObjectHandler::Find(_resource->GetClassName());
         if (nullptr != customDisplayHandler)
         {
@@ -2488,6 +2492,10 @@ namespace vg::editor
                 }
             }
         }
+        ImGui::Unindent();
+
+        if (_resource->GetObject())
+            ImGui::Spacing();
 
         ImGui::PopItemWidth();
 
@@ -2502,6 +2510,7 @@ namespace vg::editor
     {
         const char * folder = nullptr;
 
+        // TODO: Resource types should be able to register their default folder
         if (!strcmp(_resourceTypeName.c_str(), "MeshResource"))
             folder = "Meshes";
         else if (!strcmp(_resourceTypeName.c_str(), "TextureResource"))
@@ -2516,6 +2525,8 @@ namespace vg::editor
             folder = "Scenes";
         else if (!strcmp(_resourceTypeName.c_str(), "WorldResource"))
             folder = "Worlds";
+        else if (!strcmp(_resourceTypeName.c_str(), "LensResource"))
+            folder = "Lens";
         else if (!strcmp(_resourceTypeName.c_str(), "Prefabs"))
             folder = "Prefabs";
 
@@ -2765,17 +2776,17 @@ namespace vg::editor
                 float prevRot[3] = { rotation[0], rotation[1], rotation[2] };
                 float prevScale[3] = { scale[0], scale[1], scale[2] };
 
-                edited |= CustomDragFloat3(interactionType, getPropertyLabel("T").c_str(), (float *)&translation, getDragSpeedFloat(_prop) * 90.0f/8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                edited |= CustomDragFloat3(interactionType, getPropertyLabel("T").c_str(), (float *)&translation, getDragSpeedFloat(_object, _prop) * 90.0f/8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
                 itemActive = ImGui::IsItemActive() || InteractionType::Single == interactionType;
                 itemAfterEdit = ImGui::IsItemDeactivatedAfterEdit() || InteractionType::Single == interactionType;
                 drawPropertyLabel(_propContext, TLabel.c_str(), "Represents the translation part of the matrix");
 
-                edited |= CustomDragFloat3(interactionType, getPropertyLabel("R").c_str(), (float *)&rotation, getDragSpeedFloat(_prop) * 90.0f / 8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                edited |= CustomDragFloat3(interactionType, getPropertyLabel("R").c_str(), (float *)&rotation, getDragSpeedFloat(_object, _prop) * 90.0f / 8.0f, -style::range::maxFloat, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
                 itemActive |= ImGui::IsItemActive() || InteractionType::Single == interactionType;
                 itemAfterEdit |= ImGui::IsItemDeactivatedAfterEdit() || InteractionType::Single == interactionType;
                 drawPropertyLabel(_propContext, RLabel.c_str(), "Represents the rotation part of the matrix");
 
-                edited |= CustomDragFloat3(interactionType, getPropertyLabel("S").c_str(), (float *)&scale, getDragSpeedFloat(_prop) * 90.0f / 8.0f, 0.01f, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
+                edited |= CustomDragFloat3(interactionType, getPropertyLabel("S").c_str(), (float *)&scale, getDragSpeedFloat(_object, _prop) * 90.0f / 8.0f, 0.01f, style::range::maxFloat, g_editFloatFormat) && !_propContext.m_readOnly;
                 itemActive |= ImGui::IsItemActive() || InteractionType::Single == interactionType;
                 itemAfterEdit |= ImGui::IsItemDeactivatedAfterEdit() || InteractionType::Single == interactionType;
                 drawPropertyLabel(_propContext, SLabel.c_str(), "Represents the scale part of the matrix");

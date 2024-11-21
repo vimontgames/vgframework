@@ -280,7 +280,7 @@ namespace vg::gfx::dxc
                     break;
             }
 
-            // Add shader stage #define (e.g. "_PS" for pixel shaders etc...)
+            // Add shader stage #define (e.g., "_PS" for pixel shaders etc...)
             switch (_stage)
             {
                 default:

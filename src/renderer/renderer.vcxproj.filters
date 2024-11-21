@@ -57,6 +57,9 @@
     <ClCompile Include="Model\Material\MaterialManager.cpp">
       <Filter>Model\Material</Filter>
     </ClCompile>
+    <ClCompile Include="Camera\Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renderer.def" />
@@ -512,6 +515,20 @@
     <ClInclude Include="PBR\PhysicalCameraSettings.h">
       <Filter>PBR</Filter>
     </ClInclude>
+    <ClInclude Include="Camera\CameraLens.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\CameraLens.hpp">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\CameraSettings.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera\CameraSettings.hpp">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ICameraLens.h" />
+    <ClInclude Include="ICameraSettings.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -702,6 +719,9 @@
     </Filter>
     <Filter Include="Pass\Update\MaterialData">
       <UniqueIdentifier>{bafa5eb6-d76f-4359-a079-bbc20e7b6743}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{4b5a8e57-1b36-4775-9765-4c93035dfaed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

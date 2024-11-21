@@ -20,9 +20,9 @@ namespace vg::physics
     // Minimum dimension for physics shape
     const float shapeEps = 0.0001f;
 
-    // Layer that objects can be in, determines which other objects it can collide with
-    // Typically you at least want to have 1 layer for moving bodies and 1 layer for static bodies, but you can have more
-    // layers if you want. E.g. you could have a layer for high detail collision (which is not used by the physics simulation
+    // Layer that objects can be in, determines which other objects it can collide with. Typically you at least 
+    // want to have 1 layer for moving bodies and 1 layer for static bodies, but you can have more layers if you want. 
+    // e.g., you could have a layer for high detail collision (which is not used by the physics simulation
     // but only if you do collision testing).
     vg_enum_class(ObjectLayer, core::u16,
         NonMoving = 0,

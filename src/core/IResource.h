@@ -9,7 +9,7 @@ namespace vg::core
 
     //--------------------------------------------------------------------------------------
     // An IResource is an object that will from an external file with dependencies. 
-    // e.g. a TextureResource used to reference a Texture in a MaterialResource used to reference a MaterialModel
+    // e.g., a TextureResource used to reference a Texture in a MaterialResource used to reference a MaterialModel
     //--------------------------------------------------------------------------------------
     class IResource : public Object
     {

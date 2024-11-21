@@ -328,7 +328,7 @@ namespace vg::engine
 
                 VG_ASSERT(loaded.GetResourceType() == _resource->GetClassName(), "[Resource] Resource \"%s\" is already loaded as a '%s' resource and cannot also be loaded as a `%s`' resource", _newPath.c_str(), loaded.GetResourceType().c_str(), _resource->GetClassName());
                 
-                // TODO : make resource type part of the hash and cooked name to that we e.g. can have a 'MeshResource' and an 'AnimationResource' from the same FBX file?
+                // TODO : make resource type part of the hash and cooked name to that we e.g., can have a 'MeshResource' and an 'AnimationResource' from the same FBX file?
                 if (loaded.GetResourceType() == _resource->GetClassName())
                 {
                     // Add to client list
@@ -586,7 +586,7 @@ namespace vg::engine
         }
         m_resourcesLoaded.clear();
 
-        // Update null entries in resources (e.g. several requests for the same resource object)
+        // Update null entries in resources (e.g., several requests for the same resource object)
         for (auto pair : m_resourceInfosMap)
         {
             ResourceInfo * info = pair.second;

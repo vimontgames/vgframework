@@ -84,8 +84,8 @@ namespace vg::editor
         static core::ISelection *               getSelection        ();
 
     //protected:
-        static float                            getDragSpeedFloat   (const core::IProperty * _prop);
-        static float                            getDragSpeedInt     (const core::IProperty * _prop);
+        static float                            getDragSpeedFloat   (const core::IObject * _object, const core::IProperty * _prop);
+        static float                            getDragSpeedInt     (const core::IObject * _object, const core::IProperty * _prop);
         static void                             underLine           (const ImColor & _color);
         static void                             textURL             (const char * _text, const char * _url);
 

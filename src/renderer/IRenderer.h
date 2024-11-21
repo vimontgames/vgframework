@@ -41,6 +41,7 @@ namespace vg
         class ILightInstance;
         class ILightDesc;
         class IUIManager;
+        class ICameraLens;
         
         struct RendererCreationParams;
 
@@ -84,6 +85,8 @@ namespace vg
             virtual gfx::IView *                        GetView                 (gfx::ViewID _viewID) const = 0;
             virtual gfx::IView *                        GetView                 (gfx::ViewTarget _target, const core::IWorld * _world) const = 0;
             virtual const core::vector<gfx::IView *>    GetViews                (gfx::ViewTarget _target) const = 0;
+
+            virtual const ICameraLens *                 GetDefaultCameraLens    () const = 0;
 
             virtual void                                SetResized              () = 0;
             virtual void                                Resize                  (core::uint _width, core::uint _height) = 0;

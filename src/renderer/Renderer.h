@@ -78,6 +78,8 @@ namespace vg::renderer
         gfx::IView *                            GetView                     (gfx::ViewTarget _target, const core::IWorld * _world) const final override;
         const core::vector <gfx::IView *>       GetViews                    (gfx::ViewTarget _target) const final override;
 
+        const ICameraLens *                     GetDefaultCameraLens        () const final override;
+
         void                                    SetResized                  () final override;
         void                                    Resize                      (core::uint _width, core::uint _height) final override;
         void                                    Move                        () final override;
@@ -186,6 +188,7 @@ namespace vg::renderer
         gfx::Texture *                          m_generatedSpecularBRDF     = nullptr;
 
         MaterialManager *                       m_materialManager           = nullptr;
+        ICameraLens *                           m_defaultCameraLens         = nullptr;
 	};
 }
 

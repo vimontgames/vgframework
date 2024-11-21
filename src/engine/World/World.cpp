@@ -201,7 +201,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    // This is a hack to fix issue when a Prefab is being release (e.g. "Save & Update")
+    // This is a hack to fix issue when a Prefab is being release (e.g., "Save & Update")
     // As it happens during render, we might end up rendering UI that is using objects that just been released
     // But it can cause flickering in all views
     //--------------------------------------------------------------------------------------

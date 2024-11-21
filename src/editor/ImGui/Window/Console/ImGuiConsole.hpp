@@ -37,7 +37,7 @@ namespace vg::editor
             const auto errorColor = adapter->GetErrorColor();
 
             // As a specific feature guaranteed by the library, after calling Begin() the last Item represent the title bar.
-            // So e.g. IsItemHovered() will return true when hovering the title bar.
+            // So e.g., IsItemHovered() will return true when hovering the title bar.
             // Here we create a context menu only available from the title bar.
             if (ImGui::BeginPopupContextItem())
             {

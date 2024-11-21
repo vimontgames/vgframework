@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animation\Animation.cpp" />
+    <ClCompile Include="Camera\Camera.cpp" />
     <ClCompile Include="DebugDraw\DebugDraw.cpp" />
     <ClCompile Include="Geometry\Geometry.cpp" />
     <ClCompile Include="Importer\FBX\UFBXImporter\UFBXImporter.cpp" />
@@ -102,6 +103,10 @@
     <ClInclude Include="Animation\SkeletalAnimation.h" />
     <ClInclude Include="Animation\SkeletalAnimation.hpp" />
     <ClInclude Include="Animation\Skeleton.hpp" />
+    <ClInclude Include="Camera\CameraLens.h" />
+    <ClInclude Include="Camera\CameraLens.hpp" />
+    <ClInclude Include="Camera\CameraSettings.h" />
+    <ClInclude Include="Camera\CameraSettings.hpp" />
     <ClInclude Include="DebugDraw\DebugDraw.h" />
     <ClInclude Include="Geometry\Batch\Batch.h" />
     <ClInclude Include="Geometry\Batch\Batch.hpp" />
@@ -112,6 +117,8 @@
     <ClInclude Include="Geometry\Vertex\DefaultVertex.h" />
     <ClInclude Include="Geometry\Vertex\SkinningVertex.h" />
     <ClInclude Include="Geometry\Vertex\VertexFormat.h" />
+    <ClInclude Include="ICameraLens.h" />
+    <ClInclude Include="ICameraSettings.h" />
     <ClInclude Include="IDebugDraw.h" />
     <ClInclude Include="ILightInstance.h" />
     <ClInclude Include="ImGui_consts.h" />

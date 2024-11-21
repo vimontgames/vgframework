@@ -377,6 +377,12 @@
     <ClInclude Include="Component\Environment\EnvironmentComponent.h">
       <Filter>Component\Environment</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\Lens\LensResource.h">
+      <Filter>Resource\Lens</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Lens\LensResource.hpp">
+      <Filter>Resource\Lens</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -504,6 +510,9 @@
     </Filter>
     <Filter Include="Component\Environment">
       <UniqueIdentifier>{c10d46fe-9dd2-4ad6-af98-be48d90ee89d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource\Lens">
+      <UniqueIdentifier>{772b7b85-d731-4ec1-b3ac-e62e03b96e83}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

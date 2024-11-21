@@ -12,7 +12,7 @@ namespace vg::core
     class IObject;
 
     //--------------------------------------------------------------------------------------
-    // This class stores Resource's metadata (e.g. Texture resource import settings)
+    // This class stores Resource's metadata (e.g., Texture resource import settings)
     //--------------------------------------------------------------------------------------
     class IResourceMeta : public Object
     {

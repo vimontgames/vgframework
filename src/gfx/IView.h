@@ -122,7 +122,6 @@ namespace vg::gfx
     };
 
     vg_enum_class(GateFitMode, core::u8,
-        //None,
         Horizontal,
         Vertical
     );

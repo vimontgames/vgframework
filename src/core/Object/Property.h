@@ -26,6 +26,7 @@ namespace vg::core
 
         void                            SetInterface                    (const char * _interface) final override;
         void                            SetRange                        (float2 _range) final override;
+        void                            SetRangeCallback                (PropertyRangeCallback _func) final override;
         void                            SetDefaultFolder                (const char * _path) final override;
         void                            SetFlags                        (PropertyFlags _flagsToSet, PropertyFlags _flagsToRemove = PropertyFlags::None) final override;
         void                            SetOffset                       (uint_ptr _offset) final override;
@@ -44,7 +45,7 @@ namespace vg::core
 		core::u32		                GetSizeOf		                () const final override;
         const char *                    GetDisplayName                  () const final override;
         PropertyFlags                   GetFlags                        () const final override;
-        float2                          GetRange                        () const final override;
+        float2                          GetRange                        (const IObject * _object, core::uint _index = 0) const final override;
         const char *                    GetEnumTypeName                 () const final override;
         u32                             GetEnumCount                    () const final override;
         void                            SetEnumName                     (uint index, core::string _name) final override;
@@ -116,6 +117,7 @@ namespace vg::core
 		core::u32	                    sizeOf			= 0x0;
         PropertyFlags                   flags			= PropertyFlags::None;
         float2		                    range			= float2(0.0f, 0.0f);
+        PropertyRangeCallback           rangeCallback   = nullptr;
         vector<EnumDesc>                enums;
     };   
 }

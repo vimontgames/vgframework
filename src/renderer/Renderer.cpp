@@ -46,6 +46,7 @@
 #include "renderer/Instance/Light/Omni/OmniLightInstance.h"
 #include "renderer/UI/UIManager.h"
 #include "renderer/Model/Material/MaterialManager.h"
+#include "renderer/Camera/CameraLens.h"
 
 #if !VG_ENABLE_INLINE
 #include "Renderer.inl"
@@ -236,7 +237,15 @@ namespace vg::renderer
         }
 
         m_bakedSpecularBRDF = m_device.createTexture("data/Engine/BRDF/CookTorrance.png");
+
+        m_defaultCameraLens = new CameraLens("Default 24-70mm FullFrame");
 	}
+
+    //--------------------------------------------------------------------------------------
+    const ICameraLens * Renderer::GetDefaultCameraLens() const
+    {
+        return m_defaultCameraLens;
+    }
 
     //--------------------------------------------------------------------------------------
     void Renderer::registerShaders()
@@ -263,6 +272,7 @@ namespace vg::renderer
 	//--------------------------------------------------------------------------------------
 	void Renderer::Deinit()
 	{
+        VG_SAFE_RELEASE(m_defaultCameraLens);
         VG_SAFE_RELEASE(m_bakedSpecularBRDF);
         VG_SAFE_RELEASE(m_generatedSpecularBRDF);
         VG_SAFE_DELETE(m_sharedCullingJobOutput);
@@ -490,7 +500,7 @@ namespace vg::renderer
                     m_frameGraph.importRenderTarget("HDROutput", m_hdrOutput, float4(0, 0, 0, 1), FrameGraphResource::InitState::Clear);
                 }
 
-                // Register passes not linked to views (e.g. skinning, or BLAS updates)
+                // Register passes not linked to views (e.g., skinning, or BLAS updates)
                 RenderPassContext mainViewRenderPassContext;
                 mainViewRenderPassContext.setView(nullptr);
 

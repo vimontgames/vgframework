@@ -172,6 +172,7 @@ namespace vg::core
         sizeOf(_other.sizeOf),
         flags(_other.flags),
         range(_other.range),
+        rangeCallback(_other.rangeCallback),
         enums(_other.enums)
     {
         
@@ -202,6 +203,13 @@ namespace vg::core
             flags |= PropertyFlags::HasRange;
 
         range = _range;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Property::SetRangeCallback(PropertyRangeCallback _func)
+    {
+        flags |= PropertyFlags::HasRange;
+        rangeCallback = _func;
     }
 
     //--------------------------------------------------------------------------------------
@@ -291,9 +299,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    float2 Property::GetRange() const
+    float2 Property::GetRange(const IObject * _object, core::uint _index) const
     {
-        return range;
+        VG_ASSERT(asBool(PropertyFlags::HasRange & flags));
+        if (rangeCallback)
+            return rangeCallback(_object, this, _index);
+        else
+            return range;
     }
 
     //--------------------------------------------------------------------------------------

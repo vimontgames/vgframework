@@ -20,6 +20,6 @@ namespace vg::gfx::vulkan
 
 	private:
 		VkImageView					m_vkImageView;		// This is the default image view with all slices/mipmaps (used for ShaderResourceView)
-		core::vector<VkImageView>	m_vkMipImageViews;	// Separate image view for each mip level (e.g. used for RWTextures)
+		core::vector<VkImageView>	m_vkMipImageViews;	// Separate image view for each mip level (e.g., used for RWTextures)
 	};
 }

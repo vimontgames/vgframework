@@ -10,10 +10,10 @@ namespace vg::core
     class IGameObject;
 
     vg_enum_class(ObjectFlags, u32,
-        NotSerialized   = 0x00000001,   // Object is not saved when its parent is serialized (e.g. for objects instantiated at runtime)
+        NotSerialized   = 0x00000001,   // Object is not saved when its parent is serialized (e.g., for objects instantiated at runtime)
         DirtySave       = 0x00000002,   // Object has been modified and needs to be saved again or changes will be lost
         Opened          = 0x00000004,   // Object shows its children
-        Prefab          = 0x00000008,   // Object (e.g. World or GameObject) is a prefab
+        Prefab          = 0x00000008,   // Object (e.g., World or GameObject) is a prefab
         Selected        = 0x00000010,   // Object is selected
         NoCulling       = 0x00000020    // Object is not influenced by any culling 
     );

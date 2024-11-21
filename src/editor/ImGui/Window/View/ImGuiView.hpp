@@ -4,6 +4,7 @@
 #include "gfx/IUIRenderer.h"
 #include "renderer/IImGuiAdapter.h"
 #include "renderer/IPicking.h"
+#include "renderer/ICameraLens.h"
 #include "engine/ISnapComponent.h"
 #include "editor/Options/EditorOptions.h"
 #include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
@@ -227,7 +228,7 @@ namespace vg::editor
                 }
             }
 
-            view->SetupPhysicalCamera(editorCam.m_matrix, editorCam.m_physicalCameraSettings.m_focalLength, editorCam.m_physicalCameraSettings.getSensorSize(), editorCam.m_physicalCameraSettings.m_gateFitMode, editorCam.m_physicalCameraSettings.m_near, editorCam.m_physicalCameraSettings.m_far);
+            view->SetupPhysicalCamera(editorCam.m_matrix, editorCam.m_physicalCameraSettings.m_focalLength, renderer->GetDefaultCameraLens()->GetSensorSize(), editorCam.m_physicalCameraSettings.m_gateFitMode, editorCam.m_physicalCameraSettings.m_near, editorCam.m_physicalCameraSettings.m_far);
         }
     }
 

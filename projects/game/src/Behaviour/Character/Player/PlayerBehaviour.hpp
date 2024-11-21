@@ -35,7 +35,7 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
     setPropertyDescription(PlayerBehaviour, m_controllerType, "Input type used by player");
 
     registerProperty(PlayerBehaviour, m_controllerIndex, "Index");
-    setPropertyDescription(PlayerBehaviour, m_controllerIndex, "Input index used to differenciate different inputs (e.g. Joypads)");
+    setPropertyDescription(PlayerBehaviour, m_controllerIndex, "Input index used to differenciate different inputs (e.g., Joypads)");
 
     registerPropertyEx(PlayerBehaviour, m_customColor, "Custom Color", PropertyFlags::Color);
     setPropertyDescription(PlayerBehaviour, m_customColor, "Custom color used for elements controller by this player");

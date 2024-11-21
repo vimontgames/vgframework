@@ -18,3 +18,4 @@
 #include "Audio/SoundResource.hpp"
 #include "ResourceInfo.hpp"
 #include "ResourceManager.hpp"
+#include "Lens/LensResource.hpp"

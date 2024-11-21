@@ -27,13 +27,13 @@ namespace vg::gfx
 		// Called when building FrameGraph, no access to CommandList
 		virtual void	Setup			(const RenderPassContext & _renderContext) = 0;
 
-		// Called before entering RenderPass (e.g. write buffers from CPU to the GPU)
+		// Called before entering RenderPass (e.g., write buffers from CPU to the GPU)
 		virtual void	BeforeRender	(const RenderPassContext & _renderContext, CommandList * _cmdList) {}
 
 		// Called after entering RenderPass for drawing stuff
 		virtual void	Render			(const RenderPassContext & _renderContext, CommandList * _cmdList) const = 0;
 
-        // Called after exiting RenderPass (e.g. read buffer from GPU to the CPU)
+        // Called after exiting RenderPass (e.g., read buffer from GPU to the CPU)
         virtual void	AfterRender		(const RenderPassContext & _renderContext, CommandList * _cmdList) {};
 
 		// Descriptor for framegraph texture/buffer

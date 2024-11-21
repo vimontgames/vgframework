@@ -213,7 +213,7 @@ namespace vg::engine
 
     //--------------------------------------------------------------------------------------
     // Remove objects with parents already in the list
-    // This is useful e.g. when deleting or moving several objects
+    // This is useful e.g., when deleting or moving several objects
     //--------------------------------------------------------------------------------------
     core::vector<core::IGameObject *> Selection::RemoveChildGameObjectsWithParents(const core::vector<core::IObject *> & _objects) const
     {

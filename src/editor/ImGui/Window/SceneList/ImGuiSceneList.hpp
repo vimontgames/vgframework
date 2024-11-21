@@ -537,7 +537,7 @@ namespace vg::editor
                             }
                             else
                             {
-                                // Check in case menu just unloaded the scene (e.g. "Save & Update")
+                                // Check in case menu just unloaded the scene (e.g., "Save & Update")
                                 if (nullptr != sceneRes->GetObject())
                                 {
                                     string sceneLabel = fmt::sprintf("%s %s", typeInfo.icon, scene->GetName());

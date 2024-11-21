@@ -24,7 +24,7 @@ namespace vg::engine
             setPropertyDefaultFolder(EngineOptions, m_startWorld, "data/Worlds")
 
             registerPropertyEnumArray(EngineOptions, string, core::Tag, m_gameObjectTags, "GameObject Tags");
-            setPropertyDescription(EngineOptions, m_gameObjectTags, "Use GameObject Tags to categorize objects (e.g. Player, Ennemy ...)")
+            setPropertyDescription(EngineOptions, m_gameObjectTags, "Use GameObject Tags to categorize objects (e.g., Player, Enemy ...)")
         }
         registerPropertyGroupEnd(EngineOptions);
 

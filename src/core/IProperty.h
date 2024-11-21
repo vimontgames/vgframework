@@ -77,7 +77,7 @@ namespace vg::core
     vg_enum_class(PropertyFlags, u64,
         None                = 0x0000000000000000,
         ReadOnly            = 0x0000000000000001,   // Cannot edit from GUI
-        Color               = 0x0000000000000002,   // Type represents a color (e.g. float4 or u32)
+        Color               = 0x0000000000000002,   // Type represents a color (e.g., float4 or u32)
         IsFolder            = 0x0000000000000004,   // String is a folder
         IsFile              = 0x0000000000000008,   // String is a folder
         HasRange            = 0x0000000000000010,   // Property has [min..max] range
@@ -94,7 +94,7 @@ namespace vg::core
         NotVisible          = 0x0000000000008000,   // A property that is not visible
         Hexadecimal         = 0x0000000000010000,   // Display value using hexadecimal
         EulerAngle          = 0x0000000000020000,   // Edited value is Euler angle
-        AlphabeticalOrder   = 0x0000000000040000    // Sort multiple values in alphabetical order (e.g. enums)
+        AlphabeticalOrder   = 0x0000000000040000    // Sort multiple values in alphabetical order (e.g., enums)
     );
 
     vg_enum_class(PropertyLayoutElement, u8,
@@ -105,14 +105,18 @@ namespace vg::core
         GroupEnd
     );
 
+    class IObject;
+
     class IProperty
     {
     public:
 
-        using Callback = bool (__cdecl*)(class IObject*);
+        using Callback = bool (__cdecl*)(IObject*);
+        using PropertyRangeCallback = core::float2(__cdecl *)(const IObject *, const IProperty *, core::uint _index);
 
         virtual void                            SetInterface                    (const char * _interface) = 0;
         virtual void                            SetRange                        (float2 _range) = 0;
+        virtual void                            SetRangeCallback                (PropertyRangeCallback _func) = 0;
         virtual void                            SetDefaultFolder                (const char * _path) = 0;
         virtual void                            SetFlags                        (PropertyFlags _flagsToSet, PropertyFlags _flagsToRemove = PropertyFlags::None) = 0;
         virtual void                            SetOffset                       (uint_ptr _offset) = 0;
@@ -131,7 +135,7 @@ namespace vg::core
         virtual PropertyFlags                   GetFlags                        () const = 0;
         virtual uint_ptr                        GetOffset                       () const = 0;
 		virtual u32					            GetSizeOf				        () const = 0;
-        virtual float2                          GetRange                        () const = 0;
+        virtual float2                          GetRange                        (const IObject * _object, core::uint _index = 0) const = 0;
         virtual const char *                    GetEnumTypeName                 () const = 0;
         virtual u32                             GetEnumCount                    () const = 0;
         virtual void                            SetEnumName                     (uint index, core::string _name) = 0;
@@ -209,7 +213,7 @@ namespace vg::core
 // 'Ex' versions of the functions take flags as parameters
 //--------------------------------------------------------------------------------------
 
-// Register property for a simple type (e.g. int, float, float4 ...)
+// Register property for a simple type (e.g., int, float, float4 ...)
 #define registerPropertyEx(className, propertyName, displayName, flags)								        _desc.RegisterProperty(#className, #propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
 #define registerProperty(className, propertyName, displayName)									            registerPropertyEx(className, propertyName, displayName, vg::core::PropertyFlags::None)
 
@@ -282,6 +286,7 @@ namespace vg::core
 //--------------------------------------------------------------------------------------
 #define setPropertyFlag(className, propertyName, flags, value)												{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetFlags(value ? flags : (vg::core::PropertyFlags)0, value ? (vg::core::PropertyFlags)0 : flags); } else { VG_WARNING("[Factory] Could not set \"Flags\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 #define setPropertyRange(className, propertyName, range)												    { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetRange(range);                                                                                        } else { VG_WARNING("[Factory] Could not set \"Range\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyRangeCallback(className, propertyName, func)                                             { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetRangeCallback(func);                                                                                 } else { VG_WARNING("[Factory] Could not set \"Range Callback\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 #define setPropertyDefaultFolder(className, propertyName, defaultFolder)									{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetDefaultFolder(defaultFolder);                                                                        } else { VG_WARNING("[Factory] Could not set \"Default Folder\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 #define setPropertyDescription(className, propertyName, description)                                        { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetDescription(description);                                                                            } else { VG_WARNING("[Factory] Could not set \"Description\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 
