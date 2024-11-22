@@ -113,8 +113,8 @@ void GameCameraManagerBehaviour::updateGameViewports()
         {
             cameras[i] = camGO;
             auto * playerGO = player->GetGameObject();
-            camGO->SetName("Camera_" + playerGO->GetName());
-            if (auto * gameCamBehaviour = camGO->GetComponentT<GameCameraBehaviour>())
+            camGO->SetName("Player Camera " + playerGO->GetName());
+            if (auto * gameCamBehaviour = camGO->GetComponentInChildrenT<GameCameraBehaviour>())
                 gameCamBehaviour->setTarget(playerGO);
         }
     }
@@ -125,7 +125,7 @@ void GameCameraManagerBehaviour::updateGameViewports()
         {
             cameras[0]->SetInstanceFlags(vg::core::InstanceFlags::Enabled, true);
 
-            if (auto * cam0 = cameras[0]->GetComponentT<ICameraComponent>())
+            if (auto * cam0 = cameras[0]->GetComponentInChildrenT<ICameraComponent>())
             {
                 switch (m_players)
                 {
@@ -160,7 +160,7 @@ void GameCameraManagerBehaviour::updateGameViewports()
         if (m_players > 1)
         {
             cameras[1]->SetInstanceFlags(vg::core::InstanceFlags::Enabled, true);
-            if (auto * cam1 = cameras[1]->GetComponentT<ICameraComponent>())
+            if (auto * cam1 = cameras[1]->GetComponentInChildrenT<ICameraComponent>())
             {
                 switch (m_players)
                 {
@@ -190,7 +190,7 @@ void GameCameraManagerBehaviour::updateGameViewports()
         if (m_players > 2)
         {
             cameras[2]->SetInstanceFlags(vg::core::InstanceFlags::Enabled, true);
-            if (auto * cam2 = cameras[2]->GetComponentT<ICameraComponent>())
+            if (auto * cam2 = cameras[2]->GetComponentInChildrenT<ICameraComponent>())
             {
                 switch (m_players)
                 {
@@ -219,7 +219,7 @@ void GameCameraManagerBehaviour::updateGameViewports()
         if (m_players > 3)
         {
             cameras[3]->SetInstanceFlags(vg::core::InstanceFlags::Enabled, true);
-            if (auto * cam3 = cameras[3]->GetComponentT<ICameraComponent>())
+            if (auto * cam3 = cameras[3]->GetComponentInChildrenT<ICameraComponent>())
             {
                 switch (m_players)
                 {
