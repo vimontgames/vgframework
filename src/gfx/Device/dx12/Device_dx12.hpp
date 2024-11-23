@@ -127,9 +127,9 @@ namespace vg::gfx::dx12
             for (uint i = 0; i < enumCount<MSAA>(); ++i)
             {
                 const auto msaa = enumValue<MSAA>(i);
-                if (checkMSAASupport(Texture::getd3d12SurfaceFormat(PixelFormat::R16G16B16A16_float), (uint)msaa))
+                if (checkMSAASupport(Texture::getd3d12SurfaceFormat(PixelFormat::R16G16B16A16_float), (uint)TextureDesc::getMSAASampleCount(msaa)))
                 {
-                    m_caps.msaa.modes |= msaa;
+                    m_caps.msaa.modes |= (MSAAFlags)(1<<(uint)msaa);
 
                     if (!first)
                         supportedMSAAModes += " | ";

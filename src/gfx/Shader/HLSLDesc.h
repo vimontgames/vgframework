@@ -35,8 +35,11 @@ namespace vg::gfx
             ShaderKey::Flags        flags = 0x0000;
 
             VG_INLINE void setFlag(ShaderKey::Flags _flag, bool _enable = true);
-            VG_INLINE void setFlags(ShaderKey::Flags _flag, core::uint _value);
+            template <typename E> void setValue(ShaderKey::Flags _flag, E _value) { setFlags(_flag, (core::uint)_value); }
             VG_INLINE bool operator == (const Technique & _other) const;
+
+        private:
+            VG_INLINE void setFlags(ShaderKey::Flags _flag, core::uint _value);
         };
 
         ~HLSLDesc(); // release all compiled shaders

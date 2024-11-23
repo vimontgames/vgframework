@@ -294,9 +294,15 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         color = getTexture2D(postProcessConstants.getColor()).Load(address);
         #endif
 
+        #if SAMPLE_COUNT > 1
+        // TODO: pass to shader if original depthstencil is MSAA
+        float depth = loadDepthMSAA(postProcessConstants.getDepth(), address, 0);
+        uint stencil = loadStencilMSAA(postProcessConstants.getStencil(), address, 0);
+        #else
         float depth = loadDepth(postProcessConstants.getDepth(), address); 
         uint stencil = loadStencil(postProcessConstants.getStencil(), address);
-        
+        #endif
+   
         #if _TOOLMODE
 
         #if _RAYTRACING
@@ -309,13 +315,22 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
             break;
         
             case DisplayMode::PostProcess_Depth:
-            color.rgb = frac(depth * viewConstants.getCameraNearFar().y);
+            color.rgb = frac(depth.xxx * float3(65536, 256, 1));
             break;
 
             case DisplayMode::PostProcess_LinearDepth:
             {
+                #if 0
+                // Compute linear depth from ZBuffer
                 float linearDepth = viewConstants.getLinearDepth(depth);
-                color.rgb = depth < 1.0f ? frac(linearDepth * viewConstants.getCameraNearFar().y) : 0.0f;
+                color.rgb = frac(linearDepth * (viewConstants.getCameraNearFar().y-viewConstants.getCameraNearFar().x));
+                #else
+                // Use resolved MSAA linear depth texture
+                float2 linearDepth = getTexture2D(postProcessConstants.getLinearDepth()).SampleLevel(nearestClamp, uv, 0).rg;   
+                       //linearDepth *= viewConstants.getCameraDepthRange();           
+                //color.rgb = float3(frac(linearDepth.xy), (linearDepth.x == linearDepth.y) ? frac(linearDepth.x) : 0);
+                color.rgb = frac(linearDepth.xxx); // minZ
+                #endif
             }
             break;
 

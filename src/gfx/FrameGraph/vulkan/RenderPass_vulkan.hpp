@@ -33,7 +33,7 @@ namespace vg::gfx::vulkan
         _att->format = Texture::getVulkanPixelFormat(_format);
 
         // TODO: RenderPassKey flags for initial/final state for each attachment
-        _att->samples = (VkSampleCountFlagBits)_msaa;
+        _att->samples = (VkSampleCountFlagBits)TextureDesc::getMSAASampleCount(_msaa);
 
         if (asBool(ResourceTransitionFlags::Clear & _info.flags))
             _att->loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;

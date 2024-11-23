@@ -6,6 +6,7 @@
 #include "system/color.hlsli"
 #include "system/view.hlsli" 
 #include "system/msaa.hlsli"
+#include "system/depthstencil.hlsli"
 
 struct VS_Output_Quad
 {
@@ -75,7 +76,7 @@ PS_Output_Quad PS_Copy(PS_Input_Quad _input)
 
     #endif
 
-    // Apply HDR
+    // Apply HDR 
     float standardNits = 80; // temp
     const float st2084max = 10000.0;
     const float hdrScalar = standardNits / st2084max;
@@ -103,6 +104,40 @@ PS_Output_Quad PS_Copy(PS_Input_Quad _input)
     output.color0.a = 1;
 
     return output;
+}
+
+struct PS_Output_MinMaxDepth
+{
+    float2 color0 : Color0;
+};
+
+PS_Output_MinMaxDepth PS_CopyLinearDepth(PS_Input_Quad _input)
+{
+    PS_Output_MinMaxDepth output;
+    float2 uv = _input.uv;
+
+    ViewConstants viewConstants;
+    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+
+    uint2 address = viewConstants.getScreenSize().xy * uv;
+
+    #if SAMPLE_COUNT > 1  
+    float2 minMaxDepth = float2(1,0);
+    [unroll]
+    for (uint i = 0; i < SAMPLE_COUNT; ++i)
+    {
+        float depth = loadDepthMSAA(rootConstants2D.texID, address, i);
+        minMaxDepth.x = min(minMaxDepth.x, depth);
+        minMaxDepth.y = max(minMaxDepth.y, depth);
+    }   
+    output.color0 = float2(viewConstants.getLinearDepth(minMaxDepth.x), viewConstants.getLinearDepth(minMaxDepth.y));
+
+    #else
+    float depth = loadDepth(rootConstants2D.texID, address);
+    output.color0 = viewConstants.getLinearDepth(depth).xx;
+    #endif
+
+    return output; 
 }
 
 

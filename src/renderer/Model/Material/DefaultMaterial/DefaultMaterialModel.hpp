@@ -19,6 +19,9 @@ namespace vg::renderer
         registerPropertyEx(DefaultMaterialModel, m_tiling, "Tiling", PropertyFlags::NotSaved);
         setPropertyRange(DefaultMaterialModel, m_tiling, float2(0, 16));
 
+        registerPropertyEx(DefaultMaterialModel, m_offset, "Offset", PropertyFlags::NotSaved);
+        setPropertyRange(DefaultMaterialModel, m_offset, float2(-8, 8));
+
         registerPropertyEx(DefaultMaterialModel, m_enableAlbedo, "Enable Albedo", PropertyFlags::NotSaved);
         registerPropertyObjectEx(DefaultMaterialModel, m_albedoMap, "Albedo Map", PropertyFlags::NotSaved);
         registerPropertyEx(DefaultMaterialModel, m_albedoColor, "Albedo Color", PropertyFlags::Color);
@@ -60,6 +63,7 @@ namespace vg::renderer
     {
         _data->setUVSource(m_UVSource);
         _data->setTiling(m_tiling);
+        _data->setOffset(m_offset);
 
         //const auto lightingMode = RendererOptions::get()->getLightingMode();
         const bool enableAlbedo = (/*LightingMode::Deferred == lightingMode && */ SurfaceType::Decal == m_surfaceType) | m_enableAlbedo;
@@ -77,7 +81,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DefaultMaterialModel::Setup(const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3D, core::uint _index) const
+    void DefaultMaterialModel::Setup(const RenderContext & _renderContext, CommandList * _cmdList, RootConstants3D * _root3D, core::uint _index) const
     {
         _root3D->setMatID(_index);
         //_root3D->setColor(m_albedoColor);
@@ -100,8 +104,8 @@ namespace vg::renderer
                 BlendState bs(BlendFactor::Zero, BlendFactor::Zero, BlendOp::Add, (ColorWrite)0x0);
                 _cmdList->setBlendState(bs);
 
-                key.setFlag(gfx::DefaultHLSLDesc::Toolmode, false);
-                key.setFlag(gfx::DefaultHLSLDesc::ZOnly, true);
+                key.setFlag(DefaultHLSLDesc::Toolmode, false);
+                key.setFlag(DefaultHLSLDesc::ZOnly, true);
             }
             break;
 
@@ -124,7 +128,7 @@ namespace vg::renderer
                 _cmdList->setBlendState(bs);
 
                 if (_renderContext.m_raytracing)
-                    key.setFlag(gfx::DefaultHLSLDesc::RayTracing, true);
+                    key.setFlag(DefaultHLSLDesc::RayTracing, true);
 
                 if (_renderContext.m_toolmode)
                 {
@@ -134,11 +138,11 @@ namespace vg::renderer
                         _root3D->setFlags(RootConstantsFlags::Wireframe);
                     }
 
-                    key.setFlag(gfx::DefaultHLSLDesc::Toolmode, true);
+                    key.setFlag(DefaultHLSLDesc::Toolmode, true);
                 }
                 else
                 {
-                    key.setFlag(gfx::DefaultHLSLDesc::Toolmode, false);
+                    key.setFlag(DefaultHLSLDesc::Toolmode, false);
                 }
             }
             break;
@@ -155,20 +159,20 @@ namespace vg::renderer
                 {
                     if (!m_enableAlbedo)
                     {
-                        bs.m_renderTargetBlend[0].colorWrite = (gfx::ColorWrite)0x0;
-                        bs.m_flags = gfx::BlendStateFlags::IndependantBlend;
+                        bs.m_renderTargetBlend[0].colorWrite = (ColorWrite)0x0;
+                        bs.m_flags = BlendStateFlags::IndependantBlend;
                     }
 
                     //if (!m_enableNormal)
                     //{
-                    //    bs.m_renderTargetBlend[1].colorWrite = (gfx::ColorWrite)0x0;
-                    //    bs.m_flags = gfx::BlendStateFlags::IndependantBlend;
+                    //    bs.m_renderTargetBlend[1].colorWrite = (ColorWrite)0x0;
+                    //    bs.m_flags = BlendStateFlags::IndependantBlend;
                     //}
                     //
                     //if (!m_enablePbr)
                     //{
-                    //    bs.m_renderTargetBlend[2].colorWrite = (gfx::ColorWrite)0x0;
-                    //    bs.m_flags = gfx::BlendStateFlags::IndependantBlend;
+                    //    bs.m_renderTargetBlend[2].colorWrite = (ColorWrite)0x0;
+                    //    bs.m_flags = BlendStateFlags::IndependantBlend;
                     //}
                 }
                     
@@ -177,14 +181,14 @@ namespace vg::renderer
                 VG_ASSERT(!_renderContext.m_wireframe);
 
                 if (_renderContext.m_toolmode)
-                    key.setFlag(gfx::DefaultHLSLDesc::Toolmode, true);
+                    key.setFlag(DefaultHLSLDesc::Toolmode, true);
                 else
-                    key.setFlag(gfx::DefaultHLSLDesc::Toolmode, false);
+                    key.setFlag(DefaultHLSLDesc::Toolmode, false);
             }
             break;
         }       
 
-        gfx::CullMode cullMode;
+        CullMode cullMode;
         switch (m_cullMode)
         {
             default:
@@ -205,13 +209,13 @@ namespace vg::renderer
 
         _cmdList->setRasterizerState(rs);
 
-        key.setFlags(gfx::DefaultHLSLDesc::Surface, (uint)m_surfaceType);
+        key.setValue(DefaultHLSLDesc::Surface, m_surfaceType);
 
         _cmdList->setShader(key);
     }
 
     //--------------------------------------------------------------------------------------
-    void DefaultMaterialModel::SetSurfaceType(gfx::SurfaceType _surfaceType)
+    void DefaultMaterialModel::SetSurfaceType(SurfaceType _surfaceType)
     {
         m_surfaceType = _surfaceType;
     }
@@ -224,18 +228,18 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DefaultMaterialModel::SetTexture(const core::string & _name, gfx::ITexture * _value)
+    void DefaultMaterialModel::SetTexture(const core::string & _name, ITexture * _value)
     {
         if (_name == "m_albedoMap")
-            assignTexture((gfx::Texture**)&m_albedoMap, (gfx::Texture *)_value);
+            assignTexture((Texture**)&m_albedoMap, (Texture *)_value);
         else if (_name == "m_normalMap")
-            assignTexture((gfx::Texture**)&m_normalMap, (gfx::Texture *)_value);
+            assignTexture((Texture**)&m_normalMap, (Texture *)_value);
         else if (_name == "m_pbrMap")
-            assignTexture((gfx::Texture **)&m_pbrMap, (gfx::Texture *)_value);
+            assignTexture((Texture **)&m_pbrMap, (Texture *)_value);
     }
 
     //--------------------------------------------------------------------------------------
-    void DefaultMaterialModel::assignTexture(gfx::Texture ** _texture, gfx::Texture * _value)
+    void DefaultMaterialModel::assignTexture(Texture ** _texture, Texture * _value)
     {
         if (*_texture != _value)
         {

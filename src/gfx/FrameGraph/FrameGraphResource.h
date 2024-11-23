@@ -123,9 +123,9 @@ namespace vg::gfx
         }
 
         TextureType                     type        = TextureType::Texture2D;
-        core::u16			            width       = 0;
-        core::u16			            height      = 0;
-        core::u16                       depth       = 0;
+        core::u16			            width       = 1;
+        core::u16			            height      = 1;
+        core::u16                       depth       = 1;
         PixelFormat			            format      = PixelFormat::R8G8B8A8_unorm;
         MSAA                            msaa        = MSAA::None;
         FrameGraphResource::InitState   initState   = FrameGraphResource::InitState::Discard;

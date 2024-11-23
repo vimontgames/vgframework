@@ -13,8 +13,12 @@ namespace vg::engine
         setPropertyDescription(DefaultMaterialData, m_UVSource, "Select UV source to use in shader");
 
         registerProperty(DefaultMaterialData, m_tiling, "Tiling");
-        setPropertyDescription(DefaultMaterialData, m_tiling, "Texture repetition rate");
+        setPropertyDescription(DefaultMaterialData, m_tiling, "Texture coordordinates repetition rate");
         setPropertyRange(DefaultMaterialData, m_tiling, float2(0, 16));
+
+        registerProperty(DefaultMaterialData, m_offset, "Offset");
+        setPropertyDescription(DefaultMaterialData, m_offset, "Texture coordinates offset");
+        setPropertyRange(DefaultMaterialData, m_offset, float2(-8, 8));
 
         registerPropertyEx(DefaultMaterialData, m_enableAlbedo, "Albedo", PropertyFlags::NotVisible);
         registerPropertyOptionalGroupBegin(DefaultMaterialData, m_enableAlbedo, "Enable Albedo");

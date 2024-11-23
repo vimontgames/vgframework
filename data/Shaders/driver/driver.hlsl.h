@@ -6,14 +6,15 @@ namespace vg::gfx
 {
     class DriverHLSLDesc : public HLSLDesc
     {
-    public:
         enum Flags : ShaderKey::Flags
         {
-            Gamma = 0,
-            HDR = 1,  // 2 bits
-            MSAA = 3   // 3 bits
+            Gamma   = 0,    // 1 bit  (ON/OFF)
+            HDR     = 1,    // 2 bits (HDR enum)
+            MSAA    = 3,    // 3 bits (MSAA enum)
+            Depth   = 6     // 1 bit  (ON/OFF)
         };
 
+    public:
         DriverHLSLDesc()
         {
             setFile("driver/driver.hlsl");
@@ -21,6 +22,7 @@ namespace vg::gfx
             declFlag(Gamma, ShaderStageFlags::PS, "_GAMMA");
             declFlags(HDR, ShaderStageFlags::PS, { "", "_HDR10", "_HDR16" });
             declFlags(MSAA, ShaderStageFlags::PS, { "", "_MSAA2X", "_MSAA4X", "_MSAA8X", "_MSAA16X" });
+            declFlag(Depth, ShaderStageFlags::PS, "_DEPTH");
 
             auto vsQuad = declVS("VS_Quad");
             auto psCopy = declPS("PS_Copy");
@@ -28,25 +30,41 @@ namespace vg::gfx
             auto & copy = declTechnique("Copy", vsQuad, psCopy);
 
             auto & gamma = declTechnique("Gamma", vsQuad, psCopy);
-            gamma.setFlag(Flags::Gamma, true);
+            gamma.setFlag(Gamma, true);
 
             auto & hdr10 = declTechnique("HDR10", vsQuad, psCopy);
-            hdr10.setFlags(Flags::HDR, 1);
+            hdr10.setValue(HDR, HDR::HDR10);
 
             auto & hdr16 = declTechnique("HDR16", vsQuad, psCopy);
-            hdr16.setFlags(Flags::HDR, 2);
+            hdr16.setValue(HDR, HDR::HDR16);
 
-            auto & msaa2X = declTechnique("MSAA2X", vsQuad, psCopy);
-            msaa2X.setFlags(MSAA, 1);
+            auto & resolveColorMSAA2X = declTechnique("ResolveColorMSAA2X", vsQuad, psCopy);
+            resolveColorMSAA2X.setValue(MSAA, MSAA::MSAA2X);
 
-            auto & msaa4X = declTechnique("MSAA4X", vsQuad, psCopy);
-            msaa4X.setFlags(MSAA, 2);
+            auto & resolveColorMSAA4X = declTechnique("ResolveColorMSAA4X", vsQuad, psCopy);
+            resolveColorMSAA4X.setValue(MSAA, MSAA::MSAA4X);
 
-            auto & msaa8X = declTechnique("MSAA8X", vsQuad, psCopy);
-            msaa8X.setFlags(MSAA, 3);
+            auto & resolveColorMSAA8X = declTechnique("ResolveColorMSAA8X", vsQuad, psCopy);
+            resolveColorMSAA8X.setValue(MSAA, MSAA::MSAA8X);
 
-            auto & msaa16X = declTechnique("MSAA16X", vsQuad, psCopy);
-            msaa16X.setFlags(MSAA, 4);
+            auto & resolveColorMSAA16X = declTechnique("ResolveColorMSAA16X", vsQuad, psCopy);
+            resolveColorMSAA16X.setValue(MSAA, MSAA::MSAA16X);
+
+            auto psCopyLinearDepth = declPS("PS_CopyLinearDepth");
+
+            auto & copyLinearDepth = declTechnique("CopyLinearDepth", vsQuad, psCopyLinearDepth);
+
+            auto & resolveLinearDepthMSAA2X = declTechnique("ResolveLinearDepthMSAA2X", vsQuad, psCopyLinearDepth);
+            resolveLinearDepthMSAA2X.setValue(MSAA, MSAA::MSAA2X);
+
+            auto & resolveLinearDepthMSAA4X = declTechnique("ResolveLinearDepthMSAA4X", vsQuad, psCopyLinearDepth);
+            resolveLinearDepthMSAA4X.setValue(MSAA, MSAA::MSAA4X);
+
+            auto & resolveLinearDepthMSAA8X = declTechnique("ResolveLinearDepthMSAA8X", vsQuad, psCopyLinearDepth);
+            resolveLinearDepthMSAA8X.setValue(MSAA, MSAA::MSAA8X);
+
+            auto & resolveLinearDepthMSAA16X = declTechnique("ResolveLinearDepthMSAA16X", vsQuad, psCopyLinearDepth);
+            resolveLinearDepthMSAA16X.setValue(MSAA, MSAA::MSAA16X);
         }
     };
 }

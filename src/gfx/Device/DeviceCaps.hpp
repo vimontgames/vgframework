@@ -21,7 +21,7 @@ namespace vg::gfx
 		registerPropertyEnumBitfieldEx(DeviceCaps, MSAA, msaa.modes, "MSAA", PropertyFlags::ReadOnly);
 		setPropertyDescription(DeviceCaps, msaa.modes, "Supported multisampling modes");
 
-        registerPropertyEnumBitfieldEx(DeviceCaps, HDR, hdr.modes, "HDR", PropertyFlags::ReadOnly);
+        registerPropertyEnumBitfieldEx(DeviceCaps, HDRFlags, hdr.modes, "HDR", PropertyFlags::ReadOnly);
         setPropertyDescription(DeviceCaps, hdr.modes, "Supported HDR modes");
 
         return true;

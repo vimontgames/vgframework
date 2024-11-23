@@ -5,7 +5,7 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    class ForwardTransparentPass : public RenderObjectsPass
+    class ForwardTransparentPass final : public RenderObjectsPass
     {
     public:
         VG_CLASS_DECL(ForwardTransparentPass, RenderObjectsPass);
@@ -13,9 +13,11 @@ namespace vg::renderer
         ForwardTransparentPass();
         ~ForwardTransparentPass();
 
-        void Setup(const gfx::RenderPassContext & _renderPassContext) override;
-        void Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const override;
+        void Setup(const gfx::RenderPassContext & _renderPassContext) final override;
+        void BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
+        void Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const final override;
 
-
+    private:
+        static gfx::Buffer * s_TransparentPassConstantsBuffer;
     };
 }

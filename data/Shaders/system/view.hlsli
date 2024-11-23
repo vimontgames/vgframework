@@ -108,6 +108,7 @@ struct ViewConstants
     void            setCameraAspectRatio    (float _ar)                         { m_camera.w = _ar; }
 
     float2          getCameraNearFar        ()                                  { return m_camera.xy; }
+    float           getCameraDepthRange     ()                                  { return m_camera.y - 0 * m_camera.x; }
     float           getCameraFieldOfView    ()                                  { return m_camera.z; }
     float           getCameraAspectRatio    ()                                  { return m_camera.w; }
     
@@ -123,7 +124,7 @@ struct ViewConstants
     void            setProjInv              (float4x4 _projInv)                 { m_projInv = _projInv; }
     float4x4        getProjInv              ()                                  { return m_projInv; }
     
-    float           getLinearDepth          (float _zBuffer)                    { float n = getCameraNearFar().x; float f = getCameraNearFar().y;  return (2.0f * n) / (f + n - _zBuffer * (f - n)); }
+    float           getLinearDepth          (float _zBuffer)                    { float n = getCameraNearFar().x; float f = getCameraNearFar().y; return (n*f) / (f - _zBuffer * (f - n)); /*return (2.0f * n) / (f + n - _zBuffer * (f - n));*/ }
     float3          getViewPos              (float2 _screenPos, float _zBuffer) { float4 clipPos = float4(float2(_screenPos.x, 1-_screenPos.y) * 2.0f - 1.0f, _zBuffer, 1.0f); float4 viewPos = mul(clipPos, getProjInv()); return viewPos.xyz / viewPos.w; }
     float3          getWorldPos             (float2 _screenPos, float _zBuffer) { float3 viewPos = getViewPos(_screenPos, _zBuffer); return mul(float4(viewPos.xyz,1.0f), getViewInv()).xyz; }
     float3          getCameraRight          ()                                  {  return -m_viewInv[0].xyz; }

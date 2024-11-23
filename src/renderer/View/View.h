@@ -193,7 +193,7 @@ namespace vg::renderer
         Frustum                             m_frustum;
         ViewCullingJobOutput                m_cullingJobResult;
         core::vector<ShadowView*>           m_shadowViews;
-        UIRenderer *                           m_viewGUI                   = nullptr;
+        UIRenderer *                        m_viewGUI                   = nullptr;
     };
 }
 

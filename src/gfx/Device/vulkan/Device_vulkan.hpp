@@ -515,15 +515,15 @@ namespace vg::gfx::vulkan
 				}
 			}
 
-			m_caps.hdr.modes = HDR::None;
+			m_caps.hdr.modes = HDRFlags::None;
 
 			if (m_vkPhysicalDevice)
 			{
 				if (hdr10)
-					m_caps.hdr.modes |= HDR::HDR10;
+					m_caps.hdr.modes |= HDRFlags::HDR10;
 
                 if (hdr16)
-                    m_caps.hdr.modes |= HDR::HDR16;
+                    m_caps.hdr.modes |= HDRFlags::HDR16;
 			}
 			else
 			{
@@ -556,16 +556,16 @@ namespace vg::gfx::vulkan
 
 		// Check MSAA support
 		{
-			m_caps.msaa.modes = MSAA::None;
+			m_caps.msaa.modes = MSAAFlags::None;
 
 			VkSampleCountFlags colorSampleCounts = m_vkPhysicalDeviceProperties.limits.framebufferColorSampleCounts;
 			VkSampleCountFlags depthSampleCounts = m_vkPhysicalDeviceProperties.limits.framebufferDepthSampleCounts;
 
 			for (uint i = 1; i < enumCount<MSAA>(); ++i)
 			{
-				const auto bit = enumValue<MSAA>(i);
+				const auto bit = gfx::TextureDesc::getMSAASampleCount(enumValue<MSAA>(i));
 				if (((uint)bit & colorSampleCounts) && ((uint)bit & depthSampleCounts))
-					m_caps.msaa.modes |= bit;
+					m_caps.msaa.modes |= (MSAAFlags)bit;
 			}
 		}
 

@@ -4,22 +4,37 @@
 #include "renderer/Model/Mesh/MeshModel.h"
 #include "renderer/Model/Material/MaterialModel.h"
 #include "renderer/View/View.h"
+#include "renderer/RenderPass/Update/ViewConstants/ViewConstantsUpdatePass.h"
+#include "Shaders/system/transparentPass.hlsli"
 
 namespace vg::renderer
 {
+    gfx::Buffer * ForwardTransparentPass::s_TransparentPassConstantsBuffer = nullptr;
+
     //--------------------------------------------------------------------------------------
     // Setup executed once, when pass is created
     //--------------------------------------------------------------------------------------
     ForwardTransparentPass::ForwardTransparentPass() :
         RenderObjectsPass("ForwardTransparentPass")
     {
+        auto * device = Device::get();
 
+        if (nullptr == s_TransparentPassConstantsBuffer)
+        {
+            BufferDesc viewConstantsBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, sizeof(TransparentPassConstants));
+            s_TransparentPassConstantsBuffer = device->createBuffer(viewConstantsBufferDesc, "TransparentPassConstants", nullptr, ReservedSlot::TransparentPassBufSrv);
+        }
+        else
+        {
+            VG_SAFE_INCREASE_REFCOUNT(s_TransparentPassConstantsBuffer);
+        }
     }
 
     //--------------------------------------------------------------------------------------
     ForwardTransparentPass::~ForwardTransparentPass()
     {
-
+        if (s_TransparentPassConstantsBuffer && !s_TransparentPassConstantsBuffer->Release())
+            s_TransparentPassConstantsBuffer = nullptr;
     }
 
     //--------------------------------------------------------------------------------------
@@ -34,6 +49,22 @@ namespace vg::renderer
 
         const View * view = static_cast<const View *>(_renderPassContext.getView());
         readDepthStencil(view->getShadowMaps());
+
+        const auto linearDepthID = _renderPassContext.getFrameGraphID("LinearDepth");
+        readRenderTarget(linearDepthID);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ForwardTransparentPass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
+    {
+        auto linearDepthTex = getRenderTarget(_renderPassContext.getFrameGraphID("LinearDepth"));
+        auto linearDepth = linearDepthTex->getTextureHandle();
+
+        TransparentPassConstants * constants = (TransparentPassConstants *)_cmdList->map(s_TransparentPassConstantsBuffer, sizeof(TransparentPassConstants)).data;
+        {
+            constants->setLinearDepth(linearDepth);
+        }
+        _cmdList->unmap(s_TransparentPassConstantsBuffer);
     }
 
     //--------------------------------------------------------------------------------------

@@ -105,7 +105,7 @@ namespace vg::gfx::vulkan
         }
 
         ms.pSampleMask = nullptr;
-        ms.rasterizationSamples = (VkSampleCountFlagBits)_key.m_renderPassKey.m_msaa;
+        ms.rasterizationSamples = (VkSampleCountFlagBits)TextureDesc::getMSAASampleCount(_key.m_renderPassKey.m_msaa);
         vkPipelineDesc.pMultisampleState = &ms;
 
         // Shaders

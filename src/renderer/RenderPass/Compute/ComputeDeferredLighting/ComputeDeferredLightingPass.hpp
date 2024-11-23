@@ -55,7 +55,7 @@ namespace vg::renderer
             const auto colorID = _renderPassContext.getFrameGraphID("Color");
             const FrameGraphTextureResourceDesc * colorResourceDesc = getTextureResourceDesc(colorID);
 
-            int2 msaaScale = getMSAASampleScale((uint)msaa);
+            const int2 msaaScale = getMSAASampleScale((uint)TextureDesc::getMSAASampleCount(msaa));
 
             const uint width = colorResourceDesc->width * msaaScale.x;
             const uint height = colorResourceDesc->height * msaaScale.y;
@@ -104,19 +104,19 @@ namespace vg::renderer
                 break;
 
             case MSAA::MSAA2X:
-                shaderKey.setFlags(DeferredLightingHLSLDesc::Flags::MSAA, 1);
+                shaderKey.setValue(DeferredLightingHLSLDesc::Flags::MSAA, MSAA::MSAA2X);
                 break;
 
             case MSAA::MSAA4X:
-                shaderKey.setFlags(DeferredLightingHLSLDesc::Flags::MSAA, 2);
+                shaderKey.setValue(DeferredLightingHLSLDesc::Flags::MSAA, MSAA::MSAA4X);
                 break;
 
             case MSAA::MSAA8X:
-                shaderKey.setFlags(DeferredLightingHLSLDesc::Flags::MSAA, 3);
+                shaderKey.setValue(DeferredLightingHLSLDesc::Flags::MSAA, MSAA::MSAA8X);
                 break;
 
             case MSAA::MSAA16X:
-                shaderKey.setFlags(DeferredLightingHLSLDesc::Flags::MSAA, 4);
+                shaderKey.setValue(DeferredLightingHLSLDesc::Flags::MSAA, MSAA::MSAA16X);
                 break;
         }
         

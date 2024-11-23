@@ -56,8 +56,8 @@ namespace vg::gfx
         // MSAA
         struct MSAACaps
         {
-            bool isSupported(MSAA _mode) const { return core::asBool(core::operator &(_mode, modes)); }
-            MSAA modes = (MSAA)0x0;
+            bool isSupported(MSAA _mode) const { return 0 != ((1 << core::uint(_mode)) & (uint)modes); }
+            MSAAFlags modes = MSAAFlags::None;
         };
         MSAACaps msaa;
 
@@ -69,9 +69,9 @@ namespace vg::gfx
                 return modes != _other.modes || minLuminance != _other.minLuminance || maxLuminance != _other.maxLuminance || enableST2084 != _other.enableST2084 || referenceWhiteNits != _other.referenceWhiteNits;
             }
 
-            bool isSupported(HDR _mode) const { return core::asBool(core::operator &(_mode, modes)); }
+            bool isSupported(HDR _mode) const { return 0 != ((1<<core::uint(_mode)) & (uint)modes); }
 
-            HDR             modes = (HDR)0x0;
+            HDRFlags        modes = HDRFlags::None;
             float           minLuminance = 0.0f;
             float           maxLuminance = 400.0f;
             bool            enableST2084 = false;

@@ -529,6 +529,12 @@
     </ClInclude>
     <ClInclude Include="ICameraLens.h" />
     <ClInclude Include="ICameraSettings.h" />
+    <ClInclude Include="RenderPass\Render2D\LinearizeDepth\LinearizeDepthPass.h">
+      <Filter>Pass\Render2D\LinearizeDepth</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\Render2D\LinearizeDepth\LinearizeDepthPass.hpp">
+      <Filter>Pass\Render2D\LinearizeDepth</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -722,6 +728,9 @@
     </Filter>
     <Filter Include="Camera">
       <UniqueIdentifier>{4b5a8e57-1b36-4775-9765-4c93035dfaed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\Render2D\LinearizeDepth">
+      <UniqueIdentifier>{f1c3eb97-0bf4-4301-ba78-7e56bcff25f5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

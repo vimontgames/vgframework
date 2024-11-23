@@ -246,7 +246,7 @@ namespace vg::gfx::dx12
             case MSAA::MSAA8X:
             case MSAA::MSAA16X:
             {
-                resourceDesc.SampleDesc.Count = (uint)_texDesc.msaa;
+                resourceDesc.SampleDesc.Count = (uint)TextureDesc::getMSAASampleCount(_texDesc.msaa);
                 resourceDesc.SampleDesc.Quality = 0;
             }
             break;

@@ -38,11 +38,19 @@ namespace vg::gfx
 	);
 
 	vg_enum_class(MSAA, core::u8,
-        None    = 0x01,
-        MSAA2X  = 0x02,
-        MSAA4X  = 0x04,
-        MSAA8X  = 0x08,
-        MSAA16X = 0x10
+        None    = 0,
+        MSAA2X  = 1,
+        MSAA4X  = 2,
+        MSAA8X  = 3,
+        MSAA16X = 4
+    );
+
+    vg_enum_class(MSAAFlags, core::u8,
+        None	= 1 << (core::u8)MSAA::None,
+        MSAA2X	= 1 << (core::u8)MSAA::MSAA2X, 
+        MSAA4X	= 1 << (core::u8)MSAA::MSAA4X, 
+        MSAA8X	= 1 << (core::u8)MSAA::MSAA8X, 
+        MSAA16X = 1 << (core::u8)MSAA::MSAA16X
     );
 
 	class TextureDesc
@@ -81,6 +89,8 @@ namespace vg::gfx
 		VG_INLINE bool isShaderResource		() const { return resource.testBindFlags(BindFlags::ShaderResource); }
 
 		VG_INLINE bool operator != (const TextureDesc & _other) const { return resource != _other.resource || width != _other.width || height != _other.height || slices != _other.slices || mipmaps != _other.mipmaps || type != _other.type || format != _other.format || flags != _other.flags; }
-		VG_INLINE bool operator == (const TextureDesc & _other) const { return !(_other != *this); }
+        VG_INLINE bool operator == (const TextureDesc & _other) const { return !(_other != *this); }
+
+        VG_INLINE static core::uint getMSAASampleCount(MSAA _msaa) { return 1 << (core::uint)_msaa; }
 	};
 }

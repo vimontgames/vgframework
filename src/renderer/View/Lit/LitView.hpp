@@ -8,6 +8,7 @@
 #include "renderer/RenderPass/RenderObjects/Editor/EditorPass.h"
 #include "renderer/RenderPass/Compute/ComputePostProcess/ComputePostProcessPass.h"
 #include "renderer/RenderPass/Render2D/ResolveDeferredMSAA/ResolveDeferredMSAAPass.h"
+#include "renderer/RenderPass/Render2D/LinearizeDepth/LinearizeDepthPass.h"
 #include "renderer/RenderPass/Compute/ComputeDeferredLighting/ComputeDeferredLightingPass.h"
 #include "renderer/RenderPass/Render2D/FinalBlit/FinalBlitPass.h"
 #include "renderer/RenderPass/Update/TLAS/TLASUpdatePass.h"
@@ -30,6 +31,7 @@ namespace vg::renderer
         m_deferredOpaquePass = new DeferredOpaquePass();
         m_deferredLightingPass = new ComputeDeferredLightingPass();
         m_resolveDeferredMSAAPass = new ResolveDeferredMSAAPass();
+        m_linearizeDepthPass = new LinearizeDepthPass();
         m_editorPass = new EditorPass();
         m_computePostProcessPass = new ComputePostProcessPass();
         m_finalBlitPass = new FinalBlitPass();  
@@ -46,6 +48,7 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_deferredOpaquePass);
         VG_SAFE_RELEASE(m_deferredLightingPass);
         VG_SAFE_RELEASE(m_resolveDeferredMSAAPass);
+        VG_SAFE_RELEASE(m_linearizeDepthPass);
         VG_SAFE_RELEASE(m_editorPass);
         VG_SAFE_RELEASE(m_computePostProcessPass);
         VG_SAFE_RELEASE(m_finalBlitPass);   
@@ -124,7 +127,11 @@ namespace vg::renderer
                     _frameGraph.addUserPass(_renderPassContext, m_resolveDeferredMSAAPass, "Resolve Deferred MSAA");
 
                 break;
-        }      
+        }    
+
+        // Resolve/copy linear depth just before transparent pass because even in case of forward rendering we might want to add other passes writing Z (e.g., Skin, Water ...)
+        if (options->isTransparencyEnabled() || view->IsComputePostProcessNeeded())
+            _frameGraph.addUserPass(_renderPassContext, m_linearizeDepthPass, "LinearizeDepth");
 
         if (options->isTransparencyEnabled())
             _frameGraph.addUserPass(_renderPassContext, m_forwardTransparentPass, "ForwardTransparent");
@@ -139,13 +146,6 @@ namespace vg::renderer
 
         // Read from "Color" (postprocess OFF) or "PostProcessUAV" (postprocess ON) to final dest
         _frameGraph.addUserPass(_renderPassContext, m_finalBlitPass, "Final Blit");
-
-        // When HDR is enabled, previous passes are rendering to the HDROutput buffer instead of backbuffer and we need to apply HDR curve when copying to backbuffer
-        auto renderer = Renderer::get();
-        if (gfx::HDR::None != renderer->GetHDR())
-        {
-
-        }
 
         _frameGraph.popPassGroup();
     }

@@ -20,10 +20,10 @@ namespace vg::renderer
 
         m_resolveDeferredMSAARootSignature = device->addRootSignature(rsDesc);
 
-        m_resolveDeferredMSAA2XShaderKey.init("driver/driver.hlsl", "MSAA2X");
-        m_resolveDeferredMSAA4XShaderKey.init("driver/driver.hlsl", "MSAA4X");
-        m_resolveDeferredMSAA8XShaderKey.init("driver/driver.hlsl", "MSAA8X");
-        m_resolveDeferredMSAA16XShaderKey.init("driver/driver.hlsl", "MSAA16X");      
+        m_resolveDeferredMSAA2XShaderKey.init("driver/driver.hlsl", "ResolveColorMSAA2X");
+        m_resolveDeferredMSAA4XShaderKey.init("driver/driver.hlsl", "ResolveColorMSAA4X");
+        m_resolveDeferredMSAA8XShaderKey.init("driver/driver.hlsl", "ResolveColorMSAA8X");
+        m_resolveDeferredMSAA16XShaderKey.init("driver/driver.hlsl", "ResolveColorMSAA16X");      
     }
 
     //--------------------------------------------------------------------------------------
@@ -82,8 +82,19 @@ namespace vg::renderer
 
         RootConstants2D root2D;
 
-        root2D.quad.posOffsetScale = float4(0,0,1,1);
-        root2D.quad.uvOffsetScale = float4(0,0,1,1);
+        // Big triangle
+        //  ____      ________
+        // |   /|    |   |   /
+        // |  / | => |   |  /
+        // | /  |    |   | /
+        // |/___|    |___|/
+        //           |   /
+        //           |  /
+        //           | /
+        //           |/
+
+        root2D.quad.posOffsetScale = float4(0,0,2,2);
+        root2D.quad.uvOffsetScale = float4(0,0,2,2);
         root2D.texID = getRWTexture(_renderPassContext.getFrameGraphID("ResolveDeferredMSAA"))->getTextureHandle();
 
         _cmdList->setGraphicRootConstants(0, (u32 *)&root2D, RootConstants2DCount);

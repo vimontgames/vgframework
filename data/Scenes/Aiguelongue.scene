@@ -3540,8 +3540,8 @@
                         <Property type="String" name="m_name" value="Debug"/>
                         <Property type="Uint32" name="m_uid" value="1949923508"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -3552,7 +3552,7 @@
                                 <Property type="Uint32" name="m_uid" value="3740073557"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
-                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -3570,30 +3570,48 @@
                                 <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                             </Object>
                             <Object class="GameObject">
-                                <Property type="String" name="m_name" value="TestSound"/>
-                                <Property type="Uint32" name="m_uid" value="2463671653"/>
+                                <Property type="String" name="m_name" value="DepthTransparencyTest"/>
+                                <Property type="Uint32" name="m_uid" value="33097108"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2.5" Ty="5" Tz="0" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
-                                    <Object class="SoundComponent">
-                                        <Property type="String" name="m_name" value="New SoundComponent"/>
-                                        <Property type="Uint32" name="m_uid" value="2213048044"/>
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2928442164"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                        <Property type="Object" name="m_sounds">
-                                            <Object class="SoundResourceList">
-                                                <Property type="String" name="m_name" value=""/>
-                                                <Property type="Uint32" name="m_uid" value="3853890545"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                                <Property type="ResourceVector" name="m_resources"/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/unitsphere.fbx"/>
                                             </Object>
                                         </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="TransparentSphere"/>
+                                                        <Property type="Uint32" name="m_uid" value="1463542933"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Test/TransparentSphere.mat"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>

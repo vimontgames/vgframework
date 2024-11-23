@@ -39,6 +39,9 @@ namespace vg::renderer
         const auto depthStencilID = _renderPassContext.getFrameGraphID("DepthStencil");
         readDepthStencil(depthStencilID);
 
+        const auto linearDepthID = _renderPassContext.getFrameGraphID("LinearDepth");
+        readRenderTarget(linearDepthID);
+
         auto * device = Device::get();
 
         auto size = _renderPassContext.getView()->GetSize();
@@ -96,19 +99,19 @@ namespace vg::renderer
                         break;
             
                     case MSAA::MSAA2X:
-                        resolveShaderKey.setFlags(PostProcessHLSLDesc::MSAA, 1);   // TODO: separate MSAA vs MSAAFlags enums
+                        resolveShaderKey.setValue(PostProcessHLSLDesc::MSAA, MSAA::MSAA2X);
                         break;
             
                     case MSAA::MSAA4X:
-                        resolveShaderKey.setFlags(PostProcessHLSLDesc::MSAA, 2);
+                        resolveShaderKey.setValue(PostProcessHLSLDesc::MSAA, MSAA::MSAA4X);
                         break;
             
                     case MSAA::MSAA8X:
-                        resolveShaderKey.setFlags(PostProcessHLSLDesc::MSAA, 3);
+                        resolveShaderKey.setValue(PostProcessHLSLDesc::MSAA, MSAA::MSAA8X);
                         break;
             
                     case MSAA::MSAA16X:
-                        resolveShaderKey.setFlags(PostProcessHLSLDesc::MSAA, 4);
+                        resolveShaderKey.setValue(PostProcessHLSLDesc::MSAA, MSAA::MSAA16X);
                         break;
                 }
             }
@@ -116,19 +119,17 @@ namespace vg::renderer
             _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
             _cmdList->setComputeShader(resolveShaderKey);
 
-            auto color = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getTextureHandle();
-            auto depthstencil = getDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
-            auto depth = depthstencil->getDepthTextureHandle();
-            auto stencil = depthstencil->getStencilTextureHandle();
+            auto colorTex = getRenderTarget(_renderPassContext.getFrameGraphID("Color"));
+            auto color = colorTex->getTextureHandle(); 
+            
             resolveUAVTex = getRWTexture(_renderPassContext.getFrameGraphID("ResolveColorUAV"));
-            auto dst = resolveUAVTex->getRWTextureHandle();
+            auto dest = resolveUAVTex->getRWTextureHandle();
 
             PostProcessConstants postProcess;
-            postProcess.width_height = packUint16(size.xy);
+            postProcess.setScreenSize(size.xy);
             postProcess.setColor(color);
-            postProcess.setDepth(depth);
-            postProcess.setStencil(stencil);
-            postProcess.setRWBufferOut(dst);
+            postProcess.setRWBufferOut(dest);
+
             _cmdList->setComputeRootConstants(0, (u32 *)&postProcess, PostProcessConstantsCount);
 
             _cmdList->dispatch(threadGroupCount);
@@ -157,11 +158,11 @@ namespace vg::renderer
                 break;
 
             case AAPostProcess::FXAA:
-                shaderKey.setFlag(PostProcessHLSLDesc::AAPostProcess, (uint)AAPostProcess::FXAA);
+                shaderKey.setValue(PostProcessHLSLDesc::AAPostProcess, AAPostProcess::FXAA);
                 break;
 
             case AAPostProcess::SMAA:
-                shaderKey.setFlags(PostProcessHLSLDesc::AAPostProcess, (uint)AAPostProcess::SMAA);
+                shaderKey.setValue(PostProcessHLSLDesc::AAPostProcess, AAPostProcess::SMAA);
                 break;
         }
 
@@ -170,17 +171,24 @@ namespace vg::renderer
 
         auto srcID = msaa == MSAA::None ? _renderPassContext.getFrameGraphID("Color") : _renderPassContext.getFrameGraphID("ResolveColorUAV");
         auto color = getRenderTarget(srcID)->getTextureHandle();
-        auto depthstencil = getDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
-        auto depth = depthstencil->getDepthTextureHandle();
-        auto stencil = depthstencil->getStencilTextureHandle();
-        auto dst = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getRWTextureHandle();
+
+        auto depthstencilTex = getDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
+        auto depth = depthstencilTex->getDepthTextureHandle();
+        auto stencil = depthstencilTex->getStencilTextureHandle();
+
+        auto linearDepthTex = getRenderTarget(_renderPassContext.getFrameGraphID("LinearDepth"));
+        auto linearDepth = linearDepthTex->getTextureHandle();
+ 
+        auto dest = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getRWTextureHandle();
         
         PostProcessConstants postProcess;
-        postProcess.width_height = packUint16(size.xy);
+        postProcess.setScreenSize(size.xy);
         postProcess.setColor(color);
+        postProcess.setRWBufferOut(dest);
         postProcess.setDepth(depth);
-        postProcess.setStencil(stencil);
-        postProcess.setRWBufferOut(dst);
+        postProcess.setStencil(stencil);     
+        postProcess.setLinearDepth(linearDepth);
+
         _cmdList->setComputeRootConstants(0, (u32*) &postProcess, PostProcessConstantsCount);
 
         _cmdList->dispatch(threadGroupCount);

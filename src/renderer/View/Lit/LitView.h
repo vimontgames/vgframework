@@ -11,6 +11,7 @@ namespace vg::renderer
     class DeferredOpaquePass;
     class ComputeDeferredLightingPass;
     class ResolveDeferredMSAAPass;
+    class LinearizeDepthPass;
     class EditorPass;
     class RayTracingDebugPass;
     class ComputePostProcessPass;
@@ -41,6 +42,7 @@ namespace vg::renderer
         DeferredOpaquePass *            m_deferredOpaquePass        = nullptr;
         ComputeDeferredLightingPass *   m_deferredLightingPass      = nullptr;
         ResolveDeferredMSAAPass *       m_resolveDeferredMSAAPass   = nullptr;
+        LinearizeDepthPass *            m_linearizeDepthPass        = nullptr;
         EditorPass *                    m_editorPass                = nullptr;
         TLASUpdatePass *                m_TLASUpdatePass            = nullptr;
         ComputePostProcessPass *        m_computePostProcessPass    = nullptr;

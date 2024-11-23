@@ -1,10 +1,11 @@
 #include "Render2DPass.h"
 
-#include "Render2D/Background/BackgroundPass.hpp"
-#include "Render2D/FinalBlit/FinalBlitPass.hpp"
-#include "Render2D/HDROutput/HDROutputPass.hpp"
-#include "Render2D/ResolveDeferredMSAA/ResolveDeferredMSAAPass.hpp"
-#include "Render2D/Preview/Texture/TexturePreviewPass.hpp"
+#include "Background/BackgroundPass.hpp"
+#include "FinalBlit/FinalBlitPass.hpp"
+#include "HDROutput/HDROutputPass.hpp"
+#include "ResolveDeferredMSAA/ResolveDeferredMSAAPass.hpp"
+#include "LinearizeDepth/LinearizeDepthPass.hpp"
+#include "Preview/Texture/TexturePreviewPass.hpp"
 
 namespace vg::renderer
 {

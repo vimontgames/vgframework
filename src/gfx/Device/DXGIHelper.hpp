@@ -93,13 +93,13 @@ namespace vg::gfx
             bestOutput->Release();
         }
 
-        hdrCaps.modes |= HDR::None;
+        hdrCaps.modes = HDRFlags::None;
 
         if (hdrSupport)
         {
             // How to differentiate HDR10 support from HDR16 support?
-            hdrCaps.modes |= HDR::HDR10;
-            hdrCaps.modes |= HDR::HDR16;
+            hdrCaps.modes |= HDRFlags::HDR10;
+            hdrCaps.modes |= HDRFlags::HDR16; 
         }
 
         adapter->Release();

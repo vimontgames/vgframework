@@ -64,7 +64,7 @@ namespace vg::renderer
         switch (srcDesc.type)
         {
             case gfx::TextureType::TextureCube:
-                shaderKey.setFlags(gfx::PreviewHLSLDesc::Flags::Type, 2); // _TEXCUBE
+                shaderKey.setValue(gfx::PreviewHLSLDesc::Flags::Type, 2); // _TEXCUBE
                 break;
         }
 

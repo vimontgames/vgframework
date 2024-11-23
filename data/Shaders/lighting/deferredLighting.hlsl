@@ -5,6 +5,7 @@
 #include "system/lighting.hlsli"
 #include "system/msaa.hlsli"
 #include "system/environment.hlsli"
+#include "system/depthstencil.hlsli"
 
 struct DepthStencilSample
 {
@@ -13,9 +14,9 @@ struct DepthStencilSample
     void Load(int2 _coords, uint _sampleIndex)
     {
         #if SAMPLE_COUNT > 1
-        depth = getTexture2DMS(deferredLightingConstants.getDepth()).Load(_coords, _sampleIndex).r;
+        depth = loadDepthMSAA(deferredLightingConstants.getDepth(), _coords, _sampleIndex);
         #else
-        depth = getTexture2D(deferredLightingConstants.getDepth()).Load(int3(_coords, 0)).r;
+        depth = loadDepth(deferredLightingConstants.getDepth(), _coords);
         #endif
 
         #if VG_GFX_REVERSE_DEPTH

@@ -31,5 +31,6 @@ namespace vg::engine
         float                       m_roughness         = 1.0f;
         float                       m_metalness         = 1.0f;
         core::float2                m_tiling            = core::float2(1, 1);
+        core::float2                m_offset            = core::float2(0, 0);
     };
 }

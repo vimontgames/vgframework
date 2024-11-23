@@ -32,20 +32,19 @@ struct GPUMaterialData
         setPBRTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
         
         setAlbedoColor(float4(1,1,1,1));
-        setNormalStrength(1.0f);
-        setOcclusion(1.0f);
-        setRoughness(0.25f);
-        setMetalness(0.0f);
-        setTiling(float2(1.0f, 1.0f));
-
-        tiling.zw = 0; // unused
+        setNormalStrength(1.0);
+        setOcclusion(1.0);
+        setRoughness(0.25);
+        setMetalness(0.0);
+        setTiling(float2(1.0, 1.0));
+        setOffset(float2(0.0, 0.0));
     }   
     #endif 
 
     uint4 textures;         // .x = albedo | normal, .y = pbr | unused, .y = unused, .w = flags
     float4 albedoColor;
     float4 data;
-    float4 tiling;
+    float4 tilingOffset;
 
     void        setAlbedoTextureHandle  (uint _value)   { textures.x = packUint16low(textures.x, _value); }
     uint        getAlbedoTextureHandle  ()              { return unpackUint16low(textures.x); }
@@ -74,8 +73,11 @@ struct GPUMaterialData
     void        setMetalness            (float _value)  { data.z = _value; }
     float       getMetalness            ()              { return data.z; }
 
-    void        setTiling               (float2 _value) { tiling.xy = _value; }
-    float2      getTiling               ()              { return tiling.xy; }
+    void        setTiling               (float2 _value) { tilingOffset.xy = _value; }
+    float2      getTiling               ()              { return tilingOffset.xy; }
+
+    void        setOffset               (float2 _value) { tilingOffset.zw = _value; }
+    float2      getOffset               ()              { return tilingOffset.zw; }
 
     #ifndef __cplusplus
     //--------------------------------------------------------------------------------------
@@ -139,7 +141,7 @@ struct GPUMaterialData
             break;
         }
 
-        return uv * getTiling();
+        return uv * getTiling() + getOffset();
     }
 
     //--------------------------------------------------------------------------------------

@@ -33,9 +33,15 @@ namespace vg::gfx
     );
 
     vg_enum_class(HDR, core::u8,
-        None    = 0x01,
-        HDR10   = 0x0a,
-        HDR16   = 0x10
+        None    = 0,
+        HDR10   = 1,
+        HDR16   = 2
+    );
+
+    vg_enum_class(HDRFlags, core::u8,
+        None    = 1 << (core::u8)HDR::None,
+        HDR10   = 1 << (core::u8)HDR::HDR10,
+        HDR16   = 1 << (core::u8)HDR::HDR16
     );
 
     vg_enum_class(ColorSpace, core::u8,

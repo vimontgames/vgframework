@@ -2,7 +2,7 @@
 
 namespace vg::renderer
 {
-    static const u32 TextureImporterDataVersion = 4;
+    static const u32 TextureImporterDataVersion = 5;
 
     //--------------------------------------------------------------------------------------
     bool TextureImporterData::load(const core::string & _file)

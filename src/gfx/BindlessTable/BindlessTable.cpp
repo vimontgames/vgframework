@@ -32,6 +32,7 @@ namespace vg::gfx
             m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_CUBE,          BINDLESS_TEXTURE_START,     BINDLESS_TEXTURE_COUNT);
             m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_2DMS,          BINDLESS_TEXTURE_START,     BINDLESS_TEXTURE_COUNT);
             m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_2D_UINT2,      BINDLESS_TEXTURE_START,     BINDLESS_TEXTURE_COUNT);
+            m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_2DMS_UINT2,    BINDLESS_TEXTURE_START,     BINDLESS_TEXTURE_COUNT);
             m_tableDesc.addTextures(BINDLESS_TEXTURE_BINDING_3D,            BINDLESS_TEXTURE_START,     BINDLESS_TEXTURE_COUNT);
             #endif
 

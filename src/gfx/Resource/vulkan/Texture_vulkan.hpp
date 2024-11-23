@@ -148,7 +148,7 @@ namespace vg::gfx::vulkan
                               imgDesc.extent = { _texDesc.width, _texDesc.height, 1 }; // TODO: Texture3D
                               imgDesc.mipLevels = _texDesc.mipmaps;
                               imgDesc.arrayLayers = _texDesc.slices;
-                              imgDesc.samples = (VkSampleCountFlagBits)_texDesc.msaa;
+                              imgDesc.samples = (VkSampleCountFlagBits)TextureDesc::getMSAASampleCount(_texDesc.msaa);
                               imgDesc.flags = 0;
 
             if (_texDesc.type == TextureType::TextureCube || _texDesc.type == TextureType::TextureCubeArray)

@@ -130,7 +130,7 @@ namespace vg::gfx::dx12
             d3d12graphicPipelineDesc.DSVFormat = DXGI_FORMAT_UNKNOWN;
         }
 
-        d3d12graphicPipelineDesc.SampleDesc.Count = (uint)_key.m_renderPassKey.m_msaa;
+        d3d12graphicPipelineDesc.SampleDesc.Count = (uint)TextureDesc::getMSAASampleCount(_key.m_renderPassKey.m_msaa);
         d3d12graphicPipelineDesc.SampleDesc.Quality = 0;
 
         ID3D12PipelineState * d3d12GraphicPipelineState = nullptr;

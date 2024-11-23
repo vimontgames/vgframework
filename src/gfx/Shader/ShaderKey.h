@@ -45,7 +45,10 @@ namespace vg::gfx
                 flags &= ~value;
         }
 
-        void setFlags(core::uint _index, core::uint _value);
+        template <typename E> void setValue(ShaderKey::Flags _flag, E _value)
+        {
+            setFlags(_flag, (core::uint)_value);
+        }
 
         union
         {
@@ -80,5 +83,8 @@ namespace vg::gfx
                 return core::hash<core::u64>()(_this.bits);
             }
         };
+
+    private:
+        void setFlags(core::uint _index, core::uint _value);
     };
 }

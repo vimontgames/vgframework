@@ -49,6 +49,7 @@ vg_enum_class(ReservedSlot, uint,
     LastTexture             = InvalidTexture2D,
 
     // Buffer
+    TransparentPassBufSrv   = BINDLESS_BUFFER_INVALID - 6,
     MaterialDataBufSrv      = BINDLESS_BUFFER_INVALID - 5,
     InstanceDataBufSrv      = BINDLESS_BUFFER_INVALID - 4,
     SkinningMatricesBufSrv  = BINDLESS_BUFFER_INVALID - 3,
@@ -83,6 +84,7 @@ vg_enum_class(ReservedSlot, uint,
 #define RESERVEDSLOT_TEXSRV_IMGUIFONTTEX        (BINDLESS_TEXTURE_INVALID - 1)
 
 // Buffer SRV
+#define RESERVEDSLOT_BUFSRV_TRANSPARENTPASS     (BINDLESS_BUFFER_INVALID - 6)
 #define RESERVEDSLOT_BUFSRV_MATERIALDATA        (BINDLESS_BUFFER_INVALID - 5)
 #define RESERVEDSLOT_BUFSRV_INSTANCEDATA        (BINDLESS_BUFFER_INVALID - 4)
 #define RESERVEDSLOT_BUFSRV_SKINNINGMATRICES    (BINDLESS_BUFFER_INVALID - 3)
@@ -100,7 +102,8 @@ vg_enum_class(ReservedSlot, uint,
 #define BINDLESS_TEXTURE_BINDING_2D              20  
 #define BINDLESS_TEXTURE_BINDING_2DMS            21  
 #define BINDLESS_TEXTURE_BINDING_2D_UINT2        22  
-#define BINDLESS_TEXTURE_BINDING_CUBE            23   
+#define BINDLESS_TEXTURE_BINDING_2DMS_UINT2      23
+#define BINDLESS_TEXTURE_BINDING_CUBE            24   
 #define BINDLESS_TEXTURE_BINDING_3D              30  
 
 #define BINDLESS_RWTEXTURE_BINDING_1D           210 
@@ -115,7 +118,8 @@ vg_enum_class(ReservedSlot, uint,
 #define BINDLESS_TEXTURE_BINDING_2D               0   
 #define BINDLESS_TEXTURE_BINDING_CUBE             0   
 #define BINDLESS_TEXTURE_BINDING_2DMS             0  
-#define BINDLESS_TEXTURE_BINDING_2D_UINT2         0   
+#define BINDLESS_TEXTURE_BINDING_2D_UINT2         0  
+#define BINDLESS_TEXTURE_BINDING_2DMS_UINT2       0 
 #define BINDLESS_TEXTURE_BINDING_3D               0   
 
 #define BINDLESS_RWTEXTURE_BINDING_1D             2 // <=> BINDLESS_RWTEXTURE_BINDING
