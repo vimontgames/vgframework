@@ -15,7 +15,7 @@ using namespace vg::renderer;
 namespace ImGui
 {
     //--------------------------------------------------------------------------------------
-    bool PersistentTreeNode(vg::core::IObject * _object, const vg::core::IProperty * _prop, bool * _toggle, ImGuiTreeNodeFlags _flags)
+    bool PersistentTreeNode(const vg::core::string & _label, vg::core::IObject * _object, const vg::core::IProperty * _prop, bool * _toggle, ImGuiTreeNodeFlags _flags)
     {
         const auto label = ImGui::getObjectPropertyPersistentLabel("",_object, _prop);
 
@@ -30,7 +30,7 @@ namespace ImGui
         if (_toggle)
             enabled = *_toggle;
 
-        ImGui::CollapsingHeaderLabel(collapsingHeaderPos, _prop->GetDisplayName(), enabled);
+        ImGui::CollapsingHeaderLabel(collapsingHeaderPos, _label, enabled);
 
         if (_toggle)
         {
@@ -44,9 +44,9 @@ namespace ImGui
     }
 
     //--------------------------------------------------------------------------------------
-    bool PersistentCollapsingHeader(vg::core::IObject * _object, const vg::core::IProperty * _prop, bool * _toggle)
+    bool PersistentCollapsingHeader(const vg::core::string & _label, vg::core::IObject * _object, const vg::core::IProperty * _prop, bool * _toggle)
     {
-        return PersistentTreeNode(_object, _prop, _toggle, ImGuiTreeNodeFlags_CollapsingHeader);
+        return PersistentTreeNode(_label, _object, _prop, _toggle, ImGuiTreeNodeFlags_CollapsingHeader);
     }
 
     //--------------------------------------------------------------------------------------
@@ -362,7 +362,12 @@ namespace ImGui
     //--------------------------------------------------------------------------------------
     vg::core::string getObjectPropertyPersistentLabel(const vg::core::string & _displayName, const vg::core::IObject * _object, const vg::core::IProperty * _prop)
     {
-        return fmt::sprintf("%s###%s_%u", _displayName, _prop->GetName(), (uint_ptr)_object->GetUID());
+        // Try to use original UID if any
+        UID uid = _object->GetOriginalUID(false);
+        if (!uid)
+            uid = _object->GetUID();
+
+        return fmt::sprintf("%s###%s_%u", _displayName, _prop->GetName(), (uint_ptr)uid);
     }
 
     //--------------------------------------------------------------------------------------

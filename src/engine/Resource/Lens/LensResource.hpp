@@ -22,7 +22,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(LensResource, m_name, PropertyFlags::NotVisible, true);
+        setPropertyFlag(LensResource, m_name, PropertyFlags::Hidden, true);
         registerResizeVectorFunc(LensResource, ResizeMaterialResourceVector);
 
         registerPropertyObjectPtr(LensResource, m_cameraLens, "Lens");

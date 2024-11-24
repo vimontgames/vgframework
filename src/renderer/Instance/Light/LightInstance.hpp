@@ -22,7 +22,7 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerPropertyEx(LightDesc, m_shadow, "Cast Shadows", PropertyFlags::NotVisible);
+        registerPropertyEx(LightDesc, m_shadow, "Cast Shadows", PropertyFlags::Hidden);
 
         registerPropertyOptionalGroupBegin(LightDesc, m_shadow, "Shadows");
         {

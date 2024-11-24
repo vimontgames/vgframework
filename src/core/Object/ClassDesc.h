@@ -48,7 +48,7 @@ namespace vg::core
         void                                RegisterProperty            (const char * _className, const char * _propertyName, dictionary<core::IObject*>* _offset, const char * _displayName = nullptr, PropertyFlags _flags = PropertyFlags::None) final override;
         void                                RegisterProperty            (const char * _className, const char * _propertyName, core::u32 _sizeOf, void * _offset, const char * _displayName = nullptr, PropertyFlags _flags = PropertyFlags::None) final override;
 
-        void                                RegisterProperty            (const char * _className, const char * _propertyName, IProperty::Callback _funcPtr, const char * _displayName, PropertyFlags _flags) final override;
+        void                                RegisterProperty            (const char * _className, const char * _propertyName, IProperty::ActionCallback _funcPtr, const char * _displayName, PropertyFlags _flags) final override;
 
         void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::u8 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames,  const u8 * _enumValues, PropertyFlags _flags) final override;
         void								RegisterEnum                (const char * _className, const char * _propertyName, const char * _enumTypeName, core::u16 * _offset, const char * _displayName, u32 _enumCount, const char * _enumNames, const u16 * _enumValues, PropertyFlags _flags) final override;

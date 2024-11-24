@@ -19,7 +19,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Object::registerProperties(IClassDesc & _desc)
     {
-        registerPropertyEx(Object, m_name, "Name", PropertyFlags::NotVisible);
+        registerPropertyEx(Object, m_name, "Name", PropertyFlags::Hidden);
         setPropertyDescription(Object, m_name, "User-friendly name");
 
         registerPropertyEx(Object, m_uid, "UID", PropertyFlags::Debug | PropertyFlags::Hexadecimal | PropertyFlags::ReadOnly);

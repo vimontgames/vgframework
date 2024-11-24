@@ -27,6 +27,12 @@ struct GPUMaterialData
     #ifdef __cplusplus
     GPUMaterialData()
     {
+        textures     = (uint4)0;    
+        albedoColor  = (float4)0.0;
+        multipliers  = (float4)0.0;
+        tilingOffset = (float4)0.0;
+        misc         = (float4)0.0;
+
         setAlbedoTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO);
         setNormalTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
         setPBRTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
@@ -41,10 +47,11 @@ struct GPUMaterialData
     }   
     #endif 
 
-    uint4 textures;         // .x = albedo | normal, .y = pbr | unused, .y = unused, .w = flags
+    uint4  textures;         // .x = albedo | normal, .y = pbr | unused, .y = unused, .w = flags
     float4 albedoColor;
-    float4 data;
+    float4 multipliers;
     float4 tilingOffset;
+    float4 misc;
 
     void        setAlbedoTextureHandle  (uint _value)   { textures.x = packUint16low(textures.x, _value); }
     uint        getAlbedoTextureHandle  ()              { return unpackUint16low(textures.x); }
@@ -61,23 +68,26 @@ struct GPUMaterialData
     void        setAlbedoColor          (float4 _value) { albedoColor = _value; }
     float4      getAlbedoColor          ()              { return albedoColor; }
     
-    void        setNormalStrength       (float _value)  { data.w = _value; }
-    float       getNormalStrength       ()              { return data.w; }
+    void        setNormalStrength       (float _value)  { multipliers.w = _value; }
+    float       getNormalStrength       ()              { return multipliers.w; }
     
-    void        setOcclusion            (float _value)  { data.x = _value; }
-    float       getOcclusion            ()              { return data.x; }
+    void        setOcclusion            (float _value)  { multipliers.x = _value; }
+    float       getOcclusion            ()              { return multipliers.x; }
     
-    void        setRoughness            (float _value)  { data.y = _value; }
-    float       getRoughness            ()              { return data.y; }
+    void        setRoughness            (float _value)  { multipliers.y = _value; }
+    float       getRoughness            ()              { return multipliers.y; }
     
-    void        setMetalness            (float _value)  { data.z = _value; }
-    float       getMetalness            ()              { return data.z; }
+    void        setMetalness            (float _value)  { multipliers.z = _value; }
+    float       getMetalness            ()              { return multipliers.z; }
 
     void        setTiling               (float2 _value) { tilingOffset.xy = _value; }
     float2      getTiling               ()              { return tilingOffset.xy; }
 
     void        setOffset               (float2 _value) { tilingOffset.zw = _value; }
     float2      getOffset               ()              { return tilingOffset.zw; }
+
+    void        setDepthFade            (float _value)  { misc.x = 1.0f / _value; }
+    float       getInvDepthFade         ()              { return misc.x; }
 
     #ifndef __cplusplus
     //--------------------------------------------------------------------------------------

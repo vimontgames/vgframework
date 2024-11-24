@@ -24,7 +24,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(MaterialResource, m_name, PropertyFlags::NotVisible, false);
+        setPropertyFlag(MaterialResource, m_name, PropertyFlags::Hidden, false);
         registerResizeVectorFunc(MaterialResource, ResizeMaterialResourceVector);
 
         return true;

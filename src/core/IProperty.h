@@ -76,7 +76,7 @@ namespace vg::core
 
     vg_enum_class(PropertyFlags, u64,
         None                = 0x0000000000000000,
-        ReadOnly            = 0x0000000000000001,   // Cannot edit from GUI
+        ReadOnly            = 0x0000000000000001,   // A property that is visible, but edition is disabled
         Color               = 0x0000000000000002,   // Type represents a color (e.g., float4 or u32)
         IsFolder            = 0x0000000000000004,   // String is a folder
         IsFile              = 0x0000000000000008,   // String is a folder
@@ -91,7 +91,7 @@ namespace vg::core
         Flatten             = 0x0000000000001000,   // Do not open TreeNode to display object of this type
         Optional            = 0x0000000000002000,   // Previous property must be a bool, and if 'false' then this value won't be editable
         HDR                 = 0x0000000000004000,   // HDR value for color
-        NotVisible          = 0x0000000000008000,   // A property that is not visible
+        Hidden              = 0x0000000000008000,   // A property that is not visible
         Hexadecimal         = 0x0000000000010000,   // Display value using hexadecimal
         EulerAngle          = 0x0000000000020000,   // Edited value is Euler angle
         AlphabeticalOrder   = 0x0000000000040000    // Sort multiple values in alphabetical order (e.g., enums)
@@ -111,12 +111,16 @@ namespace vg::core
     {
     public:
 
-        using Callback = bool (__cdecl*)(IObject*);
-        using PropertyRangeCallback = core::float2(__cdecl *)(const IObject *, const IProperty *, core::uint _index);
+        using ActionCallback             = bool (__cdecl*)(IObject*);
+        using PropertyRangeCallback      = core::float2(__cdecl *)(const IObject *, const IProperty *, core::uint _index);
+        using IsPropertyHiddenCallback   = bool(__cdecl *)(const IObject *, const IProperty *, core::uint _index);
+        using IsPropertyReadOnlyCallback = bool(__cdecl *)(const IObject *, const IProperty *, core::uint _index);
 
         virtual void                            SetInterface                    (const char * _interface) = 0;
         virtual void                            SetRange                        (float2 _range) = 0;
-        virtual void                            SetRangeCallback                (PropertyRangeCallback _func) = 0;
+        virtual void                            SetPropertyRangeCallback        (PropertyRangeCallback _func) = 0;
+        virtual void                            SetPropertyHiddenCallback       (IsPropertyHiddenCallback _func) = 0;
+        virtual void                            SetPropertyReadOnlyCallback     (IsPropertyReadOnlyCallback _func) = 0;
         virtual void                            SetDefaultFolder                (const char * _path) = 0;
         virtual void                            SetFlags                        (PropertyFlags _flagsToSet, PropertyFlags _flagsToRemove = PropertyFlags::None) = 0;
         virtual void                            SetOffset                       (uint_ptr _offset) = 0;
@@ -136,6 +140,8 @@ namespace vg::core
         virtual uint_ptr                        GetOffset                       () const = 0;
 		virtual u32					            GetSizeOf				        () const = 0;
         virtual float2                          GetRange                        (const IObject * _object, core::uint _index = 0) const = 0;
+        virtual bool                            IsHidden                        (const IObject * _object, core::uint _index = 0) const = 0;
+        virtual bool                            IsReadOnly                      (const IObject * _object, core::uint _index = 0) const = 0;
         virtual const char *                    GetEnumTypeName                 () const = 0;
         virtual u32                             GetEnumCount                    () const = 0;
         virtual void                            SetEnumName                     (uint index, core::string _name) = 0;
@@ -184,7 +190,7 @@ namespace vg::core
         virtual u8 *                            GetPropertyResourceVectorData   (const IObject * _object) const = 0;
         virtual IResource *                     GetPropertyResourceVectorElement(const IObject * _object, uint _index) const = 0;
 
-        virtual IProperty::Callback             GetPropertyCallback             () const = 0;
+        virtual IProperty::ActionCallback       GetPropertyActionCallback       () const = 0;
 
         virtual PropertyLayoutElement           GetLayoutElementType            () const = 0;
 
@@ -263,32 +269,34 @@ namespace vg::core
 #define registerPropertyEnumArray(className, elementType, enumClassName, propertyName, displayName)         registerPropertyEnumArrayEx(className, elementType, enumClassName, propertyName, displayName, vg::core::PropertyFlags::None);
 
 // Helper for "optional" property (bool + property)
-#define registerOptionalPropertyEx(className, boolpropertyname, propertyName, displayName, flags)  	        registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::NotVisible); \
+#define registerOptionalPropertyEx(className, boolpropertyname, propertyName, displayName, flags)  	        registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::Hidden); \
                                                                                                             registerPropertyEx(className, propertyName, displayName, PropertyFlags::Optional | flags);
 
 #define registerOptionalProperty(className, boolpropertyname, propertyName, displayName)	                registerOptionalPropertyEx(className, boolpropertyname, propertyName, displayName, vg::core::PropertyFlags::None)
 
-#define registerOptionalPropertyEnum(className, boolpropertyname, enumClassName, propertyName, displayName)             registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::NotVisible); \
+#define registerOptionalPropertyEnum(className, boolpropertyname, enumClassName, propertyName, displayName)             registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::Hidden); \
                                                                                                                         registerPropertyEnumEx(className, enumClassName, propertyName, displayName, vg::core::PropertyFlags::Optional) 
 
 
-#define registerOptionalPropertyEnumBitfield(className, boolpropertyname, enumClassName, propertyName, displayName)     registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::NotVisible); \
+#define registerOptionalPropertyEnumBitfield(className, boolpropertyname, enumClassName, propertyName, displayName)     registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::Hidden); \
                                                                                                                         registerPropertyEnumEx(className, enumClassName, propertyName, displayName, vg::core::PropertyFlags::Bitfield | vg::core::PropertyFlags::Optional) 
 
-#define registerOptionalPropertyResource(className, boolpropertyname, propertyName, displayName)            registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::NotVisible); \
+#define registerOptionalPropertyResource(className, boolpropertyname, propertyName, displayName)            registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::Hidden); \
                                                                                                             registerPropertyResourceEx(className, propertyName, displayName, vg::core::PropertyFlags::Optional)    
 
-#define registerOptionalPropertyResourcePtr(className, boolpropertyname, propertyName, displayName)         registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::NotVisible); \
+#define registerOptionalPropertyResourcePtr(className, boolpropertyname, propertyName, displayName)         registerPropertyEx(className, boolpropertyname, displayName, PropertyFlags::Hidden); \
                                                                                                             registerPropertyResourcePtrEx(className, propertyName, displayName, vg::core::PropertyFlags::Optional)  
 
 //--------------------------------------------------------------------------------------
 // Modify existing class properties macros
 //--------------------------------------------------------------------------------------
 #define setPropertyFlag(className, propertyName, flags, value)												{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetFlags(value ? flags : (vg::core::PropertyFlags)0, value ? (vg::core::PropertyFlags)0 : flags); } else { VG_WARNING("[Factory] Could not set \"Flags\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
-#define setPropertyRange(className, propertyName, range)												    { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetRange(range);                                                                                        } else { VG_WARNING("[Factory] Could not set \"Range\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
-#define setPropertyRangeCallback(className, propertyName, func)                                             { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetRangeCallback(func);                                                                                 } else { VG_WARNING("[Factory] Could not set \"Range Callback\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
-#define setPropertyDefaultFolder(className, propertyName, defaultFolder)									{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetDefaultFolder(defaultFolder);                                                                        } else { VG_WARNING("[Factory] Could not set \"Default Folder\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
-#define setPropertyDescription(className, propertyName, description)                                        { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetDescription(description);                                                                            } else { VG_WARNING("[Factory] Could not set \"Description\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyRange(className, propertyName, range)												    { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetRange(range);                                                                                  } else { VG_WARNING("[Factory] Could not set \"Range\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyRangeCallback(className, propertyName, func)                                             { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetPropertyRangeCallback(func);                                                                   } else { VG_WARNING("[Factory] Could not set \"Range Callback\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyHiddenCallback(className, propertyName, func)                                            { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetPropertyHiddenCallback(func);                                                                  } else { VG_WARNING("[Factory] Could not set \"Range Callback\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyReadOnlyCallback(className, propertyName, func)                                          { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetPropertyReadOnlyCallback(func);                                                                } else { VG_WARNING("[Factory] Could not set \"Range Callback\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyDefaultFolder(className, propertyName, defaultFolder)									{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetDefaultFolder(defaultFolder);                                                                  } else { VG_WARNING("[Factory] Could not set \"Default Folder\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyDescription(className, propertyName, description)                                        { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetDescription(description);                                                                      } else { VG_WARNING("[Factory] Could not set \"Description\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 
 //--------------------------------------------------------------------------------------
 // Misc

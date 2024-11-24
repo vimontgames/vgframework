@@ -42,7 +42,7 @@ namespace vg::engine
         registerPropertyEx(AnimationResource, m_play, "Play", PropertyFlags::SingleLine | PropertyFlags::Debug);
         registerPropertyEx(AnimationResource, m_loop, "Loop", PropertyFlags::SingleLine | PropertyFlags::Debug);
 
-        setPropertyFlag(AnimationResource, m_name, PropertyFlags::NotVisible, false);
+        setPropertyFlag(AnimationResource, m_name, PropertyFlags::Hidden, false);
 
         registerProperty(AnimationResource, m_layer, "Layer");
         setPropertyRange(AnimationResource, m_layer, uint2(0, 8));

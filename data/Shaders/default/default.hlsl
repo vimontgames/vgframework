@@ -16,10 +16,20 @@
 
 #include "default.hlsli"
 
+#if _ALPHABLEND
+#define EXPORT_VPOS 1
+#else
+#define EXPORT_VPOS 0
+#endif
+
 struct VS_Output
 {
     float4 pos  : Position;
+
+    #if EXPORT_VPOS
     float4 vpos : ViewPos;
+    #endif
+
     float3 wpos : WorldPos;
     float3 nrm  : Normal;
     float3 tan  : Tangent;
@@ -65,7 +75,10 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
         viewPos.z += WIREFRAME_DEPTHBIAS;
     #endif
 
+    #if EXPORT_VPOS
     output.vpos = viewPos;
+    #endif
+
     output.pos = mul(viewPos, proj);
 
     return output;
@@ -180,9 +193,8 @@ PS_Output PS_Forward(VS_Output _input)
     transparentPassConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_TRANSPARENTPASS));
 
     float linearDepthBuffer = getTexture2D(transparentPassConstants.getLinearDepth()).SampleLevel(nearestClamp, screenPos.xy, 0).y;
-    float linearZ = -_input.vpos.z;   
-    float depthTransparencyScale = 0.1;
-    float alpha = saturate((linearDepthBuffer - linearZ)/depthTransparencyScale); 
+    float linearZ = -_input.vpos.z; 
+    float alpha = saturate((linearDepthBuffer - linearZ) * materialData.getInvDepthFade()); 
     output.color0.a *= alpha;
     #endif
 

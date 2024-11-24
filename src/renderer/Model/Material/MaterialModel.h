@@ -56,6 +56,7 @@ namespace vg
 
             GPUMaterialDataIndex            m_gpuMaterialDataIndex = (GPUMaterialDataIndex)-1;
             gfx::SurfaceType                m_surfaceType;
+            float                           m_depthFade = 0.1f;
             gfx::CullMode                   m_cullMode;
             gfx::RootSignatureHandle        m_rootSignature;
             gfx::ShaderKey                  m_shaderKey[core::enumCount<ShaderPass>()];

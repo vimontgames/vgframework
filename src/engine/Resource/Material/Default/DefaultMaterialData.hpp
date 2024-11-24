@@ -20,7 +20,7 @@ namespace vg::engine
         setPropertyDescription(DefaultMaterialData, m_offset, "Texture coordinates offset");
         setPropertyRange(DefaultMaterialData, m_offset, float2(-8, 8));
 
-        registerPropertyEx(DefaultMaterialData, m_enableAlbedo, "Albedo", PropertyFlags::NotVisible);
+        registerPropertyEx(DefaultMaterialData, m_enableAlbedo, "Albedo", PropertyFlags::Hidden);
         registerPropertyOptionalGroupBegin(DefaultMaterialData, m_enableAlbedo, "Enable Albedo");
         {
             registerPropertyResource(DefaultMaterialData, m_albedoMap, "Albedo Map");
@@ -31,7 +31,7 @@ namespace vg::engine
         }
         registerPropertyOptionalGroupEnd(DefaultMaterialData);
 
-        registerPropertyEx(DefaultMaterialData, m_enableNormal, "Enable Normal", PropertyFlags::NotVisible);
+        registerPropertyEx(DefaultMaterialData, m_enableNormal, "Enable Normal", PropertyFlags::Hidden);
         registerPropertyOptionalGroupBegin(DefaultMaterialData, m_enableNormal, "Normal");
         {
             registerPropertyResource(DefaultMaterialData, m_normalMap, "Normal Map"); 
@@ -43,7 +43,7 @@ namespace vg::engine
         }
         registerPropertyOptionalGroupEnd(DefaultMaterialData);
 
-        registerPropertyEx(DefaultMaterialData, m_enablePbr, "Enable PBR", PropertyFlags::NotVisible);
+        registerPropertyEx(DefaultMaterialData, m_enablePbr, "Enable PBR", PropertyFlags::Hidden);
         registerPropertyOptionalGroupBegin(DefaultMaterialData, m_enablePbr, "PBR");
         {
             registerPropertyResource(DefaultMaterialData, m_pbrMap, "PBR Map");

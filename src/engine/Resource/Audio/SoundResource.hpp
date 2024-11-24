@@ -23,7 +23,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(SoundResource, m_name, core::PropertyFlags::NotVisible, false);
+        setPropertyFlag(SoundResource, m_name, core::PropertyFlags::Hidden, false);
 
         registerPropertyEnumBitfield(SoundResource, audio::SoundFlags, m_soundSettings.m_flags, "Flags");
         setPropertyDescription(SoundResource, m_soundSettings.m_flags, "Sound flags")

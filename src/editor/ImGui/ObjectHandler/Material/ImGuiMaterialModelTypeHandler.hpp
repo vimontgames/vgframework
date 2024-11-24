@@ -24,7 +24,7 @@ namespace vg::editor
                 if (nullptr == prop)
                     return false;
 
-                if (ImGui::BeginCombo(ImGuiWindow::getPropertyLabel("Shader").c_str(), matModel->m_shader.c_str(), ImGuiComboFlags_HeightLarge))
+                if (ImGui::BeginCombo(ImGui::getObjectPropertyPersistentLabel("", _propContext->m_originalObject, _propContext->m_originalProp).c_str(), matModel->m_shader.c_str(), ImGuiComboFlags_HeightLarge))
                 {
                     for (uint i = 0; i < models.size(); ++i)
                     {

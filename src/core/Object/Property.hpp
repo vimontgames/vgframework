@@ -173,6 +173,8 @@ namespace vg::core
         flags(_other.flags),
         range(_other.range),
         rangeCallback(_other.rangeCallback),
+        isHiddenCallback(_other.isHiddenCallback),
+        isReadOnlyCallback(_other.isReadOnlyCallback),
         enums(_other.enums)
     {
         
@@ -206,10 +208,22 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Property::SetRangeCallback(PropertyRangeCallback _func)
+    void Property::SetPropertyRangeCallback(PropertyRangeCallback _func)
     {
         flags |= PropertyFlags::HasRange;
         rangeCallback = _func;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Property::SetPropertyHiddenCallback(IsPropertyHiddenCallback _func)
+    {
+        isHiddenCallback = _func;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Property::SetPropertyReadOnlyCallback(IsPropertyReadOnlyCallback _func)
+    {
+        isReadOnlyCallback = _func;
     }
 
     //--------------------------------------------------------------------------------------
@@ -339,6 +353,24 @@ namespace vg::core
     PropertyFlags Property::GetFlags() const
     {
         return flags;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Property::IsHidden(const IObject * _object, core::uint _index) const
+    {
+        if (nullptr != isHiddenCallback && _object)
+            return isHiddenCallback(_object, this, _index);
+
+        return asBool(PropertyFlags::Hidden & flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Property::IsReadOnly(const IObject * _object, core::uint _index) const
+    {
+        if (nullptr != isReadOnlyCallback && _object)
+            return isReadOnlyCallback(_object, this, _index);
+
+        return asBool(PropertyFlags::ReadOnly & flags);
     }
 
     //--------------------------------------------------------------------------------------
@@ -639,10 +671,10 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IProperty::Callback Property::GetPropertyCallback() const
+    IProperty::ActionCallback Property::GetPropertyActionCallback() const
     {
         checkPropertyType(PropertyType::Callback);
-        return (IProperty::Callback)offset;
+        return (IProperty::ActionCallback)offset;
     }
 
     //--------------------------------------------------------------------------------------

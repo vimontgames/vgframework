@@ -30,6 +30,7 @@ namespace vg::renderer
         super::registerProperties(_desc);
 
         registerPropertyEnum(MaterialModel, SurfaceType, m_surfaceType, "Surface Type");
+        registerProperty(MaterialModel, m_depthFade, "Depth transparency");
         registerPropertyEnum(MaterialModel, CullMode, m_cullMode, "Cull");
 
         return true;

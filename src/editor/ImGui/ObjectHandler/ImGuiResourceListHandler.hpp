@@ -109,18 +109,16 @@ namespace vg::editor
                                 itemLabel = itemPath;
 
                             if (itemPath.empty())
-                                ImGui::PushDisabledStyle(true);                                
+                                ImGui::PushDisabledStyle(true);       
 
-                            itemLabel += "###" + to_string((uint_ptr)obj);
-
-                            bool open = ImGui::TreeNodeEx(itemLabel.c_str(), ImGuiTreeNodeFlags_None);
+                            bool open = ImGui::PersistentCollapsingHeader(itemLabel, obj, prop);
 
                             if (itemPath.empty())
                                 ImGui::PopDisabledStyle();
 
                             ImGui::BeginDisabled(readOnly);
                             {
-                                if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos - ImVec2(0, 4), availableWidth - 1, _object, style::icon::Trashcan, fmt::sprintf("Remove element %u", i)))
+                                if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth - 1, _object, style::icon::Trashcan, fmt::sprintf("Remove element %u", i)))
                                     removeAt = i;
                             }
                             ImGui::EndDisabled();
@@ -128,7 +126,7 @@ namespace vg::editor
                             if (open)
                             {
                                 changed |= ImGuiWindow::displayResource(obj, prop, i, propContext);
-                                ImGui::TreePop();
+                                //ImGui::TreePop();
                             }
 
                             ImGui::PopID();

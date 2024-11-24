@@ -13,7 +13,7 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(Batch, m_name, PropertyFlags::NotVisible, false);
+        setPropertyFlag(Batch, m_name, PropertyFlags::Hidden, false);
         setPropertyFlag(Batch, m_name, PropertyFlags::Debug, true);
 
         registerPropertyEx(Batch, count, "Count", PropertyFlags::ReadOnly);

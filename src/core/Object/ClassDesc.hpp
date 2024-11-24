@@ -262,7 +262,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, IProperty::Callback _funcPtr, const char * _displayName, PropertyFlags _flags)
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, IProperty::ActionCallback _funcPtr, const char * _displayName, PropertyFlags _flags)
     {
         pushProperty({ _className, _propertyName, PropertyType::Callback, (uint_ptr)_funcPtr, (u32)sizeof(void *), _displayName, _flags });
     }
@@ -489,7 +489,7 @@ namespace vg::core
     template <> struct TypeToEnum<IObject*> { static constexpr auto value = PropertyType::ObjectPtr; };
     template <> struct TypeToEnum<IResource> { static constexpr auto value = PropertyType::Resource; };
     template <> struct TypeToEnum<IResource*> { static constexpr auto value = PropertyType::ResourcePtr; };
-    template <> struct TypeToEnum<IProperty::Callback> { static constexpr auto value = PropertyType::Callback; };
+    template <> struct TypeToEnum<IProperty::ActionCallback> { static constexpr auto value = PropertyType::Callback; };
     template <> struct TypeToEnum<vector<IObject*>> { static constexpr auto value = PropertyType::ObjectPtrVector; };
     template <> struct TypeToEnum<dictionary<core::IObject*>> { static constexpr auto value = PropertyType::ObjectPtrDictionary; };
 

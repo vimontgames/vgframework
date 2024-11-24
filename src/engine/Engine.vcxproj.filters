@@ -88,6 +88,9 @@
     <None Include="Resource\Animation\AnimationResource.inl">
       <Filter>Resource\Animation</Filter>
     </None>
+    <None Include="Resource\Material\MaterialData.inl">
+      <Filter>Resource\Material</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEngine.h" />

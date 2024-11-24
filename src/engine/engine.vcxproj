@@ -119,6 +119,7 @@
     <None Include="Engine.def" />
     <None Include="Engine.inl" />
     <None Include="Resource\Animation\AnimationResource.inl" />
+    <None Include="Resource\Material\MaterialData.inl" />
     <None Include="World\World.inl" />
   </ItemGroup>
   <ItemGroup>

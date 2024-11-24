@@ -50,10 +50,10 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumEx(CameraComponent, gfx::ViewportTarget, m_target, "Target", PropertyFlags::ReadOnly | PropertyFlags::NotVisible);
+        registerPropertyEnumEx(CameraComponent, gfx::ViewportTarget, m_target, "Target", PropertyFlags::ReadOnly | PropertyFlags::Hidden);
         setPropertyDescription(CameraComponent, m_target, "Camera target");
 
-        registerPropertyEx(CameraComponent, m_viewportIndex, "Viewport", PropertyFlags::ReadOnly | PropertyFlags::NotVisible);
+        registerPropertyEx(CameraComponent, m_viewportIndex, "Viewport", PropertyFlags::ReadOnly | PropertyFlags::Hidden);
         setPropertyRange(CameraComponent, m_viewportIndex, float2(0, 15));
         setPropertyDescription(CameraComponent, m_viewportIndex, "Viewport index");
 

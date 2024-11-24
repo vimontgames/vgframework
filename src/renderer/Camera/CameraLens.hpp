@@ -11,7 +11,7 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(CameraLens, m_name, PropertyFlags::NotVisible, false);
+        setPropertyFlag(CameraLens, m_name, PropertyFlags::Hidden, false);
 
         registerProperty(CameraLens, m_sensorSize, "Sensor size");
         setPropertyRange(CameraLens, m_sensorSize, core::float2(3.6f, 100.0f));

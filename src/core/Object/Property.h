@@ -26,7 +26,9 @@ namespace vg::core
 
         void                            SetInterface                    (const char * _interface) final override;
         void                            SetRange                        (float2 _range) final override;
-        void                            SetRangeCallback                (PropertyRangeCallback _func) final override;
+        void                            SetPropertyRangeCallback        (PropertyRangeCallback _func) final override;
+        void                            SetPropertyHiddenCallback       (IsPropertyHiddenCallback _func) final override;
+        void                            SetPropertyReadOnlyCallback     (IsPropertyReadOnlyCallback _func) final override;
         void                            SetDefaultFolder                (const char * _path) final override;
         void                            SetFlags                        (PropertyFlags _flagsToSet, PropertyFlags _flagsToRemove = PropertyFlags::None) final override;
         void                            SetOffset                       (uint_ptr _offset) final override;
@@ -46,6 +48,8 @@ namespace vg::core
         const char *                    GetDisplayName                  () const final override;
         PropertyFlags                   GetFlags                        () const final override;
         float2                          GetRange                        (const IObject * _object, core::uint _index = 0) const final override;
+        bool                            IsHidden                        (const IObject * _object, core::uint _index = 0) const final override;
+        bool                            IsReadOnly                      (const IObject * _object, core::uint _index = 0) const final override;
         const char *                    GetEnumTypeName                 () const final override;
         u32                             GetEnumCount                    () const final override;
         void                            SetEnumName                     (uint index, core::string _name) final override;
@@ -94,7 +98,7 @@ namespace vg::core
         u8 *                            GetPropertyResourceVectorData   (const IObject * _object) const final override;
         IResource *                     GetPropertyResourceVectorElement(const IObject * _object, uint _index) const final override;
 
-        IProperty::Callback             GetPropertyCallback             () const final override;
+        IProperty::ActionCallback       GetPropertyActionCallback             () const final override;
         PropertyLayoutElement           GetLayoutElementType            () const final override;
 
         bool                            IsResourceProperty              () const final override;
@@ -105,19 +109,23 @@ namespace vg::core
         void                            checkPropertyType               (PropertyType _type) const;
         
     private:
-        const char *                    name            = nullptr;
-        const char *                    className       = nullptr;
-        const char *                    displayName     = nullptr;
-        const char *                    defaultFolder   = nullptr;
-        const char *                    interfaceType   = nullptr;
-        const char *                    description     = nullptr;
-        const char *                    enumTypeName    = nullptr;
-        PropertyType                    type			= PropertyType::Undefined;
-        uint_ptr	                    offset			= (uint_ptr)-1;
-		core::u32	                    sizeOf			= 0x0;
-        PropertyFlags                   flags			= PropertyFlags::None;
-        float2		                    range			= float2(0.0f, 0.0f);
-        PropertyRangeCallback           rangeCallback   = nullptr;
+        const char *                    name                = nullptr;
+        const char *                    className           = nullptr;
+        const char *                    displayName         = nullptr;
+        const char *                    defaultFolder       = nullptr;
+        const char *                    interfaceType       = nullptr;
+        const char *                    description         = nullptr;
+        const char *                    enumTypeName        = nullptr;
+        PropertyType                    type			    = PropertyType::Undefined;
+        uint_ptr	                    offset			    = (uint_ptr)-1;
+		core::u32	                    sizeOf			    = 0x0;
+        PropertyFlags                   flags			    = PropertyFlags::None;
+        float2		                    range			    = float2(0.0f, 0.0f);
+        PropertyRangeCallback           rangeCallback       = nullptr;
+        IsPropertyHiddenCallback        isHiddenCallback    = nullptr;
+        IsPropertyReadOnlyCallback      isReadOnlyCallback  = nullptr;
         vector<EnumDesc>                enums;
+
+        // Do not forget to update Property(const Property & _other) when you add a member variable here!
     };   
 }

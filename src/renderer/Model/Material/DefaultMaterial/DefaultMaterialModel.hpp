@@ -64,6 +64,7 @@ namespace vg::renderer
         _data->setUVSource(m_UVSource);
         _data->setTiling(m_tiling);
         _data->setOffset(m_offset);
+        _data->setDepthFade(m_depthFade);
 
         //const auto lightingMode = RendererOptions::get()->getLightingMode();
         const bool enableAlbedo = (/*LightingMode::Deferred == lightingMode && */ SurfaceType::Decal == m_surfaceType) | m_enableAlbedo;

@@ -619,7 +619,7 @@ namespace vg::editor
         const auto offset = _prop->GetOffset();
         const auto flags = _prop->GetFlags();
 
-        const bool readonly = asBool(PropertyFlags::ReadOnly & flags);
+        const bool readonly = _propContext.m_readOnly || _prop->IsReadOnly(_object);
         if (readonly)
             PushDisabledStyle(true);
 
@@ -697,7 +697,7 @@ namespace vg::editor
         const auto offset = _prop->GetOffset();
         const auto flags = _prop->GetFlags();
 
-        const bool readonly = asBool(PropertyFlags::ReadOnly & flags);
+        const bool readonly = _propContext.m_readOnly || _prop->IsReadOnly(_object);
         if (readonly)
             PushDisabledStyle(true);
 
@@ -894,13 +894,14 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::isPropertyVisible(PropertyFlags _flags)
+    bool ImGuiWindow::isPropertyVisible(const core::IObject * _object, const core::IProperty * _prop)
     {
-        const bool invisible = asBool(PropertyFlags::NotVisible & _flags);
-        const bool debug = asBool(PropertyFlags::Debug & _flags);
+        const auto flags = _prop->GetFlags();
+        const bool hidden = _prop->IsHidden(_object);
+        const bool debug = asBool(PropertyFlags::Debug & flags);
         const bool showDebug = EditorOptions::get()->IsDebugPropertyVisible();
 
-        return !invisible && (!debug || showDebug);
+        return !hidden && (!debug || showDebug);
     }
 
     //--------------------------------------------------------------------------------------
@@ -1019,7 +1020,7 @@ namespace vg::editor
                 if (_description && '\0' != _description[0])
                 {
                     imGuiAdapter->PushFontStyle(renderer::FontStyle::Italic);
-                    ImGui::Text("\n%s", _description);
+                    ImGui::Text("%s", _description);
                     imGuiAdapter->PopFontStyle();
                 }
 
@@ -1117,7 +1118,7 @@ namespace vg::editor
         if (_objectContext.m_hide && (type != PropertyType::LayoutElement || !(asBool(flags & PropertyFlags::Optional))))
             return false;
 
-        if (!isPropertyVisible(flags))
+        if (!isPropertyVisible(_object, _prop))
             return false;
         
         const IClassDesc * classDesc = propContext.m_originalObject->GetClassDesc();
@@ -1158,7 +1159,7 @@ namespace vg::editor
 
             if (propContext.m_optionalProp)
             {
-                VG_ASSERT(asBool(PropertyFlags::NotVisible & propContext.m_optionalProp->GetFlags()) || _prop->GetType() == PropertyType::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be %s", _prop->GetName(), asString(PropertyFlags::NotVisible).c_str());
+                VG_ASSERT(asBool(PropertyFlags::Hidden & propContext.m_optionalProp->GetFlags()) || _prop->GetType() == PropertyType::LayoutElement, "[Factory] Property used for optional variable \"%s\" should be %s", _prop->GetName(), asString(PropertyFlags::Hidden).c_str());
                 
                 if (propContext.m_optionalProp->GetType() == PropertyType::Bool)
                 {
@@ -1209,7 +1210,7 @@ namespace vg::editor
 
         bool changed = false;
 
-        propContext.m_readOnly = asBool(PropertyFlags::ReadOnly & flags);
+        propContext.m_readOnly = _prop->IsReadOnly(_object);
 
         if (propContext.m_isPrefabInstance && !propContext.m_isPrefabOverride)
         {
@@ -1253,55 +1254,32 @@ namespace vg::editor
 
                         case PropertyLayoutElement::GroupBegin:
                         {
-                            //if (asBool(PropertyFlags::Optional & flags) && !asBool(PropertyFlags::NotVisible & propContext.m_optionalProp->GetFlags()))
-                            //{
-                            //    // optional group
-                            //    VG_ASSERT(_prop->GetOffset() != 0);
-                            //    ImGui::BeginDisabled(!*_prop->GetPropertyBool(_object));
-                            //}
-                            //else
+                            if (_objectContext.m_treeNodes.size() == 0 || _objectContext.m_treeNodes.back().treeNodeOpen)
                             {
-                                //if (_objectContext.m_treeNodes.size() > 0 || dynamic_cast<IComponent *>(_object) || dynamic_cast<IComponent *>(_object->GetParent()))
-                                //{
-                                //    if (_objectContext.m_treeNodes.size() == 0 || _objectContext.m_treeNodes.back().treeNodeOpen)
-                                //    {
-                                //        auto & newInfo = _objectContext.m_treeNodes.emplace_back();
-                                //
-                                //        newInfo.treeNodeOpen = ImGui::PersistentTreeNode(_object, _prop);
-                                //        newInfo.treeNodeIsCollapsingHeader = false;
-                                //    }
-                                //}
-                                //else
+                                auto & newInfo = _objectContext.m_treeNodes.emplace_back();
+
+                                bool * toggle = nullptr;
+                                bool previous;
+                                if (asBool(PropertyFlags::Optional & flags))
                                 {
-                                    if (_objectContext.m_treeNodes.size() == 0 || _objectContext.m_treeNodes.back().treeNodeOpen)
-                                    {
-                                        auto & newInfo = _objectContext.m_treeNodes.emplace_back();
-
-                                        bool * toggle = nullptr;
-                                        bool previous;
-                                        if (asBool(PropertyFlags::Optional & flags))
-                                        {
-                                            toggle = _prop->GetPropertyBool(_object);
-                                            previous = *toggle;
-                                        }
-
-                                        newInfo.treeNodeOpen = ImGui::PersistentCollapsingHeader(_object, _prop, toggle);
-                                        newInfo.treeNodeIsCollapsingHeader = true;
-
-                                        if (toggle)
-                                        {
-                                            if (*toggle != previous)
-                                                optionalChanged = true;
-
-                                            if (!*toggle)
-                                            {
-                                                ImGui::PushDisabledStyle(true);
-                                                newInfo.treeNodeContentDisabled = true;
-                                            }
-                                        }
-                                    }
+                                    toggle = _prop->GetPropertyBool(_object);
+                                    previous = *toggle;
                                 }
 
+                                newInfo.treeNodeOpen = ImGui::PersistentCollapsingHeader(_prop->GetDisplayName(), _object, _prop, toggle);
+                                newInfo.treeNodeIsCollapsingHeader = true;
+
+                                if (toggle)
+                                {
+                                    if (*toggle != previous)
+                                        optionalChanged = true;
+
+                                    if (!*toggle)
+                                    {
+                                        ImGui::PushDisabledStyle(true);
+                                        newInfo.treeNodeContentDisabled = true;
+                                    }
+                                }
                                 ImGui::Indent();
                             }
                         }
@@ -1309,31 +1287,24 @@ namespace vg::editor
 
                         case PropertyLayoutElement::GroupEnd:
                         {
-                            //if (asBool(PropertyFlags::Optional & flags) && !asBool(PropertyFlags::NotVisible & propContext.m_optionalProp->GetFlags()))
-                            //{
-                            //    ImGui::EndDisabled();
-                            //}
-                            //else
+                            if (_objectContext.m_treeNodes.size() > 0)
                             {
                                 ImGui::Unindent();
 
-                                if (_objectContext.m_treeNodes.size() > 0)
+                                auto & nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
+
+                                if (nodeInfo.treeNodeOpen)
                                 {
-                                    auto & nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
+                                    if (!nodeInfo.treeNodeIsCollapsingHeader)
+                                        ImGui::TreePop();
 
-                                    if (nodeInfo.treeNodeOpen)
-                                    {
-                                        if (!nodeInfo.treeNodeIsCollapsingHeader)
-                                            ImGui::TreePop();
-
-                                        ImGui::Spacing();
-                                    }
-
-                                    if (nodeInfo.treeNodeContentDisabled)
-                                        ImGui::PopDisabledStyle();                           
-
-                                    _objectContext.m_treeNodes.erase(_objectContext.m_treeNodes.begin() + _objectContext.m_treeNodes.size() - 1);
+                                    ImGui::Spacing();
                                 }
+
+                                if (nodeInfo.treeNodeContentDisabled)
+                                    ImGui::PopDisabledStyle();                           
+
+                                _objectContext.m_treeNodes.erase(_objectContext.m_treeNodes.begin() + _objectContext.m_treeNodes.size() - 1);
                             }
                         }
                         break;
@@ -1657,7 +1628,7 @@ namespace vg::editor
                 {
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
 
-                    IProperty::Callback pFunc = _prop->GetPropertyCallback();
+                    IProperty::ActionCallback pFunc = _prop->GetPropertyActionCallback();
 
                     float textWidth = ImGui::CalcTextSize(displayName).x;
                     float minWidth = style::button::SizeSmall.x;
