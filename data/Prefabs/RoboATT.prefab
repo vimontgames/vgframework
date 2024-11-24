@@ -1,0 +1,92 @@
+<Root>
+    <Object class="PrefabScene">
+        <Property type="String" name="m_name" value="RoboATT"/>
+        <Property type="Uint32" name="m_uid" value="2852052497"/>
+        <Property type="Uint32" name="m_originalUID" value="0"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="ObjectPtr" name="m_root">
+            <Object class="GameObject">
+                <Property type="String" name="m_name" value="Root"/>
+                <Property type="Uint32" name="m_uid" value="842779193"/>
+                <Property type="Uint32" name="m_originalUID" value="0"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                <Property type="ObjectPtrVector" name="m_components">
+                    <Object class="AnimationComponent">
+                        <Property type="String" name="m_name" value="New AnimationComponent"/>
+                        <Property type="Uint32" name="m_uid" value="441121012"/>
+                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                        <Property type="Object" name="m_animations">
+                            <Object class="AnimationResourceList">
+                                <Property type="String" name="m_name" value="New AnimationComponent"/>
+                                <Property type="Uint32" name="m_uid" value="2393000234"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="ResourceVector" name="m_resources">
+                                    <Object class="AnimationResource">
+                                        <Property type="String" name="m_name" value="WALK"/>
+                                        <Property type="Uint32" name="m_uid" value="1270753549"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="String" name="m_resourcePath" value="data/Animations/RoboATT/RoboATT_WALK.fbx"/>
+                                        <Property type="Bool" name="m_play" value="false"/>
+                                        <Property type="Bool" name="m_loop" value="true"/>
+                                        <Property type="Uint32" name="m_layer" value="0"/>
+                                        <Property type="Bool" name="m_useBodyParts" value="false"/>
+                                        <Property type="EnumFlagsU32" name="m_bodyParts" value="UpperBody|LowerBody"/>
+                                        <Property type="Float" name="m_speed" value="1"/>
+                                    </Object>
+                                    <Object class="AnimationResource">
+                                        <Property type="String" name="m_name" value="RUN"/>
+                                        <Property type="Uint32" name="m_uid" value="242584651"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="String" name="m_resourcePath" value="data/Animations/RoboATT/RoboATT_RUN.fbx"/>
+                                        <Property type="Bool" name="m_play" value="false"/>
+                                        <Property type="Bool" name="m_loop" value="true"/>
+                                        <Property type="Uint32" name="m_layer" value="0"/>
+                                        <Property type="Bool" name="m_useBodyParts" value="false"/>
+                                        <Property type="EnumFlagsU32" name="m_bodyParts" value=""/>
+                                        <Property type="Float" name="m_speed" value="1"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                        </Property>
+                    </Object>
+                    <Object class="MeshComponent">
+                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                        <Property type="Uint32" name="m_uid" value="2504270313"/>
+                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                        <Property type="Resource" name="m_meshResource">
+                            <Object class="MeshResource">
+                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                <Property type="Uint32" name="m_uid" value="1933841892"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="String" name="m_resourcePath" value="data/Meshes/RoboATT/RoboATT.fbx"/>
+                            </Object>
+                        </Property>
+                        <Property type="Object" name="m_meshMaterials">
+                            <Object class="MaterialResourceList">
+                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                <Property type="Uint32" name="m_uid" value="3723701647"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="ResourceVector" name="m_resources"/>
+                            </Object>
+                        </Property>
+                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                    </Object>
+                </Property>
+                <Property type="ObjectPtrVector" name="m_children"/>
+            </Object>
+        </Property>
+    </Object>
+</Root>
