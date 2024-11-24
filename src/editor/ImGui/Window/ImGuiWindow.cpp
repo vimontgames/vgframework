@@ -423,7 +423,7 @@ namespace vg::editor
 
         bool edited = false;
 
-        const auto dragSpeed = scalarTraits<S>::is_integer ? ImGuiWindow::getDragSpeedInt(_object, _prop) : ImGuiWindow::getDragSpeedFloat(_object, _prop);
+        const auto dragSpeed = scalarTraits<S>::is_integer ? ImGuiWindow::getDragSpeedInt(_propContext.m_originalObject, _prop) : ImGuiWindow::getDragSpeedFloat(_propContext.m_originalObject, _prop);
         const auto flags = _prop->GetFlags();
 
         auto editFormat = scalarTraits<S>::is_integer ? (scalarTraits<S>::is_signed ? g_editIntFormat : g_editUIntFormat) : g_editFloatFormat;
@@ -619,7 +619,7 @@ namespace vg::editor
         const auto offset = _prop->GetOffset();
         const auto flags = _prop->GetFlags();
 
-        const bool readonly = _propContext.m_readOnly || _prop->IsReadOnly(_object);
+        const bool readonly = _propContext.m_readOnly || _prop->IsReadOnly(_propContext.m_originalObject);
         if (readonly)
             PushDisabledStyle(true);
 
@@ -697,7 +697,7 @@ namespace vg::editor
         const auto offset = _prop->GetOffset();
         const auto flags = _prop->GetFlags();
 
-        const bool readonly = _propContext.m_readOnly || _prop->IsReadOnly(_object);
+        const bool readonly = _propContext.m_readOnly || _prop->IsReadOnly(_propContext.m_originalObject);
         if (readonly)
             PushDisabledStyle(true);
 
@@ -1118,7 +1118,7 @@ namespace vg::editor
         if (_objectContext.m_hide && (type != PropertyType::LayoutElement || !(asBool(flags & PropertyFlags::Optional))))
             return false;
 
-        if (!isPropertyVisible(_object, _prop))
+        if (!isPropertyVisible(propContext.m_originalObject, _prop))
             return false;
         
         const IClassDesc * classDesc = propContext.m_originalObject->GetClassDesc();
@@ -1210,7 +1210,7 @@ namespace vg::editor
 
         bool changed = false;
 
-        propContext.m_readOnly = _prop->IsReadOnly(_object);
+        propContext.m_readOnly = _prop->IsReadOnly(propContext.m_originalObject);
 
         if (propContext.m_isPrefabInstance && !propContext.m_isPrefabOverride)
         {
