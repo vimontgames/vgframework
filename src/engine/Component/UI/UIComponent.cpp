@@ -1,7 +1,7 @@
 #include "engine/Precomp.h"
 #include "UIComponent.h"
 #include "core/IGameObject.h"
-#include "gfx/IUIRenderer.h"
+#include "renderer/IUIRenderer.h"
 #include "gfx/ITexture.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IUIManager.h"
@@ -26,13 +26,13 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
         
-        registerPropertyEnum(UIComponent, gfx::HorizontalAligment, m_horizontal, "Horizontal");
+        registerPropertyEnum(UIComponent, renderer::HorizontalAligment, m_horizontal, "Horizontal");
         setPropertyDescription(UIComponent, m_horizontal, "Horizontal aligment in canvas");
 
-        registerPropertyEnum(UIComponent, gfx::VerticalAligment, m_vertical, "Vertical");
+        registerPropertyEnum(UIComponent, renderer::VerticalAligment, m_vertical, "Vertical");
         setPropertyDescription(UIComponent, m_vertical, "Vertical aligment in canvas");
 
-        registerPropertyEnumBitfield(UIComponent, gfx::UIItemFlags, m_UIFlags, "Flags");
+        registerPropertyEnumBitfield(UIComponent, renderer::UIItemFlags, m_UIFlags, "Flags");
         setPropertyDescription(UIComponent, m_UIFlags, "AutoResize: Resize the UI element according to its contents\nKeepAspectRatio: Respect aspect ratio when resizing element");
 
         registerProperty(UIComponent, m_size, "Size");
@@ -55,8 +55,8 @@ namespace vg::engine
     UIComponent::UIComponent(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent),
         m_pickingID((renderer::PickingID)0),
-        m_horizontal(gfx::HorizontalAligment::Center),
-        m_vertical(gfx::VerticalAligment::Center),
+        m_horizontal(renderer::HorizontalAligment::Center),
+        m_vertical(renderer::VerticalAligment::Center),
         m_useOffset(false),
         m_offset(core::float3(0, 0, 0)),
         m_useColor(false),
@@ -87,7 +87,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    const gfx::UICanvas * UIComponent::getCanvas() const
+    const renderer::UICanvas * UIComponent::getCanvas() const
     {
         if (auto * canvas = GetGameObject()->GetComponentInParentsT<UICanvasComponent>())
             return &canvas->getGfxCanvas();
@@ -95,8 +95,8 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::UIItem UIComponent::getUIItem() const
+    renderer::UIItem UIComponent::getUIItem() const
     {
-        return gfx::UIItem(m_pickingID, getMatrix(), getOffset(), m_size, getCenter(), m_horizontal, m_vertical, getColor(), m_UIFlags);
+        return renderer::UIItem(m_pickingID, getMatrix(), getOffset(), m_size, getCenter(), m_horizontal, m_vertical, getColor(), m_UIFlags);
     }
 }

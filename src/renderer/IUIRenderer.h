@@ -1,19 +1,19 @@
 #pragma once
 
-#include "gfx/IViewport.h"
+#include "renderer/IView.h"
+#include "renderer/IViewport.h"
 
-// This is not ideal, maybe those values should be part of the interface or just passe opaque index type?
+namespace vg::gfx
+{
+    class ITexture;
+}
+
 namespace vg::renderer
 {
     struct UIElement;
     enum class Font : core::u8;
     enum class FontStyle : core::u8;
     using PickingID = core::uint;
-}
-
-namespace vg::gfx
-{
-    class ITexture;
 
     vg_enum_class( HorizontalAligment , core::u8,
         Left,
@@ -74,11 +74,11 @@ namespace vg::gfx
         {
         }
         
-        ViewportTarget          m_viewportTarget    = ViewportTarget::Game;
-        ViewportIndex           m_viewportIndex     = (ViewportIndex)0;
+        gfx::ViewportTarget     m_viewportTarget    = gfx::ViewportTarget::Game;
+        gfx::ViewportIndex      m_viewportIndex     = (gfx::ViewportIndex)0;
         CanvasType              m_canvasType        = CanvasType::CanvasType_2D;
         bool                    m_useViewMask       = true;
-        gfx::ViewMask           m_viewMask          = gfx::ViewMask_All;
+        ViewMask                m_viewMask          = ViewMask_All;
         core::uint2             m_resolution        = core::uint2(1280, 720);
     };
 
@@ -87,7 +87,7 @@ namespace vg::gfx
     public:
         virtual ~IUIRenderer() {};
 
-        virtual void Add                (const renderer::UIElement & _desc) = 0;
+        virtual void Add                (const UIElement & _desc) = 0;
 
         virtual void Clear              () = 0;
 

@@ -64,7 +64,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void LitView::RegisterFrameGraph(const gfx::RenderPassContext & _renderPassContext, FrameGraph & _frameGraph)
     {
-        const auto * view = _renderPassContext.getView();
+        const auto * view = (const IView *)_renderPassContext.getView();
         _frameGraph.pushPassGroup(view->GetName());
 
         // If the view does not belong to a viewport then it must register its target
@@ -77,7 +77,7 @@ namespace vg::renderer
 
         const RendererOptions * options = RendererOptions::get();
 
-        const bool toolmode = _renderPassContext.getView()->IsToolmode();
+        const bool toolmode = view->IsToolmode();
         const bool computePostProcess = view->IsComputePostProcessNeeded();
 
         if (view->IsUsingRayTracing())

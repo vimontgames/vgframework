@@ -8,7 +8,7 @@
 #include "gfx/FrameGraph/SubPass.h"
 #include "gfx/FrameGraph/UserPass.h"
 #include "gfx/Profiler/Profiler.h"
-#include "gfx/IView.h"
+#include "gfx/IFrameGraphView.h"
 
 using namespace vg::core;
 

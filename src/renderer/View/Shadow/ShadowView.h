@@ -6,15 +6,11 @@ namespace vg::core
     class IWorld;
 }
 
-namespace vg::gfx
-{
-    class IView;
-}
-
 namespace vg::renderer
 {
     class LightInstance;
     class ShadowMapPass;
+    class IView;
 
     class ShadowView final : public View
     {
@@ -30,7 +26,7 @@ namespace vg::renderer
 
         const LightInstance *           getLight            () const { return m_light; }
         bool                            isUsingShadowMap    () const;
-        core::string                    getShadowMapName    (const gfx::IView * _view) const;
+        core::string                    getShadowMapName    (const IView * _view) const;
 
     private:
         LightInstance *                 m_light         = nullptr;

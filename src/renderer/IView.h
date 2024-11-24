@@ -1,93 +1,10 @@
 #pragma once
 
-#include "core/Object/Object.h"
-#include "core/IWorld.h"
+#include "gfx/IFrameGraphView.h"
 
-struct PickingData;
-struct PickingHit;
-
-namespace vg::core
+namespace vg::renderer
 {
-    class IGameObject;
-}
-
-namespace vg::gfx
-{
-    class ITexture;
-    class IUIRenderer;
-    class UserPass;
     class IViewport;
-    struct ViewportID;
-
-    vg_enum_class(ViewTarget, core::u8,
-        Game        = 0,
-        Editor      = 1,
-        Shadow      = 2
-    );
-    static inline const ViewTarget ViewTargetInvalid = (ViewTarget)0x03;
-
-    using ViewIndex = core::u8;
-    static inline const ViewIndex ViewIndexInvalid = (ViewIndex)0x3F;
-
-    vg_enum_class(ViewFlags, core::u32,
-        Visible     = 0x00000001,
-        Render      = 0x00000002,
-        Focus       = 0x00000004,
-        Ortho       = 0x00000008,
-        Prefab      = 0x00000010,
-        Additional  = 0x00000020
-    );
-
-    vg_enum_class(ViewMask, core::u32,
-        View_0        = 0x00000001,
-        View_1        = 0x00000002,
-        View_2        = 0x00000004,
-        View_3        = 0x00000008,
-        View_4        = 0x00000010,
-        View_5        = 0x00000020,
-        View_6        = 0x00000040,
-        View_7        = 0x00000080,
-        View_8        = 0x00000100,
-        View_9        = 0x00000200,
-        View_10       = 0x00000400,
-        View_11       = 0x00000800,
-        View_12       = 0x00001000,
-        View_13       = 0x00002000,
-        View_14       = 0x00004000,
-        View_15       = 0x00008000
-    );
-
-    static const ViewMask ViewMask_All = (ViewMask)0x0000FFFF;
-
-    struct ViewID
-    {
-        ViewID(ViewTarget _target = ViewTargetInvalid, ViewIndex _index = ViewIndexInvalid) :
-            target(_target),
-            index(_index)
-        {
-            
-        }
-
-        union
-        {
-            struct
-            {
-                ViewTarget target : 2;
-                ViewIndex index : 6;
-            };
-            core::u8 id;
-        };
-
-        inline bool operator == (const ViewID & _other) const
-        {
-            return target == _other.target && index == _other.index;
-        }
-
-        inline bool operator != (const ViewID & _other) const
-        {
-            return !(*this == _other);
-        }
-    };
 
     struct CreateViewParams
     {
@@ -95,7 +12,7 @@ namespace vg::gfx
         {
         }
 
-        CreateViewParams(ViewTarget _target, core::uint2 _size, IViewport * _viewport, core::IWorld * _world = nullptr, gfx::ITexture * _dest = nullptr) :
+        CreateViewParams(gfx::ViewTarget _target, core::uint2 _size, IViewport * _viewport, core::IWorld * _world = nullptr, gfx::ITexture * _dest = nullptr) :
             viewport(_viewport),
             target(_target),
             size(_size),
@@ -105,20 +22,20 @@ namespace vg::gfx
          
         }
 
-        IViewport *         viewport = nullptr;
-        ViewTarget          target = ViewTarget::Game;
-        core::uint2         size = core::uint2(0, 0);
-        core::IWorld *      world = nullptr;
-        gfx::ITexture *     dest = nullptr;
+        IViewport *     viewport = nullptr;
+        gfx::ViewTarget target   = gfx::ViewTarget::Game;
+        core::uint2     size     = core::uint2(0, 0);
+        core::IWorld *  world    = nullptr;
+        gfx::ITexture * dest     = nullptr;
     };
 
     struct ViewCullingStats
     {
-        core::uint opaque       = 0;
-        core::uint transparent  = 0;
-        core::uint directional  = 0;
-        core::uint omni         = 0;
-        core::uint spot         = 0;
+        core::uint opaque      = 0;
+        core::uint transparent = 0;
+        core::uint directional = 0;
+        core::uint omni        = 0;
+        core::uint spot        = 0;
     };
 
     vg_enum_class(GateFitMode, core::u8,
@@ -126,13 +43,42 @@ namespace vg::gfx
         Vertical
     );
 
-    class IView : public core::Object
+    vg_enum_class(ViewFlags, core::u32,
+        Visible    = 0x00000001,
+        Render     = 0x00000002,
+        Focus      = 0x00000004,
+        Ortho      = 0x00000008,
+        Prefab     = 0x00000010,
+        Additional = 0x00000020
+    );
+
+    vg_enum_class(ViewMask, core::u32,
+        View_0  = 0x00000001,
+        View_1  = 0x00000002,
+        View_2  = 0x00000004,
+        View_3  = 0x00000008,
+        View_4  = 0x00000010,
+        View_5  = 0x00000020,
+        View_6  = 0x00000040,
+        View_7  = 0x00000080,
+        View_8  = 0x00000100,
+        View_9  = 0x00000200,
+        View_10 = 0x00000400,
+        View_11 = 0x00000800,
+        View_12 = 0x00001000,
+        View_13 = 0x00002000,
+        View_14 = 0x00004000,
+        View_15 = 0x00008000
+    );
+
+    class IViewport;
+    class IUIRenderer;
+
+    static const ViewMask ViewMask_All = (ViewMask)0x0000FFFF;
+
+    class IView : public gfx::IFrameGraphView
     {
     public:
-
-        IView() {};
-        virtual ~IView() = default;
-
         virtual void                    SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset = core::float2(0, 0), core::float2 _viewportScale = core::float2(1, 1)) = 0;
         virtual void                    SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) = 0;
         virtual void                    SetupPhysicalCamera         (const core::float4x4 & _cameraWorldMatrix, float _focalLength, core::float2 _sensorSize, GateFitMode _gateFitMode, float _near, float _far, core::float2 _viewportOffset = core::float2(0, 0), core::float2 _viewportScale = core::float2(1, 1)) = 0;
@@ -159,10 +105,7 @@ namespace vg::gfx
         virtual IViewport *             GetViewport                 () const = 0;
 
         virtual void                    SetRenderTarget             (gfx::ITexture * _renderTarget) = 0;
-        virtual ITexture *              GetRenderTarget             () const = 0;
-
-        virtual void                    SetViewID                   (ViewID _viewID) = 0;
-        virtual ViewID                  GetViewID                   () const = 0;
+        virtual gfx::ITexture *         GetRenderTarget             () const = 0;
 
         // "Focused" means this is the view the user is interacting with in Editor
         virtual void                    SetFocused                  (bool _active) = 0;
@@ -196,7 +139,6 @@ namespace vg::gfx
         virtual void                    AddPickingHit               (const PickingHit & _hit) = 0;
 
         virtual ViewCullingStats        GetViewCullingStats         () const = 0;
-
-        virtual IUIRenderer *           GetUIRenderer                  () const = 0;
+        virtual IUIRenderer *           GetUIRenderer               () const = 0;
     };
 }

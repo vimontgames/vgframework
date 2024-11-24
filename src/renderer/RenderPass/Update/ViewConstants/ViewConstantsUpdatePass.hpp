@@ -52,7 +52,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ViewConstantsUpdatePass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
-        if (_renderPassContext.getView()->IsToolmode())
+        const auto * view = (IView *)_renderPassContext.getView();
+        if (view->IsToolmode())
         {
             FrameGraphBufferResourceDesc toolmodeRWBufferDesc;
             toolmodeRWBufferDesc.elementSize = sizeof(ToolmodeRWBufferData);

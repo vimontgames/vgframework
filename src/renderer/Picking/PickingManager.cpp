@@ -6,7 +6,7 @@
 #include "core/IComponent.h"
 #include "core/IGameObject.h"
 #include "core/string/string.h"
-#include "gfx/IView.h"
+#include "renderer/IView.h"
 #include "Shaders/system/toolmode.hlsl.h"
 #include "renderer/IMeshInstance.h"
 #include "editor/Editor_Consts.h" // should not include Editor from here
@@ -101,7 +101,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void PickingManager::Update(const gfx::IView * _view, bool & _showTooltip, core::string & _tooltipMsg, core::string & _tooltipDbg)
+    void PickingManager::Update(const IView * _view, bool & _showTooltip, core::string & _tooltipMsg, core::string & _tooltipDbg)
     {
         if (_view->IsMouseOverView())
         {

@@ -1,9 +1,8 @@
 #pragma once
 
 #include "engine/ICameraComponent.h"
-#include "gfx/IView.h"
-#include "renderer/PBR/PhysicalCameraSettings.h"
 #include "engine/Resource/Lens/LensResource.h"
+#include "renderer/ICameraSettings.h"
 
 namespace vg::core
 {
@@ -47,23 +46,13 @@ namespace vg::engine
 
         void                                    updateLensConstraints       ();
 
-        const renderer::ICameraLens *           getCameraLens               () const;
-
     protected:
         gfx::ViewportTarget                     m_target;
         gfx::ViewportIndex                      m_viewportIndex;
         gfx::ViewIndex                          m_viewIndex;
-
-        LensResource                            m_lensRes;
-
-        renderer::PhysicalCameraSettings        m_physicalCameraSettings;
-        float                                   m_focusDistance = 3.0f;
-        float                                   m_aperture = 4.0f;
-
+        renderer::ICameraSettings *             m_cameraSettings = nullptr;
         core::float2                            m_viewportOffset;
         core::float2                            m_viewportScale;
-
-        core::float2                            m_previousViewportScale = core::float2(0, 0);
     };
 }
 

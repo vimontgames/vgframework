@@ -17,13 +17,13 @@ namespace vg::engine
         registerPropertyEx(UICanvasComponent, m_canvas.m_viewportIndex, "Viewport", PropertyFlags::ReadOnly);
         setPropertyDescription(UICanvasComponent, m_canvas.m_viewportIndex, "Target viewport index");
 
-        registerOptionalPropertyEnumBitfield(UICanvasComponent, m_canvas.m_useViewMask, gfx::ViewMask, m_canvas.m_viewMask, "Views");
+        registerOptionalPropertyEnumBitfield(UICanvasComponent, m_canvas.m_useViewMask, renderer::ViewMask, m_canvas.m_viewMask, "Views");
         setPropertyDescription(UICanvasComponent, m_canvas.m_viewMask, "Select the views to render UI to. Disable to render fullscreen.");
 
         registerProperty(UICanvasComponent, m_canvas.m_resolution, "Resolution");
         setPropertyDescription(UICanvasComponent, m_canvas.m_resolution, "Reference resolution of UI elements");
 
-        registerPropertyEnum(UICanvasComponent, gfx::CanvasType, m_canvas.m_canvasType, "Type");
+        registerPropertyEnum(UICanvasComponent, renderer::CanvasType, m_canvas.m_canvasType, "Type");
         setPropertyDescription(UICanvasComponent, m_canvas.m_canvasType, "Use either 2D screen positions or 3D world positions for the canvas and its contents");
 
         return true;
@@ -45,7 +45,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void UICanvasComponent::SetViewIndex(core::uint _viewIndex)
     {
-        m_canvas.m_viewMask = (gfx::ViewMask)(1<<_viewIndex);
+        m_canvas.m_viewMask = (renderer::ViewMask)(1<<_viewIndex);
     }
 
     //--------------------------------------------------------------------------------------

@@ -10,7 +10,7 @@ using namespace vg::core;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    Viewport::Viewport(const gfx::CreateViewportParams & _params) :
+    Viewport::Viewport(const CreateViewportParams & _params) :
         m_renderTargetSize(_params.size)
     {
         m_viewportID.target = _params.target;
@@ -45,13 +45,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void Viewport::SetFlags(gfx::ViewportFlags _flagsToSet, gfx::ViewportFlags _flagsToRemove)
+    void Viewport::SetFlags(ViewportFlags _flagsToSet, ViewportFlags _flagsToRemove)
     {
-        m_flags = (gfx::ViewportFlags)((std::underlying_type<gfx::ViewportFlags>::type(m_flags) & ~std::underlying_type<gfx::ViewportFlags>::type(_flagsToRemove)) | (std::underlying_type<gfx::ViewportFlags>::type(_flagsToSet)));
+        m_flags = (ViewportFlags)((std::underlying_type<ViewportFlags>::type(m_flags) & ~std::underlying_type<ViewportFlags>::type(_flagsToRemove)) | (std::underlying_type<ViewportFlags>::type(_flagsToSet)));
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::ViewportFlags Viewport::GetFlags() const
+    ViewportFlags Viewport::GetFlags() const
     {
         return m_flags;
     }
@@ -181,9 +181,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IUIRenderer * Viewport::GetUIRenderer() const
+    IUIRenderer * Viewport::GetUIRenderer() const
     {
-        return VG_SAFE_STATIC_CAST(gfx::IUIRenderer, m_viewportGUI);
+        return VG_SAFE_STATIC_CAST(IUIRenderer, m_viewportGUI);
     }
 
     //--------------------------------------------------------------------------------------

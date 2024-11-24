@@ -15,19 +15,19 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void UIManager::AddCanvas(const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, core::IWorld * _world)
+    void UIManager::AddCanvas(const UICanvas * _canvas, const UIItem & _desc, core::IWorld * _world)
     {
         addUIElement(UIElement(_canvas, _desc), _world);
     }
 
     //--------------------------------------------------------------------------------------
-    void UIManager::AddText(const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const core::string & _text, Font _font, FontStyle _style, core::IWorld * _world)
+    void UIManager::AddText(const UICanvas * _canvas, const UIItem & _desc, const core::string & _text, Font _font, FontStyle _style, core::IWorld * _world)
     {
         addUIElement(UIElement(_canvas, _desc, _text, _font, _style), _world);
     }
 
     //--------------------------------------------------------------------------------------
-    void UIManager::AddImage(const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const gfx::ITexture * _texture, core::IWorld * _world)
+    void UIManager::AddImage(const UICanvas * _canvas, const UIItem & _desc, const gfx::ITexture * _texture, core::IWorld * _world)
     {
         addUIElement(UIElement(_canvas, _desc, _texture), _world);
     }
@@ -50,7 +50,7 @@ namespace vg::renderer
                     {
                         const auto index = pairs.first;
 
-                        if (asBool(((gfx::ViewMask)(1 << index)) & canvas->m_viewMask))
+                        if (asBool(((ViewMask)(1 << index)) & canvas->m_viewMask))
                         {
                             if (auto * view = renderer->GetView(pairs.second))
                             {
@@ -66,9 +66,9 @@ namespace vg::renderer
                 }
         
                 // Prefab preview mode
-                if (gfx::IView * view = renderer->GetView(gfx::ViewTarget::Editor, _world))
+                if (IView * view = renderer->GetView(gfx::ViewTarget::Editor, _world))
                 {
-                    if (view->IsRender() && view->GetWorld() == _world && asBool(gfx::ViewFlags::Prefab & view->GetFlags()))
+                    if (view->IsRender() && view->GetWorld() == _world && asBool(ViewFlags::Prefab & view->GetFlags()))
                         view->GetUIRenderer()->Add(_elem);
                 }
             }

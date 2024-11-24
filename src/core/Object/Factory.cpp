@@ -386,6 +386,28 @@ namespace vg::core
             }
             break;
 
+            case PropertyType::ResourcePtr:
+            {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyToMemory is not implemented for type '%s'", asString(type).c_str());
+                IResource ** res = _prop->GetPropertyResourcePtr(_object);
+                if (*res)
+                {
+                    auto uid = (*res)->GetUID();
+                    VG_VERIFY(_buffer.write(uid));
+
+                    const char * className = (*res)->GetClassName();
+                    VG_VERIFY(_buffer.write((u32)strlen(className)));
+                    VG_VERIFY(_buffer.write(className, strlen(className)));
+
+                    SaveProperties((*res), _bufferType);
+                }
+                else
+                {
+                    VG_VERIFY(_buffer.write((UID)0x0));
+                }
+            }
+            break;
+
             case PropertyType::ResourceVector:
             {
                 VG_ASSERT(!isEnumArray, "EnumArray serializePropertyToMemory is not implemented for type '%s'", asString(type).c_str());
@@ -882,6 +904,18 @@ namespace vg::core
         }
         break;
 
+        case PropertyType::ResourcePtr:
+        {
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            IResource ** srcRes = _srcProp->GetPropertyResourcePtr(_srcObj);
+            IResource ** dstRes = _dstProp->GetPropertyResourcePtr(_dstObj);
+            CopyProperties(*srcRes, *dstRes);
+
+            (*dstRes)->SetParent(_dstObj);
+            (*dstRes)->OnResourcePathChanged("", (*dstRes)->GetResourcePath());
+        }
+        break;
+
         case PropertyType::ResourceVector:
         {
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
@@ -934,7 +968,6 @@ namespace vg::core
         break;
 
         default:
-        case PropertyType::ResourcePtr:
         case PropertyType::ResourcePtrVector:
         case PropertyType::ObjectPtrDictionary:
         case PropertyType::ObjectVector:
@@ -1168,6 +1201,44 @@ namespace vg::core
                         if (!path.empty() && nullptr == obj->GetObject())
                             obj->OnResourcePathChanged("", path);
                     }
+                }
+            }
+            break;
+
+            case PropertyType::ResourcePtr:
+            {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyFromMemory is not implemented for type '%s'", asString(type).c_str());
+
+                UID uid = 0;
+                VG_VERIFY(_buffer.restore(&uid, sizeof(UID), changed));
+
+                if (0 != uid)
+                {
+                    u32 stringSize = 0;
+                    char className[1024];
+                    VG_ASSERT(stringSize < 1024);
+                    VG_VERIFY(_buffer.restore(&stringSize, sizeof(u32), changed));
+                    VG_VERIFY(_buffer.restore(className, stringSize, changed));
+                    className[stringSize] = '\0';
+
+                    auto ** res = _prop->GetPropertyResourcePtr(_object);
+
+                    if (nullptr != *res)
+                    {
+                        RestoreProperties(*res, _bufferType);
+                    }
+                    else
+                    {
+                        IResource * newRes = (IResource *)CreateObject(className, "", _object);
+                        newRes->SetUID(uid);
+                        RestoreProperties(newRes, _bufferType);
+                        newRes->OnLoad();
+                        *res = newRes;
+                    }
+
+                    auto path = (*res)->GetResourcePath();
+                    if (!path.empty() && nullptr == (*res)->GetObject())
+                        (*res)->OnResourcePathChanged("", path);
                 }
             }
             break;

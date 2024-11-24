@@ -476,8 +476,8 @@ namespace vg::editor
         {
             if (asBool(PropertyFlags::HasRange & flags))
             {
-                const S minRange = (S)_prop->GetRange(_object).x;
-                const S maxRange = (S)_prop->GetRange(_object).y;
+                const S minRange = (S)_prop->GetRange(_propContext.m_originalObject).x;
+                const S maxRange = (S)_prop->GetRange(_propContext.m_originalObject).y;
                 edited = CustomDragScalarN(interactionType, ImGuiWindow::getPropertyLabel(_label).c_str(), ImGuiDataTypeInfo<S>::type, &temp, count, dragSpeed, &minRange, &maxRange, editFormat, ImGuiSliderFlags_NoRoundToFormat);
             }
             else

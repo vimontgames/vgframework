@@ -25,7 +25,7 @@ namespace vg::renderer
 
         const char *                    GetClassName        () const final override { return "ForwardView"; }
 
-                                        LitView             (const gfx::CreateViewParams & _params);
+                                        LitView             (const CreateViewParams & _params);
                                         ~LitView            ();
 
         bool                            IsLit               () const { return true; }

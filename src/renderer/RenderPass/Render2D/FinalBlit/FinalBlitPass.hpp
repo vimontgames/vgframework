@@ -38,13 +38,14 @@ namespace vg::renderer
     {
         const auto * renderer = Renderer::get();
         const auto options = RendererOptions::get();
+        const auto * view = (IView *)_renderPassContext.getView();
 
-        if (_renderPassContext.getView()->IsComputePostProcessNeeded())
+        if (view->IsComputePostProcessNeeded())
             readRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"));
         else
             readRenderTarget(_renderPassContext.getFrameGraphID("Color"));        
 
-        if (!_renderPassContext.getView()->GetRenderTarget() || renderer->IsFullscreen())
+        if (!view->GetRenderTarget() || renderer->IsFullscreen())
         {
             if (HDR::None != renderer->GetHDR())
                 writeRenderTarget(0, "HDROutput");
@@ -53,7 +54,7 @@ namespace vg::renderer
         }
         else
         {
-            writeRenderTarget(0, _renderPassContext.MakeFrameGraphID("Dest", _renderPassContext.getView()->GetViewport()->GetViewportID()));
+            writeRenderTarget(0, _renderPassContext.MakeFrameGraphID("Dest", view->GetViewport()->GetViewportID()));
         }
     }
 
@@ -61,6 +62,7 @@ namespace vg::renderer
     void FinalBlitPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         const auto options = RendererOptions::get();
+        const auto * view = (IView *)_renderPassContext.getView();
 
         RasterizerState rs(FillMode::Solid, CullMode::None);
         BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
@@ -80,11 +82,11 @@ namespace vg::renderer
 
         RootConstants2D root2D;
 
-        root2D.quad.posOffsetScale = float4(_renderPassContext.getView()->GetViewportOffset(), _renderPassContext.getView()->GetViewportScale());
+        root2D.quad.posOffsetScale = float4(view->GetViewportOffset(), view->GetViewportScale());
         root2D.quad.uvOffsetScale = float4(0.0f, 0.0f, 1.0f, 1.0f);
 
         // When Compute post-process is enabled then we blit from the PostProcessUAV read as Shader Resource
-        if (_renderPassContext.getView()->IsComputePostProcessNeeded())
+        if (view->IsComputePostProcessNeeded())
             root2D.texID = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getTextureHandle();
         else
             root2D.texID = getRenderTarget(_renderPassContext.getFrameGraphID("Color"))->getTextureHandle();       
@@ -96,7 +98,7 @@ namespace vg::renderer
         // When no editor we render game UI directly to backbuffer
         if (Renderer::get()->IsFullscreen())
         {
-            if (auto * viewGUI = VG_SAFE_STATIC_CAST(UIRenderer, _renderPassContext.getView()->GetUIRenderer()))
+            if (auto * viewGUI = VG_SAFE_STATIC_CAST(UIRenderer, view->GetUIRenderer()))
                 viewGUI->RenderFullscreen();
         }
         #endif

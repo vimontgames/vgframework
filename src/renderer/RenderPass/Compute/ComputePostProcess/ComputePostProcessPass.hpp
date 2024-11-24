@@ -44,7 +44,8 @@ namespace vg::renderer
 
         auto * device = Device::get();
 
-        auto size = _renderPassContext.getView()->GetSize();
+        const auto * view = (IView *)_renderPassContext.getView();
+        auto size = view->GetSize();
 
         FrameGraphTextureResourceDesc uavDesc;
         uavDesc.format = PixelFormat::R16G16B16A16_float;
@@ -72,8 +73,8 @@ namespace vg::renderer
     void ComputePostProcessPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         const auto * options = RendererOptions::get();
-
-        auto size = _renderPassContext.getView()->GetSize();
+        const auto * view = (IView *)_renderPassContext.getView();
+        auto size = view->GetSize();
         auto threadGroupSize = uint2(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y);
         auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.y + threadGroupSize.y - 1) / threadGroupSize.y, 1);
 
@@ -85,7 +86,7 @@ namespace vg::renderer
 
             ComputeShaderKey resolveShaderKey = m_computeResolveMSAAShaderKey;
 
-            if (_renderPassContext.getView()->IsToolmode())
+            if (view->IsToolmode())
                 resolveShaderKey.setFlag(PostProcessHLSLDesc::Toolmode, true);
 
             // When MSAA is enabled, we will first resolve the MSAA color buffer to a non-MSAA UAV then use it as input for the next pass
@@ -140,11 +141,11 @@ namespace vg::renderer
 
         ComputeShaderKey shaderKey = m_computePostProcessShaderKey;
 
-        if (_renderPassContext.getView()->IsToolmode())
+        if (view->IsToolmode())
         {
             shaderKey.setFlag(PostProcessHLSLDesc::Toolmode, true);
 
-            if (_renderPassContext.getView()->IsUsingRayTracing())
+            if (view->IsUsingRayTracing())
                 shaderKey.setFlag(PostProcessHLSLDesc::RayTracing, true);
         }
 

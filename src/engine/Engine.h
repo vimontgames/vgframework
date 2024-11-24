@@ -11,14 +11,10 @@ namespace vg::core
     class UndoRedoManager;
 }
 
-namespace vg::gfx
-{
-    class IView;
-}
-
 namespace vg::renderer
 {
     class IRendererOptions;
+    class IView;
 }
 
 namespace vg::physics

@@ -9,12 +9,12 @@ namespace vg::core
 namespace vg::gfx
 {
     class ITexture;
-    struct UICanvas;
-    struct UIItem;
 }
 
 namespace vg::renderer
 {
+    struct UICanvas;
+    struct UIItem;
     enum class Font : vg::core::u8;
     enum class FontStyle : vg::core::u8;
 
@@ -24,8 +24,8 @@ namespace vg::renderer
         IUIManager() {}
         virtual ~IUIManager() {}
 
-        virtual void    AddCanvas   (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, core::IWorld * _world) = 0;
-        virtual void    AddText     (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const core::string & _text, Font _font, FontStyle _style, core::IWorld * _world) = 0;
-        virtual void    AddImage    (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const gfx::ITexture * _texture, core::IWorld * _world) = 0;
+        virtual void    AddCanvas   (const UICanvas * _canvas, const UIItem & _desc, core::IWorld * _world) = 0;
+        virtual void    AddText     (const UICanvas * _canvas, const UIItem & _desc, const core::string & _text, Font _font, FontStyle _style, core::IWorld * _world) = 0;
+        virtual void    AddImage    (const UICanvas * _canvas, const UIItem & _desc, const gfx::ITexture * _texture, core::IWorld * _world) = 0;
     };
 }

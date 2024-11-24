@@ -1,25 +1,25 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    VG_INLINE void View::setFlags(gfx::ViewFlags _flagsToSet, gfx::ViewFlags _flagsToRemove)
+    VG_INLINE void View::setFlags(ViewFlags _flagsToSet, ViewFlags _flagsToRemove)
     {
         m_flags = (m_flags & ~_flagsToRemove) | _flagsToSet;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE void View::setFlag(gfx::ViewFlags _flag, bool _value)
+    VG_INLINE void View::setFlag(ViewFlags _flag, bool _value)
     {
-        setFlags(_value ? _flag : (gfx::ViewFlags)0x0, !_value ? _flag : (gfx::ViewFlags)0x0);
+        setFlags(_value ? _flag : (ViewFlags)0x0, !_value ? _flag : (ViewFlags)0x0);
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE gfx::ViewFlags View::getFlags() const
+    VG_INLINE ViewFlags View::getFlags() const
     {
         return m_flags;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE bool View::testFlag(gfx::ViewFlags _flag) const
+    VG_INLINE bool View::testFlag(ViewFlags _flag) const
     {
         return asBool(_flag & getFlags());
     }
@@ -27,13 +27,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     VG_INLINE void View::setIsAdditionalView(bool _isAdditionalView) 
     { 
-        setFlag(gfx::ViewFlags::Additional, _isAdditionalView);
+        setFlag(ViewFlags::Additional, _isAdditionalView);
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE bool View::isAdditionalView() const 
     { 
-        return testFlag(gfx::ViewFlags::Additional);
+        return testFlag(ViewFlags::Additional);
     }
 
     //--------------------------------------------------------------------------------------

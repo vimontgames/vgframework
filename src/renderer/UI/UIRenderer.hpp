@@ -14,7 +14,7 @@ using namespace vg::gfx;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    UIRenderer::UIRenderer(gfx::IViewport * _viewport, gfx::IView * _view) :
+    UIRenderer::UIRenderer(IViewport * _viewport, IView * _view) :
         m_viewport(_viewport),
         m_view(_view)
     {

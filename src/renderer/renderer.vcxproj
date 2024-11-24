@@ -159,6 +159,9 @@
     <ClInclude Include="ISkeletalAnimation.h" />
     <ClInclude Include="ISkeleton.h" />
     <ClInclude Include="IUIManager.h" />
+    <ClInclude Include="IUIRenderer.h" />
+    <ClInclude Include="IView.h" />
+    <ClInclude Include="IViewport.h" />
     <ClInclude Include="Job\Culling\GraphicInstanceList.h" />
     <ClInclude Include="Job\Culling\ViewCullingJob.h" />
     <ClInclude Include="Job\Culling\ViewCullingJob.hpp" />
@@ -173,7 +176,6 @@
     <ClInclude Include="Options\Options.h" />
     <ClInclude Include="Pass\Pass.h" />
     <ClInclude Include="PBR\PBR_Consts.h" />
-    <ClInclude Include="PBR\PhysicalCameraSettings.h" />
     <ClInclude Include="Picking\PickingManager.h" />
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="RayTracing\RayTracingManager.h" />

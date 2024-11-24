@@ -2,8 +2,8 @@
 
 #include "core/IPlugin.h"
 #include "Renderer_consts.h"
-#include "gfx/IView.h"      
-#include "gfx/IViewport.h"
+#include "renderer/IView.h"      
+#include "renderer/IViewport.h"
 
 namespace vg
 {
@@ -18,12 +18,7 @@ namespace vg
     {
         class ITexture;
         class TextureDesc;
-        class IViewport;
-        class IView;
         class IShaderManager;
-
-        struct CreateViewParams;
-        struct CreateViewportParams;
         struct TextureImporterSettings;
 
         enum class ViewportFlags : core::u32;
@@ -41,9 +36,13 @@ namespace vg
         class ILightInstance;
         class ILightDesc;
         class IUIManager;
+        class IViewport;
+        class IView;
         class ICameraLens;
         
         struct RendererCreationParams;
+        struct CreateViewParams;
+        struct CreateViewportParams;
 
         vg_enum_class(RendererJobType, core::u8,
             Culling,
@@ -71,20 +70,20 @@ namespace vg
 
             virtual gfx::ITexture *                     CreateTexture           (const gfx::TextureDesc & _texDesc, const core::string & _name) = 0;
 
-            virtual gfx::IViewport *                    CreateViewport          (const gfx::CreateViewportParams & _params, const core::string & _name, gfx::ViewportFlags _flags = (gfx::ViewportFlags)0x0) = 0;
-            virtual gfx::ViewportID                     AddViewport             (gfx::IViewport * _viewport) = 0;
+            virtual IViewport *                         CreateViewport          (const CreateViewportParams & _params, const core::string & _name, ViewportFlags _flags = (ViewportFlags)0x0) = 0;
+            virtual gfx::ViewportID                     AddViewport             (IViewport * _viewport) = 0;
             virtual gfx::ViewportIndex                  GetFreeViewportIndex    (gfx::ViewportTarget _target) = 0;
-            virtual gfx::IViewport *                    GetViewport             (gfx::ViewportID _viewportID) = 0;
-            virtual const core::vector<gfx::IViewport*>&GetViewports            (gfx::ViewportTarget _target) const = 0;
+            virtual IViewport *                         GetViewport             (gfx::ViewportID _viewportID) = 0;
+            virtual const core::vector<IViewport*>&     GetViewports            (gfx::ViewportTarget _target) const = 0;
 
             // TODO: remove or move to IViewport (?)
-            virtual gfx::IView *                        CreateView              (gfx::CreateViewParams _params, const core::string & _name, gfx::ViewFlags _flags = (gfx::ViewFlags)0) = 0;
-            virtual gfx::ViewID                         AddView                 (gfx::IView * _view) = 0;
+            virtual IView *                             CreateView              (CreateViewParams _params, const core::string & _name, ViewFlags _flags = (ViewFlags)0) = 0;
+            virtual gfx::ViewID                         AddView                 (IView * _view) = 0;
             virtual void                                RemoveView              (gfx::ViewID _viewID) = 0;
             virtual gfx::ViewIndex                      GetFreeViewIndex        (gfx::ViewTarget _target) const = 0;
-            virtual gfx::IView *                        GetView                 (gfx::ViewID _viewID) const = 0;
-            virtual gfx::IView *                        GetView                 (gfx::ViewTarget _target, const core::IWorld * _world) const = 0;
-            virtual const core::vector<gfx::IView *>    GetViews                (gfx::ViewTarget _target) const = 0;
+            virtual IView *                             GetView                 (gfx::ViewID _viewID) const = 0;
+            virtual IView *                             GetView                 (gfx::ViewTarget _target, const core::IWorld * _world) const = 0;
+            virtual const core::vector<IView *>         GetViews                (gfx::ViewTarget _target) const = 0;
 
             virtual const ICameraLens *                 GetDefaultCameraLens    () const = 0;
 

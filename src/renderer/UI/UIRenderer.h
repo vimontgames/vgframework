@@ -1,14 +1,14 @@
 #pragma once
 
-#include "gfx/IUIRenderer.h"
+#include "renderer/IUIRenderer.h"
 #include "UIElement.h"
 
 namespace vg::renderer
 {
-    class UIRenderer : public gfx::IUIRenderer
+    class UIRenderer : public IUIRenderer
     {
     public:
-        UIRenderer(gfx::IViewport * _viewport, gfx::IView * _view);
+        UIRenderer(IViewport * _viewport, IView * _view);
         ~UIRenderer();
 
         void            Add                 (const UIElement & _desc) final override;
@@ -25,8 +25,8 @@ namespace vg::renderer
         core::float2    getOffset           () const;
         
     private:
-        gfx::IViewport *            m_viewport = nullptr;
-        gfx::IView *                m_view = nullptr;
+        IViewport *                 m_viewport = nullptr;
+        IView *                     m_view = nullptr;
         core::vector<UIElement>     m_uiElements;
     };
 }

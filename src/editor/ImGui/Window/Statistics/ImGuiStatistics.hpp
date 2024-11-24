@@ -14,7 +14,7 @@ namespace vg::editor
     {
         auto renderer = Editor::get()->getRenderer();
 
-        auto drawViewDetail = [=](IView * _view)
+        auto drawViewDetail = [=](renderer::IView * _view)
         {
             if (ImGui::TreeNodeEx(_view->GetName().c_str(), ImGuiTreeNodeFlags_None))
             {
@@ -119,7 +119,7 @@ namespace vg::editor
             }            
         };
 
-        auto drawViewportDetails = [=](IViewport * _viewport)
+        auto drawViewportDetails = [=](renderer::IViewport * _viewport)
         {
             if (ImGui::TreeNodeEx(_viewport->GetName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
             {
@@ -132,10 +132,6 @@ namespace vg::editor
                     ImGui::BeginDisabled(!_viewport->AnyVisible());
                     ImGui::Text("Visible");
                     ImGui::EndDisabled();
-
-                    //ImGui::BeginDisabled(!_viewport->AnyRender());
-                    //ImGui::Text("Render");
-                    //ImGui::EndDisabled();
 
                     ImGui::BeginDisabled(all(_viewport->GetRenderTargetSize() == 0));
                     ImGui::Text("Size");
@@ -154,10 +150,6 @@ namespace vg::editor
                     ImGui::BeginDisabled(!_viewport->AnyVisible());
                     ImGui::Text("%s", _viewport->AnyVisible() ? "True" : "False");
                     ImGui::EndDisabled();
-
-                    //ImGui::BeginDisabled(!_viewport->AnyRender());
-                    //ImGui::Text("%s", _viewport->AnyRender() ? "True" : "False");
-                    //ImGui::EndDisabled();
 
                     ImGui::BeginDisabled(all(_viewport->GetRenderTargetSize() == 0));
                     ImGui::Text("%u x %u", (uint)_viewport->GetRenderTargetSize().x, (uint)_viewport->GetRenderTargetSize().y);

@@ -1,7 +1,6 @@
 #pragma once
 
-#include "gfx/IViewport.h"
-#include "renderer/PBR/PhysicalCameraSettings.h"
+#include "gfx/IFrameGraphViewport.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 
 namespace vg::core
@@ -9,10 +8,12 @@ namespace vg::core
     class IWorld;
 }
 
-namespace vg::gfx
+namespace vg::renderer
 {
     class IViewport;
     class IView;
+    class ICameraSettings;
+    enum class ViewFlags : core::u32;
 }
 
 namespace vg::editor
@@ -37,7 +38,7 @@ namespace vg::editor
         virtual bool                    ShowTitlebarMenu    () const { return false;};
         virtual void                    DrawTitlebarMenu    () {};
 
-        virtual gfx::ViewFlags          GetViewFlags        () const; 
+        virtual renderer::ViewFlags     GetViewFlags        () const; 
         virtual core::IWorld *          GetWorld            () const;
         virtual void                    OnCloseWindow       ();
         virtual bool                    UpdateScene         () { return true; };
@@ -51,13 +52,13 @@ namespace vg::editor
         void                            focus               (const core::vector<core::IGameObject * > & _gameObjects);
 
     protected:
-        bool                            drawGizmo           (const gfx::IView * _view);
+        bool                            drawGizmo           (const renderer::IView * _view);
         void                            updatePicking       (bool & _showTooltip, core::string & _tooltipMsg);
 
     protected:
         gfx::ViewportTarget             m_target            = gfx::ViewportTarget::Game;
         core::uint2                     m_size              = core::uint2(0, 0);
-        gfx::IViewport *                m_viewport          = nullptr;
+        renderer::IViewport *           m_viewport          = nullptr;
         gfx::ViewportIndex              m_viewportIndex     = (gfx::ViewportIndex)-1;
         gfx::ITexture *                 m_texture           = nullptr;
         bool                            m_manipulating      = false;
@@ -66,9 +67,10 @@ namespace vg::editor
         struct EditorCamera
         {
             EditorCamera();
+            ~EditorCamera();
 
             core::float4x4                      m_matrix;
-            renderer::PhysicalCameraSettings    m_physicalCameraSettings;
+            renderer::ICameraSettings *         m_cameraSettings = nullptr;
             float                               m_moveSpeed;
             float                               m_rotSpeed;
             float                               m_panXYSpeed;

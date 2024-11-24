@@ -1,10 +1,11 @@
 #include "ImguiView.h"
 #include "core/IInput.h"
 #include "gfx/ITexture.h"
-#include "gfx/IUIRenderer.h"
+#include "renderer/IUIRenderer.h"
 #include "renderer/IImGuiAdapter.h"
 #include "renderer/IPicking.h"
 #include "renderer/ICameraLens.h"
+#include "renderer/ICameraSettings.h"
 #include "engine/ISnapComponent.h"
 #include "editor/Options/EditorOptions.h"
 #include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
@@ -42,6 +43,14 @@ namespace vg::editor
         m_matrix[1] = float4(0, 0, 1, 0);
         m_matrix[2] = float4(0, -1, 0, 0);
         m_matrix[3] = float4(0, -8, 2, 1);
+
+        m_cameraSettings = (renderer::ICameraSettings *)Kernel::getFactory()->CreateObject("CameraSettings");
+    }
+
+    //--------------------------------------------------------------------------------------
+    ImGuiView::EditorCamera::~EditorCamera()
+    {
+        VG_SAFE_RELEASE(m_cameraSettings);
     }
 
     //--------------------------------------------------------------------------------------
@@ -228,14 +237,14 @@ namespace vg::editor
                 }
             }
 
-            view->SetupPhysicalCamera(editorCam.m_matrix, editorCam.m_physicalCameraSettings.m_focalLength, renderer->GetDefaultCameraLens()->GetSensorSize(), editorCam.m_physicalCameraSettings.m_gateFitMode, editorCam.m_physicalCameraSettings.m_near, editorCam.m_physicalCameraSettings.m_far);
+            view->SetupPhysicalCamera(editorCam.m_matrix, editorCam.m_cameraSettings->GetFocalLength(), editorCam.m_cameraSettings->GetCameraLens()->GetSensorSize(), editorCam.m_cameraSettings->GetGateFitMode(), editorCam.m_cameraSettings->GetNear(), editorCam.m_cameraSettings->GetFar());
         }
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::ViewFlags ImGuiView::GetViewFlags() const
+    renderer::ViewFlags ImGuiView::GetViewFlags() const
     {
-        return (gfx::ViewFlags)0x0;
+        return (renderer::ViewFlags)0x0;
     }
 
     //--------------------------------------------------------------------------------------
@@ -393,7 +402,7 @@ namespace vg::editor
                 }
                 else
                 {
-                    CreateViewportParams viewportParams(m_target, m_size);
+                    renderer::CreateViewportParams viewportParams(m_target, m_size);
                     string vpName = asString(viewportParams.target) + "Viewport";
                     m_viewport = renderer->CreateViewport(viewportParams, vpName);
                     renderer->AddViewport(m_viewport);
@@ -405,17 +414,17 @@ namespace vg::editor
             // Add default view if needed but for editor view only ('Game' views needs to be created explicitely)
             if (m_target == ViewportTarget::Editor && viewIDs.size() == 0)
             {
-                gfx::CreateViewParams viewParams;
-                                      viewParams.size = m_size;
-                                      viewParams.world = GetWorld();
-                                      viewParams.target = (gfx::ViewTarget)m_target;  // TODO: hazardous cast between ViewTarget and ViewportTarget? Create single enum?
-                                      viewParams.dest = nullptr;                      // No RenderTarget yet
-                                      viewParams.viewport = m_viewport;
+                renderer::CreateViewParams viewParams;
+                                           viewParams.size = m_size;
+                                           viewParams.world = GetWorld();
+                                           viewParams.target = (gfx::ViewTarget)m_target;  // TODO: hazardous cast between ViewTarget and ViewportTarget? Create single enum?
+                                           viewParams.dest = nullptr;                      // No RenderTarget yet
+                                           viewParams.viewport = m_viewport;
             
                 string viewName = asString(viewParams.target) + "View";
             
                 // Create a view
-                gfx::ViewFlags viewFlags = GetViewFlags();
+                renderer::ViewFlags viewFlags = GetViewFlags();
             
                 if (auto * view = renderer->CreateView(viewParams, viewName, viewFlags))
                 {
@@ -673,7 +682,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     // Returns 'true' if any gizmo is manipulated (and thus we shoudn't update picking selection
     //--------------------------------------------------------------------------------------
-    bool ImGuiView::drawGizmo(const IView * _view)
+    bool ImGuiView::drawGizmo(const renderer::IView * _view)
     {
         ISelection * selection = Editor::get()->getSelection();
         const auto selectedObjectsNoFilter = selection->GetSelectedObjects();

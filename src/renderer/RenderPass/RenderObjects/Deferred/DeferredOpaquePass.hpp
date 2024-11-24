@@ -24,9 +24,10 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DeferredOpaquePass::Setup(const gfx::RenderPassContext & _renderContext)
+    void DeferredOpaquePass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
-        const auto size = _renderContext.getView()->GetSize();
+        const auto * view = (IView *)_renderPassContext.getView();
+        const auto size = view->GetSize();
         const auto options = RendererOptions::get();
         const auto msaa = options->GetMSAA();
         const TextureType texType = (MSAA::None == msaa) ? TextureType::Texture2D : TextureType::Texture2DMS;
@@ -42,7 +43,7 @@ namespace vg::renderer
                                           albedoGBufferDesc.clearColor = defaultOptimizedClearColor;
                                           albedoGBufferDesc.initState = FrameGraphResource::InitState::Clear;
 
-            const auto albedoGBufferID = _renderContext.getFrameGraphID("AlbedoGBuffer");
+            const auto albedoGBufferID = _renderPassContext.getFrameGraphID("AlbedoGBuffer");
             createRenderTarget(albedoGBufferID, albedoGBufferDesc);
             writeRenderTarget(0, albedoGBufferID);
         }
@@ -58,7 +59,7 @@ namespace vg::renderer
                                           normalGBufferDesc.clearColor = defaultOptimizedClearColor;
                                           normalGBufferDesc.initState = FrameGraphResource::InitState::Clear;
 
-            const auto normalGBufferID = _renderContext.getFrameGraphID("NormalGBuffer");
+            const auto normalGBufferID = _renderPassContext.getFrameGraphID("NormalGBuffer");
             createRenderTarget(normalGBufferID, normalGBufferDesc);
             writeRenderTarget(1, normalGBufferID);
         }
@@ -74,12 +75,12 @@ namespace vg::renderer
                                           pbrGBufferDesc.clearColor = defaultOptimizedClearColor;
                                           pbrGBufferDesc.initState = FrameGraphResource::InitState::Clear;
 
-            const auto pbrGBufferID = _renderContext.getFrameGraphID("PBRGBuffer");
+            const auto pbrGBufferID = _renderPassContext.getFrameGraphID("PBRGBuffer");
             createRenderTarget(pbrGBufferID, pbrGBufferDesc);
             writeRenderTarget(2, pbrGBufferID);
         }
 
-        writeDepthStencil(_renderContext.getFrameGraphID("DepthStencil"));
+        writeDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
 
         readRWBuffer("SkinningRWBuffer");
     }

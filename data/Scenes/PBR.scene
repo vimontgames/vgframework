@@ -37,22 +37,30 @@
                                 <Property type="Uint8" name="m_viewIndex" value="0"/>
                                 <Property type="Float2" name="m_viewportOffset" x="0" y="0"/>
                                 <Property type="Float2" name="m_viewportScale" x="1" y="1"/>
-                                <Property type="Resource" name="m_lensRes">
-                                    <Object class="LensResource">
-                                        <Property type="String" name="m_name" value=""/>
+                                <Property type="ObjectPtr" name="m_cameraSettings">
+                                    <Object class="CameraSettings">
+                                        <Property type="String" name="m_name" value="CameraSettings #2"/>
                                         <Property type="Uint32" name="m_uid" value="0"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                        <Property type="String" name="m_resourcePath" value=""/>
-                                        <Property type="ObjectPtr" name="m_cameraLens"/>
+                                        <Property type="Float" name="m_near" value="0.1"/>
+                                        <Property type="Float" name="m_far" value="1000"/>
+                                        <Property type="ResourcePtr" name="m_lensRes">
+                                            <Object class="LensResource">
+                                                <Property type="String" name="m_name" value="LensResource #2"/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value=""/>
+                                                <Property type="ObjectPtr" name="m_cameraLens"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Float" name="m_focalLength" value="35"/>
+                                        <Property type="Float" name="m_focusDistance" value="3"/>
+                                        <Property type="Float" name="m_aperture" value="4"/>
+                                        <Property type="EnumU8" name="m_gateFitMode" value="Vertical"/>
                                     </Object>
                                 </Property>
-                                <Property type="Float" name="m_physicalCameraSettings.m_focalLength" value="35"/>
-                                <Property type="Float" name="m_focusDistance" value="3"/>
-                                <Property type="Float" name="m_aperture" value="4"/>
-                                <Property type="EnumU8" name="m_physicalCameraSettings.m_gateFitMode" value="Vertical"/>
-                                <Property type="Float" name="m_physicalCameraSettings.m_near" value="0.1"/>
-                                <Property type="Float" name="m_physicalCameraSettings.m_far" value="1000"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children"/>

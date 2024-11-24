@@ -13,9 +13,9 @@ namespace vg::renderer
         UIManager();
         ~UIManager();
 
-        void    AddCanvas       (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, core::IWorld * _world) final override;
-        void    AddText         (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const core::string & _text, Font _font, FontStyle _style, core::IWorld * _world) final override;
-        void    AddImage        (const gfx::UICanvas * _canvas, const gfx::UIItem & _desc, const gfx::ITexture * _texture, core::IWorld * _world) final override;
+        void    AddCanvas       (const UICanvas * _canvas, const UIItem & _desc, core::IWorld * _world) final override;
+        void    AddText         (const UICanvas * _canvas, const UIItem & _desc, const core::string & _text, Font _font, FontStyle _style, core::IWorld * _world) final override;
+        void    AddImage        (const UICanvas * _canvas, const UIItem & _desc, const gfx::ITexture * _texture, core::IWorld * _world) final override;
 
     private:
         void    addUIElement    (const UIElement & _elem, core::IWorld * _world);

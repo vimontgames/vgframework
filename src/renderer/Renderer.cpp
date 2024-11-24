@@ -229,7 +229,7 @@ namespace vg::renderer
         m_sharedCullingJobOutput = new SharedCullingJobOutput();
 
         // Create "Game" viewport for "Game" views
-        auto gameViewportParams = gfx::CreateViewportParams(ViewportTarget::Game, GetBackbufferSize());
+        auto gameViewportParams = CreateViewportParams(ViewportTarget::Game, GetBackbufferSize());
         if (auto gameViewport = (Viewport *)CreateViewport(gameViewportParams, "Game"))
         {
             AddViewport(gameViewport);
@@ -796,7 +796,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IViewport * Renderer::CreateViewport(const gfx::CreateViewportParams & _params, const core::string & _name, gfx::ViewportFlags _flags)
+    IViewport * Renderer::CreateViewport(const CreateViewportParams & _params, const core::string & _name, ViewportFlags _flags)
     {
         if (auto * viewport = new Viewport(_params))
         {
@@ -810,7 +810,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::ViewportID Renderer::AddViewport(gfx::IViewport * _viewport)
+    gfx::ViewportID Renderer::AddViewport(IViewport * _viewport)
     {
         auto target = _viewport->GetViewportID().target;
         auto & viewports = m_viewports[(uint)target];
@@ -852,7 +852,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IViewport * Renderer::GetViewport(gfx::ViewportID _viewportID)
+    IViewport * Renderer::GetViewport(gfx::ViewportID _viewportID)
     {
         const auto & viewports = m_viewports[asInteger(_viewportID.target)];
         if (_viewportID.index < viewports.size())
@@ -862,13 +862,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<gfx::IViewport *> & Renderer::GetViewports(gfx::ViewportTarget _target) const
+    const core::vector<IViewport *> & Renderer::GetViewports(gfx::ViewportTarget _target) const
     {
-        return (core::vector<gfx::IViewport *> &)m_viewports[asInteger(_target)];
+        return (core::vector<IViewport *> &)m_viewports[asInteger(_target)];
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IView * Renderer::CreateView(gfx::CreateViewParams _params, const core::string & _name, ViewFlags _flags)
+    IView * Renderer::CreateView(CreateViewParams _params, const core::string & _name, ViewFlags _flags)
     {
         View * view = nullptr;
 
@@ -893,7 +893,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::ViewID Renderer::AddView(gfx::IView * _view)
+    gfx::ViewID Renderer::AddView(IView * _view)
     {
         auto target = _view->GetViewID().target;
         auto & views = m_views[(uint)target];
@@ -958,7 +958,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IView * Renderer::GetView(gfx::ViewID _viewID) const
+    IView * Renderer::GetView(gfx::ViewID _viewID) const
     {
         if (gfx::ViewTargetInvalid != _viewID.target && gfx::ViewIndexInvalid != _viewID.index)
         {
@@ -971,7 +971,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::IView * Renderer::GetView(gfx::ViewTarget _target, const core::IWorld * _world) const
+    IView * Renderer::GetView(gfx::ViewTarget _target, const core::IWorld * _world) const
     {
         VG_ASSERT(_world);
         if (nullptr == _world)
@@ -983,7 +983,7 @@ namespace vg::renderer
             if (const auto * view = views[i])
             {
                 if (view->GetWorld() == _world)
-                    return (gfx::IView *)view;
+                    return (IView *)view;
             }
         }
         return nullptr;

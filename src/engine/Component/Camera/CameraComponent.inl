@@ -15,18 +15,18 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     VG_INLINE float CameraComponent::getFocalLength() const
     {
-        return m_physicalCameraSettings.m_focalLength;
+        return m_cameraSettings->GetFocalLength();
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE float CameraComponent::getNear() const 
     {
-        return m_physicalCameraSettings.m_near;
+        return m_cameraSettings->GetNear();
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE float CameraComponent::getFar() const 
     {
-        return m_physicalCameraSettings.m_far;
+        return m_cameraSettings->GetFar();
     }
 }

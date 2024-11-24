@@ -1,7 +1,7 @@
 #pragma once
 
 #include "engine/IUIComponent.h"
-#include "gfx/IUIRenderer.h"
+#include "renderer/IUIRenderer.h"
 
 namespace vg::gfx
 {
@@ -41,17 +41,17 @@ namespace vg::engine
         VG_INLINE renderer::IUIManager *    getUIManager    () const;
         VG_INLINE core::float2              getCenter       () const;
 
-        const gfx::UICanvas *               getCanvas       () const;
-        gfx::UIItem                         getUIItem       () const;
+        const renderer::UICanvas *          getCanvas       () const;
+        renderer::UIItem                    getUIItem       () const;
 
     private:
         renderer::IUIManager *              m_uiManager     = nullptr;
 
     protected:
         renderer::PickingID                 m_pickingID;
-        gfx::UIItemFlags                    m_UIFlags = (gfx::UIItemFlags)0x0;
-        gfx::HorizontalAligment             m_horizontal;
-        gfx::VerticalAligment               m_vertical;
+        renderer::UIItemFlags               m_UIFlags = (renderer::UIItemFlags)0x0;
+        renderer::HorizontalAligment        m_horizontal;
+        renderer::VerticalAligment          m_vertical;
         core::uint2                         m_size = core::uint2(16, 16);
         bool                                m_useCenter = false;
         core::float2                        m_center = core::float2(0.5f, 0.5f);

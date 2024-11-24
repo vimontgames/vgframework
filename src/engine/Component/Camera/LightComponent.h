@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/Component/Component.h"
-#include "gfx/IView.h"
 
 namespace vg::renderer
 {

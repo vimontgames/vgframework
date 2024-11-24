@@ -512,9 +512,6 @@
     <ClInclude Include="Model\Material\MaterialManager.h">
       <Filter>Model\Material</Filter>
     </ClInclude>
-    <ClInclude Include="PBR\PhysicalCameraSettings.h">
-      <Filter>PBR</Filter>
-    </ClInclude>
     <ClInclude Include="Camera\CameraLens.h">
       <Filter>Camera</Filter>
     </ClInclude>
@@ -535,6 +532,9 @@
     <ClInclude Include="RenderPass\Render2D\LinearizeDepth\LinearizeDepthPass.hpp">
       <Filter>Pass\Render2D\LinearizeDepth</Filter>
     </ClInclude>
+    <ClInclude Include="IView.h" />
+    <ClInclude Include="IViewport.h" />
+    <ClInclude Include="IUIRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

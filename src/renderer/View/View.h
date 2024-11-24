@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gfx/IView.h"
+#include "renderer/IView.h"
 #include "gfx/Resource/Texture.h"
 #include "gfx/FrameGraph/FrameGraph_consts.h"
 #include "renderer/Job/Culling/ViewCullingJob.h"
@@ -21,7 +21,6 @@ namespace vg::gfx
     class Buffer;
     class TLAS;
     class IUIRenderer;
-    class IViewport;
 }
 
 namespace vg::renderer
@@ -36,21 +35,21 @@ namespace vg::renderer
     // reference a view, but the 'View' base class is defined in graphics::renderer.
     //--------------------------------------------------------------------------------------
 
-    class View : public gfx::IView
+    class View : public IView
     {
     public:
 
         const char *                        GetClassName                () const override { return "View"; }
 
-                                            View                        (const gfx::CreateViewParams & _params);
+                                            View                        (const CreateViewParams & _params);
                                             ~View                       ();
 
         void                                SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale) final override;
         void                                SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) final override;
-        void                                SetupPhysicalCamera         (const core::float4x4 & _cameraWorldMatrix, float _focalLength, core::float2 _sensorSize, gfx::GateFitMode _gateFitMode, float _near, float _far, core::float2 _viewportOffset, core::float2 _viewportScale) final override;
+        void                                SetupPhysicalCamera         (const core::float4x4 & _cameraWorldMatrix, float _focalLength, core::float2 _sensorSize, GateFitMode _gateFitMode, float _near, float _far, core::float2 _viewportOffset, core::float2 _viewportScale) final override;
 
-        void                                SetFlags                    (gfx::ViewFlags _flagsToSet, gfx::ViewFlags _flagsToRemove = (gfx::ViewFlags)0) override;
-        gfx::ViewFlags                      GetFlags                    () const override;
+        void                                SetFlags                    (ViewFlags _flagsToSet, ViewFlags _flagsToRemove = (ViewFlags)0) override;
+        ViewFlags                           GetFlags                    () const override;
 
         const core::float4x4 &              GetViewInvMatrix            () const override;
         const core::float4x4 &              GetProjectionMatrix         () const override;
@@ -68,7 +67,7 @@ namespace vg::renderer
 
         core::float2                        GetViewportOffset           () const final override;
         core::float2                        GetViewportScale            () const final override;
-        gfx::IViewport *                    GetViewport                 () const final override;
+        IViewport *                         GetViewport                 () const final override;
 
         void                                SetRenderTarget             (gfx::ITexture * _renderTarget) override;
         gfx::ITexture *                     GetRenderTarget             () const override;
@@ -76,8 +75,8 @@ namespace vg::renderer
         void                                SetViewID                   (gfx::ViewID _viewID) override;
         gfx::ViewID                         GetViewID                   () const override;
 
-        void                                SetFocused                   (bool _active) override;
-        bool                                IsFocused                    () const override;
+        void                                SetFocused                  (bool _active) override;
+        bool                                IsFocused                   () const override;
 
         void                                SetVisible                  (bool _visible) override;
         bool                                IsVisible                   () const override;
@@ -108,9 +107,8 @@ namespace vg::renderer
         const PickingHit &                  GetPickingClosestHit        () const override;
         void                                AddPickingHit               (const PickingHit & _hit) override;
 
-        gfx::ViewCullingStats               GetViewCullingStats         () const final override;
-
-        gfx::IUIRenderer *                     GetUIRenderer                  () const final override;
+        ViewCullingStats                    GetViewCullingStats         () const final override;
+        IUIRenderer *                       GetUIRenderer               () const final override;
         
         core::vector<gfx::FrameGraphResourceID>  getShadowMaps          () const;
 
@@ -121,12 +119,9 @@ namespace vg::renderer
         const ViewCullingJobOutput &        getCullingJobResult         () const;
 
         VG_INLINE core::IWorld *            getWorld                    () const;
-
         VG_INLINE const core::float4x4 &    getViewProjMatrix           () const;
-
         VG_INLINE const core::float4x4 &    getViewMatrix               () const;
         VG_INLINE const core::float4x4 &    getViewInvMatrix            () const;
-
         VG_INLINE const core::float4x4 &    getProjMatrix               () const;
         VG_INLINE const core::float4x4 &    getProjInvMatrix            () const;
 
@@ -144,10 +139,10 @@ namespace vg::renderer
 
         VG_INLINE ViewCullingJob *          getCullingJob               () const;
 
-        VG_INLINE void                      setFlags                    (gfx::ViewFlags _flagsToSet, gfx::ViewFlags _flagsToRemove = (gfx::ViewFlags)0);
-        VG_INLINE void                      setFlag                     (gfx::ViewFlags _flag, bool _value);
-        VG_INLINE gfx::ViewFlags            getFlags                    () const;
-        VG_INLINE bool                      testFlag                    (gfx::ViewFlags _flag) const;
+        VG_INLINE void                      setFlags                    (ViewFlags _flagsToSet, ViewFlags _flagsToRemove = (ViewFlags)0);
+        VG_INLINE void                      setFlag                     (ViewFlags _flag, bool _value);
+        VG_INLINE ViewFlags                 getFlags                    () const;
+        VG_INLINE bool                      testFlag                    (ViewFlags _flag) const;
 
         bool                                isToolmode                  () const;
 
@@ -167,10 +162,10 @@ namespace vg::renderer
         static core::float4x4               setOrthoProjectionRH        (float _w, float _h, float _near, float _far);
 
     private:
-        gfx::IViewport *                    m_viewport                  = nullptr;
+        IViewport *                         m_viewport                  = nullptr;
         gfx::ViewID                         m_viewID;
-        gfx::ViewFlags                      m_flags                     = (gfx::ViewFlags)0;
-        gfx::Texture *                      m_renderTarget              = nullptr;   // Assume backbuffer if nullptr
+        ViewFlags                           m_flags                     = (ViewFlags)0;
+        gfx::Texture *                      m_renderTarget              = nullptr;   // use 'nullptr' for backbuffer
         core::uint2                         m_renderTargetSize          = core::uint2(0, 0);
         core::uint2                         m_size                      = core::uint2(0, 0);
         core::int2                          m_offset                    = core::int2(0, 0);

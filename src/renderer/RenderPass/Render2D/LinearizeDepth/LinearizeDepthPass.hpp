@@ -1,6 +1,6 @@
 #include "LinearizeDepthPass.h"
 #include "renderer/Options/RendererOptions.h"
-#include "gfx/IView.h"
+#include "renderer/IView.h"
 
 using namespace vg::gfx;
 

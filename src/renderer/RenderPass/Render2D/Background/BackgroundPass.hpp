@@ -1,7 +1,7 @@
 #include "BackgroundPass.h"
 #include "shaders/background/background.hlsli"
 #include "renderer/Options/RendererOptions.h"
-#include "gfx/IView.h"
+#include "renderer/IView.h"
 
 using namespace vg::gfx;
 
@@ -39,11 +39,12 @@ namespace vg::renderer
     void BackgroundPass::Setup(const RenderPassContext & _renderPassContext)
     {
         auto * device = Device::get();
+        const auto * view = (IView *)_renderPassContext.getView();
 
-        const IWorld * world = _renderPassContext.getView()->GetWorld();
+        const IWorld * world = view->GetWorld();
         const auto environmentColor = world->GetEnvironmentColor();
 
-        const auto size = _renderPassContext.getView()->GetSize();
+        const auto size = view->GetSize();
         const auto options = RendererOptions::get();
 
         auto clearColor = m_useFastClear ? float4(pow(environmentColor.rgb, 2.2f), environmentColor.a) : defaultOptimizedClearColor;
@@ -88,7 +89,8 @@ namespace vg::renderer
     {
         if (!m_useFastClear)
         {
-            const IWorld * world = _renderPassContext.getView()->GetWorld();
+            const auto * view = (IView *)_renderPassContext.getView();
+            const IWorld * world = view->GetWorld();
             const auto environmentColor = world->GetEnvironmentColor();
 
             RasterizerState rs(FillMode::Solid, CullMode::None);

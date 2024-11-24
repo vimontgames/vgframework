@@ -13,7 +13,6 @@
 #include "core/Object/Factory.h"
 #include "core/GameObject/GameObject.h"
 #include "core/Math/Math.h"
-#include "gfx/IView.h"
 #include "gfx/IDevice.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IRendererOptions.h"
@@ -444,7 +443,7 @@ namespace vg::engine
             {
                 if (view)
                 {
-                    if (!asBool(gfx::ViewFlags::Prefab & view->GetFlags()))
+                    if (!asBool(renderer::ViewFlags::Prefab & view->GetFlags()))
                         view->SetWorld(world);
                 }
             }
@@ -454,7 +453,7 @@ namespace vg::engine
             {
                 if (view)
                 {
-                    if (!asBool(gfx::ViewFlags::Prefab & view->GetFlags()))
+                    if (!asBool(renderer::ViewFlags::Prefab & view->GetFlags()))
                         view->SetWorld(world);
                 }
             }

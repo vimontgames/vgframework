@@ -11,27 +11,31 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(CameraLens, m_name, PropertyFlags::Hidden, false);
+        setPropertyFlag(CameraLens, m_name, PropertyFlags::Hidden | PropertyFlags::NotSaved, false);
 
-        registerProperty(CameraLens, m_sensorSize, "Sensor size");
-        setPropertyRange(CameraLens, m_sensorSize, core::float2(3.6f, 100.0f));
-        setPropertyDescription(CameraLens, m_sensorSize, "Sensor size is the physical dimensions of a camera's sensor");
+        registerPropertyGroupBegin(CameraLens, "Lens settings");
+        {
+            registerProperty(CameraLens, m_sensorSize, "Sensor size");
+            setPropertyRange(CameraLens, m_sensorSize, core::float2(3.6f, 100.0f));
+            setPropertyDescription(CameraLens, m_sensorSize, "Sensor size is the physical dimensions of a camera's sensor");
 
-        registerProperty(CameraLens, m_focalLength, "Zoom range");
-        setPropertyRange(CameraLens, m_focalLength, core::float2(10.0f, 400.0f));
-        setPropertyDescription(CameraLens, m_focalLength, "The focal length range defines a lens's zoom capabilities, from wide-angle to telephoto");
+            registerProperty(CameraLens, m_focalLength, "Zoom range");
+            setPropertyRange(CameraLens, m_focalLength, core::float2(10.0f, 400.0f));
+            setPropertyDescription(CameraLens, m_focalLength, "The focal length range defines a lens's zoom capabilities, from wide-angle to telephoto");
 
-        registerProperty(CameraLens, m_minFocusDistance, "MFD");
-        setPropertyRange(CameraLens, m_minFocusDistance, core::float2(0.3f, 3.0f));
-        setPropertyDescription(CameraLens, m_minFocusDistance, "The minimum focus distance, from wide-angle to telephoto");
+            registerProperty(CameraLens, m_minFocusDistance, "MFD");
+            setPropertyRange(CameraLens, m_minFocusDistance, core::float2(0.3f, 3.0f));
+            setPropertyDescription(CameraLens, m_minFocusDistance, "The minimum focus distance, from wide-angle to telephoto");
 
-        registerProperty(CameraLens, m_minAperture, "Min f/Aperture");
-        setPropertyRange(CameraLens, m_minAperture, core::float2(22.0f, 16.0f));
-        setPropertyDescription(CameraLens, m_minAperture, "The minimum aperure size, from wide-angle to telephoto");
+            registerProperty(CameraLens, m_minAperture, "Min f/Aperture");
+            setPropertyRange(CameraLens, m_minAperture, core::float2(22.0f, 16.0f));
+            setPropertyDescription(CameraLens, m_minAperture, "The minimum aperure size, from wide-angle to telephoto");
 
-        registerProperty(CameraLens, m_maxAperture, "Max f/Aperture");
-        setPropertyRange(CameraLens, m_maxAperture, core::float2(1.4f, 6.3f));
-        setPropertyDescription(CameraLens, m_maxAperture, "The minimum aperure size, from wide-angle to telephoto");
+            registerProperty(CameraLens, m_maxAperture, "Max f/Aperture");
+            setPropertyRange(CameraLens, m_maxAperture, core::float2(1.4f, 6.3f));
+            setPropertyDescription(CameraLens, m_maxAperture, "The minimum aperure size, from wide-angle to telephoto");
+        }
+        registerPropertyGroupEnd(CameraLens);
 
         return true;
     }

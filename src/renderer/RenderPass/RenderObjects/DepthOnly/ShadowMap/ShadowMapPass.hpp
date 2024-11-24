@@ -18,7 +18,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ShadowMapPass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
-        const auto size = _renderPassContext.getView()->GetSize();
+        const auto * view = (IView *)_renderPassContext.getView();
+        const auto size = view->GetSize();
 
         FrameGraphTextureResourceDesc shadowMapDesc = {};
         shadowMapDesc.format = PixelFormat::D32S8;

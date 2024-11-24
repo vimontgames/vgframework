@@ -1,18 +1,17 @@
 #pragma once
 
-#include "gfx/IUIRenderer.h"
+#include "renderer/IUIRenderer.h"
 
 namespace vg::gfx
 {
-    struct UICanvas;
-    struct UIItem;
     class ITexture;
 }
 
 namespace vg::renderer
 {
+    struct UICanvas;
+    struct UIItem;
     using PickingID = core::uint;
-
     enum class Font : core::u8;
     enum class FontStyle : core::u8;
 
@@ -25,7 +24,7 @@ namespace vg::renderer
 
     struct UIElement
     {
-        UIElement(const gfx::UICanvas * _canvas, const gfx::UIItem & _elemDesc) :
+        UIElement(const UICanvas * _canvas, const UIItem & _elemDesc) :
             m_type(UIElementType::Canvas),
             m_canvas(_canvas),
             m_item(_elemDesc)
@@ -33,7 +32,7 @@ namespace vg::renderer
 
         }
 
-        UIElement(const gfx::UICanvas * _canvas, const gfx::UIItem & _elemDesc, const core::string & _text, Font _font, FontStyle _style) :
+        UIElement(const UICanvas * _canvas, const UIItem & _elemDesc, const core::string & _text, Font _font, FontStyle _style) :
             m_type(UIElementType::Text),
             m_canvas(_canvas),
             m_item(_elemDesc),
@@ -44,7 +43,7 @@ namespace vg::renderer
 
         }
 
-        UIElement(const gfx::UICanvas * _canvas, const gfx::UIItem & _elemDesc, const gfx::ITexture * _texture) :
+        UIElement(const UICanvas * _canvas, const UIItem & _elemDesc, const gfx::ITexture * _texture) :
             m_type(UIElementType::Image),
             m_canvas(_canvas),
             m_item(_elemDesc),
@@ -67,16 +66,16 @@ namespace vg::renderer
             return *this;
         }
 
-        const gfx::UICanvas *   m_canvas = nullptr;
-        UIElementType           m_type = (UIElementType)-1;
-        gfx::UIItem             m_item;
+        const UICanvas *    m_canvas = nullptr;
+        UIElementType       m_type = (UIElementType)-1;
+        UIItem              m_item;
 
         // Text
-        core::string            m_text;
-        Font                    m_font = (Font)0;
-        FontStyle               m_style = (FontStyle)0;
+        core::string        m_text;
+        Font                m_font = (Font)0;
+        FontStyle           m_style = (FontStyle)0;
 
         // Texture
-        gfx::ITexture *         m_texture = nullptr;
+        gfx::ITexture *     m_texture = nullptr;
     };
 }

@@ -63,20 +63,20 @@ namespace vg::renderer
 
         gfx::ITexture *                         CreateTexture               (const gfx::TextureDesc & _texDesc, const core::string & _name) final override;
 
-        gfx::IViewport *                        CreateViewport              (const gfx::CreateViewportParams & _params, const core::string & _name, gfx::ViewportFlags _flags = (gfx::ViewportFlags)0x0) final override;
-        gfx::ViewportID                         AddViewport                 (gfx::IViewport * _viewport) final override;
+        IViewport *                             CreateViewport              (const CreateViewportParams & _params, const core::string & _name, ViewportFlags _flags = (ViewportFlags)0x0) final override;
+        gfx::ViewportID                         AddViewport                 (IViewport * _viewport) final override;
         gfx::ViewportIndex                      GetFreeViewportIndex        (gfx::ViewportTarget _target) final override;
-        gfx::IViewport *                        GetViewport                 (gfx::ViewportID _viewportID) final override;
-        const core::vector<gfx::IViewport *> &  GetViewports                (gfx::ViewportTarget _target) const final override;
+        IViewport *                             GetViewport                 (gfx::ViewportID _viewportID) final override;
+        const core::vector<IViewport *> &       GetViewports                (gfx::ViewportTarget _target) const final override;
 
         // TODO: remove
-        gfx::IView *                            CreateView                  (gfx::CreateViewParams _params, const core::string & _name, gfx::ViewFlags _flags = (gfx::ViewFlags)0) final override;
-        gfx::ViewID                             AddView                     (gfx::IView * _view) final override;
+        IView *                                 CreateView                  (CreateViewParams _params, const core::string & _name, ViewFlags _flags = (ViewFlags)0) final override;
+        gfx::ViewID                             AddView                     (IView * _view) final override;
         void                                    RemoveView                  (gfx::ViewID _viewID) final override;
         gfx::ViewIndex                          GetFreeViewIndex            (gfx::ViewTarget _target) const final override;
-        gfx::IView *                            GetView                     (gfx::ViewID _viewID) const final override;
-        gfx::IView *                            GetView                     (gfx::ViewTarget _target, const core::IWorld * _world) const final override;
-        const core::vector <gfx::IView *>       GetViews                    (gfx::ViewTarget _target) const final override;
+        IView *                                 GetView                     (gfx::ViewID _viewID) const final override;
+        IView *                                 GetView                     (gfx::ViewTarget _target, const core::IWorld * _world) const final override;
+        const core::vector <IView *>            GetViews                    (gfx::ViewTarget _target) const final override;
 
         const ICameraLens *                     GetDefaultCameraLens        () const final override;
 
@@ -182,7 +182,7 @@ namespace vg::renderer
         core::JobSync                           m_jobSync[core::enumCount<RendererJobType>()];
 
         // TODO : remove
-        core::vector<View *>                    m_views[core::enumCount<gfx::ViewTarget>()];
+        core::vector<renderer::View *>          m_views[core::enumCount<gfx::ViewTarget>()];
 
         gfx::Texture *                          m_bakedSpecularBRDF         = nullptr;
         gfx::Texture *                          m_generatedSpecularBRDF     = nullptr;

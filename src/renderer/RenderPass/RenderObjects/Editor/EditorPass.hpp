@@ -109,6 +109,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void EditorPass::AfterRender(const RenderPassContext & _renderPassContext, CommandList * _cmdList)
     {
+        auto * view = (IView*)(_renderPassContext.getViewMutable());
         Buffer * toolmodeRWBuffer = getRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"));
 
         // allocate staging copy
@@ -129,7 +130,7 @@ namespace vg::renderer
         {
             const ToolmodeRWBufferData * data = (ToolmodeRWBufferData *)result.data;
             const PickingData * pickingData = &data->m_picking;
-            _renderPassContext.getViewMutable()->SetPickingData(*pickingData);
+            view->SetPickingData(*pickingData);
         }
         m_toolmodeRWBufferStaging->getResource().unmap();
     }

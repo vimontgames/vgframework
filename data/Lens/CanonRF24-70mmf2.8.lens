@@ -1,0 +1,13 @@
+<Root>
+    <Object class="CameraLens">
+        <Property type="String" name="m_name" value="Canon RF24-70mm f2.8"/>
+        <Property type="Uint32" name="m_uid" value="2938614621"/>
+        <Property type="Uint32" name="m_originalUID" value="0"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="Float2" name="m_sensorSize" x="36" y="24"/>
+        <Property type="Float2" name="m_focalLength" x="24" y="70"/>
+        <Property type="Float2" name="m_minFocusDistance" x="0.20999999" y="0.38"/>
+        <Property type="Float2" name="m_minAperture" x="22" y="22"/>
+        <Property type="Float2" name="m_maxAperture" x="2.8" y="2.8"/>
+    </Object>
+</Root>

@@ -15,9 +15,9 @@ namespace vg::engine
         void                            SetViewIndex    (core::uint _viewIndex) final override;
         void                            Update          (const Context & _context) final override;
 
-        VG_INLINE const gfx::UICanvas & getGfxCanvas    () const { return m_canvas; }
+        VG_INLINE const renderer::UICanvas & getGfxCanvas    () const { return m_canvas; }
 
     private:
-        gfx::UICanvas m_canvas;
+        renderer::UICanvas m_canvas;
     };
 }

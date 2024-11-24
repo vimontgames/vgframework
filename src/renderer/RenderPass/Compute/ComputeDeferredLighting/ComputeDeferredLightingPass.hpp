@@ -82,17 +82,17 @@ namespace vg::renderer
     {
         const auto options = RendererOptions::get();
         const auto msaa = options->GetMSAA();
-
-        auto size = _renderPassContext.getView()->GetSize();
+        const auto * view = (IView *)_renderPassContext.getView();
+        auto size = view->GetSize();
         auto threadGroupSize = uint2(DEFERRED_LIGHTING_THREADGROUP_SIZE_X, DEFERRED_LIGHTING_THREADGROUP_SIZE_Y);
         auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.y + threadGroupSize.y - 1) / threadGroupSize.y, 1);
         
         ComputeShaderKey shaderKey = m_computeDeferredLightingShaderKey;
         
-        if (_renderPassContext.getView()->IsToolmode())
+        if (view->IsToolmode())
             shaderKey.setFlag(DeferredLightingHLSLDesc::Flags::Toolmode, true);
 
-        if (_renderPassContext.getView()->IsUsingRayTracing())
+        if (view->IsUsingRayTracing())
             shaderKey.setFlag(DeferredLightingHLSLDesc::Flags::RayTracing, true);
 
         switch (msaa)

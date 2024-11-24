@@ -7,7 +7,7 @@
 #include "core/File/File.h"
 #include "core/Timer/Timer.h"
 #include "core/UndoRedo/UndoRedo.h"
-#include "gfx/IUIRenderer.h"
+#include "renderer/IUIRenderer.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IImGuiAdapter.h"
 #include "engine/IEngine.h"
@@ -88,35 +88,7 @@ namespace vg::editor
 	Editor::Editor(const core::string & _name, core::IObject * _parent) :
         IEditor(_name, _parent)
 	{
-        // Add ImGui editors
-        m_imGuiWindows.push_back(new ImGuiPlatform());
-        m_imGuiWindows.push_back(new ImGuiShader());
-        m_imGuiWindows.push_back(new ImGuiFPS());
-        m_imGuiWindows.push_back(new ImGuiResource());
-        m_imGuiWindows.push_back(new ImGuiWorld());
-        m_imGuiWindows.push_back(new ImGuiPrefab());
-        m_imGuiWindows.push_back(new ImGuiInspector());
-        m_imGuiWindows.push_back(new ImGuiEditorOptions());
-        m_imGuiWindows.push_back(new ImGuiRendererOptions());
-        m_imGuiWindows.push_back(new ImGuiPhysicsOptions());
-        m_imGuiWindows.push_back(new ImGuiEngineOptions());        
-        m_imGuiWindows.push_back(new ImGuiGameView(0));
-        m_imGuiWindows.push_back(new ImGuiEditorView(0));
-        m_imGuiWindows.push_back(new ImGuiConsole());
-        m_imGuiWindows.push_back(new ImGuiInput());
-        m_imGuiWindows.push_back(new ImGuiAbout());  
-        m_imGuiWindows.push_back(new ImGuiStatistics());
-        m_imGuiWindows.push_back(new ImGuiTime());
-        m_imGuiWindows.push_back(new ImGuiUndoRedo());
-
-        // Add ImGui toolbars
-        m_imGuiWindows.push_back(new ImGuiMainToolbar("Main Toolbar", ImGuiWindow::StartVisible));
-
-        // Plugins
-        m_imGuiWindows.push_back(new ImGuiPlugin(IconWithText(style::icon::Plugin, "Plugin")));
-
-        // Menus
-        m_imGuiMenus.push_back(new ImGuiObjectHandleMenu());
+        
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -179,6 +151,36 @@ namespace vg::editor
         RegisterClasses();
 
         auto options = new EditorOptions("Editor Options", this);
+
+        // Add ImGui editors
+        m_imGuiWindows.push_back(new ImGuiPlatform());
+        m_imGuiWindows.push_back(new ImGuiShader());
+        m_imGuiWindows.push_back(new ImGuiFPS());
+        m_imGuiWindows.push_back(new ImGuiResource());
+        m_imGuiWindows.push_back(new ImGuiWorld());
+        m_imGuiWindows.push_back(new ImGuiPrefab());
+        m_imGuiWindows.push_back(new ImGuiInspector());
+        m_imGuiWindows.push_back(new ImGuiEditorOptions());
+        m_imGuiWindows.push_back(new ImGuiRendererOptions());
+        m_imGuiWindows.push_back(new ImGuiPhysicsOptions());
+        m_imGuiWindows.push_back(new ImGuiEngineOptions());
+        m_imGuiWindows.push_back(new ImGuiGameView(0));
+        m_imGuiWindows.push_back(new ImGuiEditorView(0));
+        m_imGuiWindows.push_back(new ImGuiConsole());
+        m_imGuiWindows.push_back(new ImGuiInput());
+        m_imGuiWindows.push_back(new ImGuiAbout());
+        m_imGuiWindows.push_back(new ImGuiStatistics());
+        m_imGuiWindows.push_back(new ImGuiTime());
+        m_imGuiWindows.push_back(new ImGuiUndoRedo());
+
+        // Add ImGui toolbars
+        m_imGuiWindows.push_back(new ImGuiMainToolbar("Main Toolbar", ImGuiWindow::StartVisible));
+
+        // Plugins
+        m_imGuiWindows.push_back(new ImGuiPlugin(IconWithText(style::icon::Plugin, "Plugin")));
+
+        // Menus
+        m_imGuiMenus.push_back(new ImGuiObjectHandleMenu());
 
         // Register ImGuizmo callback
         getRenderer()->GetImGuiAdapter()->AddBeginFrameCallback(ImGuizmoBeginFrame);

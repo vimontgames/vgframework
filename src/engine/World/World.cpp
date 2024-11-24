@@ -12,7 +12,7 @@
 #include "core/IInput.h"
 #include "core/Timer/Timer.h"
 #include "core/Math/Math.h"
-#include "gfx/IUIRenderer.h"
+#include "renderer/IUIRenderer.h"
 #include "gfx/ITexture.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IRendererOptions.h"

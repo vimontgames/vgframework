@@ -24,7 +24,7 @@ namespace vg::renderer
         PickingID           CreatePickingID     (core::IObject * _object) final override;
         void                ReleasePickingID    (PickingID _id) final override;
         
-        void                Update              (const gfx::IView * _view, bool & _showTooltip, core::string & _tooltipMsg, core::string & _tooltipDbg) final override;
+        void                Update              (const IView * _view, bool & _showTooltip, core::string & _tooltipMsg, core::string & _tooltipDbg) final override;
 
         bool                decodePickingHit    (const PickingHit & _hit, PickingHitInfo & _info) const;
 
