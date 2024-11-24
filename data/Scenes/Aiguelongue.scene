@@ -1186,7 +1186,7 @@
                                 <Property type="String" name="m_name" value="Floor"/>
                                 <Property type="Uint32" name="m_uid" value="1697175564"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -3588,7 +3588,7 @@
                                         <Property type="Resource" name="m_meshResource">
                                             <Object class="MeshResource">
                                                 <Property type="String" name="m_name" value="New MeshComponent"/>
-                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_uid" value="1385712232"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Meshes/unitsphere.fbx"/>
@@ -3597,7 +3597,7 @@
                                         <Property type="Object" name="m_meshMaterials">
                                             <Object class="MaterialResourceList">
                                                 <Property type="String" name="m_name" value="New MeshComponent"/>
-                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_uid" value="1952629650"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                 <Property type="ResourceVector" name="m_resources">
@@ -3658,6 +3658,28 @@
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                 <Property type="String" name="m_resourcePath" value="data/Prefabs/SideWalkLedge.prefab"/>
+                            </Object>
+                        </Property>
+                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                    </Object>
+                    <Object class="PrefabGameObject">
+                        <Property type="String" name="m_name" value="RoboATT2M"/>
+                        <Property type="Uint32" name="m_uid" value="1012992299"/>
+                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened|Prefab"/>
+                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="11.828923" Tz="0.060487509" Tw="1"/>
+                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                        <Property type="ObjectPtrVector" name="m_components"/>
+                        <Property type="ObjectPtrVector" name="m_children"/>
+                        <Property type="Resource" name="m_prefabResource">
+                            <Object class="PrefabResource">
+                                <Property type="String" name="m_name" value=""/>
+                                <Property type="Uint32" name="m_uid" value="0"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="String" name="m_resourcePath" value="data/Prefabs/RoboATT2M.prefab"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
