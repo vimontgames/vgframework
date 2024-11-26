@@ -41,6 +41,19 @@
                                         <Property type="EnumFlagsU32" name="m_bodyParts" value=""/>
                                         <Property type="Float" name="m_speed" value="1"/>
                                     </Object>
+                                    <Object class="AnimationResource">
+                                        <Property type="String" name="m_name" value="Jump"/>
+                                        <Property type="Uint32" name="m_uid" value="3140686366"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="String" name="m_resourcePath" value="data/Animations/RoboATT/RoboATT_JUMP_2M.fbx"/>
+                                        <Property type="Bool" name="m_play" value="false"/>
+                                        <Property type="Bool" name="m_loop" value="true"/>
+                                        <Property type="Uint32" name="m_layer" value="0"/>
+                                        <Property type="Bool" name="m_useBodyParts" value="false"/>
+                                        <Property type="EnumFlagsU32" name="m_bodyParts" value=""/>
+                                        <Property type="Float" name="m_speed" value="1"/>
+                                    </Object>
                                 </Property>
                             </Object>
                         </Property>
