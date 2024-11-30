@@ -12,12 +12,19 @@ namespace vg::gfx::dx12
         uint dxgiFactoryFlags = 0;
 		if (_params.debugDevice)
 		{
-			VG_VERIFY_SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&m_d3d12debug)));
-
-			if (m_d3d12debug)
-				m_d3d12debug->EnableDebugLayer();
-
-            dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG; 
+            auto hr = D3D12GetDebugInterface(IID_PPV_ARGS(&m_d3d12debug));
+            if (SUCCEEDED(hr))
+            {
+                if (m_d3d12debug)
+                {
+                    m_d3d12debug->EnableDebugLayer();
+                    dxgiFactoryFlags = DXGI_CREATE_FACTORY_DEBUG;
+                }
+            }
+            else
+            {
+                VG_WARNING("[Device] Could not get D3D Debug interface");
+            }
 		}
 		VG_VERIFY_SUCCEEDED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&m_dxgiFactory)));
 
