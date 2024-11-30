@@ -11,6 +11,8 @@
 #include "renderer/UI/UIRenderer.h"
 #include "renderer/Picking/PickingManager.h"
 #include "renderer/Renderer_consts.h"
+#include "renderer/Camera/CameraSettings.h"
+#include "renderer/Camera/CameraLens.h"
 
 #if !VG_ENABLE_INLINE
 #include "View.inl"
@@ -196,55 +198,66 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetupPhysicalCamera(const core::float4x4 & _cameraWorldMatrix, float _focalLength, core::float2 _sensorSize, GateFitMode _gateFitMode, float _near, float _far, core::float2 _viewportOffset, core::float2 _viewportScale)
+    void View::SetupPhysicalCamera(const core::float4x4 & _cameraWorldMatrix, const ICameraSettings * _cameraSettings, core::float2 _viewportOffset, core::float2 _viewportScale)
     {
+        m_cameraSettings = _cameraSettings;
+
         float fovX, fovY;
 
         // Aspect ratio based on the screen size
         const float2 screenSize = (float2)GetSize();
         const float screenAspectRatio = screenSize.x / screenSize.y;
-        const float sensorAspectRatio = _sensorSize.x / _sensorSize.y;
 
-        switch (_gateFitMode)
+        const float2 sensorSize = _cameraSettings->GetCameraLens()->GetSensorSize();
+        const float sensorAspectRatio = sensorSize.x / sensorSize.y;
+
+        const float focalLenght = _cameraSettings->GetFocalLength();
+
+        const GateFitMode gateFitMode = _cameraSettings->GetGateFitMode();
+
+        switch (gateFitMode)
         {
             //case GateFitMode::None:
             //    if (screenAspectRatio > sensorAspectRatio)
             //    {
-            //        fovY = 2.0f * std::atan(_sensorSize.y / (2.0f * _focalLength));
+            //        fovY = 2.0f * std::atan(sensorSize.y / (2.0f * focalLenght));
             //        fovX = 2.0f * std::atan(std::tan(fovY / 2.0f) * screenAspectRatio);
             //    }
             //    else
             //    {
-            //        fovX = 2.0f * std::atan(_sensorSize.x / (2.0f * _focalLength));
+            //        fovX = 2.0f * std::atan(sensorSize.x / (2.0f * focalLenght));
             //        fovY = 2.0f * std::atan(std::tan(fovX / 2.0f) / screenAspectRatio);
             //    }
             //    break;
 
             case GateFitMode::Horizontal:
-                fovX = 2.0f * std::atan(_sensorSize.x / (2.0f * _focalLength));
-                fovY = 2.0f * std::atan((_sensorSize.x / screenAspectRatio) / (2.0f * _focalLength)); 
+                fovX = 2.0f * std::atan(sensorSize.x / (2.0f * focalLenght));
+                fovY = 2.0f * std::atan((sensorSize.x / screenAspectRatio) / (2.0f * focalLenght));
                 break;
 
             case GateFitMode::Vertical:
-                fovY = 2.0f * std::atan(_sensorSize.y / (2.0f * _focalLength));
-                fovX = 2.0f * std::atan((_sensorSize.y * screenAspectRatio) / (2.0f * _focalLength)); 
+                fovY = 2.0f * std::atan(sensorSize.y / (2.0f * focalLenght));
+                fovX = 2.0f * std::atan((sensorSize.y * screenAspectRatio) / (2.0f * focalLenght));
                 break;
 
             default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_gateFitMode);
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(gateFitMode);
                 break;
         }
+
+        const float nearPlane = _cameraSettings->GetNear();
+        const float farPlane = _cameraSettings->GetFar();
 
         m_viewportOffset = _viewportOffset;
         m_viewportScale = _viewportScale;
 
         m_viewInv = _cameraWorldMatrix;
         m_view = inverse(_cameraWorldMatrix);
-        m_cameraNearFar = float2(_near, _far);
+        m_cameraNearFar = float2(nearPlane, farPlane);
 
         m_cameraFovY = fovY;
 
-        m_proj = setPerspectiveProjectionRH(fovY, screenAspectRatio, _near, _far);
+        m_proj = setPerspectiveProjectionRH(fovY, screenAspectRatio, nearPlane, farPlane);
 
         m_projInv = inverse(m_proj);
         m_viewProj = mul(m_view, m_proj);
@@ -435,7 +448,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool View::IsRender() const
     {
-        return IsVisible() && testFlag(ViewFlags::Render);
+        return IsVisible() && testFlag(ViewFlags::Render);// && nullptr != GetCameraSettings();
     }     
 
     //--------------------------------------------------------------------------------------
@@ -658,5 +671,11 @@ namespace vg::renderer
     IUIRenderer * View::GetUIRenderer() const
     {
         return VG_SAFE_STATIC_CAST(IUIRenderer, m_viewGUI);
+    }
+
+    //--------------------------------------------------------------------------------------
+    const ICameraSettings * View::GetCameraSettings() const
+    {
+        return m_cameraSettings;
     }
 }

@@ -24,13 +24,111 @@ void CS_ResolveMSAA(int2 dispatchThreadID : SV_DispatchThreadID)
     if (all(dispatchThreadID.xy < screenSize))
     {
         float4 color = (float4)0.0;
-
+        Texture2DMS<float4> sourceTex = getTexture2DMS(postProcessConstants.getSource());
         [unroll]
         for (uint i = 0; i < SAMPLE_COUNT; ++i)
-            color += getTexture2DMS(postProcessConstants.getColor()).Load(coords, i);
+            color += sourceTex.Load(coords, i);
         color /= (float)SAMPLE_COUNT;           
 
         getRWTexture2D(postProcessConstants.getRWBufferOut())[coords] = color;
+    }
+}
+
+float ComputeCOC(float linearDepth, ViewConstants viewConstants) 
+{
+    float focallength = viewConstants.getFocalLength(); // 35.0/1000.0;
+    float aperture = viewConstants.getAperture(); // 4;
+    float objectdistance = linearDepth; 
+    float planeinfocus = viewConstants.getFocusDistance(); // 13.9;
+    float coc = (aperture * (focallength * (objectdistance - planeinfocus)) / (objectdistance * (planeinfocus - focallength)));
+    return coc * viewConstants.getDOFScale();
+}
+
+[numthreads(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y, 1)]
+void CS_DepthOfField(int2 dispatchThreadID : SV_DispatchThreadID)
+{   
+    uint2 screenSize = postProcessConstants.getScreenSize();    
+
+    int2 coords = dispatchThreadID;
+    float2 uv = ((float2)dispatchThreadID.xy + 0.5) / (float2)screenSize.xy;
+
+    if (all(dispatchThreadID.xy < screenSize))
+    {   
+        ViewConstants viewConstants;
+        viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+
+        float4 color = getTexture2D(postProcessConstants.getSource()).SampleLevel(linearClamp, uv, 0);
+        float2 linearDepth = getTexture2D(postProcessConstants.getLinearDepth()).SampleLevel(nearestClamp, uv, 0).rg;
+
+        #if _PASS0
+        float2 coc = ComputeCOC(linearDepth.y, viewConstants).xx;
+
+        // Blur color and CoC
+        {
+            int sampleCount = 4;
+            for (int j = -sampleCount; j < sampleCount; ++j)
+            {
+                for (int i = -sampleCount; i < sampleCount; ++i)
+                {
+                    float2 uvAdd = float2(float(i)+0.5, float(j)+0.5) / float(sampleCount*2);
+                    float2 sampleUV = uv + 0.01 * uvAdd;
+                    float2 sampleZ = getTexture2D(postProcessConstants.getLinearDepth()).SampleLevel(nearestClamp, sampleUV, 0).rg;
+                    float newCOC = ComputeCOC(sampleZ.y, viewConstants);
+                    
+                    if (newCOC < 0)
+                        coc.x = min(coc.x, newCOC);
+                }
+            }
+        }
+
+        getRWTexture2D(postProcessConstants.getRWBufferOut())[coords] = float4(color.rgb, max(abs(coc.x), coc.y));
+        #elif _PASS1
+        float4 downscaleCOC = getTexture2D(postProcessConstants.getTemp()).SampleLevel(nearestClamp, uv, 0).rgba;
+        float coc = ComputeCOC(linearDepth.y, viewConstants);
+              coc = downscaleCOC.a;
+        const float epsCOC = 0.001f;
+      
+        int sampleCount0 = 4;
+        for (int j = -sampleCount0; j < sampleCount0; ++j)
+        {
+            for (int i = -sampleCount0; i < sampleCount0; ++i)
+            {
+                float2 uvAdd = float2(float(i)+0.5, float(j)+0.5) / float(sampleCount0*2);
+                float2 sampleUV = uv.xy + 0.0025 * uvAdd;
+                float4 sample = getTexture2D(postProcessConstants.getTemp()).SampleLevel(nearestClamp, sampleUV, 0); 
+                    
+                coc += sample.a; 
+            }
+        }
+        coc /= float(sampleCount0*sampleCount0*4+1);
+    
+        float totalWeight = 1.0f;
+        int sampleCount = 8;
+        float scaledCOC = coc;
+            
+        for (int j = -sampleCount; j < sampleCount; ++j)
+        {
+            for (int i = -sampleCount; i < sampleCount; ++i)
+            {
+                float2 uvAdd = float2(float(i)+0.5, float(j)+0.5) / float(sampleCount*2);
+                float2 sampleUV = uv.xy + scaledCOC * uvAdd;
+                float4 sample = getTexture2D(postProcessConstants.getTemp()).SampleLevel(nearestClamp, sampleUV, 0); 
+                    
+                float sampleWeight = saturate((sample.a - coc + 0.001)*256) ; // saturate((sample.a - coc + 0.01)*16);// (1-saturate(1*(linearDepth.y - sampleZ.y)));
+                float g = (1.0-(uvAdd.x*uvAdd.x)) * (1.0-(uvAdd.y*uvAdd.y));
+                sampleWeight *= g;                    
+
+                if (sampleWeight > 0)
+                {
+                    color.rgb += sample.rgb * sampleWeight;
+                    totalWeight += sampleWeight;
+                }
+            }
+        }
+        color.rgb /= totalWeight;
+
+        getRWTexture2D(postProcessConstants.getRWBufferOut())[coords] = float4(color.rgb, coc);
+        #endif
     }
 }
 
@@ -283,15 +381,13 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
 
         int3 address = int3(dispatchThreadID.xy, 0);
 
-        float4 color;
+        float4 color = getTexture2D(postProcessConstants.getSource()).Load(address);
 
         // Select Anti-Aliasing mode
         #if _FXAA
-        color = FXAA(getTexture2D(postProcessConstants.getColor()), uv, viewConstants.getDisplayMode());
+        color.rgb = FXAA(getTexture2D(postProcessConstants.getSource()), uv, viewConstants.getDisplayMode()).rgb;
         #elif _SMAA
-        color = SMAA(getTexture2D(postProcessConstants.getColor()), address);
-        #else
-        color = getTexture2D(postProcessConstants.getColor()).Load(address);
+        color.rgb = SMAA(getTexture2D(postProcessConstants.getSource()), address).rgb;
         #endif
 
         #if SAMPLE_COUNT > 1
@@ -343,6 +439,14 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
 
             case DisplayMode::PostProcess_Stencil:
             color.rgb = stencil / 255.0f;
+            break;
+
+            case DisplayMode::PostProcess_DepthOfField:
+            {
+                float2 linearDepth = getTexture2D(postProcessConstants.getLinearDepth()).SampleLevel(nearestClamp, uv, 0).rg;
+                float coc = color.a;
+                color.rgb = lerp(color.rgb, float3(1,0,0), saturate(coc*128));  
+            }
             break;
 
             case DisplayMode::Lighting_EnvironmentSpecularBRDF:

@@ -372,7 +372,7 @@ namespace vg::engine
                         index = (uint)(m_resourcesToLoad.size() - 1);
                     }
 
-                    #if VG_DEBUG
+                    #if VG_DEBUG0
                     VG_DEBUGPRINT("\n");
                     VG_DEBUGPRINT("NEW | INDEX | PRIORITY | TYPE      | PATH\n", m_resourcesToLoad.size());
                     VG_DEBUGPRINT("----+-------+----------+-----------+---------------------------------\n");

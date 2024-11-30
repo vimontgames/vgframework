@@ -66,9 +66,11 @@
                                             </Object>
                                         </Property>
                                         <Property type="Float" name="m_focalLength" value="35"/>
-                                        <Property type="Float" name="m_focusDistance" value="3"/>
-                                        <Property type="Float" name="m_aperture" value="4"/>
+                                        <Property type="Float" name="m_focusDistance" value="14"/>
+                                        <Property type="Float" name="m_aperture" value="2.8"/>
                                         <Property type="EnumU8" name="m_gateFitMode" value="Vertical"/>
+                                        <Property type="Bool" name="m_depthOfField" value="true"/>
+                                        <Property type="Bool" name="m_motionBlur" value="false"/>
                                     </Object>
                                 </Property>
                             </Object>

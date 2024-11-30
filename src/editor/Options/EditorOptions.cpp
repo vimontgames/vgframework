@@ -2,6 +2,7 @@
 #include "EditorOptions.h"
 #include "editor/Editor.h"
 #include "renderer/IRenderer.h"
+#include "renderer/ICameraSettings.h"
 
 using namespace vg::core;
 
@@ -28,6 +29,13 @@ namespace vg::editor
                 registerOptionalProperty(EditorOptions, m_gizmo.m_snapScale, m_gizmo.m_scaleSnap, "Scale");
             }
             registerPropertyGroupEnd(EditorOptions);
+        }
+        registerPropertyGroupEnd(EditorOptions);
+
+        registerPropertyGroupBegin(EditorOptions, "Camera");
+        {
+            registerPropertyObjectPtrEx(EditorOptions, m_cameraSettings, "Camera", PropertyFlags::Flatten);
+            setPropertyDescription(EditorOptions, m_cameraSettings, "Editor camera settings");
         }
         registerPropertyGroupEnd(EditorOptions);
 
@@ -76,9 +84,23 @@ namespace vg::editor
     EditorOptions::EditorOptions(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
+        // Must be created before load
+        const auto * factory = Kernel::getFactory();
+        m_cameraSettings = (renderer::ICameraSettings *)factory->CreateObject("CameraSettings");
+        m_cameraSettings->SetParent(this);
+
         SetFile("Editor.xml");
         Load();
+
+        m_cameraSettings->RegisterUID();
+
         Editor::get()->getRenderer()->GetImGuiAdapter()->SetGUITheme(m_theme);
+    }
+
+    //--------------------------------------------------------------------------------------
+    EditorOptions::~EditorOptions()
+    {
+        VG_SAFE_RELEASE(m_cameraSettings);
     }
 
     //--------------------------------------------------------------------------------------

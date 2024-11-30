@@ -48,45 +48,6 @@ namespace vg::engine
 
         registerPropertyObjectPtrEx(CameraComponent, m_cameraSettings, "Camera Settings", PropertyFlags::Flatten);
 
-        //registerPropertyGroupBegin(CameraComponent, "Range");
-        //{
-        //    registerProperty(CameraComponent, m_physicalCameraSettings.m_near, "Near");
-        //    setPropertyRange(CameraComponent, m_physicalCameraSettings.m_near, float2(0.0f, 10.0f));
-        //    setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_near, "Camera near distance");
-        //
-        //    registerProperty(CameraComponent, m_physicalCameraSettings.m_far, "Far");
-        //    setPropertyRange(CameraComponent, m_physicalCameraSettings.m_far, float2(0.0f, 10000.0f));
-        //    setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_far, "Camera far distance");
-        //}
-        //registerPropertyGroupEnd(CameraComponent);
-        //
-        //registerPropertyGroupBegin(CameraComponent, "Optics");
-        //{
-        //    registerPropertyResource(CameraComponent, m_lensRes, "Lens");
-        //
-        //    registerProperty(CameraComponent, m_physicalCameraSettings.m_focalLength, "Focal length");
-        //    setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_focalLength, "Focal length in millimeters");
-        //    setPropertyRangeCallback(CameraComponent, m_physicalCameraSettings.m_focalLength, getFocalLengthRange); // Range depends on the lens used
-        //
-        //    registerProperty(CameraComponent, m_focusDistance, "Focus distance");
-        //    setPropertyDescription(CameraComponent, m_focusDistance, "The distance in meters between the lens and the subject that is in sharp focus");
-        //    setPropertyRangeCallback(CameraComponent, m_focusDistance, getFocusDistanceRange); // Range depends on the lens used and focal length
-        //
-        //    registerProperty(CameraComponent, m_aperture, "f/Aperture");
-        //    setPropertyDescription(CameraComponent, m_aperture, "A higher f-stop (e.g., f/16) means a smaller aperture that lets in less light, creating a deeper depth of field");
-        //    setPropertyRangeCallback(CameraComponent, m_aperture, getApertureRange); // Range depends on the lens used and focal length
-        //
-        //    registerPropertyEnum(CameraComponent, GateFitMode, m_physicalCameraSettings.m_gateFitMode, "Gate Fit");
-        //    setPropertyDescription(CameraComponent, m_physicalCameraSettings.m_gateFitMode, "Determines how the camera aligns its field of view to fit the sensor");
-        //}
-        //registerPropertyGroupEnd(CameraComponent);
-
-        registerPropertyGroupBegin(CameraComponent, "Post-processing");
-        {
-
-        }
-        registerPropertyGroupEnd(CameraComponent);
-
         return true;
     }
 
@@ -189,7 +150,7 @@ namespace vg::engine
 
             view->SetRender(true);
             const float4x4 & matrix = getGameObject()->GetGlobalMatrix();
-            view->SetupPhysicalCamera(matrix, m_cameraSettings->GetFocalLength(), m_cameraSettings->GetCameraLens()->GetSensorSize(), m_cameraSettings->GetGateFitMode(), m_cameraSettings->GetNear(), m_cameraSettings->GetFar(), m_viewportOffset, m_viewportScale);
+            view->SetupPhysicalCamera(matrix, m_cameraSettings, m_viewportOffset, m_viewportScale);
         }      
     }
 

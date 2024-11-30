@@ -43,14 +43,12 @@ namespace vg::editor
         m_matrix[1] = float4(0, 0, 1, 0);
         m_matrix[2] = float4(0, -1, 0, 0);
         m_matrix[3] = float4(0, -8, 2, 1);
-
-        m_cameraSettings = (renderer::ICameraSettings *)Kernel::getFactory()->CreateObject("CameraSettings");
     }
 
     //--------------------------------------------------------------------------------------
     ImGuiView::EditorCamera::~EditorCamera()
     {
-        VG_SAFE_RELEASE(m_cameraSettings);
+        
     }
 
     //--------------------------------------------------------------------------------------
@@ -237,7 +235,8 @@ namespace vg::editor
                 }
             }
 
-            view->SetupPhysicalCamera(editorCam.m_matrix, editorCam.m_cameraSettings->GetFocalLength(), editorCam.m_cameraSettings->GetCameraLens()->GetSensorSize(), editorCam.m_cameraSettings->GetGateFitMode(), editorCam.m_cameraSettings->GetNear(), editorCam.m_cameraSettings->GetFar());
+            const auto * editorCameraSettings = EditorOptions::get()->GetCameraSettings();
+            view->SetupPhysicalCamera(editorCam.m_matrix, editorCameraSettings);
         }
     }
 

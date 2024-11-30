@@ -70,6 +70,8 @@ struct ViewConstants
         m_environmentColor        = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_pbr                     = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
         m_textures                = _buffer.Load<uint4>(_offset);  _offset += sizeof(uint4);
+
+        m_lens                    = _buffer.Load<float4>(_offset);  _offset += sizeof(float4);
     }
     #endif
 
@@ -84,6 +86,7 @@ struct ViewConstants
     float4          m_environmentColor;
     float4          m_pbr;
     uint4           m_textures;                 // .x: EnvMap (low) + specularBRDF (high) | .y: IrradianceEnvmap (low) + SpecularReflectionMap (hight)
+    float4          m_lens;                     // .x: focal length, .y:aperture, .z:focus distance
     
     // Screen and mouse constants
     void            setScreenSize           (uint2 _screenSize)                 { m_screenSizeAndMousePos.xy = _screenSize; }
@@ -157,6 +160,19 @@ struct ViewConstants
 
     void            setSpecularReflectionIntensity(float _intensity)            { m_pbr.y = _intensity; }
     float           getSpecularReflectionIntensity()                            { return m_pbr.y; }
+
+    // Lens constants
+    void            setFocalLength          (float _focalLength)                { m_lens.x = _focalLength; }
+    float           getFocalLength          ()                                  { return m_lens.x; }
+
+    void            setAperture             (float _aperture)                   { m_lens.y = _aperture; }
+    float           getAperture             ()                                  { return m_lens.y; }
+
+    void            setFocusDistance        (float _focusDistance)              { m_lens.z = _focusDistance; }
+    float           getFocusDistance        ()                                  { return m_lens.z; }
+
+    void            setDOFScale             (float _dofScale)                   { m_lens.w = _dofScale; }
+    float           getDOFScale             ()                                  { return m_lens.w; }
 };
 
 #endif // _VIEW__HLSLI_

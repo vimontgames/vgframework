@@ -71,6 +71,13 @@ namespace vg::renderer
         }
         registerPropertyGroupEnd(CameraSettings);
 
+        registerPropertyGroupBegin(CameraSettings, "Post-processing");
+        {
+            registerProperty(CameraSettings, m_depthOfField, "Depth-of-field");
+            registerPropertyEx(CameraSettings, m_motionBlur, "Motion blur", PropertyFlags::ReadOnly);
+        }
+        registerPropertyGroupEnd(CameraComponent);
+
         return true;
     }
 
@@ -110,6 +117,18 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    float CameraSettings::GetAperture() const
+    {
+        return m_aperture;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float CameraSettings::GetFocusDistance() const
+    {
+        return m_focusDistance;
+    }
+
+    //--------------------------------------------------------------------------------------
     GateFitMode CameraSettings::GetGateFitMode() const
     {
         return m_gateFitMode;
@@ -125,6 +144,18 @@ namespace vg::renderer
     float CameraSettings::GetFar() const
     {
         return m_far;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool CameraSettings::IsDepthOfFieldEnabled() const
+    {
+        return m_depthOfField;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool CameraSettings::IsMotionBlurEnabled() const
+    {
+        return m_motionBlur;
     }
 }
 

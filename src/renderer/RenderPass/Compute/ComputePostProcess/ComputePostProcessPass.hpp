@@ -1,4 +1,6 @@
 #include "ComputePostProcessPass.h"
+#include "renderer/Camera/CameraSettings.h"
+
 #include "Shaders/postprocess/postprocess.hlsli"
 #include "Shaders/postprocess/postprocess.hlsl.h"
 
@@ -20,6 +22,7 @@ namespace vg::renderer
 
         m_computePostProcessRootSignature = device->addRootSignature(rsDesc);
         m_computeResolveMSAAShaderKey.init("postprocess/postprocess.hlsl", "ResolveMSAACS");
+        m_depthOfFieldShaderKey.init("postprocess/postprocess.hlsl", "DepthOfFieldCS");
         m_computePostProcessShaderKey.init("postprocess/postprocess.hlsl", "PostProcessMainCS");
     }
 
@@ -58,6 +61,22 @@ namespace vg::renderer
         createRWTexture(dstID, uavDesc);
         writeRWTexture(dstID);
 
+        bool needTempUAV = false;
+        const auto * camSettings = view->GetCameraSettings();
+        if (nullptr != camSettings)
+        {
+            if (camSettings->IsDepthOfFieldEnabled())
+                needTempUAV = true;
+        }
+
+        if (needTempUAV)
+        {
+            const auto tempUAVID = _renderPassContext.getFrameGraphID("TempPostProcessUAV");
+            FrameGraphTextureResourceDesc tempUavDesc = uavDesc;
+            createRWTexture(tempUAVID, tempUavDesc);
+            writeRWTexture(tempUAVID);
+        }
+
         const auto * options = RendererOptions::get();
         const auto msaa = options->GetMSAA();
         if (msaa != MSAA::None)
@@ -77,6 +96,8 @@ namespace vg::renderer
         auto size = view->GetSize();
         auto threadGroupSize = uint2(POSTPROCESS_THREADGROUP_SIZE_X, POSTPROCESS_THREADGROUP_SIZE_Y);
         auto threadGroupCount = uint3((size.x + threadGroupSize.x - 1) / threadGroupSize.x, (size.y + threadGroupSize.y - 1) / threadGroupSize.y, 1);
+
+        auto srcID = _renderPassContext.getFrameGraphID("Color");
 
         const auto msaa = options->GetMSAA();
         Texture * resolveUAVTex = nullptr;
@@ -128,7 +149,7 @@ namespace vg::renderer
 
             PostProcessConstants postProcess;
             postProcess.setScreenSize(size.xy);
-            postProcess.setColor(color);
+            postProcess.setSource(color);
             postProcess.setRWBufferOut(dest);
 
             _cmdList->setComputeRootConstants(0, (u32 *)&postProcess, PostProcessConstantsCount);
@@ -137,64 +158,134 @@ namespace vg::renderer
 
             _cmdList->addRWTextureBarrier(resolveUAVTex);
             _cmdList->transitionResource(resolveUAVTex, ResourceState::UnorderedAccess, ResourceState::ShaderResource);
-        }       
 
-        ComputeShaderKey shaderKey = m_computePostProcessShaderKey;
+            srcID = _renderPassContext.getFrameGraphID("ResolveColorUAV");
+        }    
 
-        if (view->IsToolmode())
+        const auto * camSettings = view->GetCameraSettings();
+        if (nullptr != camSettings)
         {
-            shaderKey.setFlag(PostProcessHLSLDesc::Toolmode, true);
+            if (camSettings->IsDepthOfFieldEnabled())
+            {
+                VG_PROFILE_GPU("DepthOfField");
 
-            if (view->IsUsingRayTracing())
-                shaderKey.setFlag(PostProcessHLSLDesc::RayTracing, true);
+                _cmdList->transitionResource(resolveUAVTex, ResourceState::ShaderResource, ResourceState::UnorderedAccess); 
+
+                // first pass: 
+                // - read "src" (either original image or downscaled MSAA) + linear depth
+                // - downscale to RGB and write COC to alpha
+
+                ComputeShaderKey depthOfFieldShaderKey0 = m_depthOfFieldShaderKey;
+                depthOfFieldShaderKey0.setValue(PostProcessHLSLDesc::Flags::Pass, 0);
+                
+                _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
+                _cmdList->setComputeShader(depthOfFieldShaderKey0);
+
+                auto linearDepthTex = getRenderTarget(_renderPassContext.getFrameGraphID("LinearDepth"));
+                auto linearDepth = linearDepthTex->getTextureHandle();
+
+                Texture * tempUAVTex = getRWTexture(_renderPassContext.getFrameGraphID("TempPostProcessUAV"));
+                auto dest = tempUAVTex->getRWTextureHandle();
+
+                auto * sourceTex = getRWTexture(srcID);
+                auto color = sourceTex->getTextureHandle();
+
+                PostProcessConstants postProcess0;
+                {
+                    postProcess0.setScreenSize(size);
+                    postProcess0.setSource(color);
+                    postProcess0.setRWBufferOut(dest);
+                    postProcess0.setLinearDepth(linearDepth);
+                }
+                _cmdList->setComputeRootConstants(0, (u32 *)&postProcess0, PostProcessConstantsCount);
+
+                _cmdList->dispatch(threadGroupCount);
+                _cmdList->addRWTextureBarrier(tempUAVTex);
+
+                // second pass:
+                // - read "PostProcessUAV" and do vertical blur
+                ComputeShaderKey depthOfFieldShaderKey1 = m_depthOfFieldShaderKey;
+                depthOfFieldShaderKey1.setValue(PostProcessHLSLDesc::Flags::Pass, 1);
+
+                _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
+                _cmdList->setComputeShader(depthOfFieldShaderKey1);
+
+                auto dest2 = sourceTex->getRWTextureHandle();
+
+                PostProcessConstants postProcess1;
+                {
+                    postProcess1.setScreenSize(size);
+                    postProcess1.setSource(color);
+                    postProcess1.setTemp(tempUAVTex->getTextureHandle());
+                    postProcess1.setLinearDepth(linearDepth);
+                    postProcess1.setRWBufferOut(dest2);
+                }
+                _cmdList->setComputeRootConstants(0, (u32 *)&postProcess1, PostProcessConstantsCount);
+
+                _cmdList->dispatch(threadGroupCount);
+                _cmdList->transitionResource(sourceTex, ResourceState::UnorderedAccess, ResourceState::ShaderResource);
+            }
         }
 
-        const auto aaMode = options->GetAAPostProcess();
-        switch (aaMode)
+        // Final postprocess
         {
-            default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(aaMode);
+            VG_PROFILE_GPU("FinalPostProcess");
+            ComputeShaderKey shaderKey = m_computePostProcessShaderKey;
 
-            case AAPostProcess::None:
-                break;
+            if (view->IsToolmode())
+            {
+                shaderKey.setFlag(PostProcessHLSLDesc::Toolmode, true);
 
-            case AAPostProcess::FXAA:
-                shaderKey.setValue(PostProcessHLSLDesc::AAPostProcess, AAPostProcess::FXAA);
-                break;
+                if (view->IsUsingRayTracing())
+                    shaderKey.setFlag(PostProcessHLSLDesc::RayTracing, true);
+            }
 
-            case AAPostProcess::SMAA:
-                shaderKey.setValue(PostProcessHLSLDesc::AAPostProcess, AAPostProcess::SMAA);
-                break;
+            const auto aaMode = options->GetAAPostProcess();
+            switch (aaMode)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(aaMode);
+
+                case AAPostProcess::None:
+                    break;
+
+                case AAPostProcess::FXAA:
+                    shaderKey.setValue(PostProcessHLSLDesc::AAPostProcess, AAPostProcess::FXAA);
+                    break;
+
+                case AAPostProcess::SMAA:
+                    shaderKey.setValue(PostProcessHLSLDesc::AAPostProcess, AAPostProcess::SMAA);
+                    break;
+            }
+
+            _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
+            _cmdList->setComputeShader(shaderKey);
+
+            auto color = getRenderTarget(srcID)->getTextureHandle();
+
+            auto depthstencilTex = getDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
+            auto depth = depthstencilTex->getDepthTextureHandle();
+            auto stencil = depthstencilTex->getStencilTextureHandle();
+
+            auto linearDepthTex = getRenderTarget(_renderPassContext.getFrameGraphID("LinearDepth"));
+            auto linearDepth = linearDepthTex->getTextureHandle();
+
+            auto dest = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getRWTextureHandle();
+
+            PostProcessConstants postProcess;
+            postProcess.setScreenSize(size.xy);
+            postProcess.setSource(color);
+            postProcess.setRWBufferOut(dest);
+            postProcess.setDepth(depth);
+            postProcess.setStencil(stencil);
+            postProcess.setLinearDepth(linearDepth);
+
+            _cmdList->setComputeRootConstants(0, (u32 *)&postProcess, PostProcessConstantsCount);
+
+            _cmdList->dispatch(threadGroupCount);
+
+            if (MSAA::None != msaa)
+                _cmdList->transitionResource(resolveUAVTex, ResourceState::ShaderResource, ResourceState::UnorderedAccess);
         }
-
-        _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
-        _cmdList->setComputeShader(shaderKey);
-
-        auto srcID = msaa == MSAA::None ? _renderPassContext.getFrameGraphID("Color") : _renderPassContext.getFrameGraphID("ResolveColorUAV");
-        auto color = getRenderTarget(srcID)->getTextureHandle();
-
-        auto depthstencilTex = getDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
-        auto depth = depthstencilTex->getDepthTextureHandle();
-        auto stencil = depthstencilTex->getStencilTextureHandle();
-
-        auto linearDepthTex = getRenderTarget(_renderPassContext.getFrameGraphID("LinearDepth"));
-        auto linearDepth = linearDepthTex->getTextureHandle();
- 
-        auto dest = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getRWTextureHandle();
-        
-        PostProcessConstants postProcess;
-        postProcess.setScreenSize(size.xy);
-        postProcess.setColor(color);
-        postProcess.setRWBufferOut(dest);
-        postProcess.setDepth(depth);
-        postProcess.setStencil(stencil);     
-        postProcess.setLinearDepth(linearDepth);
-
-        _cmdList->setComputeRootConstants(0, (u32*) &postProcess, PostProcessConstantsCount);
-
-        _cmdList->dispatch(threadGroupCount);
-
-        if (MSAA::None != msaa)
-            _cmdList->transitionResource(resolveUAVTex, ResourceState::ShaderResource, ResourceState::UnorderedAccess);
     }
 }

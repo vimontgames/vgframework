@@ -46,7 +46,7 @@ namespace vg::renderer
 
         void                                SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale) final override;
         void                                SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) final override;
-        void                                SetupPhysicalCamera         (const core::float4x4 & _cameraWorldMatrix, float _focalLength, core::float2 _sensorSize, GateFitMode _gateFitMode, float _near, float _far, core::float2 _viewportOffset, core::float2 _viewportScale) final override;
+        void                                SetupPhysicalCamera         (const core::float4x4 & _cameraWorldMatrix, const ICameraSettings * _cameraSettings, core::float2 _viewportOffset, core::float2 _viewportScale) final override;
 
         void                                SetFlags                    (ViewFlags _flagsToSet, ViewFlags _flagsToRemove = (ViewFlags)0) override;
         ViewFlags                           GetFlags                    () const override;
@@ -109,6 +109,7 @@ namespace vg::renderer
 
         ViewCullingStats                    GetViewCullingStats         () const final override;
         IUIRenderer *                       GetUIRenderer               () const final override;
+        const ICameraSettings *             GetCameraSettings           () const final override;
         
         core::vector<gfx::FrameGraphResourceID>  getShadowMaps          () const;
 
@@ -163,6 +164,7 @@ namespace vg::renderer
 
     private:
         IViewport *                         m_viewport                  = nullptr;
+        const ICameraSettings *             m_cameraSettings            = nullptr;
         gfx::ViewID                         m_viewID;
         ViewFlags                           m_flags                     = (ViewFlags)0;
         gfx::Texture *                      m_renderTarget              = nullptr;   // use 'nullptr' for backbuffer

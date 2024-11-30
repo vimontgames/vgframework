@@ -4,6 +4,11 @@
 #include "editor/ImGui/Window/Console/ImGuiConsoleOptions.h"
 #include "renderer/IImGuiAdapter.h"
 
+namespace vg::renderer
+{
+    class ICameraSettings;
+}
+
 namespace vg::editor
 {
     vg_enum_class(GizmoType, core::u8,
@@ -45,6 +50,9 @@ namespace vg::editor
         VG_CLASS_DECL(EditorOptions, IEditorOptions);
 
         EditorOptions(const core::string & _name, core::IObject * _parent = nullptr);
+        ~EditorOptions();
+
+        renderer::ICameraSettings *     GetCameraSettings       () const final override { return m_cameraSettings; }
 
         void                            SetPropertyValue        (const core::IProperty & _prop, void * _previousValue, void * _newValue) final override;
 
@@ -73,5 +81,6 @@ namespace vg::editor
         GizmoOptions                    m_gizmo;
         EditorDebugFlags                m_debugFlags = (EditorDebugFlags)0x0;
         ImGuiConsoleOptions             m_consoleOptions;
+        renderer::ICameraSettings *     m_cameraSettings = nullptr;          
     };
 }

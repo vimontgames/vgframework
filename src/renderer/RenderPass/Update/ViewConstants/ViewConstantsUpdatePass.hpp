@@ -138,6 +138,28 @@ namespace vg::renderer
             constants->setIrradianceIntensity(world->GetIrradianceIntensity());
             constants->setSpecularReflectionIntensity(world->GetSpecularReflectionIntensity());
 
+            const auto * camSettings = view->GetCameraSettings();
+            if (camSettings)
+            {
+                constants->setFocalLength(camSettings->GetFocalLength() * 0.001f); // focal length in mm
+                constants->setAperture(camSettings->GetAperture());
+                constants->setFocusDistance(camSettings->GetFocusDistance());
+
+                float dofScale = 1.0f;
+                const float2 referenceResolution = float2(1920, 1080);
+                switch (camSettings->GetGateFitMode())
+                {
+                    case GateFitMode::Horizontal:
+                        dofScale = referenceResolution.x / ((float)viewSize.x);
+                        break;
+
+                    case GateFitMode::Vertical:
+                        dofScale = referenceResolution.y / ((float)viewSize.y);
+                        break;
+                }
+                constants->setDOFScale(dofScale);
+            }
+
             //if (view->IsToolmode())
             //    VG_INFO("[Picking %s] RelativeMousePos = %i %i OVER = %s", _renderPassContext.m_view->getName().c_str(), (uint)constants->getMousePos().x, (uint)constants->getMousePos().y, _renderPassContext.m_view->IsMouseOverView() ? "true" : "false");
         }

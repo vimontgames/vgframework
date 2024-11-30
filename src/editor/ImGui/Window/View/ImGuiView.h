@@ -70,7 +70,6 @@ namespace vg::editor
             ~EditorCamera();
 
             core::float4x4                      m_matrix;
-            renderer::ICameraSettings *         m_cameraSettings = nullptr;
             float                               m_moveSpeed;
             float                               m_rotSpeed;
             float                               m_panXYSpeed;

@@ -62,8 +62,9 @@ vg_enum_class(DisplayMode, uint,
     RayTracing_Attributes_Albedo, 
 
     PostProcess_Depth,
-    PostProcess_LinearDepth,
     PostProcess_Stencil,
+    PostProcess_LinearDepth,
+    PostProcess_DepthOfField,
     PostProcess_FXAAEdges,
     PostProcess_WorldPos
 );

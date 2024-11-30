@@ -14,7 +14,7 @@ struct PostProcessConstants
         m_data = (uint4)0;
 
         setScreenSize(uint2(0,0));
-        setColor(BINDLESS_TEXTURE_INVALID);
+        setSource(BINDLESS_TEXTURE_INVALID);
         setRWBufferOut(BINDLESS_RWTEXTURE_INVALID);
         setDepth(BINDLESS_TEXTURE_INVALID);
         setStencil(BINDLESS_TEXTURE_INVALID);
@@ -22,24 +22,27 @@ struct PostProcessConstants
     }
     #endif
 
-    void setScreenSize  (uint2 _size)   { m_data.x = packUint16(_size.xy);}
-    uint2 getScreenSize ()              { return unpackUint16(m_data.x); }
+    void setScreenSize          (uint2 _size)   { m_data.x = packUint16(_size.xy);}
+    uint2 getScreenSize         ()              { return unpackUint16(m_data.x); }
 
-    void setColor       (uint _color)   { m_data.y = packUint16low(m_data.y, _color); }
-    uint getColor       ()              { return unpackUint16low(m_data.y); }
+    void setSource               (uint _color)  { m_data.y = packUint16low(m_data.y, _color); }
+    uint getSource               ()             { return unpackUint16low(m_data.y); }
 
-    void setRWBufferOut (uint _rwbuffer){ m_data.y = packUint16high(m_data.y, _rwbuffer); }
-    uint getRWBufferOut ()              { return unpackUint16high(m_data.y); }
+    void setRWBufferOut         (uint _rwbuffer){ m_data.y = packUint16high(m_data.y, _rwbuffer); }
+    uint getRWBufferOut         ()              { return unpackUint16high(m_data.y); }
 
-    void setDepth       (uint _depth)   { m_data.z = packUint16low(m_data.z, _depth); }
-    uint getDepth       ()              { return unpackUint16low(m_data.z); }
+    void setDepth               (uint _depth)   { m_data.z = packUint16low(m_data.z, _depth); }
+    uint getDepth               ()              { return unpackUint16low(m_data.z); }
 
-    void setStencil     (uint _stencil) { m_data.z = packUint16high(m_data.z, _stencil); }
-    uint getStencil     ()              { return unpackUint16high(m_data.z); }
+    void setStencil             (uint _stencil) { m_data.z = packUint16high(m_data.z, _stencil); }
+    uint getStencil             ()              { return unpackUint16high(m_data.z); }
 
-    void setLinearDepth (uint _linearZ) { m_data.w = packUint16high(m_data.w, _linearZ); }
-    uint getLinearDepth ()              { return unpackUint16high(m_data.w); }
+    void setLinearDepth         (uint _linearZ) { m_data.w = packUint16low(m_data.w, _linearZ); }
+    uint getLinearDepth         ()              { return unpackUint16low(m_data.w); }
 
+    void setTemp                (uint _temp)    { m_data.w = packUint16high(m_data.w, _temp); }
+    uint getTemp                ()              { return unpackUint16high(m_data.w); }
+    
     uint4 m_data;
 };
 

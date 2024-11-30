@@ -9,11 +9,9 @@ namespace vg::gfx
     public:
         enum Flags : ShaderKey::Flags
         {
-            // Bits 0..1 for AA mode
-            AAPostProcess   = 0,
-
-            // Bits 2..4 for MSAA
-            MSAA            = 2,
+            AAPostProcess   = 0,    // Bits 0..1 for AA mode
+            MSAA            = 2,    // Bits 2..4 for MSAA
+            Pass            = 5, 
 
             // Last flags are common for all shaders 
             RayTracing      = HLSLDesc::Flags::RayTracing,
@@ -26,6 +24,8 @@ namespace vg::gfx
 
             declFlags(MSAA, ShaderStageFlags::CS, { "", "_MSAA2X", "_MSAA4X", "_MSAA8X", "_MSAA16X" });
             declFlags(AAPostProcess, ShaderStageFlags::CS, { "", "_FXAA", "_SMAA" } );
+            declFlags(Pass, ShaderStageFlags::CS, { "_PASS0", "_PASS1" });
+
             declFlag(RayTracing, ShaderStageFlags::CS, "_RAYTRACING");
             declFlag(Toolmode, ShaderStageFlags::CS, "_TOOLMODE");
 
@@ -34,6 +34,13 @@ namespace vg::gfx
             {
                 resolveMSAA.cs = csResolveMSAA;
                 resolveMSAA.flags = (Flags)0;
+            }
+
+            auto csDepthOfField = declCS("CS_DepthOfField");
+            auto & depthOfField = declTechnique("DepthOfFieldCS");
+            {
+                depthOfField.cs = csDepthOfField;
+                depthOfField.flags = (Flags)0;
             }
 
             auto csPostProcessMain = declCS("CS_PostProcessMain");
