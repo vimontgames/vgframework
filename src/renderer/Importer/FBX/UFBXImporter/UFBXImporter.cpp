@@ -318,7 +318,7 @@ namespace vg::renderer
 
                         MeshImporterVertex vertex;
 
-                        vertex.pos = float4(pos.x * _scale, pos.y * _scale, pos.z * _scale, 1.0f);
+                        vertex.pos = pos * _scale;
                         vertex.nrm = float4(nrm.x, nrm.y, nrm.z, 1.0f);
                         vertex.bin = float4(bin.x, bin.y, bin.z, 1.0f);
                         vertex.tan = float4(tan.x, tan.y, tan.z, 1.0f);
@@ -341,7 +341,7 @@ namespace vg::renderer
                         vertexBuffer.push_back(vertex);
                         indexBuffer.push_back(vertexIndex);
 
-                        aabb.grow(vertex.pos.xyz);
+                        aabb.grow((core::float3)vertex.pos);
 
                         vertexIndex++;
                     }

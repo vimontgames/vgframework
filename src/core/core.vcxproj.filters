@@ -456,6 +456,12 @@
     <ClInclude Include="Misc\GenericEnumTypes.h">
       <Filter>Misc</Filter>
     </ClInclude>
+    <ClInclude Include="Math\StorageVector.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\StorageVector.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

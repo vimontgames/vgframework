@@ -68,6 +68,8 @@
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="Logger\Logger.h" />
     <ClInclude Include="Math\Math.h" />
+    <ClInclude Include="Math\StorageVector.h" />
+    <ClInclude Include="Math\StorageVector.hpp" />
     <ClInclude Include="Memory\MemoryAllocator.h" />
     <ClInclude Include="Memory\NewDelete.h" />
     <ClInclude Include="Misc\AABB\AABB.h" />

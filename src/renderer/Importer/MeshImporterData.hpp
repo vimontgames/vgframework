@@ -7,7 +7,7 @@ using namespace vg::core;
 namespace vg::renderer
 {
     // Cooked mesh version
-    static const u32 MeshImporterDataVersion = 17;
+    static const u32 MeshImporterDataVersion = 18;
 
     //--------------------------------------------------------------------------------------
     bool findBodyPartFlagsFromNamingConvention(const core::string & _name, const vector<BonesNamingConvention> & _namingConvention, BodyPartFlags & _flags)

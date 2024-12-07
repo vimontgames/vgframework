@@ -2,6 +2,7 @@
 
 #include "core/Types/Types.h"
 #include <intrin.h>
+#include "StorageVector.h"
 
 namespace vg::core
 {
@@ -206,7 +207,21 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    inline core::size_t Hash(const float & _this)
+    {
+        core::size_t hash = core::hash<float>()(_this) ^ 0xed558cc4ceb9fe1L;
+        return hash;
+    }
+
+    //--------------------------------------------------------------------------------------
     inline core::size_t Hash(const core::float2 & _this)
+    {
+        core::size_t hash = core::hash<float>()(_this.x) ^ 0xc4ceb9fe1a85ec53L ^ core::hash<float>()(_this.y) ^ 0xed558cc4ceb9fe1L;
+        return hash;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline core::size_t Hash(const core::StorageFloat2 & _this)
     {
         core::size_t hash = core::hash<float>()(_this.x) ^ 0xc4ceb9fe1a85ec53L ^ core::hash<float>()(_this.y) ^ 0xed558cc4ceb9fe1L;
         return hash;
@@ -218,9 +233,23 @@ namespace vg::core
         core::size_t hash = core::hash<float>()(_this.x) ^ 0xff51afd7ed558ccd ^core::hash<float>()(_this.y) ^ 0xc4ceb9fe1a85ec53L ^ core::hash<float>()(_this.z) ^ 0xed558cc4ceb9fe1L;
         return hash;
     }
+
+    //--------------------------------------------------------------------------------------
+    inline core::size_t Hash(const core::StorageFloat3 & _this)
+    {
+        core::size_t hash = core::hash<float>()(_this.x) ^ 0xff51afd7ed558ccd ^ core::hash<float>()(_this.y) ^ 0xc4ceb9fe1a85ec53L ^ core::hash<float>()(_this.z) ^ 0xed558cc4ceb9fe1L;
+        return hash;
+    }
     
     //--------------------------------------------------------------------------------------
     inline core::size_t Hash(const core::float4 & _this)
+    {
+        core::size_t hash = core::hash<float>()(_this.x) ^ core::hash<float>()(_this.y) ^ 0xff51afd7ed558ccd ^ core::hash<float>()(_this.z) ^ 0xc4ceb9fe1a85ec53L ^ core::hash<float>()(_this.w) ^ 0xed558cc4ceb9fe1L;
+        return hash;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline core::size_t Hash(const core::StorageFloat4 & _this)
     {
         core::size_t hash = core::hash<float>()(_this.x) ^ core::hash<float>()(_this.y) ^ 0xff51afd7ed558ccd ^ core::hash<float>()(_this.z) ^ 0xc4ceb9fe1a85ec53L ^ core::hash<float>()(_this.w) ^ 0xed558cc4ceb9fe1L;
         return hash;

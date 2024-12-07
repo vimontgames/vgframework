@@ -5,18 +5,17 @@
 
 namespace vg::renderer
 {
-    // Imaginary vertex format with all possible attributes unpacked
-    // We don't care about packing here as this format will only be used to fill the actual vertex buffers
+    // Imaginary vertex format with all possible attributes unpacked (this format will only be used to fill the actual vertex buffers)
     struct FatVertex
     {
-        core::float4    pos;
-        core::float4    nrm;
-        core::float4    bin;
-        core::float4    tan;
-        core::float4    color;
-        core::float2    uv[2];
-        u16             indices[4];
-        u8              weights[4];
+        core::StorageFloat3 pos;
+        core::StorageFloat4 nrm;
+        core::StorageFloat4 bin;
+        core::StorageFloat4 tan;
+        core::StorageFloat4 color;
+        core::StorageFloat2 uv[2];
+        u16                 indices[4];
+        u8                  weights[4];
 
         struct hash
         {
@@ -29,7 +28,7 @@ namespace vg::renderer
 
         inline bool operator == (const FatVertex & _other) const
         {
-            return all(pos == _other.pos) && all(nrm == _other.nrm) && all(bin == _other.bin) && all(tan == _other.tan) && all(color == _other.color) && all(uv[0] == _other.uv[0]) && all(uv[1] == _other.uv[1]);
+            return (pos == _other.pos) && (nrm == _other.nrm) && (bin == _other.bin) && (tan == _other.tan) && (color == _other.color) && (uv[0] == _other.uv[0]) && (uv[1] == _other.uv[1]);
         }
     };
 

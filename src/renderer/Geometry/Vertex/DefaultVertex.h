@@ -12,8 +12,8 @@ namespace vg::renderer
         // Every vertex format struct should implement a "set" func to initialize vertex contents from Fat vertex format
         void set(const FatVertex & _vtx)
         {
-            setPos(_vtx.pos.xyz);
-            setColor(_vtx.color);
+            setPos((core::float3)_vtx.pos);
+            setColor((core::float4)_vtx.color);
 
             nrm[0] = _vtx.nrm.x;    nrm[1] = _vtx.nrm.y;    nrm[2] = _vtx.nrm.z;    // TODO: pack normal
             bin[0] = _vtx.bin.x;    bin[1] = _vtx.bin.y;    bin[2] = _vtx.bin.z;    // TODO: pack binormal
