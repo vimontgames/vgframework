@@ -35,7 +35,11 @@
 	#endif
 
 	// https://github.com/p12tic/libsimdpp/issues/33
+	#if defined(HLSLPP_MODULE_DECLARATION)
+	import <intrin.h>;
+	#else	
 	#include <intrin.h>
+	#endif
 
 	//#include "hlsl++_sse_intrin.h"
 
@@ -140,7 +144,7 @@ typedef __m256i n256i;
 
 #else
 
-#define _hlslpp_sel_ps(x, y, mask)				_mm_xor_ps((x), _mm_and_ps(mask, _mm_xor_ps((y), (x))))
+#define _hlslpp_sel_ps(x, y, mask)				_mm_xor_ps((x), _mm_and_ps((mask), _mm_xor_ps((y), (x))))
 
 hlslpp_inline n128 _hlslpp_blend_ps(n128 x, n128 y, int mask)
 {
