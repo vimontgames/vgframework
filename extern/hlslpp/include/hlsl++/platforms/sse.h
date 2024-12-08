@@ -717,6 +717,27 @@ hlslpp_inline n128i _hlslpp_blend_epi32(n128i x, n128i y, int mask)
 // Converts floating point in x to packed 32-bit integers with truncation
 #define _hlslpp_cvttps_epi32(x)					_mm_cvttps_epi32((x))
 
+#if defined(__SSE4_1__)
+
+#define _hlslpp_cvtepi8_epi32(x)				_mm_cvtepi8_epi32(x)
+
+#else
+
+// https://sseplus.sourceforge.net/group__emulated___s_s_e2.html
+hlslpp_inline __m128i _hlslpp_cvtepi8_epi32(__m128i v)
+{
+	const __m128i minus_one = _mm_set1_epi32(-1);
+
+	__m128i unpacked8  = _mm_unpacklo_epi8(v, minus_one);
+	__m128i unpacked16 = _mm_unpacklo_epi16(unpacked8, minus_one);
+	__m128i andnot     = _mm_andnot_si128(unpacked16, _mm_set1_epi32(128));
+	__m128i shift_1    = _mm_slli_epi32(andnot, 1);
+	__m128i result     = _mm_add_epi32(unpacked16, shift_1);
+	return result;
+}
+
+#endif
+
 // Shift left/right by an immediate while shifting in zeroes
 #define _hlslpp_slli_epi32(x, y)				_mm_slli_epi32((x), (y))
 #define _hlslpp_srli_epi32(x, y)				_mm_srli_epi32((x), (y))
@@ -1525,3 +1546,51 @@ hlslpp_inline void _hlslpp256_load4_pd(double* p, n256d& x)
 }
 
 #endif
+
+//-------------
+// Data Packing
+//-------------
+
+hlslpp_inline uint32_t _hlslpp_pack_epu32_rgba8_unorm(__m128 v)
+{
+	__m128 v255f = _hlslpp_madd_ps(v, _mm_set1_ps(255.0f), _mm_set1_ps(0.5f));
+	__m128i v255i = _mm_cvttps_epi32(v255f);
+
+#if defined(__SSSE3__)
+	__m128i packed8 = _mm_shuffle_epi8(v255i, _mm_set1_epi32(0x0C080400));
+#else
+	__m128i packed16 = _mm_packus_epi16(v255i, v255i);
+	__m128i packed8 = _mm_packus_epi16(packed16, packed16);
+#endif
+
+	return _mm_cvtsi128_si32(packed8);
+}
+
+hlslpp_inline __m128 _hlslpp_unpack_rgba8_unorm_epu32(uint32_t p)
+{
+	__m128i i = _mm_set1_epi32(p);
+	__m128 t = _mm_cvtepi32_ps(_hlslpp_cvtepi8_epi32(i));
+	return _mm_mul_ps(t, _hlslpp_set1_ps(1.0f / 255.0f));
+}
+
+hlslpp_inline uint32_t _hlslpp_pack_epu32_rgba8_snorm(__m128 v)
+{
+	// Copy sign from x to 0.5
+	__m128 vbias = _mm_or_ps(_mm_set1_ps(0.5f), _mm_and_ps(v, _mm_castsi128_ps(_mm_set1_epi32(0x80000000u))));
+	__m128 v127f = _hlslpp_madd_ps(v, _mm_set1_ps(127.0f), vbias);
+	__m128i v127i = _mm_cvttps_epi32(v127f);
+#if defined(__SSSE3__)
+	__m128i packed8 = _mm_shuffle_epi8(v127i, _mm_set1_epi32(0x0C080400));
+#else
+	__m128i packed16 = _mm_packs_epi16(v127i, v127i);
+	__m128i packed8 = _mm_packs_epi16(packed16, packed16);
+#endif
+	return _mm_cvtsi128_si32(packed8);
+}
+
+hlslpp_inline __m128 _hlslpp_unpack_rgba8_snorm_epu32(uint32_t p)
+{
+	__m128i i = _mm_set1_epi32(p);
+	__m128 t = _mm_cvtepi32_ps(_hlslpp_cvtepi8_epi32(i));
+	return _mm_mul_ps(t, _hlslpp_set1_ps(1.0f / 127.0f));
+}

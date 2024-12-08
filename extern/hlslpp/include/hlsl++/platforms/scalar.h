@@ -1,11 +1,11 @@
 #pragma once
 
-#include "math.h"
-#include "stdint.h"
+#include <math.h>
+#include <stdint.h>
 
 namespace hlslpp
 {
-	struct vector_float4
+	struct hlslpp_alignas(16) vector_float4
 	{
 		hlslpp_inline vector_float4() {}
 		hlslpp_inline vector_float4(float f) : x(f), y(f), z(f), w(f) {}
@@ -29,7 +29,7 @@ namespace hlslpp
 		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
-	struct vector_int4
+	struct hlslpp_alignas(16) vector_int4
 	{
 		static const int32_t Max =  2147483647;
 		static const int32_t Min = -2147483647 - 1;
@@ -51,7 +51,7 @@ namespace hlslpp
 		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
-	struct vector_uint4
+	struct hlslpp_alignas(16) vector_uint4
 	{
 		static const uint32_t Max = 4294967295;
 
@@ -129,32 +129,32 @@ HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_END
 
 	hlslpp_inline vector_float4 _hlslpp_cmpeq_ps(const vector_float4& v1, const vector_float4& v2)
 	{
-		return vector_float4(v1.x == v2.x ? fffMask.f : 0, v1.y == v2.y ? fffMask.f : 0, v1.z == v2.z ? fffMask.f : 0, v1.w == v2.w ? fffMask.f : 0);
+		return vector_float4(v1.x == v2.x ? fffMask._f32 : 0, v1.y == v2.y ? fffMask._f32 : 0, v1.z == v2.z ? fffMask._f32 : 0, v1.w == v2.w ? fffMask._f32 : 0);
 	}
 
 	hlslpp_inline vector_float4 _hlslpp_cmpneq_ps(const vector_float4& v1, const vector_float4& v2)
 	{
-		return vector_float4(v1.x != v2.x ? fffMask.f : 0, v1.y != v2.y ? fffMask.f : 0, v1.z != v2.z ? fffMask.f : 0, v1.w != v2.w ? fffMask.f : 0);
+		return vector_float4(v1.x != v2.x ? fffMask._f32 : 0, v1.y != v2.y ? fffMask._f32 : 0, v1.z != v2.z ? fffMask._f32 : 0, v1.w != v2.w ? fffMask._f32 : 0);
 	}
 
 	hlslpp_inline vector_float4 _hlslpp_cmpgt_ps(const vector_float4& v1, const vector_float4& v2)
 	{
-		return vector_float4(v1.x > v2.x ? fffMask.f : 0, v1.y > v2.y ? fffMask.f : 0, v1.z > v2.z ? fffMask.f : 0, v1.w > v2.w ? fffMask.f : 0);
+		return vector_float4(v1.x > v2.x ? fffMask._f32 : 0, v1.y > v2.y ? fffMask._f32 : 0, v1.z > v2.z ? fffMask._f32 : 0, v1.w > v2.w ? fffMask._f32 : 0);
 	}
 
 	hlslpp_inline vector_float4 _hlslpp_cmpge_ps(const vector_float4& v1, const vector_float4& v2)
 	{
-		return vector_float4(v1.x >= v2.x ? fffMask.f : 0, v1.y >= v2.y ? fffMask.f : 0, v1.z >= v2.z ? fffMask.f : 0, v1.w >= v2.w ? fffMask.f : 0);
+		return vector_float4(v1.x >= v2.x ? fffMask._f32 : 0, v1.y >= v2.y ? fffMask._f32 : 0, v1.z >= v2.z ? fffMask._f32 : 0, v1.w >= v2.w ? fffMask._f32 : 0);
 	}
 
 	hlslpp_inline vector_float4 _hlslpp_cmplt_ps(const vector_float4& v1, const vector_float4& v2)
 	{
-		return vector_float4(v1.x < v2.x ? fffMask.f : 0, v1.y < v2.y ? fffMask.f : 0, v1.z < v2.z ? fffMask.f : 0, v1.w < v2.w ? fffMask.f : 0);
+		return vector_float4(v1.x < v2.x ? fffMask._f32 : 0, v1.y < v2.y ? fffMask._f32 : 0, v1.z < v2.z ? fffMask._f32 : 0, v1.w < v2.w ? fffMask._f32 : 0);
 	}
 
 	hlslpp_inline vector_float4 _hlslpp_cmple_ps(const vector_float4& v1, const vector_float4& v2)
 	{
-		return vector_float4(v1.x <= v2.x ? fffMask.f : 0, v1.y <= v2.y ? fffMask.f : 0, v1.z <= v2.z ? fffMask.f : 0, v1.w <= v2.w ? fffMask.f : 0);
+		return vector_float4(v1.x <= v2.x ? fffMask._f32 : 0, v1.y <= v2.y ? fffMask._f32 : 0, v1.z <= v2.z ? fffMask._f32 : 0, v1.w <= v2.w ? fffMask._f32 : 0);
 	}
 
 	hlslpp_inline vector_float4 _hlslpp_max_ps(const vector_float4& v1, const vector_float4& v2)
@@ -972,4 +972,49 @@ HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_END
 	hlslpp_inline void _hlslpp_load2_epu32(uint32_t* p, vector_uint4& v) { v.x = p[0]; v.y = p[1]; }
 	hlslpp_inline void _hlslpp_load3_epu32(uint32_t* p, vector_uint4& v) { v.x = p[0]; v.y = p[1]; v.z = p[2]; }
 	hlslpp_inline void _hlslpp_load4_epu32(uint32_t* p, vector_uint4& v) { v.x = p[0]; v.y = p[1]; v.z = p[2]; v.w = p[3]; }
+
+	//-------------
+	// Data Packing
+	//-------------
+
+	hlslpp_inline uint32_t _hlslpp_pack_epu32_rgba8_unorm(vector_float4 v)
+	{
+		vector_float4 v255f = vector_float4(v.x * 255.0f + 0.5f, v.y * 255.0f + 0.5f, v.z * 255.0f + 0.5f, v.w * 255.0f + 0.5f);
+		detail::packed_union packed;
+		packed._u8[0] = (uint8_t)v255f.x;
+		packed._u8[1] = (uint8_t)v255f.y;
+		packed._u8[2] = (uint8_t)v255f.z;
+		packed._u8[3] = (uint8_t)v255f.w;
+		return packed._u32;
+	}
+
+	hlslpp_inline vector_float4 _hlslpp_unpack_rgba8_unorm_epu32(uint32_t p)
+	{
+		detail::packed_union packed(p);
+		return vector_float4(packed._u8[0] / 255.0f, packed._u8[1] / 255.0f, packed._u8[2] / 255.0f, packed._u8[3] / 255.0f);
+	}
+
+	hlslpp_inline uint32_t _hlslpp_pack_epu32_rgba8_snorm(vector_float4 v)
+	{
+		vector_float4 v127f = vector_float4
+		(
+			v.x * 127.0f + (v.x > 0.0f ? 0.5f : -0.5f),
+			v.y * 127.0f + (v.y > 0.0f ? 0.5f : -0.5f),
+			v.z * 127.0f + (v.z > 0.0f ? 0.5f : -0.5f),
+			v.w * 127.0f + (v.w > 0.0f ? 0.5f : -0.5f)
+		);
+
+		detail::packed_union packed;
+		packed._c[0] = (char)v127f.x;
+		packed._c[1] = (char)v127f.y;
+		packed._c[2] = (char)v127f.z;
+		packed._c[3] = (char)v127f.w;
+		return packed._u32;
+	}
+
+	hlslpp_inline vector_float4 _hlslpp_unpack_rgba8_snorm_epu32(uint32_t p)
+	{
+		detail::packed_union packed(p);
+		return vector_float4(packed._c[0] / 127.0f, packed._c[1] / 127.0f, packed._c[2] / 127.0f, packed._c[3] / 127.0f);
+	}
 }

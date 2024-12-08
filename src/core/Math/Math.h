@@ -12,6 +12,32 @@ namespace vg::core
     const float MAX_FLOAT = FLT_MAX;
 
     //--------------------------------------------------------------------------------------
+    inline float asfloat(uint i)
+    {
+        union 
+        {
+            uint u;
+            float f;
+        } converter;
+
+        converter.u = i;
+        return converter.f;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline uint asuint(float f)
+    {
+        union
+        {
+            uint u;
+            float f;
+        } converter;
+
+        converter.f = f;
+        return converter.u;
+    }
+
+    //--------------------------------------------------------------------------------------
     template <typename T> T inline sign(T _value)
     {
         return (_value > T(0)) ? T(+1) : ((_value < T(0)) ? T(-1) : T(0));

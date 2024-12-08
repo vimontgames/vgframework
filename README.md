@@ -1,13 +1,12 @@
 ﻿<img src="doc/img/version.png" alt="VGF boy" title="VGF boy" align="right" height="74" />
 
-# VGFramework 0.42
+# VGFramework 0.43
 Yet another work-in-progress game and graphic engine project.
 
 # Table of contents
 [Build status](#Build-Status)\
-[Licence](#Licence)\
-[Features](#Features)\
 [Getting started](#Getting-started)\
+[Licence](#Licence)\
 [Extern libs](#Extern-libs)\
 [Assets](#Assets)\
 [Misc](#Misc)
@@ -34,106 +33,6 @@ Yet another work-in-progress game and graphic engine project.
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------
 | ![Win64 Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Debug.yml?branch=master&label=)     | ![Win64 Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Release.yml?branch=master&label=)     | ![Win64 Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Final.yml?branch=master&label=)
 
-# License
-
-## Code
-
-The code in `src` folder is licensed under the **MIT License**. Please refer to [LICENCE.md](LICENCE.md) for more details. 
-
-External libraries in the `extern` folder use permissive licenses. Please refer to the [Extern libs](#Extern-libs) section for details about the licenses used.
-
-## Data
-
-Most assets are using permissive licenses, while some are restricted to use only within the context of **VGFramework** development. Please refer to the [Assets](#Assets) section for more details about the licenses used.
-
-# Features
-
-## vg::editor
-Editor GUI is implemented using Dear ImGUI.
-
-Feature<img width=256/>                  | <img width=16/> 
----------------------------------------- | ------      
-EditorGUI integration                    | ✅     
-Support multiple editor viewports        | ✅     
-Basic texture and sound preview          | ✅   
-Cubemap texture preview                  | ✅     
-Texture channels preview                 | ❌      
-
-## vg::core lib
-Core library shared by all projects.
-
-Feature<img width=256/>                  | <img width=16/> 
----------------------------------------- | ------      
-Serialize objects to/from XML & binary   | ✅     
-Autodetect memory leaks                  | ✅     
-Error/Warning/Info runtime log           | ✅     
-CPU & GPU profiler integration           | ✅   
-Cross-DLL shared singletons              | ✅   
-
-## vg::engine
-Engine dynamic library.
-
-Feature<img width=256/>                  | <img width=16/> 
----------------------------------------- | ------    
-Windows 64-bits support                  | ✅  
-Windows 11 on ARM support                | ✅  
-Linux support                            | ❌ 
-Mac support                              | ❌ 
-Amiga support                            | ❌ 
-Cooking and sharing resources            | ✅     
-Reimport modified resources              | ✅     
-GameObject/Components system             | ✅     
-Prefabs & nested prefabs                 | ✅     
-Jobs scheduler using px_shed             | ✅     
-
-## vg::gfx
-Low-level cross-API interface for graphics.
-
-Feature<img width=256/>                  | <img width=16/> 
----------------------------------------- | ------     
-DirectX12 backend                        | ✅     
-Metal backend                            | ❌     
-Vulkan backend                           | ✅     
-PIX performance markers                  | ✅     
-Compressed texture formats support       | ❌     
-Compress meshes at import                | ❌     
-Precompiled PSOs                         | ❌  
-Exclusive fullscreen                     | ❌  
-
-## vg::renderer
-Renderer dynamic library implemented using the cross-API vg::gfx library.
-
-Feature<img width=256/>                  | <img width=16/> 
----------------------------------------- | ------       
-MSAA & FXAA                              | ✅     
-Deferred & forward shading               | ✅     
-Shadow maps and raytraced shadows        | ✅  
-Diffuse & specular environment maps      | ✅ 
-Inline ray tracing pipeline              | ✅     
-Import meshes & animations using UFBX    | ✅     
-Import textures using stb_image          | ✅     
-Drive Dear ImGUI using Components/Canvas | ✅    
-Realtime global illumination             | ❌   
-Configurable post-processing pipeline    | ❌   
-Terrain engin                            | ❌  
-
-## vg::physics
-Physics engine implemented using the Jolt library.
-
-Feature<img width=256/>                  | <img width=16/> 
----------------------------------------- | ------      
-Physics engine integration               | ✅     
-Rigid static & dynamic bodies            | ✅     
-Jolt character controller                | ✅     
-Ragdolls system                          | ❌ 
-
-## vg::sound
-Sound engine implemented using the SoLoud library.
-
-Feature<img width=256/>                  | <img width=16/> 
----------------------------------------- | ------      
-Sound engine integration                 | ✅   
-Spatialized sounds                       | ❌  
 
 # Getting started
 
@@ -254,7 +153,7 @@ The external libraries are included with the sources for convenience. Follow the
 | [Dirent](                  https://github.com/tronkko/dirent                                                          )    | 1.23.2                                                                   
 | [fmt](                     https://github.com/fmtlib/fmt/releases/tag/10.1.1                                          )    | 10.1.1            
 | [FXAA](                    https://github.com/GameTechDev/CMAA2/blob/master/Projects/CMAA2/FXAA/Fxaa3_11.h            )    | 3.11           
-| [hlslpp](                  https://github.com/redorav/hlslpp/releases/tag/3.5.3                                       )    | 3.5.3                              
+| [hlslpp](                  https://github.com/redorav/hlslpp/releases/tag/3.5.3                                       )    | 3.5.3 4dd067b                             
 | [IconFont CppHeaders](     https://github.com/juliettef/IconFontCppHeaders                                            )    |                                                                     
 | [ImGuiFileDialog](         https://github.com/aiekick/ImGuiFileDialog                                                 )    | 0.6.7          
 | [ImGuizmo](                https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83                              )    | 1.83                       
@@ -270,6 +169,19 @@ The external libraries are included with the sources for convenience. Follow the
 | [WinPixEventRuntime](      https://www.nuget.org/packages/WinPixEventRuntime                                          )    | 1.0.231030001                    
 
 ✨ You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0
+
+
+# License
+
+## Code
+
+The code in `src` folder is licensed under the **MIT License**. Please refer to [LICENCE.md](LICENCE.md) for more details. 
+
+External libraries in the `extern` folder use permissive licenses. Please refer to the [Extern libs](#Extern-libs) section for details about the licenses used.
+
+## Data
+
+Most assets are using permissive licenses, while some are restricted to use only within the context of **VGFramework** development. Please refer to the [Assets](#Assets) section for more details about the licenses used.
 
 
 # Assets

@@ -6,7 +6,41 @@ typedef __vector4 n128;
 typedef __vector4 n128i; // Xbox 360 has a __vector4i type but it's not actually backed by hardware
 typedef __vector4 n128u;
 
+#define HLSLPP_XBOX360_XM_PACK_FACTOR                  (float)(1 << 22)
+#define HLSLPP_XBOX360_XM_UNPACK_FACTOR_UNSIGNED       (float)(1 << 23)
+#define HLSLPP_XBOX360_XM_UNPACK_FACTOR_SIGNED         HLSLPP_XBOX360_XM_PACK_FACTOR
+
 #define HLSLPP_XBOX360_PERMWI_MASK(X, Y, Z, W) (((X) << 6) | ((Y) << 4) | ((Z) << 2) | (W))
+
+#define HLSLPP_XBOX360_XM_UNPACK_UNSIGNEDN_OFFSET(BitsX, BitsY, BitsZ, BitsW) \
+	{-HLSLPP_XBOX360_XM_UNPACK_FACTOR_UNSIGNED / (float)((1 << (BitsX)) - 1), \
+	-HLSLPP_XBOX360_XM_UNPACK_FACTOR_UNSIGNED / (float)((1 << (BitsY)) - 1), \
+	-HLSLPP_XBOX360_XM_UNPACK_FACTOR_UNSIGNED / (float)((1 << (BitsZ)) - 1), \
+	-HLSLPP_XBOX360_XM_UNPACK_FACTOR_UNSIGNED / (float)((1 << (BitsW)) - 1)}
+
+#define HLSLPP_XBOX360_XM_UNPACK_UNSIGNEDN_SCALE(BitsX, BitsY, BitsZ, BitsW) \
+	{HLSLPP_XBOX360_XM_UNPACK_FACTOR_UNSIGNED / (float)((1 << (BitsX)) - 1), \
+	HLSLPP_XBOX360_XM_UNPACK_FACTOR_UNSIGNED / (float)((1 << (BitsY)) - 1), \
+	HLSLPP_XBOX360_XM_UNPACK_FACTOR_UNSIGNED / (float)((1 << (BitsZ)) - 1), \
+	HLSLPP_XBOX360_XM_UNPACK_FACTOR_UNSIGNED / (float)((1 << (BitsW)) - 1)}
+
+#define HLSLPP_XBOX360_XM_UNPACK_SIGNEDN_SCALE(BitsX, BitsY, BitsZ, BitsW) \
+	{-HLSLPP_XBOX360_XM_UNPACK_FACTOR_SIGNED / (float)((1 << ((BitsX) - 1)) - 1), \
+	-HLSLPP_XBOX360_XM_UNPACK_FACTOR_SIGNED / (float)((1 << ((BitsY) - 1)) - 1), \
+	-HLSLPP_XBOX360_XM_UNPACK_FACTOR_SIGNED / (float)((1 << ((BitsZ) - 1)) - 1), \
+	-HLSLPP_XBOX360_XM_UNPACK_FACTOR_SIGNED / (float)((1 << ((BitsW) - 1)) - 1)}
+
+#define HLSLPP_XBOX360_XM_PACK_UNSIGNEDN_SCALE(BitsX, BitsY, BitsZ, BitsW) \
+	{-(float)((1 << (BitsX)) - 1) / HLSLPP_XBOX360_XM_PACK_FACTOR, \
+	-(float)((1 << (BitsY)) - 1) / HLSLPP_XBOX360_XM_PACK_FACTOR, \
+	-(float)((1 << (BitsZ)) - 1) / HLSLPP_XBOX360_XM_PACK_FACTOR, \
+	-(float)((1 << (BitsW)) - 1) / HLSLPP_XBOX360_XM_PACK_FACTOR}
+
+#define HLSLPP_XBOX360_XM_PACK_SIGNEDN_SCALE(BitsX, BitsY, BitsZ, BitsW) \
+	{-(float)((1 << ((BitsX) - 1)) - 1) / HLSLPP_XBOX360_XM_PACK_FACTOR, \
+	-(float)((1 << ((BitsY) - 1)) - 1) / HLSLPP_XBOX360_XM_PACK_FACTOR, \
+	-(float)((1 << ((BitsZ) - 1)) - 1) / HLSLPP_XBOX360_XM_PACK_FACTOR, \
+	-(float)((1 << ((BitsW) - 1)) - 1) / HLSLPP_XBOX360_XM_PACK_FACTOR}
 
 #define HLSLPP_XM_PERMUTE_0X 0x00010203
 #define HLSLPP_XM_PERMUTE_0Y 0x04050607
@@ -53,9 +87,43 @@ hlslpp_inline __vector4 __vset1(float x)
 	return v;
 }
 
+hlslpp_inline __vector4 __vset1(int32_t x)
+{
+	__vector4 v;
+	v.vector4_u32[0] = v.vector4_u32[1] = v.vector4_u32[2] = v.vector4_u32[3] = x;
+	return v;
+}
+
+hlslpp_inline __vector4 __vset1(uint32_t x)
+{
+	__vector4 v;
+	v.vector4_u32[0] = v.vector4_u32[1] = v.vector4_u32[2] = v.vector4_u32[3] = x;
+	return v;
+}
+
 hlslpp_inline __vector4 __vset(float x, float y, float z, float w)
 {
 	__vector4 v = { x, y, z, w };
+	return v;
+}
+
+hlslpp_inline __vector4 __vset(int32_t x, int32_t y, int32_t z, int32_t w)
+{
+	__vector4 v;
+	v.vector4_u32[0] = x;
+	v.vector4_u32[1] = y;
+	v.vector4_u32[2] = z;
+	v.vector4_u32[3] = w;
+	return v;
+}
+
+hlslpp_inline __vector4 __vset(uint32_t x, uint32_t y, uint32_t z, uint32_t w)
+{
+	__vector4 v;
+	v.vector4_u32[0] = x;
+	v.vector4_u32[1] = y;
+	v.vector4_u32[2] = z;
+	v.vector4_u32[3] = w;
 	return v;
 }
 
@@ -107,7 +175,7 @@ hlslpp_inline __vector4 __vrcp(__vector4 x)
 
 #define _hlslpp_rcp_ps(x)						__vrcp((x))
 
-#define _hlslpp_neg_ps(x)						__vxor((x), __vset1(negMask.f))
+#define _hlslpp_neg_ps(x)						__vxor((x), __vset1(negMask._f32))
 
 #define _hlslpp_madd_ps(x, y, z)				__vmaddfp((x), (y), (z)) // x * y + z
 #define _hlslpp_msub_ps(x, y, z)				_hlslpp_neg_ps(__vnmsubfp((x), (y), (z))) // Negate because __vnmsubfp does -(x * y - z)
@@ -119,7 +187,7 @@ hlslpp_inline __vector4 __vrcp(__vector4 x)
 #define _hlslpp_sqrt_ps(x)						__vsqrt(x)
 
 #define _hlslpp_cmpeq_ps(x, y)					__vcmpeqfp((x), (y))
-#define _hlslpp_cmpneq_ps(x, y)					__vxor(__vcmpeqfp((x), (y)), __vset1(fffMask.f))
+#define _hlslpp_cmpneq_ps(x, y)					__vxor(__vcmpeqfp((x), (y)), __vset1(fffMask._f32))
 
 #define _hlslpp_cmpgt_ps(x, y)					__vcmpgtfp((x), (y))
 #define _hlslpp_cmpge_ps(x, y)					__vcmpgefp((x), (y))
@@ -262,8 +330,8 @@ hlslpp_inline void _hlslpp_load4x4_ps(float* p, n128& x0, n128& x1, n128& x2, n1
 // Integer
 //--------
 
-#define _hlslpp_set1_epi32(x)					__vcfpsxws(__vset1(float(x)), 0)
-#define _hlslpp_set_epi32(x, y, z, w)			__vcfpsxws(__vset(float(x), float(y), float(z), float(w)), 0)
+#define _hlslpp_set1_epi32(x)					__vcfpsxws(__vset1(uint32_t(x)), 0)
+#define _hlslpp_set_epi32(x, y, z, w)			__vcfpsxws(__vset(uint32_t(x), uint32_t(y), uint32_t(z), uint32_t(w)), 0)
 #define _hlslpp_setzero_epi32()					__vzero()
 
 #define _hlslpp_add_epi32(x, y)					__vaddsws((x), (y))
@@ -288,7 +356,7 @@ hlslpp_inline n128i _hlslpp_abs_epi32(n128i x)
 }
 
 #define _hlslpp_cmpeq_epi32(x, y)				__vcmpequw((x), (y))
-#define _hlslpp_cmpneq_epi32(x, y)				__vxor(__vcmpequw((x), (y)), __vset1(fffMask.f))
+#define _hlslpp_cmpneq_epi32(x, y)				__vxor(__vcmpequw((x), (y)), __vset1(fffMask._f32))
 
 #define _hlslpp_cmpgt_epi32(x, y)				__vcmpgtsw((x), (y))
 #define _hlslpp_cmpge_epi32(x, y)				__vor(__vcmpgtsw((x), (y)), __vcmpequw((x), (y)))
@@ -321,6 +389,9 @@ hlslpp_inline n128i _hlslpp_abs_epi32(n128i x)
 
 #define _hlslpp_cvttps_epi32(x)					__vcfpsxws((x), 0)
 #define _hlslpp_cvtepi32_ps(x)					__vcsxwfp((x), 0)
+
+// Extracts first component of vector to int32_t
+#define _hlslpp_cvtsi128_si32(x)				x.vector4_u32[0]
 
 #define _hlslpp_slli_epi32(x, y)				__vslw((x), __vset1(y))
 #define _hlslpp_srli_epi32(x, y)				__vsrw((x), __vset1(y))
@@ -403,7 +474,7 @@ hlslpp_inline void _hlslpp_load4_epi32(int32_t* p, n128i& x)
 #define _hlslpp_subm_epu32(x, y, z)				__vcfpuxws(__vnmsubfp(__vcuxwfp((z), 0), __vcuxwfp((x), 0), __vcuxwfp((y), 0)))
 
 #define _hlslpp_cmpeq_epu32(x, y)				__vcmpequw((x), (y))
-#define _hlslpp_cmpneq_epu32(x, y)				__vxor(__vcmpequw((x), (y)), __vset1(fffMask.f))
+#define _hlslpp_cmpneq_epu32(x, y)				__vxor(__vcmpequw((x), (y)), __vset1(fffMask._f32))
 
 #define _hlslpp_cmpgt_epu32(x, y)				__vcmpgtuw((x), (y))
 #define _hlslpp_cmpge_epu32(x, y)				__vor(__vcmpgtuw((x), (y)), __vcmpequw((x), (y)))
@@ -514,4 +585,75 @@ hlslpp_inline bool _hlslpp_all4_ps(n128 x)
 	unsigned int ctrl;
 	__vcmpeqfpR(x, __vzero(), &ctrl);
 	return (ctrl & XM_CRMASK_CR6FALSE) == XM_CRMASK_CR6FALSE;
+}
+
+//-------------
+// Data Packing
+//-------------
+
+// Code from XMStoreUByteN4
+inline uint32_t _hlslpp_pack_epu32_rgba8_unorm(__vector4 v)
+{
+	static const __vector4 PackScale = HLSLPP_XBOX360_XM_PACK_UNSIGNEDN_SCALE(8, 8, 8, 8);
+
+	__vector4 packed = __vset1(3.0f); // XM_PACK_OFFSET
+	__vector4 shuf = __vpermwi(v, 0x6C); // 1, 2, 3, 0
+	packed = __vnmsubfp(shuf, PackScale, packed);
+	packed = __vpkd3d(packed, packed, VPACK_D3DCOLOR, VPACK_32, 3);
+
+	uint32_t result;
+	__stvewx(packed, &result, 0);
+	return result;
+}
+
+// Code from XMLoadUByteN4
+inline __vector4 _hlslpp_unpack_rgba8_unorm_epu32(uint32_t p)
+{
+	static const __vector4 UnpackOffset = HLSLPP_XBOX360_XM_UNPACK_UNSIGNEDN_OFFSET(8, 8, 8, 8);
+	static const __vector4 UnpackScale = HLSLPP_XBOX360_XM_UNPACK_UNSIGNEDN_SCALE(8, 8, 8, 8);
+
+	__vector4 result;
+	result = __lvlx(&p, 0);
+	result = __vsldoi(result, result, 1 << 2);
+	result = __vupkd3d(result, VPACK_D3DCOLOR);
+	result = __vmaddfp(UnpackScale, result, UnpackOffset);
+	result = __vpermwi(result, 0xC6); // 3, 0, 1, 2
+
+	return result;
+}
+
+// Code from XMStoreByteN4
+hlslpp_inline uint32_t _hlslpp_pack_epu32_rgba8_snorm(__vector4 v)
+{
+	__vector4 packed;
+	packed = __vmulfp(v, __vset1(127.0f));
+	packed = __vrfin(packed);
+	packed = __vctsxs(packed, 0);
+	packed = __vpkswss(packed, packed);
+	packed = __vpkshss(packed, packed);
+	packed = __vspltw(packed, 0);
+
+	uint32_t result;
+	__stvewx(packed, &result, 0);
+	return result;
+}
+
+// Code from XMLoadByteN4 
+hlslpp_inline __vector4 _hlslpp_unpack_rgba8_snorm_epu32(uint32_t p)
+{
+	static const __vector4 Scale = __vset1(1.0f / (float)((1 << (8 - 1)) - 1));
+
+	__vector4 result;
+	result = __lvlx(&p, 0);
+	result = __vupkhsb(result);
+	result = __vupkhsh(result);
+	result = __vcfsx(result, 0);
+	result = __vmulfp(result, Scale);
+
+	__vector4 minusOne;
+	minusOne = __vspltisw(-1);
+	minusOne = __vcfsx(minusOne, 0);
+	result = __vmaxfp(result, minusOne);
+
+	return result;
 }

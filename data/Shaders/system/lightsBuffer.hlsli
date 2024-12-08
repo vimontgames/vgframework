@@ -58,11 +58,11 @@ struct OmniLightConstants
 	void		setShadowMatrix				(float4x4 _matrix)	{ VG_CHECK_ALIGN(m_shadowMatrix, 32); m_shadowMatrix = _matrix; }
 	float4x4	getShadowMatrix				()					{ return m_shadowMatrix; }
 
-	void		setShadowBias				(float _bias)		{ m_shadow.y = asuint((float1)_bias); }
-	float		getShadowBias				()					{ return asfloat(m_shadow.y); }
+	void		setShadowBias				(float _bias)		{ m_shadow.y = asuint((float)_bias); }
+	float		getShadowBias				()					{ return asfloat((uint)m_shadow.y); }
 
-	void		setShadowInstensity			(float _intensity)  { m_shadow.z = asuint((float1)_intensity); }
-	float		getShadowInstensity			()					{ return asfloat(m_shadow.z); }
+	void		setShadowInstensity			(float _intensity)  { m_shadow.z = asuint((float)_intensity); }
+	float		getShadowInstensity			()					{ return asfloat((uint)m_shadow.z); }
 };
 
 struct DirectionalLightConstants 
@@ -85,9 +85,9 @@ struct DirectionalLightConstants
 	void		setShadowMatrix				(float4x4 _matrix)	{ VG_CHECK_ALIGN(m_shadowMatrix, 32); m_shadowMatrix = _matrix; }
 	float4x4	getShadowMatrix				()					{ return m_shadowMatrix; }
 
-	void		setShadowBias				(float _bias)		{ m_shadow.y = asuint((float1)_bias); }
-	float		getShadowBias				()					{ return asfloat(m_shadow.y); }
+	void		setShadowBias				(float _bias)		{ m_shadow.y = asuint((float)_bias); }
+	float		getShadowBias				()					{ return asfloat((uint)m_shadow.y); }
 
-	void		setShadowInstensity			(float _intensity)  { m_shadow.z = asuint((float1)_intensity); }
-	float		getShadowInstensity			()					{ return asfloat(m_shadow.z); }
+	void		setShadowInstensity			(float _intensity)  { m_shadow.z = asuint((float)_intensity); }
+	float		getShadowInstensity			()					{ return asfloat((uint)m_shadow.z); }
 };
