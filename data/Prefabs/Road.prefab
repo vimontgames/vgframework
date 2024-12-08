@@ -35,7 +35,7 @@
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
-                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                        <Property type="Uint32" name="m_uid" value="2405377343"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Road/Road.fbx"/>
@@ -44,10 +44,18 @@
                                 <Property type="Object" name="m_meshMaterials">
                                     <Object class="MaterialResourceList">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
-                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                        <Property type="Uint32" name="m_uid" value="656739380"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                        <Property type="ResourceVector" name="m_resources"/>
+                                        <Property type="ResourceVector" name="m_resources">
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Asphalt"/>
+                                                <Property type="Uint32" name="m_uid" value="118205760"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Asphalt/Asphalt.mat"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                                 <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
