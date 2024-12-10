@@ -282,7 +282,7 @@ namespace vg::gfx::vulkan
                 u64 uploadBufferSize = mem_reqs.size;
 
                 auto * uploadBuffer = device->getUploadBuffer();
-                u8 * dst = uploadBuffer->map(uploadBufferSize, (uint)mem_reqs.alignment);
+                u8 * dst = uploadBuffer->map((gfx::Texture *)this, uploadBufferSize, (uint)mem_reqs.alignment);
                 if (nullptr != dst)
                 {
                     uint_ptr currentOffset = 0;
@@ -302,7 +302,7 @@ namespace vg::gfx::vulkan
                         }
                     }
                 }
-                uploadBuffer->unmap(static_cast<gfx::Texture*>(this), dst/*, uploadBufferSize*/);
+                uploadBuffer->unmap((gfx::Texture*)this, dst, uploadBufferSize);
             }
 
             if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))

@@ -516,7 +516,7 @@ namespace vg::gfx::dx12
         {
             auto * device = gfx::Device::get();
             auto uploadBuffer = device->getUploadBuffer();
-            result.data = uploadBuffer->map(_size, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+            result.data = uploadBuffer->map(_buffer, _size, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
         }
 
         result.rowPitch = 0;

@@ -30,10 +30,10 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    core::u8 * RingBuffer::map(core::size_t _size, core::size_t _aligment)
+    core::u8 * RingBuffer::map(core::size_t _size, core::size_t _aligment, RingAllocCategory _category)
     {
         m_mutex.lock();
-        core::uint_ptr offset = alloc(_size, _aligment);
+        core::uint_ptr offset = alloc(_size, _aligment, _category);
 
         if (uint_ptr(-1) != offset)
             return getBaseAddress() + offset;
@@ -48,30 +48,56 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint_ptr RingBuffer::alloc(size_t _size, size_t _alignment)
+    core::uint_ptr RingBuffer::alloc(size_t _size, size_t _alignment, RingAllocCategory _category)
     {
         const size_t totalSize = m_buffer->getBufDesc().getSize();
         const size_t alignedSize = (_size + _alignment - 1) & ~(_alignment - 1);
 
-        if (m_offsetCur + alignedSize < totalSize)
+        auto & stats = m_stats[(uint)_category];
+
+        if ((m_totalWriteSizeAligned + alignedSize) < totalSize)
         {
-            uint_ptr offset = m_offsetCur;
-            m_offsetCur += alignedSize;
-            return offset;
-        }
-        else if (alignedSize < m_offsetStart)
-        {
-            m_offsetCur = 0;
-            uint_ptr offset = m_offsetCur;
-            m_offsetCur += alignedSize;
-            return offset;
+            if (m_offsetCur + alignedSize < totalSize)
+            {
+                uint_ptr offset = m_offsetCur;
+                m_offsetCur += alignedSize;
+
+                m_totalWriteSize += _size;
+                m_totalWriteSizeAligned += alignedSize;
+                
+                stats.m_size += _size;
+                stats.m_alignedSize += alignedSize;
+                stats.m_count++;
+
+                return offset;
+            }
+            else if (alignedSize < m_offsetStart)
+            {
+                m_padding = totalSize - m_offsetCur;
+                m_offsetCur = 0;
+
+                m_totalWriteSize += _size;
+                m_totalWriteSizeAligned += alignedSize + m_padding;
+                
+                uint_ptr offset = m_offsetCur;
+                m_offsetCur += alignedSize;
+
+                stats.m_size += _size;
+                stats.m_alignedSize += alignedSize;
+                stats.m_count++;
+
+                return offset;
+            }
         }
 
-        const float size = float(alignedSize) / (1024.0f * 1024.0f);
-        const float available = float(max(totalSize - m_offsetCur, m_offsetStart)) / (1024.0f * 1024.0f);
-        const float total = float(totalSize) / (1024.0f * 1024.0f);
+        const float BytesToMegabytes = 1.0f / (1024.0f * 1024.0f);
 
-        VG_ASSERT(false, "Cannot allocate %.2f MB for upload because ring buffer is too small (available:%.2f/%.2f MB)", size, available, total);
+        const float size = float(alignedSize) * BytesToMegabytes;
+        const float available = float(totalSize - m_totalWriteSizeAligned) * BytesToMegabytes;
+        const float total = float(totalSize) * BytesToMegabytes;
+        const float pad = float(m_padding) * BytesToMegabytes;
+
+        VG_ASSERT(false, "Cannot allocate %.2f MB in upload ring buffer because there is only %.2f/%.2f MB available", size, available, total);
 
         return uint_ptr(-1);
     }

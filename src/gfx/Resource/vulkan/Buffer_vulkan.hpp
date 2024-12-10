@@ -125,13 +125,13 @@ namespace vg::gfx::vulkan
                 u64 uploadBufferSize = _bufDesc.getSize();
 
                 auto * uploadBuffer = device->getUploadBuffer();
-                u8 * dst = uploadBuffer->map(uploadBufferSize, (uint)mem_reqs.alignment);
+                u8 * dst = uploadBuffer->map((gfx::Buffer *)this, uploadBufferSize, (uint)mem_reqs.alignment);
                 if (nullptr != dst)
                 {
                     // Copy to upload buffer
                     memcpy(dst, _initData, _bufDesc.getSize());
                 }
-                uploadBuffer->unmap(static_cast<gfx::Buffer*>(this), dst, uploadBufferSize);
+                uploadBuffer->unmap((gfx::Buffer*)this, dst, uploadBufferSize);
             }
         }
 

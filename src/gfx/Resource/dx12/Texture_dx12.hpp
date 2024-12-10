@@ -534,7 +534,7 @@ namespace vg::gfx::dx12
 
                 // Copy to upload buffer line by line
                 auto * uploadBuffer = device->getUploadBuffer();
-                core::u8 * dst = uploadBuffer->map(d3d12TotalSizeInBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
+                core::u8 * dst = uploadBuffer->map((gfx::Texture *)this, d3d12TotalSizeInBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
                 if (nullptr != dst)
                 {
                     for (uint i = 0; i < subResourceCount; ++i)
@@ -543,7 +543,7 @@ namespace vg::gfx::dx12
                             memcpy(dst + footprint[i].Offset + footprint[i].Footprint.RowPitch * y, (u8 *)subResource[i].pData + subResource[i].RowPitch * y, strides[i]);
                     }
                 }
-                uploadBuffer->unmap(static_cast<gfx::Texture *>(this), dst/*, d3d12TotalSizeInBytes*/);
+                uploadBuffer->unmap((gfx::Texture *)this, dst, d3d12TotalSizeInBytes);
             }
         }
 	}

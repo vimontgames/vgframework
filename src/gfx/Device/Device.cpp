@@ -139,7 +139,7 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         void Device::createUploadBuffer()
         {
-            m_uploadBuffer = new UploadBuffer("Upload", 512 * 1024 * 1024); // must implement upload limit per frame but for now just temporarily increase the upload buffer size 
+            m_uploadBuffer = new UploadBuffer("Upload", 768 * 1024 * 1024); // must implement upload limit per frame but for now just temporarily increase the upload buffer size 
         }
 
         //--------------------------------------------------------------------------------------
@@ -417,6 +417,8 @@ namespace vg::gfx
         VG_PROFILE_CPU("EndFrame");
 
 		super::endFrame();
+
+        m_uploadBuffer->sync();
 
         getShaderManager()->applyUpdate();
 

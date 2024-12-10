@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gfx/RingBuffer/RingBuffer.h"
+#include "gfx/Resource/Resource.h"
 
 namespace vg::gfx
 {
@@ -12,14 +13,17 @@ namespace vg::gfx
         UploadBuffer(const core::string & _name, core::uint _size);
         ~UploadBuffer();
 
-        core::u8 *      map             (core::size_t _size, core::size_t _aligment);
-        void            unmap           (Buffer * _buffer, core::u8 * _dst, size_t _size);
-        void            unmap           (Texture * _texture, core::u8 * _dst);
+        core::u8 *      map             (Buffer * _buffer, core::size_t _size, core::size_t _aligment);
+        core::u8 *      map             (Texture * _buffer, core::size_t _size, core::size_t _aligment);
 
-        void            upload          (gfx::Texture * _dst, core::uint_ptr _from);
+        void            unmap           (Buffer * _buffer, core::u8 * _dst, size_t _size);
+        void            unmap           (Texture * _texture, core::u8 * _dst, size_t _size);
+
+        void            upload          (gfx::Texture * _dst, core::uint_ptr _from, size_t _size);
         void            upload          (gfx::Buffer * _dst, core::uint_ptr _from, size_t _size);
 
         void            flush           (CommandList * _cmdList);
+        void            sync            ();
 
     private:
         struct ResourceUploadInfo

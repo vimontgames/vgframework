@@ -90,12 +90,11 @@ namespace vg::gfx::dx12
             const size_t uploadBufferSize = _bufDesc.getSize();
             auto * uploadBuffer = device->getUploadBuffer();
 
-            core::u8 * dst = uploadBuffer->map(uploadBufferSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+            core::u8 * dst = uploadBuffer->map((gfx::Buffer *)this, uploadBufferSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
             if (nullptr != dst)
-            {
                 memcpy(dst, _initData, uploadBufferSize);
-            }
-            uploadBuffer->unmap(static_cast<gfx::Buffer*>(this), dst, uploadBufferSize);
+
+            uploadBuffer->unmap((gfx::Buffer*)this, dst, uploadBufferSize);
         }
     }
 
