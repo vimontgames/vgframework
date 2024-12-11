@@ -537,7 +537,7 @@ namespace vg::gfx::vulkan
             vkGetBufferMemoryRequirements(device->getVulkanDevice(), _buffer->getResource().getVulkanBuffer(), &mem_reqs);
             VG_ASSERT(_buffer->getBufDesc().getSize() <= mem_reqs.size);
 
-            result.data = uploadBuffer->map(_buffer, mem_reqs.size, (uint)mem_reqs.alignment);
+            result.data = uploadBuffer->map(_buffer, _size, (uint)mem_reqs.alignment);
         }
         
         result.rowPitch = 0;
