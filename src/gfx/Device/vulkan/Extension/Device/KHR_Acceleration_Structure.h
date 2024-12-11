@@ -33,5 +33,6 @@ namespace vg::gfx::vulkan
 		PFN_vkDestroyAccelerationStructureKHR			m_pfnDestroyAccelerationStructureKHR;
 		PFN_vkGetAccelerationStructureDeviceAddressKHR	m_pfnGetAccelerationStructureDeviceAddressKHR;
 		PFN_vkCmdBuildAccelerationStructuresKHR			m_pfnCmdBuildAccelerationStructuresKHR;
+
 	};
 }

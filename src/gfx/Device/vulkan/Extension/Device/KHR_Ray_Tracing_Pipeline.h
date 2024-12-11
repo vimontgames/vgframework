@@ -16,7 +16,9 @@ namespace vg::gfx::vulkan
         {
             if (isEnabled())
             {
-
+                VG_VULKAN_DEVICE_PROC_ADRESS(CreateRayTracingPipelinesKHR);
+                VG_VULKAN_DEVICE_PROC_ADRESS(GetRayTracingShaderGroupHandlesKHR);
+                VG_VULKAN_DEVICE_PROC_ADRESS(CmdTraceRaysKHR);
 
                 return true;
             }
@@ -24,5 +26,8 @@ namespace vg::gfx::vulkan
             return false;
         }
 
+        PFN_vkCreateRayTracingPipelinesKHR              m_pfnCreateRayTracingPipelinesKHR;
+        PFN_vkGetRayTracingShaderGroupHandlesKHR        m_pfnGetRayTracingShaderGroupHandlesKHR;
+        PFN_vkCmdTraceRaysKHR                           m_pfnCmdTraceRaysKHR;
     };
 }

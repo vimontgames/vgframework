@@ -99,12 +99,19 @@ namespace vg::gfx::vulkan
 
                     case RootSignatureDescType::TLAS:
                     {
-                        const auto & tlas = descriptor.getTLAS();
-                        vkLayoutBinding.binding = tlas.m_binding;
-                        vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
-                        vkLayoutBinding.descriptorCount = tlas.m_count;
-                        vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
-                        vkLayoutBinding.pImmutableSamplers = nullptr;
+                        const gfx::DeviceCaps & caps = device->getDeviceCaps();
+
+                        if (caps.rayTracing.supported)
+                        {
+                            const auto & tlas = descriptor.getTLAS();
+                            vkLayoutBinding.binding = tlas.m_binding;
+                            vkLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_KHR;
+                            vkLayoutBinding.descriptorCount = tlas.m_count;
+                            vkLayoutBinding.stageFlags = getVulkanShaderStageFlags(table.getShaderStageFlags());
+                            vkLayoutBinding.pImmutableSamplers = nullptr;
+                        }
+                        else
+                            continue;
                     }
                     break;
                 }
