@@ -389,7 +389,7 @@ namespace vg::renderer
         vertices[7].setPos({ -1.0f, +1.0f, +1.0f });
         vertices[7].setColor(0xFFFFFFFF);
 
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DefaultVertex), (uint)countof(vertices));
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)countof(vertices));
         Buffer * vb = device->createBuffer(vbDesc, "unitBoxVB", vertices);
 
         u16 indices[24] =

@@ -169,7 +169,8 @@ namespace vg::renderer
             {
                 VG_PROFILE_GPU("DepthOfField");
 
-                _cmdList->transitionResource(resolveUAVTex, ResourceState::ShaderResource, ResourceState::UnorderedAccess); 
+                if (resolveUAVTex)
+                    _cmdList->transitionResource(resolveUAVTex, ResourceState::ShaderResource, ResourceState::UnorderedAccess); 
 
                 // first pass: 
                 // - read "src" (either original image or downscaled MSAA) + linear depth
