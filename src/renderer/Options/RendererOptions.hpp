@@ -1,6 +1,7 @@
 #include "RendererOptions.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Object/EnumHelper.h"
+#include "core/string/string.h"
 #include "core/IResource.h"
 #include "gfx/ITexture.h"
 #include "gfx/Device/DeviceCaps.h"
@@ -14,6 +15,27 @@ namespace vg::renderer
     VG_REGISTER_OBJECT_CLASS(RendererOptions, "Renderer Options");
 
     //--------------------------------------------------------------------------------------
+    bool IsLowQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    {
+        const RendererOptions * rendererOptions = VG_SAFE_STATIC_CAST(const RendererOptions, _object);
+        return rendererOptions->getCurrentQualityLevel() != Quality::Low;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool IsMediumQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    {
+        const RendererOptions * rendererOptions = VG_SAFE_STATIC_CAST(const RendererOptions, _object);
+        return rendererOptions->getCurrentQualityLevel() != Quality::Medium;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool IsHighQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    {
+        const RendererOptions * rendererOptions = VG_SAFE_STATIC_CAST(const RendererOptions, _object);
+        return rendererOptions->getCurrentQualityLevel() != Quality::High;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool RendererOptions::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
@@ -23,6 +45,9 @@ namespace vg::renderer
 
         //registerPropertyEnumEx(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug", PropertyFlags::AlphabeticalOrder);
         registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug");
+
+        registerOptionalPropertyEnum(RendererOptions, m_useCustomQualityLevel, Quality, m_customQualityLevel, "Quality");
+        setPropertyDescription(RendererOptions, m_customQualityLevel, "Quality level for rendering. Leave unchecked for automatic quality level based on your GPU.");
 
         registerPropertyGroupBegin(RendererOptions, "Lighting");
         {
@@ -58,8 +83,17 @@ namespace vg::renderer
             registerPropertyEnum(RendererOptions, gfx::HDR, m_HDRmode, "HDR");
             setPropertyDescription(RendererOptions, m_HDRmode, "High-dynamic range display mode");
 
-            registerPropertyEnum(RendererOptions, gfx::MSAA, m_msaa, "MSAA");
-            setPropertyDescription(RendererOptions, m_msaa, "Multisample anti-aliasing");
+            registerPropertyEnum(RendererOptions, gfx::MSAA, m_msaa[Quality::Low], "MSAA");
+            setPropertyDescription(RendererOptions, m_msaa[Quality::Low], "Multisample anti-aliasing (low)");
+            setPropertyHiddenCallback(RendererOptions, m_msaa[Quality::Low], IsLowQualityPropertyHidden);
+
+            registerPropertyEnum(RendererOptions, gfx::MSAA, m_msaa[Quality::Medium], "MSAA");
+            setPropertyDescription(RendererOptions, m_msaa[Quality::Medium], "Multisample anti-aliasing (high)");
+            setPropertyHiddenCallback(RendererOptions, m_msaa[Quality::Medium], IsMediumQualityPropertyHidden);
+
+            registerPropertyEnum(RendererOptions, gfx::MSAA, m_msaa[Quality::High], "MSAA");
+            setPropertyDescription(RendererOptions, m_msaa[Quality::High], "Multisample anti-aliasing (high)");
+            setPropertyHiddenCallback(RendererOptions, m_msaa[Quality::High], IsHighQualityPropertyHidden);
 
             registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
             setPropertyDescription(RendererOptions, m_VSync, "Sync display frequency with monitor refresh rate");
@@ -123,6 +157,36 @@ namespace vg::renderer
         m_renderPassFlags(RenderPassFlags::ZPrepass | RenderPassFlags::Opaque | RenderPassFlags::Transparency)
     {
         SetFile("Renderer.xml");
+
+        for (uint i = 0; i < enumCount<Quality>(); ++i)
+        {
+            m_msaa[i] = gfx::MSAA::None;
+        }
+
+        m_customQualityLevel = autodetectQualityLevel();
+    }
+
+    //--------------------------------------------------------------------------------------
+    Quality RendererOptions::autodetectQualityLevel()
+    {
+        auto * renderer = Renderer::get();
+        const gfx::DeviceCaps & caps = renderer->getDeviceCaps();
+
+        // caps already store memory in MB
+        if (caps.memory.dedicated <= 4 * 1024)
+            m_autodetectedQualityLevel = Quality::Low;
+        else if (caps.memory.dedicated >= 10 * 1024) 
+            m_autodetectedQualityLevel = Quality::High;
+        else
+            m_autodetectedQualityLevel = Quality::Medium;
+
+        return m_autodetectedQualityLevel;
+    }
+
+    //--------------------------------------------------------------------------------------
+    Quality RendererOptions::getCurrentQualityLevel() const
+    {
+        return m_useCustomQualityLevel ? m_customQualityLevel : m_autodetectedQualityLevel;
     }
 
     //--------------------------------------------------------------------------------------
@@ -143,17 +207,25 @@ namespace vg::renderer
         auto * classDesc = GetClassDesc();
         m_hdrProp = classDesc->GetPropertyByName("m_HDRmode");
         m_vsyncProp = classDesc->GetPropertyByName("m_VSync");
-        m_msaaProp = classDesc->GetPropertyByName("m_msaa");
         m_aaPostProcessProp = classDesc->GetPropertyByName("m_aaPostProcess");
 
         // Disable incompatible MSAA modes
-        for (uint i = 0; i < enumCount<gfx::MSAA>(); ++i)
+        for (uint q = 0; q < enumCount<Quality>(); ++q)
         {
-            const auto msaa = enumValue<gfx::MSAA>(i);
-            if (renderer->IsMSAASupported(msaa))
-                m_msaaProp->SetEnumValueFlags((u64)msaa, EnumValueFlags::Disabled, false);
-            else
-                m_msaaProp->SetEnumValueFlags((u64)msaa, EnumValueFlags::Disabled, true);
+            auto & prop = m_msaaProp[q];
+            prop = classDesc->GetPropertyByName(fmt::sprintf("m_msaa[Quality::%s]", asString((Quality)q)).c_str());
+            VG_ASSERT(prop);
+            if (nullptr != prop)
+            {
+                for (uint i = 0; i < enumCount<gfx::MSAA>(); ++i)
+                {
+                    const auto msaa = enumValue<gfx::MSAA>(i);
+                    if (renderer->IsMSAASupported(msaa))
+                        prop->SetEnumValueFlags((u64)msaa, EnumValueFlags::Disabled, false);
+                    else
+                        prop->SetEnumValueFlags((u64)msaa, EnumValueFlags::Disabled, true);
+                }
+            }
         }
 
         // SMAA not yet implemented
@@ -210,7 +282,7 @@ namespace vg::renderer
         {
             applyHDR(&_prop);
         }
-        else if (!strcmp(name, "m_msaa"))
+        else if (strstr(name, "m_msaa"))
         {
             applyMSAA(&_prop);
         }
@@ -223,6 +295,10 @@ namespace vg::renderer
         else if (!strcmp(name, "m_rayTracing"))
         {
             RayTracingManager::get()->enableRayTracing(isRayTracingEnabled());
+        }
+        else if (!strcmp(name, "m_useCustomQualityLevel"))
+        {
+            applyQualityLevel(&_prop);
         }
     }
 
@@ -260,16 +336,17 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     gfx::MSAA RendererOptions::GetMSAA() const
     {
-        return m_msaa;
+        return m_msaa[getCurrentQualityLevel()];
     }
 
     //--------------------------------------------------------------------------------------
     bool RendererOptions::SetMSAA(gfx::MSAA _msaa)
     {
-        if (m_msaa != _msaa)
+        auto & msaa = m_msaa[getCurrentQualityLevel()];
+        if (msaa != _msaa)
         {
-            m_msaa = _msaa;
-            applyMSAA(m_msaaProp);
+            msaa = _msaa;
+            applyMSAA(m_msaaProp[getCurrentQualityLevel()]);
             return true;
         }
         return false;
@@ -340,7 +417,24 @@ namespace vg::renderer
             auto value = *_prop->GetPropertyEnum<gfx::MSAA>(this);
             //Renderer::get()->SetMSAA(value);
         }
-    }    
+    }   
+
+    //--------------------------------------------------------------------------------------
+    void RendererOptions::applyQualityLevel(const core::IProperty * _prop)
+    {
+        m_autodetectedQualityLevel = autodetectQualityLevel();
+
+        if (!m_useCustomQualityLevel)
+        {
+            m_previousQualityLevel = m_customQualityLevel;
+            m_customQualityLevel = m_autodetectedQualityLevel;
+        }
+        else
+        {
+            if ((Quality)-1 != m_previousQualityLevel)
+                m_customQualityLevel = m_previousQualityLevel;
+        }
+    }
 
     //--------------------------------------------------------------------------------------
     bool RendererOptions::anyRayTracingDebugDisplay() const

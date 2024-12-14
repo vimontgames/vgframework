@@ -30,6 +30,12 @@ namespace vg::renderer
         Deferred
     );
 
+    vg_enum(Quality, core::u8,
+        Low     = 0,
+        Medium  = 1,
+        High    = 2
+    );
+
     class RendererOptions final : public IRendererOptions, public core::Singleton<RendererOptions>
     {
     public:
@@ -95,12 +101,22 @@ namespace vg::renderer
         void                    createResources                         ();
         void                    releaseResources                        ();
 
+        Quality                 getCurrentQualityLevel                  () const;
+
     protected:
+        Quality                 autodetectQualityLevel                  ();
+
         void                    applyVSync                              (const core::IProperty * _prop);
         void                    applyHDR                                (const core::IProperty * _prop);
         void                    applyMSAA                               (const core::IProperty * _prop);
+        void                    applyQualityLevel                       (const core::IProperty * _prop);
 
     private:
+        bool                    m_useCustomQualityLevel                 = false;
+        Quality                 m_customQualityLevel                    = Quality::Medium;
+        Quality                 m_autodetectedQualityLevel              = Quality::Medium;
+        Quality                 m_previousQualityLevel                  = (Quality)-1;
+
         core::float4		    m_defaultEnvironmentColor               = core::float4(0.1f, 0.1f, 0.1f, 1.0f);
         bool                    m_useDefaultEnvironmentCubemap          = false;
         core::IResource *       m_defaultEnvironmentCubemap             = nullptr;
@@ -113,7 +129,7 @@ namespace vg::renderer
         bool                    m_postProcess                           = true;
         bool                    m_rayTracing                            = false;
         gfx::HDR                m_HDRmode                               = gfx::HDR::None;
-        gfx::MSAA               m_msaa                                  = gfx::MSAA::None;
+        gfx::MSAA               m_msaa[core::enumCount<Quality>()];
         gfx::AAPostProcess      m_aaPostProcess                         = gfx::AAPostProcess::None;
         gfx::VSync              m_VSync                                 = gfx::VSync::VSync_1;
         LightingMode            m_lightingMode                          = LightingMode::Forward;
@@ -124,7 +140,7 @@ namespace vg::renderer
         const gfx::DeviceCaps * m_deviceCaps                            = nullptr;
         core::IProperty *       m_hdrProp                               = nullptr;
         core::IProperty *       m_vsyncProp                             = nullptr;
-        core::IProperty *       m_msaaProp                              = nullptr;
+        core::IProperty *       m_msaaProp[core::enumCount<Quality>()]  = {};
         core::IProperty *       m_aaPostProcessProp                     = nullptr;
     };
 }

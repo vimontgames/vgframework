@@ -132,8 +132,8 @@ namespace vg
 
             if (!first)
             {
-                strcat(temp, ")\n");
-                VG_WARNING("[UploadBuffer] %s", temp);
+                strcat(temp, ")");
+                VG_INFO("[UploadBuffer] %s", temp);
             }
 
             m_totalWriteSize = 0;
