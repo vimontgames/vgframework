@@ -1322,6 +1322,23 @@ namespace vg::gfx::vulkan
 
 		// Get Memory information and properties
 		vkGetPhysicalDeviceMemoryProperties(m_vkPhysicalDevice, &m_vkPhysicalDeviceMemoryProperties);
+
+		u64 vram = 0;
+		u64 system = 0;
+		u64 shared = 0;
+        for (uint32_t i = 0; i < m_vkPhysicalDeviceMemoryProperties.memoryHeapCount; i++)
+		{
+			const auto size = m_vkPhysicalDeviceMemoryProperties.memoryHeaps[i].size;
+
+            if (m_vkPhysicalDeviceMemoryProperties.memoryHeaps[i].flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT)
+				vram += size;
+			else
+				shared += size;
+        }
+
+		m_caps.memory.dedicated = (uint)(vram>>20);
+		m_caps.memory.system = (uint)(system >> 20);
+		m_caps.memory.shared = (uint)(shared >> 20);
 	}
  
     //--------------------------------------------------------------------------------------

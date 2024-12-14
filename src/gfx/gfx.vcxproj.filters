@@ -682,6 +682,12 @@
     <ClInclude Include="FrameGraph\RenderPassContext.hpp">
       <Filter>FrameGraph</Filter>
     </ClInclude>
+    <ClInclude Include="Device\dx12\DeviceCaps_dx12.hpp">
+      <Filter>Device\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Device\vulkan\DeviceCaps_vulkan.hpp">
+      <Filter>Device\vulkan</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

@@ -46,6 +46,15 @@ namespace vg::gfx
 
         ShaderModel     shaderModel = (ShaderModel)0;
 
+        // Memory
+        struct MemoryCaps
+        {
+            core::uint dedicated = 0;
+            core::uint system = 0;
+            core::uint shared = 0;
+        };
+        MemoryCaps memory;
+
         // RayTracing
         struct RayTracingCaps
         {

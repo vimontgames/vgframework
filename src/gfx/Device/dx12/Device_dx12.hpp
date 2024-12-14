@@ -69,6 +69,9 @@ namespace vg::gfx::dx12
                     m_d3d12device = device;
                     m_dxgiAdapter = adapter;
                     m_caps.d3d12.featureLevel = levels[l];
+                    m_caps.memory.dedicated = (uint)(desc.DedicatedVideoMemory>>20);
+                    m_caps.memory.system = (uint)(desc.DedicatedSystemMemory>>20);
+                    m_caps.memory.shared = (uint)(desc.SharedSystemMemory>>20);
                     wcstombs_s(&s, description, countof(description), desc.Description, wcslen(desc.Description));
                 }
                 else

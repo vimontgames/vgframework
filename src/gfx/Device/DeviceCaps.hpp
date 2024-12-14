@@ -1,3 +1,5 @@
+#include VG_GFXAPI_IMPL(DeviceCaps)
+
 namespace vg::gfx
 {
     //--------------------------------------------------------------------------------------
@@ -7,7 +9,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     bool DeviceCaps::registerProperties(IClassDesc & _desc)
     {
-        //super::registerProperties(_desc);
+        super::registerProperties(_desc);
 
         registerPropertyEx(DeviceCaps, gpuName, "GPU", PropertyFlags::ReadOnly);
         setPropertyDescription(DeviceCaps, gpuName, "GPU model name");
@@ -23,6 +25,15 @@ namespace vg::gfx
 
         registerPropertyEnumBitfieldEx(DeviceCaps, HDRFlags, hdr.modes, "HDR", PropertyFlags::ReadOnly);
         setPropertyDescription(DeviceCaps, hdr.modes, "Supported HDR modes");
+
+		registerPropertyEx(DeviceCaps, memory.dedicated, "Video Memory", PropertyFlags::ReadOnly);
+		setPropertyDescription(DeviceCaps, memory.dedicated, "Dedicated video memory (MB)");
+
+		registerPropertyEx(DeviceCaps, memory.system, "System Memory", PropertyFlags::ReadOnly);
+		setPropertyDescription(DeviceCaps, memory.system, "Dedicated system memory (MB)");
+
+		registerPropertyEx(DeviceCaps, memory.shared, "Shared Memory", PropertyFlags::ReadOnly);
+		setPropertyDescription(DeviceCaps, memory.shared, "Shared system memory (MB)");
 
         return true;
     }

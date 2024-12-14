@@ -224,7 +224,9 @@ namespace vg::renderer
                 _cmdList->setComputeRootConstants(0, (u32 *)&postProcess1, PostProcessConstantsCount);
 
                 _cmdList->dispatch(threadGroupCount);
-                _cmdList->transitionResource(sourceTex, ResourceState::UnorderedAccess, ResourceState::ShaderResource);
+
+                if (MSAA::None != msaa)
+                    _cmdList->transitionResource(sourceTex, ResourceState::UnorderedAccess, ResourceState::ShaderResource);
             }
         }
 
