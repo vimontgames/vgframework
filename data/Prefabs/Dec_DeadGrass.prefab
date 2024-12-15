@@ -17,7 +17,7 @@
                 <Property type="ObjectPtrVector" name="m_components"/>
                 <Property type="ObjectPtrVector" name="m_children">
                     <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Root"/>
+                        <Property type="String" name="m_name" value="DeadGrassDecal"/>
                         <Property type="Uint32" name="m_uid" value="3646130288"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
@@ -35,7 +35,7 @@
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
-                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                        <Property type="Uint32" name="m_uid" value="3722036703"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Decal/Dec_DeadGrass/Dec_DeadGrass.fbx"/>
@@ -44,7 +44,7 @@
                                 <Property type="Object" name="m_meshMaterials">
                                     <Object class="MaterialResourceList">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
-                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                        <Property type="Uint32" name="m_uid" value="3753164057"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">

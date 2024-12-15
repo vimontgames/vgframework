@@ -798,8 +798,6 @@ namespace vg::editor
                         }
 
                         undoRedoManager->BeforeChange(undoRedoGroup);
-
-                        //undoRedoManager->BeforeChange(new UndoRedoPropertyEntry(selectedObjectsWithoutParents[0], selectedObjectsWithoutParents[0]->GetClassDesc()->GetPropertyByName("m_transform")));
                         undoRedoManager->SetCurrentUndoRedoTarget(undoRedoTarget);                       
 
                         if (Kernel::getInput()->IsKeyPressed(Key::LeftShift))
@@ -814,8 +812,6 @@ namespace vg::editor
                         }
                     }
 
-                    //undoRedoManager->
-
                     // apply delta to selected objects without parents
                     if (!skip)
                     {
@@ -823,7 +819,19 @@ namespace vg::editor
                         {
                             IGameObject * go = selectedObjectsWithoutParents[i];
                             float4x4 mat = go->GetGlobalMatrix();
-                            mat = mul(mat, delta);
+                            
+                            if (imGuizmoOperation == ImGuizmo::SCALE)
+                            {
+                                float3 T = mat[3].xyz;
+                                mat[3].xyz = float3(0, 0, 0);
+                                mat = mul(mat, delta);
+                                mat[3].xyz = T;
+                            }
+                            else
+                            {
+                                mat = mul(mat, delta);
+                            }
+
                             go->SetGlobalMatrix(mat);
                         }
 

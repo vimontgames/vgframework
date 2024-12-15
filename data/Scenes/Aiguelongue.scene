@@ -1197,7 +1197,7 @@
                                         <Property type="String" name="m_name" value="Concrete"/>
                                         <Property type="Uint32" name="m_uid" value="2945606717"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -2656,7 +2656,7 @@
                                         <Property type="String" name="m_name" value="Sidewalk"/>
                                         <Property type="Uint32" name="m_uid" value="1367698627"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -2677,7 +2677,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="1101826071"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2699,7 +2699,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_01"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="358775563"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2721,7 +2721,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_02"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="354819732"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2743,7 +2743,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_03"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="3995171818"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2765,7 +2765,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_04"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="3929674396"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2787,7 +2787,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_05"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="2812474898"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2809,7 +2809,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_06"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="2694641256"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2831,7 +2831,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_07"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="1738438712"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2853,7 +2853,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_08"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="933043266"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2875,7 +2875,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_09"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="519412758"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2897,7 +2897,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_10"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="4240427828"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2919,7 +2919,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_11"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="171509881"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2941,7 +2941,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_12"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="1833054943"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2963,7 +2963,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_13"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="3685772452"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -2985,7 +2985,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_14"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="2340132735"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -3007,7 +3007,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_15"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="3570072629"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -3029,7 +3029,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_16"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="3695828293"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
@@ -3051,10 +3051,136 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Sidewalk_3x3_17"/>
-                                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                                        <Property type="Uint32" name="m_uid" value="2882719953"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Sidewalk_3x3.prefab"/>
+                                                    </Object>
+                                                </Property>
+                                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Decals"/>
+                                        <Property type="Uint32" name="m_uid" value="63146555"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                        <Property type="ObjectPtrVector" name="m_children">
+                                            <Object class="GameObject">
+                                                <Property type="String" name="m_name" value="LinesDecal"/>
+                                                <Property type="Uint32" name="m_uid" value="1435973924"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="15" Iy="0" Iz="0" Iw="0" Jx="0" Jy="27" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-2.1855694e-08" Ty="-0.25" Tz="0.064999998" Tw="1"/>
+                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_components">
+                                                    <Object class="MeshComponent">
+                                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                        <Property type="Uint32" name="m_uid" value="2550661570"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                        <Property type="Resource" name="m_meshResource">
+                                                            <Object class="MeshResource">
+                                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                                <Property type="String" name="m_resourcePath" value="data/Meshes/unitplane.fbx"/>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="Object" name="m_meshMaterials">
+                                                            <Object class="MaterialResourceList">
+                                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                                <Property type="ResourceVector" name="m_resources">
+                                                                    <Object class="MaterialResource">
+                                                                        <Property type="String" name="m_name" value="Lines"/>
+                                                                        <Property type="Uint32" name="m_uid" value="2464663595"/>
+                                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Soccer/LinesDecal.mat"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                                    </Object>
+                                                </Property>
+                                                <Property type="ObjectPtrVector" name="m_children"/>
+                                            </Object>
+                                            <Object class="PrefabGameObject">
+                                                <Property type="String" name="m_name" value="Dec_DeadGrass"/>
+                                                <Property type="Uint32" name="m_uid" value="12422894"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="3" Iy="0" Iz="0" Iw="0" Jx="0" Jy="3" Jz="0" Jw="0" Kx="0" Ky="0" Kz="2" Kw="0" Tx="-0.037156362" Ty="10.499999" Tz="0.069768809" Tw="1"/>
+                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_components"/>
+                                                <Property type="ObjectPtrVector" name="m_children"/>
+                                                <Property type="Resource" name="m_prefabResource">
+                                                    <Object class="PrefabResource">
+                                                        <Property type="String" name="m_name" value=""/>
+                                                        <Property type="Uint32" name="m_uid" value="3558105523"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/Dec_DeadGrass.prefab"/>
+                                                    </Object>
+                                                </Property>
+                                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                            </Object>
+                                            <Object class="PrefabGameObject">
+                                                <Property type="String" name="m_name" value="Dec_DeadGrass_01"/>
+                                                <Property type="Uint32" name="m_uid" value="3394479816"/>
+                                                <Property type="Uint32" name="m_originalUID" value="12422894"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1.1924854e-08" Iy="2.9999995" Iz="0" Iw="0" Jx="-2.9999995" Jy="1.1924854e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="2" Kw="0" Tx="-0.03715682" Ty="-9.5205013e-07" Tz="0.069768809" Tw="1"/>
+                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_components"/>
+                                                <Property type="ObjectPtrVector" name="m_children"/>
+                                                <Property type="Resource" name="m_prefabResource">
+                                                    <Object class="PrefabResource">
+                                                        <Property type="String" name="m_name" value="Dec_DeadGrass_01"/>
+                                                        <Property type="Uint32" name="m_uid" value="3735927893"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="3558105523"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/Dec_DeadGrass.prefab"/>
+                                                    </Object>
+                                                </Property>
+                                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                            </Object>
+                                            <Object class="PrefabGameObject">
+                                                <Property type="String" name="m_name" value="Dec_DeadGrass_02"/>
+                                                <Property type="Uint32" name="m_uid" value="135091955"/>
+                                                <Property type="Uint32" name="m_originalUID" value="12422894"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="6.9296527" Iy="1.1446667" Iz="0" Iw="0" Jx="-2.868772" Jy="2.7730393" Jz="0" Jw="0" Kx="0" Ky="0" Kz="2" Kw="0" Tx="-0.037159208" Ty="-10.999999" Tz="0.069768809" Tw="1"/>
+                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_components"/>
+                                                <Property type="ObjectPtrVector" name="m_children"/>
+                                                <Property type="Resource" name="m_prefabResource">
+                                                    <Object class="PrefabResource">
+                                                        <Property type="String" name="m_name" value="Dec_DeadGrass_02"/>
+                                                        <Property type="Uint32" name="m_uid" value="607709615"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="3558105523"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/Dec_DeadGrass.prefab"/>
                                                     </Object>
                                                 </Property>
                                                 <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
@@ -3174,30 +3300,7 @@
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
-                                <Property type="ObjectPtrVector" name="m_children">
-                                    <Object class="PrefabGameObject">
-                                        <Property type="String" name="m_name" value="Dec_DeadGrass"/>
-                                        <Property type="Uint32" name="m_uid" value="12422894"/>
-                                        <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened|Prefab"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="3" Iy="0" Iz="0" Iw="0" Jx="0" Jy="3" Jz="0" Jw="0" Kx="0" Ky="0" Kz="2" Kw="0" Tx="-0.03715634" Ty="10.999999" Tz="0.069768809" Tw="1"/>
-                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                        <Property type="ObjectPtrVector" name="m_components"/>
-                                        <Property type="ObjectPtrVector" name="m_children"/>
-                                        <Property type="Resource" name="m_prefabResource">
-                                            <Object class="PrefabResource">
-                                                <Property type="String" name="m_name" value=""/>
-                                                <Property type="Uint32" name="m_uid" value="3558105523"/>
-                                                <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Dec_DeadGrass.prefab"/>
-                                            </Object>
-                                        </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
-                                    </Object>
-                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
                             </Object>
                         </Property>
                     </Object>
@@ -3666,7 +3769,7 @@
                         <Property type="String" name="m_name" value="Ennemies"/>
                         <Property type="Uint32" name="m_uid" value="1638339078"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
