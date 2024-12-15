@@ -40,6 +40,7 @@ namespace vg::editor
         void                            displayGameObject           (core::IGameObject* root, core::uint* _count);
        
     protected:
+        ImGuiTextFilter                 m_filter;
         ImGuiSceneMenu                  m_sceneMenu;
         ImGuiGameObjectSceneEditorMenu  m_gameObjectMenu;
         core::IGameObject *             m_dragAndDropNodeTarget = nullptr;

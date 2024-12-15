@@ -75,8 +75,28 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    bool isPassingFilterRecur(const ImGuiTextFilter & _filter, const IGameObject * _gameObject)
+    {
+        if (_filter.PassFilter(_gameObject->GetName().c_str()))
+            return true;
+
+        const auto & children = _gameObject->GetChildren();
+        for (uint i = 0; i < children.size(); ++i)
+        {
+            if (isPassingFilterRecur(_filter, children[i]))
+                return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ImGuiSceneList::displayGameObject(IGameObject* _gameObject, uint * _count)
     {
+        // Skip object if not matching filter and not of his children is passing filter
+        if (!isPassingFilterRecur(m_filter, _gameObject))
+            return;
+
         const auto children = _gameObject->GetChildren();
         const auto adapter = Editor::get()->getRenderer()->GetImGuiAdapter();
 
@@ -425,6 +445,8 @@ namespace vg::editor
 
             if (ImGui::TooltipButton(fmt::sprintf("%s %s", editor::style::icon::Load, typeInfo.loadLabel).c_str(), true, true, typeInfo.loadLabel.c_str(), style::button::SizeLarge))
                 loadScene = true;
+
+            m_filter.Draw("Filter");
 
             ImGui::Separator();
 
