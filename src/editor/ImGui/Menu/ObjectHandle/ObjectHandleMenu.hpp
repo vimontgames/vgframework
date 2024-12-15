@@ -51,6 +51,7 @@ namespace vg::editor
 
             bool edited = false;
 
+
             m_filter.Draw("Filter");
            
             if (ImGui::InputScalar("UID", ImGuiDataType_U32, &editTemp, nullptr, nullptr, "%08X", ImGuiInputTextFlags_EnterReturnsTrue))

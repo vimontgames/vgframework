@@ -21,6 +21,7 @@ namespace vg::engine
         super(_name, _parent)
     {
         m_image.SetParent(this);
+        m_image.RegisterUID();
     }
 
     //--------------------------------------------------------------------------------------

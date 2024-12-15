@@ -73,7 +73,13 @@ namespace vg::engine
                 break;
         }
 
-        return nullptr != m_lightDesc;
+        if (nullptr != m_lightDesc)
+        {
+            m_lightDesc->RegisterUID();
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------

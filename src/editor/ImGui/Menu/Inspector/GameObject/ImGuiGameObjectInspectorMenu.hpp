@@ -45,6 +45,9 @@ namespace vg::editor
             {
                 if (ImGui::BeginPopupModal(fmt::sprintf("%s %s", style::icon::Plus, m_popup).c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
                 {
+                    m_addComponentFilter.Draw("Filter");
+                    ImGui::SameLine();
+
                     // List the available components
                     auto factory = Kernel::getFactory();
                     auto componentClassDescs = factory->GetClassDescriptors(ClassDescFlags::Component);
@@ -182,31 +185,72 @@ namespace vg::editor
 
                     bool doCreate = false;
 
-                    if (ImGui::BeginListBox("###Component", ImVec2(512, 4+core::clamp((uint)componentClassDescs.size(), (uint)4, (uint)16) * ImGui::GetTextLineHeightWithSpacing())))
+                    ImGui::BeginChild("TableContainer", ImVec2(0, 512), true);
                     {
-                        for (uint i = 0; i < m_categories.size(); ++i)
+                        if (ImGui::BeginTable("Components", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Sortable | ImGuiTableFlags_ScrollY))
                         {
-                            auto & cat = m_categories[i];
+                            ImGui::TableSetupColumn("Name");
+                            ImGui::TableSetupColumn("Category");
+                            ImGui::TableSetupScrollFreeze(0, 1);
+                            ImGui::TableHeadersRow();
 
-                            if (!cat.show)
-                                continue;
-
-                            auto & descriptors = cat.classes;
-                            for (auto j = 0; j < descriptors.size(); ++j)
+                            // Sort our data if sort specs have been changed!
+                            if (ImGuiTableSortSpecs * sort_specs = ImGui::TableGetSortSpecs())
                             {
-                                auto * classDesc = descriptors[j];
-                                auto * className = classDesc->GetClassName();
+                                if (sort_specs->Specs->ColumnIndex == 0)
+                                {
+                                    sort(componentClassDescs.begin(), componentClassDescs.end(), [](IClassDesc * a, IClassDesc * b)
+                                    {
+                                        return (string)a->GetClassDisplayName() < (string)b->GetClassDisplayName();
+                                    }
+                                    );
+                                }
+                                else if (sort_specs->Specs->ColumnIndex == 1)
+                                {
+                                    sort(componentClassDescs.begin(), componentClassDescs.end(), [](IClassDesc * a, IClassDesc * b)
+                                    {
+                                        return (string)a->GetCategory() < (string)b->GetCategory();
+                                    }
+                                    );
+                                }
+                            }
 
-                                bool isSelected = m_selectedClass == classDesc;
+                            for (int n = 0; n < componentClassDescs.size(); n++)
+                            {
+                                const auto & classDesc = componentClassDescs[n];
 
+                                if (!m_addComponentFilter.PassFilter(classDesc->GetClassDisplayName()) && !m_addComponentFilter.PassFilter(classDesc->GetCategory()))
+                                    continue;
+
+                                bool hideCategory = false;
+                                for (int c = 0; c < m_categories.size(); ++c)
+                                {
+                                    if ((string)classDesc->GetCategory() == m_categories[c].name)
+                                    {
+                                        if (!m_categories[c].show)
+                                        {
+                                            hideCategory = true;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (hideCategory)
+                                    continue;
+
+                                ImGui::TableNextRow();
+                                ImGui::TableNextColumn();
+                                const bool isSelected = m_selectedClass == classDesc;
+                                ImGui::SetNextItemSelectionUserData(n);
                                 string displayName = fmt::sprintf("%s %s", classDesc->GetIcon(), classDesc->GetClassDisplayName());
-
-                                if (ImGui::Selectable(displayName.c_str(), isSelected, ImGuiSelectableFlags_AllowDoubleClick))
+                                
+                                if (ImGui::Selectable(displayName.c_str(), isSelected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowOverlap | ImGuiSelectableFlags_DontClosePopups))
                                 {
                                     m_selectedClass = classDesc;
-                                    if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
-                                        doCreate = true;
-                                }
+                                }    
+
+                                if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+                                    doCreate = true;
 
                                 if (isSelected)
                                     ImGui::SetItemDefaultFocus();
@@ -217,21 +261,16 @@ namespace vg::editor
                                     string desc = description && strlen(description) > 0 ? description : "<no description available>";
                                     ImGui::SetTooltip(desc.c_str());
                                 }
+
+                                ImGui::TableNextColumn();
+                                ImGui::Text(classDesc->GetCategory());
                             }
 
-                            //ImGui::Spacing();
-                        }     
-                        //ImGui::EndCombo();
-                        ImGui::EndListBox();
+                            ImGui::EndTable();
+                        }
                     }
-
-                    if (m_selectedClass)
-                    {
-                        const char * description = m_selectedClass->GetDescription();
-                        string desc = description && strlen(description) > 0 ? description : "<no description available>";
-                        string tooltip = fmt::sprintf("%s\n%s\n", m_selectedClass->GetCategory(), desc.c_str());
-                        ImGui::Text(tooltip.c_str());
-                    }
+                    ImGui::EndChild();
+                    ImGui::Spacing();
 
                     ImGui::BeginDisabled(m_selectedClass == nullptr);
                     {

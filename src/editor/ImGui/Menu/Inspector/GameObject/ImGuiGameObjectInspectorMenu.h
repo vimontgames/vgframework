@@ -24,6 +24,7 @@ namespace vg::editor
         void addComponentPopup() { m_addComponent = true; }
 
     private:
+        ImGuiTextFilter             m_addComponentFilter;
         const core::IClassDesc *    m_selectedClass = nullptr;
         core::vector<CategoryInfo>  m_categories;
         bool                        m_addComponent = false;

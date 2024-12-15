@@ -61,6 +61,7 @@ namespace vg::engine
         m_viewportScale(float2(1, 1))
     {
         m_cameraSettings = (renderer::ICameraSettings*)Kernel::getFactory()->CreateObject("CameraSettings");
+        m_cameraSettings->RegisterUID();
         m_cameraSettings->SetParent(this);
     }
 
