@@ -420,12 +420,6 @@
     <ClInclude Include="RenderPass\Update\GPUDebug\GPUDebugUpdatePass.hpp">
       <Filter>Pass\Update\GPUDebug</Filter>
     </ClInclude>
-    <ClInclude Include="View\UIRenderer.h">
-      <Filter>View</Filter>
-    </ClInclude>
-    <ClInclude Include="View\UIRenderer.hpp">
-      <Filter>View</Filter>
-    </ClInclude>
     <ClInclude Include="Viewport\Viewport.h">
       <Filter>Viewport</Filter>
     </ClInclude>

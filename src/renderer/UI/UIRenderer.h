@@ -27,6 +27,13 @@ namespace vg::renderer
     private:
         IViewport *                 m_viewport = nullptr;
         IView *                     m_view = nullptr;
-        core::vector<UIElement>     m_uiElements;
+
+        struct UIElementInfo
+        {
+            UIElement element;
+            core::uint index;
+        };
+
+        core::vector<UIElementInfo> m_uiElements;
     };
 }

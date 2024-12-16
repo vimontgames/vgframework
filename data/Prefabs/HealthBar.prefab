@@ -1,163 +1,163 @@
 <Root>
     <Object class="PrefabScene">
-        <Property type="String" name="m_name" flags="NotVisible" value="HealthBar"/>
-        <Property type="Uint32" name="m_uid" flags="" value="4218047207"/>
-        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-        <Property type="ObjectPtr" name="m_root" flags="NotVisible">
+        <Property type="String" name="m_name" value="HealthBar"/>
+        <Property type="Uint32" name="m_uid" value="4218047207"/>
+        <Property type="Uint32" name="m_originalUID" value="0"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="ObjectPtr" name="m_root">
             <Object class="GameObject">
                 <Property type="String" name="m_name" value="Root"/>
-                <Property type="Uint32" name="m_uid" flags="" value="2936680143"/>
-                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
-                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
+                <Property type="Uint32" name="m_uid" value="2936680143"/>
+                <Property type="Uint32" name="m_originalUID" value="0"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="EnumFlagsU64" name="m_tags" value=""/>
                 <Property type="ObjectPtrVector" name="m_components"/>
-                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
+                <Property type="ObjectPtrVector" name="m_children">
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="HealthBar"/>
-                        <Property type="Uint32" name="m_uid" flags="" value="2197187471"/>
-                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
-                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                        <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                        <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
+                        <Property type="Uint32" name="m_uid" value="2197187471"/>
+                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="HealthBarBehaviour">
-                                <Property type="String" name="m_name" flags="NotVisible" value="New HealthBarBehaviour"/>
-                                <Property type="Uint32" name="m_uid" flags="" value="3833046945"/>
-                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Float" name="m_width" flags="ReadOnly" value="0"/>
-                                <Property type="Float" name="m_currentHP" flags="ReadOnly" value="0"/>
-                                <Property type="Float" name="m_maxHP" flags="ReadOnly" value="0"/>
+                                <Property type="String" name="m_name" value="New HealthBarBehaviour"/>
+                                <Property type="Uint32" name="m_uid" value="3833046945"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float" name="m_width" value="0"/>
+                                <Property type="Float" name="m_currentHP" value="0"/>
+                                <Property type="Float" name="m_maxHP" value="0"/>
                             </Object>
                             <Object class="UICanvasComponent">
-                                <Property type="String" name="m_name" flags="NotVisible" value="New UICanvasComponent"/>
-                                <Property type="Uint32" name="m_uid" flags="" value="52539760"/>
-                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                <Property type="String" name="m_name" value="New UICanvasComponent"/>
+                                <Property type="Uint32" name="m_uid" value="52539760"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_horizontal" value="Center"/>
                                 <Property type="EnumU8" name="m_vertical" value="Center"/>
-                                <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value=""/>
+                                <Property type="EnumFlagsU32" name="m_UIFlags" value=""/>
                                 <Property type="Uint2" name="m_size" x="100" y="12"/>
-                                <Property type="Bool" name="m_useCenter" flags="NotVisible" value="false"/>
-                                <Property type="Float2" name="m_center" flags="" x="0.5" y="0.5"/>
-                                <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
-                                <Property type="Float3" name="m_offset" flags="Optional" x="0" y="0" z="2"/>
-                                <Property type="Bool" name="m_useColor" flags="NotVisible" value="false"/>
-                                <Property type="Float4" name="m_color" flags="" x="1" y="1" z="1" w="1"/>
-                                <Property type="EnumU8" name="m_canvas.m_viewportTarget" flags="ReadOnly" value="Game"/>
-                                <Property type="Uint8" name="m_canvas.m_viewportIndex" flags="ReadOnly" value="0"/>
-                                <Property type="Bool" name="m_canvas.m_useViewMask" flags="NotVisible" value="true"/>
-                                <Property type="EnumFlagsU32" name="m_canvas.m_viewMask" flags="" value="View_0|View_1|View_2|View_3|View_4|View_5|View_6|View_7|View_8|View_9|View_10|View_11|View_12|View_13|View_14|View_15"/>
+                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                <Property type="Bool" name="m_useOffset" value="true"/>
+                                <Property type="Float3" name="m_offset" x="0" y="0" z="2"/>
+                                <Property type="Bool" name="m_useColor" value="false"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="EnumU8" name="m_canvas.m_viewportTarget" value="Game"/>
+                                <Property type="Uint8" name="m_canvas.m_viewportIndex" value="0"/>
+                                <Property type="Bool" name="m_canvas.m_useViewMask" value="true"/>
+                                <Property type="EnumFlagsU32" name="m_canvas.m_viewMask" value="View_0|View_1|View_2|View_3|View_4|View_5|View_6|View_7|View_8|View_9|View_10|View_11|View_12|View_13|View_14|View_15"/>
                                 <Property type="Uint2" name="m_canvas.m_resolution" x="1280" y="720"/>
                                 <Property type="EnumU8" name="m_canvas.m_canvasType" value="CanvasType_3D"/>
                             </Object>
                         </Property>
-                        <Property type="ObjectPtrVector" name="m_children" flags="NotVisible">
+                        <Property type="ObjectPtrVector" name="m_children">
                             <Object class="GameObject">
-                                <Property type="String" name="m_name" value="Backround"/>
-                                <Property type="Uint32" name="m_uid" flags="" value="2439692122"/>
-                                <Property type="Uint32" name="m_originalUID" flags="" value="3226805358"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                                <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
+                                <Property type="String" name="m_name" value="Background"/>
+                                <Property type="Uint32" name="m_uid" value="2439692122"/>
+                                <Property type="Uint32" name="m_originalUID" value="3226805358"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="UIImageComponent">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New UIImageComponent"/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="2171310607"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                        <Property type="EnumU8" name="m_horizontal" value="Center"/>
+                                        <Property type="String" name="m_name" value="New UIImageComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2171310607"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                         <Property type="EnumU8" name="m_vertical" value="Center"/>
-                                        <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value=""/>
-                                        <Property type="Uint2" name="m_size" x="100" y="12"/>
-                                        <Property type="Bool" name="m_useCenter" flags="NotVisible" value="false"/>
-                                        <Property type="Float2" name="m_center" flags="" x="0.5" y="0.5"/>
-                                        <Property type="Bool" name="m_useOffset" flags="NotVisible" value="false"/>
-                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="0" z="0"/>
-                                        <Property type="Bool" name="m_useColor" flags="NotVisible" value="true"/>
-                                        <Property type="Float4" name="m_color" flags="" x="1" y="0" z="0" w="0.78431374"/>
-                                        <Property type="Resource" name="m_image" flags="Resource">
+                                        <Property type="EnumFlagsU32" name="m_UIFlags" value=""/>
+                                        <Property type="Uint2" name="m_size" x="0" y="12"/>
+                                        <Property type="Bool" name="m_useCenter" value="false"/>
+                                        <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                        <Property type="Bool" name="m_useOffset" value="false"/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                        <Property type="Bool" name="m_useColor" value="true"/>
+                                        <Property type="Float4" name="m_color" x="1" y="0" z="0" w="0.78431374"/>
+                                        <Property type="Resource" name="m_image">
                                             <Object class="TextureResource">
-                                                <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="719438103"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/White.tga"/>
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="719438103"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Textures/White.tga"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                <Property type="ObjectPtrVector" name="m_children"/>
                             </Object>
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="Life"/>
-                                <Property type="Uint32" name="m_uid" flags="" value="876803178"/>
-                                <Property type="Uint32" name="m_originalUID" flags="" value="3226805358"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
-                                <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
-                                <Property type="Float4" name="m_color" flags="Color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" flags="Flatten" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                                <Property type="EnumFlagsU64" name="m_tags" flags="Bitfield" value=""/>
+                                <Property type="Uint32" name="m_uid" value="876803178"/>
+                                <Property type="Uint32" name="m_originalUID" value="3226805358"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="UIImageComponent">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New UIImageComponent"/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="2611496819"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="String" name="m_name" value="New UIImageComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2611496819"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="EnumU8" name="m_horizontal" value="Left"/>
                                         <Property type="EnumU8" name="m_vertical" value="Center"/>
-                                        <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_UIFlags" value=""/>
                                         <Property type="Uint2" name="m_size" x="100" y="12"/>
-                                        <Property type="Bool" name="m_useCenter" flags="NotVisible" value="false"/>
-                                        <Property type="Float2" name="m_center" flags="" x="1" y="0.5"/>
-                                        <Property type="Bool" name="m_useOffset" flags="NotVisible" value="false"/>
-                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="0" z="0"/>
-                                        <Property type="Bool" name="m_useColor" flags="NotVisible" value="true"/>
-                                        <Property type="Float4" name="m_color" flags="" x="0" y="1" z="0" w="0.78431374"/>
-                                        <Property type="Resource" name="m_image" flags="Resource">
+                                        <Property type="Bool" name="m_useCenter" value="false"/>
+                                        <Property type="Float2" name="m_center" x="1" y="0.5"/>
+                                        <Property type="Bool" name="m_useOffset" value="false"/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                        <Property type="Bool" name="m_useColor" value="true"/>
+                                        <Property type="Float4" name="m_color" x="0" y="1" z="0" w="0.78431374"/>
+                                        <Property type="Resource" name="m_image">
                                             <Object class="TextureResource">
-                                                <Property type="String" name="m_name" flags="NotVisible" value=""/>
-                                                <Property type="Uint32" name="m_uid" flags="" value="4274968656"/>
-                                                <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value=""/>
-                                                <Property type="String" name="m_resourcePath" flags="NotVisible" value="data/Textures/White.tga"/>
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="4274968656"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Textures/White.tga"/>
                                             </Object>
                                         </Property>
                                     </Object>
                                     <Object class="UITextComponent">
-                                        <Property type="String" name="m_name" flags="NotVisible" value="New UITextComponent"/>
-                                        <Property type="Uint32" name="m_uid" flags="" value="1958517721"/>
-                                        <Property type="Uint32" name="m_originalUID" flags="" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" flags="" value="Opened"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" flags="Bitfield" value="Enabled"/>
+                                        <Property type="String" name="m_name" value="New UITextComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="1958517721"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="EnumU8" name="m_horizontal" value="Center"/>
                                         <Property type="EnumU8" name="m_vertical" value="Center"/>
-                                        <Property type="EnumFlagsU32" name="m_UIFlags" flags="Bitfield" value="AutoResize"/>
+                                        <Property type="EnumFlagsU32" name="m_UIFlags" value="AutoResize"/>
                                         <Property type="Uint2" name="m_size" x="16" y="16"/>
-                                        <Property type="Bool" name="m_useCenter" flags="NotVisible" value="false"/>
-                                        <Property type="Float2" name="m_center" flags="" x="0.5" y="0.5"/>
-                                        <Property type="Bool" name="m_useOffset" flags="NotVisible" value="true"/>
-                                        <Property type="Float3" name="m_offset" flags="Optional" x="0" y="-1" z="0"/>
-                                        <Property type="Bool" name="m_useColor" flags="NotVisible" value="true"/>
-                                        <Property type="Float4" name="m_color" flags="" x="0" y="0" z="0" w="0.66666669"/>
+                                        <Property type="Bool" name="m_useCenter" value="false"/>
+                                        <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                        <Property type="Bool" name="m_useOffset" value="true"/>
+                                        <Property type="Float3" name="m_offset" x="0" y="-1" z="0"/>
+                                        <Property type="Bool" name="m_useColor" value="true"/>
+                                        <Property type="Float4" name="m_color" x="0" y="0" z="0" w="0.66666669"/>
                                         <Property type="EnumU8" name="m_font" value="Rowndies"/>
                                         <Property type="EnumU8" name="m_style" value="Regular"/>
                                         <Property type="String" name="m_text" value="100 HP"/>
                                     </Object>
                                 </Property>
-                                <Property type="ObjectPtrVector" name="m_children" flags="NotVisible"/>
+                                <Property type="ObjectPtrVector" name="m_children"/>
                             </Object>
                         </Property>
                     </Object>

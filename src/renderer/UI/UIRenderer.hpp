@@ -30,7 +30,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void UIRenderer::Add(const UIElement & _desc)
     {
-        m_uiElements.push_back(_desc);
+        m_uiElements.push_back({ _desc, (uint)m_uiElements.size() });
     }
 
     //--------------------------------------------------------------------------------------
@@ -95,12 +95,6 @@ namespace vg::renderer
     {
         VG_PROFILE_CPU("RenderUI");
 
-        sort(m_uiElements.begin(), m_uiElements.end(), [](UIElement & a, UIElement & b)
-        {
-            return a.m_item.m_matrix[3].z > b.m_item.m_matrix[3].z;
-        }
-        );
-
         auto * imGuiAdapter = Renderer::get()->GetImGuiAdapter();
         const RendererOptions * options = RendererOptions::get();
         const bool debugUI = options->isDebugUIEnabled();
@@ -112,20 +106,61 @@ namespace vg::renderer
         float2 screenSizeInPixels = ImVec2ToFloat2(ImGui::GetWindowContentRegionMax() - ImGui::GetWindowContentRegionMin());
         float2 viewSizeInPixels = screenSizeInPixels * scale;
         float2 windowOffset = ImVec2ToFloat2(ImGui::GetCursorPos()) + screenSizeInPixels * offset;
-
-        ImVec2 clipOffset = ImGui::GetWindowPos() + ImVec2(windowOffset.x, windowOffset.y);
-        ImVec2 viewClipSize = ImVec2((float)size.x+1.0f, (float)size.y+ 1.0f);
-
-        ImGui::PushClipRect(clipOffset, clipOffset + viewClipSize, true);
+        float2 windowPos = float2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+        float2 clipOffset = windowPos.xy + windowOffset.xy;
+        float2 viewClipSize = float2((float)size.x + 1.0f, (float)size.y + 1.0f);
+        float2 viewRectMin = clipOffset;
+        float2 viewRectMax = clipOffset + viewClipSize;
+        ImGui::PushClipRect(float2ToImVec2(viewRectMin), float2ToImVec2(viewRectMax), true);
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0, 0, 0, 0));
 
         float4x4 viewProj = float4x4::identity();
+        float4x4 view = float4x4::identity();
         if (m_view)
-            viewProj = mul(m_view->GetViewInvMatrix(), m_view->GetProjectionMatrix());
+        {
+            view = m_view->GetViewInvMatrix();
+            viewProj = mul(view, m_view->GetProjectionMatrix());
+        }
+
+        // TODO: sort at insertion?
+        sort(m_uiElements.begin(), m_uiElements.end(), [view](UIElementInfo & a, UIElementInfo & b)
+        {
+            const bool a3D = (a.element.m_canvas && a.element.m_canvas->m_canvasType == CanvasType::CanvasType_3D);
+            const bool b3D = (b.element.m_canvas && b.element.m_canvas->m_canvasType == CanvasType::CanvasType_3D);
+        
+            if (a3D && b3D)
+            {
+                if (a.element.m_canvas == b.element.m_canvas)
+                    return a.index < b.index;
+                else
+                {
+                    // Transform to view space for Z-sort
+                    const float4 viewPosA = mul(view, a.element.m_canvas->m_matrix[3]);
+                    const float4 viewPosB = mul(view, b.element.m_canvas->m_matrix[3]);
+
+                    return (bool)(viewPosA.z > viewPosB.z);
+                }
+            }
+            else if (!a3D && b3D)
+            {
+                return false;
+            }
+            else if (a3D && !b3D)
+            {
+                return true;
+            }
+            else
+            {
+                return a.index < b.index;
+            }
+        }
+        );
+
+        ImDrawList * drawList = ImGui::GetWindowDrawList();
   
         for (uint i = 0; i < m_uiElements.size(); ++i)
         {
-            const UIElement & elem = m_uiElements[i];
+            const UIElement & elem = m_uiElements[i].element;
 
             UICanvas canvas;
             float4 worldPos = (float4)0.0f;
@@ -220,10 +255,7 @@ namespace vg::renderer
             }
 
             float2 elemSize = elem.m_item.m_size;
-            float2 elemPos = canvasOffset;
-
-            //if (canvas.m_canvasType != CanvasType::CanvasType_3D)
-                elemPos += elem.m_item.m_offset.xy;
+            float2 elemPos = canvasOffset + elem.m_item.m_offset.xy;
 
             switch (elem.m_type)
             {
@@ -293,17 +325,25 @@ namespace vg::renderer
                 elemPos + center
             };
 
+            
             switch (elem.m_type)
             {
                 case UIElementType::Image:
                 {
                     if (elem.m_texture)
                     {
-                        ImGui::SetCursorPos(float2ToImVec2(elemPos.xy + windowOffset));
                         ImTextureID texID = imGuiAdapter->GetTextureID(elem.m_texture);
 
+                        #if 0
+                        ImGui::SetCursorPos(float2ToImVec2(elemPos.xy + windowOffset));
                         ImGui::Image(texID, float2ToImVec2(elemSize), ImVec2(0, 0), ImVec2(1, 1), float4ToImVec4(elem.m_item.m_color));
-
+                        #else  
+                        drawList->AddImage(texID, float2ToImVec2(windowOffset + windowPos + elemPos.xy), float2ToImVec2(windowOffset + windowPos + elemPos.xy + elemSize),ImVec2(0, 0), ImVec2(1, 1), packRGBA8(elem.m_item.m_color));
+                        
+                        if (elem.m_canvas && elem.m_canvas->m_canvasType == CanvasType::CanvasType_3D)
+                            drawList->AddDrawCmd(); 
+                        #endif
+                        
                         // Picking on Viewport not supported yet
                         if (m_view && m_view->IsToolmode())
                         {
@@ -323,9 +363,16 @@ namespace vg::renderer
 
                 case UIElementType::Text:
                 {
+                    #if 0
                     ImGui::SetCursorPos(float2ToImVec2(elemPos.xy + windowOffset));
                     ImGui::TextColored(float4ToImVec4(elem.m_item.m_color), elem.m_text.c_str());
-                    
+                    #else
+                    drawList->AddText(float2ToImVec2(windowOffset + windowPos + elemPos.xy), packRGBA8(elem.m_item.m_color), elem.m_text.c_str());
+
+                    if (elem.m_canvas && elem.m_canvas->m_canvasType == CanvasType::CanvasType_3D)
+                        drawList->AddDrawCmd();
+                    #endif
+
                     // Picking on Viewport not supported yet
                     if (m_view && m_view->IsToolmode())
                     {
@@ -355,7 +402,7 @@ namespace vg::renderer
                         break;
                 }
             }
-        }
+        }       
 
         ImGui::SetCursorPos(float2ToImVec2(windowOffset));
         ImGui::PopStyleColor();

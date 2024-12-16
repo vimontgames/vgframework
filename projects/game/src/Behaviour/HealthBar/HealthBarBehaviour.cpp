@@ -71,6 +71,12 @@ void HealthBarBehaviour::setHP(float _currentHP)
 {
     m_currentHP = _currentHP;
 
+    if (auto * backgroundGO = GetGameObject()->GetChildGameObject("Background"))
+    {
+        if (auto * backgroundImage = backgroundGO->GetComponentT<IUIImageComponent>())
+            backgroundImage->SetSize(uint2((1.0f-((float)m_currentHP / (float)m_maxHP)) * (float)m_width, backgroundImage->GetSize().y)); 
+    }
+
     if (auto * lifeGO = GetGameObject()->GetChildGameObject("Life"))
     {
         if (auto * lifeImage = lifeGO->GetComponentT<IUIImageComponent>())
@@ -78,11 +84,5 @@ void HealthBarBehaviour::setHP(float _currentHP)
 
         if (auto * lifeText = lifeGO->GetComponentT<IUITextComponent>())
             lifeText->SetText(vg::core::fmt::sprintf("%.0f HP", m_currentHP));
-    }
-
-    if (auto * lifeGO = GetGameObject()->GetChildGameObject("Background"))
-    {
-        if (auto * backgroundImage = lifeGO->GetComponentT<IUIImageComponent>())
-            backgroundImage->SetSize(uint2(((float)m_currentHP / (float)m_maxHP) * (float)m_width, backgroundImage->GetSize().y));
     }
 }
