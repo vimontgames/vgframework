@@ -2,29 +2,36 @@
 
 class MetaEnumStringView
 {
+    #define maxNameLength 64U
+
 public:
     constexpr MetaEnumStringView() :
         m_data{},
         m_length(0)
     {
-
+        m_czData[0] = '\0';
     }
 
-    constexpr MetaEnumStringView(const char * _buffer, size_t _lenght) :
+    constexpr MetaEnumStringView(const char * _buffer, size_t _length) :
         m_data(_buffer),
-        m_length(_lenght)
+        m_length(_length)
     {
+        unsigned int index = 0;
+        while (',' != *_buffer && '\0' != *_buffer && ' ' != *_buffer && '=' != *_buffer && (index + 1) < maxNameLength)
+            m_czData[index++] = *_buffer++;
 
+        m_czData[index] = '\0';
     }
 
     constexpr const char * data() const { return m_data; }
     constexpr size_t size() const { return m_length; }
-
+    constexpr const char * zData() const { return (const char*)m_czData; }
     constexpr char operator[](std::size_t _pos) const { return m_data[_pos]; }
 
 private:
     const char * m_data;
     size_t m_length = 0;
+    char m_czData[maxNameLength] = {};
 };
 using StringView = MetaEnumStringView;
 
@@ -289,7 +296,7 @@ template <typename Type> constexpr const char * getEnumCString(Type e)
     {
         const auto & member = members[i];
         if (member.value == e)
-            return member.name.data();
+            return member.name.zData();
     }
     return nullptr;
 }
