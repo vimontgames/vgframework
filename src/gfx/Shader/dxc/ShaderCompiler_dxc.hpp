@@ -233,6 +233,8 @@ namespace vg::gfx::dxc
     //--------------------------------------------------------------------------------------
     gfx::Shader * ShaderCompiler::compile(API _api, const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
     {
+        VG_PROFILE_CPU(asString((ShaderStageFlags)(1 << (uint)_stage)).c_str());
+
         #if VG_SHADER_SOURCE_IN_MEMORY
         const string * pSource = ShaderManager::get()->getShaderSource(_path);
         if (pSource)
