@@ -8,16 +8,16 @@
 
 #if VG_ENABLE_PROFILER
 
-#define VG_PROFILE_INIT()                   Kernel::getProfiler()->init()
-#define VG_PROFILE_DEINIT()                 Kernel::getProfiler()->deinit()
-#define VG_PROFILE_START()                  Kernel::getProfiler()->start()
-#define VG_PROFILE_STOP()                   Kernel::getProfiler()->stop()
-#define VG_PROFILE_CAPTURE_IN_PROGRESS()    Kernel::getProfiler()->isCaptureInProgress()
+#define VG_PROFILE_INIT()                   vg::core::Kernel::getProfiler()->init()
+#define VG_PROFILE_DEINIT()                 vg::core::Kernel::getProfiler()->deinit()
+#define VG_PROFILE_START()                  vg::core::Kernel::getProfiler()->start()
+#define VG_PROFILE_STOP()                   vg::core::Kernel::getProfiler()->stop()
+#define VG_PROFILE_CAPTURE_IN_PROGRESS()    vg::core::Kernel::getProfiler()->isCaptureInProgress()
 #define VG_PROFILE_TRIGGER()                if (Kernel::getProfiler()->isCaptureInProgress()) VG_PROFILE_STOP(); else VG_PROFILE_START();
-#define VG_PROFILE_CPU_EVENT_START(name)    if (auto * profiler = Kernel::getProfiler(false)) { profiler->startCpuEvent(name); }
-#define VG_PROFILE_CPU_EVENT_STOP()         if (auto * profiler = Kernel::getProfiler(false)) { profiler->stopCpuEvent(); }
+#define VG_PROFILE_CPU_EVENT_START(name)    if (auto * profiler = vg::core::Kernel::getProfiler(false)) { profiler->startCpuEvent(name); }
+#define VG_PROFILE_CPU_EVENT_STOP()         if (auto * profiler = vg::core::Kernel::getProfiler(false)) { profiler->stopCpuEvent(); }
 #define VG_PROFILE_CPU(name)                vg::core::ScopedCPUEvent scopedCPUEvent##__COUNTER__(name)
-#define VG_PROFILE_REGISTER_THREAD(name)    Kernel::registerThread(name)
+#define VG_PROFILE_REGISTER_THREAD(name)    vg::core::Kernel::registerThread(name)
 
 #else
 

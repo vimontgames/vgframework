@@ -35,5 +35,7 @@ namespace vg::gfx
 
         GraphicPipelineState(const GraphicPipelineStateKey & _key);
         ~GraphicPipelineState();
+
+        static GraphicPipelineState * createGraphicPipelineState(const GraphicPipelineStateKey & _key);
     };
 }

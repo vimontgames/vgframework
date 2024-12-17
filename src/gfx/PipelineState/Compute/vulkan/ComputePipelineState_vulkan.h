@@ -19,6 +19,7 @@ namespace vg::gfx
 
             VkPipeline & getVulkanComputePipeline() { return m_vkComputePipeline; }
 
+        protected:
             static gfx::ComputePipelineState * createComputePipelineState(const ComputePipelineStateKey & _computeKey);
 
         private:

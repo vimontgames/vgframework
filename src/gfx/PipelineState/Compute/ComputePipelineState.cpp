@@ -47,4 +47,11 @@ namespace vg::gfx
     {
 
     }
+
+    //--------------------------------------------------------------------------------------
+    ComputePipelineState * ComputePipelineState::createComputePipelineState(const ComputePipelineStateKey & _computeKey)
+    {
+        VG_PROFILE_CPU("CreateComputePSO");
+        return super::createComputePipelineState(_computeKey);
+    }
 }

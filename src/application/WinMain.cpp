@@ -251,6 +251,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     core::Singletons singletons;
     g_engine->Init(engineParams, singletons);
 
+	// Can only use profiler *AFTER* engine init
+	int profileStartFrameCount = 0;
+	auto * profiler = g_engine->GetRenderer()->GetProfiler();
+	if (cmdLine.getInt("profileStart", profileStartFrameCount))
+		profiler->start();
+
     Application * app = new Application(*g_engine);
 
     // Start in play mode?
@@ -279,7 +285,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
         g_engine->LoadWorld(world);
 
 	while (!processSystemMessage() && !g_engine->IsQuitting())
+	{
 		app->Update();
+	
+		if (profileStartFrameCount >= 0)
+		{
+			if (!profileStartFrameCount--)
+				profiler->stop();
+		}
+	}
 
     VG_SAFE_DELETE(app);
     g_engine->Deinit();

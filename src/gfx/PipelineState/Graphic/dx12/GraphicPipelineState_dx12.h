@@ -19,10 +19,12 @@ namespace vg::gfx
 
             VG_INLINE ID3D12PipelineState * getd3d12GraphicPipelineState() const;
 
-            static gfx::GraphicPipelineState * createGraphicPipelineState(const GraphicPipelineStateKey & _key);
             VG_INLINE static D3D12_PRIMITIVE_TOPOLOGY_TYPE getd3d12PrimitiveTopologyType(PrimitiveType _primitiveType);
 
             static bool getd3d3d12Bytecode(HLSLDesc * _desc, ShaderStage _stage, ShaderKey::EntryPoint _entryPoint, ShaderKey::Flags _flags, D3D12_SHADER_BYTECODE * _d3d12ShaderBytecode);
+
+        protected:
+            static gfx::GraphicPipelineState * createGraphicPipelineState(const GraphicPipelineStateKey & _key);
 
         private:
             VG_INLINE void setd3d12GraphicPipelineState(ID3D12PipelineState * _d3d12GraphicPipelineState);

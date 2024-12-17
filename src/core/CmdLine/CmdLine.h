@@ -12,6 +12,7 @@ namespace vg::core
 
 		bool getString(const string & _key, string & _value) const;
 		bool getBool(const string & _key, bool & _value) const;
+		bool getInt(const string & _key, int & _value) const;
 
 	private:
         struct CaseInsensitive

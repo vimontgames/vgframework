@@ -31,6 +31,8 @@ namespace vg::gfx
     public:
         const char * GetClassName() const final { return "ComputePipelineState"; }
 
+        static ComputePipelineState * createComputePipelineState(const ComputePipelineStateKey & _computeKey);
+
         ComputePipelineState(const ComputePipelineStateKey & _computeKey);
         ~ComputePipelineState();
     };

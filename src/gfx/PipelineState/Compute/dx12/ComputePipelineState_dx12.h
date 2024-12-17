@@ -18,6 +18,7 @@ namespace vg::gfx
 
             VG_INLINE ID3D12PipelineState * getd3d12ComputePipelineState() const;
 
+        protected:
             static gfx::ComputePipelineState * createComputePipelineState(const ComputePipelineStateKey & _computeKey);
 
         private:

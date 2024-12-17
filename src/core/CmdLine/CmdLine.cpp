@@ -90,4 +90,22 @@ namespace vg::core
 
 		return false;
 	}
+
+    //--------------------------------------------------------------------------------------
+    bool CmdLine::getInt(const string & _key, int & _value) const
+	{
+		string s;
+		if (getString(_key, s))
+		{
+            errno = 0; 
+			const char * begin = s.c_str();
+			const char * end = s.c_str() + s.length();
+			_value = std::strtol(begin, (char**)&end, 10);
+
+			if (errno != ERANGE)
+				return true;			
+		}
+
+		return false;
+	}
 }

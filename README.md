@@ -13,25 +13,12 @@ Yet another work-in-progress game and graphic engine project.
 
 # Build status
 
-#### Arm64EC DX12
-| Debug                                                                                                                                                       | Release                                                                                                                                                         | Final 												
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------
-| ![ARM64EC DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Debug.yml?branch=master&label=)     | ![ARM64EC DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Release.yml?branch=master&label=)     | ![ARM64EC DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Final.yml?branch=master&label=)
-
-#### Arm64EC Vulkan
-| Debug                                                                                                                                                       | Release                                                                                                                                                         | Final 												
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------
-| ![ARM64EC Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Debug.yml?branch=master&label=) | ![ARM64EC Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Release.yml?branch=master&label=) | ![ARM64EC Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Final.yml?branch=master&label=)
-
-#### Win64 DX12
-| Debug                                                                                                                                                       | Release                                                                                                                                                         | Final 												
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------
-| ![Win64 DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Debug.yml?branch=master&label=)         | ![Win64 DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Release.yml?branch=master&label=)         | ![Win64 DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Final.yml?branch=master&label=)
-
-#### Win64 Vulkan
-| Debug                                                                                                                                                       | Release                                                                                                                                                         | Final 												
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------
-| ![Win64 Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Debug.yml?branch=master&label=)     | ![Win64 Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Release.yml?branch=master&label=)     | ![Win64 Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Final.yml?branch=master&label=)
+|         |        | Debug                                                                                                                                                       | Release                                                                                                                                                         | Final 												
+| ------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------
+| Arm64 | DX12   | ![ARM64EC DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Debug.yml?branch=master&label=)     | ![ARM64EC DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Release.yml?branch=master&label=)     | ![ARM64EC DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Final.yml?branch=master&label=)
+| Arm64 | Vulkan | ![ARM64EC Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Debug.yml?branch=master&label=) | ![ARM64EC Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Release.yml?branch=master&label=) | ![ARM64EC Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Final.yml?branch=master&label=)
+| Win64   | DX12   | ![Win64 DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Debug.yml?branch=master&label=)         | ![Win64 DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Release.yml?branch=master&label=)         | ![Win64 DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Final.yml?branch=master&label=)
+| Win64   | Vulkan | ![Win64 Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Debug.yml?branch=master&label=)     | ![Win64 Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Release.yml?branch=master&label=)     | ![Win64 Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Final.yml?branch=master&label=)
 
 
 # Getting started
@@ -66,14 +53,15 @@ First run might take a few seconds because files are cooking.
  
 ## Command-line args
 
-| Name<img width=100/>| Description<img width=360/>													
-| ------------------- | ------------------------------------------------------------- 
-| `attachDebugger`    | MessageBox at application start to let attach a debugger
-| `breakOnErrors`     | Break on graphics API errors (with **debugDevice**)
-| `breakOnWarnings`   | Break on graphics API warnings (with **debugDevice**)
-| `debugDevice`	      | Enable the graphics API debug layer ✨
-| `fullscreen`	      | Start application with game view maximized instead of editor	
-| `play`		      | Start application with play mode running	
+| Name   <img width=100/>| Description<img width=360/>													
+| ---------------------- | ------------------------------------------------------------- 
+| `attachDebugger=true`  | MessageBox at application start to let attach a debugger
+| `breakOnErrors=true`   | Break on graphics API errors (with **debugDevice**)
+| `breakOnWarnings=true` | Break on graphics API warnings (with **debugDevice**)
+| `debugDevice=true`	 | Enable the graphics API debug layer ✨
+| `fullscreen=true`	     | Start application with game view maximized instead of editor	
+| `play=true`		     | Start application with play mode running	
+| `profileStart=N`       | Profile the 1st N frames
                       
 ✨ **debugDevice** is enabled by default on **debug** builds
 
