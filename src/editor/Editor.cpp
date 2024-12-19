@@ -44,6 +44,8 @@
 #include "editor/ImGui/Window/View/PrefabView/ImGuiPrefabView.h"
 #include "editor/ImGui/Window/Statistics/ImGuiStatistics.h"
 #include "editor/ImGui/Window/UndoRedo/ImGuiUndoRedo.h"
+#include "editor/ImGui/ObjectHandler/ImGuiObjectHandler.h"
+#include "editor/ImGui/PropertyHandler/ImGuiPropertyHandler.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
 
 using namespace vg::core;
@@ -101,6 +103,10 @@ namespace vg::editor
         for (auto i = 0; i < m_imGuiMenus.size(); ++i)
             VG_SAFE_RELEASE(m_imGuiMenus[i]);
         m_imGuiMenus.clear();
+
+        // ImGui handlers must be destroyed before ImGui shutdown in case they perform ImGui allocs (e.g. ImGuiTextFilter)
+        ImGuiObjectHandler::Destroy();
+        ImGuiPropertyHandler::Destroy();
 	}
 
     //--------------------------------------------------------------------------------------
