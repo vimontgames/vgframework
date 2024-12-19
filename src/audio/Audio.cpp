@@ -63,13 +63,15 @@ namespace vg::audio
 	//--------------------------------------------------------------------------------------
 	void Audio::Init(const AudioCreationParams & _params, Singletons & _singletons)
 	{
+        // Set our singletons used by this DLL
+        Kernel::setSingletons(_singletons);
+
+        VG_PROFILE_CPU("Audio");
+
         Timer::init();
 
         // Copy init params
         m_audioCreationParams = _params;
-
-        // Set our singletons used by this DLL
-        Kernel::setSingletons(_singletons);
 
         // Register all audio classes 
         RegisterClasses();

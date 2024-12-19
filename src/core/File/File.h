@@ -22,6 +22,11 @@ namespace vg::core::io
     bool writeFile(const string & _file, const string & _in, bool _mustExist = false);
     bool writeFile(const string & _file, const Buffer & _in, bool _mustExist = false);
 
+    bool appendFile(const string & _file, const string & _in, bool _mustExist = false);
+    bool appendFile(const string & _file, const Buffer & _in, bool _mustExist = false);
+
+    bool deleteFile(const string & _file, bool _mustExist = false);
+
     bool exists(const string & _file);
     bool createPath(const string & _dir);
     bool createFolder(const string & _dir);

@@ -109,6 +109,11 @@ namespace vg::physics
 	//--------------------------------------------------------------------------------------
 	void Physics::Init(const PhysicsCreationParams & _params, const Callbacks & _callbacks, Singletons & _singletons)
 	{
+        // Set our singletons used by this DLL
+        Kernel::setSingletons(_singletons);
+
+        VG_PROFILE_CPU("Physics");
+
         Timer::init();
 
         // Copy init params
@@ -116,9 +121,6 @@ namespace vg::physics
 
         // Store callbacks
         m_callbacks = _callbacks;
-
-        // Set our singletons used by this DLL
-        Kernel::setSingletons(_singletons);
 
         // Register our classes declared in this DLL
         RegisterClasses();

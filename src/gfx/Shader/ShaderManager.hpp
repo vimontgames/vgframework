@@ -11,9 +11,12 @@ using namespace vg::core;
 namespace vg::gfx
 {
     //--------------------------------------------------------------------------------------
-    ShaderManager::ShaderManager(const core::string & _shaderRootPath) :
-        m_shaderRootPath(_shaderRootPath)
+    ShaderManager::ShaderManager(const core::string & _shaderRootPath, gfx::API _api) :
+        m_shaderRootPath(_shaderRootPath),
+        m_api(_api)
     {
+        VG_PROFILE_CPU("ShaderManager");
+
         // Path must end with '\' or '/'
         if (m_shaderRootPath.back() != '/' && m_shaderRootPath.back() != '\\')
             m_shaderRootPath += "/";
@@ -22,6 +25,13 @@ namespace vg::gfx
         m_shaderRootFolders.push_back("system");
         m_shaderRootFolders.push_back("background");
         m_shaderRootFolders.push_back("extern");
+
+        // TODO: command line to select level
+        #ifdef VG_DEBUG
+        m_optimizationLevel = ShaderOptimizationLevel::Unoptimized;
+        #else
+        m_optimizationLevel = ShaderOptimizationLevel::Optimized;
+        #endif
     
         m_shaderCompiler = new ShaderCompiler();
     }
@@ -52,6 +62,20 @@ namespace vg::gfx
     void ShaderManager::registerHLSL(const HLSLDesc & _hlslDesc)
     {
         m_shaderFileDescriptors.push_back(_hlslDesc);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ShaderManager::loadFromCache()
+    {
+        VG_PROFILE_CPU("ShaderLoad");
+
+        const auto api = ShaderManager::get()->getAPI();
+
+        for (uint i = 0; i < m_shaderFileDescriptors.size(); ++i)
+        {
+            HLSLDesc & desc = m_shaderFileDescriptors[i];
+            desc.loadFromCache();
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -208,15 +232,16 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * ShaderManager::compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const vector<pair<string, uint>> & _macros)
+    Blob ShaderManager::compile(API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const vector<pair<string, uint>> & _macros)
     {
         RETRY:
         const auto startLoad = Timer::getTick();
 
         string warningAndErrors;
-        Shader * shader = m_shaderCompiler->compile(_api, m_shaderRootPath + _file, _entryPoint, _stage, _macros, warningAndErrors);
+        Blob bytecode = m_shaderCompiler->compile(_api, m_shaderRootPath + _file, _entryPoint, _stage, _macros, warningAndErrors);
+        const bool compiled = 0 != bytecode.size();
 
-        if (shader)
+        if (compiled)
             m_compiledCount++;
         else
             m_errorCount++;
@@ -230,7 +255,7 @@ namespace vg::gfx
         {
             warningAndErrors = fixFileLine(_file, warningAndErrors);
 
-            if (!shader)
+            if (!compiled)
                 VG_ERROR("[Shader] Error compiling %s Shader \"%s\" \n%s", asString(_stage).c_str(), _entryPoint.c_str(), warningAndErrors.c_str());
             else
             {
@@ -239,7 +264,7 @@ namespace vg::gfx
             }
         }
 
-        if (shader) 
+        if (compiled)
         {
             string msg = fmt::sprintf("[Shader] Compiled %s Shader \"%s\"", asString(_stage).c_str(), _entryPoint.c_str());
 
@@ -254,7 +279,7 @@ namespace vg::gfx
                 }
                 msg += ")";
             }
-            VG_INFO("%s in %.2f ms", msg.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+            VG_WARNING("%s in %.2f ms", msg.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
         }
         else
         {
@@ -275,7 +300,7 @@ namespace vg::gfx
             }
         }
 
-        return shader;
+        return bytecode;
     }
 
     //--------------------------------------------------------------------------------------
@@ -361,9 +386,9 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void ShaderManager::update(bool _forceUpdate)
+    void ShaderManager::update(bool _firstUpdate)
     {
-        if (_forceUpdate)
+        if (_firstUpdate)
             applyUpdate(true);
         else
             m_updateNeeded = true;
@@ -557,10 +582,12 @@ namespace vg::gfx
     #endif
 
     //--------------------------------------------------------------------------------------
-    void ShaderManager::applyUpdate(bool _forceUpdate)
+    void ShaderManager::applyUpdate(bool _firstUpdate)
     {
-        if (m_updateNeeded || _forceUpdate)
+        if (m_updateNeeded || _firstUpdate)
         {
+            VG_PROFILE_CPU("ShaderUpdate");
+
             #if VG_SHADER_SOURCE_IN_MEMORY
             saveShaderSourceInMemory();
             #endif
@@ -590,18 +617,19 @@ namespace vg::gfx
 
                 if (newCRC != oldCRC)
                 {
+                    desc.setCRC(newCRC);
+
                     if (0 != oldCRC)
                         VG_WARNING("[Shader] File \"%s\" updated (old CRC = 0x%016llu, new CRC = 0x%016llu)", file.c_str(), oldCRC, newCRC);
 
                     // delete the shaders
-                    desc.reset();
+                    if (!_firstUpdate)
+                        desc.reset();
                     
                     // delete the pso (TODO: L1 cache in cmdlist and L2 global cache using mutex)
                     device->resetShaders(ShaderKey::File(i));
 
-                    ++updated;
-
-                    desc.setCRC(newCRC);
+                    ++updated;                    
                 }
                 else
                 {
@@ -619,5 +647,17 @@ namespace vg::gfx
         }
 
         m_updateNeeded = false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    ShaderOptimizationLevel ShaderManager::getShaderOptimizationLevel() const
+    {
+        return m_optimizationLevel;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::API ShaderManager::getAPI() const
+    {
+        return m_api;
     }
 }

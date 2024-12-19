@@ -179,66 +179,77 @@ namespace vg::renderer
 	{
         Timer::init();
 
-        // Copy Profiler singleton created by the renderer
+        // Profiler singleton
         _singletons.profiler = Kernel::getProfiler();
 
         // Get other Singletons for Renderer
         Kernel::setSingletons(_singletons);
 
-        // Create device
-		m_device.init(_params.device);
+        // Start profiling immediately if requested
+        if (_params.profileStart)
+            GetProfiler()->start();
 
-        // Picking
-        m_picking = new PickingManager();
+        VG_PROFILE_CPU_EVENT_START("Init");
 
-        // UI
-        m_imgui = new ImGuiAdapter(_params.device.window, m_device);
-        g_winHandle = _params.device.window;
-
-        registerShaders();
-
-        // Create Debug draw singleton
-        new DebugDraw();
-
-        // Create UIManager singleton
-        new UIManager();
-
-        // Create passes not bound to a View
-        m_gpuDebugUpdatePass = new GPUDebugUpdatePass();
-        m_instanceDataUpdatePass = new InstanceDataUpdatePass();
-        m_materialDataUpdatePass = new MaterialDataUpdatePass();
-        m_computeSkinningPass = new ComputeSkinningPass();
-        m_computeSpecularBRDFPass = new ComputeSpecularBRDFPass();
-        m_computeIBLCubemapsPass = new ComputeIBLCubemapsPass();
-        m_BLASUpdatePass = new BLASUpdatePass();
-        m_imguiPass = new ImGuiPass();
-        m_hdrOutputPass = new HDROutputPass();
-
-        RegisterClasses();
-
-        RayTracingManager * rtManager = new RayTracingManager();
-
-        RendererOptions * options = new RendererOptions("Renderer Options", this);
-
-        m_materialManager = new MaterialManager();
-
-        initDefaultTextures();
-        initDefaultMaterials();        
-
-        // Shared job output (must be created before views because it's needed to init View culling jobs
-        m_sharedCullingJobOutput = new SharedCullingJobOutput();
-
-        // Create "Game" viewport for "Game" views
-        auto gameViewportParams = CreateViewportParams(ViewportTarget::Game, GetBackbufferSize());
-        if (auto gameViewport = (Viewport *)CreateViewport(gameViewportParams, "Game"))
+        // We can profile from now
         {
-            AddViewport(gameViewport);
-            VG_SAFE_RELEASE(gameViewport);
+            VG_PROFILE_CPU("Renderer");
+
+            // Create device
+            m_device.init(_params.device);
+
+            // Picking
+            m_picking = new PickingManager();
+
+            // UI
+            m_imgui = new ImGuiAdapter(_params.device.window, m_device);
+            g_winHandle = _params.device.window;
+
+            registerShaders();
+
+            // Create Debug draw singleton
+            new DebugDraw();
+
+            // Create UIManager singleton
+            new UIManager();
+
+            // Create passes not bound to a View
+            m_gpuDebugUpdatePass = new GPUDebugUpdatePass();
+            m_instanceDataUpdatePass = new InstanceDataUpdatePass();
+            m_materialDataUpdatePass = new MaterialDataUpdatePass();
+            m_computeSkinningPass = new ComputeSkinningPass();
+            m_computeSpecularBRDFPass = new ComputeSpecularBRDFPass();
+            m_computeIBLCubemapsPass = new ComputeIBLCubemapsPass();
+            m_BLASUpdatePass = new BLASUpdatePass();
+            m_imguiPass = new ImGuiPass();
+            m_hdrOutputPass = new HDROutputPass();
+
+            RegisterClasses();
+
+            RayTracingManager * rtManager = new RayTracingManager();
+
+            RendererOptions * options = new RendererOptions("Renderer Options", this);
+
+            m_materialManager = new MaterialManager();
+
+            initDefaultTextures();
+            initDefaultMaterials();
+
+            // Shared job output (must be created before views because it's needed to init View culling jobs
+            m_sharedCullingJobOutput = new SharedCullingJobOutput();
+
+            // Create "Game" viewport for "Game" views
+            auto gameViewportParams = CreateViewportParams(ViewportTarget::Game, GetBackbufferSize());
+            if (auto gameViewport = (Viewport *)CreateViewport(gameViewportParams, "Game"))
+            {
+                AddViewport(gameViewport);
+                VG_SAFE_RELEASE(gameViewport);
+            }
+
+            m_bakedSpecularBRDF = m_device.createTexture("data/Engine/BRDF/CookTorrance.png");
+
+            m_defaultCameraLens = new CameraLens("Default 24-70mm FullFrame");
         }
-
-        m_bakedSpecularBRDF = m_device.createTexture("data/Engine/BRDF/CookTorrance.png");
-
-        m_defaultCameraLens = new CameraLens("Default 24-70mm FullFrame");
 	}
 
     //--------------------------------------------------------------------------------------
@@ -250,23 +261,29 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void Renderer::registerShaders()
     {
-        auto * sm = ShaderManager::get();
+        VG_PROFILE_CPU("Shaders");
+
+        auto * shaderManager = ShaderManager::get();
 
         // TODO: register from parsing 
-        sm->registerHLSL(DriverHLSLDesc());
-        sm->registerHLSL(DebugDrawHLSLDesc());
-        sm->registerHLSL(DefaultHLSLDesc());
-        sm->registerHLSL(BackgroundHLSLDesc());
-        sm->registerHLSL(PostProcessHLSLDesc());
-        sm->registerHLSL(SkinningHLSLDesc());
-        sm->registerHLSL(DeferredLightingHLSLDesc());
-        sm->registerHLSL(PreviewHLSLDesc());
-        sm->registerHLSL(PrecomputeIBLHLSLDesc());
+        shaderManager->registerHLSL(DriverHLSLDesc());
+        shaderManager->registerHLSL(DebugDrawHLSLDesc());
+        shaderManager->registerHLSL(DefaultHLSLDesc());
+        shaderManager->registerHLSL(BackgroundHLSLDesc());
+        shaderManager->registerHLSL(PostProcessHLSLDesc());
+        shaderManager->registerHLSL(SkinningHLSLDesc());
+        shaderManager->registerHLSL(DeferredLightingHLSLDesc());
+        shaderManager->registerHLSL(PreviewHLSLDesc());
+        shaderManager->registerHLSL(PrecomputeIBLHLSLDesc());
 
         // Register callback for after shader updates
-        m_device.getShaderManager()->setOnShadersUpdatedCallback(onShadersUpdated);
+        shaderManager->setOnShadersUpdatedCallback(onShadersUpdated);
 
-        sm->update(true);
+        // First update will build CRC
+        shaderManager->update(true);
+
+        // Load from cache after CRC has been computed
+        shaderManager->loadFromCache();
     }
 
 	//--------------------------------------------------------------------------------------

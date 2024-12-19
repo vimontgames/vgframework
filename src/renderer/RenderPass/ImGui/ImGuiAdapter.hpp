@@ -31,6 +31,8 @@ namespace vg::renderer
         m_currentFontStyle(s_defaultFontStyle),
         m_currentFontSize(s_defaultFontSize)
     {        
+        VG_PROFILE_CPU("ImGui");
+
         ImGui::CreateContext();
         ImGuiIO & io = ImGui::GetIO();
         io.ConfigWindowsMoveFromTitleBarOnly = true;

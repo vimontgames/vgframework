@@ -261,4 +261,28 @@ namespace vg::core::io
 
         return true;
     }
+
+    //--------------------------------------------------------------------------------------
+    inline size_t Buffer::getReadOffset() const
+    {
+        return m_read; 
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline size_t Buffer::getWriteOffset() const 
+    {
+        return m_write; 
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline bool Buffer::isEndOfFile() const
+    {
+        return m_read == m_data.size(); 
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline void Buffer::seek(size_t _size)
+    {
+        m_read += _size;
+    }
 }

@@ -1,11 +1,19 @@
 #include "HLSLDesc.h"
+#include "core/File/Buffer.h"
 
 #if !VG_ENABLE_INLINE
 #include "HLSLDesc.inl"
 #endif
 
+#include "core/Plugin/Plugin.h"
+
+using namespace vg::core;
+
 namespace vg::gfx
 {
+    // Shader cache version
+    static const u32 CachedShaderVersion = 1;
+
     //--------------------------------------------------------------------------------------
     HLSLDesc::~HLSLDesc()
     {
@@ -134,15 +142,80 @@ namespace vg::gfx
                 return it->second;
         }
 
-        auto * sm = ShaderManager::get();
+        auto * shaderManager = ShaderManager::get();
 
         const auto & macros = getShaderMacros(_api, _stage, key.m_flags);
 
-        auto * shader = sm->compile(_api, m_file, entryPoint, _stage, macros);
+        Blob bytecode = shaderManager->compile(_api, m_file, entryPoint, _stage, macros);
+
+        Shader * shader = nullptr;
+        if (0 != bytecode.size())
+        {
+            // Save shader bytecode
+            const string cookedPath = getCookedShaderPath();
+            
+            CachedShaderHeader cachedShaderHeader;
+            cachedShaderHeader.version = CachedShaderVersion;
+            cachedShaderHeader.crc = getCRC();
+            cachedShaderHeader.size = bytecode.size();
+            cachedShaderHeader.key = key;
+
+            io::Buffer cachedShaderData;
+            cachedShaderData.resize(sizeof(CachedShaderHeader) + bytecode.size());
+
+            cachedShaderData.write(cachedShaderHeader);
+            cachedShaderData.write(bytecode.data(), bytecode.size());
+
+            io::appendFile(cookedPath, cachedShaderData);
+
+            shader = new gfx::Shader(bytecode);
+            shader->SetName(entryPoint);
+            bytecode.Release();
+        }
 
         m_variants[key] = shader;
 
         return shader;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::string HLSLDesc::getCookedShaderPath() const
+    {
+        ShaderManager * shaderManager = ShaderManager::get();
+        return io::getCookedPath(fmt::sprintf("%s%s/%s/%s/%s", shaderManager->getShaderRootPath(), asString(shaderManager->getAPI()), core::Plugin::getPlatform(), asString(shaderManager->getShaderOptimizationLevel()), m_file)); // getShaderRootPath already ends with '/'
+    }
+
+    //--------------------------------------------------------------------------------------
+    void HLSLDesc::loadFromCache()
+    {
+        const string cookedPath = getCookedShaderPath();
+        io::Buffer cachedShaderData;
+        if (io::readFile(cookedPath, cachedShaderData, false))
+        {
+            VG_PROFILE_CPU(m_file.c_str());
+
+            while (!cachedShaderData.isEndOfFile())
+            {
+                CachedShaderHeader header;
+                cachedShaderData.read(&header, sizeof(CachedShaderHeader));
+
+                if (header.version == CachedShaderVersion && header.crc == getCRC())
+                {
+                    void * data = malloc(header.size);
+                    cachedShaderData.read(data, header.size);
+                    Blob bytecode = Blob(data, header.size);
+                    Shader * shader = new gfx::Shader(bytecode);
+                    auto & entryPoint = m_entryPoint[asInteger(header.key.m_stage)][header.key.m_entryPoint];
+                    shader->SetName(entryPoint);
+                    m_variants[header.key] = shader;
+                    bytecode.Release();
+                }
+                else
+                {
+                    cachedShaderData.seek(header.size);
+                }
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -197,6 +270,9 @@ namespace vg::gfx
     {
         core::vector<core::pair<core::string, core::uint>> macros;
 
+        // TODO: remove API parameters?
+        VG_ASSERT(_api == ShaderManager::get()->getAPI());
+
         for (uint i = 0; i < countof(m_flagDescs); ++i)
         {
             const auto & desc = m_flagDescs[i];
@@ -247,6 +323,8 @@ namespace vg::gfx
     {
         for (auto & pair : m_variants)
             VG_SAFE_RELEASE(pair.second);
+
+        io::deleteFile(getCookedShaderPath());
     }
 
     //--------------------------------------------------------------------------------------

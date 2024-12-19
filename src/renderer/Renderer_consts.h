@@ -8,5 +8,6 @@ namespace vg::renderer
     struct RendererCreationParams
     {
         gfx::DeviceParams device;
+        bool profileStart = false;
     };
 }

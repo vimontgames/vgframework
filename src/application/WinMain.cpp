@@ -22,6 +22,7 @@ HWND g_hWnd;
 
 using namespace vg;
 engine::IEngine * g_engine = nullptr;
+renderer::IRenderer * g_renderer = nullptr;
 
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -248,16 +249,17 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	SetWindowTextA(g_hWnd, title.c_str());
 
+    // Start profiling as soon as possible
+    int profileStartFrameCount = 0;
+	if (cmdLine.getInt("profileStart", profileStartFrameCount))
+		engineParams.renderer.profileStart = true;
+
     core::Singletons singletons;
     g_engine->Init(engineParams, singletons);
-
-	// Can only use profiler *AFTER* engine init
-	int profileStartFrameCount = 0;
-	auto * profiler = g_engine->GetRenderer()->GetProfiler();
-	if (cmdLine.getInt("profileStart", profileStartFrameCount))
-		profiler->start();
+	g_renderer = g_engine->GetRenderer();
 
     Application * app = new Application(*g_engine);
+	auto * profiler = g_renderer->GetProfiler();
 
     // Start in play mode?
 	#if VG_FINAL

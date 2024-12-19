@@ -79,18 +79,26 @@ namespace vg::gfx
         Technique & declTechnique(const core::string & _name, ShaderKey::VS _vs, ShaderKey::PS _ps);
         const core::vector<Technique> & getTechniques() const;
 
-        core::u64 getCRC() const { return m_crc; }
-        void setCRC(core::u64 _crc) { m_crc = _crc; }
+        core::u64 getCRC() const;
+        void setCRC(core::u64 _crc);
 
         void reset();
+        void loadFromCache();
 
     protected:
         core::vector<core::pair<core::string, core::uint>> getShaderMacros(API _api, ShaderStage _stage, ShaderKey::Flags _flags) const;
 
     private:
+        core::string getCookedShaderPath() const;
 
         struct VariantKey
         {
+            explicit VariantKey() :
+                m_bits(0x0)
+            {
+
+            }
+
             inline VariantKey(ShaderStage _stage, ShaderKey::EntryPoint _entryPoint, ShaderKey::Flags _flags) :
                 m_stage(_stage),
                 m_entryPoint(_entryPoint),
@@ -119,6 +127,14 @@ namespace vg::gfx
         VariantKey computeVariantKey(ShaderStage _stage, ShaderKey::EntryPoint _index, ShaderKey::Flags _flags) const;
 
         using VariantCollection = core::map<VariantKey, Shader *>;
+
+        struct CachedShaderHeader
+        {
+            u32                     version;
+            u64                     crc;
+            u32                     size;
+            HLSLDesc::VariantKey    key;
+        };
 
         struct ShaderFlagDesc
         {

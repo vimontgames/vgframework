@@ -38,14 +38,9 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    Shader * ShaderCompiler::compile(API _api, const string & _path, const string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
+    core::Blob ShaderCompiler::compile(API _api, const string & _path, const string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
     {
-        auto * shader = super::compile(_api, _path, _entryPoint, _stage, _macros, _warningAndErrors);
-
-        if (shader)
-            shader->SetName(_entryPoint);
-
-        return shader;
+        return super::compile(_api, _path, _entryPoint, _stage, _macros, _warningAndErrors);
     }
 }
 

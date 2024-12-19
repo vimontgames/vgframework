@@ -228,6 +228,8 @@ namespace vg::engine
     {
         if (_path.length() > 0)
         {
+            VG_PROFILE_CPU("LoadGame");
+
             auto folderNameBegin = _path.find_last_of('/');
             string gameDLLName = _path.substr(folderNameBegin);
 
@@ -348,45 +350,53 @@ namespace vg::engine
 
         // Load Renderer DLL
 		m_renderer = Plugin::create<renderer::IRenderer>("renderer", api);
-		m_renderer->Init(_params.renderer, _singletons);
 
         // Profiler has to be created by the renderer to be able to also profile the GPU
-        Kernel::setProfiler(_singletons.profiler);
+        Kernel::setProfiler(m_renderer->GetProfiler());
         _singletons.scheduler->RegisterCurrentThread("Main");
 
-        // Resource manager has to be created after Profiler to register the loading thread
-        m_resourceManager = new ResourceManager("Resource Manager", this);
-        _singletons.resourceManager = m_resourceManager;
-        Kernel::setResourceManager(_singletons.resourceManager);
+		m_renderer->Init(_params.renderer, _singletons);
 
-        // Post-init to init resources after the Resource manager has been created
-        m_renderer->CreateResources();
+        // We can profile from here
+        {
+            VG_PROFILE_CPU("Engine");
 
-        // Register worker threads, it will be useful to get worker thread names in profiler
-        _singletons.scheduler->RegisterWorkerThreads();
+            // Resource manager has to be created after Profiler to register the loading thread
+            m_resourceManager = new ResourceManager("Resource Manager", this);
+            _singletons.resourceManager = m_resourceManager;
+            Kernel::setResourceManager(_singletons.resourceManager);
 
-        // Load Physics DLL
-        m_physics = Plugin::create<physics::IPhysics>("physics");
-        physics::Callbacks physicsEngineCallbacks;
-        physicsEngineCallbacks.validateContact = shouldCollide;
-        m_physics->Init(_params.physics, physicsEngineCallbacks, _singletons);
+            // Post-init to init resources after the Resource manager has been created
+            m_renderer->CreateResources();
 
-        // Load Audio DLL
-        m_audio = Plugin::create<audio::IAudio>("audio");
-        m_audio->Init(_params.audio, _singletons);
+            // Register worker threads, it will be useful to get worker thread names in profiler
+            _singletons.scheduler->RegisterWorkerThreads();
 
-        // Load project DLL
-        LoadGame(engineOptions->GetProjectPath());
+            // Load Physics DLL
+            m_physics = Plugin::create<physics::IPhysics>("physics");
+            physics::Callbacks physicsEngineCallbacks;
+            physicsEngineCallbacks.validateContact = shouldCollide;
+            m_physics->Init(_params.physics, physicsEngineCallbacks, _singletons);
 
-        // Load Editor DLL
-        #if VG_ENABLE_EDITOR
-        m_editor = Plugin::create<editor::IEditor>("editor");
-        m_editor->Init(_singletons);
-        #endif
+            // Load Audio DLL
+            m_audio = Plugin::create<audio::IAudio>("audio");
+            m_audio->Init(_params.audio, _singletons);
 
-        // Create default world resource or load world path from command line (TODO)
-        VG_ASSERT(m_worldResource == nullptr);
-        m_worldResource = new WorldResource("Default", this);
+            // Load project DLL
+            LoadGame(engineOptions->GetProjectPath());
+
+            // Load Editor DLL
+            #if VG_ENABLE_EDITOR
+            m_editor = Plugin::create<editor::IEditor>("editor");
+            m_editor->Init(_singletons);
+            #endif
+
+            // Create default world resource or load world path from command line (TODO)
+            VG_ASSERT(m_worldResource == nullptr);
+            m_worldResource = new WorldResource("Default", this);
+        }
+
+        VG_PROFILE_CPU_EVENT_STOP(); // "Init"
 	}
 
     //--------------------------------------------------------------------------------------

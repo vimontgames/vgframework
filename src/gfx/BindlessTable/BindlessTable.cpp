@@ -180,6 +180,8 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void BindlessTable::init()
     {
+        VG_PROFILE_CPU("BindlessTable");
+
         auto * device = gfx::Device::get();
         
         // create default texture 2D

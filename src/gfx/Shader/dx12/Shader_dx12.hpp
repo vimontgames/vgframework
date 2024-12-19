@@ -6,7 +6,7 @@ namespace vg::gfx::dx12
     {
         const uint size = _bytecode.size();
         m_d3d12bytecode.pShaderBytecode = malloc(size);
-        memcpy((void*)m_d3d12bytecode.pShaderBytecode, _bytecode.data(), size);
+        memcpy((void*)m_d3d12bytecode.pShaderBytecode, _bytecode.data(), size); // Copy should not be necessary if the shader belongs to the microcode database
         m_d3d12bytecode.BytecodeLength = size;
     }
 

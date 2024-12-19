@@ -56,8 +56,11 @@ namespace vg::core::io
         void resetRead();
         void resetWrite();
 
-        size_t getReadOffset() const { return m_read; }
-        size_t getWriteOffset() const { return m_write; }
+        size_t getReadOffset() const;
+        size_t getWriteOffset() const;
+
+        bool isEndOfFile() const;
+        void seek(size_t _size);
 
     private:
         size_t              m_read = 0;

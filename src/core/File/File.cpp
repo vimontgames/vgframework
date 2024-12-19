@@ -154,6 +154,40 @@ namespace vg::core::io
     }
 
     //--------------------------------------------------------------------------------------
+    bool appendFile(const string & _file, const string & _in, bool _mustExist)
+    {
+        return writeFile(_file, Buffer((const u8 *)_in.c_str(), _in.size()), _mustExist);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool appendFile(const string & _file, const Buffer & _in, bool _mustExist)
+    {
+        const auto dir = getFileDir(_file);
+
+        if (createPath(getFileDir(_file)))
+        {
+            ofstream file(getFilePath(_file.c_str()), ios::app | ios::binary);
+
+            if (file.is_open())
+            {
+                file.write((const char *)_in.data(), _in.size());
+                file.close();
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool deleteFile(const string & _file, bool _mustExist)
+    {
+        VG_ASSERT(exists(_file) || !_mustExist);
+        return std::filesystem::remove(_file);
+    }
+
+    //--------------------------------------------------------------------------------------
     string getFilePath(const string _file)
     {
         char fullpath[1024];

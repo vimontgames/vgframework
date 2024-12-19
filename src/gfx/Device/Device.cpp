@@ -50,7 +50,7 @@ namespace vg::gfx
 		void Device::init(const DeviceParams & _params)
 		{
 			m_deviceParams = _params;
-            m_shaderManager = new gfx::ShaderManager("data/shaders");
+            m_shaderManager = new gfx::ShaderManager("data/Shaders", _params.api);
 		}
 
 		//--------------------------------------------------------------------------------------
@@ -337,6 +337,8 @@ namespace vg::gfx
 	//--------------------------------------------------------------------------------------
 	void Device::init(const DeviceParams & _params)
 	{
+        VG_PROFILE_CPU("Device");
+
         const auto startDeviceInit = Timer::getTick();
 
 		super::init(_params);

@@ -58,7 +58,7 @@ public:
         }
 
         #if VG_SHADER_SOURCE_IN_MEMORY
-        const string * pSource = ShaderManager::get()->getShaderSource(path);
+        const string * pSource = shaderManager->getShaderSource(path);
         HRESULT hr = m_dxcUtils->CreateBlob(pSource->data(), (uint)pSource->size(), CP_UTF8, pEncoding.GetAddressOf());
         #else
         wstring filename = wstring_convert(path);
@@ -231,12 +231,14 @@ namespace vg::gfx::dxc
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::Shader * ShaderCompiler::compile(API _api, const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
+    core::Blob ShaderCompiler::compile(API _api, const core::string & _path, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros, string & _warningAndErrors)
     {
         VG_PROFILE_CPU(asString((ShaderStageFlags)(1 << (uint)_stage)).c_str());
 
+        ShaderManager * shaderManager = ShaderManager::get();
+
         #if VG_SHADER_SOURCE_IN_MEMORY
-        const string * pSource = ShaderManager::get()->getShaderSource(_path);
+        const string * pSource = shaderManager->getShaderSource(_path);
         if (pSource)
         {
             IDxcBlobEncoding * dxcSource;
@@ -256,13 +258,19 @@ namespace vg::gfx::dxc
 
             args.push_back((wchar_t *)L"-HV 2021");
 
-            #ifdef VG_DEBUG
-            args.push_back((wchar_t*)L"-Od");
-            args.push_back((wchar_t*)L"-Zi");
-            args.push_back((wchar_t*)L"-Qembed_debug");
-            #else
-            args.push_back((wchar_t*)L"-O3");
-            #endif
+            switch (shaderManager->getShaderOptimizationLevel())
+            {
+                case ShaderOptimizationLevel::Unoptimized:
+                    args.push_back((wchar_t *)L"-Od");
+                    args.push_back((wchar_t *)L"-Zi");
+                    args.push_back((wchar_t *)L"-Qembed_debug");
+                    break;
+
+                case ShaderOptimizationLevel::Optimized:
+                    args.push_back((wchar_t *)L"-O3");
+                    break;
+
+            }
 
             switch (_api)
             {
@@ -353,7 +361,7 @@ namespace vg::gfx::dxc
                 VG_SAFE_RELEASE(dxcCompileResult);
                 VG_SAFE_RELEASE(dxcWarningAndErrors);
 
-                return nullptr;
+                return {};
             }
             else
             {
@@ -376,18 +384,17 @@ namespace vg::gfx::dxc
             IDxcBlob * dxcCompiledBlob = nullptr;
             dxcCompileResult->GetResult(&dxcCompiledBlob);
 
-            core::Blob blob(dxcCompiledBlob->GetBufferPointer(), (uint)dxcCompiledBlob->GetBufferSize());
-
-            auto * shader = new gfx::Shader(blob);
+            // Create a copy of the bytecode because we want to be able to manage its lifetime
+            Blob bytecode = Blob::Copy(dxcCompiledBlob->GetBufferPointer(), (uint)dxcCompiledBlob->GetBufferSize());
 
             VG_SAFE_RELEASE(dxcSource);
             VG_SAFE_RELEASE(dxcCompileResult);
             VG_SAFE_RELEASE(dxcWarningAndErrors);
-            VG_SAFE_RELEASE(dxcCompiledBlob);
+            VG_SAFE_RELEASE(dxcCompiledBlob); // This has to be released *AFTER* the shader is created
 
-            return shader;
+            return bytecode;
         }
 
-        return nullptr;
+        return {};
     }
 }

@@ -37,4 +37,16 @@ namespace vg::gfx
     {
         return m_flagDescs[_index].isInitialized();
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::u64 HLSLDesc::getCRC() const
+    {
+        return m_crc;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void HLSLDesc::setCRC(core::u64 _crc)
+    {
+        m_crc = _crc; 
+    }
 }

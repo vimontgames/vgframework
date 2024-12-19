@@ -4,11 +4,21 @@
 #include "ComputeShaderKey.h"
 #include "gfx/IShaderManager.h"
 
+namespace vg::core
+{
+    class Blob;
+}
+
 namespace vg::gfx
 {
     class Shader;
     class ShaderCompiler;
     class HLSLDesc;
+
+    vg_enum_class(ShaderOptimizationLevel, core::u8,
+        Unoptimized = 0,
+        Optimized
+    );
 
     class ShaderManager : public IShaderManager, public core::Singleton<ShaderManager>
     {
@@ -17,7 +27,7 @@ namespace vg::gfx
 
         using OnShadersUpdatedCallbackFunc = void(*)(bool);
 
-        ShaderManager(const core::string & _shaderRootPath);
+        ShaderManager(const core::string & _shaderRootPath, gfx::API _api);
         ~ShaderManager();
 
         core::uint                          GetShaderCompiledCount      () const final override;
@@ -26,8 +36,9 @@ namespace vg::gfx
 
         void                                setOnShadersUpdatedCallback (OnShadersUpdatedCallbackFunc _onShadersUpdatedCallback);
 
-        void                                update                      (bool _forceUpdate = false);
-        void                                applyUpdate                 (bool _forceUpdate = false);
+        void                                loadFromCache               ();
+        void                                update                      (bool _firstUpdate = false);
+        void                                applyUpdate                 (bool _firstUpdate = false);
 
         void                                registerHLSL                (const HLSLDesc & _hlslDesc);
         bool                                initShaderKey               (ShaderKey & _key, const core::string & _file, const core::string & _technique);
@@ -35,7 +46,7 @@ namespace vg::gfx
 
         HLSLDesc *                          getHLSLDescriptor           (ShaderKey::File _file);
 
-        Shader *                            compile                     (API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros);
+        core::Blob                          compile                     (API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros);
 
         const core::string &                getShaderRootPath           () const { return m_shaderRootPath; }
         const core::vector<core::string> &  getShaderRootFolders        () const { return m_shaderRootFolders; }
@@ -46,6 +57,9 @@ namespace vg::gfx
         void                                saveShaderSourceInMemory    ();
         #endif
 
+        gfx::API                            getAPI                      () const;
+        ShaderOptimizationLevel             getShaderOptimizationLevel  () const;
+
     private:
         void                                parseIncludes               (core::uint _index, core::string dir, core::string _file, core::vector<core::string> & _includes, core::u64 & _crc, core::uint _depth = 0);
         static core::string                 fixFileLine                 (const core::string & _filename, const core::string & _warningAndErrorString);
@@ -55,10 +69,12 @@ namespace vg::gfx
         core::string                        m_shaderRootPath;
         core::vector<core::string>          m_shaderRootFolders;
         ShaderCompiler *                    m_shaderCompiler = nullptr;
+        gfx::API                            m_api;
         core::vector<HLSLDesc>              m_shaderFileDescriptors;
         core::uint                          m_compiledCount = 0;
         core::uint                          m_warningCount = 0;
         core::uint                          m_errorCount = 0;
+        ShaderOptimizationLevel             m_optimizationLevel;
 
         #if VG_SHADER_SOURCE_IN_MEMORY
         core::unordered_map<core::string, core::string> m_shaderFilesHash;

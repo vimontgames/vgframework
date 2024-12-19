@@ -142,6 +142,8 @@ namespace vg::editor
         // Get existing Singletons
         Kernel::setSingletons(_singletons);
 
+        VG_PROFILE_CPU("Editor");
+
         // Cache ptr to IEngine and IRenderer as Editor is going to need them very often ...
         m_engine = findEngine();
         m_renderer = findRenderer();
