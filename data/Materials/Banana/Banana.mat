@@ -1,0 +1,64 @@
+<Root>
+    <Object class="MaterialResourceData">
+        <Property type="Uint32" name="m_uid" value="2782084025"/>
+        <Property type="Uint32" name="m_originalUID" value="0"/>
+        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="Object" name="m_materialModelType">
+            <Object class="MaterialModelType">
+                <Property type="String" name="m_name" value=""/>
+                <Property type="Uint32" name="m_uid" value="3104250422"/>
+                <Property type="Uint32" name="m_originalUID" value="0"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                <Property type="String" name="m_shader" value="Default"/>
+            </Object>
+        </Property>
+        <Property type="ObjectPtr" name="m_data">
+            <Object class="DefaultMaterialData">
+                <Property type="Uint32" name="m_uid" value="85916186"/>
+                <Property type="Uint32" name="m_originalUID" value="0"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                <Property type="EnumU8" name="m_surfaceType" value="Opaque"/>
+                <Property type="Float" name="m_depthFade" value="0.1"/>
+                <Property type="EnumU8" name="m_cullMode" value="Back"/>
+                <Property type="EnumU32" name="m_UVSource" value="UV0"/>
+                <Property type="Float2" name="m_tiling" x="1" y="1"/>
+                <Property type="Float2" name="m_offset" x="0" y="0"/>
+                <Property type="Bool" name="m_enableAlbedo" value="true"/>
+                <Property type="Resource" name="m_albedoMap">
+                    <Object class="TextureResource">
+                        <Property type="String" name="m_name" value=""/>
+                        <Property type="Uint32" name="m_uid" value="3806179911"/>
+                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="String" name="m_resourcePath" value="data/Textures/Banana/Banana_tex.png"/>
+                    </Object>
+                </Property>
+                <Property type="Float4" name="m_albedoColor" x="1" y="1" z="1" w="1"/>
+                <Property type="Bool" name="m_enableNormal" value="true"/>
+                <Property type="Resource" name="m_normalMap">
+                    <Object class="TextureResource">
+                        <Property type="String" name="m_name" value=""/>
+                        <Property type="Uint32" name="m_uid" value="2585188076"/>
+                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="String" name="m_resourcePath" value=""/>
+                    </Object>
+                </Property>
+                <Property type="Float" name="m_normalStrength" value="1"/>
+                <Property type="Bool" name="m_enablePbr" value="true"/>
+                <Property type="Resource" name="m_pbrMap">
+                    <Object class="TextureResource">
+                        <Property type="String" name="m_name" value=""/>
+                        <Property type="Uint32" name="m_uid" value="234059196"/>
+                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="String" name="m_resourcePath" value=""/>
+                    </Object>
+                </Property>
+                <Property type="Float" name="m_occlusion" value="1"/>
+                <Property type="Float" name="m_roughness" value="1"/>
+                <Property type="Float" name="m_metalness" value="1"/>
+            </Object>
+        </Property>
+    </Object>
+</Root>

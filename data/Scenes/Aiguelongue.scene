@@ -618,7 +618,7 @@
                         <Property type="String" name="m_name" value="Level"/>
                         <Property type="Uint32" name="m_uid" value="1093025436"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-4.3711388e-08" Iy="1" Iz="0" Iw="0" Jx="-1" Jy="-4.3711388e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999994" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -3065,7 +3065,7 @@
                                         <Property type="String" name="m_name" value="Decals"/>
                                         <Property type="Uint32" name="m_uid" value="63146555"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -3091,7 +3091,7 @@
                                                         <Property type="Resource" name="m_meshResource">
                                                             <Object class="MeshResource">
                                                                 <Property type="String" name="m_name" value="New MeshComponent"/>
-                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" value="509994843"/>
                                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                                 <Property type="String" name="m_resourcePath" value="data/Meshes/unitplane.fbx"/>
@@ -3100,7 +3100,7 @@
                                                         <Property type="Object" name="m_meshMaterials">
                                                             <Object class="MaterialResourceList">
                                                                 <Property type="String" name="m_name" value="New MeshComponent"/>
-                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" value="1771350507"/>
                                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                                 <Property type="ResourceVector" name="m_resources">
@@ -3490,7 +3490,7 @@
                                 <Property type="String" name="m_name" value="Weapons"/>
                                 <Property type="Uint32" name="m_uid" value="2238613537"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -3570,7 +3570,7 @@
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-3.5" Ty="-6.5" Tz="1" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-12.5" Ty="-6" Tz="0.5" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                         <Property type="ObjectPtrVector" name="m_components"/>
                                         <Property type="ObjectPtrVector" name="m_children"/>

@@ -23,12 +23,22 @@ WeaponBehaviour::~WeaponBehaviour()
 }
 
 //--------------------------------------------------------------------------------------
+bool IsProjectilePropertyHidden(const IObject * _object, const IProperty * _prop, uint _index)
+{
+    const WeaponBehaviour * weapon = VG_SAFE_STATIC_CAST(const WeaponBehaviour, _object);
+    return WeaponType::Pistol != weapon->getWeaponType();
+}
+
+//--------------------------------------------------------------------------------------
 bool WeaponBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
     registerPropertyEnum(WeaponBehaviour, WeaponType, m_weaponType, "Type");
     setPropertyDescription(WeaponBehaviour, m_weaponType, "Weapon type");
+
+    registerProperty(WeaponBehaviour, m_projectile, "Projectile");
+    setPropertyHiddenCallback(WeaponBehaviour, m_projectile, IsProjectilePropertyHidden);
 
     return true;
 }

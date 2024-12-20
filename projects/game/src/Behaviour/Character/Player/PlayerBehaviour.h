@@ -26,6 +26,7 @@ private:
     vg::core::ObjectHandle              m_UI;
     ItemBehaviour *                     m_rightHandItem     = nullptr;
     vg::core::u8                        m_viewIndex         = -1;
+    bool                                m_shotFired         = false;
 };
 
 #if VG_ENABLE_INLINE

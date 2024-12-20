@@ -5,6 +5,8 @@
 #include "PlayerBehaviour.inl"
 #endif
 
+#include "core/IBaseScene.h"
+
 using namespace vg::core;
 using namespace vg::engine;
 
@@ -252,6 +254,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                                 case WeaponType::Pistol:
                                     m_fightState = FightState::Shoot;
                                     playFightAnim(FightState::Shoot, false);
+                                    m_shotFired = false;
                                     break;
                             };                            
 
@@ -271,6 +274,38 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     {
                         stopFightAnim(m_fightState);
                         m_fightState = FightState::None;
+                    }
+                    else
+                    {
+                        if (!m_shotFired && anim->GetTime() > 0.3f)
+                        {
+                            //VG_WARNING("[Player] Shoot banana");
+                            if (nullptr != m_rightHandItem)
+                            {
+                                WeaponBehaviour * weapon = VG_SAFE_STATIC_CAST(WeaponBehaviour, m_rightHandItem);
+                                if (nullptr != weapon)
+                                {
+                                    GameObject * projectileModelGO = weapon->getProjectile().get<GameObject>();
+                                    if (nullptr != projectileModelGO)
+                                    {
+                                        IGameObject * newProjectileGO = (IGameObject *)projectileModelGO->Instanciate();
+                                        newProjectileGO->SetInstanceFlags(InstanceFlags::Enabled | InstanceFlags::Temporary, true);
+                                        projectileModelGO->GetScene()->GetRoot()->AddChild(newProjectileGO);
+                                        GameObject * weaponGO = weapon->getGameObject();
+                                        float4x4 projectileMatrix = weaponGO->getGlobalMatrix();
+                                        float3 projectileDir = normalize(projectileMatrix[1].xyz);
+                                        projectileMatrix[3].xyz += projectileDir * 0.5f + float3(0,0,0.1f); // TODO: expose projectile placement parameters?
+                                        newProjectileGO->SetGlobalMatrix(projectileMatrix);
+                                        newProjectileGO->OnPlay();
+                                        if (auto * physicsBody = newProjectileGO->GetComponentInChildrenT<vg::engine::IPhysicsBodyComponent>())
+                                            physicsBody->AddImpulse(float3(projectileDir.x, projectileDir.y, 0.1f) * 0.6f);
+                                        VG_SAFE_RELEASE(newProjectileGO);
+                                    }
+                                }
+                            }
+
+                            m_shotFired = true;
+                        }
                     }
                 }
             }
