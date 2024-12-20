@@ -18,7 +18,7 @@ namespace vg::editor
 
             ~AutoRegister()
             {
-                //VG_SAFE_DELETE(m_handler); // static deinit is too late! ImGui handlers must be destroyed before ImGui shutdown in case they perform ImGui allocs (e.g. ImGuiTextFiler) 
+                // ImGui handlers must be explicitly destroyed using Destroy before ImGui shutdown in case they perform ImGui allocs (e.g. ImGuiTextFiler) 
             }
 
             C * m_handler = nullptr;

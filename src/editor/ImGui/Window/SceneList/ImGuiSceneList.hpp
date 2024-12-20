@@ -197,7 +197,7 @@ namespace vg::editor
         }
         else
         {
-            char gameObjectLabel[1024];
+            char gameObjectLabel[256];
             sprintf(gameObjectLabel, "%s###%p", _gameObject->GetName().c_str(), (void *)_gameObject);
             open = ImGui::TreeNodeEx(gameObjectLabel, flags | ImGuiTreeNodeFlags_SpanAvailWidth | ImGuiTreeNodeFlags_SpanFullWidth);
         }
@@ -278,7 +278,7 @@ namespace vg::editor
             ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
             {
                 ImGui::SetCursorPosY(ImGui::GetCursorPosY() - style::draganddrop::interlineSize.y - 1);
-                string beforeGO = fmt::sprintf("###after %s", _gameObject->GetName().c_str());
+                string beforeGO = fmt::sprintf("###after %s%p", _gameObject->GetName().c_str(), (void *)_gameObject);
                 ImGui::InvisibleButton(beforeGO.c_str(), style::draganddrop::interlineSize);
         
                 // debug
