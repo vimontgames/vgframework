@@ -30,6 +30,9 @@ namespace vg::engine
         super(_name, _parent)
     {
         EnableUpdateFlags(UpdateFlags::Update, false);
+
+        if (m_shapeDesc == nullptr)
+            createShapeDesc();
     }
 
     //--------------------------------------------------------------------------------------
@@ -53,9 +56,6 @@ namespace vg::engine
 
         if (m_shape == nullptr)
             createShape();
-
-        if (m_shapeDesc)
-            m_shapeDesc->RegisterUID();
     }
 
     //--------------------------------------------------------------------------------------
@@ -115,6 +115,8 @@ namespace vg::engine
 
                 if (previousOriginalUID)
                     m_shapeDesc->SetOriginalUID(previousOriginalUID);
+                else
+                    m_shapeDesc->RegisterUID();
             }
         }
 
