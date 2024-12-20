@@ -366,6 +366,27 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    bool destroyTemporaryGameObjectsRecur(IGameObject * _object)
+    {
+        if (asBool(InstanceFlags::Temporary & _object->GetInstanceFlags()))
+        {
+            IGameObject * parent = VG_SAFE_STATIC_CAST(IGameObject, _object->getParent());
+            parent->RemoveChild(_object);
+            return true;
+        }
+        else
+        {
+            auto & children = _object->GetChildren();
+            for (uint i = 0; i < children.size(); ++i)
+            {
+                if (destroyTemporaryGameObjectsRecur((IGameObject *)children[i]))
+                    --i;
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     void World::OnStop()
     {
         IFactory * factory = Kernel::getFactory();
@@ -390,7 +411,7 @@ namespace vg::engine
             VG_SAFE_RELEASE(m_staticColliders[i]);
         m_staticColliders.clear();
 
-        // Destroy "_Temp"
+        // Destroy temporary GameObjects
         for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)
         {
             const IBaseScene * scene = GetScene(i, BaseSceneType::Scene);
@@ -398,10 +419,7 @@ namespace vg::engine
             {
                 IGameObject * root = VG_SAFE_STATIC_CAST(IGameObject, scene->GetRoot());
                 if (nullptr != root)
-                {
-                    if (auto * tempGO = root->GetChildGameObject("_Temp"))
-                        root->RemoveChild(tempGO);
-                }
+                    destroyTemporaryGameObjectsRecur(root);
             }
         }
     }

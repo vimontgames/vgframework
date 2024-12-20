@@ -15,8 +15,9 @@ namespace vg::core
     );
 
     vg_enum_class(InstanceFlags, u32,
-        Enabled = 0x00000001,   // Instance is enabled and its enabled components are active
-        Static  = 0x00000002    // Instance doesn't move or change
+        Enabled     = 0x00000001,   // Instance is enabled and its enabled components are active
+        Static      = 0x00000002,   // Instance doesn't move or change
+        Temporary   = 0x00000004    // Temp object that should be deleted when engine stops
     );
 
     class IInstance : public Object
