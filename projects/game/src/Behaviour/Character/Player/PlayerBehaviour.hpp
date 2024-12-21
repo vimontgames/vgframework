@@ -204,6 +204,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
             const float pickupDist = 1.0f;
             const float3 playerPos = playerGO->GetGlobalMatrix()[3].xyz;
+            const float time = Game::get()->Engine().GetTime().m_enlapsedTimeSinceStartScaled;
 
             if (input.IsJoyButtonJustPressed(joyID, JoyButton::X))
             {
@@ -254,7 +255,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                                 case WeaponType::Pistol:
                                     m_fightState = FightState::Shoot;
                                     playFightAnim(FightState::Shoot, false);
-                                    m_shotFired = false;
+                                    m_nextShootTime = time + 0.3f; // first shoot cooldown
                                     break;
                             };                            
 
@@ -272,40 +273,49 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 {
                     if (!anim->IsPlaying() || anim->IsFinished())
                     {
-                        stopFightAnim(m_fightState);
-                        m_fightState = FightState::None;
-                    }
-                    else
-                    {
-                        if (!m_shotFired && anim->GetTime() > 0.3f)
+                        if (FightState::Shoot != m_fightState || !input.IsJoyButtonPressed(joyID, JoyButton::X))
                         {
-                            //VG_WARNING("[Player] Shoot banana");
-                            if (nullptr != m_rightHandItem)
-                            {
-                                WeaponBehaviour * weapon = VG_SAFE_STATIC_CAST(WeaponBehaviour, m_rightHandItem);
-                                if (nullptr != weapon)
-                                {
-                                    GameObject * projectileModelGO = weapon->getProjectile().get<GameObject>();
-                                    if (nullptr != projectileModelGO)
-                                    {
-                                        IGameObject * newProjectileGO = (IGameObject *)projectileModelGO->Instanciate();
-                                        newProjectileGO->SetInstanceFlags(InstanceFlags::Enabled | InstanceFlags::Temporary, true);
-                                        projectileModelGO->GetScene()->GetRoot()->AddChild(newProjectileGO);
-                                        GameObject * weaponGO = weapon->getGameObject();
-                                        float4x4 projectileMatrix = weaponGO->getGlobalMatrix();
-                                        float3 projectileDir = normalize(projectileMatrix[1].xyz);
-                                        projectileMatrix[3].xyz += projectileDir * 0.5f + float3(0,0,0.1f); // TODO: expose projectile placement parameters?
-                                        newProjectileGO->SetGlobalMatrix(projectileMatrix);
-                                        newProjectileGO->OnPlay();
-                                        if (auto * physicsBody = newProjectileGO->GetComponentInChildrenT<vg::engine::IPhysicsBodyComponent>())
-                                            physicsBody->AddImpulse(float3(projectileDir.x, projectileDir.y, 0.1f) * 0.6f);
-                                        VG_SAFE_RELEASE(newProjectileGO);
-                                    }
-                                }
-                            }
-
-                            m_shotFired = true;
+                            stopFightAnim(m_fightState);
+                            m_fightState = FightState::None;
+                            m_nextShootTime = -1.0f;
                         }
+                    }
+                }
+            }
+
+            if (IAnimationResource * anim = animationComponent->GetAnimation(m_fightAnim[asInteger(m_fightState)]))
+            {
+                if (input.IsJoyButtonPressed(joyID, JoyButton::X) && FightState::Shoot == m_fightState && time >= m_nextShootTime)
+                {
+                    // Keep shooting
+                    //VG_DEBUGPRINT("[PlayerBehaviour] Shoot\n");
+
+                    //VG_WARNING("[Player] Shoot banana");
+                    if (nullptr != m_rightHandItem)
+                    {
+                        WeaponBehaviour * weapon = VG_SAFE_STATIC_CAST(WeaponBehaviour, m_rightHandItem);
+                        if (nullptr != weapon)
+                        {
+                            GameObject * projectileModelGO = weapon->getProjectile().get<GameObject>();
+                            if (nullptr != projectileModelGO)
+                            {
+                                IGameObject * newProjectileGO = (IGameObject *)projectileModelGO->Instanciate();
+                                newProjectileGO->SetInstanceFlags(InstanceFlags::Enabled | InstanceFlags::Temporary, true);
+                                projectileModelGO->GetScene()->GetRoot()->AddChild(newProjectileGO);
+                                GameObject * weaponGO = weapon->getGameObject();
+                                float4x4 projectileMatrix = weaponGO->getGlobalMatrix();
+                                float3 projectileDir = normalize(projectileMatrix[1].xyz);
+                                projectileMatrix[3].xyz += projectileDir * 0.6f + float3(0, 0, 0.1f); // TODO: expose projectile placement parameters?
+                                newProjectileGO->SetGlobalMatrix(projectileMatrix);
+                                newProjectileGO->OnPlay();
+                                if (auto * physicsBody = newProjectileGO->GetComponentInChildrenT<vg::engine::IPhysicsBodyComponent>())
+                                    physicsBody->AddImpulse(float3(projectileDir.x, projectileDir.y, 0.15f) * 3.5f);
+                                VG_SAFE_RELEASE(newProjectileGO);
+                            }
+                        }
+
+                        // next shoot cooldown
+                        m_nextShootTime = time + 0.3f;
                     }
                 }
             }

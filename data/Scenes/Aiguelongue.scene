@@ -55,10 +55,10 @@
                                 <Property type="String" name="m_name" value="Player Camera 1"/>
                                 <Property type="Uint32" name="m_uid" value="3106054100"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened|Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00040713145" Iz="-1.9879371e-07" Iw="0" Jx="0.00024372329" Jy="0.59824407" Jz="0.80131358" Jw="0" Kx="-0.00032612117" Ky="-0.80131358" Kz="0.59824407" Kw="0" Tx="-11" Ty="-13" Tz="9" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00040713145" Iz="-1.9879371e-07" Iw="0" Jx="0.00024372329" Jy="0.59824407" Jz="0.80131358" Jw="0" Kx="-0.00032612117" Ky="-0.80131358" Kz="0.59824407" Kw="0" Tx="-11" Ty="-17" Tz="13" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -80,7 +80,7 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00040713145" Iz="-1.9879371e-07" Iw="0" Jx="0.00024372329" Jy="0.59824407" Jz="0.80131358" Jw="0" Kx="-0.00032612117" Ky="-0.80131358" Kz="0.59824407" Kw="0" Tx="-11" Ty="-13" Tz="9" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00040713145" Iz="-1.9879371e-07" Iw="0" Jx="0.00024372329" Jy="0.59824407" Jz="0.80131358" Jw="0" Kx="-0.00032612117" Ky="-0.80131358" Kz="0.59824407" Kw="0" Tx="-11" Ty="-17" Tz="13" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -119,7 +119,7 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00040713145" Iz="-1.9879371e-07" Iw="0" Jx="0.00024372329" Jy="0.59824407" Jz="0.80131358" Jw="0" Kx="-0.00032612117" Ky="-0.80131358" Kz="0.59824407" Kw="0" Tx="-11" Ty="-13" Tz="9" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="0.99999994" Iy="-0.00040713145" Iz="-1.9879371e-07" Iw="0" Jx="0.00024372329" Jy="0.59824407" Jz="0.80131358" Jw="0" Kx="-0.00032612117" Ky="-0.80131358" Kz="0.59824407" Kw="0" Tx="-11" Ty="-17" Tz="13" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children"/>

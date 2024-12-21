@@ -36,10 +36,10 @@ void CS_ResolveMSAA(int2 dispatchThreadID : SV_DispatchThreadID)
 
 float ComputeCOC(float linearDepth, ViewConstants viewConstants) 
 {
-    float focallength = viewConstants.getFocalLength(); // 35.0/1000.0;
-    float aperture = viewConstants.getAperture(); // 4;
+    float focallength = viewConstants.getFocalLength(); 
+    float aperture = viewConstants.getAperture(); 
     float objectdistance = linearDepth; 
-    float planeinfocus = viewConstants.getFocusDistance(); // 13.9;
+    float planeinfocus = viewConstants.getFocusDistance(); 
     float coc = (aperture * (focallength * (objectdistance - planeinfocus)) / (objectdistance * (planeinfocus - focallength)));
     return coc * viewConstants.getDOFScale();
 }

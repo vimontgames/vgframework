@@ -37,6 +37,8 @@ namespace vg::engine
 
         void                                    SetMotionType       (physics::MotionType _motionType) final override;
         physics::MotionType                     GetMotionType       () const final override;
+
+        const core::float3 &                    GetVelocity         () const final override;
         
         void                                    onShapeUpdated      ();
         void                                    updateShapesColor   ();

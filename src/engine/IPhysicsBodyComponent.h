@@ -18,5 +18,7 @@ namespace vg::engine
     
         virtual void                    SetMotionType(physics::MotionType _motionType) = 0;
         virtual physics::MotionType     GetMotionType() const = 0;
+
+        virtual const core::float3 &    GetVelocity() const = 0;
     };
 }

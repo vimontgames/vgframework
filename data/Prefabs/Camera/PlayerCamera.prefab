@@ -33,7 +33,7 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="ObjectHandle" name="m_target" value="0"/>
-                                <Property type="Float3" name="m_offset" x="0" y="-11" z="8.5"/>
+                                <Property type="Float3" name="m_offset" x="0" y="-15" z="12.5"/>
                                 <Property type="Float" name="m_delay" value="0.1"/>
                             </Object>
                             <Object class="CameraComponent">
@@ -66,7 +66,7 @@
                                             </Object>
                                         </Property>
                                         <Property type="Float" name="m_focalLength" value="35"/>
-                                        <Property type="Float" name="m_focusDistance" value="14"/>
+                                        <Property type="Float" name="m_focusDistance" value="19.5"/>
                                         <Property type="Float" name="m_aperture" value="2.8"/>
                                         <Property type="EnumU8" name="m_gateFitMode" value="Vertical"/>
                                         <Property type="Bool" name="m_depthOfField" value="true"/>

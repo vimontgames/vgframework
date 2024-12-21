@@ -112,6 +112,12 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    const core::float3 & PhysicsBodyComponent::GetVelocity() const
+    {
+        return m_velocity;
+    }
+
+    //--------------------------------------------------------------------------------------
     void PhysicsBodyComponent::OnLoad()
     {
         createBody();

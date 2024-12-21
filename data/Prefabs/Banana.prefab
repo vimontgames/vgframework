@@ -47,9 +47,9 @@
                                         <Property type="EnumU8" name="m_motion" value="Dynamic"/>
                                         <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
                                         <Property type="Bool" name="m_overrideMass" value="true"/>
-                                        <Property type="Float" name="m_mass" value="0.2"/>
-                                        <Property type="Float" name="m_friction" value="0.5"/>
-                                        <Property type="Float" name="m_restitution" value="0.55000001"/>
+                                        <Property type="Float" name="m_mass" value="0.5"/>
+                                        <Property type="Float" name="m_friction" value="0.55000001"/>
+                                        <Property type="Float" name="m_restitution" value="0.69999999"/>
                                     </Object>
                                 </Property>
                             </Object>
@@ -57,7 +57,7 @@
                                 <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2212977972"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_shapeType" value="Capsule"/>
                                 <Property type="ObjectPtr" name="m_shapeDesc">
@@ -79,7 +79,7 @@
                                 <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2340866316"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_shapeType" value="Capsule"/>
                                 <Property type="ObjectPtr" name="m_shapeDesc">
@@ -96,6 +96,15 @@
                                         <Property type="Float" name="m_height" value="0.2"/>
                                     </Object>
                                 </Property>
+                            </Object>
+                            <Object class="ItemBehaviour">
+                                <Property type="String" name="m_name" value="New ItemBehaviour"/>
+                                <Property type="Uint32" name="m_uid" value="2895164308"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float" name="m_damage" value="10"/>
+                                <Property type="Float" name="m_push" value="1"/>
                             </Object>
                             <Object class="MeshComponent">
                                 <Property type="String" name="m_name" value="New MeshComponent"/>

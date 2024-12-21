@@ -5,6 +5,8 @@
 #include "ItemBehaviour.inl"
 #endif
 
+#include "engine/IPhysicsBodyComponent.h"
+
 #include "Ball/BallBehaviour.hpp"
 #include "Weapon/WeaponBehaviour.hpp"
 
@@ -98,6 +100,15 @@ void ItemBehaviour::OnCollisionEnter(vg::core::IGameObject * _other)
     }
     else if (auto * enemy = _other->GetComponentT<EnemyBehaviour>())
     {
-        enemy->takeHit(nullptr, this);
+        // check projectile speed
+        if (auto * physicsBodyComponent = GetGameObject()->GetComponentInChildrenT<IPhysicsBodyComponent>())
+        {
+            const float3 & velocity = physicsBodyComponent->GetVelocity();
+            const float velocityNorm = length(velocity);
+            //VG_DEBUGPRINT("[ItemBehaviour] Velocity = %f, %f, %f (%f)\n", (float)velocity.x, (float)velocity.y, (float)velocity.z, velocityNorm);
+
+            if (velocityNorm > 0.01f)
+                enemy->takeHit(nullptr, this);
+        }        
     }
 }

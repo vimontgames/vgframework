@@ -116,9 +116,8 @@ void Game::addCharacter(CharacterType _type, CharacterBehaviour * _character)
 void Game::removeCharacter(CharacterType _type, CharacterBehaviour * _character)
 {
     auto & characters = m_characters[vg::core::asInteger(_type)];
-    VG_ASSERT(vector_helper::exists(characters, _character));
-    vector_helper::remove(characters, _character);
-    //VG_INFO("[Game] Remove %s Character \"%s\"", asString(_type).c_str(), _character->GetName().c_str());
+    if (!vector_helper::remove(characters, _character))
+        VG_WARNING("[Game] Cannot unregister Character \"%s\" from GameObject \"%s\" of type %s.", _character->GetName().c_str(), _character->GetGameObject()->GetName().c_str(), asString(_type).c_str());
 }
 
 //--------------------------------------------------------------------------------------
@@ -160,9 +159,8 @@ void Game::addItem(ItemType _type, ItemBehaviour * _item)
 void Game::removeItem(ItemType _type, ItemBehaviour * _item)
 {
     auto & items = m_items[vg::core::asInteger(_type)];
-    VG_ASSERT(vector_helper::exists(items, _item));
-    vector_helper::remove(items, _item);
-    //VG_INFO("[Game] Remove %s Item \"%s\"", asString(_type).c_str(), _item->GetName().c_str());
+    if (!vector_helper::remove(items, _item))
+        VG_WARNING("[Game] Cannot unregister Item \"%s\" from GameObject \"%s\" of type %s.", _item->GetName().c_str(), _item->GetGameObject()->GetName().c_str(), asString(_type).c_str());
 }
 
 //--------------------------------------------------------------------------------------

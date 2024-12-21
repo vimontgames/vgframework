@@ -33,7 +33,8 @@ vg_enum_class(SoundState, vg::core::u8,
 vg_enum_class(ItemType, vg::core::u8,
     Default = 0,
     Ball,
-    Weapon
+    Weapon,
+    Projectile
 );
 
 vg_enum_class(BallType, vg::core::u8,

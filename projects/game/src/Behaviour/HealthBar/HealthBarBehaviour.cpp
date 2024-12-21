@@ -85,4 +85,7 @@ void HealthBarBehaviour::setHP(float _currentHP)
         if (auto * lifeText = lifeGO->GetComponentT<IUITextComponent>())
             lifeText->SetText(vg::core::fmt::sprintf("%.0f HP", m_currentHP));
     }
+
+    if (m_currentHP <= 0)
+        GetGameObject()->setInstanceFlags(InstanceFlags::Enabled, false);
 }

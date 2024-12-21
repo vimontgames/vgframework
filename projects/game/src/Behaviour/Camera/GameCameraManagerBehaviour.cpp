@@ -119,6 +119,8 @@ void GameCameraManagerBehaviour::updateGameViewports()
         }
     }
 
+    const bool verticalSplit = true;
+
     if (cameras.size() > 0)
     {
         if (m_players > 0)
@@ -139,8 +141,12 @@ void GameCameraManagerBehaviour::updateGameViewports()
                     break;
 
                 case 2:
-                    cam0->SetViewportOffsetAndScale(float2(0.0f, 0.0f), float2(0.5f, 1.0f));        // ■□
-                    break;                                                                          // ■□
+                    if (verticalSplit)                                                              // ■□
+                        cam0->SetViewportOffsetAndScale(float2(0.0f, 0.0f), float2(0.5f, 1.0f));    // ■□
+                    else
+                        cam0->SetViewportOffsetAndScale(float2(0.0f, 0.0f), float2(1.0f, 0.5f));    // ■■
+                                                                                                    // □□
+                    break;
 
                 case 3:
                 case 4:                                                                             // ■□
@@ -169,8 +175,11 @@ void GameCameraManagerBehaviour::updateGameViewports()
                         break;
 
                     case 2:
-                        cam1->SetViewportOffsetAndScale(float2(0.5f, 0.0f), float2(0.5f, 1.0f));    // □■
-                        break;                                                                      // □■
+                        if (verticalSplit)                                                          // □■
+                            cam1->SetViewportOffsetAndScale(float2(0.5f, 0.0f), float2(0.5f, 1.0f));// □■
+                        else
+                            cam1->SetViewportOffsetAndScale(float2(0.0f, 0.5f), float2(1.0f, 0.5f));// □□
+                        break;                                                                      // ■■
 
                     case 3:
                     case 4:                                                                         // □■
