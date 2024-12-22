@@ -159,29 +159,17 @@ PS_Output PS_Forward(VS_Output _input)
     output.color0.a = albedo.a; 
     
     #if _TOOLMODE && !_ZONLY
-
     output.color0 = forwardDebugDisplay(output.color0, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
-
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
         output.color0 = float4(0,1,0,1);
-
-    // Picking
-    uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
-    if (0xFFFF != toolmodeRWBufferID)
-    {
-        uint2 inputPos = _input.pos.xy;
-        float depth = _input.pos.z;
-        uint2 mousePos = viewConstants.getMousePos();
-        uint4 pickingID = uint4(rootConstants3D.getPickingID(), rootConstants3D.getMatID(), 0, 0);
-    
-        if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, depth, worldPos, mousePos, screenSize, pickingID))
-            output.color0 = lerp(output.color0, float4(0,1,0,1), 0.25f);
-    }
-
     #endif // _TOOLMODE
 
     #if _ALPHATEST
-    clip(output.color0.a-0.5f); 
+    if (output.color0.a < 0.5f)
+    {
+        output.color0.a = 0;
+        clip(-1);
+    }
     #endif
     
     #if !_ALPHABLEND && !_DECAL
@@ -197,6 +185,24 @@ PS_Output PS_Forward(VS_Output _input)
     float alpha = saturate((linearDepthBuffer - linearZ) * materialData.getInvDepthFade()); 
     output.color0.a *= alpha;
     #endif
+
+    #if _TOOLMODE && !_ZONLY
+    // Picking
+    if (output.color0.a > 0)
+    {
+        uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
+        if (0xFFFF != toolmodeRWBufferID)
+        {
+            uint2 inputPos = _input.pos.xy;
+            float depth = _input.pos.z;
+            uint2 mousePos = viewConstants.getMousePos();
+            uint4 pickingID = uint4(rootConstants3D.getPickingID(), rootConstants3D.getMatID(), 0, 0);
+    
+            if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, depth, worldPos, mousePos, screenSize, pickingID))
+                output.color0 = lerp(output.color0, float4(0,1,0,1), 0.25f);
+        }
+    }
+    #endif // #if _TOOLMODE && !_ZONLY
 
     #if _ZONLY
     return;
@@ -295,23 +301,14 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     #if _TOOLMODE && !_ZONLY
     // If any 'Forward' debug display mode is enabled then its result is stored into the 'Albedo' buffer
     output.albedo = forwardDebugDisplay(output.albedo, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
-
-    // Picking
-    uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
-    if (0xFFFF != toolmodeRWBufferID)
-    {
-        uint2 inputPos = _input.pos.xy;
-        float depth = _input.pos.z;
-        uint2 mousePos = viewConstants.getMousePos();
-        uint4 pickingID = uint4(rootConstants3D.getPickingID(), rootConstants3D.getMatID(), 0, 0);
-    
-        if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, depth, worldPos, mousePos, screenSize, pickingID))
-            output.albedo = lerp(output.albedo, float4(0,1,0,1), 0.25);
-    }
     #endif // _TOOLMODE && !_ZONLY
 
     #if _ALPHATEST
-    clip(output.albedo.a - 0.5); 
+    if (output.albedo.a < 0.5)
+    {
+        output.albedo.a = 0;
+        clip(-1);
+    } 
     #endif
 
     #if !_ALPHABLEND && !_DECAL
@@ -319,6 +316,24 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     output.normal.a = 1;
     output.pbr.a = 1;
     #endif
+
+    #if _TOOLMODE && !_ZONLY
+    if (output.albedo.a > 0)
+    {
+        // Picking
+        uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
+        if (0xFFFF != toolmodeRWBufferID)
+        {
+            uint2 inputPos = _input.pos.xy;
+            float depth = _input.pos.z;
+            uint2 mousePos = viewConstants.getMousePos();
+            uint4 pickingID = uint4(rootConstants3D.getPickingID(), rootConstants3D.getMatID(), 0, 0);
+    
+            if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, depth, worldPos, mousePos, screenSize, pickingID))
+                output.albedo = lerp(output.albedo, float4(0,1,0,1), 0.25);
+        }
+    }
+    #endif // _TOOLMODE && !_ZONLY
 
     #if _ZONLY
     return;
