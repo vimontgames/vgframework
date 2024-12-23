@@ -2,6 +2,7 @@
 #include "SnapComponent.h"
 #include "editor/Editor_Consts.h"
 #include "core/IGameObject.h"
+#include "core/Math/Math.h"
 
 using namespace vg::core;
 
@@ -48,27 +49,61 @@ namespace vg::engine
     {
         if (_gameObject->IsPrefab())
         {
+            bool dirty = false;
+
+            float3 T, R, S;
+            Float4x4ToTRS(_gameObject->GetLocalMatrix(), T, R, S);
+
+            const float eps = 0.0001f;
+
             if (m_snapTranslation)
             {
-                float4x4 matrix = _gameObject->GetLocalMatrix();
-                const float eps = 0.001f;
-                const float3 ratioT = matrix[3].xyz / abs(m_translation.xyz);
-                const float3 nearestMultiple = round(ratioT);
+                const float3 ratioT = T / abs(m_translation.xyz);
+                const float3 nearestIntT = round(ratioT);
 
-                if (any( abs(nearestMultiple-ratioT) > eps ))
+                if (any( abs(nearestIntT-ratioT) > eps ))
                 {
-                    float3 snapT = nearestMultiple * m_translation;
+                    float3 snapT = nearestIntT * m_translation;
 
-                    VG_WARNING("[Snap] Translation of Prefab \"%s\" (%.3f, %.3f, %.3f) has been snapped to (%.3f, %.3f, %.3f) because of snap component forces snap to (%.3f, %.3f, %.3f)", 
+                    VG_WARNING("[Snap] Translation of Prefab \"%s\" (UID: 0x%08X) changed from (%.3f, %.3f, %.3f) to (%.3f, %.3f, %.3f) because of translation snap value of (%.3f, %.3f, %.3f)", 
                         _gameObject->GetName().c_str(), 
-                        (float)matrix[3].x, (float)matrix[3].y, (float)matrix[3].z,
+                        _gameObject->GetUID(),
+                        (float)T.x, (float)T.y, (float)T.z,
                         (float)snapT.x, (float)snapT.y, (float)snapT.z,
                         (float)m_translation.x, (float)m_translation.y, (float)m_translation.z
                     );
 
-                    matrix[3].xyz = snapT;
-                    _gameObject->SetLocalMatrix(matrix);
+                    T = snapT;
+                    dirty = true;
                 }
+            }
+
+            if (m_snapRotation)
+            {
+                const float3 ratioR = R / abs(m_rotation);
+                const float3 nearestIntR = round(ratioR);
+
+                if (any(abs(nearestIntR - ratioR) > eps))
+                {
+                    float3 snapR = nearestIntR * m_rotation;
+
+                    VG_WARNING("[Snap] Rotation of Prefab \"%s\" (UID: 0x%08X) changed from (%.3f, %.3f, %.3f) to (%.3f, %.3f, %.3f) because of translation snap value of (%.3f, %.3f, %.3f)",
+                        _gameObject->GetName().c_str(),
+                        _gameObject->GetUID(),
+                        (float)R.x, (float)R.y, (float)R.z,
+                        (float)snapR.x, (float)snapR.y, (float)snapR.z,
+                        (float)m_rotation, (float)m_rotation, (float)m_rotation
+                    );
+
+                    R = snapR;
+                    dirty = true;
+                }
+            }
+
+            if (dirty)
+            {
+                float4x4 matrix = TRSToFloat4x4(T, R, S);
+                _gameObject->SetLocalMatrix(matrix);
             }
         }
 
