@@ -250,7 +250,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetWindowTextA(g_hWnd, title.c_str());
 
     // Start profiling as soon as possible
-    int profileStartFrameCount = 0;
+    int profileStartFrameCount = -1;
 	if (cmdLine.getInt("profileStart", profileStartFrameCount))
 		engineParams.renderer.profileStart = true;
 

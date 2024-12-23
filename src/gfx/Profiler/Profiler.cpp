@@ -86,6 +86,10 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void Profiler::start()
     {
+        VG_ASSERT(!m_isCaptureInProgress, "Cannot start profile capture because a capture is already in progress");
+        if (m_isCaptureInProgress)
+            return;
+        
         VG_INFO("[Profiler] Start capture");
         auto * device = Device::get();
         device->beginCapture();
@@ -96,6 +100,10 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void Profiler::stop()
     {
+        VG_ASSERT(m_isCaptureInProgress, "Cannot stop profile capture because there is no capture currently in progress");
+        if (!m_isCaptureInProgress)
+            return;
+
         m_isCaptureInProgress = false;
         OPTICK_STOP_CAPTURE();
         VG_INFO("[Profiler] Stop capture");
