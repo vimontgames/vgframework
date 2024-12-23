@@ -3,6 +3,8 @@
 # VGFramework 0.44
 Yet another work-in-progress game and graphic engine project.
 
+![Demo](doc/img/demo.mp4)
+
 # Table of contents
 [Build status](#Build-Status)\
 [Getting started](#Getting-started)\
