@@ -15,6 +15,12 @@ namespace vg::engine
         bool            TryGetSnapRotate    (float & _rotate) const final override;
         bool            TryGetSnapScale     (float & _scale) const final override;
 
+        void            snap                ();
+
+    private:
+        static bool     snapObject          (core::IObject * _object);
+        void            snapObjectRecur     (core::IGameObject * _gameObject);
+
     protected:
         bool            m_snapTranslation = true;
         core::float3    m_translation = core::float3(1,1,1);

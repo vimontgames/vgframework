@@ -4,14 +4,14 @@
 
 namespace vg::engine
 {
-    class Scene : public GameObjectHierarchy
+    class Scene final: public GameObjectHierarchy
     {
     public:
         VG_CLASS_DECL(Scene, GameObjectHierarchy);
 
-        Scene(const core::string & _name, core::IObject * _parent);
-        ~Scene();
+                                Scene           (const core::string & _name, core::IObject * _parent);
+                                ~Scene          ();
 
-        core::BaseSceneType   GetSceneType() const final override { return core::BaseSceneType::Scene; }
+        core::BaseSceneType     GetSceneType    () const final override { return core::BaseSceneType::Scene; }
     };
 }

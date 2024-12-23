@@ -2,6 +2,7 @@
 #include "PrefabGameObject.h"
 #include "engine/World/Prefab/PrefabScene.h"
 #include "core/Object/DynamicProperties/DynamicProperties.h"
+#include "engine/Component/Editor/Snap/SnapComponent.h"
 
 using namespace vg::core;
 
@@ -512,6 +513,11 @@ namespace vg::engine
                     OverrideGameObjectProperties((GameObject*)instance, nullptr);
 
                     AddChild(instance);
+
+                    // Force Prefab snap
+                    if (SnapComponent * snapComp = instance->GetComponentInChildrenT<SnapComponent>())
+                        snapComp->snap();
+
                     VG_SAFE_RELEASE(instance);
                 }
             }
