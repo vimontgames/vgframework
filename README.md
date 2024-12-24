@@ -1,6 +1,6 @@
 ﻿<img src="doc/img/version.png" alt="VGF boy" title="VGF boy" align="right" height="74" />
 
-# VGFramework 0.44
+# VGFramework 0.45
 Yet another work-in-progress game and graphic engine project.
 
 ![Demo](doc/img/demo.gif)
@@ -55,18 +55,17 @@ First run might take a few seconds because files are cooking.
  
 ## Command-line args
 
-| Name   <img width=100/>| Description<img width=360/>													
-| ---------------------- | ------------------------------------------------------------- 
-| `attachDebugger=true`  | MessageBox at application start to let attach a debugger
-| `breakOnErrors=true`   | Break on graphics API errors (with **debugDevice**)
-| `breakOnWarnings=true` | Break on graphics API warnings (with **debugDevice**)
-| `debugDevice=true`	 | Enable the graphics API debug layer ✨
-| `fullscreen=true`	     | Start application with game view maximized instead of editor	
-| `play=true`		     | Start application with play mode running	
-| `profileStart=N`       | Profile the 1st N frames
+| Name   <img width=100/>        | Description<img width=360/>													
+| ------------------------------ | ------------------------------------------------------------- 
+| `attachDebugger={true, false}` | MessageBox at application start to let attach a debugger
+| `breakOnErrors={true, false}`  | Break on graphics API errors (*`debugDevice` required*)
+| `breakOnWarnings={true, false}`| Break on graphics API warnings (*`debugDevice` required*)
+| `debugDevice={true, false}`	 | Enable the graphics API debug layer (*default for `Debug` builds*)
+| `editor={true, false}`         | Enable editor (*default for `Debug` and `Release` builds*)
+| `fullscreen={true, false}`	 | Start application with game view maximized (*default for `Final` builds*)	
+| `play={true, false}`		     | Start application with play mode running	(*default for `Final` builds*)
+| `profileStart={N}`             | Profile the 1st N frames
                       
-✨ **debugDevice** is enabled by default on **debug** builds
-
 ## Keyboard shortcuts
 
 | Name<img width=100/>| Description<img width=360/>		 												

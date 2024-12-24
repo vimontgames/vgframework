@@ -9,5 +9,6 @@ namespace vg::renderer
     {
         gfx::DeviceParams device;
         bool profileStart = false;
+        bool editor = false;
     };
 }

@@ -249,6 +249,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	SetWindowTextA(g_hWnd, title.c_str());
 
+	// 'Debug' and 'Release' targets default with Editor enabled, but 'Final' doesn't.
+	// Override command-line with "editor=false" for Debug/Release standalone version or use "editor=true" for a FINAL editor version
+	#if VG_FINAL
+	bool editor = false;
+	#else
+	bool editor = true;
+	#endif
+	cmdLine.getBool("editor", editor);
+	engineParams.renderer.editor = editor;
+
     // Start profiling as soon as possible
     int profileStartFrameCount = -1;
 	if (cmdLine.getInt("profileStart", profileStartFrameCount))
@@ -261,21 +271,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     Application * app = new Application(*g_engine);
 	auto * profiler = g_renderer->GetProfiler();
 
-    // Start in play mode?
-	#if VG_FINAL
-	bool play = true;
-	#else
-	bool play = false;
-	#endif
+    // Start in play mode? In Editor mode the default is not to start in 'Play' mode but in standalone we default to 'Play' mode start
+	bool play = !editor;
 	cmdLine.getBool("play", play);
     g_engine->StartInPlayMode(play);
 
-    // Start maximized?
-	#if VG_FINAL
-	bool fullscreen = true;
-	#else
-	bool fullscreen = false;
-	#endif
+    // Start maximized? In Editor mode the default is not to maximize game view but in standalone we default to maximize game view
+	bool fullscreen = !editor;
     cmdLine.getBool("fullscreen", fullscreen),
 	g_engine->GetRenderer()->SetFullscreen(fullscreen);
 

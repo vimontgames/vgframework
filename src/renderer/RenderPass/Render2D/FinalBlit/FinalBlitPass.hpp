@@ -61,7 +61,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void FinalBlitPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
-        const auto options = RendererOptions::get();
+        const auto * renderer = Renderer::get();
+        const auto * options = RendererOptions::get();
         const auto * view = (IView *)_renderPassContext.getView();
 
         RasterizerState rs(FillMode::Solid, CullMode::None);
@@ -94,13 +95,14 @@ namespace vg::renderer
         _cmdList->setGraphicRootConstants(0, (u32*)&root2D, RootConstants2DCount);
         _cmdList->draw(4);
 
-        #if !VG_ENABLE_EDITOR
-        // When no editor we render game UI directly to backbuffer
-        if (Renderer::get()->IsFullscreen())
+        if (!renderer->IsEditor())
         {
-            if (auto * viewGUI = VG_SAFE_STATIC_CAST(UIRenderer, view->GetUIRenderer()))
-                viewGUI->RenderFullscreen();
+            // When not editor, render game UI directly to backbuffer
+            if (Renderer::get()->IsFullscreen())
+            {
+                if (auto * viewGUI = VG_SAFE_STATIC_CAST(UIRenderer, view->GetUIRenderer()))
+                    viewGUI->RenderFullscreen();
+            }
         }
-        #endif
     }
 }

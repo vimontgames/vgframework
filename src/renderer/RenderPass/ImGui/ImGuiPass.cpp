@@ -92,21 +92,22 @@ namespace vg::renderer
         auto * imGuiAdapter = Renderer::get()->getImGuiAdapter();
         imGuiAdapter->PushDefaultFont();
 
-        #if VG_ENABLE_EDITOR
-        editor::IEditor * editor = getEngine()->GetEditor();
-        if (editor)
+        auto * renderer = Renderer::get();
+        if (renderer->IsEditor())
         {
-            editor::GUIContext guiContext;
-            guiContext.imgui = ImGui::GetCurrentContext();
-            guiContext.filedialog = ImGuiFileDialog::Instance();
-
-            editor->DrawGUI(guiContext);
+            editor::IEditor * editor = getEngine()->GetEditor();
+            VG_ASSERT(nullptr != editor);
+            if (editor)
+            {
+                editor::GUIContext guiContext;
+                guiContext.imgui = ImGui::GetCurrentContext();
+                guiContext.filedialog = ImGuiFileDialog::Instance();
+                editor->DrawGUI(guiContext);
+            }
         }
-        #else
-        // When no editor, render game UI directly to final target
-        if (Renderer::get()->IsFullscreen())
+        else
         {
-            auto * renderer = Renderer::get();
+            // When no editor, render game UI directly to final target
             auto & gameViewports = renderer->GetViewports(gfx::ViewportTarget::Game);
             for (auto & gameViewport : gameViewports)
             {
@@ -114,7 +115,6 @@ namespace vg::renderer
                     uiRenderer->RenderFullscreen();
             }
         }
-        #endif
 
         imGuiAdapter->PopFont();
         imGuiAdapter->render(_cmdList);

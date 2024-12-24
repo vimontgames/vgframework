@@ -185,6 +185,9 @@ namespace vg::renderer
         // Get other Singletons for Renderer
         Kernel::setSingletons(_singletons);
 
+        // Does this renderer support editor rendering?
+        m_editor = _params.editor;
+
         // Start profiling immediately if requested
         if (_params.profileStart)
             GetProfiler()->start();
@@ -1172,9 +1175,9 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void Renderer::SetFullscreen(bool _fullscreen)
     {
-        #if !VG_ENABLE_EDITOR
-        _fullscreen = true;
-        #endif
+        // Always maximize game view in standalone
+        if (!m_editor)
+            _fullscreen = true;
 
         if (_fullscreen != m_fullscreen)
         {
@@ -1217,11 +1220,16 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool Renderer::IsFullscreen() const
     {
-        #if !VG_ENABLE_EDITOR
-        return true;
-        #else
-        return m_fullscreen;
-        #endif
+        if (m_editor)
+            return m_fullscreen;
+        else
+            return true;    // Game view is always maximized in standalone            
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Renderer::IsEditor() const
+    {
+        return m_editor;
     }
 
     //--------------------------------------------------------------------------------------

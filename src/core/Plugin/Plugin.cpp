@@ -19,7 +19,7 @@ namespace vg::core
 
 		// Call FormatMessage asking to allocate.
 		size_t size = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-			NULL, errorID, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&messageBuffer, 0, NULL);
+			NULL, errorID, MAKELANGID(LANG_ENGLISH, SUBLANG_ENGLISH_US), (LPSTR)&messageBuffer, 0, NULL);
 
 		std::string message(messageBuffer, size);
 
@@ -64,7 +64,10 @@ namespace vg::core
         else
         {
             DWORD error = GetLastError();
-			VG_ASSERT(false, "Error: \"%s\" (0x%08X) loading %s Plugin \"%s\"", GetWin32ErrorAsString(error).c_str(), error, _name.c_str(), filename.c_str());
+			VG_ASSERT(hModule, "Error 0x%08X: %s\nCould not load \"%s\" plugin.\n\nIf you are running from the IDE, please make sure that $(SolutionDir) is your working directory.", 
+				error,
+				GetWin32ErrorAsString(error).c_str(),
+				_name.c_str());
         }
 		#endif
 

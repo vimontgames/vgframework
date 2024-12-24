@@ -93,9 +93,7 @@ namespace vg::engine
 
         core::uint2                             GetScreenSize       () const final;
 
-        #if VG_ENABLE_EDITOR
         editor::IEditor *                       GetEditor           () const final override;
-        #endif
 
 		renderer::IRenderer *	                GetRenderer	        () const final override;
         physics::IPhysics *                     GetPhysics          () const final override;
@@ -148,11 +146,7 @@ namespace vg::engine
         bool                                    m_quit              : 1;
         IGame *                                 m_game              = nullptr;
         WorldResource *                         m_worldResource     = nullptr;
-
-        #if VG_ENABLE_EDITOR
         editor::IEditor *                       m_editor            = nullptr;
-        #endif
-
 		renderer::IRenderer *	                m_renderer          = nullptr;
         physics::IPhysics *                     m_physics           = nullptr;
         audio::IAudio *                         m_audio             = nullptr;

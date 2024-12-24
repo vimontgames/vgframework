@@ -121,6 +121,7 @@ namespace vg::renderer
 
         void                                    SetFullscreen               (bool _fullscreen) final override;
         bool                                    IsFullscreen                () const final override;
+        bool                                    IsEditor                    () const final override;
 
         ILightInstance *                        CreateLightInstance         (const ILightDesc * _lightDesc) final override;
 
@@ -158,6 +159,7 @@ namespace vg::renderer
         void                                    releaseSpecularBRDF         ();
 
 	private:
+        bool                                    m_editor                    = false;
 		gfx::Device &		                    m_device;
         gfx::FrameGraph &                       m_frameGraph;
         gfx::Texture *                          m_hdrOutput                 = nullptr;

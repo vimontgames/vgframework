@@ -70,6 +70,7 @@ jobs:
             src/commit.h
             VGFramework_x64_Final_DX12.exe
             build\bin\x64\Final\audio.dll
+            build\bin\x64\Final\editor.dll
             build\bin\x64\Final\engine.dll
             build\bin\x64\Final\game.dll
             build\bin\x64\Final\physics.dll
@@ -145,6 +146,7 @@ jobs:
           # Stage Game files
           git add -f "Game.exe"
           git add -f "bin\x64\Final\audio.dll"
+          git add -f "bin\x64\Final\editor.dll"
           git add -f "bin\x64\Final\engine.dll"
           git add -f "bin\x64\Final\game.dll"
           git add -f "bin\x64\Final\physics.dll"

@@ -385,11 +385,12 @@ namespace vg::engine
             // Load project DLL
             LoadGame(engineOptions->GetProjectPath());
 
-            // Load Editor DLL
-            #if VG_ENABLE_EDITOR
-            m_editor = Plugin::create<editor::IEditor>("editor");
-            m_editor->Init(_singletons);
-            #endif
+            // Load Editor DLL if requested
+            if (_params.renderer.editor)
+            {
+                m_editor = Plugin::create<editor::IEditor>("editor");
+                m_editor->Init(_singletons);
+            }
 
             // Create default world resource or load world path from command line (TODO)
             VG_ASSERT(m_worldResource == nullptr);
@@ -597,10 +598,11 @@ namespace vg::engine
 
         IFactory * factory = Kernel::getFactory();
 
-        #if VG_ENABLE_EDITOR
-        m_editor->Deinit();
-        m_editor->Release();
-        #endif
+        if (m_editor)
+        {
+            m_editor->Deinit();
+            VG_SAFE_RELEASE(m_editor);
+        }
 
         // ~dtor time is too late to unload world resource we have to use ptr so as to do it manually before the ResourceMananger shutdowns
         VG_SAFE_RELEASE(m_worldResource);
@@ -892,10 +894,8 @@ namespace vg::engine
             }
         }
 
-        #if VG_ENABLE_EDITOR
         if (m_editor)
             m_editor->RunOneFrame();
-        #endif
 
         // This will use all available threads for culling then rendering scene
         if (m_renderer)
@@ -915,12 +915,11 @@ namespace vg::engine
 	}
 
     //--------------------------------------------------------------------------------------
-    #if VG_ENABLE_EDITOR
     editor::IEditor * Engine::GetEditor() const
     {
+        VG_ASSERT(m_editor, "Editor is not supported. Use \"editor=true\" in command-line to enable editor");
         return m_editor;
     }
-    #endif
 
 	//--------------------------------------------------------------------------------------
 	renderer::IRenderer * Engine::GetRenderer() const

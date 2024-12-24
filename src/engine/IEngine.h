@@ -29,12 +29,10 @@ namespace vg
         class IAudio;
     }
 
-    #if VG_ENABLE_EDITOR
     namespace editor
     {
         class IEditor;
     }
-    #endif
 
     namespace core
     {
@@ -108,9 +106,7 @@ namespace vg
 		    virtual void						        RunOneFrame	        () = 0;
             virtual void                                FlushLoading        () = 0;
 
-            #if VG_ENABLE_EDITOR
             virtual editor::IEditor *                   GetEditor           () const = 0;
-            #endif
 
 		    virtual renderer::IRenderer *	            GetRenderer	        () const = 0;
             virtual physics::IPhysics *                 GetPhysics          () const = 0;

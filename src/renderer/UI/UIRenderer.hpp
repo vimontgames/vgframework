@@ -45,17 +45,19 @@ namespace vg::renderer
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0); // This is necessary in !VG_ENABLE_EDITOR mode to remove dark window borders
 
-        #if !VG_ENABLE_EDITOR
-        // if not rendered from inside dock the ImGui::Begin part is needed!
-        ImGui::Begin("ViewGUI", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
-        #endif
+        const bool editor = Renderer::get()->IsEditor();
+        if (!editor)
         {
-            ImGui::SetCursorScreenPos(ImVec2(0, 0));
-            render();
+            // if not rendered from inside dock the ImGui::Begin part is needed!
+            ImGui::Begin("ViewGUI", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar);
         }
-        #if !VG_ENABLE_EDITOR
-        ImGui::End();
-        #endif
+
+        ImGui::SetCursorScreenPos(ImVec2(0, 0));
+        render();
+        
+        if (!editor)
+            ImGui::End();
+
         ImGui::PopStyleColor();
         ImGui::PopStyleVar(2);
     }
