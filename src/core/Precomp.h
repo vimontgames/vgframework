@@ -176,10 +176,6 @@ namespace vg::core
 //--------------------------------------------------------------------------------------
 #define HLSLPP_FEATURE_TRANSFORM
 
-#if defined(_M_ARM64EC)
-#define HLSLPP_SCALAR
-#endif
-
 #include "hlslpp/include/hlsl++.h"
 
 //--------------------------------------------------------------------------------------
