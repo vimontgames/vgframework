@@ -34,19 +34,23 @@ namespace vg::core
 	{
 		string filename;
 
+		const auto platform = getPlatform();
+		const auto config = getConfiguration();
+		const auto extension = getExtension();
+
 		// First, look for the locally compiled version in the "build" folder
 		if (_configSuffix.empty())
-			filename = fmt::sprintf("build/bin/%s/%s/%s.%s", getPlatform(), getConfiguration(), _name, getExtension());
+			filename = fmt::sprintf("build/bin/%s/%s/%s.%s", platform, config, _name, extension);
 		else
-			filename = fmt::sprintf("build/bin/%s/%s_%s/%s.%s", getPlatform(), getConfiguration(), _configSuffix, _name,  getExtension());
+			filename = fmt::sprintf("build/bin/%s/%s_%s/%s.%s", platform, config, _configSuffix, _name, extension);
 
 		// If it does not exist, then use the prebuilt version
 		if (!io::exists(filename))
 		{
             if (_configSuffix.empty())
-                filename = fmt::sprintf("bin/%s/%s/%s.%s", getPlatform(), getConfiguration(), _name, getExtension());
+                filename = fmt::sprintf("bin/%s/%s/%s.%s", platform, config, _name, extension);
             else
-                filename = fmt::sprintf("bin/%s/%s_%s/%s.%s", getPlatform(), getConfiguration(), _configSuffix, _name, getExtension());
+                filename = fmt::sprintf("bin/%s/%s_%s/%s.%s", platform, config, _configSuffix, _name, extension);
 		}
 		
 		IPlugin * instance = nullptr;
@@ -98,6 +102,8 @@ namespace vg::core
 	{
 		#ifdef VG_DEBUG
 		return "Debug";
+		#elif defined(VG_DEVELOPMENT)
+		return "Development";
 		#elif defined(VG_RELEASE)
 		return "Release";
 		#elif defined(VG_FINAL)

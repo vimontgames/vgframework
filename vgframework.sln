@@ -179,6 +179,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DX12", "DX12", "{10B0BBE1-BF80-4ECD-8F14-8194F451766D}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\Win64_DX12_Debug.yml = .github\workflows\Win64_DX12_Debug.yml
+		.github\workflows\Win64_DX12_Development.yml = .github\workflows\Win64_DX12_Development.yml
 		.github\workflows\Win64_DX12_Final.yml = .github\workflows\Win64_DX12_Final.yml
 		.github\workflows\Win64_DX12_Release.yml = .github\workflows\Win64_DX12_Release.yml
 	EndProjectSection
@@ -186,6 +187,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vulkan", "Vulkan", "{E092AAFC-AD5F-4267-B76E-A8B5E8D544B5}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\Win64_Vulkan_Debug.yml = .github\workflows\Win64_Vulkan_Debug.yml
+		.github\workflows\Win64_Vulkan_Development.yml = .github\workflows\Win64_Vulkan_Development.yml
 		.github\workflows\Win64_Vulkan_Final.yml = .github\workflows\Win64_Vulkan_Final.yml
 		.github\workflows\Win64_Vulkan_Release.yml = .github\workflows\Win64_Vulkan_Release.yml
 	EndProjectSection
@@ -195,6 +197,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DX12", "DX12", "{98E46C92-0EB4-4952-A209-EE9FCB60C9BC}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\ARM64EC_DX12_Debug.yml = .github\workflows\ARM64EC_DX12_Debug.yml
+		.github\workflows\ARM64EC_DX12_Development.yml = .github\workflows\ARM64EC_DX12_Development.yml
 		.github\workflows\ARM64EC_DX12_Final.yml = .github\workflows\ARM64EC_DX12_Final.yml
 		.github\workflows\ARM64EC_DX12_Release.yml = .github\workflows\ARM64EC_DX12_Release.yml
 	EndProjectSection
@@ -202,6 +205,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vulkan", "Vulkan", "{A5BEB808-297E-4924-838D-D74404C7025C}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\ARM64EC_Vulkan_Debug.yml = .github\workflows\ARM64EC_Vulkan_Debug.yml
+		.github\workflows\ARM64EC_Vulkan_Development.yml = .github\workflows\ARM64EC_Vulkan_Development.yml
 		.github\workflows\ARM64EC_Vulkan_Final.yml = .github\workflows\ARM64EC_Vulkan_Final.yml
 		.github\workflows\ARM64EC_Vulkan_Release.yml = .github\workflows\ARM64EC_Vulkan_Release.yml
 	EndProjectSection
@@ -249,6 +253,10 @@ Global
 		Debug|ARM64EC Vulkan = Debug|ARM64EC Vulkan
 		Debug|Win64 DX12 = Debug|Win64 DX12
 		Debug|Win64 Vulkan = Debug|Win64 Vulkan
+		Development|ARM64EC DX12 = Development|ARM64EC DX12
+		Development|ARM64EC Vulkan = Development|ARM64EC Vulkan
+		Development|Win64 DX12 = Development|Win64 DX12
+		Development|Win64 Vulkan = Development|Win64 Vulkan
 		Final|ARM64EC DX12 = Final|ARM64EC DX12
 		Final|ARM64EC Vulkan = Final|ARM64EC Vulkan
 		Final|Win64 DX12 = Final|Win64 DX12
@@ -267,6 +275,14 @@ Global
 		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Debug|Win64 DX12.Build.0 = Debug|x64
 		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Debug|Win64 Vulkan.ActiveCfg = Debug|x64
 		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Debug|Win64 Vulkan.Build.0 = Debug|x64
+		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Development|ARM64EC DX12.ActiveCfg = Development|ARM64EC
+		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Development|ARM64EC DX12.Build.0 = Development|ARM64EC
+		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Development|ARM64EC Vulkan.ActiveCfg = Development|ARM64EC
+		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Development|ARM64EC Vulkan.Build.0 = Development|ARM64EC
+		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Development|Win64 DX12.ActiveCfg = Development|x64
+		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Development|Win64 DX12.Build.0 = Development|x64
+		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Development|Win64 Vulkan.ActiveCfg = Development|x64
+		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Development|Win64 Vulkan.Build.0 = Development|x64
 		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Final|ARM64EC DX12.ActiveCfg = Final|ARM64EC
 		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Final|ARM64EC DX12.Build.0 = Final|ARM64EC
 		{257A93DC-9206-4770-9560-7A22DFF0AC01}.Final|ARM64EC Vulkan.ActiveCfg = Final|ARM64EC
@@ -291,6 +307,14 @@ Global
 		{42797D89-56C0-4B42-846D-DEB042288DCF}.Debug|Win64 DX12.Build.0 = Debug|x64
 		{42797D89-56C0-4B42-846D-DEB042288DCF}.Debug|Win64 Vulkan.ActiveCfg = Debug|x64
 		{42797D89-56C0-4B42-846D-DEB042288DCF}.Debug|Win64 Vulkan.Build.0 = Debug|x64
+		{42797D89-56C0-4B42-846D-DEB042288DCF}.Development|ARM64EC DX12.ActiveCfg = Development|ARM64EC
+		{42797D89-56C0-4B42-846D-DEB042288DCF}.Development|ARM64EC DX12.Build.0 = Development|ARM64EC
+		{42797D89-56C0-4B42-846D-DEB042288DCF}.Development|ARM64EC Vulkan.ActiveCfg = Development|ARM64EC
+		{42797D89-56C0-4B42-846D-DEB042288DCF}.Development|ARM64EC Vulkan.Build.0 = Development|ARM64EC
+		{42797D89-56C0-4B42-846D-DEB042288DCF}.Development|Win64 DX12.ActiveCfg = Development|x64
+		{42797D89-56C0-4B42-846D-DEB042288DCF}.Development|Win64 DX12.Build.0 = Development|x64
+		{42797D89-56C0-4B42-846D-DEB042288DCF}.Development|Win64 Vulkan.ActiveCfg = Development|x64
+		{42797D89-56C0-4B42-846D-DEB042288DCF}.Development|Win64 Vulkan.Build.0 = Development|x64
 		{42797D89-56C0-4B42-846D-DEB042288DCF}.Final|ARM64EC DX12.ActiveCfg = Final|ARM64EC
 		{42797D89-56C0-4B42-846D-DEB042288DCF}.Final|ARM64EC DX12.Build.0 = Final|ARM64EC
 		{42797D89-56C0-4B42-846D-DEB042288DCF}.Final|ARM64EC Vulkan.ActiveCfg = Final|ARM64EC
@@ -315,6 +339,14 @@ Global
 		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Debug|Win64 DX12.Build.0 = Debug_DX12|x64
 		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Debug|Win64 Vulkan.ActiveCfg = Debug_Vulkan|x64
 		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Debug|Win64 Vulkan.Build.0 = Debug_Vulkan|x64
+		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Development|ARM64EC DX12.ActiveCfg = Development_DX12|ARM64EC
+		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Development|ARM64EC DX12.Build.0 = Development_DX12|ARM64EC
+		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Development|ARM64EC Vulkan.ActiveCfg = Development_Vulkan|ARM64EC
+		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Development|ARM64EC Vulkan.Build.0 = Development_Vulkan|ARM64EC
+		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Development|Win64 DX12.ActiveCfg = Development_DX12|x64
+		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Development|Win64 DX12.Build.0 = Development_DX12|x64
+		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Development|Win64 Vulkan.ActiveCfg = Development_Vulkan|x64
+		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Development|Win64 Vulkan.Build.0 = Development_Vulkan|x64
 		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Final|ARM64EC DX12.ActiveCfg = Final_DX12|ARM64EC
 		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Final|ARM64EC DX12.Build.0 = Final_DX12|ARM64EC
 		{1D9F3C91-FD72-4EE4-AF87-B8737AACB65C}.Final|ARM64EC Vulkan.ActiveCfg = Final_Vulkan|ARM64EC
@@ -339,6 +371,14 @@ Global
 		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Debug|Win64 DX12.Build.0 = Debug|x64
 		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Debug|Win64 Vulkan.ActiveCfg = Debug|x64
 		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Debug|Win64 Vulkan.Build.0 = Debug|x64
+		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Development|ARM64EC DX12.ActiveCfg = Development|ARM64EC
+		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Development|ARM64EC DX12.Build.0 = Development|ARM64EC
+		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Development|ARM64EC Vulkan.ActiveCfg = Development|ARM64EC
+		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Development|ARM64EC Vulkan.Build.0 = Development|ARM64EC
+		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Development|Win64 DX12.ActiveCfg = Development|x64
+		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Development|Win64 DX12.Build.0 = Development|x64
+		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Development|Win64 Vulkan.ActiveCfg = Development|x64
+		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Development|Win64 Vulkan.Build.0 = Development|x64
 		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Final|ARM64EC DX12.ActiveCfg = Final|ARM64EC
 		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Final|ARM64EC DX12.Build.0 = Final|ARM64EC
 		{F31ACA84-29B9-4517-80E5-3D625A8AC34B}.Final|ARM64EC Vulkan.ActiveCfg = Final|ARM64EC
@@ -363,6 +403,14 @@ Global
 		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Debug|Win64 DX12.Build.0 = Debug_DX12|x64
 		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Debug|Win64 Vulkan.ActiveCfg = Debug_Vulkan|x64
 		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Debug|Win64 Vulkan.Build.0 = Debug_Vulkan|x64
+		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Development|ARM64EC DX12.ActiveCfg = Development_DX12|ARM64EC
+		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Development|ARM64EC DX12.Build.0 = Development_DX12|ARM64EC
+		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Development|ARM64EC Vulkan.ActiveCfg = Development_Vulkan|ARM64EC
+		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Development|ARM64EC Vulkan.Build.0 = Development_Vulkan|ARM64EC
+		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Development|Win64 DX12.ActiveCfg = Development_DX12|x64
+		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Development|Win64 DX12.Build.0 = Development_DX12|x64
+		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Development|Win64 Vulkan.ActiveCfg = Development_Vulkan|x64
+		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Development|Win64 Vulkan.Build.0 = Development_Vulkan|x64
 		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Final|ARM64EC DX12.ActiveCfg = Final_DX12|ARM64EC
 		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Final|ARM64EC DX12.Build.0 = Final_DX12|ARM64EC
 		{51C074CB-0146-4324-9D1E-EB8192BF6673}.Final|ARM64EC Vulkan.ActiveCfg = Final_Vulkan|ARM64EC
@@ -387,6 +435,14 @@ Global
 		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Debug|Win64 DX12.Build.0 = Debug_DX12|x64
 		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Debug|Win64 Vulkan.ActiveCfg = Debug_Vulkan|x64
 		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Debug|Win64 Vulkan.Build.0 = Debug_Vulkan|x64
+		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Development|ARM64EC DX12.ActiveCfg = Development_DX12|ARM64EC
+		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Development|ARM64EC DX12.Build.0 = Development_DX12|ARM64EC
+		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Development|ARM64EC Vulkan.ActiveCfg = Development_Vulkan|ARM64EC
+		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Development|ARM64EC Vulkan.Build.0 = Development_Vulkan|ARM64EC
+		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Development|Win64 DX12.ActiveCfg = Development_DX12|x64
+		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Development|Win64 DX12.Build.0 = Development_DX12|x64
+		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Development|Win64 Vulkan.ActiveCfg = Development_Vulkan|x64
+		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Development|Win64 Vulkan.Build.0 = Development_Vulkan|x64
 		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Final|ARM64EC DX12.ActiveCfg = Final_DX12|ARM64EC
 		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Final|ARM64EC DX12.Build.0 = Final_DX12|ARM64EC
 		{151CE489-91FC-4A2D-9C64-5431B77238AF}.Final|ARM64EC Vulkan.ActiveCfg = Final_Vulkan|ARM64EC
@@ -411,6 +467,14 @@ Global
 		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Debug|Win64 DX12.Build.0 = Debug|x64
 		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Debug|Win64 Vulkan.ActiveCfg = Debug|x64
 		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Debug|Win64 Vulkan.Build.0 = Debug|x64
+		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Development|ARM64EC DX12.ActiveCfg = Development|ARM64EC
+		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Development|ARM64EC DX12.Build.0 = Development|ARM64EC
+		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Development|ARM64EC Vulkan.ActiveCfg = Development|ARM64EC
+		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Development|ARM64EC Vulkan.Build.0 = Development|ARM64EC
+		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Development|Win64 DX12.ActiveCfg = Development|x64
+		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Development|Win64 DX12.Build.0 = Development|x64
+		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Development|Win64 Vulkan.ActiveCfg = Development|x64
+		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Development|Win64 Vulkan.Build.0 = Development|x64
 		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Final|ARM64EC DX12.ActiveCfg = Final|ARM64EC
 		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Final|ARM64EC DX12.Build.0 = Final|ARM64EC
 		{14D354ED-895F-48E3-85AF-AFF4335717C7}.Final|ARM64EC Vulkan.ActiveCfg = Final|ARM64EC
@@ -435,6 +499,14 @@ Global
 		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Debug|Win64 DX12.Build.0 = Debug|x64
 		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Debug|Win64 Vulkan.ActiveCfg = Debug|x64
 		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Debug|Win64 Vulkan.Build.0 = Debug|x64
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Development|ARM64EC DX12.ActiveCfg = Development|ARM64EC
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Development|ARM64EC DX12.Build.0 = Development|ARM64EC
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Development|ARM64EC Vulkan.ActiveCfg = Development|ARM64EC
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Development|ARM64EC Vulkan.Build.0 = Development|ARM64EC
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Development|Win64 DX12.ActiveCfg = Development|x64
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Development|Win64 DX12.Build.0 = Development|x64
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Development|Win64 Vulkan.ActiveCfg = Development|x64
+		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Development|Win64 Vulkan.Build.0 = Development|x64
 		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Final|ARM64EC DX12.ActiveCfg = Final|ARM64EC
 		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Final|ARM64EC DX12.Build.0 = Final|ARM64EC
 		{F9F268C0-B4CB-4B80-B857-C75C7555E09B}.Final|ARM64EC Vulkan.ActiveCfg = Final|ARM64EC
@@ -459,6 +531,14 @@ Global
 		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Debug|Win64 DX12.Build.0 = Debug|x64
 		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Debug|Win64 Vulkan.ActiveCfg = Debug|x64
 		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Debug|Win64 Vulkan.Build.0 = Debug|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Development|ARM64EC DX12.ActiveCfg = Development|ARM64EC
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Development|ARM64EC DX12.Build.0 = Development|ARM64EC
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Development|ARM64EC Vulkan.ActiveCfg = Development|ARM64EC
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Development|ARM64EC Vulkan.Build.0 = Development|ARM64EC
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Development|Win64 DX12.ActiveCfg = Development|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Development|Win64 DX12.Build.0 = Development|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Development|Win64 Vulkan.ActiveCfg = Development|x64
+		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Development|Win64 Vulkan.Build.0 = Development|x64
 		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Final|ARM64EC DX12.ActiveCfg = Final|ARM64EC
 		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Final|ARM64EC DX12.Build.0 = Final|ARM64EC
 		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Final|ARM64EC Vulkan.ActiveCfg = Final|ARM64EC

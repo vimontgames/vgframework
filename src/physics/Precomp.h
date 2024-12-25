@@ -2,7 +2,7 @@
 #include "core/IProfiler.h"
 #include "core/Object/AutoRegisterClass.h"
 
-#if defined(VG_DEBUG) || defined(VG_RELEASE)
+#if !defined(VG_FINAL)
 #define JPH_PROFILE_ENABLED
 #define JPH_DEBUG_RENDERER
 #define JPH_FLOATING_POINT_EXCEPTIONS_ENABLED
