@@ -37,6 +37,5 @@ namespace vg::core
 }
 
 #if VG_ENABLE_INLINE
-#error("inline should not be enabled")
 #include "BitMask.inl" 
 #endif
