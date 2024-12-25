@@ -55,16 +55,16 @@ First run might take a few seconds because files are cooking.
  
 ## Command-line args
 
-| Name   <img width=100/>        | Description<img width=360/>													
-| ------------------------------ | ------------------------------------------------------------- 
-| `attachDebugger={true, false}` | MessageBox at application start to let attach a debugger
-| `breakOnErrors={true, false}`  | Break on graphics API errors (*`debugDevice` required*)
-| `breakOnWarnings={true, false}`| Break on graphics API warnings (*`debugDevice` required*)
-| `debugDevice={true, false}`	 | Enable the graphics API debug layer (*default for `Debug` builds*)
-| `editor={true, false}`         | Enable editor (*default for `Debug` and `Release` builds*)
-| `fullscreen={true, false}`	 | Start application with game view maximized (*default for `Final` builds*)	
-| `play={true, false}`		     | Start application with play mode running	(*default for `Final` builds*)
-| `profileStart={N}`             | Profile the 1st N frames
+| Name   <img width=100/> | Type | Description<img width=360/>													
+| ----------------------- | ---- | ------------------------------------------------------------- 
+| `attachDebugger`        | bool | MessageBox at application start to let attach a debugger
+| `breakOnErrors`         | bool | Break on graphics API errors (*`debugDevice` required*)
+| `breakOnWarnings`       | bool | Break on graphics API warnings (*`debugDevice` required*)
+| `debugDevice`	          | bool | Enable the graphics API debug layer (*default for `Debug` builds*)
+| `editor`                | bool | Enable editor (*default for `Debug` and `Release` builds*)
+| `fullscreen`	          | bool | Start application with game view maximized (*default for `Final` builds*)	
+| `play`		          | bool | Start application with play mode running	(*default for `Final` builds*)
+| `profileStart`          | int  | Profile the 1st N frames
                       
 ## Keyboard shortcuts
 
@@ -111,9 +111,22 @@ You will also need if you want to build the ARM64EC versions:
 
 ![Screenshot](doc/img/vsbuild.png)
 
-Use the 'Configuration' combo to select the target and graphics API you want to use:
+### Solution Configuration
+Use the 'Configuration' combo to select build configuration:
 
-![Screenshot](doc/img/SolutionPlatformName2.png)
+![Screenshot](doc/img/SolutionConfiguration.png)
+
+| Config      | #define         | Runtime | Optimization | Inlining | Edit & Continue | Assert   
+| ----------- | --------------- | ------- | ------------ | -------- | --------------- | -------
+| Debug       | `VG_DEBUG`      | /MDd    | /Od          | /Ob0     | Yes             | Yes
+| Development | `VG_DEVELOPMENT`| /MD     | /Od          | /Ob0     | Yes             | Yes
+| Release     | `VG_RELEASE`    | /MD     | /O2          | /Ob2     | No              | Yes
+| Final       | `VG_FINAL`      | /MD     | /O2          | /Ob2     | No              | No
+
+### Solution Platform
+Use the 'Platform' combo to select target architecture and graphics API:
+
+![Screenshot](doc/img/SolutionPlatformName.png)
 
 Also don't forget to set the *working directory* to **$(SolutionDir)**.
 
