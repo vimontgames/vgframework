@@ -659,14 +659,19 @@
       <PreprocessorDefinitions>VG_DEVELOPMENT;VG_DX12;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <OptimizeReferences>
+      </OptimizeReferences>
       <ModuleDefinitionFile>Renderer.def</ModuleDefinitionFile>
       <AdditionalDependencies>$(SolutionDir)build\lib\$(Platform)\Development\core.lib;$(SolutionDir)build\lib\$(Platform)\$(Configuration)\gfx.lib;$(SolutionDir)extern\winpixeventruntime\bin\x64\WinPixEventRuntime.lib;$(SolutionDir)extern\dxc\lib\x64\dxcompiler.lib;d3d12.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <LinkTimeCodeGeneration />
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_DX12|ARM64EC'">
@@ -707,14 +712,19 @@
       <PrecompiledHeaderFile>renderer/Precomp.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>VG_DEVELOPMENT;VG_DX12;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <OmitFramePointers />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <OptimizeReferences>
+      </OptimizeReferences>
       <ModuleDefinitionFile>Renderer.def</ModuleDefinitionFile>
       <AdditionalDependencies>$(SolutionDir)build\lib\$(Platform)\Development\core.lib;$(SolutionDir)build\lib\$(Platform)\$(Configuration)\gfx.lib;$(SolutionDir)extern\winpixeventruntime\bin\x64\WinPixEventRuntime.lib;$(SolutionDir)extern\dxc\lib\x64\dxcompiler.lib;d3d12.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <LinkTimeCodeGeneration />
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Final_DX12|x64'">
@@ -806,14 +816,19 @@
       <PreprocessorDefinitions>VG_DEVELOPMENT;VG_VULKAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <OptimizeReferences>
+      </OptimizeReferences>
       <ModuleDefinitionFile>Renderer.def</ModuleDefinitionFile>
       <AdditionalDependencies>$(SolutionDir)build\lib\$(Platform)\Development\core.lib;$(SolutionDir)build\lib\$(Platform)\$(Configuration)\gfx.lib;$(SolutionDir)extern\dxc\lib\x64\dxcompiler.lib;$(VULKAN_SDK)\Lib\vulkan-1.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <LinkTimeCodeGeneration />
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_Vulkan|ARM64EC'">
@@ -854,14 +869,19 @@
       <PrecompiledHeaderFile>renderer/Precomp.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>VG_DEVELOPMENT;VG_VULKAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <OmitFramePointers />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
+      <OptimizeReferences>
+      </OptimizeReferences>
       <ModuleDefinitionFile>Renderer.def</ModuleDefinitionFile>
       <AdditionalDependencies>$(SolutionDir)build\lib\$(Platform)\Development\core.lib;$(SolutionDir)build\lib\$(Platform)\$(Configuration)\gfx.lib;$(SolutionDir)extern\dxc\lib\x64\dxcompiler.lib;$(VULKAN_SDK)\Lib\vulkan-1.lib;dxgi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
+      <LinkTimeCodeGeneration />
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Final_Vulkan|x64'">
