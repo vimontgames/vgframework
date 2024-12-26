@@ -227,6 +227,19 @@ namespace vg::editor
         return windows;
     }
 
+    //--------------------------------------------------------------------------------------
+    core::vector<ImGuiWindow *> Editor::GetWindows(const core::string & _className) const
+    {
+        core::vector<ImGuiWindow *> windows;
+        for (auto i = 0; i < m_imGuiWindows.size(); ++i)
+        {
+            auto & win = m_imGuiWindows[i];
+            const char * className = win->GetClassName();
+            if (!strcmp(className, _className.c_str()))
+                windows.push_back(m_imGuiWindows[i]);
+        }
+        return windows;
+    }
 
     //--------------------------------------------------------------------------------------
     void Editor::destroyWindow(ImGuiWindow * _window)

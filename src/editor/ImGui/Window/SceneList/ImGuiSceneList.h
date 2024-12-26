@@ -20,6 +20,7 @@ namespace vg::editor
     class ImGuiSceneList : public ImGuiWindow
     {
     public:
+        VG_CLASS_DECL(ImGuiSceneList, ImGuiWindow);
 
         struct SceneTypeInfo
         {
@@ -33,17 +34,20 @@ namespace vg::editor
 
         ImGuiSceneList(core::BaseSceneType _sceneType, const core::string& _icon, const core::string& _path, const core::string& _name, Flags _flags);
         
-        static SceneTypeInfo            getGameObjectTreeTypeInfo   (core::BaseSceneType _sceneType);
+        static SceneTypeInfo                getGameObjectTreeTypeInfo   (core::BaseSceneType _sceneType);
+        void                                focus                       (const core::vector<core::IGameObject * > & _gameObjects);
 
     protected:
-        void                            display                     (core::BaseSceneType _sceneType);
-        void                            displayGameObject           (core::IGameObject* root, core::uint* _count);
+        void                                display                     (core::BaseSceneType _sceneType);
+        void                                displayGameObject           (core::IGameObject* root);
        
     protected:
-        ImGuiTextFilter                 m_filter;
-        ImGuiSceneMenu                  m_sceneMenu;
-        ImGuiGameObjectSceneEditorMenu  m_gameObjectMenu;
-        core::IGameObject *             m_dragAndDropNodeTarget = nullptr;
-        core::IGameObject *             m_dragAndDropInterlineTarget = nullptr;
+        ImGuiTextFilter                     m_filter;
+        ImGuiSceneMenu                      m_sceneMenu;
+        ImGuiGameObjectSceneEditorMenu      m_gameObjectMenu;
+        core::IGameObject *                 m_dragAndDropNodeTarget = nullptr;
+        core::IGameObject *                 m_dragAndDropInterlineTarget = nullptr;
+        core::vector<core::IGameObject * >  m_focusedGameObjects;
+        core::uint                          m_count;
     };
 }

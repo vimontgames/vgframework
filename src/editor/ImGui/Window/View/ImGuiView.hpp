@@ -905,7 +905,15 @@ namespace vg::editor
             VG_ASSERT(aabb.isFinite());
             
             float3 center = aabb.center();
-            m_editorCam.m_matrix[3].xyz = center + offset * aabb.radius() * 3.1417f;
+            m_editorCam.m_matrix[3].xyz = center + offset * aabb.radius() * PI;
+
+            // Find the scene lists this object is displayed into
+            vector<ImGuiWindow *> sceneLists = Editor::get()->GetWindows("ImGuiSceneList");
+            for (uint i = 0; i < sceneLists.size(); ++i)
+            {
+                ImGuiSceneList * sceneList = (ImGuiSceneList*)sceneLists[i];
+                sceneList->focus(_gameObjects);
+            }
 
             setWindowFocus();
         }

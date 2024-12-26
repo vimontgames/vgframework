@@ -53,6 +53,7 @@ namespace vg
 			IEditorOptions *					GetOptions			() const final override;
 
 			const core::vector<ImGuiWindow *> & GetWindows			() const { return m_imGuiWindows; }
+			core::vector<ImGuiWindow*>			GetWindows			(const core::string & _className) const;
 			template <class T> T *				getMenu				(const core::string _name = {}) const;
 
 			core::IFactory *					getFactory			() const;

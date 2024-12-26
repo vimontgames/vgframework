@@ -91,7 +91,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiSceneList::displayGameObject(IGameObject* _gameObject, uint * _count)
+    void ImGuiSceneList::displayGameObject(IGameObject* _gameObject)
     {
         // Skip object if not matching filter and not of his children is passing filter
         if (!isPassingFilterRecur(m_filter, _gameObject))
@@ -100,8 +100,14 @@ namespace vg::editor
         const auto children = _gameObject->GetChildren();
         const auto adapter = Editor::get()->getRenderer()->GetImGuiAdapter();
 
-        if (_count)
-            (*_count)++;
+        // Focus 1st selected element
+        if (vector_helper::exists(m_focusedGameObjects, _gameObject))
+        {
+            m_focusedGameObjects.clear();
+            ImGui::SetScrollHereY(0.0f);
+        }
+
+        m_count++;
 
         const bool disabled = !_gameObject->IsEnabledInHierarchy();// !asBool(InstanceFlags::Enabled & _gameObject->GetInstanceFlags());
 
@@ -121,7 +127,7 @@ namespace vg::editor
         {
             u32 rowBgColor;
 
-            if (*_count & 1)
+            if (m_count & 1)
                 rowBgColor = GetColorU32(adapter->GetRowColorEven());
             else
                 rowBgColor = GetColorU32(adapter->GetRowColorOdd());
@@ -385,7 +391,7 @@ namespace vg::editor
             for (uint j = 0; j < children.size(); ++j)
             {
                 IGameObject* child = children[j];
-                displayGameObject(child, _count);
+                displayGameObject(child);
             }
 
             ImGui::TreePop();
@@ -421,6 +427,12 @@ namespace vg::editor
         }
 
         return info;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiSceneList::focus(const core::vector<core::IGameObject * > & _gameObjects)
+    {
+        m_focusedGameObjects = _gameObjects;
     }
 
     //--------------------------------------------------------------------------------------
@@ -528,6 +540,8 @@ namespace vg::editor
 
                     auto availableWidth = ImGui::GetContentRegionAvail().x;
 
+                    m_count = 0;
+
                     auto sceneResourceCount = worldRes->GetSceneResourceCount(_sceneType);
                     for (uint i = 0; i < sceneResourceCount; ++i)
                     {
@@ -547,6 +561,8 @@ namespace vg::editor
                             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
                             const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", scene->GetName(), scene).c_str(), flags);
+
+                            m_count++;
 
                             bool enabled = asBool(InstanceFlags::Enabled & root->GetInstanceFlags());
 
@@ -572,12 +588,7 @@ namespace vg::editor
                                     if (open)
                                     {
                                         if (nullptr != root)
-                                        {
-                                            // Draw
-                                            uint counter = 0;
-                                            displayGameObject(root, &counter);
-                                        }
-                                        //ImGui::TreePop();
+                                            displayGameObject(root);
                                     }
                                 }
                             }
@@ -585,6 +596,8 @@ namespace vg::editor
                             ImGui::PopID();
                         }
                     }
+
+                    m_focusedGameObjects.clear();
                 }
             }
             ImGui::EndChild();
