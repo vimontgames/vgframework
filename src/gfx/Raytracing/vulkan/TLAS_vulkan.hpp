@@ -1,9 +1,5 @@
 #include "TLAS_vulkan.h"
 
-#define VG_TLAS_SIZE            (1024 * 1024 * 32)
-#define VG_TLAS_SCRATCH_SIZE    (1024 * 1024 * 32)
-#define VG_TLAS_INSTANCECOUNT   (1024)
-
 namespace vg::gfx::vulkan
 {
     //--------------------------------------------------------------------------------------

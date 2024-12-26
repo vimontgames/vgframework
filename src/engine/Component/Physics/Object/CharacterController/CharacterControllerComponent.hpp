@@ -227,7 +227,7 @@ namespace vg::engine
 
         if (m_character)
         {
-            if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused())
+            if (_context.m_playing && !_context.m_paused)
             {
                 m_character->Update();
 

@@ -32,7 +32,10 @@ namespace vg::renderer
     struct ViewCullingStats
     {
         core::uint opaque      = 0;
+        core::uint alphatest   = 0;
         core::uint transparent = 0;
+        core::uint decal       = 0;
+
         core::uint directional = 0;
         core::uint omni        = 0;
         core::uint spot        = 0;

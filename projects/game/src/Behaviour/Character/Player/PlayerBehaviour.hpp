@@ -80,7 +80,7 @@ void PlayerBehaviour::OnStop()
 //--------------------------------------------------------------------------------------
 void PlayerBehaviour::FixedUpdate(const Context & _context)
 {
-    if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused()) // TODO: Use context intead?
+    if (_context.m_playing && !_context.m_paused)
     {
         IInput & input = Game::Input();
         IGameObject * playerGO = GetGameObject();
@@ -419,7 +419,7 @@ void PlayerBehaviour::Update(const Context & _context)
 {
     super::Update(_context);
 
-    if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused())   // TODO: pass world->IsPlaying and world->IsPaused as 'Update' parameters, or World directly? Use Context?
+    if (_context.m_playing && !_context.m_paused)
     {
         // Update UI
         {

@@ -64,7 +64,7 @@ namespace vg::engine
             if (nullptr == m_bodyDesc)
                 return;
 
-            if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused())   
+            if (_context.m_playing && !_context.m_paused)
             {
                 if (m_body)
                 {

@@ -537,7 +537,7 @@ namespace vg::editor
                                 const auto & stats = view->GetViewCullingStats();
                                 uint line = 0;
 
-                                ImVec2 pos = ImVec2((float)view->GetOffset().x, (float)view->GetOffset().y);
+                                ImVec2 pos = ImVec2((float)view->GetOffset().x, (float)view->GetOffset().y + 48);
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
@@ -550,7 +550,17 @@ namespace vg::editor
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
                                 pos.y += style::font::DefaultFontHeight;
+                                ImGui::Text("AlphaTest %u", stats.alphatest);
+
+                                ImGui::SameLine();
+                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                pos.y += style::font::DefaultFontHeight;
                                 ImGui::Text("Transparent %u", stats.transparent);
+
+                                ImGui::SameLine();
+                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                pos.y += style::font::DefaultFontHeight;
+                                ImGui::Text("Decal %u", stats.decal);
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);

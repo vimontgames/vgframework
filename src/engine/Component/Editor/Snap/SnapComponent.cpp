@@ -87,7 +87,7 @@ namespace vg::engine
                 {
                     float3 snapR = nearestIntR * m_rotation;
 
-                    VG_WARNING("[Snap] Rotation of Prefab \"%s\" (UID: 0x%08X) changed from (%.3f, %.3f, %.3f) to (%.3f, %.3f, %.3f) because of translation snap value of (%.3f, %.3f, %.3f)",
+                    VG_WARNING("[Snap] Rotation of Prefab \"%s\" (UID: 0x%08X) changed from (%.3f, %.3f, %.3f) to (%.3f, %.3f, %.3f) because of rotation snap value of (%.3f, %.3f, %.3f)",
                         _gameObject->GetName().c_str(),
                         _gameObject->GetUID(),
                         (float)R.x, (float)R.y, (float)R.z,

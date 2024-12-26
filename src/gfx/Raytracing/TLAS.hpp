@@ -1,8 +1,8 @@
 #include "TLAS.h"
 
-#define VG_TLAS_SIZE            (1024 * 1024 * 32)
-#define VG_TLAS_SCRATCH_SIZE    (1024 * 1024 * 32)
-#define VG_TLAS_INSTANCECOUNT   (1024)
+#define VG_TLAS_INSTANCECOUNT   (4096)
+#define VG_TLAS_SIZE            (VG_TLAS_INSTANCECOUNT * 1024 * 32)
+#define VG_TLAS_SCRATCH_SIZE    (VG_TLAS_INSTANCECOUNT * 1024 * 32)
 
 #include VG_GFXAPI_IMPL(TLAS)
 

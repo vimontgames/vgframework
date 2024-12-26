@@ -60,7 +60,7 @@ struct ActivePlayerInfo
 //--------------------------------------------------------------------------------------
 void EnemyBehaviour::FixedUpdate(const Context & _context)
 {
-    if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused())   // TODO: use Context
+    if (_context.m_playing && !_context.m_paused)   
     {
         if (MoveState::Die == m_moveState)
         {

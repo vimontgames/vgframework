@@ -54,7 +54,7 @@ namespace vg::engine
     {
         auto & animResources = m_animations.getResources();
 
-        if (_context.m_world->IsPlaying() && !_context.m_world->IsPaused()) // TODO: check if running from prefab world using context instead? Or include play/stop/paused state in context maybe?
+        if (_context.m_playing && !_context.m_paused)
         {
             float amount = _context.m_dt * 4.0f;    // Animation blending speed should be exposed (in 'PlayAnimation'?)
 
