@@ -255,7 +255,7 @@ namespace vg::renderer
 
             if (debugUI && elem.m_type == UIElementType::Canvas)
             {
-                ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + canvasRect[0]), float2ToImVec2(winOffset + canvasRect[1]), packRGBA8(canvas.m_color));
+                drawList->AddRect(float2ToImVec2(winOffset + canvasRect[0]), float2ToImVec2(winOffset + canvasRect[1]), packRGBA8(canvas.m_color));
                 continue;
             }
 
@@ -327,60 +327,72 @@ namespace vg::renderer
             float2 elemRect[2] =
             {
                 elemPos,
-                elemPos + center
+                elemPos + elemSize
             };
 
-            
-            switch (elem.m_type)
+            // Cull offscreen UI elements
+            if (any(elemRect[1] > 0) && any(elemRect[0] < viewSizeInPixels))
             {
-                case UIElementType::Image:
+                switch (elem.m_type)
                 {
-                    if (elem.m_texture)
+                    case UIElementType::Image:
                     {
-                        ImTextureID texID = imGuiAdapter->GetTextureID(elem.m_texture);
+                        if (elem.m_texture)
+                        {
+                            ImTextureID texID = imGuiAdapter->GetTextureID(elem.m_texture);
 
-                        drawList->AddImage(texID, float2ToImVec2(windowOffset + windowPos + elemPos.xy), float2ToImVec2(windowOffset + windowPos + elemPos.xy + elemSize),ImVec2(0, 0), ImVec2(1, 1), packRGBA8(elem.m_item.m_color));
-                        
+                            drawList->AddImage(texID, float2ToImVec2(windowOffset + windowPos + elemRect[0]), float2ToImVec2(windowOffset + windowPos + elemRect[1]), ImVec2(0, 0), ImVec2(1, 1), packRGBA8(elem.m_item.m_color));
+
+                            if (elem.m_canvas && elem.m_canvas->m_canvasType == CanvasType::CanvasType_3D)
+                                drawList->AddDrawCmd();
+
+                            // Picking on Viewport not supported yet
+                            if (m_view && m_view->IsToolmode())
+                            {
+                                if (all(mousePos >= elemRect[0]) && all(mousePos <= elemRect[1]))
+                                {
+                                    PickingHit hit;
+                                    hit.m_id = elem.m_item.m_pickingID;
+                                    hit.m_pos = float4(elemPos.xy, 0, 1);
+                                    m_view->AddPickingHit(hit);
+                                }
+                            }
+
+                            imGuiAdapter->ReleaseTextureID(elem.m_texture);
+                        }
+                        break;
+                    }
+
+                    case UIElementType::Text:
+                    {
+                        drawList->AddText(float2ToImVec2(windowOffset + windowPos + elemRect[0]), packRGBA8(elem.m_item.m_color), elem.m_text.c_str());
+
                         if (elem.m_canvas && elem.m_canvas->m_canvasType == CanvasType::CanvasType_3D)
-                            drawList->AddDrawCmd(); 
-                        
+                            drawList->AddDrawCmd();
+
                         // Picking on Viewport not supported yet
                         if (m_view && m_view->IsToolmode())
                         {
-                            if (all(mousePos.xy >= elemPos.xy) && all(mousePos.xy <= elemPos.xy + elemSize.xy))
+                            if (all(mousePos >= elemRect[0]) && all(mousePos <= elemRect[1]))
                             {
                                 PickingHit hit;
                                 hit.m_id = elem.m_item.m_pickingID;
-                                hit.m_pos = float4(elemPos.xy, 0, 1);
+                                hit.m_pos = float4(mousePos.xy, 0, 1);
                                 m_view->AddPickingHit(hit);
                             }
                         }
 
-                        imGuiAdapter->ReleaseTextureID(elem.m_texture);
+                        imGuiAdapter->PopFont();
                     }
-                    break;
                 }
-
-                case UIElementType::Text:
+            }
+            else
+            {
+                switch (elem.m_type)
                 {
-                    drawList->AddText(float2ToImVec2(windowOffset + windowPos + elemPos.xy), packRGBA8(elem.m_item.m_color), elem.m_text.c_str());
-
-                    if (elem.m_canvas && elem.m_canvas->m_canvasType == CanvasType::CanvasType_3D)
-                        drawList->AddDrawCmd();
-
-                    // Picking on Viewport not supported yet
-                    if (m_view && m_view->IsToolmode())
-                    {
-                        if (all(mousePos.xy >= elemPos.xy) && all(mousePos.xy <= elemPos.xy + elemSize.xy))
-                        {
-                            PickingHit hit;
-                            hit.m_id = elem.m_item.m_pickingID;
-                            hit.m_pos = float4(elemPos.xy + center.xy, 0, 1); // TODO: pass mouse position instead?
-                            m_view->AddPickingHit(hit);
-                        }
-                    }
-
-                    imGuiAdapter->PopFont();
+                    case UIElementType::Text:
+                        imGuiAdapter->PopFont();
+                        break;
                 }
             }
 
@@ -389,11 +401,11 @@ namespace vg::renderer
                 switch (elem.m_type)
                 {
                     case UIElementType::Image:
-                        ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + elemRect[0]), float2ToImVec2(winOffset + elemRect[1]), packRGBA8(elem.m_item.m_color * 0.5f));
+                        drawList->AddRect(float2ToImVec2(winOffset + elemRect[0]), float2ToImVec2(winOffset + elemRect[1]), packRGBA8(elem.m_item.m_color * 0.5f));
                         break;
 
                     case UIElementType::Text:
-                        ImGui::GetForegroundDrawList()->AddRect(float2ToImVec2(winOffset + elemRect[0]), float2ToImVec2(winOffset + elemRect[1]), packRGBA8(elem.m_item.m_color*0.5f));
+                        drawList->AddRect(float2ToImVec2(winOffset + elemRect[0]), float2ToImVec2(winOffset + elemRect[1]), packRGBA8(elem.m_item.m_color * 0.5f));
                         break;
                 }
             }
