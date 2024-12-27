@@ -18,6 +18,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------------------
+    bool HideCastShadow(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const LightDesc * lightDesc = VG_SAFE_STATIC_CAST(const LightDesc, _object);
+        return lightDesc->GetLightType() != LightType::Directional;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool LightDesc::registerProperties(core::IClassDesc & _desc)
     {
         super::registerProperties(_desc);
@@ -45,6 +52,7 @@ namespace vg::renderer
             setPropertyDescription(LightDesc, m_shadowIntensity, "Amound of light occluded in shadowed areas");
         }
         registerPropertyOptionalGroupEnd(LightDesc);
+        setPropertyHiddenCallback(LightDesc, Shadows, HideCastShadow);
 
         registerPropertyEx(LightDesc, m_color, "Color", PropertyFlags::Color | PropertyFlags::HDR);
         setPropertyDescription(LightDesc, m_color, "Direct Light color");

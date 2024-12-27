@@ -24,7 +24,7 @@ namespace vg::editor
 
         float                           m_availableWidth = 0.0f;
         core::vector<TreeNodeStackInfo> m_treeNodes;
-        bool                            m_hide = false;
+        core::uint                      m_treeNodeHideLevel = -1;
     };
 
     //--------------------------------------------------------------------------------------

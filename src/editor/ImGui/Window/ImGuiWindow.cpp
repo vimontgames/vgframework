@@ -1107,7 +1107,7 @@ namespace vg::editor
 
         if (_objectContext.m_treeNodes.size() > 0)
         {
-            auto nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
+            auto & nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
             if (!nodeInfo.treeNodeOpen)
             {
                 if (PropertyType::LayoutElement != type)
@@ -1115,12 +1115,25 @@ namespace vg::editor
             }
         }
 
-        if (_objectContext.m_hide && (type != PropertyType::LayoutElement || !(asBool(flags & PropertyFlags::Optional))))
-            return false;
-
         if (!isPropertyVisible(propContext.m_originalObject, _prop))
+        {
+            // If hidden property is a group, hide everything til the group is closed
+            if (type == PropertyType::LayoutElement)
+            {
+                auto layoutType = _prop->GetLayoutElementType();
+                if (layoutType == PropertyLayoutElement::GroupBegin)
+                    _objectContext.m_treeNodeHideLevel = (uint)_objectContext.m_treeNodes.size();
+            }
+
             return false;
-        
+        }
+
+        if (-1 != _objectContext.m_treeNodeHideLevel && _objectContext.m_treeNodeHideLevel <= _objectContext.m_treeNodes.size())
+        {
+            if (type != PropertyType::LayoutElement || _prop->GetLayoutElementType() != PropertyLayoutElement::GroupEnd)
+                return false;
+        }
+
         const IClassDesc * classDesc = propContext.m_originalObject->GetClassDesc();
         auto * previousProp = classDesc->GetPreviousProperty(propContext.m_originalProp->GetName());
         bool singleLine = false;
@@ -1287,24 +1300,31 @@ namespace vg::editor
 
                         case PropertyLayoutElement::GroupEnd:
                         {
-                            if (_objectContext.m_treeNodes.size() > 0)
+                            if (-1 == _objectContext.m_treeNodeHideLevel || _objectContext.m_treeNodeHideLevel > _objectContext.m_treeNodes.size())
                             {
-                                ImGui::Unindent();
-
-                                auto & nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
-
-                                if (nodeInfo.treeNodeOpen)
+                                if (_objectContext.m_treeNodes.size() > 0)
                                 {
-                                    if (!nodeInfo.treeNodeIsCollapsingHeader)
-                                        ImGui::TreePop();
+                                    ImGui::Unindent();
 
-                                    ImGui::Spacing();
+                                    auto & nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
+
+                                    if (nodeInfo.treeNodeOpen)
+                                    {
+                                        if (!nodeInfo.treeNodeIsCollapsingHeader)
+                                            ImGui::TreePop();
+
+                                        ImGui::Spacing();
+                                    }
+
+                                    if (nodeInfo.treeNodeContentDisabled)
+                                        ImGui::PopDisabledStyle();
+
+                                    _objectContext.m_treeNodes.erase(_objectContext.m_treeNodes.begin() + _objectContext.m_treeNodes.size() - 1);
                                 }
-
-                                if (nodeInfo.treeNodeContentDisabled)
-                                    ImGui::PopDisabledStyle();                           
-
-                                _objectContext.m_treeNodes.erase(_objectContext.m_treeNodes.begin() + _objectContext.m_treeNodes.size() - 1);
+                            }
+                            else
+                            {
+                                _objectContext.m_treeNodeHideLevel = -1;
                             }
                         }
                         break;
