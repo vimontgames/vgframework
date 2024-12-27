@@ -86,11 +86,7 @@ namespace vg::engine
             if (_data)
             {
                 IGameObject * srcGO = VG_SAFE_STATIC_CAST(IGameObject, _data);
-                //IGameObject * newGameObject = (IGameObject *)factory->createObject("GameObject");
-                //factory->CopyProperties(srcGO, newGameObject);
-
                 root->AddChild(srcGO);
-                //VG_SAFE_RELEASE(newGameObject);
             }
 
             VG_SAFE_RELEASE(root);

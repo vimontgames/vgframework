@@ -6,9 +6,22 @@ namespace vg::core
 {
     class IGameObject;
 
+    vg_enum_class(SelectionChangeType, core::u8,
+        Add,
+        Remove,
+        Clear
+    );
+
+    class ISelectionChangeListener
+    {
+
+    };
+
     class ISelection : public core::Object
     {
     public:
+        using OnSelectionChangedCallback = void(__cdecl *)(core::IObject * _this, SelectionChangeType _selectionChangeType);
+
         virtual core::IObject *                     GetSelectedObject                   () = 0;
         virtual core::vector<core::IObject *> &     GetSelectedObjects                  () = 0;
         
@@ -25,5 +38,8 @@ namespace vg::core
         virtual core::float4x4 &                    GetSelectionMatrix                  () = 0;
         virtual core::vector<core::IGameObject *>   RemoveChildGameObjectsWithParents   (const core::vector<core::IObject *> & _objects) const = 0;
         virtual core::vector<core::IGameObject*>    DuplicateGameObjects                (const core::vector<core::IGameObject *> & _gameObjects) = 0;
+
+        virtual bool                                RegisterSelectionChangedCallback    (core::IObject * _this, OnSelectionChangedCallback _onSelectionChangedCallback) = 0;
+        virtual bool                                UnregisterSelectionChangedCallback  (core::IObject * _this, OnSelectionChangedCallback _onSelectionChangedCallback) = 0;
     };
 }

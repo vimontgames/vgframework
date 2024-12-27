@@ -498,6 +498,9 @@ namespace vg::engine
             {
                 IGameObject * prefabRoot = prefabScene->GetRoot();
 
+                // Load Prefab as "not opened" in editor
+                SetObjectFlags(ObjectFlags::Opened, false);
+
                 auto & prefabChildren = GetChildren();
                 if (prefabChildren.size() == 0)
                 {

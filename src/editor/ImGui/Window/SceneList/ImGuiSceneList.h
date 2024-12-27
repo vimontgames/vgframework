@@ -7,6 +7,7 @@
 namespace vg::core
 {
     enum BaseSceneType : core::u8;
+    enum class SelectionChangeType : core::u8;
 }
 
 namespace vg::editor
@@ -33,13 +34,15 @@ namespace vg::editor
         };
 
         ImGuiSceneList(core::BaseSceneType _sceneType, const core::string& _icon, const core::string& _path, const core::string& _name, Flags _flags);
-        
+        ~ImGuiSceneList();
+
         static SceneTypeInfo                getGameObjectTreeTypeInfo   (core::BaseSceneType _sceneType);
         void                                focus                       (const core::vector<core::IGameObject * > & _gameObjects);
 
     protected:
         void                                display                     (core::BaseSceneType _sceneType);
         void                                displayGameObject           (core::IGameObject* root);
+        static void                         onSelectionChanged          (core::IObject * _this, core::SelectionChangeType _change);
        
     protected:
         ImGuiTextFilter                     m_filter;

@@ -12,6 +12,43 @@ namespace vg::editor
         ImGuiWindow(_icon, _path, _name, _flags),
         m_sceneMenu(_sceneType)
     {
+        getSelection()->RegisterSelectionChangedCallback(this, onSelectionChanged);
+    }
+
+    //--------------------------------------------------------------------------------------
+    ImGuiSceneList ::~ImGuiSceneList()
+    {
+        getSelection()->UnregisterSelectionChangedCallback(this, onSelectionChanged);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiSceneList::onSelectionChanged(core::IObject * _this, core::SelectionChangeType _change)
+    {
+        ImGuiSceneList * sceneList = dynamic_cast<ImGuiSceneList *>(_this);
+        VG_ASSERT(nullptr != sceneList);
+
+        if (nullptr != sceneList)
+        {
+            auto & selectedObjects = getSelection()->GetSelectedObjects();
+            core::vector<IGameObject *> selectedGameObjects;
+            selectedGameObjects.reserve(selectedObjects.size());
+
+            switch (_change)
+            {
+                case core::SelectionChangeType::Add:
+                {
+                    for (uint i = 0; i < selectedObjects.size(); ++i)
+                    {
+                        if (IGameObject * go = dynamic_cast<IGameObject *>(selectedObjects[i]))
+                            selectedGameObjects.push_back(go);
+                    }
+
+                    if (selectedGameObjects.size() > 0)
+                        sceneList->focus(selectedGameObjects);
+                }
+                break;
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------

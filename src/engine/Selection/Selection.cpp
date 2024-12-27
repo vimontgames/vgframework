@@ -90,6 +90,13 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void Selection::updateSelectionChangedListeners(SelectionChangeType _selectionChangeType)
+    {
+        for (uint i = 0; i < m_listeners.size(); ++i)
+            m_listeners[i].m_onSelectionChangedCallback(m_listeners[i].m_listener, _selectionChangeType);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool Selection::add(core::IObject * _object)
     {
         if (m_selectionSet.end() == m_selectionSet.find(_object))
@@ -105,6 +112,8 @@ namespace vg::engine
                 for (uint j = 0; j < children.size(); ++j)
                     add(children[j]);
             }
+
+            updateSelectionChangedListeners(SelectionChangeType::Add);
 
             return true;
         }
@@ -133,6 +142,9 @@ namespace vg::engine
         VG_ASSERT(removedFromArray == removedFromHash);
         removed |= (removedFromArray | removedFromHash);
 
+        if (removed)
+            updateSelectionChangedListeners(SelectionChangeType::Remove);
+
         return removed;
     }
 
@@ -158,8 +170,13 @@ namespace vg::engine
     {
         for (uint i = 0; i < m_selectionArray.size(); ++i)
             setSelected(m_selectionArray[i], false);
-        m_selectionArray.clear();
-        m_selectionSet.clear();
+
+        if (m_selectionArray.size() || m_selectionSet.size())
+        {
+            m_selectionArray.clear();
+            m_selectionSet.clear();
+            updateSelectionChangedListeners(SelectionChangeType::Clear);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -272,6 +289,34 @@ namespace vg::engine
         }
 
         return name;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Selection::RegisterSelectionChangedCallback(core::IObject * _this, OnSelectionChangedCallback _onSelectionChangedCallback)
+    {
+        for (uint i = 0; i < m_listeners.size(); ++i)
+        {
+            if (m_listeners[i].m_listener == _this)
+                return false;
+        }
+
+        m_listeners.push_back({ _this, _onSelectionChangedCallback });
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Selection::UnregisterSelectionChangedCallback(core::IObject * _this, OnSelectionChangedCallback _onSelectionChangedCallback)
+    {
+        for (uint i = 0; i < m_listeners.size(); ++i)
+        {
+            if (m_listeners[i].m_listener == _this)
+            {
+                m_listeners.erase(m_listeners.begin()+i);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
