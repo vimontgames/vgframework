@@ -85,7 +85,6 @@ namespace vg::renderer
     void DefaultMaterialModel::Setup(const RenderContext & _renderContext, CommandList * _cmdList, RootConstants3D * _root3D, core::uint _index) const
     {
         _root3D->setMatID(_index);
-        //_root3D->setColor(m_albedoColor);
 
         auto key = m_shaderKey[asInteger(_renderContext.m_shaderPass)];
 
@@ -118,13 +117,6 @@ namespace vg::renderer
                     bs = BlendState(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
                 else
                     bs = BlendState(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
-
-                // TODO: find a blend mode + shader output to modulate luminosity?
-                //if (SurfaceType::Decal == m_surfaceType)
-                //{
-                //    if (!m_enableAlbedo)
-                //        bs = BlendState(BlendFactor::SrcAlpha, BlendFactor::One, BlendOp::Mul);
-                //}
 
                 _cmdList->setBlendState(bs);
 
@@ -163,18 +155,6 @@ namespace vg::renderer
                         bs.m_renderTargetBlend[0].colorWrite = (ColorWrite)0x0;
                         bs.m_flags = BlendStateFlags::IndependantBlend;
                     }
-
-                    //if (!m_enableNormal)
-                    //{
-                    //    bs.m_renderTargetBlend[1].colorWrite = (ColorWrite)0x0;
-                    //    bs.m_flags = BlendStateFlags::IndependantBlend;
-                    //}
-                    //
-                    //if (!m_enablePbr)
-                    //{
-                    //    bs.m_renderTargetBlend[2].colorWrite = (ColorWrite)0x0;
-                    //    bs.m_flags = BlendStateFlags::IndependantBlend;
-                    //}
                 }
                     
                 _cmdList->setBlendState(bs);

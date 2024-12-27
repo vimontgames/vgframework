@@ -401,7 +401,7 @@ namespace vg::renderer
 
                     auto surfaceType = material->getSurfaceType();
 
-                    if (_renderContext.m_surfaceType != surfaceType)
+                    if (_renderContext.m_surfaceType != surfaceType && !_renderContext.m_wireframe)
                         continue;
 
                     switch (_renderContext.m_shaderPass)

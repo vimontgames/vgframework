@@ -39,6 +39,7 @@ namespace vg::renderer
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(_list);
                 break;
 
+            case GraphicInstanceListType::All:
             case GraphicInstanceListType::Opaque:
                 renderContext.m_surfaceType = gfx::SurfaceType::Opaque;
                 break;
