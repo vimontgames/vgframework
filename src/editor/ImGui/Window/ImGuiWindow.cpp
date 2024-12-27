@@ -576,7 +576,7 @@ namespace vg::editor
 
             if (ImGui::Selectable(camelCaseToSpaces(_enumName).c_str()))
             {
-                if (!_propContext.m_readOnly && !disabled)
+                if (enumVal != *_pEnum && !_propContext.m_readOnly && !disabled)
                 {
                     bool edited = true;
                     auto editingState = undoRedoBeforeEdit<T>(edited, _propContext, _object, _prop, (T *)&enumVal, _pEnum, InteractionType::Single);
