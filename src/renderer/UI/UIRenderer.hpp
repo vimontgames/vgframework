@@ -118,10 +118,13 @@ namespace vg::renderer
 
         float4x4 viewProj = float4x4::identity();
         float4x4 view = float4x4::identity();
+        float2 mousePos = float2(0, 0);
+
         if (m_view)
         {
             view = m_view->GetViewInvMatrix();
             viewProj = mul(view, m_view->GetProjectionMatrix());
+            mousePos = (float2)m_view->GetRelativeMousePos();
         }
 
         // TODO: sort at insertion?
@@ -336,20 +339,15 @@ namespace vg::renderer
                     {
                         ImTextureID texID = imGuiAdapter->GetTextureID(elem.m_texture);
 
-                        #if 0
-                        ImGui::SetCursorPos(float2ToImVec2(elemPos.xy + windowOffset));
-                        ImGui::Image(texID, float2ToImVec2(elemSize), ImVec2(0, 0), ImVec2(1, 1), float4ToImVec4(elem.m_item.m_color));
-                        #else  
                         drawList->AddImage(texID, float2ToImVec2(windowOffset + windowPos + elemPos.xy), float2ToImVec2(windowOffset + windowPos + elemPos.xy + elemSize),ImVec2(0, 0), ImVec2(1, 1), packRGBA8(elem.m_item.m_color));
                         
                         if (elem.m_canvas && elem.m_canvas->m_canvasType == CanvasType::CanvasType_3D)
                             drawList->AddDrawCmd(); 
-                        #endif
                         
                         // Picking on Viewport not supported yet
                         if (m_view && m_view->IsToolmode())
                         {
-                            if (ImGui::IsItemHovered())
+                            if (all(mousePos.xy >= elemPos.xy) && all(mousePos.xy <= elemPos.xy + elemSize.xy))
                             {
                                 PickingHit hit;
                                 hit.m_id = elem.m_item.m_pickingID;
@@ -365,20 +363,15 @@ namespace vg::renderer
 
                 case UIElementType::Text:
                 {
-                    #if 0
-                    ImGui::SetCursorPos(float2ToImVec2(elemPos.xy + windowOffset));
-                    ImGui::TextColored(float4ToImVec4(elem.m_item.m_color), elem.m_text.c_str());
-                    #else
                     drawList->AddText(float2ToImVec2(windowOffset + windowPos + elemPos.xy), packRGBA8(elem.m_item.m_color), elem.m_text.c_str());
 
                     if (elem.m_canvas && elem.m_canvas->m_canvasType == CanvasType::CanvasType_3D)
                         drawList->AddDrawCmd();
-                    #endif
 
                     // Picking on Viewport not supported yet
                     if (m_view && m_view->IsToolmode())
                     {
-                        if (ImGui::IsItemHovered())
+                        if (all(mousePos.xy >= elemPos.xy) && all(mousePos.xy <= elemPos.xy + elemSize.xy))
                         {
                             PickingHit hit;
                             hit.m_id = elem.m_item.m_pickingID;

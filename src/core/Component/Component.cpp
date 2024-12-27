@@ -116,8 +116,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     const core::string Component::GetSubObjectName(core::uint _subObjectIndex) const 
     { 
-        VG_ASSERT_NOT_IMPLEMENTED(); 
-        return ""; 
+        return GetClassName(); 
     };
 
     //--------------------------------------------------------------------------------------
