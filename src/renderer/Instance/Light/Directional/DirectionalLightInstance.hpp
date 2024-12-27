@@ -82,7 +82,12 @@ namespace vg::renderer
             ShadowView * shadowView = new ShadowView(this, _view->getWorld(), m_shadowResolution);
             _view->addShadowView(shadowView);
 
-            shadowView->SetupOrthographicCamera(this->getGlobalMatrix(), m_shadowSize, m_shadowRange);
+            float4x4 shadowMatrix = this->getGlobalMatrix();
+
+            if (m_shadowCameraOffset)
+                shadowMatrix[3].xyz += _view->getViewInvMatrix()[3].xyz;
+
+            shadowView->SetupOrthographicCamera(shadowMatrix, m_shadowSize, m_shadowRange);
 
             _cullingResult->m_output->add(shadowView);
 

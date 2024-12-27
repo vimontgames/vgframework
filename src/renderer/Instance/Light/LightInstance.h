@@ -10,14 +10,16 @@ namespace vg::renderer
 
         LightType       GetLightType() const = 0;
 
-        bool            m_shadow            = false;
-        core::float2    m_shadowRange       = core::float2(0.1f, 100.0f);
-        float           m_shadowBias        = 0.01f;
-        core::uint2     m_shadowSize        = core::uint2(16, 16);
-        core::uint2     m_shadowResolution  = core::uint2(1024, 1024);
-        float           m_shadowIntensity   = 1.0f;
-        core::float4    m_color             = core::float4(1, 1, 1, 1);
-        float           m_intensity         = 1.0f;
+        bool            m_shadow                = false;
+        bool            m_shadowCameraOffset    = false;   
+        core::float2    m_shadowRange           = core::float2(0.1f, 100.0f);
+        float           m_shadowBias            = 0.01f;
+        core::uint2     m_shadowSize            = core::uint2(16, 16);
+        core::uint2     m_shadowResolution      = core::uint2(1024, 1024);
+        float           m_shadowIntensity       = 1.0f;
+
+        core::float4    m_color                 = core::float4(1, 1, 1, 1);
+        float           m_intensity             = 1.0f;
     };
 
     class ShadowView;
@@ -38,6 +40,7 @@ namespace vg::renderer
         VG_INLINE float                 getIntensity        () const { return m_intensity; }
 
         bool                            m_shadow;
+        bool                            m_shadowCameraOffset = false;
         core::float2                    m_shadowRange;
         float                           m_shadowBias;
         core::uint2                     m_shadowSize;
