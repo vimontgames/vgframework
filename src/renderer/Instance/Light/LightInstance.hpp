@@ -44,8 +44,8 @@ namespace vg::renderer
             registerProperty(LightDesc, m_shadowSize, "Size");
             setPropertyDescription(LightDesc, m_shadowSize, "Shadow map size in world-space");
 
-            registerProperty(LightDesc, m_shadowResolution, "Resolution");
-            setPropertyDescription(LightDesc, m_shadowResolution, "Shadow map resolution in pixels");
+            registerPropertyEnum(LightDesc, ShadowResolution, m_shadowResolution, "Resolution");
+            setPropertyDescription(LightDesc, m_shadowResolution, "Shadow map resolution from 'VeryLow' (default size /4) to 'Very High' (default size x4)");
 
             registerProperty(LightDesc, m_shadowIntensity, "Shadow Intensity");
             setPropertyRange(LightDesc, m_shadowIntensity, float2(0.0f, 1.0f));
@@ -99,6 +99,32 @@ namespace vg::renderer
     LightInstance::~LightInstance()
     {
         
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool LightInstance::IsCastShadow() const 
+    { 
+        if (m_shadow)
+        {
+            const auto * rendererOptions = RendererOptions::get();
+            return rendererOptions->GetShadowsEnabled();
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint2 LightInstance::getShadowResolution() const
+    {
+        const auto * rendererOptions = RendererOptions::get();
+        uint2 resolution = rendererOptions->GetShadowDefaultResolution();
+        const int shadowResInt = asInteger(m_shadowResolution);
+        if (shadowResInt > 0)
+            resolution <<= shadowResInt;
+        else if (shadowResInt < 0)
+            resolution >>= (uint)(-shadowResInt);
+
+        return resolution;
     }
 
     //--------------------------------------------------------------------------------------

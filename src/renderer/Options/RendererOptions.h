@@ -30,10 +30,19 @@ namespace vg::renderer
         Deferred
     );
 
-    vg_enum(Quality, core::u8,
-        Low     = 0,
-        Medium  = 1,
-        High    = 2
+    vg_enum(Quality, core::i8,
+        VeryLow = 0,
+        Low     = 1,
+        Medium  = 2,
+        High    = 3,
+        VeryHigh= 4
+    );
+
+    vg_enum(ShadowDefaultResolution, core::u16,
+        ShadowDefaultResolution_512 = 512,
+        ShadowDefaultResolution_1024 = 1024,
+        ShadowDefaultResolution_2048 = 2048,
+        ShadowDefaultResolution_4096 = 4096
     );
 
     class RendererOptions final : public IRendererOptions, public core::Singleton<RendererOptions>
@@ -51,6 +60,9 @@ namespace vg::renderer
 
         bool                    IsToolModeEnabled                       () const final override { return isToolModeEnabled(); };
         bool                    IsRayTracingEnabled                     () const final override { return isRayTracingEnabled(); };
+
+        bool                    GetShadowsEnabled                       () const final override;
+        core::uint2             GetShadowDefaultResolution              () const final override;
 
         gfx::MSAA               GetMSAA                                 () const final override;
         bool                    SetMSAA                                 (gfx::MSAA _msaa) final override;
@@ -133,11 +145,14 @@ namespace vg::renderer
         gfx::AAPostProcess      m_aaPostProcess                         = gfx::AAPostProcess::None;
         gfx::VSync              m_VSync                                 = gfx::VSync::VSync_1;
         LightingMode            m_lightingMode                          = LightingMode::Forward;
+        bool                    m_shadows[core::enumCount<Quality>()];
+        ShadowDefaultResolution m_shadowsResolution[core::enumCount<Quality>()];
         PBRFlags                m_pbrFlags                              = (PBRFlags)0x0;
         DisplayMode	            m_debugDisplayMode                      = DisplayMode::None;
         DisplayFlags            m_displayFlags                          = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap | DisplayFlags::VertexColor | DisplayFlags::MaterialColor | DisplayFlags::InstanceColor;
         RenderPassFlags         m_renderPassFlags;
         const gfx::DeviceCaps * m_deviceCaps                            = nullptr;
+        
         core::IProperty *       m_hdrProp                               = nullptr;
         core::IProperty *       m_vsyncProp                             = nullptr;
         core::IProperty *       m_msaaProp[core::enumCount<Quality>()]  = {};

@@ -52,10 +52,6 @@ namespace vg::core
         EnumFlagsU16,
         EnumFlagsU32,
         EnumFlagsU64,
-        EnumFlagsI8,
-        EnumFlagsI16,
-        EnumFlagsI32,
-        EnumFlagsI64,
         BitMask,
         Resource,
         ResourcePtr,
@@ -127,8 +123,8 @@ namespace vg::core
         virtual void                            SetDescription                  (const char * _description) = 0;
         virtual void                            SetEnumTypeName                 (const char * _enumTypeName) = 0;
         virtual bool                            SetEnumValueFlags               (u64 _value, EnumValueFlags _flags, bool _enabled) = 0;
-        virtual EnumValueFlags                  GetEnumValueFlags               (u64 _value) const = 0;
-
+        virtual EnumValueFlags                  GetUnsignedEnumValueFlags       (u64 _value) const = 0;
+        virtual EnumValueFlags                  GetSignedEnumValueFlags         (i64 _value) const = 0;
         virtual const char *                    GetInterface                    () const = 0;
         virtual const char *                    GetName                         () const = 0;
         virtual const char *                    GetClassName                    () const = 0;

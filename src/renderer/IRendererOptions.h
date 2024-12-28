@@ -28,6 +28,9 @@ namespace vg::renderer
         virtual gfx::MSAA               GetMSAA                                 () const = 0;
         virtual bool                    SetMSAA                                 (gfx::MSAA _msaa) = 0;
 
+        virtual bool                    GetShadowsEnabled                       () const = 0;
+        virtual core::uint2             GetShadowDefaultResolution              () const = 0;
+
         virtual gfx::HDR                GetHDR                                  () const = 0;
         virtual bool                    SetHDR                                  (gfx::HDR _hdr) = 0;
 

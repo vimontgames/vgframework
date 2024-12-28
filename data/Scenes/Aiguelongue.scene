@@ -602,7 +602,7 @@
                                                 <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
                                                 <Property type="Float" name="m_shadowBias" value="0.1"/>
                                                 <Property type="Uint2" name="m_shadowSize" x="50" y="50"/>
-                                                <Property type="Uint2" name="m_shadowResolution" x="4096" y="4096"/>
+                                                <Property type="EnumI8" name="m_shadowResolution" value="ShadowResolution_High"/>
                                                 <Property type="Float" name="m_shadowIntensity" value="1"/>
                                                 <Property type="Bool" name="m_shadowCameraOffset" value="true"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>

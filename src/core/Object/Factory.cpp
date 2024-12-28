@@ -317,10 +317,6 @@ namespace vg::core
             case PropertyType::EnumFlagsU16:
             case PropertyType::EnumFlagsU32:
             case PropertyType::EnumFlagsU64:
-            case PropertyType::EnumFlagsI8:
-            case PropertyType::EnumFlagsI16:
-            case PropertyType::EnumFlagsI32:
-            case PropertyType::EnumFlagsI64:
             {
                 const void * src = (void *)(uint_ptr(_object) + offset);
 
@@ -733,28 +729,24 @@ namespace vg::core
 
         case PropertyType::Int8:
         case PropertyType::EnumI8:
-        case PropertyType::EnumFlagsI8:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyInt8(_dstObj) = *_srcProp->GetPropertyInt8(_srcObj);
             break;
 
         case PropertyType::Int16:
         case PropertyType::EnumI16:
-        case PropertyType::EnumFlagsI16:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyInt16(_dstObj) = *_srcProp->GetPropertyInt16(_srcObj);
             break;
 
         case PropertyType::Int32:
         case PropertyType::EnumI32:
-        case PropertyType::EnumFlagsI32:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyInt32(_dstObj) = *_srcProp->GetPropertyInt32(_srcObj);
             break;
 
         case PropertyType::Int64:
         case PropertyType::EnumI64:
-        case PropertyType::EnumFlagsI64:
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             *_dstProp->GetPropertyInt64(_dstObj) = *_srcProp->GetPropertyInt64(_srcObj);
             break;
@@ -1089,10 +1081,6 @@ namespace vg::core
             case PropertyType::EnumFlagsU16:
             case PropertyType::EnumFlagsU32:
             case PropertyType::EnumFlagsU64:
-            case PropertyType::EnumFlagsI8:
-            case PropertyType::EnumFlagsI16:
-            case PropertyType::EnumFlagsI32:
-            case PropertyType::EnumFlagsI64:
             {
                 void * dst = (void *)(uint_ptr(_object) + offset);
                 if (isEnumArray)
@@ -2028,6 +2016,31 @@ namespace vg::core
                                             serializeEnumPropertyFromXML<u32>(_object, prop, xmlPropElem);
                                         break;
 
+                                        case PropertyType::EnumU64:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            serializeEnumPropertyFromXML<u64>(_object, prop, xmlPropElem);
+                                            break;
+
+                                        case PropertyType::EnumI8:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            serializeEnumPropertyFromXML<i8>(_object, prop, xmlPropElem);
+                                            break;
+
+                                        case PropertyType::EnumI16:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            serializeEnumPropertyFromXML<i16>(_object, prop, xmlPropElem);
+                                            break;
+
+                                        case PropertyType::EnumI32:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            serializeEnumPropertyFromXML<i32>(_object, prop, xmlPropElem);
+                                            break;
+
+                                        case PropertyType::EnumI64:
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            serializeEnumPropertyFromXML<i64>(_object, prop, xmlPropElem);
+                                            break;
+
                                         case PropertyType::Uint8:
                                             if (isEnumArray)
                                             {
@@ -2621,6 +2634,26 @@ namespace vg::core
                 case PropertyType::EnumU64:
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     serializeEnumPropertyToXML<u64>(_object, prop, xmlPropElem);
+                    break;
+
+                case PropertyType::EnumI8:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
+                    serializeEnumPropertyToXML<i8>(_object, prop, xmlPropElem);
+                    break;
+
+                case PropertyType::EnumI16:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
+                    serializeEnumPropertyToXML<i16>(_object, prop, xmlPropElem);
+                    break;
+
+                case PropertyType::EnumI32:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
+                    serializeEnumPropertyToXML<i32>(_object, prop, xmlPropElem);
+                    break;
+
+                case PropertyType::EnumI64:
+                    VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
+                    serializeEnumPropertyToXML<i64>(_object, prop, xmlPropElem);
                     break;
             }
 

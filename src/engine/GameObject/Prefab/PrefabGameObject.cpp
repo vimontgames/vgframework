@@ -241,7 +241,6 @@ namespace vg::engine
 
             case PropertyType::Int8:
             case PropertyType::EnumI8:
-            case PropertyType::EnumFlagsI8:
             {
                 if (isEnumArray)
                     return false;
@@ -252,7 +251,6 @@ namespace vg::engine
 
             case PropertyType::Int16:
             case PropertyType::EnumI16:
-            case PropertyType::EnumFlagsI16:
             {
                 if (isEnumArray)
                     return false;
@@ -263,7 +261,6 @@ namespace vg::engine
 
             case PropertyType::Int32:
             case PropertyType::EnumI32:
-            case PropertyType::EnumFlagsI32:
             {
                 if (isEnumArray)
                     return false;
@@ -274,7 +271,6 @@ namespace vg::engine
 
             case PropertyType::Int64:
             case PropertyType::EnumI64:
-            case PropertyType::EnumFlagsI64:
             {
                 if (isEnumArray)
                     return false;
@@ -453,25 +449,21 @@ namespace vg::engine
 
                 case PropertyType::Int8:
                 case PropertyType::EnumI8:
-                case PropertyType::EnumFlagsI8:
                     newDynProp = new DynamicPropertyI8(_prop->GetName());
                     break;
 
                 case PropertyType::Int16:
                 case PropertyType::EnumI16:
-                case PropertyType::EnumFlagsI16:
                     newDynProp = new DynamicPropertyI16(_prop->GetName());
                     break;
 
                 case PropertyType::Int32:
                 case PropertyType::EnumI32:
-                case PropertyType::EnumFlagsI32:
                     newDynProp = new DynamicPropertyI32(_prop->GetName());
                     break;
 
                 case PropertyType::Int64:
                 case PropertyType::EnumI64:
-                case PropertyType::EnumFlagsI64:
                     newDynProp = new DynamicPropertyI64(_prop->GetName());
                     break;
             }

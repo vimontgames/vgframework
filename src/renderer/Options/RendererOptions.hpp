@@ -14,25 +14,67 @@ namespace vg::renderer
 {
     VG_REGISTER_OBJECT_CLASS(RendererOptions, "Renderer Options");
 
+    #define setPropertyHiddenCallbackQuality(className, propertyName)                          setPropertyHiddenCallback(className, propertyName[Quality::VeryLow],  isVeryLowQualityPropertyHidden);   \
+                                                                                               setPropertyHiddenCallback(className, propertyName[Quality::Low],      isLowQualityPropertyHidden);       \
+                                                                                               setPropertyHiddenCallback(className, propertyName[Quality::Medium],   isMediumQualityPropertyHidden);    \
+                                                                                               setPropertyHiddenCallback(className, propertyName[Quality::High],     isHighQualityPropertyHidden);      \
+                                                                                               setPropertyHiddenCallback(className, propertyName[Quality::VeryHigh], isVeryHighQualityPropertyHidden);  
+
+    #define registerPropertyQuality(className, propertyName, displayName)                       registerProperty(className, propertyName[Quality::VeryLow], displayName);                               \
+                                                                                                registerProperty(className, propertyName[Quality::Low],     displayName);                               \
+                                                                                                registerProperty(className, propertyName[Quality::Medium],  displayName);                               \
+                                                                                                registerProperty(className, propertyName[Quality::High],    displayName);                               \
+                                                                                                registerProperty(className, propertyName[Quality::VeryHigh],displayName);                               \
+                                                                                                setPropertyHiddenCallbackQuality(className, propertyName);
+
+    #define registerPropertyEnumQuality(className, enumClassName, propertyName, displayName)    registerPropertyEnum(className, enumClassName, propertyName[Quality::VeryLow], displayName);            \
+                                                                                                registerPropertyEnum(className, enumClassName, propertyName[Quality::Low],     displayName);            \
+                                                                                                registerPropertyEnum(className, enumClassName, propertyName[Quality::Medium],  displayName);            \
+                                                                                                registerPropertyEnum(className, enumClassName, propertyName[Quality::High],    displayName);            \
+                                                                                                registerPropertyEnum(className, enumClassName, propertyName[Quality::VeryHigh],displayName);            \
+                                                                                                setPropertyHiddenCallbackQuality(className, propertyName);
+                                                                                 
+    #define setPropertyDescriptionQuality(className, propertyName, desc)                        setPropertyDescription(className, propertyName[Quality::VeryLow], desc##" in 'VeryLow' quality mode");  \
+                                                                                                setPropertyDescription(className, propertyName[Quality::Low],     desc##" in 'Low' quality mode");      \
+                                                                                                setPropertyDescription(className, propertyName[Quality::Medium],  desc##" in 'Medium' quality mode");   \
+                                                                                                setPropertyDescription(className, propertyName[Quality::High],    desc##" in 'High' quality mode");     \
+                                                                                                setPropertyDescription(className, propertyName[Quality::VeryHigh],desc##" in 'VeryHigh' quality mode");
+
     //--------------------------------------------------------------------------------------
-    bool IsLowQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    bool isQualityLevelPropertyHidden(const IObject * _object, const IProperty * _prop, Quality _quality)
     {
         const RendererOptions * rendererOptions = VG_SAFE_STATIC_CAST(const RendererOptions, _object);
-        return rendererOptions->getCurrentQualityLevel() != Quality::Low;
+        return rendererOptions->getCurrentQualityLevel() != _quality;
     }
 
     //--------------------------------------------------------------------------------------
-    bool IsMediumQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    bool isVeryLowQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
     {
-        const RendererOptions * rendererOptions = VG_SAFE_STATIC_CAST(const RendererOptions, _object);
-        return rendererOptions->getCurrentQualityLevel() != Quality::Medium;
+        return isQualityLevelPropertyHidden(_object, _prop, Quality::VeryLow);
     }
 
     //--------------------------------------------------------------------------------------
-    bool IsHighQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    bool isLowQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
     {
-        const RendererOptions * rendererOptions = VG_SAFE_STATIC_CAST(const RendererOptions, _object);
-        return rendererOptions->getCurrentQualityLevel() != Quality::High;
+        return isQualityLevelPropertyHidden(_object, _prop, Quality::Low);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool isMediumQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    {
+        return isQualityLevelPropertyHidden(_object, _prop, Quality::Medium);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool isHighQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    {
+        return isQualityLevelPropertyHidden(_object, _prop, Quality::High);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool isVeryHighQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    {
+        return isQualityLevelPropertyHidden(_object, _prop, Quality::VeryHigh);
     }
 
     //--------------------------------------------------------------------------------------
@@ -56,6 +98,16 @@ namespace vg::renderer
 
             registerPropertyEnumBitfield(RendererOptions, PBRFlags, m_pbrFlags, "PBR"); 
             setPropertyDescription(RendererOptions, m_pbrFlags, "PBR lighting flags");
+             
+            registerPropertyGroupBegin(RendererOptions, "Shadows");
+            {
+                registerPropertyQuality(RendererOptions, m_shadows, "Cast shadows");
+                setPropertyDescriptionQuality(RendererOptions, m_shadows, "Enable realtime shadows");
+
+                registerPropertyEnumQuality(RendererOptions, ShadowDefaultResolution, m_shadowsResolution, "Resolution");
+                setPropertyDescriptionQuality(RendererOptions, m_shadowsResolution, "Default resolution for realtime shadows");
+            }
+            registerPropertyGroupEnd(RendererOptions);
 
             registerPropertyGroupBegin(RendererOptions, "Default environment");
             {
@@ -83,17 +135,8 @@ namespace vg::renderer
             registerPropertyEnum(RendererOptions, gfx::HDR, m_HDRmode, "HDR");
             setPropertyDescription(RendererOptions, m_HDRmode, "High-dynamic range display mode");
 
-            registerPropertyEnum(RendererOptions, gfx::MSAA, m_msaa[Quality::Low], "MSAA");
-            setPropertyDescription(RendererOptions, m_msaa[Quality::Low], "Multisample anti-aliasing (low)");
-            setPropertyHiddenCallback(RendererOptions, m_msaa[Quality::Low], IsLowQualityPropertyHidden);
-
-            registerPropertyEnum(RendererOptions, gfx::MSAA, m_msaa[Quality::Medium], "MSAA");
-            setPropertyDescription(RendererOptions, m_msaa[Quality::Medium], "Multisample anti-aliasing (high)");
-            setPropertyHiddenCallback(RendererOptions, m_msaa[Quality::Medium], IsMediumQualityPropertyHidden);
-
-            registerPropertyEnum(RendererOptions, gfx::MSAA, m_msaa[Quality::High], "MSAA");
-            setPropertyDescription(RendererOptions, m_msaa[Quality::High], "Multisample anti-aliasing (high)");
-            setPropertyHiddenCallback(RendererOptions, m_msaa[Quality::High], IsHighQualityPropertyHidden);
+            registerPropertyEnumQuality(RendererOptions, gfx::MSAA, m_msaa, "MSAA");
+            setPropertyDescriptionQuality(RendererOptions, m_msaa, "MSAA sample count for antialiasing");
 
             registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
             setPropertyDescription(RendererOptions, m_VSync, "Sync display frequency with monitor refresh rate");
@@ -161,7 +204,18 @@ namespace vg::renderer
         for (uint i = 0; i < enumCount<Quality>(); ++i)
         {
             m_msaa[i] = gfx::MSAA::None;
+            m_shadows[i] = true;
+            m_shadowsResolution[i] = ShadowDefaultResolution::ShadowDefaultResolution_1024;
         }
+
+        // Default shadow quality
+        m_shadowsResolution[Quality::Low] = ShadowDefaultResolution::ShadowDefaultResolution_512;
+        m_shadows[Quality::Low] = false; // Disable shadows for the less detailed quality level
+
+        m_shadowsResolution[Quality::Low] = ShadowDefaultResolution::ShadowDefaultResolution_1024;
+        m_shadowsResolution[Quality::Medium] = ShadowDefaultResolution::ShadowDefaultResolution_2048;
+        m_shadowsResolution[Quality::High] = ShadowDefaultResolution::ShadowDefaultResolution_4096;
+        m_shadowsResolution[Quality::VeryHigh] = ShadowDefaultResolution::ShadowDefaultResolution_4096; // Will ultimately use RT anyway
 
         m_customQualityLevel = autodetectQualityLevel();
     }
@@ -199,6 +253,9 @@ namespace vg::renderer
 
         Load();
 
+        if (!m_useCustomQualityLevel)
+            m_customQualityLevel = autodetectQualityLevel();
+
         auto * renderer = Renderer::get();
         renderer->SetVSync(m_VSync);
         renderer->SetHDR(m_HDRmode);
@@ -213,8 +270,9 @@ namespace vg::renderer
         for (uint q = 0; q < enumCount<Quality>(); ++q)
         {
             auto & prop = m_msaaProp[q];
-            prop = classDesc->GetPropertyByName(fmt::sprintf("m_msaa[Quality::%s]", asString((Quality)q)).c_str());
-            VG_ASSERT(prop);
+            auto propName = fmt::sprintf("m_msaa[Quality::%s]", asString((Quality)q));
+            prop = classDesc->GetPropertyByName(propName.c_str());
+            VG_ASSERT(prop, "Could not find property \"%s\"", propName.c_str());
             if (nullptr != prop)
             {
                 for (uint i = 0; i < enumCount<gfx::MSAA>(); ++i)
@@ -350,6 +408,18 @@ namespace vg::renderer
             return true;
         }
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool RendererOptions::GetShadowsEnabled() const
+    {
+        return m_shadows[getCurrentQualityLevel()];
+    }
+
+    //--------------------------------------------------------------------------------------
+    uint2 RendererOptions::GetShadowDefaultResolution() const
+    {
+        return m_shadowsResolution[getCurrentQualityLevel()];
     }
 
     //--------------------------------------------------------------------------------------

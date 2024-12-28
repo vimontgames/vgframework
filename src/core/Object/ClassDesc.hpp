@@ -327,7 +327,7 @@ namespace vg::core
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i8 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i8 * _enumValues, PropertyFlags _flags)
     {
         const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
-        pushProperty({ _className, _propertyName, bitfield ? PropertyType::EnumFlagsI8 : PropertyType::EnumI8, (uint_ptr)_offset, (u32)sizeof(i8), _displayName, _flags, _enumCount, _enumNames, _enumValues });
+        pushProperty({ _className, _propertyName, PropertyType::EnumI8, (uint_ptr)_offset, (u32)sizeof(i8), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
     }
@@ -336,7 +336,7 @@ namespace vg::core
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i16 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i16 * _enumValues, PropertyFlags _flags)
     {
         const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
-        pushProperty({ _className, _propertyName, bitfield ? PropertyType::EnumFlagsI16 : PropertyType::EnumI16, (uint_ptr)_offset, (u32)sizeof(i16), _displayName, _flags, _enumCount, _enumNames, _enumValues });
+        pushProperty({ _className, _propertyName, PropertyType::EnumI16, (uint_ptr)_offset, (u32)sizeof(i16), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
     }
@@ -345,7 +345,7 @@ namespace vg::core
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i32 * _enumValues, PropertyFlags _flags)
     {
         const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
-        pushProperty({ _className, _propertyName, bitfield ? PropertyType::EnumFlagsI32 : PropertyType::EnumI32, (uint_ptr)_offset, (u32)sizeof(i32), _displayName, _flags, _enumCount, _enumNames, _enumValues });
+        pushProperty({ _className, _propertyName, PropertyType::EnumI32, (uint_ptr)_offset, (u32)sizeof(i32), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
     }
@@ -354,7 +354,7 @@ namespace vg::core
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i64 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i64 * _enumValues, PropertyFlags _flags)
     {
         const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
-        pushProperty({ _className, _propertyName, bitfield ? PropertyType::EnumFlagsI64 : PropertyType::EnumI64, (uint_ptr)_offset, (u32)sizeof(i64), _displayName, _flags, _enumCount, _enumNames, _enumValues });
+        pushProperty({ _className, _propertyName, PropertyType::EnumI64, (uint_ptr)_offset, (u32)sizeof(i64), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
     }

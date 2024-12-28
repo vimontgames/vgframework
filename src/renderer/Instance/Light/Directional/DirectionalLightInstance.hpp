@@ -79,7 +79,7 @@ namespace vg::renderer
             // Create view and start culling immediately
             Renderer * renderer = Renderer::get();
 
-            ShadowView * shadowView = new ShadowView(this, _view->getWorld(), m_shadowResolution);
+            ShadowView * shadowView = new ShadowView(this, _view->getWorld(), getShadowResolution());
             _view->addShadowView(shadowView);
 
             float4x4 shadowMatrix = this->getGlobalMatrix();
