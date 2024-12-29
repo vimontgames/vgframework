@@ -661,7 +661,6 @@ namespace vg::gfx::dx12
 		for (auto & cmdPool : context.commandPools)
 			cmdPool->beginFrame();
 
-        
         for (uint type = 0; type < enumCount<CommandListType>(); ++type)
         {
             // First cmdList will perform a Tiemstamp query

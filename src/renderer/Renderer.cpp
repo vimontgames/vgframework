@@ -461,6 +461,18 @@ namespace vg::renderer
         return m_device.getHDR();
     }
 
+    //--------------------------------------------------------------------------------------
+    bool Renderer::SetRenderJobCount(core::uint _count)
+    {
+        return m_device.setRenderJobCount(_count);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint Renderer::GetRenderJobCount() const
+    {
+        return m_device.getRenderJobCount();
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Renderer::RunOneFrame()
 	{
@@ -478,6 +490,11 @@ namespace vg::renderer
             return;
         
         options->update();
+
+        if (options->isRenderJobsEnabled())
+            SetRenderJobCount(Kernel::getScheduler()->GetWorkerThreadCount());
+        else
+            SetRenderJobCount(0);
 
 		m_device.beginFrame();
 		{

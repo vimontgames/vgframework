@@ -114,6 +114,7 @@
     <None Include="Instance\GraphicInstance.inl" />
     <None Include="Instance\Light\LightInstance.inl" />
     <None Include="Instance\Mesh\MeshInstance.inl" />
+    <None Include="Options\RendererOptions.inl" />
     <None Include="Renderer.def" />
     <None Include="Renderer.inl" />
     <None Include="View\View.inl" />

@@ -115,6 +115,8 @@ namespace vg::renderer
 
         Quality                 getCurrentQualityLevel                  () const;
 
+        VG_INLINE bool          isRenderJobsEnabled                     () const;
+
     protected:
         Quality                 autodetectQualityLevel                  ();
 
@@ -151,6 +153,7 @@ namespace vg::renderer
         DisplayMode	            m_debugDisplayMode                      = DisplayMode::None;
         DisplayFlags            m_displayFlags                          = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap | DisplayFlags::VertexColor | DisplayFlags::MaterialColor | DisplayFlags::InstanceColor;
         RenderPassFlags         m_renderPassFlags;
+        bool                    m_renderJobs                            = false;
         const gfx::DeviceCaps * m_deviceCaps                            = nullptr;
         
         core::IProperty *       m_hdrProp                               = nullptr;
@@ -159,3 +162,7 @@ namespace vg::renderer
         core::IProperty *       m_aaPostProcessProp                     = nullptr;
     };
 }
+
+#if VG_ENABLE_INLINE
+#include "RendererOptions.inl"
+#endif

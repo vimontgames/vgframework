@@ -189,6 +189,41 @@ namespace vg::gfx
 			}
 		}
 
+        //--------------------------------------------------------------------------------------
+        void Device::updateFrameContext()
+        {
+            auto frameContextIndex = getFrameContextIndex();
+            auto & frameContext = m_frameContext[frameContextIndex];
+
+            auto & cmdPools = frameContext.commandPools;
+            auto & cmdLists = frameContext.commandLists[asInteger(CommandListType::Graphics)];
+            VG_ASSERT(cmdPools.size() == cmdLists.size());
+
+            // Alloc more command lists for render jobs if needed
+            for (uint i = (uint)cmdPools.size(); i < m_renderJobCount+1; ++i)
+            {
+                const auto cmdPoolIndex = (uint)cmdPools.size();
+                cmdPools.push_back(new gfx::CommandPool(frameContextIndex, cmdPoolIndex));
+                auto & cmdPool = cmdPools.back();
+
+                const auto cmdListIndex = (uint)cmdLists.size();
+                cmdLists.push_back(new gfx::CommandList(CommandListType::Graphics, cmdPool, frameContextIndex, cmdListIndex));
+            }
+           
+            // Destroy extra command lists
+            for (uint i = m_renderJobCount + 1; i < (uint)cmdPools.size(); ++i)
+            {
+                VG_SAFE_RELEASE_ASYNC(cmdPools[i]);
+                VG_SAFE_RELEASE_ASYNC(cmdLists[i]);
+            }
+
+            if (cmdPools.size() != m_renderJobCount + 1)
+            {
+                cmdPools.resize(m_renderJobCount + 1);
+                cmdLists.resize(m_renderJobCount + 1);
+            }            
+        }
+
 		//--------------------------------------------------------------------------------------
 		void Device::destroyFrameContext(core::uint _frameContextIndex)
 		{
@@ -400,6 +435,8 @@ namespace vg::gfx
         VG_DEBUGPRINT("beginFrame #%u\n{\n", getFrameCounter());
         #endif
 
+        updateFrameContext();
+
 		super::beginFrame();
 
         // Copy staging data to GPU textures/buffers used for rendering
@@ -534,5 +571,24 @@ namespace vg::gfx
     void Device::waitGPUIdle()
     {
         super::waitGPUIdle();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Device::setRenderJobCount(core::uint _count)
+    {
+        if (m_renderJobCount != _count)
+        {
+            VG_WARNING("[Device] RenderJobCount changed from %u to %u", m_renderJobCount, _count);
+            m_renderJobCount = _count;
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint Device::getRenderJobCount() const
+    {
+        return m_renderJobCount;
     }
 }

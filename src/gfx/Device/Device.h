@@ -72,6 +72,7 @@ namespace vg::gfx
             core::u64                                       getFrameCounter() const;
 
 			void											createFrameContext		    (core::uint _frameContextIndex);
+            void                                            updateFrameContext          ();
 			void											destroyFrameContext		    (core::uint _frameContextIndex);
 			core::uint                                      getFrameContextIndex        () const;
             FrameContext &									getCurrentFrameContext      ();
@@ -131,9 +132,10 @@ namespace vg::gfx
             core::u8                                        m_nextFrameIndex;
             core::u8                                        m_currentBackbufferIndex;   // current backbuffer being used
             double                                          m_gpuFrameTime = 0;
-            core::Ticks                                      m_beginWaitGPUTicks = 0;
+            core::Ticks                                     m_beginWaitGPUTicks = 0;
             double                                          m_gpuWaitTime = 0;
             bool                                            m_captureInProgress = false;
+            core::uint                                      m_renderJobCount = 0;
 		};
 	}
 }
@@ -177,6 +179,9 @@ namespace vg::gfx
 
         void                setHDR              (HDR _mode);
         HDR                 getHDR              () const;
+
+        bool                setRenderJobCount   (core::uint _count);
+        core::uint          getRenderJobCount   () const;
 
         void                waitGPUIdle         ();
 

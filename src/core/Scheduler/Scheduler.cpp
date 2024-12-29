@@ -24,32 +24,6 @@ namespace px_sched
 
 namespace vg::core
 {
-    class TestJob : public Job
-    {
-    public:
-        const char * GetClassName() const final { return "TestJob"; }
-
-        TestJob(const string & _name, IObject * _parent) :
-            Job(_name, _parent)
-        {
-
-        }
-
-        void run() override
-        {
-            VG_PROFILE_CPU(Kernel::getScheduler()->GetCurrentThreadName().c_str());
-            //VG_DEBUGPRINT("Job \"%s\" running on \"%s\"\n", getName().c_str(), Scheduler::getCurrentThreadName().c_str());
-            
-            static volatile uint test = 0;
-            uint r = rand() & 0x0FFFF;
-            for (uint i = 0; i < (r<<3); ++i)
-                test += i;
-        }
-
-    private:
-        char m_name[256];
-    };
-
     class RegisterWorkerThreadJob : public Job
     {
     public:
@@ -193,37 +167,4 @@ namespace vg::core
             return {};
         }
     }
-
-    //--------------------------------------------------------------------------------------
-    //void Scheduler::test()
-    //{
-    //    // Sync objects can be used later to wait for them
-    //    px_sched::Sync s;
-    //
-    //    VG_PROFILE_CPU("SchedulerTest");
-    //
-    //    vector<TestJob*> testJobs;
-    //  
-    //    for (uint i = 0; i < 16; ++i)
-    //    {
-    //        char jobName[256];
-    //        sprintf_s(jobName, "Job %u", i);
-    //
-    //        testJobs.push_back(new TestJob(jobName, nullptr));
-    //
-    //        px_sched::Job job{ testJobs[i] };
-    //        m_schd->run(job, &s);
-    //    }
-    //
-    //    // wait for all tasks to finish
-    //    {
-    //        VG_PROFILE_CPU("SyncJobs");
-    //        m_schd->waitFor(s); 
-    //    }
-    //
-    //    // clear
-    //    for (uint i = 0; i < testJobs.size(); ++i)
-    //        VG_SAFE_DELETE(testJobs[i]);
-    //    testJobs.clear();
-    //}
 }

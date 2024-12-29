@@ -1,4 +1,9 @@
 #include "RendererOptions.h"
+
+#if !VG_ENABLE_INLINE
+#include "RendererOptions.inl"
+#endif
+
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Object/EnumHelper.h"
 #include "core/string/string.h"
@@ -177,11 +182,18 @@ namespace vg::renderer
             registerPropertyEx(RendererOptions, m_wireframe, "Wireframe", PropertyFlags::SingleLine);
             setPropertyDescription(RendererOptions, m_wireframe, "Show Wireframe");
 
-            registerPropertyEx(RendererOptions, m_aabb, "Bounding Box", PropertyFlags::SingleLine);
+            registerPropertyEx(RendererOptions, m_aabb, "AABB", PropertyFlags::SingleLine);
             setPropertyDescription(RendererOptions, m_aabb, "Show Bounding Boxes");
 
             registerPropertyEx(RendererOptions, m_debugUI, "Debug UI", PropertyFlags::SingleLine);
             setPropertyDescription(RendererOptions, m_debugUI, "Show UI debug");
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
+        registerPropertyGroupBegin(RendererOptions, "Multithreading");
+        {
+            registerProperty(RendererOptions, m_renderJobs, "Render Jobs");
+            setPropertyDescription(RendererOptions, m_renderJobs, "Use render jobs (experimental)");
         }
         registerPropertyGroupEnd(RendererOptions);
 

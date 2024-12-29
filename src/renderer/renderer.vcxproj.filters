@@ -88,6 +88,9 @@
     <None Include="Instance\GraphicInstance.inl">
       <Filter>Instance</Filter>
     </None>
+    <None Include="Options\RendererOptions.inl">
+      <Filter>Options</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />

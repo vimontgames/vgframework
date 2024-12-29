@@ -100,6 +100,9 @@ namespace vg
             virtual void                                SetHDR                  (gfx::HDR _mode) = 0;
             virtual gfx::HDR                            GetHDR                  () const = 0;
 
+            virtual bool                                SetRenderJobCount       (core::uint _count) = 0;
+            virtual core::uint                          GetRenderJobCount       () const = 0;
+
             #ifdef _WIN32
             virtual LRESULT CALLBACK                    WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
             #endif
