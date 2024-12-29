@@ -94,15 +94,5 @@ namespace vg::renderer
 
         _cmdList->setGraphicRootConstants(0, (u32*)&root2D, RootConstants2DCount);
         _cmdList->draw(4);
-
-        if (!renderer->IsEditor())
-        {
-            // When not editor, render game UI directly to backbuffer
-            if (Renderer::get()->IsFullscreen())
-            {
-                if (auto * viewGUI = VG_SAFE_STATIC_CAST(UIRenderer, view->GetUIRenderer()))
-                    viewGUI->RenderFullscreen();
-            }
-        }
     }
 }

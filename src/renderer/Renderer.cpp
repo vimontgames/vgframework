@@ -498,9 +498,6 @@ namespace vg::renderer
 
 		m_device.beginFrame();
 		{
-            //if (!m_fullscreen)
-                m_imgui->beginFrame();
-
             //--------------------------------------------------------------------------------------
             // Culling all views : 
             // - a job a created for each view to fill View::m_cullingJobResult & synced

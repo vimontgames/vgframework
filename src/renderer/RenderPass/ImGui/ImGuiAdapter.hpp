@@ -407,7 +407,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::beginFrame()
+    void ImGuiAdapter::beginFrame(gfx::CommandList * _cmdList)
     {
         VG_PROFILE_CPU("Dear Imgui");
 
@@ -440,8 +440,7 @@ namespace vg::renderer
         ImGui_ImplVulkan_NewFrame();
         if (m_rebuildFontTex)
         {
-            CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[0];
-            ImGui_ImplVulkan_CreateFontsTexture(/*cmdList->getVulkanCommandBuffer()*/);
+            ImGui_ImplVulkan_CreateFontsTexture();
             m_rebuildFontTex = false;
         }
 

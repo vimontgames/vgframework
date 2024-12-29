@@ -194,6 +194,7 @@ namespace vg::gfx
 
             UserPassInfoNode info(m_currentUserPass);
             info.m_userPass = &m_userPassInfo[m_userPassInfo.size() - 1];
+            info.m_name = _userPass->GetName();
             m_currentUserPass->m_children.push_back(info);
 
             return true;
@@ -724,17 +725,30 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void FrameGraph::renderNode(UserPassInfoNode & _node, gfx::CommandList * cmdList)
+    void FrameGraph::gatherRenderNodes(const UserPassInfoNode & _node, vector<UserPassInfoNode> & _nodes)
+    {
+        for (auto & child : _node.m_children)
+            gatherRenderNodes(child, _nodes);
+
+        _nodes.push_back(_node);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::renderNode(UserPassInfoNode & _node, gfx::CommandList * cmdList, bool _recur)
     {
         VG_PROFILE_GPU(_node.m_name.c_str());
 
-        for (auto & child : _node.m_children)
-            renderNode(child, cmdList);
+        if (_recur)
+        {
+            // jobs disabled, render child jobs
+            for (auto & child : _node.m_children)
+                renderNode(child, cmdList, true);
+        }
 
         if (!_node.m_renderPass)
             return;
 
-        RenderPass * renderPass = _node.m_renderPass;// m_renderPasses[j];
+        RenderPass * renderPass = _node.m_renderPass;
         const auto & subPasses = renderPass->getSubPasses();
 
         // allocate all transient resources that will be required during the subpasses before beginning the renderpass
@@ -1004,8 +1018,23 @@ namespace vg::gfx
         // Split events by view
         auto profiler = core::Kernel::getProfiler();
 
-        for (auto & node : m_userPassInfoTree.m_children)
-            renderNode(node, cmdList);
+        if (device->getRenderJobCount() > 0)
+        {
+            // List all jobs
+            vector<UserPassInfoNode> nodes;
+            for (auto & node : m_userPassInfoTree.m_children)
+                gatherRenderNodes(node, nodes);
+
+            // Render all nodes
+            for (uint i = 0; i < nodes.size(); ++i)
+                renderNode(nodes[i], cmdList, false);
+        }
+        else
+        {
+            // render nodes sequentially
+            for (auto & node : m_userPassInfoTree.m_children)
+                renderNode(node, cmdList, true);
+        }
 
         // All textures and buffers remaining in pool should be marked as 'unused' at this point
         for (uint i = 0; i < m_sharedTextures.size(); ++i)

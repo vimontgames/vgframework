@@ -49,7 +49,7 @@ namespace vg
             ImTextureID             GetTextureID                    (const gfx::ITexture * _texture) final override;
             void                    ReleaseTextureID                (const gfx::ITexture * _texture) final override;
 
-            void                    beginFrame                      ();
+            void                    beginFrame                      (gfx::CommandList * _cmdList);
             void                    render                          (gfx::CommandList * _cmdList);
 
             void                    AddBeginFrameCallback           (BeginFrameCallback _func);

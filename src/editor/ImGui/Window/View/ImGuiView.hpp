@@ -527,7 +527,7 @@ namespace vg::editor
                         if (auto * uiRenderer = view->GetUIRenderer())
                         {
                             ImGui::SetCursorPos(ImVec2(0, titleBarHeight + toolbarHeight));
-                            uiRenderer->RenderWindowed();
+                            uiRenderer->RenderWindowed(renderer::RenderUIType::RenderUIType_3D);
 
                             const auto options = EditorOptions::get();
                             bool debugCulling = options->IsDebugCulling();
@@ -584,19 +584,9 @@ namespace vg::editor
                 if (auto * uiRenderer = m_viewport->GetUIRenderer())
                 {
                     ImGui::SetCursorPos(ImVec2(0, titleBarHeight + toolbarHeight));
-                    uiRenderer->RenderWindowed();
+                    uiRenderer->RenderWindowed(renderer::RenderUIType::RenderUIType_2D);
                 }
             }
-
-            // Draw Border
-            //auto * window = ImGui::FindWindowByName(name.c_str());
-            //ImGuiDockNode * node = window->DockNode;
-            //if (!node)
-            //{
-            //    auto borderColor = ImGui::GetStyleColorVec4(ImGuiCol_Border);
-            //    borderColor.w *= 0.5f;
-            //    ImGui::GetForegroundDrawList()->AddRect(vMin, vMax, GetColorU32(borderColor));
-            //}
 
             bool activeGizmo = false;
 

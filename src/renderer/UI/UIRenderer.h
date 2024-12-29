@@ -13,13 +13,13 @@ namespace vg::renderer
 
         void            Add                 (const UIElement & _desc) final override;
 
-        void            RenderFullscreen    () final override;
-        void            RenderWindowed      () final override;
+        void            RenderFullscreen    (RenderUIType _renderUIType) final override;
+        void            RenderWindowed      (RenderUIType _renderUIType) final override;
 
         void            Clear               () final override;
 
     protected:
-        void            render              ();
+        void            render              (RenderUIType _renderUIType);
         core::uint2     getSize             () const;
         core::float2    getScale            () const;
         core::float2    getOffset           () const;

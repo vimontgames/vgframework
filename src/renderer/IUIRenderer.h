@@ -82,6 +82,11 @@ namespace vg::renderer
         core::uint2             m_resolution        = core::uint2(1280, 720);
     };
 
+    vg_enum_class(RenderUIType, core::u8,
+        RenderUIType_2D = 0,
+        RenderUIType_3D
+    );
+
     class IUIRenderer
     {
     public:
@@ -91,7 +96,7 @@ namespace vg::renderer
 
         virtual void Clear              () = 0;
 
-        virtual void RenderFullscreen   () = 0;
-        virtual void RenderWindowed     () = 0;
+        virtual void RenderFullscreen   (RenderUIType _renderUIType) = 0;
+        virtual void RenderWindowed     (RenderUIType _renderUIType) = 0;
     };
 }

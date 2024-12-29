@@ -36,7 +36,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Create transparent window to render game UI
     //--------------------------------------------------------------------------------------
-    void UIRenderer::RenderFullscreen()
+    void UIRenderer::RenderFullscreen(RenderUIType _renderUIType)
     {
         ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f));
         ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
@@ -53,7 +53,7 @@ namespace vg::renderer
         }
 
         ImGui::SetCursorScreenPos(ImVec2(0, 0));
-        render();
+        render(_renderUIType);
         
         if (!editor)
             ImGui::End();
@@ -63,9 +63,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void UIRenderer::RenderWindowed()
+    void UIRenderer::RenderWindowed(RenderUIType _renderUIType)
     {
-        render();
+        render(_renderUIType);
     }
 
     //--------------------------------------------------------------------------------------
@@ -93,9 +93,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void UIRenderer::render()
+    void UIRenderer::render(RenderUIType _renderUIType)
     {
-        VG_PROFILE_CPU("RenderUI");
+        VG_PROFILE_CPU(_renderUIType == RenderUIType::RenderUIType_2D ? "RenderUI2D" : "RenderUI3D");
 
         auto * imGuiAdapter = Renderer::get()->GetImGuiAdapter();
         const RendererOptions * options = RendererOptions::get();

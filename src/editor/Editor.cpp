@@ -389,12 +389,12 @@ namespace vg::editor
                         if (auto * view = renderer->GetView(pair.second))
                         {
                             if (auto * uiRenderer = view->GetUIRenderer())
-                                uiRenderer->RenderFullscreen();
+                                uiRenderer->RenderFullscreen(renderer::RenderUIType::RenderUIType_3D);
                         }
 
                         // Render viewport GUI on top of view GUIs
                         if (auto * uiRenderer = viewport->GetUIRenderer())
-                            uiRenderer->RenderFullscreen();
+                            uiRenderer->RenderFullscreen(renderer::RenderUIType::RenderUIType_2D);
                     }                 
                 }
             }

@@ -90,9 +90,11 @@ namespace vg::renderer
     void ImGuiPass::Render(const RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const
     {
         auto * imGuiAdapter = Renderer::get()->getImGuiAdapter();
+        imGuiAdapter->beginFrame(_cmdList);
         imGuiAdapter->PushDefaultFont();
 
         auto * renderer = Renderer::get();
+
         if (renderer->IsEditor())
         {
             editor::IEditor * editor = getEngine()->GetEditor();
@@ -107,12 +109,22 @@ namespace vg::renderer
         }
         else
         {
-            // When no editor, render game UI directly to final target
+            // When not editor, render game UI directly to backbuffer
             auto & gameViewports = renderer->GetViewports(gfx::ViewportTarget::Game);
             for (auto & gameViewport : gameViewports)
             {
+                for (auto & pair : gameViewport->GetViewIDs())
+                {
+                    if (auto * view = renderer->GetView(pair.second))
+                    {
+                        if (auto * viewGUI = view->GetUIRenderer())
+                            viewGUI->RenderFullscreen(RenderUIType::RenderUIType_3D);
+                    }
+                }
+
+
                 if (auto * uiRenderer = gameViewport->GetUIRenderer())
-                    uiRenderer->RenderFullscreen();
+                    uiRenderer->RenderFullscreen(RenderUIType::RenderUIType_2D);
             }
         }
 
