@@ -1039,23 +1039,23 @@ namespace vg::gfx
         const auto & cmdLists = device->getCommandLists(CommandListType::Graphics);
 
         // Split events by view
-        const auto renderJobCount = device->getRenderJobCount();
+        const auto maxRenderJobCount = device->getMaxRenderJobCount();
 
         // Alloc render jobs if not yet created
-        if (m_renderJobs.size() != renderJobCount)
+        if (m_renderJobs.size() != maxRenderJobCount)
         {
-            m_renderJobs.reserve(renderJobCount);
+            m_renderJobs.reserve(maxRenderJobCount);
 
-            for (uint i = (uint)m_renderJobs.size(); i < renderJobCount; ++i)
+            for (uint i = (uint)m_renderJobs.size(); i < maxRenderJobCount; ++i)
                 m_renderJobs.push_back(new gfx::RenderJob("RenderJob", i, this));
 
-            for (uint i = renderJobCount; i < (uint)m_renderJobs.size(); ++i)
+            for (uint i = maxRenderJobCount; i < (uint)m_renderJobs.size(); ++i)
                 VG_SAFE_RELEASE(m_renderJobs[i]);
 
-            m_renderJobs.resize(renderJobCount);
+            m_renderJobs.resize(maxRenderJobCount);
         }
 
-        if (renderJobCount > 0)
+        if (maxRenderJobCount > 0)
         {
             // List all nodes
             vector<UserPassInfoNode> nodes;
@@ -1066,9 +1066,9 @@ namespace vg::gfx
             CommandList * defaultCmdList = cmdLists[0];
 
             // TODO: estimate node cost to dispatch jobs
-            const uint nodesPerJob = ((uint)nodes.size() + renderJobCount-1) / renderJobCount;
+            const uint nodesPerJob = ((uint)nodes.size() + maxRenderJobCount-1) / maxRenderJobCount;
            
-            #if 1
+            #if 0
 
             // TEMP: Render all nodes using several command list, but still on main thread because the Framegraph needs refactor to support async resource alloc/free
             uint cmdListIndex = 0;

@@ -209,7 +209,7 @@ namespace vg::gfx
             VG_ASSERT(cmdPools.size() == cmdLists.size());
 
             // Alloc more command lists for render jobs if needed (Make sure we have as much CommandLists as worker threads)
-            const auto cmdListTargetCount = max((uint)1, m_renderJobCount);
+            const auto cmdListTargetCount = max((uint)1, m_maxRenderJobCount);
 
             for (uint i = (uint)cmdPools.size(); i < cmdListTargetCount; ++i)
             {
@@ -583,12 +583,12 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    bool Device::setRenderJobCount(core::uint _count)
+    bool Device::setMaxRenderJobCount(core::uint _count)
     {
-        if (m_renderJobCount != _count)
+        if (m_maxRenderJobCount != _count)
         {
-            VG_WARNING("[Device] RenderJobCount changed from %u to %u", m_renderJobCount, _count);
-            m_renderJobCount = _count;
+            VG_WARNING("[Device] MaxRenderJobCount changed from %u to %u", m_maxRenderJobCount, _count);
+            m_maxRenderJobCount = _count;
             return true;
         }
 
@@ -596,8 +596,8 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint Device::getRenderJobCount() const
+    core::uint Device::getMaxRenderJobCount() const
     {
-        return m_renderJobCount;
+        return m_maxRenderJobCount;
     }
 }
