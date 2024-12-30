@@ -1068,7 +1068,7 @@ namespace vg::gfx
             // TODO: estimate node cost to dispatch jobs
             const uint nodesPerJob = ((uint)nodes.size() + maxRenderJobCount-1) / maxRenderJobCount;
            
-            #if 0
+            #if 1
 
             // TEMP: Render all nodes using several command list, but still on main thread because the Framegraph needs refactor to support async resource alloc/free
             uint cmdListIndex = 0;
