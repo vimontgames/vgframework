@@ -13,10 +13,10 @@ namespace vg::renderer
         GPUMaterialDataIndex   allocMaterialDataGPUIndex  (MaterialModel * _material);
         void                    freeMaterialDataGPUIndex   (GPUMaterialDataIndex & _handle);
 
-        VG_INLINE const core::vector<MaterialModel *> getMaterials() const { return m_materials; }
+        VG_INLINE const core::vector<MaterialModel *> & getMaterials() const { return m_materials; }
 
     private:
-        core::IndexPool<GPUMaterialDataIndex, s_MaxMaterialCount>  m_handles;
+        core::IndexPool<GPUMaterialDataIndex, s_MaxMaterialCount>   m_handles;
         core::vector<MaterialModel*>                                m_materials;
     };
 }
