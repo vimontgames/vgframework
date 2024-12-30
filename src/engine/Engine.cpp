@@ -872,7 +872,7 @@ namespace vg::engine
         // Sync animations so the result can be used during LateUpdate & Render
         auto * scheduler = Kernel::getScheduler();
         {
-            VG_PROFILE_CPU("Sync Animation");
+            VG_PROFILE_CPU("Wait Animation");
             scheduler->Wait(getJobSync(EngineJobType::Animation));
         }
 

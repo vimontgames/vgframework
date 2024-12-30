@@ -14,10 +14,8 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void DrawSkeletonJob::run()
+    void DrawSkeletonJob::Run()
     {
-        //VG_PROFILE_CPU("DrawSkeletonJob");
-
         auto * instance = m_meshComponent->getMeshInstance();
         auto * world = m_meshComponent->getGameObject()->GetWorld();
         instance->DrawSkeleton(world);

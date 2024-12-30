@@ -10,7 +10,7 @@ namespace vg::physics
         PhysicsJob(JobSystemAdapter::Job * _jphJob);
         ~PhysicsJob();
 
-        void run() override;
+        void Run() override;
 
     private:
         JobSystemAdapter::Job * m_jphJob = nullptr;

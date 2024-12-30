@@ -798,7 +798,7 @@ namespace vg::renderer
 
         if (jobStartCounter > 0)
         {
-            VG_PROFILE_CPU("Sync Culling");
+            VG_PROFILE_CPU("Wait Culling");
             jobScheduler->Wait(jobSync);
         }
     }

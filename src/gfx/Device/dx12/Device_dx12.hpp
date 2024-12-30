@@ -632,10 +632,10 @@ namespace vg::gfx::dx12
 		super::beginFrame();
 
         // Get/Increment the fence counter
-        const u64 FrameFence = m_nextFrameFence;
+        const u64 frameFence = m_nextFrameFence;
         m_nextFrameFence = m_nextFrameFence + 1;
 
-        const uint FrameIndex = m_nextFrameIndex;
+        const uint frameIndex = m_nextFrameIndex;
         m_nextFrameIndex = (m_nextFrameIndex + 1) % (UINT)max_frame_latency;
 
         m_currentBackbufferIndex = m_dxgiSwapChain->GetCurrentBackBufferIndex();
@@ -644,40 +644,43 @@ namespace vg::gfx::dx12
         {
             VG_PROFILE_CPU("Wait GPU");
             beginWaitGPU();
-            FrameContext * Frame = &m_frameContext[FrameIndex];
+            FrameContext * Frame = &m_frameContext[frameIndex];
 
             #if DEBUG_GPU_CPU_SYNC
-            VG_DEBUGPRINT("[Device::beginFrame %u] WaitForFence(%u)\n", m_frameCounter & 0xFF, Frame->mFrameFenceId);
+            VG_DEBUGPRINT("[Device::beginFrame %u] WaitForFence(%u)\n", m_frameCounter & 0xFF, Frame->m_frameFenceId);
             #endif
 
-            WaitForFence(m_d3d12fence, m_d3d12fenceEvent, Frame->mFrameFenceId);
-            Frame->mFrameFenceId = FrameFence;
+            WaitForFence(m_d3d12fence, m_d3d12fenceEvent, Frame->m_frameFenceId);
+            Frame->m_frameFenceId = frameFence;
             endWaitGPU();
         }
-        m_currentFrameIndex = FrameIndex;
+        m_currentFrameIndex = frameIndex;
 
 		auto & context = getCurrentFrameContext();
 
-		for (auto & cmdPool : context.commandPools)
+        // This will create additional command list when needed (Must be done *AFTER* m_currentFrameIndex is assigned to get correct current frame index)
+        updateFrameContext();
+
+		for (auto & cmdPool : context.m_commandPools)
 			cmdPool->beginFrame();
 
         for (uint type = 0; type < enumCount<CommandListType>(); ++type)
         {
-            // First cmdList will perform a Tiemstamp query
+            // First cmdList will perform a Timestamp query
             const auto cmdQueueType = (CommandQueueType)type;
 
-            if (context.commandLists[type].size() > 0)
+            if (context.m_commandLists[type].size() > 0)
             {
-                for (auto & cmdList : context.commandLists[type])
+                for (auto & cmdList : context.m_commandLists[type])
                     cmdList->reset();
 
-                auto & cmdList = context.commandLists[type][0];
+                auto & cmdList = context.m_commandLists[type][0];
                 auto * queue = getCommandQueue(cmdQueueType);
                 queue->beginFrame(cmdList);
             }
         }
 
-		auto * commandList = context.commandLists[asInteger(CommandListType::Graphics)][0]->getd3d12GraphicsCommandList();
+		auto * commandList = context.m_commandLists[asInteger(CommandListType::Graphics)][0]->getd3d12GraphicsCommandList();
 
 		// Transition back buffer
 		D3D12_RESOURCE_BARRIER barrier;
@@ -702,9 +705,11 @@ namespace vg::gfx::dx12
         {
             const auto cmdQueueType = (CommandQueueType)q;
             auto * queue = getCommandQueue(cmdQueueType);
-            auto & queueCmdLists = context.commandLists[q];
+            auto & queueCmdLists = context.m_commandLists[q];
 
             vector<ID3D12CommandList*> cmdListsToExecute;
+
+            const uint executeCmdListCount = context.m_executeCommandListCount[q]; // queueCmdLists.size()
 
             for (uint c = 0; c < queueCmdLists.size(); ++c)
             {
@@ -712,7 +717,8 @@ namespace vg::gfx::dx12
                 auto * d3d12cmdList = queueCmdLists[c]->getd3d12GraphicsCommandList();
 
                 // Perform swap after last graphics command list
-                const bool swap = CommandQueueType::Graphics == cmdQueueType && queueCmdLists.size() == c + 1;
+                const bool last = executeCmdListCount == c + 1;
+                const bool swap = last && CommandQueueType::Graphics == cmdQueueType;
 
                 if (swap)
                 {
@@ -728,7 +734,7 @@ namespace vg::gfx::dx12
                     d3d12cmdList->ResourceBarrier(1, &barrier);
                 }
 
-                if (c + 1 == queueCmdLists.size())
+                if (last)
                 {
                     auto cmdList = queueCmdLists[c];
                     queue->endFrame(cmdList);
@@ -742,7 +748,7 @@ namespace vg::gfx::dx12
             {
                 VG_PROFILE_CPU("ExecuteCommandLists");
                 auto * d3d12queue = queue->getd3d12CommandQueue();
-                d3d12queue->ExecuteCommandLists((uint)cmdListsToExecute.size(), cmdListsToExecute.data());
+                d3d12queue->ExecuteCommandLists(executeCmdListCount, cmdListsToExecute.data());
             }
         }
 
@@ -761,10 +767,10 @@ namespace vg::gfx::dx12
                 // Signal that the frame is complete
                 auto & Frame = getCurrentFrameContext();
                 #if GPU_FENCE_DEBUG
-                VG_DEBUGPRINT("[Device::endFrame %u] Signal(%u)\n", m_frameCounter & 0xFF, Frame.mFrameFenceId);
+                VG_DEBUGPRINT("[Device::endFrame %u] Signal(%u)\n", m_frameCounter & 0xFF, Frame.m_frameFenceId);
                 #endif
-                VG_VERIFY_SUCCEEDED(m_d3d12fence->SetEventOnCompletion(Frame.mFrameFenceId, m_d3d12fenceEvent));
-                VG_VERIFY_SUCCEEDED(d3d12queue->Signal(m_d3d12fence, Frame.mFrameFenceId));
+                VG_VERIFY_SUCCEEDED(m_d3d12fence->SetEventOnCompletion(Frame.m_frameFenceId, m_d3d12fenceEvent));
+                VG_VERIFY_SUCCEEDED(d3d12queue->Signal(m_d3d12fence, Frame.m_frameFenceId));
             }
         }
         

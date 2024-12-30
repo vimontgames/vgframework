@@ -133,8 +133,17 @@ namespace vg::gfx
 		core::vector<gfx::CommandList*> & Device::getCommandLists(CommandListType _type)
 		{
 			VG_ASSERT(isEnumValue(_type));
-			return getCurrentFrameContext().commandLists[asInteger(_type)];
+			return getCurrentFrameContext().m_commandLists[asInteger(_type)];
 		}
+
+        //--------------------------------------------------------------------------------------
+        void Device::setExecuteCommandListCount(CommandListType _type, core::uint _count)
+        {
+            auto & frameContext = getCurrentFrameContext();
+            const uint cmdListCount = (uint)frameContext.m_commandLists[asInteger(_type)].size();
+            VG_ASSERT(_count <= cmdListCount);
+            frameContext.m_executeCommandListCount[asInteger(_type)] = min(_count, cmdListCount);
+        }
 
         //--------------------------------------------------------------------------------------
         void Device::createUploadBuffer()
@@ -159,11 +168,11 @@ namespace vg::gfx
 		{
 			auto & context = m_frameContext[_frameContextIndex];
 
-            context.mFrameFenceId = 0;
+            context.m_frameFenceId = 0;
 
 			// Create command lists
 			{
-                auto & cmdPools = context.commandPools;
+                auto & cmdPools = context.m_commandPools;
 
                 // Create graphics command list for uploads
                 //{
@@ -182,7 +191,7 @@ namespace vg::gfx
                     cmdPools.push_back(new gfx::CommandPool(_frameContextIndex, cmdPoolIndex));
                     auto & cmdPool = cmdPools.back();
 
-					auto & cmdLists = context.commandLists[asInteger(CommandListType::Graphics)];
+					auto & cmdLists = context.m_commandLists[asInteger(CommandListType::Graphics)];
 					const auto cmdListIndex = (uint)cmdLists.size();
 					cmdLists.push_back(new gfx::CommandList(CommandListType::Graphics, cmdPool, _frameContextIndex, cmdListIndex));
 				}
@@ -195,12 +204,14 @@ namespace vg::gfx
             auto frameContextIndex = getFrameContextIndex();
             auto & frameContext = m_frameContext[frameContextIndex];
 
-            auto & cmdPools = frameContext.commandPools;
-            auto & cmdLists = frameContext.commandLists[asInteger(CommandListType::Graphics)];
+            auto & cmdPools = frameContext.m_commandPools;
+            auto & cmdLists = frameContext.m_commandLists[asInteger(CommandListType::Graphics)];
             VG_ASSERT(cmdPools.size() == cmdLists.size());
 
-            // Alloc more command lists for render jobs if needed
-            for (uint i = (uint)cmdPools.size(); i < m_renderJobCount+1; ++i)
+            // Alloc more command lists for render jobs if needed (Make sure we have as much CommandLists as worker threads)
+            const auto cmdListTargetCount = max((uint)1, m_renderJobCount);
+
+            for (uint i = (uint)cmdPools.size(); i < cmdListTargetCount; ++i)
             {
                 const auto cmdPoolIndex = (uint)cmdPools.size();
                 cmdPools.push_back(new gfx::CommandPool(frameContextIndex, cmdPoolIndex));
@@ -211,16 +222,16 @@ namespace vg::gfx
             }
            
             // Destroy extra command lists
-            for (uint i = m_renderJobCount + 1; i < (uint)cmdPools.size(); ++i)
+            for (uint i = cmdListTargetCount; i < (uint)cmdPools.size(); ++i)
             {
                 VG_SAFE_RELEASE_ASYNC(cmdPools[i]);
                 VG_SAFE_RELEASE_ASYNC(cmdLists[i]);
             }
 
-            if (cmdPools.size() != m_renderJobCount + 1)
+            if (cmdPools.size() != cmdListTargetCount)
             {
-                cmdPools.resize(m_renderJobCount + 1);
-                cmdLists.resize(m_renderJobCount + 1);
+                cmdPools.resize(cmdListTargetCount);
+                cmdLists.resize(cmdListTargetCount);
             }            
         }
 
@@ -228,14 +239,14 @@ namespace vg::gfx
 		void Device::destroyFrameContext(core::uint _frameContextIndex)
 		{
             auto & context = m_frameContext[_frameContextIndex];
-			auto & pools = context.commandPools;
+			auto & pools = context.m_commandPools;
 			for (auto & pool : pools)
 				VG_SAFE_RELEASE(pool);
 			pools.clear();
 
 			for (uint type = 0; type < enumCount<CommandListType>(); ++type)
 			{
-				auto & cmdLists = context.commandLists[type];
+				auto & cmdLists = context.m_commandLists[type];
 				for (auto & cmdList : cmdLists)
 					VG_SAFE_RELEASE(cmdList);
 				cmdLists.clear();
@@ -419,7 +430,7 @@ namespace vg::gfx
         {
             for (auto cmdListType = 0; cmdListType < enumCount<CommandListType>(); ++cmdListType)
             {
-                auto & cmdLists = frame.commandLists[cmdListType];
+                auto & cmdLists = frame.m_commandLists[cmdListType];
                 for (auto * cmdList : cmdLists)
                     cmdList->resetShaders(_file);
             }
@@ -434,8 +445,6 @@ namespace vg::gfx
         #if VG_DBG_CPUGPUSYNC
         VG_DEBUGPRINT("beginFrame #%u\n{\n", getFrameCounter());
         #endif
-
-        updateFrameContext();
 
 		super::beginFrame();
 
@@ -472,7 +481,7 @@ namespace vg::gfx
         VG_PROFILE_CPU("flushTextureUploads");
 
         auto & context = getCurrentFrameContext();
-        auto * cmdList = context.commandLists[asInteger(CommandQueueType::Graphics)][0];
+        auto * cmdList = context.m_commandLists[asInteger(CommandQueueType::Graphics)][0];
 
         m_uploadBuffer->flush(cmdList);
     }

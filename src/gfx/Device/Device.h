@@ -43,9 +43,19 @@ namespace vg::gfx
 
 	struct FrameContext
 	{
-		core::vector<gfx::CommandPool*>     commandPools;
-		core::vector<gfx::CommandList*>     commandLists[core::enumCount<CommandListType>()];
-        UINT64                              mFrameFenceId;
+        FrameContext()
+        {
+            for (uint i = 0; i < core::enumCount<CommandListType>(); ++i)
+                m_executeCommandListCount[i] = 0;
+
+            m_executeCommandListCount[core::asInteger(CommandListType::Graphics)] = 1;
+            m_frameFenceId = -1;
+        }
+
+		core::vector<gfx::CommandPool*>     m_commandPools;
+		core::vector<gfx::CommandList*>     m_commandLists[core::enumCount<CommandListType>()];
+        core::u32                           m_executeCommandListCount[core::enumCount<CommandListType>()];
+        core::u64                           m_frameFenceId;
 	};
 
 	namespace base
@@ -69,7 +79,7 @@ namespace vg::gfx
 			gfx::CommandQueue * 			                getCommandQueue		        (CommandQueueType _type);
 			void											destroyCommandQueues	    ();
 			
-            core::u64                                       getFrameCounter() const;
+            core::u64                                       getFrameCounter             () const;
 
 			void											createFrameContext		    (core::uint _frameContextIndex);
             void                                            updateFrameContext          ();
@@ -87,6 +97,7 @@ namespace vg::gfx
             BufferContext &									getCurrentBackbuffer        ();
 
 			core::vector<gfx::CommandList*> &			    getCommandLists			    (CommandListType _type);
+            void                                            setExecuteCommandListCount  (CommandListType _type, core::uint _count);
 			gfx::Texture *								    getBackbuffer			    ();
 
             BindlessTable *                                 getBindlessTable            () const;

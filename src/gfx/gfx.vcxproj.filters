@@ -688,6 +688,12 @@
     <ClInclude Include="Device\vulkan\DeviceCaps_vulkan.hpp">
       <Filter>Device\vulkan</Filter>
     </ClInclude>
+    <ClInclude Include="FrameGraph\RenderJob.h">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameGraph\RenderJob.hpp">
+      <Filter>FrameGraph</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

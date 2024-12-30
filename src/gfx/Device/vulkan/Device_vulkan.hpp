@@ -1458,6 +1458,9 @@ namespace vg::gfx::vulkan
 			vkResetFences(vkDevice, 1, &m_vkFences[FrameIndex]);
 			m_currentFrameIndex = FrameIndex;
 
+            // This will create additional command list when needed (Must be done *AFTER* m_currentFrameIndex is assigned to get correct current frame index)
+            updateFrameContext();
+
 			VG_VERIFY_VULKAN(m_KHR_Swapchain.m_pfnAcquireNextImageKHR(vkDevice, m_vkSwapchain, UINT64_MAX, m_vkImageAcquiredSemaphores[FrameIndex], VK_NULL_HANDLE, &currentBuffer));
 			endWaitGPU();
 		}
@@ -1466,14 +1469,14 @@ namespace vg::gfx::vulkan
 
 		auto & context = getCurrentFrameContext();
 
-		for (auto & cmdPool : context.commandPools)
+		for (auto & cmdPool : context.m_commandPools)
 			cmdPool->beginFrame();
 
 		for (uint q = 0; q < enumCount<CommandListType>(); ++q)
 		{
             const auto cmdQueueType = (CommandQueueType)q;
             auto * queue = getCommandQueue(cmdQueueType);
-            const auto & queueCmdLists = context.commandLists[q];
+            const auto & queueCmdLists = context.m_commandLists[q];
 
 			if (queueCmdLists.size() > 0)
 			{
@@ -1499,15 +1502,18 @@ namespace vg::gfx::vulkan
         {
             const auto cmdQueueType = (CommandQueueType)q;
             auto * queue = getCommandQueue(cmdQueueType);
-            const auto & queueCmdLists = context.commandLists[q];
+            const auto & queueCmdLists = context.m_commandLists[q];
 
             vector<VkCommandBuffer> cmdBuffersToExecute;
+
+            const uint executeCmdListCount = context.m_executeCommandListCount[q]; // queueCmdLists.size()
 
             for (uint c = 0; c < queueCmdLists.size(); ++c)
             {
                 auto * cmdList = queueCmdLists[c];
 
-                if (c + 1 == queueCmdLists.size())
+				const bool last = executeCmdListCount == c + 1;
+                if (last)
                     queue->endFrame(cmdList);
 
                 cmdList->close();
@@ -1523,7 +1529,7 @@ namespace vg::gfx::vulkan
                 submit_info.pWaitDstStageMask = &pipe_stage_flags;
                 submit_info.waitSemaphoreCount = 1;
                 submit_info.pWaitSemaphores = &m_vkImageAcquiredSemaphores[currentFrameIndex];
-                submit_info.commandBufferCount = (uint)cmdBuffersToExecute.size();
+				submit_info.commandBufferCount = executeCmdListCount;
                 submit_info.pCommandBuffers = cmdBuffersToExecute.data();
                 submit_info.signalSemaphoreCount = 1;
                 submit_info.pSignalSemaphores = &m_vkDrawCompleteSemaphores[currentFrameIndex];

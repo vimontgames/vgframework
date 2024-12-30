@@ -92,7 +92,7 @@ namespace vg::renderer
         const char * GetClassName() const final { return "ViewCullingJob"; }
 
         ViewCullingJob(const core::string & _name, core::IObject * _parent, ViewCullingJobOutput * const _output, SharedCullingJobOutput * const _sharedOutput);
-        void run() override;
+        void Run() override;
 
     protected:
         void cullGameObjectRecur(const core::GameObject * _go, View * _view);

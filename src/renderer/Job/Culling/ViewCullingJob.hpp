@@ -64,7 +64,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewCullingJob::run()
+    void ViewCullingJob::Run()
     {
         m_result.m_output->clear();
 

@@ -11,7 +11,7 @@ namespace vg::engine
         const char * GetClassName() const final { return "DrawSkeletonJob"; }
 
         DrawSkeletonJob(MeshComponent * _meshComponent);
-        void run() override;
+        void Run() override;
 
     private:
         MeshComponent * m_meshComponent;

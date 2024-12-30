@@ -12,11 +12,11 @@ namespace vg::gfx
 			SubPass();
 			virtual ~SubPass();
 
-            void addUserPassInfo(const FrameGraph::UserPassInfo & _userPassInfo);
-            const core::vector<FrameGraph::UserPassInfo> & getUserPassesInfos() const;
+            void addUserPassInfo(const UserPassInfo & _userPassInfo);
+            const core::vector<UserPassInfo> & getUserPassesInfos() const;
 
         private:
-			core::vector<FrameGraph::UserPassInfo> m_userPassesInfos;
+			core::vector<UserPassInfo> m_userPassesInfos;
 		};
 	}
 }
@@ -32,7 +32,7 @@ namespace vg::gfx
 	public:
         const char * GetClassName() const final { return "SubPass"; }
 
-		SubPass(/*const vector<AttachmentInfo> & _resourceTransitions*/);
+		SubPass();
 		~SubPass();
 	};
 }

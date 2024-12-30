@@ -46,6 +46,7 @@ namespace vg
 
         vg_enum_class(RendererJobType, core::u8,
             Culling,
+            Render,
             DebugDraw
         );
 

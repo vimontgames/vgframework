@@ -10,6 +10,6 @@ namespace vg::core
             Job(const string & _name, IObject * _parent);
             virtual ~Job();
 
-            virtual void run() = 0;
+            virtual void Run() = 0;
     };
 }

@@ -13,13 +13,13 @@ namespace vg::gfx::base
 	}
 
     //--------------------------------------------------------------------------------------
-    void SubPass::addUserPassInfo(const FrameGraph::UserPassInfo & _userPassInfo)
+    void SubPass::addUserPassInfo(const UserPassInfo & _userPassInfo)
     {
         m_userPassesInfos.push_back(_userPassInfo);
     }
 
     //--------------------------------------------------------------------------------------
-	const core::vector<FrameGraph::UserPassInfo> & SubPass::getUserPassesInfos() const
+	const core::vector<UserPassInfo> & SubPass::getUserPassesInfos() const
     {
         return m_userPassesInfos;
     }
@@ -30,7 +30,7 @@ namespace vg::gfx::base
 namespace vg::gfx
 {
 	//--------------------------------------------------------------------------------------
-	SubPass::SubPass(/*const vector<AttachmentInfo> & _resourceTransitions*/) :
+	SubPass::SubPass() :
         super::SubPass()
 	{
 

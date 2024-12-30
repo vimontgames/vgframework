@@ -11,7 +11,7 @@ namespace px_sched
     struct Job 
     {
         vg::core::Job * m_job = nullptr;
-        void operator()() { m_job->run(); }
+        void operator()() { m_job->Run(); }
     };
 } // px namespace
 
@@ -35,7 +35,7 @@ namespace vg::core
 
         }
 
-        void run() override
+        void Run() override
         {
             // User name from scheduler to make sure they match (they seem valid at this point)
             const auto & name = px_sched::Scheduler::current_thread_name(); //  Scheduler::getCurrentThreadName();

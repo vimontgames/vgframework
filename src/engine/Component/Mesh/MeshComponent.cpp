@@ -83,14 +83,14 @@ namespace vg::engine
             if (EngineOptions::get()->useAnimationJobs())
             {
                 if (nullptr == m_updateSkeletonJob)
-                    m_updateSkeletonJob = new AnimationJob(this, displayBones);
+                    m_updateSkeletonJob = new AnimationJob(this);
 
                 const auto animSync = Engine::get()->getJobSync(EngineJobType::Animation);
 
                 core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
                 jobScheduler->Start(m_updateSkeletonJob, animSync);
 
-                if (isSkeletonVisible())
+                if (displayBones)
                 {
                     const auto debugDrawSync = Engine::get()->GetRenderer()->GetJobSync(RendererJobType::DebugDraw);
 

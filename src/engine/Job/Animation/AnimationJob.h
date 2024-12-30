@@ -10,11 +10,10 @@ namespace vg::engine
     public:
         const char * GetClassName() const final { return "UpdateSkeletonJob"; }
 
-        AnimationJob(MeshComponent * _meshComponent, bool _debugDrawBones);
-        void run() override;
+        AnimationJob(MeshComponent * _meshComponent);
+        void Run() override;
 
     private:
         MeshComponent * m_meshComponent;
-        bool            m_debugDrawBones = false;
     };
 }

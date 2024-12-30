@@ -9,6 +9,7 @@
 #include "gfx/FrameGraph/UserPass.h"
 #include "gfx/Profiler/Profiler.h"
 #include "gfx/IFrameGraphView.h"
+#include "core/IScheduler.h"
 
 using namespace vg::core;
 
@@ -19,6 +20,7 @@ using namespace vg::core;
 #include "RenderPass.hpp"
 #include "SubPass.hpp"
 #include "UserPass.hpp"
+#include "RenderJob.hpp"
 
 namespace vg::gfx
 {
@@ -34,6 +36,10 @@ namespace vg::gfx
 	//--------------------------------------------------------------------------------------
 	FrameGraph::~FrameGraph()
 	{
+        for (uint i = 0; i < m_renderJobs.size(); ++i)
+            VG_SAFE_RELEASE(m_renderJobs[i]);
+        m_renderJobs.clear();
+
         cleanup();
         destroyTransientResources(true);        
 	}
@@ -734,7 +740,13 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void FrameGraph::renderNode(UserPassInfoNode & _node, gfx::CommandList * cmdList, bool _recur)
+    void FrameGraph::RenderNode(gfx::CommandList * _cmdList, const UserPassInfoNode * _node)
+    {
+        renderNode(*_node, _cmdList, false);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::renderNode(const UserPassInfoNode & _node, gfx::CommandList * cmdList, bool _recur)
     {
         VG_PROFILE_GPU(_node.m_name.c_str());
 
@@ -830,30 +842,44 @@ namespace vg::gfx
             VG_ASSERT(subPasses.size() == 1);
             SubPass * subPass = subPasses[0];
             const auto & userPassInfo = subPass->getUserPassesInfos()[0];
-            VG_PROFILE_GPU(userPassInfo.m_userPass->GetName().c_str());
-
-            for (uint i = 0; i < subPasses.size(); ++i)
+            
+            // Before
             {
-                const auto & userPassInfo = subPass->getUserPassesInfos()[0];
-                userPassInfo.m_userPass->BeforeRender(userPassInfo.m_renderContext, cmdList);
-            }
+                //VG_PROFILE_GPU("Before");
 
-            cmdList->beginRenderPass(renderPass);
-            for (uint i = 0; i < subPasses.size(); ++i)
-            {
-                cmdList->beginSubPass(i, subPass);
+                for (uint i = 0; i < subPasses.size(); ++i)
                 {
-                    VG_ASSERT(isEnumValue(userPassInfo.m_userPass->getUserPassType()), "UserPass \"%s\" has invalid RenderPassType 0x%02X. Valid values are Graphic (0), Compute (1), and Raytrace (2)", userPassInfo.m_userPass->GetName().c_str(), userPassInfo.m_userPass->getUserPassType());
-                    userPassInfo.m_userPass->Render(userPassInfo.m_renderContext, cmdList);
+                    const auto & userPassInfo = subPass->getUserPassesInfos()[0];
+                    userPassInfo.m_userPass->BeforeRender(userPassInfo.m_renderContext, cmdList);
                 }
-                cmdList->endSubPass();
             }
-            cmdList->endRenderPass();
 
-            for (uint i = 0; i < subPasses.size(); ++i)
+            // Render
             {
-                const auto & userPassInfo = subPass->getUserPassesInfos()[0];
-                userPassInfo.m_userPass->AfterRender(userPassInfo.m_renderContext, cmdList);
+                //VG_PROFILE_GPU("Render");
+
+                cmdList->beginRenderPass(renderPass);
+                for (uint i = 0; i < subPasses.size(); ++i)
+                {
+                    cmdList->beginSubPass(i, subPass);
+                    {
+                        VG_ASSERT(isEnumValue(userPassInfo.m_userPass->getUserPassType()), "UserPass \"%s\" has invalid RenderPassType 0x%02X. Valid values are Graphic (0), Compute (1), and Raytrace (2)", userPassInfo.m_userPass->GetName().c_str(), userPassInfo.m_userPass->getUserPassType());
+                        userPassInfo.m_userPass->Render(userPassInfo.m_renderContext, cmdList);
+                    }
+                    cmdList->endSubPass();
+                }
+                cmdList->endRenderPass();
+            }
+
+            // After
+            {
+                //VG_PROFILE_GPU("After");
+
+                for (uint i = 0; i < subPasses.size(); ++i)
+                {
+                    const auto & userPassInfo = subPass->getUserPassesInfos()[0];
+                    userPassInfo.m_userPass->AfterRender(userPassInfo.m_renderContext, cmdList);
+                }
             }
         }
 
@@ -1010,30 +1036,113 @@ namespace vg::gfx
 	{
 		// Temp: use graphics command list
 		Device * device = Device::get();
-		CommandList * cmdList = device->getCommandLists(CommandListType::Graphics)[0]; 
-
-        VG_PROFILE_GPU_CONTEXT(cmdList);
-        VG_PROFILE_GPU("Render");
+        const auto & cmdLists = device->getCommandLists(CommandListType::Graphics);
 
         // Split events by view
-        auto profiler = core::Kernel::getProfiler();
+        const auto renderJobCount = device->getRenderJobCount();
 
-        if (device->getRenderJobCount() > 0)
+        // Alloc render jobs if not yet created
+        if (m_renderJobs.size() != renderJobCount)
         {
-            // List all jobs
+            m_renderJobs.reserve(renderJobCount);
+
+            for (uint i = (uint)m_renderJobs.size(); i < renderJobCount; ++i)
+                m_renderJobs.push_back(new gfx::RenderJob("RenderJob", i, this));
+
+            for (uint i = renderJobCount; i < (uint)m_renderJobs.size(); ++i)
+                VG_SAFE_RELEASE(m_renderJobs[i]);
+
+            m_renderJobs.resize(renderJobCount);
+        }
+
+        if (renderJobCount > 0)
+        {
+            // List all nodes
             vector<UserPassInfoNode> nodes;
             for (auto & node : m_userPassInfoTree.m_children)
                 gatherRenderNodes(node, nodes);
 
-            // Render all nodes
+            // temp: use default cmdlist
+            CommandList * defaultCmdList = cmdLists[0];
+
+            // TODO: estimate node cost to dispatch jobs
+            const uint nodesPerJob = ((uint)nodes.size() + renderJobCount-1) / renderJobCount;
+           
+            #if 1
+
+            // TEMP: Render all nodes using several command list, but still on main thread because the Framegraph needs refactor to support async resource alloc/free
+            uint cmdListIndex = 0;
+            uint nodeCount = 0;
             for (uint i = 0; i < nodes.size(); ++i)
-                renderNode(nodes[i], cmdList, false);
+            {
+                CommandList * cmdList = cmdLists[cmdListIndex];
+            
+                VG_PROFILE_GPU_CONTEXT(cmdList);
+                renderNode(nodes[i], cmdList, false);  
+
+                if (++nodeCount > nodesPerJob)
+                {
+                    cmdListIndex++;
+                    nodeCount = 0;
+                }
+            }
+
+            device->setExecuteCommandListCount(gfx::CommandListType::Graphics, cmdListIndex + 1);
+
+            #else
+
+            // Reset all jobs
+            for (uint i = 0; i < m_renderJobs.size(); ++i)
+                m_renderJobs[i]->reset(cmdLists[i]);
+
+            // Assign nodes to render jobs, sequentially
+            uint cmdListIndex = 0;
+            uint nodeCount = 0;
+            for (uint i = 0; i < nodes.size(); ++i)
+            {
+                const UserPassInfoNode * node = &nodes[i];
+                auto & renderJob = m_renderJobs[cmdListIndex];
+                renderJob->add(node);
+
+                if (++nodeCount > nodesPerJob)
+                {
+                    cmdListIndex++;
+                    nodeCount = 0;
+                }
+            }
+
+            device->setExecuteCommandListCount(gfx::CommandListType::Graphics, cmdListIndex + 1);
+
+            uint jobCount = cmdListIndex;
+            if (nodeCount > 0)
+                jobCount++;
+
+            core::JobSync renderJobSync;
+
+            // Kick jobs ...
+            core::IScheduler * jobScheduler = Kernel::getScheduler();
+            for (uint i = 0; i < jobCount; ++i)
+                jobScheduler->Start(m_renderJobs[i], &renderJobSync);
+
+            // ... and wait for completion
+            {
+                VG_PROFILE_CPU("Wait RenderJobs");
+                jobScheduler->Wait(&renderJobSync);
+            }
+            #endif
         }
         else
         {
-            // render nodes sequentially
+            // render all nodes sequentially using default command list
+            CommandList * defaultCmdList = cmdLists[0];
+
+            VG_PROFILE_GPU_CONTEXT(defaultCmdList);
+            VG_PROFILE_GPU("Render");
+            
             for (auto & node : m_userPassInfoTree.m_children)
-                renderNode(node, cmdList, true);
+                renderNode(node, defaultCmdList, true);
+
+            device->setExecuteCommandListCount(gfx::CommandListType::Graphics, 1);
         }
 
         // All textures and buffers remaining in pool should be marked as 'unused' at this point
