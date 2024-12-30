@@ -34,8 +34,10 @@ namespace vg::renderer
         VG_ASSERT(defaultMaterial);
 
         MaterialManager * materialManager = MaterialManager::get();
-        
-        const auto & materials = materialManager->getMaterials();
+
+        // What if a material is added to materialManager during this loop? 
+        // We need a mutex or some kind of "safe copy" to avoid multi threading issues here.        
+        const auto & materials = materialManager->getMaterialsSafeCopy();
         size_t mapSize = materials.size() * sizeof(GPUMaterialData);
         
         if (mapSize > 0)

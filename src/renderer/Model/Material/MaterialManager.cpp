@@ -6,6 +6,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     GPUMaterialDataIndex MaterialManager::allocMaterialDataGPUIndex(MaterialModel * _material)
     {
+        lock_guard<mutex> lock(m_mutex);
+
         GPUMaterialDataIndex handle = m_handles.alloc();
         if (m_materials.size() < handle + 1)
             m_materials.resize(handle + 1);
@@ -16,7 +18,20 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void MaterialManager::freeMaterialDataGPUIndex(GPUMaterialDataIndex & _handle)
     {
+        lock_guard<mutex> lock(m_mutex);
+
         m_materials[_handle] = nullptr;
         m_handles.dealloc(_handle);
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::vector<MaterialModel *> & MaterialManager::getMaterialsSafeCopy()
+    {
+        lock_guard<mutex> lock(m_mutex);
+
+        VG_PROFILE_CPU("MaterialsSafeCopy");
+
+        m_materialsSafeCopy = m_materials;
+        return m_materialsSafeCopy;
     }
 }
