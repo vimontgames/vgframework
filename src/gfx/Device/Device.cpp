@@ -148,19 +148,42 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         void Device::createUploadBuffer()
         {
-            m_uploadBuffer = new UploadBuffer("Upload", 768 * 1024 * 1024); // must implement upload limit per frame but for now just temporarily increase the upload buffer size 
+            VG_ASSERT(m_uploadBuffers.size() == 0);
+            m_uploadBuffers.push_back(new UploadBuffer("Upload #0", 768 * 1024 * 1024)); // must implement upload limit per frame but for now just temporarily increase the upload buffer size 
         }
 
         //--------------------------------------------------------------------------------------
-        void Device::destroyUploadBuffer()
+        void Device::updateUploadBuffers()
         {
-            VG_SAFE_DELETE(m_uploadBuffer);
+            const auto uploadBufferTargetCount = max((uint)1, m_maxRenderJobCount);
+
+            for (uint i = (uint)m_uploadBuffers.size(); i < uploadBufferTargetCount; ++i)
+                m_uploadBuffers.push_back(new UploadBuffer(fmt::sprintf("Upload #%u", i), 1 * 1024 * 1024));
+
+            // Destroy extra command lists
+            for (uint i = uploadBufferTargetCount; i < (uint)m_uploadBuffers.size(); ++i)
+                VG_SAFE_RELEASE_ASYNC(m_uploadBuffers[i]);
+
+            if (m_uploadBuffers.size() != uploadBufferTargetCount)
+            {
+                m_uploadBuffers.resize(uploadBufferTargetCount);
+                m_uploadBuffers.resize(uploadBufferTargetCount);
+            }
         }
 
         //--------------------------------------------------------------------------------------
-        UploadBuffer * Device::getUploadBuffer()
+        void Device::destroyUploadBuffers()
         {
-            return m_uploadBuffer;
+            for (uint i = 0; i < m_uploadBuffers.size(); ++i)
+                VG_SAFE_DELETE(m_uploadBuffers[i]);
+            m_uploadBuffers.clear();
+        }
+
+        //--------------------------------------------------------------------------------------
+        UploadBuffer * Device::getUploadBuffer(core::uint _index)
+        {
+            VG_ASSERT(_index < m_uploadBuffers.size());
+            return m_uploadBuffers[_index];
         }
 
 		//--------------------------------------------------------------------------------------
@@ -193,7 +216,9 @@ namespace vg::gfx
 
 					auto & cmdLists = context.m_commandLists[asInteger(CommandListType::Graphics)];
 					const auto cmdListIndex = (uint)cmdLists.size();
-					cmdLists.push_back(new gfx::CommandList(CommandListType::Graphics, cmdPool, _frameContextIndex, cmdListIndex));
+                    VG_ASSERT(0 == cmdPoolIndex);
+                    auto * cmdList = new gfx::CommandList(CommandListType::Graphics, cmdPool, _frameContextIndex, cmdListIndex);
+					cmdLists.push_back(cmdList);
 				}
 			}
 		}
@@ -218,7 +243,8 @@ namespace vg::gfx
                 auto & cmdPool = cmdPools.back();
 
                 const auto cmdListIndex = (uint)cmdLists.size();
-                cmdLists.push_back(new gfx::CommandList(CommandListType::Graphics, cmdPool, frameContextIndex, cmdListIndex));
+                auto * cmdList = new gfx::CommandList(CommandListType::Graphics, cmdPool, frameContextIndex, cmdListIndex);
+                cmdLists.push_back(cmdList);
             }
            
             // Destroy extra command lists
@@ -466,7 +492,8 @@ namespace vg::gfx
 
 		super::endFrame();
 
-        m_uploadBuffer->sync();
+        for (uint i = 0; i < m_uploadBuffers.size(); ++i)
+            m_uploadBuffers[i]->sync();
 
         getShaderManager()->applyUpdate();
 
@@ -481,9 +508,11 @@ namespace vg::gfx
         VG_PROFILE_CPU("flushTextureUploads");
 
         auto & context = getCurrentFrameContext();
-        auto * cmdList = context.m_commandLists[asInteger(CommandQueueType::Graphics)][0];
 
-        m_uploadBuffer->flush(cmdList);
+        auto & cmdLists = context.m_commandLists[asInteger(CommandQueueType::Graphics)];
+
+        for (uint i = 0; i < cmdLists.size(); ++i)
+            m_uploadBuffers[i]->flush(cmdLists[i], true);
     }
 
 	//--------------------------------------------------------------------------------------

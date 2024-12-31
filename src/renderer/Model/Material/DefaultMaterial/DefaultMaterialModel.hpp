@@ -66,8 +66,7 @@ namespace vg::renderer
         _data->setOffset(m_offset);
         _data->setDepthFade(m_depthFade);
 
-        //const auto lightingMode = RendererOptions::get()->getLightingMode();
-        const bool enableAlbedo = (/*LightingMode::Deferred == lightingMode && */ SurfaceType::Decal == m_surfaceType) | m_enableAlbedo;
+        const bool enableAlbedo = (SurfaceType::Decal == m_surfaceType) | m_enableAlbedo;
 
         _data->setAlbedoTextureHandle(enableAlbedo && m_albedoMap ? m_albedoMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO);
         _data->setAlbedoColor(m_albedoColor);

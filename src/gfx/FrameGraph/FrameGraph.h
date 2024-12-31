@@ -56,9 +56,9 @@ namespace vg::gfx
 		void                            importRenderTarget          (const FrameGraphResourceID & _resID, Texture * _tex, core::float4 _clearColor = defaultOptimizedClearColor, FrameGraphResource::InitState _initState = FrameGraphResource::InitState::Clear);
 		void                            setGraphOutput              (const FrameGraphResourceID & _destTexResID);
 
-		void                            setup();
-		void                            build();
-		void                            render();
+		void                            setup                       ();
+		void                            build                       ();
+		void                            render                      ();
 
         void                            pushPassGroup               (const core::string & _name);
         void                            popPassGroup                ();
@@ -80,18 +80,20 @@ namespace vg::gfx
 	private:
         void                            setupNode                   (UserPassInfoNode & _node);
         void                            buildNode                   (UserPassInfoNode & _node);
-        void                            gatherRenderNodes           (const UserPassInfoNode & _node, core::vector<UserPassInfoNode> & _nodes);
+        void                            gatherNodes                 (const UserPassInfoNode & _node, core::vector<UserPassInfoNode> & _nodes);
+        void                            gatherResources             (const UserPassInfoNode & _node); 
+        void                            prepareNode                 (const UserPassInfoNode & _node);
         void                            renderNode                  (const UserPassInfoNode & _node, gfx::CommandList * _cmdList, bool _recur);
 
-        Texture *                       createRenderTargetFromPool  (const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc);
-        Texture *                       createDepthStencilFromPool  (const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc);
-		Texture *                       createRWTextureFromPool     (const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc);
+        Texture *                       createRenderTargetFromPool  (const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex);
+        Texture *                       createDepthStencilFromPool  (const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex);
+		Texture *                       createRWTextureFromPool     (const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex);
 
-        Texture *                       createTextureFromPool       (const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _renderTarget, bool _depthStencil, bool _uav);
+        Texture *                       createTextureFromPool       (const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex, bool _renderTarget, bool _depthStencil, bool _uav);
         void                            releaseTextureFromPool      (Texture *& _tex);
 
-        Buffer *                        createRWBufferFromPool      (const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc);
-        Buffer *                        createBufferFromPool        (const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc, bool _uav);
+        Buffer *                        createRWBufferFromPool      (const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc, core::uint _createPassIndex);
+        Buffer *                        createBufferFromPool        (const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc, core::uint _createPassIndex, bool _uav);
         void                            releaseBufferFromPool       (Buffer *& _buffer);
 
         void                            cleanup                     ();

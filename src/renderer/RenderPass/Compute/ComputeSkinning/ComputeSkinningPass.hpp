@@ -53,26 +53,47 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void ComputeSkinningPass::Prepare(const RenderPassContext & _renderContext)
+    {
+        VG_PROFILE_CPU("Skinning");
+
+        const auto & skinnedMeshes = Renderer::get()->getSharedCullingJobOutput()->m_skins;
+
+        // Compute bones upload size
+        uint dstVertOffset = 0;
+        uint totalBoneCount = 0;
+
+        const Buffer * dstBuffer = getRWBuffer("SkinningRWBuffer");
+
+        for (uint i = 0; i < skinnedMeshes.size(); ++i)
+        {
+            MeshInstance * meshInstance = skinnedMeshes[i];
+
+            const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
+            const MeshGeometry * meshGeo = meshModel->getGeometry();
+            const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
+            const uint boneCount = skeleton->getBoneCount();
+            const uint vertexCount = meshGeo->getVertexCount();
+            const uint vertexSize = meshGeo->getVertexSize();
+
+            meshInstance->setSkinnedMesh(dstBuffer, dstVertOffset);
+            meshInstance->removeAtomicFlags(GraphicInstance::AtomicFlags::SkinLOD0);
+
+            dstVertOffset += vertexCount * vertexSize;
+            totalBoneCount += boneCount;
+        }
+
+        m_mapSize = totalBoneCount * sizeof(float4x4);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ComputeSkinningPass::Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const
     {
         uint dstMatOffset = 0;
 
         const auto & skinnedMeshes = Renderer::get()->getSharedCullingJobOutput()->m_skins;
 
-        // Compute bones upload size
-        uint totalBoneCount = 0;
-
-        for (uint i = 0; i < skinnedMeshes.size(); ++i)
-        {
-            MeshInstance * meshInstance = skinnedMeshes[i];
-            const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
-            const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
-            const uint boneCount = skeleton->getBoneCount();
-
-            totalBoneCount += boneCount;
-        }
-
-        size_t mapSizeInBytes = totalBoneCount * sizeof(float4x4); // m_skinningMatricesBuffer->getBufDesc().getSize();
+        size_t mapSizeInBytes = m_mapSize;
 
         // Upload bones matrices
         if (mapSizeInBytes > 0)
@@ -81,7 +102,7 @@ namespace vg::renderer
             {
                 for (uint i = 0; i < skinnedMeshes.size(); ++i)
                 {
-                    MeshInstance * meshInstance = skinnedMeshes[i];
+                    const MeshInstance * meshInstance = skinnedMeshes[i];
                     const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
                     const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
                     const uint boneCount = skeleton->getBoneCount();
@@ -110,7 +131,7 @@ namespace vg::renderer
 
         for (uint i = 0; i < skinnedMeshes.size(); ++i)
         {
-            MeshInstance * meshInstance = skinnedMeshes[i];
+            const MeshInstance * meshInstance = skinnedMeshes[i];
             const MeshModel * meshModel = meshInstance->getMeshModel(Lod::Lod0);
             const MeshGeometry * meshGeo = meshModel->getGeometry();
             const Skeleton * skeleton = meshInstance->getInstanceSkeleton();
@@ -148,13 +169,13 @@ namespace vg::renderer
                 _cmdList->dispatch(threadGroupCount);
 
                 // Store skinned VB and offset in mesh
-                meshInstance->setSkinnedMesh(dstBuffer, dstVertOffset);
+                VG_ASSERT(dstBuffer == meshInstance->getSkinnedMeshBuffer());
+                VG_ASSERT(dstVertOffset == meshInstance->getSkinnedMeshBufferOffset());
 
                 dstVertOffset += vertexCount * vertexSize;
                 dstMatOffset += boneCount * sizeof(float4x4);
             }
-
-            meshInstance->removeAtomicFlags(GraphicInstance::AtomicFlags::SkinLOD0);
         }
+        VG_ASSERT(mapSizeInBytes == dstMatOffset);
     }
 }

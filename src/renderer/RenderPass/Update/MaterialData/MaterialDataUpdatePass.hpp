@@ -23,6 +23,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void MaterialDataUpdatePass::Prepare(const gfx::RenderPassContext & _renderContext)
+    {
+        MaterialManager * materialManager = MaterialManager::get();
+        materialManager->getMaterialsSafeCopy(m_materials);
+    }
+
+    //--------------------------------------------------------------------------------------
     void MaterialDataUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
         auto renderer = Renderer::get();
@@ -31,25 +38,22 @@ namespace vg::renderer
         
         const auto & instances = cullingJobOutput->m_instances;
         const auto * defaultMaterial = renderer->getDefaultMaterial();
-        VG_ASSERT(defaultMaterial);
-
-        MaterialManager * materialManager = MaterialManager::get();
+        VG_ASSERT(defaultMaterial);        
 
         // What if a material is added to materialManager during this loop? 
         // We need a mutex or some kind of "safe copy" to avoid multi threading issues here.        
-        const auto & materials = materialManager->getMaterialsSafeCopy();
-        size_t mapSize = materials.size() * sizeof(GPUMaterialData);
+        size_t mapSize = m_materials.size() * sizeof(GPUMaterialData);
         
         if (mapSize > 0)
         {
             uint offset = 0;
             const u8 * data = (const u8 *)_cmdList->map(m_materialDataBuffer, mapSize).data;
             {
-                for (uint i = 0; i < materials.size(); ++i)
+                for (uint i = 0; i < m_materials.size(); ++i)
                 {
                     GPUMaterialData * dst = (GPUMaterialData *)(data + offset);
 
-                    const auto * material = materials[i];
+                    const auto * material = m_materials[i];
                     if (nullptr == material)
                         material = defaultMaterial;
                         

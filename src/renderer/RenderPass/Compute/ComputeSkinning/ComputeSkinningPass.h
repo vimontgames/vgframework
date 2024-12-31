@@ -8,7 +8,7 @@ namespace vg::renderer
     class MeshInstance;
 
     //--------------------------------------------------------------------------------------
-    class ComputeSkinningPass : public ComputePass
+    class ComputeSkinningPass final : public ComputePass
     {
     public:
         const char * GetClassName() const final { return "ComputeSkinningPass"; }
@@ -16,12 +16,14 @@ namespace vg::renderer
         ComputeSkinningPass();
         ~ComputeSkinningPass();
 
-        void Setup(const gfx::RenderPassContext & _renderContext) override;
-        void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
+        void Setup(const gfx::RenderPassContext & _renderContext) final override;
+        void Prepare(const gfx::RenderPassContext & _renderContext) final override;
+        void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
     private:
         gfx::RootSignatureHandle    m_computeSkinningRootSignature;
         gfx::ComputeShaderKey       m_computeSkinningShaderKey;
         gfx::Buffer *               m_skinningMatricesBuffer;
+        core::uint                  m_mapSize = 0;
     };
 }

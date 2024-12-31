@@ -1,5 +1,6 @@
 #include "gfx/Precomp.h"
 #include "core/string/string.h"
+#include "core/IScheduler.h"
 #include "gfx/Device/Device.h"
 #include "gfx/Memory/MemoryAllocator.h"
 #include "Resource.h"

@@ -22,6 +22,39 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void InstanceDataUpdatePass::Prepare(const gfx::RenderPassContext & _renderContext)
+    {
+        VG_PROFILE_CPU("InstanceData");
+
+        auto renderer = Renderer::get();
+        const auto * cullingJobOutput = renderer->getSharedCullingJobOutput();
+        VG_ASSERT(nullptr != cullingJobOutput);
+
+        const auto & instances = cullingJobOutput->m_instances;
+        const auto * defaultMaterial = renderer->getDefaultMaterial();
+        VG_ASSERT(defaultMaterial);
+        const auto defaultMaterialIndex = defaultMaterial->getGPUMaterialDataIndex();
+        VG_ASSERT(defaultMaterialIndex == 0);
+
+        uint offset = 0;
+
+        for (uint i = 0; i < instances.size(); ++i)
+        {
+            GraphicInstance * instance = instances[i];
+            const uint batchCount = instance->GetBatchCount();
+
+            // Save offset
+            instance->setGPUInstanceDataOffset(offset);
+            offset += sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData);
+
+            // Clear atomic flag
+            instance->removeAtomicFlags(GraphicInstance::AtomicFlags::Instance);
+        }
+
+        m_mapSize = offset;
+    }
+
+    //--------------------------------------------------------------------------------------
     void InstanceDataUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
         auto renderer = Renderer::get();
@@ -34,18 +67,7 @@ namespace vg::renderer
         const auto defaultMaterialIndex = defaultMaterial->getGPUMaterialDataIndex();
         VG_ASSERT(defaultMaterialIndex == 0);
 
-        size_t mapSize = 0;
-
-        for (uint i = 0; i < instances.size(); ++i)
-        {
-            GraphicInstance * instance = instances[i];
-            const uint batchCount = instance->GetBatchCount();
-
-            mapSize += sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData);
-
-            // clear atomic flag after processing
-            instance->removeAtomicFlags(GraphicInstance::AtomicFlags::Instance);
-        }
+        size_t mapSize = m_mapSize;
 
         VG_ASSERT_IS_ALIGNED(sizeof(GPUInstanceData), GPU_INSTANCE_DATA_ALIGNMENT);
 
@@ -56,12 +78,13 @@ namespace vg::renderer
             {
                 for (uint i = 0; i < instances.size(); ++i)
                 {
-                    GraphicInstance * instance = instances[i];
+                    const GraphicInstance * instance = instances[i];
                     const auto & materials = instance->getMaterials();
                     const uint batchCount = instance->GetBatchCount();
                     const uint materialCount = (uint)materials.size();
 
-                    instance->setGPUInstanceDataOffset(offset);
+                    //instance->setGPUInstanceDataOffset(offset);
+                    VG_ASSERT(instance->getGPUInstanceDataOffset() == offset);
 
                     GPUInstanceData * instanceData = (GPUInstanceData *)(data + offset);
                     {
@@ -111,7 +134,6 @@ namespace vg::renderer
                 }
             }
             _cmdList->unmap(m_instanceDataBuffer);
-
             VG_ASSERT(offset == mapSize);
         }
     }

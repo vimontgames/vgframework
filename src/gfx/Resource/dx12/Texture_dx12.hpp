@@ -533,7 +533,9 @@ namespace vg::gfx::dx12
                     setSubResourceData(i, footprint[i].Offset);
 
                 // Copy to upload buffer line by line
-                auto * uploadBuffer = device->getUploadBuffer();
+                const auto * scheduler = Kernel::getScheduler();
+                VG_ASSERT(scheduler->IsMainThread() || scheduler->IsLoadingThread(), "Expected Main or Loading thread but current thread is \"%s\"", scheduler->GetCurrentThreadName().c_str());
+                auto * uploadBuffer = device->getUploadBuffer(0);
                 core::u8 * dst = uploadBuffer->map((gfx::Texture *)this, d3d12TotalSizeInBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
                 if (nullptr != dst)
                 {

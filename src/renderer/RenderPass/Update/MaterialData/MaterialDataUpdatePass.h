@@ -10,7 +10,7 @@ namespace vg::gfx
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    class MaterialDataUpdatePass : public UpdatePass
+    class MaterialDataUpdatePass final : public UpdatePass
     {
     public:
         const char * GetClassName() const final { return "MaterialDataUpdatePass"; }
@@ -18,9 +18,11 @@ namespace vg::renderer
         MaterialDataUpdatePass();
         ~MaterialDataUpdatePass();
 
-        void	        BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
+        void Prepare(const gfx::RenderPassContext & _renderContext) final override;
+        void BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
 
     private:
-        gfx::Buffer *   m_materialDataBuffer = nullptr;
+        gfx::Buffer *                   m_materialDataBuffer = nullptr;
+        core::vector<MaterialModel *>   m_materials;
     };
 }

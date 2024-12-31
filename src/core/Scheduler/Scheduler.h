@@ -13,6 +13,18 @@ namespace vg::core
 {
     class Job;
 
+    struct ThreadInfo
+    {
+        ThreadInfo(ThreadType _type, const core::string & _name) :
+            m_type(_type),
+            m_name(_name)
+        {
+
+        }
+        const ThreadType m_type;
+        const core::string m_name;
+    };
+
     class Scheduler final : public IScheduler, public core::Singleton<Scheduler>
     {
     public:
@@ -26,17 +38,25 @@ namespace vg::core
         void                        Wait                        (JobSync * _sync) final override;
 
         void                        RegisterWorkerThreads       () final override;
-        virtual void                RegisterCurrentThread       (const core::string & _name) final override;
+        virtual void                RegisterCurrentThread       (const core::string & _name, ThreadType _threadType, core::uint _index = 0) final override;
 
         ThreadID                    GetCurrentThreadID          () const final override;
-        const string                GetCurrentThreadName        () const final override;
+        ThreadType                  GetCurrentThreadType        () const final override;
+        const string &              GetCurrentThreadName        () const final override;
 
         core::uint                  GetWorkerThreadCount        () const final override;
+
+        bool                        IsMainThread                () const final override;
+        bool                        IsLoadingThread             () const final override;
+        bool                        IsWorkerThread              () const final override;
+
+    private:
+        const ThreadInfo *          getCurrentThreadInfo        () const;
 
     private:
         px_sched::Scheduler *                               m_schd = nullptr;
         core::uint                                          m_threadCount = 0;
-        core::unordered_map<ThreadID, const core::string>   m_registeredThreads;
+        core::unordered_map<ThreadID, const ThreadInfo>     m_registeredThreads;
         std::mutex                                          m_registerThreadMutex;
     };
 }

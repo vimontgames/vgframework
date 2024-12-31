@@ -88,8 +88,9 @@ namespace vg::gfx
             FrameContext &									getCurrentFrameContext      ();
 
             void                                            createUploadBuffer          ();
-            void                                            destroyUploadBuffer         ();
-            UploadBuffer *                                  getUploadBuffer             ();
+            void                                            updateUploadBuffers         ();
+            void                                            destroyUploadBuffers        ();
+            UploadBuffer *                                  getUploadBuffer             (core::uint _index);
 
             void											createBackbuffer            (core::uint _backbufferIndex, void * _backbuffer);
             void											destroyBackbuffer           (core::uint _backbufferIndex);
@@ -124,7 +125,7 @@ namespace vg::gfx
             gfx::DeviceCaps                                 m_caps;
 			gfx::CommandQueue*				                m_commandQueue[core::enumCount<CommandQueueType>()];
 			FrameContext									m_frameContext[max_frame_latency];
-            UploadBuffer *                                  m_uploadBuffer = nullptr;
+            core::vector<UploadBuffer *>                    m_uploadBuffers = {};
             BufferContext                                   m_bufferContext[max_backbuffer_count];
 			core::u64										m_frameCounter = 0;
             gfx::PixelFormat                                m_backbufferFormat;

@@ -34,6 +34,9 @@ namespace vg::gfx
 		{
 			string name = asString(_type) + "CmdList#" + to_string(_index);
 			SetName(name);
+
+            auto * device = gfx::Device::get();
+            m_uploadBuffer = device->getUploadBuffer(_index);
 		}
 
 		//--------------------------------------------------------------------------------------

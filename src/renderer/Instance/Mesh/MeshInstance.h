@@ -103,7 +103,7 @@ namespace vg::renderer
     private:
         Skeleton *                      m_instanceSkeleton = nullptr;
         const gfx::Buffer *             m_skinnedMeshBuffer = nullptr;
-        core::uint                      m_skinnedMeshBufferOffset = 0;
+        core::uint                      m_skinnedMeshBufferOffset = -1;
         gfx::BLAS *                     m_instanceBLAS = nullptr;
         core::vector<AnimationBinding>  m_animationBindings;
     };

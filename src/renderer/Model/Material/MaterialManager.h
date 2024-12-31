@@ -13,12 +13,11 @@ namespace vg::renderer
     public:
         GPUMaterialDataIndex                    allocMaterialDataGPUIndex   (MaterialModel * _material);
         void                                    freeMaterialDataGPUIndex    (GPUMaterialDataIndex & _handle);
-        const core::vector<MaterialModel *> &   getMaterialsSafeCopy        ();
+        void                                    getMaterialsSafeCopy        (core::vector<MaterialModel *> & _materials);
 
     private:
         core::IndexPool<GPUMaterialDataIndex, s_MaxMaterialCount>   m_handles;
         core::vector<MaterialModel*>                                m_materials;
-        core::vector<MaterialModel *>                               m_materialsSafeCopy;
         core::mutex                                                 m_mutex;
     };
 }

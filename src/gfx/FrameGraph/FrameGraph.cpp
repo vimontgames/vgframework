@@ -517,25 +517,25 @@ namespace vg::gfx
 	}
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createRenderTargetFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc)
+    Texture * FrameGraph::createRenderTargetFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex)
     {
-        return createTextureFromPool(_name, _textureResourceDesc, true, false, false);
+        return createTextureFromPool(_name, _textureResourceDesc, _createPassIndex, true, false, false);
     }
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createDepthStencilFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc)
+    Texture * FrameGraph::createDepthStencilFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex)
     {
-        return createTextureFromPool(_name, _textureResourceDesc, false, true, false);
+        return createTextureFromPool(_name, _textureResourceDesc, _createPassIndex, false, true, false);
     }
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createRWTextureFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc)
+    Texture * FrameGraph::createRWTextureFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex)
     {
-        return createTextureFromPool(_name, _textureResourceDesc, false, false, true);
+        return createTextureFromPool(_name, _textureResourceDesc, _createPassIndex, false, false, true);
     }
 
     //--------------------------------------------------------------------------------------
-    Texture * FrameGraph::createTextureFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, bool _renderTarget, bool _depthStencil, bool _uav)
+    Texture * FrameGraph::createTextureFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex, bool _renderTarget, bool _depthStencil, bool _uav)
     {
         VG_ASSERT(_depthStencil == Texture::isDepthStencilFormat(_textureResourceDesc.format));
 
@@ -657,13 +657,13 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    Buffer * FrameGraph::createRWBufferFromPool(const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc)
+    Buffer * FrameGraph::createRWBufferFromPool(const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc, core::uint _createPassIndex)
     {
-        return createBufferFromPool(_name, _bufferResourceDesc, true);
+        return createBufferFromPool(_name, _bufferResourceDesc, _createPassIndex, true);
     }
 
     //--------------------------------------------------------------------------------------
-    Buffer * FrameGraph::createBufferFromPool(const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc, bool _uav)
+    Buffer * FrameGraph::createBufferFromPool(const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc, core::uint _createPassIndex, bool _uav)
     {
         VG_ASSERT(_uav == _bufferResourceDesc.uav);
 
@@ -731,12 +731,119 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void FrameGraph::gatherRenderNodes(const UserPassInfoNode & _node, vector<UserPassInfoNode> & _nodes)
+    void FrameGraph::gatherNodes(const UserPassInfoNode & _node, vector<UserPassInfoNode> & _nodes)
     {
         for (auto & child : _node.m_children)
-            gatherRenderNodes(child, _nodes);
+            gatherNodes(child, _nodes);
 
         _nodes.push_back(_node);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::gatherResources(const UserPassInfoNode & _node)
+    {
+        for (auto & child : _node.m_children)
+            gatherResources(child);
+
+        if (!_node.m_renderPass)
+            return;
+
+        RenderPass * renderPass = _node.m_renderPass;
+        const auto & subPasses = renderPass->getSubPasses();
+
+        for (uint i = 0; i < subPasses.size(); ++i)
+        {
+            SubPass * subPass = subPasses[i];
+            const auto userPassInfo = subPass->getUserPassesInfos()[0];
+
+            const UserPass * userPass = userPassInfo.m_userPass;
+
+            auto & rwTextures = userPass->getRWTextures();
+            for (uint i = 0; i < rwTextures.size(); ++i)
+            {
+                FrameGraphTextureResource * res = rwTextures[i];
+                const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+
+                if (textureResourceDesc.transient)
+                {
+                    if (res->isFirstWrite(userPass))
+                    {
+                        Texture * tex = createRWTextureFromPool(res->getName(), textureResourceDesc, i);
+                        res->setTexture(tex);
+                    }
+                }
+            }
+
+            auto & rwBuffers = userPass->getRWBuffers();
+            for (uint i = 0; i < rwBuffers.size(); ++i)
+            {
+                FrameGraphBufferResource * res = rwBuffers[i];
+                const FrameGraphBufferResourceDesc & bufferResourceDesc = res->getBufferResourceDesc();
+
+                if (bufferResourceDesc.transient)
+                {
+                    if (res->isFirstWrite(userPass))
+                    {
+                        Buffer * buffer = createRWBufferFromPool(res->getName(), bufferResourceDesc, i);
+                        res->setBuffer(buffer);
+                    }
+                }
+            }
+
+            auto & renderTargets = userPass->getRenderTargets();
+            for (uint i = 0; i < renderTargets.size(); ++i)
+            {
+                FrameGraphTextureResource * res = renderTargets[i];
+                const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+
+                if (textureResourceDesc.transient)
+                {
+                    if (res->isFirstWrite(userPass))
+                    {
+                        Texture * tex = createRenderTargetFromPool(res->getName(), textureResourceDesc, i);
+                        res->setTexture(tex);
+                    }
+                }
+            }
+
+
+            FrameGraphTextureResource * depthStencil = userPass->getDepthStencil();
+            if (depthStencil)
+            {
+                FrameGraphTextureResource * res = depthStencil;
+                const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
+
+                if (textureResourceDesc.transient)
+                {
+                    if (res->isFirstWrite(userPass))
+                    {
+                        Texture * tex = createDepthStencilFromPool(res->getName(), textureResourceDesc, i);
+                        res->setTexture(tex);
+                    }
+                }
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::prepareNode(const UserPassInfoNode & _node)
+    {
+        for (auto & child : _node.m_children)
+            prepareNode(child);
+
+        if (!_node.m_renderPass)
+            return;
+
+        // TODO: refactor as we always have only one SubPass per UserPass?
+        const auto & subPasses = _node.m_renderPass->getSubPasses();
+        VG_ASSERT(subPasses.size() == 1);
+
+        for (uint i = 0; i < subPasses.size(); ++i)
+        {
+            SubPass * subPass = subPasses[i];
+            const auto & userPassInfo = subPass->getUserPassesInfos()[0];
+            userPassInfo.m_userPass->Prepare(userPassInfo.m_renderContext);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -762,79 +869,6 @@ namespace vg::gfx
 
         RenderPass * renderPass = _node.m_renderPass;
         const auto & subPasses = renderPass->getSubPasses();
-
-        // allocate all transient resources that will be required during the subpasses before beginning the renderpass
-        for (uint i = 0; i < subPasses.size(); ++i)
-        {
-            SubPass * subPass = subPasses[i];
-            const auto userPassInfo = subPass->getUserPassesInfos()[0];
-
-            const UserPass * userPass = userPassInfo.m_userPass;
-
-            auto & rwTextures = userPass->getRWTextures();
-            for (uint i = 0; i < rwTextures.size(); ++i)
-            {
-                FrameGraphTextureResource * res = rwTextures[i];
-                const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
-
-                if (textureResourceDesc.transient)
-                {
-                    if (res->isFirstWrite(userPass))
-                    {
-                        Texture * tex = createRWTextureFromPool(res->getName(), textureResourceDesc);
-                        res->setTexture(tex);
-                    }
-                }
-            }
-
-            auto & rwBuffers = userPass->getRWBuffers();
-            for (uint i = 0; i < rwBuffers.size(); ++i)
-            {
-                FrameGraphBufferResource * res = rwBuffers[i];
-                const FrameGraphBufferResourceDesc & bufferResourceDesc = res->getBufferResourceDesc();
-
-                if (bufferResourceDesc.transient)
-                {
-                    if (res->isFirstWrite(userPass))
-                    {
-                        Buffer * buffer = createRWBufferFromPool(res->getName(), bufferResourceDesc);
-                        res->setBuffer(buffer);
-                    }
-                }
-            }
-
-            auto & renderTargets = userPass->getRenderTargets();
-            for (uint i = 0; i < renderTargets.size(); ++i)
-            {
-                FrameGraphTextureResource * res = renderTargets[i];
-                const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
-
-                if (textureResourceDesc.transient)
-                {
-                    if (res->isFirstWrite(userPass))
-                    {
-                        Texture * tex = createRenderTargetFromPool(res->getName(), textureResourceDesc);
-                        res->setTexture(tex);
-                    }
-                }
-            }
-
-            FrameGraphTextureResource * depthStencil = userPass->getDepthStencil();
-            if (depthStencil)
-            {
-                FrameGraphTextureResource * res = depthStencil;
-                const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
-
-                if (textureResourceDesc.transient)
-                {
-                    if (res->isFirstWrite(userPass))
-                    {
-                        Texture * tex = createDepthStencilFromPool(res->getName(), textureResourceDesc);
-                        res->setTexture(tex);
-                    }
-                }
-            }
-        }
 
         // Before + Render + After
         {
@@ -916,34 +950,6 @@ namespace vg::gfx
                     }
                 }
             }
-
-            //auto & renderTargets = userPass->getRenderTargets();
-            //for (uint i = 0; i < renderTargets.size(); ++i)
-            //{
-            //    FrameGraphTextureResource * res = renderTargets[i];
-            //    const FrameGraphTextureResourceDesc & textureResourceDesc = res->getTextureResourceDesc();
-            //
-            //    const auto & readWrites = res->getReadWriteAccess();
-            //    const bool isLastReadOrWrite = readWrites.size() > 0 && readWrites[readWrites.size() - 1].m_userPass == userPass;
-            //
-            //    if (isLastReadOrWrite)
-            //    {
-            //        // Make sure RenderTarget is set in the 'RenderTarget' state after use by FrameGraph so that's in a predictable state for the next frame
-            //        auto current = res->getCurrentState();
-            //        if (ResourceState::RenderTarget != current)
-            //        {
-            //            cmdList->transitionResource(res->getTexture(), current, ResourceState::RenderTarget);
-            //            res->setCurrentState(ResourceState::RenderTarget);
-            //        }
-            //
-            //        if (textureResourceDesc.transient)
-            //        {
-            //            Texture * tex = res->getTexture();
-            //            releaseTextureFromPool(tex);
-            //            res->resetTexture();
-            //        }
-            //    }
-            //}
 
             FrameGraphTextureResource * depthStencil = userPass->getDepthStencil();
             if (depthStencil)
@@ -1055,20 +1061,31 @@ namespace vg::gfx
             m_renderJobs.resize(maxRenderJobCount);
         }
 
+        // Prepare nodes for rendering by determining the textures/buffers than will need to be allocated or reused
+        for (auto & node : m_userPassInfoTree.m_children)
+            gatherResources(node);
+
+        // TODO: find a better name than "Prepare"?
+        {
+            VG_PROFILE_CPU("Prepare");
+            for (auto & node : m_userPassInfoTree.m_children)
+                prepareNode(node);
+        }
+
         if (maxRenderJobCount > 0)
         {
             // List all nodes
             vector<UserPassInfoNode> nodes;
             for (auto & node : m_userPassInfoTree.m_children)
-                gatherRenderNodes(node, nodes);
+                gatherNodes(node, nodes);
 
             // temp: use default cmdlist
             CommandList * defaultCmdList = cmdLists[0];
 
             // TODO: estimate node cost to dispatch jobs
-            const uint nodesPerJob = ((uint)nodes.size() + maxRenderJobCount-1) / maxRenderJobCount;
+            const uint nodesPerJob = ((uint)nodes.size() + maxRenderJobCount - 1) / maxRenderJobCount;
            
-            #if 1
+            #if 0
 
             // TEMP: Render all nodes using several command list, but still on main thread because the Framegraph needs refactor to support async resource alloc/free
             uint cmdListIndex = 0;
@@ -1092,37 +1109,77 @@ namespace vg::gfx
             #else
 
             // Reset all jobs
-            for (uint i = 0; i < m_renderJobs.size(); ++i)
-                m_renderJobs[i]->reset(cmdLists[i]);
-
-            // Assign nodes to render jobs, sequentially
-            uint cmdListIndex = 0;
-            uint nodeCount = 0;
-            for (uint i = 0; i < nodes.size(); ++i)
             {
-                const UserPassInfoNode * node = &nodes[i];
-                auto & renderJob = m_renderJobs[cmdListIndex];
-                renderJob->add(node);
-
-                if (++nodeCount > nodesPerJob)
-                {
-                    cmdListIndex++;
-                    nodeCount = 0;
-                }
+                VG_PROFILE_CPU("Reset RenderJobs");
+                for (uint i = 0; i < m_renderJobs.size(); ++i)
+                    m_renderJobs[i]->reset(cmdLists[i]);
             }
 
-            device->setExecuteCommandListCount(gfx::CommandListType::Graphics, cmdListIndex + 1);
+            uint jobCount;
 
-            uint jobCount = cmdListIndex;
-            if (nodeCount > 0)
-                jobCount++;
+            // Assign nodes to render jobs, sequentially
+            {
+                VG_PROFILE_CPU("Dispatch RenderJobs");
+                //uint cmdListIndex = 0;
+                //uint nodeCount = 0;
+                //for (uint i = 0; i < nodes.size(); ++i)
+                //{
+                //    const UserPassInfoNode * node = &nodes[i];
+                //    auto & renderJob = m_renderJobs[cmdListIndex];
+                //    renderJob->add(node);
+                //
+                //    #if 0
+                //    if (i <= 4)
+                //        cmdListIndex++;
+                //    nodeCount++;
+                //    #else
+                //    if (++nodeCount > nodesPerJob)
+                //    {
+                //        cmdListIndex++;
+                //        nodeCount = 0;
+                //    }
+                //    #endif
+                //}
+                //
+                //device->setExecuteCommandListCount(gfx::CommandListType::Graphics, cmdListIndex + 1);
+                //
+                //jobCount = cmdListIndex;
+                //if (nodeCount > 0)
+                //    jobCount++;
+
+                const uint nodeCount = (uint)nodes.size();
+                jobCount = min((uint)m_renderJobs.size(), nodeCount); // Can't have more jobs than nodes to render
+
+                const uint minNodeCount = nodeCount / jobCount;
+                const uint maxNodeCount = minNodeCount + 1;
+                const uint limit = nodeCount % jobCount;
+
+                uint nodeBaseIndex = 0;
+                for (uint i = 0; i < jobCount; ++i)
+                {
+                    auto & renderJob = m_renderJobs[i];
+
+                    const uint jobNodeCount = i < limit ? maxNodeCount : minNodeCount;
+                    for (uint n = 0; n < jobNodeCount; ++n)
+                    {
+                        const UserPassInfoNode * node = &nodes[nodeBaseIndex + n];
+                        renderJob->add(node);
+                    }
+                    nodeBaseIndex += jobNodeCount;
+                }
+
+                device->setExecuteCommandListCount(gfx::CommandListType::Graphics, jobCount);
+            }
 
             core::JobSync renderJobSync;
+            core::IScheduler * jobScheduler = Kernel::getScheduler();
 
             // Kick jobs ...
-            core::IScheduler * jobScheduler = Kernel::getScheduler();
-            for (uint i = 0; i < jobCount; ++i)
-                jobScheduler->Start(m_renderJobs[i], &renderJobSync);
+            {
+                VG_PROFILE_CPU("Start RenderJobs");
+                for (uint i = 0; i < jobCount; ++i)
+                    jobScheduler->Start(m_renderJobs[i], &renderJobSync);
+            }
 
             // ... and wait for completion
             {
@@ -1134,15 +1191,17 @@ namespace vg::gfx
         else
         {
             // render all nodes sequentially using default command list
-            CommandList * defaultCmdList = cmdLists[0];
+            {
+                CommandList * defaultCmdList = cmdLists[0];
 
-            VG_PROFILE_GPU_CONTEXT(defaultCmdList);
-            VG_PROFILE_GPU("Render");
-            
-            for (auto & node : m_userPassInfoTree.m_children)
-                renderNode(node, defaultCmdList, true);
+                VG_PROFILE_GPU_CONTEXT(defaultCmdList);
+                VG_PROFILE_GPU("Render");
 
-            device->setExecuteCommandListCount(gfx::CommandListType::Graphics, 1);
+                for (auto & node : m_userPassInfoTree.m_children)
+                    renderNode(node, defaultCmdList, true);
+
+                device->setExecuteCommandListCount(gfx::CommandListType::Graphics, 1);
+            }
         }
 
         // All textures and buffers remaining in pool should be marked as 'unused' at this point

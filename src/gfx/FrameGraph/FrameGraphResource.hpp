@@ -273,7 +273,7 @@ namespace vg::gfx
     void FrameGraphTextureResource::resetTexture()
     {
         VG_ASSERT(m_desc.transient);
-        m_texture = nullptr;
+        //m_texture = nullptr;
     }
 
     //--------------------------------------------------------------------------------------
@@ -321,6 +321,6 @@ namespace vg::gfx
     void FrameGraphBufferResource::resetBuffer()
     {
         VG_ASSERT(m_desc.transient);
-        m_buffer = nullptr;
+        //m_buffer = nullptr;
     }
 }

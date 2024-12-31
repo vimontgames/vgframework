@@ -123,8 +123,9 @@ namespace vg::gfx::vulkan
                 vkGetBufferMemoryRequirements(device->getVulkanDevice(), getResource().getVulkanBuffer(), &mem_reqs);
                 VG_ASSERT(_bufDesc.getSize() <= mem_reqs.size);
                 u64 uploadBufferSize = _bufDesc.getSize();
-
-                auto * uploadBuffer = device->getUploadBuffer();
+                const auto * scheduler = Kernel::getScheduler();
+                VG_ASSERT(scheduler->IsMainThread() || scheduler->IsLoadingThread(), "Expected Main or Loading thread but current thread is \"%s\"", scheduler->GetCurrentThreadName().c_str());
+                auto * uploadBuffer = device->getUploadBuffer(0);
                 u8 * dst = uploadBuffer->map((gfx::Buffer *)this, uploadBufferSize, (uint)mem_reqs.alignment);
                 if (nullptr != dst)
                 {

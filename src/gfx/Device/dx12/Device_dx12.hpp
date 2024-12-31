@@ -191,12 +191,13 @@ namespace vg::gfx::dx12
             m_DSVDescriptorSize = device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
         }
 
+        createUploadBuffer();
+
 		// For now just create command pools to handle latency
 		// We'll need later to have one per thread recording command buffers
 		for (uint i = 0; i < max_frame_latency; ++i)
 			createFrameContext(i);
 
-        createUploadBuffer();
         created3d12Backbuffers();
 
         m_bindlessTable = new gfx::BindlessTable();
@@ -544,7 +545,7 @@ namespace vg::gfx::dx12
 	//--------------------------------------------------------------------------------------
 	void Device::deinit()
 	{
-        destroyUploadBuffer();
+        destroyUploadBuffers();
 
         for (uint i = 0; i < countof(m_frameContext); ++i)
             destroyFrameContext(i);
@@ -657,6 +658,9 @@ namespace vg::gfx::dx12
         m_currentFrameIndex = frameIndex;
 
 		auto & context = getCurrentFrameContext();
+
+        // This will create additional upload buffers for command lists when needed
+        updateUploadBuffers();
 
         // This will create additional command list when needed (Must be done *AFTER* m_currentFrameIndex is assigned to get correct current frame index)
         updateFrameContext();

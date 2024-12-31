@@ -14,6 +14,7 @@ namespace vg::gfx
     void RenderJob::Run()
     {
         VG_PROFILE_GPU_CONTEXT(m_cmdList);
+        VG_PROFILE_CPU(GetName().c_str());
 
         FrameGraph * framegraph = VG_SAFE_STATIC_CAST(FrameGraph, getParent());
         for (uint i = 0; i < m_nodes.size(); ++i)

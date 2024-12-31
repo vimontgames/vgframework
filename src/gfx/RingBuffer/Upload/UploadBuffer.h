@@ -22,7 +22,7 @@ namespace vg::gfx
         void            upload          (gfx::Texture * _dst, core::uint_ptr _from, size_t _size);
         void            upload          (gfx::Buffer * _dst, core::uint_ptr _from, size_t _size);
 
-        void            flush           (CommandList * _cmdList);
+        void            flush           (CommandList * _cmdList, bool _canBeEmpty = false);
         void            sync            ();
 
     private:

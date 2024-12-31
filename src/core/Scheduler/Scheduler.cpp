@@ -37,9 +37,9 @@ namespace vg::core
 
         void Run() override
         {
-            // User name from scheduler to make sure they match (they seem valid at this point)
-            const auto & name = px_sched::Scheduler::current_thread_name(); //  Scheduler::getCurrentThreadName();
-            ((Scheduler*)Kernel::getScheduler())->RegisterCurrentThread(name);
+            // User name from scheduler to make sure they match
+            const auto & name = px_sched::Scheduler::current_thread_name(); 
+            ((Scheduler*)Kernel::getScheduler())->RegisterCurrentThread(name, ThreadType::Worker);
         }
 
     private:
@@ -52,7 +52,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Scheduler::RegisterCurrentThread(const core::string & _name)
+    void Scheduler::RegisterCurrentThread(const core::string & _name, ThreadType _threadType, core::uint _index)
     {
         core::lock_guard<mutex> lock(m_registerThreadMutex);
 
@@ -72,7 +72,7 @@ namespace vg::core
         Kernel::getProfiler()->registerProfilerThread(_name.c_str());
 
         // Record
-        m_registeredThreads.insert(std::pair(threadId, _name));
+        m_registeredThreads.insert(std::pair(threadId, ThreadInfo(ThreadType((int)_threadType + _index), _name)));
     }
 
     //--------------------------------------------------------------------------------------
@@ -151,20 +151,67 @@ namespace vg::core
         return m_threadCount;
     }
 
+
     //--------------------------------------------------------------------------------------
-    const string Scheduler::GetCurrentThreadName() const
+    const ThreadInfo * Scheduler::getCurrentThreadInfo() const
     {
         const ThreadID threadId = GetCurrentThreadID();
 
         auto it = m_registeredThreads.find(threadId);
         if (it != m_registeredThreads.end())
         {
-            return it->second;
+            return &it->second;
         }
         else
         {
             VG_ASSERT(it != m_registeredThreads.end(), "Thread 0x%08X is not registered\n", threadId);
-            return {};
+            return nullptr;
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    ThreadType Scheduler::GetCurrentThreadType() const
+    {
+        if (const ThreadInfo * threadInfo = getCurrentThreadInfo())
+            return threadInfo->m_type;
+        else
+            return ThreadType::Unknown;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const string & Scheduler::GetCurrentThreadName() const
+    {
+        static string unknown = "Unknown";
+
+        if (const ThreadInfo * threadInfo = getCurrentThreadInfo())
+            return threadInfo->m_name;
+        else
+            return unknown;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Scheduler::IsMainThread() const
+    {
+        if (const ThreadInfo * threadInfo = getCurrentThreadInfo())
+            return ThreadType::Main == threadInfo->m_type;
+        else
+            return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Scheduler::IsLoadingThread() const 
+    {
+        if (const ThreadInfo * threadInfo = getCurrentThreadInfo())
+            return ThreadType::Loading == threadInfo->m_type;
+        else
+            return false;
+    }
+    //--------------------------------------------------------------------------------------
+    bool Scheduler::IsWorkerThread() const
+    {
+        if (const ThreadInfo * threadInfo = getCurrentThreadInfo())
+            return ThreadType::Worker == threadInfo->m_type;
+        else
+            return false;
     }
 }

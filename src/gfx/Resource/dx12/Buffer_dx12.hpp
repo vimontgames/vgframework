@@ -88,7 +88,9 @@ namespace vg::gfx::dx12
         if (nullptr != _initData)
         {
             const size_t uploadBufferSize = _bufDesc.getSize();
-            auto * uploadBuffer = device->getUploadBuffer();
+            const auto * scheduler = Kernel::getScheduler();
+            VG_ASSERT(scheduler->IsMainThread() || scheduler->IsLoadingThread(), "Expected Main or Loading thread but current thread is \"%s\"", scheduler->GetCurrentThreadName().c_str());
+            auto * uploadBuffer = device->getUploadBuffer(0);
 
             core::u8 * dst = uploadBuffer->map((gfx::Buffer *)this, uploadBufferSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
             if (nullptr != dst)

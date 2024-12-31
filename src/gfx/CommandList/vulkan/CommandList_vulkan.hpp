@@ -522,7 +522,7 @@ namespace vg::gfx::vulkan
         VG_ASSERT((size_t)-1 != _size);
 
         auto * device = gfx::Device::get();
-        auto uploadBuffer = device->getUploadBuffer();
+        auto uploadBuffer = device->getUploadBuffer(m_index);
 
         Map result;
 
@@ -559,7 +559,7 @@ namespace vg::gfx::vulkan
         {
             VG_ASSERT(nullptr != _data, "The '_data' parameter should not be NULL when mapping Resources for Upload");
             auto * device = gfx::Device::get();
-            auto uploadBuffer = device->getUploadBuffer();
+            auto uploadBuffer = device->getUploadBuffer(m_index);
             uploadBuffer->unmap(_buffer, (u8 *)_data, _size);
             uploadBuffer->flush((gfx::CommandList *)this);
         }

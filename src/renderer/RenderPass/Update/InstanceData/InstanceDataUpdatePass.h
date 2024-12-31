@@ -10,7 +10,7 @@ namespace vg::gfx
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    class InstanceDataUpdatePass : public UpdatePass
+    class InstanceDataUpdatePass final : public UpdatePass
     {
     public:
         const char * GetClassName() const final { return "InstanceDataUpdatePass"; }
@@ -18,9 +18,11 @@ namespace vg::renderer
         InstanceDataUpdatePass();
         ~InstanceDataUpdatePass();
 
-        void	BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
+        void Prepare(const gfx::RenderPassContext & _renderContext) final override;
+        void BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
 
     private:
         gfx::Buffer * m_instanceDataBuffer = nullptr;
+        core::uint m_mapSize = 0;
     };
 }

@@ -9,6 +9,13 @@ namespace vg::core
     };
     using ThreadID = std::thread::id;
 
+    vg_enum_class(ThreadType, core::i8,
+        Unknown     = -128,
+        Loading     = -2,
+        Main        = -1,
+        Worker      = 0
+    );
+
     class IScheduler
     {
     public:
@@ -21,11 +28,16 @@ namespace vg::core
         virtual void                    Wait                    (JobSync * _sync) = 0;
 
         virtual void                    RegisterWorkerThreads   () = 0;
-        virtual void                    RegisterCurrentThread   (const core::string & _name) = 0;
+        virtual void                    RegisterCurrentThread   (const core::string & _name, ThreadType _threadType, core::uint _index = 0) = 0;
 
         virtual ThreadID                GetCurrentThreadID      () const = 0;
-        virtual const core::string      GetCurrentThreadName    () const = 0;
+        virtual ThreadType              GetCurrentThreadType    () const = 0;
+        virtual const core::string &    GetCurrentThreadName    () const = 0;
 
         virtual core::uint              GetWorkerThreadCount    () const = 0;
+
+        virtual bool                    IsMainThread            () const = 0;
+        virtual bool                    IsLoadingThread         () const = 0;
+        virtual bool                    IsWorkerThread          () const = 0;
     };
 }

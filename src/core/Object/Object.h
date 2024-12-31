@@ -117,7 +117,7 @@ namespace vg::core
 
 		string					    m_name;
         string                      m_file;
-		mutable const IClassDesc * m_classDesc = nullptr;
+		mutable const IClassDesc *	m_classDesc = nullptr;
 	};
 }
 

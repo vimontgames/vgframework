@@ -632,10 +632,11 @@ namespace vg::gfx::vulkan
 		m_vkPresentMode = VSyncToVkPresentModeKHR(m_VSync);
 		createSwapchain();
 
+		createUploadBuffer();
+
         for (uint i = 0; i < max_frame_latency; ++i)
             createFrameContext(i);
-		
-        createUploadBuffer();
+
         createVulkanBackbuffers();
 
         m_bindlessTable = new gfx::BindlessTable();
@@ -1389,7 +1390,7 @@ namespace vg::gfx::vulkan
         m_vkRenderPassHash.clear();
 
 		destroyCommandQueues();
-        destroyUploadBuffer();
+        destroyUploadBuffers();
 
 		for (uint i = 0; i < countof(m_frameContext); ++i)
 			destroyFrameContext(i);
@@ -1457,6 +1458,9 @@ namespace vg::gfx::vulkan
 			}
 			vkResetFences(vkDevice, 1, &m_vkFences[FrameIndex]);
 			m_currentFrameIndex = FrameIndex;
+
+            // This will create additional upload buffers for command lists when needed
+            updateUploadBuffers();
 
             // This will create additional command list when needed (Must be done *AFTER* m_currentFrameIndex is assigned to get correct current frame index)
             updateFrameContext();

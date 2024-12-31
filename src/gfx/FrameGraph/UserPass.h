@@ -27,6 +27,9 @@ namespace vg::gfx
 		// Called when building FrameGraph, no access to CommandList
 		virtual void	Setup			(const RenderPassContext & _renderContext) = 0;
 
+		// Called on main thread for all nodes before rendering using multiple threads (e.g., compute offsets used in other RenderJobs)
+		virtual void	Prepare			(const RenderPassContext & _renderContext) {};
+
 		// Called before entering RenderPass (e.g., write buffers from CPU to the GPU)
 		virtual void	BeforeRender	(const RenderPassContext & _renderContext, CommandList * _cmdList) {}
 

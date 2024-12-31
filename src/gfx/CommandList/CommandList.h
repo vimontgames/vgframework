@@ -18,6 +18,7 @@ namespace vg::gfx
     class ComputePipelineState;
     class Texture;
     class Buffer;
+    class UploadBuffer;
 
 	namespace base
 	{
@@ -27,51 +28,49 @@ namespace vg::gfx
 			CommandList(gfx::CommandListType _type, gfx::CommandPool * _cmdPool, core::uint _frame, core::uint _index);
 			~CommandList();
 
-			CommandListType			getType			        () const;
-			CommandPool *			getCommandPool	        () const;
+			CommandListType			    getType			        () const;
+			CommandPool *			    getCommandPool	        () const;
 
             // Graphic
-			void					beginRenderPass	        (gfx::RenderPass * _renderPass);
-			void					endRenderPass	        ();
+			void					    beginRenderPass	            (gfx::RenderPass * _renderPass);
+			void					    endRenderPass	            ();
 
-			void					beginSubPass	        (core::uint _subPassIndex, gfx::SubPass * _subPass);
-			void					endSubPass		        ();
+			void					    beginSubPass	            (core::uint _subPassIndex, gfx::SubPass * _subPass);
+			void					    endSubPass		            ();
 
-			const RenderPass *		getRenderPass	        () const;
-            const SubPass *         getSubPass              () const;
-			const core::uint		getSubPassIndex	        () const;
+			const RenderPass *		    getRenderPass	            () const;
+            const SubPass *             getSubPass                  () const;
+			const core::uint		    getSubPassIndex	            () const;
 
-            void                    setGraphicRootSignature (const RootSignatureHandle & _rsHandle);
+            void                        setGraphicRootSignature     (const RootSignatureHandle & _rsHandle);
 
-            void                    setRasterizerState      (const gfx::RasterizerState & _rs);
-            void                    setDepthStencilState    (const gfx::DepthStencilState & _ds);
-            void                    setStencilRefValue      (core::u8 _stencilRef);
-            void                    setBlendState           (const gfx::BlendState & _bs);
-            void                    setShader               (const ShaderKey & _key);
-            void                    setPrimitiveTopology    (PrimitiveTopology _topology);
-            void                    setViewport             (const core::uint4 & _viewport);
-            void                    setScissor              (const core::uint4 & _scissor);
-            void                    setGraphicRootConstants (core::uint _startOffset, core::u32 * _values, core::uint _count);
-            void                    setIndexBuffer          (gfx::Buffer * _ib);
+            void                        setRasterizerState          (const gfx::RasterizerState & _rs);
+            void                        setDepthStencilState        (const gfx::DepthStencilState & _ds);
+            void                        setStencilRefValue          (core::u8 _stencilRef);
+            void                        setBlendState               (const gfx::BlendState & _bs);
+            void                        setShader                   (const ShaderKey & _key);
+            void                        setPrimitiveTopology        (PrimitiveTopology _topology);
+            void                        setViewport                 (const core::uint4 & _viewport);
+            void                        setScissor                  (const core::uint4 & _scissor);
+            void                        setGraphicRootConstants     (core::uint _startOffset, core::u32 * _values, core::uint _count);
+            void                        setIndexBuffer              (gfx::Buffer * _ib);
 
             // Compute
-            void                    setComputeRootSignature (const RootSignatureHandle & _rsHandle);
-            void                    setComputeShader        (const ComputeShaderKey & _computeKey);
-            void                    setComputeRootConstants (core::uint _startOffset, core::u32 * _values, core::uint _count);
+            void                        setComputeRootSignature     (const RootSignatureHandle & _rsHandle);
+            void                        setComputeShader            (const ComputeShaderKey & _computeKey);
+            void                        setComputeRootConstants     (core::uint _startOffset, core::u32 * _values, core::uint _count);
 
-            void                    setCurrentRenderPassType(RenderPassType _renderPassType);
+            void                        setCurrentRenderPassType    (RenderPassType _renderPassType);
 
 		protected:
-			CommandListType			m_type;
-			core::u8				m_frame;
-			core::u8				m_index;
-			gfx::CommandPool *	    m_cmdPool;
-
-			RenderPass *		    m_renderPass   = nullptr;
-			SubPass *			    m_subPass	   = nullptr;
-			core::uint				m_subPassIndex = -1;
-
-        protected:
+			CommandListType			    m_type;
+			core::u8				    m_frame;
+			core::u8				    m_index;
+			gfx::CommandPool *	        m_cmdPool      = nullptr;
+            UploadBuffer *              m_uploadBuffer = nullptr;
+			RenderPass *		        m_renderPass   = nullptr;
+			SubPass *			        m_subPass	   = nullptr;
+			core::uint				    m_subPassIndex = -1;
             RenderPassType              m_currentRenderPassType = (RenderPassType)-1;
             GraphicPipelineStateCache   m_graphicStateCache;
             ComputePipelineStateCache   m_computeStateCache;

@@ -25,13 +25,11 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    const core::vector<MaterialModel *> & MaterialManager::getMaterialsSafeCopy()
+    void MaterialManager::getMaterialsSafeCopy(core::vector<MaterialModel *> & _materials)
     {
         lock_guard<mutex> lock(m_mutex);
 
         VG_PROFILE_CPU("MaterialsSafeCopy");
-
-        m_materialsSafeCopy = m_materials;
-        return m_materialsSafeCopy;
+        _materials = m_materials;
     }
 }

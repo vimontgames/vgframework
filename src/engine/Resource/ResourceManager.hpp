@@ -254,7 +254,7 @@ namespace vg::engine
     {
         #if VG_RESOURCE_MANAGER_ASYNC_LOADING
 
-        Kernel::getScheduler()->RegisterCurrentThread("Loading");
+        Kernel::getScheduler()->RegisterCurrentThread("Loading", ThreadType::Loading);
 
         while (_this->isLoadingThreadRunning())
         {

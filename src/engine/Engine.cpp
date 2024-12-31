@@ -353,7 +353,7 @@ namespace vg::engine
 
         // Profiler has to be created by the renderer to be able to also profile the GPU
         Kernel::setProfiler(m_renderer->GetProfiler());
-        _singletons.scheduler->RegisterCurrentThread("Main");
+        _singletons.scheduler->RegisterCurrentThread("Main", ThreadType::Main);
 
 		m_renderer->Init(_params.renderer, _singletons);
 
