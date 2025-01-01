@@ -22,10 +22,16 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void ComputePipelineStateCache::resetShaders(ComputeShaderKey::File _file)
+    void ComputePipelineStateCache::resetComputePipelineStates(ComputeShaderKey::File _file)
+    {
+        resetComputePipelineStatesImpl(m_computePipelineStateHash, _file);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ComputePipelineStateCache::resetComputePipelineStatesImpl(ComputePipelineStateHash & _computePipelineStateHash, ComputeShaderKey::File _file)
     {
         vector<ComputePipelineStateKey> computeKeys;
-        for (auto & pair : m_computePipelineStateHash)
+        for (auto & pair : _computePipelineStateHash)
         {
             const ComputePipelineStateKey & computeKey = pair.first;
             if (computeKey.m_computeShaderKey.file == _file)
@@ -35,7 +41,7 @@ namespace vg::gfx
             }
         }
         for (ComputePipelineStateKey computeKey : computeKeys)
-            m_computePipelineStateHash.erase(computeKey);
+            _computePipelineStateHash.erase(computeKey);
     }
 
     //--------------------------------------------------------------------------------------
@@ -50,14 +56,8 @@ namespace vg::gfx
         }
         else
         {
-            core::lock_guard<mutex> lock(ShaderManager::get()->getComputePipelineStateMutex());
-
-            const auto startCreateComputePSO = Timer::getTick();
-
-            pso = ComputePipelineState::createComputePipelineState(_key);
+            pso = ShaderManager::get()->createComputePipelineState(_key);
             m_computePipelineStateHash[_key] = pso;
-
-            //VG_INFO("[Device] Created Compute PipelineStateObject 0x%016X in %.2f ms", pso, Timer::getEnlapsedTime(startCreateComputePSO, Timer::getTick()));
         }
 
         _computePipelineState = pso;

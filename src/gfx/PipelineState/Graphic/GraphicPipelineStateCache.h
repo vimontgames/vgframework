@@ -18,7 +18,8 @@ namespace vg::gfx
 
         void clear();
         void reset();
-        void resetShaders(ShaderKey::File _file);
+        void resetGraphicPipelineStates(ShaderKey::File _file);
+        static void resetGraphicPipelineStatesImpl(GraphicPipelineStateHash & _graphicPipelineStateHash, ShaderKey::File _file);
 
         bool getGraphicPipelineState(const GraphicPipelineStateKey & _key, GraphicPipelineState *& _graphicPipelineState);
 

@@ -353,8 +353,8 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void CommandList::resetShaders(ShaderKey::File _file)
     {
-        m_graphicStateCache.resetShaders(_file);
-        m_computeStateCache.resetShaders(_file);
+        m_graphicStateCache.resetGraphicPipelineStates(_file);
+        m_computeStateCache.resetComputePipelineStates(_file);
     }
 
     //--------------------------------------------------------------------------------------

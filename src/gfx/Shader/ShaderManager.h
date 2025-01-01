@@ -4,6 +4,8 @@
 #include "ComputeShaderKey.h"
 #include "gfx/IShaderManager.h"
 #include "core/Scheduler/Mutex.h"
+#include "gfx/PipelineState/Graphic/GraphicPipelineStateKey.h"
+#include "gfx/PipelineState/Compute/ComputePipelineStateKey.h"
 
 namespace vg::core
 {
@@ -15,6 +17,8 @@ namespace vg::gfx
     class Shader;
     class ShaderCompiler;
     class HLSLDesc;
+    class GraphicPipelineState;
+    class ComputePipelineState;
 
     vg_enum_class(ShaderOptimizationLevel, core::u8,
         Unoptimized = 0,
@@ -64,9 +68,15 @@ namespace vg::gfx
         core::mutex &                       getGraphicPipelineStateMutex    () { return m_graphicPipelineStateMutex; }
         core::mutex &                       getComputePipelineStateMutex    () { return m_computePipelineStateMutex; }
 
+        GraphicPipelineState *              createGraphicPipelineState      (const GraphicPipelineStateKey & _key);
+        ComputePipelineState *              createComputePipelineState      (const ComputePipelineStateKey & _key);
+
     private:
         void                                parseIncludes                   (core::uint _index, core::string dir, core::string _file, core::vector<core::string> & _includes, core::u64 & _crc, core::uint _depth = 0);
         static core::string                 fixFileLine                     (const core::string & _filename, const core::string & _warningAndErrorString);
+
+        void                                resetGraphicPipelineStates      (ShaderKey::File _file);
+        void                                resetComputePipelineStates      (ComputeShaderKey::File _file);
 
     private:
         bool                                m_updateNeeded = false;
@@ -89,5 +99,11 @@ namespace vg::gfx
         OnShadersUpdatedCallbackFunc        m_onShadersUpdatedCallbackFunc = nullptr;
         core::mutex                         m_graphicPipelineStateMutex;
         core::mutex                         m_computePipelineStateMutex;
+
+        using GraphicPipelineStateHash = core::unordered_map<gfx::GraphicPipelineStateKey, gfx::GraphicPipelineState *, gfx::GraphicPipelineStateKey::hash>;
+        GraphicPipelineStateHash            m_graphicPipelineStateHash;
+
+        using ComputePipelineStateHash = core::unordered_map<gfx::ComputePipelineStateKey, gfx::ComputePipelineState *, gfx::ComputePipelineStateKey::hash>;
+        ComputePipelineStateHash            m_computePipelineStateHash;
     };
 }

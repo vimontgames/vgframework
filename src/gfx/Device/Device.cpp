@@ -616,7 +616,7 @@ namespace vg::gfx
     {
         if (m_maxRenderJobCount != _count)
         {
-            VG_WARNING("[Device] MaxRenderJobCount changed from %u to %u", m_maxRenderJobCount, _count);
+            VG_INFO("[Device] MaxRenderJobCount changed from %u to %u", m_maxRenderJobCount, _count);
             m_maxRenderJobCount = _count;
             return true;
         }

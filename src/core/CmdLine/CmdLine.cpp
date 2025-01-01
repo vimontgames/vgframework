@@ -68,7 +68,7 @@ namespace vg::core
 		}
 		else
 		{
-			VG_INFO("[CmdLine] Could not find \"%s\" in command-line", _key.c_str());
+			VG_INFO("[CmdLine] Parameter \"%s\" not found in command-line", _key.c_str());
 			return false;
 		}
 	}

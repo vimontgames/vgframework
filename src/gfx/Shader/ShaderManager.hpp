@@ -3,6 +3,10 @@
 #include "core/string/string.h"
 #include "core/Math/Math.h"
 #include "core/Timer/Timer.h"
+#include "gfx/PipelineState/Graphic/GraphicPipelineState.h"
+#include "gfx/PipelineState/Graphic/GraphicPipelineStateCache.h"
+#include "gfx/PipelineState/Compute/ComputePipelineState.h"
+#include "gfx/PipelineState/Compute/ComputePipelineStateCache.h"
 
 using namespace vg::core;
 
@@ -39,6 +43,14 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     ShaderManager::~ShaderManager()
     {
+        for (auto & pair : m_graphicPipelineStateHash)
+            VG_SAFE_RELEASE(pair.second);
+        m_graphicPipelineStateHash.clear();
+
+        for (auto & pair : m_computePipelineStateHash)
+            VG_SAFE_RELEASE(pair.second);
+        m_computePipelineStateHash.clear();        
+
         VG_SAFE_DELETE(m_shaderCompiler);
     }
 
@@ -279,7 +291,7 @@ namespace vg::gfx
                 }
                 msg += ")";
             }
-            VG_WARNING("%s in %.2f ms", msg.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+            VG_INFO("%s in %.2f ms", msg.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
         }
         else
         {
@@ -626,8 +638,14 @@ namespace vg::gfx
                     if (!_firstUpdate)
                         desc.reset();
                     
-                    // delete the pso (TODO: L1 cache in cmdlist and L2 global cache using mutex)
-                    device->resetShaders(ShaderKey::File(i));
+                    auto file = ShaderKey::File(i);
+
+                    // delete the global PSOs created
+                    resetGraphicPipelineStates(file);
+                    resetComputePipelineStates(file);
+
+                    // delete the PSO cached by command lists
+                    device->resetShaders(file);
 
                     ++updated;                    
                 }
@@ -659,5 +677,63 @@ namespace vg::gfx
     gfx::API ShaderManager::getAPI() const
     {
         return m_api;
+    }
+
+    //--------------------------------------------------------------------------------------
+    GraphicPipelineState * ShaderManager::createGraphicPipelineState(const GraphicPipelineStateKey & _key)
+    {
+        core::lock_guard<mutex> lock(m_graphicPipelineStateMutex);
+        GraphicPipelineState * pso = nullptr;
+
+        auto it = m_graphicPipelineStateHash.find(_key);
+        if (m_graphicPipelineStateHash.end() != it)
+        {
+            pso = it->second;
+        }
+        else
+        {
+            const auto startCreateGraphicsPSO = Timer::getTick();
+            pso = GraphicPipelineState::createGraphicPipelineState(_key);
+            m_graphicPipelineStateHash[_key] = pso;
+            VG_INFO("[Device] Created Graphics PipelineStateObject 0x%016X in %.2f ms", pso, Timer::getEnlapsedTime(startCreateGraphicsPSO, Timer::getTick()));
+        }
+
+        VG_SAFE_INCREASE_REFCOUNT(pso);
+        return pso;
+    }
+
+    //--------------------------------------------------------------------------------------
+    ComputePipelineState * ShaderManager::createComputePipelineState(const ComputePipelineStateKey & _key)
+    {
+        core::lock_guard<mutex> lock(ShaderManager::get()->getComputePipelineStateMutex());
+        ComputePipelineState * pso = nullptr;
+
+        auto it = m_computePipelineStateHash.find(_key);
+        if (m_computePipelineStateHash.end() != it)
+        {
+            pso = it->second;
+        }
+        else
+        {
+            const auto startCreateGraphicsPSO = Timer::getTick();
+            pso = ComputePipelineState::createComputePipelineState(_key);
+            m_computePipelineStateHash[_key] = pso;
+            VG_INFO("[Device] Created Compute PipelineStateObject 0x%016X in %.2f ms", pso, Timer::getEnlapsedTime(startCreateGraphicsPSO, Timer::getTick()));
+        }
+
+        VG_SAFE_INCREASE_REFCOUNT(pso);
+        return pso;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ShaderManager::resetGraphicPipelineStates(ShaderKey::File _file)
+    {
+        GraphicPipelineStateCache::resetGraphicPipelineStatesImpl(m_graphicPipelineStateHash, _file);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ShaderManager::resetComputePipelineStates(ComputeShaderKey::File _file)
+    {
+        ComputePipelineStateCache::resetComputePipelineStatesImpl(m_computePipelineStateHash, _file);
     }
 }

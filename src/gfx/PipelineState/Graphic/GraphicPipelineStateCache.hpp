@@ -32,10 +32,16 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void GraphicPipelineStateCache::resetShaders(ShaderKey::File _file)
+    void GraphicPipelineStateCache::resetGraphicPipelineStates(ShaderKey::File _file)
+    {
+        resetGraphicPipelineStatesImpl(m_graphicPipelineStateHash, _file);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GraphicPipelineStateCache::resetGraphicPipelineStatesImpl(GraphicPipelineStateHash & _graphicPipelineStateHash, ShaderKey::File _file)
     {
         vector<GraphicPipelineStateKey> keys;
-        for (auto & pair : m_graphicPipelineStateHash)
+        for (auto & pair : _graphicPipelineStateHash)
         {
             const GraphicPipelineStateKey & key = pair.first;
             if (key.m_shaderKey.file == _file)
@@ -45,7 +51,7 @@ namespace vg::gfx
             }
         }
         for (GraphicPipelineStateKey key : keys)
-            m_graphicPipelineStateHash.erase(key);
+            _graphicPipelineStateHash.erase(key);
     }
 
     //--------------------------------------------------------------------------------------
@@ -60,14 +66,8 @@ namespace vg::gfx
         }
         else
         {
-            core::lock_guard<mutex> lock(ShaderManager::get()->getGraphicPipelineStateMutex());
-
-            const auto startCreateGraphicsPSO = Timer::getTick();
-
-            pso = GraphicPipelineState::createGraphicPipelineState(_key);
+            pso = ShaderManager::get()->createGraphicPipelineState(_key);
             m_graphicPipelineStateHash[_key] = pso;
-
-            //VG_INFO("[Device] Created Graphics PipelineStateObject 0x%016X in %.2f ms", pso, Timer::getEnlapsedTime(startCreateGraphicsPSO, Timer::getTick()));
         }
 
         _graphicPipelineState = pso;
