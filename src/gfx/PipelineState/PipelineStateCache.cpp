@@ -1,6 +1,9 @@
 #include "gfx/Precomp.h"
 #include "PipelineStateCache.h"
 #include "core/Timer/Timer.h"
+#include "core/Scheduler/Mutex.h"
+#include "gfx/Shader/HLSLDesc.h"
+#include "gfx/Shader/ShaderManager.h"
 
 using namespace vg::core;
 

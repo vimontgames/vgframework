@@ -50,6 +50,8 @@ namespace vg::gfx
         }
         else
         {
+            core::lock_guard<mutex> lock(ShaderManager::get()->getComputePipelineStateMutex());
+
             const auto startCreateComputePSO = Timer::getTick();
 
             pso = ComputePipelineState::createComputePipelineState(_key);

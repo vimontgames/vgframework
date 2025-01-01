@@ -3,6 +3,7 @@
 #include "ShaderKey.h"
 #include "ComputeShaderKey.h"
 #include "gfx/IShaderManager.h"
+#include "core/Scheduler/Mutex.h"
 
 namespace vg::core
 {
@@ -30,39 +31,42 @@ namespace vg::gfx
         ShaderManager(const core::string & _shaderRootPath, gfx::API _api);
         ~ShaderManager();
 
-        core::uint                          GetShaderCompiledCount      () const final override;
-        core::uint                          GetShaderWarningCount       () const final override;
-        core::uint                          GetShaderErrorCount         () const final override;
+        core::uint                          GetShaderCompiledCount          () const final override;
+        core::uint                          GetShaderWarningCount           () const final override;
+        core::uint                          GetShaderErrorCount             () const final override;
 
-        void                                setOnShadersUpdatedCallback (OnShadersUpdatedCallbackFunc _onShadersUpdatedCallback);
+        void                                setOnShadersUpdatedCallback     (OnShadersUpdatedCallbackFunc _onShadersUpdatedCallback);
 
-        void                                loadFromCache               ();
-        void                                update                      (bool _firstUpdate = false);
-        void                                applyUpdate                 (bool _firstUpdate = false);
+        void                                loadFromCache                   ();
+        void                                update                          (bool _firstUpdate = false);
+        void                                applyUpdate                     (bool _firstUpdate = false);
 
-        void                                registerHLSL                (const HLSLDesc & _hlslDesc);
-        bool                                initShaderKey               (ShaderKey & _key, const core::string & _file, const core::string & _technique);
-        bool                                initComputeShaderKey        (ComputeShaderKey & _key, const core::string & _file, const core::string & _technique);
+        void                                registerHLSL                    (const HLSLDesc & _hlslDesc);
+        bool                                initShaderKey                   (ShaderKey & _key, const core::string & _file, const core::string & _technique);
+        bool                                initComputeShaderKey            (ComputeShaderKey & _key, const core::string & _file, const core::string & _technique);
 
-        HLSLDesc *                          getHLSLDescriptor           (ShaderKey::File _file);
+        HLSLDesc *                          getHLSLDescriptor               (ShaderKey::File _file);
 
-        core::Blob                          compile                     (API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros);
+        core::Blob                          compile                         (API _api, const core::string & _file, const core::string & _entryPoint, ShaderStage _stage, const core::vector<core::pair<core::string, core::uint>> & _macros);
 
-        const core::string &                getShaderRootPath           () const { return m_shaderRootPath; }
-        const core::vector<core::string> &  getShaderRootFolders        () const { return m_shaderRootFolders; }
+        const core::string &                getShaderRootPath               () const { return m_shaderRootPath; }
+        const core::vector<core::string> &  getShaderRootFolders            () const { return m_shaderRootFolders; }
 
         #if VG_SHADER_SOURCE_IN_MEMORY
-        const core::string *                getShaderFilePathFromID     (core::uint _fileID, bool _mustExist = true) const;
-        const core::string *                getShaderSource             (const core::string & _path, bool _mustExist = true) const;
-        void                                saveShaderSourceInMemory    ();
+        const core::string *                getShaderFilePathFromID         (core::uint _fileID, bool _mustExist = true) const;
+        const core::string *                getShaderSource                 (const core::string & _path, bool _mustExist = true) const;
+        void                                saveShaderSourceInMemory        ();
         #endif
 
-        gfx::API                            getAPI                      () const;
-        ShaderOptimizationLevel             getShaderOptimizationLevel  () const;
+        gfx::API                            getAPI                          () const;
+        ShaderOptimizationLevel             getShaderOptimizationLevel      () const;
+
+        core::mutex &                       getGraphicPipelineStateMutex    () { return m_graphicPipelineStateMutex; }
+        core::mutex &                       getComputePipelineStateMutex    () { return m_computePipelineStateMutex; }
 
     private:
-        void                                parseIncludes               (core::uint _index, core::string dir, core::string _file, core::vector<core::string> & _includes, core::u64 & _crc, core::uint _depth = 0);
-        static core::string                 fixFileLine                 (const core::string & _filename, const core::string & _warningAndErrorString);
+        void                                parseIncludes                   (core::uint _index, core::string dir, core::string _file, core::vector<core::string> & _includes, core::u64 & _crc, core::uint _depth = 0);
+        static core::string                 fixFileLine                     (const core::string & _filename, const core::string & _warningAndErrorString);
 
     private:
         bool                                m_updateNeeded = false;
@@ -83,5 +87,7 @@ namespace vg::gfx
         #endif
 
         OnShadersUpdatedCallbackFunc        m_onShadersUpdatedCallbackFunc = nullptr;
+        core::mutex                         m_graphicPipelineStateMutex;
+        core::mutex                         m_computePipelineStateMutex;
     };
 }

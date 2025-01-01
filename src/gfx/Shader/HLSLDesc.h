@@ -1,6 +1,8 @@
 #pragma once
 
+#include "Shader_consts.h"
 #include "ShaderKey.h"
+#include "ComputeShaderKey.h"
 
 namespace vg::gfx
 {
@@ -130,9 +132,9 @@ namespace vg::gfx
 
         struct CachedShaderHeader
         {
-            u32                     version;
-            u64                     crc;
-            u32                     size;
+            core::u32               version;
+            core::u64               crc;
+            core::u32               size;
             HLSLDesc::VariantKey    key;
         };
 
@@ -156,7 +158,7 @@ namespace vg::gfx
             {
                 VG_ASSERT(_defines.size() > 0);
                 m_defines = _defines;
-                m_bits = computeBitCount((uint)_defines.size());
+                m_bits = computeBitCount((core::uint)_defines.size());
             }
 
             inline void clear()
