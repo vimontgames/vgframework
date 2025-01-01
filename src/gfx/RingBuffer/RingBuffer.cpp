@@ -37,8 +37,8 @@ namespace vg::gfx
 
         if (uint_ptr(-1) != offset)
             return getBaseAddress() + offset;
-        else
-            return nullptr;
+
+        return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
@@ -48,10 +48,15 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    // Not only the allocation size but also the allocation start address must be aligned as requested
+    //--------------------------------------------------------------------------------------
     core::uint_ptr RingBuffer::alloc(size_t _size, size_t _alignment, RingAllocCategory _category)
     {
-        const size_t totalSize = m_buffer->getBufDesc().getSize();
-        const size_t alignedSize = (_size + _alignment - 1) & ~(_alignment - 1);
+        const size_t totalSize = m_buffer->getBufDesc().getSize();       
+
+        const uint_ptr baseAddress = (uint_ptr)getBaseAddress();
+        uint_ptr alignedStartOffset = alignUp(baseAddress + m_offsetCur, _alignment) - (baseAddress + m_offsetCur);
+        size_t alignedSize = alignUp(_size, _alignment) + alignedStartOffset;
 
         auto & stats = m_stats[(uint)_category];
 
@@ -69,24 +74,33 @@ namespace vg::gfx
                 stats.m_alignedSize += alignedSize;
                 stats.m_count++;
 
-                return offset;
+                VG_ASSERT_IS_ALIGNED(baseAddress + offset + alignedStartOffset, _alignment);
+                return offset + alignedStartOffset;
             }
-            else if (alignedSize < m_offsetStart)
+            else
             {
-                m_padding = totalSize - m_offsetCur;
-                m_offsetCur = 0;
+                // Recompute new aligned size from the start of the buffer
+                alignedStartOffset = alignUp(baseAddress + 0, _alignment) - (baseAddress + 0);
+                alignedSize = alignUp(_size, _alignment) + alignedStartOffset;
 
-                m_totalWriteSize += _size;
-                m_totalWriteSizeAligned += alignedSize + m_padding;
-                
-                uint_ptr offset = m_offsetCur;
-                m_offsetCur += alignedSize;
+                if (alignedSize < m_offsetStart)
+                {
+                    m_padding = totalSize - m_offsetCur;
+                    m_offsetCur = 0;
 
-                stats.m_size += _size;
-                stats.m_alignedSize += alignedSize;
-                stats.m_count++;
+                    m_totalWriteSize += _size;
+                    m_totalWriteSizeAligned += alignedSize + m_padding;
 
-                return offset;
+                    uint_ptr offset = m_offsetCur;
+                    m_offsetCur += alignedSize;
+
+                    stats.m_size += _size;
+                    stats.m_alignedSize += alignedSize;
+                    stats.m_count++;
+
+                    VG_ASSERT_IS_ALIGNED(baseAddress + offset + alignedStartOffset, _alignment);
+                    return offset + alignedStartOffset;
+                }
             }
         }
 

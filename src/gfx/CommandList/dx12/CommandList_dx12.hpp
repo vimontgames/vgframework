@@ -514,7 +514,7 @@ namespace vg::gfx::dx12
         }
         else
         {
-            VG_DEBUGPRINT("[Device] Map buffer \"%s\" from commandlist %u\n", _buffer->GetName().c_str(), m_index);
+            //VG_DEBUGPRINT("[Device] Map buffer \"%s\" from commandlist %u\n", _buffer->GetName().c_str(), m_index);
 
             auto * device = gfx::Device::get();
             auto uploadBuffer = device->getUploadBuffer(m_index);
@@ -538,7 +538,7 @@ namespace vg::gfx::dx12
         }
         else
         {
-            VG_DEBUGPRINT("[Device] Unmap buffer \"%s\" from commandlist %u\n", _buffer->GetName().c_str(), m_index);
+            //VG_DEBUGPRINT("[Device] Unmap buffer \"%s\" from commandlist %u\n", _buffer->GetName().c_str(), m_index);
 
             VG_ASSERT(nullptr != _data, "The '_data' parameter should not be NULL when mapping Resources for Upload");
             auto * device = gfx::Device::get();
