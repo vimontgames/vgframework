@@ -736,7 +736,9 @@ namespace vg::gfx
         for (auto & child : _node.m_children)
             gatherNodes(child, _nodes);
 
-        _nodes.push_back(_node);
+        // Do not add empty nodes without renderpass
+        if (nullptr != _node.m_renderPass)
+            _nodes.push_back(_node);
     }
 
     //--------------------------------------------------------------------------------------
