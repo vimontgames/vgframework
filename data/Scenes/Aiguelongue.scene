@@ -613,6 +613,139 @@
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
                             </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Spots"/>
+                                <Property type="Uint32" name="m_uid" value="3684794600"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value=""/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components"/>
+                                <Property type="ObjectPtrVector" name="m_children">
+                                    <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Red Spot"/>
+                                        <Property type="Uint32" name="m_uid" value="3145571222"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-1.5" Ty="0" Tz="1" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components">
+                                            <Object class="LightComponent">
+                                                <Property type="String" name="m_name" value="New LightComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1667057836"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU8" name="m_lightType" value="Omni"/>
+                                                <Property type="ObjectPtr" name="m_lightDesc">
+                                                    <Object class="OmniLightDesc">
+                                                        <Property type="String" name="m_name" value="OmniLightDesc #2"/>
+                                                        <Property type="Uint32" name="m_uid" value="3839130980"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_shadow" value="false"/>
+                                                        <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
+                                                        <Property type="Float" name="m_shadowBias" value="0.0099999998"/>
+                                                        <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
+                                                        <Property type="EnumI8" name="m_shadowResolution" value="ShadowResolution_Medium"/>
+                                                        <Property type="Float" name="m_shadowIntensity" value="1"/>
+                                                        <Property type="Bool" name="m_shadowCameraOffset" value="false"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="0" z="0" w="1"/>
+                                                        <Property type="Float" name="m_intensity" value="20.200001"/>
+                                                        <Property type="Bool" name="m_useMaxRadius" value="false"/>
+                                                        <Property type="Float" name="m_maxRadius" value="1"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                    </Object>
+                                    <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Green Spot"/>
+                                        <Property type="Uint32" name="m_uid" value="2423980058"/>
+                                        <Property type="Uint32" name="m_originalUID" value="3145571222"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="1" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components">
+                                            <Object class="LightComponent">
+                                                <Property type="String" name="m_name" value="New LightComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3169401164"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1667057836"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU8" name="m_lightType" value="Omni"/>
+                                                <Property type="ObjectPtr" name="m_lightDesc">
+                                                    <Object class="OmniLightDesc">
+                                                        <Property type="String" name="m_name" value="OmniLightDesc #2"/>
+                                                        <Property type="Uint32" name="m_uid" value="661690895"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="3839130980"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_shadow" value="false"/>
+                                                        <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
+                                                        <Property type="Float" name="m_shadowBias" value="0.0099999998"/>
+                                                        <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
+                                                        <Property type="EnumI8" name="m_shadowResolution" value="ShadowResolution_Medium"/>
+                                                        <Property type="Float" name="m_shadowIntensity" value="1"/>
+                                                        <Property type="Bool" name="m_shadowCameraOffset" value="false"/>
+                                                        <Property type="Float4" name="m_color" x="0" y="1" z="0" w="1"/>
+                                                        <Property type="Float" name="m_intensity" value="20.200001"/>
+                                                        <Property type="Bool" name="m_useMaxRadius" value="false"/>
+                                                        <Property type="Float" name="m_maxRadius" value="1"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                    </Object>
+                                    <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Blue Spot"/>
+                                        <Property type="Uint32" name="m_uid" value="931646211"/>
+                                        <Property type="Uint32" name="m_originalUID" value="3145571222"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="1.5" Ty="0" Tz="1" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components">
+                                            <Object class="LightComponent">
+                                                <Property type="String" name="m_name" value="New LightComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3565494331"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1667057836"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU8" name="m_lightType" value="Omni"/>
+                                                <Property type="ObjectPtr" name="m_lightDesc">
+                                                    <Object class="OmniLightDesc">
+                                                        <Property type="String" name="m_name" value="OmniLightDesc #2"/>
+                                                        <Property type="Uint32" name="m_uid" value="3637429493"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="3839130980"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_shadow" value="false"/>
+                                                        <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
+                                                        <Property type="Float" name="m_shadowBias" value="0.0099999998"/>
+                                                        <Property type="Uint2" name="m_shadowSize" x="16" y="16"/>
+                                                        <Property type="EnumI8" name="m_shadowResolution" value="ShadowResolution_Medium"/>
+                                                        <Property type="Float" name="m_shadowIntensity" value="1"/>
+                                                        <Property type="Bool" name="m_shadowCameraOffset" value="false"/>
+                                                        <Property type="Float4" name="m_color" x="0" y="0" z="1" w="1"/>
+                                                        <Property type="Float" name="m_intensity" value="20.200001"/>
+                                                        <Property type="Bool" name="m_useMaxRadius" value="false"/>
+                                                        <Property type="Float" name="m_maxRadius" value="1"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                    </Object>
+                                </Property>
+                            </Object>
                         </Property>
                     </Object>
                     <Object class="GameObject">
@@ -8567,7 +8700,7 @@
                         <Property type="String" name="m_name" value="Debug"/>
                         <Property type="Uint32" name="m_uid" value="1949923508"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -8595,6 +8728,53 @@
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Sphere"/>
+                                <Property type="Uint32" name="m_uid" value="1871269719"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2867368839"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1630885121"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/unitsphere.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2625236236"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value=""/>
+                                                        <Property type="Uint32" name="m_uid" value="2644989306"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Test/TransparentSphere.mat"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
                             </Object>
                         </Property>
                     </Object>

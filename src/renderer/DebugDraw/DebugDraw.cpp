@@ -557,6 +557,8 @@ namespace vg::renderer
     void DebugDraw::drawGrid(CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Wireframe, CullMode::None);
+        DepthStencilState ds(true, false, ComparisonFunc::LessEqual);
+        BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
 
         VG_ASSERT(nullptr != m_gridVB);
         const BufferDesc & gridDesc = m_gridVB->getBufDesc();
@@ -569,6 +571,8 @@ namespace vg::renderer
         debugDrawRoot3D.setColor(float4(1, 1, 1, 1));
 
         _cmdList->setRasterizerState(rs);
+        _cmdList->setDepthStencilState(ds);
+        _cmdList->setBlendState(bs);
         _cmdList->setGraphicRootSignature(m_debugDrawSignatureHandle);
         _cmdList->setShader(m_debugDrawShaderKey);
         _cmdList->setGraphicRootConstants(0, (u32 *)&debugDrawRoot3D, DebugDrawRootConstants3DCount);
@@ -580,6 +584,8 @@ namespace vg::renderer
     void DebugDraw::drawAxis(CommandList * _cmdList) const
     {
         RasterizerState rs(FillMode::Wireframe, CullMode::None);
+        DepthStencilState ds(true, false, ComparisonFunc::LessEqual);
+        BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
 
         VG_ASSERT(nullptr != m_axisVB);
         const BufferDesc & gridDesc = m_axisVB->getBufDesc();
@@ -592,6 +598,8 @@ namespace vg::renderer
         debugDrawRoot3D.setColor(float4(1, 1, 1, 1));
 
         _cmdList->setRasterizerState(rs);
+        _cmdList->setDepthStencilState(ds);
+        _cmdList->setBlendState(bs);
         _cmdList->setShader(m_debugDrawShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::LineList);
 

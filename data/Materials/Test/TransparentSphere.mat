@@ -18,9 +18,11 @@
                 <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                 <Property type="EnumU8" name="m_surfaceType" value="AlphaBlend"/>
+                <Property type="Float" name="m_depthFade" value="0.5"/>
                 <Property type="EnumU8" name="m_cullMode" value="Back"/>
                 <Property type="EnumU32" name="m_UVSource" value="UV0"/>
                 <Property type="Float2" name="m_tiling" x="1" y="1"/>
+                <Property type="Float2" name="m_offset" x="0" y="0"/>
                 <Property type="Bool" name="m_enableAlbedo" value="true"/>
                 <Property type="Resource" name="m_albedoMap">
                     <Object class="TextureResource">

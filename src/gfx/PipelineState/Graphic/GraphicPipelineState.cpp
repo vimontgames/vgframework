@@ -60,6 +60,7 @@ namespace vg::gfx
     GraphicPipelineState * GraphicPipelineState::createGraphicPipelineState(const GraphicPipelineStateKey & _key)
     {
         VG_PROFILE_CPU("CreateGraphicsPSO");
+        _key.verify();
         return super::createGraphicPipelineState(_key);
     }
 }

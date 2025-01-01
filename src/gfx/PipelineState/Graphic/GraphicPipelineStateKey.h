@@ -34,11 +34,8 @@ namespace vg::gfx
 
         PrimitiveType getPrimitiveType() const;
 
-        void reset()
-        {
-            memset(this, -1, sizeof(*this));
-            m_perSampleShading = false;
-        }
+        void reset();
+        void verify() const;
 
         bool operator == (const GraphicPipelineStateKey & _other) const
         {

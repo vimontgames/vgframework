@@ -46,7 +46,7 @@ namespace vg::gfx::vulkan
         switch (_blendOp)
         {
             default:
-                VG_ASSERT(false, "Unhandled BlendFaBlendOpctor \"%s\" (%u)", asString(_blendOp).c_str(), _blendOp);
+                VG_ASSERT(false, "Unhandled BlendOp \"%s\" (%u)", asString(_blendOp).c_str(), _blendOp);
 
             case BlendOp::Add:
                 return VK_BLEND_OP_ADD;
