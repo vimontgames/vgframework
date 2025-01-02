@@ -43,13 +43,19 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     ShaderManager::~ShaderManager()
     {
+        deinit();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ShaderManager::deinit()
+    {
         for (auto & pair : m_graphicPipelineStateHash)
             VG_SAFE_RELEASE(pair.second);
         m_graphicPipelineStateHash.clear();
 
         for (auto & pair : m_computePipelineStateHash)
             VG_SAFE_RELEASE(pair.second);
-        m_computePipelineStateHash.clear();        
+        m_computePipelineStateHash.clear();
 
         VG_SAFE_DELETE(m_shaderCompiler);
     }
@@ -683,8 +689,12 @@ namespace vg::gfx
     GraphicPipelineState * ShaderManager::createGraphicPipelineState(const GraphicPipelineStateKey & _key)
     {
         core::lock_guard<mutex> lock(m_graphicPipelineStateMutex);
-        GraphicPipelineState * pso = nullptr;
 
+        #if 0
+        GraphicPipelineState * pso = GraphicPipelineState::createGraphicPipelineState(_key);
+        #else
+        GraphicPipelineState * pso = nullptr;
+        
         auto it = m_graphicPipelineStateHash.find(_key);
         if (m_graphicPipelineStateHash.end() != it)
         {
@@ -697,8 +707,9 @@ namespace vg::gfx
             m_graphicPipelineStateHash[_key] = pso;
             VG_INFO("[Device] Created Graphics PipelineStateObject 0x%016X in %.2f ms", pso, Timer::getEnlapsedTime(startCreateGraphicsPSO, Timer::getTick()));
         }
-
+        
         VG_SAFE_INCREASE_REFCOUNT(pso);
+        #endif
         return pso;
     }
 
@@ -706,6 +717,10 @@ namespace vg::gfx
     ComputePipelineState * ShaderManager::createComputePipelineState(const ComputePipelineStateKey & _key)
     {
         core::lock_guard<mutex> lock(ShaderManager::get()->getComputePipelineStateMutex());
+        
+        #if 0
+        ComputePipelineState * pso = ComputePipelineState::createComputePipelineState(_key);
+        #else
         ComputePipelineState * pso = nullptr;
 
         auto it = m_computePipelineStateHash.find(_key);
@@ -722,6 +737,7 @@ namespace vg::gfx
         }
 
         VG_SAFE_INCREASE_REFCOUNT(pso);
+        #endif
         return pso;
     }
 

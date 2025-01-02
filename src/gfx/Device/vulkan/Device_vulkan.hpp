@@ -361,7 +361,7 @@ namespace vg::gfx::vulkan
 	//--------------------------------------------------------------------------------------
 	void Device::init(const DeviceParams & _params)
 	{
-		base::Device::init(_params);
+		super::init(_params);
 
 		#ifdef VG_WINDOWS
 		m_caps.hdr = DXGIHelper::getHDRCaps((HWND)m_deviceParams.window);
@@ -1411,7 +1411,7 @@ namespace vg::gfx::vulkan
 		m_instanceExtensionList.deinit();
 		m_deviceExtensionList.deinit();
 
-		base::Device::deinit();
+		super::deinit();
 	}
 
     //--------------------------------------------------------------------------------------

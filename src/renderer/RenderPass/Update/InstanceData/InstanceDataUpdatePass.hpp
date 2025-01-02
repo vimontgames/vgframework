@@ -74,17 +74,22 @@ namespace vg::renderer
         if (mapSize > 0)
         {
             uint offset = 0;
-            const u8 * data = (const u8 *)_cmdList->map(m_instanceDataBuffer, mapSize).data;
+            const u8 * VG_RESTRICT data = (const u8 * VG_RESTRICT)_cmdList->map(m_instanceDataBuffer, mapSize).data;
             {
                 for (uint i = 0; i < instances.size(); ++i)
                 {
                     const GraphicInstance * instance = instances[i];
+                    VG_ASSERT(instance->getGPUInstanceDataOffset() == offset);
+
+                    #if 1
+
+                    instance->FillGPUInstanceData(data, offset);
+
+                    #else
+
                     const auto & materials = instance->getMaterials();
                     const uint batchCount = instance->GetBatchCount();
                     const uint materialCount = (uint)materials.size();
-
-                    //instance->setGPUInstanceDataOffset(offset);
-                    VG_ASSERT(instance->getGPUInstanceDataOffset() == offset);
 
                     GPUInstanceData * instanceData = (GPUInstanceData *)(data + offset);
                     {
@@ -130,7 +135,10 @@ namespace vg::renderer
                             batchData->setMaterialIndex(defaultMaterialIndex);
                         }
                     }
+
                     offset += sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData);
+
+                    #endif                    
                 }
             }
             _cmdList->unmap(m_instanceDataBuffer);

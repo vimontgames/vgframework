@@ -7,7 +7,7 @@
         <Property type="Bool" name="m_toolMode" value="false"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
         <Property type="Bool" name="m_useCustomQualityLevel" value="false"/>
-        <Property type="EnumI8" name="m_customQualityLevel" value="VeryLow"/>
+        <Property type="EnumI8" name="m_customQualityLevel" value="High"/>
         <Property type="EnumU8" name="m_lightingMode" value="Deferred"/>
         <Property type="EnumFlagsU32" name="m_pbrFlags" value="GenerateIrradianceCubemap|GenerateSpecularReflectionCubemap|GenerateSpecularBRDF"/>
         <Property type="Bool" name="m_shadows[Quality::VeryLow]" value="false"/>
@@ -48,5 +48,6 @@
         <Property type="Bool" name="m_wireframe" value="false"/>
         <Property type="Bool" name="m_aabb" value="false"/>
         <Property type="Bool" name="m_debugUI" value="false"/>
+        <Property type="Bool" name="m_renderJobs" value="true"/>
     </Object>
 </Root>

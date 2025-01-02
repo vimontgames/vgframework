@@ -36,4 +36,10 @@ namespace vg::renderer
     {
         return m_instanceBLAS;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE bool MeshInstance::isSkinned() const
+    {
+        return nullptr != getInstanceSkeleton();
+    }
 }

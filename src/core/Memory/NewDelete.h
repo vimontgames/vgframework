@@ -1,6 +1,6 @@
 #pragma once
 
-#if VG_GLOBAL_NEW_DELETE
+#if VG_ENABLE_GLOBAL_NEW_DELETE
 #pragma push_macro("new")
 #undef new
 

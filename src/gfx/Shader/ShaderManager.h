@@ -39,6 +39,8 @@ namespace vg::gfx
         core::uint                          GetShaderWarningCount           () const final override;
         core::uint                          GetShaderErrorCount             () const final override;
 
+        void                                deinit                          ();
+
         void                                setOnShadersUpdatedCallback     (OnShadersUpdatedCallbackFunc _onShadersUpdatedCallback);
 
         void                                loadFromCache                   ();

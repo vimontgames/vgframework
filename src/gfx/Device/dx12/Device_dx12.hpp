@@ -567,14 +567,14 @@ namespace vg::gfx::dx12
         VG_SAFE_RELEASE(m_memoryAllocator);
 		VG_SAFE_RELEASE(m_d3d12device);
 
+        super::deinit();
+
 		IDXGIDebug1 * debug = nullptr;
 		if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug))))
 		{
 			debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL | DXGI_DEBUG_RLO_IGNORE_INTERNAL);
 			debug->Release();
-		}
-
-		super::deinit();
+		}		
 	}
 
     //--------------------------------------------------------------------------------------

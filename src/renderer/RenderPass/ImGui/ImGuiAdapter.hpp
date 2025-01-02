@@ -409,7 +409,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::beginFrame(gfx::CommandList * _cmdList)
     {
-        VG_PROFILE_CPU("Dear Imgui");
+        VG_PROFILE_CPU("beginFrame");
 
         gfx::Device * device = Device::get();
  
@@ -541,6 +541,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::render(gfx::CommandList * _cmdList)
     {
+        VG_PROFILE_CPU("render");
+
         #ifdef VG_DX12
         ImGui::Render();
         ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), _cmdList->getd3d12GraphicsCommandList());

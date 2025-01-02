@@ -76,6 +76,8 @@ namespace vg::renderer
 
         void                            Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
+        void                            FillGPUInstanceData         (const core::u8 * VG_RESTRICT _data, core::uint & _offset) const final override;
+
         bool                            GetIndexBuffer              (gfx::BindlessBufferHandle & _vb, core::uint & _offset, core::uint & _indexSize) const final override;
         bool                            GetVertexBuffer             (gfx::BindlessBufferHandle & _vb, core::uint & _offset) const final override;
         bool                            GetVertexFormat             (VertexFormat & _vertexFormat) const final override;
@@ -97,8 +99,9 @@ namespace vg::renderer
         gfx::BLASVariantKey             computeBLASVariantKey       () const;
         bool                            updateInstanceBLAS          ();
 
-    protected:
+    private:
         AnimationBinding *              getAnimationBinding         (ISkeletalAnimation * _animation);
+        VG_INLINE bool                  isSkinned                   () const;
 
     private:
         Skeleton *                      m_instanceSkeleton = nullptr;

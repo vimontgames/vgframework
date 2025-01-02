@@ -43,12 +43,25 @@ inline uint unpackA8(uint _packed)
     return (0xFF000000 & _packed) >> 24; // 0xFF000000 mask is unnecessary, will the compiler remove it?
 }
 
-inline uint packRGBA8(const float4 _color)
+// Current version of HLSLPP does not implement 'dot' for integer types
+//inline uint dot(uint4 a, uint4 b)
+//{
+//    return (a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w);
+//}
+
+inline uint packRGBA8(float4 _color)
 {
-    uint r = clamp(uint(_color.r * 255.5f), uint(0), uint(255));
-    uint g = clamp(uint(_color.g * 255.5f), uint(0), uint(255));
-    uint b = clamp(uint(_color.b * 255.5f), uint(0), uint(255));
-    uint a = clamp(uint(_color.a * 255.5f), uint(0), uint(255));
+    uint4 color = clamp((uint4)(_color * 255.5f), (uint4)0, (uint4)255);
+    return (color.a << 24) | (color.b << 16) | (color.g << 8) | color.r; 
+    //return dot(color, uint4(1, 1<<8, 1<<16, 1<<24 ));
+}
+
+inline uint packRGBA8(float _r, float _g, float _b, float _a)
+{
+    uint r = clamp(uint(_r * 255.5f), uint(0), uint(255));
+    uint g = clamp(uint(_g * 255.5f), uint(0), uint(255));
+    uint b = clamp(uint(_b * 255.5f), uint(0), uint(255));
+    uint a = clamp(uint(_a * 255.5f), uint(0), uint(255));
 
     return (a << 24) | (b << 16) | (g << 8) | r; 
 }

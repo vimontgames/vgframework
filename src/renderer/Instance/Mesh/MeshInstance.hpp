@@ -155,7 +155,7 @@ namespace vg::renderer
                 if (setAtomicFlags(GraphicInstance::AtomicFlags::Instance))
                     _cullingResult->m_sharedOutput->m_instances.push_back_atomic(this);
 
-                if (IsSkinned())
+                if (isSkinned())
                 {
                     if (setAtomicFlags(GraphicInstance::AtomicFlags::SkinLOD0))
                         _cullingResult->m_sharedOutput->m_skins.push_back_atomic(this);
@@ -204,7 +204,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool MeshInstance::updateInstanceBLAS()
     {
-        if (!IsSkinned() && RendererOptions::get()->isRayTracingEnabled())
+        if (!isSkinned() && RendererOptions::get()->isRayTracingEnabled())
         {
             auto * blas = getInstanceBLAS();
 
@@ -252,7 +252,82 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::GetIndexBuffer(gfx::BindlessBufferHandle & _vb, core::uint & _offset, core::uint & _indexSize) const
+    void MeshInstance::FillGPUInstanceData(const core::u8 * VG_RESTRICT _data, core::uint & _offset) const
+    {
+        GPUInstanceData * VG_RESTRICT instanceData = (GPUInstanceData * VG_RESTRICT)(_data + _offset);
+
+        const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
+        const MeshGeometry * geo = nullptr;
+
+        uint batchCount = 1;
+        VertexFormat vertexFormat = (VertexFormat)-1;
+        
+        BindlessBufferHandle ibHandle;
+        uint ibOffset, indexSize;
+
+        BindlessBufferHandle vbHandle;
+        uint vbOffset;
+
+        const auto & materials = getMaterials();
+        const uint materialCount = (uint)materials.size();
+        
+        if (nullptr != model)
+        {
+            geo = model->getGeometry();
+            batchCount = (uint)geo->batches().size();
+            vertexFormat = geo->getVertexFormat();
+
+            const Buffer * ib = geo->getIndexBuffer();
+            ibHandle = ib->getBufferHandle();
+            ibOffset = 0;
+            indexSize = ib->getBufDesc().elementSize;
+
+            if (isSkinned())
+            {
+                vbHandle = m_skinnedMeshBuffer->getBufferHandle();
+                vbOffset = m_skinnedMeshBufferOffset;
+            }
+            else
+            {
+                vbHandle = geo->getVertexBuffer()->getBufferHandle();
+                vbOffset = geo->getVertexBufferOffset();
+            }
+        }
+
+        instanceData->setMaterialCount(materialCount);
+        instanceData->setVertexFormat(vertexFormat);
+        #if 0
+        const float * VG_RESTRICT color = (const float * VG_RESTRICT) & getColor();
+        instanceData->setInstanceColor(color[0], color[1], color[2], color[3]);
+        #else
+        instanceData->setInstanceColor(getColor());
+        #endif
+        instanceData->setIndexBuffer(ibHandle, indexSize, ibOffset);
+        instanceData->setVertexBuffer(vbHandle, vbOffset);
+
+        const auto * renderer = Renderer::get();
+        const auto * defaultMaterial = renderer->getDefaultMaterial();
+        VG_ASSERT(defaultMaterial);
+        const auto defaultMaterialIndex = defaultMaterial->getGPUMaterialDataIndex();
+        VG_ASSERT(defaultMaterialIndex == 0);
+
+        for (uint b = 0; b < batchCount; ++b)
+        {
+            GPUBatchData * VG_RESTRICT batchData = (GPUBatchData * VG_RESTRICT)(_data + _offset + sizeof(GPUInstanceData) + b * sizeof(GPUBatchData));
+
+            const MaterialModel * mat = (b < materialCount) ? materials[b] : nullptr;
+            GPUMaterialDataIndex matIndex = (nullptr != mat) ? mat->getGPUMaterialDataIndex() : defaultMaterialIndex;
+            batchData->setMaterialIndex(matIndex);
+                
+            uint batchOffset = (nullptr != geo && b < geo->batches().size()) ? geo->batches()[b].offset : 0;
+            batchData->setStartIndex(batchOffset);
+        }
+
+        _offset += sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MeshInstance::GetIndexBuffer(gfx::BindlessBufferHandle & _ib, core::uint & _offset, core::uint & _indexSize) const
     {
         const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
         VG_ASSERT(model);
@@ -262,7 +337,7 @@ namespace vg::renderer
             const MeshGeometry * geo = model->getGeometry();
             VG_ASSERT(geo);
             const Buffer * ib = geo->getIndexBuffer();
-            _vb = ib->getBufferHandle();
+            _ib = ib->getBufferHandle();
             _offset = 0;
             _indexSize = ib->getBufDesc().elementSize;
             return true;
@@ -810,7 +885,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool MeshInstance::IsSkinned() const
     {
-        return nullptr != getInstanceSkeleton();
+        return isSkinned();
     }
 
     //--------------------------------------------------------------------------------------

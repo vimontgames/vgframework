@@ -3,6 +3,8 @@
 #include "shaders/system/table.hlsl.h"
 #include "core/Math/Math.h"
 
+#define VG_BINDLESSTABLE_USE_SCALAR 1
+
 namespace vg::gfx
 {
     struct BindlessHandle
@@ -14,12 +16,13 @@ namespace vg::gfx
         operator Type() const { return value; }
 
     protected:
+        #if !VG_BINDLESSTABLE_USE_SCALAR
         bool checkValidRange(core::uint2 _range) const
         {
             return core::within(value, (core::u16)_range.x, (core::u16)_range.y); // Last value in range stands for 'invalid' value
         }
+        #endif
 
-    private:
         Type value;
     };
 
@@ -35,8 +38,15 @@ namespace vg::gfx
             BindlessHandle(_value) 
         { 
         }
+
+        #if VG_BINDLESSTABLE_USE_SCALAR
+        static inline constexpr core::u16 getMinRange() { return BINDLESS_TEXTURE_START; }
+        static inline constexpr core::u16 getMaxRange() { return BINDLESS_TEXTURE_START + BINDLESS_TEXTURE_COUNT - 1; }
+        inline bool isValid() const { return value >= getMinRange() && value <= getMaxRange(); } // Last value in range stands for 'invalid' value; }
+        #else
         static core::uint2 getValidRange() { return core::uint2(BINDLESS_TEXTURE_START, (BINDLESS_TEXTURE_START + BINDLESS_TEXTURE_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
+        #endif
     };
 
     struct BindlessBufferHandle : public BindlessHandle
@@ -51,8 +61,15 @@ namespace vg::gfx
             BindlessHandle(_value) 
         {
         }
+
+        #if VG_BINDLESSTABLE_USE_SCALAR
+        static inline constexpr core::u16 getMinRange() { return BINDLESS_BUFFER_START; }
+        static inline constexpr core::u16 getMaxRange() { return BINDLESS_BUFFER_START + BINDLESS_BUFFER_COUNT - 1; }
+        inline bool isValid() const { return value >= getMinRange() && value <= getMaxRange(); } // Last value in range stands for 'invalid' value; }
+        #else
         static core::uint2 getValidRange() { return core::uint2(BINDLESS_BUFFER_START, (BINDLESS_BUFFER_START + BINDLESS_BUFFER_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
+        #endif
     };
 
     struct BindlessRWTextureHandle : public BindlessHandle
@@ -67,8 +84,15 @@ namespace vg::gfx
             BindlessHandle(_value) 
         {  
         }
+
+        #if VG_BINDLESSTABLE_USE_SCALAR
+        static inline constexpr core::u16 getMinRange() { return BINDLESS_RWTEXTURE_START; }
+        static inline constexpr core::u16 getMaxRange() { return BINDLESS_RWTEXTURE_START + BINDLESS_RWTEXTURE_COUNT - 1; }
+        inline bool isValid() const { return value >= getMinRange() && value <= getMaxRange(); } // Last value in range stands for 'invalid' value; }
+        #else
         static core::uint2 getValidRange() { return core::uint2(BINDLESS_RWTEXTURE_START, (BINDLESS_RWTEXTURE_START + BINDLESS_RWTEXTURE_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
+        #endif
     };
 
     struct BindlessRWBufferHandle : public BindlessHandle
@@ -83,8 +107,15 @@ namespace vg::gfx
             BindlessHandle(_value) 
         { 
         }
+
+        #if VG_BINDLESSTABLE_USE_SCALAR
+        static inline constexpr core::u16 getMinRange() { return BINDLESS_RWBUFFER_START; }
+        static inline constexpr core::u16 getMaxRange() { return BINDLESS_RWBUFFER_START + BINDLESS_RWBUFFER_COUNT - 1; }
+        inline bool isValid() const { return value >= getMinRange() && value <= getMaxRange(); } // Last value in range stands for 'invalid' value; }
+        #else
         static core::uint2 getValidRange() { return core::uint2(BINDLESS_RWBUFFER_START, (BINDLESS_RWBUFFER_START + BINDLESS_RWBUFFER_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
+        #endif
     };
 
     struct BindlessTLASHandle : public BindlessHandle
@@ -93,7 +124,14 @@ namespace vg::gfx
             BindlessHandle(_value) 
         { 
         }
+
+        #if VG_BINDLESSTABLE_USE_SCALAR
+        static inline constexpr core::u16 getMinRange() { return BINDLESS_TLAS_START; }
+        static inline constexpr core::u16 getMaxRange() { return BINDLESS_TLAS_START + BINDLESS_TLAS_COUNT - 1; }
+        inline bool isValid() const { return value >= getMinRange() && value <= getMaxRange(); } // Last value in range stands for 'invalid' value; }
+        #else
         static core::uint2 getValidRange() { return core::uint2(BINDLESS_TLAS_START, (BINDLESS_TLAS_START + BINDLESS_TLAS_COUNT - 1)); }
         bool isValid() const { return checkValidRange(getValidRange()); }
+        #endif
     };
 }

@@ -27,7 +27,7 @@ struct GPUBatchData
     uint getStartIndex                  ()                                                  { return m_startIndex; }
 
     #ifndef __cplusplus
-    GPUMaterialData loadGPUMaterialData  ()                                                  { return getBuffer(RESERVEDSLOT_BUFSRV_MATERIALDATA).Load<GPUMaterialData>(getMaterialBytesOffset()); }
+    GPUMaterialData loadGPUMaterialData  ()                                                 { return getBuffer(RESERVEDSLOT_BUFSRV_MATERIALDATA).Load<GPUMaterialData>(getMaterialBytesOffset()); }
     #endif
 };
 
@@ -37,24 +37,29 @@ struct GPUBatchData
 //--------------------------------------------------------------------------------------
 struct GPUInstanceData
 {
-    uint4 m_header;
+    // m_header[0]: MaterialCount | VertexFormat<<8 | unused<<16 | unused<<24   (8 bits x 4)
+    // m_header[1]: InstanceColor                                               (32 bits)
+    // m_header[2]: (IndexSize + IB) | VB                                       (16 bits x 2)
+    // m_header[3]: VBOffset                                                    (32 bits)
+    uint m_header[4];   
 
-    void setMaterialCount               (uint _count)                                       { m_header.x = packR8(m_header.x, _count); }
-    uint getMaterialCount               ()                                                  { return unpackR8(m_header.x); }
+    void setMaterialCount               (uint _count)                                       { m_header[0] = packR8(m_header[0], _count); }
+    uint getMaterialCount               ()                                                  { return unpackR8(m_header[0]); }
 
-    void setVertexFormat                (VertexFormat _vertexFormat)                        { m_header.x = packG8(m_header.x, (uint)_vertexFormat); }
-    VertexFormat getVertexFormat        ()                                                  { return (VertexFormat)unpackG8(m_header.x); }
+    void setVertexFormat                (VertexFormat _vertexFormat)                        { m_header[0] = packG8(m_header[0], (uint)_vertexFormat); }
+    VertexFormat getVertexFormat        ()                                                  { return (VertexFormat)unpackG8(m_header[0]); }
 
-    void setInstanceColor               (float4 _color)                                     { m_header.y = packRGBA8(_color); }
-    float4 getInstanceColor             ()                                                  { return unpackRGBA8(m_header.y); }
+    void setInstanceColor               (float4 _color)                                     { m_header[1] = packRGBA8(_color); }
+    void setInstanceColor               (float _r, float _g, float _b, float _a)            { m_header[1] = packRGBA8(_r, _g, _b, _a); }
+    float4 getInstanceColor             ()                                                  { return unpackRGBA8(m_header[1]); }
 
-    void setIndexBuffer                 (uint _ib, uint _indexSize = 2, uint _offset = 0)   { m_header.z = packUint16low(m_header.z, _indexSize == 4 ? (_ib | 0x8000) : _ib); }
-    uint getIndexBufferHandle           ()                                                  { return unpackUint16low(m_header.z) & ~0x8000; }
-    uint getIndexSize                   ()                                                  { return (unpackUint16low(m_header.z) & 0x8000) ? 4 : 2; }
+    void setIndexBuffer                 (uint _ib, uint _indexSize = 2, uint _offset = 0)   { m_header[2] = packUint16low(m_header[2], _indexSize == 4 ? (_ib | 0x8000) : _ib); }
+    uint getIndexBufferHandle           ()                                                  { return unpackUint16low(m_header[2]) & ~0x8000; }
+    uint getIndexSize                   ()                                                  { return (unpackUint16low(m_header[2]) & 0x8000) ? 4 : 2; }
 
-    void setVertexBuffer                (uint _vb, uint _offset = 0)                        { m_header.z = packUint16high(m_header.z, _vb); m_header.w = _offset; }
-    uint getVertexBufferHandle          ()                                                  { return unpackUint16high(m_header.z); }
-    uint getVertexBufferOffset          ()                                                  { return m_header.w; }
+    void setVertexBuffer                (uint _vb, uint _offset = 0)                        { m_header[2] = packUint16high(m_header[2], _vb); m_header[3] = _offset; }
+    uint getVertexBufferHandle          ()                                                  { return unpackUint16high(m_header[2]); }
+    uint getVertexBufferOffset          ()                                                  { return m_header[3]; }
 
     #ifndef __cplusplus
 

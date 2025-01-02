@@ -38,28 +38,32 @@
 // Debug macros
 //--------------------------------------------------------------------------------------
 #ifdef VG_DEBUG
-	#define VG_ENABLE_ASSERT		1
-	#define VG_ENABLE_DEBUGPRINT	1
-    #define VG_ENABLE_INLINE        0
-	#define VG_GLOBAL_NEW_DELETE	1
+	#define VG_ENABLE_ASSERT            1
+	#define VG_ENABLE_DEBUGPRINT        1
+	#define VG_ENABLE_INLINE            0
+	#define VG_ENABLE_GLOBAL_NEW_DELETE 1
+	#define VG_ENABLE_CHECK_STATIC_CAST 1 
 #elif defined(VG_DEVELOPMENT)
-	#define VG_ENABLE_ASSERT		1
-	#define VG_ENABLE_DEBUGPRINT	1
-	#define VG_ENABLE_INLINE        0
-	#define VG_GLOBAL_NEW_DELETE	0
+	#define VG_ENABLE_ASSERT            1
+	#define VG_ENABLE_DEBUGPRINT        1
+	#define VG_ENABLE_INLINE			0
+	#define VG_ENABLE_GLOBAL_NEW_DELETE	0
+	#define VG_ENABLE_CHECK_STATIC_CAST	1 
 #elif defined(VG_RELEASE)
-	#define VG_ENABLE_ASSERT		1
-	#define VG_ENABLE_DEBUGPRINT	1
-    #define VG_ENABLE_INLINE        1
-	#define VG_GLOBAL_NEW_DELETE	0
+	#define VG_ENABLE_ASSERT			1
+	#define VG_ENABLE_DEBUGPRINT		1
+    #define VG_ENABLE_INLINE			1
+	#define VG_ENABLE_GLOBAL_NEW_DELETE	0
+	#define VG_ENABLE_CHECK_STATIC_CAST	0 
 #elif defined(VG_FINAL)
-	#define VG_ENABLE_ASSERT		0
-	#define VG_ENABLE_DEBUGPRINT	0
-	#define VG_ENABLE_INLINE        1
-	#define VG_GLOBAL_NEW_DELETE	0
+	#define VG_ENABLE_ASSERT			0
+	#define VG_ENABLE_DEBUGPRINT		0
+	#define VG_ENABLE_INLINE			1
+	#define VG_ENABLE_GLOBAL_NEW_DELETE	0
+	#define VG_ENABLE_CHECK_STATIC_CAST	0 
 #endif
 
-#if VG_GLOBAL_NEW_DELETE 
+#if VG_ENABLE_GLOBAL_NEW_DELETE 
 
 void * operator new(std::size_t _size);
 void operator delete(void * ptr) noexcept;
@@ -124,7 +128,7 @@ namespace vg::core
 
 #define VG_STATIC_ASSERT_IS_ALIGNED(address, alignment, message) VG_STATIC_ASSERT(0 == (uint_ptr(address) & (alignment-1)), message)
 
-#if VG_ENABLE_ASSERT
+#if VG_ENABLE_CHECK_STATIC_CAST
 	namespace vg::core
 	{
 		template <typename DST, typename SRC> inline DST * SafeStaticCast(SRC * _src)

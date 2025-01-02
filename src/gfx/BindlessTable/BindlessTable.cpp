@@ -95,7 +95,11 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         BindlessTextureHandle BindlessTable::allocBindlessTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot)
         {
+            #if VG_BINDLESSTABLE_USE_SCALAR
+            VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessTextureHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the Texture SRV range [%u;%u]", _reservedSlot, BindlessTextureHandle::getMinRange(), BindlessTextureHandle::getMaxRange());
+            #else
             VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessTextureHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the Texture SRV range [%u;%u]", _reservedSlot, (uint)BindlessTextureHandle::getValidRange().x, (uint)BindlessTextureHandle::getValidRange().y);
+            #endif
             return allocBindlessHandle<BindlessTextureHandle>(_texture, _reservedSlot, m_textureIndexPool, m_textures, BINDLESS_TEXTURE_START, BINDLESS_TEXTURE_INVALID);
         }
 
@@ -109,7 +113,11 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         BindlessBufferHandle BindlessTable::allocBindlessBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot)
         {
+            #if VG_BINDLESSTABLE_USE_SCALAR
+            VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessBufferHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the Buffer SRV range [%u;%u]", _reservedSlot, BindlessBufferHandle::getMinRange(), BindlessBufferHandle::getMaxRange());
+            #else
             VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessBufferHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the Buffer SRV range [%u;%u]", _reservedSlot, (uint)BindlessBufferHandle::getValidRange().x, (uint)BindlessBufferHandle::getValidRange().y);
+            #endif
             return allocBindlessHandle<BindlessBufferHandle>(_buffer, _reservedSlot, m_bufferIndexPool, m_buffers, BINDLESS_BUFFER_START, BINDLESS_BUFFER_INVALID);
         }
         
@@ -123,7 +131,11 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         BindlessRWTextureHandle BindlessTable::allocBindlessRWTextureHandle(const gfx::Texture * _texture, ReservedSlot _reservedSlot)
         {
+            #if VG_BINDLESSTABLE_USE_SCALAR
+            VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessRWTextureHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the RWTexture range [%u;%u]", _reservedSlot, BindlessRWTextureHandle::getMinRange(), BindlessRWTextureHandle::getMaxRange());
+            #else
             VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessRWTextureHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the RWTexture range [%u;%u]", _reservedSlot, (uint)BindlessRWTextureHandle::getValidRange().x, (uint)BindlessRWTextureHandle::getValidRange().y);
+            #endif
             return allocBindlessHandle<BindlessRWTextureHandle>(_texture, _reservedSlot, m_rwTextureIndexPool, m_rwTextures, BINDLESS_RWTEXTURE_START, BINDLESS_RWTEXTURE_INVALID);
         }
 
@@ -137,7 +149,11 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         BindlessRWBufferHandle BindlessTable::allocBindlessRWBufferHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot)
         {
+            #if VG_BINDLESSTABLE_USE_SCALAR
+            VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessRWBufferHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the RWBuffer range [%u;%u]", _reservedSlot, BindlessRWBufferHandle::getMinRange(), (uint)BindlessRWBufferHandle::getMaxRange());
+            #else
             VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessRWBufferHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the RWBuffer range [%u;%u]", _reservedSlot, (uint)BindlessRWBufferHandle::getValidRange().x, (uint)BindlessRWBufferHandle::getValidRange().y);
+            #endif
             return allocBindlessHandle<BindlessRWBufferHandle>(_buffer, _reservedSlot, m_rwBufferIndexPool, m_rwBuffers, BINDLESS_RWBUFFER_START, BINDLESS_RWBUFFER_INVALID);
         }
 
@@ -151,7 +167,11 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         BindlessTLASHandle BindlessTable::allocBindlessTLASHandle(const gfx::Buffer * _buffer, ReservedSlot _reservedSlot)
         {
+            #if VG_BINDLESSTABLE_USE_SCALAR
+            VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessTLASHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the TLAS range [%u;%u]", _reservedSlot, BindlessTLASHandle::getMinRange(), BindlessTLASHandle::getMaxRange());
+            #else
             VG_ASSERT(ReservedSlot::None == _reservedSlot || BindlessTLASHandle((u16)_reservedSlot).isValid(), "Reserved slot %u does not belong to the TLAS range [%u;%u]", _reservedSlot, (uint)BindlessTLASHandle::getValidRange().x, (uint)BindlessTLASHandle::getValidRange().y);
+            #endif
             return allocBindlessHandle<BindlessTLASHandle>(_buffer, _reservedSlot, m_TLASIndexPool, m_TLAS, BINDLESS_TLAS_START, BINDLESS_TLAS_INVALID);
         }
 
