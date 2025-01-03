@@ -16,6 +16,9 @@ namespace vg::renderer
         void Render(const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
     private:
+        bool isDepthOfFieldEnabled(const IView * _view) const;
+
+    private:
         gfx::RootSignatureHandle    m_computePostProcessRootSignature;
         gfx::ComputeShaderKey       m_computeResolveMSAAShaderKey;
         gfx::ComputeShaderKey       m_depthOfFieldShaderKey;

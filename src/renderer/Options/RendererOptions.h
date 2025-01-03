@@ -61,7 +61,7 @@ namespace vg::renderer
         bool                    IsToolModeEnabled                       () const final override { return isToolModeEnabled(); };
         bool                    IsRayTracingEnabled                     () const final override { return isRayTracingEnabled(); };
 
-        bool                    GetShadowsEnabled                       () const final override;
+        bool                    IsShadowEnabled                       () const final override;
         core::uint2             GetShadowDefaultResolution              () const final override;
 
         gfx::MSAA               GetMSAA                                 () const final override;
@@ -72,6 +72,9 @@ namespace vg::renderer
 
         gfx::AAPostProcess      GetAAPostProcess                        () const final override;
         bool                    SetAAPostProcess                        (gfx::AAPostProcess _aa) final override;
+
+        DepthOfFieldMode        GetDepthOfFieldMode                     () const final override;
+        bool                    SetDepthOfFieldMode                     (DepthOfFieldMode _depthOfField) final override;
 
         gfx::VSync              GetVSync                                () const final override;
         bool                    SetVSync                                (gfx::VSync _vsync) final override;
@@ -116,6 +119,7 @@ namespace vg::renderer
         Quality                 getCurrentQualityLevel                  () const;
 
         VG_INLINE bool          isRenderJobsEnabled                     () const;
+        VG_INLINE bool          isRenderJobsUsingOnlyMainThread         () const;
 
     protected:
         Quality                 autodetectQualityLevel                  ();
@@ -145,6 +149,7 @@ namespace vg::renderer
         gfx::HDR                m_HDRmode                               = gfx::HDR::None;
         gfx::MSAA               m_msaa[core::enumCount<Quality>()];
         gfx::AAPostProcess      m_aaPostProcess                         = gfx::AAPostProcess::None;
+        DepthOfFieldMode        m_depthOfField[core::enumCount<Quality>()];
         gfx::VSync              m_VSync                                 = gfx::VSync::VSync_1;
         LightingMode            m_lightingMode                          = LightingMode::Forward;
         bool                    m_shadows[core::enumCount<Quality>()];
@@ -154,6 +159,7 @@ namespace vg::renderer
         DisplayFlags            m_displayFlags                          = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap | DisplayFlags::VertexColor | DisplayFlags::MaterialColor | DisplayFlags::InstanceColor;
         RenderPassFlags         m_renderPassFlags;
         bool                    m_renderJobs                            = false;
+        bool                    m_renderJobsOnMainThreadOnly            = false;
         const gfx::DeviceCaps * m_deviceCaps                            = nullptr;
         
         core::IProperty *       m_hdrProp                               = nullptr;

@@ -612,21 +612,16 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    bool Device::setMaxRenderJobCount(core::uint _count)
+    bool Device::setMaxRenderJobCount(core::uint _maxCount, bool _mainThreadOnly)
     {
-        if (m_maxRenderJobCount != _count)
+        if (m_maxRenderJobCount != _maxCount || m_renderJobsMainThreadOnly != _mainThreadOnly)
         {
-            VG_INFO("[Device] MaxRenderJobCount changed from %u to %u", m_maxRenderJobCount, _count);
-            m_maxRenderJobCount = _count;
+            VG_INFO("[Device] setMaxRenderJobCount changed from %u (%s) to %u (%s)", m_maxRenderJobCount, m_renderJobsMainThreadOnly ? "true" : "false", _maxCount, _mainThreadOnly ? "true" : "false");
+            m_maxRenderJobCount = _maxCount;
+            m_renderJobsMainThreadOnly = _mainThreadOnly;
             return true;
         }
 
         return false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    core::uint Device::getMaxRenderJobCount() const
-    {
-        return m_maxRenderJobCount;
     }
 }

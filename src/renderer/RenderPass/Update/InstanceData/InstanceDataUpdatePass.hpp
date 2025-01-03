@@ -22,6 +22,18 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    // Estimate returns a cost of 1 per instance to update
+    //--------------------------------------------------------------------------------------
+    core::u64 InstanceDataUpdatePass::GetCostEstimate() const
+    {
+        auto renderer = Renderer::get();
+        const auto * cullingJobOutput = renderer->getSharedCullingJobOutput();
+        VG_ASSERT(nullptr != cullingJobOutput);
+        const auto & instances = cullingJobOutput->m_instances;
+        return cullingJobOutput->m_instances.size();
+    }
+
+    //--------------------------------------------------------------------------------------
     void InstanceDataUpdatePass::Prepare(const gfx::RenderPassContext & _renderContext)
     {
         VG_PROFILE_CPU("InstanceData");

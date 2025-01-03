@@ -532,6 +532,9 @@
     <ClInclude Include="IView.h" />
     <ClInclude Include="IViewport.h" />
     <ClInclude Include="IUIRenderer.h" />
+    <ClInclude Include="RenderPass\Compute\ComputePostProcess\PostProcess_consts.h">
+      <Filter>Pass\Compute\ComputePostProcess</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

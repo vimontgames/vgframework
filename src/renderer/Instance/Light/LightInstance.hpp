@@ -107,7 +107,7 @@ namespace vg::renderer
         if (m_shadow)
         {
             const auto * rendererOptions = RendererOptions::get();
-            return rendererOptions->GetShadowsEnabled();
+            return rendererOptions->IsShadowEnabled();
         }
 
         return false;

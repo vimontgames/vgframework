@@ -34,8 +34,24 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool ComputePostProcessPass::isDepthOfFieldEnabled(const IView * _view) const
+    {
+        const auto * camSettings = _view->GetCameraSettings();
+        if (nullptr != camSettings)
+        {
+            const auto * options = RendererOptions::get();
+            if (camSettings->IsDepthOfFieldEnabled() && options->GetDepthOfFieldMode() != DepthOfFieldMode::None)
+                return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ComputePostProcessPass::Setup(const RenderPassContext & _renderPassContext)
     {
+        const auto * options = RendererOptions::get();
+
         const auto colorID = _renderPassContext.getFrameGraphID("Color");
         readRenderTarget(colorID);
 
@@ -62,12 +78,9 @@ namespace vg::renderer
         writeRWTexture(dstID);
 
         bool needTempUAV = false;
-        const auto * camSettings = view->GetCameraSettings();
-        if (nullptr != camSettings)
-        {
-            if (camSettings->IsDepthOfFieldEnabled())
-                needTempUAV = true;
-        }
+
+        if (isDepthOfFieldEnabled(view))
+            needTempUAV = true;
 
         if (needTempUAV)
         {
@@ -77,7 +90,6 @@ namespace vg::renderer
             writeRWTexture(tempUAVID);
         }
 
-        const auto * options = RendererOptions::get();
         const auto msaa = options->GetMSAA();
         if (msaa != MSAA::None)
         {
@@ -162,72 +174,68 @@ namespace vg::renderer
             srcID = _renderPassContext.getFrameGraphID("ResolveColorUAV");
         }    
 
-        const auto * camSettings = view->GetCameraSettings();
-        if (nullptr != camSettings)
+        if (isDepthOfFieldEnabled(view))
         {
-            if (camSettings->IsDepthOfFieldEnabled())
-            {
-                VG_PROFILE_GPU("DepthOfField");
+            VG_PROFILE_GPU("DepthOfField");
 
-                if (resolveUAVTex)
-                    _cmdList->transitionResource(resolveUAVTex, ResourceState::ShaderResource, ResourceState::UnorderedAccess); 
+            if (resolveUAVTex)
+                _cmdList->transitionResource(resolveUAVTex, ResourceState::ShaderResource, ResourceState::UnorderedAccess); 
 
-                // first pass: 
-                // - read "src" (either original image or downscaled MSAA) + linear depth
-                // - downscale to RGB and write COC to alpha
+            // first pass: 
+            // - read "src" (either original image or downscaled MSAA) + linear depth
+            // - downscale to RGB and write COC to alpha
 
-                ComputeShaderKey depthOfFieldShaderKey0 = m_depthOfFieldShaderKey;
-                depthOfFieldShaderKey0.setValue(PostProcessHLSLDesc::Flags::Pass, 0);
+            ComputeShaderKey depthOfFieldShaderKey0 = m_depthOfFieldShaderKey;
+            depthOfFieldShaderKey0.setValue(PostProcessHLSLDesc::Flags::Pass, 0);
                 
-                _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
-                _cmdList->setComputeShader(depthOfFieldShaderKey0);
+            _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
+            _cmdList->setComputeShader(depthOfFieldShaderKey0);
 
-                auto linearDepthTex = getRenderTarget(_renderPassContext.getFrameGraphID("LinearDepth"));
-                auto linearDepth = linearDepthTex->getTextureHandle();
+            auto linearDepthTex = getRenderTarget(_renderPassContext.getFrameGraphID("LinearDepth"));
+            auto linearDepth = linearDepthTex->getTextureHandle();
 
-                Texture * tempUAVTex = getRWTexture(_renderPassContext.getFrameGraphID("TempPostProcessUAV"));
-                auto dest = tempUAVTex->getRWTextureHandle();
+            Texture * tempUAVTex = getRWTexture(_renderPassContext.getFrameGraphID("TempPostProcessUAV"));
+            auto dest = tempUAVTex->getRWTextureHandle();
 
-                auto * sourceTex = getRWTexture(srcID);
-                auto color = sourceTex->getTextureHandle();
+            auto * sourceTex = getRWTexture(srcID);
+            auto color = sourceTex->getTextureHandle();
 
-                PostProcessConstants postProcess0;
-                {
-                    postProcess0.setScreenSize(size);
-                    postProcess0.setSource(color);
-                    postProcess0.setRWBufferOut(dest);
-                    postProcess0.setLinearDepth(linearDepth);
-                }
-                _cmdList->setComputeRootConstants(0, (u32 *)&postProcess0, PostProcessConstantsCount);
-
-                _cmdList->dispatch(threadGroupCount);
-                _cmdList->addRWTextureBarrier(tempUAVTex);
-
-                // second pass:
-                // - read "PostProcessUAV" and do vertical blur
-                ComputeShaderKey depthOfFieldShaderKey1 = m_depthOfFieldShaderKey;
-                depthOfFieldShaderKey1.setValue(PostProcessHLSLDesc::Flags::Pass, 1);
-
-                _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
-                _cmdList->setComputeShader(depthOfFieldShaderKey1);
-
-                auto dest2 = sourceTex->getRWTextureHandle();
-
-                PostProcessConstants postProcess1;
-                {
-                    postProcess1.setScreenSize(size);
-                    postProcess1.setSource(color);
-                    postProcess1.setTemp(tempUAVTex->getTextureHandle());
-                    postProcess1.setLinearDepth(linearDepth);
-                    postProcess1.setRWBufferOut(dest2);
-                }
-                _cmdList->setComputeRootConstants(0, (u32 *)&postProcess1, PostProcessConstantsCount);
-
-                _cmdList->dispatch(threadGroupCount);
-
-                if (MSAA::None != msaa)
-                    _cmdList->transitionResource(sourceTex, ResourceState::UnorderedAccess, ResourceState::ShaderResource);
+            PostProcessConstants postProcess0;
+            {
+                postProcess0.setScreenSize(size);
+                postProcess0.setSource(color);
+                postProcess0.setRWBufferOut(dest);
+                postProcess0.setLinearDepth(linearDepth);
             }
+            _cmdList->setComputeRootConstants(0, (u32 *)&postProcess0, PostProcessConstantsCount);
+
+            _cmdList->dispatch(threadGroupCount);
+            _cmdList->addRWTextureBarrier(tempUAVTex);
+
+            // second pass:
+            // - read "PostProcessUAV" and do vertical blur
+            ComputeShaderKey depthOfFieldShaderKey1 = m_depthOfFieldShaderKey;
+            depthOfFieldShaderKey1.setValue(PostProcessHLSLDesc::Flags::Pass, 1);
+
+            _cmdList->setComputeRootSignature(m_computePostProcessRootSignature);
+            _cmdList->setComputeShader(depthOfFieldShaderKey1);
+
+            auto dest2 = sourceTex->getRWTextureHandle();
+
+            PostProcessConstants postProcess1;
+            {
+                postProcess1.setScreenSize(size);
+                postProcess1.setSource(color);
+                postProcess1.setTemp(tempUAVTex->getTextureHandle());
+                postProcess1.setLinearDepth(linearDepth);
+                postProcess1.setRWBufferOut(dest2);
+            }
+            _cmdList->setComputeRootConstants(0, (u32 *)&postProcess1, PostProcessConstantsCount);
+
+            _cmdList->dispatch(threadGroupCount);
+
+            if (MSAA::None != msaa)
+                _cmdList->transitionResource(sourceTex, ResourceState::UnorderedAccess, ResourceState::ShaderResource);
         }
 
         // Final postprocess

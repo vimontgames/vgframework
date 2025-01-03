@@ -30,14 +30,11 @@ namespace vg::gfx
 
     struct UserPassInfoNode
     {
-        UserPassInfoNode(UserPassInfoNode * _parent = nullptr) :
-            m_parent(_parent)
-        {
-            m_children.reserve(16);
-        }
+        UserPassInfoNode(UserPassInfoNode * _parent = nullptr);
+        core::u64 getCostEstimate() const;
 
         core::string                                    m_name;
-        UserPassInfo *                                  m_userPass = nullptr;
+        UserPassInfo *                                  m_userPassInfo = nullptr;
         RenderPass *                                    m_renderPass = nullptr;
         UserPassInfoNode *                              m_parent = nullptr;
         core::vector<UserPassInfoNode>                  m_children;
@@ -80,7 +77,7 @@ namespace vg::gfx
 	private:
         void                            setupNode                   (UserPassInfoNode & _node);
         void                            buildNode                   (UserPassInfoNode & _node);
-        void                            gatherNodes                 (const UserPassInfoNode & _node, core::vector<UserPassInfoNode> & _nodes);
+        void                            gatherNodes                 (const UserPassInfoNode & _node, core::vector<UserPassInfoNode> & _nodes, core::u64 & _totalEstimatedCost);
         void                            gatherResources             (const UserPassInfoNode & _node); 
         void                            prepareNode                 (const UserPassInfoNode & _node);
         void                            renderNode                  (const UserPassInfoNode & _node, gfx::CommandList * _cmdList, bool _recur);

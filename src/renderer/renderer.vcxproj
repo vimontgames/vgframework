@@ -210,6 +210,7 @@
     <ClInclude Include="RenderPass\Compute\ComputePass.hpp" />
     <ClInclude Include="RenderPass\Compute\ComputePostProcess\ComputePostProcessPass.h" />
     <ClInclude Include="RenderPass\Compute\ComputePostProcess\ComputePostProcessPass.hpp" />
+    <ClInclude Include="RenderPass\Compute\ComputePostProcess\PostProcess_consts.h" />
     <ClInclude Include="RenderPass\Compute\ComputeSkinning\ComputeSkinningPass.h" />
     <ClInclude Include="RenderPass\Compute\ComputeSkinning\ComputeSkinningPass.hpp" />
     <ClInclude Include="RenderPass\Compute\ComputeSpecularBRDF\ComputeSpecularBRDFPass.h" />

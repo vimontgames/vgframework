@@ -24,6 +24,21 @@ using namespace vg::core;
 
 namespace vg::gfx
 {
+    //--------------------------------------------------------------------------------------
+    // UserPassInfoNode
+    //--------------------------------------------------------------------------------------
+    UserPassInfoNode::UserPassInfoNode(UserPassInfoNode * _parent) :
+        m_parent(_parent)
+    {
+        m_children.reserve(16);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::u64 UserPassInfoNode::getCostEstimate() const
+    {
+        return m_userPassInfo->m_userPass->GetCostEstimate();
+    }
+
 	//--------------------------------------------------------------------------------------
 	// FrameGraph
 	//--------------------------------------------------------------------------------------
@@ -199,7 +214,7 @@ namespace vg::gfx
             m_userPassInfo.push_back({ _renderContext, _userPass });
 
             UserPassInfoNode info(m_currentUserPass);
-            info.m_userPass = &m_userPassInfo[m_userPassInfo.size() - 1];
+            info.m_userPassInfo = &m_userPassInfo[m_userPassInfo.size() - 1];
             info.m_name = _userPass->GetName();
             m_currentUserPass->m_children.push_back(info);
 
@@ -217,10 +232,10 @@ namespace vg::gfx
         for (auto & child : _node.m_children)
             setupNode(child);
 
-        if (_node.m_userPass)
+        if (_node.m_userPassInfo)
         {
-            _node.m_userPass->m_userPass->reset();
-            _node.m_userPass->m_userPass->Setup(_node.m_userPass->m_renderContext);
+            _node.m_userPassInfo->m_userPass->reset();
+            _node.m_userPassInfo->m_userPass->Setup(_node.m_userPassInfo->m_renderContext);
         }
     }
 
@@ -241,10 +256,10 @@ namespace vg::gfx
         for (auto & child : _node.m_children)
             buildNode(child);
 
-        if (!_node.m_userPass)
+        if (!_node.m_userPassInfo)
             return;
 
-        auto userPassInfo = *_node.m_userPass;
+        auto userPassInfo = *_node.m_userPassInfo;
 
         const auto * userPass = userPassInfo.m_userPass;
         auto & renderTargets = userPass->getRenderTargets();
@@ -731,14 +746,17 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void FrameGraph::gatherNodes(const UserPassInfoNode & _node, vector<UserPassInfoNode> & _nodes)
+    void FrameGraph::gatherNodes(const UserPassInfoNode & _node, vector<UserPassInfoNode> & _nodes, u64 & _totalEstimatedCost)
     {
         for (auto & child : _node.m_children)
-            gatherNodes(child, _nodes);
+            gatherNodes(child, _nodes, _totalEstimatedCost);
 
         // Do not add empty nodes without renderpass
         if (nullptr != _node.m_renderPass)
+        {
             _nodes.push_back(_node);
+            _totalEstimatedCost += _node.getCostEstimate(); 
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -1078,8 +1096,9 @@ namespace vg::gfx
         {
             // List all nodes
             vector<UserPassInfoNode> nodes;
+            u64 totalEstimatedCost = 0;
             for (auto & node : m_userPassInfoTree.m_children)
-                gatherNodes(node, nodes);
+                gatherNodes(node, nodes, totalEstimatedCost);
 
             // temp: use default cmdlist
             CommandList * defaultCmdList = cmdLists[0];
@@ -1087,108 +1106,107 @@ namespace vg::gfx
             // TODO: estimate node cost to dispatch jobs
             const uint nodesPerJob = ((uint)nodes.size() + maxRenderJobCount - 1) / maxRenderJobCount;
            
-            #if 0
-
-            // TEMP: Render all nodes using several command list, but still on main thread because the Framegraph needs refactor to support async resource alloc/free
-            uint cmdListIndex = 0;
-            uint nodeCount = 0;
-            for (uint i = 0; i < nodes.size(); ++i)
+            if (device->getRenderJobsMainThreadOnly())
             {
-                CommandList * cmdList = cmdLists[cmdListIndex];
-            
-                VG_PROFILE_GPU_CONTEXT(cmdList);
-                renderNode(nodes[i], cmdList, false);  
-
-                if (++nodeCount > nodesPerJob)
+                // Render all nodes using several command list, but still on main thread (for debug purpose)
+                uint cmdListIndex = 0;
+                uint nodeCount = 0;
+                for (uint i = 0; i < nodes.size(); ++i)
                 {
-                    cmdListIndex++;
-                    nodeCount = 0;
-                }
-            }
+                    CommandList * cmdList = cmdLists[cmdListIndex];
 
-            device->setExecuteCommandListCount(gfx::CommandListType::Graphics, cmdListIndex + 1);
+                    VG_PROFILE_GPU_CONTEXT(cmdList);
+                    renderNode(nodes[i], cmdList, false);
 
-            #else
-
-            // Reset all jobs
-            {
-                VG_PROFILE_CPU("Reset RenderJobs");
-                for (uint i = 0; i < m_renderJobs.size(); ++i)
-                    m_renderJobs[i]->reset(cmdLists[i]);
-            }
-
-            uint jobCount;
-
-            // Assign nodes to render jobs, sequentially
-            {
-                VG_PROFILE_CPU("Dispatch RenderJobs");
-                //uint cmdListIndex = 0;
-                //uint nodeCount = 0;
-                //for (uint i = 0; i < nodes.size(); ++i)
-                //{
-                //    const UserPassInfoNode * node = &nodes[i];
-                //    auto & renderJob = m_renderJobs[cmdListIndex];
-                //    renderJob->add(node);
-                //
-                //    #if 0
-                //    if (i <= 4)
-                //        cmdListIndex++;
-                //    nodeCount++;
-                //    #else
-                //    if (++nodeCount > nodesPerJob)
-                //    {
-                //        cmdListIndex++;
-                //        nodeCount = 0;
-                //    }
-                //    #endif
-                //}
-                //
-                //device->setExecuteCommandListCount(gfx::CommandListType::Graphics, cmdListIndex + 1);
-                //
-                //jobCount = cmdListIndex;
-                //if (nodeCount > 0)
-                //    jobCount++;
-
-                const uint nodeCount = (uint)nodes.size();
-                jobCount = min((uint)m_renderJobs.size(), nodeCount); // Can't have more jobs than nodes to render
-
-                const uint minNodeCount = nodeCount / jobCount;
-                const uint maxNodeCount = minNodeCount + 1;
-                const uint limit = nodeCount % jobCount;
-
-                uint nodeBaseIndex = 0;
-                for (uint i = 0; i < jobCount; ++i)
-                {
-                    auto & renderJob = m_renderJobs[i];
-
-                    const uint jobNodeCount = i < limit ? maxNodeCount : minNodeCount;
-                    for (uint n = 0; n < jobNodeCount; ++n)
+                    if (++nodeCount > nodesPerJob)
                     {
-                        const UserPassInfoNode * node = &nodes[nodeBaseIndex + n];
-                        renderJob->add(node);
+                        cmdListIndex++;
+                        nodeCount = 0;
                     }
-                    nodeBaseIndex += jobNodeCount;
                 }
 
-                device->setExecuteCommandListCount(gfx::CommandListType::Graphics, jobCount);
+                device->setExecuteCommandListCount(gfx::CommandListType::Graphics, cmdListIndex + 1);
             }
-
-            core::JobSync renderJobSync;
-            core::IScheduler * jobScheduler = Kernel::getScheduler();
-
-            // Kick jobs ...
+            else
             {
-                VG_PROFILE_CPU("Start RenderJobs");
-                for (uint i = 0; i < jobCount; ++i)
-                    jobScheduler->Start(m_renderJobs[i], &renderJobSync);
-            }
+                // Use up to 1 job per worker thread to run RenderJobs
 
-            // ... and wait for completion
-            {
-                VG_PROFILE_CPU("Wait RenderJobs");
-                jobScheduler->Wait(&renderJobSync);
+                // Reset all jobs
+                {
+                    VG_PROFILE_CPU("Reset RenderJobs");
+                    for (uint i = 0; i < m_renderJobs.size(); ++i)
+                        m_renderJobs[i]->reset(cmdLists[i]);
+                }
+
+                uint jobCount;
+
+                // Assign nodes to render jobs, sequentially
+                {
+                    VG_PROFILE_CPU("Dispatch RenderJobs");
+
+                    const uint nodeCount = (uint)nodes.size();
+                    jobCount = min((uint)m_renderJobs.size(), nodeCount); // Can't have more jobs than nodes to render
+
+                    if (nodeCount <= jobCount)
+                    {
+                        for (uint n = 0; n < nodeCount; ++n)
+                        {
+                            auto & renderJob = m_renderJobs[n];
+                            const UserPassInfoNode * node = &nodes[n];
+                            renderJob->add(node);
+                        }
+                    }
+                    else
+                    {
+                        #if 1
+
+                        // Split based only on node count (doesn't account node estimated cost)
+                        const uint minNodeCount = nodeCount / jobCount;
+                        const uint maxNodeCount = minNodeCount + 1;
+                        const uint limit = nodeCount % jobCount;
+
+                        uint nodeBaseIndex = 0;
+                        for (uint i = 0; i < jobCount; ++i)
+                        {
+                            auto & renderJob = m_renderJobs[i];
+
+                            const uint jobNodeCount = i < limit ? maxNodeCount : minNodeCount;
+                            for (uint n = 0; n < jobNodeCount; ++n)
+                            {
+                                const UserPassInfoNode * node = &nodes[nodeBaseIndex + n];
+                                renderJob->add(node);
+                            }
+                            nodeBaseIndex += jobNodeCount;
+                        }
+                        #else
+
+                        // Try to minimize sum of estimated cost per job
+                        {
+                           
+                        }
+
+                        #endif
+                    }
+
+                    device->setExecuteCommandListCount(gfx::CommandListType::Graphics, jobCount);
+                }
+
+                core::JobSync renderJobSync;
+                core::IScheduler * jobScheduler = Kernel::getScheduler();
+
+                // Kick jobs ...
+                {
+                    VG_PROFILE_CPU("Start RenderJobs");
+                    for (uint i = 0; i < jobCount; ++i)
+                        jobScheduler->Start(m_renderJobs[i], &renderJobSync);
+                }
+
+                // ... and wait for completion
+                {
+                    VG_PROFILE_CPU("Wait RenderJobs");
+                    jobScheduler->Wait(&renderJobSync);
+                }
             }
-            #endif
         }
         else
         {

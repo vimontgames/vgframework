@@ -19,25 +19,31 @@ namespace vg::renderer
 {
     VG_REGISTER_OBJECT_CLASS(RendererOptions, "Renderer Options");
 
-    #define setPropertyHiddenCallbackQuality(className, propertyName)                          setPropertyHiddenCallback(className, propertyName[Quality::VeryLow],  isVeryLowQualityPropertyHidden);   \
-                                                                                               setPropertyHiddenCallback(className, propertyName[Quality::Low],      isLowQualityPropertyHidden);       \
-                                                                                               setPropertyHiddenCallback(className, propertyName[Quality::Medium],   isMediumQualityPropertyHidden);    \
-                                                                                               setPropertyHiddenCallback(className, propertyName[Quality::High],     isHighQualityPropertyHidden);      \
-                                                                                               setPropertyHiddenCallback(className, propertyName[Quality::VeryHigh], isVeryHighQualityPropertyHidden);  
+    #define setPropertyHiddenCallbackQualityEx(className, propertyName, func)                   setPropertyHiddenCallback(className, propertyName[Quality::VeryLow],  func##VeryLow);   \
+                                                                                                setPropertyHiddenCallback(className, propertyName[Quality::Low],      func##Low);       \
+                                                                                                setPropertyHiddenCallback(className, propertyName[Quality::Medium],   func##Medium);    \
+                                                                                                setPropertyHiddenCallback(className, propertyName[Quality::High],     func##High);      \
+                                                                                                setPropertyHiddenCallback(className, propertyName[Quality::VeryHigh], func##VeryHigh);  
 
-    #define registerPropertyQuality(className, propertyName, displayName)                       registerProperty(className, propertyName[Quality::VeryLow], displayName);                               \
+    #define setPropertyReadOnlyCallbackQuality(className, propertyName, func)                   setPropertyReadOnlyCallback(className, propertyName[Quality::VeryLow],  func);  \
+                                                                                                setPropertyReadOnlyCallback(className, propertyName[Quality::Low],      func);  \
+                                                                                                setPropertyReadOnlyCallback(className, propertyName[Quality::Medium],   func);  \
+                                                                                                setPropertyReadOnlyCallback(className, propertyName[Quality::High],     func);  \
+                                                                                                setPropertyReadOnlyCallback(className, propertyName[Quality::VeryHigh], func);  
+
+    #define registerPropertyQuality(className, propertyName, displayName, func)                 registerProperty(className, propertyName[Quality::VeryLow], displayName);                               \
                                                                                                 registerProperty(className, propertyName[Quality::Low],     displayName);                               \
                                                                                                 registerProperty(className, propertyName[Quality::Medium],  displayName);                               \
                                                                                                 registerProperty(className, propertyName[Quality::High],    displayName);                               \
                                                                                                 registerProperty(className, propertyName[Quality::VeryHigh],displayName);                               \
-                                                                                                setPropertyHiddenCallbackQuality(className, propertyName);
+                                                                                                setPropertyHiddenCallbackQualityEx(className, propertyName, func);
 
-    #define registerPropertyEnumQuality(className, enumClassName, propertyName, displayName)    registerPropertyEnum(className, enumClassName, propertyName[Quality::VeryLow], displayName);            \
-                                                                                                registerPropertyEnum(className, enumClassName, propertyName[Quality::Low],     displayName);            \
-                                                                                                registerPropertyEnum(className, enumClassName, propertyName[Quality::Medium],  displayName);            \
-                                                                                                registerPropertyEnum(className, enumClassName, propertyName[Quality::High],    displayName);            \
-                                                                                                registerPropertyEnum(className, enumClassName, propertyName[Quality::VeryHigh],displayName);            \
-                                                                                                setPropertyHiddenCallbackQuality(className, propertyName);
+    #define registerPropertyEnumQuality(className, enumName, propertyName, displayName, func)   registerPropertyEnum(className, enumName, propertyName[Quality::VeryLow], displayName);            \
+                                                                                                registerPropertyEnum(className, enumName, propertyName[Quality::Low],     displayName);            \
+                                                                                                registerPropertyEnum(className, enumName, propertyName[Quality::Medium],  displayName);            \
+                                                                                                registerPropertyEnum(className, enumName, propertyName[Quality::High],    displayName);            \
+                                                                                                registerPropertyEnum(className, enumName, propertyName[Quality::VeryHigh],displayName);            \
+                                                                                                setPropertyHiddenCallbackQualityEx(className, propertyName, func);
                                                                                  
     #define setPropertyDescriptionQuality(className, propertyName, desc)                        setPropertyDescription(className, propertyName[Quality::VeryLow], desc##" in 'VeryLow' quality mode");  \
                                                                                                 setPropertyDescription(className, propertyName[Quality::Low],     desc##" in 'Low' quality mode");      \
@@ -46,40 +52,61 @@ namespace vg::renderer
                                                                                                 setPropertyDescription(className, propertyName[Quality::VeryHigh],desc##" in 'VeryHigh' quality mode");
 
     //--------------------------------------------------------------------------------------
-    bool isQualityLevelPropertyHidden(const IObject * _object, const IProperty * _prop, Quality _quality)
+    bool isQualityPropertyHidden(const IObject * _object, const IProperty * _prop, Quality _quality)
     {
         const RendererOptions * rendererOptions = VG_SAFE_STATIC_CAST(const RendererOptions, _object);
         return rendererOptions->getCurrentQualityLevel() != _quality;
     }
 
     //--------------------------------------------------------------------------------------
-    bool isVeryLowQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    bool isQualityPropertyHiddenVeryLow(const IObject * _object, const IProperty * _prop, core::uint _index)
     {
-        return isQualityLevelPropertyHidden(_object, _prop, Quality::VeryLow);
+        return isQualityPropertyHidden(_object, _prop, Quality::VeryLow);
     }
 
     //--------------------------------------------------------------------------------------
-    bool isLowQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    bool isQualityPropertyHiddenLow(const IObject * _object, const IProperty * _prop, core::uint _index)
     {
-        return isQualityLevelPropertyHidden(_object, _prop, Quality::Low);
+        return isQualityPropertyHidden(_object, _prop, Quality::Low);
     }
 
     //--------------------------------------------------------------------------------------
-    bool isMediumQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    bool isQualityPropertyHiddenMedium(const IObject * _object, const IProperty * _prop, core::uint _index)
     {
-        return isQualityLevelPropertyHidden(_object, _prop, Quality::Medium);
+        return isQualityPropertyHidden(_object, _prop, Quality::Medium);
     }
 
     //--------------------------------------------------------------------------------------
-    bool isHighQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    bool isQualityPropertyHiddenHigh(const IObject * _object, const IProperty * _prop, core::uint _index)
     {
-        return isQualityLevelPropertyHidden(_object, _prop, Quality::High);
+        return isQualityPropertyHidden(_object, _prop, Quality::High);
     }
 
     //--------------------------------------------------------------------------------------
-    bool isVeryHighQualityPropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    bool isQualityPropertyHiddenVeryHigh(const IObject * _object, const IProperty * _prop, core::uint _index)
     {
-        return isQualityLevelPropertyHidden(_object, _prop, Quality::VeryHigh);
+        return isQualityPropertyHidden(_object, _prop, Quality::VeryHigh);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool isRenderJobOptionHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const RendererOptions * options = VG_SAFE_STATIC_CAST(const RendererOptions, _object);
+        return !options->isRenderJobsEnabled();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool isPostProcessPropertyReadOnly(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const RendererOptions * options = VG_SAFE_STATIC_CAST(const RendererOptions, _object);
+        return !options->isPostProcessEnabled();
+    }    
+
+    //--------------------------------------------------------------------------------------
+    bool isShadowPropertyReadOnly(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const RendererOptions * options = VG_SAFE_STATIC_CAST(const RendererOptions, _object);
+        return !options->IsShadowEnabled();
     }
 
     //--------------------------------------------------------------------------------------
@@ -106,11 +133,12 @@ namespace vg::renderer
              
             registerPropertyGroupBegin(RendererOptions, "Shadows");
             {
-                registerPropertyQuality(RendererOptions, m_shadows, "Cast shadows");
+                registerPropertyQuality(RendererOptions, m_shadows, "Cast shadows", isQualityPropertyHidden);
                 setPropertyDescriptionQuality(RendererOptions, m_shadows, "Enable realtime shadows");
 
-                registerPropertyEnumQuality(RendererOptions, ShadowDefaultResolution, m_shadowsResolution, "Resolution");
+                registerPropertyEnumQuality(RendererOptions, ShadowDefaultResolution, m_shadowsResolution, "Resolution", isQualityPropertyHidden);
                 setPropertyDescriptionQuality(RendererOptions, m_shadowsResolution, "Default resolution for realtime shadows");
+                setPropertyReadOnlyCallbackQuality(RendererOptions, m_shadowsResolution, isShadowPropertyReadOnly);
             }
             registerPropertyGroupEnd(RendererOptions);
 
@@ -140,7 +168,7 @@ namespace vg::renderer
             registerPropertyEnum(RendererOptions, gfx::HDR, m_HDRmode, "HDR");
             setPropertyDescription(RendererOptions, m_HDRmode, "High-dynamic range display mode");
 
-            registerPropertyEnumQuality(RendererOptions, gfx::MSAA, m_msaa, "MSAA");
+            registerPropertyEnumQuality(RendererOptions, gfx::MSAA, m_msaa, "MSAA", isQualityPropertyHidden);
             setPropertyDescriptionQuality(RendererOptions, m_msaa, "MSAA sample count for antialiasing");
 
             registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
@@ -162,6 +190,11 @@ namespace vg::renderer
 
             registerPropertyEnum(RendererOptions, gfx::AAPostProcess, m_aaPostProcess, "Anti-aliasing");
             setPropertyDescription(RendererOptions, m_aaPostProcess, "Post-Process anti-aliasing");
+            setPropertyReadOnlyCallback(RendererOptions, m_aaPostProcess, isPostProcessPropertyReadOnly);
+
+            registerPropertyEnumQuality(RendererOptions, DepthOfFieldMode, m_depthOfField, "Depth of field", isQualityPropertyHidden);
+            setPropertyDescriptionQuality(RendererOptions, m_depthOfField, "Select depth of field postprocess quality");
+            setPropertyReadOnlyCallbackQuality(RendererOptions, m_depthOfField, isPostProcessPropertyReadOnly);
         }
         registerPropertyGroupEnd(RendererOptions);
 
@@ -194,6 +227,11 @@ namespace vg::renderer
         {
             registerProperty(RendererOptions, m_renderJobs, "Render Jobs");
             setPropertyDescription(RendererOptions, m_renderJobs, "Use render jobs (experimental)");
+
+            registerProperty(RendererOptions, m_renderJobsOnMainThreadOnly, "Main thread");
+            setPropertyDescription(RendererOptions, m_renderJobsOnMainThreadOnly, "Fill several command lists but only on main thread");
+            setPropertyReadOnlyCallback(RendererOptions, m_renderJobsOnMainThreadOnly, isRenderJobOptionHidden);
+            
         }
         registerPropertyGroupEnd(RendererOptions);
 
@@ -218,6 +256,7 @@ namespace vg::renderer
             m_msaa[i] = gfx::MSAA::None;
             m_shadows[i] = true;
             m_shadowsResolution[i] = ShadowDefaultResolution::ShadowDefaultResolution_1024;
+            m_depthOfField[i] = DepthOfFieldMode::Default;
         }
 
         // Default shadow quality
@@ -228,6 +267,9 @@ namespace vg::renderer
         m_shadowsResolution[Quality::Medium] = ShadowDefaultResolution::ShadowDefaultResolution_2048;
         m_shadowsResolution[Quality::High] = ShadowDefaultResolution::ShadowDefaultResolution_4096;
         m_shadowsResolution[Quality::VeryHigh] = ShadowDefaultResolution::ShadowDefaultResolution_4096; // Will ultimately use RT anyway
+
+        // Disable DOF for lower quality level
+        m_depthOfField[Quality::Low] = DepthOfFieldMode::None;
 
         m_customQualityLevel = autodetectQualityLevel();
     }
@@ -423,7 +465,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool RendererOptions::GetShadowsEnabled() const
+    bool RendererOptions::IsShadowEnabled() const
     {
         return m_shadows[getCurrentQualityLevel()];
     }
@@ -446,6 +488,26 @@ namespace vg::renderer
         if (m_aaPostProcess != _aa)
         {
             m_aaPostProcess = _aa;
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    DepthOfFieldMode RendererOptions::GetDepthOfFieldMode() const
+    {
+        return m_depthOfField[getCurrentQualityLevel()];
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool RendererOptions::SetDepthOfFieldMode(DepthOfFieldMode _depthOfField)
+    {
+        auto & current = m_depthOfField[getCurrentQualityLevel()];
+
+        if (current != _depthOfField)
+        {
+            current = _depthOfField;
             return true;
         }
 

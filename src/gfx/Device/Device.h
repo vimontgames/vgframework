@@ -148,6 +148,7 @@ namespace vg::gfx
             double                                          m_gpuWaitTime = 0;
             bool                                            m_captureInProgress = false;
             core::uint                                      m_maxRenderJobCount = 0;
+            bool                                            m_renderJobsMainThreadOnly = false;
 		};
 	}
 }
@@ -163,39 +164,40 @@ namespace vg::gfx
 		using super = VG_GFXAPI::Device;
 
 	public:
-        const char *        GetClassName            () const final { return "Device"; }
+        const char *            GetClassName                () const final { return "Device"; }
 
-		void		        init			        (const DeviceParams & _params);
-		void		        deinit			        ();
+		void		            init			            (const DeviceParams & _params);
+		void		            deinit			            ();
 
-        void                resize                  (core::uint _width, core::uint _height);
+        void                    resize                      (core::uint _width, core::uint _height);
 
-		void		        beginFrame		        ();
-		void		        endFrame		        ();
+		void		            beginFrame		            ();
+		void		            endFrame		            ();
 
-		Texture *	        createTexture	        (const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
-        Texture *	        createTexture           (const core::string & _path, ReservedSlot _reservedSlot = ReservedSlot::None);
-        Buffer *            createBuffer            (const BufferDesc & _bufDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
+		Texture *	            createTexture	            (const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
+        Texture *	            createTexture               (const core::string & _path, ReservedSlot _reservedSlot = ReservedSlot::None);
+        Buffer *                createBuffer                (const BufferDesc & _bufDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
 
-        RootSignatureHandle addRootSignature        (const RootSignatureDesc & _desc);
-        RootSignature *     getRootSignature        (const RootSignatureHandle & _handle);
-        core::uint          removeRootSignature     (RootSignatureHandle & _handle);
+        RootSignatureHandle     addRootSignature            (const RootSignatureDesc & _desc);
+        RootSignature *         getRootSignature            (const RootSignatureHandle & _handle);
+        core::uint              removeRootSignature         (RootSignatureHandle & _handle);
 
-        void                flushUploadBuffer       ();
+        void                    flushUploadBuffer           ();
 
-        bool                isMinimized             ();
-        void                resetShaders            (ShaderKey::File _file);
+        bool                    isMinimized                 ();
+        void                    resetShaders                (ShaderKey::File _file);
 
-        void                setVSync                (VSync mode);
-        VSync               getVSync                () const;
+        void                    setVSync                    (VSync mode);
+        VSync                   getVSync                    () const;
 
-        void                setHDR                  (HDR _mode);
-        HDR                 getHDR                  () const;
+        void                    setHDR                      (HDR _mode);
+        HDR                     getHDR                      () const;
 
-        bool                setMaxRenderJobCount    (core::uint _count);
-        core::uint          getMaxRenderJobCount    () const;
+        bool                    setMaxRenderJobCount        (core::uint _maxCount, bool _mainThreadOnly = false);
+        VG_INLINE core::uint    getMaxRenderJobCount        () const;
+        VG_INLINE bool          getRenderJobsMainThreadOnly () const;
 
-        void                waitGPUIdle             ();
+        void                    waitGPUIdle                 ();
 
 	private:
         TextureImporter *   m_textureImporter = nullptr;

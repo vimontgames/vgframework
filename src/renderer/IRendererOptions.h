@@ -1,5 +1,6 @@
 #pragma once
 #include "core/Options/Options.h"
+#include "renderer/RenderPass/Compute/ComputePostProcess/PostProcess_consts.h"
 
 namespace vg::gfx
 {
@@ -28,15 +29,17 @@ namespace vg::renderer
         virtual gfx::MSAA               GetMSAA                                 () const = 0;
         virtual bool                    SetMSAA                                 (gfx::MSAA _msaa) = 0;
 
-        virtual bool                    GetShadowsEnabled                       () const = 0;
+        virtual bool                    IsShadowEnabled                         () const = 0;
         virtual core::uint2             GetShadowDefaultResolution              () const = 0;
 
         virtual gfx::HDR                GetHDR                                  () const = 0;
         virtual bool                    SetHDR                                  (gfx::HDR _hdr) = 0;
 
-
         virtual gfx::AAPostProcess      GetAAPostProcess                        () const = 0;
         virtual bool                    SetAAPostProcess                        (gfx::AAPostProcess _aa) = 0;
+
+        virtual DepthOfFieldMode        GetDepthOfFieldMode                     () const = 0;
+        virtual bool                    SetDepthOfFieldMode                     (DepthOfFieldMode _depthOfField) = 0;
 
         virtual gfx::VSync              GetVSync                                () const = 0;
         virtual bool                    SetVSync                                (gfx::VSync _vsync) = 0;

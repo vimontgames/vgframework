@@ -39,6 +39,9 @@ namespace vg::gfx
         // Called after exiting RenderPass (e.g., read buffer from GPU to the CPU)
         virtual void	AfterRender		(const RenderPassContext & _renderContext, CommandList * _cmdList) {};
 
+		// An heuristic used during job dispatch where 1 ~= 1 draw call. It can be a fixed cost and/or variable cost
+		virtual core::u64	GetCostEstimate() const { return 1; }
+
 		// Descriptor for framegraph texture/buffer
 		const FrameGraphTextureResourceDesc * getTextureResourceDesc(const FrameGraphResourceID & _resID) const;
 		const FrameGraphBufferResourceDesc * getBufferResourceDesc(const FrameGraphResourceID & _resID) const;
