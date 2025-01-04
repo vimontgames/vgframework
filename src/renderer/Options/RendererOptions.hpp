@@ -89,11 +89,18 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool isRenderJobOptionHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    bool isRenderJobOptionReadOnly(const IObject * _object, const IProperty * _prop, uint _index)
     {
         const RendererOptions * options = VG_SAFE_STATIC_CAST(const RendererOptions, _object);
         return !options->isRenderJobsEnabled();
     }
+
+    //--------------------------------------------------------------------------------------
+    bool isRenderJobsCountReadOnly(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const RendererOptions * options = VG_SAFE_STATIC_CAST(const RendererOptions, _object);
+        return !options->isRenderJobsEnabled() || !options->isForcedRenderJobsCount();
+    }    
 
     //--------------------------------------------------------------------------------------
     bool isPostProcessPropertyReadOnly(const IObject * _object, const IProperty * _prop, uint _index)
@@ -225,13 +232,25 @@ namespace vg::renderer
 
         registerPropertyGroupBegin(RendererOptions, "Multithreading");
         {
-            registerProperty(RendererOptions, m_renderJobs, "Render Jobs");
-            setPropertyDescription(RendererOptions, m_renderJobs, "Use render jobs (experimental)");
+            registerPropertyGroupBegin(RendererOptions, "Render jobs");
+            {
+                registerProperty(RendererOptions, m_renderJobs, "Enable");
+                setPropertyDescription(RendererOptions, m_renderJobs, "Enable render jobs");
 
-            registerProperty(RendererOptions, m_renderJobsOnMainThreadOnly, "Main thread");
-            setPropertyDescription(RendererOptions, m_renderJobsOnMainThreadOnly, "Fill several command lists but only on main thread");
-            setPropertyReadOnlyCallback(RendererOptions, m_renderJobsOnMainThreadOnly, isRenderJobOptionHidden);
-            
+                registerProperty(RendererOptions, m_renderJobsOnMainThreadOnly, "Single-threaded");
+                setPropertyDescription(RendererOptions, m_renderJobsOnMainThreadOnly, "Several command lists will still be used but only the main thread will be used to fill them.");
+                setPropertyReadOnlyCallback(RendererOptions, m_renderJobsOnMainThreadOnly, isRenderJobOptionReadOnly);
+
+                registerProperty(RendererOptions, m_forceRenderJobsCount, "Force job count");
+                setPropertyDescription(RendererOptions, m_forceRenderJobsCount, "Override RenderJobs count");
+                setPropertyReadOnlyCallback(RendererOptions, m_forceRenderJobsCount, isRenderJobOptionReadOnly);
+
+                registerProperty(RendererOptions, m_renderJobsCount, "Job count");
+                setPropertyDescription(RendererOptions, m_renderJobsCount, "Forced job count");
+                setPropertyRange(RendererOptions, m_renderJobsCount, float2(2, 64));
+                setPropertyHiddenCallback(RendererOptions, m_renderJobsCount, isRenderJobsCountReadOnly);
+            }
+            registerPropertyGroupEnd(RendererOptions);
         }
         registerPropertyGroupEnd(RendererOptions);
 
@@ -618,6 +637,22 @@ namespace vg::renderer
                     // changed
                 }
             }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint RendererOptions::getRenderJobCount() const
+    {
+        if (isRenderJobsEnabled())
+        {
+            if (isForcedRenderJobsCount())
+                return m_renderJobsCount;
+            else
+                return Kernel::getScheduler()->GetWorkerThreadCount();                
+        }
+        else
+        {
+            return 0;
         }
     }
 }

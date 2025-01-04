@@ -492,7 +492,7 @@ namespace vg::renderer
         options->update();
 
         if (options->isRenderJobsEnabled())
-            SetMaxRenderJobCount(Kernel::getScheduler()->GetWorkerThreadCount(), options->isRenderJobsUsingOnlyMainThread());
+            SetMaxRenderJobCount(options->getRenderJobCount(), options->isRenderJobsUsingOnlyMainThread());
         else
             SetMaxRenderJobCount(0);
 

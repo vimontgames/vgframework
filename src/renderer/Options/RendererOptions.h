@@ -119,6 +119,8 @@ namespace vg::renderer
         Quality                 getCurrentQualityLevel                  () const;
 
         VG_INLINE bool          isRenderJobsEnabled                     () const;
+        VG_INLINE bool          isForcedRenderJobsCount                 () const;
+        core::uint              getRenderJobCount                       () const;
         VG_INLINE bool          isRenderJobsUsingOnlyMainThread         () const;
 
     protected:
@@ -159,6 +161,8 @@ namespace vg::renderer
         DisplayFlags            m_displayFlags                          = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap | DisplayFlags::VertexColor | DisplayFlags::MaterialColor | DisplayFlags::InstanceColor;
         RenderPassFlags         m_renderPassFlags;
         bool                    m_renderJobs                            = false;
+        bool                    m_forceRenderJobsCount                  = false;
+        core::u16               m_renderJobsCount                       = 1;
         bool                    m_renderJobsOnMainThreadOnly            = false;
         const gfx::DeviceCaps * m_deviceCaps                            = nullptr;
         
