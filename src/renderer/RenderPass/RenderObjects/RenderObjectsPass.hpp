@@ -23,7 +23,13 @@ namespace vg::renderer
     RenderObjectsPass::~RenderObjectsPass()
     {
 
-    }          
+    }   
+
+    //--------------------------------------------------------------------------------------
+    core::u64 RenderObjectsPass::getListCostEstimate(const ViewCullingJobOutput & _cullingOutput, GraphicInstanceListType _list) const
+    {
+        return _cullingOutput.get(_list).m_instances.size();
+    }
 
     //--------------------------------------------------------------------------------------
     void RenderObjectsPass::DrawGraphicInstances(const RenderContext & _renderContext, gfx::CommandList * _cmdList, GraphicInstanceListType _list) const

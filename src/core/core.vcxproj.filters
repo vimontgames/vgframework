@@ -462,6 +462,9 @@
     <ClInclude Include="Math\StorageVector.hpp">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Types\vector2D.h">
+      <Filter>Types</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

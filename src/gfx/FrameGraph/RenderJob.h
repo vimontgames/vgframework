@@ -18,6 +18,8 @@ namespace vg::gfx
             void reset(gfx::CommandList * _cmdList);
             void add(const UserPassInfoNode * _nodeToRender);
 
+            const core::vector<const UserPassInfoNode *> & getNodes() const { return m_nodes; }
+
         private:
             core::uint                              m_index = core::uint(-1);
             gfx::CommandList *                      m_cmdList = nullptr;

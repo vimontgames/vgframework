@@ -69,7 +69,7 @@ namespace vg::core
         SetThreadDescription(GetCurrentThread(), core::wstring_convert((string)_name).c_str());
 
         // Register for profiler markers
-        Kernel::getProfiler()->registerProfilerThread(_name.c_str());
+        Kernel::getProfiler()->RegisterProfilerThread(_name.c_str());
 
         // Record
         m_registeredThreads.insert(std::pair(threadId, ThreadInfo(ThreadType((int)_threadType + _index), _name)));

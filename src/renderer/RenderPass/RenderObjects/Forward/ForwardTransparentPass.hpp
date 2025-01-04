@@ -38,6 +38,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    core::u64 ForwardTransparentPass::GetCostEstimate(const RenderPassContext & _renderPassContext) const
+    {
+        const View * view = static_cast<const View *>(_renderPassContext.getView());
+        return getListCostEstimate(view->getCullingJobResult(), GraphicInstanceListType::Transparent);
+    }
+
+    //--------------------------------------------------------------------------------------
     // Setup executed each frame, for each pass instance
     //--------------------------------------------------------------------------------------
     void ForwardTransparentPass::Setup(const gfx::RenderPassContext & _renderPassContext)

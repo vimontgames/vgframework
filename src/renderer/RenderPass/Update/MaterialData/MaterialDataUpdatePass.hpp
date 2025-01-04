@@ -35,14 +35,11 @@ namespace vg::renderer
         auto renderer = Renderer::get();
         const auto * cullingJobOutput = renderer->getSharedCullingJobOutput();
         VG_ASSERT(nullptr != cullingJobOutput);
-        
         const auto & instances = cullingJobOutput->m_instances;
-        const auto * defaultMaterial = renderer->getDefaultMaterial();
-        VG_ASSERT(defaultMaterial);        
 
-        // What if a material is added to materialManager during this loop? 
-        // We need a mutex or some kind of "safe copy" to avoid multi threading issues here.        
-        size_t mapSize = m_materials.size() * sizeof(GPUMaterialData);
+        const auto * defaultMaterial = renderer->getDefaultMaterial();
+        VG_ASSERT(defaultMaterial);
+        size_t mapSize = m_materials.size() * sizeof(GPUMaterialData);      
         
         if (mapSize > 0)
         {

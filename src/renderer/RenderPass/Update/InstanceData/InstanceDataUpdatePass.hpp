@@ -24,7 +24,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // Estimate returns a cost of 1 per instance to update
     //--------------------------------------------------------------------------------------
-    core::u64 InstanceDataUpdatePass::GetCostEstimate() const
+    core::u64 InstanceDataUpdatePass::GetCostEstimate(const RenderPassContext & _renderContext) const
     {
         auto renderer = Renderer::get();
         const auto * cullingJobOutput = renderer->getSharedCullingJobOutput();
@@ -41,8 +41,8 @@ namespace vg::renderer
         auto renderer = Renderer::get();
         const auto * cullingJobOutput = renderer->getSharedCullingJobOutput();
         VG_ASSERT(nullptr != cullingJobOutput);
-
         const auto & instances = cullingJobOutput->m_instances;
+
         const auto * defaultMaterial = renderer->getDefaultMaterial();
         VG_ASSERT(defaultMaterial);
         const auto defaultMaterialIndex = defaultMaterial->getGPUMaterialDataIndex();

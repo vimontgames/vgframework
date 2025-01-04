@@ -5,7 +5,7 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    class DeferredOpaquePass : public RenderObjectsPass
+    class DeferredOpaquePass final : public RenderObjectsPass
     {
     public:
         VG_CLASS_DECL(DeferredOpaquePass, RenderObjectsPass);
@@ -13,7 +13,8 @@ namespace vg::renderer
         DeferredOpaquePass();
         ~DeferredOpaquePass();
 
-        void Setup(const gfx::RenderPassContext & _renderPassContext) override;
-        void Render(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const override;
+        core::u64   GetCostEstimate     (const gfx::RenderPassContext & _renderPassContext) const final override;
+        void        Setup               (const gfx::RenderPassContext & _renderPassContext) final override;
+        void        Render              (const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const final override;
     };
 }

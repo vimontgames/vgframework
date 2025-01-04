@@ -43,6 +43,12 @@ namespace vg::renderer
     {
 
     }
+
+    //--------------------------------------------------------------------------------------
+    core::u64 ImGuiPass::GetCostEstimate(const RenderPassContext & _renderPassContext) const
+    {
+        return 1000;
+    }
     
     //--------------------------------------------------------------------------------------
     void ImGuiPass::Setup(const gfx::RenderPassContext & _renderPassContext)

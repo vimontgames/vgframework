@@ -190,7 +190,7 @@ namespace vg::renderer
 
         // Start profiling immediately if requested
         if (_params.profileStart)
-            GetProfiler()->start();
+            GetProfiler()->Start();
 
         VG_PROFILE_CPU_EVENT_START("Init");
 

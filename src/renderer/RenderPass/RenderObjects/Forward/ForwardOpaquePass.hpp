@@ -37,6 +37,16 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    core::u64 ForwardOpaquePass::GetCostEstimate(const RenderPassContext & _renderPassContext) const
+    {        
+        const View * view = static_cast<const View *>(_renderPassContext.getView());
+
+        return getListCostEstimate(view->getCullingJobResult(), GraphicInstanceListType::Opaque)
+             + getListCostEstimate(view->getCullingJobResult(), GraphicInstanceListType::AlphaTest)
+             + getListCostEstimate(view->getCullingJobResult(), GraphicInstanceListType::Decal);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ForwardOpaquePass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         const View * view = static_cast<const View *>(_renderPassContext.getView());

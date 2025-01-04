@@ -8,6 +8,8 @@ namespace vg::renderer
     class RenderContext;
     class GraphicInstanceList;
 
+    struct ViewCullingJobOutput;
+
     enum class GraphicInstanceListType : core::u8;
 
     //--------------------------------------------------------------------------------------
@@ -21,5 +23,6 @@ namespace vg::renderer
 
     protected:
         virtual void    DrawGraphicInstances(const RenderContext & _renderContext, gfx::CommandList * _cmdList, GraphicInstanceListType _list) const;
+        core::u64       getListCostEstimate(const ViewCullingJobOutput & _cullingOutput, GraphicInstanceListType _list) const;
     };
 }

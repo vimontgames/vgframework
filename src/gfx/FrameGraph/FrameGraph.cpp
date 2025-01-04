@@ -10,6 +10,7 @@
 #include "gfx/Profiler/Profiler.h"
 #include "gfx/IFrameGraphView.h"
 #include "core/IScheduler.h"
+#include "core/Types/vector2D.h"
 
 using namespace vg::core;
 
@@ -36,7 +37,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     core::u64 UserPassInfoNode::getCostEstimate() const
     {
-        return m_userPassInfo->m_userPass->GetCostEstimate();
+        return m_userPassInfo->m_userPass->GetCostEstimate(m_userPassInfo->m_renderContext);
     }
 
 	//--------------------------------------------------------------------------------------
@@ -1158,31 +1159,123 @@ namespace vg::gfx
                     }
                     else
                     {
-                        #if 1
+                        #if 0
 
                         // Split based only on node count (doesn't account node estimated cost)
-                        const uint minNodeCount = nodeCount / jobCount;
-                        const uint maxNodeCount = minNodeCount + 1;
-                        const uint limit = nodeCount % jobCount;
-
-                        uint nodeBaseIndex = 0;
-                        for (uint i = 0; i < jobCount; ++i)
                         {
-                            auto & renderJob = m_renderJobs[i];
+                            const uint minNodeCount = nodeCount / jobCount;
+                            const uint maxNodeCount = minNodeCount + 1;
+                            const uint limit = nodeCount % jobCount;
 
-                            const uint jobNodeCount = i < limit ? maxNodeCount : minNodeCount;
-                            for (uint n = 0; n < jobNodeCount; ++n)
+                            uint nodeBaseIndex = 0;
+                            for (uint i = 0; i < jobCount; ++i)
                             {
-                                const UserPassInfoNode * node = &nodes[nodeBaseIndex + n];
-                                renderJob->add(node);
-                            }
-                            nodeBaseIndex += jobNodeCount;
-                        }
-                        #else
+                                auto & renderJob = m_renderJobs[i];
 
-                        // Try to minimize sum of estimated cost per job
+                                const uint jobNodeCount = i < limit ? maxNodeCount : minNodeCount;
+                                for (uint n = 0; n < jobNodeCount; ++n)
+                                {
+                                    const UserPassInfoNode * node = &nodes[nodeBaseIndex + n];
+                                    renderJob->add(node);
+                                }
+                                nodeBaseIndex += jobNodeCount;
+                            }
+                        }
+
+                        #elif 0
+
+                        // Estimate cost then add jobs as long as the total cost < targetCost
                         {
-                           
+                            u64 targetCost = totalEstimatedCost / jobCount;
+                            uint renderJobIndex = 0;
+                            u64 renderJobCost = 0;
+                            for (uint i = 0; i < nodeCount; ++i)
+                            {
+                                const auto & node = nodes[i];
+                                const auto cost = node.getCostEstimate();
+
+                                if (renderJobCost + cost < targetCost || (renderJobIndex + 1 == jobCount))
+                                {
+                                    auto & renderJob = m_renderJobs[renderJobIndex];
+                                    renderJob->add(&node);
+                                    renderJobCost += cost;
+                                }
+                                else
+                                {
+                                    renderJobIndex++;
+                                    VG_ASSERT(renderJobIndex < jobCount);
+                                    renderJobCost = 0;
+                                    auto & renderJob = m_renderJobs[renderJobIndex];
+                                    renderJob->add(&node);
+                                    renderJobCost += cost;
+                                }
+                            }
+
+                            jobCount = renderJobIndex + 1;
+                        }
+
+                        #else 
+
+                        // Try to minimize sum of estimated cost per job, while preserving order so as to have only one command list per worker thread max
+                        {
+                            // Create cumulativeCost vector
+                            u64 maxCost = -1;
+                            vector<u64> cumulativeCost(nodeCount + 1, 0);
+                            for (uint n = 0; n < nodeCount; ++n)
+                                cumulativeCost[n + 1] = cumulativeCost[n] + min(nodes[n].getCostEstimate(), maxCost);
+
+                            // Prepare 2D vectors for DP and backtrack
+                            vector2D<i64> backtrack(jobCount, nodeCount, -1);
+                            vector2D<u64> dp(jobCount, nodeCount, ULLONG_MAX);
+
+                            // Calculate range cost
+                            auto cost = [&](int _begin, int _end) 
+                            {
+                                return cumulativeCost[_end + 1] - cumulativeCost[_begin];
+                            };
+
+                            // DP initialization
+                            for (uint n = 0; n < nodeCount; ++n) 
+                                dp[0][n] = cost(0, n);
+
+                            // DP algorithm to calculate minimal cost and distribute nodes more evenly
+                            for (uint j = 1; j < jobCount; ++j)
+                            {
+                                for (uint n = j; n < nodeCount; ++n) 
+                                {
+                                    for (uint k = j - 1; k < n; ++k) 
+                                    {
+                                        u64 currentCost = dp[j - 1][k];
+                                        u64 segmentCost = cost(k + 1, n);
+                                        u64 maxCost = max(currentCost, segmentCost);
+                                        if (maxCost < dp[j][n]) 
+                                        {
+                                            dp[j][n] = maxCost;
+                                            backtrack[j][n] = k;
+                                        }
+                                    }
+                                }
+                            }
+
+                            // To assign nodes to jobs
+                            i64 i = nodeCount - 1;
+                            i64 j = jobCount - 1;
+
+                            // Backtrack to find the optimal assignments
+                            vector<vector<int>> jobAssignments(jobCount);
+                            while (j >= 0) 
+                            {
+                                i64 k = backtrack[j][i];
+                                for (i64 idx = k + 1; idx <= i; ++idx) 
+                                {
+                                    const auto & node = nodes[idx];
+
+                                    auto & renderJob = m_renderJobs[j];
+                                    renderJob->add(&node);
+                                }
+                                i = k;
+                                --j;
+                            }                            
                         }
 
                         #endif
@@ -1200,6 +1293,29 @@ namespace vg::gfx
                     for (uint i = 0; i < jobCount; ++i)
                         jobScheduler->Start(m_renderJobs[i], &renderJobSync);
                 }
+
+                // debug
+                //{
+                //    VG_PROFILE_CPU("debug");
+                //
+                //    for (uint j = 0; j < m_renderJobs.size(); ++j)
+                //    {
+                //        const auto & renderJob = m_renderJobs[j];
+                //        u64 totalCost = 0;
+                //        string jobNames = "";
+                //        const auto & jobNodes = renderJob->getNodes();
+                //        for (uint i = 0; i < (uint)jobNodes.size(); ++i)
+                //        {
+                //            const auto * node = jobNodes[i];
+                //            const auto nodeCost = node->getCostEstimate();
+                //            if (i != 0)
+                //                jobNames += " + ";
+                //            jobNames += fmt::sprintf("%s (%u)", node->m_name.c_str(), nodeCost);
+                //            totalCost += nodeCost;
+                //        }
+                //        VG_DEBUGPRINT("Job %u: %s (total: %u)\n", j, jobNames.c_str(), totalCost);
+                //    }
+                //}
 
                 // ... and wait for completion
                 {

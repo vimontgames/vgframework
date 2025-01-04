@@ -36,7 +36,7 @@ namespace vg::gfx
     ProfilerContext Profiler::s_contextTLS;
 
     //--------------------------------------------------------------------------------------
-    void Profiler::init()
+    void Profiler::Init()
     {
         Device * device = Device::get();
 
@@ -78,13 +78,13 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void Profiler::deinit()
+    void Profiler::Deinit()
     {
         OPTICK_SHUTDOWN();
     }
 
     //--------------------------------------------------------------------------------------
-    void Profiler::start()
+    void Profiler::Start()
     {
         VG_ASSERT(!m_isCaptureInProgress, "Cannot start profile capture because a capture is already in progress");
         if (m_isCaptureInProgress)
@@ -98,7 +98,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void Profiler::stop()
+    void Profiler::Stop()
     {
         VG_ASSERT(m_isCaptureInProgress, "Cannot stop profile capture because there is no capture currently in progress");
         if (!m_isCaptureInProgress)
@@ -128,25 +128,60 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    bool Profiler::isCaptureInProgress() const
+    bool Profiler::IsCaptureInProgress() const
     {
         return m_isCaptureInProgress;
     }
 
     //--------------------------------------------------------------------------------------
-    void Profiler::startCpuEvent(const char * _name)
+    void Profiler::StartCpuEvent(const char * _name)
     {
         OPTICK_PUSH_DYNAMIC(_name);
     }
 
     //--------------------------------------------------------------------------------------
-    void Profiler::stopCpuEvent()
+    void Profiler::AddCpuEventLabel(const char * _name, float _data)
+    {
+        OPTICK_TAG(_name, _data);
+    }
+    //--------------------------------------------------------------------------------------
+    void Profiler::AddCpuEventLabel(const char * _name, core::i32 _data)
+    {
+        OPTICK_TAG(_name, _data);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::AddCpuEventLabel(const char * _name, core::u32 _data)
+    {
+        OPTICK_TAG(_name, _data);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::AddCpuEventLabel(const char * _name, core::u64 _data)
+    {
+        OPTICK_TAG(_name, _data);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::AddCpuEventLabel(const char * _name, const core::float3 & _data)
+    {
+        OPTICK_TAG(_name, _data.x, _data.y, _data.z);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::AddCpuEventLabel(const char * _name, const core::string & _data)
+    {
+        OPTICK_TAG(_name, _data.c_str());
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Profiler::StopCpuEvent()
     {
         OPTICK_POP();
     }
 
     //--------------------------------------------------------------------------------------
-    void Profiler::startGpuEvent(const char * _name)
+    void Profiler::StartGpuEvent(const char * _name)
     {
         #if VG_ENABLE_GPU_MARKER
         getCommandList()->beginGPUEvent(_name, 0xFFFFFFFF);
@@ -154,7 +189,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void Profiler::stopGpuEvent()
+    void Profiler::StopGpuEvent()
     {
         #if VG_ENABLE_GPU_MARKER
         getCommandList()->endGPUEvent();
@@ -162,7 +197,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void Profiler::registerProfilerThread(const char * _name)
+    void Profiler::RegisterProfilerThread(const char * _name)
     {
         Optick::RegisterThread(_name);
     }

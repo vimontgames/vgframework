@@ -21,6 +21,15 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    core::u64 DepthOnlyPass::GetCostEstimate(const RenderPassContext & _renderPassContext) const
+    {
+        const View * view = static_cast<const View *>(_renderPassContext.getView());
+
+        return getListCostEstimate(view->getCullingJobResult(), GraphicInstanceListType::Opaque)
+            + getListCostEstimate(view->getCullingJobResult(), GraphicInstanceListType::AlphaTest);
+    }
+
+    //--------------------------------------------------------------------------------------
     void DepthOnlyPass::Render(const RenderPassContext & _renderPassContext, CommandList * _cmdList) const
     {
         const View * view = static_cast<const View*>(_renderPassContext.getView());

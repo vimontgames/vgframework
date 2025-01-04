@@ -39,6 +39,16 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    // Estimate returns a cost of 1 per instance to update
+    //--------------------------------------------------------------------------------------
+    core::u64 ComputeSkinningPass::GetCostEstimate(const RenderPassContext & _renderContext) const
+    {
+        auto renderer = Renderer::get();
+        const auto & skinnedMeshes = Renderer::get()->getSharedCullingJobOutput()->m_skins;
+        return skinnedMeshes.size();
+    }
+
+    //--------------------------------------------------------------------------------------
     void ComputeSkinningPass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
         auto * device = Device::get();
@@ -56,8 +66,7 @@ namespace vg::renderer
     void ComputeSkinningPass::Prepare(const RenderPassContext & _renderContext)
     {
         VG_PROFILE_CPU("Skinning");
-
-        const auto & skinnedMeshes = Renderer::get()->getSharedCullingJobOutput()->m_skins;
+        const auto & skinnedMeshes = Renderer::get()->getSharedCullingJobOutput()->m_skins;        
 
         // Compute bones upload size
         uint dstVertOffset = 0;

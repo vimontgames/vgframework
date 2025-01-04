@@ -295,7 +295,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		if (profileStartFrameCount >= 0)
 		{
 			if (!profileStartFrameCount--)
-				profiler->stop();
+				profiler->Stop();
 		}
 	}
 
