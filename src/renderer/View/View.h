@@ -52,6 +52,7 @@ namespace vg::renderer
         ViewFlags                           GetFlags                    () const override;
 
         const core::float4x4 &              GetViewInvMatrix            () const override;
+        const core::float4x4 &              GetViewMatrix               () const override;
         const core::float4x4 &              GetProjectionMatrix         () const override;
         core::float2                        GetCameraNearFar            () const override;
         float                               GetCameraFovY               () const override;

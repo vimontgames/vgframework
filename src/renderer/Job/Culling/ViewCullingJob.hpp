@@ -98,6 +98,51 @@ namespace vg::renderer
                 if (root)
                     cullGameObjectRecur((GameObject *)root, view);
             }
+
+            const float4x4 & viewMatrix = view->GetViewInvMatrix();
+
+            for (uint i = 0; i < core::enumCount<GraphicInstanceListType>(); ++i)
+            {
+                const auto listType = (GraphicInstanceListType)i;
+                auto & list = m_result.m_output->m_instancesLists[i].m_instances;
+
+                if (list.size() > 1)
+                {
+                    switch (listType)
+                    {
+                        default:
+                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(listType);
+                            break;
+
+                        case GraphicInstanceListType::All:
+                        case GraphicInstanceListType::Opaque:
+                        case GraphicInstanceListType::AlphaTest:
+                        case GraphicInstanceListType::Decal:
+                            break;
+
+                        case GraphicInstanceListType::Transparent:
+                        {
+                            VG_PROFILE_CPU("Back-to-front");
+
+                            sort(list.begin(), list.end(), [=](GraphicInstance * const a, GraphicInstance * const b)
+                            {
+                                const float4x4 & matA = a->GetGlobalMatrix();
+                                const float4 & viewPosA = mul(viewMatrix, matA[3]);
+                            
+                                const float4x4 & matB = b->GetGlobalMatrix();
+                                const float4 & viewPosB = mul(viewMatrix, matB[3]);
+                                
+                                return (bool)(viewPosA.z < viewPosB.z);
+                            }
+                            );
+                        }
+                        break;
+
+                        case GraphicInstanceListType::Selected:
+                            break;
+                    }
+                }
+            }
         }
     }
 }

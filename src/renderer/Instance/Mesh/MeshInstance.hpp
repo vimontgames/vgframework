@@ -161,6 +161,11 @@ namespace vg::renderer
                         _cullingResult->m_sharedOutput->m_skins.push_back_atomic(this);
                 }
 
+                const ObjectFlags objectFlags = this->getObjectFlags();
+
+                if (asBool(ObjectFlags::Selected & objectFlags))
+                    _cullingResult->m_output->add(GraphicInstanceListType::Selected, this);
+
                 return true;
             }
         }

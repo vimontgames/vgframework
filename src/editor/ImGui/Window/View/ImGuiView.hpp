@@ -537,8 +537,9 @@ namespace vg::editor
                                 const auto & stats = view->GetViewCullingStats();
                                 uint line = 0;
 
-                                ImVec2 pos = ImVec2((float)view->GetOffset().x, (float)view->GetOffset().y + 48);
+                                ImVec2 pos = ImVec2((float)view->GetOffset().x, (float)view->GetOffset().y);
 
+                                // Instances
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
                                 string text = fmt::sprintf("Opaque %u", stats.opaque);
@@ -561,6 +562,14 @@ namespace vg::editor
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
                                 pos.y += style::font::DefaultFontHeight;
                                 ImGui::Text("Decal %u", stats.decal);
+
+                                ImGui::SameLine();
+                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                pos.y += style::font::DefaultFontHeight;
+                                ImGui::Text("Selected %u", stats.selected);
+
+                                // Lights
+                                pos.y += style::font::DefaultFontHeight;
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
@@ -768,7 +777,7 @@ namespace vg::editor
             // clip gizmo rendering to viewport
             ImGui::PushClipRect(ImVec2(pos.x + vMin.x, pos.y + vMin.y), ImVec2(pos.x + vMin.x + size.x, pos.y + vMin.y + size.y), false);
             {
-                const float * viewMatrix = (float *)&_view->GetViewInvMatrix();
+                const float * viewMatrix = (float *)&_view->GetViewMatrix();
                 const float * projMatrix = (float *)&_view->GetProjectionMatrix();
                 
                 float4x4 & selectionMatrix = selection->GetSelectionMatrix();

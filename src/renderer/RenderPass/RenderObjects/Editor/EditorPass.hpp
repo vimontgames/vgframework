@@ -77,8 +77,7 @@ namespace vg::renderer
             _cmdList->setBlendState(bs);
             _cmdList->setDepthStencilState(ds);
 
-            bool wireframeSelection = false; // TODO: expose option for selection
-            if (options->isWireframeEnabled() || wireframeSelection)
+            if (options->isWireframeEnabled())
             {
                 renderContext.m_wireframe = true;
                 DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::All);

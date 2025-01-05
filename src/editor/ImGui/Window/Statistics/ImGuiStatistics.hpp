@@ -57,8 +57,20 @@ namespace vg::editor
                         ImGui::Text("Opaque");
                         ImGui::EndDisabled();
 
+                        ImGui::BeginDisabled(!stats.alphatest);
+                        ImGui::Text("AlphaTest");
+                        ImGui::EndDisabled();
+
                         ImGui::BeginDisabled(!stats.transparent);
                         ImGui::Text("Transparent");
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!stats.decal);
+                        ImGui::Text("Decal");
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!stats.selected);
+                        ImGui::Text("Selected");
                         ImGui::EndDisabled();
                     }
                     ImGui::NextColumn();
@@ -69,8 +81,57 @@ namespace vg::editor
                         ImGui::Text("%u", stats.opaque);
                         ImGui::EndDisabled();
 
+                        ImGui::BeginDisabled(!stats.alphatest);
+                        ImGui::Text("%u", stats.alphatest);
+                        ImGui::EndDisabled();
+
                         ImGui::BeginDisabled(!stats.transparent);
                         ImGui::Text("%u", stats.transparent);
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!stats.decal);
+                        ImGui::Text("%u", stats.decal);
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!stats.selected);
+                        ImGui::Text("%u", stats.selected);
+                        ImGui::EndDisabled();
+                    }
+                    ImGui::Columns(1);
+                    ImGui::TreePop();
+                }
+
+                if (ImGui::TreeNodeEx(getObjectLabel("Lights", _view).c_str(), ImGuiTreeNodeFlags_None))
+                {
+                    ImGui::Columns(2, "mycolumns2", false);
+                    {
+                        const auto & stats = _view->GetViewCullingStats();
+                        ImGui::BeginDisabled(!stats.directional);
+                        ImGui::Text("Directional");
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!stats.omni);
+                        ImGui::Text("Omni");
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!stats.spot);
+                        ImGui::Text("Spot");
+                        ImGui::EndDisabled();
+                    }
+                    ImGui::NextColumn();
+                    {
+                        const auto & stats = _view->GetViewCullingStats();
+
+                        ImGui::BeginDisabled(!stats.directional);
+                        ImGui::Text("%u", stats.directional);
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!stats.omni);
+                        ImGui::Text("%u", stats.omni);
+                        ImGui::EndDisabled();
+
+                        ImGui::BeginDisabled(!stats.spot);
+                        ImGui::Text("%u", stats.spot);
                         ImGui::EndDisabled();
                     }
                     ImGui::Columns(1);

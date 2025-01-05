@@ -5,9 +5,9 @@ namespace vg::renderer
     template <typename T> class InstanceList
     {
     public:
-        core::vector<const T *> m_instances;
+        core::vector<T*> m_instances;
 
-        void clear()
+        inline void clear()
         {
             m_instances.clear();
         }

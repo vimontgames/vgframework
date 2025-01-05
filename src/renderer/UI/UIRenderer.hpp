@@ -117,18 +117,18 @@ namespace vg::renderer
         ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0, 0, 0, 0));
 
         float4x4 viewProj = float4x4::identity();
-        float4x4 view = float4x4::identity();
+        float4x4 viewInv = float4x4::identity();
         float2 mousePos = float2(0, 0);
 
         if (m_view)
         {
-            view = m_view->GetViewInvMatrix();
-            viewProj = mul(view, m_view->GetProjectionMatrix());
+            viewInv = m_view->GetViewInvMatrix();
+            viewProj = mul(m_view->GetViewMatrix(), m_view->GetProjectionMatrix());
             mousePos = (float2)m_view->GetRelativeMousePos();
         }
 
         // TODO: sort at insertion?
-        sort(m_uiElements.begin(), m_uiElements.end(), [view](UIElementInfo & a, UIElementInfo & b)
+        sort(m_uiElements.begin(), m_uiElements.end(), [viewInv](UIElementInfo & a, UIElementInfo & b)
         {
             const bool a3D = (a.element.m_canvas && a.element.m_canvas->m_canvasType == CanvasType::CanvasType_3D);
             const bool b3D = (b.element.m_canvas && b.element.m_canvas->m_canvasType == CanvasType::CanvasType_3D);
@@ -140,10 +140,10 @@ namespace vg::renderer
                 else
                 {
                     // Transform to view space for Z-sort
-                    const float4 viewPosA = mul(view, a.element.m_canvas->m_matrix[3]);
-                    const float4 viewPosB = mul(view, b.element.m_canvas->m_matrix[3]);
+                    const float4 viewPosA = mul(viewInv, a.element.m_canvas->m_matrix[3]);
+                    const float4 viewPosB = mul(viewInv, b.element.m_canvas->m_matrix[3]);
 
-                    return (bool)(viewPosA.z > viewPosB.z);
+                    return (bool)(viewPosA.z < viewPosB.z);
                 }
             }
             else if (!a3D && b3D)

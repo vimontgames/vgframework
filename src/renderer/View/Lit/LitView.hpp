@@ -5,6 +5,7 @@
 #include "renderer/RenderPass/RenderObjects/Forward/ForwardOpaquePass.h"
 #include "renderer/RenderPass/RenderObjects/Forward/ForwardTransparentPass.h"
 #include "renderer/RenderPass/RenderObjects/Deferred/DeferredOpaquePass.h"
+#include "renderer/RenderPass/RenderObjects/Misc/Outline/OutlineMaskPass.h"
 #include "renderer/RenderPass/RenderObjects/Editor/EditorPass.h"
 #include "renderer/RenderPass/Compute/ComputePostProcess/ComputePostProcessPass.h"
 #include "renderer/RenderPass/Render2D/ResolveDeferredMSAA/ResolveDeferredMSAAPass.h"
@@ -32,6 +33,7 @@ namespace vg::renderer
         m_deferredLightingPass = new ComputeDeferredLightingPass();
         m_resolveDeferredMSAAPass = new ResolveDeferredMSAAPass();
         m_linearizeDepthPass = new LinearizeDepthPass();
+        m_outlineMaskPass = new OutlineMaskPass();
         m_editorPass = new EditorPass();
         m_computePostProcessPass = new ComputePostProcessPass();
         m_finalBlitPass = new FinalBlitPass();  
@@ -49,6 +51,7 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_deferredLightingPass);
         VG_SAFE_RELEASE(m_resolveDeferredMSAAPass);
         VG_SAFE_RELEASE(m_linearizeDepthPass);
+        VG_SAFE_RELEASE(m_outlineMaskPass);
         VG_SAFE_RELEASE(m_editorPass);
         VG_SAFE_RELEASE(m_computePostProcessPass);
         VG_SAFE_RELEASE(m_finalBlitPass);   
@@ -129,8 +132,10 @@ namespace vg::renderer
                 break;
         }    
 
+        const bool outline = toolmode && true;
+
         // Resolve/copy linear depth just before transparent pass because even in case of forward rendering we might want to add other passes writing Z (e.g., Skin, Water ...)
-        if (options->isTransparencyEnabled() || view->IsComputePostProcessNeeded())
+        if (outline || options->isTransparencyEnabled() || view->IsComputePostProcessNeeded())
             _frameGraph.addUserPass(_renderPassContext, m_linearizeDepthPass, "LinearizeDepth");
 
         if (options->isTransparencyEnabled())
@@ -138,7 +143,12 @@ namespace vg::renderer
 
         // Render editor display to "Color"
         if (toolmode)
+        {
+            if (outline)
+                _frameGraph.addUserPass(_renderPassContext, m_outlineMaskPass, "OutlineMask");
+
             _frameGraph.addUserPass(_renderPassContext, m_editorPass, "Editor");
+        }
 
         // Apply PostProcess from "Color" and "DepthStencil" to "PostProcessUAV"
         if (view->IsComputePostProcessNeeded())

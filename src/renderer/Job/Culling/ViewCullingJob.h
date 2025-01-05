@@ -23,7 +23,8 @@ namespace vg::renderer
         Opaque,
         AlphaTest,
         Transparent,
-        Decal
+        Decal,
+        Selected
     );
  
     struct ViewCullingJobOutput
@@ -31,7 +32,7 @@ namespace vg::renderer
         ~ViewCullingJobOutput() { clear(); }
         void clear();
 
-        void add(GraphicInstanceListType _type, const GraphicInstance * _instance)
+        void add(GraphicInstanceListType _type, GraphicInstance * _instance)
         {
             m_instancesLists[core::asInteger(_type)].m_instances.push_back(_instance);
         }
@@ -41,7 +42,7 @@ namespace vg::renderer
             return m_instancesLists[core::asInteger(_type)];
         }
 
-        void add(LightType _type, const LightInstance * _light)
+        void add(LightType _type, LightInstance * _light)
         {
             m_lightsLists[core::asInteger(_type)].m_instances.push_back(_light);
         }

@@ -35,7 +35,7 @@ namespace vg::renderer
         core::uint alphatest   = 0;
         core::uint transparent = 0;
         core::uint decal       = 0;
-
+        core::uint selected    = 0;
         core::uint directional = 0;
         core::uint omni        = 0;
         core::uint spot        = 0;
@@ -86,6 +86,7 @@ namespace vg::renderer
         virtual ViewFlags               GetFlags                    () const = 0;
 
         virtual const core::float4x4 &  GetViewInvMatrix            () const = 0;
+        virtual const core::float4x4 &  GetViewMatrix               () const = 0;
         virtual const core::float4x4 &  GetProjectionMatrix         () const = 0;
         virtual core::float2            GetCameraNearFar            () const = 0;
         virtual float                   GetCameraFovY               () const = 0;
