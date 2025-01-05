@@ -1252,7 +1252,8 @@ namespace vg::gfx
                                 sortedNodes.reserve(nodeCount);
 
                                 const auto maxJobCount = jobCount;
-                                while (nodeLists.size() < maxJobCount)
+                                bool exit = false;
+                                while (nodeLists.size() < maxJobCount && !exit)
                                 {
                                     // Find list to split (can only split if > 1 nodes)
                                     u64 maxListCost = 0;
@@ -1269,6 +1270,12 @@ namespace vg::gfx
                                                 maxListCostIndex = i;
                                             }
                                         }
+                                    }
+
+                                    if (maxListCostIndex == -1)
+                                    {
+                                        exit = true;
+                                        continue;
                                     }
 
                                     // Find biggest node in this list

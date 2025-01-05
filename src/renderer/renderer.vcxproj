@@ -254,6 +254,8 @@
     <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardOpaquePass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardTransparentPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\Forward\ForwardTransparentPass.hpp" />
+    <ClInclude Include="RenderPass\RenderObjects\Misc\Outline\OutlineMaskPass.h" />
+    <ClInclude Include="RenderPass\RenderObjects\Misc\Outline\OutlineMaskPass.hpp" />
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.h" />
     <ClInclude Include="RenderPass\RenderObjects\RenderObjectsPass.hpp" />
     <ClInclude Include="RenderPass\RenderPass.h" />

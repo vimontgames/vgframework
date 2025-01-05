@@ -9,6 +9,7 @@
 #include "RenderObjects/Forward/ForwardTransparentPass.hpp"
 #include "RenderObjects/Deferred/DeferredOpaquePass.hpp"
 #include "RenderObjects/Editor/EditorPass.hpp"
+#include "RenderObjects/Misc/Outline/OutlineMaskPass.hpp"
 
 namespace vg::renderer
 {
@@ -46,6 +47,7 @@ namespace vg::renderer
                 break;
 
             case GraphicInstanceListType::All:
+            case GraphicInstanceListType::Selected:
             case GraphicInstanceListType::Opaque:
                 renderContext.m_surfaceType = gfx::SurfaceType::Opaque;
                 break;

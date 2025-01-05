@@ -532,6 +532,10 @@ namespace vg::editor
                             const auto options = EditorOptions::get();
                             bool debugCulling = options->IsDebugCulling();
 
+                            const auto rectPos = ImGui::GetWindowPos() + ImGui::GetWindowContentRegionMin();
+                            const auto rectColor = 0x7F000000;
+                            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0, 1, 0, 1));
+
                             if (view && debugCulling)
                             {
                                 const auto & stats = view->GetViewCullingStats();
@@ -544,48 +548,71 @@ namespace vg::editor
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
                                 string text = fmt::sprintf("Opaque %u", stats.opaque);
                                 ImVec2 textSize = ImGui::CalcTextSize(text.c_str());
-                                ImGui::GetWindowDrawList()->AddRect(pos, vMax, 0x7F7F7F7F);
+                                ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
                                 ImGui::Text(text.c_str(), stats.opaque);
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                text = fmt::sprintf("AlphaTest %u", stats.alphatest);
+                                textSize = ImGui::CalcTextSize(text.c_str());
+                                ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text("AlphaTest %u", stats.alphatest);
+                                ImGui::Text(text.c_str(), stats.alphatest);
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                text = fmt::sprintf("Transparent %u", stats.transparent);
+                                textSize = ImGui::CalcTextSize(text.c_str());
+                                ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text("Transparent %u", stats.transparent);
+                                ImGui::Text(text.c_str(), stats.transparent);
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                text = fmt::sprintf("Decal %u", stats.decal);
+                                textSize = ImGui::CalcTextSize(text.c_str());
+                                ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text("Decal %u", stats.decal);
+                                ImGui::Text(text.c_str(), stats.decal);
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                text = fmt::sprintf("Selected %u", stats.selected);
+                                textSize = ImGui::CalcTextSize(text.c_str());
+                                ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text("Selected %u", stats.selected);
+                                ImGui::Text(text.c_str(), stats.selected);
 
                                 // Lights
                                 pos.y += style::font::DefaultFontHeight;
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                text = fmt::sprintf("Directional %u", stats.directional);
+                                textSize = ImGui::CalcTextSize(text.c_str());
+                                ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text("Directional %u", stats.directional);
+                                ImGui::Text(text.c_str(), stats.directional);
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                text = fmt::sprintf("Omni %u", stats.omni);
+                                textSize = ImGui::CalcTextSize(text.c_str());
+                                ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text("Omni %u", stats.omni);
+                                ImGui::Text(text.c_str(), stats.omni);
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                text = fmt::sprintf("Spot %u", stats.spot);
+                                textSize = ImGui::CalcTextSize(text.c_str());
+                                ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text("Spot %u", stats.spot);
+                                ImGui::Text(text.c_str(), stats.spot);
                             }
+
+                            ImGui::PopStyleColor();
                         }
                     }
                 }

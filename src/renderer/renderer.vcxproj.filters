@@ -535,6 +535,12 @@
     <ClInclude Include="RenderPass\Compute\ComputePostProcess\PostProcess_consts.h">
       <Filter>Pass\Compute\ComputePostProcess</Filter>
     </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\Misc\Outline\OutlineMaskPass.h">
+      <Filter>Pass\RenderObjects\Misc\Outline</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\RenderObjects\Misc\Outline\OutlineMaskPass.hpp">
+      <Filter>Pass\RenderObjects\Misc\Outline</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -731,6 +737,12 @@
     </Filter>
     <Filter Include="Pass\Render2D\LinearizeDepth">
       <UniqueIdentifier>{f1c3eb97-0bf4-4301-ba78-7e56bcff25f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\RenderObjects\Misc">
+      <UniqueIdentifier>{292cb3eb-6783-40a1-817f-99dd73ec48ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pass\RenderObjects\Misc\Outline">
+      <UniqueIdentifier>{49ddc95f-4624-4288-84aa-927c435becbc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
