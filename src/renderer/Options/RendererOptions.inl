@@ -13,8 +13,8 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE bool RendererOptions::isRenderJobsUsingOnlyMainThread() const
+    VG_INLINE gfx::RenderJobsPolicy RendererOptions::getRenderJobsPolicy() const
     {
-        return m_renderJobsOnMainThreadOnly;
+        return m_renderJobsPolicy;
     }
 }

@@ -4,6 +4,7 @@
 #include "core/Singleton/Singleton.h"
 #include "gfx/Device/Device_consts.h"
 #include "gfx/Resource/Texture_consts.h"
+#include "gfx/FrameGraph/FrameGraph_consts.h"
 #include "Shaders/system/displaymodes.hlsli"
 #include "renderer/PBR/PBR_Consts.h"
 
@@ -121,7 +122,7 @@ namespace vg::renderer
         VG_INLINE bool          isRenderJobsEnabled                     () const;
         VG_INLINE bool          isForcedRenderJobsCount                 () const;
         core::uint              getRenderJobCount                       () const;
-        VG_INLINE bool          isRenderJobsUsingOnlyMainThread         () const;
+        VG_INLINE gfx::RenderJobsPolicy getRenderJobsPolicy             () const;
 
     protected:
         Quality                 autodetectQualityLevel                  ();
@@ -163,9 +164,8 @@ namespace vg::renderer
         bool                    m_renderJobs                            = false;
         bool                    m_forceRenderJobsCount                  = false;
         core::u16               m_renderJobsCount                       = 1;
-        bool                    m_renderJobsOnMainThreadOnly            = false;
-        const gfx::DeviceCaps * m_deviceCaps                            = nullptr;
-        
+        gfx::RenderJobsPolicy   m_renderJobsPolicy                      = gfx::RenderJobsPolicy::RecursiveSplit;
+        const gfx::DeviceCaps * m_deviceCaps                            = nullptr;        
         core::IProperty *       m_hdrProp                               = nullptr;
         core::IProperty *       m_vsyncProp                             = nullptr;
         core::IProperty *       m_msaaProp[core::enumCount<Quality>()]  = {};

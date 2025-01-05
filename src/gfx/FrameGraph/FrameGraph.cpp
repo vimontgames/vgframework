@@ -35,9 +35,9 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    core::u64 UserPassInfoNode::getCostEstimate() const
+    void UserPassInfoNode::cacheCostEstimate()
     {
-        return m_userPassInfo->m_userPass->GetCostEstimate(m_userPassInfo->m_renderContext);
+        m_cost = m_userPassInfo->m_userPass->GetCostEstimate(m_userPassInfo->m_renderContext);
     }
 
 	//--------------------------------------------------------------------------------------
@@ -243,7 +243,7 @@ namespace vg::gfx
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::setup()
 	{
-        VG_PROFILE_CPU("setup");
+        VG_PROFILE_CPU("Setup");
 
         for (UserPassInfoNode & node : m_userPassInfoTree.m_children)
             setupNode(node);
@@ -519,7 +519,7 @@ namespace vg::gfx
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::build()
 	{
-        VG_PROFILE_CPU("build");
+        VG_PROFILE_CPU("Build");
 
         // Cleanup
 		for (auto * renderPass : m_renderPasses)
@@ -747,7 +747,7 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void FrameGraph::gatherNodes(const UserPassInfoNode & _node, vector<UserPassInfoNode> & _nodes, u64 & _totalEstimatedCost)
+    void FrameGraph::gatherNodes(UserPassInfoNode & _node, vector<UserPassInfoNode> & _nodes, u64 & _totalEstimatedCost)
     {
         for (auto & child : _node.m_children)
             gatherNodes(child, _nodes, _totalEstimatedCost);
@@ -755,8 +755,9 @@ namespace vg::gfx
         // Do not add empty nodes without renderpass
         if (nullptr != _node.m_renderPass)
         {
+            _node.cacheCostEstimate();
             _nodes.push_back(_node);
-            _totalEstimatedCost += _node.getCostEstimate(); 
+            _totalEstimatedCost += _node.getCostEstimate();
         }
     }
 
@@ -1104,223 +1105,366 @@ namespace vg::gfx
             // temp: use default cmdlist
             CommandList * defaultCmdList = cmdLists[0];
 
-            // TODO: estimate node cost to dispatch jobs
-            const uint nodesPerJob = ((uint)nodes.size() + maxRenderJobCount - 1) / maxRenderJobCount;
-           
-            if (device->getRenderJobsMainThreadOnly())
+            // Select policy used to dispatch nodes into Render jobs
+            const auto renderJobsPolicy = device->getRenderJobsPolicy();
+
+            // Dispatch render nodes
             {
-                // Render all nodes using several command list, but still on main thread (for debug purpose)
-                uint cmdListIndex = 0;
-                uint nodeCount = 0;
-                for (uint i = 0; i < nodes.size(); ++i)
+                VG_PROFILE_CPU("RenderJobs");
+
+                if (RenderJobsPolicy::MainThread == renderJobsPolicy)
                 {
-                    CommandList * cmdList = cmdLists[cmdListIndex];
+                    VG_PROFILE_CPU("MainThread");
 
-                    VG_PROFILE_GPU_CONTEXT(cmdList);
-                    renderNode(nodes[i], cmdList, false);
+                    // Render all nodes using several command list, but still on main thread (for debug purpose)
+                    const uint nodesPerJob = ((uint)nodes.size() + maxRenderJobCount - 1) / maxRenderJobCount;
 
-                    if (++nodeCount > nodesPerJob)
+                    uint cmdListIndex = 0;
+                    uint nodeCount = 0;
+                    for (uint i = 0; i < nodes.size(); ++i)
                     {
-                        cmdListIndex++;
-                        nodeCount = 0;
-                    }
-                }
+                        CommandList * cmdList = cmdLists[cmdListIndex];
 
-                device->setExecuteCommandListCount(gfx::CommandListType::Graphics, cmdListIndex + 1);
-            }
-            else
-            {
-                // Use up to 1 job per worker thread to run RenderJobs
+                        VG_PROFILE_GPU_CONTEXT(cmdList);
+                        renderNode(nodes[i], cmdList, false);
 
-                // Reset all jobs
-                {
-                    VG_PROFILE_CPU("Reset RenderJobs");
-                    for (uint i = 0; i < m_renderJobs.size(); ++i)
-                        m_renderJobs[i]->reset(cmdLists[i]);
-                }
-
-                uint jobCount;
-
-                // Assign nodes to render jobs, sequentially
-                {
-                    VG_PROFILE_CPU("Dispatch RenderJobs");
-
-                    const uint nodeCount = (uint)nodes.size();
-                    jobCount = min((uint)m_renderJobs.size(), nodeCount); // Can't have more jobs than nodes to render
-
-                    if (nodeCount <= jobCount)
-                    {
-                        for (uint n = 0; n < nodeCount; ++n)
+                        if (++nodeCount > nodesPerJob)
                         {
-                            auto & renderJob = m_renderJobs[n];
-                            const UserPassInfoNode * node = &nodes[n];
-                            renderJob->add(node);
+                            cmdListIndex++;
+                            nodeCount = 0;
                         }
                     }
-                    else
+
+                    device->setExecuteCommandListCount(gfx::CommandListType::Graphics, cmdListIndex + 1);
+                }
+                else
+                {
+                    core::JobSync renderJobSync;
+                    core::IScheduler * jobScheduler = Kernel::getScheduler();
+                    uint jobCount = 0;
+                    core::vector<RenderJob *> jobsToStart;
+                    jobsToStart.reserve(maxRenderJobCount);
+
+                    // Use up to 1 job per worker thread to run RenderJobs
                     {
-                        #if 0
+                        VG_PROFILE_CPU("Dispatch");
 
-                        // Split based only on node count (doesn't account node estimated cost)
+                        // Reset all jobs
                         {
-                            const uint minNodeCount = nodeCount / jobCount;
-                            const uint maxNodeCount = minNodeCount + 1;
-                            const uint limit = nodeCount % jobCount;
-
-                            uint nodeBaseIndex = 0;
-                            for (uint i = 0; i < jobCount; ++i)
-                            {
-                                auto & renderJob = m_renderJobs[i];
-
-                                const uint jobNodeCount = i < limit ? maxNodeCount : minNodeCount;
-                                for (uint n = 0; n < jobNodeCount; ++n)
-                                {
-                                    const UserPassInfoNode * node = &nodes[nodeBaseIndex + n];
-                                    renderJob->add(node);
-                                }
-                                nodeBaseIndex += jobNodeCount;
-                            }
+                            VG_PROFILE_CPU("Reset");
+                            for (uint i = 0; i < m_renderJobs.size(); ++i)
+                                m_renderJobs[i]->reset(cmdLists[i]);
                         }
 
-                        #elif 0
+                        // Assign nodes to render jobs, sequentially
+                        const uint nodeCount = (uint)nodes.size();
+                        jobCount = min((uint)m_renderJobs.size(), nodeCount); // Can't have more jobs than nodes to render
 
-                        // Estimate cost then add jobs as long as the total cost < targetCost
+                        if (nodeCount <= jobCount)
                         {
-                            u64 targetCost = totalEstimatedCost / jobCount;
-                            uint renderJobIndex = 0;
-                            u64 renderJobCost = 0;
-                            for (uint i = 0; i < nodeCount; ++i)
-                            {
-                                const auto & node = nodes[i];
-                                const auto cost = node.getCostEstimate();
+                            VG_PROFILE_CPU("JobCount");
 
-                                if (renderJobCost + cost < targetCost || (renderJobIndex + 1 == jobCount))
-                                {
-                                    auto & renderJob = m_renderJobs[renderJobIndex];
-                                    renderJob->add(&node);
-                                    renderJobCost += cost;
-                                }
-                                else
-                                {
-                                    renderJobIndex++;
-                                    VG_ASSERT(renderJobIndex < jobCount);
-                                    renderJobCost = 0;
-                                    auto & renderJob = m_renderJobs[renderJobIndex];
-                                    renderJob->add(&node);
-                                    renderJobCost += cost;
-                                }
-                            }
-
-                            jobCount = renderJobIndex + 1;
-                        }
-
-                        #else 
-
-                        // Try to minimize sum of estimated cost per job, while preserving order so as to have only one command list per worker thread max
-                        {
-                            // Create cumulativeCost vector
-                            u64 maxCost = -1;
-                            vector<u64> cumulativeCost(nodeCount + 1, 0);
                             for (uint n = 0; n < nodeCount; ++n)
-                                cumulativeCost[n + 1] = cumulativeCost[n] + min(nodes[n].getCostEstimate(), maxCost);
-
-                            // Prepare 2D vectors for DP and backtrack
-                            vector2D<i64> backtrack(jobCount, nodeCount, -1);
-                            vector2D<u64> dp(jobCount, nodeCount, ULLONG_MAX);
-
-                            // Calculate range cost
-                            auto cost = [&](int _begin, int _end) 
                             {
-                                return cumulativeCost[_end + 1] - cumulativeCost[_begin];
-                            };
-
-                            // DP initialization
-                            for (uint n = 0; n < nodeCount; ++n) 
-                                dp[0][n] = cost(0, n);
-
-                            // DP algorithm to calculate minimal cost and distribute nodes more evenly
-                            for (uint j = 1; j < jobCount; ++j)
+                                auto & renderJob = m_renderJobs[n];
+                                const UserPassInfoNode * node = &nodes[n];
+                                renderJob->add(node);
+                            }
+                        }
+                        else
+                        {
+                            if (RenderJobsPolicy::NodeCount == renderJobsPolicy)
                             {
-                                for (uint n = j; n < nodeCount; ++n) 
+                                // Split based only on node count (doesn't account node estimated cost)
+                                VG_PROFILE_CPU("NodeCount");
+
+                                const uint minNodeCount = nodeCount / jobCount;
+                                const uint maxNodeCount = minNodeCount + 1;
+                                const uint limit = nodeCount % jobCount;
+
+                                uint nodeBaseIndex = 0;
+                                for (uint i = 0; i < jobCount; ++i)
                                 {
-                                    for (uint k = j - 1; k < n; ++k) 
+                                    auto & renderJob = m_renderJobs[i];
+
+                                    const uint jobNodeCount = i < limit ? maxNodeCount : minNodeCount;
+                                    for (uint n = 0; n < jobNodeCount; ++n)
                                     {
-                                        u64 currentCost = dp[j - 1][k];
-                                        u64 segmentCost = cost(k + 1, n);
-                                        u64 maxCost = max(currentCost, segmentCost);
-                                        if (maxCost < dp[j][n]) 
+                                        const UserPassInfoNode * node = &nodes[nodeBaseIndex + n];
+                                        renderJob->add(node);
+                                    }
+                                    nodeBaseIndex += jobNodeCount;
+                                }
+                            }
+                            else if (RenderJobsPolicy::TargetCost == renderJobsPolicy)
+                            {
+                                // Estimate cost then add jobs as long as the total cost < targetCost
+                                VG_PROFILE_CPU("TargetCost");
+
+                                u64 targetCost = totalEstimatedCost / jobCount;
+                                uint renderJobIndex = 0;
+                                u64 renderJobCost = 0;
+                                for (uint i = 0; i < nodeCount; ++i)
+                                {
+                                    const auto & node = nodes[i];
+                                    const auto cost = node.getCostEstimate();
+
+                                    if (renderJobCost + cost < targetCost || (renderJobIndex + 1 == jobCount))
+                                    {
+                                        auto & renderJob = m_renderJobs[renderJobIndex];
+                                        renderJob->add(&node);
+                                        renderJobCost += cost;
+                                    }
+                                    else
+                                    {
+                                        renderJobIndex++;
+                                        VG_ASSERT(renderJobIndex < jobCount);
+                                        renderJobCost = 0;
+                                        auto & renderJob = m_renderJobs[renderJobIndex];
+                                        renderJob->add(&node);
+                                        renderJobCost += cost;
+                                    }
+                                }
+
+                                jobCount = renderJobIndex + 1;
+                            }
+                            else if (RenderJobsPolicy::RecursiveSplit == renderJobsPolicy)
+                            {
+                                // Start will all nodes in a single job, and recursively split the job by separating the most expensive node in a new job
+                                VG_PROFILE_CPU("RecursiveSplit");
+
+                                struct NodeList
+                                {
+                                    vector<const UserPassInfoNode *> nodes;
+                                    u64 totalCost = 0;
+                                    uint jobIndex = -1;
+                                };
+
+                                vector<NodeList> nodeLists(1);
+                                nodeLists[0].nodes.reserve(nodeCount);
+                                for (uint i = 0; i < nodeCount; ++i)
+                                {
+                                    nodeLists[0].nodes.push_back(&nodes[i]);
+                                    nodeLists[0].totalCost += nodes[i].getCostEstimate();
+                                }
+
+                                vector<const UserPassInfo *> sortedNodes;
+                                sortedNodes.reserve(nodeCount);
+
+                                const auto maxJobCount = jobCount;
+                                while (nodeLists.size() < maxJobCount)
+                                {
+                                    // Find list to split (can only split if > 1 nodes)
+                                    u64 maxListCost = 0;
+                                    uint maxListCostIndex = -1;
+                                    for (uint i = 0; i < nodeLists.size(); ++i)
+                                    {
+                                        const auto & nodeList = nodeLists[i];
+
+                                        if (nodeList.nodes.size() > 1)
                                         {
-                                            dp[j][n] = maxCost;
-                                            backtrack[j][n] = k;
+                                            if (nodeList.totalCost > maxListCost)
+                                            {
+                                                maxListCost = nodeList.totalCost;
+                                                maxListCostIndex = i;
+                                            }
+                                        }
+                                    }
+
+                                    // Find biggest node in this list
+                                    auto & nodeListToSplit = nodeLists[maxListCostIndex];
+                                    u64 maxNodeCost = 0;
+                                    uint maxNodeCostIndex = -1;
+                                    for (uint i = 0; i < nodeListToSplit.nodes.size(); ++i)
+                                    {
+                                        const auto & node = nodeListToSplit.nodes[i];
+                                        if (node->m_cost > maxNodeCost)
+                                        {
+                                            maxNodeCost = node->m_cost;
+                                            maxNodeCostIndex = i;
+                                        }
+                                    }
+
+                                    // Split in two lists, new list starts with the biggest node
+                                    if (maxNodeCostIndex > 0)
+                                    {
+                                        uint newNodeListSize = (uint)nodeListToSplit.nodes.size() - maxNodeCostIndex;
+                                        NodeList newNodeList;
+                                        newNodeList.nodes.resize(newNodeListSize);
+                                        newNodeList.totalCost = 0;
+                                        for (uint i = 0; i < newNodeListSize; ++i)
+                                        {
+                                            const auto * node = nodeListToSplit.nodes[maxNodeCostIndex + i];
+                                            newNodeList.nodes[i] = node;
+                                            newNodeList.totalCost += node->m_cost;
+                                        }
+
+                                        nodeListToSplit.nodes.resize(maxNodeCostIndex);
+                                        nodeListToSplit.totalCost = 0;
+                                        for (uint i = 0; i < maxNodeCostIndex; ++i)
+                                        {
+                                            const auto * node = nodeListToSplit.nodes[i];
+                                            nodeListToSplit.totalCost += node->m_cost;
+                                        }
+
+                                        nodeLists.insert(nodeLists.begin() + maxListCostIndex + 1, newNodeList); // insert after nodeListToSplit
+                                    }
+                                    else
+                                    {
+                                        // separate 
+                                        uint newNodeListSize = (uint)nodeListToSplit.nodes.size() - 1;
+                                        NodeList newNodeList;
+                                        newNodeList.nodes.resize(newNodeListSize);
+                                        newNodeList.totalCost = newNodeList.totalCost - nodeListToSplit.nodes[0]->m_cost;
+                                        for (uint i = 0; i < newNodeListSize; ++i)
+                                        {
+                                            const auto * node = nodeListToSplit.nodes[i + 1];
+                                            newNodeList.nodes[i] = node;
+                                            newNodeList.totalCost += node->m_cost;
+                                        }
+
+                                        nodeListToSplit.nodes.resize(1);
+                                        nodeListToSplit.totalCost = nodeListToSplit.nodes[0]->m_cost;
+
+                                        nodeLists.insert(nodeLists.begin() + maxListCostIndex + 1, newNodeList); // insert after nodeListToSplit
+                                    }
+                                }
+
+                                jobCount = (uint)nodeLists.size();
+                                for (uint j = 0; j < jobCount; ++j)
+                                {
+                                    auto * renderJob = m_renderJobs[j];
+                                    auto & nodeList = nodeLists[j];
+                                    nodeList.jobIndex = j;
+                                    const auto & jobNodes = nodeList.nodes;
+                                    for (uint n = 0; n < jobNodes.size(); ++n)
+                                        renderJob->add(jobNodes[n]);
+                                }
+
+                                // Sort node lists so as to get biggest jobs first (we don't want a worker thread to start with a small job THEN execute a big job)
+                                sort(nodeLists.begin(), nodeLists.end(), [](NodeList & a, NodeList & b)
+                                    {
+                                        return a.totalCost > b.totalCost;
+                                    }
+                                );
+
+                                // Start biggest jobs first but keep execution order 
+                                for (uint i = 0; i < nodeLists.size(); ++i)
+                                    jobsToStart.push_back(m_renderJobs[nodeLists[i].jobIndex]);
+                            }
+
+                            else if (RenderJobsPolicy::CumulativeCost == renderJobsPolicy)
+                            {
+                                // Try to minimize sum of estimated cost per job, while preserving order so as to have only one command list per worker thread max
+                                VG_PROFILE_CPU("CumulativeCost");
+
+                                // Create cumulativeCost vector
+                                u64 maxCost = -1;
+                                vector<u64> cumulativeCost(nodeCount + 1, 0);
+                                for (uint n = 0; n < nodeCount; ++n)
+                                    cumulativeCost[n + 1] = cumulativeCost[n] + min(nodes[n].getCostEstimate(), maxCost);
+
+                                // Prepare 2D vectors for DP and backtrack
+                                vector2D<i64> backtrack(jobCount, nodeCount, -1);
+                                vector2D<u64> dp(jobCount, nodeCount, ULLONG_MAX);
+
+                                // Calculate range cost
+                                auto cost = [&](int _begin, int _end)
+                                    {
+                                        return cumulativeCost[_end + 1] - cumulativeCost[_begin];
+                                    };
+
+                                // DP initialization
+                                for (uint n = 0; n < nodeCount; ++n)
+                                    dp[0][n] = cost(0, n);
+
+                                // DP algorithm to calculate minimal cost and distribute nodes more evenly
+                                for (uint j = 1; j < jobCount; ++j)
+                                {
+                                    for (uint n = j; n < nodeCount; ++n)
+                                    {
+                                        for (uint k = j - 1; k < n; ++k)
+                                        {
+                                            u64 currentCost = dp[j - 1][k];
+                                            u64 segmentCost = cost(k + 1, n);
+                                            u64 maxCost = max(currentCost, segmentCost);
+                                            if (maxCost < dp[j][n])
+                                            {
+                                                dp[j][n] = maxCost;
+                                                backtrack[j][n] = k;
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            // To assign nodes to jobs
-                            i64 i = nodeCount - 1;
-                            i64 j = jobCount - 1;
+                                // To assign nodes to jobs
+                                i64 i = nodeCount - 1;
+                                i64 j = jobCount - 1;
 
-                            // Backtrack to find the optimal assignments
-                            vector<vector<int>> jobAssignments(jobCount);
-                            while (j >= 0) 
-                            {
-                                i64 k = backtrack[j][i];
-                                for (i64 idx = k + 1; idx <= i; ++idx) 
+                                // Backtrack to find the optimal assignments
+                                vector<vector<int>> jobAssignments(jobCount);
+                                while (j >= 0)
                                 {
-                                    const auto & node = nodes[idx];
+                                    i64 k = backtrack[j][i];
+                                    for (i64 idx = k + 1; idx <= i; ++idx)
+                                    {
+                                        const auto & node = nodes[idx];
 
-                                    auto & renderJob = m_renderJobs[j];
-                                    renderJob->add(&node);
+                                        auto & renderJob = m_renderJobs[j];
+                                        renderJob->add(&node);
+                                    }
+                                    i = k;
+                                    --j;
                                 }
-                                i = k;
-                                --j;
-                            }                            
+                            }
                         }
 
-                        #endif
+                        device->setExecuteCommandListCount(gfx::CommandListType::Graphics, jobCount);
                     }
 
-                    device->setExecuteCommandListCount(gfx::CommandListType::Graphics, jobCount);
-                }
+                    // Kick jobs ...
+                    {
+                        VG_PROFILE_CPU("Start");
+                        if (jobsToStart.size() > 0)
+                        {
+                            for (uint i = 0; i < jobsToStart.size(); ++i)
+                                jobScheduler->Start(jobsToStart[i], &renderJobSync);
+                        }
+                        else
+                        {
+                            for (uint i = 0; i < jobCount; ++i)
+                                jobScheduler->Start(m_renderJobs[i], &renderJobSync);
+                        }
+                    }
 
-                core::JobSync renderJobSync;
-                core::IScheduler * jobScheduler = Kernel::getScheduler();
+                    // debug
+                    //{
+                    //    VG_PROFILE_CPU("debug");
+                    //
+                    //    for (uint j = 0; j < m_renderJobs.size(); ++j)
+                    //    {
+                    //        const auto & renderJob = m_renderJobs[j];
+                    //        u64 totalCost = 0;
+                    //        string jobNames = "";
+                    //        const auto & jobNodes = renderJob->getNodes();
+                    //        for (uint i = 0; i < (uint)jobNodes.size(); ++i)
+                    //        {
+                    //            const auto * node = jobNodes[i];
+                    //            const auto nodeCost = node->getCostEstimate();
+                    //            if (i != 0)
+                    //                jobNames += " + ";
+                    //            jobNames += fmt::sprintf("%s (%u)", node->m_name.c_str(), nodeCost);
+                    //            totalCost += nodeCost;
+                    //        }
+                    //        VG_DEBUGPRINT("Job %u: %s (total: %u)\n", j, jobNames.c_str(), totalCost);
+                    //    }
+                    //}
 
-                // Kick jobs ...
-                {
-                    VG_PROFILE_CPU("Start RenderJobs");
-                    for (uint i = 0; i < jobCount; ++i)
-                        jobScheduler->Start(m_renderJobs[i], &renderJobSync);
-                }
-
-                // debug
-                //{
-                //    VG_PROFILE_CPU("debug");
-                //
-                //    for (uint j = 0; j < m_renderJobs.size(); ++j)
-                //    {
-                //        const auto & renderJob = m_renderJobs[j];
-                //        u64 totalCost = 0;
-                //        string jobNames = "";
-                //        const auto & jobNodes = renderJob->getNodes();
-                //        for (uint i = 0; i < (uint)jobNodes.size(); ++i)
-                //        {
-                //            const auto * node = jobNodes[i];
-                //            const auto nodeCost = node->getCostEstimate();
-                //            if (i != 0)
-                //                jobNames += " + ";
-                //            jobNames += fmt::sprintf("%s (%u)", node->m_name.c_str(), nodeCost);
-                //            totalCost += nodeCost;
-                //        }
-                //        VG_DEBUGPRINT("Job %u: %s (total: %u)\n", j, jobNames.c_str(), totalCost);
-                //    }
-                //}
-
-                // ... and wait for completion
-                {
-                    VG_PROFILE_CPU("Wait RenderJobs");
-                    jobScheduler->Wait(&renderJobSync);
+                    // ... and wait for completion
+                    {
+                        VG_PROFILE_CPU("Wait");
+                        jobScheduler->Wait(&renderJobSync);
+                    }
                 }
             }
         }

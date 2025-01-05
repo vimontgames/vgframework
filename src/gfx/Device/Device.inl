@@ -24,9 +24,9 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE bool Device::getRenderJobsMainThreadOnly() const
+    VG_INLINE gfx::RenderJobsPolicy Device::getRenderJobsPolicy() const
     {
-        return m_renderJobsMainThreadOnly;
+        return m_renderJobsPolicy;
     }
 }
 

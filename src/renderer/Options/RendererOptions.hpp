@@ -237,10 +237,6 @@ namespace vg::renderer
                 registerProperty(RendererOptions, m_renderJobs, "Enable");
                 setPropertyDescription(RendererOptions, m_renderJobs, "Enable render jobs");
 
-                registerProperty(RendererOptions, m_renderJobsOnMainThreadOnly, "Single-threaded");
-                setPropertyDescription(RendererOptions, m_renderJobsOnMainThreadOnly, "Several command lists will still be used but only the main thread will be used to fill them.");
-                setPropertyReadOnlyCallback(RendererOptions, m_renderJobsOnMainThreadOnly, isRenderJobOptionReadOnly);
-
                 registerProperty(RendererOptions, m_forceRenderJobsCount, "Force job count");
                 setPropertyDescription(RendererOptions, m_forceRenderJobsCount, "Override RenderJobs count");
                 setPropertyReadOnlyCallback(RendererOptions, m_forceRenderJobsCount, isRenderJobOptionReadOnly);
@@ -249,6 +245,10 @@ namespace vg::renderer
                 setPropertyDescription(RendererOptions, m_renderJobsCount, "Forced job count");
                 setPropertyRange(RendererOptions, m_renderJobsCount, float2(2, 64));
                 setPropertyHiddenCallback(RendererOptions, m_renderJobsCount, isRenderJobsCountReadOnly);
+
+                registerPropertyEnum(RendererOptions, gfx::RenderJobsPolicy, m_renderJobsPolicy, "Policy");
+                setPropertyDescription(RendererOptions, m_renderJobsPolicy, "RenderJobs scheduling policy.");
+                setPropertyReadOnlyCallback(RendererOptions, m_renderJobsPolicy, isRenderJobOptionReadOnly);
             }
             registerPropertyGroupEnd(RendererOptions);
         }

@@ -9,6 +9,7 @@
 #include "gfx/RootSignature/RootSignature_consts.h"
 #include "gfx/Device/DeviceCaps.h"
 #include "gfx/Shader/ShaderKey.h"
+#include "gfx/FrameGraph/FrameGraph_consts.h"
 
 //#define VG_DBG_CPUGPUSYNC 1
 
@@ -148,7 +149,7 @@ namespace vg::gfx
             double                                          m_gpuWaitTime = 0;
             bool                                            m_captureInProgress = false;
             core::uint                                      m_maxRenderJobCount = 0;
-            bool                                            m_renderJobsMainThreadOnly = false;
+            gfx::RenderJobsPolicy                           m_renderJobsPolicy = gfx::RenderJobsPolicy::RecursiveSplit;
 		};
 	}
 }
@@ -193,14 +194,14 @@ namespace vg::gfx
         void                    setHDR                      (HDR _mode);
         HDR                     getHDR                      () const;
 
-        bool                    setMaxRenderJobCount        (core::uint _maxCount, bool _mainThreadOnly = false);
+        bool                    setMaxRenderJobCount        (core::uint _maxCount, gfx::RenderJobsPolicy _policy);
         VG_INLINE core::uint    getMaxRenderJobCount        () const;
-        VG_INLINE bool          getRenderJobsMainThreadOnly () const;
+        VG_INLINE gfx::RenderJobsPolicy getRenderJobsPolicy () const;
 
         void                    waitGPUIdle                 ();
 
 	private:
-        TextureImporter *   m_textureImporter = nullptr;
+        TextureImporter *       m_textureImporter = nullptr;
 	};
 }
 

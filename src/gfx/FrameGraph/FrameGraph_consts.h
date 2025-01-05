@@ -26,4 +26,12 @@ namespace vg::gfx
         Read    = 0x01,
         Write   = 0x02
     );
+
+    vg_enum_class(RenderJobsPolicy, core::u8,
+        MainThread = 0,
+        NodeCount,
+        TargetCost,
+        RecursiveSplit,
+        CumulativeCost
+    );
 }

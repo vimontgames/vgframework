@@ -462,9 +462,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool Renderer::SetMaxRenderJobCount(core::uint _maxCount, bool _mainThreadOnly)
+    bool Renderer::SetMaxRenderJobCount(core::uint _maxCount, gfx::RenderJobsPolicy _scheduling)
     {
-        return m_device.setMaxRenderJobCount(_maxCount, _mainThreadOnly);
+        return m_device.setMaxRenderJobCount(_maxCount, _scheduling);
     }
 
     //--------------------------------------------------------------------------------------
@@ -492,9 +492,9 @@ namespace vg::renderer
         options->update();
 
         if (options->isRenderJobsEnabled())
-            SetMaxRenderJobCount(options->getRenderJobCount(), options->isRenderJobsUsingOnlyMainThread());
+            SetMaxRenderJobCount(options->getRenderJobCount(), options->getRenderJobsPolicy());
         else
-            SetMaxRenderJobCount(0);
+            SetMaxRenderJobCount(0, RenderJobsPolicy::MainThread);
 
 		m_device.beginFrame();
 		{
