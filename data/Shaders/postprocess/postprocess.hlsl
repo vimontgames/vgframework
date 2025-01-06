@@ -133,6 +133,67 @@ void CS_DepthOfField(int2 dispatchThreadID : SV_DispatchThreadID)
     }
 }
 
+void outlineEdgeSample(uint4 _center, uint4 _sample, inout bool _visibleOutline, inout bool _hiddenOutline)
+{
+    if ((_sample.a & ~(uint)OutlineMaskFlags::DepthFail) != (_center.a & ~(uint)OutlineMaskFlags::DepthFail))
+    {
+        if (0 != _sample.a)
+        {
+            if (_sample.a & (uint)OutlineMaskFlags::DepthFail)
+                _hiddenOutline = true;
+            else
+                _visibleOutline = true;
+        }
+    }
+}
+
+void outlineEdge(uint4 s00, uint4 s01, uint4 s02,
+                 uint4 s10, uint4 s11, uint4 s12,
+                 uint4 s20, uint4 s21, uint4 s22, inout float _visible, inout float _hidden)
+{
+    bool visibleOutline = false, hiddenOutline = false;
+
+    outlineEdgeSample(s11, s00, visibleOutline, hiddenOutline);
+    outlineEdgeSample(s11, s01, visibleOutline, hiddenOutline);
+    outlineEdgeSample(s11, s02, visibleOutline, hiddenOutline);
+
+    outlineEdgeSample(s11, s10, visibleOutline, hiddenOutline);
+    //outlineEdgeSample(s11, s11, visibleOutline, hiddenOutline);
+    outlineEdgeSample(s11, s12, visibleOutline, hiddenOutline);
+
+    outlineEdgeSample(s11, s20, visibleOutline, hiddenOutline);
+    outlineEdgeSample(s11, s21, visibleOutline, hiddenOutline);
+    outlineEdgeSample(s11, s22, visibleOutline, hiddenOutline);
+    
+    if (visibleOutline)
+        _visible += 1.0;
+    else if (hiddenOutline)
+        _hidden += 1.0;
+}
+
+void outlineEdge(Texture2D<uint4> _tex, int2 _coords, inout float _visible, inout float _hidden)
+{
+    bool visibleOutline = false, hiddenOutline = false;
+
+    uint4 center = _tex.Load(int3(_coords.xy, 0));
+
+    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(-1,-1), 0)), visibleOutline, hiddenOutline);
+    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(-1, 0), 0)), visibleOutline, hiddenOutline);
+    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(-1,+1), 0)), visibleOutline, hiddenOutline);
+
+    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2( 0,-1), 0)), visibleOutline, hiddenOutline);
+    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(0,+1), 0)), visibleOutline, hiddenOutline);
+
+    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(+1,-1), 0)), visibleOutline, hiddenOutline);
+    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(+1, 0), 0)), visibleOutline, hiddenOutline);
+    outlineEdgeSample(center, _tex.Load(int3(_coords.xy + int2(+1,+1), 0)), visibleOutline, hiddenOutline);
+    
+    if (visibleOutline)
+        _visible += 1.0;
+    else if (hiddenOutline)
+        _hidden += 1.0;
+}
+
 #if _TOOLMODE
 #if _RAYTRACING
 float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants viewConstants)
@@ -408,45 +469,58 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
 
         // outline
         {
+            #if 0
+
+            float visible = 0.0f;
+            float hidden = 0.0f;
+
+            Texture2D<uint4> outline = getTexture2D_UInt4(postProcessConstants.getOutlineMask());
             
-            float2 pcf = (float2)0.0f;
-            for (int jj = -1; jj < 1; ++jj)
-            {
-                for (int ii = -1; ii < 1; ++ii)
-                {
-                    uint4 center = getTexture2D_UInt4(postProcessConstants.getOutlineMask()).Load(int3(coords.x + ii, coords.y + jj, 0));
+            outlineEdge(outline, coords.xy + int2( 0, -1), visible, hidden);
+            outlineEdge(outline, coords.xy + int2(-1,  0), visible, hidden);
+            outlineEdge(outline, coords.xy + int2( 0,  0), visible, hidden);
+            outlineEdge(outline, coords.xy + int2(+1,  0), visible, hidden);
+            outlineEdge(outline, coords.xy + int2(+1, +1), visible, hidden);
 
-                    bool visibleOutline = false;
-                    bool hiddenOutline = false;
+            color.rgb = lerp(color.rgb, float3(0,1,0), saturate(max(visible, hidden * 0.15) / 4.0));
 
-                    for (int j = -1; j <= 1; ++j)
-                    {
-                        for (int i = -1; i <= 1; ++i)
-                        {
-                            uint4 sample = getTexture2D_UInt4(postProcessConstants.getOutlineMask()).Load(int3(coords.x + ii + i, coords.y + jj + j,0));
+            #else
 
-                            if ((sample.a & ~(uint)OutlineMaskFlags::DepthFail) != (center.a & ~(uint)OutlineMaskFlags::DepthFail))
-                            {
-                                if (0 != sample.a)
-                                {
-                                    if (sample.a & (uint)OutlineMaskFlags::DepthFail)
-                                        hiddenOutline = true;
-                                    else
-                                        visibleOutline = true;
-                                }
-                            }
-                        }
-                    }
-                    
-                    if (visibleOutline)
-                        pcf += 1;
+            Texture2D<uint4> outline = getTexture2D_UInt4(postProcessConstants.getOutlineMask());
+            float4 s[5][5];
 
-                    if (hiddenOutline)
-                        pcf.y += 0.325;
-                }
-            }
+            s[0][0] = outline.Load(int3(coords.x - 2, coords.y - 2,0)); s[0][1] = outline.Load(int3(coords.x - 1, coords.y - 2,0)); s[0][2] = outline.Load(int3(coords.x, coords.y - 2,0)); s[0][3] = outline.Load(int3(coords.x + 1, coords.y - 2,0)); s[0][4] = outline.Load(int3(coords.x + 2, coords.y - 2,0));
+            s[1][0] = outline.Load(int3(coords.x - 2, coords.y - 1,0)); s[1][1] = outline.Load(int3(coords.x - 1, coords.y - 1,0)); s[1][2] = outline.Load(int3(coords.x, coords.y - 1,0)); s[1][3] = outline.Load(int3(coords.x + 1, coords.y - 1,0)); s[1][4] = outline.Load(int3(coords.x + 2, coords.y - 1,0));
+            s[2][0] = outline.Load(int3(coords.x - 2, coords.y - 0,0)); s[2][1] = outline.Load(int3(coords.x - 1, coords.y    ,0)); s[2][2] = outline.Load(int3(coords.x, coords.y    ,0)); s[2][3] = outline.Load(int3(coords.x + 1, coords.y    ,0)); s[2][4] = outline.Load(int3(coords.x + 2, coords.y    ,0));
+            s[3][0] = outline.Load(int3(coords.x - 2, coords.y + 1,0)); s[3][1] = outline.Load(int3(coords.x - 1, coords.y + 1,0)); s[3][2] = outline.Load(int3(coords.x, coords.y + 1,0)); s[3][3] = outline.Load(int3(coords.x + 1, coords.y + 1,0)); s[3][4] = outline.Load(int3(coords.x + 2, coords.y + 1,0));
+            s[4][0] = outline.Load(int3(coords.x - 2, coords.y + 2,0)); s[4][1] = outline.Load(int3(coords.x - 1, coords.y + 2,0)); s[4][2] = outline.Load(int3(coords.x, coords.y + 2,0)); s[4][3] = outline.Load(int3(coords.x + 1, coords.y + 2,0)); s[4][4] = outline.Load(int3(coords.x + 2, coords.y + 2,0));
+            
+            float visible = 0.0f;
+            float hidden = 0.0f;
+                
+            outlineEdge(s[0][1], s[0][2], s[0][3],
+                        s[1][1], s[1][2], s[1][3],
+                        s[2][1], s[2][2], s[2][3], visible, hidden);
 
-            color.rgb = lerp(color.rgb, float3(0,1,0), saturate((pcf.x + pcf.y) / 4.0f));
+            outlineEdge(s[1][0], s[1][1], s[1][2],
+                        s[2][0], s[2][1], s[2][2],
+                        s[3][0], s[3][1], s[3][2], visible, hidden);
+
+            outlineEdge(s[1][1], s[1][2], s[1][3],
+                        s[2][1], s[2][2], s[2][3],
+                        s[3][1], s[3][2], s[3][3], visible, hidden);
+
+            outlineEdge(s[1][2], s[1][3], s[1][4],
+                        s[2][2], s[2][3], s[2][4],
+                        s[3][2], s[3][3], s[3][4], visible, hidden);
+
+            outlineEdge(s[2][1], s[2][2], s[2][3],
+                        s[3][1], s[3][2], s[3][3],
+                        s[4][1], s[4][2], s[4][3], visible, hidden);
+
+            color.rgb = lerp(color.rgb, float3(0,1,0), saturate(max(visible, hidden * 0.15) / 4.0));
+
+            #endif            
         }
 
         switch(viewConstants.getDisplayMode())
