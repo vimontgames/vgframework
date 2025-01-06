@@ -24,7 +24,7 @@ namespace vg::renderer
         AlphaTest,
         Transparent,
         Decal,
-        Selected
+        Outline
     );
  
     struct ViewCullingJobOutput

@@ -3086,7 +3086,7 @@ namespace vg::editor
         {
             bool edited = false;
 
-            sprintf_s(buffer, pString->c_str());
+            strcpy_s(buffer, pString->c_str());
 
             if (ImGui::InputText(getPropertyLabel(_label, _index).c_str(), buffer, countof(buffer), getImGuiInputTextFlags(_propContext, _prop)))
                 edited = true;

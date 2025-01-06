@@ -20,7 +20,8 @@ namespace vg::renderer
             m_shaderPass((ShaderPass)0),
             m_toolmode(false),
             m_raytracing(false),
-            m_wireframe(false)
+            m_wireframe(false),
+            m_outline(false)
         {
 
         }
@@ -32,6 +33,7 @@ namespace vg::renderer
         bool                            m_toolmode     : 1;
         bool                            m_raytracing   : 1;
         bool                            m_wireframe    : 1;
+        bool                            m_outline      : 1;
         gfx::SurfaceType                m_surfaceType = (gfx::SurfaceType)-1;
     };
 }

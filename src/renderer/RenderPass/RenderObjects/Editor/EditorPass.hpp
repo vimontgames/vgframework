@@ -9,20 +9,36 @@
 #include "renderer/Instance/GraphicInstance.h"
 
 #include "Shaders/system/toolmode.hlsl.h"
+#include "Shaders/system/editorpass.hlsli"
 
 namespace vg::renderer
 {
+    //gfx::Buffer * EditorPass::s_editorPassConstantsBuffer = nullptr;
+
     //--------------------------------------------------------------------------------------
     EditorPass::EditorPass() :
         RenderObjectsPass("EditorPass")
     {
+        auto * device = Device::get();
 
+        //if (nullptr == s_editorPassConstantsBuffer)
+        //{
+        //    BufferDesc editorPassConstantsBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, sizeof(EditorPassConstants));
+        //    s_editorPassConstantsBuffer = device->createBuffer(editorPassConstantsBufferDesc, "EditorPassConstants", nullptr, ReservedSlot::EditorPassBufSrv);
+        //}
+        //else
+        //{
+        //    VG_SAFE_INCREASE_REFCOUNT(s_editorPassConstantsBuffer);
+        //}
     }
 
     //--------------------------------------------------------------------------------------
     EditorPass::~EditorPass()
     {
         VG_SAFE_DELETE(m_toolmodeRWBufferStaging);
+
+        //if (s_editorPassConstantsBuffer && !s_editorPassConstantsBuffer->Release())
+        //    s_editorPassConstantsBuffer = nullptr;
     }
 
     //--------------------------------------------------------------------------------------
@@ -31,8 +47,6 @@ namespace vg::renderer
         writeRenderTarget(0, _renderPassContext.getFrameGraphID("Color"));
         writeDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
         writeRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"));
-
-        readRenderTarget(_renderPassContext.getFrameGraphID("OutlineMask"));
         readRWBuffer("SkinningRWBuffer");
     }
 
@@ -40,6 +54,15 @@ namespace vg::renderer
     void EditorPass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
         DebugDraw::get()->update(static_cast<const View*>(_renderPassContext.getView()), _cmdList);
+
+        //auto OutlineMaskTex = getRenderTarget(_renderPassContext.getFrameGraphID("OutlineMask"));
+        //auto outlineMask = OutlineMaskTex->getTextureHandle();
+
+        //EditorPassConstants * constants = (EditorPassConstants *)_cmdList->map(s_editorPassConstantsBuffer, sizeof(EditorPassConstants)).data;
+        //{
+        //    constants->setOutlineMask(outlineMask);
+        //}
+        //_cmdList->unmap(s_editorPassConstantsBuffer);
     }
 
     //--------------------------------------------------------------------------------------
@@ -84,16 +107,12 @@ namespace vg::renderer
                 DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::All);
             }
 
-            bool boudingBoxSelection = true;
-            if (options->isAABBEnabled() || boudingBoxSelection)
+            if (options->isAABBEnabled())
             {
                 const GraphicInstanceList & allInstances = view->getCullingJobResult().get(GraphicInstanceListType::All);
                 for (uint i = 0; i < allInstances.m_instances.size(); ++i)
                 {
                     auto * instance = (GraphicInstance*)allInstances.m_instances[i];
-
-                    if (boudingBoxSelection && !asBool(ObjectFlags::Selected & instance->getObjectFlags()))
-                        continue;
 
                     AABB aabb;
                     if (instance->TryGetAABB(aabb))
@@ -109,7 +128,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void EditorPass::AfterRender(const RenderPassContext & _renderPassContext, CommandList * _cmdList)
     {
-        auto * view = (IView*)(_renderPassContext.getViewMutable());
+        const auto * view = (IView*)(_renderPassContext.getView());
         Buffer * toolmodeRWBuffer = getRWBuffer(_renderPassContext.getFrameGraphID("ToolmodeRWBuffer"));
 
         // allocate staging copy
@@ -130,8 +149,15 @@ namespace vg::renderer
         {
             const ToolmodeRWBufferData * data = (ToolmodeRWBufferData *)result.data;
             const PickingData * pickingData = &data->m_picking;
-            view->SetPickingData(*pickingData);
+            m_pickingData = *pickingData; ;
         }
         m_toolmodeRWBufferStaging->getResource().unmap();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void EditorPass::AfterAll(const gfx::RenderPassContext & _renderPassContext)
+    {
+        auto * view = (IView *)(_renderPassContext.getViewMutable());
+        view->SetPickingData(m_pickingData);
     }
 }

@@ -10,8 +10,7 @@ struct TransparentPassConstants
     #ifdef __cplusplus
     TransparentPassConstants()
     {
-        m_data = (uint4)0;
-
+        m_data = 0;
         setLinearDepth(BINDLESS_TEXTURE_INVALID);
     }
     #else
@@ -21,10 +20,10 @@ struct TransparentPassConstants
     }
     #endif
 
-    uint4   m_data;    
+    uint   m_data;    
     
-    void    setLinearDepth  (uint _linearZ) { m_data.x = packUint16low(m_data.x, _linearZ); }
-    uint    getLinearDepth  ()              { return unpackUint16low(m_data.x); }
+    void    setLinearDepth  (uint _linearZ) { m_data = packUint16low(m_data, _linearZ); }
+    uint    getLinearDepth  ()              { return unpackUint16low(m_data); }
 };
 
 #endif // _TRANSPARENT_PASS__HLSLI_

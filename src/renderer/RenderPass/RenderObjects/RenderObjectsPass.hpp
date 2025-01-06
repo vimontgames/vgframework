@@ -47,7 +47,7 @@ namespace vg::renderer
                 break;
 
             case GraphicInstanceListType::All:
-            case GraphicInstanceListType::Selected:
+            case GraphicInstanceListType::Outline:
             case GraphicInstanceListType::Opaque:
                 renderContext.m_surfaceType = gfx::SurfaceType::Opaque;
                 break;

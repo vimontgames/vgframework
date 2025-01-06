@@ -18,7 +18,7 @@ namespace vg::renderer
 
         core::u64   GetCostEstimate (const gfx::RenderPassContext & _renderContext) const;
         void        Setup           (const gfx::RenderPassContext & _renderContext) final override;
-        void        Prepare         (const gfx::RenderPassContext & _renderContext) final override;
+        void        BeforeAll         (const gfx::RenderPassContext & _renderContext) final override;
         void        Render          (const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
     private:

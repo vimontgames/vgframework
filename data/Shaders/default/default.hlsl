@@ -9,10 +9,8 @@
 #include "system/lighting.hlsli"
 #include "system/debugdisplay.hlsli"
 #include "system/instancedata.hlsli"
-
-#if _ALPHABLEND
 #include "system/transparentPass.hlsli"
-#endif
+#include "system/outlinemask.hlsli"
 
 #include "default.hlsli"
 
@@ -21,6 +19,28 @@
 #else
 #define EXPORT_VPOS 0
 #endif
+
+// TODO: move to transparentPass.hlsli?
+void applyDepthTransparency(inout float _alpha, float2 _screenPos, float4 _vpos, float _invDepthFade)
+{
+    TransparentPassConstants transparentPassConstants;
+    transparentPassConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_TRANSPARENTPASS));
+
+    float linearDepthBuffer = getTexture2D(transparentPassConstants.getLinearDepth()).SampleLevel(nearestClamp, _screenPos.xy, 0).y;
+    float linearZ = -_vpos.z; 
+    float alpha = saturate((linearDepthBuffer - linearZ) * _invDepthFade ); 
+    _alpha *= alpha;
+}
+
+bool linearDepthTest(float2 _screenPos, float4 _vpos)
+{
+    TransparentPassConstants transparentPassConstants;
+    transparentPassConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_TRANSPARENTPASS));
+
+    float linearDepthBuffer = getTexture2D(transparentPassConstants.getLinearDepth()).SampleLevel(nearestClamp, _screenPos.xy, 0).y;
+    float linearZ = -_vpos.z; 
+    return linearZ < linearDepthBuffer + 0.01;
+}
 
 struct VS_Output
 {
@@ -49,7 +69,6 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
 
     Vertex vert;
            vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
-           //vert.Load(getBuffer(instanceData.getVertexBufferHandle()), instanceData.getVertexFormat(), _vertexID, instanceData.getVertexBufferOffset());
 
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
@@ -177,13 +196,7 @@ PS_Output PS_Forward(VS_Output _input)
     #endif 
 
     #if _ALPHABLEND
-    TransparentPassConstants transparentPassConstants;
-    transparentPassConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_TRANSPARENTPASS));
-
-    float linearDepthBuffer = getTexture2D(transparentPassConstants.getLinearDepth()).SampleLevel(nearestClamp, screenPos.xy, 0).y;
-    float linearZ = -_input.vpos.z; 
-    float alpha = saturate((linearDepthBuffer - linearZ) * materialData.getInvDepthFade()); 
-    output.color0.a *= alpha;
+    applyDepthTransparency(output.color0.a, screenPos.xy, _input.vpos, materialData.getInvDepthFade());
     #endif
 
     #if _TOOLMODE && !_ZONLY
@@ -340,4 +353,60 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     #else    
     return output;
     #endif
+}
+
+struct VS_Output_Outline
+{
+    float4 pos  : Position;
+    float4 vpos : ViewPos;
+};
+
+//--------------------------------------------------------------------------------------
+VS_Output_Outline VS_Outline(uint _vertexID : VertexID)
+{
+    VS_Output_Outline output;
+
+    uint instanceDataOffset = rootConstants3D.getGPUInstanceDataOffset(); 
+    GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
+
+    Vertex vert;
+           vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
+
+    ViewConstants viewConstants;
+                  viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+
+    float4x4 view = viewConstants.getView();
+    float4x4 proj = viewConstants.getProj();
+        
+    float3 modelPos = vert.getPos();
+    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
+    float4 viewPos = mul(float4(worldPos.xyz, 1.0f), view); 
+
+    viewPos.z += WIREFRAME_DEPTHBIAS;
+    output.vpos = viewPos;
+    output.pos = mul(viewPos, proj);
+
+    return output;
+}
+
+struct PS_Output_Outline
+{
+    uint4 id : Color0;
+};
+
+PS_Output_Outline PS_Outline(VS_Output_Outline _input)
+{
+    ViewConstants viewConstants;
+    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+    
+    uint2 screenSize = viewConstants.getScreenSize();
+    float3 screenPos = _input.pos.xyz / float3(screenSize.xy, 1);
+
+    PS_Output_Outline output = (PS_Output_Outline)0;
+    output.id = rootConstants3D.getPickingID();
+
+    if (!linearDepthTest(screenPos.xy, _input.vpos))
+        output.id |= (uint)OutlineMaskFlags::DepthFail;
+
+    return output;
 }

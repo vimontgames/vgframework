@@ -2,6 +2,7 @@
 #include "View.h"
 #include "core/GameObject/GameObject.h"
 #include "core/IInput.h"
+#include "core/Scheduler/Mutex.h"
 #include "gfx/ITexture.h"
 #include "gfx/Resource/Buffer.h"
 #include "gfx/Raytracing/TLAS.h"
@@ -529,6 +530,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool View::IsOutlinePassNeeded() const
+    {
+        const auto options = RendererOptions::get();
+        return IsComputePostProcessNeeded() && isToolmode();
+    }
+
+    //--------------------------------------------------------------------------------------
     void View::setTLAS(TLAS * _tlas)
     {
         if (_tlas != m_tlas)
@@ -562,6 +570,8 @@ namespace vg::renderer
     {
         // Copy last picking results
         m_rawPickingData = _pickingData;
+
+        lock_guard<AssertMutex> _(m_pickingHitsAssertMutex);
 
         // Save hits
         const uint counter = m_rawPickingData.m_counter.x;
@@ -599,6 +609,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void View::AddPickingHit(const PickingHit & _hit)
     {
+        lock_guard<AssertMutex> _(m_pickingHitsAssertMutex);
+
         if (isToolmode())
             m_pickingHits.insert(m_pickingHits.begin(), _hit);
     }
@@ -606,6 +618,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     const PickingHit & View::GetPickingClosestHit() const
     {
+        lock_guard<AssertMutex> _(m_pickingHitsAssertMutex);
+
         VG_ASSERT(GetPickingHitCount() > 0);
         return m_pickingHits[0];
     }
@@ -613,12 +627,16 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     const PickingHit & View::GetPickingHit(uint _index) const
     {
+        lock_guard<AssertMutex> _(m_pickingHitsAssertMutex);
+
         return m_pickingHits[_index];
     }
 
     //--------------------------------------------------------------------------------------
     uint View::GetPickingHitCount() const
     {
+        lock_guard<AssertMutex> _(m_pickingHitsAssertMutex);
+
         VG_ASSERT(m_pickingHits.size() <= PICKING_MAX_HITS);
         return (uint)m_pickingHits.size();
     }
@@ -644,7 +662,7 @@ namespace vg::renderer
         stats.alphatest     = (uint)m_cullingJobResult.get(GraphicInstanceListType::AlphaTest).m_instances.size();
         stats.transparent   = (uint)m_cullingJobResult.get(GraphicInstanceListType::Transparent).m_instances.size();
         stats.decal         = (uint)m_cullingJobResult.get(GraphicInstanceListType::Decal).m_instances.size();
-        stats.selected      = (uint)m_cullingJobResult.get(GraphicInstanceListType::Selected).m_instances.size();
+        stats.outline      = (uint)m_cullingJobResult.get(GraphicInstanceListType::Outline).m_instances.size();
 
         stats.directional   = (uint)m_cullingJobResult.get(LightType::Directional).m_instances.size();
         stats.omni          = (uint)m_cullingJobResult.get(LightType::Omni).m_instances.size();

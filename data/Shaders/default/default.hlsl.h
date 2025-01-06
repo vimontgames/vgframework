@@ -44,6 +44,12 @@ namespace vg::gfx
                 deferred.vs = declVS("VS_Deferred");
                 deferred.ps = declPS("PS_Deferred");
             }
+
+            auto & outline = declTechnique("Outline");
+            {
+                outline.vs = declVS("VS_Outline");
+                outline.ps = declPS("PS_Outline");
+            }
         }
     };
 }

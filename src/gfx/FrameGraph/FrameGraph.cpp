@@ -848,15 +848,14 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void FrameGraph::prepareNode(const UserPassInfoNode & _node)
+    void FrameGraph::beforeAll(const UserPassInfoNode & _node)
     {
         for (auto & child : _node.m_children)
-            prepareNode(child);
+            beforeAll(child);
 
         if (!_node.m_renderPass)
             return;
 
-        // TODO: refactor as we always have only one SubPass per UserPass?
         const auto & subPasses = _node.m_renderPass->getSubPasses();
         VG_ASSERT(subPasses.size() == 1);
 
@@ -864,7 +863,27 @@ namespace vg::gfx
         {
             SubPass * subPass = subPasses[i];
             const auto & userPassInfo = subPass->getUserPassesInfos()[0];
-            userPassInfo.m_userPass->Prepare(userPassInfo.m_renderContext);
+            userPassInfo.m_userPass->BeforeAll(userPassInfo.m_renderContext);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::afterAll(const UserPassInfoNode & _node)
+    {
+        for (auto & child : _node.m_children)
+            afterAll(child);
+
+        if (!_node.m_renderPass)
+            return;
+
+        const auto & subPasses = _node.m_renderPass->getSubPasses();
+        VG_ASSERT(subPasses.size() == 1);
+
+        for (uint i = 0; i < subPasses.size(); ++i)
+        {
+            SubPass * subPass = subPasses[i];
+            const auto & userPassInfo = subPass->getUserPassesInfos()[0];
+            userPassInfo.m_userPass->AfterAll(userPassInfo.m_renderContext);
         }
     }
 
@@ -1087,11 +1106,10 @@ namespace vg::gfx
         for (auto & node : m_userPassInfoTree.m_children)
             gatherResources(node);
 
-        // TODO: find a better name than "Prepare"?
         {
-            VG_PROFILE_CPU("Prepare");
+            VG_PROFILE_CPU("BeforeAll");
             for (auto & node : m_userPassInfoTree.m_children)
-                prepareNode(node);
+                beforeAll(node);
         }
 
         if (maxRenderJobCount > 0)
@@ -1489,6 +1507,12 @@ namespace vg::gfx
 
                 device->setExecuteCommandListCount(gfx::CommandListType::Graphics, 1);
             }
+        }
+
+        {
+            VG_PROFILE_CPU("AfterAll");
+            for (auto & node : m_userPassInfoTree.m_children)
+                afterAll(node);
         }
 
         // All textures and buffers remaining in pool should be marked as 'unused' at this point

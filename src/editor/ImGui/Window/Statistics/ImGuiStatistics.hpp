@@ -69,8 +69,8 @@ namespace vg::editor
                         ImGui::Text("Decal");
                         ImGui::EndDisabled();
 
-                        ImGui::BeginDisabled(!stats.selected);
-                        ImGui::Text("Selected");
+                        ImGui::BeginDisabled(!stats.outline);
+                        ImGui::Text("Outline");
                         ImGui::EndDisabled();
                     }
                     ImGui::NextColumn();
@@ -93,8 +93,8 @@ namespace vg::editor
                         ImGui::Text("%u", stats.decal);
                         ImGui::EndDisabled();
 
-                        ImGui::BeginDisabled(!stats.selected);
-                        ImGui::Text("%u", stats.selected);
+                        ImGui::BeginDisabled(!stats.outline);
+                        ImGui::Text("%u", stats.outline);
                         ImGui::EndDisabled();
                     }
                     ImGui::Columns(1);

@@ -1,8 +1,9 @@
 #pragma once
 
-#include "renderer/IView.h"
+#include "core/Scheduler/AssertMutex.h"
 #include "gfx/Resource/Texture.h"
 #include "gfx/FrameGraph/FrameGraph_consts.h"
+#include "renderer/IView.h"
 #include "renderer/Job/Culling/ViewCullingJob.h"
 #include "shaders/system/picking.hlsli"    
 #include "Frustum.h"
@@ -96,6 +97,7 @@ namespace vg::renderer
         bool                                IsUsingRayTracing           () const override;
         bool                                IsLit                       () const override;
         bool                                IsComputePostProcessNeeded  () const override;
+        bool                                IsOutlinePassNeeded         () const override;
 
         void                                setTLAS                     (gfx::TLAS * _tlas);
         gfx::TLAS *                         getTLAS                     () const;
@@ -187,6 +189,7 @@ namespace vg::renderer
         core::uint2                         m_mouseOffset;
         PickingData                         m_rawPickingData;
         core::vector<PickingHit>            m_pickingHits;
+        mutable core::AssertMutex           m_pickingHitsAssertMutex    = core::AssertMutex("PickingHits");
         gfx::TLAS *                         m_tlas                      = nullptr;
         Frustum                             m_frustum;
         ViewCullingJobOutput                m_cullingJobResult;

@@ -35,7 +35,7 @@ namespace vg::renderer
         core::uint alphatest   = 0;
         core::uint transparent = 0;
         core::uint decal       = 0;
-        core::uint selected    = 0;
+        core::uint outline    = 0;
         core::uint directional = 0;
         core::uint omni        = 0;
         core::uint spot        = 0;
@@ -130,6 +130,7 @@ namespace vg::renderer
         virtual bool                    IsLit                       () const = 0;
         virtual bool                    IsUsingRayTracing           () const = 0;
         virtual bool                    IsComputePostProcessNeeded  () const = 0;
+        virtual bool                    IsOutlinePassNeeded         () const = 0;
       
         virtual void                    SetPickingData              (const PickingData & _pickingData) = 0;
         virtual const PickingHit &      GetPickingHit               (core::uint _index) const = 0;

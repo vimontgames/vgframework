@@ -31,7 +31,7 @@ namespace vg::gfx
         virtual core::u64	GetCostEstimate		(const RenderPassContext & _renderPassContext) const { return 1; }
 
 		// Called on main thread for all nodes before rendering using multiple threads (e.g., compute offsets used in other RenderJobs)
-		virtual void		Prepare				(const RenderPassContext & _renderPassContext) {};
+		virtual void		BeforeAll			(const RenderPassContext & _renderPassContext) {};
 
 		// Called before entering RenderPass (e.g., write buffers from CPU to the GPU)
 		virtual void		BeforeRender		(const RenderPassContext & _renderPassContext, CommandList * _cmdList) {}
@@ -41,6 +41,9 @@ namespace vg::gfx
 
         // Called after exiting RenderPass (e.g., read buffer from GPU to the CPU)
         virtual void		AfterRender			(const RenderPassContext & _renderPassContext, CommandList * _cmdList) {};
+
+        // Called on main thread for all nodes after rendering using multiple threads (e.g., process GPU readback data)
+        virtual void		AfterAll			(const RenderPassContext & _renderPassContext) {};
 
 		// Descriptor for framegraph texture/buffer
 		const FrameGraphTextureResourceDesc * getTextureResourceDesc(const FrameGraphResourceID & _resID) const;

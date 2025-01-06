@@ -86,6 +86,7 @@ namespace vg::renderer
         _root3D->setMatID(_index);
 
         auto key = m_shaderKey[asInteger(_renderContext.m_shaderPass)];
+        VG_ASSERT(0xFF != key.file, "Undefined ShaderKey for pass \"%s\"", asString(_renderContext.m_shaderPass).c_str());
 
         RasterizerState rs(FillMode::Solid, CullMode::Back);
 
@@ -164,6 +165,15 @@ namespace vg::renderer
                     key.setFlag(DefaultHLSLDesc::Toolmode, true);
                 else
                     key.setFlag(DefaultHLSLDesc::Toolmode, false);
+            }
+            break;
+
+            case ShaderPass::Outline:
+            {
+                BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+                _cmdList->setBlendState(bs);
+
+                key.setFlag(DefaultHLSLDesc::Toolmode, false);
             }
             break;
         }       

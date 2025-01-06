@@ -82,8 +82,9 @@ namespace vg::gfx
         void                            buildNode                   (UserPassInfoNode & _node);
         void                            gatherNodes                 (UserPassInfoNode & _node, core::vector<UserPassInfoNode> & _nodes, core::u64 & _totalEstimatedCost);
         void                            gatherResources             (const UserPassInfoNode & _node); 
-        void                            prepareNode                 (const UserPassInfoNode & _node);
+        void                            beforeAll                   (const UserPassInfoNode & _node);
         void                            renderNode                  (const UserPassInfoNode & _node, gfx::CommandList * _cmdList, bool _recur);
+        void                            afterAll                    (const UserPassInfoNode & _node);
 
         Texture *                       createRenderTargetFromPool  (const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex);
         Texture *                       createDepthStencilFromPool  (const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex);

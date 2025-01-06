@@ -18,7 +18,7 @@ namespace vg::renderer
         MaterialDataUpdatePass();
         ~MaterialDataUpdatePass();
 
-        void Prepare(const gfx::RenderPassContext & _renderContext) final override;
+        void BeforeAll(const gfx::RenderPassContext & _renderContext) final override;
         void BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
 
     private:

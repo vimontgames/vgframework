@@ -465,6 +465,9 @@
     <ClInclude Include="Types\vector2D.h">
       <Filter>Types</Filter>
     </ClInclude>
+    <ClInclude Include="Scheduler\AssertMutex.h">
+      <Filter>Scheduler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

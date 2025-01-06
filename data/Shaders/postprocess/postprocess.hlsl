@@ -6,6 +6,7 @@
 #include "system/msaa.hlsli"
 #include "system/instancedata.hlsli"
 #include "system/gamma.hlsli"
+#include "system/outlinemask.hlsli"
 
 #if _FXAA
 #include "FXAA.hlsli"
@@ -405,6 +406,49 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         color = DebugRayTracing(color, uv, screenSize, viewConstants);
         #endif
 
+        // outline
+        {
+            
+            float2 pcf = (float2)0.0f;
+            for (int jj = -1; jj < 1; ++jj)
+            {
+                for (int ii = -1; ii < 1; ++ii)
+                {
+                    uint4 center = getTexture2D_UInt4(postProcessConstants.getOutlineMask()).Load(int3(coords.x + ii, coords.y + jj, 0));
+
+                    bool visibleOutline = false;
+                    bool hiddenOutline = false;
+
+                    for (int j = -1; j <= 1; ++j)
+                    {
+                        for (int i = -1; i <= 1; ++i)
+                        {
+                            uint4 sample = getTexture2D_UInt4(postProcessConstants.getOutlineMask()).Load(int3(coords.x + ii + i, coords.y + jj + j,0));
+
+                            if ((sample.a & ~(uint)OutlineMaskFlags::DepthFail) != (center.a & ~(uint)OutlineMaskFlags::DepthFail))
+                            {
+                                if (0 != sample.a)
+                                {
+                                    if (sample.a & (uint)OutlineMaskFlags::DepthFail)
+                                        hiddenOutline = true;
+                                    else
+                                        visibleOutline = true;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (visibleOutline)
+                        pcf += 1;
+
+                    if (hiddenOutline)
+                        pcf.y += 0.325;
+                }
+            }
+
+            color.rgb = lerp(color.rgb, float3(0,1,0), saturate((pcf.x + pcf.y) / 4.0f));
+        }
+
         switch(viewConstants.getDisplayMode())
         {
             default:
@@ -451,6 +495,16 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
 
             case DisplayMode::Lighting_EnvironmentSpecularBRDF:
             color.rgb = getTexture2D(viewConstants.getSpecularBRDF()).SampleLevel(nearestClamp, uv, 0).rgb;
+            break;
+
+            case DisplayMode::PostProcess_OutlineMask:
+            {
+                uint sample = getTexture2D_UInt4(postProcessConstants.getOutlineMask()).Load(int3(coords,0)).a;
+                uint id = sample & (uint)~0x80000000;
+                float alpha = (sample & 0x80000000) ? 0.5 : 1.0;
+                color.rgb = (0 != id.x) ? frac(float3(id.x * 31.0, id.x * 17.0, id.x * 59.0) / 255.0) : float3(0,0,0);
+                color.rgb *= alpha;
+            }
             break;
         }
 

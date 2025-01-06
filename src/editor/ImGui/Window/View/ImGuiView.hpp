@@ -578,11 +578,11 @@ namespace vg::editor
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
-                                text = fmt::sprintf("Selected %u", stats.selected);
+                                text = fmt::sprintf("Outline %u", stats.outline);
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text(text.c_str(), stats.selected);
+                                ImGui::Text(text.c_str(), stats.outline);
 
                                 // Lights
                                 pos.y += style::font::DefaultFontHeight;

@@ -9,7 +9,7 @@
 
 namespace vg::renderer
 {
-    gfx::Buffer * ForwardTransparentPass::s_TransparentPassConstantsBuffer = nullptr;
+    gfx::Buffer * ForwardTransparentPass::s_transparentPassConstantsBuffer = nullptr;
 
     //--------------------------------------------------------------------------------------
     // Setup executed once, when pass is created
@@ -19,22 +19,22 @@ namespace vg::renderer
     {
         auto * device = Device::get();
 
-        if (nullptr == s_TransparentPassConstantsBuffer)
+        if (nullptr == s_transparentPassConstantsBuffer)
         {
-            BufferDesc viewConstantsBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, sizeof(TransparentPassConstants));
-            s_TransparentPassConstantsBuffer = device->createBuffer(viewConstantsBufferDesc, "TransparentPassConstants", nullptr, ReservedSlot::TransparentPassBufSrv);
+            BufferDesc editorPassConstantsBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, sizeof(TransparentPassConstants));
+            s_transparentPassConstantsBuffer = device->createBuffer(editorPassConstantsBufferDesc, "TransparentPassConstants", nullptr, ReservedSlot::TransparentPassBufSrv);
         }
         else
         {
-            VG_SAFE_INCREASE_REFCOUNT(s_TransparentPassConstantsBuffer);
+            VG_SAFE_INCREASE_REFCOUNT(s_transparentPassConstantsBuffer);
         }
     }
 
     //--------------------------------------------------------------------------------------
     ForwardTransparentPass::~ForwardTransparentPass()
     {
-        if (s_TransparentPassConstantsBuffer && !s_TransparentPassConstantsBuffer->Release())
-            s_TransparentPassConstantsBuffer = nullptr;
+        if (s_transparentPassConstantsBuffer && !s_transparentPassConstantsBuffer->Release())
+            s_transparentPassConstantsBuffer = nullptr;
     }
 
     //--------------------------------------------------------------------------------------
@@ -67,11 +67,11 @@ namespace vg::renderer
         auto linearDepthTex = getRenderTarget(_renderPassContext.getFrameGraphID("LinearDepth"));
         auto linearDepth = linearDepthTex->getTextureHandle();
 
-        TransparentPassConstants * constants = (TransparentPassConstants *)_cmdList->map(s_TransparentPassConstantsBuffer, sizeof(TransparentPassConstants)).data;
+        TransparentPassConstants * constants = (TransparentPassConstants *)_cmdList->map(s_transparentPassConstantsBuffer, sizeof(TransparentPassConstants)).data;
         {
             constants->setLinearDepth(linearDepth);
         }
-        _cmdList->unmap(s_TransparentPassConstantsBuffer);
+        _cmdList->unmap(s_transparentPassConstantsBuffer);
     }
 
     //--------------------------------------------------------------------------------------

@@ -47,6 +47,7 @@ namespace vg::renderer
         // Alloc new slot
         id = (PickingID)m_pickingID.size();
         m_pickingID.push_back(_object);
+        VG_ASSERT(id < 32768); // Only 15 bits because upper bit is used for "ZTest" in Outline
         return id;
     }
 

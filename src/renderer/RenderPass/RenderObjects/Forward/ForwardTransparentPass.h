@@ -19,6 +19,6 @@ namespace vg::renderer
         void        Render          (const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const final override;
 
     private:
-        static gfx::Buffer * s_TransparentPassConstantsBuffer;
+        static gfx::Buffer * s_transparentPassConstantsBuffer;
     };
 }

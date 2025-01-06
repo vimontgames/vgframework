@@ -29,7 +29,8 @@ namespace vg
             ZOnly = 0,
             Forward,
             Deferred,
-            Transparent
+            Transparent,
+            Outline
         );
 
         class MaterialModel : public IMaterialModel

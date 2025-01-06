@@ -12,6 +12,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void ShaderKey::clear()
     {
+        file = ShaderKey::File(-1);
         vs = ShaderKey::VS(-1);
         hs = ShaderKey::HS(-1);
         ds = ShaderKey::DS(-1);

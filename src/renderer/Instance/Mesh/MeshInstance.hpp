@@ -164,7 +164,7 @@ namespace vg::renderer
                 const ObjectFlags objectFlags = this->getObjectFlags();
 
                 if (asBool(ObjectFlags::Selected & objectFlags))
-                    _cullingResult->m_output->add(GraphicInstanceListType::Selected, this);
+                    _cullingResult->m_output->add(GraphicInstanceListType::Outline, this);
 
                 return true;
             }
@@ -481,7 +481,7 @@ namespace vg::renderer
 
                     auto surfaceType = material->getSurfaceType();
 
-                    if (_renderContext.m_surfaceType != surfaceType && !_renderContext.m_wireframe)
+                    if (_renderContext.m_surfaceType != surfaceType && !_renderContext.m_wireframe && !_renderContext.m_outline)
                         continue;
 
                     switch (_renderContext.m_shaderPass)
@@ -493,6 +493,7 @@ namespace vg::renderer
                         case ShaderPass::ZOnly:
                         case ShaderPass::Forward:
                         case ShaderPass::Deferred:
+                        case ShaderPass::Outline:
                             material->Setup(_renderContext, _cmdList, &root3D, i);
                             break;
 

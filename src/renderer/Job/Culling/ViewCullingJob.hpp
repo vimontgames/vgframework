@@ -138,7 +138,7 @@ namespace vg::renderer
                         }
                         break;
 
-                        case GraphicInstanceListType::Selected:
+                        case GraphicInstanceListType::Outline:
                             break;
                     }
                 }

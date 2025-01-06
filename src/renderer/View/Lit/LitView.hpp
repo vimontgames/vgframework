@@ -132,7 +132,7 @@ namespace vg::renderer
                 break;
         }    
 
-        const bool outline = toolmode && true;
+        const bool outline = view->IsOutlinePassNeeded();
 
         // Resolve/copy linear depth just before transparent pass because even in case of forward rendering we might want to add other passes writing Z (e.g., Skin, Water ...)
         if (outline || options->isTransparencyEnabled() || view->IsComputePostProcessNeeded())
@@ -143,12 +143,11 @@ namespace vg::renderer
 
         // Render editor display to "Color"
         if (toolmode)
-        {
-            if (outline)
-                _frameGraph.addUserPass(_renderPassContext, m_outlineMaskPass, "OutlineMask");
-
             _frameGraph.addUserPass(_renderPassContext, m_editorPass, "Editor");
-        }
+        
+        // Render outline mask buffer
+        if (outline)
+            _frameGraph.addUserPass(_renderPassContext, m_outlineMaskPass, "OutlineMask");
 
         // Apply PostProcess from "Color" and "DepthStencil" to "PostProcessUAV"
         if (view->IsComputePostProcessNeeded())

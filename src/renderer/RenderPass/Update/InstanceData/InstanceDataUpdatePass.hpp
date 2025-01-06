@@ -34,7 +34,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void InstanceDataUpdatePass::Prepare(const gfx::RenderPassContext & _renderContext)
+    void InstanceDataUpdatePass::BeforeAll(const gfx::RenderPassContext & _renderContext)
     {
         VG_PROFILE_CPU("InstanceData");
 

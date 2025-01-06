@@ -23,7 +23,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void MaterialDataUpdatePass::Prepare(const gfx::RenderPassContext & _renderContext)
+    void MaterialDataUpdatePass::BeforeAll(const gfx::RenderPassContext & _renderContext)
     {
         MaterialManager * materialManager = MaterialManager::get();
         materialManager->getMaterialsSafeCopy(m_materials);

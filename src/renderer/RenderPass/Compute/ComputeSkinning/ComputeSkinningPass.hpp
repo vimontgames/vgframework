@@ -63,7 +63,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ComputeSkinningPass::Prepare(const RenderPassContext & _renderContext)
+    void ComputeSkinningPass::BeforeAll(const RenderPassContext & _renderContext)
     {
         VG_PROFILE_CPU("Skinning");
         const auto & skinnedMeshes = Renderer::get()->getSharedCullingJobOutput()->m_skins;        

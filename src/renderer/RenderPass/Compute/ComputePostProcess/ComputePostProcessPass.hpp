@@ -98,6 +98,12 @@ namespace vg::renderer
             createRWTexture(dstID, uavDesc);
             writeRWTexture(dstID);
         }
+
+        if (view->IsOutlinePassNeeded())
+        {
+            const auto outlineMaskID = _renderPassContext.getFrameGraphID("OutlineMask");
+            readRenderTarget(outlineMaskID);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -290,6 +296,14 @@ namespace vg::renderer
             postProcess.setDepth(depth);
             postProcess.setStencil(stencil);
             postProcess.setLinearDepth(linearDepth);
+
+            if (view->IsOutlinePassNeeded())
+            {
+                auto outlineMaskTex = getRenderTarget(_renderPassContext.getFrameGraphID("OutlineMask"));
+                auto outlineMask = outlineMaskTex->getTextureHandle();
+
+                postProcess.setOutlineMask(outlineMask);
+            }
 
             _cmdList->setComputeRootConstants(0, (u32 *)&postProcess, PostProcessConstantsCount);
 

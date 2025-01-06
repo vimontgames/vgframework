@@ -159,6 +159,7 @@
     <ClInclude Include="Scheduler\Job.h" />
     <ClInclude Include="Scheduler\Mutex.h" />
     <ClInclude Include="Scheduler\Scheduler.h" />
+    <ClInclude Include="Scheduler\AssertMutex.h" />
     <ClInclude Include="Singleton\Singleton.h" />
     <ClInclude Include="string\string.h" />
     <ClInclude Include="Timer\Timer.h" />
