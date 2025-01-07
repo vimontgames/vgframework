@@ -943,7 +943,7 @@ namespace vg::renderer
 
                 float3 boxSize = float3(0.01f, 0.01f, 0.01f);
 
-                if (skeleton->IsNodeSelected(j))
+                if (skeleton->IsNodeSelected(index))
                 {
                     color |= 0xCFCFCFCF;
                     boxSize *= 1.5f;
