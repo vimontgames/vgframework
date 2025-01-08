@@ -98,4 +98,45 @@ namespace vg::core
         _currentValue = float4(vX, vY, vZ, vW);
         return result;
     }
+
+    //--------------------------------------------------------------------------------------
+    quaternion slerpShortestPath(quaternion _q0, quaternion _q1, float _blend)
+    {
+        _q0 = normalize(_q0);
+        _q1 = normalize(_q1);
+        _blend = clamp(_blend, 0.0f, 1.0f);
+
+        // Compute cosine of the angle between q0 and q1
+        float cosq = dot(_q0, _q1);
+
+        // If the dot product is smaller than epsilon, negate one quaternion to take the shorter path
+        const float eps = 0.01f;
+        if (cosq < -eps)
+        {
+            _q0.x = -_q0.x;
+            _q0.y = -_q0.y;
+            _q0.z = -_q0.z;
+            _q0.w = -_q0.w;
+            cosq = -cosq;
+        }
+
+        // If the quaternions are too close use linear interpolation
+        const float cosq_threshold = 0.9995f;
+        if (cosq > cosq_threshold)
+        {
+            quaternion result = normalize(lerp(_q0, _q1, _blend));
+            return result;
+        }
+
+        // Calculate the angle and interpolate
+        float theta_0 = acos(cosq);     
+        float theta = theta_0 * _blend;  
+
+        float2 sin_theta = sin(float2(theta, theta_0));
+
+        float s1 = sin_theta.x / sin_theta.y;   
+        float s0 = cos(theta) - cosq * s1;     
+
+        return quaternion(s0 * _q0 + s1 * _q1);
+    }
 }

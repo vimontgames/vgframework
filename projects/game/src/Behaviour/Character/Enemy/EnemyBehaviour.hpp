@@ -133,8 +133,8 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                     m_targetPosNew = closestPlayerInfo.position;
                     m_targetPosSmooth = smoothdamp(m_targetPosSmooth, m_targetPosNew, m_targetPosSmoothdamp, 0.1f, _context.m_dt);
 
-                    dbgDraw->AddLine(_context.m_world, pos, m_targetPosSmooth, 0xFFFFFFFF);
-                    dbgDraw->AddLine(_context.m_world, pos, m_targetPosNew, 0xFF0000FF);
+                    dbgDraw->AddLine(_context.m_world, pos, m_targetPosSmooth, 0x5FFFFFFF);
+                    //dbgDraw->AddLine(_context.m_world, pos, m_targetPosNew, 0xFF0000FF);
                 }
                 else
                 {
@@ -181,7 +181,7 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
 
                     charaController->SetRotation(quaternion::rotation_z(degreesToRadians(m_currentRotation)));
 
-                    dbgDraw->AddLine(_context.m_world, pos, pos + normalize(updatedVelocity), 0xFF00FF00);
+                    //dbgDraw->AddLine(_context.m_world, pos, pos + normalize(updatedVelocity), 0xFF00FF00);
                 }
             }
 

@@ -636,16 +636,24 @@ namespace vg::renderer
                 quaternion rotation = quaternion::identity();
                 float3 scale = (float3)1.0f;
 
+                float accumulateLayerWeights = 0;
+
                 for (uint iLayer = 0; iLayer < MaxAnimationLayerCount; ++iLayer)
                 {
                     if (sum[iLayer] <= 0.0f && !forceTPose)
                         continue;
 
-                    float3 lTranslation = skeletonNode.pos * tPoseWeight[iLayer];
-                    quaternion lRotation = skeletonNode.rot * tPoseWeight[iLayer];
-                    float3 lScale = skeletonNode.scale * tPoseWeight[iLayer];
+                    //float3 lTranslation = skeletonNode.pos * tPoseWeight[iLayer];
+                    //quaternion lRotation = skeletonNode.rot * tPoseWeight[iLayer];
+                    //float3 lScale = skeletonNode.scale * tPoseWeight[iLayer];
+
+                    float3 lTranslation = skeletonNode.pos;
+                    quaternion lRotation = skeletonNode.rot;
+                    float3 lScale = skeletonNode.scale;
 
                     bool applyLayer = forceTPose && iLayer == 0;
+
+                    float accumulatedAnimWeights = tPoseWeight[iLayer];
 
                     for (uint j = 0; j < m_animationBindings.size(); ++j)
                     {
@@ -661,11 +669,11 @@ namespace vg::renderer
                         const AnimImporterData & anim = animation->getAnimationData();
 
                         const float time = animationBinding.m_animationState.m_time;
+                        const float frame_time = (time - anim.time_begin) * anim.framerate;
 
-                        float frame_time = (time - anim.time_begin) * anim.framerate;
-                        uint f0 = min((uint)frame_time + 0, anim.num_frames - 1);
-                        uint f1 = min((uint)frame_time + 1, anim.num_frames - 1);
-                        float t = min(frame_time - (float)f0, 1.0f);
+                        const uint f0 = min((uint)frame_time + 0, anim.num_frames - 1);
+                        const uint f1 = min((uint)frame_time + 1, anim.num_frames - 1);
+                        const float t = min(frame_time - (float)f0, 1.0f);
 
                         // index in animation
                         const int index = animationBinding.m_skeletonToAnimIndex[i];
@@ -677,12 +685,15 @@ namespace vg::renderer
                                 const AnimNodeData & animNode = anim.animNodes[index];
 
                                 const float3 aTranslation = animNode.pos.size() > 0 ? lerp(animNode.pos[f0], animNode.pos[f1], t) : animNode.const_pos;
-                                const quaternion aRotation = animNode.rot.size() > 0 ? lerp(animNode.rot[f0], animNode.rot[f1], t) : animNode.const_rot;
+                                const quaternion aRotation = animNode.rot.size() > 0 ? slerpShortestPath(animNode.rot[f0], animNode.rot[f1], t) : animNode.const_rot;
                                 const float3 aScale = animNode.scale.size() > 0 ? lerp(animNode.scale[f0], animNode.scale[f1], t) : animNode.const_scale;
 
-                                lTranslation += aTranslation * animationBinding.m_normalizedWeight;
-                                lRotation += aRotation * animationBinding.m_normalizedWeight;
-                                lScale += aScale * animationBinding.m_normalizedWeight;
+                                const float weight = animationBinding.m_normalizedWeight;
+                                accumulatedAnimWeights += weight;
+                                const float normalizedAnimWeight = weight / accumulatedAnimWeights;
+                                lTranslation = lerp(lTranslation, aTranslation, normalizedAnimWeight);
+                                lRotation = slerpShortestPath(lRotation, aRotation, normalizedAnimWeight);
+                                lScale = lerp (lScale, aScale, normalizedAnimWeight);
 
                                 applyLayer = true;
                             }
@@ -693,9 +704,12 @@ namespace vg::renderer
                     if (applyLayer)
                     {
                         const float layerWeight = forceTPose ? 1.0f : saturate(sum[iLayer]);
-                        translation = translation * (1.0f - layerWeight) + lTranslation * layerWeight;
-                        rotation = rotation * (1.0f - layerWeight) + lRotation * layerWeight;
-                        scale = scale * (1.0f - layerWeight) + lScale * layerWeight;
+                        const float normalizedLayerWeight = (accumulateLayerWeights == 0.0f) ? 1 : layerWeight / accumulateLayerWeights;
+                        accumulateLayerWeights += layerWeight;
+
+                        translation = lerp(translation, lTranslation, normalizedLayerWeight);
+                        rotation = slerpShortestPath(rotation, lRotation, normalizedLayerWeight);
+                        scale = lerp(scale, lScale, normalizedLayerWeight);
                     }
                 }
 
@@ -933,19 +947,28 @@ namespace vg::renderer
                 // YUp skeleton displayed as ZUp
                 float4x4 boneMatrix = mul(nodeMatrix, matrix) ;
 
-                u32 color = 0x7F3F3F3F;
+                u32 color = 0x0;
+                const bool upper = asBool(node.flags & renderer::BodyPartFlags::UpperBody);
+                const bool lower = asBool(node.flags & renderer::BodyPartFlags::LowerBody);
 
-                if (asBool(node.flags & renderer::BodyPartFlags::UpperBody))
-                    color |= 0x7F0000FF;
+                if (upper || lower)
+                {
+                    if (upper)
+                        color |= 0xFF0000FF;
 
-                if (asBool(node.flags & renderer::BodyPartFlags::LowerBody))
-                    color |= 0x7F00FF00;
+                    if (lower)
+                        color |= 0xFF00FF00;
+                }
+                else
+                {
+                    color = 0xFF7F7F7F;
+                }
 
                 float3 boxSize = float3(0.01f, 0.01f, 0.01f);
 
                 if (skeleton->IsNodeSelected(index))
                 {
-                    color |= 0xCFCFCFCF;
+                    color |= 0xFFCFCFCF;
                     boxSize *= 1.5f;
                 }
 

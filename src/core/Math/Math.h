@@ -110,8 +110,11 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     template <typename T1, typename T2> T1 inline lerp(T1 _a, T1 _b, T2 _blend)
     {
-        return _b * _blend + _a * (T2(1)-T2(_blend));
+        return _a + _blend * (_b - _a);
     }
+
+    //--------------------------------------------------------------------------------------
+    quaternion slerpShortestPath(quaternion _q0, quaternion _q1, float _blend);
 
     //--------------------------------------------------------------------------------------
     template <typename T> inline bool within(T _value, T _min, T _max)

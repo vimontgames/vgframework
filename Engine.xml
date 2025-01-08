@@ -27,7 +27,7 @@
         <Property type="Float" name="m_maxDT" value="16.666666"/>
         <Property type="Bool" name="m_useFixedDT" value="false"/>
         <Property type="Float" name="m_fixedDT" value="16.666666"/>
-        <Property type="EnumFlagsU32" name="m_animationOptionFlags" value="AnimationJobs"/>
+        <Property type="EnumFlagsU32" name="m_animationOptionFlags" value="AnimationJobs|ShowSkeletons"/>
         <Property type="EnumFlagsU32" name="m_loadingOptionFlags" value="ResourcePriority"/>
     </Object>
 </Root>
