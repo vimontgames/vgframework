@@ -21,7 +21,7 @@ namespace vg::engine
         setPropertyRange(DefaultMaterialData, m_offset, float2(-8, 8));
 
         registerPropertyEx(DefaultMaterialData, m_enableAlbedo, "Albedo", PropertyFlags::Hidden);
-        registerPropertyOptionalGroupBegin(DefaultMaterialData, m_enableAlbedo, "Enable Albedo");
+        registerPropertyOptionalGroupBegin(DefaultMaterialData, m_enableAlbedo, "Albedo");
         {
             registerPropertyResource(DefaultMaterialData, m_albedoMap, "Albedo Map");
             setPropertyDescription(DefaultMaterialData, m_albedoMap, "Base color texture");

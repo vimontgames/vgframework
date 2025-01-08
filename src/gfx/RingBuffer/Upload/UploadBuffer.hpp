@@ -139,6 +139,7 @@ namespace vg
             }
 
             m_totalWriteSize = 0;
+            m_totalWritesPreviousFrame = m_totalWriteSizeAligned;
             m_totalWriteSizeAligned = 0;
             m_padding = 0;
 

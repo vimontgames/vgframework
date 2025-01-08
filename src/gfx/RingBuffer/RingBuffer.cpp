@@ -60,7 +60,7 @@ namespace vg::gfx
 
         auto & stats = m_stats[(uint)_category];
 
-        if ((m_totalWriteSizeAligned + alignedSize) < totalSize)
+        if ((m_totalWriteSizeAligned + alignedSize) < (totalSize - m_totalWritesPreviousFrame))
         {
             if (m_offsetCur + alignedSize < totalSize)
             {
@@ -107,7 +107,7 @@ namespace vg::gfx
         const float BytesToMegabytes = 1.0f / (1024.0f * 1024.0f);
 
         const float size = float(alignedSize) * BytesToMegabytes;
-        const float available = float(totalSize - m_totalWriteSizeAligned) * BytesToMegabytes;
+        const float available = float(totalSize - m_totalWriteSizeAligned - m_totalWritesPreviousFrame) * BytesToMegabytes;
         const float total = float(totalSize) * BytesToMegabytes;
         const float pad = float(m_padding) * BytesToMegabytes;
 

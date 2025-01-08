@@ -158,7 +158,7 @@ namespace vg::gfx
             const auto uploadBufferTargetCount = max((uint)1, m_maxRenderJobCount);
 
             for (uint i = (uint)m_uploadBuffers.size(); i < uploadBufferTargetCount; ++i)
-                m_uploadBuffers.push_back(new UploadBuffer(fmt::sprintf("Upload #%u", i), 1 * 1024 * 1024));
+                m_uploadBuffers.push_back(new UploadBuffer(fmt::sprintf("Upload #%u", i), 4 * 1024 * 1024));
 
             // Destroy extra command lists
             for (uint i = uploadBufferTargetCount; i < (uint)m_uploadBuffers.size(); ++i)

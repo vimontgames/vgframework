@@ -39,6 +39,7 @@ namespace vg::gfx
         core::uint_ptr  m_offsetStart = 0;
         core::u64       m_totalWriteSize = 0;
         core::u64       m_totalWriteSizeAligned = 0;
+        core::u64       m_totalWritesPreviousFrame = 0;
         core::u64       m_padding = 0;
         RingAllocStats  m_stats[core::enumCount<RingAllocCategory>()];
         core::mutex     m_mutex;
