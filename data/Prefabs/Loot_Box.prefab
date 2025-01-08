@@ -35,12 +35,12 @@
                                 <Property type="Object" name="m_animations">
                                     <Object class="AnimationResourceList">
                                         <Property type="String" name="m_name" value="New AnimationComponent"/>
-                                        <Property type="Uint32" name="m_uid" value="0"/>
+                                        <Property type="Uint32" name="m_uid" value="3094621007"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="AnimationResource">
-                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="String" name="m_name" value="Xplod"/>
                                                 <Property type="Uint32" name="m_uid" value="3030148273"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
