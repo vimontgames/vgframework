@@ -44,8 +44,8 @@
                                                 <Property type="Uint32" name="m_uid" value="3030148273"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                                <Property type="String" name="m_resourcePath" value="data/Meshes/LootBox/LootBox_Ann.fbx"/>
-                                                <Property type="Bool" name="m_play" value="true"/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/LootBox/Xplod_Loot_V2_ANN.fbx"/>
+                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" value="true"/>
                                                 <Property type="Uint32" name="m_layer" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="false"/>
@@ -68,7 +68,7 @@
                                         <Property type="Uint32" name="m_uid" value="4177948355"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                        <Property type="String" name="m_resourcePath" value="data/Meshes/LootBox/LootBox_Xplod1.fbx"/>
+                                        <Property type="String" name="m_resourcePath" value="data/Meshes/LootBox/Xplod_Loot_V2_obj.fbx"/>
                                     </Object>
                                 </Property>
                                 <Property type="Object" name="m_meshMaterials">
@@ -80,7 +80,7 @@
                                         <Property type="ResourceVector" name="m_resources"/>
                                     </Object>
                                 </Property>
-                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                <Property type="BitMask" name="m_batchMask" BitCount="10" Value="0x00000000000003FF"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children"/>
