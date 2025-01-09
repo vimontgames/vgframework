@@ -1,6 +1,6 @@
 ﻿<img src="doc/img/version.png" alt="VGF boy" title="VGF boy" align="right" height="74" />
 
-# VGFramework 0.45
+# VGFramework 0.46.4
 Yet another work-in-progress game and graphic engine project.
 
 ![Demo](doc/img/0.46.4.png)
