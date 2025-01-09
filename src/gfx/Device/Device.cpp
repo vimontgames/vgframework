@@ -155,19 +155,27 @@ namespace vg::gfx
         //--------------------------------------------------------------------------------------
         void Device::updateUploadBuffers()
         {
-            const auto uploadBufferTargetCount = max((uint)1, m_maxRenderJobCount);
-
-            for (uint i = (uint)m_uploadBuffers.size(); i < uploadBufferTargetCount; ++i)
-                m_uploadBuffers.push_back(new UploadBuffer(fmt::sprintf("Upload #%u", i), 4 * 1024 * 1024));
-
-            // Destroy extra command lists
-            for (uint i = uploadBufferTargetCount; i < (uint)m_uploadBuffers.size(); ++i)
-                VG_SAFE_RELEASE_ASYNC(m_uploadBuffers[i]);
-
-            if (m_uploadBuffers.size() != uploadBufferTargetCount)
+            if (m_renderJobsDirty)
             {
-                m_uploadBuffers.resize(uploadBufferTargetCount);
-                m_uploadBuffers.resize(uploadBufferTargetCount);
+                // destroy existing buffers
+                for (uint i = 1; i < (uint)m_uploadBuffers.size(); ++i)
+                    VG_SAFE_RELEASE_ASYNC(m_uploadBuffers[i]);
+                m_uploadBuffers.resize(1);                
+
+                // recreate them
+                VG_ASSERT(-1 != m_maxRenderJobCount);
+                const auto uploadBufferTargetCount = max((uint)1, m_maxRenderJobCount);
+                m_uploadBuffers.reserve(uploadBufferTargetCount);
+
+                if (uploadBufferTargetCount > 1)
+                {
+                    const uint uploadBufferSize = max(m_renderJobsWorkerMinBufferSize, m_renderJobsTotalBufferSize / (uploadBufferTargetCount-1));
+
+                    for (uint i = (uint)1; i < uploadBufferTargetCount; ++i)
+                        m_uploadBuffers.push_back(new UploadBuffer(fmt::sprintf("Upload #%u", i), uploadBufferSize));
+                }
+
+                m_renderJobsDirty = false;
             }
         }
 
@@ -234,6 +242,7 @@ namespace vg::gfx
             VG_ASSERT(cmdPools.size() == cmdLists.size());
 
             // Alloc more command lists for render jobs if needed (Make sure we have as much CommandLists as worker threads)
+            VG_ASSERT(-1 != m_maxRenderJobCount);
             const auto cmdListTargetCount = max((uint)1, m_maxRenderJobCount);
 
             for (uint i = (uint)cmdPools.size(); i < cmdListTargetCount; ++i)
@@ -612,13 +621,22 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    bool Device::setMaxRenderJobCount(core::uint _maxCount, gfx::RenderJobsPolicy _policy)
+    bool Device::setupRenderJobs(core::uint _maxCount, gfx::RenderJobsPolicy _policy, core::uint _renderJobsTotalBufferSize, core::uint _renderJobsWorkerMinBufferSize)
     {
-        if (m_maxRenderJobCount != _maxCount || m_renderJobsPolicy != _policy)
+        if (m_maxRenderJobCount != _maxCount || m_renderJobsPolicy != _policy || _renderJobsTotalBufferSize != m_renderJobsTotalBufferSize || _renderJobsWorkerMinBufferSize != m_renderJobsWorkerMinBufferSize)
         {
-            VG_INFO("[Device] setMaxRenderJobCount changed from %u (%s) to %u (%s)", m_maxRenderJobCount, asCString(m_renderJobsPolicy), _maxCount, asCString(_policy));
+            if (m_maxRenderJobCount == -1)
+                VG_INFO("[Device] Setup render jobs {%s-%u %u/%u MB}", asCString(_policy), _maxCount, _renderJobsWorkerMinBufferSize >> 20, _renderJobsTotalBufferSize >> 20);
+            else
+                VG_INFO("[Device] Render jobs setup changed from {%s-%u %u/%u MB} to {%s-%u %u/%u MB}", asCString(m_renderJobsPolicy), m_maxRenderJobCount, m_renderJobsWorkerMinBufferSize>>20, m_renderJobsTotalBufferSize>>20,
+                                                                                                        asCString(_policy), _maxCount, _renderJobsWorkerMinBufferSize>>20, _renderJobsTotalBufferSize>>20);
             m_maxRenderJobCount = _maxCount;
             m_renderJobsPolicy = _policy;
+            m_renderJobsTotalBufferSize = _renderJobsTotalBufferSize;
+            m_renderJobsWorkerMinBufferSize = _renderJobsWorkerMinBufferSize;
+
+            m_renderJobsDirty = true;
+
             return true;
         }
 

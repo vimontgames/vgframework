@@ -123,6 +123,8 @@ namespace vg::renderer
         VG_INLINE bool          isForcedRenderJobsCount                 () const;
         core::uint              getRenderJobCount                       () const;
         VG_INLINE gfx::RenderJobsPolicy getRenderJobsPolicy             () const;
+        VG_INLINE core::uint    getMaxRenderTotalBufferSize             () const;
+        VG_INLINE core::uint    getMaxRenderMinBufferSize               () const;
 
     protected:
         Quality                 autodetectQualityLevel                  ();
@@ -162,9 +164,11 @@ namespace vg::renderer
         DisplayFlags            m_displayFlags                          = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap | DisplayFlags::VertexColor | DisplayFlags::MaterialColor | DisplayFlags::InstanceColor;
         RenderPassFlags         m_renderPassFlags;
         bool                    m_renderJobs                            = false;
-        bool                    m_forceRenderJobsCount                  = false;
+        bool                    m_forceRenderJobsCount                  = false;  
         core::u16               m_renderJobsCount                       = 1;
         gfx::RenderJobsPolicy   m_renderJobsPolicy                      = gfx::RenderJobsPolicy::RecursiveSplit;
+        core::u32               m_renderJobsTotalBufferSizeInMB         = 64;
+        core::u32               m_renderJobsWorkerMinBufferSizeInMB     = 4;
         const gfx::DeviceCaps * m_deviceCaps                            = nullptr;        
         core::IProperty *       m_hdrProp                               = nullptr;
         core::IProperty *       m_vsyncProp                             = nullptr;

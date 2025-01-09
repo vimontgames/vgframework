@@ -890,5 +890,8 @@
     <None Include="Shader\HLSLDesc.inl">
       <Filter>Shader</Filter>
     </None>
+    <None Include="FrameGraph\FrameGraph.inl">
+      <Filter>FrameGraph</Filter>
+    </None>
   </ItemGroup>
 </Project>

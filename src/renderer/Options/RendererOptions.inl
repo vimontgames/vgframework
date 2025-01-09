@@ -17,4 +17,16 @@ namespace vg::renderer
     {
         return m_renderJobsPolicy;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::uint RendererOptions::getMaxRenderTotalBufferSize() const
+    {
+        return m_renderJobsTotalBufferSizeInMB * 1024 * 1024;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::uint RendererOptions::getMaxRenderMinBufferSize() const
+    {
+        return m_renderJobsWorkerMinBufferSizeInMB * 1024 * 1024;
+    }
 }

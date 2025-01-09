@@ -12,6 +12,10 @@
 #include "core/IScheduler.h"
 #include "core/Types/vector2D.h"
 
+#if !VG_ENABLE_INLINE
+#include "FrameGraph.inl"
+#endif
+
 using namespace vg::core;
 
 #include "shaders/system/shared_consts.hlsli"
@@ -1452,6 +1456,7 @@ namespace vg::gfx
                         VG_PROFILE_CPU("Start");
                         if (jobsToStart.size() > 0)
                         {
+                            VG_ASSERT(jobsToStart.size() == jobCount);
                             for (uint i = 0; i < jobsToStart.size(); ++i)
                                 jobScheduler->Start(jobsToStart[i], &renderJobSync);
                         }

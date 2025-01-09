@@ -148,8 +148,11 @@ namespace vg::gfx
             core::Ticks                                     m_beginWaitGPUTicks = 0;
             double                                          m_gpuWaitTime = 0;
             bool                                            m_captureInProgress = false;
-            core::uint                                      m_maxRenderJobCount = 0;
+            core::uint                                      m_maxRenderJobCount = -1;
             gfx::RenderJobsPolicy                           m_renderJobsPolicy = gfx::RenderJobsPolicy::RecursiveSplit;
+            core::u32                                       m_renderJobsTotalBufferSize = 64 * 1024 * 1024;
+            core::u32                                       m_renderJobsWorkerMinBufferSize = 4 * 1024 * 1024;
+            bool                                            m_renderJobsDirty = true;
 		};
 	}
 }
@@ -194,9 +197,12 @@ namespace vg::gfx
         void                    setHDR                      (HDR _mode);
         HDR                     getHDR                      () const;
 
-        bool                    setMaxRenderJobCount        (core::uint _maxCount, gfx::RenderJobsPolicy _policy);
+        bool                    setupRenderJobs             (core::uint _maxCount, gfx::RenderJobsPolicy _policy, core::uint _renderJobsTotalBufferSize, core::uint  _renderJobsWorkerMinBufferSize);
+
         VG_INLINE core::uint    getMaxRenderJobCount        () const;
         VG_INLINE gfx::RenderJobsPolicy getRenderJobsPolicy () const;
+        VG_INLINE core::uint    getMaxRenderTotalBufferSize () const;
+        VG_INLINE core::uint    getMaxRenderMinBufferSize   () const;
 
         void                    waitGPUIdle                 ();
 

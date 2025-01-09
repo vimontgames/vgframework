@@ -77,6 +77,13 @@ namespace vg::gfx
 
         void                            RenderNode                  (gfx::CommandList * _cmdList, const UserPassInfoNode * _node);
 
+        bool                            setupRenderJobs(core::uint _maxCount, gfx::RenderJobsPolicy _policy, core::uint m_renderJobsTotalBufferSize, core::uint  m_renderJobsWorkerMinBufferSize);
+
+        VG_INLINE core::uint            getMaxRenderJobCount        () const;
+        VG_INLINE gfx::RenderJobsPolicy getRenderJobsPolicy         () const;
+        VG_INLINE core::uint            getMaxRenderTotalBufferSize () const;
+        VG_INLINE core::uint            getMaxRenderMinBufferSize   () const;
+
 	private:
         void                            setupNode                   (UserPassInfoNode & _node);
         void                            buildNode                   (UserPassInfoNode & _node);
@@ -133,3 +140,7 @@ namespace vg::gfx
         core::vector<gfx::RenderJob *>  m_renderJobs;
 	};
 }
+
+#if VG_ENABLE_INLINE
+#include "FrameGraph.inl"
+#endif

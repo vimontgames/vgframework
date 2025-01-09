@@ -93,9 +93,6 @@ namespace vg::renderer
         void                                    SetHDR                      (gfx::HDR _mode) final override;
         gfx::HDR                                GetHDR                      () const final override;
 
-        bool                                    SetMaxRenderJobCount        (core::uint _maxCount, gfx::RenderJobsPolicy _scheduling) final override;
-        core::uint                              GetMaxRenderJobCount        () const final override;
-
         core::IProfiler *                       GetProfiler                 () const final override;
         IImGuiAdapter *                         GetImGuiAdapter             () const final override;
         gfx::IShaderManager *                   GetShaderManager            () const final override;

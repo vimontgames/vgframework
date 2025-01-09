@@ -102,9 +102,6 @@ namespace vg
             virtual void                                SetHDR                  (gfx::HDR _mode) = 0;
             virtual gfx::HDR                            GetHDR                  () const = 0;
 
-            virtual bool                                SetMaxRenderJobCount    (core::uint _maxCount, gfx::RenderJobsPolicy _scheduling) = 0;
-            virtual core::uint                          GetMaxRenderJobCount    () const = 0;
-
             #ifdef _WIN32
             virtual LRESULT CALLBACK                    WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) = 0;
             #endif

@@ -43,11 +43,21 @@
         <Property type="Bool" name="m_rayTracing" value="false"/>
         <Property type="Bool" name="m_postProcess" value="true"/>
         <Property type="EnumU8" name="m_aaPostProcess" value="FXAA"/>
+        <Property type="EnumU8" name="m_depthOfField[Quality::VeryLow]" value="Default"/>
+        <Property type="EnumU8" name="m_depthOfField[Quality::Low]" value="None"/>
+        <Property type="EnumU8" name="m_depthOfField[Quality::Medium]" value="Default"/>
+        <Property type="EnumU8" name="m_depthOfField[Quality::High]" value="Default"/>
+        <Property type="EnumU8" name="m_depthOfField[Quality::VeryHigh]" value="Default"/>
         <Property type="EnumFlagsU32" name="m_renderPassFlags" value="ZPrepass|Opaque|Transparency"/>
         <Property type="EnumFlagsU32" name="m_displayFlags" value="AlbedoMap|NormalMap|VertexColor|MaterialColor|InstanceColor"/>
         <Property type="Bool" name="m_wireframe" value="false"/>
         <Property type="Bool" name="m_aabb" value="false"/>
         <Property type="Bool" name="m_debugUI" value="false"/>
         <Property type="Bool" name="m_renderJobs" value="true"/>
+        <Property type="Bool" name="m_forceRenderJobsCount" value="false"/>
+        <Property type="Uint16" name="m_renderJobsCount" value="2"/>
+        <Property type="EnumU8" name="m_renderJobsPolicy" value="RecursiveSplit"/>
+        <Property type="Uint32" name="m_renderJobsTotalBufferSizeInMB" value="64"/>
+        <Property type="Uint32" name="m_renderJobsWorkerMinBufferSizeInMB" value="4"/>
     </Object>
 </Root>

@@ -20,6 +20,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     VG_INLINE core::uint Device::getMaxRenderJobCount() const
     {
+        VG_ASSERT(-1 != m_maxRenderJobCount);
         return m_maxRenderJobCount;
     }
 
@@ -27,6 +28,18 @@ namespace vg::gfx
     VG_INLINE gfx::RenderJobsPolicy Device::getRenderJobsPolicy() const
     {
         return m_renderJobsPolicy;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::uint Device::getMaxRenderTotalBufferSize() const
+    {
+        return m_renderJobsTotalBufferSize;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::uint Device::getMaxRenderMinBufferSize() const
+    {
+        return m_renderJobsWorkerMinBufferSize;
     }
 }
 

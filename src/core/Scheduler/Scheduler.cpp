@@ -39,7 +39,16 @@ namespace vg::core
         {
             // User name from scheduler to make sure they match
             const auto & name = px_sched::Scheduler::current_thread_name(); 
-            ((Scheduler*)Kernel::getScheduler())->RegisterCurrentThread(name, ThreadType::Worker);
+
+            // Extract worker index
+            std::string input(name);
+            size_t pos = input.find_last_of('-'); 
+            uint index = -1;
+            if (pos != string::npos)
+                index = stoi(input.substr(pos + 1));
+
+            auto * scheduler = ((Scheduler *)Kernel::getScheduler());
+            scheduler->RegisterCurrentThread(name, ThreadType::Worker, index, scheduler->GetWorkerThreadCount());
         }
 
     private:
@@ -52,7 +61,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void Scheduler::RegisterCurrentThread(const core::string & _name, ThreadType _threadType, core::uint _index)
+    void Scheduler::RegisterCurrentThread(const core::string & _name, ThreadType _threadType, core::uint _index, core::uint _count)
     {
         core::lock_guard<mutex> lock(m_registerThreadMutex);
 
@@ -63,7 +72,10 @@ namespace vg::core
         if (m_registeredThreads.end() != m_registeredThreads.find(threadId))
             return;  
 
-        VG_INFO("[Profiler] Register Thread \"%s\" (0x%08X)", _name.c_str(), threadId);
+        if (_count == 1)
+            VG_INFO("[Profiler] Register %s thread", asCString(_threadType));
+        else
+            VG_INFO("[Profiler] Register %s thread %2u/%-2u", asCString(_threadType), _index, _count);
 
         // Set thread name for debug
         SetThreadDescription(GetCurrentThread(), core::wstring_convert((string)_name).c_str());
@@ -82,7 +94,6 @@ namespace vg::core
         px_sched::SchedulerParams params;
                                   params.max_running_threads = static_cast<uint16_t>(std::thread::hardware_concurrency());
                                   params.num_threads = params.max_running_threads;
-                                  params.thread_sleep_on_idle_in_microseconds = 0;
         m_schd->init(params);
 
         // save thread count
@@ -142,6 +153,7 @@ namespace vg::core
             px_sched::Job job{ &registerThreadJob };
             m_schd->run(job, &s);
         }
+        Sleep(100);
         m_schd->waitFor(s);
     }
 

@@ -249,6 +249,14 @@ namespace vg::renderer
                 registerPropertyEnum(RendererOptions, gfx::RenderJobsPolicy, m_renderJobsPolicy, "Policy");
                 setPropertyDescription(RendererOptions, m_renderJobsPolicy, "RenderJobs scheduling policy.");
                 setPropertyReadOnlyCallback(RendererOptions, m_renderJobsPolicy, isRenderJobOptionReadOnly);
+
+                registerProperty(RendererOptions, m_renderJobsTotalBufferSizeInMB, "Total size");
+                setPropertyDescription(RendererOptions, m_renderJobsTotalBufferSizeInMB, "Total size of the upload buffers used by render jobs in MB.");
+                setPropertyReadOnlyCallback(RendererOptions, m_renderJobsTotalBufferSizeInMB, isRenderJobOptionReadOnly);
+
+                registerProperty(RendererOptions, m_renderJobsWorkerMinBufferSizeInMB, "Min size");
+                setPropertyDescription(RendererOptions, m_renderJobsWorkerMinBufferSizeInMB, "Minimum size of the upload buffer used by one render jobs in MB.");
+                setPropertyReadOnlyCallback(RendererOptions, m_renderJobsWorkerMinBufferSizeInMB, isRenderJobOptionReadOnly);
             }
             registerPropertyGroupEnd(RendererOptions);
         }

@@ -38,7 +38,7 @@ namespace vg::core
         void                        Wait                        (JobSync * _sync) final override;
 
         void                        RegisterWorkerThreads       () final override;
-        virtual void                RegisterCurrentThread       (const core::string & _name, ThreadType _threadType, core::uint _index = 0) final override;
+        virtual void                RegisterCurrentThread       (const core::string & _name, ThreadType _threadType, core::uint _index, core::uint _count) final override;
 
         ThreadID                    GetCurrentThreadID          () const final override;
         ThreadType                  GetCurrentThreadType        () const final override;

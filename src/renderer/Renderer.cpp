@@ -461,18 +461,6 @@ namespace vg::renderer
         return m_device.getHDR();
     }
 
-    //--------------------------------------------------------------------------------------
-    bool Renderer::SetMaxRenderJobCount(core::uint _maxCount, gfx::RenderJobsPolicy _scheduling)
-    {
-        return m_device.setMaxRenderJobCount(_maxCount, _scheduling);
-    }
-
-    //--------------------------------------------------------------------------------------
-    core::uint Renderer::GetMaxRenderJobCount() const
-    {
-        return m_device.getMaxRenderJobCount();
-    }
-
 	//--------------------------------------------------------------------------------------
 	void Renderer::RunOneFrame()
 	{
@@ -492,9 +480,9 @@ namespace vg::renderer
         options->update();
 
         if (options->isRenderJobsEnabled())
-            SetMaxRenderJobCount(options->getRenderJobCount(), options->getRenderJobsPolicy());
+            m_device.setupRenderJobs(options->getRenderJobCount(), options->getRenderJobsPolicy(), options->getMaxRenderTotalBufferSize(), options->getMaxRenderMinBufferSize());
         else
-            SetMaxRenderJobCount(0, RenderJobsPolicy::MainThread);
+            m_device.setupRenderJobs(0, options->getRenderJobsPolicy(), options->getMaxRenderTotalBufferSize(), options->getMaxRenderMinBufferSize());
 
 		m_device.beginFrame();
 		{

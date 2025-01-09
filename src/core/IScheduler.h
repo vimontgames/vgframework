@@ -28,7 +28,7 @@ namespace vg::core
         virtual void                    Wait                    (JobSync * _sync) = 0;
 
         virtual void                    RegisterWorkerThreads   () = 0;
-        virtual void                    RegisterCurrentThread   (const core::string & _name, ThreadType _threadType, core::uint _index = 0) = 0;
+        virtual void                    RegisterCurrentThread   (const core::string & _name, ThreadType _threadType, core::uint _index, core::uint _count) = 0;
 
         virtual ThreadID                GetCurrentThreadID      () const = 0;
         virtual ThreadType              GetCurrentThreadType    () const = 0;

@@ -106,14 +106,17 @@ namespace vg::editor
                 char infoLabel[256];
                 sprintf_s(infoLabel, "%s %u", style::icon::Info, infoCount);
                 auto infoLabelWidth = ImGui::CalcTextSize(infoLabel).x + style.FramePadding.x * 2.0f;
+                strcat(infoLabel, "###ShowInfo");
 
                 char warningLabel[256];
                 sprintf_s(warningLabel, "%s %u", style::icon::Warning, warningCount);
                 auto warningLabelWidth = ImGui::CalcTextSize(warningLabel).x + style.FramePadding.x * 2.0f;
+                strcat(warningLabel, "###ShowWarning");
 
                 char errorLabel[256];
                 sprintf_s(errorLabel, "%s %u", style::icon::Error, errorCount);
                 auto errorLabelWidth = ImGui::CalcTextSize(errorLabel).x + style.FramePadding.x * 2.0f;
+                strcat(errorLabel, "###ShowError");
 
                 float offset = size.x - infoLabelWidth - warningLabelWidth - errorLabelWidth - style.FramePadding.x;
 
