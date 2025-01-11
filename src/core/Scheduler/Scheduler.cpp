@@ -94,6 +94,7 @@ namespace vg::core
         px_sched::SchedulerParams params;
                                   params.max_running_threads = static_cast<uint16_t>(std::thread::hardware_concurrency());
                                   params.num_threads = params.max_running_threads;
+                                  params.thread_sleep_on_idle_in_microseconds = 0;
         m_schd->init(params);
 
         // save thread count

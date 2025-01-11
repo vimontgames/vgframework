@@ -38,9 +38,6 @@
     <ClCompile Include="Importer\Importer.cpp">
       <Filter>Importer</Filter>
     </ClCompile>
-    <ClCompile Include="RingBuffer\RingBuffer.cpp">
-      <Filter>RingBuffer</Filter>
-    </ClCompile>
     <ClCompile Include="PipelineState\Graphic\GraphicPipelineState.cpp">
       <Filter>PipelineState\Graphic</Filter>
     </ClCompile>
@@ -52,6 +49,9 @@
     </ClCompile>
     <ClCompile Include="Raytracing\RayTracing.cpp">
       <Filter>RayTracing</Filter>
+    </ClCompile>
+    <ClCompile Include="UploadBuffer\UploadBuffer.cpp">
+      <Filter>UploadBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -390,15 +390,6 @@
     <ClInclude Include="ITexture.h" />
     <ClInclude Include="IFrameGraphView.h" />
     <ClInclude Include="IShaderManager.h" />
-    <ClInclude Include="RingBuffer\RingBuffer.h">
-      <Filter>RingBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="RingBuffer\Upload\UploadBuffer.h">
-      <Filter>RingBuffer\Upload</Filter>
-    </ClInclude>
-    <ClInclude Include="RingBuffer\Upload\UploadBuffer.hpp">
-      <Filter>RingBuffer\Upload</Filter>
-    </ClInclude>
     <ClInclude Include="Device\vulkan\Extension\ExtensionList_vulkan.h">
       <Filter>Device\vulkan\Extension</Filter>
     </ClInclude>
@@ -694,6 +685,9 @@
     <ClInclude Include="FrameGraph\RenderJob.hpp">
       <Filter>FrameGraph</Filter>
     </ClInclude>
+    <ClInclude Include="UploadBuffer\UploadBuffer.h">
+      <Filter>UploadBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
@@ -798,12 +792,6 @@
     <Filter Include="Shader\dxc">
       <UniqueIdentifier>{f02f74c8-fe1d-4c92-9977-c60213733700}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RingBuffer">
-      <UniqueIdentifier>{65c4e526-f461-483f-b869-7759b4a7cad0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RingBuffer\Upload">
-      <UniqueIdentifier>{207be679-e64c-4ad4-9fc0-5ae24978b170}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Device\vulkan\Extension">
       <UniqueIdentifier>{bb34f2eb-a74c-4705-96ce-4e0eb76b249b}</UniqueIdentifier>
     </Filter>
@@ -852,6 +840,9 @@
     <Filter Include="Profiler\Optick\vulkan">
       <UniqueIdentifier>{ac543bdd-832a-46ae-aed4-99b045fbc853}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UploadBuffer">
+      <UniqueIdentifier>{65c4e526-f461-483f-b869-7759b4a7cad0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="PipelineState\Graphic\dx12\GraphicPipelineState_dx12.inl">
@@ -892,6 +883,9 @@
     </None>
     <None Include="FrameGraph\FrameGraph.inl">
       <Filter>FrameGraph</Filter>
+    </None>
+    <None Include="UploadBuffer\UploadBuffer.inl">
+      <Filter>UploadBuffer</Filter>
     </None>
   </ItemGroup>
 </Project>

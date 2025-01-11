@@ -14,7 +14,7 @@
 #include "gfx/PipelineState/Graphic/SamplerState.h"
 #include "gfx/Profiler/Profiler.h"
 #include "gfx/Importer/TextureImporter.h"
-#include "gfx/RingBuffer/Upload/UploadBuffer.h"
+#include "gfx/UploadBuffer/UploadBuffer.h"
 #include "gfx/Importer/TextureImporterSettings.h"
 
 #if !VG_ENABLE_INLINE
@@ -149,7 +149,7 @@ namespace vg::gfx
         void Device::createUploadBuffer()
         {
             VG_ASSERT(m_uploadBuffers.size() == 0);
-            m_uploadBuffers.push_back(new UploadBuffer("Upload #0", 768 * 1024 * 1024)); // must implement upload limit per frame but for now just temporarily increase the upload buffer size 
+            m_uploadBuffers.push_back(new UploadBuffer("Upload #0", 512 * 1024 * 1024, 0)); // must implement upload limit per frame but for now just temporarily increase the upload buffer size 
         }
 
         //--------------------------------------------------------------------------------------
@@ -172,7 +172,7 @@ namespace vg::gfx
                     const uint uploadBufferSize = max(m_renderJobsWorkerMinBufferSize, m_renderJobsTotalBufferSize / (uploadBufferTargetCount-1));
 
                     for (uint i = (uint)1; i < uploadBufferTargetCount; ++i)
-                        m_uploadBuffers.push_back(new UploadBuffer(fmt::sprintf("Upload #%u", i), uploadBufferSize));
+                        m_uploadBuffers.push_back(new UploadBuffer(fmt::sprintf("Upload #%u", i), uploadBufferSize, i));
                 }
 
                 m_renderJobsDirty = false;

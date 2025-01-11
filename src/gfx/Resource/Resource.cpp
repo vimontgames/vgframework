@@ -6,7 +6,7 @@
 #include "Resource.h"
 #include "Buffer.h"
 #include "Texture.h"
-#include "gfx/RingBuffer/Upload/UploadBuffer.h"
+#include "gfx/UploadBuffer/UploadBuffer.h"
 #include "gfx/bindlessTable/BindlessTable.h"
 
 using namespace vg::core;

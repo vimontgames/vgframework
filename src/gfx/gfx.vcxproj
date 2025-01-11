@@ -67,6 +67,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="UploadBuffer\UploadBuffer.cpp" />
     <ClInclude Include="..\..\extern\optick\src\optick_capi.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug_DX12|x64'">
       </ExcludedFromBuild>
@@ -487,7 +488,6 @@
     <ClInclude Include="Resource\Resource.h" />
     <ClInclude Include="Resource\Resource_consts.h" />
     <ClInclude Include="Resource\Texture.hpp" />
-    <ClCompile Include="RingBuffer\RingBuffer.cpp" />
     <ClCompile Include="RootSignature\RootSignature.cpp" />
     <ClCompile Include="Shader\Shader.cpp" />
     <ClInclude Include="CommandList\CommandList.h" />
@@ -557,9 +557,6 @@
     <ClInclude Include="Resource\vulkan\Resource_vulkan.hpp" />
     <ClInclude Include="Resource\vulkan\Texture_vulkan.h" />
     <ClInclude Include="Resource\vulkan\Texture_vulkan.hpp" />
-    <ClInclude Include="RingBuffer\RingBuffer.h" />
-    <ClInclude Include="RingBuffer\Upload\UploadBuffer.h" />
-    <ClInclude Include="RingBuffer\Upload\UploadBuffer.hpp" />
     <ClInclude Include="RootSignature\dx12\RootSignature_dx12.h" />
     <ClInclude Include="RootSignature\dx12\RootSignature_dx12.hpp" />
     <ClInclude Include="RootSignature\RootSignature.h" />
@@ -588,6 +585,7 @@
     <ClInclude Include="Shader\Shader_consts.h" />
     <ClInclude Include="Shader\vulkan\Shader_vulkan.h" />
     <ClInclude Include="Shader\vulkan\Shader_vulkan.hpp" />
+    <ClInclude Include="UploadBuffer\UploadBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandQueue\CommandQueue.h" />
@@ -617,6 +615,7 @@
     <None Include="Resource\Buffer.inl" />
     <None Include="Resource\Texture.inl" />
     <None Include="Shader\HLSLDesc.inl" />
+    <None Include="UploadBuffer\UploadBuffer.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

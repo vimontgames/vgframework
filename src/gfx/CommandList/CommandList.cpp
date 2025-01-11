@@ -10,7 +10,7 @@
 #include "gfx/FrameGraph/UserPass.h"
 #include "gfx/Resource/Texture.h"
 #include "gfx/Resource/Buffer.h"
-#include "gfx/RingBuffer/Upload/UploadBuffer.h"
+#include "gfx/UploadBuffer/UploadBuffer.h"
 #include "gfx/BindlessTable/BindlessTable.h"
 
 using namespace vg::core;
