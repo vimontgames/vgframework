@@ -18,6 +18,6 @@ namespace vg::renderer
     private:
         core::IndexPool<GPUMaterialDataIndex, s_MaxMaterialCount>   m_handles;
         core::vector<MaterialModel*>                                m_materials;
-        core::mutex                                                 m_mutex;
+        core::Mutex                                                 m_mutex = core::Mutex("Mutex - MaterialManager");
     };
 }

@@ -67,8 +67,8 @@ namespace vg::gfx
         gfx::API                            getAPI                          () const;
         ShaderOptimizationLevel             getShaderOptimizationLevel      () const;
 
-        core::mutex &                       getGraphicPipelineStateMutex    () { return m_graphicPipelineStateMutex; }
-        core::mutex &                       getComputePipelineStateMutex    () { return m_computePipelineStateMutex; }
+        core::Mutex &                       getGraphicPipelineStateMutex    () { return m_graphicPipelineStateMutex; }
+        core::Mutex &                       getComputePipelineStateMutex    () { return m_computePipelineStateMutex; }
 
         GraphicPipelineState *              createGraphicPipelineState      (const GraphicPipelineStateKey & _key);
         ComputePipelineState *              createComputePipelineState      (const ComputePipelineStateKey & _key);
@@ -99,8 +99,8 @@ namespace vg::gfx
         #endif
 
         OnShadersUpdatedCallbackFunc        m_onShadersUpdatedCallbackFunc = nullptr;
-        core::mutex                         m_graphicPipelineStateMutex;
-        core::mutex                         m_computePipelineStateMutex;
+        core::Mutex                         m_graphicPipelineStateMutex = core::Mutex("Mutex - GraphicPSO");
+        core::Mutex                         m_computePipelineStateMutex = core::Mutex("Mutex - ComputePSO");
 
         using GraphicPipelineStateHash = core::unordered_map<gfx::GraphicPipelineStateKey, gfx::GraphicPipelineState *, gfx::GraphicPipelineStateKey::hash>;
         GraphicPipelineStateHash            m_graphicPipelineStateHash;

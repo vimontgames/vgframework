@@ -80,8 +80,8 @@ namespace vg::engine
         core::vector<core::IResource*>                          m_resourcesLoaded;
         core::vector<core::IResource *>                         m_resourcesLoadedAsync;
 
-        mutable core::recursive_mutex                           m_addResourceToLoadRecursiveMutex;
-        mutable core::mutex                                     m_resourceLoadedAsyncMutex;
+        mutable core::RecursiveMutex                            m_addResourceToLoadRecursiveMutex = core::RecursiveMutex("RecursiveMutex - AddResourceToLoad");
+        mutable core::Mutex                                     m_resourceLoadedAsyncMutex = core::Mutex("Mutex - ResourceLoaded");
         
     };
 }

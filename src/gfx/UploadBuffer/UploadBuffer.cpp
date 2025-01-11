@@ -177,7 +177,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void UploadBuffer::flush(CommandList * _cmdList, bool _canBeEmpty)
     {
-        lock_guard<mutex> lock(m_mutex);
+        lock_guard lock(m_mutex);
 
         VG_ASSERT(_canBeEmpty || m_buffersToUpload.size() || m_texturesToUpload.size());
 
@@ -211,7 +211,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void UploadBuffer::sync()
     {
-        lock_guard<mutex> lock(m_mutex);
+        lock_guard lock(m_mutex);
 
         const uint bufferSize = m_buffer->getBufDesc().getSize();
 

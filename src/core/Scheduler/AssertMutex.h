@@ -23,6 +23,16 @@ namespace vg::core
                 m_isEntered.store(false);
             }
 
+            inline void setName(const char * _name)
+            {
+                m_name = _name;
+            }
+
+            inline const char * getName()
+            {
+                return m_name;
+            }
+
         private:
             const char * m_name;
             core::atomic<bool> m_isEntered;

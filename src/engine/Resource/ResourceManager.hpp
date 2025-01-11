@@ -207,7 +207,7 @@ namespace vg::engine
 
         for (auto info : allResourceInfos)
         {
-            const string path = info->m_path;
+            const string & path = info->m_path;
             if (!path.empty() && path == _res->GetResourcePath())
             {
                 VG_INFO("[Resource] Reimport \"%s\" (%u clients)", path.c_str(), info->m_clients.size());
@@ -277,7 +277,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::updateLoading(bool _async)
     {
-        lock_guard<recursive_mutex> lock(m_addResourceToLoadRecursiveMutex);
+        lock_guard lock(m_addResourceToLoadRecursiveMutex);
 
         auto resourcesToLoad = std::move(m_resourcesToLoad);
         auto & resourcesLoaded = _async ? m_resourcesLoadedAsync : m_resourcesLoaded;
@@ -307,7 +307,7 @@ namespace vg::engine
     {
         VG_ASSERT(_resource->GetParent() != nullptr); 
         VG_ASSERT(_resource->GetResourcePath() == _newPath); // TODO: get rid of the '_newPath' parameter?
-        lock_guard<recursive_mutex> lock(m_addResourceToLoadRecursiveMutex);
+        lock_guard lock(m_addResourceToLoadRecursiveMutex);
 
         const auto * options = EngineOptions::get();
 
@@ -467,7 +467,9 @@ namespace vg::engine
     {
         // get shared resource info
         auto & clients = _info.m_clients;
-        const string path = _info.m_path;
+        const string & path = _info.m_path;
+
+        VG_PROFILE_CPU(path.c_str());
 
         // check for an up-to-date cooked version of the resource
         auto needCook = needsCook(_info);
@@ -481,6 +483,9 @@ namespace vg::engine
         // Reimport is forced only once
         _info.m_forceReimport = false;
 
+        // HACK: use 1st client
+        auto * cooker = clients[0];
+
         bool done = false;
 
         while (!done)
@@ -488,10 +493,8 @@ namespace vg::engine
             const auto startCook = Timer::getTick();
             if (CookStatus::UP_TO_DATE != needCook)
             {
+                VG_PROFILE_CPU("Cook");
                 VG_INFO("[Resource] File \"%s\" needs cook because %s", path.c_str(), asString(needCook).c_str());
-
-                // HACK: use 1st client
-                auto * cooker = clients[0];
 
                 bool isFileCooked = cooker->Cook(path);
 
@@ -505,17 +508,16 @@ namespace vg::engine
                         VG_INFO("[Resource] File \"%s\" cooked in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
                 }
             }
-
-            auto client0 = clients[0];
+;
             const auto startLoad = Timer::getTick();
 
             VG_ASSERT(_info.m_object == nullptr);
-            string path = client0->GetResourcePath();
+            string path = cooker->GetResourcePath();
 
             VG_ASSERT(!path.empty());
 
             // Cooked file may seem up to date but format version actually changed
-            _info.m_object = client0->Load(path);
+            _info.m_object = cooker->Load(path);
 
             if (nullptr != _info.m_object)
             {
@@ -552,7 +554,7 @@ namespace vg::engine
         #if VG_RESOURCE_MANAGER_ASYNC_LOADING
         // Add resources that were loaded async during previous frames
         {
-            lock_guard<mutex> lock(m_resourceLoadedAsyncMutex);
+            lock_guard lock(m_resourceLoadedAsyncMutex);
 
             const auto asyncLoadCount = m_resourcesLoadedAsync.size();
 

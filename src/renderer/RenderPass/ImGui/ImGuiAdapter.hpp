@@ -190,6 +190,7 @@ namespace vg::renderer
         
         if (dirty)
         {
+            VG_PROFILE_CPU("BuildFonts");
             ImGuiIO & io = ImGui::GetIO();
             io.Fonts->Build();
             m_rebuildFontTex = true;
@@ -421,6 +422,7 @@ namespace vg::renderer
 
         if (m_rebuildFontTex)
         {
+            VG_PROFILE_CPU("BuildFonts");
             ImGui_ImplDX12_CreateFontsTexture();
             m_rebuildFontTex = false;
             first = true;
@@ -440,6 +442,7 @@ namespace vg::renderer
         ImGui_ImplVulkan_NewFrame();
         if (m_rebuildFontTex)
         {
+            VG_PROFILE_CPU("BuildFonts");
             ImGui_ImplVulkan_CreateFontsTexture();
             m_rebuildFontTex = false;
         }

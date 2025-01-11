@@ -522,7 +522,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     UID Factory::RegisterUID(IObject * _object)
     {
-        lock_guard<mutex> lock(m_uidObjectHashMutex);
+        lock_guard lock(m_uidObjectHashMutex);
 
         auto uid = _object->GetUID(false);
 
@@ -579,7 +579,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Factory::ReleaseUID(IObject * _object, UID & _uid)
     {
-        lock_guard<mutex> lock(m_uidObjectHashMutex);
+        lock_guard lock(m_uidObjectHashMutex);
 
         if (_uid)
         {
@@ -597,7 +597,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IObject * Factory::FindByUID(UID _uid) const
     {
-        lock_guard<mutex> lock(m_uidObjectHashMutex);
+        lock_guard lock(m_uidObjectHashMutex);
 
         if (_uid)
         {
@@ -2821,14 +2821,14 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Factory::ReleaseAsync(core::IObject * _object)
     {
-        lock_guard<mutex> lock(m_objectsToReleaseMutex);
+        lock_guard lock(m_objectsToReleaseMutex);
         m_objectsToRelease[m_objectsToReleaseTableIndex].push_back(_object);
     }
 
     //--------------------------------------------------------------------------------------
     void Factory::FlushReleaseAsync()
     {
-        lock_guard<mutex> lock(m_objectsToReleaseMutex);
+        lock_guard lock(m_objectsToReleaseMutex);
 
         auto & objectsToRelease = m_objectsToRelease[m_objectsToReleaseTableIndex ^ 1];
 

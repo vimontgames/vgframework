@@ -79,7 +79,7 @@ namespace vg::gfx
         core::vector<Range>     m_previousRanges;   // Previous frame allocation ranges
 
         // Mutex should be necessary only for UploadBuffer #0 that is used for loading (TODO: separate upload buffer/command list for loading?)
-        core::mutex             m_mutex;
+        core::Mutex             m_mutex = core::Mutex("Mutex - UploadBuffer");
 
         struct ResourceUploadInfo
         {

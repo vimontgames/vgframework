@@ -75,15 +75,15 @@ namespace vg::core
          const char *                               fixDeprecatedClassName          (const char * _className) const;
 
     private:
-        core::vector<ClassDesc>                     m_classes;
-        core::dictionary<PropertyType>              m_oldTypeNames;
-        core::dictionary<string>                    m_oldPropertyNames;
-        core::dictionary<const char *>              m_oldClassNames;
-        mutex                                       m_objectsToReleaseMutex;
-        vector<IObject*>                            m_objectsToRelease[2];
-        u8                                          m_objectsToReleaseTableIndex = 0;
-        core::unordered_map<UID, io::Buffer *>      m_buffers[enumCount<BufferType>()];
-        UIDObjectHash                               m_uidObjectHash;
-        mutable mutex                               m_uidObjectHashMutex;
+        vector<ClassDesc>                     m_classes;
+        dictionary<PropertyType>              m_oldTypeNames;
+        dictionary<string>                    m_oldPropertyNames;
+        dictionary<const char *>              m_oldClassNames;
+        Mutex                                 m_objectsToReleaseMutex = core::Mutex("Mutex - FactoryRelease");
+        vector<IObject*>                      m_objectsToRelease[2];
+        u8                                    m_objectsToReleaseTableIndex = 0;
+        unordered_map<UID, io::Buffer *>      m_buffers[enumCount<BufferType>()];
+        UIDObjectHash                         m_uidObjectHash;
+        mutable Mutex                         m_uidObjectHashMutex = core::Mutex("Mutex - FactoryObjectHash");
     };    
 }

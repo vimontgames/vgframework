@@ -161,7 +161,7 @@ namespace vg::editor
 
                         if (!sceneRes)
                         {
-                            const string path = prefabGameObject->GetPrefabResource()->GetResourcePath();
+                            const string & path = prefabGameObject->GetPrefabResource()->GetResourcePath();
                             worldRes->LoadSceneResource(path, BaseSceneType::Prefab);
                             engine->FlushLoading();
                         }

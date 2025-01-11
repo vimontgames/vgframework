@@ -688,7 +688,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     GraphicPipelineState * ShaderManager::createGraphicPipelineState(const GraphicPipelineStateKey & _key)
     {
-        core::lock_guard<mutex> lock(m_graphicPipelineStateMutex);
+        core::lock_guard lock(m_graphicPipelineStateMutex);
 
         #if 0
         GraphicPipelineState * pso = GraphicPipelineState::createGraphicPipelineState(_key);
@@ -716,7 +716,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     ComputePipelineState * ShaderManager::createComputePipelineState(const ComputePipelineStateKey & _key)
     {
-        core::lock_guard<mutex> lock(ShaderManager::get()->getComputePipelineStateMutex());
+        core::lock_guard lock(ShaderManager::get()->getComputePipelineStateMutex());
         
         #if 0
         ComputePipelineState * pso = ComputePipelineState::createComputePipelineState(_key);

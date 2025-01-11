@@ -63,7 +63,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Scheduler::RegisterCurrentThread(const core::string & _name, ThreadType _threadType, core::uint _index, core::uint _count)
     {
-        core::lock_guard<mutex> lock(m_registerThreadMutex);
+        core::lock_guard lock(m_registerThreadMutex);
 
         // Current thread id
         ThreadID threadId = GetCurrentThreadID();
