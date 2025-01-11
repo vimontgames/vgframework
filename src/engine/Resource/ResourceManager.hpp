@@ -9,8 +9,6 @@
 
 using namespace vg::core;
 
-#define VG_RESOURCE_MANAGER_ASYNC_LOADING 1
-
 namespace vg::engine
 {
     VG_REGISTER_OBJECT_CLASS(ResourceManager, "Resource Manager");
@@ -195,8 +193,19 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void ResourceManager::Reimport(core::IResource * _res)
+    void ResourceManager::Reimport(core::IResource * _res, bool _async)
     {
+        if (_async)
+            m_resourcesToReimport.push_back(_res);
+        else
+            reimport(_res);        
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceManager::reimport(core::IResource * _res)
+    {
+        VG_ASSERT(Scheduler::get()->IsMainThread());
+
         // Unloading resources will remove entries in the resourceMap so we need to copy the existing resources to iterate over
         vector<ResourceInfo *> allResourceInfos;
         for (auto pair : m_resourceInfosMap)
@@ -252,8 +261,6 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::loading(ResourceManager * _this)
     {
-        #if VG_RESOURCE_MANAGER_ASYNC_LOADING
-
         Kernel::getScheduler()->RegisterCurrentThread("Loading", ThreadType::Loading, 0, 1);
 
         while (_this->isLoadingThreadRunning())
@@ -261,7 +268,6 @@ namespace vg::engine
             _this->updateLoading(true);
             Sleep(1);
         }
-        #endif
     }
 
     //--------------------------------------------------------------------------------------
@@ -277,6 +283,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::updateLoading(bool _async)
     {
+        VG_ASSERT(Scheduler::get()->IsLoadingThread());
+
         lock_guard lock(m_addResourceToLoadRecursiveMutex);
 
         auto resourcesToLoad = std::move(m_resourcesToLoad);
@@ -305,8 +313,10 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::LoadResourceAsync(IResource * _resource, const core::string & _oldPath, const string & _newPath)
     {
+        VG_ASSERT(Scheduler::get()->IsMainThread() || Scheduler::get()->IsLoadingThread());
         VG_ASSERT(_resource->GetParent() != nullptr); 
         VG_ASSERT(_resource->GetResourcePath() == _newPath); // TODO: get rid of the '_newPath' parameter?
+
         lock_guard lock(m_addResourceToLoadRecursiveMutex);
 
         const auto * options = EngineOptions::get();
@@ -352,44 +362,44 @@ namespace vg::engine
 
                 m_resourceInfosMap.insert(make_pair(_newPath, info));
 
-                if (options->useResourceLoadingPriority())
-                {
-                    const Priority priority = _resource->GetClassDesc()->GetPriority();
-                    uint index = -1;
-                    for (uint i = 0; i < m_resourcesToLoad.size(); ++i)
-                    {
-                        const auto * res = m_resourcesToLoad[i];
-                        if (priority < res->GetClassDesc()->GetPriority())
-                        {
-                            m_resourcesToLoad.insert(m_resourcesToLoad.begin() + i, _resource);
-                            index = i;
-                            break;
-                        }
-                    }
-                    if (-1 == index)
-                    {
-                        m_resourcesToLoad.emplace_back(_resource);
-                        index = (uint)(m_resourcesToLoad.size() - 1);
-                    }
-
-                    #if VG_DEBUG0
-                    VG_DEBUGPRINT("\n");
-                    VG_DEBUGPRINT("NEW | INDEX | PRIORITY | TYPE      | PATH\n", m_resourcesToLoad.size());
-                    VG_DEBUGPRINT("----+-------+----------+-----------+---------------------------------\n");
-                    for (uint i = 0; i < m_resourcesToLoad.size(); ++i)
-                    {
-                        const auto * res = m_resourcesToLoad[i];
-                        string shortTypeName = res->GetClassDesc()->GetClassName();
-                        auto resPos = shortTypeName.find("Resource");
-                        if (-1 != resPos)
-                            shortTypeName = shortTypeName.substr(0, resPos);
-                        VG_DEBUGPRINT("%s | %5u | %8i | %9s | \"%s\"\n", res == _resource ? "==>" : "   ", i, res->GetClassDesc()->GetPriority(), shortTypeName.c_str(), res->GetResourcePath().c_str());
-                    }
-                    VG_DEBUGPRINT("\n");
-                    #endif
-
-                }
-                else
+                //if (options->useResourceLoadingPriority())
+                //{
+                //    const Priority priority = _resource->GetClassDesc()->GetPriority();
+                //    uint index = -1;
+                //    for (uint i = 0; i < m_resourcesToLoad.size(); ++i)
+                //    {
+                //        const auto * res = m_resourcesToLoad[i];
+                //        if (priority < res->GetClassDesc()->GetPriority())
+                //        {
+                //            m_resourcesToLoad.insert(m_resourcesToLoad.begin() + i, _resource);
+                //            index = i;
+                //            break;
+                //        }
+                //    }
+                //    if (-1 == index)
+                //    {
+                //        m_resourcesToLoad.emplace_back(_resource);
+                //        index = (uint)(m_resourcesToLoad.size() - 1);
+                //    }
+                //
+                //    #if VG_DEBUG0
+                //    VG_DEBUGPRINT("\n");
+                //    VG_DEBUGPRINT("NEW | INDEX | PRIORITY | TYPE      | PATH\n", m_resourcesToLoad.size());
+                //    VG_DEBUGPRINT("----+-------+----------+-----------+---------------------------------\n");
+                //    for (uint i = 0; i < m_resourcesToLoad.size(); ++i)
+                //    {
+                //        const auto * res = m_resourcesToLoad[i];
+                //        string shortTypeName = res->GetClassDesc()->GetClassName();
+                //        auto resPos = shortTypeName.find("Resource");
+                //        if (-1 != resPos)
+                //            shortTypeName = shortTypeName.substr(0, resPos);
+                //        VG_DEBUGPRINT("%s | %5u | %8i | %9s | \"%s\"\n", res == _resource ? "==>" : "   ", i, res->GetClassDesc()->GetPriority(), shortTypeName.c_str(), res->GetResourcePath().c_str());
+                //    }
+                //    VG_DEBUGPRINT("\n");
+                //    #endif
+                //
+                //}
+                //else
                 {
                     m_resourcesToLoad.emplace_back(_resource);
                 }
@@ -465,6 +475,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::loadOneResource(ResourceInfo & _info)
     {
+        VG_ASSERT(Scheduler::get()->IsLoadingThread());
+
         // get shared resource info
         auto & clients = _info.m_clients;
         const string & path = _info.m_path;
@@ -540,9 +552,10 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void ResourceManager::updateLoading()
+    void ResourceManager::updateLoadingMainThread()
     {
-        VG_PROFILE_CPU("UpdateLoading");
+        VG_PROFILE_CPU("Loading");
+        VG_ASSERT(Scheduler::get()->IsMainThread());
 
         static u32 skipFrames = 2;
         if (skipFrames != 0)
@@ -550,8 +563,14 @@ namespace vg::engine
             --skipFrames;
             return;
         }
+
+        // Update resources to reimport
+        {
+            for (uint i = 0; i < m_resourcesToReimport.size(); ++i)
+                reimport(m_resourcesToReimport[i]);
+            m_resourcesToReimport.clear();
+        }
         
-        #if VG_RESOURCE_MANAGER_ASYNC_LOADING
         // Add resources that were loaded async during previous frames
         {
             lock_guard lock(m_resourceLoadedAsyncMutex);
@@ -568,7 +587,6 @@ namespace vg::engine
                 m_resourcesLoadedAsync.clear();
             }
         }
-        #endif
 
         // Sync point to notify resource loaded last frame
         for (uint i = 0; i < m_resourcesLoaded.size(); ++i)
@@ -607,10 +625,6 @@ namespace vg::engine
                 }
             }
         }
-
-        #if !VG_RESOURCE_MANAGER_ASYNC_LOADING
-        updateLoading(false);
-        #endif
     }
 
     //--------------------------------------------------------------------------------------

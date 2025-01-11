@@ -743,7 +743,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void Engine::FlushLoading()
     {
-        m_resourceManager->updateLoading();
+        m_resourceManager->updateLoadingMainThread();
     }
 
 	//--------------------------------------------------------------------------------------
@@ -802,7 +802,7 @@ namespace vg::engine
         }
 
         m_resourceManager->flushUpdateResource();
-        m_resourceManager->updateLoading();
+        m_resourceManager->updateLoadingMainThread();
 
         const float scaledDeltaTime = m_time.m_scaledDeltaTime;
         const float realDeltaTime = m_time.m_realDeltaTime;

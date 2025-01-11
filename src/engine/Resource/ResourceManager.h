@@ -48,12 +48,12 @@ namespace vg::engine
         void                        SetResourceMeta             (const core::string & _resourcePath, core::IResourceMeta * _meta) final override;
 
         void                        UpdateResources             (bool _async = true) final override;
-        void                        Reimport                    (core::IResource * _res) final override;
+        void                        Reimport                    (core::IResource * _res, bool _async) final override;
 
         void                        LoadResourceAsync           (core::IResource * _resource, const core::string & _oldPath, const core::string & _path) final override;
         void                        UnloadResource              (core::IResource * _resource, const core::string & _path) final override ;
 
-        void                        updateLoading               ();
+        void                        updateLoadingMainThread     ();
         void                        flushPendingLoading         ();
 
         bool                        isLoadingThreadRunning      () const { return m_isLoadingThreadRunning; }
@@ -67,6 +67,7 @@ namespace vg::engine
         void                        loadOneResource             (ResourceInfo & _info);
 
         core::uint                  updateResources             ();
+        void                        reimport                    (core::IResource * _res);
 
     private:
         std::thread                                             m_loadingThread;
@@ -79,6 +80,8 @@ namespace vg::engine
         core::vector<core::IResource*>                          m_resourcesToLoad;
         core::vector<core::IResource*>                          m_resourcesLoaded;
         core::vector<core::IResource *>                         m_resourcesLoadedAsync;
+
+        core::vector<core::IResource *>                         m_resourcesToReimport;
 
         mutable core::RecursiveMutex                            m_addResourceToLoadRecursiveMutex = core::RecursiveMutex("RecursiveMutex - AddResourceToLoad");
         mutable core::Mutex                                     m_resourceLoadedAsyncMutex = core::Mutex("Mutex - ResourceLoaded");

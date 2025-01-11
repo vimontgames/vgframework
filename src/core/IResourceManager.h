@@ -59,6 +59,6 @@ namespace vg::core
         virtual void UpdateResources(bool _async = true) = 0;
 
         // Force reimport specific resource
-        virtual void Reimport(IResource * _res) = 0;
+        virtual void Reimport(IResource * _res, bool _async = true) = 0;
     };
 }
