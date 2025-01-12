@@ -485,7 +485,7 @@ namespace vg::engine
     {
         if (_resource == &m_prefabResource)
         {
-            VG_PROFILE_CPU("OnPrefabGameObjectLoaded");
+            VG_PROFILE_CPU("Prefab");
 
             // Instanciate the Prefab
             if (PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, _resource->GetObject()))
@@ -681,6 +681,8 @@ namespace vg::engine
     void PrefabGameObject::OverrideGameObjectProperties(IGameObject * _gameObject, const IDynamicProperty * _dynProp)
     {        
         bool found = false;
+
+        VG_PROFILE_CPU("OverrideProperties");
 
         for (uint j = 0; j < m_dynamicProperties.size(); ++j)
         {

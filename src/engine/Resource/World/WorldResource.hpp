@@ -292,6 +292,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void WorldResource::OnResourceLoaded(core::IResource * _resource)
     {
+        VG_PROFILE_CPU("WorldResource");
+
         WorldResourceData * worldResData = dynamic_cast<WorldResourceData *>(GetObject());
         VG_ASSERT(worldResData);
 

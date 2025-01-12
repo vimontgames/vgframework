@@ -63,6 +63,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MeshResource::OnResourceLoaded(core::IResource * _resource)
     {
+        VG_PROFILE_CPU("MeshResource");
+
         const auto userData = _resource->GetUserData();
         const uint matID = (userData >> 16) & 0xFFFF;
         const auto texSlot = (renderer::MaterialTextureType)(userData & 0xFFFF);

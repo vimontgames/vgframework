@@ -444,6 +444,8 @@ namespace vg::engine
     {
         if (_resource == m_worldResource)
         {
+            VG_PROFILE_CPU("World");
+
             VG_ASSERT(dynamic_cast<WorldResource*>(_resource));
             WorldResource * worldRes = (WorldResource *)_resource;
             auto world = worldRes->GetWorld();

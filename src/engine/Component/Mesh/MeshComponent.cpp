@@ -186,6 +186,8 @@ namespace vg::engine
     {
         if (_resource == &m_meshResource)
         {
+            VG_PROFILE_CPU("MeshComponent");
+
             // Mesh loaded
             IMeshModel * meshModel = m_meshResource.getMeshModel();
             m_meshInstance->SetModel(Lod::Lod0, meshModel);

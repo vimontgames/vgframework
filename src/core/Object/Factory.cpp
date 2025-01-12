@@ -480,6 +480,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IObject * Factory::Instanciate(const core::IObject * _object, IObject * _parent)
     {
+        VG_PROFILE_CPU("Instanciate");
+
         const auto className = _object->GetClassName();
         
         IObject * newObj = CreateObject(className, _object->GetName(), _parent);

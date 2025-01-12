@@ -195,6 +195,8 @@ namespace vg::engine
         MeshComponent * meshComponent = getMeshComponent();
         if (meshComponent)
         {
+            VG_PROFILE_CPU("AnimationComponent");
+
             AnimationResource * animRes = VG_SAFE_STATIC_CAST(AnimationResource, _resource);
             if (renderer::ISkeletalAnimation * anim = VG_SAFE_STATIC_CAST(renderer::ISkeletalAnimation, animRes->GetObject()))
             {

@@ -128,6 +128,8 @@ namespace vg::engine
     {
         if (auto material = getMaterialModel())
         {
+            VG_PROFILE_CPU("MaterialData");
+
             if (auto * matProp = findTextureResourceProperty(_resource))
             {
                 if (material)

@@ -35,6 +35,8 @@ namespace vg::engine
     {
         if (_resource == &m_image)
         {
+            VG_PROFILE_CPU("UIImageComponent");
+
             auto * tex = VG_SAFE_STATIC_CAST(gfx::ITexture, _resource->GetObject());
             if (tex != m_texture)
             {
