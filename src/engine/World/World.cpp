@@ -509,7 +509,7 @@ namespace vg::engine
     {
         if (m_specularReflectionCubemap != _texture)
         {
-            VG_SAFE_RELEASE(m_specularReflectionCubemap);
+            VG_SAFE_RELEASE_ASYNC(m_specularReflectionCubemap);
             m_specularReflectionCubemap = _texture;
             VG_SAFE_INCREASE_REFCOUNT(m_specularReflectionCubemap);
         }
