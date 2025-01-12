@@ -391,7 +391,13 @@ namespace vg::engine
         else
         {
             if (!_newPath.empty())
-                VG_ERROR("[Resource] Could not find %s file \"%s\" referenced by GameObject \"%s\"", _resource->GetClassName(), _newPath.c_str(), _resource->GetParentGameObject()->GetName().c_str());
+            {
+                auto * parentGameObject = _resource->GetParentGameObject();
+                if (nullptr != parentGameObject)
+                    VG_ERROR("[Resource] Could not find %s file \"%s\" referenced by GameObject \"%s\"", _resource->GetClassName(), _newPath.c_str(), parentGameObject->GetName().c_str());
+                else
+                    VG_ERROR("[Resource] Could not find %s file \"%s\"", _resource->GetClassName(), _newPath.c_str());
+            }
         }
 
         //flushResourcesToLoadAsync();

@@ -355,7 +355,6 @@ namespace vg::engine
                 if (_resource == (*sceneResources)[i])
                 {
                     IBaseScene * scene = dynamic_cast<IBaseScene *>(_resource->GetObject());
-                    BaseSceneResource * sceneRes = VG_SAFE_STATIC_CAST(BaseSceneResource, _resource);
                     
                     if (worldResData->m_world)
                     {
@@ -367,12 +366,10 @@ namespace vg::engine
 
                             case BaseSceneType::Scene:
                                 worldResData->m_world->RemoveScene(scene, sceneType);
-                                //worldResData->RemoveScene(sceneRes, sceneType);
                                 break;
 
                             case BaseSceneType::Prefab:
                                 worldResData->m_world->RemoveScene(scene, sceneType);
-                                //worldResData->RemoveScene(sceneRes, sceneType);
                                 break;
                         }
                     }
