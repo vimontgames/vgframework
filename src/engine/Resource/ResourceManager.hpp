@@ -259,9 +259,20 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void ResourceManager::registerThread()
+    {
+        if (!m_isLoadingThreadRegistered)
+        {
+            Kernel::getScheduler()->RegisterCurrentThread("Loading", ThreadType::Loading, 0, 1);
+            m_isLoadingThreadRegistered = true;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     void ResourceManager::loading(ResourceManager * _this)
     {
-        Kernel::getScheduler()->RegisterCurrentThread("Loading", ThreadType::Loading, 0, 1);
+        _this->registerThread();
+        
 
         while (_this->isLoadingThreadRunning())
         {
@@ -608,13 +619,6 @@ namespace vg::engine
     {
         VG_PROFILE_CPU("Loading");
         VG_ASSERT(Kernel::getScheduler()->IsMainThread());
-
-        static u32 skipFrames = 2;
-        if (skipFrames != 0)
-        {
-            --skipFrames;
-            return;
-        }
 
         // Update resources to reimport
         flushResourceToReimport();

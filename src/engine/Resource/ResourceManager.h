@@ -60,6 +60,7 @@ namespace vg::engine
         void                        flushUpdateResource();
 
     protected:
+        void                        registerThread              ();
         static void                 loading                     (ResourceManager * _this);
         static CookStatus           needsCook                   (const ResourceInfo & _info);
 
@@ -75,6 +76,7 @@ namespace vg::engine
 
     private:
         std::thread                                             m_loadingThread;
+        bool                                                    m_isLoadingThreadRegistered = false;
         core::atomic<bool>                                      m_isLoadingThreadRunning = true;
         core::atomic<bool>                                      m_needUpdateResource = false;
 
