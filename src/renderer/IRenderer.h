@@ -47,7 +47,6 @@ namespace vg
 
         vg_enum_class(RendererJobType, core::u8,
             Culling,
-            Render,
             DebugDraw
         );
 
@@ -135,6 +134,7 @@ namespace vg
             virtual bool                                IsMSAASupported         (gfx::MSAA _mode) const = 0;
 
             virtual core::JobSync *                     GetJobSync              (RendererJobType _jobSync) = 0;
+            virtual bool                                WaitJobSync             (RendererJobType _jobSync) = 0;
 
             virtual double                              GetGpuFrameTime         () const = 0;
             virtual double                              GetGpuWaitTime          () const = 0;

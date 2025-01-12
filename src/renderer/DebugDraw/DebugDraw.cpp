@@ -783,8 +783,7 @@ namespace vg::renderer
         // Wait DebugDraw jobs
         {
             VG_PROFILE_CPU("Wait DebugDraw");
-            auto scheduler = Kernel::getScheduler();
-            scheduler->Wait(Renderer::get()->GetJobSync(RendererJobType::DebugDraw));
+            Renderer::get()->WaitJobSync(RendererJobType::DebugDraw);
         }
 
         DrawData & drawData = getDrawData(_view);

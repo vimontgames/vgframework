@@ -787,7 +787,7 @@ namespace vg::renderer
         if (jobStartCounter > 0)
         {
             VG_PROFILE_CPU("Wait Culling");
-            jobScheduler->Wait(jobSync);
+            WaitJobSync(RendererJobType::Culling);
         }
     }
 
@@ -1336,5 +1336,27 @@ namespace vg::renderer
             m_computeSpecularBRDFPass->setSpecularBRDFTexture(nullptr);
     }
 
+    //--------------------------------------------------------------------------------------
+    core::JobSync * Renderer::GetJobSync(RendererJobType _jobSync) 
+    {
+        auto & info = m_jobSyncInfo[core::asInteger(_jobSync)];
+        info.started.store(true);
+        return &info.id;
+    }
 
+    //--------------------------------------------------------------------------------------
+    bool Renderer::WaitJobSync(RendererJobType _jobSync)
+    {
+        auto * scheduler = Kernel::getScheduler();
+        auto & info = m_jobSyncInfo[core::asInteger(_jobSync)];
+
+        if (info.started)
+        {
+            scheduler->Wait(&info.id);
+            info.started = false;
+            return true;
+        }
+
+        return false;
+    }
 }

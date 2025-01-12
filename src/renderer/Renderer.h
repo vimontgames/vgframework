@@ -129,9 +129,11 @@ namespace vg::renderer
         bool                                    IsHDRSupported              (gfx::HDR _mode) const final override;
         bool                                    IsMSAASupported             (gfx::MSAA _mode) const final override;
 
-        core::JobSync *                         GetJobSync                  (RendererJobType _jobSync) final override { return &m_jobSync[core::asInteger(_jobSync)]; }
+        core::JobSync *                         GetJobSync                  (RendererJobType _jobSync) final override;
+        bool                                    WaitJobSync                 (RendererJobType _jobSync) final override;
+
         double                                  GetGpuFrameTime             () const final override;
-        double                                  GetGpuWaitTime              () const  final override;
+        double                                  GetGpuWaitTime              () const final override;
 
         const gfx::DeviceCaps &                 getDeviceCaps               () const;
 
@@ -181,7 +183,13 @@ namespace vg::renderer
         SharedCullingJobOutput *                m_sharedCullingJobOutput    = nullptr;
 
         core::vector<Viewport *>                m_viewports[core::enumCount<gfx::ViewportTarget>()];
-        core::JobSync                           m_jobSync[core::enumCount<RendererJobType>()];
+
+        struct JobSyncInfo
+        {
+            core::atomic<bool> started = false;
+            core::JobSync id;
+        };
+        JobSyncInfo                             m_jobSyncInfo[core::enumCount<RendererJobType>()];
 
         // TODO : remove
         core::vector<renderer::View *>          m_views[core::enumCount<gfx::ViewTarget>()];
