@@ -53,7 +53,7 @@ namespace vg::engine
         void                        LoadResourceAsync           (core::IResource * _resource, const core::string & _oldPath, const core::string & _path) final override;
         void                        UnloadResource              (core::IResource * _resource, const core::string & _path) final override ;
 
-        void                        updateLoadingMainThread     ();
+        void                        updateMainThread            ();
         void                        flushPendingLoading         ();
 
         bool                        isLoadingThreadRunning      () const { return m_isLoadingThreadRunning; }
@@ -63,11 +63,15 @@ namespace vg::engine
         static void                 loading                     (ResourceManager * _this);
         static CookStatus           needsCook                   (const ResourceInfo & _info);
 
-        void                        updateLoading               (bool _async);
+        void                        updateLoadingThread         ();
         void                        loadOneResource             (ResourceInfo & _info);
 
         core::uint                  updateResources             ();
         void                        reimport                    (core::IResource * _res);
+
+        void                        flushResourceToReimport     ();
+        void                        flushResourcesToLoadAsync   ();
+        void                        flushResourcesLoadedAsync   ();
 
     private:
         std::thread                                             m_loadingThread;
@@ -77,9 +81,11 @@ namespace vg::engine
         core::dictionary<ResourceInfo*>                         m_resourceInfosMap;
         core::dictionary<core::IResourceMeta *>                 m_resourceMeta;
 
+        core::vector<core::IResource *>                         m_resourcesToLoadAsync;
         core::vector<core::IResource*>                          m_resourcesToLoad;
-        core::vector<core::IResource*>                          m_resourcesLoaded;
+
         core::vector<core::IResource *>                         m_resourcesLoadedAsync;
+        core::vector<core::IResource*>                          m_resourcesLoaded;
 
         core::vector<core::IResource *>                         m_resourcesToReimport;
 
