@@ -399,8 +399,6 @@ namespace vg::engine
                     VG_ERROR("[Resource] Could not find %s file \"%s\"", _resource->GetClassName(), _newPath.c_str());
             }
         }
-
-        //flushResourcesToLoadAsync();
     }
 
     //--------------------------------------------------------------------------------------
