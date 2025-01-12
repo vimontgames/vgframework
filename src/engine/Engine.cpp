@@ -706,9 +706,9 @@ namespace vg::engine
             float maxDT;
             if (engineOptions->TryGetMaxDT(maxDT))
                 m_time.m_scaledDeltaTime = min(m_time.m_scaledDeltaTime, maxDT / 1000.0f);
-
-            previous = current;
         }
+
+        previous = current;
 
         m_time.m_enlapsedTimeSinceStartReal += m_time.m_realDeltaTime;
         m_time.m_enlapsedTimeSinceStartScaled += m_time.m_scaledDeltaTime;
