@@ -168,6 +168,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     const ThreadInfo * Scheduler::getCurrentThreadInfo() const
     {
+        core::lock_guard lock(m_registerThreadMutex);
         const ThreadID threadId = GetCurrentThreadID();
 
         auto it = m_registeredThreads.find(threadId);
