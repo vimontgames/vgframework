@@ -1,6 +1,7 @@
 #include "renderer/Precomp.h"
 #include "RayTracingManager.h"
 #include "core/Timer/Timer.h"
+#include "core/Scheduler/Scheduler.h"
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/Resource/Buffer.h"
 #include "renderer/Model/Mesh/MeshModel.h"
@@ -47,6 +48,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void RayTracingManager::onEnableRayTracing()
     {
+        lock_guard lock(m_addRTMeshInstanceMutex);
         VG_INFO("[Renderer] RayTracing is enabled");
         
         for (uint i = 0; i < m_meshInstances.size(); ++i)
@@ -59,6 +61,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void RayTracingManager::onDisableRayTracing()
     {
+        lock_guard lock(m_addRTMeshInstanceMutex);
         VG_INFO("[Renderer] RayTracing is disabled");
 
         for (uint i = 0; i < m_meshInstances.size(); ++i)
@@ -103,6 +106,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void RayTracingManager::addMeshInstance(MeshInstance * _meshInstance)
     {
+        lock_guard lock(m_addRTMeshInstanceMutex);
         VG_ASSERT(!vector_helper::exists(m_meshInstances, _meshInstance));
         m_meshInstances.push_back(_meshInstance);
     }
@@ -110,6 +114,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void RayTracingManager::removeMeshInstance(MeshInstance * _meshInstance)
     {
+        lock_guard lock(m_addRTMeshInstanceMutex);
         VG_ASSERT(vector_helper::exists(m_meshInstances, _meshInstance));
         vector_helper::remove(m_meshInstances, _meshInstance);
     }

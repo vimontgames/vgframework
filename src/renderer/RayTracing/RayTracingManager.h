@@ -1,6 +1,7 @@
 #pragma once
 #include "core/Object/Object.h"
 #include "core/Singleton/Singleton.h"
+#include "core/Scheduler/Mutex.h"
 
 namespace vg::gfx
 {
@@ -41,5 +42,6 @@ namespace vg::renderer
         core::vector<MeshModel *>       m_meshModels;
         core::vector<MeshInstance *>    m_meshInstances;
         core::vector<MeshInstance *>    m_meshInstanceUpdateQueue;
+        mutable core::Mutex             m_addRTMeshInstanceMutex = core::Mutex("Mutex - AddRTMeshInstance");
     };
 }
