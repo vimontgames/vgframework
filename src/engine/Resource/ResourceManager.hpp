@@ -272,7 +272,6 @@ namespace vg::engine
     void ResourceManager::loading(ResourceManager * _this)
     {
         _this->registerThread();
-        
 
         while (_this->isLoadingThreadRunning())
         {
@@ -308,7 +307,7 @@ namespace vg::engine
         // Load resource without blocking mutex
         if (nullptr != res)
         {
-            VG_PROFILE_CPU("loading");
+            VG_PROFILE_CPU("Loading");
             string resPath = res->GetResourcePath();
 
             auto it = m_resourceInfosMap.find(resPath);
@@ -330,66 +329,57 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::LoadResourceAsync(IResource * _resource, const core::string & _oldPath, const string & _newPath)
     {
-        VG_ASSERT(Kernel::getScheduler()->IsMainThread() || Kernel::getScheduler()->IsLoadingThread());
         VG_ASSERT(_resource->GetParent() != nullptr); 
         VG_ASSERT(_resource->GetResourcePath() == _newPath); // TODO: get rid of the '_newPath' parameter?
 
         const auto * options = EngineOptions::get();
 
+        lock_guard lock(m_addResourceToLoadRecursiveMutex);
+
         // unload previous
+        UnloadResource(_resource, _oldPath);
+        
+        // Reuse existing object if it's already loaded
+        auto it = m_resourceInfosMap.find(_resource->GetResourcePath());
+        if (m_resourceInfosMap.end() != it)
         {
-            auto it = m_resourceInfosMap.find(_oldPath);
-            if (m_resourceInfosMap.end() != it)
-                UnloadResource(_resource, _oldPath);
-        }
+            ResourceInfo & loaded = *it->second;
 
-        if (io::exists(_newPath))
-        {
-            // Reuse existing object if it's already loaded
-            auto it = m_resourceInfosMap.find(_resource->GetResourcePath());
-            if (m_resourceInfosMap.end() != it)
-            {
-                ResourceInfo & loaded = *it->second;
-
-                VG_ASSERT(loaded.GetResourceType() == _resource->GetClassName(), "[Resource] Resource \"%s\" is already loaded as a '%s' resource and cannot also be loaded as a `%s`' resource", _newPath.c_str(), loaded.GetResourceType().c_str(), _resource->GetClassName());
+            VG_ASSERT(loaded.GetResourceType() == _resource->GetClassName(), "[Resource] Resource \"%s\" is already loaded as a '%s' resource and cannot also be loaded as a `%s`' resource", _newPath.c_str(), loaded.GetResourceType().c_str(), _resource->GetClassName());
                 
-                // TODO : make resource type part of the hash and cooked name to that we e.g., can have a 'MeshResource' and an 'AnimationResource' from the same FBX file?
-                if (loaded.GetResourceType() == _resource->GetClassName())
-                {
-                    // Add to client list
-                    loaded.m_clients.push_back(_resource);
-
-                    if (loaded.m_object != nullptr)
-                    {
-                        // already loaded? Add to resource to update BUT is several clients requested the resource at the same frame it could be not ready yet and dropped :(
-                        m_resourcesLoadedAsync.push_back(_resource);
-                    }
-                }
-            }
-            else
+            // TODO : make resource type part of the hash and cooked name to that we e.g., can have a 'MeshResource' and an 'AnimationResource' from the same FBX file?
+            if (loaded.GetResourceType() == _resource->GetClassName())
             {
-                // Create entry in ResourceMap
-                string name = io::getFileName(_resource->GetResourcePath());
-                ResourceInfo * info = new ResourceInfo(name);
-                info->m_clients.push_back(_resource);
-                info->m_path = _newPath;
-                info->m_object = nullptr;
+                // Add to client list
+                loaded.m_clients.push_back(_resource);
 
-                m_resourceInfosMap.insert(make_pair(_newPath, info));
-
-                // Add resource to load asynchronously
+                if (loaded.m_object != nullptr)
                 {
-                    lock_guard lock(m_addResourceToLoadRecursiveMutex);
-
-                    if (Scheduler::get()->IsMainThread())
-                        m_resourcesToLoad.emplace_back(_resource);
-                    else
-                        m_resourcesToLoadAsync.emplace_back(_resource);
+                    // already loaded? Add to resource to update BUT is several clients requested the resource at the same frame it could be not ready yet and dropped :(
+                    m_resourcesLoadedAsync.push_back(_resource);
                 }
             }
+        }
+        else if (io::exists(_newPath))
+        {
+            // Create entry in ResourceMap
+            string name = io::getFileName(_resource->GetResourcePath());
+            ResourceInfo * info = new ResourceInfo(name);
+            info->m_clients.push_back(_resource);
+            info->m_path = _newPath;
+            info->m_object = nullptr;
+
+            m_resourceInfosMap.insert(make_pair(_newPath, info));
+
+            // Add resource to load asynchronously
+            if (Scheduler::get()->IsMainThread())
+                m_resourcesToLoad.emplace_back(_resource);
+            else
+                m_resourcesToLoadAsync.emplace_back(_resource);
         }
         else
         {
+            // File does not exist
             if (!_newPath.empty())
             {
                 auto * parentGameObject = _resource->GetParentGameObject();
@@ -406,6 +396,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::UnloadResource(core::IResource * _resource, const core::string & _path)
     {
+        lock_guard lock(m_addResourceToLoadRecursiveMutex);
+
         auto it = m_resourceInfosMap.find(_path);
         if (m_resourceInfosMap.end() != it)
         {
@@ -543,7 +535,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::flushResourceToReimport()
     {
-        VG_PROFILE_CPU("flushResourceToReimport");
+        VG_PROFILE_CPU("FlushResourceToReimport");
 
         for (uint i = 0; i < m_resourcesToReimport.size(); ++i)
             reimport(m_resourcesToReimport[i]);
@@ -553,7 +545,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::flushResourcesToLoadAsync()
     {
-        VG_PROFILE_CPU("flushResourcesToLoadAsync");
+        VG_PROFILE_CPU("FlushResourcesToLoad");
 
         lock_guard lock(m_addResourceToLoadRecursiveMutex);
 
@@ -572,7 +564,7 @@ namespace vg::engine
 
             if (options->useResourceLoadingPriority())
             {
-                VG_PROFILE_CPU("resourceLoadingPriority");
+                VG_PROFILE_CPU("LoadingPriority");
 
                 sort(m_resourcesToLoad.begin(), m_resourcesToLoad.end(), [](IResource * a, IResource * b)
                 {
@@ -602,7 +594,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::flushResourcesLoadedAsync()
     {
-        VG_PROFILE_CPU("flushResourcesLoadedAsync");
+        VG_PROFILE_CPU("FlushResourcesLoaded");
         lock_guard lock(m_resourceLoadedAsyncMutex);
 
         const auto asyncLoadedCount = m_resourcesLoadedAsync.size();
@@ -622,7 +614,6 @@ namespace vg::engine
     void ResourceManager::updateMainThread()
     {
         VG_PROFILE_CPU("Loading");
-        VG_ASSERT(Kernel::getScheduler()->IsMainThread());
 
         // Update resources to reimport
         flushResourceToReimport();
@@ -633,39 +624,50 @@ namespace vg::engine
         // Add resources that were loaded async during previous frames
         flushResourcesLoadedAsync();
 
-        // Sync point to notify resource loaded last frame
-        for (uint i = 0; i < m_resourcesLoaded.size(); ++i)
+        core::dictionary<ResourceInfo *> resourceInfoMap;
         {
-            const auto & res = m_resourcesLoaded[i];
-
-            auto it = m_resourceInfosMap.find(res->GetResourcePath());
-            auto & info = it->second;
-
-            // Set Shared Resource Object and Notify owner
-            res->SetObject(info->m_object);
-            res->LoadSubResources();
-            IObject * resOwner = res->GetParent();
-            VG_ASSERT(nullptr != resOwner);
-            if (nullptr != resOwner)
-                resOwner->OnResourceLoaded(res);
+            VG_PROFILE_CPU("CopyResourceInfoMap");
+            lock_guard lock(m_addResourceToLoadRecursiveMutex);
+            resourceInfoMap = m_resourceInfosMap;
         }
-        m_resourcesLoaded.clear();
 
-        // Update null entries in resources (e.g., several requests for the same resource object)
-        for (auto pair : m_resourceInfosMap)
+        // Sync point to notify resource loaded last frame
         {
-            ResourceInfo * info = pair.second;
-            auto & clients = info->m_clients;
-            for (uint i = 0; i < clients.size(); ++i)
+            VG_PROFILE_CPU("OnResourceLoaded");
+
+            for (uint i = 0; i < m_resourcesLoaded.size(); ++i)
             {
-                auto & res = clients[i];
-                if (res->GetObject() == nullptr)
+                const auto & res = m_resourcesLoaded[i];
+
+                auto it = resourceInfoMap.find(res->GetResourcePath());
+                auto & info = it->second;
+
+                // Set Shared Resource Object and Notify owner
+                res->SetObject(info->m_object);
+                res->LoadSubResources();
+                IObject * resOwner = res->GetParent();
+                VG_ASSERT(nullptr != resOwner);
+                if (nullptr != resOwner)
+                    resOwner->OnResourceLoaded(res);
+            }
+            m_resourcesLoaded.clear();
+
+            // Update null entries in resources (e.g., several requests for the same resource object)
+            for (auto pair : resourceInfoMap)
+            {
+                ResourceInfo * info = pair.second;
+                auto & clients = info->m_clients;
+                for (uint i = 0; i < clients.size(); ++i)
                 {
-                    if (nullptr != info->m_object)
+                    auto & res = clients[i];
+                    if (res->GetObject() == nullptr)
                     {
-                        res->SetObject(info->m_object);
-                        res->LoadSubResources();
-                        res->GetParent()->OnResourceLoaded(res);
+                        if (nullptr != info->m_object)
+                        {
+                            res->SetObject(info->m_object);
+                            res->LoadSubResources();
+                            res->GetParent()->OnResourceLoaded(res);
+                        }
                     }
                 }
             }
