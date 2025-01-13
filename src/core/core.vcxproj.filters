@@ -88,6 +88,9 @@
     <Filter Include="UndoRedo\Entry">
       <UniqueIdentifier>{4c661d57-b085-4a38-becb-44c83b1d191c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Misc\Random">
+      <UniqueIdentifier>{dc7c9a48-62ef-47b2-b2f9-4c55100643c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -468,6 +471,9 @@
     <ClInclude Include="Scheduler\AssertMutex.h">
       <Filter>Scheduler</Filter>
     </ClInclude>
+    <ClInclude Include="Misc\Random\Random.h">
+      <Filter>Misc\Random</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -543,6 +549,9 @@
     </ClCompile>
     <ClCompile Include="UndoRedo\UndoRedo.cpp">
       <Filter>UndoRedo</Filter>
+    </ClCompile>
+    <ClCompile Include="Misc\Random\Random.cpp">
+      <Filter>Misc\Random</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

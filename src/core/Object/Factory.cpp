@@ -11,8 +11,7 @@
 #include "core/IInstance.h"
 #include "core/Object/ObjectHandle.h"
 #include "core/Types/Traits.h"
-
-#include <random>
+#include "core/Misc/Random/Random.h"
 
 using namespace tinyxml2;
 
@@ -513,15 +512,6 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> T Random(T _min, T _max)
-    {
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<T> randomDist(_min, _max);
-        return randomDist(gen);
-    }
-
-    //--------------------------------------------------------------------------------------
     UID Factory::RegisterUID(IObject * _object)
     {
         lock_guard lock(m_uidObjectHashMutex);
@@ -566,7 +556,7 @@ namespace vg::core
     {
         do
         {
-            UID uid = Random<u32>(0x00000001, 0xFFFFFFFF);
+            UID uid = Random::getRandomInRange(0x00000001, 0xFFFFFFFF);
             auto it = m_uidObjectHash.find(uid);
             if (m_uidObjectHash.end() == it)
             {
