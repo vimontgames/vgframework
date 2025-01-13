@@ -58,7 +58,7 @@ namespace vg::renderer
         gfx::ITexture *         GetDefaultCubemap                       () const final override;
         float                   GetDefaultIrradianceIntensity           () const final override { return m_defaultIrradianceIntensity; }
         float                   GetDefaultSpecularReflectionIntensity   () const final override { return m_defaultSpecularReflectionIntensity; }
-
+        gfx::ITexture *         GetBakedSpecularBRDF                    () const  final override;
         bool                    IsToolModeEnabled                       () const final override { return isToolModeEnabled(); };
         bool                    IsRayTracingEnabled                     () const final override { return isRayTracingEnabled(); };
 
@@ -160,6 +160,7 @@ namespace vg::renderer
         bool                    m_shadows[core::enumCount<Quality>()];
         ShadowDefaultResolution m_shadowsResolution[core::enumCount<Quality>()];
         PBRFlags                m_pbrFlags                              = (PBRFlags)0x0;
+        core::IResource *       m_pbrBakedBRDFTexture                   = nullptr;
         DisplayMode	            m_debugDisplayMode                      = DisplayMode::None;
         DisplayFlags            m_displayFlags                          = DisplayFlags::AlbedoMap | DisplayFlags::NormalMap | DisplayFlags::VertexColor | DisplayFlags::MaterialColor | DisplayFlags::InstanceColor;
         RenderPassFlags         m_renderPassFlags;

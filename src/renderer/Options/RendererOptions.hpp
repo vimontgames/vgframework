@@ -135,8 +135,15 @@ namespace vg::renderer
             registerPropertyEnum(RendererOptions, LightingMode, m_lightingMode, "Mode");
             setPropertyDescription(RendererOptions, m_lightingMode, "Lighting monde will affect how lights are computed.\nIn \"Forward\" mode lighting is computed on the fly in pixel shader\nIn \"Defered\" mode lighting is computed in screen-space");
 
-            registerPropertyEnumBitfield(RendererOptions, PBRFlags, m_pbrFlags, "PBR"); 
-            setPropertyDescription(RendererOptions, m_pbrFlags, "PBR lighting flags");
+            registerPropertyGroupBegin(RendererOptions, "PBR");
+            {
+                registerPropertyEnumBitfield(RendererOptions, PBRFlags, m_pbrFlags, "Flags");
+                setPropertyDescription(RendererOptions, m_pbrFlags, "Physically-based rendering flags");
+
+                registerPropertyResourcePtr(RendererOptions, m_pbrBakedBRDFTexture, "Baked BRDF");
+                setPropertyDescription(RendererOptions, m_pbrBakedBRDFTexture, "Baked specular BRDF texture used when \"Generate specular BRDF\" is not selected.")
+            }
+            registerPropertyGroupEnd(RendererOptions);
              
             registerPropertyGroupBegin(RendererOptions, "Shadows");
             {
@@ -331,8 +338,17 @@ namespace vg::renderer
         const auto * factory = Kernel::getFactory();
         m_defaultEnvironmentCubemap = (core::IResource *)factory->CreateObject("TextureResource");
         m_defaultEnvironmentCubemap->SetParent(this);
+        m_defaultEnvironmentCubemap->RegisterUID();
+
+        m_pbrBakedBRDFTexture = (core::IResource *)factory->CreateObject("TextureResource");
+        m_pbrBakedBRDFTexture->SetParent(this);
+        m_pbrBakedBRDFTexture->RegisterUID();        
+        //m_pbrBakedBRDFTexture->SetResourcePath("data/Engine/BRDF/CookTorrance.png"); // can't default value from because loading will load it again and it will leak
 
         Load();
+
+        if (m_pbrBakedBRDFTexture->GetResourcePath().empty())
+            m_pbrBakedBRDFTexture->SetResourcePath("data/Engine/BRDF/CookTorrance.png");
 
         if (!m_useCustomQualityLevel)
             m_customQualityLevel = autodetectQualityLevel();
@@ -389,6 +405,7 @@ namespace vg::renderer
     void RendererOptions::releaseResources()
     {
         VG_SAFE_RELEASE(m_defaultEnvironmentCubemap);
+        VG_SAFE_RELEASE(m_pbrBakedBRDFTexture);
     }
 
     //--------------------------------------------------------------------------------------
@@ -404,6 +421,18 @@ namespace vg::renderer
         {
             if (auto * cubemap = VG_SAFE_STATIC_CAST(gfx::ITexture, m_defaultEnvironmentCubemap->GetObject()))
                 return cubemap;
+        }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    gfx::ITexture * RendererOptions::GetBakedSpecularBRDF() const
+    {
+        if (!asBool(PBRFlags::GenerateSpecularBRDF & getPBRFlags()))
+        {
+            if (auto * brdf = VG_SAFE_STATIC_CAST(gfx::ITexture, m_pbrBakedBRDFTexture->GetObject()))
+                return brdf;
         }
 
         return nullptr;

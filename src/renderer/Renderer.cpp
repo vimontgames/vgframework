@@ -249,8 +249,6 @@ namespace vg::renderer
                 VG_SAFE_RELEASE(gameViewport);
             }
 
-            m_bakedSpecularBRDF = m_device.createTexture("data/Engine/BRDF/CookTorrance.png");
-
             m_defaultCameraLens = new CameraLens("Default 24-70mm FullFrame");
         }
 	}
@@ -293,7 +291,6 @@ namespace vg::renderer
 	void Renderer::Deinit()
 	{
         VG_SAFE_RELEASE(m_defaultCameraLens);
-        VG_SAFE_RELEASE(m_bakedSpecularBRDF);
         VG_SAFE_RELEASE(m_generatedSpecularBRDF);
         VG_SAFE_DELETE(m_sharedCullingJobOutput);
         VG_SAFE_RELEASE(m_hdrOutput);
@@ -801,6 +798,12 @@ namespace vg::renderer
     const gfx::DeviceParams & Renderer::GetDeviceCreationParams() const
     {
         return m_device.getDeviceParams();
+    }
+
+    //--------------------------------------------------------------------------------------
+    const renderer::IRendererOptions * Renderer::GetOptions() const
+    {
+        return RendererOptions::get();
     }
 
     //--------------------------------------------------------------------------------------
@@ -1325,7 +1328,7 @@ namespace vg::renderer
         if (asBool(PBRFlags::GenerateSpecularBRDF & RendererOptions::get()->getPBRFlags()))
             return m_generatedSpecularBRDF;
         else
-            return m_bakedSpecularBRDF;
+            return (Texture*)GetOptions()->GetBakedSpecularBRDF();
     }
 
     //--------------------------------------------------------------------------------------

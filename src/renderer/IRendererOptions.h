@@ -22,6 +22,7 @@ namespace vg::renderer
         virtual gfx::ITexture *         GetDefaultCubemap                       () const = 0;
         virtual float                   GetDefaultIrradianceIntensity           () const = 0;
         virtual float                   GetDefaultSpecularReflectionIntensity   () const = 0;
+        virtual gfx::ITexture *         GetBakedSpecularBRDF                    () const = 0;
 
         virtual bool                    IsToolModeEnabled                       () const = 0;
         virtual bool                    IsRayTracingEnabled                     () const = 0;

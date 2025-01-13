@@ -528,12 +528,14 @@ namespace vg::gfx
 	Texture * Device::createTexture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot)
 	{
         VG_ASSERT(_texDesc.width > 0 && _texDesc.height > 0);
+        VG_PROFILE_CPU("createTexture");
 		return new Texture(_texDesc, _name, _initData, _reservedSlot);
 	}
 
     //--------------------------------------------------------------------------------------
-    Texture * Device::createTexture(const core::string & _path, ReservedSlot _reservedSlot)
+    Texture * Device::createTextureFromFile(const core::string & _path, ReservedSlot _reservedSlot)
     {
+        VG_PROFILE_CPU("createTextureFromFile");
         TextureDesc texDesc;
         core::vector<u8> texData;
     
@@ -556,6 +558,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     Buffer * Device::createBuffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot)
     {
+        VG_PROFILE_CPU("createBuffer");
         return new Buffer(_bufDesc, _name, _initData, _reservedSlot);
     }
 

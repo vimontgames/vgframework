@@ -59,6 +59,7 @@ namespace vg::renderer
         void					                RunOneFrame			        () final override;
 
         const gfx::DeviceParams &               GetDeviceCreationParams     () const final override;
+        const renderer::IRendererOptions *      GetOptions                  () const final override;
         renderer::IRendererOptions *            GetOptions                  () final override;
 
         gfx::ITexture *                         CreateTexture               (const gfx::TextureDesc & _texDesc, const core::string & _name) final override;
@@ -194,9 +195,7 @@ namespace vg::renderer
         // TODO : remove
         core::vector<renderer::View *>          m_views[core::enumCount<gfx::ViewTarget>()];
 
-        gfx::Texture *                          m_bakedSpecularBRDF         = nullptr;
         gfx::Texture *                          m_generatedSpecularBRDF     = nullptr;
-
         MaterialManager *                       m_materialManager           = nullptr;
         ICameraLens *                           m_defaultCameraLens         = nullptr;
 	};

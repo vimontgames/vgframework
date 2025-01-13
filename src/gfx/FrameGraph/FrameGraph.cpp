@@ -539,18 +539,21 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     Texture * FrameGraph::createRenderTargetFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex)
     {
+        VG_PROFILE_CPU("createRenderTarget");
         return createTextureFromPool(_name, _textureResourceDesc, _createPassIndex, true, false, false);
     }
 
     //--------------------------------------------------------------------------------------
     Texture * FrameGraph::createDepthStencilFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex)
     {
+        VG_PROFILE_CPU("createDepthStencil");
         return createTextureFromPool(_name, _textureResourceDesc, _createPassIndex, false, true, false);
     }
 
     //--------------------------------------------------------------------------------------
     Texture * FrameGraph::createRWTextureFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex)
     {
+        VG_PROFILE_CPU("createRWTexture");
         return createTextureFromPool(_name, _textureResourceDesc, _createPassIndex, false, false, true);
     }
 
@@ -679,12 +682,14 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     Buffer * FrameGraph::createRWBufferFromPool(const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc, core::uint _createPassIndex)
     {
+        VG_PROFILE_CPU("createRWBuffer");
         return createBufferFromPool(_name, _bufferResourceDesc, _createPassIndex, true);
     }
 
     //--------------------------------------------------------------------------------------
     Buffer * FrameGraph::createBufferFromPool(const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc, core::uint _createPassIndex, bool _uav)
     {
+        VG_PROFILE_CPU("createBuffer");
         VG_ASSERT(_uav == _bufferResourceDesc.uav);
 
         for (uint i = 0; i < m_sharedBuffers.size(); ++i)
@@ -1085,6 +1090,8 @@ namespace vg::gfx
 	//--------------------------------------------------------------------------------------
 	void FrameGraph::render()
 	{
+        VG_PROFILE_CPU("render");
+
 		// Temp: use graphics command list
 		Device * device = Device::get();
         const auto & cmdLists = device->getCommandLists(CommandListType::Graphics);
@@ -1095,6 +1102,8 @@ namespace vg::gfx
         // Alloc render jobs if not yet created
         if (m_renderJobs.size() != maxRenderJobCount)
         {
+            VG_PROFILE_CPU("createJobs");
+
             m_renderJobs.reserve(maxRenderJobCount);
 
             for (uint i = (uint)m_renderJobs.size(); i < maxRenderJobCount; ++i)
@@ -1107,9 +1116,11 @@ namespace vg::gfx
         }
 
         // Prepare nodes for rendering by determining the textures/buffers than will need to be allocated or reused
-        for (auto & node : m_userPassInfoTree.m_children)
-            gatherResources(node);
-
+        {
+            VG_PROFILE_CPU("GatherResources");
+            for (auto & node : m_userPassInfoTree.m_children)
+                gatherResources(node);
+        }
         {
             VG_PROFILE_CPU("BeforeAll");
             for (auto & node : m_userPassInfoTree.m_children)
