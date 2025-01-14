@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour/Item/ItemBehaviour.h"
+#include "Behaviour/Entity/Item/ItemBehaviour.h"
 
 class CharacterBehaviour;
 
@@ -23,6 +23,6 @@ protected:
     WeaponType              m_weaponType        = WeaponType::Melee;
 
 private:
-    vg::core::Tag           m_ennemyTag         = (vg::core::Tag)0x0;
+    vg::core::Tag           m_hitTags           = (vg::core::Tag)0x0;
     vg::core::ObjectHandle  m_projectile;
 };

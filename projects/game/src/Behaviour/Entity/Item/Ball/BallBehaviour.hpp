@@ -1,7 +1,7 @@
 #include "BallBehaviour.h"
 #include "Game.h"
-#include "Behaviour/Character/Player/PlayerBehaviour.h"
-#include "Behaviour/Character/Enemy/EnemyBehaviour.h"
+#include "Behaviour/Entity/Character/Player/PlayerBehaviour.h"
+#include "Behaviour/Entity/Character/Enemy/EnemyBehaviour.h"
 
 using namespace vg::core;
 using namespace vg::engine;

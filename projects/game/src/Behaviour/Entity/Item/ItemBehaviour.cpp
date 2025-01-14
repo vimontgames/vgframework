@@ -9,6 +9,7 @@
 
 #include "Ball/BallBehaviour.hpp"
 #include "Weapon/WeaponBehaviour.hpp"
+#include "Chest/ChestBehaviour.hpp"
 
 VG_REGISTER_COMPONENT_CLASS(ItemBehaviour, "Item", "Game", "Basic game item", vg::editor::style::icon::Script, 0);
 
@@ -17,8 +18,7 @@ ItemBehaviour::ItemBehaviour(const vg::core::string & _name, vg::core::IObject *
     super(_name, _parent),
     m_itemType(_itemType)
 {
-    // Default item does not implement update
-    // Child classes derived from 'Item' should explicitely enable 'Update' if needed
+    // Default item does not implement update, child classes derived from 'Item' should explicitely enable 'Update' if needed
     EnableUpdateFlags(UpdateFlags::Update, false);
 }
 
@@ -98,7 +98,7 @@ void ItemBehaviour::OnCollisionEnter(vg::core::IGameObject * _other)
         if (player->isActive())
              SetOwner(player->GetGameObject());
     }
-    else if (auto * enemy = _other->GetComponentT<EnemyBehaviour>())
+    else if (auto * enemy = _other->GetComponentT<EntityBehaviour>())
     {
         // check projectile speed
         if (auto * physicsBodyComponent = GetGameObject()->GetComponentInChildrenT<IPhysicsBodyComponent>())
@@ -108,7 +108,7 @@ void ItemBehaviour::OnCollisionEnter(vg::core::IGameObject * _other)
             //VG_DEBUGPRINT("[ItemBehaviour] Velocity = %f, %f, %f (%f)\n", (float)velocity.x, (float)velocity.y, (float)velocity.z, velocityNorm);
 
             if (velocityNorm > 0.01f)
-                enemy->takeHit(nullptr, this);
+                enemy->TakeHit(GetOwnerCharacter(), this);
         }        
     }
 }

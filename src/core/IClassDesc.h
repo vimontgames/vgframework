@@ -24,7 +24,8 @@ namespace vg::core
         Resource        = 0x0000000000000040,
         SceneNode       = 0x0000000000000080,
         Plugin          = 0x0000000000000100,
-        UID             = 0x0000000000000200
+        UID             = 0x0000000000000200,
+        Hidden          = 0x0000000000004000
     };
 
     using Priority = core::i16;
@@ -116,6 +117,7 @@ namespace vg::core
         virtual void                        SetDescription              (const char * _description) = 0;
         virtual void                        SetIcon                     (const char * _icon) = 0;
         virtual void                        SetPriority                 (Priority _priority) = 0;
+        virtual void                        SetFlags                    (ClassDescFlags _flags) = 0;
 
         virtual uint                        GetPropertyCount            () const = 0;
         virtual const IProperty *           GetPropertyByIndex          (uint _index) const = 0;
@@ -127,9 +129,7 @@ namespace vg::core
         virtual SingletonFunc               GetSingletonFunc            () const = 0;
         virtual ClassDescFlags              GetFlags                    () const = 0;
         virtual u32                         GetSizeOf                   () const = 0;
-        virtual u32                         GetNextIndex                () const = 0;
-
-        
+        virtual u32                         GetNextIndex                () const = 0;       
  
     }; 
 }

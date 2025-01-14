@@ -1,14 +1,14 @@
 #pragma once
 #include "game_consts.h"
 #include "core/Object/ObjectHandle.h"
-#include "core/Component/Behaviour/Behaviour.h"
+#include "Behaviour/Entity/EntityBehaviour.h"
 
 class CharacterBehaviour;
 
-class ItemBehaviour : public vg::core::Behaviour
+class ItemBehaviour : public EntityBehaviour
 {
 public:
-    VG_CLASS_DECL(ItemBehaviour, vg::core::Behaviour);
+    VG_CLASS_DECL(ItemBehaviour, EntityBehaviour);
 
     ItemBehaviour(const vg::core::string & _name, vg::core::IObject * _parent, ItemType _itemType = ItemType::Default);
     ~ItemBehaviour();

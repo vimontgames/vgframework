@@ -83,6 +83,7 @@ namespace vg::core
         void                                SetDescription              (const char * _description) final override;
         void                                SetIcon                     (const char * _icon) final override;
         void                                SetPriority                 (Priority _priority) final override;
+        void                                SetFlags                    (ClassDescFlags _flags) final override;
 
         uint                                GetPropertyCount            () const final override;
         const IProperty *                   GetPropertyByIndex          (uint _index) const final override;

@@ -1,7 +1,7 @@
 #include "GameCameraBehaviour.h"
 #include "Game.h"
 #include "core/GameObject/GameObject.h"
-#include "Behaviour/Character/Player/PlayerBehaviour.h"
+#include "Behaviour/Entity/Character/Player/PlayerBehaviour.h"
 
 using namespace vg::core;
 using namespace vg::engine;

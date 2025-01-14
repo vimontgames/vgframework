@@ -127,6 +127,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool ImGuiAdapter::createFont(Font _font, FontStyle _style)
     {
+        VG_PROFILE_CPU("createFont");
+
         const auto fontPath = GetFontPath(_font, _style);
         auto & slot = m_imGuiFont[asInteger(_font)][asInteger(_style)];
 

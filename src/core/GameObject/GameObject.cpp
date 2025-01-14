@@ -565,28 +565,34 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IComponent * GameObject::GetComponentByType(const char * _className, bool _searchInParent, bool _searchInChildren) const
     {
+        auto * factory = Kernel::getFactory();
         const auto & components = getComponents();
         for (uint i = 0; i < components.size(); ++i)
         {
             auto * component = components[i];
             if (nullptr != component)
             {
-                if (!strcmp(component->GetClassName(), _className))
+                const char * componentClassName = component->GetClassName();
+                if (!strcmp(componentClassName, _className))
                 {
                     return component;
                 }
                 else 
                 {
-                    const auto * classDesc = Kernel::getFactory()->GetClassDescriptor(component->GetClassName());
+                    const auto * classDesc = factory->GetClassDescriptor(componentClassName, false);
                     if (nullptr != classDesc)
                     {
                         const char * interfaceName = classDesc->GetParentClassName();
-                        if (nullptr != interfaceName)
+                        while (nullptr != interfaceName)
                         {
                             if (!strcmp(interfaceName, _className))
-                            {
                                 return component;
-                            }
+
+                            classDesc = factory->GetClassDescriptor(interfaceName, false);
+                            if (classDesc)
+                                interfaceName = classDesc->GetParentClassName();
+                            else
+                                interfaceName = nullptr;
                         }
                     }
                 }

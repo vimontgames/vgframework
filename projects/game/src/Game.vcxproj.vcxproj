@@ -36,14 +36,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Behaviour\Camera\GameCameraManagerBehaviour.cpp" />
-    <ClCompile Include="Behaviour\Character\CharacterBehaviour.cpp" />
     <ClInclude Include="Behaviour\Camera\GameCameraBehaviour.h" />
     <ClInclude Include="Behaviour\Camera\GameCameraBehaviour.hpp" />
     <ClInclude Include="Behaviour\Camera\GameCameraManagerBehaviour.h" />
-    <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.hpp" />
+    <ClCompile Include="Behaviour\Entity\Character\CharacterBehaviour.cpp" />
+    <ClCompile Include="Behaviour\Entity\EntityBehaviour.cpp" />
+    <ClCompile Include="Behaviour\Entity\Item\ItemBehaviour.cpp" />
     <ClCompile Include="Behaviour\Goal\GoalBehaviour.cpp" />
     <ClCompile Include="Behaviour\HealthBar\HealthBarBehaviour.cpp" />
-    <ClCompile Include="Behaviour\Item\ItemBehaviour.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Precomp.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -57,25 +57,30 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Behaviour\Character\CharacterBehaviour.h" />
-    <ClInclude Include="Behaviour\Character\Enemy\EnemyBehaviour.h" />
-    <ClInclude Include="Behaviour\Character\Enemy\EnemyBehaviour.hpp" />
-    <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.h" />
+    <ClInclude Include="Behaviour\Entity\Character\CharacterBehaviour.h" />
+    <ClInclude Include="Behaviour\Entity\Character\Enemy\EnemyBehaviour.h" />
+    <ClInclude Include="Behaviour\Entity\Character\Enemy\EnemyBehaviour.hpp" />
+    <ClInclude Include="Behaviour\Entity\Character\Player\PlayerBehaviour.h" />
+    <ClInclude Include="Behaviour\Entity\Character\Player\PlayerBehaviour.hpp" />
+    <ClInclude Include="Behaviour\Entity\EntityBehaviour.h" />
+    <ClInclude Include="Behaviour\Entity\EntityBehaviour.inl" />
+    <ClInclude Include="Behaviour\Entity\Item\Ball\BallBehaviour.h" />
+    <ClInclude Include="Behaviour\Entity\Item\Ball\BallBehaviour.hpp" />
+    <ClInclude Include="Behaviour\Entity\Item\Chest\ChestBehaviour.h" />
+    <ClInclude Include="Behaviour\Entity\Item\Chest\ChestBehaviour.hpp" />
+    <ClInclude Include="Behaviour\Entity\Item\ItemBehaviour.h" />
+    <ClInclude Include="Behaviour\Entity\Item\Weapon\WeaponBehaviour.h" />
+    <ClInclude Include="Behaviour\Entity\Item\Weapon\WeaponBehaviour.hpp" />
     <ClInclude Include="Behaviour\Goal\GoalBehaviour.h" />
     <ClInclude Include="Behaviour\HealthBar\HealthBarBehaviour.h" />
-    <ClInclude Include="Behaviour\Item\Ball\BallBehaviour.h" />
-    <ClInclude Include="Behaviour\Item\Ball\BallBehaviour.hpp" />
-    <ClInclude Include="Behaviour\Item\ItemBehaviour.h" />
-    <ClInclude Include="Behaviour\Item\Weapon\WeaponBehaviour.h" />
-    <ClInclude Include="Behaviour\Item\Weapon\WeaponBehaviour.hpp" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Game_consts.h" />
     <ClInclude Include="Precomp.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Behaviour\Character\CharacterBehaviour.inl" />
-    <None Include="Behaviour\Character\Player\PlayerBehaviour.inl" />
-    <None Include="Behaviour\Item\ItemBehaviour.inl" />
+    <None Include="Behaviour\Entity\Character\CharacterBehaviour.inl" />
+    <None Include="Behaviour\Entity\Character\Player\PlayerBehaviour.inl" />
+    <None Include="Behaviour\Entity\Item\ItemBehaviour.inl" />
     <None Include="Game.def" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

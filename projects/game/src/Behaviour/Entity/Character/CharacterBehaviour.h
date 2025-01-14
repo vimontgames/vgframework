@@ -1,16 +1,16 @@
 #pragma once
 #include "game_consts.h"
-#include "core/Component/Behaviour/Behaviour.h"
+#include "Behaviour/Entity/EntityBehaviour.h"
 
 class ItemBehaviour;
 class HealthBarBehaviour;
 
-class CharacterBehaviour : public vg::core::Behaviour
+class CharacterBehaviour : public EntityBehaviour
 {
 public:
-    VG_CLASS_DECL(CharacterBehaviour, vg::core::Behaviour);
+    VG_CLASS_DECL(CharacterBehaviour, EntityBehaviour);
 
-    CharacterBehaviour(const vg::core::string & _name, vg::core::IObject * _parent, CharacterType _characterType);
+    CharacterBehaviour(const vg::core::string & _name, vg::core::IObject * _parent, CharacterType _characterType = CharacterType::Neutral);
     ~CharacterBehaviour();
 
     void                    OnEnable() override;
@@ -23,7 +23,7 @@ public:
     void                    Update(const Context & _context) override;
 
     void                    addScore(vg::core::i32 _points);
-    bool                    takeHit(CharacterBehaviour * _attacker, ItemBehaviour * _weapon = nullptr);
+    bool                    TakeHit(CharacterBehaviour * _attacker, ItemBehaviour * _weapon = nullptr);
 
     VG_INLINE bool          isActive() const;
     VG_INLINE MoveState     getMoveState() const;

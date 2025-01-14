@@ -14,8 +14,8 @@
 #include "engine/IUITextComponent.h"
 #include "engine/IUIImageComponent.h"
 #include "engine/IEngineOptions.h"
-#include "Behaviour/Item/Ball/BallBehaviour.h"
-#include "Behaviour/Item/Weapon/WeaponBehaviour.h"
+#include "Behaviour/Entity/Item/Ball/BallBehaviour.h"
+#include "Behaviour/Entity/Item/Weapon/WeaponBehaviour.h"
 #include "Behaviour/HealthBar/HealthBarBehaviour.h"
 #include "Game.h"
 
@@ -29,7 +29,8 @@
 using namespace vg::core;
 using namespace vg::engine;
 
-VG_REGISTER_ABSTRACT_CLASS(CharacterBehaviour, "CharacterBehaviour");
+// Component base class is not being exposed but still needs to be registered for custom RTTI
+VG_REGISTER_OBJECT_CLASS(CharacterBehaviour, "Character");
 
 //--------------------------------------------------------------------------------------
 CharacterBehaviour::CharacterBehaviour(const string & _name, IObject * _parent, CharacterType _characterType) :
@@ -233,7 +234,7 @@ void CharacterBehaviour::addScore(vg::core::i32 _points)
 }
 
 //--------------------------------------------------------------------------------------
-bool CharacterBehaviour::takeHit(CharacterBehaviour * _attacker, ItemBehaviour * _weapon)
+bool CharacterBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour * _weapon)
 {
     if (m_moveState != MoveState::Hurt)
     {

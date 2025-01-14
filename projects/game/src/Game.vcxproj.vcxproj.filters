@@ -3,14 +3,8 @@
   <ItemGroup>
     <ClCompile Include="Precomp.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Behaviour\Character\CharacterBehaviour.cpp">
-      <Filter>Behaviour\Character</Filter>
-    </ClCompile>
     <ClCompile Include="Behaviour\Goal\GoalBehaviour.cpp">
       <Filter>Behaviour\Goal</Filter>
-    </ClCompile>
-    <ClCompile Include="Behaviour\Item\ItemBehaviour.cpp">
-      <Filter>Behaviour\Item</Filter>
     </ClCompile>
     <ClCompile Include="Behaviour\Camera\GameCameraManagerBehaviour.cpp">
       <Filter>Behaviour\Camera</Filter>
@@ -18,46 +12,25 @@
     <ClCompile Include="Behaviour\HealthBar\HealthBarBehaviour.cpp">
       <Filter>Behaviour\HealthBar</Filter>
     </ClCompile>
+    <ClCompile Include="Behaviour\Entity\Item\ItemBehaviour.cpp">
+      <Filter>Behaviour\Entity\Item</Filter>
+    </ClCompile>
+    <ClCompile Include="Behaviour\Entity\Character\CharacterBehaviour.cpp">
+      <Filter>Behaviour\Entity\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Behaviour\Entity\EntityBehaviour.cpp">
+      <Filter>Behaviour\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.h">
-      <Filter>Behaviour\Character\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Behaviour\Character\CharacterBehaviour.h">
-      <Filter>Behaviour\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Behaviour\Character\Enemy\EnemyBehaviour.h">
-      <Filter>Behaviour\Character\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Behaviour\Character\Enemy\EnemyBehaviour.hpp">
-      <Filter>Behaviour\Character\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Behaviour\Character\Player\PlayerBehaviour.hpp">
-      <Filter>Behaviour\Character\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Game_consts.h" />
     <ClInclude Include="Behaviour\Goal\GoalBehaviour.h">
       <Filter>Behaviour\Goal</Filter>
     </ClInclude>
     <ClInclude Include="Behaviour\Camera\GameCameraBehaviour.h">
       <Filter>Behaviour\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Behaviour\Item\ItemBehaviour.h">
-      <Filter>Behaviour\Item</Filter>
-    </ClInclude>
-    <ClInclude Include="Behaviour\Item\Ball\BallBehaviour.h">
-      <Filter>Behaviour\Item\Ball</Filter>
-    </ClInclude>
-    <ClInclude Include="Behaviour\Item\Ball\BallBehaviour.hpp">
-      <Filter>Behaviour\Item\Ball</Filter>
-    </ClInclude>
-    <ClInclude Include="Behaviour\Item\Weapon\WeaponBehaviour.h">
-      <Filter>Behaviour\Item\Weapon</Filter>
-    </ClInclude>
-    <ClInclude Include="Behaviour\Item\Weapon\WeaponBehaviour.hpp">
-      <Filter>Behaviour\Item\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="Behaviour\Camera\GameCameraManagerBehaviour.h">
       <Filter>Behaviour\Camera</Filter>
@@ -68,19 +41,52 @@
     <ClInclude Include="Behaviour\HealthBar\HealthBarBehaviour.h">
       <Filter>Behaviour\HealthBar</Filter>
     </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Item\ItemBehaviour.h">
+      <Filter>Behaviour\Entity\Item</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Item\Ball\BallBehaviour.h">
+      <Filter>Behaviour\Entity\Item\Ball</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Item\Ball\BallBehaviour.hpp">
+      <Filter>Behaviour\Entity\Item\Ball</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Item\Chest\ChestBehaviour.h">
+      <Filter>Behaviour\Entity\Item\Chest</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Item\Chest\ChestBehaviour.hpp">
+      <Filter>Behaviour\Entity\Item\Chest</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Item\Weapon\WeaponBehaviour.h">
+      <Filter>Behaviour\Entity\Item\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Item\Weapon\WeaponBehaviour.hpp">
+      <Filter>Behaviour\Entity\Item\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Character\CharacterBehaviour.h">
+      <Filter>Behaviour\Entity\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Character\Enemy\EnemyBehaviour.h">
+      <Filter>Behaviour\Entity\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Character\Enemy\EnemyBehaviour.hpp">
+      <Filter>Behaviour\Entity\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Character\Player\PlayerBehaviour.h">
+      <Filter>Behaviour\Entity\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Character\Player\PlayerBehaviour.hpp">
+      <Filter>Behaviour\Entity\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\EntityBehaviour.h">
+      <Filter>Behaviour\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\EntityBehaviour.inl">
+      <Filter>Behaviour\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviour">
       <UniqueIdentifier>{f22a42c3-1de4-4af1-a237-fd64e93380cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Behaviour\Character">
-      <UniqueIdentifier>{6defa4dd-0664-4639-b079-02eb2647fade}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Behaviour\Character\Player">
-      <UniqueIdentifier>{b445a131-cc29-49b8-8417-1ad64a20ce75}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Behaviour\Character\Enemy">
-      <UniqueIdentifier>{3ae2e852-7d3f-4079-86ec-96a29ab4708e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Behaviour\Goal">
       <UniqueIdentifier>{ca4b3ef2-69b6-4062-bac1-08197050ee8d}</UniqueIdentifier>
@@ -88,29 +94,44 @@
     <Filter Include="Behaviour\Camera">
       <UniqueIdentifier>{73afb719-c434-407f-bbb2-9d58c1588663}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Behaviour\Item">
-      <UniqueIdentifier>{370cc594-90d9-4215-8439-ab5f709e10c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Behaviour\Item\Ball">
-      <UniqueIdentifier>{fb89c9e6-7259-4e92-b4b9-cc07c445a601}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Behaviour\Item\Weapon">
-      <UniqueIdentifier>{1301a258-7b69-47a0-9e4a-1cdf0b98dd4a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Behaviour\HealthBar">
       <UniqueIdentifier>{c5aa9b00-32c5-409d-b6d9-89829a238e36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Entity">
+      <UniqueIdentifier>{10c04c61-02b2-4fe2-872a-8111525140c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Entity\Item">
+      <UniqueIdentifier>{d80e8448-efee-4a2b-9fe6-a7db076242d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Entity\Character">
+      <UniqueIdentifier>{81023732-48cc-47c6-962f-04aaff1d8690}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Entity\Item\Ball">
+      <UniqueIdentifier>{686ba2d2-7fde-40ae-8d6c-a42cd88df5bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Entity\Item\Chest">
+      <UniqueIdentifier>{064b00bd-8f38-42d8-8f75-79dc0ac12e52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Entity\Item\Weapon">
+      <UniqueIdentifier>{88475c6a-5811-4caa-8d92-397fb61ed96d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Entity\Character\Enemy">
+      <UniqueIdentifier>{d00ba3ac-9040-4dab-956e-c19ab7a6137b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Entity\Character\Player">
+      <UniqueIdentifier>{1445cc56-936d-4ddd-a7be-191b580b7ad5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Game.def" />
-    <None Include="Behaviour\Character\Player\PlayerBehaviour.inl">
-      <Filter>Behaviour\Character\Player</Filter>
+    <None Include="Behaviour\Entity\Item\ItemBehaviour.inl">
+      <Filter>Behaviour\Entity\Item</Filter>
     </None>
-    <None Include="Behaviour\Character\CharacterBehaviour.inl">
-      <Filter>Behaviour\Character</Filter>
+    <None Include="Behaviour\Entity\Character\CharacterBehaviour.inl">
+      <Filter>Behaviour\Entity\Character</Filter>
     </None>
-    <None Include="Behaviour\Item\ItemBehaviour.inl">
-      <Filter>Behaviour\Item</Filter>
+    <None Include="Behaviour\Entity\Character\Player\PlayerBehaviour.inl">
+      <Filter>Behaviour\Entity\Character\Player</Filter>
     </None>
   </ItemGroup>
 </Project>

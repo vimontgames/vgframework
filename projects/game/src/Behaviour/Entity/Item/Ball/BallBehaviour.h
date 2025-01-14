@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour/Item/ItemBehaviour.h"
+#include "Behaviour/Entity/Item/ItemBehaviour.h"
 
 class CharacterBehaviour;
 

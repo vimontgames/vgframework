@@ -53,11 +53,12 @@
                                                                                                             desc->SetCategory(category);                                                                                                \
                                                                                                             desc->SetDescription(description);                                                                                          \
                                                                                                             desc->SetIcon(icon);                                                                                                        \
-                                                                                                            desc->SetPriority(priority);                                                                                                    \
+                                                                                                            desc->SetPriority(priority);                                                                                                \
                                                                                                             return true;                                                                                                                \
                                                                                                         }                                                                                                                               \
                                                                                                         return false;                                                                                                                   \
                                                                                                     }
+
 namespace vg::core
 {
     struct AutoRegisterClassInfo

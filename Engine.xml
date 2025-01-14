@@ -10,6 +10,7 @@
             <Value name="Tag_0" value="Player"/>
             <Value name="Tag_1" value="Enemy"/>
             <Value name="Tag_2" value="Weapon"/>
+            <Value name="Tag_3" value="Chest"/>
         </Property>
         <Property type="Bool" name="m_showRigidBodies" value="false"/>
         <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" value="Sphere|Box|Capsule|Cylinder"/>

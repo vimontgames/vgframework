@@ -308,8 +308,13 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                                 projectileMatrix[3].xyz += projectileDir * 0.6f + float3(0, 0, 0.1f); // TODO: expose projectile placement parameters?
                                 newProjectileGO->SetGlobalMatrix(projectileMatrix);
                                 newProjectileGO->OnPlay();
+
                                 if (auto * physicsBody = newProjectileGO->GetComponentInChildrenT<vg::engine::IPhysicsBodyComponent>())
                                     physicsBody->AddImpulse(float3(projectileDir.x, projectileDir.y, 0.15f) * 3.5f);
+
+                                if (auto * item = newProjectileGO->GetComponentInChildrenT<ItemBehaviour>())
+                                    item->SetOwner(playerGO); // Make current player the owner of the projectile (e.g. for scoring)
+
                                 VG_SAFE_RELEASE(newProjectileGO);
                             }
                         }
@@ -372,16 +377,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     m_rightHandItem->SetOwner(nullptr);
 
                     if (auto * physicsBody = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsBodyComponent>())
-                    {
                         physicsBody->SetTrigger(false);
-
-                        //physicsBody->SetMotionType(vg::physics::MotionType::Dynamic);
-                        //physicsBody->SetMatrix(m_rightHandItem->GetGameObject()->GetGlobalMatrix());
-                        //
-                        //// Weapon should collide with everything again
-                        //physicsBody->EnableCollisionMask(false);
-                        //physicsBody->SetCollisionMask((vg::physics::CategoryFlag)-1);
-                    }
 
                     m_rightHandItem = nullptr;
                 }

@@ -1,6 +1,6 @@
 #include "WeaponBehaviour.h"
 #include "Game.h"
-#include "Behaviour/Character/Player/PlayerBehaviour.h"
+#include "Behaviour/Entity/Character/Player/PlayerBehaviour.h"
 #include "engine/IAttachToNodeComponent.h"
 #include "engine/IEngineOptions.h"
 
@@ -47,13 +47,16 @@ bool WeaponBehaviour::registerProperties(IClassDesc & _desc)
 void WeaponBehaviour::OnPlay()
 {
     super::OnPlay();
-    m_ennemyTag = Game::get()->Engine().GetOptions()->GetGameObjectTag("Enemy");
+    const auto & options = Game::get()->Engine().GetOptions();
+    auto enemyTag = options->GetGameObjectTag("Enemy");
+    auto chestTag = options->GetGameObjectTag("Chest");
+    m_hitTags = enemyTag | chestTag;
 }
 
 //--------------------------------------------------------------------------------------
 void WeaponBehaviour::OnTriggerEnter(vg::core::IGameObject * _other)
 {
-    if (asBool(m_ennemyTag & _other->GetTags()))
+    if (asBool(m_hitTags & _other->GetTags()))
     {
         if (auto * owner = GetOwner().get<IGameObject>())
         {
@@ -61,8 +64,8 @@ void WeaponBehaviour::OnTriggerEnter(vg::core::IGameObject * _other)
             {
                 if (attacker->getFightState() == FightState::Hit)
                 {
-                    if (auto * defender = _other->GetComponentT<CharacterBehaviour>())
-                        defender->takeHit(attacker, this);
+                    if (auto * defender = _other->GetComponentT<EntityBehaviour>())
+                        defender->TakeHit(attacker, this);
                 }
             }
         }

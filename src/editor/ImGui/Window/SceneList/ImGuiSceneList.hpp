@@ -381,27 +381,29 @@ namespace vg::editor
             ImGui::SameLine();
 
             auto drawIcon = [=](const char * icon, bool enabled, float & totalSize, float availableWidth, ImVec2 pos, string tooltip)
-                {
-                    auto size = ImGui::CalcTextSize(icon).x;
-                    totalSize += size + ImGui::GetStyle().FramePadding.x;
+            {
+                VG_ASSERT(nullptr != icon);
 
-                    ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
+                auto size = ImGui::CalcTextSize(icon).x;
+                totalSize += size + ImGui::GetStyle().FramePadding.x;
 
-                    if (enabled)
-                        textColor.w *= 1;
-                    else
-                        textColor.w *= disabledAlpha;
+                ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 
-                    ImGui::SetCursorPosX(availableWidth - totalSize);
-                    ImGui::SetCursorPosY(pos.y);
-                    ImGui::PushStyleColor(ImGuiCol_Text, textColor);
-                    ImGui::Text(icon);
+                if (enabled)
+                    textColor.w *= 1;
+                else
+                    textColor.w *= disabledAlpha;
 
-                    if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                        ImGui::SetTooltip(tooltip.c_str());
+                ImGui::SetCursorPosX(availableWidth - totalSize);
+                ImGui::SetCursorPosY(pos.y);
+                ImGui::PushStyleColor(ImGuiCol_Text, textColor);
+                ImGui::Text(icon);
 
-                    ImGui::PopStyleColor();
-                };
+                if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
+                    ImGui::SetTooltip(tooltip.c_str());
+
+                ImGui::PopStyleColor();
+            };
 
             float totalSize = 0;
             for (i64 i = components.size() - 1; i >= 0; --i)
@@ -409,8 +411,11 @@ namespace vg::editor
                 const auto * component = components[i];
                 const auto * componentClassDesc = component->GetClassDesc();
                 auto icon = componentClassDesc->GetIcon();
-                bool enabled = asBool(ComponentFlags::Enabled & component->GetComponentFlags());
-                drawIcon(icon, enabled, totalSize, availableWidth, pos, componentClassDesc->GetDescription());
+                if (nullptr != icon)
+                {
+                    const bool enabled = asBool(ComponentFlags::Enabled & component->GetComponentFlags());
+                    drawIcon(icon, enabled, totalSize, availableWidth, pos, componentClassDesc->GetDescription());
+                }
             }
 
             if (isPrefab)

@@ -426,6 +426,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void ClassDesc::SetFlags(ClassDescFlags _flags)
+    {
+        flags = _flags;
+    }
+
+    //--------------------------------------------------------------------------------------
     uint ClassDesc::GetPropertyCount() const
     {
         return (uint)properties.size();

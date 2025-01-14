@@ -34,7 +34,8 @@ vg_enum_class(ItemType, vg::core::u8,
     Default = 0,
     Ball,
     Weapon,
-    Projectile
+    Projectile,
+    Chest
 );
 
 vg_enum_class(BallType, vg::core::u8,
@@ -45,4 +46,8 @@ vg_enum_class(BallType, vg::core::u8,
 vg_enum_class(WeaponType, vg::core::u8,
     Melee,
     Pistol
+);
+
+vg_enum_class(ChestType, vg::core::u8,
+    Default
 );

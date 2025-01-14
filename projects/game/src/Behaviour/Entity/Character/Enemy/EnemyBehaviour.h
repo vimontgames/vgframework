@@ -1,5 +1,5 @@
 #pragma once
-#include "Behaviour/Character/CharacterBehaviour.h"
+#include "Behaviour/Entity/Character/CharacterBehaviour.h"
 
 class EnemyBehaviour final : public CharacterBehaviour
 {

@@ -3,8 +3,8 @@
 #include "core/Kernel.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "engine/IEngine.h"
-#include "Behaviour/Character/Player/PlayerBehaviour.h"
-#include "Behaviour/Item/ItemBehaviour.h"
+#include "Behaviour/Entity/Character/Player/PlayerBehaviour.h"
+#include "Behaviour/Entity/Item/ItemBehaviour.h"
 
 using namespace vg::core;
 

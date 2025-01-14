@@ -1,8 +1,8 @@
 #include "Precomp.h"
 #include "GoalBehaviour.h"
 #include "Game.h"
-#include "Behaviour/Item/Ball/BallBehaviour.h"
-#include "Behaviour/Character/Player/PlayerBehaviour.h"
+#include "Behaviour/Entity/Item/Ball/BallBehaviour.h"
+#include "Behaviour/Entity/Character/Player/PlayerBehaviour.h"
 
 using namespace vg::core;
 using namespace vg::engine;
