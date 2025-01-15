@@ -82,6 +82,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Component::Enable(bool _enable) 
+    {
+        EnableComponentFlags(ComponentFlags::Enabled, _enable);
+    }
+
+    //--------------------------------------------------------------------------------------
     ComponentFlags Component::GetComponentFlags() const
     {
         return getComponentFlags();

@@ -66,8 +66,8 @@
     <ClInclude Include="Behaviour\Entity\EntityBehaviour.inl" />
     <ClInclude Include="Behaviour\Entity\Item\Ball\BallBehaviour.h" />
     <ClInclude Include="Behaviour\Entity\Item\Ball\BallBehaviour.hpp" />
-    <ClInclude Include="Behaviour\Entity\Item\Chest\ChestBehaviour.h" />
-    <ClInclude Include="Behaviour\Entity\Item\Chest\ChestBehaviour.hpp" />
+    <ClInclude Include="Behaviour\Entity\Item\Breakable\BreakableBehaviour.h" />
+    <ClInclude Include="Behaviour\Entity\Item\Breakable\BreakableBehaviour.hpp" />
     <ClInclude Include="Behaviour\Entity\Item\ItemBehaviour.h" />
     <ClInclude Include="Behaviour\Entity\Item\Weapon\WeaponBehaviour.h" />
     <ClInclude Include="Behaviour\Entity\Item\Weapon\WeaponBehaviour.hpp" />

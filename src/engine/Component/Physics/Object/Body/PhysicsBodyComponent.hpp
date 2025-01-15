@@ -264,6 +264,19 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void PhysicsBodyComponent::OnEnable()
+    {
+        if (!m_body)
+            createBody();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PhysicsBodyComponent::OnDisable()
+    {
+        VG_SAFE_RELEASE(m_body);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool PhysicsBodyComponent::createBody()
     {
         IWorld * world = GetGameObject()->GetWorld();

@@ -26,6 +26,8 @@ namespace vg::core
 
         void                        SetPropertyValue        (const IProperty & _prop, void * _previousValue, void * _newValue) override;
 
+        void                        Enable                  (bool _enable) final override;
+
         ComponentFlags              GetComponentFlags       () const final override;
         void                        EnableComponentFlags    (ComponentFlags _flags, bool _enabled = true) override;
 

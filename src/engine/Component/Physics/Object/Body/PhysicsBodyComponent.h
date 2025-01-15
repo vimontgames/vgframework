@@ -23,6 +23,8 @@ namespace vg::engine
         ~PhysicsBodyComponent();
 
         void                                    Update              (const Context & _context) final override;
+        void                                    OnEnable            () final override;
+        void                                    OnDisable           () final override;
         void                                    OnLoad              () final override;
         void                                    OnPlay              () final override;
         void                                    OnStop              () final override;

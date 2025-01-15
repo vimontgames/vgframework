@@ -50,12 +50,6 @@
     <ClInclude Include="Behaviour\Entity\Item\Ball\BallBehaviour.hpp">
       <Filter>Behaviour\Entity\Item\Ball</Filter>
     </ClInclude>
-    <ClInclude Include="Behaviour\Entity\Item\Chest\ChestBehaviour.h">
-      <Filter>Behaviour\Entity\Item\Chest</Filter>
-    </ClInclude>
-    <ClInclude Include="Behaviour\Entity\Item\Chest\ChestBehaviour.hpp">
-      <Filter>Behaviour\Entity\Item\Chest</Filter>
-    </ClInclude>
     <ClInclude Include="Behaviour\Entity\Item\Weapon\WeaponBehaviour.h">
       <Filter>Behaviour\Entity\Item\Weapon</Filter>
     </ClInclude>
@@ -83,6 +77,12 @@
     <ClInclude Include="Behaviour\Entity\EntityBehaviour.inl">
       <Filter>Behaviour\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Item\Breakable\BreakableBehaviour.h">
+      <Filter>Behaviour\Entity\Item\Breakable</Filter>
+    </ClInclude>
+    <ClInclude Include="Behaviour\Entity\Item\Breakable\BreakableBehaviour.hpp">
+      <Filter>Behaviour\Entity\Item\Breakable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Behaviour">
@@ -109,9 +109,6 @@
     <Filter Include="Behaviour\Entity\Item\Ball">
       <UniqueIdentifier>{686ba2d2-7fde-40ae-8d6c-a42cd88df5bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Behaviour\Entity\Item\Chest">
-      <UniqueIdentifier>{064b00bd-8f38-42d8-8f75-79dc0ac12e52}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Behaviour\Entity\Item\Weapon">
       <UniqueIdentifier>{88475c6a-5811-4caa-8d92-397fb61ed96d}</UniqueIdentifier>
     </Filter>
@@ -120,6 +117,9 @@
     </Filter>
     <Filter Include="Behaviour\Entity\Character\Player">
       <UniqueIdentifier>{1445cc56-936d-4ddd-a7be-191b580b7ad5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Behaviour\Entity\Item\Breakable">
+      <UniqueIdentifier>{064b00bd-8f38-42d8-8f75-79dc0ac12e52}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

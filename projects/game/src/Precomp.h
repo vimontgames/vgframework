@@ -11,6 +11,13 @@
 #include "engine/IEngine.h"
 #include "engine/IAnimationComponent.h"
 #include "engine/IAnimationResource.h"
+#include "engine/ICharacterControllerComponent.h"
+#include "engine/IPhysicsBodyComponent.h"
+#include "engine/IPhysicsShapeComponent.h"
+#include "engine/ISoundComponent.h"
+#include "engine/IUICanvasComponent.h"
+#include "engine/IUITextComponent.h"
+#include "engine/IUIImageComponent.h"
 
 #include "editor/Editor_Consts.h"
 

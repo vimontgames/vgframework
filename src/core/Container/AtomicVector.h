@@ -53,7 +53,7 @@ namespace vg::core
         inline T & push_empty_atomic()
         {
             size_t index = m_counter.fetch_add(1);
-            VG_ASSERT(index < capacity());
+            VG_ASSERT(index < capacity(), "Cannot add element to atomic vector (size: %u)", m_data.size());
             return m_data.data()[index];
         }
 
@@ -61,7 +61,7 @@ namespace vg::core
         inline T * alloc(size_t _count)
         {
             size_t offset = m_counter.fetch_add(_count);
-            VG_ASSERT(offset < capacity());
+            VG_ASSERT(offset < capacity(), "Cannot allocated %u elements in atomic vector (size: %u)", _count, m_data.size());
             return &m_data.data()[offset];
         }
 

@@ -71,11 +71,11 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                 if (anim->GetTime() > 0.5f)
                 {
                     if (auto * characterController = getGameObject()->GetComponentT<ICharacterControllerComponent>())
-                        characterController->setComponentFlags(vg::core::ComponentFlags::Enabled, false);
+                        characterController->Enable(false);
 
                     auto bodies = getGameObject()->GetComponentsInChildrenT<IPhysicsBodyComponent>();
                     for (auto * body : bodies)
-                        body->setComponentFlags(vg::core::ComponentFlags::Enabled, false);
+                        body->Enable(false);
                 }
             }
         }

@@ -5,11 +5,9 @@
 #include "ItemBehaviour.inl"
 #endif
 
-#include "engine/IPhysicsBodyComponent.h"
-
 #include "Ball/BallBehaviour.hpp"
 #include "Weapon/WeaponBehaviour.hpp"
-#include "Chest/ChestBehaviour.hpp"
+#include "Breakable/BreakableBehaviour.hpp"
 
 VG_REGISTER_COMPONENT_CLASS(ItemBehaviour, "Item", "Game", "Basic game item", vg::editor::style::icon::Script, 0);
 

@@ -1,6 +1,6 @@
 ﻿<img src="doc/img/version.png" alt="VGF boy" title="VGF boy" align="right" height="74" />
 
-# VGFramework 0.46.4
+# VGFramework 0.46.10
 Yet another work-in-progress game and graphic engine project.
 
 ![Demo](doc/img/0.46.gif)
@@ -46,7 +46,7 @@ The program will use these locally built files if they are present; otherwise, i
 - Open the `vgframework.sln` solution in Visual Studio 2022 Community IDE.
 - Build & Run
 
-**Debug** and **Release** versions will start with the editor:
+**Debug**, **Development*** and **Release** versions will start with the editor:
 Press `F5` to enter game mode and `F11` to maximize game view and press `ESC` to go back Editor mode.
 
 **Final** versions are compiled without the editor, they will start directly in game mode and maximized.
@@ -170,7 +170,7 @@ The external libraries are included with the sources for convenience. Follow the
 | [Vulkan Memory Allocator]( https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator                          )    | 3.0.1                   
 | [WinPixEventRuntime](      https://www.nuget.org/packages/WinPixEventRuntime                                          )    | 1.0.231030001                    
 
-✨ You can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0
+✨ Optick viewer can be tricky to build but you can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0 or build them more easily from https://github.com/vimontgames/optick. 
 
 
 # License
@@ -240,6 +240,7 @@ The following assets are provided under permissive licenses. Please follow the p
 | [Large sword swing](    https://freesound.org/people/Luis0413/sounds/737748/                            ) | Luis0413              
 | [Tally Dub](            https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/ ) | Brotheration Records   
 | [Chainsaw](             https://freesound.org/people/pblzr/sounds/512875/                               ) | [pblzr](https://freesound.org/people/pblzr/)
+| [Retro Bonus Pickup](   https://freesound.org/people/suntemple/sounds/253172/                           ) | [suntemple](https://freesound.org/people/suntemple/)
 
 
 # Misc
