@@ -10,6 +10,15 @@
         <Property type="EnumI8" name="m_customQualityLevel" value="High"/>
         <Property type="EnumU8" name="m_lightingMode" value="Deferred"/>
         <Property type="EnumFlagsU32" name="m_pbrFlags" value="GenerateIrradianceCubemap|GenerateSpecularReflectionCubemap|GenerateSpecularBRDF"/>
+        <Property type="ResourcePtr" name="m_pbrBakedBRDFTexture">
+            <Object class="TextureResource">
+                <Property type="String" name="m_name" value="TextureResource #1"/>
+                <Property type="Uint32" name="m_uid" value="388369360"/>
+                <Property type="Uint32" name="m_originalUID" value="0"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                <Property type="String" name="m_resourcePath" value="data/Engine/BRDF/CookTorrance.png"/>
+            </Object>
+        </Property>
         <Property type="Bool" name="m_shadows[Quality::VeryLow]" value="false"/>
         <Property type="Bool" name="m_shadows[Quality::Low]" value="true"/>
         <Property type="Bool" name="m_shadows[Quality::Medium]" value="true"/>
@@ -57,7 +66,7 @@
         <Property type="Bool" name="m_forceRenderJobsCount" value="false"/>
         <Property type="Uint16" name="m_renderJobsCount" value="2"/>
         <Property type="EnumU8" name="m_renderJobsPolicy" value="RecursiveSplit"/>
-        <Property type="Uint32" name="m_renderJobsTotalBufferSizeInMB" value="64"/>
+        <Property type="Uint32" name="m_renderJobsTotalBufferSizeInMB" value="128"/>
         <Property type="Uint32" name="m_renderJobsWorkerMinBufferSizeInMB" value="4"/>
     </Object>
 </Root>
