@@ -144,7 +144,7 @@ namespace vg::engine
     {
         const auto flags = _prop->GetFlags();
 
-        if (asBool(PropertyFlags::NotSaved & flags))
+        if (asBool(PropertyFlags::Transient & flags))
             return false;
 
         if (!_object->GetUID(false))

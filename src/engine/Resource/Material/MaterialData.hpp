@@ -21,7 +21,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(MaterialData, m_name, PropertyFlags::Hidden | PropertyFlags::NotSaved, true);
+        setPropertyFlag(MaterialData, m_name, PropertyFlags::Hidden | PropertyFlags::Transient, true);
 
         registerPropertyEnum(MaterialData, gfx::SurfaceType, m_surfaceType, "Surface");
         setPropertyDescription(MaterialData, m_surfaceType, "Surface type determines how the material deal with alpha transparency");

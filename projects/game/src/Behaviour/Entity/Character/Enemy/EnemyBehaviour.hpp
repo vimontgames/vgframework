@@ -29,8 +29,8 @@ bool EnemyBehaviour::registerProperties(IClassDesc & _desc)
 
     registerPropertyGroupBegin(EnemyBehaviour, "Enemy debug");
     {
-        registerPropertyEx(EnemyBehaviour, m_targetPosNew, "Target position", PropertyFlags::NotSaved);
-        registerPropertyEx(EnemyBehaviour, m_targetPosSmooth, "Target position (smoothed)", PropertyFlags::NotSaved);
+        registerPropertyEx(EnemyBehaviour, m_targetPosNew, "Target position", PropertyFlags::Transient);
+        registerPropertyEx(EnemyBehaviour, m_targetPosSmooth, "Target position (smoothed)", PropertyFlags::Transient);
     }
     registerPropertyGroupEnd(EnemyBehaviour);
 

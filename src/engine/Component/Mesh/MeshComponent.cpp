@@ -33,7 +33,7 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerPropertyResource(MeshComponent, m_meshResource, "Mesh");
-        registerPropertyObjectPtrEx(MeshComponent, m_meshInstance, "MeshInstance", PropertyFlags::NotSaved | PropertyFlags::Flatten);
+        registerPropertyObjectPtrEx(MeshComponent, m_meshInstance, "MeshInstance", PropertyFlags::Transient | PropertyFlags::Flatten);
         registerPropertyObjectEx(MeshComponent, m_meshMaterials, "Materials", PropertyFlags::Flatten);
         registerProperty(MeshComponent, m_batchMask, "Batch Mask");
         

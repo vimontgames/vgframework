@@ -14,30 +14,30 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool DefaultMaterialModel::registerProperties(core::IClassDesc & _desc)
     {
-        registerPropertyEnumEx(DefaultMaterialModel, UVSource, m_UVSource, "UV Source", PropertyFlags::NotSaved);
+        registerPropertyEnumEx(DefaultMaterialModel, UVSource, m_UVSource, "UV Source", PropertyFlags::Transient);
 
-        registerPropertyEx(DefaultMaterialModel, m_tiling, "Tiling", PropertyFlags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_tiling, "Tiling", PropertyFlags::Transient);
         setPropertyRange(DefaultMaterialModel, m_tiling, float2(0, 16));
 
-        registerPropertyEx(DefaultMaterialModel, m_offset, "Offset", PropertyFlags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_offset, "Offset", PropertyFlags::Transient);
         setPropertyRange(DefaultMaterialModel, m_offset, float2(-8, 8));
 
-        registerPropertyEx(DefaultMaterialModel, m_enableAlbedo, "Enable Albedo", PropertyFlags::NotSaved);
-        registerPropertyObjectEx(DefaultMaterialModel, m_albedoMap, "Albedo Map", PropertyFlags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_enableAlbedo, "Enable Albedo", PropertyFlags::Transient);
+        registerPropertyObjectEx(DefaultMaterialModel, m_albedoMap, "Albedo Map", PropertyFlags::Transient);
         registerPropertyEx(DefaultMaterialModel, m_albedoColor, "Albedo Color", PropertyFlags::Color);
 
-        registerPropertyEx(DefaultMaterialModel, m_enableNormal, "Enable Normal", PropertyFlags::NotSaved);
-        registerPropertyObjectEx(DefaultMaterialModel, m_normalMap, "Normal Map", PropertyFlags::NotSaved);
-        registerPropertyEx(DefaultMaterialModel, m_normalStrength, "Normal Strength", PropertyFlags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_enableNormal, "Enable Normal", PropertyFlags::Transient);
+        registerPropertyObjectEx(DefaultMaterialModel, m_normalMap, "Normal Map", PropertyFlags::Transient);
+        registerPropertyEx(DefaultMaterialModel, m_normalStrength, "Normal Strength", PropertyFlags::Transient);
         setPropertyRange(DefaultMaterialModel, m_normalStrength, float2(0.0f, 1.0f));
 
-        registerPropertyEx(DefaultMaterialModel, m_enablePbr, "Enable PBR", PropertyFlags::NotSaved);
-        registerPropertyObjectEx(DefaultMaterialModel, m_pbrMap, "PBR Map", PropertyFlags::NotSaved);
-        registerPropertyEx(DefaultMaterialModel, m_occlusion, "Occlusion", PropertyFlags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_enablePbr, "Enable PBR", PropertyFlags::Transient);
+        registerPropertyObjectEx(DefaultMaterialModel, m_pbrMap, "PBR Map", PropertyFlags::Transient);
+        registerPropertyEx(DefaultMaterialModel, m_occlusion, "Occlusion", PropertyFlags::Transient);
         setPropertyRange(DefaultMaterialModel, m_occlusion, float2(0.0f, 1.0f));
-        registerPropertyEx(DefaultMaterialModel, m_roughness, "Roughness", PropertyFlags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_roughness, "Roughness", PropertyFlags::Transient);
         setPropertyRange(DefaultMaterialModel, m_roughness, float2(0.0f, 1.0f));
-        registerPropertyEx(DefaultMaterialModel, m_metalness, "Metalness", PropertyFlags::NotSaved);
+        registerPropertyEx(DefaultMaterialModel, m_metalness, "Metalness", PropertyFlags::Transient);
         setPropertyRange(DefaultMaterialModel, m_metalness, float2(0.0f, 1.0f));
 
         return super::registerProperties(_desc);

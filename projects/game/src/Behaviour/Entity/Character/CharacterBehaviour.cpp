@@ -67,14 +67,14 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
 
     registerPropertyGroupBegin(CharacterBehaviour, "Character debug");
     {
-        registerPropertyEx(CharacterBehaviour, m_isActive, "Active", vg::core::PropertyFlags::NotSaved);
-        registerPropertyEx(CharacterBehaviour, m_score, "Score", vg::core::PropertyFlags::NotSaved);
-        registerPropertyEnumEx(CharacterBehaviour, MoveState, m_moveState, "Move", vg::core::PropertyFlags::NotSaved);
-        registerPropertyEnumEx(CharacterBehaviour, FightState, m_fightState, "Fight", vg::core::PropertyFlags::NotSaved);
-        registerPropertyEnumEx(CharacterBehaviour, SoundState, m_soundState, "Sound", vg::core::PropertyFlags::NotSaved);
-        registerPropertyEx(CharacterBehaviour, m_speedCurrent, "Speed", vg::core::PropertyFlags::NotSaved);
-        registerPropertyEx(CharacterBehaviour, m_velocityNorm, "Velocity", vg::core::PropertyFlags::NotSaved);
-        registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rotation", vg::core::PropertyFlags::NotSaved);
+        registerPropertyEx(CharacterBehaviour, m_isActive, "Active", vg::core::PropertyFlags::Transient);
+        registerPropertyEx(CharacterBehaviour, m_score, "Score", vg::core::PropertyFlags::Transient);
+        registerPropertyEnumEx(CharacterBehaviour, MoveState, m_moveState, "Move", vg::core::PropertyFlags::Transient);
+        registerPropertyEnumEx(CharacterBehaviour, FightState, m_fightState, "Fight", vg::core::PropertyFlags::Transient);
+        registerPropertyEnumEx(CharacterBehaviour, SoundState, m_soundState, "Sound", vg::core::PropertyFlags::Transient);
+        registerPropertyEx(CharacterBehaviour, m_speedCurrent, "Speed", vg::core::PropertyFlags::Transient);
+        registerPropertyEx(CharacterBehaviour, m_velocityNorm, "Velocity", vg::core::PropertyFlags::Transient);
+        registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rotation", vg::core::PropertyFlags::Transient);
     }
     registerPropertyGroupEnd(CharacterBehaviour);
 

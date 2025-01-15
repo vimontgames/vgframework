@@ -21,7 +21,7 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectPtrEx(MeshModel, m_geometry, "Geometry", PropertyFlags::NotSaved);
+        registerPropertyObjectPtrEx(MeshModel, m_geometry, "Geometry", PropertyFlags::Transient);
         
         return true;
     }

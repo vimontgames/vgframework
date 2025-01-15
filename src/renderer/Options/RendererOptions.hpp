@@ -271,7 +271,7 @@ namespace vg::renderer
 
         registerPropertyGroupBegin(RendererOptions, "Device");
         {
-            registerPropertyObjectPtrEx(RendererOptions, m_deviceCaps, "Device Caps", PropertyFlags::Flatten | PropertyFlags::NotSaved);
+            registerPropertyObjectPtrEx(RendererOptions, m_deviceCaps, "Device Caps", PropertyFlags::Flatten | PropertyFlags::Transient);
         }
         registerPropertyGroupEnd(RendererOptions);
 

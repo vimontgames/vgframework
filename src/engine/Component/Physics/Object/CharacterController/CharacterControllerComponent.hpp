@@ -24,7 +24,7 @@ namespace vg::engine
         registerPropertyEnumArrayEx(CharacterControllerComponent, u8, physics::GroundState, m_delayState, "GroundState Delay", PropertyFlags::Flatten);
 
         registerPropertyGroupBegin(CharacterControllerComponent, "Debug");
-        registerPropertyEnumEx(CharacterControllerComponent, physics::GroundState, m_groundState, "State", PropertyFlags::NotSaved);
+        registerPropertyEnumEx(CharacterControllerComponent, physics::GroundState, m_groundState, "State", PropertyFlags::Transient);
         registerPropertyGroupEnd(CharacterControllerComponent);
 
         return true;

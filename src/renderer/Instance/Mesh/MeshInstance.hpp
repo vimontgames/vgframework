@@ -38,7 +38,7 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectPtrEx(MeshInstance, m_instanceSkeleton, "Skeleton", PropertyFlags::NotSaved);
+        registerPropertyObjectPtrEx(MeshInstance, m_instanceSkeleton, "Skeleton", PropertyFlags::Transient);
 
         return true;
     }

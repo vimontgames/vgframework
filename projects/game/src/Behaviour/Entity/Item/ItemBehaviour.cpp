@@ -41,7 +41,7 @@ bool ItemBehaviour::registerProperties(IClassDesc & _desc)
     setPropertyRange(ItemBehaviour, m_push, float2(0, 100));
     setPropertyDescription(ItemBehaviour, m_damage, "Amount of force applied in the direction of the hit");
 
-    registerPropertyEx(ItemBehaviour, m_owner, "Owner", vg::core::PropertyFlags::NotSaved);
+    registerPropertyEx(ItemBehaviour, m_owner, "Owner", vg::core::PropertyFlags::Transient);
 
     return true;
 }

@@ -34,7 +34,7 @@ namespace vg
             bool                    IsCurrentThemeDark              () const final override;
 
             const ImVec4 &          GetTextColor                    () const final override { return m_textColor; }
-            const ImVec4 &          GetUnsavedPropertyColor         () const final override { return m_unsavedPropertyColor; }
+            const ImVec4 &          GetTransientPropertyColor       () const final override { return m_unsavedPropertyColor; }
             const ImVec4 &          GetPrefabOverridePropertyColor  () const final override { return m_prefabOverridePropertyColor; }
 
             const ImVec4 &          GetRowColorEven                 () const final override { return m_rowColorEven;}

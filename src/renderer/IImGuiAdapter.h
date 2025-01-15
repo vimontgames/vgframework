@@ -31,7 +31,7 @@ namespace vg
             virtual bool                IsCurrentThemeDark              () const = 0;
 
             virtual const ImVec4 &      GetTextColor                    () const = 0;
-            virtual const ImVec4 &      GetUnsavedPropertyColor         () const = 0;
+            virtual const ImVec4 &      GetTransientPropertyColor       () const = 0;
             virtual const ImVec4 &      GetPrefabOverridePropertyColor  () const = 0;
 
             virtual const ImVec4 &      GetRowColorEven                 () const = 0;

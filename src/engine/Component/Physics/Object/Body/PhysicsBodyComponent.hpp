@@ -24,7 +24,7 @@ namespace vg::engine
 
         registerPropertyObjectPtrEx(PhysicsBodyComponent, m_bodyDesc, "Body", PropertyFlags::Flatten);
 
-        registerPropertyEx(PhysicsBodyComponent, m_velocity, "Velocity", PropertyFlags::NotSaved | PropertyFlags::ReadOnly);
+        registerPropertyEx(PhysicsBodyComponent, m_velocity, "Velocity", PropertyFlags::Transient | PropertyFlags::ReadOnly);
 
         return true;
     }

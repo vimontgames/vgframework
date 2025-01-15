@@ -53,8 +53,8 @@ namespace vg::engine
         registerProperty(AnimationResource, m_speed, "Speed");
         setPropertyRange(AnimationResource, m_speed, float2(0.0f, 10.0f));
 
-        registerPropertyEx(AnimationResource, m_time, "Time", PropertyFlags::NotSaved);
-        registerPropertyEx(AnimationResource, m_weight, "Weight", PropertyFlags::NotSaved);
+        registerPropertyEx(AnimationResource, m_time, "Time", PropertyFlags::Transient);
+        registerPropertyEx(AnimationResource, m_weight, "Weight", PropertyFlags::Transient);
         setPropertyRange(AnimationResource, m_weight, float2(0.0f, 1.0f));
         registerResizeVectorFunc(AnimationResource, ResizeAnimationResourceVector);
 

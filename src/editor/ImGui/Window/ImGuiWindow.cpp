@@ -225,7 +225,7 @@ namespace vg::editor
     {
         if ((!_propContext.m_readOnly))
         {
-            if (_propContext.m_isPrefabInstance && !_propContext.m_isPrefabOverride && !asBool(_prop->GetFlags() & PropertyFlags::NotSaved))
+            if (_propContext.m_isPrefabInstance && !_propContext.m_isPrefabOverride && !asBool(_prop->GetFlags() & PropertyFlags::Transient))
             {
                 if (_propContext.m_propOverride = _propContext.m_prefab->CreateDynamicProperty(_object, _prop))
                 {
@@ -916,8 +916,8 @@ namespace vg::editor
     {
         auto * imGuiAdapter = getImGuiAdapter();
 
-        if (asBool(PropertyFlags::NotSaved & _propContext.m_originalProp->GetFlags()))
-            return imGuiAdapter->GetUnsavedPropertyColor();
+        if (asBool(PropertyFlags::Transient & _propContext.m_originalProp->GetFlags()))
+            return imGuiAdapter->GetTransientPropertyColor();
 
         if (_propContext.m_isPrefabInstance) 
         {
@@ -988,9 +988,9 @@ namespace vg::editor
 
                 if (_propContext.m_originalProp->GetType() != core::PropertyType::Callback)
                 {
-                    if (asBool(PropertyFlags::NotSaved & _propContext.m_originalProp->GetFlags()))
+                    if (asBool(PropertyFlags::Transient & _propContext.m_originalProp->GetFlags()))
                     {
-                        ImGui::TextColored(imGuiAdapter->GetUnsavedPropertyColor(), "Not saved");
+                        ImGui::TextColored(imGuiAdapter->GetTransientPropertyColor(), "Not saved");
 
                         if (_propContext.m_readOnly)
                         {
@@ -1230,7 +1230,7 @@ namespace vg::editor
         {
             if (!propContext.m_canPrefabOverride)
             {
-                if (!asBool(PropertyFlags::NotSaved & flags))
+                if (!asBool(PropertyFlags::Transient & flags))
                     propContext.m_readOnly = true;
             }
         }

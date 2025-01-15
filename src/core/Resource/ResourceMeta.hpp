@@ -7,9 +7,9 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(ResourceMeta, m_uid, PropertyFlags::Hidden | PropertyFlags::NotSaved, true);
-        setPropertyFlag(ResourceMeta, m_originalUID, PropertyFlags::Hidden | PropertyFlags::NotSaved, true);
-        setPropertyFlag(ResourceMeta, m_objectFlags, PropertyFlags::Hidden | PropertyFlags::NotSaved, true);
+        setPropertyFlag(ResourceMeta, m_uid, PropertyFlags::Hidden | PropertyFlags::Transient, true);
+        setPropertyFlag(ResourceMeta, m_originalUID, PropertyFlags::Hidden | PropertyFlags::Transient, true);
+        setPropertyFlag(ResourceMeta, m_objectFlags, PropertyFlags::Hidden | PropertyFlags::Transient, true);
 
         return true;
     }

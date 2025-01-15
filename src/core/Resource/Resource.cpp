@@ -20,7 +20,7 @@ namespace vg::core
         setPropertyDescription(Resource, m_resourcePath, "Resource file relative path");
 
         // This is used for the inspector to display resource preview, but not serialized
-        registerPropertyObjectPtrEx(Resource, m_object, "Object", PropertyFlags::NotSaved);
+        registerPropertyObjectPtrEx(Resource, m_object, "Object", PropertyFlags::Transient);
 
         return true;
     }

@@ -11,7 +11,7 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(CameraLens, m_name, PropertyFlags::Hidden | PropertyFlags::NotSaved, false);
+        setPropertyFlag(CameraLens, m_name, PropertyFlags::Hidden | PropertyFlags::Transient, false);
 
         registerPropertyGroupBegin(CameraLens, "Lens settings");
         {

@@ -47,7 +47,7 @@ bool PlayerBehaviour::registerProperties(IClassDesc & _desc)
 
     registerPropertyGroupBegin(PlayerBehaviour, "Player debug");
     {
-        registerPropertyEx(PlayerBehaviour, m_viewIndex, "View", vg::core::PropertyFlags::NotSaved | vg::core::PropertyFlags::ReadOnly);
+        registerPropertyEx(PlayerBehaviour, m_viewIndex, "View", vg::core::PropertyFlags::Transient | vg::core::PropertyFlags::ReadOnly);
         setPropertyDescription(PlayerBehaviour, m_viewIndex, "Index of the View used by this player");
     }
     registerPropertyGroupEnd(PlayerBehaviour);

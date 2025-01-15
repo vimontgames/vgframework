@@ -65,6 +65,8 @@
                                 <Property type="Float" name="m_damage" value="0"/>
                                 <Property type="Float" name="m_push" value="0"/>
                                 <Property type="EnumU8" name="m_chestType" value="Default"/>
+                                <Property type="Bool" name="m_useDestroyAnim" value="true"/>
+                                <Property type="String" name="m_destroyAnimName" value="Xplod"/>
                             </Object>
                             <Object class="PhysicsShapeComponent">
                                 <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>

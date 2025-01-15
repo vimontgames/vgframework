@@ -82,7 +82,7 @@ namespace vg::core
         Debug               = 0x0000000000000080,   // A debug property that is hidden by default
         Bitfield            = 0x0000000000000100,   // Value displayed as hex, enum as flags
         Resource            = 0x0000000000000200,   // Property is a Resource
-        NotSaved            = 0x0000000000000400,   // Property is not saved nor loaded
+        Transient           = 0x0000000000000400,   // Property is not saved nor loaded
         EnumArray           = 0x0000000000000800,   // Property is fixed-size C array with element count the size of the enum
         Flatten             = 0x0000000000001000,   // Do not open TreeNode to display object of this type
         Optional            = 0x0000000000002000,   // Previous property must be a bool, and if 'false' then this value won't be editable
