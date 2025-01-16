@@ -64,7 +64,7 @@ void WeaponBehaviour::OnTriggerEnter(vg::core::IGameObject * _other)
             {
                 if (attacker->getFightState() == FightState::Hit)
                 {
-                    if (auto * defender = _other->GetComponentT<EntityBehaviour>())
+                    if (auto * defender = _other->GetComponentInParentsT<EntityBehaviour>())
                         defender->TakeHit(attacker, this);
                 }
             }

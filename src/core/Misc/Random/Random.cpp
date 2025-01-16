@@ -34,4 +34,18 @@ namespace vg::core
         const u32 value = _min + ((rand()|(rand()<<16)) % (_max - _min + 1));
         return value;
     }
+
+    //--------------------------------------------------------------------------------------
+    float Random::getRandomInRange(float _min, float _max)
+    {
+        const float random = (float)(rand()) / (float)(RAND_MAX);
+        return _min + random * (_max - _min);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float3 Random::getRandomInRange(const core::float3 & _min, const core::float3 & _max)
+    {
+        const float3 random = float3((float)rand(), (float)rand(), (float)rand()) / (float)(RAND_MAX);
+        return _min + random * (_max - _min);
+    }
 }

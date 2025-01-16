@@ -96,7 +96,7 @@ void ItemBehaviour::OnCollisionEnter(vg::core::IGameObject * _other)
         if (player->isActive())
              SetOwner(player->GetGameObject());
     }
-    else if (auto * enemy = _other->GetComponentT<EntityBehaviour>())
+    else if (auto * enemy = _other->GetComponentInParentsT<EntityBehaviour>())
     {
         // check projectile speed
         if (auto * physicsBodyComponent = GetGameObject()->GetComponentInChildrenT<IPhysicsBodyComponent>())

@@ -22,10 +22,10 @@ namespace vg::core
         registerPropertyEx(Object, m_name, "Name", PropertyFlags::Hidden);
         setPropertyDescription(Object, m_name, "User-friendly name");
 
-        registerPropertyEx(Object, m_uid, "UID", PropertyFlags::Debug | PropertyFlags::Hexadecimal | PropertyFlags::ReadOnly);
+        registerPropertyEx(Object, m_uid, "UID", PropertyFlags::Debug | PropertyFlags::Hexadecimal /* | PropertyFlags::ReadOnly*/);
         setPropertyDescription(Object, m_uid, "Unique ID");
 
-        registerPropertyEx(Object, m_originalUID, "UID (Source)", PropertyFlags::Debug | PropertyFlags::Hexadecimal | PropertyFlags::ReadOnly);
+        registerPropertyEx(Object, m_originalUID, "UID (Source)", PropertyFlags::Debug | PropertyFlags::Hexadecimal /* | PropertyFlags::ReadOnly*/);
         setPropertyDescription(Object, m_originalUID, "Source object's unique ID");
 
         registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectFlags, "Flags", PropertyFlags::Debug);
@@ -148,6 +148,15 @@ namespace vg::core
                 {
                     default:
                         break;
+
+                    case PropertyType::ObjectHandle:
+                    {
+                        if (const ObjectHandle * obj = prop->GetPropertyObjectHandle(_object))
+                        {
+                            return obj->getObject();
+                        }
+                    }
+                    break;
 
                     //TODO: other 'Object' types
 

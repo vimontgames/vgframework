@@ -552,7 +552,7 @@ namespace vg::engine
                                 }
                                 else
                                 {
-                                    VG_WARNING("[Prefab] Could not to patch ObjectHandle UID 0x%08X from Property \"%s\" in Object \"%s\" of class %s", handle->getUID(), prop->GetName(), _object->GetName().c_str(), classDesc->GetClassName());
+                                    VG_WARNING("[Prefab] Could not patch ObjectHandle UID 0x%08X from Property \"%s\" in Object \"%s\" of class %s", handle->getUID(), prop->GetName(), _object->GetName().c_str(), classDesc->GetClassName());
                                 }
                             }
                         }

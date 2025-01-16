@@ -32,6 +32,8 @@ namespace vg::core
 
         InstanceFlags               GetInstanceFlags    () const final override;
         void                        SetInstanceFlags    (InstanceFlags _flags, bool _enabled) override;
+        
+        void                        Enable              (bool _enable) override;
 
     public:
         VG_INLINE void              setLocalMatrix      (const float4x4 & _local);

@@ -40,6 +40,6 @@
             </Object>
         </Property>
         <Property type="EnumFlagsU32" name="m_consoleOptions.m_levels" value="Warning|Error"/>
-        <Property type="EnumFlagsU64" name="m_debugFlags" value="Culling"/>
+        <Property type="EnumFlagsU64" name="m_debugFlags" value=""/>
     </Object>
 </Root>

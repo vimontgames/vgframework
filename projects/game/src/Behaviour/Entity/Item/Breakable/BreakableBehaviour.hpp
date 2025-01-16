@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "Behaviour/Entity/Item/ItemBehaviour.h"
 #include "Behaviour/Entity/Character/CharacterBehaviour.h"
+#include "core/Misc/Random/Random.h"
 
 using namespace vg::core;
 using namespace vg::engine;
@@ -26,21 +27,32 @@ bool BreakableBehaviour::registerProperties(IClassDesc & _desc)
 {
     super::registerProperties(_desc);
 
-    registerPropertyEnum(BreakableBehaviour, ChestType, m_chestType, "Type");
-    setPropertyDescription(BreakableBehaviour, m_chestType, "Chest type");
+    registerPropertyEnum(BreakableBehaviour, BreakableType, m_breakableType, "Type");
+    setPropertyDescription(BreakableBehaviour, m_breakableType, "Chest type");
 
-    registerPropertyGroupBegin(BreakableBehaviour, "OnDestroy")
+    registerPropertyGroupBegin(BreakableBehaviour, "Default")
     {
-        registerOptionalProperty(BreakableBehaviour, m_useDestroyAnim, m_destroyAnimName, "Animation");
-        setPropertyDescription(BreakableBehaviour, m_destroyAnimName, "Name of the animation to play on destroy (an Animation component is required)");
-
-        registerOptionalProperty(BreakableBehaviour, m_useDestroySound, m_destroySound, "Sound");
-        setPropertyDescription(BreakableBehaviour, m_destroyAnimName, "Name of the sound to play on destroy (a Sound component is required)");
+        registerProperty(BreakableBehaviour, m_default, "GameObject");
     }
     registerPropertyGroupEnd(BreakableBehaviour);
 
-    registerPropertyEnumEx(BreakableBehaviour, ChestState, m_chestState, "State", vg::core::PropertyFlags::Transient);
-    setPropertyDescription(BreakableBehaviour, m_chestState, "Chest state");
+    registerPropertyGroupBegin(BreakableBehaviour, "Destroyed")
+    {
+        registerProperty(BreakableBehaviour, m_destroyed, "Destroyed");
+
+        //registerOptionalProperty(BreakableBehaviour, m_useDestroyAnim, m_destroyAnimName, "Animation");
+        //setPropertyDescription(BreakableBehaviour, m_destroyAnimName, "Name of the animation to play on destroy (an Animation component is required)");
+
+        registerOptionalProperty(BreakableBehaviour, m_useDestroySound, m_destroySound, "Sound");
+        setPropertyDescription(BreakableBehaviour, m_destroySound, "Name of the sound to play on destroy (a Sound component is required)");
+
+        registerOptionalProperty(BreakableBehaviour, m_useImpulse, m_impulse, "Impulse");
+        setPropertyDescription(BreakableBehaviour, m_impulse, "The strength of the physics impulse when object is destroyed");
+    }
+    registerPropertyGroupEnd(BreakableBehaviour);
+
+    registerPropertyEnumEx(BreakableBehaviour, BreakableState, m_breakableState, "State", vg::core::PropertyFlags::Transient);
+    setPropertyDescription(BreakableBehaviour, m_breakableState, "Chest state");
 
     return true;
 }
@@ -51,13 +63,13 @@ void BreakableBehaviour::OnPlay()
     super::OnPlay();
 
     // Reset chest state (as it's not serialized so it's not restored on restart)
-    m_chestState = ChestState::Default;
+    m_breakableState = BreakableState::Default;
 }
 
 //--------------------------------------------------------------------------------------
 bool BreakableBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour * _weapon)
 {
-    if (m_chestState == ChestState::Default)
+    if (m_breakableState == BreakableState::Default)
     {
         auto * thisGameObject = GetGameObject();
         float3 hitDir;
@@ -72,23 +84,23 @@ bool BreakableBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
             else
                 VG_INFO("[Entity] \"%s\" was hit by \"%s\"", thisGameObject->GetName().c_str(), attackerGO->GetName().c_str());
 
-            m_chestState = ChestState::Destroyed;
+            m_breakableState = BreakableState::Destroyed;
 
-            if (m_useDestroyAnim)
-            {
-                if (auto * animComp = thisGameObject->GetComponentT<IAnimationComponent>())
-                {
-                    uint animIndex = animComp->GetAnimationIndex(m_destroyAnimName);
-                    if (-1 != animIndex)
-                        animComp->PlayAnimation(animIndex, false);
-                    else
-                        VG_WARNING("[Chest] Missing OnDestroy animation \"%s\"", m_destroyAnimName.c_str());
-                }
-                else
-                {
-                    VG_WARNING("[Chest] Missing IAnimationComponent");
-                }
-            }
+            //if (m_useDestroyAnim)
+            //{
+            //    if (auto * animComp = thisGameObject->GetComponentT<IAnimationComponent>())
+            //    {
+            //        uint animIndex = animComp->GetAnimationIndex(m_destroyAnimName);
+            //        if (-1 != animIndex)
+            //            animComp->PlayAnimation(animIndex, false);
+            //        else
+            //            VG_WARNING("[Chest] Missing 'Destroyed' animation \"%s\"", m_destroyAnimName.c_str());
+            //    }
+            //    else
+            //    {
+            //        VG_WARNING("[Chest] Missing IAnimationComponent");
+            //    }
+            //}
 
             if (m_useDestroySound)
             {
@@ -98,7 +110,7 @@ bool BreakableBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
                     if (-1 != soundIndex)
                         soundComponent->Play(soundIndex);
                     else
-                        VG_WARNING("[Chest] Missing OnDestroy sound \"%s\"", m_destroyAnimName.c_str());
+                        VG_WARNING("[Chest] Missing 'Destroyed' sound \"%s\"", m_destroySound.c_str());
                 }
                 else
                 {
@@ -106,9 +118,37 @@ bool BreakableBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
                 }
             }
 
-            // Disable physics
-            if (auto * physicsBodyComp = thisGameObject->GetComponentT<vg::engine::IPhysicsBodyComponent>())
-                physicsBodyComp->Enable(false);
+            //// Disable physics
+            //if (auto * physicsBodyComp = thisGameObject->GetComponentT<IPhysicsBodyComponent>())
+            //    physicsBodyComp->Enable(false);
+
+            // Disable original object
+            if (IGameObject * defaultGameObject = m_default.get<vg::core::IGameObject>())
+                defaultGameObject->Enable(false);
+
+            // Show destroyed objects
+            if (IGameObject * destroyedGameObject = m_destroyed.get<IGameObject>())
+            {
+                destroyedGameObject->Enable(true);
+                auto & children = destroyedGameObject->GetChildren();
+                for (uint i = 0; i < children.size(); ++i)
+                {
+                    IGameObject * part = children[i];
+                    part->Enable(true);
+
+                    if (m_useImpulse)
+                    {
+                        if (IPhysicsBodyComponent * physicsBodyComp = part->GetComponentT<IPhysicsBodyComponent>())
+                        {
+                            float rx = Random::getRandomInRange(-m_impulse.x, +m_impulse.x);
+                            float ry = Random::getRandomInRange(-m_impulse.y, +m_impulse.y);
+                            float rz = m_impulse.z;
+
+                            physicsBodyComp->AddImpulse(float3(rx, ry, rz));
+                        }
+                    }
+                }
+            }
 
             return true; // hit was taken
         }

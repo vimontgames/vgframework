@@ -48,6 +48,6 @@ vg_enum_class(WeaponType, vg::core::u8,
     Pistol
 );
 
-vg_enum_class(ChestType, vg::core::u8,
-    Default
+vg_enum_class(BreakableType, vg::core::u8,
+    LootBox
 );

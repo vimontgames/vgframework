@@ -1,7 +1,7 @@
 #pragma once
 #include "Behaviour/Entity/Item/ItemBehaviour.h"
 
-vg_enum_class(ChestState, vg::core::u8,
+vg_enum_class(BreakableState, vg::core::u8,
     Default = 0,
     Destroyed
 );
@@ -18,12 +18,20 @@ public:
     bool                    TakeHit             (CharacterBehaviour * _attacker, ItemBehaviour * _weapon) final override;
 
 protected:
-    ChestType               m_chestType = ChestType::Default;
-    ChestState              m_chestState = ChestState::Default;
+    BreakableType           m_breakableType = BreakableType::LootBox;
+    BreakableState          m_breakableState = BreakableState::Default;
 
-    bool                    m_useDestroyAnim = false;
-    vg::core::string        m_destroyAnimName;
+    vg::core::ObjectHandle  m_default;
+
+
+    vg::core::ObjectHandle  m_destroyed;
+
+    //bool                    m_useDestroyAnim = false;
+    //vg::core::string        m_destroyAnimName;
 
     bool                    m_useDestroySound = false;
     vg::core::string        m_destroySound;
+
+    bool                    m_useImpulse = false;
+    vg::core::float3        m_impulse = float3(0,0,0);
 };

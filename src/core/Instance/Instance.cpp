@@ -117,6 +117,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Instance::Enable(bool _enable)
+    {
+        SetInstanceFlags(InstanceFlags::Enabled, _enable);
+    }
+
+    //--------------------------------------------------------------------------------------
     void Instance::setModel(Lod _lod, Model * _model)
     {
         VG_ASSERT(isEnumValue(_lod));

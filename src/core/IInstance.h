@@ -44,6 +44,8 @@ namespace vg::core
         virtual InstanceFlags       GetInstanceFlags    () const = 0;
         virtual void                SetInstanceFlags    (InstanceFlags _flags, bool _enabled) = 0;
 
+        virtual void                Enable              (bool _enable) = 0;
+
         virtual bool                TryGetAABB          (AABB & _aabb) const = 0;
     };
 }
