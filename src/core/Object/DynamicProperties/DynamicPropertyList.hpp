@@ -32,6 +32,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void DynamicPropertyList::OnLoad()
+    {
+        for (uint i = 0; i < m_properties.size(); ++i)
+            m_properties[i]->SetParent(this);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool DynamicPropertyList::RegisterUID()
     {
         return false;

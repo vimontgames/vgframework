@@ -471,6 +471,7 @@ namespace vg::engine
             // update (TODO: make proper method!)
             VG_VERIFY(propList->GetProperty(_prop));
 
+            newDynProp->setParent(this);
             newDynProp->BackupOriginalValue(_object, _prop);
             newDynProp->SetOverrideInitValue(_object, _prop);
 

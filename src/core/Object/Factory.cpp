@@ -7,8 +7,11 @@
 #include "core/Kernel.h"
 #include "core/File/File.h"
 #include "core/File/Buffer.h"
+#include "core/string/string.h"
 #include "core/Misc/BitMask/BitMask.h"
 #include "core/IInstance.h"
+#include "core/IGameObject.h"
+#include "core/IBaseScene.h"
 #include "core/Object/ObjectHandle.h"
 #include "core/Types/Traits.h"
 #include "core/Misc/Random/Random.h"
@@ -512,11 +515,33 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    string getDuplicateUIDObjectName(const IObject * _object)
+    {
+        IGameObject * go = _object->GetParentGameObject();
+        if (nullptr != go)
+        {
+            IBaseScene * scene = go->GetScene();
+            if (nullptr != scene)
+            {
+                return fmt::sprintf("(%s) \"%s\" from GameObject \"%s\" in %s \"%s\"", _object->GetClassDesc()->GetClassName(), _object->GetName(), go->GetName(), asString(scene->GetSceneType()), scene->GetName());
+            }
+            else
+            {
+                return fmt::sprintf("(%s) \"%s\" from GameObject \"%s\"", _object->GetClassDesc()->GetClassName(), _object->GetName(), go->GetName());
+            }
+        }
+        else
+        {
+            return fmt::sprintf("(%s) \"%s\"", _object->GetClassDesc()->GetClassName(), _object->GetName());
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     UID Factory::RegisterUID(IObject * _object)
     {
         lock_guard lock(m_uidObjectHashMutex);
 
-        auto uid = _object->GetUID(false);
+        const auto uid = _object->GetUID(false);
 
         if (uid)
         {
@@ -532,9 +557,9 @@ namespace vg::core
                 }
                 else
                 {
-                    // If it's already in the table but for another object then we must give it a new UID
-                    VG_WARNING("[Factory] (%s) \"%s\" has the same UID 0x%08X than (%s) \"%s\"", _object->GetClassDesc()->GetClassName(), _object->GetName().c_str(), uid, it->second->GetClassDesc()->GetClassName(), it->second->GetName().c_str());
-                    return getNewUID(_object);
+                    const auto newUID = getNewUID(_object);
+                    VG_WARNING("[Factory] A new UID 0x%08X was assigned to %s because it has the same UID 0x%08X as %s.", newUID, getDuplicateUIDObjectName(_object).c_str(), uid, getDuplicateUIDObjectName(it->second).c_str());
+                    return newUID;
                 }
             }
             else

@@ -291,7 +291,7 @@
                                             </Object>
                                             <Object class="PhysicsShapeComponent">
                                                 <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
-                                                <Property type="Uint32" name="m_uid" value="51014538"/>
+                                                <Property type="Uint32" name="m_uid" value="1345940457"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
@@ -359,7 +359,7 @@
                                                 <Property type="ObjectPtr" name="m_bodyDesc">
                                                     <Object class="PhysicsBodyDesc">
                                                         <Property type="String" name="m_name" value="PhysicsBodyDesc #390"/>
-                                                        <Property type="Uint32" name="m_uid" value="120739503"/>
+                                                        <Property type="Uint32" name="m_uid" value="264858572"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_trigger" value="false"/>
