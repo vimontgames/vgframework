@@ -1,0 +1,10 @@
+<Root>
+    <Object class="TextureResourceMeta">
+        <Property type="String" name="m_name" value="BananaBonus_PBR.tga.meta"/>
+        <Property type="EnumU8" name="m_importSettings.m_importerType" value="Auto"/>
+        <Property type="EnumU8" name="m_importSettings.m_importerFormat" value="Auto"/>
+        <Property type="Bool" name="m_importSettings.m_sRGB" value="false"/>
+        <Property type="EnumU8" name="m_importSettings.m_mipLevelCount" value="TextureImporterMip_Auto"/>
+        <Property type="EnumU8" name="m_importSettings.m_downscale" value="None"/>
+    </Object>
+</Root>
