@@ -38,7 +38,7 @@ namespace vg::core
         virtual void UnloadResource(core::IResource * _resource, const core::string & _path) = 0;
 
         // Return 'true' if any resource is currently loading 
-        virtual bool HasResourceLoading() const = 0;
+        virtual bool HasAnyLoadingInProgress() const = 0;
         
         // Get number of registered resources
         virtual uint GetResourceCount() const = 0;

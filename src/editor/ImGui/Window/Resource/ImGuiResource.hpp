@@ -19,7 +19,7 @@ namespace vg::editor
         {
             IResourceManager * rm = Editor::get()->getEngine()->GetResourceManager();
 
-            bool enabled = rm != nullptr && !rm->HasResourceLoading();
+            bool enabled = rm != nullptr && !rm->HasAnyLoadingInProgress();
 
             if (ImGui::TooltipButton(fmt::sprintf("%s Reload Resources", style::icon::Reload).c_str(), enabled, enabled, "Reload Resources (F7)", style::button::SizeLarge))
                 rm->UpdateResources();

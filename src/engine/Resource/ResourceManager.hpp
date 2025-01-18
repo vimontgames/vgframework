@@ -42,10 +42,10 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool ResourceManager::HasResourceLoading() const
+    bool ResourceManager::HasAnyLoadingInProgress() const
     {
         Lock();
-        bool hasResourceLoading = m_resourcesToLoad.size() != 0 || m_resourcesLoaded.size() != 0;
+        bool hasResourceLoading = m_resourcesToLoad.size() != 0 || m_resourcesLoaded.size() != 0 || m_resourcesToLoadAsync.size() != 0 || m_resourcesLoadedAsync.size() != 0;
         Unlock();
 
         return hasResourceLoading;

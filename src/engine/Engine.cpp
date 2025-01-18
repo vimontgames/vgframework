@@ -906,7 +906,7 @@ namespace vg::engine
         if (m_startInPlayMode)
         {
             auto * rm = GetResourceManager();
-            if (!rm->HasResourceLoading())
+            if (!rm->HasAnyLoadingInProgress())
             {
                 Play();
                 m_startInPlayMode = false;
