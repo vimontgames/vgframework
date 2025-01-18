@@ -474,21 +474,73 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiSceneList::focus(const core::vector<core::IGameObject * > & _gameObjects)
     {
+        if (_gameObjects.size() > 0)
+        {
+            engine::IEngine * engine = getEngine();
+            const engine::IWorldResource * worldRes = engine->GetWorldResource();
+            const IWorld * world = worldRes ? worldRes->GetWorld() : nullptr;
+            const auto sceneType = GetSceneType();
+            auto sceneResourceCount = worldRes->GetSceneResourceCount(sceneType);
+            for (uint i = 0; i < sceneResourceCount; ++i)
+            {
+                const core::IResource * sceneRes = worldRes->GetSceneResource(i, sceneType);
+                const IBaseScene * scene = (IBaseScene *)sceneRes->GetObject();
+                if (nullptr != scene)
+                {
+                    if (_gameObjects[_gameObjects.size() - 1]->GetScene() == scene)
+                    {
+                        if (auto * window = FindWindowByName(getWindowTitle().c_str()))
+                        {
+                            if (window->Hidden)
+                                m_stealFocus = true;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
         m_focusedGameObjects = _gameObjects;
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiSceneList::display(core::BaseSceneType _sceneType)
+    string ImGuiSceneList::getWindowTitle() const
     {
-        const string sceneTypeName = asString(_sceneType);
-        const auto typeInfo = getGameObjectTreeTypeInfo(_sceneType);
+        auto worldRes = getEngine()->GetWorldResource();
+        string label = worldRes && worldRes->GetObject() ? worldRes->GetObject()->GetName() : "<No World loaded>";
+        const auto sceneType = GetSceneType();
+        const auto typeInfo = getGameObjectTreeTypeInfo(sceneType);
+        const string sceneTypeName = asString(sceneType);
+        return fmt::sprintf("%s %s###%s", typeInfo.icon, typeInfo.windowName, sceneTypeName);
+    }
+
+    const char * g_previousFocusedWindowName = nullptr;
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiSceneList::display()
+    {
+        const auto sceneType = GetSceneType();
+        const string sceneTypeName = asString(sceneType);
+        const auto typeInfo = getGameObjectTreeTypeInfo(sceneType);
 
         ImGui::PushID(sceneTypeName.c_str());
 
         auto worldRes = getEngine()->GetWorldResource();
         string label = worldRes && worldRes->GetObject() ? worldRes->GetObject()->GetName() : "<No World loaded>";
 
-        if (ImGui::IconBegin(typeInfo.icon.c_str(), fmt::sprintf("%s###%s", typeInfo.windowName, sceneTypeName).c_str(), &m_isVisible))
+        if (m_stealFocus)
+        {
+            ImGuiContext & g = *ImGui::GetCurrentContext(); 
+
+            g_previousFocusedWindowName = g.NavWindow->Name;
+
+            if (auto * window = FindWindowByName(getWindowTitle().c_str()))
+                ImGui::FocusWindow(window);
+
+            m_stealFocus = false;
+        }
+
+        if (ImGui::Begin(getWindowTitle().c_str(), &m_isVisible))
         {
             bool newScene = false, loadScene = false;
 
@@ -562,7 +614,7 @@ namespace vg::editor
                         if (ImGui::DisplayFileDialog(m_popup))
                         {
                             if (ImGui::IsFileDialogOK())
-                                worldRes->CreateSceneResource(ImGui::GetFileDialogSelectedFile(), _sceneType);
+                                worldRes->CreateSceneResource(ImGui::GetFileDialogSelectedFile(), sceneType);
 
                             ImGui::CloseFileDialog();
                         }
@@ -573,7 +625,7 @@ namespace vg::editor
                         if (ImGui::DisplayFileDialog(m_popup))
                         {
                             if (ImGui::IsFileDialogOK())
-                                worldRes->LoadSceneResource(ImGui::GetFileDialogSelectedFile(), _sceneType);
+                                worldRes->LoadSceneResource(ImGui::GetFileDialogSelectedFile(), sceneType);
 
                             ImGui::CloseFileDialog();
                         }
@@ -584,10 +636,10 @@ namespace vg::editor
 
                     m_count = 0;
 
-                    auto sceneResourceCount = worldRes->GetSceneResourceCount(_sceneType);
+                    auto sceneResourceCount = worldRes->GetSceneResourceCount(sceneType);
                     for (uint i = 0; i < sceneResourceCount; ++i)
                     {
-                        const core::IResource* sceneRes = worldRes->GetSceneResource(i, _sceneType);
+                        const core::IResource* sceneRes = worldRes->GetSceneResource(i, sceneType);
                         const IBaseScene* scene = (IBaseScene*)sceneRes->GetObject();
                         if (nullptr != scene)
                         {

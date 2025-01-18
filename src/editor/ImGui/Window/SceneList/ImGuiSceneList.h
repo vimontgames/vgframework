@@ -36,11 +36,14 @@ namespace vg::editor
         ImGuiSceneList(core::BaseSceneType _sceneType, const core::string& _icon, const core::string& _path, const core::string& _name, Flags _flags);
         ~ImGuiSceneList();
 
+        virtual core::BaseSceneType         GetSceneType                () const = 0;
+
         static SceneTypeInfo                getGameObjectTreeTypeInfo   (core::BaseSceneType _sceneType);
         void                                focus                       (const core::vector<core::IGameObject * > & _gameObjects);
 
     protected:
-        void                                display                     (core::BaseSceneType _sceneType);
+        core::string                        getWindowTitle              () const;
+        void                                display                     ();
         void                                displayGameObject           (core::IGameObject* root);
         static void                         onSelectionChanged          (core::IObject * _this, core::SelectionChangeType _change);
        
@@ -51,6 +54,7 @@ namespace vg::editor
         core::IGameObject *                 m_dragAndDropNodeTarget = nullptr;
         core::IGameObject *                 m_dragAndDropInterlineTarget = nullptr;
         core::vector<core::IGameObject * >  m_focusedGameObjects;
+        bool                                m_stealFocus = false;
         core::uint                          m_count;
     };
 }

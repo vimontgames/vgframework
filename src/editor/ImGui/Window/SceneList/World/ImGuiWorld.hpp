@@ -16,6 +16,6 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiWorld::DrawGUI()
     {
-        display(BaseSceneType::Scene);
+        display();
     }    
 }

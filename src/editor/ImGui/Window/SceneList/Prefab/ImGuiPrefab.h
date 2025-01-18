@@ -9,6 +9,7 @@ namespace vg::editor
     public:
         ImGuiPrefab();
 
-        void DrawGUI() final override;
+        core::BaseSceneType GetSceneType    () const final override { return core::BaseSceneType::Prefab; }
+        void                DrawGUI         () final override;
     };
 }

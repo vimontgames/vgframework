@@ -16,6 +16,6 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void ImGuiPrefab::DrawGUI()
     {
-        display(BaseSceneType::Prefab);
+        display();
     }
 }

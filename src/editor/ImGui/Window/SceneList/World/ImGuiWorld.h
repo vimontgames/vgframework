@@ -9,6 +9,7 @@ namespace vg::editor
     public:
         ImGuiWorld();
 
-        virtual void                    DrawGUI                 () final override;
+        core::BaseSceneType GetSceneType    () const final override { return core::BaseSceneType::Scene; }
+        void                DrawGUI         () final override;
     };
 }

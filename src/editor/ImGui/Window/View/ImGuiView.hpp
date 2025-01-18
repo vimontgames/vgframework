@@ -344,6 +344,20 @@ namespace vg::editor
         if (active)
             ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGui::GetStyleColorVec4(ImGuiCol_TabActive));
 
+        extern const char * g_previousFocusedWindowName;
+        if (g_previousFocusedWindowName && !strcmp(g_previousFocusedWindowName, title.c_str()))
+        {
+            static int counter = 0;
+            if (counter == 1)
+            {
+                SetNextWindowFocus();
+                g_previousFocusedWindowName = nullptr;
+                counter = 0;
+            }
+            else
+                counter++;
+        }
+
         if (ImGui::Begin(title.c_str(), &m_isVisible, ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNavInputs | ImGuiWindowFlags_NoScrollbar))
         {
             // Menu
