@@ -5,7 +5,7 @@
 #include "gfx/BindlessTable/BindlessTable_consts.h"
 #include "ImGuiSettings.h"
 
-typedef void * ImTextureID;
+typedef vg::core::u64 ImTextureID;
 
 namespace vg
 {
@@ -122,7 +122,7 @@ namespace vg
                 struct AllocData
                 {
                     core::u32       m_refCount  = 0;
-                    ImTextureID     m_id        = nullptr;
+                    ImTextureID     m_id        = 0;
                 };
 
                 core::map<const gfx::Texture*, AllocData>  m_descriptorSetAllocs;

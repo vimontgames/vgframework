@@ -2,7 +2,7 @@
 
 #include "ImGui_consts.h"
 
-typedef void * ImTextureID;
+typedef vg::core::u64 ImTextureID;
 struct ImVec4;
 struct ImFont;
 
