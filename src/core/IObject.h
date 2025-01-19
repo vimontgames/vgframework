@@ -15,7 +15,8 @@ namespace vg::core
         Opened          = 0x00000004,   // Object shows its children
         Prefab          = 0x00000008,   // Object (e.g., World or GameObject) is a prefab
         Selected        = 0x00000010,   // Object is selected
-        NoCulling       = 0x00000020    // Object is not influenced by any culling 
+        NoCulling       = 0x00000020,   // Object is not influenced by any culling 
+        Unloaded        = 0x00000040    // Object is being unloaded
     );
 
     using UID = core::u32;

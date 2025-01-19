@@ -191,6 +191,11 @@ namespace vg::core
     void Resource::Unload(const core::string & _file)
     {
         //VG_INFO("[Resource] Unload %s \"%s\"", GetClassName(), _file.c_str());
+        if (auto * object = GetObject())
+        {
+            object->SetObjectFlags(ObjectFlags::Unloaded, true);
+            object->SetName(object->GetName() + " (Unloaded)");
+        }
     }
 
     //--------------------------------------------------------------------------------------

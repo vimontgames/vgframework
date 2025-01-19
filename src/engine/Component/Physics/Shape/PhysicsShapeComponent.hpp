@@ -93,6 +93,10 @@ namespace vg::engine
                 if (auto * bodyComp = getBodyComponent())
                     bodyComp->onShapeUpdated();
             }
+            else
+            {
+                VG_WARNING("[Physics] Mesh \"%s\" has no collision data. Please check \"Collision data\" in mesh metadata", _resource->GetResourcePath().c_str());
+            }
         }
     }
 
@@ -197,7 +201,9 @@ namespace vg::engine
                     u32 color = _shape->GetColor();
 
                     const auto & triangles = meshModel->GetColliderTriangles();
-                    return &triangles;
+
+                    if (triangles.size() > 0)
+                        return &triangles;
                 }
             }
         }

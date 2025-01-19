@@ -298,6 +298,15 @@ namespace vg::engine
             {
                 if (physics::IShape * physicsShape = shape->getPhysicsShape())
                 {
+                    if (physicsShape->GetShapeType() == physics::ShapeType::Mesh)
+                    {
+                        if (this->GetMotionType() != physics::MotionType::Static)
+                        {
+                            VG_WARNING("[Physics] Mesh colliders are only supported for static colliders");
+                            continue;
+                        }
+                    }
+
                     physics::ShapeInfo & info = physicsShapes.emplace_back();
                     info.m_shape = physicsShape;
                     totalMass += physicsShape->GetMass();

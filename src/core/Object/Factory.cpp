@@ -518,6 +518,8 @@ namespace vg::core
     string getDuplicateUIDObjectName(const IObject * _object)
     {
         IGameObject * go = _object->GetParentGameObject();
+        VG_ASSERT(_object->GetClassDesc());
+
         if (nullptr != go)
         {
             IBaseScene * scene = go->GetScene();
@@ -557,9 +559,27 @@ namespace vg::core
                 }
                 else
                 {
-                    const auto newUID = getNewUID(_object);
-                    VG_WARNING("[Factory] A new UID 0x%08X was assigned to %s because it has the same UID 0x%08X as %s.", newUID, getDuplicateUIDObjectName(_object).c_str(), uid, getDuplicateUIDObjectName(it->second).c_str());
-                    return newUID;
+                    bool hasUnloadedParent = false;
+                    auto * parent = it->second;
+                    while (parent && !hasUnloadedParent)
+                    {
+                        if (asBool(ObjectFlags::Unloaded & parent->GetObjectFlags()))
+                        {
+                            hasUnloadedParent = true;
+                            break;
+                        }
+
+                        parent = parent->GetParent();
+                    }
+
+                    if (!hasUnloadedParent)
+                    {
+                        const auto newUID = getNewUID(_object);
+                        VG_WARNING("[Factory] New UID 0x%08X has been assigned to \"%s\" because it had the same UID 0x%08X as \"%s\".", newUID, getDuplicateUIDObjectName(_object).c_str(), uid, getDuplicateUIDObjectName(it->second).c_str());
+                        return newUID;
+                    }
+                    
+                    return uid;
                 }
             }
             else

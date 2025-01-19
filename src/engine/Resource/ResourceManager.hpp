@@ -204,8 +204,6 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::reimport(core::IResource * _res)
     {
-        VG_ASSERT(Kernel::getScheduler()->IsMainThread());
-
         lock_guard lock(m_addResourceToLoadRecursiveMutex);
 
         // Unloading resources will remove entries in the resourceMap so we need to copy the existing resources to iterate over
