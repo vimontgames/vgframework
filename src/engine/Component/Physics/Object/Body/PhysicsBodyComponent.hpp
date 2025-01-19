@@ -87,7 +87,6 @@ namespace vg::engine
             const auto shapes = GetGameObject()->GetComponentsT<PhysicsShapeComponent>();
             if (shapes.size() > 0)
             {
-                float totalMass = 0.0f;
                 for (uint i = 0; i < shapes.size(); ++i)
                 {
                     const auto * shape = shapes[i];
@@ -281,13 +280,16 @@ namespace vg::engine
     {
         IWorld * world = GetGameObject()->GetWorld();
 
-        if (nullptr == world || false == world->IsPlaying())
-            return false;
- 
-        VG_SAFE_RELEASE(m_body);
-
         const auto shapes = GetGameObject()->GetComponentsT<PhysicsShapeComponent>();
         vector<physics::ShapeInfo> physicsShapes;
+
+        updateShapesColor();
+
+        if (nullptr == world || false == world->IsPlaying())
+            return false;
+
+        VG_SAFE_RELEASE(m_body);
+
         float totalMass = 0.0f;
         for (uint i = 0; i < shapes.size(); ++i)
         {
@@ -303,6 +305,12 @@ namespace vg::engine
             }
         }
 
+        if (totalMass <= 0.0f)
+        {
+            VG_WARNING("[Physics] Body from GameObject \"%s\" cannot have a total mass of %f. Defaulting mass to 1.0f.", GetGameObject()->GetName().c_str(), totalMass);
+            m_bodyDesc->SetMass(1.0f);
+        }
+
         if (physicsShapes.size() > 0)
         {
             if (!m_bodyDesc->IsMassOverriden())
@@ -315,8 +323,6 @@ namespace vg::engine
         {
             VG_WARNING("[Physics] PhysicsBodyComponent in GameObject \"%s\" has no PhysicsShapeComponent", GetGameObject()->GetName().c_str());
         }
-
-        updateShapesColor();
 
         return nullptr != m_body;
     }

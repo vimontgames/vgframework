@@ -10,6 +10,7 @@
 #include "BoxShape.hpp"
 #include "CapsuleShape.hpp"
 #include "CylinderShape.hpp"
+#include "MeshShape.hpp"
 
 using namespace vg::core;
 

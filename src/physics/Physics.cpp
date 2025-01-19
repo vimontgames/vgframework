@@ -5,6 +5,7 @@
 #include "Shape/BoxShape.h"
 #include "Shape/CapsuleShape.h"
 #include "Shape/CylinderShape.h"
+#include "Shape/MeshShape.h"
 #include "Body/Body.h"
 #include "Character/Character.h"
 #include "Options/PhysicsOptions.h"
@@ -279,6 +280,10 @@ namespace vg::physics
                 case ShapeType::Cylinder:
                     shape = new CylinderShape(*(const CylinderShapeDesc *)_shapeDesc);
                     break;
+
+                case ShapeType::Mesh:
+                    shape = new MeshShape(*(const MeshShapeDesc *)_shapeDesc);
+                    break;
             }
 
             if (shape)
@@ -354,6 +359,12 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void Physics::RemoveBody(core::IPhysicsWorld * _physicsWorld, IBody * _body)
     {
-        //_body->getph
+        
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Physics::SetDrawShapeCallback(DrawShapeCallback _drawShape)
+    {
+        m_drawShapeCallback = _drawShape;
     }
 }

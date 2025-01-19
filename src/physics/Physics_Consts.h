@@ -54,14 +54,16 @@ namespace vg::physics
         Sphere = 0,
         Box,
         Capsule,
-        Cylinder
+        Cylinder,
+        Mesh
     );
 
     vg_enum_class(ShapeTypeFlags, core::u32,
         Sphere          = 1 << (core::u32)ShapeType::Sphere,
         Box             = 1 << (core::u32)ShapeType::Box,
         Capsule         = 1 << (core::u32)ShapeType::Capsule,
-        Cylinder        = 1 << (core::u32)ShapeType::Cylinder
+        Cylinder        = 1 << (core::u32)ShapeType::Cylinder,
+        Mesh            = 1 << (core::u32)ShapeType::Mesh
     );
 
     vg_enum_class(BodyType, core::u8,

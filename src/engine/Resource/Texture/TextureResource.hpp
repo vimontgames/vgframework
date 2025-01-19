@@ -57,13 +57,13 @@ namespace vg::engine
         auto * meta = (TextureResourceMeta*)ResourceManager::get()->GetOrCreateResourceMeta(this);
 
         // Import texture using meta
-        return Engine::get()->GetRenderer()->cookTexture(_file, &meta->getTextureImportSettings());
+        return Engine::get()->GetRenderer()->CookTexture(_file, &meta->getTextureImportSettings());
     }
 
     //--------------------------------------------------------------------------------------
     IObject * TextureResource::Load(const string & _file)
     {
-        gfx::ITexture * texture = Engine::get()->GetRenderer()->loadTexture(_file);
+        gfx::ITexture * texture = Engine::get()->GetRenderer()->LoadTexture(_file);
         return texture;
     }
 

@@ -144,6 +144,7 @@
     <ClInclude Include="ILightInstance.h" />
     <ClInclude Include="ImGui_consts.h" />
     <ClInclude Include="Importer\BodyPartFlags.h" />
+    <ClInclude Include="Importer\CollisionImporterData.h" />
     <ClInclude Include="Importer\NamingConvention\CharacterStudioBipedNamingConvention.h" />
     <ClInclude Include="Importer\NamingConvention\MixamoBonesNamingConvention.h" />
     <ClInclude Include="Instance\Light\Directional\DirectionalLightInstance.h" />

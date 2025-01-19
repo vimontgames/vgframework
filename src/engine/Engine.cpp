@@ -28,6 +28,7 @@
 #include "engine/Component/Camera/CameraComponent.h"
 #include "engine/Component/Mesh/MeshComponent.h"
 #include "engine/Component/Physics/Object/PhysicsObjectComponent.h"
+#include "engine/Component/Physics/Shape/PhysicsShapeComponent.h"
 #include "engine/Behaviour/FreeCam/FreeCamBehaviour.h"
 #include "editor/IEditor.h"
 #include "application/IGame.h"
@@ -377,6 +378,7 @@ namespace vg::engine
             physics::Callbacks physicsEngineCallbacks;
             physicsEngineCallbacks.validateContact = shouldCollide;
             m_physics->Init(_params.physics, physicsEngineCallbacks, _singletons);
+            m_physics->SetDrawShapeCallback(PhysicsShapeComponent::drawShapeCallback);
 
             // Load Audio DLL
             m_audio = Plugin::create<audio::IAudio>("audio");

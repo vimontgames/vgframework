@@ -51,6 +51,8 @@ namespace vg::physics
         ICharacter *                            CreateCharacter             (core::IPhysicsWorld * _physicsWorld, const ICharacterDesc * _characterDesc, IShape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent) final override;
         ICharacter *                            CreateCharacter             (core::IPhysicsWorld * _physicsWorld, const ICharacterDesc * _characterDesc, const core::vector<IShape*> & _shapes, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent) final override;
         void                                    RemoveBody                  (core::IPhysicsWorld * _physicsWorld, IBody * _body) final override;
+        void                                    SetDrawShapeCallback        (DrawShapeCallback _drawShape) final override;
+        VG_INLINE DrawShapeCallback             getDrawShapeCallback        () const { return m_drawShapeCallback; }
 
         engine::IEngine *                       getEngine                   () const;
         renderer::IDebugDraw *                  getDebugDraw                () const;
@@ -74,6 +76,7 @@ namespace vg::physics
         ObjectFilter                            m_objectFilter;
         JPH::TempAllocatorMalloc                m_tempAllocator;
         core::vector<PhysicsWorld*>             m_physicsWorlds;
+        DrawShapeCallback                       m_drawShapeCallback = nullptr;
 	};
 }
 

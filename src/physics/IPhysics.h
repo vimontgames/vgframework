@@ -35,7 +35,6 @@ namespace vg
 	    {
 	    public:
 
-
             IPhysics(const core::string & _name, core::IObject * _parent) :
                 core::IPlugin(_name, _parent)
             {
@@ -57,6 +56,9 @@ namespace vg
             virtual ICharacter *            CreateCharacter             (core::IPhysicsWorld * _physicsWorld, const ICharacterDesc * _characterDesc, IShape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent) = 0;
             virtual ICharacter *            CreateCharacter             (core::IPhysicsWorld * _physicsWorld, const ICharacterDesc * _characterDesc, const core::vector<IShape*> & _shapes, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent) = 0;
             virtual void                    RemoveBody                  (core::IPhysicsWorld * _physicsWorld, IBody * _body) = 0;
+
+            using DrawShapeCallback = void(*)(const IShape * _shape, const core::IWorld * _world, const core::float4x4 & _matrix);
+            virtual void                    SetDrawShapeCallback        (DrawShapeCallback _drawShape) = 0;
 	    };
     }
 }

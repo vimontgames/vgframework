@@ -20,10 +20,10 @@ namespace vg::renderer
         UFBXImporter();
         ~UFBXImporter();
 
-        bool importFBX(const core::string & _path, SceneImporterData & _data) final override;
+        bool ImportFBX(const core::string & _path, SceneImporterData & _data, const gfx::MeshImporterSettings * _meshImportSettings) final override;
 
     private:
-        bool loadFBXMesh(const ufbx_scene * _UFBXScene, const ufbx_mesh * _UFBXMesh, MeshImporterData & _data, double _scale);
+        bool loadFBXMesh(const ufbx_scene * _UFBXScene, const ufbx_mesh * _UFBXMesh, MeshImporterData & _data, double _scale, const gfx::MeshImporterSettings * _meshImportSettings);
         bool loadFBXAnim(const ufbx_scene * _UFBXScene, const ufbx_anim_stack * _UFBXAnimStack, AnimImporterData & _animData);
         bool loadFBXAnimNode(const ufbx_anim_stack * _UFBXAnimStack, const ufbx_node * _UFBXNode, const AnimImporterData & _animData, AnimNodeData & _animNodeData);
     };

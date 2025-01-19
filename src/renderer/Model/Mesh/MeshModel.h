@@ -22,29 +22,33 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL(MeshModel, IMeshModel);
 
-                                    MeshModel               (const core::string & _name, core::IObject * _parent);
-                                    ~MeshModel              ();
+                                                MeshModel               (const core::string & _name, core::IObject * _parent);
+                                                ~MeshModel              ();
 
-        core::uint                  GetBatchCount           () const final override;
-        core::vector<core::string>  GetBatchNames           () const final override;
+        core::uint                              GetBatchCount           () const final override;
+        core::vector<core::string>              GetBatchNames           () const final override;
 
-        void                        setGeometry             (MeshGeometry * _geometry);
-        const MeshGeometry *        getGeometry             () const;
+        void                                    setGeometry             (MeshGeometry * _geometry);
+        const MeshGeometry *                    getGeometry             () const;
 
-        void                        setSkeleton             (Skeleton * _skeleton);
-        const Skeleton *            getSkeleton             () const;
+        void                                    setSkeleton             (Skeleton * _skeleton);
+        const Skeleton *                        getSkeleton             () const;
 
-        void                        clearBLASes             ();
-        gfx::BLASMap &              getBLASMap              () { return m_BLASMap; }
+        void                                    clearBLASes             ();
+        gfx::BLASMap &                          getBLASMap              () { return m_BLASMap; }
 
-        static MeshModel *          createFromImporterData  (const MeshImporterData & _data);
+        void                                    setColliderTriangles    (const core::vector<ColliderTriangle> & _triangles);
+        const core::vector<ColliderTriangle> &  GetColliderTriangles    () const final override { return m_colliderTriangles; }
+
+        static MeshModel *                      createFromImporterData  (const MeshImporterData & _data);
 
     private:
         template <VertexFormat F> static gfx::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);
 
     private:
-        MeshGeometry *          m_geometry  = nullptr;
-        Skeleton *              m_skeleton  = nullptr;
-        gfx::BLASMap            m_BLASMap;
+        MeshGeometry *                          m_geometry  = nullptr;
+        Skeleton *                              m_skeleton  = nullptr;
+        gfx::BLASMap                            m_BLASMap;
+        core::vector<ColliderTriangle>          m_colliderTriangles;
     };
 }

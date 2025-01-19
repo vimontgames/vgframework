@@ -27,7 +27,7 @@ namespace vg::physics
 
         bool                IsMassOverriden     () const final override { return m_overrideMass; }
         float               GetMass             () const final override { return m_mass; }
-        void                SetMass             (float _mass) final override { m_mass = _mass; }
+        void                SetMass             (float _mass) final override { m_overrideMass = true; m_mass = _mass; }
 
     public:
         bool                m_trigger           = false;

@@ -85,13 +85,13 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool AnimationResource::Cook(const string & _file) const
     {
-        return Engine::get()->GetRenderer()->cookAnimation(_file);
+        return Engine::get()->GetRenderer()->CookAnimation(_file);
     }
 
     //--------------------------------------------------------------------------------------
     core::IObject * AnimationResource::Load(const string & _file)
     {
-        IAnimation * anim = Engine::get()->GetRenderer()->loadAnimation(_file);
+        IAnimation * anim = Engine::get()->GetRenderer()->LoadAnimation(_file);
         return anim;
     }
 

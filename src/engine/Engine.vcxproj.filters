@@ -386,6 +386,12 @@
     <ClInclude Include="Resource\Lens\LensResource.hpp">
       <Filter>Resource\Lens</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\Mesh\MeshResourceMeta.h">
+      <Filter>Resource\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Mesh\MeshResourceMeta.hpp">
+      <Filter>Resource\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">

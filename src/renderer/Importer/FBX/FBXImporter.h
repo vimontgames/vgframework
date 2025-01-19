@@ -10,6 +10,11 @@ namespace fbxsdk
     class FbxMesh;
 }
 
+namespace vg::gfx
+{
+    struct MeshImporterSettings;
+}
+
 namespace vg::renderer
 {
     class SceneImporterData;
@@ -18,6 +23,6 @@ namespace vg::renderer
     class FBXImporter : public gfx::Importer
     {
     public:
-        virtual bool importFBX(const core::string & _path, SceneImporterData & _data) = 0;
+        virtual bool ImportFBX(const core::string & _path, SceneImporterData & _data, const gfx::MeshImporterSettings * _meshImportSettings) = 0;
     };
 }

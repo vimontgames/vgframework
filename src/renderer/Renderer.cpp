@@ -16,6 +16,7 @@
 #include "gfx/Profiler/Profiler.h"
 #include "gfx/Resource/Texture.h"
 #include "gfx/Importer/TextureImporter.h"
+#include "gfx/Importer/MeshImporterSettings.h"
 
 #include "renderer/RenderPass/ImGui/ImGui.h"
 #include "renderer/RenderPass/ImGui/ImGuiPass.h"
@@ -1015,11 +1016,11 @@ namespace vg::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    bool Renderer::cookMeshModel(const core::string & _file)
+    bool Renderer::CookMeshModel(const core::string & _file, const gfx::MeshImporterSettings * _importSettings)
     {
         SceneImporterData imported;
 
-        if (m_fbxImporter->importFBX(_file, imported))
+        if (m_fbxImporter->ImportFBX(_file, imported, _importSettings))
         {
             if (imported.meshes.size() > 0)
             {
@@ -1034,7 +1035,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    IMeshModel * Renderer::loadMeshModel(const core::string & _file)
+    IMeshModel * Renderer::LoadMeshModel(const core::string & _file)
     {
         MeshImporterData meshData;
 
@@ -1048,7 +1049,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool Renderer::cookTexture(const core::string & _file, const gfx::TextureImporterSettings * _importSettings)
+    bool Renderer::CookTexture(const core::string & _file, const gfx::TextureImporterSettings * _importSettings)
     {
         TextureImporterData imported;
         imported.name = _file;
@@ -1064,7 +1065,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::ITexture * Renderer::loadTexture(const core::string & _file)
+    gfx::ITexture * Renderer::LoadTexture(const core::string & _file)
     {
         TextureImporterData textureData;
 
@@ -1078,11 +1079,11 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool Renderer::cookAnimation(const core::string & _file)
+    bool Renderer::CookAnimation(const core::string & _file)
     {
         SceneImporterData imported;
 
-        if (m_fbxImporter->importFBX(_file, imported))
+        if (m_fbxImporter->ImportFBX(_file, imported, nullptr))
         {
             if (imported.anims.size() > 0)
             {
@@ -1097,7 +1098,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    IAnimation * Renderer::loadAnimation(const core::string & _file) 
+    IAnimation * Renderer::LoadAnimation(const core::string & _file) 
     {
         AnimImporterData animData;
 

@@ -206,6 +206,8 @@ namespace vg::engine
     {
         VG_ASSERT(Kernel::getScheduler()->IsMainThread());
 
+        lock_guard lock(m_addResourceToLoadRecursiveMutex);
+
         // Unloading resources will remove entries in the resourceMap so we need to copy the existing resources to iterate over
         vector<ResourceInfo *> allResourceInfos;
         for (auto pair : m_resourceInfosMap)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MaterialImporterData.h"
+#include "CollisionImporterData.h"
 #include "core/Math/Math.h"
 #include "core/Misc/AABB/AABB.h"
 #include "renderer/Geometry/Batch/Batch.h"
@@ -58,5 +59,6 @@ namespace vg::renderer
         core::vector<MeshImporterNode>      nodes;
         core::vector<core::u32>             bonesIndices;
         core::vector<core::float4x4>        bonesMatrices;
+        core::vector<ColliderTriangle>      colliderTriangles;
     };
 }

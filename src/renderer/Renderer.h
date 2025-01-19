@@ -101,14 +101,14 @@ namespace vg::renderer
         IDebugDraw *                            GetDebugDraw                () const final override;
         IUIManager *                            GetUIManager                () const final override;
 
-        bool                                    cookMeshModel               (const core::string & _file) final override;
-        IMeshModel *                            loadMeshModel               (const core::string & _file) final override;
+        bool                                    CookMeshModel               (const core::string & _file, const gfx::MeshImporterSettings * _importSettings) final override;
+        IMeshModel *                            LoadMeshModel               (const core::string & _file) final override;
 
-        bool                                    cookTexture                 (const core::string & _file, const gfx::TextureImporterSettings * _importSettings) final override;
-        gfx::ITexture *                         loadTexture                 (const core::string & _file) final override;
+        bool                                    CookTexture                 (const core::string & _file, const gfx::TextureImporterSettings * _importSettings) final override;
+        gfx::ITexture *                         LoadTexture                 (const core::string & _file) final override;
 
-        bool                                    cookAnimation               (const core::string & _file) final override;
-        IAnimation *                            loadAnimation               (const core::string & _file) final override;
+        bool                                    CookAnimation               (const core::string & _file) final override;
+        IAnimation *                            LoadAnimation               (const core::string & _file) final override;
 
         void                                    ReleaseAsync                (core::IObject * _object) final override;
 

@@ -688,6 +688,9 @@
     <ClInclude Include="UploadBuffer\UploadBuffer.h">
       <Filter>UploadBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="Importer\MeshImporterSettings.h">
+      <Filter>Importer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">

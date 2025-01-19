@@ -233,6 +233,14 @@ namespace vg::renderer
 
         RayTracingManager::get()->addMeshModel(meshModel);
 
+        meshModel->setColliderTriangles(_data.colliderTriangles);
+
         return meshModel;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MeshModel::setColliderTriangles(const core::vector<ColliderTriangle> & _triangles)
+    {
+        m_colliderTriangles = _triangles;
     }
 }

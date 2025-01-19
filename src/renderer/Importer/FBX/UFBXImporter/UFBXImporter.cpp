@@ -4,6 +4,7 @@
 #include "renderer/Importer/SceneImporterData.h"
 #include "core/File/File.h"
 #include "core/string/string.h"
+#include "gfx/Importer/MeshImporterSettings.h"
 
 #pragma push_macro("free")
 #undef free
@@ -27,12 +28,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool UFBXImporter::importFBX(const string & _path, SceneImporterData & _data)
+    bool UFBXImporter::ImportFBX(const string & _path, SceneImporterData & _data, const gfx::MeshImporterSettings * _meshImportSettings)
     {
         ufbx_load_opts opts = {};
-        opts.load_external_files = false,
-        opts.generate_missing_normals = true,
-        opts.evaluate_skinning = true,
+        opts.load_external_files = false;
+        opts.generate_missing_normals = true;
+        opts.evaluate_skinning = true;
         opts.target_axes.right = UFBX_COORDINATE_AXIS_POSITIVE_X;
         opts.target_axes.up = UFBX_COORDINATE_AXIS_POSITIVE_Y;
         opts.target_axes.front = UFBX_COORDINATE_AXIS_POSITIVE_Z;
@@ -50,7 +51,7 @@ namespace vg::renderer
             for (uint i = 0; i < meshCount; ++i)
             {
                 MeshImporterData meshImporterData;
-                if (loadFBXMesh(scene, scene->meshes[i], meshImporterData, scene->settings.unit_meters))
+                if (loadFBXMesh(scene, scene->meshes[i], meshImporterData, scene->settings.unit_meters, _meshImportSettings))
                     _data.meshes.push_back(meshImporterData);
             }
 
@@ -137,7 +138,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool UFBXImporter::loadFBXMesh(const ufbx_scene * _UFBXScene, const ufbx_mesh * _UFbxMesh, MeshImporterData & _data, double _scale)
+    bool UFBXImporter::loadFBXMesh(const ufbx_scene * _UFBXScene, const ufbx_mesh * _UFbxMesh, MeshImporterData & _data, double _scale, const gfx::MeshImporterSettings * _meshImportSettings)
     {
         const auto start = Timer::getTick();
 
@@ -215,7 +216,7 @@ namespace vg::renderer
             VG_ASSERT(_data.maxBonesCountPerVertex == 4);
             constexpr uint MAXBONESPERVERTEX = 4; // _data.maxBonesCountPerVertex;
 
-            meshSkinVertices.reserve(totalTriangleCount * 3);
+            meshSkinVertices.reserve(_UFbxMesh->num_vertices * 3);
 
             // Precalculate skinned vertex bones/weights for each vertex
             for (uint i = 0; i < _UFbxMesh->num_vertices; i++)
@@ -447,6 +448,36 @@ namespace vg::renderer
         _data.aabb = std::move(aabb);
 
         VG_SAFE_DELETE(triangleIndexTmp);
+
+        if (_meshImportSettings->m_physicsCollisionData)
+        {
+            _data.colliderTriangles.reserve(totalTriangleCount);
+            uint batchOffset = 0;
+            for (uint b = 0; b < _data.batches.size(); b++)
+            {
+                const Batch & batch = _data.batches[b];
+                uint batchTriangleCount = batch.count / 3;
+
+                for (uint v = 0; v < batchTriangleCount; ++v)
+                {
+                    ColliderTriangle collisionTriangle;
+
+                    const uint i0 = _data.indices[v * 3 + 0 + batchOffset];
+                    const uint i1 = _data.indices[v * 3 + 1 + batchOffset];
+                    const uint i2 = _data.indices[v * 3 + 2 + batchOffset];
+
+                    collisionTriangle.v[0] = _data.vertices[i0].pos;
+                    collisionTriangle.v[1] = _data.vertices[i1].pos;
+                    collisionTriangle.v[2] = _data.vertices[i2].pos;
+                    collisionTriangle.matID = b;
+
+                    _data.colliderTriangles.push_back(collisionTriangle);
+                }
+
+                batchOffset += batch.offset;
+            }
+
+        }
 
         VG_DEBUGPRINT(" %.2f ms\n", Timer::getEnlapsedTime(start, Timer::getTick()));
         return true;

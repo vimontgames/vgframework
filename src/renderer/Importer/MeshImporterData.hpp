@@ -7,7 +7,7 @@ using namespace vg::core;
 namespace vg::renderer
 {
     // Cooked mesh version
-    static const u32 MeshImporterDataVersion = 18;
+    static const u32 MeshImporterDataVersion = 19;
 
     //--------------------------------------------------------------------------------------
     bool findBodyPartFlagsFromNamingConvention(const core::string & _name, const vector<BonesNamingConvention> & _namingConvention, BodyPartFlags & _flags)
@@ -129,6 +129,8 @@ namespace vg::renderer
                 buffer.read(&bonesIndices);
                 buffer.read(&bonesMatrices);
 
+                buffer.read(&colliderTriangles);
+
                 return true;
             }
         }        
@@ -165,6 +167,8 @@ namespace vg::renderer
      
         buffer.write(bonesIndices);
         buffer.write(bonesMatrices);
+
+        buffer.write(colliderTriangles);
 
         if (io::writeFile(_file, buffer))
             return true;

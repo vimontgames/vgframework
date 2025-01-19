@@ -541,6 +541,9 @@
     <ClInclude Include="RenderPass\RenderObjects\Misc\Outline\OutlineMaskPass.hpp">
       <Filter>Pass\RenderObjects\Misc\Outline</Filter>
     </ClInclude>
+    <ClInclude Include="Importer\CollisionImporterData.h">
+      <Filter>Importer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IGraphicModel.h"
+#include "renderer/Importer/CollisionImporterData.h"
 
 namespace vg::renderer
 {
@@ -12,5 +13,7 @@ namespace vg::renderer
         {
 
         }
+
+        virtual const core::vector<ColliderTriangle> & GetColliderTriangles() const = 0;
     };
 }

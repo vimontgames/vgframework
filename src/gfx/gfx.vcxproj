@@ -410,6 +410,7 @@
     <ClInclude Include="FrameGraph\ResourceTransition.h" />
     <ClInclude Include="IImporter.h" />
     <ClInclude Include="Importer\Importer.h" />
+    <ClInclude Include="Importer\MeshImporterSettings.h" />
     <ClInclude Include="Importer\TextureImporter.h" />
     <ClInclude Include="Importer\TextureImporter.hpp" />
     <ClInclude Include="Importer\TextureImporterSettings.h" />

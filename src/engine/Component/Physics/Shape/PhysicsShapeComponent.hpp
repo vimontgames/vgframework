@@ -3,6 +3,10 @@
 #include "core/IWorld.h"
 #include "engine/Engine.h"
 #include "engine/EngineOptions.h"
+#include "engine/Resource/Mesh/MeshResource.h"
+#include "renderer/IRenderer.h"
+#include "renderer/IMeshModel.h"
+#include "renderer/IDebugDraw.h"
 #include "physics/IShape.h"
 #include "editor/Editor_Consts.h"
 
@@ -31,8 +35,11 @@ namespace vg::engine
     {
         EnableUpdateFlags(UpdateFlags::Update, false);
 
-        if (m_shapeDesc == nullptr)
+        if (nullptr == m_shapeDesc)
             createShapeDesc();
+
+        //if (nullptr == m_shape)
+        //    createShape();
     }
 
     //--------------------------------------------------------------------------------------
@@ -73,6 +80,22 @@ namespace vg::engine
         super::OnPropertyChanged(_object, _prop, _notifyParent);
     }
 
+
+    //--------------------------------------------------------------------------------------
+    void PhysicsShapeComponent::OnResourceLoaded(core::IResource * _resource)
+    {
+        if (m_shape)
+        {
+            if (auto * triangles = getColliderTriangles(m_shape))
+            {
+                m_shape->OnGeometryLoaded(*triangles);
+
+                if (auto * bodyComp = getBodyComponent())
+                    bodyComp->onShapeUpdated();
+            }
+        }
+    }
+
     //--------------------------------------------------------------------------------------
     bool PhysicsShapeComponent::createShapeDesc()
     {
@@ -106,6 +129,10 @@ namespace vg::engine
 
                 case physics::ShapeType::Cylinder:
                     m_shapeDesc = (physics::IShapeDesc *)factory->CreateObject("CylinderShapeDesc", "", this);
+                    break;
+
+                case physics::ShapeType::Mesh:
+                    m_shapeDesc = (physics::IShapeDesc *)factory->CreateObject("MeshShapeDesc", "", this);
                     break;
             }
 
@@ -154,5 +181,66 @@ namespace vg::engine
         }
 
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::vector<renderer::ColliderTriangle> * PhysicsShapeComponent::getColliderTriangles(const physics::IShape * _shape)
+    {
+        if (auto * res = _shape->GetResource())
+        {
+            const MeshResource * meshRes = VG_SAFE_STATIC_CAST(const MeshResource, res);
+            if (nullptr != meshRes)
+            {
+                if (const renderer::IMeshModel * meshModel = meshRes->getMeshModel())
+                {
+                    renderer::IDebugDraw * debugDraw = Engine::get()->GetRenderer()->GetDebugDraw();
+                    u32 color = _shape->GetColor();
+
+                    const auto & triangles = meshModel->GetColliderTriangles();
+                    return &triangles;
+                }
+            }
+        }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PhysicsShapeComponent::drawShapeCallback(const physics::IShape * _shape, const core::IWorld * _world, const core::float4x4 & _matrix)
+    {
+        if (nullptr != _shape)
+        {
+            const auto shapeType = _shape->GetShapeType();
+            switch (shapeType)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(shapeType);
+                    break;
+
+                case physics::ShapeType::Mesh:
+                {
+                    if (const core::vector<renderer::ColliderTriangle> * triangles = getColliderTriangles(_shape))
+                    {
+                        renderer::IDebugDraw * debugDraw = Engine::get()->GetRenderer()->GetDebugDraw();
+                        u32 color = _shape->GetColor();
+
+                        for (uint i = 0; i < triangles->size(); ++i)
+                        {
+                            const renderer::ColliderTriangle & tri = (*triangles)[i];
+
+                            const float3 v0 = float3(tri.v[0].x, tri.v[0].y, tri.v[0].z);
+                            const float3 v1 = float3(tri.v[1].x, tri.v[1].y, tri.v[1].z);
+                            const float3 v2 = float3(tri.v[2].x, tri.v[2].y, tri.v[2].z);
+
+                            // TODO: debugDraw->AddWireframeTriangle ?
+                            debugDraw->AddLine(_world, v0, v1, color, _matrix);
+                            debugDraw->AddLine(_world, v1, v2, color, _matrix);
+                            debugDraw->AddLine(_world, v2, v0, color, _matrix);
+                        }
+                    }
+                }
+                break;
+            }
+        }
     }
 }

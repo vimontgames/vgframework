@@ -3,6 +3,9 @@
 #include "renderer/IMeshModel.h"
 #include "renderer/IMaterialModel.h"
 #include "renderer/Model/Material/Material_Consts.h"
+#include "engine/Resource/Mesh/MeshResourceMeta.h"
+
+#include "MeshResourceMeta.hpp"
 
 using namespace vg::core;
 
@@ -40,17 +43,26 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    core::IResourceMeta * MeshResource::CreateResourceMeta(const core::string & _path) const
+    {
+        return new MeshResourceMeta(_path);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool MeshResource::Cook(const string & _file) const
     {
+        // Get meta if it exists
+        auto * meta = (MeshResourceMeta *)ResourceManager::get()->GetOrCreateResourceMeta(this);
+
         auto * renderer = Engine::get()->GetRenderer();
-        return renderer->cookMeshModel(_file);
+        return renderer->CookMeshModel(_file, &meta->getMeshImportSettings());
     }
 
     //--------------------------------------------------------------------------------------
     core::IObject * MeshResource::Load(const string & _path)
     {
         auto * renderer = Engine::get()->GetRenderer();
-        auto * meshModel = renderer->loadMeshModel(_path);    
+        auto * meshModel = renderer->LoadMeshModel(_path);    
         return meshModel;
     }
 

@@ -109,6 +109,8 @@
     <ClInclude Include="Shape\CapsuleShape.hpp" />
     <ClInclude Include="Shape\CylinderShape.h" />
     <ClInclude Include="Shape\CylinderShape.hpp" />
+    <ClInclude Include="Shape\MeshShape.h" />
+    <ClInclude Include="Shape\MeshShape.hpp" />
     <ClInclude Include="Shape\Shape.h" />
     <ClInclude Include="Shape\SphereShape.h" />
     <ClInclude Include="Shape\SphereShape.hpp" />

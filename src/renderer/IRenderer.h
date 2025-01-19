@@ -20,6 +20,7 @@ namespace vg
         class TextureDesc;
         class IShaderManager;
         struct TextureImporterSettings;
+        struct MeshImporterSettings;
 
         enum class ViewportFlags : core::u32;
         enum class RenderJobsPolicy : core::u8;
@@ -113,14 +114,14 @@ namespace vg
             virtual IDebugDraw *                        GetDebugDraw            () const = 0;
             virtual IUIManager *                        GetUIManager            () const = 0;
 
-            virtual bool                                cookMeshModel           (const core::string & _file) = 0;
-            virtual IMeshModel *                        loadMeshModel           (const core::string & _file) = 0;
+            virtual bool                                CookMeshModel           (const core::string & _file, const gfx::MeshImporterSettings * _importSettings) = 0;
+            virtual IMeshModel *                        LoadMeshModel           (const core::string & _file) = 0;
 
-            virtual bool                                cookTexture             (const core::string & _file, const gfx::TextureImporterSettings * _importSettings) = 0;
-            virtual gfx::ITexture *                     loadTexture             (const core::string & _file) = 0;
+            virtual bool                                CookTexture             (const core::string & _file, const gfx::TextureImporterSettings * _importSettings) = 0;
+            virtual gfx::ITexture *                     LoadTexture             (const core::string & _file) = 0;
 
-            virtual bool                                cookAnimation           (const core::string & _file) = 0;
-            virtual IAnimation *                        loadAnimation           (const core::string & _file) = 0;
+            virtual bool                                CookAnimation           (const core::string & _file) = 0;
+            virtual IAnimation *                        LoadAnimation           (const core::string & _file) = 0;
 
             virtual void                                ReleaseAsync            (core::IObject * _object) = 0;
 
