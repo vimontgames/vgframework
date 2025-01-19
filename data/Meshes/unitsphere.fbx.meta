@@ -1,0 +1,6 @@
+<Root>
+    <Object class="MeshResourceMeta">
+        <Property type="String" name="m_name" value="unitsphere.fbx.meta"/>
+        <Property type="Bool" name="m_importSettings.m_physicsCollisionData" value="false"/>
+    </Object>
+</Root>
