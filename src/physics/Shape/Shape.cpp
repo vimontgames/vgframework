@@ -23,11 +23,11 @@ namespace vg::physics
     {
         super::registerProperties(_desc);
 
-        registerPropertyEx(ShapeDesc, m_rotation, "Rotate", PropertyFlags::EulerAngle);
-        setPropertyDescription(ShapeDesc, m_rotation, "Euler ZYX rotation angles");
-
-        registerProperty(ShapeDesc, m_offset, "Offset");
+        registerProperty(ShapeDesc, m_offset, "Translation");
         setPropertyDescription(ShapeDesc, m_offset, "Translation offset");
+
+        registerPropertyEx(ShapeDesc, m_rotation, "Rotation", PropertyFlags::EulerAngle);
+        setPropertyDescription(ShapeDesc, m_rotation, "Euler ZYX rotation angles");
 
         return true;
     }

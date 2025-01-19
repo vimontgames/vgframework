@@ -23,9 +23,55 @@
                         <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="0.011386935" Iy="-0.99993563" Iz="0" Iw="0" Jx="0.99993563" Jy="0.011386935" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                        <Property type="ObjectPtrVector" name="m_components"/>
+                        <Property type="ObjectPtrVector" name="m_components">
+                            <Object class="BreakableBehaviour">
+                                <Property type="String" name="m_name" value="New BreakableBehaviour"/>
+                                <Property type="Uint32" name="m_uid" value="939985942"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float" name="m_damage" value="0"/>
+                                <Property type="Float" name="m_push" value="0"/>
+                                <Property type="EnumU8" name="m_breakableType" value="LootBox"/>
+                                <Property type="ObjectHandle" name="m_default" value="2705444"/>
+                                <Property type="Bool" name="m_useRotation" value="true"/>
+                                <Property type="Float3" name="m_rotation" x="0" y="0" z="2"/>
+                                <Property type="ObjectHandle" name="m_destroyed" value="592454383"/>
+                                <Property type="Bool" name="m_useDestroySound" value="true"/>
+                                <Property type="String" name="m_destroySound" value="Boom"/>
+                                <Property type="Bool" name="m_useImpulse" value="false"/>
+                                <Property type="Float3" name="m_impulse" x="0" y="0" z="0"/>
+                            </Object>
+                            <Object class="SoundComponent">
+                                <Property type="String" name="m_name" value="New SoundComponent"/>
+                                <Property type="Uint32" name="m_uid" value="104036156"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Object" name="m_sounds">
+                                    <Object class="SoundResourceList">
+                                        <Property type="String" name="m_name" value="New SoundComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="131006518"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="ResourceVector" name="m_resources">
+                                            <Object class="SoundResource">
+                                                <Property type="String" name="m_name" value="Boom"/>
+                                                <Property type="Uint32" name="m_uid" value="1484278593"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Sounds/Chest/253172__suntemple__retro-bonus-pickup-sfx.wav"/>
+                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" value=""/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" value="1"/>
+                                                <Property type="Float" name="m_soundSettings.m_delay" value="0"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                            </Object>
+                        </Property>
                         <Property type="ObjectPtrVector" name="m_children">
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="BananaB_Default"/>
@@ -37,11 +83,146 @@
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="PhysicsBodyComponent">
+                                        <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="32188138"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_category" value="Default"/>
+                                        <Property type="Bool" name="m_useCollisionMask" value="false"/>
+                                        <Property type="EnumFlagsU64" name="m_collisionMask" value=""/>
+                                        <Property type="ObjectPtr" name="m_bodyDesc">
+                                            <Object class="PhysicsBodyDesc">
+                                                <Property type="String" name="m_name" value="PhysicsBodyDesc #415"/>
+                                                <Property type="Uint32" name="m_uid" value="1102797554"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_trigger" value="true"/>
+                                                <Property type="Bool" name="m_softBody" value="false"/>
+                                                <Property type="EnumU16" name="m_layer" value="Moving"/>
+                                                <Property type="EnumU8" name="m_motion" value="Dynamic"/>
+                                                <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
+                                                <Property type="Bool" name="m_overrideMass" value="false"/>
+                                                <Property type="Float" name="m_mass" value="0"/>
+                                                <Property type="Float" name="m_friction" value="0.5"/>
+                                                <Property type="Float" name="m_restitution" value="0"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PhysicsShapeComponent">
+                                        <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="433666023"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_shapeType" value="Cylinder"/>
+                                        <Property type="ObjectPtr" name="m_shapeDesc">
+                                            <Object class="CylinderShapeDesc">
+                                                <Property type="String" name="m_name" value="CylinderShapeDesc #16"/>
+                                                <Property type="Uint32" name="m_uid" value="198914077"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="Float3" name="m_offset" x="-0.45300001" y="0.035999998" z="0.81999999"/>
+                                                <Property type="Float3" name="m_rotation" x="0" y="-20" z="0"/>
+                                                <Property type="Float" name="m_radius" value="0.15000001"/>
+                                                <Property type="Float" name="m_height" value="0.40000001"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PhysicsShapeComponent">
+                                        <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="842747462"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_shapeType" value="Cylinder"/>
+                                        <Property type="ObjectPtr" name="m_shapeDesc">
+                                            <Object class="CylinderShapeDesc">
+                                                <Property type="String" name="m_name" value="CylinderShapeDesc #12"/>
+                                                <Property type="Uint32" name="m_uid" value="198914077"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="Float3" name="m_offset" x="-0.31" y="0.024" z="0.40900001"/>
+                                                <Property type="Float3" name="m_rotation" x="0" y="-45" z="0"/>
+                                                <Property type="Float" name="m_radius" value="0.15000001"/>
+                                                <Property type="Float" name="m_height" value="0.34999999"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PhysicsShapeComponent">
+                                        <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2038250143"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_shapeType" value="Cylinder"/>
+                                        <Property type="ObjectPtr" name="m_shapeDesc">
+                                            <Object class="CylinderShapeDesc">
+                                                <Property type="String" name="m_name" value="CylinderShapeDesc #13"/>
+                                                <Property type="Uint32" name="m_uid" value="775964997"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="Float3" name="m_offset" x="-0.068999998" y="0.024" z="0.22400001"/>
+                                                <Property type="Float3" name="m_rotation" x="0" y="-80" z="0"/>
+                                                <Property type="Float" name="m_radius" value="0.15000001"/>
+                                                <Property type="Float" name="m_height" value="0.34999999"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PhysicsShapeComponent">
+                                        <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="742088755"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_shapeType" value="Cylinder"/>
+                                        <Property type="ObjectPtr" name="m_shapeDesc">
+                                            <Object class="CylinderShapeDesc">
+                                                <Property type="String" name="m_name" value="CylinderShapeDesc #22"/>
+                                                <Property type="Uint32" name="m_uid" value="1411519906"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="Float3" name="m_offset" x="0.31600001" y="0.025" z="0.18000001"/>
+                                                <Property type="Float3" name="m_rotation" x="0" y="90" z="0"/>
+                                                <Property type="Float" name="m_radius" value="0.15000001"/>
+                                                <Property type="Float" name="m_height" value="0.34999999"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="PhysicsShapeComponent">
+                                        <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2039157474"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumU8" name="m_shapeType" value="Cylinder"/>
+                                        <Property type="ObjectPtr" name="m_shapeDesc">
+                                            <Object class="CylinderShapeDesc">
+                                                <Property type="String" name="m_name" value="CylinderShapeDesc #23"/>
+                                                <Property type="Uint32" name="m_uid" value="1943671328"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="Float3" name="m_offset" x="0.65200001" y="0.024" z="0.25400001"/>
+                                                <Property type="Float3" name="m_rotation" x="0" y="-110" z="-15"/>
+                                                <Property type="Float" name="m_radius" value="0.15000001"/>
+                                                <Property type="Float" name="m_height" value="0.34999999"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="NotifyParentComponent">
+                                        <Property type="String" name="m_name" value="New NotifyParentComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2146795415"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_notificationFlags" value="TriggerEnter"/>
+                                    </Object>
                                     <Object class="MeshComponent">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="1525760444"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Resource" name="m_meshResource">
                                             <Object class="MeshResource">
@@ -99,7 +280,7 @@
                                                 <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="1792410751"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_category" value="Default"/>
                                                 <Property type="Bool" name="m_useCollisionMask" value="false"/>
@@ -135,8 +316,8 @@
                                                         <Property type="Uint32" name="m_uid" value="2038658544"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                                        <Property type="Float3" name="m_rotation" x="0" y="-20" z="0"/>
                                                         <Property type="Float3" name="m_offset" x="-0.050000001" y="0" z="0"/>
+                                                        <Property type="Float3" name="m_rotation" x="0" y="-20" z="0"/>
                                                         <Property type="Float" name="m_radius" value="0.15000001"/>
                                                         <Property type="Float" name="m_height" value="0.40000001"/>
                                                     </Object>
@@ -229,8 +410,8 @@
                                                         <Property type="Uint32" name="m_uid" value="1465082048"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                                        <Property type="Float3" name="m_rotation" x="0" y="-45" z="0"/>
                                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                        <Property type="Float3" name="m_rotation" x="0" y="-45" z="0"/>
                                                         <Property type="Float" name="m_radius" value="0.15000001"/>
                                                         <Property type="Float" name="m_height" value="0.34999999"/>
                                                     </Object>
@@ -287,7 +468,7 @@
                                                 <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="329085002"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_category" value="Default"/>
                                                 <Property type="Bool" name="m_useCollisionMask" value="false"/>
@@ -323,8 +504,8 @@
                                                         <Property type="Uint32" name="m_uid" value="1764510337"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                                        <Property type="Float3" name="m_rotation" x="0" y="-80" z="0"/>
                                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                        <Property type="Float3" name="m_rotation" x="0" y="-80" z="0"/>
                                                         <Property type="Float" name="m_radius" value="0.15000001"/>
                                                         <Property type="Float" name="m_height" value="0.34999999"/>
                                                     </Object>
@@ -381,7 +562,7 @@
                                                 <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="304051163"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_category" value="Default"/>
                                                 <Property type="Bool" name="m_useCollisionMask" value="false"/>
@@ -417,8 +598,8 @@
                                                         <Property type="Uint32" name="m_uid" value="1487939275"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                                        <Property type="Float3" name="m_rotation" x="0" y="90" z="0"/>
                                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                        <Property type="Float3" name="m_rotation" x="0" y="90" z="0"/>
                                                         <Property type="Float" name="m_radius" value="0.15000001"/>
                                                         <Property type="Float" name="m_height" value="0.34999999"/>
                                                     </Object>
@@ -475,7 +656,7 @@
                                                 <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="1454245683"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_category" value="Default"/>
                                                 <Property type="Bool" name="m_useCollisionMask" value="false"/>
@@ -511,8 +692,8 @@
                                                         <Property type="Uint32" name="m_uid" value="316766604"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                                        <Property type="Float3" name="m_rotation" x="0" y="-110" z="-15"/>
                                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0.050000001"/>
+                                                        <Property type="Float3" name="m_rotation" x="0" y="-110" z="-15"/>
                                                         <Property type="Float" name="m_radius" value="0.15000001"/>
                                                         <Property type="Float" name="m_height" value="0.315"/>
                                                     </Object>

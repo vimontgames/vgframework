@@ -63,6 +63,9 @@
     <ClCompile Include="Component\Environment\EnvironmentComponent.cpp">
       <Filter>Component\Environment</Filter>
     </ClCompile>
+    <ClCompile Include="Component\Engine\EngineComponent.cpp">
+      <Filter>Component\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine.def" />
@@ -392,6 +395,15 @@
     <ClInclude Include="Resource\Mesh\MeshResourceMeta.hpp">
       <Filter>Resource\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Engine\EngineComponent.h">
+      <Filter>Component\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Engine\NotifyParent\NotifyParentComponent.h">
+      <Filter>Component\Engine\NotifyParent</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Engine\NotifyParent\NotifyParentComponent.hpp">
+      <Filter>Component\Engine\NotifyParent</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Input">
@@ -522,6 +534,12 @@
     </Filter>
     <Filter Include="Resource\Lens">
       <UniqueIdentifier>{772b7b85-d731-4ec1-b3ac-e62e03b96e83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Engine">
+      <UniqueIdentifier>{805172a6-664a-4cf9-a310-1a2ce81b6e7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\Engine\NotifyParent">
+      <UniqueIdentifier>{8a8f945e-92ac-4307-980f-b309a24747e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -575,7 +575,7 @@ namespace vg::core
                     if (!hasUnloadedParent)
                     {
                         const auto newUID = getNewUID(_object);
-                        VG_WARNING("[Factory] New UID 0x%08X has been assigned to \"%s\" because it had the same UID 0x%08X as \"%s\".", newUID, getDuplicateUIDObjectName(_object).c_str(), uid, getDuplicateUIDObjectName(it->second).c_str());
+                        VG_WARNING("[Factory] New UID 0x%08X has been assigned to %s because it had the same UID 0x%08X as %s.", newUID, getDuplicateUIDObjectName(_object).c_str(), uid, getDuplicateUIDObjectName(it->second).c_str());
                         return newUID;
                     }
                     

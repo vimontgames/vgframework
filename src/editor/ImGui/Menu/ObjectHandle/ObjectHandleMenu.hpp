@@ -54,7 +54,7 @@ namespace vg::editor
 
             m_filter.Draw("Filter");
            
-            if (ImGui::InputScalar("UID", ImGuiDataType_U32, &editTemp, nullptr, nullptr, "%08X", ImGuiInputTextFlags_EnterReturnsTrue))
+            if (ImGui::InputScalar("UID", ImGuiDataType_U32, &editTemp, nullptr, nullptr, "%08X", 0/*ImGuiInputTextFlags_EnterReturnsTrue*/)) // ImGuiInputTextFlags_EnterReturnsTrue Not supported by InputScalar()
                 edited = true;
 
             auto * factory = Kernel::getFactory();

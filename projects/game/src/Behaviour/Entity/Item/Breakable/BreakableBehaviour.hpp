@@ -13,7 +13,7 @@ VG_REGISTER_COMPONENT_CLASS(BreakableBehaviour, "Breakable", "Game", "A breakabl
 BreakableBehaviour::BreakableBehaviour(const string & _name, IObject * _parent) :
     super(_name, _parent, ItemType::Chest)
 {
-    EnableUpdateFlags(vg::core::UpdateFlags::Update, false);
+    EnableUpdateFlags(UpdateFlags::Update, true);
 }
 
 //--------------------------------------------------------------------------------------
@@ -33,6 +33,7 @@ bool BreakableBehaviour::registerProperties(IClassDesc & _desc)
     registerPropertyGroupBegin(BreakableBehaviour, "Default")
     {
         registerProperty(BreakableBehaviour, m_default, "GameObject");
+        registerOptionalProperty(BreakableBehaviour, m_useRotation, m_rotation, "Rotation");
     }
     registerPropertyGroupEnd(BreakableBehaviour);
 
@@ -64,6 +65,26 @@ void BreakableBehaviour::OnPlay()
 
     // Reset chest state (as it's not serialized so it's not restored on restart)
     m_breakableState = BreakableState::Default;
+}
+
+//--------------------------------------------------------------------------------------
+void BreakableBehaviour::Update(const Context & _context)
+{
+    if (m_useRotation)
+    {
+        IGameObject * go = GetGameObject();
+        float4x4 matrix = go->GetLocalMatrix();
+        float4x4 rotZ = float4x4::rotation_z(m_rotation.z * _context.m_dt);
+        matrix = mul(matrix, rotZ);
+        go->SetLocalMatrix(matrix);
+    }
+}
+
+//--------------------------------------------------------------------------------------
+void BreakableBehaviour::OnTriggerEnter(vg::core::IGameObject * _other)
+{
+    if (CharacterBehaviour * attacker = _other->GetComponentT<CharacterBehaviour>())
+        TakeHit(attacker, nullptr);
 }
 
 //--------------------------------------------------------------------------------------

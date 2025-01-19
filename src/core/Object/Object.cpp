@@ -199,7 +199,9 @@ namespace vg::core
             selection->Remove(this);    // Unselect object on load
 
         SetObjectFlags(ObjectFlags::Selected, false); 
-        RegisterUID();
+
+        if (!HasValidUID())
+            RegisterUID();
     }
 
     //--------------------------------------------------------------------------------------

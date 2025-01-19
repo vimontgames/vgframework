@@ -90,6 +90,7 @@ namespace vg::editor
             inline static const char * Minimize             = ICON_FA_MINIMIZE;
             inline static const char * Minus                = ICON_FA_SQUARE_MINUS;
             inline static const char * New                  = ICON_FA_FILE_MEDICAL;
+            inline static const char * Parent               = ICON_FA_PERSON_BREASTFEEDING;
             inline static const char * Override             = ICON_FA_STAR;
             inline static const char * Pause                = ICON_FA_PAUSE;
             inline static const char * Physics              = ICON_FA_CAPSULES;

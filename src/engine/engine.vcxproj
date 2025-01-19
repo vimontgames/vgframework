@@ -44,6 +44,7 @@
     <ClCompile Include="Component\Debug\HUD\HUDComponent.cpp" />
     <ClCompile Include="Component\Debug\TestComponent\TestComponent.cpp" />
     <ClCompile Include="Component\Editor\Snap\SnapComponent.cpp" />
+    <ClCompile Include="Component\Engine\EngineComponent.cpp" />
     <ClCompile Include="Component\Environment\EnvironmentComponent.cpp" />
     <ClCompile Include="Component\Mesh\MeshComponent.cpp" />
     <ClCompile Include="Component\Physics\PhysicsComponent.cpp" />
@@ -72,6 +73,9 @@
     <ClInclude Include="Component\Debug\HUD\HUDComponent.h" />
     <ClInclude Include="Component\Debug\TestComponent\TestComponent.h" />
     <ClInclude Include="Component\Editor\Snap\SnapComponent.h" />
+    <ClInclude Include="Component\Engine\EngineComponent.h" />
+    <ClInclude Include="Component\Engine\NotifyParent\NotifyParentComponent.h" />
+    <ClInclude Include="Component\Engine\NotifyParent\NotifyParentComponent.hpp" />
     <ClInclude Include="Component\Environment\EnvironmentComponent.h" />
     <ClInclude Include="Component\Physics\Object\Body\PhysicsBodyComponent.h" />
     <ClInclude Include="Component\Physics\Object\Body\PhysicsBodyComponent.hpp" />

@@ -15,14 +15,17 @@ public:
     ~BreakableBehaviour();
 
     void                    OnPlay              () final override;
+    void                    Update              (const Context & _context) final override;
     bool                    TakeHit             (CharacterBehaviour * _attacker, ItemBehaviour * _weapon) final override;
+    void                    OnTriggerEnter      (vg::core::IGameObject * _other);
 
 protected:
     BreakableType           m_breakableType = BreakableType::LootBox;
     BreakableState          m_breakableState = BreakableState::Default;
 
     vg::core::ObjectHandle  m_default;
-
+    bool                    m_useRotation = false;
+    vg::core::float3        m_rotation = vg::core::float3(0.0f, 0.0f, 1.0f);
 
     vg::core::ObjectHandle  m_destroyed;
 
