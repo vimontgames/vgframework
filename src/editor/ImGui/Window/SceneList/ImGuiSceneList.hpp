@@ -380,31 +380,100 @@ namespace vg::editor
             auto bakePos = ImGui::GetCursorPos();
             ImGui::SameLine();
 
-            auto drawIcon = [=](const char * icon, bool enabled, float & totalSize, float availableWidth, ImVec2 pos, string tooltip)
+            auto drawIcon = [=](const char * _icon, uint _enabledCount, uint _disabledCount, float & _totalSize, float _availableWidth, const ImVec2 & _pos, const string & _tooltip)
             {
-                VG_ASSERT(nullptr != icon);
+                VG_ASSERT(nullptr != _icon);
 
-                auto size = ImGui::CalcTextSize(icon).x;
-                totalSize += size + ImGui::GetStyle().FramePadding.x;
+                const auto & style = ImGui::GetStyle();
 
                 ImVec4 textColor = ImGui::GetStyleColorVec4(ImGuiCol_Text);
 
-                if (enabled)
-                    textColor.w *= 1;
+                if (_enabledCount != 0 && _disabledCount != 0) // mixed
+                {
+                    textColor.w *= (0.5f + 0.5f * disabledAlpha);
+                }
                 else
-                    textColor.w *= disabledAlpha;
+                {
+                    if (_enabledCount > 0)
+                        textColor.w *= 1;
+                    else
+                        textColor.w *= disabledAlpha;
+                }
 
-                ImGui::SetCursorPosX(availableWidth - totalSize);
-                ImGui::SetCursorPosY(pos.y);
+                auto size = ImGui::CalcTextSize(_icon).x;
+                _totalSize += size + style.FramePadding.x;
+
+                ImGui::SetCursorPosX(_availableWidth - _totalSize);
+                ImGui::SetCursorPosY(_pos.y);
                 ImGui::PushStyleColor(ImGuiCol_Text, textColor);
-                ImGui::Text(icon);
+
+                ImGui::Text(_icon);
 
                 if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                    ImGui::SetTooltip(tooltip.c_str());
+                {
+                    if ((_enabledCount + _disabledCount) > 1)
+                    {
+                        string tooltip = fmt::sprintf("%s (x%u)", _tooltip, _enabledCount + _disabledCount);
+                        ImGui::SetTooltip(tooltip.c_str());
+                    }
+                    else
+                    {
+                        ImGui::SetTooltip(_tooltip.c_str());
+                    }
+                }
 
                 ImGui::PopStyleColor();
             };
 
+#if 1
+            vector<const char*> componentIcons;
+            for (uint i = 0; i < (uint)components.size(); ++i)
+            {
+                const auto * component = components[i];
+                const auto * componentClassDesc = component->GetClassDesc();
+                auto icon = componentClassDesc->GetIcon();
+                if (nullptr != icon)
+                {
+                    if (!vector_helper::exists(componentIcons, icon))
+                        componentIcons.push_back(icon);
+                }
+            }
+
+            float totalSize = 0;
+            for (int i = (int)componentIcons.size() - 1; i >= 0; --i)
+            {
+                auto compIcon = componentIcons[i];
+
+                uint enabledCount = 0, disabledCount = 0;
+
+                const IClassDesc * componentClassDesc = nullptr;
+
+                for (uint j = 0; j < components.size(); ++j)
+                {
+                    const auto * component = components[j];
+                    auto icon = component->GetClassDesc()->GetIcon();
+                    if (nullptr != icon)
+                    {
+                        if (icon == compIcon)
+                        {
+                            const bool enabled = asBool(ComponentFlags::Enabled & component->GetComponentFlags());
+                            componentClassDesc = component->GetClassDesc();
+
+                            if (enabled)
+                                enabledCount++;
+                            else
+                                disabledCount++;
+                        }
+                    }
+                }
+
+                if (enabledCount || disabledCount)
+                {
+                    drawIcon(compIcon, enabledCount, disabledCount, totalSize, availableWidth, pos, componentClassDesc->GetDescription());
+                }
+            }
+
+#else
             float totalSize = 0;
             for (i64 i = components.size() - 1; i >= 0; --i)
             {
@@ -414,14 +483,14 @@ namespace vg::editor
                 if (nullptr != icon)
                 {
                     const bool enabled = asBool(ComponentFlags::Enabled & component->GetComponentFlags());
-                    drawIcon(icon, enabled, totalSize, availableWidth, pos, componentClassDesc->GetDescription());
+                    drawIcon(icon, enabled ? 1 : 0, enabled ? 0 : 1, totalSize, availableWidth, pos, componentClassDesc->GetDescription());
                 }
             }
-
+#endif
             if (isPrefab)
             {
                 bool enabled = asBool(InstanceFlags::Enabled & _gameObject->GetInstanceFlags());
-                drawIcon(editor::style::icon::Prefab, enabled, totalSize, availableWidth, pos, "Prefab");
+                drawIcon(editor::style::icon::Prefab, enabled ? 1 : 0, enabled ? 0 : 1, totalSize, availableWidth, pos, "Prefab");
             }
 
             ImGui::SetCursorPosX(bakePos.x);
