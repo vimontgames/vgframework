@@ -10,7 +10,11 @@ namespace vg::core
 
         Options(const string & _name, IObject * _parent = nullptr);
 
-        virtual bool    Load() override;
-        virtual bool    Save() override;
+        void    Update  () override;
+        bool    Load    (bool _async) override;
+        bool    Save    () override;
+
+    private:
+        bool    m_reload = false;
     };
 }

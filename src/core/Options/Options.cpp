@@ -2,6 +2,7 @@
 #include "Options.h"
 #include "core/Kernel.h"
 #include "core/IFactory.h"
+#include "core/IScheduler.h"
 
 namespace vg::core
 {
@@ -20,13 +21,31 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Options::Load()
+    void Options::Update()
     {
-        const auto * factory = Kernel::getFactory();
-        if (factory->LoadFromXML(this, GetFile()))
+        if (m_reload)
         {
-            OnLoad();
+            Load(false);
+            m_reload = false;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Options::Load(bool _async)
+    {
+        if (_async)
+        {
+            m_reload = true;
             return true;
+        }
+        else
+        {
+            const auto * factory = Kernel::getFactory();
+            if (factory->LoadFromXML(this, GetFile()))
+            {
+                OnLoad();
+                return true;
+            }
         }
         return false;
     }

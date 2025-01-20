@@ -22,7 +22,7 @@ namespace vg::audio
         super(_name, _parent)
     {
         SetFile("Audio.xml");
-        Load();
+        Load(false);
     }
 
     //--------------------------------------------------------------------------------------

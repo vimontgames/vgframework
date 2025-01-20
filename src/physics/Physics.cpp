@@ -212,6 +212,8 @@ namespace vg::physics
 	{
         VG_PROFILE_CPU("Physics");
         const auto * engine = getEngine();
+
+        PhysicsOptions::get()->Update();
        
         for (auto * physicsWorld : m_physicsWorlds)
             physicsWorld->Update(_dt, m_tempAllocator, m_jobSystem);

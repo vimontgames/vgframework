@@ -48,7 +48,8 @@ namespace vg::core
 								    Object		        ();
 								    ~Object		        ();
 
-		bool						RegisterUID			();
+		bool						RegisterUID			() override;
+		bool                        UnregisterUID		() override;
 		bool                        HasValidUID			() const final override;
 
 		UID							GetUID				(bool _mustBeValid = true) const final override;
@@ -77,6 +78,7 @@ namespace vg::core
         void                        SetParent           (IObject * _parent) override;
         IObject *                   GetParent           () const final override;
 		IGameObject *				GetParentGameObject	() const final override;
+		IComponent *				GetParentComponent	() const final override;
 
         void                        OnPropertyChanged   (IObject * _object, const IProperty & _prop, bool _notifyParent) override;
 		void						SetPropertyValue	(const IProperty & _prop, void * _previousValue, void * _newValue) override;

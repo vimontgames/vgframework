@@ -486,7 +486,7 @@ namespace vg::engine
     {
         if (_resource == &m_prefabResource)
         {
-            VG_PROFILE_CPU("Prefab");
+            VG_PROFILE_CPU("PrefabGameObject");
 
             // Instanciate the Prefab
             if (PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, _resource->GetObject()))

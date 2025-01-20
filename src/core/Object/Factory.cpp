@@ -11,6 +11,7 @@
 #include "core/Misc/BitMask/BitMask.h"
 #include "core/IInstance.h"
 #include "core/IGameObject.h"
+#include "core/IComponent.h"
 #include "core/IBaseScene.h"
 #include "core/Object/ObjectHandle.h"
 #include "core/Types/Traits.h"
@@ -193,7 +194,7 @@ namespace vg::core
                 //VG_INFO("[Factory] Load \"%s\"", relativePath.c_str());
                 if (SerializeFromXML(_object, xmlDoc))
                 {
-                    VG_INFO("[Factory] \"%s\" loaded from XML in %.2f ms", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
+                    //VG_INFO("[Factory] \"%s\" loaded from XML in %.2f ms", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                     _object->SetFile(relativePath.c_str());
                     return true;
                 }
@@ -520,22 +521,23 @@ namespace vg::core
         IGameObject * go = _object->GetParentGameObject();
         VG_ASSERT(_object->GetClassDesc());
 
+        string msg = fmt::sprintf("(%s) \"%s\"", _object->GetClassDesc()->GetClassName(), _object->GetName());
+
+        IComponent * comp = _object->GetParentComponent();
+        if (comp)
+            msg += fmt::sprintf(" in Component \"%s\"", comp->GetName());
+
         if (nullptr != go)
         {
+            if (go != _object)
+                msg += fmt::sprintf(" in GameObject \"%s\"", go->GetName());
+
             IBaseScene * scene = go->GetScene();
             if (nullptr != scene)
-            {
-                return fmt::sprintf("(%s) \"%s\" from GameObject \"%s\" in %s \"%s\"", _object->GetClassDesc()->GetClassName(), _object->GetName(), go->GetName(), asString(scene->GetSceneType()), scene->GetName());
-            }
-            else
-            {
-                return fmt::sprintf("(%s) \"%s\" from GameObject \"%s\"", _object->GetClassDesc()->GetClassName(), _object->GetName(), go->GetName());
-            }
+                msg += fmt::sprintf(" in %s \"%s\"", asString(scene->GetSceneType()), scene->GetName());
         }
-        else
-        {
-            return fmt::sprintf("(%s) \"%s\"", _object->GetClassDesc()->GetClassName(), _object->GetName());
-        }
+
+        return msg;
     }
 
     //--------------------------------------------------------------------------------------
@@ -559,33 +561,38 @@ namespace vg::core
                 }
                 else
                 {
-                    bool hasUnloadedParent = false;
-                    auto * parent = it->second;
-                    while (parent && !hasUnloadedParent)
+                    VG_ASSERT(it->second->GetUID() == uid);
+                    if (it->second->GetUID() == uid)
                     {
-                        if (asBool(ObjectFlags::Unloaded & parent->GetObjectFlags()))
+                        bool hasUnloadedParent = false;
+                        auto * current = it->second;
+                        while (current)
                         {
-                            hasUnloadedParent = true;
-                            break;
+                            if (asBool(ObjectFlags::Unloaded & current->GetObjectFlags()))
+                            {
+                                hasUnloadedParent = true;
+                                current = nullptr;
+                            }
+                            else
+                            {
+                                current = current->GetParent();
+                            }
                         }
 
-                        parent = parent->GetParent();
+                        if (!hasUnloadedParent)
+                        {
+                            const auto newUID = getNewUID(_object);
+                            VG_WARNING("[Factory] New UID 0x%08X has been assigned to %s because it had the same UID 0x%08X as %s.", newUID, getDuplicateUIDObjectName(_object).c_str(), uid, getDuplicateUIDObjectName(it->second).c_str());
+                            return newUID;
+                        }
                     }
-
-                    if (!hasUnloadedParent)
-                    {
-                        const auto newUID = getNewUID(_object);
-                        VG_WARNING("[Factory] New UID 0x%08X has been assigned to %s because it had the same UID 0x%08X as %s.", newUID, getDuplicateUIDObjectName(_object).c_str(), uid, getDuplicateUIDObjectName(it->second).c_str());
-                        return newUID;
-                    }
-                    
                     return uid;
                 }
             }
             else
             {
-                // Object has UID but is not yet in table so add it
-                //VG_INFO("[Factory] Registered UID 0x%08X for object \"%s\"", uid, _object->getName().c_str());
+                // Object has UID but is not yet in table so add it (e.g. Object was just loaded)
+                //VG_INFO("[Factory] Add object \"%s\" for UID 0x%08X ", _object->GetName().c_str(), uid);
                 m_uidObjectHash.insert(std::pair(uid, _object));
                 return uid;
             }
@@ -605,7 +612,7 @@ namespace vg::core
             auto it = m_uidObjectHash.find(uid);
             if (m_uidObjectHash.end() == it)
             {
-                //VG_INFO("[Factory] Registered new UID 0x%08X for object \"%s\"", uid, _object->getName().c_str());
+                //VG_INFO("[Factory] Register new UID 0x%08X for object \"%s\"", uid, _object->GetName().c_str());
                 m_uidObjectHash.insert(std::pair(uid, _object));
                 return uid;
             }
@@ -2115,8 +2122,15 @@ namespace vg::core
                                             break;
 
                                         case PropertyType::Uint32:
+                                            if (!strcmp(prop->GetName(), "m_uid"))
+                                            {
+                                                if (_object->HasValidUID())
+                                                    _object->UnregisterUID();
+                                            }
+
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
                                             serializeIntegerPropertyFromXML<u32>(_object, prop, xmlPropElem);
+
                                             break;
 
                                         case PropertyType::ObjectHandle:

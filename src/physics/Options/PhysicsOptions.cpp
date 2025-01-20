@@ -24,7 +24,7 @@ namespace vg::physics
         super(_name, _parent)
     {
         SetFile("Physics.xml");
-        Load();
+        Load(false);
     }
 
     //--------------------------------------------------------------------------------------

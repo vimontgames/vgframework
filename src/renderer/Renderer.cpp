@@ -471,11 +471,11 @@ namespace vg::renderer
 
         VG_PROFILE_CPU("Renderer");
 
-        const RendererOptions * options = RendererOptions::get(false);
+        RendererOptions * options = RendererOptions::get(false);
         if (!options)
             return;
         
-        options->update();
+        options->Update();
 
         if (options->isRenderJobsEnabled())
             m_device.setupRenderJobs(options->getRenderJobCount(), options->getRenderJobsPolicy(), options->getMaxRenderTotalBufferSize(), options->getMaxRenderMinBufferSize());

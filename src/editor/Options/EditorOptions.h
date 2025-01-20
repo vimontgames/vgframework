@@ -52,6 +52,8 @@ namespace vg::editor
         EditorOptions(const core::string & _name, core::IObject * _parent = nullptr);
         ~EditorOptions();
 
+        bool                            Load                    (bool _async) final override;
+
         renderer::ICameraSettings *     GetCameraSettings       () const final override { return m_cameraSettings; }
 
         void                            SetPropertyValue        (const core::IProperty & _prop, void * _previousValue, void * _newValue) final override;

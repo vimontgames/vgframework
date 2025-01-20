@@ -84,17 +84,30 @@ namespace vg::editor
     EditorOptions::EditorOptions(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
     {
-        // Must be created before load
-        const auto * factory = Kernel::getFactory();
-        m_cameraSettings = (renderer::ICameraSettings *)factory->CreateObject("CameraSettings");
-        m_cameraSettings->SetParent(this);
-
-        SetFile("Editor.xml");
-        Load();
+        Load(false);
 
         m_cameraSettings->RegisterUID();
 
         Editor::get()->getRenderer()->GetImGuiAdapter()->SetGUITheme(m_theme);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool EditorOptions::Load(bool _async)
+    {
+        if (_async)
+        {
+            return super::Load(true);
+        }
+        else
+        {
+            // Must be created before load
+            VG_SAFE_RELEASE_ASYNC(m_cameraSettings);
+            const auto * factory = Kernel::getFactory();
+            m_cameraSettings = (renderer::ICameraSettings *)factory->CreateObject("CameraSettings");
+            m_cameraSettings->SetParent(this);
+            SetFile("Editor.xml");
+            return super::Load(false);
+        }
     }
 
     //--------------------------------------------------------------------------------------

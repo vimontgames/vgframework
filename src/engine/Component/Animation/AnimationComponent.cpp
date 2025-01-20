@@ -174,6 +174,7 @@ namespace vg::engine
         MeshComponent * meshComponent = getMeshComponent();
         if (meshComponent)
         {
+            VG_PROFILE_CPU("bindAnimations");
             auto & animResources = m_animations.getResources();
             for (uint i = 0; i < animResources.size(); ++i)
             {

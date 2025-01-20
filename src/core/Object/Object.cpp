@@ -62,11 +62,7 @@ namespace vg::core
 	Object::~Object()
 	{
         VG_ASSERT(m_refCount <= 1, "An object is being deleted with a RefCount of %u\nUse VG_SAFE_RELEASE for refcounted objects", m_refCount.load());
-        if (m_uid)
-        {
-            IFactory * factory = Kernel::getFactory();
-            factory->ReleaseUID(this, m_uid);
-        }
+        UnregisterUID();
 	}
 
     //--------------------------------------------------------------------------------------
@@ -76,6 +72,19 @@ namespace vg::core
 
         SetUID(factory->RegisterUID(this));
         return HasValidUID();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Object::UnregisterUID()
+    {
+        if (m_uid)
+        {
+            IFactory * factory = Kernel::getFactory();
+            factory->ReleaseUID(this, m_uid);
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -472,6 +481,23 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    IComponent * Object::GetParentComponent() const
+    {
+        const IObject * obj = this;
+        while (obj)
+        {
+            if (obj->IsRegisteredClass())
+            {
+                if (!strcmp("Component", obj->GetClassDesc()->GetClassName()))
+                    return (IComponent *)obj;
+            }
+
+            obj = obj->GetParent();
+        }
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
     const string Object::GetShortName() const
     {
         string name = GetName();
@@ -537,5 +563,5 @@ namespace vg::core
     {
         VG_ASSERT(false);
         return false;
-    }
+    }	
 }

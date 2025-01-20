@@ -99,6 +99,7 @@ namespace vg::audio
 	void Audio::Update(float _dt)
 	{
         VG_PROFILE_CPU("Audio");
+        GetOptions()->Update();
 	}
 
     //--------------------------------------------------------------------------------------

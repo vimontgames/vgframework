@@ -31,6 +31,7 @@
 #include "engine/Component/Physics/Shape/PhysicsShapeComponent.h"
 #include "engine/Behaviour/FreeCam/FreeCamBehaviour.h"
 #include "editor/IEditor.h"
+#include "editor/IEditorOptions.h"
 #include "application/IGame.h"
 
 #if !VG_ENABLE_INLINE
@@ -757,7 +758,9 @@ namespace vg::engine
             return;
         g_RunningOneFrame = true;
 
-        VG_PROFILE_CPU("Engine");       
+        VG_PROFILE_CPU("Engine");  
+
+        EngineOptions::get()->Update();
 
         updateDt();
 

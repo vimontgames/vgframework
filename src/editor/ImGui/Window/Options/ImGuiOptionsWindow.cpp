@@ -23,7 +23,7 @@ namespace vg::editor
             if (ImGui::IconBegin(getIcon().c_str(), GetName().c_str(), &m_isVisible))
             {
                 if (ImGui::TooltipButton(fmt::sprintf("%s Reload", editor::style::icon::Reload).c_str(), true, true, "Reload", style::button::SizeLarge))
-                    GetOptions()->Load();
+                    GetOptions()->Load(true); 
 
                 ImGui::SameLine();
 

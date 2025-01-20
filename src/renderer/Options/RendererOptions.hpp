@@ -345,7 +345,7 @@ namespace vg::renderer
         m_pbrBakedBRDFTexture->RegisterUID();        
         //m_pbrBakedBRDFTexture->SetResourcePath("data/Engine/BRDF/CookTorrance.png"); // can't default value from because loading will load it again and it will leak
 
-        Load();
+        Load(false);
 
         if (m_pbrBakedBRDFTexture->GetResourcePath().empty())
             m_pbrBakedBRDFTexture->SetResourcePath("data/Engine/BRDF/CookTorrance.png");
@@ -643,8 +643,10 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void RendererOptions::update() const
+    void RendererOptions::Update()
     {
+        super::Update();
+
         auto * renderer = Renderer::get();
 
         if (m_hdrProp)

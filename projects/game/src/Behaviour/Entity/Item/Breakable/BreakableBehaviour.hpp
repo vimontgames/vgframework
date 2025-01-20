@@ -70,13 +70,16 @@ void BreakableBehaviour::OnPlay()
 //--------------------------------------------------------------------------------------
 void BreakableBehaviour::Update(const Context & _context)
 {
-    if (m_useRotation)
+    if (_context.m_playing && !_context.m_paused && !_context.m_world->IsPrefabWorld())
     {
-        IGameObject * go = GetGameObject();
-        float4x4 matrix = go->GetLocalMatrix();
-        float4x4 rotZ = float4x4::rotation_z(m_rotation.z * _context.m_dt);
-        matrix = mul(matrix, rotZ);
-        go->SetLocalMatrix(matrix);
+        if (m_useRotation)
+        {
+            IGameObject * go = GetGameObject();
+            float4x4 matrix = go->GetLocalMatrix();
+            float4x4 rotZ = float4x4::rotation_z(m_rotation.z * _context.m_dt);
+            matrix = mul(matrix, rotZ);
+            go->SetLocalMatrix(matrix);
+        }
     }
 }
 
@@ -145,27 +148,30 @@ bool BreakableBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
 
             // Disable original object
             if (IGameObject * defaultGameObject = m_default.get<vg::core::IGameObject>())
+            {
                 defaultGameObject->Enable(false);
 
-            // Show destroyed objects
-            if (IGameObject * destroyedGameObject = m_destroyed.get<IGameObject>())
-            {
-                destroyedGameObject->Enable(true);
-                auto & children = destroyedGameObject->GetChildren();
-                for (uint i = 0; i < children.size(); ++i)
+                // Show destroyed objects
+                if (IGameObject * destroyedGameObject = m_destroyed.get<IGameObject>())
                 {
-                    IGameObject * part = children[i];
-                    part->Enable(true);
-
-                    if (m_useImpulse)
+                    destroyedGameObject->SetLocalMatrix(defaultGameObject->GetLocalMatrix());
+                    destroyedGameObject->Enable(true);
+                    auto & children = destroyedGameObject->GetChildren();
+                    for (uint i = 0; i < children.size(); ++i)
                     {
-                        if (IPhysicsBodyComponent * physicsBodyComp = part->GetComponentT<IPhysicsBodyComponent>())
-                        {
-                            float rx = Random::getRandomInRange(-m_impulse.x, +m_impulse.x);
-                            float ry = Random::getRandomInRange(-m_impulse.y, +m_impulse.y);
-                            float rz = m_impulse.z;
+                        IGameObject * part = children[i];
+                        part->Enable(true);
 
-                            physicsBodyComp->AddImpulse(float3(rx, ry, rz));
+                        if (m_useImpulse)
+                        {
+                            if (IPhysicsBodyComponent * physicsBodyComp = part->GetComponentT<IPhysicsBodyComponent>())
+                            {
+                                float rx = Random::getRandomInRange(-m_impulse.x, +m_impulse.x);
+                                float ry = Random::getRandomInRange(-m_impulse.y, +m_impulse.y);
+                                float rz = m_impulse.z;
+
+                                physicsBodyComp->AddImpulse(float3(rx, ry, rz));
+                            }
                         }
                     }
                 }

@@ -8,6 +8,7 @@ namespace vg::core
     class IProperty;
     class IResource;
     class IGameObject;
+    class IComponent;
 
     vg_enum_class(ObjectFlags, u32,
         NotSerialized   = 0x00000001,   // Object is not saved when its parent is serialized (e.g., for objects instantiated at runtime)
@@ -35,6 +36,7 @@ namespace vg::core
 		virtual							    ~IObject	        () = default;
 
         virtual bool                        RegisterUID         () = 0;
+        virtual bool                        UnregisterUID       () = 0;
         virtual bool                        HasValidUID         () const = 0;
 
         virtual UID                         GetUID              (bool _mustBeValid = true) const = 0;
@@ -63,6 +65,7 @@ namespace vg::core
         virtual void                        SetParent           (IObject * _parent) = 0;
         virtual IObject *                   GetParent           () const = 0;
         virtual IGameObject *               GetParentGameObject () const = 0;
+        virtual IComponent *                GetParentComponent  () const = 0;
 
         virtual void                        OnPropertyChanged   (IObject * _object, const IProperty & _prop, bool _notifyParent = true) = 0;
         virtual void						SetPropertyValue    (const IProperty & _prop, void * _previousValue, void * _newValue) = 0;

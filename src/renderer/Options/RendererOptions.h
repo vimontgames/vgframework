@@ -112,7 +112,7 @@ namespace vg::renderer
         void                    setDefaultClearColor                    (const core::float4 & _backgroundColor);
         core::float4		    getDefaultClearColor                    () const { return m_defaultEnvironmentColor; }
 
-        void                    update                                  () const;
+        void                    Update                                  () final override;
 
         void                    createResources                         ();
         void                    releaseResources                        ();

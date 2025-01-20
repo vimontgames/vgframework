@@ -79,7 +79,7 @@ namespace vg::engine
         super(_name, _parent)
     {
         SetFile("Engine.xml");
-        Load();
+        Load(false);
 
         if (auto * gameObjectTagsProp = GetClassDesc()->GetPropertyByName(VG_STRINGIFY(m_gameObjectTags)))
             updateDynamicEnum(*gameObjectTagsProp);

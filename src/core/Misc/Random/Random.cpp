@@ -38,6 +38,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     float Random::getRandomInRange(float _min, float _max)
     {
+        if (!s_initialized)
+            init();
         const float random = (float)(rand()) / (float)(RAND_MAX);
         return _min + random * (_max - _min);
     }
@@ -45,6 +47,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     core::float3 Random::getRandomInRange(const core::float3 & _min, const core::float3 & _max)
     {
+        if (!s_initialized)
+            init();
         const float3 random = float3((float)rand(), (float)rand(), (float)rand()) / (float)(RAND_MAX);
         return _min + random * (_max - _min);
     }

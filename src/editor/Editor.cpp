@@ -277,7 +277,9 @@ namespace vg::editor
         VG_PROFILE_CPU("Editor");
 
         auto input = Kernel::getInput();
-        auto options = EditorOptions::get();
+        auto * options = EditorOptions::get();
+
+        options->Update();
 
         const bool shift = input->IsKeyPressed(Key::LeftShift) || input->IsKeyPressed(Key::RightShift);
         const bool ctrl = input->IsKeyPressed(Key::LeftControl) || input->IsKeyPressed(Key::RightControl);

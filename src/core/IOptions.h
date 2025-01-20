@@ -8,7 +8,8 @@ namespace vg::core
     public:
         VG_CLASS_DECL_ABSTRACT(IOptions, core::Object);
 
-        virtual bool    Load() = 0;
+        virtual void    Update() = 0;
+        virtual bool    Load(bool _async) = 0;
         virtual bool    Save() = 0;
     };
 }
