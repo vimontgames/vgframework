@@ -92,65 +92,7 @@ namespace vg::renderer
                 {
                     const GraphicInstance * instance = instances[i];
                     VG_ASSERT(instance->getGPUInstanceDataOffset() == offset);
-
-                    #if 1
-
-                    instance->FillGPUInstanceData(data, offset);
-
-                    #else
-
-                    const auto & materials = instance->getMaterials();
-                    const uint batchCount = instance->GetBatchCount();
-                    const uint materialCount = (uint)materials.size();
-
-                    GPUInstanceData * instanceData = (GPUInstanceData *)(data + offset);
-                    {
-                        VertexFormat vertexFormat;
-                        if (instance->GetVertexFormat(vertexFormat))
-                            instanceData->setVertexFormat(vertexFormat);
-                        else
-                            instanceData->setVertexFormat((VertexFormat)-1);
-
-                        instanceData->setMaterialCount(materialCount);
-                        instanceData->setInstanceColor(instance->getColor());
-
-                        BindlessBufferHandle ib;
-                        uint ibOffset, indexSize;
-
-                        if (instance->GetIndexBuffer(ib, ibOffset, indexSize))
-                            instanceData->setIndexBuffer(ib, indexSize, ibOffset);
-                        else
-                            instanceData->setIndexBuffer(-1);
-
-                        BindlessBufferHandle vb;
-                        uint vbOffset;
-                        if (instance->GetVertexBuffer(vb, vbOffset))
-                            instanceData->setVertexBuffer(vb, vbOffset);
-                        else
-                            instanceData->setVertexBuffer(-1);
-
-                        for (uint b = 0; b < batchCount; ++b)
-                        {
-                            GPUBatchData * batchData = (GPUBatchData *)(data + offset + sizeof(GPUInstanceData) + b * sizeof(GPUBatchData));
-
-                            if (b < materialCount)
-                            {
-                                const MaterialModel * mat = materials[b];
-                                if (nullptr != mat)
-                                {
-                                    batchData->setMaterialIndex(mat->getGPUMaterialDataIndex());
-                                    batchData->setStartIndex(instance->GetBatchOffset(b));
-                                    continue;
-                                }
-                            }
-                            
-                            batchData->setMaterialIndex(defaultMaterialIndex);
-                        }
-                    }
-
-                    offset += sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData);
-
-                    #endif                    
+                    instance->FillGPUInstanceData(data, offset);                                      
                 }
             }
             _cmdList->unmap(m_instanceDataBuffer);

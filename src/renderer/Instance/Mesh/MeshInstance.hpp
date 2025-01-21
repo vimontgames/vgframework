@@ -256,11 +256,11 @@ namespace vg::renderer
         return true;
     }
 
+    #define FILL_GPU_INSTANCE_DATA_WRITE_COMBINE_OPTIMIZATION 1
+
     //--------------------------------------------------------------------------------------
     void MeshInstance::FillGPUInstanceData(const core::u8 * VG_RESTRICT _data, core::uint & _offset) const
     {
-        GPUInstanceData * VG_RESTRICT instanceData = (GPUInstanceData * VG_RESTRICT)(_data + _offset);
-
         const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
         const MeshGeometry * geo = nullptr;
 
@@ -274,7 +274,7 @@ namespace vg::renderer
         uint vbOffset;
 
         const auto & materials = getMaterials();
-        const uint materialCount = (uint)materials.size();
+        const uint materialCount = (uint)materials.size();       
         
         if (nullptr != model)
         {
@@ -299,14 +299,23 @@ namespace vg::renderer
             }
         }
 
+        const size_t size = sizeof(GPUInstanceData) + sizeof(GPUBatchData) * batchCount;
+
+        #if FILL_GPU_INSTANCE_DATA_WRITE_COMBINE_OPTIMIZATION
+        // Write to scratch buffer then memcpy
+        const core::u8 * VG_RESTRICT data = (u8 * VG_RESTRICT)alloca(size);  
+        const uint offset = 0;
+        #else
+        // write directly to destination buffer
+        const core::u8 * VG_RESTRICT data = _data;  
+        const uint offset = _offset;
+        #endif
+
+        GPUInstanceData * VG_RESTRICT instanceData = (GPUInstanceData * VG_RESTRICT)(data + offset);
+
         instanceData->setMaterialCount(materialCount);
         instanceData->setVertexFormat(vertexFormat);
-        #if 0
-        const float * VG_RESTRICT color = (const float * VG_RESTRICT) & getColor();
-        instanceData->setInstanceColor(color[0], color[1], color[2], color[3]);
-        #else
         instanceData->setInstanceColor(getColor());
-        #endif
         instanceData->setIndexBuffer(ibHandle, indexSize, ibOffset);
         instanceData->setVertexBuffer(vbHandle, vbOffset);
 
@@ -318,7 +327,7 @@ namespace vg::renderer
 
         for (uint b = 0; b < batchCount; ++b)
         {
-            GPUBatchData * VG_RESTRICT batchData = (GPUBatchData * VG_RESTRICT)(_data + _offset + sizeof(GPUInstanceData) + b * sizeof(GPUBatchData));
+            GPUBatchData * VG_RESTRICT batchData = (GPUBatchData * VG_RESTRICT)(data + offset + sizeof(GPUInstanceData) + b * sizeof(GPUBatchData));
 
             const MaterialModel * mat = (b < materialCount) ? materials[b] : nullptr;
             GPUMaterialDataIndex matIndex = (nullptr != mat) ? mat->getGPUMaterialDataIndex() : defaultMaterialIndex;
@@ -328,7 +337,11 @@ namespace vg::renderer
             batchData->setStartIndex(batchOffset);
         }
 
-        _offset += sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData);
+        #if FILL_GPU_INSTANCE_DATA_WRITE_COMBINE_OPTIMIZATION
+        memcpy((u8*)_data + _offset, data, size);
+        #endif
+
+        _offset += (uint)size;
     }
 
     //--------------------------------------------------------------------------------------
