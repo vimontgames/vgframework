@@ -178,6 +178,25 @@ namespace vg::gfx
         return &m_shaderFileDescriptors[_file];
     }
 
+    // TODO: move to string.h
+    //--------------------------------------------------------------------------------------
+    bool caseInsensitiveCharCompare(char c1, char c2)
+    {
+        return std::tolower(c1) == std::tolower(c2);
+    }
+
+    // Function to perform case-insensitive find
+    //--------------------------------------------------------------------------------------
+    std::size_t findCaseInsensitive(const std::string & str, const std::string & toFind)
+    {
+        auto it = std::search(str.begin(), str.end(), toFind.begin(), toFind.end(), caseInsensitiveCharCompare);
+
+        if (it != str.end()) 
+            return std::distance(str.begin(), it); // Found
+        else 
+            return std::string::npos; // Not found
+    }
+
     //--------------------------------------------------------------------------------------
     // Fix the warning or error line number so that visual studio opens correct file when double-clicked
     // 
@@ -224,21 +243,33 @@ namespace vg::gfx
                     pos += 1; 
                 }
 
-                string folder = "data";
-                if (line._Starts_with(folder))
-                    line.replace(0, folder.length(), root + "/" + folder);
-
+                string path = "data/";
+                auto folder = findCaseInsensitive(line, path);
+                if (-1 != folder)
+                {
+                    if (!folder) // line begin
+                        line.replace(folder, path.length(), root + "/" + path);
+                    else
+                        line.replace(0, folder + path.length(), root + "/" + path);
+                }
                 string shad = "shaders";
                 string sys = "system";
 
-                auto syspos = line.find(sys);
+                auto system2 = findCaseInsensitive(line, sys+"/"+ sys);
+                if (-1 != system2)
+                    line.replace(system2, sys.length() + 1, "");
+
+                auto syspos = findCaseInsensitive(line, sys);
                 if (string::npos != syspos)
                 {
-                    auto shadpos = line.find(shad);
+                    auto shadpos = findCaseInsensitive(line, shad);
 
-                    if (syspos != shadpos + shad.length() + 1)
+                    if (-1 != shadpos)
                     {
-                        line.replace(shadpos + shad.length(), syspos - (shadpos + shad.length()) - 1, "");
+                        if (syspos != shadpos + shad.length() + 1)
+                        {
+                            line.replace(shadpos + shad.length(), syspos - (shadpos + shad.length()) - 1, "");
+                        }
                     }
                 }
 
@@ -274,11 +305,11 @@ namespace vg::gfx
             warningAndErrors = fixFileLine(_file, warningAndErrors);
 
             if (!compiled)
-                VG_ERROR("[Shader] Error compiling %s Shader \"%s\" \n%s", asString(_stage).c_str(), _entryPoint.c_str(), warningAndErrors.c_str());
+                VG_ERROR("[Shader] Error(s) compiling %s Shader \"%s\" \n%s: ", asString(_stage).c_str(), _entryPoint.c_str(), warningAndErrors.c_str());
             else
             {
                 m_warningCount++;
-                VG_WARNING("[Shader] Warning compiling %s Shader \"%s\" \n%s", asString(_stage).c_str(), _entryPoint.c_str(), warningAndErrors.c_str());
+                VG_WARNING("[Shader] Warning(s) compiling %s Shader \"%s\" \n%s: ", asString(_stage).c_str(), _entryPoint.c_str(), warningAndErrors.c_str());
             }
         }
 
