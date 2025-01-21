@@ -2837,7 +2837,7 @@ namespace vg::core
                     auto name = _prop->GetEnumName(e);
                     auto value = scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(e) : _prop->GetUnsignedEnumValue(e);
 
-                    if (!strcmp(name.c_str(), temp))
+                    if (!name.empty() && !strcmp(name.c_str(), temp))
                     {
                         enumVal |= value;
                         break;
@@ -2859,11 +2859,15 @@ namespace vg::core
             T temp = (T)(scalarTraits<T>::is_signed ? _prop->GetSignedEnumValue(i) : _prop->GetUnsignedEnumValue(i));
             if (0 != (*pEnum & temp))
             {
-                if (!first)
-                    flags += "|";
-                else
-                    first = false;
-                flags += (string)_prop->GetEnumName(i);
+                const string name = (string)_prop->GetEnumName(i);
+                if (!name.empty())
+                {
+                    if (!first)
+                        flags += "|";
+                    else
+                        first = false;
+                    flags += name;
+                }
             }
         }
         _xmlElem->SetAttribute("value", flags.c_str());
