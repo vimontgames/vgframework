@@ -11,7 +11,7 @@ public:
 
     void                OnPlay() final override;
     void                OnStop() final override;
-
+    void                OnTriggerEnter(vg::core::IGameObject * _other) override;
     void                FixedUpdate(const Context & _context) override;
     void                Update(const Context & _context) override;
 
@@ -21,4 +21,5 @@ private:
     vg::core::float3    m_targetPosSmooth = vg::core::float3(0, 0, 0);
     bool                m_targetAcquired = false;
     vg::core::float3    m_targetPosSmoothdamp = vg::core::float3(0, 0, 0);
+    vg::core::Tag       m_playerTag = (vg::core::Tag)0x0;
 };

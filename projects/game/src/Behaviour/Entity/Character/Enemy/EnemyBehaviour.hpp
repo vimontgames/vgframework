@@ -41,6 +41,8 @@ bool EnemyBehaviour::registerProperties(IClassDesc & _desc)
 void EnemyBehaviour::OnPlay()
 {
     super::OnPlay();
+    const auto & options = Game::get()->Engine().GetOptions();
+    m_playerTag = options->GetGameObjectTag("Player");
 }
 
 //--------------------------------------------------------------------------------------
@@ -50,16 +52,25 @@ void EnemyBehaviour::OnStop()
     m_moveState = MoveState::Idle;
 }
 
-struct ActivePlayerInfo
+//--------------------------------------------------------------------------------------
+void EnemyBehaviour::OnTriggerEnter(IGameObject * _other)
 {
-    PlayerBehaviour * behaviour = nullptr;
-    float3 position = (float3)0.0f;
-    float distance = 0.0f;
-};
+    if (asBool(_other->GetTags() & m_playerTag))
+    {
+        VG_WARNING("[Enemy] Player \"%s\" is being punched by enemy \"%s\"", _other->GetName().c_str(), GetGameObject()->GetName().c_str());
+    }
+}
 
 //--------------------------------------------------------------------------------------
 void EnemyBehaviour::FixedUpdate(const Context & _context)
 {
+    struct ActivePlayerInfo
+    {
+        PlayerBehaviour * behaviour = nullptr;
+        float3 position = (float3)0.0f;
+        float distance = 0.0f;
+    };
+
     if (_context.m_playing && !_context.m_paused)   
     {
         if (MoveState::Die == m_moveState)

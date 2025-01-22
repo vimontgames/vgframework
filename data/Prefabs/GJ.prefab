@@ -67,8 +67,8 @@
                                         <Property type="Uint32" name="m_uid" value="2637626638"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                        <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0.875"/>
+                                        <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
                                         <Property type="Bool" name="m_tapered" value="false"/>
                                         <Property type="Float" name="m_topRadius" value="0.25"/>
                                         <Property type="Float" name="m_bottomRadius" value="0.5"/>
@@ -348,8 +348,8 @@
                                                 <Property type="Uint32" name="m_uid" value="3510451234"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                                <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
                                                 <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
                                                 <Property type="Float" name="m_radius" value="0.2"/>
                                             </Object>
                                         </Property>
@@ -364,6 +364,14 @@
                                         <Property type="ObjectHandle" name="m_target" value="3525072167"/>
                                         <Property type="String" name="m_boneName" value="Jg_ R Finger21"/>
                                         <Property type="Float4x4" name="m_transform" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                    </Object>
+                                    <Object class="NotifyParentComponent">
+                                        <Property type="String" name="m_name" value="New NotifyParentComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="1030507234"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_notificationFlags" value="TriggerEnter"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -418,8 +426,8 @@
                                                 <Property type="Uint32" name="m_uid" value="1429600130"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                                <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
                                                 <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
                                                 <Property type="Float" name="m_radius" value="0.2"/>
                                             </Object>
                                         </Property>
@@ -434,6 +442,14 @@
                                         <Property type="ObjectHandle" name="m_target" value="3525072167"/>
                                         <Property type="String" name="m_boneName" value="Jg_ L Finger21"/>
                                         <Property type="Float4x4" name="m_transform" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                    </Object>
+                                    <Object class="NotifyParentComponent">
+                                        <Property type="String" name="m_name" value="New NotifyParentComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="1924017367"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_notificationFlags" value="TriggerEnter"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>
