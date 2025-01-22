@@ -11,6 +11,8 @@
 vg_enum_class(DisplayMode, uint,
 	None = 0,
 
+    Instance_Color,
+
     Material_Albedo,         
     Material_NormalMap,      
     Material_AmbientOcclusion,

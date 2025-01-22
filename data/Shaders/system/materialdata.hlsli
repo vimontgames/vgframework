@@ -91,7 +91,7 @@ struct GPUMaterialData
 
     #ifndef __cplusplus
     //--------------------------------------------------------------------------------------
-    float4 getVertexColorOut(float4 _vertexColor, float4 _instanceColor, DisplayFlags _flags)
+    float4 getVertexColorOut(float4 _vertexColor, float4 _instanceColor, DisplayFlags _flags, DisplayMode _mode)
     {
         float4 color = 1;
 
@@ -119,6 +119,11 @@ struct GPUMaterialData
             color.rgb *= _instanceColor.rgb;
         }
         color.a *= _instanceColor.a;
+
+        #if _TOOLMODE
+        if (DisplayMode::Instance_Color == _mode)
+            color.rgba = _instanceColor.rgba;
+        #endif
 
         return color;
     }
@@ -168,7 +173,7 @@ struct GPUMaterialData
     // If the texture may have different value in different threads from a wave, 
     // then '_nonUniform' shall be 'true' to avoid rendering artifacts in AMD cards.
     //--------------------------------------------------------------------------------------
-    float4 getAlbedo(float2 _uv, float4 _vertexColor, DisplayFlags _flags, bool _nonUniform = false)
+    float4 getAlbedo(float2 _uv, float4 _vertexColor, DisplayFlags _flags, DisplayMode _mode, bool _nonUniform = false)
     {                 
         float4 albedo = sampleTexture2D(getAlbedoTextureHandle(), albedoSampler, _uv, _nonUniform);
 
@@ -178,6 +183,11 @@ struct GPUMaterialData
         #endif
 
         albedo *= _vertexColor;
+
+        #if _TOOLMODE
+        if (DisplayMode::Instance_Color == _mode)
+            albedo = _vertexColor;
+        #endif
     
         return albedo;
     }

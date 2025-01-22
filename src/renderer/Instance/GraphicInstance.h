@@ -65,7 +65,8 @@ namespace vg::renderer
         virtual void                                    OnMaterialChanged           (core::uint _index) {}
         virtual bool                                    OnUpdateRayTracing          (gfx::CommandList * _cmdList, View * _view, core::uint _index) = 0;
 
-        virtual void                                    FillGPUInstanceData         (const core::u8 * VG_RESTRICT _data, core::uint & _offset) const {};
+        virtual core::uint                              GetGPUInstanceDataSize      () const { return 0; }
+        virtual core::uint                               FillGPUInstanceData         (const core::u8 * VG_RESTRICT _data) const { return 0; }
 
         virtual bool                                    GetIndexBuffer              (gfx::BindlessBufferHandle & _vb, core::uint & _offset, core::uint & _indexSize) const { return false; }
         virtual bool                                    GetVertexBuffer             (gfx::BindlessBufferHandle & _vb, core::uint & _offset) const { return false; }

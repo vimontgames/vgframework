@@ -74,6 +74,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
 
     DisplayFlags flags = viewConstants.getDisplayFlags();
+    DisplayMode mode = viewConstants.getDisplayMode();
 
     float4x4 view = viewConstants.getView();
     float4x4 proj = viewConstants.getProj();
@@ -82,7 +83,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags);
+    output.col = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags, mode);
     
     float3 modelPos = vert.getPos();
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
@@ -149,6 +150,7 @@ PS_Output PS_Forward(VS_Output _input)
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
 
     DisplayFlags flags = viewConstants.getDisplayFlags();
+    DisplayMode mode = viewConstants.getDisplayMode();
     
     uint2 screenSize = viewConstants.getScreenSize();
     float3 screenPos = _input.pos.xyz / float3(screenSize.xy, 1);
@@ -163,9 +165,9 @@ PS_Output PS_Forward(VS_Output _input)
     GPUMaterialData materialData = instanceData.loadGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
 
     float2 uv0 = materialData.GetUV0(_input.uv.xy,_input.uv.zw, worldPos);
-    float2 uv1 = _input.uv.zw;
+    float2 uv1 = _input.uv.zw;   
 
-    float4 albedo = materialData.getAlbedo(uv0, _input.col, flags);
+    float4 albedo = materialData.getAlbedo(uv0, _input.col, flags, mode);
     float3 normal = materialData.getNormal(uv0, flags).xyz;
     float4 pbr = materialData.getPBR(uv0);
 
@@ -174,11 +176,11 @@ PS_Output PS_Forward(VS_Output _input)
     // Compute & Apply lighting
     LightingResult lighting = computeDirectLighting(viewConstants, camPos, worldPos, albedo.rgb, worldNormal.xyz, pbr);
 
-    output.color0.rgb = applyLighting(albedo.rgb, lighting, viewConstants.getDisplayMode());
+    output.color0.rgb = applyLighting(albedo.rgb, lighting, mode);
     output.color0.a = albedo.a; 
     
     #if _TOOLMODE && !_ZONLY
-    output.color0 = forwardDebugDisplay(output.color0, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
+    output.color0 = forwardDebugDisplay(output.color0, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
         output.color0 = float4(0,1,0,1);
     #endif // _TOOLMODE
@@ -240,6 +242,7 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
 
     DisplayFlags flags = viewConstants.getDisplayFlags();
+    DisplayMode mode = viewConstants.getDisplayMode();
 
     float4x4 view = viewConstants.getView();
     float4x4 proj = viewConstants.getProj();
@@ -248,7 +251,7 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags);
+    output.col = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags, mode);
     
     float3 modelPos = vert.getPos();
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
@@ -286,6 +289,7 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
 
     DisplayFlags flags = viewConstants.getDisplayFlags();
+    DisplayMode mode = viewConstants.getDisplayMode();
 
     uint2 screenSize = viewConstants.getScreenSize();
     float3 screenPos = _input.pos.xyz / float3(screenSize.xy, 1);
@@ -301,7 +305,7 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     float2 uv0 = materialData.GetUV0(_input.uv.xy,_input.uv.zw, worldPos);
     float2 uv1 = _input.uv.zw;
 
-    float4 albedo = materialData.getAlbedo(uv0, _input.col, flags);
+    float4 albedo = materialData.getAlbedo(uv0, _input.col, flags, mode);
     float4 normal = materialData.getNormal(uv0, flags);
     float4 pbr = materialData.getPBR(uv0);
     
@@ -313,7 +317,7 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
 
     #if _TOOLMODE && !_ZONLY
     // If any 'Forward' debug display mode is enabled then its result is stored into the 'Albedo' buffer
-    output.albedo = forwardDebugDisplay(output.albedo, viewConstants.getDisplayMode(), rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
+    output.albedo = forwardDebugDisplay(output.albedo, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
     #endif // _TOOLMODE && !_ZONLY
 
     #if _ALPHATEST

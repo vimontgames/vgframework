@@ -379,7 +379,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
                     float2 uv0 = materialData.GetUV0(vert.uv[0], vert.uv[1], worldPosition);
                     
                     float4 vertexColor = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags);
-                    float4 albedo = materialData.getAlbedo(uv0, vertexColor, flags, true);
+                    float4 albedo = materialData.getAlbedo(uv0, vertexColor, flags, mode, true);
 
                     switch(mode)
                     {

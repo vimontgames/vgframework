@@ -76,7 +76,8 @@ namespace vg::renderer
 
         void                            Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
-        void                            FillGPUInstanceData         (const core::u8 * VG_RESTRICT _data, core::uint & _offset) const final override;
+        core::uint                      GetGPUInstanceDataSize      () const final override;
+        core::uint                      FillGPUInstanceData         (const core::u8 * VG_RESTRICT _data) const final override;
 
         bool                            GetIndexBuffer              (gfx::BindlessBufferHandle & _vb, core::uint & _offset, core::uint & _indexSize) const final override;
         bool                            GetVertexBuffer             (gfx::BindlessBufferHandle & _vb, core::uint & _offset) const final override;

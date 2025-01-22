@@ -27,10 +27,10 @@ namespace vg::renderer
     core::u64 DeferredOpaquePass::GetCostEstimate(const RenderPassContext & _renderPassContext) const
     {
         const View * view = static_cast<const View *>(_renderPassContext.getView());
-
-        return getListCostEstimate(view->getCullingJobResult(), GraphicInstanceListType::Opaque)
-             + getListCostEstimate(view->getCullingJobResult(), GraphicInstanceListType::AlphaTest)
-             + getListCostEstimate(view->getCullingJobResult(), GraphicInstanceListType::Decal);
+        const auto & cullingResult = view->getCullingJobResult();
+        return getListCostEstimate(cullingResult, GraphicInstanceListType::Opaque)
+             + getListCostEstimate(cullingResult, GraphicInstanceListType::AlphaTest)
+             + getListCostEstimate(cullingResult, GraphicInstanceListType::Decal);
     }
 
     //--------------------------------------------------------------------------------------

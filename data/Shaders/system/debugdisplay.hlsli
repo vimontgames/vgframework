@@ -56,6 +56,7 @@ float4 forwardDebugDisplay(float4 _color, DisplayMode _mode, uint _matID, float3
         case DisplayMode::Geometry_UV1:
             return sRGBA2Linear(float4(frac(_uv1.xy), any(saturate(_uv0) != _uv0) ? 1 : 0, 1));
         
+        case DisplayMode::Instance_Color:
         case DisplayMode::Material_Albedo:
             return float4(_albedo.rgb, 1);
 

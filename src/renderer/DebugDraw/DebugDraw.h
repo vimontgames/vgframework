@@ -38,39 +38,41 @@ namespace vg::renderer
 
         core::IDebugDrawData * CreateDebugDrawData() final override;
 
-        void        AddLine                 (const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity()) final override;
-        void        AddWireframeBox         (const core::IWorld * _world, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity()) final override;
-        void        AddWireframeSphere      (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
-        void        AddHemisphere           (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
-        void        AddCylinder             (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
-        void        AddTaperedCylinder      (const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
-        void        AddCapsule              (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
-        void        AddTaperedCapsule       (const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
+        void                AddLine                 (const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity()) final override;
+        void                AddWireframeBox         (const core::IWorld * _world, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity()) final override;
+        void                AddWireframeSphere      (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
+        void                AddHemisphere           (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
+        void                AddCylinder             (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
+        void                AddTaperedCylinder      (const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
+        void                AddCapsule              (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
+        void                AddTaperedCapsule       (const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity()) final override;
 
-        void        endFrame                ();
-        void        reset                   ();
+        void                endFrame                ();
+        void                reset                   ();
 
-        void        update                  (const View * _view, gfx::CommandList * _cmdList);
-        void        render                  (const View * _view, gfx::CommandList * _cmdList);
+        core::u64           getDebugDrawCount       (const View * _view) const;
 
-        void        drawAABB                (gfx::CommandList * _cmdList, const core::AABB & _aabb, const core::float4x4 & _world) const;
-        void        drawGrid                (gfx::CommandList * _cmdList) const; 
-        void        drawAxis                (gfx::CommandList * _cmdList) const;
+        void                update                  (const View * _view, gfx::CommandList * _cmdList);
+        void                render                  (const View * _view, gfx::CommandList * _cmdList);
+
+        void                drawAABB                (gfx::CommandList * _cmdList, const core::AABB & _aabb, const core::float4x4 & _world) const;
+        void                drawGrid                (gfx::CommandList * _cmdList) const; 
+        void                drawAxis                (gfx::CommandList * _cmdList) const;
 
     protected:
-        void        createBoxPrimitive      ();
-        void        createGrid              ();
-        void        createAxis              ();
-        void        createIcoSpherePrimitive(); 
-        void        createCylinderPrimitive ();
+        void                createBoxPrimitive      ();
+        void                createGrid              ();
+        void                createAxis              ();
+        void                createIcoSpherePrimitive(); 
+        void                createCylinderPrimitive ();
 
-        DrawData &  getDrawData             (const View * _view);
-        void        clearDrawData           ();
+        DrawData &          getDrawData             (const View * _view);
+        void                clearDrawData           ();
 
-        WorldData * getWorldData            (const core::IWorld * _world);
-        void        clearWorldData          ();
+        const WorldData *   getWorldData            (const core::IWorld * _world) const;
+        WorldData *         getWorldData            (const core::IWorld * _world);
 
-        void        addLine                 (const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix);
+        void                addLine                 (const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix);
          
         struct DebugDrawInstanceData
         {

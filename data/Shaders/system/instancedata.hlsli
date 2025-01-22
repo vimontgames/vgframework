@@ -5,7 +5,7 @@
 #include "system/materialdata.hlsli"
 #include "system/vertex.hlsli"
 
-#define GPU_INSTANCE_DATA_ALIGNMENT 8
+#define GPU_INSTANCE_DATA_ALIGNMENT 16
 
 //--------------------------------------------------------------------------------------
 // 1xGPUInstanceData, N*GPUBatchData : In instance stream, 1 'GPUInstanceData' is followed by N 'GPUBatchData' for every batch (<=>material)
@@ -50,7 +50,6 @@ struct GPUInstanceData
     VertexFormat getVertexFormat        ()                                                  { return (VertexFormat)unpackG8(m_header[0]); }
 
     void setInstanceColor               (float4 _color)                                     { m_header[1] = packRGBA8(_color); }
-    void setInstanceColor               (float _r, float _g, float _b, float _a)            { m_header[1] = packRGBA8(_r, _g, _b, _a); }
     float4 getInstanceColor             ()                                                  { return unpackRGBA8(m_header[1]); }
 
     void setIndexBuffer                 (uint _ib, uint _indexSize = 2, uint _offset = 0)   { m_header[2] = packUint16low(m_header[2], _indexSize == 4 ? (_ib | 0x8000) : _ib); }

@@ -43,18 +43,23 @@ namespace vg::renderer
         
         if (mapSize > 0)
         {
+            // Alloc temp write buffer for GPUMaterialData
+            const uint bufferMaxSize = sizeof(GPUMaterialData);
+            GPUMaterialData * buffer = (GPUMaterialData *)alignUp((uint_ptr)alloca(bufferMaxSize + GPU_INSTANCE_DATA_ALIGNMENT - 1), (uint_ptr)GPU_INSTANCE_DATA_ALIGNMENT);
+            VG_ASSERT_IS_ALIGNED(buffer, sizeof(uint4));
+
             uint offset = 0;
-            const u8 * data = (const u8 *)_cmdList->map(m_materialDataBuffer, mapSize).data;
+            const u8 * VG_RESTRICT data = (const u8 * VG_RESTRICT)_cmdList->map(m_materialDataBuffer, mapSize).data;
             {
+                VG_ASSERT_IS_ALIGNED(data, sizeof(uint4));
                 for (uint i = 0; i < m_materials.size(); ++i)
                 {
-                    GPUMaterialData * dst = (GPUMaterialData *)(data + offset);
-
                     const auto * material = m_materials[i];
                     if (nullptr == material)
                         material = defaultMaterial;
                         
-                    material->FillGPUMaterialData(dst);
+                    material->FillGPUMaterialData(buffer);
+                    memcpy((GPUMaterialData *)(data + offset), buffer, sizeof(GPUMaterialData));
                     offset += sizeof(GPUMaterialData);
                 }
             }

@@ -13,11 +13,12 @@ namespace vg::renderer
         EditorPass();
         ~EditorPass();
 
-        void    Setup       (const gfx::RenderPassContext & _renderPassContext) final override;
-        void	BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
-        void    Render      (const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const final override;
-        void	AfterRender (const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
-        void	AfterAll    (const gfx::RenderPassContext & _renderPassContext) final override;
+        core::u64   GetCostEstimate (const gfx::RenderPassContext & _renderPassContext) const final override;
+        void        Setup           (const gfx::RenderPassContext & _renderPassContext) final override;
+        void	    BeforeRender    (const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
+        void        Render          (const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) const final override;
+        void	    AfterRender     (const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
+        void	    AfterAll        (const gfx::RenderPassContext & _renderPassContext) final override;
 
     private:
         //static gfx::Buffer * s_editorPassConstantsBuffer;

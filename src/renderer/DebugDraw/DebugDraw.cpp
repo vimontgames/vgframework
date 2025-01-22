@@ -62,7 +62,6 @@ namespace vg::renderer
         Device::get()->removeRootSignature(m_debugDrawSignatureHandle);
 
         clearDrawData();
-        clearWorldData();   
 
         VG_SAFE_RELEASE(m_box);
         VG_SAFE_RELEASE(m_gridVB);
@@ -73,9 +72,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::clearWorldData()
+    const DebugDraw::WorldData * DebugDraw::getWorldData(const core::IWorld * _world) const
     {
-   
+        return (DebugDraw::WorldData *)_world->GetDebugDrawData();
     }
 
     //--------------------------------------------------------------------------------------
@@ -766,10 +765,21 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    u64 DebugDraw::getDebugDrawCount(const View * _view) const
+    {
+        auto world = ((IView *)_view)->GetWorld();
+        if (world)
+        {
+            const auto * worldData = getWorldData(world);
+            return (worldData->m_cylinders.size() + worldData->m_hemiSpheres.size() + worldData->m_icoSpheres.size() + worldData->m_lines.size()) << 1;
+        }
+        return 0;
+    }
+
+    //--------------------------------------------------------------------------------------
     void DebugDraw::reset()
     {
         clearDrawData();
-        clearWorldData();
     }
 
     const float4 opaqueColor = float4(1.0f, 1.0f, 1.0f, 0.75f);

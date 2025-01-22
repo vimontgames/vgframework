@@ -78,6 +78,7 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
         case DisplayMode::Environment_SpecularReflectionCubemap: 
             break;
 
+        case DisplayMode::Instance_Color:
         case DisplayMode::Forward_SurfaceType:
         case DisplayMode::Geometry_MaterialID:
 	    case DisplayMode::Geometry_VertexNormal:

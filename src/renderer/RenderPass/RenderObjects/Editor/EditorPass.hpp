@@ -42,6 +42,26 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    core::u64 EditorPass::GetCostEstimate(const gfx::RenderPassContext & _renderPassContext) const 
+    {
+        const auto options = RendererOptions::get();
+        const View * view = static_cast<const View *>(_renderPassContext.getView());
+        const auto & cullingResult = view->getCullingJobResult();
+        u64 cost = 2;
+
+        if (options->isWireframeEnabled())
+            cost += getListCostEstimate(cullingResult, GraphicInstanceListType::Opaque);
+
+        if (options->isAABBEnabled())
+            cost += getListCostEstimate(cullingResult, GraphicInstanceListType::Opaque);
+
+        DebugDraw * dbgDraw = DebugDraw::get();
+        cost += dbgDraw->getDebugDrawCount(view);
+
+        return cost;
+    }
+
+    //--------------------------------------------------------------------------------------
     void EditorPass::Setup(const gfx::RenderPassContext & _renderPassContext)
     {
         writeRenderTarget(0, _renderPassContext.getFrameGraphID("Color"));

@@ -2,6 +2,7 @@
 #include "MeshInstance.h"
 
 #include "core/Object/AutoRegisterClass.h"
+#include "core/Math/Math.h"
 
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/Resource/Buffer.h"
@@ -256,10 +257,15 @@ namespace vg::renderer
         return true;
     }
 
-    #define FILL_GPU_INSTANCE_DATA_WRITE_COMBINE_OPTIMIZATION 1
+    //--------------------------------------------------------------------------------------
+    uint MeshInstance::GetGPUInstanceDataSize() const
+    {
+        const uint batchCount = GetBatchCount();
+        return alignUp((uint)(sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData)), (uint)GPU_INSTANCE_DATA_ALIGNMENT);
+    }
 
     //--------------------------------------------------------------------------------------
-    void MeshInstance::FillGPUInstanceData(const core::u8 * VG_RESTRICT _data, core::uint & _offset) const
+    uint MeshInstance::FillGPUInstanceData(const core::u8 * VG_RESTRICT _data) const
     {
         const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
         const MeshGeometry * geo = nullptr;
@@ -299,19 +305,9 @@ namespace vg::renderer
             }
         }
 
-        const size_t size = sizeof(GPUInstanceData) + sizeof(GPUBatchData) * batchCount;
+        const size_t instanceDataSize = GetGPUInstanceDataSize();
 
-        #if FILL_GPU_INSTANCE_DATA_WRITE_COMBINE_OPTIMIZATION
-        // Write to scratch buffer then memcpy
-        const core::u8 * VG_RESTRICT data = (u8 * VG_RESTRICT)alloca(size);  
-        const uint offset = 0;
-        #else
-        // write directly to destination buffer
-        const core::u8 * VG_RESTRICT data = _data;  
-        const uint offset = _offset;
-        #endif
-
-        GPUInstanceData * VG_RESTRICT instanceData = (GPUInstanceData * VG_RESTRICT)(data + offset);
+        GPUInstanceData * VG_RESTRICT instanceData = (GPUInstanceData * VG_RESTRICT)_data;
 
         instanceData->setMaterialCount(materialCount);
         instanceData->setVertexFormat(vertexFormat);
@@ -327,7 +323,7 @@ namespace vg::renderer
 
         for (uint b = 0; b < batchCount; ++b)
         {
-            GPUBatchData * VG_RESTRICT batchData = (GPUBatchData * VG_RESTRICT)(data + offset + sizeof(GPUInstanceData) + b * sizeof(GPUBatchData));
+            GPUBatchData * VG_RESTRICT batchData = (GPUBatchData * VG_RESTRICT)(_data + sizeof(GPUInstanceData) + b * sizeof(GPUBatchData));
 
             const MaterialModel * mat = (b < materialCount) ? materials[b] : nullptr;
             GPUMaterialDataIndex matIndex = (nullptr != mat) ? mat->getGPUMaterialDataIndex() : defaultMaterialIndex;
@@ -337,11 +333,7 @@ namespace vg::renderer
             batchData->setStartIndex(batchOffset);
         }
 
-        #if FILL_GPU_INSTANCE_DATA_WRITE_COMBINE_OPTIMIZATION
-        memcpy((u8*)_data + _offset, data, size);
-        #endif
-
-        _offset += (uint)size;
+        return (uint)instanceDataSize;
     }
 
     //--------------------------------------------------------------------------------------
