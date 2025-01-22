@@ -12,15 +12,21 @@ namespace vg::editor
     bool ImGuiObjectHandleMenu::SelectUID(core::UID * _uid, IGameObject * _gameobject, bool _open)
     {
         bool changed = false;
-        bool openPopup = _open;
+        bool openSelectionPopup = _open;
+        bool select = false;
 
-        if (!openPopup)
+        if (!openSelectionPopup)
         {
             if (ImGui::BeginPopupContextItem("ImGuiObjectRefMenu", ImGuiPopupFlags_MouseButtonLeft))
             {
                 if (ImGui::MenuItem("Select"))
                 {
-                    openPopup = true;
+                    openSelectionPopup = true;
+                }
+
+                if (ImGui::MenuItem("Show"))
+                {
+                    select = true;
                 }
 
                 if (ImGui::MenuItem("Clear"))
@@ -36,12 +42,24 @@ namespace vg::editor
         static UID editTemp = 0x0;
         const char * selectObjectTitle = "Select GameObject";
 
-        if (openPopup)
+        if (openSelectionPopup)
         {
             ImGui::OpenPopup(selectObjectTitle);
             ImGui::SetNextWindowPos(ImGui::GetMainViewport()->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-            openPopup = false;
+            openSelectionPopup = false;
             editTemp = *_uid;
+        }
+
+        if (select)
+        {
+            auto * factory = Kernel::getFactory();
+            IGameObject * selectedGameObject = dynamic_cast<IGameObject*>(factory->FindByUID(*_uid));
+
+            if (selectedGameObject)
+            {
+                ISelection * selection = Kernel::getSelection();
+                selection->SetSelectedObject(selectedGameObject);
+            }
         }
 
         if (ImGui::BeginPopupModal(selectObjectTitle, nullptr, ImGuiWindowFlags_AlwaysAutoResize))
@@ -50,7 +68,6 @@ namespace vg::editor
                 ImGui::SetKeyboardFocusHere(0);
 
             bool edited = false;
-
 
             m_filter.Draw("Filter");
            
