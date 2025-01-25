@@ -35,10 +35,10 @@ namespace vg::core
 
         bool                                        SaveProperties                  (core::IObject * _object, BufferType _bufferType) final override;
         bool                                        RestoreProperties               (core::IObject * _object, BufferType _bufferType) final override;
-        bool                                        CopyProperties                  (const core::IObject * _srcObj, core::IObject * _dstObj) final override;
+        bool                                        CopyProperties                  (const core::IObject * _srcObj, core::IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) final override;
         bool                                        CanCopyProperty                 (const core::IProperty * _srcProp, const core::IProperty * _dstProp) const final override;
-        bool                                        CopyProperty                    (const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj) final override;
-        IObject *                                   Instanciate                     (const core::IObject * _object, IObject * _parent) final override;
+        bool                                        CopyProperty                    (const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) final override;
+        IObject *                                   Instanciate                     (const core::IObject * _object, IObject * _parent, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) final override;
 
         bool                                        IsA                             (const char * _class, const char * _other) const final override;
 

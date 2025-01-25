@@ -481,7 +481,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * Factory::Instanciate(const core::IObject * _object, IObject * _parent)
+    IObject * Factory::Instanciate(const core::IObject * _object, IObject * _parent, CopyPropertyFlags _copyPropertyFlags)
     {
         VG_PROFILE_CPU("Instanciate");
 
@@ -492,7 +492,7 @@ namespace vg::core
         if (nullptr == newObj)
             return nullptr;
 
-        CopyProperties(_object, newObj);
+        CopyProperties(_object, newObj, _copyPropertyFlags);
 
         return newObj;
     }
@@ -661,7 +661,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::CopyProperties(const core::IObject * _srcObj, core::IObject * _dstObj)
+    bool Factory::CopyProperties(const core::IObject * _srcObj, core::IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags)
     {
         if (_srcObj == nullptr || _dstObj == nullptr)
             return false;
@@ -683,10 +683,16 @@ namespace vg::core
             const IProperty * prop = classDesc->GetPropertyByIndex(i);
             const PropertyFlags propFlags = prop->GetFlags();
 
+            if (asBool(CopyPropertyFlags::NoChildren & _copyPropertyFlags))
+            {
+                if (!strcmp(prop->GetName(), "m_children"))
+                    continue;
+            }
+
             if (asBool(PropertyFlags::Transient & propFlags))
                 continue;
 
-            CopyProperty(prop, _srcObj, prop, _dstObj);            
+            CopyProperty(prop, _srcObj, prop, _dstObj, _copyPropertyFlags);
         }
 
         return true;
@@ -711,7 +717,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::CopyProperty(const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj)
+    bool Factory::CopyProperty(const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags)
     {
         const PropertyType srcPropType = _srcProp->GetType();
         const PropertyType dstPropType = _dstProp->GetType();

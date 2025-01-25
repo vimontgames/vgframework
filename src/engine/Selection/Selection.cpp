@@ -331,6 +331,12 @@ namespace vg::engine
             if (nullptr != parentGameObject)
             {
                 IGameObject * newGO = (IGameObject *)go->Instanciate();
+                if (nullptr == newGO)
+                {
+                    VG_ERROR("[Selection] Cannot Instanciate object \"%s\"", go->GetName().c_str());
+                    continue;
+                }
+
                 auto index = parentGameObject->GetChildIndex(go);
 
                 // Get unique name and sort

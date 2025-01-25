@@ -482,6 +482,15 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    // In case of Prefab copy we simply create a new PrefabGameObject and copy Prefab path
+    //--------------------------------------------------------------------------------------
+    IObject * PrefabGameObject::Instanciate() const
+    {
+        auto * factory = Kernel::getFactory();
+        return factory->Instanciate(this, nullptr, CopyPropertyFlags::NoChildren);
+    }
+
+    //--------------------------------------------------------------------------------------
     void PrefabGameObject::OnResourceLoaded(IResource * _resource)
     {
         if (_resource == &m_prefabResource)
@@ -507,7 +516,7 @@ namespace vg::engine
                     // then it must be "patched" so that it becomes an UID in the instanced Prefab too.
                     patchPrefabGameObjectUIDs(instance, instance);
 
-                    // Unless it's explicitely overriden in the Prefab instance of course.
+                    // Unless it's explicitly overridden in the Prefab instance of course.
                     OverrideGameObjectProperties((GameObject*)instance, nullptr);
 
                     AddChild(instance);
