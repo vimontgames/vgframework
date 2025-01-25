@@ -3,6 +3,7 @@
 #include "engine/World/Prefab/PrefabScene.h"
 #include "core/Object/DynamicProperties/DynamicProperties.h"
 #include "engine/Component/Editor/Snap/SnapComponent.h"
+#include "engine/Engine.h"
 
 using namespace vg::core;
 
@@ -482,12 +483,20 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    // In case of Prefab copy we simply create a new PrefabGameObject and copy Prefab path
+    // In case of Prefab during editition, we copy we simply create a new PrefabGameObject and copy Prefab path.
+    // At runtime, a full copy is made so that the object can be used immediately
     //--------------------------------------------------------------------------------------
     IObject * PrefabGameObject::Instanciate() const
     {
-        auto * factory = Kernel::getFactory();
-        return factory->Instanciate(this, nullptr, CopyPropertyFlags::NoChildren);
+        if (Engine::get()->IsPlaying())
+        {
+            return super::Instanciate();
+        }
+        else
+        {
+            auto * factory = Kernel::getFactory();
+            return factory->Instanciate(this, nullptr, CopyPropertyFlags::NoChildren);
+        }
     }
 
     //--------------------------------------------------------------------------------------

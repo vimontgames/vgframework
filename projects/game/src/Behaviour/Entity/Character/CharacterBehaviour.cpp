@@ -161,6 +161,15 @@ void CharacterBehaviour::OnStop()
 {
     Game::get()->removeCharacter(m_characterType, this);
     super::OnStop();
+
+    m_isActive = false;
+    m_score = 0;
+    m_moveState = MoveState::Idle;
+    m_fightState = FightState::None;
+    m_soundState = SoundState::None;
+    m_speedCurrent = 0;
+    m_velocityNorm = 0;
+    m_currentRotation = 0;
 }
 
 //--------------------------------------------------------------------------------------
@@ -243,7 +252,7 @@ bool CharacterBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
             hitDir = normalize(go->GetGlobalMatrix()[3].xyz - attackerGO->GetGlobalMatrix()[3].xyz);
 
             if (_weapon)
-                VG_INFO("[Character] \"%s\" was hit by \"%s\" with \"%s\"", go->GetName().c_str(), attackerGO->GetName().c_str(), _weapon->GetGameObject()->GetName().c_str());
+                VG_INFO("[Character] \"%s\" was hit by \"%s\" with weapon \"%s\"", go->GetName().c_str(), attackerGO->GetName().c_str(), _weapon->GetGameObject()->GetName().c_str());
             else
                 VG_INFO("[Character] \"%s\" was hit by \"%s\"", go->GetName().c_str(), attackerGO->GetName().c_str());
         }
@@ -255,7 +264,7 @@ bool CharacterBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
             VG_INFO("[Character] \"%s\" was hit by \"%s\"", go->GetName().c_str(), weaponGO->GetName().c_str());
         }
 
-        float damage = _weapon ? _weapon->getDamage() : 0.0f;
+        float damage = _weapon ? _weapon->getDamage() : 1.0f;
         m_hp = max(0.0f, m_hp - damage);
 
         if (damage > 0.0f)

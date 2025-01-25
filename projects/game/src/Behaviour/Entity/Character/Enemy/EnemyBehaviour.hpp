@@ -49,7 +49,8 @@ void EnemyBehaviour::OnPlay()
 void EnemyBehaviour::OnStop()
 {
     super::OnStop();
-    m_moveState = MoveState::Idle;
+    m_targetPosNew = 0;
+    m_targetPosSmooth = 0;
 }
 
 //--------------------------------------------------------------------------------------
@@ -58,6 +59,11 @@ void EnemyBehaviour::OnTriggerEnter(IGameObject * _other)
     if (asBool(_other->GetTags() & m_playerTag))
     {
         VG_WARNING("[Enemy] Player \"%s\" is being punched by enemy \"%s\"", _other->GetName().c_str(), GetGameObject()->GetName().c_str());
+        
+        if (PlayerBehaviour * playerBehaviour = _other->GetComponentInChildrenT<PlayerBehaviour>())
+        {
+            playerBehaviour->TakeHit(this, this->GetGameObject()->GetComponentInChildrenT<WeaponBehaviour>());
+        }
     }
 }
 
@@ -125,13 +131,24 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                 closestPlayerInfo = activePlayersInfos[0];
                 vg::renderer::IDebugDraw * dbgDraw = Game::Engine().GetRenderer()->GetDebugDraw();
 
-                const bool isClose = closestPlayerInfo.distance < m_detectionRadius;
+                const bool isClose = closestPlayerInfo.distance <= m_detectionRadius;
+                const bool isVeryClose = closestPlayerInfo.distance <= m_attackRadius && m_moveState != MoveState::Hurt && m_moveState != MoveState::Die;
 
                 //dbgDraw->AddLine(world, pos, closestPlayerInfo.position, m_isActive ? 0xFF0000FF : 0xFF00FF00);
 
                 float3 dir = (float3)0.0f;
 
-                if (isClose)
+                if (isVeryClose)
+                {
+                    if (m_fightState != FightState::Hit)
+                    {
+                        m_fightState = FightState::Hit;
+                        playFightAnim(FightState::Hit, false);
+                        playSound(SoundState::Hit);
+                    }
+                }
+
+                if (isClose || isVeryClose)
                 {
                     m_isActive = true;
 
@@ -147,7 +164,8 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                     dbgDraw->AddLine(_context.m_world, pos, m_targetPosSmooth, 0x5FFFFFFF);
                     //dbgDraw->AddLine(_context.m_world, pos, m_targetPosNew, 0xFF0000FF);
                 }
-                else
+
+                if (!isClose)
                 {
                     m_moveState = MoveState::Idle;
                     m_targetAcquired = false;
@@ -155,12 +173,15 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
 
                 m_speedCurrent = m_walkSpeed; // TODO : smooth
 
-                if (MoveState::Hurt != m_moveState)
+                if (MoveState::Hurt != m_moveState && FightState::Hit != m_fightState)
                 {
                     if (m_targetAcquired)
                     {
                         dir = normalize(m_targetPosSmooth - pos);
-                        translation.xy = dir.xy * m_speedCurrent;
+
+                        if (m_fightState != FightState::Hit)
+                            translation.xy = dir.xy * m_speedCurrent;
+
                         m_targetRotation = radiansToDegrees(atan2((float)dir.x, (float)-dir.y));
                     }
 
@@ -194,21 +215,7 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
 
                     //dbgDraw->AddLine(_context.m_world, pos, pos + normalize(updatedVelocity), 0xFF00FF00);
                 }
-            }
-
-            IAnimationComponent * animationComponent = _context.m_gameObject->GetComponentT<IAnimationComponent>();
-
-            if (animationComponent)
-            {
-                if (MoveState::Hurt == m_moveState)
-                {
-                    if (IAnimationResource * anim = animationComponent->GetAnimation(m_moveAnim[asInteger(MoveState::Hurt)]))
-                    {
-                        if (anim->GetTime() > 1.2f)
-                            m_moveState = MoveState::Idle;
-                    }
-                }
-            }
+            }            
         }
 
         switch (m_moveState)
@@ -227,11 +234,42 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
 
             case MoveState::Hurt:
                 playMoveAnim(MoveState::Hurt, false);
+
+                if (auto * animationComponent = _context.m_gameObject->GetComponentT<IAnimationComponent>())
+                {
+                    if (IAnimationResource * anim = animationComponent->GetAnimation(m_moveAnim[asInteger(MoveState::Hurt)]))
+                    {
+                        if (!anim->IsPlaying() || anim->IsFinished())
+                            m_moveState = MoveState::Idle;
+                    }
+                }
                 break;
 
             case MoveState::Die:
                 playMoveAnim(MoveState::Die, false);
                 break;
+        }
+
+        switch (m_fightState)
+        {
+            case FightState::None:
+                break;
+
+            case FightState::Hit:
+            {
+                if (auto * animationComponent = _context.m_gameObject->GetComponentT<IAnimationComponent>())
+                {
+                    if (IAnimationResource * anim = animationComponent->GetAnimation(m_fightAnim[asInteger(m_fightState)]))
+                    {
+                        if (!anim->IsPlaying() || anim->IsFinished())
+                        {
+                            stopFightAnim(m_fightState);
+                            m_fightState = FightState::None;
+                        }
+                    }
+                }
+            }
+            break;
         }
     }
 }

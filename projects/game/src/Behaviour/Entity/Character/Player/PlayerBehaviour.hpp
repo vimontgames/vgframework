@@ -72,7 +72,6 @@ void PlayerBehaviour::OnPlay()
 //--------------------------------------------------------------------------------------
 void PlayerBehaviour::OnStop()
 {
-    m_isActive = false;
     m_rightHandItem = nullptr;
     super::OnStop();
 }
@@ -92,6 +91,14 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_moveState);
                 break;
 
+            case MoveState::Die:
+                playMoveAnim(MoveState::Die, false);
+            break;
+
+            case MoveState::Hurt:
+                playMoveAnim(MoveState::Hurt, false);
+            break;
+
             case MoveState::Idle:
                 playMoveAnim(MoveState::Idle, true);
             break;
@@ -107,6 +114,18 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
             case MoveState::Jump:
                 playMoveAnim(MoveState::Jump, true);
                 break;
+        }
+
+        if (auto * animationComponent = _context.m_gameObject->GetComponentT<IAnimationComponent>())
+        {
+            if (MoveState::Hurt == m_moveState)
+            {
+                if (IAnimationResource * anim = animationComponent->GetAnimation(m_moveAnim[asInteger(MoveState::Hurt)]))
+                {
+                    if (!anim->IsPlaying() || anim->IsFinished())
+                        m_moveState = MoveState::Idle;
+                }
+            }
         }
 
         switch (m_fightState)
@@ -141,7 +160,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
             const float2 leftJoyDir = input.GetJoyLeftStickDir(joyID);
 
-            if (any(abs(leftJoyDir).xy > joyDeadZone))
+            if (any(abs(leftJoyDir).xy > joyDeadZone) && (m_moveState != MoveState::Hurt && m_moveState != MoveState::Die))
             {
                 translation.xy += leftJoyDir.xy * float2(1, -1) * m_speedCurrent;
                 m_currentRotation = radiansToDegrees(atan2((float)leftJoyDir.x, (float)leftJoyDir.y));
@@ -250,6 +269,8 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                                 case WeaponType::Melee:
                                     m_fightState = FightState::Hit;
                                     playFightAnim(FightState::Hit, false);
+                                    if (auto * soundComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
+                                        soundComponent->Play(0);
                                     break;
 
                                 case WeaponType::Pistol:
@@ -258,10 +279,6 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                                     m_nextShootTime = time + 0.3f; // first shoot cooldown
                                     break;
                             };                            
-
-                            // Play sound
-                            if (auto * soundComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
-                                soundComponent->Play(0);
                         }
                     }
                 }
@@ -314,6 +331,9 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
                                 if (auto * item = newProjectileGO->GetComponentInChildrenT<ItemBehaviour>())
                                     item->SetOwner(playerGO); // Make current player the owner of the projectile (e.g. for scoring)
+
+                                if (auto * soundComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
+                                    soundComponent->Play(0);
 
                                 VG_SAFE_RELEASE(newProjectileGO);
                             }
