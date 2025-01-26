@@ -16,7 +16,7 @@ public:
     void                Update(const Context & _context) override;
 
 private:
-    float               m_attackRadius = 2.0f;
+    float               m_attackRadius = 1.0f;
     float               m_detectionRadius = 10.0f;
     vg::core::float3    m_targetPosNew = vg::core::float3(0, 0, 0);
     vg::core::float3    m_targetPosSmooth = vg::core::float3(0, 0, 0);

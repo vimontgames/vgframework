@@ -81,6 +81,8 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 {
     if (_context.m_playing && !_context.m_paused)
     {
+        const float time = Game::get()->Engine().GetTime().m_enlapsedTimeSinceStartScaled;
+
         IInput & input = Game::Input();
         IGameObject * playerGO = GetGameObject();
         IAnimationComponent * animationComponent = playerGO->GetComponentT<IAnimationComponent>();
@@ -93,6 +95,16 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
             case MoveState::Die:
                 playMoveAnim(MoveState::Die, false);
+                if (m_respawnTime <= 0.0f)
+                {
+                    m_respawnTime = time + 5.0f;
+                }
+                else if (time >= m_respawnTime)
+                {
+                    m_respawnTime = 0.0f;
+                    OnDeath(_context);
+                }
+
             break;
 
             case MoveState::Hurt:

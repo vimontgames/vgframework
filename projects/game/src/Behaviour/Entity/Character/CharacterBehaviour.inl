@@ -15,3 +15,9 @@ VG_INLINE FightState CharacterBehaviour::getFightState() const
 {
     return m_fightState;
 }
+
+//--------------------------------------------------------------------------------------
+VG_INLINE float CharacterBehaviour::getHealth() const
+{
+    return m_hp;
+}

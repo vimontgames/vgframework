@@ -27,6 +27,7 @@ private:
     ItemBehaviour *                     m_rightHandItem     = nullptr;
     vg::core::u8                        m_viewIndex         = -1;
     float                               m_nextShootTime     = 0.0f;
+    float                               m_respawnTime       = 0.0f;
 };
 
 #if VG_ENABLE_INLINE

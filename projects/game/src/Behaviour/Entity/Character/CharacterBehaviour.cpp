@@ -215,16 +215,22 @@ void CharacterBehaviour::Update(const Context & _context)
 {
     auto world = _context.m_gameObject->getGlobalMatrix();
     if (world[3].z < -32.0f)
+        OnDeath(_context);
+}
+
+//--------------------------------------------------------------------------------------
+void CharacterBehaviour::OnDeath(const Context & _context)
+{
+    if (m_life > 0)
     {
+        m_life--;
+
         if (m_life > 0)
         {
-            m_life--;
+            if (auto * charaController = _context.m_gameObject->GetComponentT<vg::engine::ICharacterControllerComponent>())
+                charaController->SetPosition(m_startPos + float3(0, 0, 16));
 
-            if (m_life > 0)
-            {
-                if (auto * charaController = _context.m_gameObject->GetComponentT<vg::engine::ICharacterControllerComponent>())
-                    charaController->SetPosition(m_startPos + float3(0, 0, 16));
-            }
+            m_hp = 100;
         }
     }
 }

@@ -1435,7 +1435,7 @@ namespace vg::editor
                                 if (asBool(PropertyFlags::HasRange & flags))
                                     changed |= ImGui::SliderInt(enumLabel.c_str(), &temp, max((int)0, (int)_prop->GetRange(_object).x), min((int)255, (int)_prop->GetRange(_object).y), "%d", imguiInputTextflags);
                                 else
-                                    changed |= ImGui::InputInt(enumLabel.c_str(), &temp, 1, 16, imguiInputTextflags);
+                                    changed |= ImGui::InputInt(enumLabel.c_str(), &temp, 1, 16, imguiInputTextflags & ~ImGuiInputTextFlags_EnterReturnsTrue);
                                 if (changed)
                                     *pU8 = (u8)temp;
                             }

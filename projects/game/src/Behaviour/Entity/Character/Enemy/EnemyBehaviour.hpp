@@ -27,6 +27,9 @@ bool EnemyBehaviour::registerProperties(IClassDesc & _desc)
     registerProperty(EnemyBehaviour, m_detectionRadius, "Detection radius");
     setPropertyDescription(EnemyBehaviour, m_detectionRadius, "If a player is detected in this radius, it will be detected");
 
+    registerProperty(EnemyBehaviour, m_attackRadius, "Punch radius");
+    setPropertyDescription(EnemyBehaviour, m_attackRadius, "If a player is detected in this radius, it will be punched");
+    
     registerPropertyGroupBegin(EnemyBehaviour, "Enemy debug");
     {
         registerPropertyEx(EnemyBehaviour, m_targetPosNew, "Target position", PropertyFlags::Transient);
@@ -106,7 +109,7 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
             vector<ActivePlayerInfo> activePlayersInfos;
             for (auto * player : players)
             {
-                if (player->isActive())
+                if (player->isActive() && player->getHealth() > 0)
                 {
                     auto & info = activePlayersInfos.emplace_back();
                     info.behaviour = player;
@@ -134,8 +137,6 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                 const bool isClose = closestPlayerInfo.distance <= m_detectionRadius;
                 const bool isVeryClose = closestPlayerInfo.distance <= m_attackRadius && m_moveState != MoveState::Hurt && m_moveState != MoveState::Die;
 
-                //dbgDraw->AddLine(world, pos, closestPlayerInfo.position, m_isActive ? 0xFF0000FF : 0xFF00FF00);
-
                 float3 dir = (float3)0.0f;
 
                 if (isVeryClose)
@@ -162,7 +163,7 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                     m_targetPosSmooth = smoothdamp(m_targetPosSmooth, m_targetPosNew, m_targetPosSmoothdamp, 0.1f, _context.m_dt);
 
                     dbgDraw->AddLine(_context.m_world, pos, m_targetPosSmooth, 0x5FFFFFFF);
-                    //dbgDraw->AddLine(_context.m_world, pos, m_targetPosNew, 0xFF0000FF);
+                    dbgDraw->AddLine(_context.m_world, pos, m_targetPosNew, 0xFF0000FF);
                 }
 
                 if (!isClose)
@@ -215,7 +216,12 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
 
                     //dbgDraw->AddLine(_context.m_world, pos, pos + normalize(updatedVelocity), 0xFF00FF00);
                 }
-            }            
+            }   
+            else
+            {
+                m_moveState = MoveState::Idle;
+                m_targetAcquired = false;
+            }
         }
 
         switch (m_moveState)

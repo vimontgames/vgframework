@@ -23,11 +23,14 @@ public:
     void                    Update(const Context & _context) override;
 
     void                    addScore(vg::core::i32 _points);
-    bool                    TakeHit(CharacterBehaviour * _attacker, ItemBehaviour * _weapon = nullptr);
+    bool                    TakeHit(CharacterBehaviour * _attacker, ItemBehaviour * _weapon = nullptr) override;
+
+    void                    OnDeath(const Context & _context);
 
     VG_INLINE bool          isActive() const;
     VG_INLINE MoveState     getMoveState() const;
     VG_INLINE FightState    getFightState() const;
+    VG_INLINE float         getHealth() const;
 
 protected:
     void                    initAnimations();
