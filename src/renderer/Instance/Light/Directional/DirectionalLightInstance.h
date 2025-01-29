@@ -23,7 +23,7 @@ namespace vg::renderer
         ~DirectionalLightInstance();
 
         bool            TryGetAABB(AABB & _aabb) const final override;
-        bool            Cull(CullingResult * _cullingResult, View * _view) final override;
+        bool            Cull(CullingResult * _cullingResult, View * _view) const final override;
         void            Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
         LightType       GetLightType() const final override { return LightType::Directional; }

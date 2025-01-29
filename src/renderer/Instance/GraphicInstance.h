@@ -55,18 +55,18 @@ namespace vg::renderer
         void                                            SetPickingID                (PickingID _id) override;
         PickingID                                       GetPickingID                () const override;
 
-        VG_INLINE bool                                  setAtomicFlags              (AtomicFlags _flag);
+        VG_INLINE bool                                  setAtomicFlags              (AtomicFlags _flag) const;
         VG_INLINE bool                                  removeAtomicFlags           (AtomicFlags _flag);
         VG_INLINE void                                  setGPUInstanceDataOffset    (core::uint _offset);
         VG_INLINE core::uint                            getGPUInstanceDataOffset    () const;
         VG_INLINE const core::BitMask &                 getBatchMask                () const;
 
-        virtual bool                                    Cull                        (CullingResult * _cullingResult, View * _view) = 0;
+        virtual bool                                    Cull                        (CullingResult * _cullingResult, View * _view) const = 0;
         virtual void                                    OnMaterialChanged           (core::uint _index) {}
         virtual bool                                    OnUpdateRayTracing          (gfx::CommandList * _cmdList, View * _view, core::uint _index) = 0;
 
         virtual core::uint                              GetGPUInstanceDataSize      () const { return 0; }
-        virtual core::uint                               FillGPUInstanceData         (const core::u8 * VG_RESTRICT _data) const { return 0; }
+        virtual core::uint                              FillGPUInstanceData         (const core::u8 * VG_RESTRICT _data) const { return 0; }
 
         virtual bool                                    GetIndexBuffer              (gfx::BindlessBufferHandle & _vb, core::uint & _offset, core::uint & _indexSize) const { return false; }
         virtual bool                                    GetVertexBuffer             (gfx::BindlessBufferHandle & _vb, core::uint & _offset) const { return false; }
@@ -75,7 +75,7 @@ namespace vg::renderer
         virtual core::uint                              GetBatchOffset              (core::uint _index) const { return 0; }
 
     private:
-        core::atomic<core::u32>                         m_atomicFlags;
+        mutable core::atomic<core::u32>                 m_atomicFlags;
         core::uint                                      m_gpuInstanceDataHandle = -1;
         PickingID                                       m_pickingID;
         core::vector<MaterialModel *>                   m_materials;

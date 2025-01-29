@@ -12,7 +12,7 @@
             <Value name="Tag_2" value="Weapon"/>
             <Value name="Tag_3" value="Chest"/>
         </Property>
-        <Property type="Bool" name="m_showRigidBodies" value="true"/>
+        <Property type="Bool" name="m_showRigidBodies" value="false"/>
         <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" value="Sphere|Box|Capsule|Cylinder|Mesh"/>
         <Property type="Bool" name="m_mergeStaticBodies" value="true"/>
         <Property type="String" name="m_physicsCategories">

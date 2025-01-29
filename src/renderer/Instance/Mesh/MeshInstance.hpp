@@ -1,8 +1,4 @@
-#include "renderer/Precomp.h"
 #include "MeshInstance.h"
-
-#include "core/Object/AutoRegisterClass.h"
-#include "core/Math/Math.h"
 
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/Resource/Buffer.h"
@@ -80,7 +76,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::Cull(CullingResult * _cullingResult, View * _view)
+    bool MeshInstance::Cull(CullingResult * _cullingResult, View * _view) const
     {
         const MeshModel * meshModel = getMeshModel(Lod::Lod0);
 
@@ -153,14 +149,10 @@ namespace vg::renderer
                 if (hasDecal)
                     _cullingResult->m_output->add(GraphicInstanceListType::Decal, this);
 
-                if (setAtomicFlags(GraphicInstance::AtomicFlags::Instance))
-                    _cullingResult->m_sharedOutput->m_instances.push_back_atomic(this);
+                _cullingResult->m_sharedOutput->addInstance(this);
 
                 if (isSkinned())
-                {
-                    if (setAtomicFlags(GraphicInstance::AtomicFlags::SkinLOD0))
-                        _cullingResult->m_sharedOutput->m_skins.push_back_atomic(this);
-                }
+                    _cullingResult->m_sharedOutput->addSkinMesh(this);
 
                 const ObjectFlags objectFlags = this->getObjectFlags();
 

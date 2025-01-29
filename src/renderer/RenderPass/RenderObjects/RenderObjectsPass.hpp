@@ -1,6 +1,7 @@
 #include "RenderObjectsPass.h"
 #include "renderer/Job/Culling/GraphicInstanceList.h"
 #include "renderer/Instance/GraphicInstance.h"
+#include "renderer/Instance/Light/LightInstance.h"
 
 #include "RenderObjects/DepthOnly/DepthOnlyPass.hpp"
 #include "RenderObjects/DepthOnly/DepthPrepass/DepthPrePass.hpp"
@@ -75,5 +76,25 @@ namespace vg::renderer
                 instance->Draw(renderContext, _cmdList);
             }
         }
-    }    
+    }  
+
+    //--------------------------------------------------------------------------------------
+    void RenderObjectsPass::DrawGraphicInstances(const RenderContext & _renderContext, gfx::CommandList * _cmdList, LightType _list) const
+    {
+        const auto * view = static_cast<const View *>(_renderContext.m_renderPass->getView());
+        const auto & list = view->getCullingJobResult().get(_list).m_instances;
+
+        RenderContext renderContext = _renderContext;
+
+        if (list.size() > 0)
+        {
+            VG_PROFILE_GPU(asCString(_list));
+
+            for (uint i = 0; i < list.size(); ++i)
+            {
+                const GraphicInstance * instance = list[i];
+                instance->Draw(renderContext, _cmdList);
+            }
+        }
+    }
 }

@@ -5,7 +5,12 @@
 #include "GraphicInstance.inl"
 #endif
 
+#include "core/Object/AutoRegisterClass.h"
+#include "core/Math/Math.h"
+#include "gfx/FrameGraph/RenderPassContext.h"
+
 #include "Mesh/MeshInstance.hpp"
+#include "ParticleSystem/ParticleSystemInstance.hpp"
 #include "Light/LightInstance.hpp"
 
 namespace vg::renderer

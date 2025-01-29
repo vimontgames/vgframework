@@ -39,7 +39,8 @@ namespace vg::renderer
         LightInstance(const core::string & _name, core::IObject * _parent, const LightDesc * _lightDesc = nullptr);
         ~LightInstance();
 
-        bool                            Cull                (CullingResult * _cullingResult, View * _view) override;
+        bool                            Cull                (CullingResult * _cullingResult, View * _view) const override;
+        void                            Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const override;
         bool                            OnUpdateRayTracing  (gfx::CommandList * _cmdList, View * _view, core::uint _index) override { return false; }
         LightType                       GetLightType        () const = 0;    
         bool                            IsCastShadow        () const final override;

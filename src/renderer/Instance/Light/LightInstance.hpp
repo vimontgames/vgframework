@@ -128,18 +128,34 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool LightInstance::Cull(CullingResult * _cullingResult, View * _view)
+    bool LightInstance::Cull(CullingResult * _cullingResult, View * _view) const
     {
-        bool visible = true; // TODO
+        _cullingResult->m_output->add(GetLightType(), this);
 
-        if (visible)
+        // TODO: to render light outlines we need a flag to render debug primitives to the outline buffer
+        //const ObjectFlags objectFlags = this->getObjectFlags();
+        //if (asBool(ObjectFlags::Selected & objectFlags))
+        //    _cullingResult->m_output->add(GraphicInstanceListType::Outline, this);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void LightInstance::Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
+    {
+        switch (_renderContext.m_shaderPass)
         {
-            _cullingResult->m_output->add(GraphicInstanceListType::All, this);
-            _cullingResult->m_output->add(GetLightType(), this);
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderContext.m_shaderPass);
+                break;
 
-            return true;
+            case ShaderPass::ZOnly:
+                break;
+
+            case ShaderPass::Forward:
+            case ShaderPass::Deferred:
+                DebugDraw::get()->AddSphere(_renderContext.m_renderPass->getWorld(), 0.5f, 0x7F00FFFF, getGlobalMatrix(), GetPickingID());
+                break;
         }
-
-        return false;
     }
 }

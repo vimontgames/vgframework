@@ -127,6 +127,9 @@ namespace vg::renderer
                 DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::All);
             }
 
+            for (uint i = 0; i < enumCount<LightType>(); ++i)
+                DrawGraphicInstances(renderContext, _cmdList, (LightType)i);
+
             if (options->isAABBEnabled())
             {
                 const GraphicInstanceList & allInstances = view->getCullingJobResult().get(GraphicInstanceListType::All);

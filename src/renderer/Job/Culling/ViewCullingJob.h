@@ -4,6 +4,7 @@
 #include "GraphicInstanceList.h"
 #include "core/Container/AtomicVector.h"
 #include "renderer/ILightInstance.h"
+#include "renderer/Instance/GraphicInstance.h"
 
 namespace vg::core
 {
@@ -32,9 +33,9 @@ namespace vg::renderer
         ~ViewCullingJobOutput() { clear(); }
         void clear();
 
-        void add(GraphicInstanceListType _type, GraphicInstance * _instance)
+        void add(GraphicInstanceListType _type, const GraphicInstance * _instance)
         {
-            m_instancesLists[core::asInteger(_type)].m_instances.push_back(_instance);
+            m_instancesLists[core::asInteger(_type)].m_instances.push_back(const_cast<GraphicInstance*>(_instance));
         }
 
         const GraphicInstanceList & get(GraphicInstanceListType _type) const
@@ -42,9 +43,9 @@ namespace vg::renderer
             return m_instancesLists[core::asInteger(_type)];
         }
 
-        void add(LightType _type, LightInstance * _light)
+        void add(LightType _type, const LightInstance * _light)
         {
-            m_lightsLists[core::asInteger(_type)].m_instances.push_back(_light);
+            m_lightsLists[core::asInteger(_type)].m_instances.push_back(const_cast<LightInstance*>(_light));
         }
 
         const LightInstanceList & get(LightType _type) const
@@ -77,14 +78,27 @@ namespace vg::renderer
             m_instances.clear();
         }
 
-        core::atomicvector<MeshInstance *>      m_skins;        // all mesh instances with skin visible in one view or more
+        void addInstance(const GraphicInstance * _graphicInstance)
+        {
+            if (_graphicInstance->setAtomicFlags(GraphicInstance::AtomicFlags::Instance))
+                m_instances.push_back_atomic((GraphicInstance *)_graphicInstance);
+        }
+
+        void addSkinMesh(const MeshInstance * _skinMeshInstance)
+        {
+            if (((GraphicInstance*)_skinMeshInstance)->setAtomicFlags(GraphicInstance::AtomicFlags::SkinLOD0))
+                m_skins.push_back_atomic((MeshInstance *)_skinMeshInstance);
+        }
+
         core::atomicvector<GraphicInstance *>   m_instances;    // all visible mesh instances, used to fill instance data
+        core::atomicvector<MeshInstance *>      m_skins;        // all mesh instances with skin visible in one view or more
+
     };
 
     struct CullingResult
     {
         ViewCullingJobOutput *      m_output        = nullptr;
-        SharedCullingJobOutput *    m_sharedOutput  = nullptr;
+        SharedCullingJobOutput *    m_sharedOutput  = nullptr;        
     };
 
     class ViewCullingJob : public core::Job

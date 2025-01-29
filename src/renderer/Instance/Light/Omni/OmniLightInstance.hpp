@@ -15,7 +15,8 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
     
-        registerOptionalProperty(OmniLightDesc, m_useMaxRadius, m_maxRadius, "Max. Radius");
+        registerOptionalProperty(OmniLightDesc, m_useMaxRadius, m_maxRadius, "Radius");
+        setPropertyRange(OmniLightDesc, m_useMaxRadius, float2(0.01f, 100.0f));
     
         return true;
     }
@@ -81,15 +82,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool OmniLightInstance::Cull(CullingResult * _cullingResult, View * _view)
+    bool OmniLightInstance::Cull(CullingResult * _cullingResult, View * _view) const
     {
         bool visible = _view->getCameraFrustum().intersects(getMaxRadius(), getGlobalMatrix()) != FrustumTest::Outside;
 
         if (visible)
         {
-            _cullingResult->m_output->add(GraphicInstanceListType::All, this);
-            _cullingResult->m_output->add(LightType::Omni, this);
-
+            super::Cull(_cullingResult, _view);
             return true;
         }
 
@@ -99,6 +98,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void OmniLightInstance::Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
     {
+        super::Draw(_renderContext, _cmdList);
+
         switch (_renderContext.m_shaderPass)
         {
             default:
@@ -110,7 +111,7 @@ namespace vg::renderer
 
             case ShaderPass::Forward:
             case ShaderPass::Deferred:
-                DebugDraw::get()->AddWireframeSphere(nullptr/*_world*/, getMaxRadius(), 0xFF00FFFF, getGlobalMatrix());
+                DebugDraw::get()->AddWireframeSphere(_renderContext.m_renderPass->getWorld(), getMaxRadius(), 0x7F00FFFF, getGlobalMatrix(), GetPickingID());
                 break;     
         }            
     }

@@ -94,8 +94,8 @@ namespace vg::physics
         float4x4 matrix = mul(m_transform, getMatrixWithoutScale(_matrix));
 
         if (m_bottomRadius != m_topRadius)
-            getDebugDraw()->AddTaperedCapsule(_world, m_topRadius, m_bottomRadius, m_height, m_color, matrix);
+            getDebugDraw()->AddWireframeTaperedCapsule(_world, m_topRadius, m_bottomRadius, m_height, m_color, matrix);
         else
-            getDebugDraw()->AddCapsule(_world, m_bottomRadius, m_height, m_color, matrix);
+            getDebugDraw()->AddWireframeCapsule(_world, m_bottomRadius, m_height, m_color, matrix);
     }
 }

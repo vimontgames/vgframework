@@ -91,6 +91,9 @@
     <None Include="Options\RendererOptions.inl">
       <Filter>Options</Filter>
     </None>
+    <None Include="Instance\ParticleSystem\ParticleSystemInstance.inl">
+      <Filter>Instance\ParticleSystem</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -544,6 +547,13 @@
     <ClInclude Include="Importer\CollisionImporterData.h">
       <Filter>Importer</Filter>
     </ClInclude>
+    <ClInclude Include="Instance\ParticleSystem\ParticleSystemInstance.h">
+      <Filter>Instance\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Instance\ParticleSystem\ParticleSystemInstance.hpp">
+      <Filter>Instance\ParticleSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="IParticleSystemInstance.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -746,6 +756,9 @@
     </Filter>
     <Filter Include="Pass\RenderObjects\Misc\Outline">
       <UniqueIdentifier>{49ddc95f-4624-4288-84aa-927c435becbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Instance\ParticleSystem">
+      <UniqueIdentifier>{d86133c5-7392-4b2f-aa46-759fcbda35e4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

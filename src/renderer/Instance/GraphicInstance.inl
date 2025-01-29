@@ -3,7 +3,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
 // Returns true if the flag was just set
 //--------------------------------------------------------------------------------------
-    VG_INLINE bool GraphicInstance::setAtomicFlags(AtomicFlags _flag)
+    VG_INLINE bool GraphicInstance::setAtomicFlags(AtomicFlags _flag) const
     {
         return 0 == (_flag & m_atomicFlags.fetch_or(_flag));
     }

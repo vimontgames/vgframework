@@ -114,6 +114,7 @@
     <None Include="Instance\GraphicInstance.inl" />
     <None Include="Instance\Light\LightInstance.inl" />
     <None Include="Instance\Mesh\MeshInstance.inl" />
+    <None Include="Instance\ParticleSystem\ParticleSystemInstance.inl" />
     <None Include="Options\RendererOptions.inl" />
     <None Include="Renderer.def" />
     <None Include="Renderer.inl" />
@@ -153,6 +154,9 @@
     <ClInclude Include="Instance\Light\LightInstance.hpp" />
     <ClInclude Include="Instance\Light\Omni\OmniLightInstance.h" />
     <ClInclude Include="Instance\Light\Omni\OmniLightInstance.hpp" />
+    <ClInclude Include="Instance\ParticleSystem\ParticleSystemInstance.h" />
+    <ClInclude Include="Instance\ParticleSystem\ParticleSystemInstance.hpp" />
+    <ClInclude Include="IParticleSystemInstance.h" />
     <ClInclude Include="IRendererOptions.h" />
     <ClInclude Include="IGraphicInstance.h" />
     <ClInclude Include="IGraphicModel.h" />

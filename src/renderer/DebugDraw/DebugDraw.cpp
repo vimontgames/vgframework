@@ -80,7 +80,11 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     DebugDraw::WorldData * DebugDraw::getWorldData(const core::IWorld * _world)
     {
-        return (DebugDraw::WorldData *)_world->GetDebugDrawData();
+        VG_ASSERT(nullptr != _world);
+        if (nullptr != _world)
+            return (DebugDraw::WorldData *)_world->GetDebugDrawData();
+        else
+            return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
@@ -607,7 +611,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddLine(const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix)
+    void DebugDraw::AddLine(const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickindID)
     {
         addLine(_world, _beginPos, _endPos, _color, _matrix);
     }
@@ -625,7 +629,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeBox(const core::IWorld * _world, const float3 & _minPos, const float3 & _maxPos, u32 _color, const float4x4 & _matrix)
+    void DebugDraw::AddWireframeBox(const core::IWorld * _world, const float3 & _minPos, const float3 & _maxPos, u32 _color, const float4x4 & _matrix, PickingID _pickindID)
     {
         DebugDrawLineData * lines = getWorldData(_world)->m_lines.alloc(12);
 
@@ -646,25 +650,39 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeSphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix)
+    void DebugDraw::AddWireframeSphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
     {
-        DebugDrawIcoSphereData & icoSphere = getWorldData(_world)->m_icoSpheres.emplace_back();
+        addSphere(_world, _radius, _color, _matrix, _pickindID, DebugDrawFillMode::Wireframe);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddSphere(const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    {
+        addSphere(_world, _radius, _color, _matrix, _pickindID, DebugDrawFillMode::Solid);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::addSphere(const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID, DebugDrawFillMode _fillmode)
+    {
+        DebugDrawIcoSphereData & icoSphere = getWorldData(_world)->m_icoSpheres[asInteger(_fillmode)].emplace_back();
         icoSphere.world = mul(float4x4::scale(_radius), _matrix);
+        icoSphere.pickingID = _pickindID;
         icoSphere.color = _color;
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddHemisphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix)
+    void DebugDraw::AddWireframeHemisphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
     {
-        DebugDrawHemiSphereData & hemiSphere = getWorldData(_world)->m_hemiSpheres.emplace_back();
+        DebugDrawHemiSphereData & hemiSphere = getWorldData(_world)->m_hemiSpheres[asInteger(DebugDrawFillMode::Wireframe)].emplace_back();
         hemiSphere.world = mul(float4x4::scale(_radius), _matrix);
+        hemiSphere.pickingID = _pickindID;
         hemiSphere.color = _color;
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix)
+    void DebugDraw::AddWireframeCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
     {
-        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders.emplace_back();
+        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders[asInteger(DebugDrawFillMode::Wireframe)].emplace_back();
 
         float3 s = float3(_radius, _radius, _height * 0.5f);
 
@@ -677,14 +695,15 @@ namespace vg::renderer
         );
 
         cylinder.world = mul(scale, _matrix);
+        cylinder.pickingID = _pickindID;
         cylinder.color = _color;
         cylinder.taper = 1.0f;
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddTaperedCylinder(const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix)
+    void DebugDraw::AddWireframeTaperedCylinder(const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
     {
-        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders.emplace_back();
+        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders[asInteger(DebugDrawFillMode::Wireframe)].emplace_back();
 
         float radius = _bottomRadius;
         float3 s = float3(radius, radius, _height * 0.5f);
@@ -698,42 +717,43 @@ namespace vg::renderer
         );
 
         cylinder.world = mul(scale, _matrix);
+        cylinder.pickingID = _pickindID;
         cylinder.color = _color;
         cylinder.taper = _topRadius / _bottomRadius;
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddCapsule(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix)
+    void DebugDraw::AddWireframeCapsule(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
     {
         float offset = max(0.0f, _height - _radius * 2.0f);
 
         float4x4 topHemi = float4x4::identity();
         topHemi[3].xyz = float3(0, 0, 0.5f * offset);
-        AddHemisphere(_world, _radius, _color, mul(topHemi, _matrix));
+        AddWireframeHemisphere(_world, _radius, _color, mul(topHemi, _matrix), _pickindID);
 
-        AddCylinder(_world, _radius, offset, _color, _matrix);
+        AddWireframeCylinder(_world, _radius, offset, _color, _matrix, _pickindID);
 
         float4x4 bottomHemi = float4x4::identity();
         bottomHemi[2].xyz *= -1.0f;
         bottomHemi[3].xyz = float3(0, 0, -0.5f * offset);
-        AddHemisphere(_world, _radius, _color, mul(bottomHemi, _matrix));
+        AddWireframeHemisphere(_world, _radius, _color, mul(bottomHemi, _matrix), _pickindID);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddTaperedCapsule(const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix)
+    void DebugDraw::AddWireframeTaperedCapsule(const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
     {
         float offset = max(0.0f, _height - (_topRadius + _bottomRadius));
 
         float4x4 topHemi = float4x4::identity();
         topHemi[3].xyz = float3(0, 0, 0.5f * offset);
-        AddHemisphere(_world, _topRadius, _color, mul(topHemi, _matrix));
+        AddWireframeHemisphere(_world, _topRadius, _color, mul(topHemi, _matrix), _pickindID);
 
-        AddTaperedCylinder(_world, _topRadius, _bottomRadius, offset, _color, _matrix);
+        AddWireframeTaperedCylinder(_world, _topRadius, _bottomRadius, offset, _color, _matrix, _pickindID);
 
         float4x4 bottomHemi = float4x4::identity();
         bottomHemi[2].xyz *= -1.0f;
         bottomHemi[3].xyz = float3(0, 0, -0.5f * offset);
-        AddHemisphere(_world, _bottomRadius, _color, mul(bottomHemi, _matrix));
+        AddWireframeHemisphere(_world, _bottomRadius, _color, mul(bottomHemi, _matrix), _pickindID);
     }
 
     //--------------------------------------------------------------------------------------
@@ -757,9 +777,15 @@ namespace vg::renderer
             if (worldData)
             {
                 worldData->m_lines.clear();
-                worldData->m_icoSpheres.clear();
-                worldData->m_hemiSpheres.clear();
-                worldData->m_cylinders.clear();
+
+                for (uint i = 0; i < countof(worldData->m_hemiSpheres); ++i)
+                    worldData->m_hemiSpheres[i].clear();
+
+                for (uint i = 0; i < countof(worldData->m_cylinders); ++i)
+                    worldData->m_cylinders[i].clear();
+
+                for (uint i = 0; i < countof(worldData->m_icoSpheres); ++i)
+                    worldData->m_icoSpheres[i].clear();
             }
         }
     }
@@ -771,7 +797,19 @@ namespace vg::renderer
         if (world)
         {
             const auto * worldData = getWorldData(world);
-            return (worldData->m_cylinders.size() + worldData->m_hemiSpheres.size() + worldData->m_icoSpheres.size() + worldData->m_lines.size()) << 1;
+
+            auto count = worldData->m_lines.size();
+
+            for (uint i = 0; i < countof(worldData->m_hemiSpheres); ++i)
+                count += worldData->m_cylinders[i].size();
+
+            for (uint i = 0; i < countof(worldData->m_cylinders); ++i)
+                count += worldData->m_hemiSpheres[i].size();
+
+            for (uint i = 0; i < countof(worldData->m_icoSpheres); ++i)
+                count += worldData->m_icoSpheres[i].size();
+
+            return count;
         }
         return 0;
     }
@@ -914,35 +952,59 @@ namespace vg::renderer
 
         auto * worldData = getWorldData(world);
 
-        // draw spheres
+        // draw plain spheres
         {
             VG_PROFILE_CPU("Spheres");
-            drawDebugModelInstances(_cmdList, m_icoSphere, worldData->m_icoSpheres);
+            drawDebugModelInstances(_cmdList, m_icoSphere, worldData->m_icoSpheres, DebugDrawFillMode::Solid);
         }
 
-        // draw hemispheres
+        // draw wireframe spheres
         {
-            VG_PROFILE_CPU("HemiSpheres");
-            drawDebugModelInstances(_cmdList, m_hemiSphere, worldData->m_hemiSpheres);
+            VG_PROFILE_CPU("Spheres (wireframe)");
+            drawDebugModelInstances(_cmdList, m_icoSphere, worldData->m_icoSpheres, DebugDrawFillMode::Wireframe);
         }
 
-        // draw cylinders
+        // draw wireframe hemispheres
         {
-            VG_PROFILE_CPU("Cylinders");
-            drawDebugModelInstances(_cmdList, m_cylinder, worldData->m_cylinders);
+            VG_PROFILE_CPU("HemiSpheres (wireframe)");
+            drawDebugModelInstances(_cmdList, m_hemiSphere, worldData->m_hemiSpheres, DebugDrawFillMode::Wireframe);
+        }
+
+        // draw wireframe cylinders
+        {
+            VG_PROFILE_CPU("Cylinders (wireframe)");
+            drawDebugModelInstances(_cmdList, m_cylinder, worldData->m_cylinders, DebugDrawFillMode::Wireframe);
         }
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T> void DebugDraw::drawDebugModelInstances(gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<T> & _instances)
+    template <typename T, size_t N> void DebugDraw::drawDebugModelInstances(gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<T> (& _instances)[N], DebugDrawFillMode _fillmode)
     {
         VG_PROFILE_GPU("DebugDrawSpheres");
 
         // Root sig
         _cmdList->setGraphicRootSignature(m_debugDrawSignatureHandle);
 
-        RasterizerState rs(FillMode::Wireframe, CullMode::None);
-        _cmdList->setRasterizerState(rs);
+        switch (_fillmode)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_fillmode);
+                
+            case DebugDrawFillMode::Wireframe:
+            {
+                RasterizerState rs(FillMode::Wireframe, CullMode::Back);
+                _cmdList->setRasterizerState(rs);
+            }
+            break;
+
+            case DebugDrawFillMode::Solid:
+            {
+                RasterizerState rs(FillMode::Solid, CullMode::Back);
+                _cmdList->setRasterizerState(rs);
+            }
+            break;
+        }        
+
         _cmdList->setShader(m_debugDrawShaderKey);
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
         _cmdList->setIndexBuffer(_geometry->getIndexBuffer());
@@ -954,6 +1016,8 @@ namespace vg::renderer
         debugDraw3D.setVertexBufferHandle(_geometry->getVertexBuffer()->getBufferHandle());
         debugDraw3D.setVertexFormat(VertexFormat::DebugDraw);
 
+        auto & instances = _instances[asInteger(_fillmode)];
+
         // Transparent
         {
             BlendState bsAlpha(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
@@ -961,12 +1025,13 @@ namespace vg::renderer
             DepthStencilState dsAlpha(false, false, ComparisonFunc::Always);
             _cmdList->setDepthStencilState(dsAlpha);
 
-            for (uint i = 0; i < _instances.size(); ++i)
+            for (uint i = 0; i < instances.size(); ++i)
             {
-                const T & instance = _instances[i];
+                const T & instance = instances[i];
                 float4 color = unpackRGBA8(instance.color) * transparentColor;
 
                 debugDraw3D.setWorldMatrix(transpose(instance.world));
+                debugDraw3D.setPickingID(instance.pickingID);
                 debugDraw3D.setColor(color);
                 debugDraw3D.setTaper(instance.getTaper());
                 _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
@@ -976,18 +1041,19 @@ namespace vg::renderer
 
         // Opaque
         {
-            BlendState bsOpaque(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+            BlendState bsOpaque(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
             _cmdList->setBlendState(bsOpaque);
 
             DepthStencilState dsOpaque(true, true, ComparisonFunc::LessEqual);
             _cmdList->setDepthStencilState(dsOpaque);
 
-            for (uint i = 0; i < _instances.size(); ++i)
+            for (uint i = 0; i < instances.size(); ++i)
             {
-                const T & instance = _instances[i];
+                const T & instance = instances[i];
                 float4 color = unpackRGBA8(instance.color) * opaqueColor;
 
                 debugDraw3D.setWorldMatrix(transpose(instance.world));
+                debugDraw3D.setPickingID(instance.pickingID);
                 debugDraw3D.setColor(color);
                 debugDraw3D.setTaper(instance.getTaper());
                 _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);

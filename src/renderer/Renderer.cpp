@@ -703,6 +703,7 @@ namespace vg::renderer
 
                     gfx::RenderPassContext rc;
                                            rc.setView(view);
+                                           rc.setWorld(view->getWorld());
 
                     view->RegisterFrameGraph(rc, m_frameGraph);
                 }

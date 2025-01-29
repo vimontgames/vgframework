@@ -18,11 +18,7 @@ namespace vg::renderer
     class IMeshInstance : public GraphicInstance
     {
     public:
-        IMeshInstance(const core::string & _name, core::IObject * _parent) :
-            GraphicInstance(_name, _parent)
-        {
-            
-        }
+        VG_CLASS_DECL_ABSTRACT(IMeshInstance, GraphicInstance);
 
         virtual const ISkeleton *   GetSkeleton             () const = 0;
         virtual bool                UpdateSkeleton          () = 0;

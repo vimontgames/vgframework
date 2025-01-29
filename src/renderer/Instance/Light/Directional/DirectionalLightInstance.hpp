@@ -68,39 +68,43 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool DirectionalLightInstance::Cull(CullingResult * _cullingResult, View * _view)
+    bool DirectionalLightInstance::Cull(CullingResult * _cullingResult, View * _view) const
     {
         // Directional light is never culled
-        _cullingResult->m_output->add(GraphicInstanceListType::All, this);
-        _cullingResult->m_output->add(LightType::Directional, this);
-
-        if (!_view->isAdditionalView() && IsCastShadow())
+        if (1)
         {
-            // Create view and start culling immediately
-            Renderer * renderer = Renderer::get();
+            super::Cull(_cullingResult, _view);
 
-            ShadowView * shadowView = new ShadowView(this, _view->getWorld(), getShadowResolution());
-            _view->addShadowView(shadowView);
+            if (!_view->isAdditionalView() && IsCastShadow())
+            {
+                // Create view and start culling immediately
+                Renderer * renderer = Renderer::get();
 
-            float4x4 shadowMatrix = this->getGlobalMatrix();
+                ShadowView * shadowView = new ShadowView(this, _view->getWorld(), getShadowResolution());
+                _view->addShadowView(shadowView);
 
-            if (m_shadowCameraOffset)
-                shadowMatrix[3].xyz += _view->getViewInvMatrix()[3].xyz;
+                float4x4 shadowMatrix = this->getGlobalMatrix();
 
-            shadowView->SetupOrthographicCamera(shadowMatrix, m_shadowSize, m_shadowRange);
+                if (m_shadowCameraOffset)
+                    shadowMatrix[3].xyz += _view->getViewInvMatrix()[3].xyz;
 
-            _cullingResult->m_output->add(shadowView);
+                shadowView->SetupOrthographicCamera(shadowMatrix, m_shadowSize, m_shadowRange);
 
-            core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
-            jobScheduler->Start(shadowView->getCullingJob(), renderer->GetJobSync(RendererJobType::Culling));
+                _cullingResult->m_output->add(shadowView);
+
+                core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
+                jobScheduler->Start(shadowView->getCullingJob(), renderer->GetJobSync(RendererJobType::Culling));
+            }
+
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
     void DirectionalLightInstance::Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
     {
-        
+        super::Draw(_renderContext, _cmdList);
     }
 }

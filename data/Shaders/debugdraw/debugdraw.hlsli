@@ -11,6 +11,7 @@ struct DebugDrawRootConstants3D
     uint        stream0Offset;  // stream0 offset (might need more than 16 bits because of skinning)
     uint        misc;           // unused (16) | format (8) | unused (8)
     float       taper;          // Top/Bottom ratio for tapered shapes
+    uint        picking;        // PickingID
 
     #ifdef __cplusplus
     DebugDrawRootConstants3D() :
@@ -18,7 +19,8 @@ struct DebugDrawRootConstants3D
         color(float4(1,1,1,1)),
         stream0(0x0000FFFF),
         stream0Offset(0),
-        taper(1.0f)
+        taper(1.0f),
+        picking(0)
     {
 
     }
@@ -74,9 +76,20 @@ struct DebugDrawRootConstants3D
     {
         misc = (misc & ~0x00FF0000UL) | ((((uint) _value) & 0xFF) << 16);
     }
+
     VertexFormat getVertexFormat()
     {
         return (VertexFormat) ((misc >> 16) & 0xFF);
+    }
+
+    void setPickingID(uint _value)
+    {
+        picking = _value;
+    }
+    
+    uint getPickingID()
+    {
+        return picking;
     }
 };
 

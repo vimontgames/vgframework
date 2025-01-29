@@ -1,16 +1,18 @@
 #include "engine/Precomp.h"
 #include "LightComponent.h"
-#include "editor/Editor_Consts.h"
-#include "renderer/ILightInstance.h"
 #include "core/GameObject/GameObject.h"
-#include "engine/Engine.h"
 #include "renderer/IRenderer.h"
+#include "renderer/IPicking.h"
+#include "renderer/ILightInstance.h"
+#include "editor/Editor_Consts.h"
+#include "engine/Engine.h"
 
 #if !VG_ENABLE_INLINE
 #include "LightComponent.inl"
 #endif
 
 using namespace vg::core;
+using namespace vg::renderer;
 
 namespace vg::engine
 {
@@ -45,11 +47,15 @@ namespace vg::engine
 
         if (m_registered)
         {
+            auto * picking = Engine::get()->GetRenderer()->GetPicking();
+            picking->ReleasePickingID(m_light->GetPickingID());
+            m_light->ClearPickingID();
+
             getGameObject()->removeGraphicInstance(m_light);
             m_registered = false;
         }
 
-        VG_SAFE_RELEASE(m_light);
+        VG_SAFE_RELEASE_ASYNC(m_light);
     }
 
     //--------------------------------------------------------------------------------------
@@ -93,7 +99,7 @@ namespace vg::engine
             m_registered = false;
         }
 
-        VG_SAFE_RELEASE(m_light);
+        VG_SAFE_RELEASE_ASYNC(m_light);
 
         switch (m_lightType)
         {
@@ -109,6 +115,14 @@ namespace vg::engine
 
         if (m_light)
         {
+            auto * picking = Engine::get()->GetRenderer()->GetPicking();
+            PickingID id = m_light->GetPickingID();
+            if (!id)
+            {
+                id = picking->CreatePickingID(this);
+                m_light->SetPickingID(id);
+            }
+
             getGameObject()->addGraphicInstance(m_light);
             m_registered = true;
             return true;

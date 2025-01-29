@@ -43,7 +43,7 @@ namespace vg::renderer
         float                   m_normalizedWeight = 0.0f;
     };
 
-    class MeshInstance : public IMeshInstance
+    class MeshInstance final : public IMeshInstance
     {
     public:
         VG_CLASS_DECL(MeshInstance, IMeshInstance);
@@ -70,7 +70,7 @@ namespace vg::renderer
         core::string                    GetBatchName                (core::uint _batchIndex) const final override;
 
         bool                            TryGetAABB                  (core::AABB & _aabb) const final override;
-        bool                            Cull                        (CullingResult * _cullingResult, View * _view) final override;
+        bool                            Cull                        (CullingResult * _cullingResult, View * _view) const final override;
         void                            OnMaterialChanged           (core::uint _index) final override;
         bool                            OnUpdateRayTracing          (gfx::CommandList * _cmdList, View * _view, core::uint _index) final override;
 

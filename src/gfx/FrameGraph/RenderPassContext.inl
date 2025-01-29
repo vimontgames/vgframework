@@ -29,4 +29,16 @@ namespace vg::gfx
     {
         m_parent = const_cast<IFrameGraphView *>(_parentView);
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const core::IWorld * RenderPassContext::getWorld() const
+    {
+        return m_world;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void RenderPassContext::setWorld(const core::IWorld * _world)
+    {
+        m_world = _world;
+    }
 }
