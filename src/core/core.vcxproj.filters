@@ -91,6 +91,9 @@
     <Filter Include="Misc\Random">
       <UniqueIdentifier>{dc7c9a48-62ef-47b2-b2f9-4c55100643c9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Curve">
+      <UniqueIdentifier>{401ba165-6e1a-4586-be86-a3c58cfdab33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Math\Math.h">
@@ -474,6 +477,15 @@
     <ClInclude Include="Misc\Random\Random.h">
       <Filter>Misc\Random</Filter>
     </ClInclude>
+    <ClInclude Include="Curve\FloatCurve.h">
+      <Filter>Curve</Filter>
+    </ClInclude>
+    <ClInclude Include="Curve\Curve.h">
+      <Filter>Curve</Filter>
+    </ClInclude>
+    <ClInclude Include="Curve\FloatCurve.hpp">
+      <Filter>Curve</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">
@@ -552,6 +564,9 @@
     </ClCompile>
     <ClCompile Include="Misc\Random\Random.cpp">
       <Filter>Misc\Random</Filter>
+    </ClCompile>
+    <ClCompile Include="Curve\Curve.cpp">
+      <Filter>Curve</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

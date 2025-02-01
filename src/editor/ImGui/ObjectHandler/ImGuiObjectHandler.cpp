@@ -12,6 +12,7 @@ namespace vg::editor
 #include "Texture/ImGuiTextureHandler.hpp"
 #include "Texture/ImGuiTextureResourceHandler.hpp"
 #include "Material/ImGuiMaterialModelTypeHandler.hpp"
+#include "Curve/ImGuiCurveObjectHandler.hpp"
 
 #include "ImGuiResourceListHandler.hpp"
 

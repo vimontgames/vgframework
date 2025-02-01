@@ -75,6 +75,11 @@ namespace vg::engine
         }
         registerPropertyGroupEnd(TestComponent);
         
+        registerPropertyGroupBegin(TestComponent, "Curves");
+        {
+            registerProperty(TestComponent, m_floatCurve, "Float curve");
+        }
+        registerPropertyGroupEnd(TestComponent);
 
         return true;
     }

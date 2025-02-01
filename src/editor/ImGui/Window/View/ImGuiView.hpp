@@ -301,7 +301,7 @@ namespace vg::editor
             auto selectedObjects = selection->GetSelectedObjects();
             auto topLevelGameObjects = selection->RemoveChildGameObjectsWithParents(selectedObjects);
 
-            if (!ImGui::IsAnyItemActive())
+            if (!ImGui::IsAnyItemFocused())
             {
                 if (ImGui::IsKeyPressed(ImGuiKey_F) && topLevelGameObjects.size() > 0)
                 {

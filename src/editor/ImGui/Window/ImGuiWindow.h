@@ -75,6 +75,7 @@ namespace vg::editor
         static bool                             editBitMask         (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
         template <typename T> static bool       editEnum            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
         template <typename T> static bool       editEnumFlags       (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
+        template <typename T> static bool       editCurve           (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
 
         static core::string                     getFileBrowserExt   (const core::IResource * _resource);
         static core::string                     getDefaultFolder    (const core::IResource * _resource);

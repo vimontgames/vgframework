@@ -44,6 +44,9 @@
     <ClInclude Include="Container\HandleTable.hpp" />
     <ClInclude Include="Container\Vector.h" />
     <ClInclude Include="Core.h" />
+    <ClInclude Include="Curve\Curve.h" />
+    <ClInclude Include="Curve\FloatCurve.h" />
+    <ClInclude Include="Curve\FloatCurve.hpp" />
     <ClInclude Include="File\Buffer.inl" />
     <ClInclude Include="File\File.h" />
     <ClInclude Include="File\Buffer.h" />
@@ -81,6 +84,7 @@
     <ClInclude Include="Memory\MemoryAllocator.h" />
     <ClInclude Include="Memory\NewDelete.h" />
     <ClInclude Include="Misc\AABB\AABB.h" />
+    <ClCompile Include="Curve\Curve.cpp" />
     <ClCompile Include="Misc\AABB\AABB.cpp" />
     <ClInclude Include="Misc\BitMask\BitMask.h" />
     <ClInclude Include="Misc\GenericEnumTypes.h" />

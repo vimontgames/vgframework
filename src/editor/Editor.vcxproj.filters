@@ -292,6 +292,9 @@
     <ClInclude Include="ImGui\ObjectHandler\Texture\ImGuiTextureResourceHandler.hpp">
       <Filter>ImGui\ObjectHandler\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\ObjectHandler\Curve\ImGuiCurveObjectHandler.hpp">
+      <Filter>ImGui\ObjectHandler\Curves</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Editor.def" />
@@ -444,6 +447,9 @@
     </Filter>
     <Filter Include="ImGui\Window\UndoRedo">
       <UniqueIdentifier>{d4798306-257f-485e-a1b1-291e47ed74d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\ObjectHandler\Curves">
+      <UniqueIdentifier>{dfb2e46a-05f7-46d3-8d8b-fd4db78bb9f4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

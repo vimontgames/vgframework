@@ -791,6 +791,17 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    template <typename T> bool ImGuiWindow::editCurve(core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext)
+    {
+        const string enumLabel = ImGui::getObjectLabel(_prop->GetDisplayName(), _prop);
+        FloatCurveData * pCurve = _prop->GetPropertyFloatCurveData(_object);
+
+        ImGui::Text("TODO: editCurve");
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ImGuiWindow::displayObject(core::IObject * _object)
     {
         ObjectContext objectContext;
@@ -1363,6 +1374,12 @@ namespace vg::editor
                     }
                 };
                 break;
+
+                // TODO: custom Property control instead?
+                case PropertyType::FloatCurveData:
+                    VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());
+                    changed |= editCurve<float>(_object, _prop, propContext);
+                    break;
 
                 case PropertyType::EnumU8:
                     VG_ASSERT(!isEnumArray, "Display of EnumArray property not implemented for type '%s'", asString(type).c_str());

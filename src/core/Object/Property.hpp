@@ -486,6 +486,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    FloatCurveData * Property::GetPropertyFloatCurveData(const IObject * _object) const
+    {
+        VG_ASSERT(nullptr != _object);
+        checkPropertyType(PropertyType::FloatCurveData);
+        return (FloatCurveData *)(uint_ptr(_object) + offset);
+    }
+
+    //--------------------------------------------------------------------------------------
     ObjectHandle * Property::GetPropertyObjectHandle(const IObject * _object) const
     {
         VG_ASSERT(nullptr != _object);

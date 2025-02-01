@@ -11,6 +11,7 @@ namespace vg::core
     class ObjectHandle;
     class IResource;
     class BitMask;
+    struct FloatCurveData;
 
     enum class ClassDescFlags : u64
     {
@@ -66,7 +67,8 @@ namespace vg::core
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, string * _offset, const char * _displayName, PropertyFlags _flags) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, BitMask * _offset, const char * _displayName, PropertyFlags _flags) = 0;
         virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, ObjectHandle * _offset, const char * _displayName, PropertyFlags _flags) = 0;
-
+        virtual void                        RegisterProperty            (const char * _className, const char * _propertyName, FloatCurveData * _offset, const char * _displayName, PropertyFlags _flags) = 0;
+        
         virtual void                        RegisterPropertyResource    (const char * _className, const char * _propertyName, IResource * _offset, const char * _displayName, PropertyFlags _flags) = 0;
         virtual void                        RegisterPropertyResourcePtr (const char * _className, const char * _propertyName, IResource ** _offset, const char * _displayName, PropertyFlags _flags) = 0;
 

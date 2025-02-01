@@ -9,6 +9,7 @@
 #include "core/File/Buffer.h"
 #include "core/string/string.h"
 #include "core/Misc/BitMask/BitMask.h"
+#include "core/Curve/FloatCurve.h"
 #include "core/IInstance.h"
 #include "core/IGameObject.h"
 #include "core/IComponent.h"
@@ -996,6 +997,15 @@ namespace vg::core
         }
         break;
 
+        case PropertyType::FloatCurveData:
+        {
+            VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
+            auto * srcCurve = _srcProp->GetPropertyFloatCurveData(_srcObj);
+            auto * dstCurve = _dstProp->GetPropertyFloatCurveData(_dstObj);
+            *dstCurve = *srcCurve;
+        }
+        break;
+
         case PropertyType::Callback:
         case PropertyType::LayoutElement:
             // Nothing to do
@@ -1009,10 +1019,36 @@ namespace vg::core
         }
         break;
 
+        case PropertyType::ObjectVector:
+        {
+            uint srcVecCount = _srcProp->GetPropertyObjectVectorCount(_srcObj);
+            auto * srcVecData = _srcProp->GetPropertyObjectVectorData(_srcObj);
+
+            uint dstVecCount = _dstProp->GetPropertyObjectVectorCount(_dstObj);
+            auto * dstVecData = _dstProp->GetPropertyObjectVectorData(_dstObj);
+
+            const char * elemClassName = _srcProp->GetPropertyObjectVectorElement(_srcObj, 0)->GetClassName();
+            const IClassDesc * elemClassDesc = GetClassDescriptor(elemClassName);
+            VG_ASSERT(elemClassDesc);
+            if (elemClassDesc)
+            {
+                void * data = elemClassDesc->ResizeVector(_dstObj, (uint)_srcProp->GetOffset(), (uint)srcVecCount);
+
+                for (uint i = 0; i < srcVecCount; ++i)
+                {
+                    const IObject * srcElem = _srcProp->GetPropertyObjectVectorElement(_srcObj, i);
+                    IObject * dstElem = _dstProp->GetPropertyObjectVectorElement(_dstObj, i);
+                    CopyProperties(srcElem, dstElem);
+
+                    dstElem->SetParent(_dstObj);
+                }
+            }
+        }
+        break;
+
         default:
         case PropertyType::ResourcePtrVector:
         case PropertyType::ObjectPtrDictionary:
-        case PropertyType::ObjectVector:
             VG_ASSERT_ENUM_NOT_IMPLEMENTED(srcPropType);
             return false;
         }
@@ -1547,6 +1583,36 @@ namespace vg::core
                                         }
                                         break;
 
+                                        case PropertyType::FloatCurveData:
+                                        {
+                                            FloatCurveData * pFloatCurve = prop->GetPropertyFloatCurveData(_object);
+                                            pFloatCurve->m_points.clear();
+
+                                            uint count = 0;
+                                            const XMLAttribute * xmlCount= xmlPropElem->FindAttribute("count");
+                                            if (nullptr != xmlCount)
+                                            {
+                                                count = xmlCount->UnsignedValue();
+                                                const XMLElement * xmlPoint = xmlPropElem->FirstChildElement("Point");
+                                                for (uint i = 0; i < count; ++i)
+                                                {
+                                                    if (nullptr != xmlPoint)
+                                                    {
+                                                        const XMLAttribute * xmlT = xmlPoint->FindAttribute("t");
+                                                        const XMLAttribute * xmlValue = xmlPoint->FindAttribute("value");
+                                                        if (nullptr != xmlT && nullptr != xmlValue)
+                                                        {
+                                                            float t = xmlT->FloatValue();
+                                                            float value = xmlValue->FloatValue();
+                                                            pFloatCurve->m_points.push_back({ t, value });
+                                                        }
+                                                        xmlPoint = xmlPoint->NextSiblingElement("Point");
+                                                    }                                                    
+                                                }
+                                            }
+                                        }
+                                        break;
+
                                         case PropertyType::Float4x4:
                                         {
                                             VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
@@ -1744,6 +1810,66 @@ namespace vg::core
                                                                     pResource->SetParent(_object);
                                                                     pResource->OnResourcePathChanged("", pResource->GetResourcePath());
                                                                 }
+                                                                index++;
+                                                            }
+                                                        }
+
+                                                        xmlObjectRef = xmlObjectRef->NextSiblingElement("Object");
+
+                                                    } while (xmlObjectRef != nullptr);
+                                                    VG_ASSERT(index == count);
+                                                }
+                                            }
+                                        }
+                                        break;
+
+                                        case PropertyType::ObjectVector:
+                                        {
+                                            VG_ASSERT(!isEnumArray, "EnumArray serialization from XML not implemented for type '%s'", asString(type).c_str());
+                                            const XMLElement * const xmlObjectRefStart = xmlPropElem->FirstChildElement("Object");
+                                            if (nullptr != xmlObjectRefStart)
+                                            {
+                                                auto xmlObjectRef = xmlObjectRefStart;
+                                                uint count = 0;
+                                                const IClassDesc * classDesc = nullptr;
+                                                do
+                                                {
+                                                    const XMLAttribute * xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
+                                                    if (nullptr != xmlClassAttrRef)
+                                                    {
+                                                        const char * classNameRef = xmlClassAttrRef->Value();
+                                                        const auto * classDescRef = GetClassDescriptor(classNameRef);
+                                                        if (nullptr != classDescRef)
+                                                        {
+                                                            count++;
+                                                            VG_ASSERT(classDesc == nullptr || classDesc == classDescRef);
+                                                            classDesc = classDescRef;
+                                                        }
+                                                    }
+                                                    xmlObjectRef = xmlObjectRef->NextSiblingElement("Object");
+
+                                                } while (xmlObjectRef != nullptr);
+
+                                                const uint sizeOf = prop->GetSizeOf();
+                                                void * data = classDesc->ResizeVector(_object, (uint)offset, count);
+                                                VG_ASSERT(nullptr != data);
+
+                                                if (nullptr != data)
+                                                {
+                                                    xmlObjectRef = xmlObjectRefStart;
+                                                    uint index = 0;
+                                                    do
+                                                    {
+                                                        const XMLAttribute * xmlClassAttrRef = xmlObjectRef->FindAttribute("class");
+                                                        if (nullptr != xmlClassAttrRef)
+                                                        {
+                                                            const char * classNameRef = xmlClassAttrRef->Value();
+                                                            const auto * classDescRef = GetClassDescriptor(classNameRef);
+                                                            if (nullptr != classDescRef)
+                                                            {
+                                                                IObject * pObject = (IObject *)(uint_ptr(data) + index * sizeOf);
+                                                                if (SerializeFromXML(pObject, xmlObjectRef))
+                                                                    pObject->SetParent(_object);
                                                                 index++;
                                                             }
                                                         }
@@ -2248,6 +2374,25 @@ namespace vg::core
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
                     skipAttribute = true;
                     break;
+
+                case PropertyType::FloatCurveData:
+                {
+                    const FloatCurveData * pFloatCurve = prop->GetPropertyFloatCurveData(_object);
+                    xmlPropElem->SetAttribute("count", pFloatCurve->m_points.size());
+
+                    for (uint i = 0; i < pFloatCurve->m_points.size(); ++i)
+                    {
+                        const auto & p = pFloatCurve->m_points[i];
+
+                        XMLElement * xmlPropElemChild = _xmlDoc.NewElement("Point");
+                        {
+                            xmlPropElemChild->SetAttribute("t", p.t);
+                            xmlPropElemChild->SetAttribute("value", p.value);
+                        }
+                        xmlPropElem->InsertEndChild(xmlPropElemChild);
+                    }
+                }
+                break;
 
                 case PropertyType::LayoutElement:
                     break;

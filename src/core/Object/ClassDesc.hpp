@@ -1,6 +1,7 @@
 #include "ClassDesc.h"
 #include "core/IResource.h"
 #include "core/Misc/BitMask/BitMask.h"
+#include "core/Curve/FloatCurve.h"
 #include "core/Object/ObjectHandle.h"
 
 namespace vg::core
@@ -227,6 +228,12 @@ namespace vg::core
 
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, BitMask * _offset, const char * _displayName, PropertyFlags _flags)
+    {
+        registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ClassDesc::RegisterProperty(const char * _className, const char * _propertyName, FloatCurveData * _offset, const char * _displayName, PropertyFlags _flags)
     {
         registerClassMemberT(_className, _propertyName, _offset, _displayName, _flags);
     }
@@ -490,6 +497,7 @@ namespace vg::core
     template <> struct TypeToEnum<core::float4x4> { static constexpr auto value = PropertyType::Float4x4; };
     template <> struct TypeToEnum<core::string> { static constexpr auto value = PropertyType::String; };
     template <> struct TypeToEnum<core::BitMask> { static constexpr auto value = PropertyType::BitMask; };
+    template <> struct TypeToEnum<core::FloatCurveData> { static constexpr auto value = PropertyType::FloatCurveData; };
     template <> struct TypeToEnum<core::ObjectHandle> { static constexpr auto value = PropertyType::ObjectHandle; };
     template <> struct TypeToEnum<IObject> { static constexpr auto value = PropertyType::Object; };
     template <> struct TypeToEnum<IObject*> { static constexpr auto value = PropertyType::ObjectPtr; };
