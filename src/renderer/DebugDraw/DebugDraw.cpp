@@ -50,6 +50,8 @@ namespace vg::renderer
         m_debugDrawShaderKey = ShaderKey("debugdraw/debugdraw.hlsl", "DebugDraw");
 
         createBoxPrimitive();
+        createCubePrimitive();
+        createSquarePyramidPrimitive();
         createIcoSpherePrimitive();
         createGrid();
         createAxis();
@@ -66,6 +68,8 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_box);
         VG_SAFE_RELEASE(m_gridVB);
         VG_SAFE_RELEASE(m_axisVB);
+        VG_SAFE_RELEASE(m_cube);
+        VG_SAFE_RELEASE(m_squarePyramid);
         VG_SAFE_RELEASE(m_icoSphere);
         VG_SAFE_RELEASE(m_hemiSphere);
         VG_SAFE_RELEASE(m_cylinder);
@@ -333,14 +337,14 @@ namespace vg::renderer
             else // if (i > 0)
             {
                 triangles.push_back({ prevTop, vtop, prevBot });
-                triangles.push_back({ prevBot, vbot, vtop });
+                triangles.push_back({ vbot, prevBot, vtop });
             }
 
             prevBot = vbot;
             prevTop = vtop;
         }
 
-        triangles.push_back({ firstTop, prevTop, firstBot });
+        triangles.push_back({ prevTop, firstTop, firstBot });
         triangles.push_back({ firstBot, prevBot, prevTop });
 
         auto * device = Device::get();
@@ -361,6 +365,8 @@ namespace vg::renderer
         VG_SAFE_RELEASE(vb);
     }
 
+    //--------------------------------------------------------------------------------------
+    // Box primitive is used to render wireframe bounding box using lines (without the triangles inside face)
     //--------------------------------------------------------------------------------------
     void DebugDraw::createBoxPrimitive()
     {
@@ -421,6 +427,115 @@ namespace vg::renderer
         m_box->setIndexBuffer(ib);
         m_box->setVertexBuffer(vb);
         m_box->addBatch("BoxBatch", indiceCount);
+
+        VG_SAFE_RELEASE(ib);
+        VG_SAFE_RELEASE(vb);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Cube primitive is used to draw solid cube using index triangles geometry
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::createCubePrimitive()
+    {
+        auto * device = Device::get();
+
+        DebugDrawVertex vertices[8];
+
+        vertices[0].setPos({ -1.0f, -1.0f, -1.0f });
+        vertices[0].setColor(0xFFFFFFFF);
+
+        vertices[1].setPos({ +1.0f, -1.0f, -1.0f });
+        vertices[1].setColor(0xFFFFFFFF);
+
+        vertices[2].setPos({ +1.0f, +1.0f, -1.0f });
+        vertices[2].setColor(0xFFFFFFFF);
+
+        vertices[3].setPos({ -1.0f, +1.0f, -1.0f });
+        vertices[3].setColor(0xFFFFFFFF);
+
+        vertices[4].setPos({ -1.0f, -1.0f, +1.0f });
+        vertices[4].setColor(0xFFFFFFFF);
+
+        vertices[5].setPos({ +1.0f, -1.0f, +1.0f });
+        vertices[5].setColor(0xFFFFFFFF);
+
+        vertices[6].setPos({ +1.0f, +1.0f, +1.0f });
+        vertices[6].setColor(0xFFFFFFFF);
+
+        vertices[7].setPos({ -1.0f, +1.0f, +1.0f });
+        vertices[7].setColor(0xFFFFFFFF);
+
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)countof(vertices));
+        Buffer * vb = device->createBuffer(vbDesc, "CubeVB", vertices);
+
+        u16 indices[] =
+        {
+           0, 1, 2,  2, 3, 0,   // Front face
+           4, 6, 5,  6, 4, 7,   // Back face
+           0, 3, 7,  7, 4, 0,   // Left face
+           1, 5, 6,  6, 2, 1,   // Right face
+           3, 2, 6,  6, 7, 3,   // Top face
+           0, 4, 5,  5, 1, 0    // Bottom face
+        };
+
+        const uint indiceCount = (uint)countof(indices);
+        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer | BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
+        Buffer * ib = device->createBuffer(ibDesc, "CubeIB", indices);
+
+        m_cube = new MeshGeometry("Cube", this);
+        m_cube->setIndexBuffer(ib);
+        m_cube->setVertexBuffer(vb);
+        m_cube->addBatch("CubeBatch", indiceCount);
+
+        VG_SAFE_RELEASE(ib);
+        VG_SAFE_RELEASE(vb);
+    }
+    
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::createSquarePyramidPrimitive()
+    {
+        auto * device = Device::get();
+
+        DebugDrawVertex vertices[5];
+
+        // Base
+        vertices[0].setPos({ -1.0f, -1.0f,  0.0f });
+        vertices[0].setColor(0xFFFFFFFF);
+
+        vertices[1].setPos({ +1.0f, -1.0f,  0.0f });
+        vertices[1].setColor(0xFFFFFFFF);
+
+        vertices[2].setPos({ +1.0f, +1.0f,  0.0f });
+        vertices[2].setColor(0xFFFFFFFF);
+
+        vertices[3].setPos({ -1.0f, +1.0f,  0.0f });
+        vertices[3].setColor(0xFFFFFFFF);
+
+        // Apex 
+        vertices[4].setPos({ 0.0f,  0.0f, +1.5f });
+        vertices[4].setColor(0xFFFFFFFF);
+
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)countof(vertices));
+        Buffer * vb = device->createBuffer(vbDesc, "PyramidVB", vertices);
+
+        // Index buffer 
+        u16 indices[] =
+        {
+            0, 1, 2,  2, 3, 0,  // Base
+            0, 4, 1,            // Front left
+            1, 4, 2,            // Front right
+            2, 4, 3,            // Back right
+            3, 4, 0             // Back left
+        };
+
+        const uint indiceCount = (uint)countof(indices);
+        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer | BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
+        Buffer * ib = device->createBuffer(ibDesc, "PyramidIB", indices);
+
+        m_squarePyramid = new MeshGeometry("Pyramid", this);
+        m_squarePyramid->setIndexBuffer(ib);
+        m_squarePyramid->setVertexBuffer(vb);
+        m_squarePyramid->addBatch("PyramidBatch", indiceCount);
 
         VG_SAFE_RELEASE(ib);
         VG_SAFE_RELEASE(vb);
@@ -629,7 +744,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeBox(const core::IWorld * _world, const float3 & _minPos, const float3 & _maxPos, u32 _color, const float4x4 & _matrix, PickingID _pickindID)
+    void DebugDraw::AddWireframeCube(const core::IWorld * _world, const float3 & _minPos, const float3 & _maxPos, u32 _color, const float4x4 & _matrix, PickingID _pickindID)
     {
         DebugDrawLineData * lines = getWorldData(_world)->m_lines.alloc(12);
 
@@ -650,13 +765,22 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void DebugDraw::AddSolidCube(const core::IWorld * _world, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickindID)
+    {
+        DebugDrawCubeData & cube = getWorldData(_world)->m_cubes[asInteger(DebugDrawFillMode::Solid)].emplace_back();
+        cube.world = mul(float4x4::scale(_maxPos- _minPos), _matrix);
+        cube.pickingID = _pickindID;
+        cube.color = _color;
+    }
+
+    //--------------------------------------------------------------------------------------
     void DebugDraw::AddWireframeSphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
     {
         addSphere(_world, _radius, _color, _matrix, _pickindID, DebugDrawFillMode::Wireframe);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddSphere(const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    void DebugDraw::AddSolidSphere(const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
     {
         addSphere(_world, _radius, _color, _matrix, _pickindID, DebugDrawFillMode::Solid);
     }
@@ -673,7 +797,19 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DebugDraw::AddWireframeHemisphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
     {
-        DebugDrawHemiSphereData & hemiSphere = getWorldData(_world)->m_hemiSpheres[asInteger(DebugDrawFillMode::Wireframe)].emplace_back();
+        addHemisphere(_world, _radius, _color, _matrix, _pickindID, DebugDrawFillMode::Wireframe);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddSolidHemisphere(const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    {
+        addHemisphere(_world, _radius, _color, _matrix, _pickindID, DebugDrawFillMode::Solid);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::addHemisphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID, DebugDrawFillMode _fillmode)
+    {
+        DebugDrawHemiSphereData & hemiSphere = getWorldData(_world)->m_hemiSpheres[asInteger(_fillmode)].emplace_back();
         hemiSphere.world = mul(float4x4::scale(_radius), _matrix);
         hemiSphere.pickingID = _pickindID;
         hemiSphere.color = _color;
@@ -682,16 +818,28 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DebugDraw::AddWireframeCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
     {
-        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders[asInteger(DebugDrawFillMode::Wireframe)].emplace_back();
+        addCylinder(_world, _radius, _height, _color, _matrix, _pickindID, DebugDrawFillMode::Wireframe);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddSolidCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    {
+        addCylinder(_world, _radius, _height, _color, _matrix, _pickindID, DebugDrawFillMode::Solid);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::addCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID, DebugDrawFillMode _fillmode)
+    {
+        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders[asInteger(_fillmode)].emplace_back();
 
         float3 s = float3(_radius, _radius, _height * 0.5f);
 
         const float4x4 scale = float4x4
         (
-            s.x,   0,   0, 0,
-              0, s.y,   0, 0,
-              0,   0, s.z, 0,
-              0,   0,   0, 1 
+            s.x, 0, 0, 0,
+            0, s.y, 0, 0,
+            0, 0, s.z, 0,
+            0, 0, 0, 1
         );
 
         cylinder.world = mul(scale, _matrix);
@@ -757,6 +905,38 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void DebugDraw::AddWireframeSquarePyramid(const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    {
+        addSquarePyramid(_world, _base, _height, _color, _matrix, _pickindID, DebugDrawFillMode::Wireframe);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddSolidSquarePyramid(const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    {
+        addSquarePyramid(_world, _base, _height, _color, _matrix, _pickindID, DebugDrawFillMode::Solid);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::addSquarePyramid(const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID, DebugDrawFillMode _fillmode)
+    {
+        DebugDrawSquarePyramidData & squarePyramid = getWorldData(_world)->m_squarePyramid[asInteger(_fillmode)].emplace_back();
+
+        float3 s = float3(_base, _base, _height);
+
+        const float4x4 scale = float4x4
+        (
+            s.x, 0, 0, 0,
+            0, s.y, 0, 0,
+            0, 0, s.z, 0,
+            0, 0, 0, 1
+        );
+
+        squarePyramid.world = mul(scale, _matrix);
+        squarePyramid.pickingID = _pickindID;
+        squarePyramid.color = _color;
+    }
+
+    //--------------------------------------------------------------------------------------
     const vg::engine::IEngine * getEngine()
     {
         const auto * factory = Kernel::getFactory();
@@ -777,6 +957,12 @@ namespace vg::renderer
             if (worldData)
             {
                 worldData->m_lines.clear();
+
+                for (uint i = 0; i < countof(worldData->m_squarePyramid); ++i)
+                    worldData->m_squarePyramid[i].clear();
+
+                for (uint i = 0; i < countof(worldData->m_cubes); ++i)
+                    worldData->m_cubes[i].clear();
 
                 for (uint i = 0; i < countof(worldData->m_hemiSpheres); ++i)
                     worldData->m_hemiSpheres[i].clear();
@@ -952,35 +1138,70 @@ namespace vg::renderer
 
         auto * worldData = getWorldData(world);
 
-        // draw plain spheres
+        // draw solid primitives
         {
-            VG_PROFILE_CPU("Spheres");
-            drawDebugModelInstances(_cmdList, m_icoSphere, worldData->m_icoSpheres, DebugDrawFillMode::Solid);
+            VG_PROFILE_CPU("Solid");
+            VG_PROFILE_GPU("Solid");
+            {
+                VG_PROFILE_CPU("Cube");
+                VG_PROFILE_GPU("Cube");
+                drawDebugModelInstances(_cmdList, m_cube, worldData->m_cubes, DebugDrawFillMode::Solid);
+            }
+            {
+                VG_PROFILE_CPU("SquarePyramid");
+                VG_PROFILE_GPU("SquarePyramid");
+                drawDebugModelInstances(_cmdList, m_squarePyramid, worldData->m_squarePyramid, DebugDrawFillMode::Solid);
+            }
+            {
+                VG_PROFILE_CPU("Spheres");
+                VG_PROFILE_GPU("Spheres");
+                drawDebugModelInstances(_cmdList, m_icoSphere, worldData->m_icoSpheres, DebugDrawFillMode::Solid);
+            }
+            {
+                VG_PROFILE_CPU("HemiSpheres");
+                VG_PROFILE_GPU("HemiSpheres");
+                drawDebugModelInstances(_cmdList, m_hemiSphere, worldData->m_hemiSpheres, DebugDrawFillMode::Solid);
+            }
+            {
+                VG_PROFILE_CPU("Cylinders");
+                VG_PROFILE_GPU("Cylinders");
+                drawDebugModelInstances(_cmdList, m_cylinder, worldData->m_cylinders, DebugDrawFillMode::Solid);
+            }
         }
 
-        // draw wireframe spheres
+        // draw wireframe primitives
         {
-            VG_PROFILE_CPU("Spheres (wireframe)");
-            drawDebugModelInstances(_cmdList, m_icoSphere, worldData->m_icoSpheres, DebugDrawFillMode::Wireframe);
-        }
-
-        // draw wireframe hemispheres
-        {
-            VG_PROFILE_CPU("HemiSpheres (wireframe)");
-            drawDebugModelInstances(_cmdList, m_hemiSphere, worldData->m_hemiSpheres, DebugDrawFillMode::Wireframe);
-        }
-
-        // draw wireframe cylinders
-        {
-            VG_PROFILE_CPU("Cylinders (wireframe)");
-            drawDebugModelInstances(_cmdList, m_cylinder, worldData->m_cylinders, DebugDrawFillMode::Wireframe);
-        }
+            VG_PROFILE_CPU("Wireframe");
+            VG_PROFILE_GPU("Wireframe");
+            {
+                VG_PROFILE_CPU("Spheres");
+                VG_PROFILE_GPU("Spheres");
+                drawDebugModelInstances(_cmdList, m_icoSphere, worldData->m_icoSpheres, DebugDrawFillMode::Wireframe);
+            }
+            {
+                VG_PROFILE_CPU("SquarePyramid");
+                VG_PROFILE_GPU("SquarePyramid");
+                drawDebugModelInstances(_cmdList, m_squarePyramid, worldData->m_squarePyramid, DebugDrawFillMode::Wireframe);
+            }
+            {
+                VG_PROFILE_CPU("HemiSpheres");
+                VG_PROFILE_GPU("HemiSpheres");
+                drawDebugModelInstances(_cmdList, m_hemiSphere, worldData->m_hemiSpheres, DebugDrawFillMode::Wireframe);
+            }
+            {
+                VG_PROFILE_CPU("Cylinders");
+                VG_PROFILE_GPU("Cylinders");
+                drawDebugModelInstances(_cmdList, m_cylinder, worldData->m_cylinders, DebugDrawFillMode::Wireframe);
+            }
+        }        
     }
 
     //--------------------------------------------------------------------------------------
     template <typename T, size_t N> void DebugDraw::drawDebugModelInstances(gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<T> (& _instances)[N], DebugDrawFillMode _fillmode)
     {
-        VG_PROFILE_GPU("DebugDrawSpheres");
+        VG_ASSERT(nullptr != _geometry);
+        if (nullptr == _geometry)
+            return;
 
         // Root sig
         _cmdList->setGraphicRootSignature(m_debugDrawSignatureHandle);

@@ -154,7 +154,7 @@ namespace vg::renderer
 
             case ShaderPass::Forward:
             case ShaderPass::Deferred:
-                DebugDraw::get()->AddSphere(_renderContext.m_renderPass->getWorld(), 0.5f, 0x7F00FFFF, getGlobalMatrix(), GetPickingID());
+                DebugDraw::get()->AddSolidCube(_renderContext.m_renderPass->getWorld(), (float3)-0.05f, (float3)0.05f, packRGBA8(GetColor()), getGlobalMatrix(), GetPickingID());
                 break;
         }
     }

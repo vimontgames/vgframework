@@ -45,15 +45,20 @@ namespace vg::renderer
 
         void                AddLine                     (const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
         
-        void                AddWireframeBox             (const core::IWorld * _world, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
+        void                AddWireframeCube            (const core::IWorld * _world, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
         void                AddWireframeSphere          (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
         void                AddWireframeHemisphere      (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
         void                AddWireframeCylinder        (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
         void                AddWireframeTaperedCylinder (const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
         void                AddWireframeCapsule         (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
         void                AddWireframeTaperedCapsule  (const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
+        void                AddWireframeSquarePyramid   (const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
 
-        void                AddSphere                   (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
+        void                AddSolidCube                (const core::IWorld * _world, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
+        void                AddSolidSphere              (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
+        void                AddSolidHemisphere          (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
+        void                AddSolidCylinder            (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
+        void                AddSolidSquarePyramid       (const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 _matrix = core::float4x4::identity(), PickingID _pickindID = 0) final override;
 
         void                endFrame                    ();
         void                reset                       ();
@@ -69,6 +74,8 @@ namespace vg::renderer
 
     protected:
         void                createBoxPrimitive          ();
+        void                createCubePrimitive         ();
+        void                createSquarePyramidPrimitive();
         void                createGrid                  ();
         void                createAxis                  ();
         void                createIcoSpherePrimitive    (); 
@@ -81,7 +88,10 @@ namespace vg::renderer
         WorldData *         getWorldData                (const core::IWorld * _world);
 
         void                addLine                     (const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix);
+        void                addSquarePyramid            (const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID, DebugDrawFillMode _fillmode);
         void                addSphere                   (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID, DebugDrawFillMode _fillmode);
+        void                addHemisphere               (const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID, DebugDrawFillMode _fillmode);
+        void                addCylinder                 (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID, DebugDrawFillMode _fillmode);
 
         struct DebugDrawInstanceData
         {
@@ -108,6 +118,8 @@ namespace vg::renderer
         MeshGeometry *                  m_box = nullptr;
         gfx::Buffer *                   m_gridVB = nullptr;
         gfx::Buffer *                   m_axisVB = nullptr;
+        MeshGeometry *                  m_cube = nullptr;
+        MeshGeometry *                  m_squarePyramid = nullptr;
         MeshGeometry *                  m_icoSphere = nullptr;
         MeshGeometry *                  m_hemiSphere = nullptr;
         MeshGeometry *                  m_cylinder = nullptr;
@@ -121,6 +133,8 @@ namespace vg::renderer
             core::u32 endColor;
         };
 
+        using DebugDrawCubeData = DebugDrawInstanceData;
+        using DebugDrawSquarePyramidData = DebugDrawInstanceData;
         using DebugDrawIcoSphereData = DebugDrawInstanceData;
         using DebugDrawHemiSphereData = DebugDrawInstanceData;
         using DebugDrawCylinderData = DebugDrawInstanceDataCylinder;
@@ -130,10 +144,12 @@ namespace vg::renderer
             WorldData();
             ~WorldData();
 
-            core::atomicvector<DebugDrawLineData>   m_lines;
-            core::vector<DebugDrawIcoSphereData>    m_icoSpheres[core::enumCount<DebugDrawFillMode>()];
-            core::vector<DebugDrawHemiSphereData>   m_hemiSpheres[1];
-            core::vector<DebugDrawCylinderData>     m_cylinders[1];
+            core::atomicvector<DebugDrawLineData>       m_lines;
+            core::vector<DebugDrawIcoSphereData>        m_squarePyramid[core::enumCount<DebugDrawFillMode>()]; 
+            core::vector<DebugDrawSquarePyramidData>    m_cubes[core::enumCount<DebugDrawFillMode>()];
+            core::vector<DebugDrawIcoSphereData>        m_icoSpheres[core::enumCount<DebugDrawFillMode>()];
+            core::vector<DebugDrawHemiSphereData>       m_hemiSpheres[core::enumCount<DebugDrawFillMode>()];
+            core::vector<DebugDrawCylinderData>         m_cylinders[core::enumCount<DebugDrawFillMode>()];
         };
 
         struct DrawData

@@ -111,7 +111,7 @@ namespace vg::renderer
 
             case ShaderPass::Forward:
             case ShaderPass::Deferred:
-                DebugDraw::get()->AddWireframeSphere(_renderContext.m_renderPass->getWorld(), getMaxRadius(), 0x7F00FFFF, getGlobalMatrix(), GetPickingID());
+                DebugDraw::get()->AddWireframeSphere(_renderContext.m_renderPass->getWorld(), getMaxRadius(), packRGBA8(GetColor()), getGlobalMatrix(), GetPickingID());
                 break;     
         }            
     }

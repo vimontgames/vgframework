@@ -969,7 +969,7 @@ namespace vg::renderer
                     boxSize *= 1.5f;
                 }
 
-                dbgDraw->AddWireframeBox(_world, -boxSize, boxSize, color, boneMatrix);
+                dbgDraw->AddWireframeCube(_world, -boxSize, boxSize, color, boneMatrix);
 
                 if (-1 != node.parent_index)
                 {
