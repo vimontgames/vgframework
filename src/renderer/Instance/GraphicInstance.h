@@ -19,8 +19,7 @@ namespace vg::renderer
 {
     class MaterialModel;
     class View;
-
-    struct Frustum;
+    class Frustum;
     struct CullingResult;
 
     class GraphicInstance : public IGraphicInstance

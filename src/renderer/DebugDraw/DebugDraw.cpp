@@ -1007,7 +1007,7 @@ namespace vg::renderer
     }
 
     const float4 opaqueColor = float4(1.0f, 1.0f, 1.0f, 0.75f);
-    const float4 transparentColor = float4(0.75f, 0.75f, 0.75f, 0.25f);
+    const float4 transparentColor = float4(0.75f, 0.75f, 0.75f, 0.5f);
 
     //--------------------------------------------------------------------------------------
     void DebugDraw::update(const View * _view, gfx::CommandList * _cmdList)
@@ -1085,7 +1085,7 @@ namespace vg::renderer
         {
             VG_PROFILE_GPU("Lines");
 
-            RasterizerState rs(FillMode::Wireframe, CullMode::None);
+            RasterizerState rs(FillMode::Wireframe, CullMode::None, Orientation::ClockWise, DepthClip::Disable);
 
             VG_ASSERT(nullptr != drawData.m_debugDrawVB);
 
@@ -1105,7 +1105,7 @@ namespace vg::renderer
 
             // transparent 
             {
-                debugDrawRoot3D.color = opaqueColor;
+                debugDrawRoot3D.color = transparentColor ;
                 _cmdList->setGraphicRootConstants(0, (u32 *)&debugDrawRoot3D, DebugDrawRootConstants3DCount);
 
                 BlendState bsAlpha(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
@@ -1119,15 +1119,15 @@ namespace vg::renderer
 
             // opaque
             {
-                debugDrawRoot3D.color = transparentColor;
+                debugDrawRoot3D.color = opaqueColor;
                 _cmdList->setGraphicRootConstants(0, (u32 *)&debugDrawRoot3D, DebugDrawRootConstants3DCount);
-
+            
                 BlendState bsOpaque(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
                 _cmdList->setBlendState(bsOpaque);
-
+            
                 DepthStencilState dsOpaque(true, true, ComparisonFunc::LessEqual);
                 _cmdList->setDepthStencilState(dsOpaque);
-
+            
                 _cmdList->draw(drawData.m_linesToDraw << 1);
             }
         }

@@ -19,6 +19,8 @@
 #include "View.inl"
 #endif
 
+#include "Shaders/system/packing.hlsli"
+
 #include "Lit/LitView.hpp"
 #include "Shadow/ShadowView.hpp"
 #include "Frustum.hpp"
@@ -161,8 +163,10 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetupPerspectiveCamera(const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale)
+    void View::SetupPerspectiveCamera(const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale, const core::IGameObject * _cameraGO, PickingID _pickingID)
     {
+        m_cameraGO = _cameraGO;
+        m_pickingID = _pickingID;
         m_viewportOffset = _viewportOffset;
         m_viewportScale = _viewportScale;
 
@@ -184,8 +188,10 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetupOrthographicCamera(const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar)
+    void View::SetupOrthographicCamera(const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar, const core::IGameObject * _cameraGO, PickingID _pickingID)
     {
+        m_cameraGO = _cameraGO;
+        m_pickingID = _pickingID;
         m_viewInv = _cameraWorldMatrix;
         m_view = inverse(_cameraWorldMatrix);
         m_cameraNearFar = _nearFar;
@@ -199,8 +205,10 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::SetupPhysicalCamera(const core::float4x4 & _cameraWorldMatrix, const ICameraSettings * _cameraSettings, core::float2 _viewportOffset, core::float2 _viewportScale)
+    void View::SetupPhysicalCamera(const core::float4x4 & _cameraWorldMatrix, const ICameraSettings * _cameraSettings, core::float2 _viewportOffset, core::float2 _viewportScale, const core::IGameObject * _cameraGO, PickingID _pickingID)
     {
+        m_cameraGO = _cameraGO;
+        m_pickingID = _pickingID;
         m_cameraSettings = _cameraSettings;
 
         float fovX, fovY;
@@ -270,41 +278,34 @@ namespace vg::renderer
     void View::computeCameraFrustum()
     {
         const float4x4 viewProj = mul(m_view, m_proj);
+        m_frustum.compute(viewProj);
 
-        m_frustum.planes[asInteger(FrustumPlane::Left)].x = viewProj._m03 + viewProj._m00;
-        m_frustum.planes[asInteger(FrustumPlane::Left)].y = viewProj._m13 + viewProj._m10;
-        m_frustum.planes[asInteger(FrustumPlane::Left)].z = viewProj._m23 + viewProj._m20;
-        m_frustum.planes[asInteger(FrustumPlane::Left)].w = viewProj._m33 + viewProj._m30;
-
-        m_frustum.planes[asInteger(FrustumPlane::Right)].x = viewProj._m03 - viewProj._m00;
-        m_frustum.planes[asInteger(FrustumPlane::Right)].y = viewProj._m13 - viewProj._m10;
-        m_frustum.planes[asInteger(FrustumPlane::Right)].z = viewProj._m23 - viewProj._m20;
-        m_frustum.planes[asInteger(FrustumPlane::Right)].w = viewProj._m33 - viewProj._m30;
-
-        m_frustum.planes[asInteger(FrustumPlane::Top)].x = viewProj._m03 - viewProj._m01;
-        m_frustum.planes[asInteger(FrustumPlane::Top)].y = viewProj._m13 - viewProj._m11;
-        m_frustum.planes[asInteger(FrustumPlane::Top)].z = viewProj._m23 - viewProj._m21;
-        m_frustum.planes[asInteger(FrustumPlane::Top)].w = viewProj._m33 - viewProj._m31;
-
-        m_frustum.planes[asInteger(FrustumPlane::Bottom)].x = viewProj._m03 + viewProj._m01;
-        m_frustum.planes[asInteger(FrustumPlane::Bottom)].y = viewProj._m13 + viewProj._m11;
-        m_frustum.planes[asInteger(FrustumPlane::Bottom)].z = viewProj._m23 + viewProj._m21;
-        m_frustum.planes[asInteger(FrustumPlane::Bottom)].w = viewProj._m33 + viewProj._m31;
-
-        m_frustum.planes[asInteger(FrustumPlane::Near)].x = viewProj._m02;
-        m_frustum.planes[asInteger(FrustumPlane::Near)].y = viewProj._m12;
-        m_frustum.planes[asInteger(FrustumPlane::Near)].z = viewProj._m22;
-        m_frustum.planes[asInteger(FrustumPlane::Near)].w = viewProj._m32;
-
-        m_frustum.planes[asInteger(FrustumPlane::Far)].x = viewProj._m03 - viewProj._m02;
-        m_frustum.planes[asInteger(FrustumPlane::Far)].y = viewProj._m13 - viewProj._m12;
-        m_frustum.planes[asInteger(FrustumPlane::Far)].z = viewProj._m23 - viewProj._m22;
-        m_frustum.planes[asInteger(FrustumPlane::Far)].w = viewProj._m33 - viewProj._m32;
-
-        for (uint i = 0; i < countof(m_frustum.planes); ++i)
+        if (m_viewID.target == ViewTarget::Game)
         {
-            float normXYZ = rsqrt(dot(m_frustum.planes[i].xyz, m_frustum.planes[i].xyz));
-            m_frustum.planes[i] /= normXYZ;
+            const auto * world = getWorld();
+            const u32 color = m_cameraGO ? packRGBA8(m_cameraGO->GetColor()) : 0x7F7F7F7F;
+            const PickingID pickingID = m_pickingID;
+            m_frustum.draw(world, color);
+
+            auto * debugDraw = DebugDraw::get();
+
+            float4x4 mCube = float4x4::identity();
+                     mCube[0].xyz = float3(0.5f, 0.0f, 0.0f);
+                     mCube[1].xyz = float3(0.0f, 0.5f, 0.0f);
+                     mCube[2].xyz = float3(0.0f, 0.0f, 1.0f);
+                     mCube[3].xyz = float3(0.0f, 0.0f, 1.0f);
+                     mCube = mul(mCube, m_viewInv);
+
+            debugDraw->AddSolidCube(world, (float3)-0.25f, (float3)0.25f, color, mCube, pickingID);
+
+            float4x4 mSquarePyramid = float4x4::identity();
+                     mSquarePyramid[0].xyz = float3(0.5f, 0.0f, 0.0f);
+                     mSquarePyramid[1].xyz = float3(0.0f, 0.5f, 0.0f);
+                     mSquarePyramid[2].xyz = float3(0.0f, 0.0f, 0.5f);
+                     mSquarePyramid[3].xyz = float3(0.0f, 0.0f, 0.25f);
+                     mSquarePyramid = mul(mSquarePyramid, m_viewInv);
+
+            debugDraw->AddSolidSquarePyramid(world, 1.0f, 1.0f, color, mSquarePyramid, pickingID);
         }
     }
 

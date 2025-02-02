@@ -30,6 +30,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     PickingID PickingManager::CreatePickingID(IObject * _object)
     {
+        VG_ASSERT(nullptr != dynamic_cast<core::IComponent *>(_object), "Picking is expecting a IComponent object");
+
         PickingID id = -1;
 
         // Lookup available slots

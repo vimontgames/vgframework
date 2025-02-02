@@ -68,6 +68,8 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    // This method is called once for each view, thus we can compute a view-dependent matrix for directional lights
+    //--------------------------------------------------------------------------------------
     bool DirectionalLightInstance::Cull(CullingResult * _cullingResult, View * _view) const
     {
         // Directional light is never culled
@@ -80,6 +82,8 @@ namespace vg::renderer
                 // Create view and start culling immediately
                 Renderer * renderer = Renderer::get();
 
+                const Frustum & frustum = _view->getCameraFrustum();
+
                 ShadowView * shadowView = new ShadowView(this, _view->getWorld(), getShadowResolution());
                 _view->addShadowView(shadowView);
 
@@ -87,10 +91,23 @@ namespace vg::renderer
                 shadowMatrix[0].xyz *= -1;
                 shadowMatrix[1].xyz *= -1;
                 shadowMatrix[2].xyz *= -1;
-                //shadowMatrix[3].xyz *= -1;
 
                 if (m_shadowCameraOffset)
-                    shadowMatrix[3].xyz += _view->getViewInvMatrix()[3].xyz;
+                    shadowMatrix[3].xyz = _view->getViewInvMatrix()[3].xyz;
+
+                // Find the bounding box in world-space
+                float3 minBounds = (float3)FLT_MAX;
+                float3 maxBounds = (float3)-FLT_MAX;
+
+                const auto & corners = frustum.getCorners();
+                for (uint i = 0; i < countof(corners); ++i)
+                {
+                    const float3 corner = corners[i];
+                    float3 p = mul(float4(corner.xyz, 1.0f), shadowMatrix).xyz;
+
+                    minBounds = min(minBounds, p);
+                    maxBounds = max(maxBounds, p);
+                }
 
                 shadowView->SetupOrthographicCamera(shadowMatrix, m_shadowSize, m_shadowRange);
 

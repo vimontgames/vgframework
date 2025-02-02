@@ -3,6 +3,7 @@
 namespace vg::core
 {
     class AABB;
+    class IWorld;
 }
 
 namespace vg::renderer
@@ -22,11 +23,35 @@ namespace vg::renderer
         Outside
     );
 
-    struct Frustum
+    vg_enum_class(FrustumCorner, core::u8,
+        NearBottomLeft = 0,
+        NearBottomRight,
+        NearTopLeft,
+        NearTopRight,
+        FarBottomLeft,
+        FarBottomRight,
+        FarTopLeft,
+        FarTopRight
+    );
+
+    class Frustum
     {
-        core::float4 planes[core::enumCount<FrustumPlane>()];
+    public:
+        using Planes = core::float4[core::enumCount<FrustumPlane>()];
+        using Corners = core::float3[core::enumCount<FrustumCorner>()];
+
+        const Planes & getPlanes() const { return m_planes; }
+        const Corners & getCorners() const { return m_corners; }
+
+        void compute(const float4x4 & viewProj);
 
         FrustumTest intersects(const core::AABB & _aabb, const core::float4x4 & _world) const;
         FrustumTest intersects(float _radius, const core::float4x4 & _world) const;
+
+        void draw(const core::IWorld * _world, core::u32 _color);
+
+    private:
+        Planes m_planes;
+        Corners m_corners;
     };
 }

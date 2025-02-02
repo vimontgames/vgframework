@@ -5,6 +5,7 @@
 #include "core/string/string.h"
 #include "renderer/IRenderer.h"
 #include "renderer/ICameraLens.h"
+#include "renderer/IPicking.h"
 #include "engine/Engine.h"
 #include "editor/Editor_Consts.h"
 
@@ -63,12 +64,18 @@ namespace vg::engine
         m_cameraSettings = (renderer::ICameraSettings*)Kernel::getFactory()->CreateObject("CameraSettings");
         m_cameraSettings->RegisterUID();
         m_cameraSettings->SetParent(this);
+
+        auto * picking = Engine::get()->GetRenderer()->GetPicking();
+        m_pickingID = picking->CreatePickingID(this);
     }
 
     //--------------------------------------------------------------------------------------
     CameraComponent::~CameraComponent()
     {
         VG_SAFE_RELEASE(m_cameraSettings);
+
+        auto * picking = Engine::get()->GetRenderer()->GetPicking();
+        picking->ReleasePickingID(m_pickingID);
     }
 
     //--------------------------------------------------------------------------------------
@@ -150,8 +157,9 @@ namespace vg::engine
             }
 
             view->SetRender(true);
-            const float4x4 & matrix = getGameObject()->GetGlobalMatrix();
-            view->SetupPhysicalCamera(matrix, m_cameraSettings, m_viewportOffset, m_viewportScale);
+            const auto & go = getGameObject();
+            const float4x4 & matrix = go->GetGlobalMatrix();
+            view->SetupPhysicalCamera(matrix, m_cameraSettings, m_viewportOffset, m_viewportScale, go, m_pickingID);
         }      
     }
 

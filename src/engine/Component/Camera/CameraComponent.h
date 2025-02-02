@@ -19,6 +19,7 @@ namespace vg::gfx
 namespace vg::renderer
 {
     class IView;
+    using PickingID = core::uint;
 }
 
 namespace vg::engine
@@ -30,6 +31,7 @@ namespace vg::engine
 
                                                 CameraComponent             (const core::string & _name, core::IObject * _parent);
                                                 ~CameraComponent            ();
+
         void                                    OnLoad                      () final override;
         void                                    OnPropertyChanged           (vg::core::IObject * _object, const vg::core::IProperty & _prop, bool _notifyParent) final override;
         void                                    Update                      (const Context & _context) final override;
@@ -53,6 +55,7 @@ namespace vg::engine
         renderer::ICameraSettings *             m_cameraSettings = nullptr;
         core::float2                            m_viewportOffset;
         core::float2                            m_viewportScale;
+        renderer::PickingID                     m_pickingID = 0;
     };
 }
 

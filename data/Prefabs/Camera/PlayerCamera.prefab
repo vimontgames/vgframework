@@ -53,8 +53,8 @@
                                         <Property type="Uint32" name="m_uid" value="2257072415"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                        <Property type="Float" name="m_near" value="0.1"/>
-                                        <Property type="Float" name="m_far" value="1000"/>
+                                        <Property type="Float" name="m_near" value="1"/>
+                                        <Property type="Float" name="m_far" value="500"/>
                                         <Property type="ResourcePtr" name="m_lensRes">
                                             <Object class="LensResource">
                                                 <Property type="String" name="m_name" value="LensResource #4"/>

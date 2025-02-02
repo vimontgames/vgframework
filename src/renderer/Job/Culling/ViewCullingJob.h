@@ -16,8 +16,7 @@ namespace vg::renderer
     class View;
     class IGraphicInstance;
     class MeshInstance;
-
-    struct Frustum;
+    class Frustum;
 
     vg_enum_class(GraphicInstanceListType, core::u8,
         All = 0,

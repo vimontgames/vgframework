@@ -45,9 +45,9 @@ namespace vg::renderer
                                             View                        (const CreateViewParams & _params);
                                             ~View                       ();
 
-        void                                SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale) final override;
-        void                                SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) final override;
-        void                                SetupPhysicalCamera         (const core::float4x4 & _cameraWorldMatrix, const ICameraSettings * _cameraSettings, core::float2 _viewportOffset, core::float2 _viewportScale) final override;
+        void                                SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset, core::float2 _viewportScale, const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) final override;
+        void                                SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar, const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) final override;
+        void                                SetupPhysicalCamera         (const core::float4x4 & _cameraWorldMatrix, const ICameraSettings * _cameraSettings, core::float2 _viewportOffset, core::float2 _viewportScale, const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) final override;
 
         void                                SetFlags                    (ViewFlags _flagsToSet, ViewFlags _flagsToRemove = (ViewFlags)0) override;
         ViewFlags                           GetFlags                    () const override;
@@ -167,6 +167,8 @@ namespace vg::renderer
 
     private:
         IViewport *                         m_viewport                  = nullptr;
+        const core::IGameObject *           m_cameraGO                  = nullptr;
+        PickingID                           m_pickingID                 = 0;
         const ICameraSettings *             m_cameraSettings            = nullptr;
         gfx::ViewID                         m_viewID;
         ViewFlags                           m_flags                     = (ViewFlags)0;

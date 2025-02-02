@@ -5,6 +5,7 @@
 namespace vg::renderer
 {
     class IViewport;
+    using PickingID = core::uint;
 
     struct CreateViewParams
     {
@@ -78,9 +79,9 @@ namespace vg::renderer
     class IView : public gfx::IFrameGraphView
     {
     public:
-        virtual void                    SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset = core::float2(0, 0), core::float2 _viewportScale = core::float2(1, 1)) = 0;
-        virtual void                    SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar) = 0;
-        virtual void                    SetupPhysicalCamera         (const core::float4x4 & _cameraWorldMatrix, const ICameraSettings * _cameraSettings, core::float2 _viewportOffset = core::float2(0, 0), core::float2 _viewportScale = core::float2(1, 1)) = 0;
+        virtual void                    SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset = core::float2(0, 0), core::float2 _viewportScale = core::float2(1, 1), const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) = 0;
+        virtual void                    SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar, const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) = 0;
+        virtual void                    SetupPhysicalCamera         (const core::float4x4 & _cameraWorldMatrix, const ICameraSettings * _cameraSettings, core::float2 _viewportOffset = core::float2(0, 0), core::float2 _viewportScale = core::float2(1, 1), const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) = 0;
 
         virtual void                    SetFlags                    (ViewFlags _flagsToSet, ViewFlags _flagsToRemove = (ViewFlags)0) = 0;
         virtual ViewFlags               GetFlags                    () const = 0;
