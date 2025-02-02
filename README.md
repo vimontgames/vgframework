@@ -44,8 +44,8 @@ The program will use these locally built files if they are present; otherwise, i
 - Sync the depot.
 - Install the required SDKs and configure the environment variables.
 - Open the `vgframework.sln` solution in Visual Studio 2022 Community IDE.
-- Select solution [Configuration](#SolutionConfiguration) and [Platform](#SolutionPlatform)
-- Select the solution folder for [Working Directory](#WorkingDirectory)
+- Select solution [Configuration](#Solution-Configuration) and [Platform](#Solution-Platform)
+- Select the solution folder for [Working Directory](#Working-Directory)
 - Build & Run
 
 **Debug**, **Development*** and **Release** versions will start with the editor:
