@@ -34,7 +34,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void RenderObjectsPass::DrawGraphicInstances(const RenderContext & _renderContext, gfx::CommandList * _cmdList, GraphicInstanceListType _list) const
+    void RenderObjectsPass::DrawGraphicInstanceList(const RenderContext & _renderContext, gfx::CommandList * _cmdList, GraphicInstanceListType _list) const
     {
         const auto * view = static_cast<const View *>(_renderContext.m_renderPass->getView());
         const auto & list = view->getCullingJobResult().get(_list).m_instances;
@@ -79,7 +79,7 @@ namespace vg::renderer
     }  
 
     //--------------------------------------------------------------------------------------
-    void RenderObjectsPass::DrawGraphicInstances(const RenderContext & _renderContext, gfx::CommandList * _cmdList, LightType _list) const
+    void RenderObjectsPass::DrawLightInstanceList(const RenderContext & _renderContext, gfx::CommandList * _cmdList, LightType _list) const
     {
         const auto * view = static_cast<const View *>(_renderContext.m_renderPass->getView());
         const auto & list = view->getCullingJobResult().get(_list).m_instances;
@@ -97,4 +97,24 @@ namespace vg::renderer
             }
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    void RenderObjectsPass::DrawCameraInstanceList(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
+    {
+        const auto * view = static_cast<const View *>(_renderContext.m_renderPass->getView());
+        const auto & list = view->getCullingJobResult().m_cameras;
+
+        RenderContext renderContext = _renderContext;
+
+        if (list.size() > 0)
+        {
+            VG_PROFILE_GPU("Cameras");
+
+            for (uint i = 0; i < list.size(); ++i)
+            {
+                const GraphicInstance * instance = list[i];
+                instance->Draw(renderContext, _cmdList);
+            }
+        }
+    }    
 }

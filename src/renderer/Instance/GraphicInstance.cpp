@@ -12,6 +12,7 @@
 #include "Mesh/MeshInstance.hpp"
 #include "ParticleSystem/ParticleSystemInstance.hpp"
 #include "Light/LightInstance.hpp"
+#include "Camera/CameraInstance.hpp"
 
 namespace vg::renderer
 {
@@ -20,7 +21,6 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        //registerPropertyObjectPtrVectorEx(GraphicInstance, m_materials, "Materials", PropertyFlags::Transient);
         setPropertyFlag(GraphicInstance, m_flags, PropertyFlags::ReadOnly | PropertyFlags::Hidden, true);
         setPropertyFlag(GraphicInstance, m_color, PropertyFlags::ReadOnly | PropertyFlags::Hidden, true);
         setPropertyFlag(GraphicInstance, m_local, PropertyFlags::ReadOnly | PropertyFlags::Hidden, true);

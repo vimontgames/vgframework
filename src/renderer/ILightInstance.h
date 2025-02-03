@@ -25,7 +25,6 @@ namespace vg::renderer
             
         }
 
-        bool                            IsSkinned       () const final override { return false; }
         void                            Draw            (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const override = 0;
 
         virtual LightType               GetLightType    () const = 0;

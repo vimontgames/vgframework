@@ -94,6 +94,9 @@
     <None Include="Instance\ParticleSystem\ParticleSystemInstance.inl">
       <Filter>Instance\ParticleSystem</Filter>
     </None>
+    <None Include="Instance\Camera\CameraInstance.inl">
+      <Filter>Instance\Camera</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Precomp.h" />
@@ -317,7 +320,7 @@
     <ClInclude Include="Importer\AnimImporterData.hpp">
       <Filter>Importer</Filter>
     </ClInclude>
-    <ClInclude Include="Geometry\Vertex\DebugDrawVertex.h">
+    <ClInclude Include="Geometry\Vertex\DebugDrawUnlitVertex.h">
       <Filter>Geometry\Vertex</Filter>
     </ClInclude>
     <ClInclude Include="IDebugDraw.h" />
@@ -554,6 +557,16 @@
       <Filter>Instance\ParticleSystem</Filter>
     </ClInclude>
     <ClInclude Include="IParticleSystemInstance.h" />
+    <ClInclude Include="ICameraInstance.h" />
+    <ClInclude Include="Instance\Camera\CameraInstance.h">
+      <Filter>Instance\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Instance\Camera\CameraInstance.hpp">
+      <Filter>Instance\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Geometry\Vertex\DebugDrawLitVertex.h">
+      <Filter>Geometry\Vertex</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Pass">
@@ -759,6 +772,9 @@
     </Filter>
     <Filter Include="Instance\ParticleSystem">
       <UniqueIdentifier>{d86133c5-7392-4b2f-aa46-759fcbda35e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Instance\Camera">
+      <UniqueIdentifier>{f684d33b-e196-414e-a60f-18f387640a34}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -73,8 +73,8 @@ namespace vg::renderer
         _cmdList->setBlendState(bs);
         _cmdList->setDepthStencilState(ds);
 
-        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Opaque);
-        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::AlphaTest);
-        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Decal);
+        DrawGraphicInstanceList(renderContext, _cmdList, GraphicInstanceListType::Opaque);
+        DrawGraphicInstanceList(renderContext, _cmdList, GraphicInstanceListType::AlphaTest);
+        DrawGraphicInstanceList(renderContext, _cmdList, GraphicInstanceListType::Decal);
     }   
 }

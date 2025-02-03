@@ -65,7 +65,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void Frustum::draw(const core::IWorld * _world, core::u32 _color)
+    void Frustum::draw(const core::IWorld * _world, core::u32 _color) const
     {
         auto * debugDraw = DebugDraw::get();
 

@@ -22,4 +22,9 @@ namespace vg::renderer
     {
 
     };
+
+    class CameraInstanceList : public InstanceList<class ICameraInstance>
+    {
+
+    };
 }

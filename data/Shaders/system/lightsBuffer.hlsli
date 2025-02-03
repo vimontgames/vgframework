@@ -6,7 +6,8 @@
 #define VG_CHECK_ALIGN(var, align)
 #endif
 
-static float lightEps = 0.01f;
+static const float lightEps = 1.0f / 256.0f;
+static const float3 lightLuminance = float3(0.299f, 0.587f, 0.114f);
 
 //--------------------------------------------------------------------------------------
 // *WARNING*: The C++ struct will be 32-bytes aligned because of the float4x4 matrix, so the HLSL sizeof should match!

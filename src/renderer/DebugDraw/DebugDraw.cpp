@@ -48,6 +48,7 @@ namespace vg::renderer
         
         m_debugDrawSignatureHandle = device->addRootSignature(rsDesc);
         m_debugDrawShaderKey = ShaderKey("debugdraw/debugdraw.hlsl", "DebugDraw");
+        m_debugDrawOutlineShaderKey = ShaderKey("debugdraw/debugdraw.hlsl", "DebugDrawOutline");
 
         createBoxPrimitive();
         createCubePrimitive();
@@ -122,7 +123,7 @@ namespace vg::renderer
         return it->second;
     }
 
-    using VertexList = std::vector<DebugDrawVertex>;
+    using VertexList = std::vector<DebugDrawUnlitVertex>;
     struct Triangle
     {
         Triangle(u16 _indice0 = -1, u16 _indice1 = -1, u16 _indice2 = -1)
@@ -175,7 +176,7 @@ namespace vg::renderer
                 auto & edge0 = _vertices[_first];
                 auto & edge1 = _vertices[_second];
                 float3 point = normalize( float3(edge0.pos[0], edge0.pos[1], edge0.pos[2]) + float3(edge1.pos[0], edge1.pos[1], edge1.pos[2]));
-                _vertices.push_back(DebugDrawVertex(point.x, point.y, point.z));
+                _vertices.push_back(DebugDrawUnlitVertex(point.x, point.y, point.z));
             }
             
             return (u16)inserted.first->second;
@@ -209,7 +210,7 @@ namespace vg::renderer
 
         // Create full sphere
         {
-            BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)vertices.size());
+            BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawUnlitVertex), (uint)vertices.size());
             Buffer * vb = device->createBuffer(vbDesc, "IcoSphereVB", vertices.data());
 
             const uint indiceCount = (uint)triangles.size() * 3;
@@ -217,6 +218,7 @@ namespace vg::renderer
             Buffer * ib = device->createBuffer(ibDesc, "IcoSphereIB", triangles.data());
 
             m_icoSphere = new MeshGeometry("IcoSphere", this);
+            m_icoSphere->setVertexFormat(VertexFormat::DebugDrawUnlit);
             m_icoSphere->setIndexBuffer(ib);
             m_icoSphere->setVertexBuffer(vb);
             m_icoSphere->addBatch("IcoBatch", indiceCount);
@@ -230,7 +232,7 @@ namespace vg::renderer
             VertexList hemiVertices;
             TriangleList hemiTriangles;
 
-            auto pushVertex = [](VertexList & hemiVertices, DebugDrawVertex & _vertex)
+            auto pushVertex = [](VertexList & hemiVertices, DebugDrawUnlitVertex & _vertex)
             {
                 if (_vertex.pos[2] < 0.0f)
                 {
@@ -245,7 +247,7 @@ namespace vg::renderer
                 const uint count = (uint)hemiVertices.size();
                 for (uint j = 0; j < count; ++j)
                 {
-                    if (!memcmp(&hemiVertices[j], &_vertex, sizeof(DebugDrawVertex)))
+                    if (!memcmp(&hemiVertices[j], &_vertex, sizeof(DebugDrawUnlitVertex)))
                         return j;
                 }
 
@@ -270,7 +272,7 @@ namespace vg::renderer
                 }
             }
 
-            BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)hemiVertices.size());
+            BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawUnlitVertex), (uint)hemiVertices.size());
             Buffer * vb = device->createBuffer(vbDesc, "HemiSphereVB", hemiVertices.data());
 
             const uint indiceCount = (uint)hemiTriangles.size() * 3;
@@ -278,6 +280,7 @@ namespace vg::renderer
             Buffer * ib = device->createBuffer(ibDesc, "HemiSphereIB", hemiTriangles.data());
 
             m_hemiSphere = new MeshGeometry("HemiSphere", this);
+            m_hemiSphere->setVertexFormat(VertexFormat::DebugDrawUnlit);
             m_hemiSphere->setIndexBuffer(ib);
             m_hemiSphere->setVertexBuffer(vb);
             m_hemiSphere->addBatch("HemiBatch", indiceCount);
@@ -300,12 +303,12 @@ namespace vg::renderer
         vertices.reserve(resolution * 2);
         triangles.reserve(resolution * 4);
 
-        auto pushVertex = [](VertexList & vertices, DebugDrawVertex & _vertex)
+        auto pushVertex = [](VertexList & vertices, DebugDrawUnlitVertex & _vertex)
         {
             const uint count = (uint)vertices.size();
             for (uint j = 0; j < count; ++j)
             {
-                if (!memcmp(&vertices[j], &_vertex, sizeof(DebugDrawVertex)))
+                if (!memcmp(&vertices[j], &_vertex, sizeof(DebugDrawUnlitVertex)))
                     return j;
             }
 
@@ -323,8 +326,8 @@ namespace vg::renderer
             float x = cos(r) * radius;
             float y = sin(r) * radius;
 
-            auto bottom = DebugDrawVertex(x, y, -height);
-            auto top = DebugDrawVertex(x, y, height);
+            auto bottom = DebugDrawUnlitVertex(x, y, -height);
+            auto top = DebugDrawUnlitVertex(x, y, height);
 
             u16 vbot = pushVertex(vertices, bottom);
             u16 vtop = pushVertex(vertices, top);
@@ -349,7 +352,7 @@ namespace vg::renderer
 
         auto * device = Device::get();
 
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)vertices.size());
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawUnlitVertex), (uint)vertices.size());
         Buffer * vb = device->createBuffer(vbDesc, "CylinderVB", vertices.data());
 
         const uint indiceCount = (uint)triangles.size() * 3;
@@ -357,6 +360,7 @@ namespace vg::renderer
         Buffer * ib = device->createBuffer(ibDesc, "CylinderIB", triangles.data());
 
         m_cylinder = new MeshGeometry("Cylinder", this);
+        m_cylinder->setVertexFormat(VertexFormat::DebugDrawUnlit);
         m_cylinder->setIndexBuffer(ib);
         m_cylinder->setVertexBuffer(vb);
         m_cylinder->addBatch("CylinderBatch", indiceCount);
@@ -372,7 +376,7 @@ namespace vg::renderer
     {
         auto * device = Device::get();
 
-        DebugDrawVertex vertices[8];
+        DebugDrawUnlitVertex vertices[8];
 
         vertices[0].setPos({ -1.0f, -1.0f, -1.0f });
         vertices[0].setColor(0xFFFFFFFF);
@@ -398,7 +402,7 @@ namespace vg::renderer
         vertices[7].setPos({ -1.0f, +1.0f, +1.0f });
         vertices[7].setColor(0xFFFFFFFF);
 
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)countof(vertices));
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawUnlitVertex), (uint)countof(vertices));
         Buffer * vb = device->createBuffer(vbDesc, "unitBoxVB", vertices);
 
         u16 indices[24] =
@@ -424,6 +428,7 @@ namespace vg::renderer
         Buffer * ib = device->createBuffer(ibDesc, "BoxIB", indices);
 
         m_box = new MeshGeometry("Box", this);
+        m_box->setVertexFormat(VertexFormat::DebugDrawUnlit);
         m_box->setIndexBuffer(ib);
         m_box->setVertexBuffer(vb);
         m_box->addBatch("BoxBatch", indiceCount);
@@ -439,43 +444,122 @@ namespace vg::renderer
     {
         auto * device = Device::get();
 
-        DebugDrawVertex vertices[8];
+        DebugDrawLitVertex vertices[24];
 
+        // Front face
         vertices[0].setPos({ -1.0f, -1.0f, -1.0f });
         vertices[0].setColor(0xFFFFFFFF);
+        vertices[0].setNormal({ 0.0f, 0.0f, -1.0f });
 
         vertices[1].setPos({ +1.0f, -1.0f, -1.0f });
         vertices[1].setColor(0xFFFFFFFF);
+        vertices[1].setNormal({ 0.0f, 0.0f, -1.0f });
 
         vertices[2].setPos({ +1.0f, +1.0f, -1.0f });
         vertices[2].setColor(0xFFFFFFFF);
+        vertices[2].setNormal({ 0.0f, 0.0f, -1.0f });
 
         vertices[3].setPos({ -1.0f, +1.0f, -1.0f });
         vertices[3].setColor(0xFFFFFFFF);
+        vertices[3].setNormal({ 0.0f, 0.0f, -1.0f });
 
+        // Back face
         vertices[4].setPos({ -1.0f, -1.0f, +1.0f });
         vertices[4].setColor(0xFFFFFFFF);
+        vertices[4].setNormal({ 0.0f, 0.0f, 1.0f });
 
         vertices[5].setPos({ +1.0f, -1.0f, +1.0f });
         vertices[5].setColor(0xFFFFFFFF);
+        vertices[5].setNormal({ 0.0f, 0.0f, 1.0f });
 
         vertices[6].setPos({ +1.0f, +1.0f, +1.0f });
         vertices[6].setColor(0xFFFFFFFF);
+        vertices[6].setNormal({ 0.0f, 0.0f, 1.0f });
 
         vertices[7].setPos({ -1.0f, +1.0f, +1.0f });
         vertices[7].setColor(0xFFFFFFFF);
+        vertices[7].setNormal({ 0.0f, 0.0f, 1.0f });
 
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)countof(vertices));
+        // Left face
+        vertices[8].setPos({ -1.0f, -1.0f, -1.0f });
+        vertices[8].setColor(0xFFFFFFFF);
+        vertices[8].setNormal({ -1.0f, 0.0f, 0.0f });
+
+        vertices[9].setPos({ -1.0f, +1.0f, -1.0f });
+        vertices[9].setColor(0xFFFFFFFF);
+        vertices[9].setNormal({ -1.0f, 0.0f, 0.0f });
+
+        vertices[10].setPos({ -1.0f, +1.0f, +1.0f });
+        vertices[10].setColor(0xFFFFFFFF);
+        vertices[10].setNormal({ -1.0f, 0.0f, 0.0f });
+
+        vertices[11].setPos({ -1.0f, -1.0f, +1.0f });
+        vertices[11].setColor(0xFFFFFFFF);
+        vertices[11].setNormal({ -1.0f, 0.0f, 0.0f });
+
+        // Right face
+        vertices[12].setPos({ +1.0f, -1.0f, -1.0f });
+        vertices[12].setColor(0xFFFFFFFF);
+        vertices[12].setNormal({ 1.0f, 0.0f, 0.0f });
+
+        vertices[13].setPos({ +1.0f, +1.0f, -1.0f });
+        vertices[13].setColor(0xFFFFFFFF);
+        vertices[13].setNormal({ 1.0f, 0.0f, 0.0f });
+
+        vertices[14].setPos({ +1.0f, +1.0f, +1.0f });
+        vertices[14].setColor(0xFFFFFFFF);
+        vertices[14].setNormal({ 1.0f, 0.0f, 0.0f });
+
+        vertices[15].setPos({ +1.0f, -1.0f, +1.0f });
+        vertices[15].setColor(0xFFFFFFFF);
+        vertices[15].setNormal({ 1.0f, 0.0f, 0.0f });
+
+        // Top face
+        vertices[16].setPos({ -1.0f, +1.0f, -1.0f });
+        vertices[16].setColor(0xFFFFFFFF);
+        vertices[16].setNormal({ 0.0f, 1.0f, 0.0f });
+
+        vertices[17].setPos({ +1.0f, +1.0f, -1.0f });
+        vertices[17].setColor(0xFFFFFFFF);
+        vertices[17].setNormal({ 0.0f, 1.0f, 0.0f });
+
+        vertices[18].setPos({ +1.0f, +1.0f, +1.0f });
+        vertices[18].setColor(0xFFFFFFFF);
+        vertices[18].setNormal({ 0.0f, 1.0f, 0.0f });
+
+        vertices[19].setPos({ -1.0f, +1.0f, +1.0f });
+        vertices[19].setColor(0xFFFFFFFF);
+        vertices[19].setNormal({ 0.0f, 1.0f, 0.0f });
+
+        // Bottom face
+        vertices[20].setPos({ -1.0f, -1.0f, -1.0f });
+        vertices[20].setColor(0xFFFFFFFF);
+        vertices[20].setNormal({ 0.0f, -1.0f, 0.0f });
+
+        vertices[21].setPos({ +1.0f, -1.0f, -1.0f });
+        vertices[21].setColor(0xFFFFFFFF);
+        vertices[21].setNormal({ 0.0f, -1.0f, 0.0f });
+
+        vertices[22].setPos({ +1.0f, -1.0f, +1.0f });
+        vertices[22].setColor(0xFFFFFFFF);
+        vertices[22].setNormal({ 0.0f, -1.0f, 0.0f });
+
+        vertices[23].setPos({ -1.0f, -1.0f, +1.0f });
+        vertices[23].setColor(0xFFFFFFFF);
+        vertices[23].setNormal({ 0.0f, -1.0f, 0.0f });
+
+        // Additional faces added
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawLitVertex), (uint)countof(vertices));
         Buffer * vb = device->createBuffer(vbDesc, "CubeVB", vertices);
 
-        u16 indices[] =
+        const u16 indices[] =
         {
-           0, 1, 2,  2, 3, 0,   // Front face
-           4, 6, 5,  6, 4, 7,   // Back face
-           0, 3, 7,  7, 4, 0,   // Left face
-           1, 5, 6,  6, 2, 1,   // Right face
-           3, 2, 6,  6, 7, 3,   // Top face
-           0, 4, 5,  5, 1, 0    // Bottom face
+            1, 2, 0,  2, 3, 0,      // Front
+            4, 6, 5,  6, 4, 7,      // Back
+            8, 9, 10,  10, 11, 8,    // Left 
+            12, 14, 13,  14, 12, 15, // Right
+            16, 17, 18,  18, 19, 16, // Top 
+            20, 22, 21,  22, 20, 23  // Bottom
         };
 
         const uint indiceCount = (uint)countof(indices);
@@ -483,6 +567,7 @@ namespace vg::renderer
         Buffer * ib = device->createBuffer(ibDesc, "CubeIB", indices);
 
         m_cube = new MeshGeometry("Cube", this);
+        m_cube->setVertexFormat(VertexFormat::DebugDrawLit);
         m_cube->setIndexBuffer(ib);
         m_cube->setVertexBuffer(vb);
         m_cube->addBatch("CubeBatch", indiceCount);
@@ -490,51 +575,113 @@ namespace vg::renderer
         VG_SAFE_RELEASE(ib);
         VG_SAFE_RELEASE(vb);
     }
+
     
     //--------------------------------------------------------------------------------------
     void DebugDraw::createSquarePyramidPrimitive()
     {
         auto * device = Device::get();
 
-        DebugDrawVertex vertices[5];
+        // Vertex data for the square pyramid, each face gets its own set of vertices
+        DebugDrawLitVertex vertices[18];
 
-        // Base
-        vertices[0].setPos({ -1.0f, -1.0f,  0.0f });
+        // Base face (4 vertices, with the same normal pointing downwards)
+        vertices[0].setPos({ -1.0f, -1.0f, 0.0f });
+        vertices[0].setNormal({ 0.0f, 0.0f, -1.0f });
         vertices[0].setColor(0xFFFFFFFF);
 
-        vertices[1].setPos({ +1.0f, -1.0f,  0.0f });
+        vertices[1].setPos({ +1.0f, -1.0f, 0.0f });
+        vertices[1].setNormal({ 0.0f, 0.0f, -1.0f });
         vertices[1].setColor(0xFFFFFFFF);
 
-        vertices[2].setPos({ +1.0f, +1.0f,  0.0f });
+        vertices[2].setPos({ +1.0f, +1.0f, 0.0f });
+        vertices[2].setNormal({ 0.0f, 0.0f, -1.0f });
         vertices[2].setColor(0xFFFFFFFF);
 
-        vertices[3].setPos({ -1.0f, +1.0f,  0.0f });
+        vertices[3].setPos({ -1.0f, +1.0f, 0.0f });
+        vertices[3].setNormal({ 0.0f, 0.0f, -1.0f });
         vertices[3].setColor(0xFFFFFFFF);
 
-        // Apex 
-        vertices[4].setPos({ 0.0f,  0.0f, +1.5f });
+        // Side faces (each face gets 3 new vertices with the correct normal)
+        float3 apex = { 0.0f, 0.0f, +1.5f };
+
+        // Front left face (normal is pointing outwards)
+        vertices[4].setPos({ -1.0f, -1.0f, 0.0f });
+        vertices[4].setNormal({ -0.577f, -0.577f, +0.577f }); // Normal
         vertices[4].setColor(0xFFFFFFFF);
 
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)countof(vertices));
-        Buffer * vb = device->createBuffer(vbDesc, "PyramidVB", vertices);
+        vertices[5].setPos({ +1.0f, -1.0f, 0.0f });
+        vertices[5].setNormal({ -0.577f, -0.577f, +0.577f }); // Normal
+        vertices[5].setColor(0xFFFFFFFF);
 
-        // Index buffer 
-        u16 indices[] =
+        vertices[6].setPos(apex);
+        vertices[6].setNormal({ -0.577f, -0.577f, +0.577f });
+        vertices[6].setColor(0xFFFFFFFF);
+
+        // Front right face
+        vertices[7].setPos({ +1.0f, -1.0f, 0.0f });
+        vertices[7].setNormal({ +0.577f, -0.577f, +0.577f });
+        vertices[7].setColor(0xFFFFFFFF);
+
+        vertices[8].setPos({ +1.0f, +1.0f, 0.0f });
+        vertices[8].setNormal({ +0.577f, -0.577f, +0.577f });
+        vertices[8].setColor(0xFFFFFFFF);
+
+        vertices[9].setPos(apex);
+        vertices[9].setNormal({ +0.577f, -0.577f, +0.577f });
+        vertices[9].setColor(0xFFFFFFFF);
+
+        // Back right face
+        vertices[10].setPos({ +1.0f, +1.0f, 0.0f });
+        vertices[10].setNormal({ +0.577f, +0.577f, +0.577f });
+        vertices[10].setColor(0xFFFFFFFF);
+
+        vertices[11].setPos({ -1.0f, +1.0f, 0.0f });
+        vertices[11].setNormal({ +0.577f, +0.577f, +0.577f });
+        vertices[11].setColor(0xFFFFFFFF);
+
+        vertices[12].setPos(apex);
+        vertices[12].setNormal({ +0.577f, +0.577f, +0.577f });
+        vertices[12].setColor(0xFFFFFFFF);
+
+        // Back left face
+        vertices[13].setPos({ -1.0f, +1.0f, 0.0f });
+        vertices[13].setNormal({ -0.577f, +0.577f, +0.577f });
+        vertices[13].setColor(0xFFFFFFFF);
+
+        vertices[14].setPos({ -1.0f, -1.0f, 0.0f });
+        vertices[14].setNormal({ -0.577f, +0.577f, +0.577f });
+        vertices[14].setColor(0xFFFFFFFF);
+
+        vertices[15].setPos(apex);
+        vertices[15].setNormal({ -0.577f, +0.577f, +0.577f });
+        vertices[15].setColor(0xFFFFFFFF);
+
+        // Index buffer (updated for the new vertex structure)
+        const u16 indices[] =
         {
-            0, 1, 2,  2, 3, 0,  // Base
-            0, 4, 1,            // Front left
-            1, 4, 2,            // Front right
-            2, 4, 3,            // Back right
-            3, 4, 0             // Back left
+            0, 1, 2,  2, 3, 0,  // Base face 
+            4, 6, 5,            // Front left face
+            7, 9, 8,            // Front right face
+            10, 12, 11,         // Back right face
+            13, 15, 14          // Back left face
         };
 
         const uint indiceCount = (uint)countof(indices);
+
+        // Vertex buffer
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawLitVertex), (uint)countof(vertices));
+        Buffer * vb = device->createBuffer(vbDesc, "PyramidVB", vertices);
+
+        // Index buffer
         BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer | BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), indiceCount);
         Buffer * ib = device->createBuffer(ibDesc, "PyramidIB", indices);
 
+        // Create the mesh
         m_squarePyramid = new MeshGeometry("Pyramid", this);
-        m_squarePyramid->setIndexBuffer(ib);
+        m_squarePyramid->setVertexFormat(VertexFormat::DebugDrawLit);  
         m_squarePyramid->setVertexBuffer(vb);
+        m_squarePyramid->setIndexBuffer(ib);
         m_squarePyramid->addBatch("PyramidBatch", indiceCount);
 
         VG_SAFE_RELEASE(ib);
@@ -551,7 +698,7 @@ namespace vg::renderer
         int begin = -(int)gridSize / 2;
         int end = (int)gridSize / 2;
 
-        vector<DebugDrawVertex> vertices;
+        vector<DebugDrawUnlitVertex> vertices;
         vertices.reserve((end - begin + 1) << 2);
 
         for (int i = begin; i <= end; ++i)
@@ -573,7 +720,7 @@ namespace vg::renderer
             h1.setColor(0xFF0D0D0D);
         }
 
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (u32)vertices.size());
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawUnlitVertex), (u32)vertices.size());
         m_gridVB = device->createBuffer(vbDesc, "GridVB", vertices.data());
     }
 
@@ -582,7 +729,7 @@ namespace vg::renderer
     {
         auto * device = Device::get();
 
-        DebugDrawVertex vertices[6];
+        DebugDrawUnlitVertex vertices[6];
 
         const float eps = 0.0001f;
 
@@ -601,7 +748,7 @@ namespace vg::renderer
         vertices[5].setPos({ 0.0f, 0.0f, eps + 1.0f });
         vertices[5].setColor(0xFFFF0000);
 
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawVertex), (uint)countof(vertices));
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawUnlitVertex), (uint)countof(vertices));
 
         m_axisVB = device->createBuffer(vbDesc, "AxisVB", vertices);
     }
@@ -619,7 +766,7 @@ namespace vg::renderer
         {
             debugDraw3D.setWorldMatrix(transpose(aabbMatrixWS));
             debugDraw3D.setVertexBufferHandle(m_box->getVertexBuffer()->getBufferHandle(), m_box->getVertexBufferOffset());
-            debugDraw3D.setVertexFormat(VertexFormat::DebugDraw);
+            debugDraw3D.setVertexFormat(VertexFormat::DebugDrawUnlit);
         }
 
         // Root sig
@@ -685,7 +832,7 @@ namespace vg::renderer
 
         debugDrawRoot3D.setWorldMatrix(float4x4::identity());
         debugDrawRoot3D.setVertexBufferHandle(m_gridVB->getBufferHandle());
-        debugDrawRoot3D.setVertexFormat(VertexFormat::DebugDraw);
+        debugDrawRoot3D.setVertexFormat(VertexFormat::DebugDrawUnlit);
         debugDrawRoot3D.setColor(float4(1, 1, 1, 1));
 
         _cmdList->setRasterizerState(rs);
@@ -712,7 +859,7 @@ namespace vg::renderer
 
         debugDrawRoot3D.setWorldMatrix(float4x4::identity());
         debugDrawRoot3D.setVertexBufferHandle(m_axisVB->getBufferHandle());
-        debugDrawRoot3D.setVertexFormat(VertexFormat::DebugDraw);
+        debugDrawRoot3D.setVertexFormat(VertexFormat::DebugDrawUnlit);
         debugDrawRoot3D.setColor(float4(1, 1, 1, 1));
 
         _cmdList->setRasterizerState(rs);
@@ -726,7 +873,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddLine(const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickindID)
+    void DebugDraw::AddLine(const core::IWorld * _world, const core::float3 & _beginPos, const core::float3 & _endPos, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
     {
         addLine(_world, _beginPos, _endPos, _color, _matrix);
     }
@@ -744,7 +891,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeCube(const core::IWorld * _world, const float3 & _minPos, const float3 & _maxPos, u32 _color, const float4x4 & _matrix, PickingID _pickindID)
+    void DebugDraw::AddWireframeCube(const core::IWorld * _world, const float3 & _minPos, const float3 & _maxPos, u32 _color, const float4x4 & _matrix, PickingID _pickingID)
     {
         DebugDrawLineData * lines = getWorldData(_world)->m_lines.alloc(12);
 
@@ -765,75 +912,84 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddSolidCube(const core::IWorld * _world, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickindID)
+    void DebugDraw::AddSolidCube(const core::IWorld * _world, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
     {
         DebugDrawCubeData & cube = getWorldData(_world)->m_cubes[asInteger(DebugDrawFillMode::Solid)].emplace_back();
-        cube.world = mul(float4x4::scale(_maxPos- _minPos), _matrix);
-        cube.pickingID = _pickindID;
+        cube.world = getCubeMatrix(_matrix, _minPos, _maxPos);
+        cube.pickingID = _pickingID;
         cube.color = _color;
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeSphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    float4x4 DebugDraw::getCubeMatrix(const core::float4x4 & _matrix, const core::float3 & _minPos, const core::float3 & _maxPos) const
     {
-        addSphere(_world, _radius, _color, _matrix, _pickindID, DebugDrawFillMode::Wireframe);
+        return mul(float4x4::scale(_maxPos - _minPos), _matrix);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddSolidSphere(const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    void DebugDraw::AddWireframeSphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
     {
-        addSphere(_world, _radius, _color, _matrix, _pickindID, DebugDrawFillMode::Solid);
+        addSphere(_world, _radius, _color, _matrix, _pickingID, DebugDrawFillMode::Wireframe);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::addSphere(const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID, DebugDrawFillMode _fillmode)
+    void DebugDraw::AddSolidSphere(const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
+    {
+        addSphere(_world, _radius, _color, _matrix, _pickingID, DebugDrawFillMode::Solid);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::addSphere(const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID, DebugDrawFillMode _fillmode)
     {
         DebugDrawIcoSphereData & icoSphere = getWorldData(_world)->m_icoSpheres[asInteger(_fillmode)].emplace_back();
-        icoSphere.world = mul(float4x4::scale(_radius), _matrix);
-        icoSphere.pickingID = _pickindID;
+        icoSphere.world = getIcoSphereMatrix(_matrix, _radius);
+        icoSphere.pickingID = _pickingID;
         icoSphere.color = _color;
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeHemisphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    core::float4x4 DebugDraw::getIcoSphereMatrix(const core::float4x4 & _matrix, float _radius) const
     {
-        addHemisphere(_world, _radius, _color, _matrix, _pickindID, DebugDrawFillMode::Wireframe);
+        return mul(float4x4::scale(_radius), _matrix);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddSolidHemisphere(const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    void DebugDraw::AddWireframeHemisphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
     {
-        addHemisphere(_world, _radius, _color, _matrix, _pickindID, DebugDrawFillMode::Solid);
+        addHemisphere(_world, _radius, _color, _matrix, _pickingID, DebugDrawFillMode::Wireframe);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::addHemisphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID, DebugDrawFillMode _fillmode)
+    void DebugDraw::AddSolidHemisphere(const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
+    {
+        addHemisphere(_world, _radius, _color, _matrix, _pickingID, DebugDrawFillMode::Solid);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::addHemisphere(const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID, DebugDrawFillMode _fillmode)
     {
         DebugDrawHemiSphereData & hemiSphere = getWorldData(_world)->m_hemiSpheres[asInteger(_fillmode)].emplace_back();
         hemiSphere.world = mul(float4x4::scale(_radius), _matrix);
-        hemiSphere.pickingID = _pickindID;
+        hemiSphere.pickingID = _pickingID;
         hemiSphere.color = _color;
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    void DebugDraw::AddWireframeCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
     {
-        addCylinder(_world, _radius, _height, _color, _matrix, _pickindID, DebugDrawFillMode::Wireframe);
+        addCylinder(_world, _radius, _height, _color, _matrix, _pickingID, DebugDrawFillMode::Wireframe);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddSolidCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    void DebugDraw::AddSolidCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
     {
-        addCylinder(_world, _radius, _height, _color, _matrix, _pickindID, DebugDrawFillMode::Solid);
+        addCylinder(_world, _radius, _height, _color, _matrix, _pickingID, DebugDrawFillMode::Solid);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::addCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID, DebugDrawFillMode _fillmode)
+    float4x4 DebugDraw::getCylinderMatrix(const core::float4x4 & _matrix, float _radius, float _height) const
     {
-        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders[asInteger(_fillmode)].emplace_back();
-
         float3 s = float3(_radius, _radius, _height * 0.5f);
-
         const float4x4 scale = float4x4
         (
             s.x, 0, 0, 0,
@@ -841,15 +997,22 @@ namespace vg::renderer
             0, 0, s.z, 0,
             0, 0, 0, 1
         );
+        return mul(scale, _matrix);
+    }
 
-        cylinder.world = mul(scale, _matrix);
-        cylinder.pickingID = _pickindID;
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::addCylinder(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID, DebugDrawFillMode _fillmode)
+    {
+        DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders[asInteger(_fillmode)].emplace_back();
+
+        cylinder.world = getCylinderMatrix(_matrix, _radius, _height);
+        cylinder.pickingID = _pickingID;
         cylinder.color = _color;
         cylinder.taper = 1.0f;
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeTaperedCylinder(const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    void DebugDraw::AddWireframeTaperedCylinder(const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
     {
         DebugDrawCylinderData & cylinder = getWorldData(_world)->m_cylinders[asInteger(DebugDrawFillMode::Wireframe)].emplace_back();
 
@@ -865,62 +1028,70 @@ namespace vg::renderer
         );
 
         cylinder.world = mul(scale, _matrix);
-        cylinder.pickingID = _pickindID;
+        cylinder.pickingID = _pickingID;
         cylinder.color = _color;
         cylinder.taper = _topRadius / _bottomRadius;
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeCapsule(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    void DebugDraw::AddWireframeCapsule(const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
     {
         float offset = max(0.0f, _height - _radius * 2.0f);
 
         float4x4 topHemi = float4x4::identity();
         topHemi[3].xyz = float3(0, 0, 0.5f * offset);
-        AddWireframeHemisphere(_world, _radius, _color, mul(topHemi, _matrix), _pickindID);
+        AddWireframeHemisphere(_world, _radius, _color, mul(topHemi, _matrix), _pickingID);
 
-        AddWireframeCylinder(_world, _radius, offset, _color, _matrix, _pickindID);
+        AddWireframeCylinder(_world, _radius, offset, _color, _matrix, _pickingID);
 
         float4x4 bottomHemi = float4x4::identity();
         bottomHemi[2].xyz *= -1.0f;
         bottomHemi[3].xyz = float3(0, 0, -0.5f * offset);
-        AddWireframeHemisphere(_world, _radius, _color, mul(bottomHemi, _matrix), _pickindID);
+        AddWireframeHemisphere(_world, _radius, _color, mul(bottomHemi, _matrix), _pickingID);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeTaperedCapsule(const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    void DebugDraw::AddWireframeTaperedCapsule(const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
     {
         float offset = max(0.0f, _height - (_topRadius + _bottomRadius));
 
         float4x4 topHemi = float4x4::identity();
         topHemi[3].xyz = float3(0, 0, 0.5f * offset);
-        AddWireframeHemisphere(_world, _topRadius, _color, mul(topHemi, _matrix), _pickindID);
+        AddWireframeHemisphere(_world, _topRadius, _color, mul(topHemi, _matrix), _pickingID);
 
-        AddWireframeTaperedCylinder(_world, _topRadius, _bottomRadius, offset, _color, _matrix, _pickindID);
+        AddWireframeTaperedCylinder(_world, _topRadius, _bottomRadius, offset, _color, _matrix, _pickingID);
 
         float4x4 bottomHemi = float4x4::identity();
         bottomHemi[2].xyz *= -1.0f;
         bottomHemi[3].xyz = float3(0, 0, -0.5f * offset);
-        AddWireframeHemisphere(_world, _bottomRadius, _color, mul(bottomHemi, _matrix), _pickindID);
+        AddWireframeHemisphere(_world, _bottomRadius, _color, mul(bottomHemi, _matrix), _pickingID);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddWireframeSquarePyramid(const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    void DebugDraw::AddWireframeSquarePyramid(const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
     {
-        addSquarePyramid(_world, _base, _height, _color, _matrix, _pickindID, DebugDrawFillMode::Wireframe);
+        addSquarePyramid(_world, _base, _height, _color, _matrix, _pickingID, DebugDrawFillMode::Wireframe);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::AddSolidSquarePyramid(const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID)
+    void DebugDraw::AddSolidSquarePyramid(const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
     {
-        addSquarePyramid(_world, _base, _height, _color, _matrix, _pickindID, DebugDrawFillMode::Solid);
+        addSquarePyramid(_world, _base, _height, _color, _matrix, _pickingID, DebugDrawFillMode::Solid);
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::addSquarePyramid(const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 _matrix, PickingID _pickindID, DebugDrawFillMode _fillmode)
+    void DebugDraw::addSquarePyramid(const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID, DebugDrawFillMode _fillmode)
     {
         DebugDrawSquarePyramidData & squarePyramid = getWorldData(_world)->m_squarePyramid[asInteger(_fillmode)].emplace_back();
 
+        squarePyramid.world = getSquarePyramidMatrix(_matrix, _base, _height);
+        squarePyramid.pickingID = _pickingID;
+        squarePyramid.color = _color;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float4x4 DebugDraw::getSquarePyramidMatrix(const core::float4x4 & _matrix, float _base, float _height) const
+    {
         float3 s = float3(_base, _base, _height);
 
         const float4x4 scale = float4x4
@@ -931,9 +1102,7 @@ namespace vg::renderer
             0, 0, 0, 1
         );
 
-        squarePyramid.world = mul(scale, _matrix);
-        squarePyramid.pickingID = _pickindID;
-        squarePyramid.color = _color;
+        return mul(scale, _matrix);
     }
 
     //--------------------------------------------------------------------------------------
@@ -1006,7 +1175,7 @@ namespace vg::renderer
         clearDrawData();
     }
 
-    const float4 opaqueColor = float4(1.0f, 1.0f, 1.0f, 0.75f);
+    const float4 opaqueColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
     const float4 transparentColor = float4(0.75f, 0.75f, 0.75f, 0.5f);
 
     //--------------------------------------------------------------------------------------
@@ -1037,30 +1206,30 @@ namespace vg::renderer
 
         auto * worldData = getWorldData(world);
 
-        const auto mapSizeInBytes = worldData->m_lines.size() * 2 * sizeof(DebugDrawVertex);
+        const auto mapSizeInBytes = worldData->m_lines.size() * 2 * sizeof(DebugDrawUnlitVertex);
         if (mapSizeInBytes > 0)
         {
             u8 * dbgDrawData = (u8 *)_cmdList->map(drawData.m_debugDrawVB, mapSizeInBytes).data;
             {
                 for (uint i = 0; i < worldData->m_lines.size(); ++i)
                 {
-                    VG_ASSERT(offset + 2 * sizeof(DebugDrawVertex) < drawData.m_debugDrawVBSize);
+                    VG_ASSERT(offset + 2 * sizeof(DebugDrawUnlitVertex) < drawData.m_debugDrawVBSize);
 
-                    if (uint_ptr(offset + 2 * sizeof(DebugDrawVertex)) < drawData.m_debugDrawVBSize)
+                    if (uint_ptr(offset + 2 * sizeof(DebugDrawUnlitVertex)) < drawData.m_debugDrawVBSize)
                     {
                         const auto & line = worldData->m_lines[i];
 
-                        DebugDrawVertex * v0 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                        DebugDrawUnlitVertex * v0 = ((DebugDrawUnlitVertex *)(dbgDrawData + offset));
                         float3 pos0 = mul(float4(line.beginPos.xyz, 1), line.world).xyz;
                         memcpy(v0->pos, &pos0, sizeof(float) * 3);
                         v0->color = line.beginColor;
-                        offset += sizeof(DebugDrawVertex);
+                        offset += sizeof(DebugDrawUnlitVertex);
 
-                        DebugDrawVertex * v1 = ((DebugDrawVertex *)(dbgDrawData + offset));
+                        DebugDrawUnlitVertex * v1 = ((DebugDrawUnlitVertex *)(dbgDrawData + offset));
                         float3 pos1 = mul(float4(line.endPos.xyz, 1), line.world).xyz;
                         memcpy(v1->pos, &pos1, sizeof(float) * 3);
                         v1->color = line.endColor;
-                        offset += sizeof(DebugDrawVertex);
+                        offset += sizeof(DebugDrawUnlitVertex);
 
                         lineCount++;
                     }
@@ -1096,7 +1265,7 @@ namespace vg::renderer
             DebugDrawRootConstants3D debugDrawRoot3D;
             debugDrawRoot3D.setWorldMatrix(float4x4::identity());
             debugDrawRoot3D.setVertexBufferHandle(drawData.m_debugDrawVB->getBufferHandle(), drawData.m_linesVBOffset);
-            debugDrawRoot3D.setVertexFormat(VertexFormat::DebugDraw);
+            debugDrawRoot3D.setVertexFormat(VertexFormat::DebugDrawUnlit);
             debugDrawRoot3D.setColor(float4(1, 1, 1, 1));
 
             _cmdList->setRasterizerState(rs);
@@ -1105,7 +1274,7 @@ namespace vg::renderer
 
             // transparent 
             {
-                debugDrawRoot3D.color = transparentColor ;
+                debugDrawRoot3D.color = transparentColor;
                 _cmdList->setGraphicRootConstants(0, (u32 *)&debugDrawRoot3D, DebugDrawRootConstants3DCount);
 
                 BlendState bsAlpha(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
@@ -1121,13 +1290,13 @@ namespace vg::renderer
             {
                 debugDrawRoot3D.color = opaqueColor;
                 _cmdList->setGraphicRootConstants(0, (u32 *)&debugDrawRoot3D, DebugDrawRootConstants3DCount);
-            
+
                 BlendState bsOpaque(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
                 _cmdList->setBlendState(bsOpaque);
-            
+
                 DepthStencilState dsOpaque(true, true, ComparisonFunc::LessEqual);
                 _cmdList->setDepthStencilState(dsOpaque);
-            
+
                 _cmdList->draw(drawData.m_linesToDraw << 1);
             }
         }
@@ -1193,15 +1362,15 @@ namespace vg::renderer
                 VG_PROFILE_GPU("Cylinders");
                 drawDebugModelInstances(_cmdList, m_cylinder, worldData->m_cylinders, DebugDrawFillMode::Wireframe);
             }
-        }        
+        }
     }
 
     //--------------------------------------------------------------------------------------
-    template <typename T, size_t N> void DebugDraw::drawDebugModelInstances(gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<T> (& _instances)[N], DebugDrawFillMode _fillmode)
+    bool DebugDraw::setupDebugModelInstances(gfx::CommandList * _cmdList, const MeshGeometry * _geometry, DebugDrawFillMode _fillmode, DebugDrawRootConstants3D & _debugDraw3D, core::uint & _indexCount) const
     {
         VG_ASSERT(nullptr != _geometry);
         if (nullptr == _geometry)
-            return;
+            return false;
 
         // Root sig
         _cmdList->setGraphicRootSignature(m_debugDrawSignatureHandle);
@@ -1210,7 +1379,7 @@ namespace vg::renderer
         {
             default:
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(_fillmode);
-                
+
             case DebugDrawFillMode::Wireframe:
             {
                 RasterizerState rs(FillMode::Wireframe, CullMode::Back);
@@ -1219,67 +1388,178 @@ namespace vg::renderer
             break;
 
             case DebugDrawFillMode::Solid:
+            case DebugDrawFillMode::Outline:
             {
                 RasterizerState rs(FillMode::Solid, CullMode::Back);
                 _cmdList->setRasterizerState(rs);
             }
             break;
-        }        
+        }
 
-        _cmdList->setShader(m_debugDrawShaderKey);
+        switch (_fillmode)
+        {
+            case DebugDrawFillMode::Wireframe:
+            case DebugDrawFillMode::Solid:
+                _cmdList->setShader(m_debugDrawShaderKey);
+                break;
+
+            case DebugDrawFillMode::Outline:
+                _cmdList->setShader(m_debugDrawOutlineShaderKey);
+                break;
+        }
+        
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
         _cmdList->setIndexBuffer(_geometry->getIndexBuffer());
 
-        const uint indexCount = _geometry->getIndexBuffer()->getBufDesc().getElementCount();
+        _indexCount = _geometry->getIndexBuffer()->getBufDesc().getElementCount();
 
         // Root constants
+        _debugDraw3D.setVertexBufferHandle(_geometry->getVertexBuffer()->getBufferHandle());
+        _debugDraw3D.setVertexFormat(_geometry->getVertexFormat());
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    template <typename T, size_t N> void DebugDraw::drawDebugModelInstances(gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<T> (& _instances)[N], DebugDrawFillMode _fillmode) const
+    {
         DebugDrawRootConstants3D debugDraw3D;
-        debugDraw3D.setVertexBufferHandle(_geometry->getVertexBuffer()->getBufferHandle());
-        debugDraw3D.setVertexFormat(VertexFormat::DebugDraw);
+        uint indexCount;
 
-        auto & instances = _instances[asInteger(_fillmode)];
-
-        // Transparent
+        if (setupDebugModelInstances(_cmdList, _geometry, _fillmode, debugDraw3D, indexCount))
         {
-            BlendState bsAlpha(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
-            _cmdList->setBlendState(bsAlpha);
-            DepthStencilState dsAlpha(false, false, ComparisonFunc::Always);
-            _cmdList->setDepthStencilState(dsAlpha);
+            auto & instances = _instances[asInteger(_fillmode)];
 
-            for (uint i = 0; i < instances.size(); ++i)
+            // Transparent
             {
-                const T & instance = instances[i];
-                float4 color = unpackRGBA8(instance.color) * transparentColor;
+                setupZFail(_cmdList);
 
-                debugDraw3D.setWorldMatrix(transpose(instance.world));
-                debugDraw3D.setPickingID(instance.pickingID);
-                debugDraw3D.setColor(color);
-                debugDraw3D.setTaper(instance.getTaper());
+                for (uint i = 0; i < instances.size(); ++i)
+                {
+                    const T & instance = instances[i];
+                    float4 color = unpackRGBA8(instance.color) * transparentColor;
+
+                    debugDraw3D.setWorldMatrix(transpose(instance.world));
+                    debugDraw3D.setPickingID(instance.pickingID);
+                    debugDraw3D.setColor(color);
+                    debugDraw3D.setTaper(instance.getTaper());
+                    _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
+                    _cmdList->drawIndexed(indexCount);
+                }
+            }
+
+            // Opaque
+            {
+                setupZPass(_cmdList);
+
+                for (uint i = 0; i < instances.size(); ++i)
+                {
+                    const T & instance = instances[i];
+                    float4 color = unpackRGBA8(instance.color) * opaqueColor;
+
+                    debugDraw3D.setWorldMatrix(transpose(instance.world));
+                    debugDraw3D.setPickingID(instance.pickingID);
+                    debugDraw3D.setColor(color);
+                    debugDraw3D.setTaper(instance.getTaper());
+                    _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
+                    _cmdList->drawIndexed(indexCount);
+                }
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::drawCube(gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID) const
+    {
+        drawDebugModelInstance(_cmdList, _mode, _zTest, m_cube, getCubeMatrix(_matrix, _minPos, _maxPos), _color, 1.0f, _pickingID);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::drawSphere(gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, float _radius, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID) const
+    {
+        drawDebugModelInstance(_cmdList, _mode, _zTest, m_icoSphere, getIcoSphereMatrix(_matrix, _radius), _color, 1.0f, _pickingID);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::drawCylinder(gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, float _radius, float _height, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID) const
+    {
+        drawDebugModelInstance(_cmdList, _mode, _zTest, m_cylinder, getCylinderMatrix(_matrix, _radius, _height), _color, 1.0f, _pickingID);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::drawSquarePyramid(gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, float _base, float _height, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID) const
+    {
+        drawDebugModelInstance(_cmdList, _mode, _zTest, m_squarePyramid, getSquarePyramidMatrix(_matrix, _base, _height), _color, 1.0f, _pickingID);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::drawDebugModelInstance(gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, const MeshGeometry * _geometry, const float4x4 & _matrix, u32 _color, float _taper, PickingID _pickingID) const
+    {
+        DebugDrawRootConstants3D debugDraw3D;
+        uint indexCount;
+
+        if (setupDebugModelInstances(_cmdList, _geometry, _mode, debugDraw3D, indexCount))
+        {
+            debugDraw3D.setWorldMatrix(transpose(_matrix));
+            debugDraw3D.setPickingID(_pickingID);
+            debugDraw3D.setTaper(_taper);
+
+            const float4 color = unpackRGBA8(_color);
+
+            if (_mode == DebugDrawFillMode::Outline)
+            {
+                setupOutline(_cmdList);
+
                 _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
                 _cmdList->drawIndexed(indexCount);
             }
-        }
-
-        // Opaque
-        {
-            BlendState bsOpaque(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
-            _cmdList->setBlendState(bsOpaque);
-
-            DepthStencilState dsOpaque(true, true, ComparisonFunc::LessEqual);
-            _cmdList->setDepthStencilState(dsOpaque);
-
-            for (uint i = 0; i < instances.size(); ++i)
+            else
             {
-                const T & instance = instances[i];
-                float4 color = unpackRGBA8(instance.color) * opaqueColor;
-
-                debugDraw3D.setWorldMatrix(transpose(instance.world));
-                debugDraw3D.setPickingID(instance.pickingID);
-                debugDraw3D.setColor(color);
-                debugDraw3D.setTaper(instance.getTaper());
-                _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
-                _cmdList->drawIndexed(indexCount);
+                if (!_zTest)
+                {
+                    setupZFail(_cmdList);
+                    debugDraw3D.setColor(color * transparentColor);
+                    _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
+                    _cmdList->drawIndexed(indexCount);
+                }
+                else
+                {
+                    setupZPass(_cmdList);
+                    debugDraw3D.setColor(color * opaqueColor);
+                    _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
+                    _cmdList->drawIndexed(indexCount);
+                }
             }
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::setupZFail(gfx::CommandList * _cmdList) const
+    {
+        BlendState bsAlpha(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
+        _cmdList->setBlendState(bsAlpha);
+
+        DepthStencilState dsAlpha(false, false, ComparisonFunc::Always);
+        _cmdList->setDepthStencilState(dsAlpha);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::setupZPass(gfx::CommandList * _cmdList) const
+    {
+        BlendState bsOpaque(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
+        _cmdList->setBlendState(bsOpaque);
+
+        DepthStencilState dsOpaque(true, true, ComparisonFunc::LessEqual);
+        _cmdList->setDepthStencilState(dsOpaque);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::setupOutline(gfx::CommandList * _cmdList) const
+    {
+        BlendState bsAlpha(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+        _cmdList->setBlendState(bsAlpha);
+
+        DepthStencilState dsOpaque(true, true, ComparisonFunc::LessEqual);
+        _cmdList->setDepthStencilState(dsOpaque);
     }
 }

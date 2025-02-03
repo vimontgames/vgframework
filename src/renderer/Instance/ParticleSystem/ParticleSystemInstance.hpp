@@ -46,6 +46,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool ParticleSystemInstance::TryGetAABB(core::AABB & _aabb) const
     {
+        // TODO
         return false;
     }
 

@@ -5,11 +5,14 @@
 #include "system/depthbias.hlsli"
 #include "system/picking.hlsl"
 #include "debugdraw.hlsli"
+#include "system/outlinemask.hlsli"
+#include "system/transparency.hlsli"
 
 struct VS_Output
 {
     float4 pos  : Position;
     float3 wpos : WorldPos;
+    float3 nrm : Normal;
     float4 col  : Color;
 };
 
@@ -20,7 +23,7 @@ VS_Output VS_DebugDraw(uint _vertexID : VertexID)
     ByteAddressBuffer buf = getBuffer(debugDrawRootConstants3D.getVertexBufferHandle());
         
     Vertex vert;
-           vert.Load(buf, debugDrawRootConstants3D.getVertexFormat(), _vertexID, debugDrawRootConstants3D.getVertexBufferBytesOffset());
+           vert.Load(buf, debugDrawRootConstants3D.getVertexFormat(), _vertexID, debugDrawRootConstants3D.getVertexBufferOffset());
     
     ViewConstants viewConstants;
     viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
@@ -31,14 +34,17 @@ VS_Output VS_DebugDraw(uint _vertexID : VertexID)
     float3 modelPos = vert.getPos();
 
     modelPos.xy *= lerp(1, debugDrawRootConstants3D.getTaper(), modelPos.z*0.5f+0.5f);
-
-    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), debugDrawRootConstants3D.getWorldMatrix()).xyz;
+    
+    float4x4 world = debugDrawRootConstants3D.getWorldMatrix();
+    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), world).xyz;
 
     float4 viewPos = mul(float4(worldPos.xyz, 1.0f), view);
     viewPos.z += WIREFRAME_DEPTHBIAS;
 
     output.wpos = worldPos;
     output.pos = mul(viewPos, proj);
+
+    output.nrm = mul(float4(vert.getNrm(), 0.0f), getMatrixWithoutScale(world)).xyz;
 
     return output;
 }
@@ -51,7 +57,15 @@ struct PS_Output
 PS_Output PS_DebugDraw(VS_Output _input)
 {
     PS_Output output;
-    output.color0 = _input.col;
+ 
+    if (debugDrawRootConstants3D.getVertexFormat() == VertexFormat::DebugDrawLit)
+    {
+        output.color0 = float4( (saturate(dot(_input.nrm, normalize(float3(1,2,3))).xxx * 0.25) + 0.75) * _input.col.rgb, _input.col.a); 
+    }
+    else
+    {
+        output.color0 = _input.col.rgba; 
+    }
 
     #if _TOOLMODE && !_ZONLY
     ViewConstants viewConstants;
@@ -73,6 +87,48 @@ PS_Output PS_DebugDraw(VS_Output _input)
     }
 
     #endif // #if _TOOLMODE && !_ZONLY
+
+    return output;
+}
+
+//--------------------------------------------------------------------------------------
+VS_Output_Outline VS_DebugDrawOutline(uint _vertexID : VertexID)
+{
+    VS_Output_Outline output;
+
+    Vertex vert;
+           vert.Load(getBuffer(debugDrawRootConstants3D.getVertexBufferHandle()), debugDrawRootConstants3D.getVertexFormat(), _vertexID, debugDrawRootConstants3D.getVertexBufferOffset());
+
+    ViewConstants viewConstants;
+                  viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+
+    float4x4 view = viewConstants.getView();
+    float4x4 proj = viewConstants.getProj();
+        
+    float3 modelPos = vert.getPos();
+    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), debugDrawRootConstants3D.getWorldMatrix()).xyz;
+    float4 viewPos = mul(float4(worldPos.xyz, 1.0f), view); 
+
+    viewPos.z += WIREFRAME_DEPTHBIAS;
+    output.vpos = viewPos;
+    output.pos = mul(viewPos, proj);
+
+    return output;
+}
+
+PS_Output_Outline PS_DebugDrawOutline(VS_Output_Outline _input)
+{
+    ViewConstants viewConstants;
+    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+    
+    uint2 screenSize = viewConstants.getScreenSize();
+    float3 screenPos = _input.pos.xyz / float3(screenSize.xy, 1);
+
+    PS_Output_Outline output = (PS_Output_Outline)0;
+    output.id = debugDrawRootConstants3D.getPickingID();
+
+    if (!linearDepthTest(screenPos.xy, _input.vpos))
+        output.id |= (uint)OutlineMaskFlags::DepthFail;
 
     return output;
 }

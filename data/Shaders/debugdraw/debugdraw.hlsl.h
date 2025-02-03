@@ -25,6 +25,14 @@ namespace vg::gfx
 
                 debugDraw.setFlag(Flags::Toolmode);
             }
+
+            auto & debugDrawOutline = declTechnique("DebugDrawOutline");
+            {
+                debugDrawOutline.vs = declVS("VS_DebugDrawOutline");
+                debugDrawOutline.ps = declPS("PS_DebugDrawOutline");
+
+                debugDraw.setFlag(Flags::Toolmode);
+            }
         }
     };
 }

@@ -107,7 +107,7 @@ float SampleDirectionalShadowMap(Texture2D _shadowMap, float3 _shadowUV, float _
 }
 
 //--------------------------------------------------------------------------------------
-LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePos, float3 _worldPos, float3 _albedo, float3 _worldNormal, float4 _pbr)
+LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePos, float3 _worldPos, inout float3 _albedo, float3 _worldNormal, float4 _pbr)
 {
     LightingResult output = (LightingResult)0;
     
@@ -256,6 +256,11 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 				#endif		
 
 				shadow = 1.0f - ((1.0f-shadow) * si);
+
+				//if (all(saturate(shadowUV) == shadowUV))
+				//	_albedo = lerp(_albedo, float3(0,1,0), 0.5);
+				//else
+				//	_albedo = lerp(_albedo, float3(1,0,0), 0.5);
 			}
 
 			output.addLightContribution(Lo, cosLo, cosLi, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
@@ -270,10 +275,10 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		float dist = length(lightDir);
 
 		float att = getRangeAttenuation(dist, omni.getRadius());
+		float3 color = omni.getColor();
 
-		if (att > lightEps)
+		if ((att * dot(lightLuminance, color)) > lightEps)
 		{
-			float3 color = omni.getColor();
 			float3 Li = normalize(lightDir);
 			float cosLi = max(0.0f, dot(_worldNormal, Li));
 

@@ -132,10 +132,9 @@ namespace vg::renderer
     {
         _cullingResult->m_output->add(GetLightType(), this);
 
-        // TODO: to render light outlines we need a flag to render debug primitives to the outline buffer
-        //const ObjectFlags objectFlags = this->getObjectFlags();
-        //if (asBool(ObjectFlags::Selected & objectFlags))
-        //    _cullingResult->m_output->add(GraphicInstanceListType::Outline, this);
+        const ObjectFlags objectFlags = this->getObjectFlags();
+        if (asBool(ObjectFlags::Selected & objectFlags))
+            _cullingResult->m_output->add(GraphicInstanceListType::Outline, this);
 
         return true;
     }
@@ -154,7 +153,7 @@ namespace vg::renderer
 
             case ShaderPass::Forward:
             case ShaderPass::Deferred:
-                DebugDraw::get()->AddSolidCube(_renderContext.m_renderPass->getWorld(), (float3)-0.05f, (float3)0.05f, packRGBA8(GetColor()), getGlobalMatrix(), GetPickingID());
+                DebugDraw::get()->drawCube(_cmdList, DebugDrawFillMode::Solid, true, (float3)-0.05f, (float3)0.05f, packRGBA8(GetColor()), getGlobalMatrix(), GetPickingID());
                 break;
         }
     }

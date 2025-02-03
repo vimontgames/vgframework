@@ -121,15 +121,15 @@ namespace vg::renderer
             const bool depthWrite = options->isZPrepassEnabled() ? false : true;
             DepthStencilState ds(true, depthWrite, ComparisonFunc::LessEqual);
             _cmdList->setDepthStencilState(ds);
-            DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Opaque);
-            DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::AlphaTest);
+            DrawGraphicInstanceList(renderContext, _cmdList, GraphicInstanceListType::Opaque);
+            DrawGraphicInstanceList(renderContext, _cmdList, GraphicInstanceListType::AlphaTest);
         }
 
         // Always disable depth writes when rendering decals
         {
             DepthStencilState ds(true, false, ComparisonFunc::LessEqual);
             _cmdList->setDepthStencilState(ds);
-            DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Decal);
+            DrawGraphicInstanceList(renderContext, _cmdList, GraphicInstanceListType::Decal);
         }
     }
 }

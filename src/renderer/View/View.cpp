@@ -280,32 +280,16 @@ namespace vg::renderer
         const float4x4 viewProj = mul(m_view, m_proj);
         m_frustum.compute(viewProj);
 
-        if (m_viewID.target == ViewTarget::Game)
+        if (m_viewID.target == ViewTarget::Game )
         {
             const auto * world = getWorld();
-            const u32 color = m_cameraGO ? packRGBA8(m_cameraGO->GetColor()) : 0x7F7F7F7F;
-            const PickingID pickingID = m_pickingID;
-            m_frustum.draw(world, color);
 
-            auto * debugDraw = DebugDraw::get();
-
-            float4x4 mCube = float4x4::identity();
-                     mCube[0].xyz = float3(0.5f, 0.0f, 0.0f);
-                     mCube[1].xyz = float3(0.0f, 0.5f, 0.0f);
-                     mCube[2].xyz = float3(0.0f, 0.0f, 1.0f);
-                     mCube[3].xyz = float3(0.0f, 0.0f, 1.0f);
-                     mCube = mul(mCube, m_viewInv);
-
-            debugDraw->AddSolidCube(world, (float3)-0.25f, (float3)0.25f, color, mCube, pickingID);
-
-            float4x4 mSquarePyramid = float4x4::identity();
-                     mSquarePyramid[0].xyz = float3(0.5f, 0.0f, 0.0f);
-                     mSquarePyramid[1].xyz = float3(0.0f, 0.5f, 0.0f);
-                     mSquarePyramid[2].xyz = float3(0.0f, 0.0f, 0.5f);
-                     mSquarePyramid[3].xyz = float3(0.0f, 0.0f, 0.25f);
-                     mSquarePyramid = mul(mSquarePyramid, m_viewInv);
-
-            debugDraw->AddSolidSquarePyramid(world, 1.0f, 1.0f, color, mSquarePyramid, pickingID);
+            if (m_cameraGO->GetWorld() == world)
+            {
+                const u32 color = m_cameraGO ? packRGBA8(m_cameraGO->GetColor()) : 0x7F7F7F7F;
+                const PickingID pickingID = m_pickingID;
+                m_frustum.draw(world, color);
+            }
         }
     }
 

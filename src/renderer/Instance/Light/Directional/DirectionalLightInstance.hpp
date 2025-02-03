@@ -126,8 +126,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DirectionalLightInstance::Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
     {
-        super::Draw(_renderContext, _cmdList);
-
         switch (_renderContext.m_shaderPass)
         {
             default:
@@ -137,16 +135,21 @@ namespace vg::renderer
             case ShaderPass::ZOnly:
                 break;
 
+            case ShaderPass::Outline:
             case ShaderPass::Forward:
             case ShaderPass::Deferred:
             {
                 const float4x4 & mGlobal = getGlobalMatrix();
+                auto * debugDraw = DebugDraw::get();
+                const auto color = packRGBA8(GetColor());
+                const auto pickingID = GetPickingID();
 
                 float4x4 mLine = float4x4::identity();
+                         mLine[0].xyz = float3(0.25f, 0.0f, 0.0f);
+                         mLine[1].xyz = float3(0.0f, 0.25f, 0.0f);
+                         mLine[2].xyz = float3(0.0f, 0.0f, 1.0f);
                          mLine[3].xyz = float3(0,0,0.5f);
-                         mLine = mul(mLine, mGlobal);
-
-                DebugDraw::get()->AddSolidCylinder(_renderContext.m_renderPass->getWorld(), 0.1f, 1.0f, packRGBA8(GetColor()), mLine, GetPickingID());
+                         mLine = mul(mLine, mGlobal);                
 
                 float4x4 mArrow = float4x4::identity();
                          mArrow[0].xyz = float3(0.25f, 0.0f, 0.0f);
@@ -155,7 +158,19 @@ namespace vg::renderer
                          mArrow[3].xyz = float3(0, 0, 1.0f);
                          mArrow = mul(mArrow, mGlobal);
 
-                DebugDraw::get()->AddSolidSquarePyramid(_renderContext.m_renderPass->getWorld(), 1.0f, 1.0f, packRGBA8(GetColor()), mArrow, GetPickingID());
+                if (ShaderPass::Outline == _renderContext.m_shaderPass)
+                {
+                    debugDraw->drawCube(_cmdList, DebugDrawFillMode::Outline, true, (float3)-0.25f, (float3)0.25f, color, mLine, pickingID);
+                    debugDraw->drawSquarePyramid(_cmdList, DebugDrawFillMode::Outline, true, 1.0f, 1.0f, color, mArrow, pickingID);
+                }
+                else
+                {
+                    debugDraw->drawCube(_cmdList, DebugDrawFillMode::Solid, false, (float3)-0.25f, (float3)0.25f, color, mLine, pickingID);
+                    debugDraw->drawSquarePyramid(_cmdList, DebugDrawFillMode::Solid, false, 1.0f, 1.0f, color, mArrow, pickingID);
+
+                    debugDraw->drawCube(_cmdList, DebugDrawFillMode::Solid, true, (float3)-0.25f, (float3)0.25f, color, mLine, pickingID);
+                    debugDraw->drawSquarePyramid(_cmdList, DebugDrawFillMode::Solid, true, 1.0f, 1.0f, color, mArrow, pickingID);
+                }
             }
             break;
         }

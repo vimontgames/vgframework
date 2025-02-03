@@ -10,15 +10,31 @@
 vg_enum_class(VertexFormat, uint,
     Default         = 0,
     Skinning_4Bones = 1,
-    DebugDraw       = 2
+    DebugDrawUnlit  = 2,
+    DebugDrawLit    = 3
 );
+
+//--------------------------------------------------------------------------------------
+// TODO: move to HLSL math header?
+//--------------------------------------------------------------------------------------
+inline float4x4 getMatrixWithoutScale(float4x4 _matrix)
+{
+    float4x4 matrix = _matrix;
+    matrix[0].xyz = matrix[0].xyz / length(_matrix[0].xyz);
+    matrix[1].xyz = matrix[1].xyz / length(_matrix[1].xyz);
+    matrix[2].xyz = matrix[2].xyz / length(_matrix[2].xyz);
+    return matrix;
+}
 
 inline constexpr uint getVertexFormatStride(VertexFormat _format)
 {
     switch (_format)
     {
-        case VertexFormat::DebugDraw:
+        case VertexFormat::DebugDrawUnlit:
             return 16;
+
+        case VertexFormat::DebugDrawLit:
+            return 28;
         
         default:
         case VertexFormat::Default:
@@ -35,10 +51,11 @@ inline bool hasNormal(VertexFormat _format)
     {
         case VertexFormat::Default:
         case VertexFormat::Skinning_4Bones:
+        case VertexFormat::DebugDrawLit:
             return true;
         
         default:
-        case VertexFormat::DebugDraw:
+        case VertexFormat::DebugDrawUnlit:
             return false;
     }
 }
@@ -52,7 +69,8 @@ inline bool hasBinormal(VertexFormat _format)
             return true;
         
         default:
-        case VertexFormat::DebugDraw:
+        case VertexFormat::DebugDrawLit:
+        case VertexFormat::DebugDrawUnlit:
             return false;
     }
 }
@@ -66,7 +84,8 @@ inline bool hasTangent(VertexFormat _format)
             return true;
         
         default:
-        case VertexFormat::DebugDraw:
+        case VertexFormat::DebugDrawLit:
+        case VertexFormat::DebugDrawUnlit:
             return false;
     }
 }
@@ -80,7 +99,8 @@ inline bool hasUV0(VertexFormat _format)
             return true;
         
         default:
-        case VertexFormat::DebugDraw:
+        case VertexFormat::DebugDrawLit:
+        case VertexFormat::DebugDrawUnlit:
             return false;
     }
 }
@@ -94,7 +114,8 @@ inline bool hasUV1(VertexFormat _format)
             return true;
         
         default:
-        case VertexFormat::DebugDraw:
+        case VertexFormat::DebugDrawLit:
+        case VertexFormat::DebugDrawUnlit:
             return false;
     }
 }
@@ -105,7 +126,8 @@ inline bool hasColor(VertexFormat _format)
     {
         case VertexFormat::Default:
         case VertexFormat::Skinning_4Bones:
-        case VertexFormat::DebugDraw:
+        case VertexFormat::DebugDrawLit:
+        case VertexFormat::DebugDrawUnlit:
             return true;
         
         default:

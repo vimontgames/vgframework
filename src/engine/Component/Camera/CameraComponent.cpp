@@ -6,6 +6,7 @@
 #include "renderer/IRenderer.h"
 #include "renderer/ICameraLens.h"
 #include "renderer/IPicking.h"
+#include "renderer/ICameraInstance.h"
 #include "engine/Engine.h"
 #include "editor/Editor_Consts.h"
 
@@ -14,6 +15,7 @@
 #endif
 
 using namespace vg::core;
+using namespace vg::renderer;
 
 namespace vg::engine
 {
@@ -61,12 +63,19 @@ namespace vg::engine
         m_viewportOffset(float2(0, 0)),
         m_viewportScale(float2(1, 1))
     {
-        m_cameraSettings = (renderer::ICameraSettings*)Kernel::getFactory()->CreateObject("CameraSettings");
+        m_cameraSettings = (ICameraSettings*)Kernel::getFactory()->CreateObject("CameraSettings");
         m_cameraSettings->RegisterUID();
         m_cameraSettings->SetParent(this);
 
         auto * picking = Engine::get()->GetRenderer()->GetPicking();
         m_pickingID = picking->CreatePickingID(this);
+
+        m_cameraInstance = (ICameraInstance *)CreateFactoryObject(CameraInstance, _name, this);
+        auto * go = getGameObject();
+        m_cameraInstance->SetName(go->GetName().c_str());
+        m_cameraInstance->SetPickingID(m_pickingID);
+        go->addGraphicInstance(m_cameraInstance);
+        
     }
 
     //--------------------------------------------------------------------------------------
@@ -74,8 +83,13 @@ namespace vg::engine
     {
         VG_SAFE_RELEASE(m_cameraSettings);
 
-        auto * picking = Engine::get()->GetRenderer()->GetPicking();
+        auto * renderer = Engine::get()->GetRenderer();
+        auto * picking = renderer->GetPicking();
         picking->ReleasePickingID(m_pickingID);
+
+        auto * go = getGameObject();
+        go->removeGraphicInstance(m_cameraInstance);
+        Engine::get()->GetRenderer()->ReleaseAsync(m_cameraInstance);
     }
 
     //--------------------------------------------------------------------------------------
@@ -109,6 +123,15 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void CameraComponent::EnableComponentFlags(core::ComponentFlags _flags, bool _enabled)
+    {
+        super::EnableComponentFlags(_flags, _enabled);
+
+        if (m_cameraInstance)
+            m_cameraInstance->SetInstanceFlags(InstanceFlags::Enabled, asBool(ComponentFlags::Enabled & GetComponentFlags()));
+    }
+
+    //--------------------------------------------------------------------------------------
     void CameraComponent::updateLensConstraints()
     {
         
@@ -120,18 +143,18 @@ namespace vg::engine
         auto renderer = Engine::get()->GetRenderer();
 
         // Create or get the view
-        renderer::IViewport * viewport = Engine::get()->GetRenderer()->GetViewport(gfx::ViewportID(m_target, m_viewportIndex));
+        IViewport * viewport = Engine::get()->GetRenderer()->GetViewport(gfx::ViewportID(m_target, m_viewportIndex));
         if (viewport)
         {
             const auto & views = viewport->GetViewIDs();
             auto it = views.find(m_viewIndex);
             if (it == views.end())
             {
-                renderer::CreateViewParams viewParams;
-                                           viewParams.size = viewport->GetRenderTargetSize();
-                                           viewParams.world = GetGameObject()->GetWorld();
-                                           viewParams.target = (gfx::ViewTarget)m_target;  // TODO: hazardous cast between ViewTarget and ViewportTarget? Create single enum?
-                                           viewParams.viewport = viewport;
+                CreateViewParams viewParams;
+                                 viewParams.size = viewport->GetRenderTargetSize();
+                                 viewParams.world = GetGameObject()->GetWorld();
+                                 viewParams.target = (gfx::ViewTarget)m_target;  // TODO: hazardous cast between ViewTarget and ViewportTarget? Create single enum?
+                                 viewParams.viewport = viewport;
 
                 string viewName = fmt::sprintf("%s View #%u", asString(viewParams.target).c_str(), m_viewIndex);
 
@@ -155,6 +178,10 @@ namespace vg::engine
                 view->SetRenderTargetSize(viewport->GetRenderTargetSize());
                 view->SetVisible(true);
             }
+
+            VG_ASSERT(nullptr != m_cameraInstance);
+            m_cameraInstance->setGlobalMatrix(_context.m_gameObject->GetGlobalMatrix());
+            m_cameraInstance->setColor(_context.m_gameObject->GetColor());
 
             view->SetRender(true);
             const auto & go = getGameObject();

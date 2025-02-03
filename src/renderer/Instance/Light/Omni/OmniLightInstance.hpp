@@ -16,7 +16,7 @@ namespace vg::renderer
         super::registerProperties(_desc);
     
         registerOptionalProperty(OmniLightDesc, m_useMaxRadius, m_maxRadius, "Radius");
-        setPropertyRange(OmniLightDesc, m_useMaxRadius, float2(0.01f, 100.0f));
+        setPropertyRange(OmniLightDesc, m_maxRadius, float2(0.01f, 256.0f));
     
         return true;
     }
@@ -72,7 +72,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     float OmniLightInstance::getMaxRadius() const
     {
-        float intensity = dot(getColor().rgb, float3(0.299f, 0.587f, 0.114f)) * m_intensity;
+        float intensity = dot(getColor().rgb, lightLuminance) * m_intensity;
         float maxRadius = sqrtf(intensity / (lightEps));
 
         if (m_maxRadius < 0.0f)
@@ -98,7 +98,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void OmniLightInstance::Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
     {
-        super::Draw(_renderContext, _cmdList);
+        //super::Draw(_renderContext, _cmdList);
 
         switch (_renderContext.m_shaderPass)
         {
@@ -109,10 +109,28 @@ namespace vg::renderer
             case ShaderPass::ZOnly:
                 break;
 
+            case ShaderPass::Outline:
             case ShaderPass::Forward:
             case ShaderPass::Deferred:
-                DebugDraw::get()->AddWireframeSphere(_renderContext.m_renderPass->getWorld(), getMaxRadius(), packRGBA8(GetColor()), getGlobalMatrix(), GetPickingID());
-                break;     
+            {
+                const float4x4 & mGlobal = getGlobalMatrix();
+                auto * debugDraw = DebugDraw::get();
+                const auto color = packRGBA8(GetColor());
+                const auto pickingID = GetPickingID();
+                const float radius = 0.25f;
+
+                if (ShaderPass::Outline == _renderContext.m_shaderPass)
+                {
+                    debugDraw->drawSphere(_cmdList, DebugDrawFillMode::Outline, true, radius, color, mGlobal, pickingID);
+                }
+                else
+                {
+                    debugDraw->drawSphere(_cmdList, DebugDrawFillMode::Solid, false, radius, color, mGlobal, pickingID);
+                    debugDraw->drawSphere(_cmdList, DebugDrawFillMode::Solid, true, radius, color, mGlobal, pickingID);
+                    //debugDraw->AddWireframeSphere(_renderContext.m_renderPass->getWorld(), getMaxRadius(), color, mGlobal, pickingID);
+                }                
+            }
+            break;
         }            
     }
 }

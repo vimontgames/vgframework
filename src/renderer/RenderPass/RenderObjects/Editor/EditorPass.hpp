@@ -124,11 +124,13 @@ namespace vg::renderer
             if (options->isWireframeEnabled())
             {
                 renderContext.m_wireframe = true;
-                DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::All);
+                DrawGraphicInstanceList(renderContext, _cmdList, GraphicInstanceListType::All);
             }
 
             for (uint i = 0; i < enumCount<LightType>(); ++i)
-                DrawGraphicInstances(renderContext, _cmdList, (LightType)i);
+                DrawLightInstanceList(renderContext, _cmdList, (LightType)i);
+
+            DrawCameraInstanceList(renderContext, _cmdList); 
 
             if (options->isAABBEnabled())
             {

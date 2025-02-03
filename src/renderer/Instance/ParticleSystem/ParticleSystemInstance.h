@@ -16,7 +16,6 @@ namespace vg::renderer
         void    SetModel                    (core::Lod _lod, core::IModel * _model) final override;
         bool    TryGetAABB                  (core::AABB & _aabb) const final override;
         bool    Cull                        (CullingResult * _cullingResult, View * _view) const final override;
-        bool    IsSkinned                   () const final override { return false; } // Rename to 'UseSkinningBuffer' or 'UseDynamicBuffer'?
         bool    OnUpdateRayTracing          (gfx::CommandList * _cmdList, View * _view, core::uint _index) final override;
         void    Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
     };

@@ -23,8 +23,9 @@ namespace vg::renderer
         ~RenderObjectsPass();
 
     protected:
-        virtual void    DrawGraphicInstances(const RenderContext & _renderContext, gfx::CommandList * _cmdList, GraphicInstanceListType _list) const;
-        virtual void    DrawGraphicInstances(const RenderContext & _renderContext, gfx::CommandList * _cmdList, LightType _list) const;
+        virtual void    DrawGraphicInstanceList(const RenderContext & _renderContext, gfx::CommandList * _cmdList, GraphicInstanceListType _list) const;
+        virtual void    DrawLightInstanceList(const RenderContext & _renderContext, gfx::CommandList * _cmdList, LightType _list) const;
+        virtual void    DrawCameraInstanceList(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const;
         core::u64       getListCostEstimate(const ViewCullingJobOutput & _cullingOutput, GraphicInstanceListType _list) const;
     };
 }

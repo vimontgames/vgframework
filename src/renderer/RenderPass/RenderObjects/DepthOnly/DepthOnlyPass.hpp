@@ -52,7 +52,7 @@ namespace vg::renderer
         _cmdList->setDepthStencilState(ds);
 
         // Render full opaque then alphatest
-        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::Opaque);
-        DrawGraphicInstances(renderContext, _cmdList, GraphicInstanceListType::AlphaTest); 
+        DrawGraphicInstanceList(renderContext, _cmdList, GraphicInstanceListType::Opaque);
+        DrawGraphicInstanceList(renderContext, _cmdList, GraphicInstanceListType::AlphaTest);
     }
 }

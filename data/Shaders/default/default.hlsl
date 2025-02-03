@@ -9,8 +9,8 @@
 #include "system/lighting.hlsli"
 #include "system/debugdisplay.hlsli"
 #include "system/instancedata.hlsli"
-#include "system/transparentPass.hlsli"
 #include "system/outlinemask.hlsli"
+#include "system/transparency.hlsli"
 
 #include "default.hlsli"
 
@@ -19,28 +19,6 @@
 #else
 #define EXPORT_VPOS 0
 #endif
-
-// TODO: move to transparentPass.hlsli?
-void applyDepthTransparency(inout float _alpha, float2 _screenPos, float4 _vpos, float _invDepthFade)
-{
-    TransparentPassConstants transparentPassConstants;
-    transparentPassConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_TRANSPARENTPASS));
-
-    float linearDepthBuffer = getTexture2D(transparentPassConstants.getLinearDepth()).SampleLevel(nearestClamp, _screenPos.xy, 0).y;
-    float linearZ = -_vpos.z; 
-    float alpha = saturate((linearDepthBuffer - linearZ) * _invDepthFade ); 
-    _alpha *= alpha;
-}
-
-bool linearDepthTest(float2 _screenPos, float4 _vpos)
-{
-    TransparentPassConstants transparentPassConstants;
-    transparentPassConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_TRANSPARENTPASS));
-
-    float linearDepthBuffer = getTexture2D(transparentPassConstants.getLinearDepth()).SampleLevel(nearestClamp, _screenPos.xy, 0).y;
-    float linearZ = -_vpos.z; 
-    return linearZ < linearDepthBuffer + 0.01;
-}
 
 struct VS_Output
 {
@@ -111,18 +89,6 @@ struct PS_Output
 };
 
 //--------------------------------------------------------------------------------------
-// TODO: move to HLSL math header?
-//--------------------------------------------------------------------------------------
-float4x4 getMatrixWithoutScale(float4x4 _matrix)
-{
-    float4x4 matrix = _matrix;
-    matrix[0].xyz = matrix[0].xyz / length(_matrix[0].xyz);
-    matrix[1].xyz = matrix[1].xyz / length(_matrix[1].xyz);
-    matrix[2].xyz = matrix[2].xyz / length(_matrix[2].xyz);
-    return matrix;
-}
-
-//--------------------------------------------------------------------------------------
 float3 getWorldNormal(float3 _normal, float3 _vertexTangent, float3 _vertexBinormal, float3 _vertexNormal, float4x4 _world)
 {
     float3 T = normalize(_vertexTangent);
@@ -134,8 +100,6 @@ float3 getWorldNormal(float3 _normal, float3 _vertexTangent, float3 _vertexBinor
 
     return worldNormal;
 }
-
-
 
 //--------------------------------------------------------------------------------------
 #if _ZONLY
@@ -359,19 +323,10 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     #endif
 }
 
-struct VS_Output_Outline
-{
-    float4 pos  : Position;
-    float4 vpos : ViewPos;
-};
-
 //--------------------------------------------------------------------------------------
 VS_Output_Outline VS_Outline(uint _vertexID : VertexID)
 {
     VS_Output_Outline output;
-
-    uint instanceDataOffset = rootConstants3D.getGPUInstanceDataOffset(); 
-    GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
 
     Vertex vert;
            vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
@@ -392,11 +347,6 @@ VS_Output_Outline VS_Outline(uint _vertexID : VertexID)
 
     return output;
 }
-
-struct PS_Output_Outline
-{
-    uint4 id : Color0;
-};
 
 PS_Output_Outline PS_Outline(VS_Output_Outline _input)
 {

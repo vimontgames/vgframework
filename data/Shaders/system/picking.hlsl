@@ -2,7 +2,7 @@
 #include "debug.hlsli"
 
 //--------------------------------------------------------------------------------------
-bool ProcessPicking(uint _rwBufferID, uint _offset, uint2 _inputPos, float _depth, float3 _worldPos, uint2 _mousePos, uint2 _screenSize, uint4 _pickindID)
+bool ProcessPicking(uint _rwBufferID, uint _offset, uint2 _inputPos, float _depth, float3 _worldPos, uint2 _mousePos, uint2 _screenSize, uint4 _pickingID)
 {
     if (0xFFFF != _rwBufferID)
     {        
@@ -19,7 +19,7 @@ bool ProcessPicking(uint _rwBufferID, uint _offset, uint2 _inputPos, float _dept
             if (index < PICKING_MAX_HITS)
             {
                 PickingHit hit;
-                hit.m_id = _pickindID;
+                hit.m_id = _pickingID;
                 hit.m_pos = float4(_worldPos.xyz, _depth);
                         
                 rwBuffer.Store4(_offset + index * sizeof(PickingHit) + 16, hit.m_id);

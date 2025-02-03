@@ -21,6 +21,8 @@ namespace vg::renderer
         for (core::uint i = 0; i < core::enumCount<LightType>(); ++i)
             m_lightsLists[i].clear();
 
+        m_cameras.clear();
+
         for (core::uint i = 0; i < m_additionalViews.size(); ++i)
             VG_SAFE_RELEASE(m_additionalViews[i]);
         m_additionalViews.clear();

@@ -111,6 +111,7 @@
     <None Include="Animation\Skeleton.inl" />
     <None Include="Geometry\Geometry.inl" />
     <None Include="Geometry\Mesh\MeshGeometry.inl" />
+    <None Include="Instance\Camera\CameraInstance.inl" />
     <None Include="Instance\GraphicInstance.inl" />
     <None Include="Instance\Light\LightInstance.inl" />
     <None Include="Instance\Mesh\MeshInstance.inl" />
@@ -135,10 +136,12 @@
     <ClInclude Include="Geometry\Geometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.h" />
     <ClInclude Include="Geometry\Mesh\MeshGeometry.hpp" />
-    <ClInclude Include="Geometry\Vertex\DebugDrawVertex.h" />
+    <ClInclude Include="Geometry\Vertex\DebugDrawLitVertex.h" />
+    <ClInclude Include="Geometry\Vertex\DebugDrawUnlitVertex.h" />
     <ClInclude Include="Geometry\Vertex\DefaultVertex.h" />
     <ClInclude Include="Geometry\Vertex\SkinningVertex.h" />
     <ClInclude Include="Geometry\Vertex\VertexFormat.h" />
+    <ClInclude Include="ICameraInstance.h" />
     <ClInclude Include="ICameraLens.h" />
     <ClInclude Include="ICameraSettings.h" />
     <ClInclude Include="IDebugDraw.h" />
@@ -148,6 +151,8 @@
     <ClInclude Include="Importer\CollisionImporterData.h" />
     <ClInclude Include="Importer\NamingConvention\CharacterStudioBipedNamingConvention.h" />
     <ClInclude Include="Importer\NamingConvention\MixamoBonesNamingConvention.h" />
+    <ClInclude Include="Instance\Camera\CameraInstance.h" />
+    <ClInclude Include="Instance\Camera\CameraInstance.hpp" />
     <ClInclude Include="Instance\Light\Directional\DirectionalLightInstance.h" />
     <ClInclude Include="Instance\Light\Directional\DirectionalLightInstance.hpp" />
     <ClInclude Include="Instance\Light\LightInstance.h" />

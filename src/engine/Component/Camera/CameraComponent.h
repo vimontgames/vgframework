@@ -19,6 +19,7 @@ namespace vg::gfx
 namespace vg::renderer
 {
     class IView;
+    class ICameraInstance;
     using PickingID = core::uint;
 }
 
@@ -34,6 +35,7 @@ namespace vg::engine
 
         void                                    OnLoad                      () final override;
         void                                    OnPropertyChanged           (vg::core::IObject * _object, const vg::core::IProperty & _prop, bool _notifyParent) final override;
+        void                                    EnableComponentFlags        (core::ComponentFlags _flags, bool _enabled) final override;
         void                                    Update                      (const Context & _context) final override;
 
         void                                    SetViewportOffsetAndScale   (core::float2 _offset, const core::float2 & _scale) final override;
@@ -49,6 +51,7 @@ namespace vg::engine
         void                                    updateLensConstraints       ();
 
     protected:
+        renderer::ICameraInstance *             m_cameraInstance = nullptr;
         gfx::ViewportTarget                     m_target;
         gfx::ViewportIndex                      m_viewportIndex;
         gfx::ViewIndex                          m_viewIndex;

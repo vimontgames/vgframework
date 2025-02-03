@@ -48,7 +48,7 @@ namespace vg::renderer
         FrustumTest intersects(const core::AABB & _aabb, const core::float4x4 & _world) const;
         FrustumTest intersects(float _radius, const core::float4x4 & _world) const;
 
-        void draw(const core::IWorld * _world, core::u32 _color);
+        void draw(const core::IWorld * _world, core::u32 _color) const;
 
     private:
         Planes m_planes;
