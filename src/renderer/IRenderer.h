@@ -25,7 +25,15 @@ namespace vg
         enum class ViewportFlags : core::u32;
         enum class RenderJobsPolicy : core::u8;
     }
+}
 
+vg_enum_class_ns(vg::renderer, RendererJobType, core::u8,
+    Culling,
+    DebugDraw
+);
+
+namespace vg
+{
     namespace renderer
     {
         class IImGuiAdapter;
@@ -45,11 +53,6 @@ namespace vg
         struct RendererCreationParams;
         struct CreateViewParams;
         struct CreateViewportParams;
-
-        vg_enum_class(RendererJobType, core::u8,
-            Culling,
-            DebugDraw
-        );
 
         class IRenderer : public core::IPlugin
         {

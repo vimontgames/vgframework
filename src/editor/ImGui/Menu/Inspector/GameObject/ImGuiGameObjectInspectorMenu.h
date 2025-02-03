@@ -2,6 +2,11 @@
 
 #include "editor/ImGui/Menu/ImGuiMenu.h"
 
+vg_enum_class_ns(vg::editor,  GameObjectInspectorMenuOption, core::u8,
+    None = 0,
+    AddComponent
+);
+
 namespace vg::editor
 {
     struct CategoryInfo
@@ -10,11 +15,6 @@ namespace vg::editor
         bool show = true;
         core::vector<core::IClassDesc *> classes;
     };
-
-    vg_enum_class(GameObjectInspectorMenuOption, core::u8,
-        None = 0,
-        AddComponent
-    );
 
     class ImGuiGameObjectInspectorMenu : public ImGuiMenu
     {

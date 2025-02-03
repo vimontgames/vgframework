@@ -6,34 +6,34 @@ namespace vg::core
     class IWorld;
 }
 
+vg_enum_class_ns(vg::renderer, FrustumPlane, core::u8,
+    Left = 0,
+    Right,
+    Top,
+    Bottom,
+    Near,
+    Far
+);
+
+vg_enum_class_ns(vg::renderer, FrustumTest, core::u8,
+    Intersect = 0,
+    Inside,
+    Outside
+);
+
+vg_enum_class_ns(vg::renderer, FrustumCorner, core::u8,
+    NearBottomLeft = 0,
+    NearBottomRight,
+    NearTopLeft,
+    NearTopRight,
+    FarBottomLeft,
+    FarBottomRight,
+    FarTopLeft,
+    FarTopRight
+);
+
 namespace vg::renderer
 {
-    vg_enum_class(FrustumPlane, core::u8,
-        Left = 0,
-        Right,
-        Top,
-        Bottom,
-        Near,
-        Far
-    );
-
-    vg_enum_class(FrustumTest, core::u8,
-        Intersect = 0,
-        Inside,
-        Outside
-    );
-
-    vg_enum_class(FrustumCorner, core::u8,
-        NearBottomLeft = 0,
-        NearBottomRight,
-        NearTopLeft,
-        NearTopRight,
-        FarBottomLeft,
-        FarBottomRight,
-        FarTopLeft,
-        FarTopRight
-    );
-
     class Frustum
     {
     public:

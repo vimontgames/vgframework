@@ -2,13 +2,13 @@
 
 #include "editor/ImGui/Menu/ImGuiMenu.h"
 
+vg_enum_class_ns(vg::editor, InspectorMenuOption, core::u8,
+    None = 0,
+    RemoveComponent
+);
+
 namespace vg::editor
 {
-    vg_enum_class(InspectorMenuOption, core::u8,
-        None = 0,
-        RemoveComponent
-    );
-
     class ImGuiComponentInspectorMenu : public ImGuiMenu
     {
     public:

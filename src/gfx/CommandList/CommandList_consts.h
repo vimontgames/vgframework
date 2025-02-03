@@ -2,28 +2,28 @@
 
 #include "shaders/system/shared_consts.hlsli"
 
+vg_enum_class_ns(vg::gfx, CommandListType, core::u8,
+    Graphics = 0,
+    Compute,
+    Present
+);
+
+vg_enum_class_ns(vg::gfx, PrimitiveType, core::u8,
+    Point = 0,
+    Line,
+    Triangle
+);
+
+vg_enum_class_ns(vg::gfx, PrimitiveTopology, core::u8,
+    PointList = 0,
+    LineList,
+    LineStrip,
+    TriangleList,
+    TriangleStrip
+);
+
 namespace vg::gfx
 {
-	vg_enum_class(CommandListType, core::u8,
-		Graphics = 0,
-		Compute,
-		Present
-	);
-
-    vg_enum_class(PrimitiveType, core::u8,
-        Point = 0,
-        Line,
-        Triangle
-    );
-
-    vg_enum_class(PrimitiveTopology, core::u8,
-        PointList = 0,
-        LineList,
-        LineStrip,
-        TriangleList,
-        TriangleStrip
-    );
-
     constexpr core::uint max_root_constants = 32;
     constexpr core::uint max_constant_buffers = 1;
 

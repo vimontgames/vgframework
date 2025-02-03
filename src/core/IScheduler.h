@@ -1,5 +1,12 @@
 #pragma once
 
+vg_enum_class_ns(vg::core, ThreadType, core::i8,
+    Unknown = -128,
+    Loading = -2,
+    Main = -1,
+    Worker = 0
+);
+
 namespace vg::core
 {
     class Job;
@@ -8,13 +15,6 @@ namespace vg::core
         u64 handle = 0; // JobHandle must be initialized
     };
     using ThreadID = std::thread::id;
-
-    vg_enum_class(ThreadType, core::i8,
-        Unknown     = -128,
-        Loading     = -2,
-        Main        = -1,
-        Worker      = 0
-    );
 
     class IScheduler
     {

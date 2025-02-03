@@ -3,18 +3,18 @@
 #include "gfx/Shader/Shader_consts.h"
 #include "gfx/Resource/Texture_consts.h"
 
+vg_enum_class_ns(vg::gfx, RootSignatureDescType, core::u8,
+    ConstantBuffer = 0,
+    Texture,
+    Buffer,
+    RWTexture,
+    RWBuffer,
+    TLAS,
+    Sampler
+);
+
 namespace vg::gfx
 {
-    vg_enum_class(RootSignatureDescType, core::u8,
-        ConstantBuffer = 0,
-        Texture,
-        Buffer,
-        RWTexture,
-        RWBuffer,
-        TLAS,
-        Sampler
-    );
-
     class RootSignatureTableDesc
     {
     public:

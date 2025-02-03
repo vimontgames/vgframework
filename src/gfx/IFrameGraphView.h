@@ -11,13 +11,14 @@ namespace vg::core
     class IGameObject;
 }
 
+vg_enum_class_ns(vg::gfx, ViewTarget, core::u8,
+    Game = 0,
+    Editor = 1,
+    Shadow = 2
+);
+
 namespace vg::gfx
 {
-    vg_enum_class(ViewTarget, core::u8,
-        Game        = 0,
-        Editor      = 1,
-        Shadow      = 2
-    );
     static inline const ViewTarget ViewTargetInvalid = (ViewTarget)0x03;
 
     using ViewIndex = core::u8;

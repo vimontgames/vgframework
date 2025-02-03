@@ -1,14 +1,14 @@
 #pragma once
 #include "renderer/Instance/GraphicInstance.h"
 
+vg_enum_class_ns(vg::renderer, LightType, core::u8,
+    Directional = 0,
+    Omni,
+    Spot
+);
+
 namespace vg::renderer
 {
-    vg_enum_class(LightType, core::u8,
-        Directional = 0,
-        Omni,
-        Spot
-    );
-
     class ILightDesc : public core::Object
     {
     public:

@@ -13,19 +13,19 @@ namespace vg::core
     class Resource;
 }
 
+vg_enum_class_ns(vg::engine, CookStatus, core::u8,
+    UP_TO_DATE = 0,             // File doesn't need cook
+
+    RAWDATA_FILE_UPDATED,       // File needs cook because raw data file has been updated
+    META_FILE_UPDATED,          // File needs cook because meta file has been updated
+    NO_COOKED_FILE,             // File needs cook because no cooked file was found
+    FORCE_REIMPORT,             // File needs cook because reimport is forced
+    COOK_VERSION_DEPRECATED     // File needs cook because cooked file version is deprecated
+);
+
 namespace vg::engine
 {
     class ResourceInfo;
-
-    vg_enum_class(CookStatus, core::u8,
-        UP_TO_DATE = 0,             // File doesn't need cook
-
-        RAWDATA_FILE_UPDATED,       // File needs cook because raw data file has been updated
-        META_FILE_UPDATED,          // File needs cook because meta file has been updated
-        NO_COOKED_FILE,             // File needs cook because no cooked file was found
-        FORCE_REIMPORT,             // File needs cook because reimport is forced
-        COOK_VERSION_DEPRECATED     // File needs cook because cooked file version is deprecated
-    );
 
     class ResourceManager final : public core::IResourceManager, public core::Singleton<ResourceManager>
     {

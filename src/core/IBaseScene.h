@@ -2,15 +2,15 @@
 
 #include "core/Object/Object.h"
 
+vg_enum_ns(vg::core, BaseSceneType, core::u8,
+    Scene = 0,
+    Prefab
+);
+
 namespace vg::core
 {
     class IGameObject;
     class IWorld;
-
-    vg_enum(BaseSceneType, core::u8,
-        Scene = 0,
-        Prefab
-    );
 
     class IBaseScene : public Object
     {

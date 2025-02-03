@@ -1,16 +1,16 @@
 #pragma once
 #include "renderer/ILightInstance.h"
 
+vg_enum_class_ns(vg::renderer, ShadowResolution, core::i8,
+    ShadowResolution_VeryLow = -2,
+    ShadowResolution_Low = -1,
+    ShadowResolution_Medium = 0,
+    ShadowResolution_High = 1,
+    ShadowResolution_VeryHigh = 2
+);
+
 namespace vg::renderer
 {
-    vg_enum_class(ShadowResolution, core::i8,
-        ShadowResolution_VeryLow  = -2,
-        ShadowResolution_Low      = -1,
-        ShadowResolution_Medium   = 0,
-        ShadowResolution_High     = 1,
-        ShadowResolution_VeryHigh = 2
-    );
-
     class LightDesc : public ILightDesc
     {
     public:

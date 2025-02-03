@@ -9,6 +9,14 @@
 struct RootConstants3D;
 struct GPUMaterialData;
 
+vg_enum_class_ns(vg::renderer, ShaderPass, core::u8,
+    ZOnly = 0,
+    Forward,
+    Deferred,
+    Transparent,
+    Outline
+);
+
 namespace vg
 {
     namespace gfx
@@ -24,14 +32,6 @@ namespace vg
     {
         class RenderContext;
         class MaterialImporterData;
-
-        vg_enum_class(ShaderPass, core::u8,
-            ZOnly = 0,
-            Forward,
-            Deferred,
-            Transparent,
-            Outline
-        );
 
         class MaterialModel : public IMaterialModel
         {

@@ -12,6 +12,11 @@ namespace vg::core
     class Blob;
 }
 
+vg_enum_class_ns(vg::gfx, ShaderOptimizationLevel, core::u8,
+    Unoptimized = 0,
+    Optimized
+);
+
 namespace vg::gfx
 {
     class Shader;
@@ -19,11 +24,6 @@ namespace vg::gfx
     class HLSLDesc;
     class GraphicPipelineState;
     class ComputePipelineState;
-
-    vg_enum_class(ShaderOptimizationLevel, core::u8,
-        Unoptimized = 0,
-        Optimized
-    );
 
     class ShaderManager : public IShaderManager, public core::Singleton<ShaderManager>
     {

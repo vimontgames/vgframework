@@ -3,16 +3,16 @@
 #include "core/Object/Object.h"
 #include "core/Object/Update.h"
 
+vg_enum_class_ns(vg::core, ComponentFlags, u32,
+    Enabled = 0x00000001,
+    NoCulling = 0x00000002
+);
+
 namespace vg::core
 {
     class IWorld;
     class IGameObject;
     class AABB;
-
-    vg_enum_class(ComponentFlags, u32,
-        Enabled     = 0x00000001,
-        NoCulling   = 0x00000002
-    );
 
     class IComponent : public core::Object
     {

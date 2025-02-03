@@ -7,26 +7,26 @@ namespace vg::core
     class IGameObject;
 }
 
+vg_enum_class_ns(vg::editor, GameObjectSceneEditorMenuOption, core::u8,
+    None = 0,
+
+    AddGameObject,
+    AddChildGameObject,
+    AddParentGameObject,
+
+    EditPrefab,
+    CreatePrefab,
+    UnpackPrefab,
+    AddPrefab,
+    AddChildPrefab,
+    ReplaceByPrefab,
+
+    Delete,
+    Rename
+);
+
 namespace vg::editor
 {
-    vg_enum_class(GameObjectSceneEditorMenuOption, core::u8,
-        None = 0,
-
-        AddGameObject,
-        AddChildGameObject,
-        AddParentGameObject,
-
-        EditPrefab,
-        CreatePrefab,
-        UnpackPrefab,
-        AddPrefab,
-        AddChildPrefab,
-        ReplaceByPrefab,
-
-        Delete,
-        Rename
-    );
-
     class ImGuiGameObjectSceneEditorMenu : public ImGuiMenu
     {
     public:

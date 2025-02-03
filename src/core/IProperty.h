@@ -1,5 +1,90 @@
 #pragma once
 
+vg_enum_class_ns(vg::core, PropertyType, u32,
+    Undefined = 0,
+    Bool,
+    Int8,
+    Int16,
+    Int32,
+    Int64,
+    Uint8,
+    Uint16,
+    Uint32,
+    Uint2,
+    Uint3,
+    Uint4,
+    Int2,
+    Int3,
+    Int4,
+    Uint64,
+    Float,
+    Float2,
+    Float3,
+    Float4,
+    Float4x4,
+    String,
+    EnumU8,
+    EnumU16,
+    EnumU32,
+    EnumU64,
+    EnumI8,
+    EnumI16,
+    EnumI32,
+    EnumI64,
+    EnumFlagsU8,
+    EnumFlagsU16,
+    EnumFlagsU32,
+    EnumFlagsU64,
+    BitMask,
+    FloatCurveData,
+    Resource,
+    ResourcePtr,
+    ResourcePtrVector,
+    Object,                 // Embedded IObject
+    ObjectHandle,           // For objects referencing other objects dynamically using UID
+    ObjectPtr,              // Pointer to IObject
+    ObjectPtrVector,        // Vector of pointers to IObject
+    ObjectPtrDictionary,    // Dictionary of pointers to IObject,
+
+    ObjectVector,           // sizeof(element) is unknown ('registerResizeVectorFunc' must be registered for serialization)
+    ResourceVector,         // sizeof(element) is unknown ('registerResizeVectorFunc' must be registered for serialization)
+
+    Callback,               // No data, only (IObject*) callback
+
+    LayoutElement           // Cosmetic-only properties (doesn't change serialized data)
+);
+
+vg_enum_class_ns(vg::core, PropertyFlags, u64,
+    None = 0x0000000000000000,
+    ReadOnly = 0x0000000000000001,   // A property that is visible, but edition is disabled
+    Color = 0x0000000000000002,   // Type represents a color (e.g., float4 or u32)
+    IsFolder = 0x0000000000000004,   // String is a folder
+    IsFile = 0x0000000000000008,   // String is a folder
+    HasRange = 0x0000000000000010,   // Property has [min..max] range
+    SingleLine = 0x0000000000000020,   // This property and the following ones will be displayed on the same line to save space
+    Radio = 0x0000000000000040,   // Part of a radio button group
+    Debug = 0x0000000000000080,   // A debug property that is hidden by default
+    Bitfield = 0x0000000000000100,   // Value displayed as hex, enum as flags
+    Resource = 0x0000000000000200,   // Property is a Resource
+    Transient = 0x0000000000000400,   // Property is not saved nor loaded
+    EnumArray = 0x0000000000000800,   // Property is fixed-size C array with element count the size of the enum
+    Flatten = 0x0000000000001000,   // Do not open TreeNode to display object of this type
+    Optional = 0x0000000000002000,   // Previous property must be a bool, and if 'false' then this value won't be editable
+    HDR = 0x0000000000004000,   // HDR value for color
+    Hidden = 0x0000000000008000,   // A property that is not visible
+    Hexadecimal = 0x0000000000010000,   // Display value using hexadecimal
+    EulerAngle = 0x0000000000020000,   // Edited value is Euler angle
+    AlphabeticalOrder = 0x0000000000040000    // Sort multiple values in alphabetical order (e.g., enums)
+);
+
+vg_enum_class_ns(vg::core, PropertyLayoutElement, u8,
+    Separator = 0,
+    SameLineBegin,
+    SameLineEnd,
+    GroupBegin,
+    GroupEnd
+);
+
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
@@ -17,91 +102,6 @@ namespace vg::core
         Disabled    = 0x00000001,
         Hidden      = 0x00000002
     };
-
-    vg_enum_class(PropertyType, u32,
-        Undefined = 0,
-        Bool,
-        Int8,
-        Int16,
-        Int32,
-        Int64,
-        Uint8,
-        Uint16,
-        Uint32,
-        Uint2,
-        Uint3,
-        Uint4,
-        Int2,
-        Int3,
-        Int4,
-        Uint64,
-        Float,
-        Float2,
-        Float3,
-        Float4,
-        Float4x4,
-        String,
-        EnumU8,
-        EnumU16,
-        EnumU32,
-        EnumU64,
-        EnumI8,
-        EnumI16,
-        EnumI32,
-        EnumI64,
-        EnumFlagsU8,
-        EnumFlagsU16,
-        EnumFlagsU32,
-        EnumFlagsU64,
-        BitMask,
-        FloatCurveData,
-        Resource,
-        ResourcePtr,
-        ResourcePtrVector,
-        Object,                 // Embedded IObject
-        ObjectHandle,           // For objects referencing other objects dynamically using UID
-        ObjectPtr,              // Pointer to IObject
-        ObjectPtrVector,        // Vector of pointers to IObject
-        ObjectPtrDictionary,    // Dictionary of pointers to IObject,
-
-        ObjectVector,           // sizeof(element) is unknown ('registerResizeVectorFunc' must be registered for serialization)
-        ResourceVector,         // sizeof(element) is unknown ('registerResizeVectorFunc' must be registered for serialization)
-
-        Callback,               // No data, only (IObject*) callback
-
-        LayoutElement           // Cosmetic-only properties (doesn't change serialized data)
-    );
-
-    vg_enum_class(PropertyFlags, u64,
-        None                = 0x0000000000000000,
-        ReadOnly            = 0x0000000000000001,   // A property that is visible, but edition is disabled
-        Color               = 0x0000000000000002,   // Type represents a color (e.g., float4 or u32)
-        IsFolder            = 0x0000000000000004,   // String is a folder
-        IsFile              = 0x0000000000000008,   // String is a folder
-        HasRange            = 0x0000000000000010,   // Property has [min..max] range
-        SingleLine          = 0x0000000000000020,   // This property and the following ones will be displayed on the same line to save space
-        Radio               = 0x0000000000000040,   // Part of a radio button group
-        Debug               = 0x0000000000000080,   // A debug property that is hidden by default
-        Bitfield            = 0x0000000000000100,   // Value displayed as hex, enum as flags
-        Resource            = 0x0000000000000200,   // Property is a Resource
-        Transient           = 0x0000000000000400,   // Property is not saved nor loaded
-        EnumArray           = 0x0000000000000800,   // Property is fixed-size C array with element count the size of the enum
-        Flatten             = 0x0000000000001000,   // Do not open TreeNode to display object of this type
-        Optional            = 0x0000000000002000,   // Previous property must be a bool, and if 'false' then this value won't be editable
-        HDR                 = 0x0000000000004000,   // HDR value for color
-        Hidden              = 0x0000000000008000,   // A property that is not visible
-        Hexadecimal         = 0x0000000000010000,   // Display value using hexadecimal
-        EulerAngle          = 0x0000000000020000,   // Edited value is Euler angle
-        AlphabeticalOrder   = 0x0000000000040000    // Sort multiple values in alphabetical order (e.g., enums)
-    );
-
-    vg_enum_class(PropertyLayoutElement, u8,
-        Separator = 0,
-        SameLineBegin,
-        SameLineEnd,
-        GroupBegin,
-        GroupEnd
-    );
 
     class IObject;
 

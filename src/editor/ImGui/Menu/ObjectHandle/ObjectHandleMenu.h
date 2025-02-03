@@ -7,14 +7,14 @@ namespace vg::core
     using UID = core::u32;
 }
 
+vg_enum_class_ns(vg::editor, ObjectHandleMenuOption, core::u8,
+    None = 0,
+    Select,
+    Clear
+);
+
 namespace vg::editor
 {
-    vg_enum_class(ObjectHandleMenuOption, core::u8,
-        None = 0,
-        Select,
-        Clear
-    );
-
     class ImGuiObjectHandleMenu : public ImGuiMenu
     {
     public:

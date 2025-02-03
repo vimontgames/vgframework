@@ -8,6 +8,8 @@ namespace vg::renderer
     class IGraphicInstance; // Should be part of vg::core?
 }
 
+vg_generic_enum_bitfield_64(vg::core, Tag);
+
 namespace vg::core
 {
     class IComponent;
@@ -15,8 +17,6 @@ namespace vg::core
     class IWorld;
     class IDynamicPropertyList;
     class IDynamicProperty;
-
-    vg_generic_enum_bitfield_64(Tag);
 
     class IGameObject : public Instance
     {

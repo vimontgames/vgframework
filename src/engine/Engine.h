@@ -27,12 +27,12 @@ namespace vg::audio
     class IAudioOptions;
 }
 
+vg_enum_class_ns(vg::engine, EngineJobType, core::u8,
+    Animation
+);
+
 namespace vg::engine
 {
-    vg_enum_class(EngineJobType, core::u8,
-        Animation
-    );
-
     class FreeCam;
     class ResourceManager;
     class WorldResource;

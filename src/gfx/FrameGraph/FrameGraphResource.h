@@ -6,16 +6,16 @@
 #include "gfx/Resource/Texture_consts.h"
 #include "gfx/Device/Device_consts.h"
 
+vg_enum_class_ns(vg::gfx, FrameGraphResourceType, core::u8,
+    Buffer = 0,
+    Texture
+);
+
 namespace vg::gfx
 {
     class Texture;
     class Buffer;
     class UserPass;
-
-    vg_enum_class(FrameGraphResourceType, core::u8,
-        Buffer = 0,
-        Texture
-    );
 
     class FrameGraphResource
     {

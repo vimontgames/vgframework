@@ -11,6 +11,15 @@ namespace vg::core
     class GameObject;
 }
 
+vg_enum_class_ns(vg::renderer, GraphicInstanceListType, core::u8,
+    All = 0,
+    Opaque,
+    AlphaTest,
+    Transparent,
+    Decal,
+    Outline
+);
+
 namespace vg::renderer
 {
     class View;
@@ -18,15 +27,6 @@ namespace vg::renderer
     class MeshInstance;
     class Frustum;
 
-    vg_enum_class(GraphicInstanceListType, core::u8,
-        All = 0,
-        Opaque,
-        AlphaTest,
-        Transparent,
-        Decal,
-        Outline
-    );
- 
     struct ViewCullingJobOutput
     {
         ~ViewCullingJobOutput() { clear(); }
