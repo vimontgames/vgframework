@@ -7,14 +7,14 @@ namespace vg::core
     enum BaseSceneType : core::u8;
 }
 
+vg_enum_ns(vg::editor, SceneMenuOption, core::u8,
+    None = 0,
+    Save,
+    Close
+);
+
 namespace vg::editor
 {
-    vg_enum(SceneMenuOption, core::u8,
-        None = 0,
-        Save,
-        Close
-    );
-
     class ImGuiSceneMenu : public ImGuiMenu
     {
     public:

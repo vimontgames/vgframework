@@ -2,19 +2,19 @@
 
 #include "core/Object/Object.h"
 
+vg_enum_class_ns(vg::core, CurveType, core::u8,
+    Float = 0,
+    Float4
+);
+
+vg_enum_class_ns(vg::core, CurveInterpolationType, core::u8,
+    Constant = 0,
+    Linear,
+    Smooth
+);
+
 namespace vg::core
 {
-    vg_enum_class(CurveType, core::u8,
-        Float = 0,
-        Float4
-    );
-
-    vg_enum_class(CurveInterpolationType, core::u8,
-        Constant = 0,
-        Linear,
-        Smooth
-    );
-
     class Curve : public core::Object
     {
         public:

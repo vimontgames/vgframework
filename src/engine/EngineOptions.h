@@ -10,17 +10,17 @@ namespace vg::physics
     enum class ShapeTypeFlags : core::u32;
 }
 
+vg_enum_class_ns(vg::engine, AnimationOptionFlags, core::u32,
+    AnimationJobs = 0x00000001,
+    ShowSkeletons = 0x00000002
+);
+
+vg_enum_class_ns(vg::engine, LoadingOptionFlags, core::u32,
+    ResourcePriority = 0x00000001
+);
+
 namespace vg::engine
 {
-    vg_enum_class(AnimationOptionFlags, core::u32,
-        AnimationJobs = 0x00000001,
-        ShowSkeletons = 0x00000002        
-    );
-
-    vg_enum_class(LoadingOptionFlags, core::u32,
-        ResourcePriority = 0x00000001
-    );
-
     class EngineOptions final : public IEngineOptions, public core::Singleton<EngineOptions>
     {
     public:

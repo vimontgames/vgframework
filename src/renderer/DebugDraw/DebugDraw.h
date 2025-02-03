@@ -18,15 +18,15 @@ namespace vg::gfx
     class Buffer;
 }
 
+vg_enum_class_ns(vg::renderer, DebugDrawFillMode, core::u8,
+    Wireframe,
+    Solid
+);
+
 namespace vg::renderer
 {
     class MeshGeometry;
     class View;
-
-    vg_enum_class(DebugDrawFillMode, core::u8,
-        Wireframe,
-        Solid
-    );
 
     //--------------------------------------------------------------------------------------
     // Primitives to draw using 'AddLine', 'AddWireframe' are added to a common list but each

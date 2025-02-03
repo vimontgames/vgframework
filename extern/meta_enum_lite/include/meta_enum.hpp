@@ -231,41 +231,45 @@ namespace meta_enum_internal
     }
 }
 
-#define meta_enum(Type, UnderlyingType, ...)\
-    enum Type : UnderlyingType { __VA_ARGS__};\
-    constexpr static auto Type##_internal_size = []  () constexpr\
+#define META_ENUM_DEFINITION(Directive, Type, UnderlyingType, ...)\
+    Directive Type : UnderlyingType { __VA_ARGS__ };\
+    constexpr static auto Type##_internal_size = ([] () constexpr\
     {\
         using IntWrapperType = meta_enum_internal::IntWrapper<UnderlyingType>;\
         IntWrapperType __VA_ARGS__;\
         return std::initializer_list<IntWrapperType>{__VA_ARGS__}.size();\
-    };\
-    constexpr static auto Type##_meta = meta_enum_internal::parseMetaEnum<Type, UnderlyingType, Type##_internal_size()>(#__VA_ARGS__, sizeof(#__VA_ARGS__), []() {\
+    })();\
+    constexpr static auto Type##_meta = meta_enum_internal::parseMetaEnum<Type, UnderlyingType, Type##_internal_size>(#__VA_ARGS__, sizeof(#__VA_ARGS__), []() {\
         using IntWrapperType = meta_enum_internal::IntWrapper<UnderlyingType>;\
         IntWrapperType __VA_ARGS__;\
-        return meta_enum_internal::resolveEnumValuesArray<Type, UnderlyingType, Type##_internal_size()>({__VA_ARGS__});\
-    }());\
+        return meta_enum_internal::resolveEnumValuesArray<Type, UnderlyingType, Type##_internal_size>({__VA_ARGS__});\
+    }());
+
+#define META_ENUM_TRAITS(Type)\
     template <> struct ::MetaEnumTraits<Type>\
     {\
         static const inline MetaEnum<Type, std::underlying_type_t<Type>, Type##_meta.members.size()> Meta = Type##_meta;\
     };
 
+#define meta_enum(Type, UnderlyingType, ...)\
+    META_ENUM_DEFINITION(enum, Type, UnderlyingType, __VA_ARGS__)\
+    META_ENUM_TRAITS(Type)
+
+#define meta_enum_ns(Namespace, Type, UnderlyingType, ...)\
+    namespace Namespace {\
+        META_ENUM_DEFINITION(enum, Type, UnderlyingType, __VA_ARGS__)\
+    }\
+    META_ENUM_TRAITS(Namespace::Type)
+
 #define meta_enum_class(Type, UnderlyingType, ...)\
-    enum class Type : UnderlyingType { __VA_ARGS__};\
-    constexpr static auto Type##_internal_size = [] () constexpr\
-    {\
-        using IntWrapperType = meta_enum_internal::IntWrapper<UnderlyingType>;\
-        IntWrapperType __VA_ARGS__;\
-        return std::initializer_list<IntWrapperType>{__VA_ARGS__}.size();\
-    };\
-    constexpr static auto Type##_meta = meta_enum_internal::parseMetaEnum<Type, UnderlyingType, Type##_internal_size()>(#__VA_ARGS__, sizeof(#__VA_ARGS__), []() {\
-        using IntWrapperType = meta_enum_internal::IntWrapper<UnderlyingType>;\
-        IntWrapperType __VA_ARGS__;\
-        return meta_enum_internal::resolveEnumValuesArray<Type, UnderlyingType, Type##_internal_size()>({__VA_ARGS__});\
-    }());\
-    template <> struct ::MetaEnumTraits<Type>\
-    {\
-        static const inline MetaEnum<Type, std::underlying_type_t<Type>, Type##_meta.members.size()> Meta = Type##_meta;\
-    };
+    META_ENUM_DEFINITION(enum class, Type, UnderlyingType, __VA_ARGS__)\
+    META_ENUM_TRAITS(Type)
+
+#define meta_enum_class_ns(Namespace, Type, UnderlyingType, ...)\
+    namespace Namespace {\
+        META_ENUM_DEFINITION(enum class, Type, UnderlyingType, __VA_ARGS__)\
+    }\
+    META_ENUM_TRAITS(Namespace::Type)
 
 template <typename Type> constexpr const auto & getEnumMembers()
 {
@@ -277,7 +281,7 @@ template <typename Type> constexpr const size_t getEnumSize()
     return MetaEnumTraits<Type>::Meta.members.size();
 }
 
-template <typename Type> constexpr const std::string getEnumString(Type e)
+template <typename Type> const std::string getEnumString(Type e)
 {
     const auto & members = getEnumMembers<Type>();
     for (auto i = 0; i < members.size(); ++i)

@@ -2,36 +2,36 @@
 
 #include "gfx/PipelineState/Graphic/GraphicPipelineState_consts.h"
 
+vg_enum_class_ns(vg::gfx, BlendOp, core::u32,
+    Add = 0,
+    Substract,
+    RevSubstract,
+    Min,
+    Max
+);
+
+vg_enum_ns(vg::gfx, ColorWrite, core::u32,
+    Red = 0x01,
+    Green = 0x02,
+    Blue = 0x04,
+    Alpha = 0x08
+);
+
+vg_enum_class_ns(vg::gfx, BlendFactor, core::u32,
+    Zero = 0,
+    One,
+    SrcAlpha,
+    OneMinusSrcAlpha,
+    SrcColor,
+    OneMinusSrcColor,
+    DstAlpha,
+    OneMinusDstAlpha,
+    DstColor,
+    OneMinusDstColor
+);
+
 namespace vg::gfx
 {
-    vg_enum_class(BlendFactor, core::u32,
-        Zero = 0,
-        One,
-        SrcAlpha,
-        OneMinusSrcAlpha,
-        SrcColor,
-        OneMinusSrcColor,
-        DstAlpha,
-        OneMinusDstAlpha,
-        DstColor,
-        OneMinusDstColor
-    );
-
-    vg_enum_class(BlendOp, core::u32,
-        Add = 0,
-        Substract,
-        RevSubstract,
-        Min,
-        Max
-    );
-
-    vg_enum(ColorWrite, core::u32,
-        Red     = 0x01,
-        Green   = 0x02,
-        Blue    = 0x04,
-        Alpha   = 0x08
-    );
-
     struct RenderTargetBlend
     {
         RenderTargetBlend() :

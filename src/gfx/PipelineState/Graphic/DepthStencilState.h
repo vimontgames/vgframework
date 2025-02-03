@@ -2,30 +2,30 @@
 
 #include "gfx/PipelineState/Graphic/GraphicPipelineState_consts.h"
 
+vg_enum_class_ns(vg::gfx, ComparisonFunc, core::u16,
+    Always = 0,
+    Never,
+    Equal,
+    NotEqual,
+    Less,
+    LessEqual,
+    Greater,
+    GreaterEqual
+);
+
+vg_enum_class_ns(vg::gfx, StencilOp, core::u16,
+    Zero = 0,
+    Keep,
+    Replace,
+    IncrementSat,
+    DecrementSat,
+    Invert,
+    IncrementWrap,
+    DecrementWrap
+);
+
 namespace vg::gfx
 {
-    vg_enum_class(ComparisonFunc, core::u16,
-        Always = 0,
-        Never,
-        Equal,
-        NotEqual,
-        Less,
-        LessEqual,
-        Greater,
-        GreaterEqual
-    );
-
-    vg_enum_class(StencilOp, core::u16,
-        Zero = 0,
-        Keep,
-        Replace,
-        IncrementSat,
-        DecrementSat,
-        Invert,
-        IncrementWrap,
-        DecrementWrap
-    );
-
     struct StencilState
     {
         StencilState(ComparisonFunc _func = ComparisonFunc::Always, StencilOp _passOp = StencilOp::Keep, StencilOp _failOp = StencilOp::Keep, StencilOp _depthFailOp = StencilOp::Keep) :

@@ -33,20 +33,20 @@
 #define VG_WARNING_ONCE(...) VG_LOG_ONCE(vg::core::Level::Warning, __VA_ARGS__)
 #define VG_ERROR_ONCE(...)   VG_LOG_ONCE(vg::core::Level::Error, __VA_ARGS__)
 
+vg_enum_class_ns(vg::core, Level, u8,
+    Info = 0,
+    Warning,
+    Error
+);
+
+vg_enum_class_ns(vg::core, LevelFlags, u32,
+    Info = 1 << (u32)Level::Info,
+    Warning = 1 << (u32)Level::Warning,
+    Error = 1 << (u32)Level::Error
+);
+
 namespace vg::core
 {
-    vg_enum_class(Level, u8,
-        Info = 0,
-        Warning,
-        Error
-    );
-
-    vg_enum_class(LevelFlags, u32,
-        Info    = 1 << (u32)Level::Info,
-        Warning = 1 << (u32)Level::Warning,
-        Error   = 1 << (u32)Level::Error
-    );
-
     struct LogEntry
     {
         u64 crc;

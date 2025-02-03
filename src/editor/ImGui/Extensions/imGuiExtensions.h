@@ -16,13 +16,13 @@ namespace vg::renderer
     enum class FontStyle : vg::core::u8;
 }
 
+vg_enum_class_ns(ImGui, InteractionType, vg::core::u8,
+    Single = 0,
+    Continuous
+);
+
 namespace ImGui
 {
-    vg_enum_class(InteractionType, vg::core::u8,
-        Single = 0,
-        Continuous
-    );
-
     ImVec4 getDisabledButtonColor();
     ImVec4 getDisabledTextColor();
 

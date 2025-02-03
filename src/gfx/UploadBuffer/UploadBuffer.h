@@ -3,16 +3,16 @@
 #include "core/Object/Object.h"
 #include "core/Scheduler/Mutex.h"
 
+vg_enum_class_ns(vg::gfx, RingAllocCategory, core::u8,
+    Buffer = 0,
+    Texture
+);
+
 namespace vg::gfx
 {
     class CommandList;
     class Buffer;
     class Texture;
-
-    vg_enum_class(RingAllocCategory, core::u8,
-        Buffer = 0,
-        Texture
-    );
 
     class UploadBuffer : public core::Object
     {

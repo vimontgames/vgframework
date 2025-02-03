@@ -2,18 +2,18 @@
 
 #include "core/Component/Behaviour/Behaviour.h"
 
+vg_enum_class_ns(vg::engine, ParentNotificationTypeFlags, core::u32,
+    CollisionEnter = 0x00000001,
+    CollisionStay = 0x00000002,
+    CollisionExit = 0x00000004,
+
+    TriggerEnter = 0x00000010,
+    TriggerStay = 0x00000020,
+    TriggerExit = 0x00000040
+);
+
 namespace vg::engine
 {
-    vg_enum_class(ParentNotificationTypeFlags, core::u32,
-        CollisionEnter  = 0x00000001,
-        CollisionStay   = 0x00000002,
-        CollisionExit   = 0x00000004,
-
-        TriggerEnter    = 0x00000010,
-        TriggerStay     = 0x00000020,
-        TriggerExit     = 0x00000040
-    );
-
     class NotifyParentComponent final : public vg::core::Behaviour
     {
     public:

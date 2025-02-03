@@ -2,28 +2,28 @@
 
 #include "SamplerState_consts.h"
 
+vg_enum_class_ns(vg::gfx, Filter, vg::core::u8,
+    Nearest = 0,
+    Linear,
+    DepthCmp
+);
+
+vg_enum_class_ns(vg::gfx, Address, vg::core::u8,
+    Repeat = 0,
+    Clamp,
+    Mirror
+);
+
+vg_enum_class_ns(vg::gfx, Anisotropy, vg::core::u8,
+    Anisotropy_None,
+    Anisotropy_2X,
+    Anisotropy_4X,
+    Anisotropy_8X,
+    Anisotropy_16X
+);
+
 namespace vg::gfx
 {
-    vg_enum_class(Filter, core::u8,
-        Nearest = 0,
-        Linear,
-        DepthCmp
-    );
-
-    vg_enum_class(Address, core::u8,
-        Repeat = 0,
-        Clamp,
-        Mirror
-    );
-
-    vg_enum_class(Anisotropy, core::u8,
-        Anisotropy_None,
-        Anisotropy_2X,
-        Anisotropy_4X,
-        Anisotropy_8X,
-        Anisotropy_16X
-    );
-
     namespace base
     {
         class SamplerState

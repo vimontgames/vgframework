@@ -9,26 +9,26 @@ namespace vg::renderer
     class ICameraSettings;
 }
 
+vg_enum_class_ns(vg::editor, GizmoType, core::u8,
+    Translate = 0,
+    Rotate,
+    Scale
+);
+
+vg_enum_class_ns(vg::editor, GizmoSpace, core::u8,
+    Local = 0,
+    World
+);
+
+vg_enum_class_ns(vg::editor, EditorDebugFlags, core::u64,
+    Culling = 0x00000001,
+    Inspector = 0x00000002,
+    Picking = 0x00000004,
+    Properties = 0x00000008
+);
+
 namespace vg::editor
 {
-    vg_enum_class(GizmoType, core::u8,
-        Translate = 0,
-        Rotate,
-        Scale
-    );
-
-    vg_enum_class(GizmoSpace, core::u8,
-        Local = 0,
-        World
-    );
-
-    vg_enum_class(EditorDebugFlags, core::u64,
-        Culling     = 0x00000001,
-        Inspector   = 0x00000002,
-        Picking     = 0x00000004,
-        Properties  = 0x00000008
-    );
-
     struct GizmoOptions
     {
         GizmoType           m_type = GizmoType::Translate;

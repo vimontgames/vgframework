@@ -2,15 +2,15 @@
 
 #include "core/Object/Object.h"
 
+vg_enum_class_ns(vg::core, SelectionChangeType, core::u8,
+    Add,
+    Remove,
+    Clear
+);
+
 namespace vg::core
 {
     class IGameObject;
-
-    vg_enum_class(SelectionChangeType, core::u8,
-        Add,
-        Remove,
-        Clear
-    );
 
     class ISelectionChangeListener
     {

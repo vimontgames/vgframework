@@ -3,12 +3,13 @@
 #include "core/Object/Object.h"
 #include "gfx/IFrameGraphView.h"
 
+vg_enum_class_ns(vg::gfx, ViewportTarget, core::u8,
+    Game = 0,
+    Editor = 1
+);
+
 namespace vg::gfx
 {
-    vg_enum_class(ViewportTarget, core::u8,
-        Game    = 0,
-        Editor  = 1
-    );
     static inline const ViewportTarget ViewportTargetInvalid = (ViewportTarget)-1;
 
     using ViewportIndex = core::u8;

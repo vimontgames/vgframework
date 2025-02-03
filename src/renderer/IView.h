@@ -2,6 +2,34 @@
 
 #include "gfx/IFrameGraphView.h"
 
+vg_enum_class_ns(vg::renderer, ViewFlags, core::u32,
+    Visible = 0x00000001,
+    Render = 0x00000002,
+    Focus = 0x00000004,
+    Ortho = 0x00000008,
+    Prefab = 0x00000010,
+    Additional = 0x00000020
+);
+
+vg_enum_class_ns(vg::renderer, ViewMask, core::u32,
+    View_0 = 0x00000001,
+    View_1 = 0x00000002,
+    View_2 = 0x00000004,
+    View_3 = 0x00000008,
+    View_4 = 0x00000010,
+    View_5 = 0x00000020,
+    View_6 = 0x00000040,
+    View_7 = 0x00000080,
+    View_8 = 0x00000100,
+    View_9 = 0x00000200,
+    View_10 = 0x00000400,
+    View_11 = 0x00000800,
+    View_12 = 0x00001000,
+    View_13 = 0x00002000,
+    View_14 = 0x00004000,
+    View_15 = 0x00008000
+);
+
 namespace vg::renderer
 {
     class IViewport;
@@ -41,34 +69,6 @@ namespace vg::renderer
         core::uint omni        = 0;
         core::uint spot        = 0;
     };
-
-    vg_enum_class(ViewFlags, core::u32,
-        Visible    = 0x00000001,
-        Render     = 0x00000002,
-        Focus      = 0x00000004,
-        Ortho      = 0x00000008,
-        Prefab     = 0x00000010,
-        Additional = 0x00000020
-    );
-
-    vg_enum_class(ViewMask, core::u32,
-        View_0  = 0x00000001,
-        View_1  = 0x00000002,
-        View_2  = 0x00000004,
-        View_3  = 0x00000008,
-        View_4  = 0x00000010,
-        View_5  = 0x00000020,
-        View_6  = 0x00000040,
-        View_7  = 0x00000080,
-        View_8  = 0x00000100,
-        View_9  = 0x00000200,
-        View_10 = 0x00000400,
-        View_11 = 0x00000800,
-        View_12 = 0x00001000,
-        View_13 = 0x00002000,
-        View_14 = 0x00004000,
-        View_15 = 0x00008000
-    );
 
     class IViewport;
     class IUIRenderer;

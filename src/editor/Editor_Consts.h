@@ -3,6 +3,12 @@
 #include "editor/ImGui/ImGui.h"
 #include "IconFont/IconsFontAwesome6.h"
 
+vg_enum_ns(vg::editor::style::draganddrop, Type, core::u8,
+    BeforeNode,
+    Node,
+    AfterNode
+);
+
 namespace vg::editor
 {
     namespace style
@@ -45,12 +51,6 @@ namespace vg::editor
         namespace draganddrop
         {
             inline static const ImVec2 interlineSize = ImVec2(256.0f, 8.0f);
-
-            vg_enum(Type, core::u8,
-                BeforeNode,
-                Node,
-                AfterNode
-            );
         }
 
         // from https://fontawesome.com/v6/search?m=free

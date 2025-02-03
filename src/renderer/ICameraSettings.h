@@ -3,13 +3,13 @@
 #include "core/Object/Object.h"
 #include "renderer/IView.h"
 
+vg_enum_class_ns(vg::renderer, GateFitMode, core::u8,
+    Horizontal,
+    Vertical
+);
+
 namespace vg::renderer
 {
-    vg_enum_class(GateFitMode, core::u8,
-        Horizontal,
-        Vertical
-    );
-
     class ICameraSettings : public core::Object
     {
     public:

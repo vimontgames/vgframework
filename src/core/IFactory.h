@@ -4,6 +4,15 @@
 #include "core/Object/EnumHelper.h"
 #include "XML/XML.h"
 
+vg_enum_class_ns(vg::core, BufferType, core::u8,
+    InitValue = 0,
+    UndoRedo
+);
+
+vg_enum_class_ns(vg::core, CopyPropertyFlags, core::u32,
+    NoChildren = 0x00000001
+);
+
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
@@ -17,15 +26,6 @@ namespace vg::core
     class IComponent;
 
     using UID = core::u32;
-
-    vg_enum_class(BufferType, core::u8,
-        InitValue = 0,
-        UndoRedo
-    );
-
-    vg_enum_class(CopyPropertyFlags, core::u32,
-        NoChildren = 0x00000001
-    );
 
     class IFactory
     {

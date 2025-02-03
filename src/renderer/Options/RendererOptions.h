@@ -18,34 +18,34 @@ namespace vg::gfx
     class DeviceCaps;
 }
 
+vg_enum_class_ns(vg::renderer, RenderPassFlags, core::u32,
+    ZPrepass = 0x00000001,
+    Opaque = 0x00000002,
+    Transparency = 0x00000004
+);
+
+vg_enum_class_ns(vg::renderer, LightingMode, core::u8,
+    Forward = 0,
+    Deferred
+);
+
+vg_enum_ns(vg::renderer, Quality, core::i8,
+    VeryLow = 0,
+    Low = 1,
+    Medium = 2,
+    High = 3,
+    VeryHigh = 4
+);
+
+vg_enum_ns(vg::renderer, ShadowDefaultResolution, core::u16,
+    ShadowDefaultResolution_512 = 512,
+    ShadowDefaultResolution_1024 = 1024,
+    ShadowDefaultResolution_2048 = 2048,
+    ShadowDefaultResolution_4096 = 4096
+);
+
 namespace vg::renderer
 {
-    vg_enum_class(RenderPassFlags, core::u32,
-        ZPrepass        = 0x00000001,
-        Opaque          = 0x00000002,
-        Transparency    = 0x00000004
-    );
-
-    vg_enum_class(LightingMode, core::u8,
-        Forward = 0,
-        Deferred
-    );
-
-    vg_enum(Quality, core::i8,
-        VeryLow = 0,
-        Low     = 1,
-        Medium  = 2,
-        High    = 3,
-        VeryHigh= 4
-    );
-
-    vg_enum(ShadowDefaultResolution, core::u16,
-        ShadowDefaultResolution_512 = 512,
-        ShadowDefaultResolution_1024 = 1024,
-        ShadowDefaultResolution_2048 = 2048,
-        ShadowDefaultResolution_4096 = 4096
-    );
-
     class RendererOptions final : public IRendererOptions, public core::Singleton<RendererOptions>
     {
     public:
