@@ -4,7 +4,7 @@
 
 namespace vg::gfx
 {
-    vg_enum_class(BlendFactor, core::u32,
+    vg_enum_class(vg::gfx, BlendFactor, core::u32,
         Zero = 0,
         One,
         SrcAlpha,
@@ -17,7 +17,7 @@ namespace vg::gfx
         OneMinusDstColor
     );
 
-    vg_enum_class(BlendOp, core::u32,
+    vg_enum_class(vg::gfx, BlendOp, core::u32,
         Add = 0,
         Substract,
         RevSubstract,
@@ -25,7 +25,7 @@ namespace vg::gfx
         Max
     );
 
-    vg_enum(ColorWrite, core::u32,
+    vg_enum(vg::gfx, ColorWrite, core::u32,
         Red     = 0x01,
         Green   = 0x02,
         Blue    = 0x04,

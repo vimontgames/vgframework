@@ -4,7 +4,7 @@ namespace vg::gfx
 {
     // Vulkan uses DXC to compile shader and thus requires a ShaderLevel string
     // This is our cross-platform equivalent of D3D_SHADER_MODEL
-    vg_enum_class(ShaderModel, core::u8,
+    vg_enum_class(vg::gfx, ShaderModel, core::u8,
         SM_5_1 = 0x51,
         SM_6_0 = 0x60,
         SM_6_1 = 0x61,

@@ -7,7 +7,7 @@
 #define GPU_VERTEXBUFFER_OFFSET_ALIGNMENT 4
 
 // List every vertex format here (max 255 because it's serialized as u8 and 0xFF stands for "invalid vertex format")
-vg_enum_class(VertexFormat, uint,
+vg_enum_class_global(VertexFormat, uint,
     Default         = 0,
     Skinning_4Bones = 1,
     DebugDrawUnlit  = 2,

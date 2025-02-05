@@ -9,7 +9,7 @@ namespace vg::gfx
     class Buffer;
     class Texture;
 
-    vg_enum_class(RingAllocCategory, core::u8,
+    vg_enum_class(vg::gfx, RingAllocCategory, core::u8,
         Buffer = 0,
         Texture
     );

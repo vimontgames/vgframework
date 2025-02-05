@@ -8,13 +8,13 @@ namespace vg::core
 
     using JoyID = core::u8;
 
-    vg_enum_class(InputType, core::u8,
+    vg_enum_class(vg::core, InputType, u8,
         Keyboard = 0,
         Mouse,
         Joypad
     );
 
-    vg_enum_class(KeyboardLayout, core::u8,
+    vg_enum_class(vg::core, KeyboardLayout, u8,
         Qwerty = 0,
         Azerty
     );
@@ -62,13 +62,13 @@ namespace vg::core
     #pragma endregion Joy
     };
 
-    vg_enum_class(MouseButton, core::u8,
+    vg_enum_class(vg::core, MouseButton, u8,
         Left = 0,
         Right,
         Middle
     );
 
-    vg_enum_class(JoyButton, core::u8,
+    vg_enum_class(vg::core, JoyButton, u8,
         A = 0,
         B,
         X,
@@ -81,7 +81,7 @@ namespace vg::core
         RightStick
     );
 
-    vg_enum_class(Key, core::u16,
+    vg_enum_class(vg::core, Key, u16,
         Escape = 0,
         One,
         Two,

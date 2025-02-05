@@ -35,13 +35,13 @@
 
 namespace vg::core
 {
-    vg_enum_class(Level, u8,
+    vg_enum_class(vg::core, Level, u8,
         Info = 0,
         Warning,
         Error
     );
 
-    vg_enum_class(LevelFlags, u32,
+    vg_enum_class(vg::core, LevelFlags, u32,
         Info    = 1 << (u32)Level::Info,
         Warning = 1 << (u32)Level::Warning,
         Error   = 1 << (u32)Level::Error

@@ -11,18 +11,18 @@ namespace vg::renderer
 
 namespace vg::editor
 {
-    vg_enum_class(GizmoType, core::u8,
+    vg_enum_class(vg::editor, GizmoType, core::u8,
         Translate = 0,
         Rotate,
         Scale
     );
 
-    vg_enum_class(GizmoSpace, core::u8,
+    vg_enum_class(vg::editor, GizmoSpace, core::u8,
         Local = 0,
         World
     );
 
-    vg_enum_class(EditorDebugFlags, core::u64,
+    vg_enum_class(vg::editor, EditorDebugFlags, core::u64,
         Culling     = 0x00000001,
         Inspector   = 0x00000002,
         Picking     = 0x00000004,

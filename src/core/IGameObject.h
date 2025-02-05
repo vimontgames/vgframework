@@ -16,7 +16,7 @@ namespace vg::core
     class IDynamicPropertyList;
     class IDynamicProperty;
 
-    vg_generic_enum_bitfield_64(Tag);
+    vg_generic_enum_bitfield_64(vg::core, Tag);
 
     class IGameObject : public Instance
     {

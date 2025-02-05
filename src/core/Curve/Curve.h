@@ -4,12 +4,12 @@
 
 namespace vg::core
 {
-    vg_enum_class(CurveType, core::u8,
+    vg_enum_class(vg::core, CurveType, u8,
         Float = 0,
         Float4
     );
 
-    vg_enum_class(CurveInterpolationType, core::u8,
+    vg_enum_class(vg::core, CurveInterpolationType, u8,
         Constant = 0,
         Linear,
         Smooth

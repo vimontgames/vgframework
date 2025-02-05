@@ -12,7 +12,7 @@ namespace vg::gfx
     class Buffer;
     class UserPass;
 
-    vg_enum_class(FrameGraphResourceType, core::u8,
+    vg_enum_class(vg::gfx, FrameGraphResourceType, core::u8,
         Buffer = 0,
         Texture
     );

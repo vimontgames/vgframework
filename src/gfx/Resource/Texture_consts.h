@@ -4,7 +4,7 @@
 
 namespace vg::gfx
 {
-	vg_enum_class(TextureType, core::u8,
+	vg_enum_class(vg::gfx, TextureType, core::u8,
 		Texture1D			= 0x01,
 		Texture2D			= 0x02,
 		Texture3D			= 0x03,
@@ -16,7 +16,7 @@ namespace vg::gfx
 		Texture2DMSArray	= 0x31
 	);
 
-	vg_enum_class(PixelFormat, core::u8,
+	vg_enum_class(vg::gfx, PixelFormat, core::u8,
 		Unknow = 0,		
 		R8G8B8A8_unorm,
 		R8G8B8A8_unorm_sRGB,
@@ -33,14 +33,14 @@ namespace vg::gfx
 		D32S8
 	);
 
-	vg_enum_class(TextureFlags, core::u32,
+	vg_enum_class(vg::gfx, TextureFlags, core::u32,
 		None			= 0x00000000,
         Backbuffer		= 0x00000001,
 		RenderTarget	= 0x00000002,
         DepthStencil    = 0x00000004
 	);
 
-	vg_enum_class(MSAA, core::u8,
+	vg_enum_class(vg::gfx, MSAA, core::u8,
         None    = 0,
         MSAA2X  = 1,
         MSAA4X  = 2,
@@ -48,7 +48,7 @@ namespace vg::gfx
         MSAA16X = 4
     );
 
-    vg_enum_class(MSAAFlags, core::u8,
+    vg_enum_class(vg::gfx, MSAAFlags, core::u8,
         None	= 1 << (core::u8)MSAA::None,
         MSAA2X	= 1 << (core::u8)MSAA::MSAA2X, 
         MSAA4X	= 1 << (core::u8)MSAA::MSAA4X, 

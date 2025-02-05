@@ -1698,7 +1698,7 @@ namespace vg::editor
                     {
                         if (!strcmp(displayName, "Components"))
                         {
-                            auto dragAndDropInterline = [=](IComponent * component, style::draganddrop::Type type)
+                            auto dragAndDropInterline = [=](IComponent * component, DragAndDropType type)
                             {
                                 //ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
                                 {
@@ -1710,7 +1710,7 @@ namespace vg::editor
                                     // debug
                                     //{
                                     //    u32 color;
-                                    //    if (type == style::draganddrop::Type::BeforeNode)
+                                    //    if (type == DragAndDropType::BeforeNode)
                                     //        color = 0x7F0000FF;
                                     //    else
                                     //        color = 0x7F00FF00;
@@ -1764,9 +1764,9 @@ namespace vg::editor
                                                     parent->RemoveComponent(from);
                                                     uint index = parent->GetComponentIndex(to);
 
-                                                    if (style::draganddrop::Type::BeforeNode == type)
+                                                    if (DragAndDropType::BeforeNode == type)
                                                         parent->AddComponent(from, index);
-                                                    else if (style::draganddrop::Type::AfterNode == type)
+                                                    else if (DragAndDropType::AfterNode == type)
                                                         parent->AddComponent(from, index + 1);
 
                                                     VG_SAFE_RELEASE(from);
@@ -1786,7 +1786,7 @@ namespace vg::editor
                                 IComponent * pComponent = (IComponent *)(*vec)[i];
 
                                 if (i == 0)
-                                    dragAndDropInterline(pComponent, style::draganddrop::BeforeNode);
+                                    dragAndDropInterline(pComponent, DragAndDropType::BeforeNode);
                                 
                                 auto * classDesc = pComponent->GetClassDesc();
                                 string componentShortName = fmt::sprintf("%s %s", classDesc->GetIcon(), classDesc->GetClassDisplayName()); // pComponent->GetClassName();
@@ -1850,7 +1850,7 @@ namespace vg::editor
                                 }
 
                                 // Invisible selectable for interline
-                                dragAndDropInterline(pComponent, style::draganddrop::AfterNode);                        
+                                dragAndDropInterline(pComponent, DragAndDropType::AfterNode);
 
                                 if (open)
                                 {

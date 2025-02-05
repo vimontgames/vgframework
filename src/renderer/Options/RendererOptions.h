@@ -20,18 +20,18 @@ namespace vg::gfx
 
 namespace vg::renderer
 {
-    vg_enum_class(RenderPassFlags, core::u32,
+    vg_enum_class(vg::renderer, RenderPassFlags, core::u32,
         ZPrepass        = 0x00000001,
         Opaque          = 0x00000002,
         Transparency    = 0x00000004
     );
 
-    vg_enum_class(LightingMode, core::u8,
+    vg_enum_class(vg::renderer, LightingMode, core::u8,
         Forward = 0,
         Deferred
     );
 
-    vg_enum(Quality, core::i8,
+    vg_enum(vg::renderer, Quality, core::i8,
         VeryLow = 0,
         Low     = 1,
         Medium  = 2,
@@ -39,7 +39,7 @@ namespace vg::renderer
         VeryHigh= 4
     );
 
-    vg_enum(ShadowDefaultResolution, core::u16,
+    vg_enum(vg::renderer, ShadowDefaultResolution, core::u16,
         ShadowDefaultResolution_512 = 512,
         ShadowDefaultResolution_1024 = 1024,
         ShadowDefaultResolution_2048 = 2048,

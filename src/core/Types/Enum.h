@@ -2,8 +2,13 @@
 
 #include "meta_enum_lite/include/meta_enum.hpp"
 
-#define vg_enum(Type, UnderlyingType, ...) meta_enum(Type, UnderlyingType, __VA_ARGS__) 
-#define vg_enum_class(Type, UnderlyingType, ...) meta_enum_class(Type, UnderlyingType, __VA_ARGS__)
+// Define an enum/enum class type with reflection at global scope
+#define vg_enum_global(Type, UnderlyingType, ...) meta_enum_global(Type, UnderlyingType, __VA_ARGS__) 
+#define vg_enum_class_global(Type, UnderlyingType, ...) meta_enum_class_global(Type, UnderlyingType, __VA_ARGS__)
+
+// Define an enum/enum class type under namespace (use fully qualified names to support nested namespaces)
+#define vg_enum(Namespace, Type, UnderlyingType, ...) meta_enum_namespace(Namespace, Type, UnderlyingType, __VA_ARGS__) 
+#define vg_enum_class(Namespace, Type, UnderlyingType, ...) meta_enum_class_namespace(Namespace, Type, UnderlyingType, __VA_ARGS__)
 
 namespace vg
 {

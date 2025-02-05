@@ -7,7 +7,7 @@ namespace vg::audio
         
     };
 
-    vg_enum_class(AudioSourceType, core::u8,
+    vg_enum_class(vg::audio, AudioSourceType, core::u8,
         None,
         Wav,
         Ogg,
@@ -15,7 +15,7 @@ namespace vg::audio
         Flac
     );
 
-    vg_enum_class(SoundFlags, core::u32,
+    vg_enum_class(vg::audio, SoundFlags, core::u32,
         PlayOnStart = 0x00000001,
         Loop        = 0x00000002,
         Background  = 0x80000000 

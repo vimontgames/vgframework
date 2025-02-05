@@ -25,7 +25,7 @@ namespace vg::renderer
     class MeshGeometry;
     class View;
 
-    vg_enum_class(DebugDrawFillMode, core::u8,
+    vg_enum_class(vg::renderer, DebugDrawFillMode, core::u8,
         Wireframe,
         Solid,
         Outline

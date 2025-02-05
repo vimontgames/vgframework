@@ -2,7 +2,7 @@
 
 namespace vg::gfx
 {
-    vg_enum_class(TextureImporterType, core::u8,
+    vg_enum_class(vg::gfx, TextureImporterType, core::u8,
         Auto        = 0,
 
         Texture1D   = 1,
@@ -11,7 +11,7 @@ namespace vg::gfx
         Cubemap     = 4
     );
 
-    vg_enum_class(TextureImporterFormat, core::u8,
+    vg_enum_class(vg::gfx, TextureImporterFormat, core::u8,
         Auto   = 0,
 
         RGBA8,
@@ -19,7 +19,7 @@ namespace vg::gfx
         RGBA32f
     );
 
-    vg_enum_class(TextureImporterMip, core::u8,
+    vg_enum_class(vg::gfx, TextureImporterMip, core::u8,
         TextureImporterMip_Auto = 0,
 
         TextureImporterMip_1    = 1,
@@ -39,7 +39,7 @@ namespace vg::gfx
         TextureImporterMip_15   = 15
     );
 
-    vg_enum_class(Downscale , core::u8,
+    vg_enum_class(vg::gfx, Downscale , core::u8,
         None = 0,
 
         Downscale_2,

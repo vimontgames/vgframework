@@ -4,7 +4,7 @@
 
 namespace vg::gfx
 {
-    vg_enum_class(ComparisonFunc, core::u16,
+    vg_enum_class(vg::gfx, ComparisonFunc, core::u16,
         Always = 0,
         Never,
         Equal,
@@ -15,7 +15,7 @@ namespace vg::gfx
         GreaterEqual
     );
 
-    vg_enum_class(StencilOp, core::u16,
+    vg_enum_class(vg::gfx, StencilOp, core::u16,
         Zero = 0,
         Keep,
         Replace,

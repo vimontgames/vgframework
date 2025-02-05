@@ -5,7 +5,7 @@
 
 namespace vg::gfx
 {
-    vg_enum_class(ViewportTarget, core::u8,
+    vg_enum_class(vg::gfx, ViewportTarget, core::u8,
         Game    = 0,
         Editor  = 1
     );

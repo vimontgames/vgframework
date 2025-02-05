@@ -42,7 +42,7 @@ namespace vg::renderer
         core::uint spot        = 0;
     };
 
-    vg_enum_class(ViewFlags, core::u32,
+    vg_enum_class(vg::renderer, ViewFlags, core::u32,
         Visible    = 0x00000001,
         Render     = 0x00000002,
         Focus      = 0x00000004,
@@ -51,7 +51,7 @@ namespace vg::renderer
         Additional = 0x00000020
     );
 
-    vg_enum_class(ViewMask, core::u32,
+    vg_enum_class(vg::renderer, ViewMask, core::u32,
         View_0  = 0x00000001,
         View_1  = 0x00000002,
         View_2  = 0x00000004,

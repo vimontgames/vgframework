@@ -2,20 +2,20 @@
 
 namespace vg::gfx
 {
-    vg_enum_class(Usage, core::u8,
+    vg_enum_class(vg::gfx, Usage, core::u8,
         Default = 0,
         Upload,
         Staging
     );
 
-    vg_enum_class(CPUAccessFlags, core::u8,
+    vg_enum_class(vg::gfx, CPUAccessFlags, core::u8,
         None                = 0x00,
         Read                = 0x01,
         Write               = 0x02,
         ReadWrite           = 0x03
     );
 
-    vg_enum_class(BindFlags, core::u16,
+    vg_enum_class(vg::gfx, BindFlags, core::u16,
         None				            = 0x0000,
         ConstantBuffer                  = 0x0001,
         ShaderResource                  = 0x0002,

@@ -9,7 +9,7 @@ namespace vg::core
     class IGameObject;
     class AABB;
 
-    vg_enum_class(ComponentFlags, u32,
+    vg_enum_class(vg::core, ComponentFlags, u32,
         Enabled     = 0x00000001,
         NoCulling   = 0x00000002
     );

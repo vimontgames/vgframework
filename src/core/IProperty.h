@@ -18,7 +18,7 @@ namespace vg::core
         Hidden      = 0x00000002
     };
 
-    vg_enum_class(PropertyType, u32,
+    vg_enum_class(vg::core, PropertyType, u32,
         Undefined = 0,
         Bool,
         Int8,
@@ -72,7 +72,7 @@ namespace vg::core
         LayoutElement           // Cosmetic-only properties (doesn't change serialized data)
     );
 
-    vg_enum_class(PropertyFlags, u64,
+    vg_enum_class(vg::core, PropertyFlags, u64,
         None                = 0x0000000000000000,
         ReadOnly            = 0x0000000000000001,   // A property that is visible, but edition is disabled
         Color               = 0x0000000000000002,   // Type represents a color (e.g., float4 or u32)
@@ -95,7 +95,7 @@ namespace vg::core
         AlphabeticalOrder   = 0x0000000000040000    // Sort multiple values in alphabetical order (e.g., enums)
     );
 
-    vg_enum_class(PropertyLayoutElement, u8,
+    vg_enum_class(vg::core, PropertyLayoutElement, u8,
         Separator = 0,
         SameLineBegin,
         SameLineEnd,

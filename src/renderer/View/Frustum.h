@@ -8,7 +8,7 @@ namespace vg::core
 
 namespace vg::renderer
 {
-    vg_enum_class(FrustumPlane, core::u8,
+    vg_enum_class(vg::renderer, FrustumPlane, core::u8,
         Left = 0,
         Right,
         Top,
@@ -17,13 +17,13 @@ namespace vg::renderer
         Far
     );
 
-    vg_enum_class(FrustumTest, core::u8,
+    vg_enum_class(vg::renderer, FrustumTest, core::u8,
         Intersect = 0,
         Inside,
         Outside
     );
 
-    vg_enum_class(FrustumCorner, core::u8,
+    vg_enum_class(vg::renderer, FrustumCorner, core::u8,
         NearBottomLeft = 0,
         NearBottomRight,
         NearTopLeft,

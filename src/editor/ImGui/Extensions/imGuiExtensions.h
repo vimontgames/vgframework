@@ -18,7 +18,7 @@ namespace vg::renderer
 
 namespace ImGui
 {
-    vg_enum_class(InteractionType, vg::core::u8,
+    vg_enum_class(ImGui, InteractionType, vg::core::u8,
         Single = 0,
         Continuous
     );

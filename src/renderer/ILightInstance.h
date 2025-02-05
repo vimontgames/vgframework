@@ -3,7 +3,7 @@
 
 namespace vg::renderer
 {
-    vg_enum_class(LightType, core::u8,
+    vg_enum_class(vg::renderer, LightType, core::u8,
         Directional = 0,
         Omni,
         Spot

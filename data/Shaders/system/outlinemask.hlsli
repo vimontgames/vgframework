@@ -3,7 +3,7 @@
 
 #include "types.hlsli"
 
-vg_enum_class(OutlineMaskFlags, uint,
+vg_enum_class_global(OutlineMaskFlags, uint,
     DepthFail = 0x8000
 );
 

@@ -5,6 +5,12 @@
 
 namespace vg::editor
 {
+    vg_enum(vg::editor, DragAndDropType, core::u8,
+        BeforeNode,
+        Node,
+        AfterNode
+    );
+
     namespace style
     {
         namespace dialog
@@ -45,12 +51,6 @@ namespace vg::editor
         namespace draganddrop
         {
             inline static const ImVec2 interlineSize = ImVec2(256.0f, 8.0f);
-
-            vg_enum(Type, core::u8,
-                BeforeNode,
-                Node,
-                AfterNode
-            );
         }
 
         // from https://fontawesome.com/v6/search?m=free

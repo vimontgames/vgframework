@@ -2,7 +2,7 @@
 
 namespace vg::renderer
 {
-    vg_enum_class(BodyPartFlags, core::u32,
+    vg_enum_class(vg::renderer, BodyPartFlags, core::u32,
         UpperBody   = 0x00000001,
         LowerBody   = 0x00000002
     );

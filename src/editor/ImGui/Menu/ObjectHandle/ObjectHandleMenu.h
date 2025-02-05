@@ -9,7 +9,7 @@ namespace vg::core
 
 namespace vg::editor
 {
-    vg_enum_class(ObjectHandleMenuOption, core::u8,
+    vg_enum_class(vg::editor, ObjectHandleMenuOption, core::u8,
         None = 0,
         Select,
         Clear

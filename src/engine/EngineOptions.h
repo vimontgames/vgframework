@@ -12,12 +12,12 @@ namespace vg::physics
 
 namespace vg::engine
 {
-    vg_enum_class(AnimationOptionFlags, core::u32,
+    vg_enum_class(vg::engine, AnimationOptionFlags, core::u32,
         AnimationJobs = 0x00000001,
         ShowSkeletons = 0x00000002        
     );
 
-    vg_enum_class(LoadingOptionFlags, core::u32,
+    vg_enum_class(vg::engine, LoadingOptionFlags, core::u32,
         ResourcePriority = 0x00000001
     );
 

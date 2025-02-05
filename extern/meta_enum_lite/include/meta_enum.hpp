@@ -2,7 +2,7 @@
 
 class MetaEnumStringView
 {
-    #define maxNameLength 64U
+#define maxNameLength 64U
 
 public:
     constexpr MetaEnumStringView() :
@@ -25,7 +25,7 @@ public:
 
     constexpr const char * data() const { return m_data; }
     constexpr size_t size() const { return m_length; }
-    constexpr const char * zData() const { return (const char*)m_czData; }
+    constexpr const char * zData() const { return (const char *)m_czData; }
     constexpr char operator[](std::size_t _pos) const { return m_data[_pos]; }
 
 private:
@@ -63,7 +63,10 @@ struct MetaEnum
     Array<MetaEnumMember<EnumType>, size> members = {};
 };
 
-template <typename E> struct MetaEnumTraits;
+template <typename E> struct MetaEnumTraits
+{
+    static_assert(false, "MetaEnumTraits must be specialized for this type using meta_enum_namespace.");
+};
 
 namespace meta_enum_internal
 {
@@ -90,28 +93,28 @@ namespace meta_enum_internal
 
                 switch (c)
                 {
-                case '"':
-                    if (lastChar != '\\') //ignore " if they are backslashed
-                        quote = true;
-                    break;
-                case '(':
-                case '<':
-                    if (lastChar == '<' || nextChar == '<')
+                    case '"':
+                        if (lastChar != '\\') //ignore " if they are backslashed
+                            quote = true;
                         break;
-                    [[fallthrough]];
-                case '{':
-                    ++brackets;
-                    break;
-                case ')':
-                case '>':
-                    if (lastChar == '>' || nextChar == '>')
+                    case '(':
+                    case '<':
+                        if (lastChar == '<' || nextChar == '<')
+                            break;
+                        [[fallthrough]];
+                    case '{':
+                        ++brackets;
                         break;
-                    [[fallthrough]];
-                case '}':
-                    --brackets;
-                    break;
-                default:
-                    break;
+                    case ')':
+                    case '>':
+                        if (lastChar == '>' || nextChar == '>')
+                            break;
+                        [[fallthrough]];
+                    case '}':
+                        --brackets;
+                        break;
+                    default:
+                        break;
                 }
             };
 
@@ -231,7 +234,7 @@ namespace meta_enum_internal
     }
 }
 
-#define meta_enum(Type, UnderlyingType, ...)\
+#define meta_enum_global(Type, UnderlyingType, ...)\
     enum Type : UnderlyingType { __VA_ARGS__};\
     constexpr static auto Type##_internal_size = []  () constexpr\
     {\
@@ -244,12 +247,32 @@ namespace meta_enum_internal
         IntWrapperType __VA_ARGS__;\
         return meta_enum_internal::resolveEnumValuesArray<Type, UnderlyingType, Type##_internal_size()>({__VA_ARGS__});\
     }());\
-    template <> struct ::MetaEnumTraits<Type>\
+    template <> struct MetaEnumTraits<Type>\
     {\
-        static const inline MetaEnum<Type, std::underlying_type_t<Type>, Type##_meta.members.size()> Meta = Type##_meta;\
+        static const inline auto Meta = Type##_meta; \
     };
 
-#define meta_enum_class(Type, UnderlyingType, ...)\
+#define meta_enum_namespace(Namespace, Type, UnderlyingType, ...)\
+        enum Type : UnderlyingType { __VA_ARGS__};\
+        constexpr static auto Type##_internal_size = []  () constexpr\
+        {\
+            using IntWrapperType = meta_enum_internal::IntWrapper<UnderlyingType>;\
+            IntWrapperType __VA_ARGS__;\
+            return std::initializer_list<IntWrapperType>{__VA_ARGS__}.size();\
+        };\
+        constexpr static auto Type##_meta = meta_enum_internal::parseMetaEnum<Type, UnderlyingType, Type##_internal_size()>(#__VA_ARGS__, sizeof(#__VA_ARGS__), []() {\
+            using IntWrapperType = meta_enum_internal::IntWrapper<UnderlyingType>;\
+            IntWrapperType __VA_ARGS__;\
+            return meta_enum_internal::resolveEnumValuesArray<Type, UnderlyingType, Type##_internal_size()>({__VA_ARGS__});\
+        }());\
+    }\
+    namespace Namespace {\
+    template <> struct MetaEnumTraits<Namespace::Type>\
+    {\
+        static const inline auto Meta = Namespace::Type##_meta;\
+    };
+
+#define meta_enum_class_global(Type, UnderlyingType, ...)\
     enum class Type : UnderlyingType { __VA_ARGS__};\
     constexpr static auto Type##_internal_size = [] () constexpr\
     {\
@@ -262,9 +285,29 @@ namespace meta_enum_internal
         IntWrapperType __VA_ARGS__;\
         return meta_enum_internal::resolveEnumValuesArray<Type, UnderlyingType, Type##_internal_size()>({__VA_ARGS__});\
     }());\
-    template <> struct ::MetaEnumTraits<Type>\
+    template <> struct MetaEnumTraits<Type>\
     {\
-        static const inline MetaEnum<Type, std::underlying_type_t<Type>, Type##_meta.members.size()> Meta = Type##_meta;\
+        static const inline auto Meta = Type##_meta;\
+    };
+
+#define meta_enum_class_namespace(Namespace, Type, UnderlyingType, ...)\
+        enum class Type : UnderlyingType { __VA_ARGS__};\
+        constexpr static auto Type##_internal_size = [] () constexpr\
+        {\
+            using IntWrapperType = meta_enum_internal::IntWrapper<UnderlyingType>;\
+            IntWrapperType __VA_ARGS__;\
+            return std::initializer_list<IntWrapperType>{__VA_ARGS__}.size();\
+        };\
+        constexpr static auto Type##_meta = meta_enum_internal::parseMetaEnum<Type, UnderlyingType, Type##_internal_size()>(#__VA_ARGS__, sizeof(#__VA_ARGS__), []() {\
+            using IntWrapperType = meta_enum_internal::IntWrapper<UnderlyingType>;\
+            IntWrapperType __VA_ARGS__;\
+            return meta_enum_internal::resolveEnumValuesArray<Type, UnderlyingType, Type##_internal_size()>({__VA_ARGS__});\
+        }());\
+    }\
+    namespace Namespace {\
+    template <> struct MetaEnumTraits<Namespace::Type>\
+    {\
+        static const inline auto Meta = Namespace::Type##_meta;\
     };
 
 template <typename Type> constexpr const auto & getEnumMembers()
@@ -277,7 +320,7 @@ template <typename Type> constexpr const size_t getEnumSize()
     return MetaEnumTraits<Type>::Meta.members.size();
 }
 
-template <typename Type> constexpr const std::string getEnumString(Type e)
+template <typename Type> const std::string getEnumString(Type e)
 {
     const auto & members = getEnumMembers<Type>();
     for (auto i = 0; i < members.size(); ++i)

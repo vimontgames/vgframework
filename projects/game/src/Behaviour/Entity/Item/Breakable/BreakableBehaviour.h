@@ -1,7 +1,7 @@
 #pragma once
 #include "Behaviour/Entity/Item/ItemBehaviour.h"
 
-vg_enum_class(BreakableState, vg::core::u8,
+vg_enum_class_global(BreakableState, vg::core::u8,
     Default = 0,
     Destroyed
 );

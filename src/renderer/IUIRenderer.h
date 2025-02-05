@@ -15,24 +15,24 @@ namespace vg::renderer
     enum class FontStyle : core::u8;
     using PickingID = core::uint;
 
-    vg_enum_class( HorizontalAligment , core::u8,
+    vg_enum_class(vg::renderer,  HorizontalAligment , core::u8,
         Left,
         Center,
         Right
     );
 
-    vg_enum_class(VerticalAligment , core::u8,
+    vg_enum_class(vg::renderer, VerticalAligment , core::u8,
         Top,
         Center,
         Bottom
     );
 
-    vg_enum_class(UIItemFlags , core::u32,
+    vg_enum_class(vg::renderer, UIItemFlags , core::u32,
         AutoResize      = 0x00000001,
         KeepAspectRatio = 0x00000002
     );    
 
-    vg_enum_class(CanvasType, core::u8,
+    vg_enum_class(vg::renderer, CanvasType, core::u8,
         CanvasType_2D = 0x00000002,
         CanvasType_3D = 0x00000003
     );
@@ -82,7 +82,7 @@ namespace vg::renderer
         core::uint2             m_resolution        = core::uint2(1280, 720);
     };
 
-    vg_enum_class(RenderUIType, core::u8,
+    vg_enum_class(vg::renderer, RenderUIType, core::u8,
         RenderUIType_2D = 0,
         RenderUIType_3D
     );

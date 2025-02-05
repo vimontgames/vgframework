@@ -12,7 +12,7 @@ namespace vg::core
 
 namespace vg::editor
 {
-    vg_enum_class(SceneListMenuOption, core::u8,
+    vg_enum_class(vg::editor, SceneListMenuOption, core::u8,
         None = 0,
         AddScene,
         LoadScene

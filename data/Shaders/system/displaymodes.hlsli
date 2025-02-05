@@ -8,7 +8,7 @@
 // All shader-only code should be added to displaymode.hlsl instead
 //--------------------------------------------------------------------------------------
 
-vg_enum_class(DisplayMode, uint,
+vg_enum_class_global(DisplayMode, uint,
 	None = 0,
 
     Instance_Color,
@@ -72,7 +72,7 @@ vg_enum_class(DisplayMode, uint,
     PostProcess_OutlineMask
 );
 
-vg_enum(DisplayFlags, uint,
+vg_enum_global(DisplayFlags, uint,
     AlbedoMap       = 0x00000001,
     NormalMap       = 0x00000002,
     VertexColor     = 0x00000004,

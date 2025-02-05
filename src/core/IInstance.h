@@ -7,14 +7,14 @@ namespace vg::core
     class IModel;
     class AABB;
 
-    vg_enum_class(Lod, core::u8,
+    vg_enum_class(vg::core, Lod, u8,
         Lod0 = 0,
         Lod1,
         Lod2,
         Lod3
     );
 
-    vg_enum_class(InstanceFlags, u32,
+    vg_enum_class(vg::core, InstanceFlags, u32,
         Enabled     = 0x00000001,   // Instance is enabled and its enabled components are active
         Static      = 0x00000002,   // Instance doesn't move or change
         Temporary   = 0x00000004    // Temp object that should be deleted when engine stops

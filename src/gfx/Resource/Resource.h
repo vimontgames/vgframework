@@ -5,12 +5,12 @@
 
 namespace vg::gfx
 {
-    vg_enum_class(ResourceFlags, core::u32,
+    vg_enum_class(vg::gfx, ResourceFlags, core::u32,
 		None        = 0x00000000,
         Backbuffer  = 0x00000001
 	);
 
-    vg_enum_class(ResourceType, core::u8,
+    vg_enum_class(vg::gfx, ResourceType, core::u8,
         Texture     = 0,
         Buffer
     );

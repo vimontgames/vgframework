@@ -2,7 +2,7 @@
 
 namespace vg::core
 {
-    vg_enum_class(EditingState, core::u8,
+    vg_enum_class(vg::core, EditingState, u8,
         Unknown = 0,
         BeginEdit,
         Editing,

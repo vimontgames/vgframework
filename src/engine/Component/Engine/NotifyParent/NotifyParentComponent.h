@@ -4,7 +4,7 @@
 
 namespace vg::engine
 {
-    vg_enum_class(ParentNotificationTypeFlags, core::u32,
+    vg_enum_class(vg::engine, ParentNotificationTypeFlags, core::u32,
         CollisionEnter  = 0x00000001,
         CollisionStay   = 0x00000002,
         CollisionExit   = 0x00000004,

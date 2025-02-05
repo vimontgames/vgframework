@@ -20,7 +20,7 @@ namespace vg::renderer
     class CameraInstance;
     class Frustum;
 
-    vg_enum_class(GraphicInstanceListType, core::u8,
+    vg_enum_class(vg::renderer, GraphicInstanceListType, core::u8,
         All = 0,
         Opaque,
         AlphaTest,

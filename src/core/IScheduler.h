@@ -9,7 +9,7 @@ namespace vg::core
     };
     using ThreadID = std::thread::id;
 
-    vg_enum_class(ThreadType, core::i8,
+    vg_enum_class(vg::core, ThreadType, i8,
         Unknown     = -128,
         Loading     = -2,
         Main        = -1,

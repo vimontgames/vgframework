@@ -52,7 +52,7 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    bool doDragDrop(IGameObject* _from, IGameObject* _to, style::draganddrop::Type _dest)
+    bool doDragDrop(IGameObject* _from, IGameObject* _to, DragAndDropType _dest)
     {
         if (_from == _to)
         {
@@ -69,43 +69,43 @@ namespace vg::editor
 
         switch (_dest)
         {
-        case style::draganddrop::Type::Node:
-        {
-            // '_to' is the new parent of '_from'
-            IGameObject* fromParent = dynamic_cast<IGameObject*>(_from->GetParent());
-            if (fromParent)
+            case DragAndDropType::Node:
             {
-                VG_SAFE_INCREASE_REFCOUNT(_from);
-                fromParent->RemoveChild(_from);
-                _to->AddChild(_from, 0);
-                VG_SAFE_RELEASE(_from);
-                return true;
-            }
-        }
-        break;
-
-        case style::draganddrop::Type::AfterNode:
-        {
-            // '_from' is not the next following brother of '_to'
-            IGameObject* fromParent = dynamic_cast<IGameObject*>(_from->GetParent());
-            if (fromParent)
-            {
-                IGameObject* toParent = dynamic_cast<IGameObject*>(_to->GetParent());
-                if (toParent)
+                // '_to' is the new parent of '_from'
+                IGameObject* fromParent = dynamic_cast<IGameObject*>(_from->GetParent());
+                if (fromParent)
                 {
                     VG_SAFE_INCREASE_REFCOUNT(_from);
                     fromParent->RemoveChild(_from);
-
-                    uint childIndex = toParent->GetChildIndex(_to);
-                    toParent->AddChild(_from, childIndex + 1);
-
+                    _to->AddChild(_from, 0);
                     VG_SAFE_RELEASE(_from);
-
                     return true;
                 }
             }
-        }
-        break;
+            break;
+
+            case DragAndDropType::AfterNode:
+            {
+                // '_from' is not the next following brother of '_to'
+                IGameObject* fromParent = dynamic_cast<IGameObject*>(_from->GetParent());
+                if (fromParent)
+                {
+                    IGameObject* toParent = dynamic_cast<IGameObject*>(_to->GetParent());
+                    if (toParent)
+                    {
+                        VG_SAFE_INCREASE_REFCOUNT(_from);
+                        fromParent->RemoveChild(_from);
+
+                        uint childIndex = toParent->GetChildIndex(_to);
+                        toParent->AddChild(_from, childIndex + 1);
+
+                        VG_SAFE_RELEASE(_from);
+
+                        return true;
+                    }
+                }
+            }
+            break;
         }
 
         return false;
@@ -272,7 +272,7 @@ namespace vg::editor
 
                 if (payload->Delivery)
                 {
-                    doDragDrop(from, to, style::draganddrop::Type::Node);
+                    doDragDrop(from, to, DragAndDropType::Node);
                     m_dragAndDropNodeTarget = nullptr;
                 }
                 else
@@ -361,7 +361,7 @@ namespace vg::editor
         
                 if (payload->Delivery)
                 {
-                    doDragDrop(from, to, style::draganddrop::Type::AfterNode);
+                    doDragDrop(from, to, DragAndDropType::AfterNode);
                     m_dragAndDropInterlineTarget = nullptr;
                 }
                 else

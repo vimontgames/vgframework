@@ -13,7 +13,7 @@ namespace vg::core
 
 namespace vg::gfx
 {
-    vg_enum_class(ViewTarget, core::u8,
+    vg_enum_class(vg::gfx, ViewTarget, core::u8,
         Game        = 0,
         Editor      = 1,
         Shadow      = 2

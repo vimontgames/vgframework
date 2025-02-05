@@ -4,7 +4,7 @@
 
 namespace vg::editor
 {
-    vg_enum_class(InspectorMenuOption, core::u8,
+    vg_enum_class(vg::editor, InspectorMenuOption, core::u8,
         None = 0,
         RemoveComponent
     );

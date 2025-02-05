@@ -5,7 +5,7 @@
 
 namespace vg::gfx
 {
-    vg_enum_class(RootSignatureDescType, core::u8,
+    vg_enum_class(vg::gfx, RootSignatureDescType, core::u8,
         ConstantBuffer = 0,
         Texture,
         Buffer,

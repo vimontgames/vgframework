@@ -20,7 +20,7 @@ namespace vg::gfx
     class GraphicPipelineState;
     class ComputePipelineState;
 
-    vg_enum_class(ShaderOptimizationLevel, core::u8,
+    vg_enum_class(vg::gfx, ShaderOptimizationLevel, core::u8,
         Unoptimized = 0,
         Optimized
     );

@@ -9,7 +9,7 @@ namespace vg::core
 
 namespace vg::editor
 {
-    vg_enum_class(GameObjectSceneEditorMenuOption, core::u8,
+    vg_enum_class(vg::editor, GameObjectSceneEditorMenuOption, core::u8,
         None = 0,
 
         AddGameObject,

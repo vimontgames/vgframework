@@ -29,7 +29,7 @@ namespace vg::audio
 
 namespace vg::engine
 {
-    vg_enum_class(EngineJobType, core::u8,
+    vg_enum_class(vg::engine, EngineJobType, core::u8,
         Animation
     );
 

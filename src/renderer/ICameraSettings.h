@@ -5,7 +5,7 @@
 
 namespace vg::renderer
 {
-    vg_enum_class(GateFitMode, core::u8,
+    vg_enum_class(vg::renderer, GateFitMode, core::u8,
         Horizontal,
         Vertical
     );

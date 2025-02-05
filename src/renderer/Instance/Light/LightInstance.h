@@ -3,7 +3,7 @@
 
 namespace vg::renderer
 {
-    vg_enum_class(ShadowResolution, core::i8,
+    vg_enum_class(vg::renderer, ShadowResolution, core::i8,
         ShadowResolution_VeryLow  = -2,
         ShadowResolution_Low      = -1,
         ShadowResolution_Medium   = 0,

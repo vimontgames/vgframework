@@ -4,19 +4,19 @@
 
 namespace vg::gfx
 {
-    vg_enum_class(Filter, core::u8,
+    vg_enum_class(vg::gfx, Filter, core::u8,
         Nearest = 0,
         Linear,
         DepthCmp
     );
 
-    vg_enum_class(Address, core::u8,
+    vg_enum_class(vg::gfx, Address, core::u8,
         Repeat = 0,
         Clamp,
         Mirror
     );
 
-    vg_enum_class(Anisotropy, core::u8,
+    vg_enum_class(vg::gfx, Anisotropy, core::u8,
         Anisotropy_None,
         Anisotropy_2X,
         Anisotropy_4X,

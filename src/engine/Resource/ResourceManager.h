@@ -17,7 +17,7 @@ namespace vg::engine
 {
     class ResourceInfo;
 
-    vg_enum_class(CookStatus, core::u8,
+    vg_enum_class(vg::engine, CookStatus, core::u8,
         UP_TO_DATE = 0,             // File doesn't need cook
 
         RAWDATA_FILE_UPDATED,       // File needs cook because raw data file has been updated

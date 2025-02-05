@@ -6,7 +6,7 @@ namespace vg::core
 {
     class IGameObject;
 
-    vg_enum_class(SelectionChangeType, core::u8,
+    vg_enum_class(vg::core, SelectionChangeType, u8,
         Add,
         Remove,
         Clear

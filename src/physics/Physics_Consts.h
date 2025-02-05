@@ -24,7 +24,7 @@ namespace vg::physics
     // want to have 1 layer for moving bodies and 1 layer for static bodies, but you can have more layers if you want. 
     // e.g., you could have a layer for high detail collision (which is not used by the physics simulation
     // but only if you do collision testing).
-    vg_enum_class(ObjectLayer, core::u16,
+    vg_enum_class(vg::physics, ObjectLayer, core::u16,
         NonMoving = 0,
         Moving
     );
@@ -34,23 +34,23 @@ namespace vg::physics
     // You can have a 1-on-1 mapping between object layers and broadphase layers (like in this case) but if you have
     // many object layers you'll be creating many broad phase trees, which is not efficient. If you want to fine tune
     // your broadphase layers define JPH_TRACK_BROADPHASE_STATS and look at the stats reported on the TTY.
-    vg_enum_class(BPLayer, core::u8,
+    vg_enum_class(vg::physics, BPLayer, core::u8,
         NonMoving = 0,
         Moving
     );
 
-    vg_enum_class(MotionType, core::u8,
+    vg_enum_class(vg::physics, MotionType, core::u8,
         Static = 0, // Non movable
         Kinematic,  // Movable using velocities only, does not respond to forces
         Dynamic     // Responds to forces as a normal physics object
     );
 
-    vg_enum_class(MotionQuality, core::u8, 
+    vg_enum_class(vg::physics, MotionQuality, core::u8,
         Discrete = 0,   // Update the body in discrete steps
         Continuous      // Update the body using linear casting
     );
 
-    vg_enum_class(ShapeType, core::u8,
+    vg_enum_class(vg::physics, ShapeType, core::u8,
         Sphere = 0,
         Box,
         Capsule,
@@ -58,7 +58,7 @@ namespace vg::physics
         Mesh
     );
 
-    vg_enum_class(ShapeTypeFlags, core::u32,
+    vg_enum_class(vg::physics, ShapeTypeFlags, core::u32,
         Sphere          = 1 << (core::u32)ShapeType::Sphere,
         Box             = 1 << (core::u32)ShapeType::Box,
         Capsule         = 1 << (core::u32)ShapeType::Capsule,
@@ -66,17 +66,17 @@ namespace vg::physics
         Mesh            = 1 << (core::u32)ShapeType::Mesh
     );
 
-    vg_enum_class(BodyType, core::u8,
+    vg_enum_class(vg::physics, BodyType, core::u8,
         Rigid = 0,
         Soft
     );
 
-    vg_enum_class(CharacterType, core::u8,
+    vg_enum_class(vg::physics, CharacterType, core::u8,
         Rigid = 0,
         Virtual
     );
 
-    vg_enum_class(GroundState, core::u8,
+    vg_enum_class(vg::physics, GroundState, core::u8,
         Grounded,   // Character is on the ground 
         Blocked,    // Character is on a slope that is too steep and can't climb
         Touching,   // Character is touching an object, but is not supported and should fall
@@ -92,6 +92,6 @@ namespace vg::physics
         core::quaternion    m_rotation = core::quaternion(0, 0, 0, 1);
     };
 
-    vg_generic_enum_value_64(Category);
-    vg_generic_enum_bitfield_64(CategoryFlag);
+    vg_generic_enum_value_64(vg::physics, Category);
+    vg_generic_enum_bitfield_64(vg::physics, CategoryFlag);
 }

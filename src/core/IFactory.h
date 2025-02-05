@@ -18,12 +18,12 @@ namespace vg::core
 
     using UID = core::u32;
 
-    vg_enum_class(BufferType, core::u8,
+    vg_enum_class(vg::core, BufferType, u8,
         InitValue = 0,
         UndoRedo
     );
 
-    vg_enum_class(CopyPropertyFlags, core::u32,
+    vg_enum_class(vg::core, CopyPropertyFlags, u32,
         NoChildren = 0x00000001
     );
 

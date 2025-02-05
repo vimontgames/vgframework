@@ -4,19 +4,19 @@
 
 namespace vg::gfx
 {
-	vg_enum_class(CommandListType, core::u8,
+	vg_enum_class(vg::gfx, CommandListType, core::u8,
 		Graphics = 0,
 		Compute,
 		Present
 	);
 
-    vg_enum_class(PrimitiveType, core::u8,
+    vg_enum_class(vg::gfx, PrimitiveType, core::u8,
         Point = 0,
         Line,
         Triangle
     );
 
-    vg_enum_class(PrimitiveTopology, core::u8,
+    vg_enum_class(vg::gfx, PrimitiveTopology, core::u8,
         PointList = 0,
         LineList,
         LineStrip,

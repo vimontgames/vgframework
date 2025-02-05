@@ -34,7 +34,7 @@ using namespace vg::core;
 //--------------------------------------------------------------------------------------
 // When compiling HLSL, process vg_enum[_class] shared declarations as regular enum [class] declarations
 //--------------------------------------------------------------------------------------
-#define vg_enum(Type, UnderlyingType, ...)       enum Type : UnderlyingType { __VA_ARGS__};
-#define vg_enum_class(Type, UnderlyingType, ...) enum class Type : UnderlyingType { __VA_ARGS__};
+#define vg_enum_global(Type, UnderlyingType, ...)       enum Type : UnderlyingType { __VA_ARGS__};
+#define vg_enum_class_global(Type, UnderlyingType, ...) enum class Type : UnderlyingType { __VA_ARGS__};
 
 #endif

@@ -7,19 +7,19 @@ namespace vg::core
 {
 	void debugPrint(const char * _format, ...);
 
-    vg_enum_class(MessageBoxIcon, u8,
+    vg_enum_class(vg::core, MessageBoxIcon, u8,
         Error = 0,
         Warning,
         Info
     );
 
-    vg_enum(MessageBoxType, u8,
+    vg_enum(vg::core, MessageBoxType, u8,
         OK = 0,
         YesNo,
         YesNoCancel
     );
 
-    vg_enum_class(MessageBoxResult, u8,
+    vg_enum_class(vg::core, MessageBoxResult, u8,
         Yes = 0,
         No,
         Cancel,

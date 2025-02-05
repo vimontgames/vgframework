@@ -11,7 +11,7 @@ namespace vg::editor
         core::vector<core::IClassDesc *> classes;
     };
 
-    vg_enum_class(GameObjectInspectorMenuOption, core::u8,
+    vg_enum_class(vg::editor, GameObjectInspectorMenuOption, core::u8,
         None = 0,
         AddComponent
     );
