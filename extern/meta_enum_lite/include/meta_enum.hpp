@@ -266,11 +266,11 @@ namespace meta_enum_internal
             return meta_enum_internal::resolveEnumValuesArray<Type, UnderlyingType, Type##_internal_size()>({__VA_ARGS__});\
         }());\
     }\
-    namespace Namespace {\
     template <> struct MetaEnumTraits<Namespace::Type>\
     {\
         static const inline auto Meta = Namespace::Type##_meta;\
-    };
+    };\
+    namespace Namespace {
 
 #define meta_enum_class_global(Type, UnderlyingType, ...)\
     enum class Type : UnderlyingType { __VA_ARGS__};\
@@ -304,11 +304,11 @@ namespace meta_enum_internal
             return meta_enum_internal::resolveEnumValuesArray<Type, UnderlyingType, Type##_internal_size()>({__VA_ARGS__});\
         }());\
     }\
-    namespace Namespace {\
     template <> struct MetaEnumTraits<Namespace::Type>\
     {\
         static const inline auto Meta = Namespace::Type##_meta;\
-    };
+    };\
+    namespace Namespace {
 
 template <typename Type> constexpr const auto & getEnumMembers()
 {
