@@ -78,7 +78,13 @@ namespace vg::gfx
 	}
 }
 
-#include VG_GFXAPI_HEADER(CommandList)
+#ifdef VG_DX12
+#include "dx12/CommandList_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/CommandList_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

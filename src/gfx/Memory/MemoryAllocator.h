@@ -15,7 +15,13 @@ namespace vg::gfx
     }
 }
 
-#include VG_GFXAPI_HEADER(MemoryAllocator)
+#ifdef VG_DX12
+#include "dx12/MemoryAllocator_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/MemoryAllocator_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

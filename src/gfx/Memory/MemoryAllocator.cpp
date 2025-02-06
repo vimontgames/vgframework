@@ -2,9 +2,15 @@
 #include "MemoryAllocator.h"
 #include "gfx/Device/Device.h"
 
-using namespace vg::core;
+#ifdef VG_DX12
+#include "dx12/MemoryAllocator_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/MemoryAllocator_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
 
-#include VG_GFXAPI_IMPL(MemoryAllocator)
+using namespace vg::core;
 
 namespace vg::gfx
 {

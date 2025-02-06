@@ -1,3 +1,11 @@
+#ifdef VG_DX12
+#include "dx12/SubPass_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/SubPass_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
+
 namespace vg::gfx::base
 {
 	//--------------------------------------------------------------------------------------
@@ -24,8 +32,6 @@ namespace vg::gfx::base
         return m_userPassesInfos;
     }
 }
-
-#include VG_GFXAPI_IMPL(SubPass)
 
 namespace vg::gfx
 {

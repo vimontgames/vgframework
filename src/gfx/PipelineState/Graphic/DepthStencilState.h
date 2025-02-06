@@ -82,7 +82,13 @@ namespace vg::gfx
     }
 }
 
-#include VG_GFXAPI_HEADER(DepthStencilState)
+#ifdef VG_DX12
+#include "dx12/DepthStencilState_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/DepthStencilState_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

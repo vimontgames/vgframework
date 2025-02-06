@@ -7,9 +7,17 @@
 #include "gfx/Resource/Texture.h"
 #include "ComputePipelineState.h"
 
-using namespace vg::core;
-
 #include "ComputePipelineStateKey.hpp"
+
+#ifdef VG_DX12
+#include "dx12/ComputePipelineState_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/ComputePipelineState_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
+
+using namespace vg::core;
 
 namespace vg::gfx
 {
@@ -30,8 +38,6 @@ namespace vg::gfx
 
     }
 }
-
-#include VG_GFXAPI_IMPL(ComputePipelineState)
 
 namespace vg::gfx
 {

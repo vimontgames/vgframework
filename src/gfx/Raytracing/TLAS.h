@@ -21,7 +21,13 @@ namespace vg::gfx
     }
 }
 
-#include VG_GFXAPI_HEADER(TLAS)
+#ifdef VG_DX12
+#include "dx12/TLAS_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/TLAS_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

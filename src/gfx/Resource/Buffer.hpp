@@ -1,4 +1,10 @@
-#include VG_GFXAPI_IMPL(Buffer)
+#ifdef VG_DX12
+#include "dx12/Buffer_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/Buffer_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
 
 #if !VG_ENABLE_INLINE
 #include "Buffer.inl"

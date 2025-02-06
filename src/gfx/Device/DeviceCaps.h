@@ -26,7 +26,13 @@ namespace vg::gfx::base
     };
 }
 
-#include VG_GFXAPI_HEADER(DeviceCaps)
+#ifdef VG_DX12
+#include "dx12/DeviceCaps_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/DeviceCaps_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

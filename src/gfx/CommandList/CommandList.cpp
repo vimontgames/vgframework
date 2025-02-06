@@ -13,9 +13,15 @@
 #include "gfx/UploadBuffer/UploadBuffer.h"
 #include "gfx/BindlessTable/BindlessTable.h"
 
-using namespace vg::core;
+#ifdef VG_DX12
+#include "dx12/CommandList_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/CommandList_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
 
-#include VG_GFXAPI_IMPL(CommandList)
+using namespace vg::core;
 
 #if !VG_ENABLE_INLINE
 #include "CommandList.inl"

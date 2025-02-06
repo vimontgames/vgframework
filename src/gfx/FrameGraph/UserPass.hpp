@@ -1,8 +1,6 @@
 #include "gfx/Precomp.h"
 #include "UserPass.h"
 
-#include VG_GFXAPI_IMPL(SubPass)
-
 #if !VG_ENABLE_INLINE
 #include "UserPass.inl"
 #endif

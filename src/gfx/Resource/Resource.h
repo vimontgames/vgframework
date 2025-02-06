@@ -40,7 +40,13 @@ namespace vg::gfx
     }
 }
 
-#include VG_GFXAPI_HEADER(Resource)
+#ifdef VG_DX12
+#include "dx12/Resource_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/Resource_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

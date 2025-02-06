@@ -20,7 +20,13 @@ namespace vg::gfx
     }
 }
 
-#include VG_GFXAPI_HEADER(Shader)
+#ifdef VG_DX12
+#include "dx12/Shader_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/Shader_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

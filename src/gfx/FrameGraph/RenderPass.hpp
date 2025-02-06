@@ -1,4 +1,10 @@
-#include VG_GFXAPI_IMPL(RenderPass)
+#ifdef VG_DX12
+#include "dx12/RenderPass_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/RenderPass_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

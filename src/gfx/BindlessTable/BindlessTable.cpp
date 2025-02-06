@@ -8,9 +8,15 @@
 
 #include "shaders/system/cubemap.hlsli"
 
-using namespace vg::core;
+#ifdef VG_DX12
+#include "dx12/BindlessTable_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/BindlessTable_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
 
-#include VG_GFXAPI_IMPL(BindlessTable)
+using namespace vg::core;
 
 namespace vg::gfx
 {

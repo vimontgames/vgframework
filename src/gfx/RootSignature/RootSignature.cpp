@@ -3,10 +3,16 @@
 #include "gfx/PipelineState/Graphic/SamplerState.h"
 #include "gfx/Device/Device.h"
 
-using namespace vg::core;
-
 #include "RootSignatureDesc.hpp"
 #include "RootSignatureTableDesc.hpp"
+
+#ifdef VG_DX12
+#include "dx12/RootSignature_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/RootSignature_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {
@@ -26,8 +32,6 @@ namespace vg::gfx
         }
     }
 }
-
-#include VG_GFXAPI_IMPL(RootSignature)
 
 namespace vg::gfx
 {

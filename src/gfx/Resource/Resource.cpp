@@ -9,9 +9,13 @@
 #include "gfx/UploadBuffer/UploadBuffer.h"
 #include "gfx/bindlessTable/BindlessTable.h"
 
-using namespace vg::core;
-
-#include VG_GFXAPI_IMPL(Resource)
+#ifdef VG_DX12
+#include "dx12/Resource_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/Resource_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
 
 #include "Texture.hpp"
 #include "Buffer.hpp"

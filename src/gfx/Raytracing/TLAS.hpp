@@ -4,7 +4,13 @@
 #define VG_TLAS_SIZE            (VG_TLAS_INSTANCECOUNT * 1024 * 32)
 #define VG_TLAS_SCRATCH_SIZE    (VG_TLAS_INSTANCECOUNT * 1024 * 32)
 
-#include VG_GFXAPI_IMPL(TLAS)
+#ifdef VG_DX12
+#include "dx12/TLAS_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/TLAS_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

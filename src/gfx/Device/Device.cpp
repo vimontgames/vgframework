@@ -21,13 +21,18 @@
 #include "Device.inl"
 #endif
 
-using namespace vg::core;
-using namespace vg::gfx;
-
 #include "gfx/Device/DeviceCaps.hpp"
 #include "DXGIHelper.hpp"
 
-#include VG_GFXAPI_IMPL(Device)
+#ifdef VG_DX12
+#include "dx12/Device_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/Device_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
+
+using namespace vg::core;
 
 namespace vg::gfx
 {

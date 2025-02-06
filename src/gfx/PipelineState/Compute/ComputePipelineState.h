@@ -20,7 +20,13 @@ namespace vg::gfx
     }
 }
 
-#include VG_GFXAPI_HEADER(ComputePipelineState)
+#ifdef VG_DX12
+#include "dx12/ComputePipelineState_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/ComputePipelineState_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

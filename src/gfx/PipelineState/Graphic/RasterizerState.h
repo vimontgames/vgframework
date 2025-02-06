@@ -37,7 +37,13 @@ namespace vg::gfx
     }
 }
 
-#include VG_GFXAPI_HEADER(RasterizerState)
+#ifdef VG_DX12
+#include "dx12/RasterizerState_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/RasterizerState_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

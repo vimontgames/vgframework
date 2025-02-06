@@ -94,7 +94,13 @@ namespace vg::gfx
     }
 }
 
-#include VG_GFXAPI_HEADER(BlendState)
+#ifdef VG_DX12
+#include "dx12/BlendState_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/BlendState_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

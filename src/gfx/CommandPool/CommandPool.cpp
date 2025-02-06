@@ -2,9 +2,15 @@
 #include "CommandPool.h"
 #include "gfx/Device/Device.h"
 
-using namespace vg::core;
+#ifdef VG_DX12
+#include "dx12/CommandPool_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/CommandPool_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
 
-#include VG_GFXAPI_IMPL(CommandPool)
+using namespace vg::core;
 
 namespace vg::gfx
 {

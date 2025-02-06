@@ -49,7 +49,13 @@ namespace vg::gfx
     }
 }
 
-#include VG_GFXAPI_HEADER(SamplerState)
+#ifdef VG_DX12
+#include "dx12/SamplerState_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/SamplerState_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

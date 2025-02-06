@@ -1,6 +1,12 @@
 #include "BLAS.h"
 
-#include VG_GFXAPI_IMPL(BLAS)
+#ifdef VG_DX12
+#include "dx12/BLAS_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/BLAS_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

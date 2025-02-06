@@ -11,13 +11,21 @@
 #include "BlendState.h"
 #include "SamplerState.h"
 
-using namespace vg::core;
-
 #include "GraphicPipelineStateKey.hpp"
 #include "DepthStencilState.hpp"
 #include "RasterizerState.hpp"
 #include "BlendState.hpp"
 #include "SamplerState.hpp"
+
+#ifdef VG_DX12
+#include "dx12/GraphicPipelineState_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/GraphicPipelineState_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
+
+using namespace vg::core;
 
 namespace vg::gfx
 {
@@ -38,8 +46,6 @@ namespace vg::gfx
 
     }
 }
-
-#include VG_GFXAPI_IMPL(GraphicPipelineState)
 
 namespace vg::gfx
 {

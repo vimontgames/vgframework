@@ -1,4 +1,10 @@
-#include VG_GFXAPI_IMPL(Texture)
+#ifdef VG_DX12
+#include "dx12/Texture_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/Texture_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
 
 #include "core/Math/Math.h"
 #include "core/Object/EnumHelper.h"

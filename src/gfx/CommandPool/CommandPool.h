@@ -19,7 +19,13 @@ namespace vg::gfx
 	}
 }
 
-#include VG_GFXAPI_HEADER(CommandPool)
+#ifdef VG_DX12
+#include "dx12/CommandPool_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/CommandPool_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

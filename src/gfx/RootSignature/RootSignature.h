@@ -21,7 +21,13 @@ namespace vg::gfx
     }
 }
 
-#include VG_GFXAPI_HEADER(RootSignature)
+#ifdef VG_DX12
+#include "dx12/RootSignature_dx12.h"
+#elif defined(VG_VULKAN)
+#include "vulkan/RootSignature_vulkan.h"
+#else
+#error Undefined GFXAPI
+#endif
 
 namespace vg::gfx
 {

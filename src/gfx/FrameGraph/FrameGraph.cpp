@@ -676,7 +676,7 @@ namespace vg::gfx
                 return;
             }
         }
-        VG_ASSERT(false, "Could not release Texture \"%s\" from pool", _tex->GetName());
+        VG_ASSERT(false, "Could not release Texture \"%s\" from pool", _tex->GetName().c_str());
     }
 
     //--------------------------------------------------------------------------------------
@@ -752,7 +752,7 @@ namespace vg::gfx
                 return;
             }
         }
-        VG_ASSERT(false, "Could not release Buffer \"%s\" from pool", _buffer->GetName());
+        VG_ASSERT(false, "Could not release Buffer \"%s\" from pool", _buffer->GetName().c_str());
     }
 
     //--------------------------------------------------------------------------------------

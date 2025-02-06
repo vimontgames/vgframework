@@ -76,27 +76,12 @@
 // Use for static inheritance of platform-specific implementation classes
 //--------------------------------------------------------------------------------------
 
-#define VG_GFXAPI_MAKE_HEADER_PATH(filename, api)			            VG_STRINGIFY(api##/filename##_##api.h)
-#define VG_GFXAPI_MAKE_HEADER_PATH_EXT(filename, version, api)          VG_STRINGIFY(api##/filename##_##version##_##api.h)
-#define VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, api)	            VG_STRINGIFY(api##/filename##_##api.hpp)
-#define VG_GFXAPI_MAKE_IMPLEMENTATION_PATH_EXT(filename, version, api)	VG_STRINGIFY(api##/filename##_##version##_##api.hpp)
-
 #ifdef VG_DX12
-
 #define VG_GFXAPI dx12
-#define VG_GFXAPI_HEADER(filename)                                      VG_GFXAPI_MAKE_HEADER_PATH(filename, dx12)
-#define VG_GFXAPI_HEADER_EXT(filename, version)                         VG_GFXAPI_MAKE_HEADER_PATH_EXT(filename, version, dx12)
-#define VG_GFXAPI_IMPL(filename)                                        VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, dx12)
-#define VG_GFXAPI_IMPL_EXT(filename, version)                           VG_GFXAPI_MAKE_IMPLEMENTATION_PATH_EXT(filename, version, dx12)
-
 #elif defined(VG_VULKAN)
-
 #define VG_GFXAPI vulkan
-#define VG_GFXAPI_HEADER(filename)                                      VG_GFXAPI_MAKE_HEADER_PATH(filename, vulkan)
-#define VG_GFXAPI_HEADER_EXT(filename, version)                         VG_GFXAPI_MAKE_HEADER_PATH_EXT(filename, version, vulkan)
-#define VG_GFXAPI_IMPL(filename)                                        VG_GFXAPI_MAKE_IMPLEMENTATION_PATH(filename, vulkan)
-#define VG_GFXAPI_IMPL_EXT(filename, version)                           VG_GFXAPI_MAKE_IMPLEMENTATION_PATH_EXT(filename, version, vulkan)
-
+#else
+#error Undefined GFXAPI
 #endif
 
 //--------------------------------------------------------------------------------------
