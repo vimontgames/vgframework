@@ -5,12 +5,12 @@ namespace vg::core
 {
     //--------------------------------------------------------------------------------------
     Property::Property(const char * _class, const char * _name, PropertyType _type, uint_ptr _offset, core::u32 _sizeOf, const char * _prettyName, PropertyFlags _flags, uint _enumCount, const char * _enumNames, const void * _enumValues, uint _enumSizeOf) :
-        className(_class),
-        name(_name),
+        name(_name), 
+        className(_class),   
+        displayName(_prettyName),
         type(_type),
         offset(_offset),
         sizeOf(_sizeOf),
-        displayName(_prettyName),
         flags(_flags)
     {
         if (_enumCount > 0)

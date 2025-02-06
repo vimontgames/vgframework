@@ -1,5 +1,5 @@
 #include "core/Precomp.h"
-#include "file.h"
+#include "File.h"
 #include "core/Kernel.h"
 #include <iostream>
 #include <fstream>
@@ -300,7 +300,6 @@ namespace vg::core::io
     //--------------------------------------------------------------------------------------
     string addExtensionIfNotPresent(const string & _file, const string & _ext)
     {
-        size_t findExt = _file.find_last_of(_ext);
         if (fileHasExtension(_file, _ext))
             return _file ;
         else
@@ -315,7 +314,6 @@ namespace vg::core::io
         bool extensionFound = false;
         for (uint i = 0; i < _ext.size(); ++i)
         {
-            size_t findExt = _file.find_last_of(_ext[i]); 
             if (fileHasExtension(_file, _ext[i]))
             {
                 extensionFound = true;

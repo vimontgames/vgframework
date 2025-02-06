@@ -112,7 +112,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     template <class T> core::vector<T *> IGameObject::GetComponentsT() const
     {
-        return (core::vector<T *>&)(GetComponentsByType(T::getStaticClassName(), false, false));
+        auto temp = GetComponentsByType(T::getStaticClassName(), false, false);
+        return reinterpret_cast<core::vector<T *>&>(temp);
     }
 
     //--------------------------------------------------------------------------------------

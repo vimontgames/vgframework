@@ -224,17 +224,13 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Object::OnPlay()
     {
-        auto * factory = Kernel::getFactory();
-        //if (factory)
-        //    factory->SaveProperties(this);
+   
     }
 
     //--------------------------------------------------------------------------------------
     void Object::OnStop()
     {
-        auto * factory = Kernel::getFactory();
-        //if (factory)
-        //    factory->RestoreProperties(this);        
+       
     }
 
     //--------------------------------------------------------------------------------------

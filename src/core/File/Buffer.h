@@ -69,7 +69,7 @@ namespace vg::core::io
     };
 }
 
-#include "buffer.inl"
+#include "Buffer.inl"
 
 
 

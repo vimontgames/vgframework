@@ -183,7 +183,6 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Factory::LoadFromXML(IObject * _object, const string & _xmlFile) const
     {
-        const auto startLoad = Timer::getTick();
         string relativePath = io::getRelativePath(_xmlFile);
 
         XMLDoc xmlDoc;
@@ -192,10 +191,8 @@ namespace vg::core
             XMLNode * xmlRoot = xmlDoc.FirstChild();
             if (xmlRoot != nullptr)
             {
-                //VG_INFO("[Factory] Load \"%s\"", relativePath.c_str());
                 if (SerializeFromXML(_object, xmlDoc))
                 {
-                    //VG_INFO("[Factory] \"%s\" loaded from XML in %.2f ms", relativePath.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                     _object->SetFile(relativePath.c_str());
                     return true;
                 }
@@ -228,7 +225,7 @@ namespace vg::core
         if (it == buffers.end())
         {
             io::Buffer * buffer = new io::Buffer();
-            buffers.insert(std::pair(_object->GetUID(), buffer)).first;
+            buffers.insert(std::pair(_object->GetUID(), buffer));
             return serializeObjectToMemory(_object, *buffer, _bufferType);
         }
         else
@@ -963,7 +960,6 @@ namespace vg::core
         {
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             const size_t srcCount = _srcProp->GetPropertyResourceVectorCount(_srcObj);
-            const byte * srcData = _srcProp->GetPropertyResourceVectorData(_srcObj);
 
             if (srcCount > 0)
             {
@@ -972,7 +968,7 @@ namespace vg::core
                 VG_ASSERT(elemClassDesc);
                 if (elemClassDesc)
                 {
-                    void * data = elemClassDesc->ResizeVector(_dstObj, (uint)_srcProp->GetOffset(), (uint)srcCount);
+                    elemClassDesc->ResizeVector(_dstObj, (uint)_srcProp->GetOffset(), (uint)srcCount);
 
                     for (uint i = 0; i < srcCount; ++i)
                     {
@@ -1022,17 +1018,13 @@ namespace vg::core
         case PropertyType::ObjectVector:
         {
             uint srcVecCount = _srcProp->GetPropertyObjectVectorCount(_srcObj);
-            auto * srcVecData = _srcProp->GetPropertyObjectVectorData(_srcObj);
-
-            uint dstVecCount = _dstProp->GetPropertyObjectVectorCount(_dstObj);
-            auto * dstVecData = _dstProp->GetPropertyObjectVectorData(_dstObj);
 
             const char * elemClassName = _srcProp->GetPropertyObjectVectorElement(_srcObj, 0)->GetClassName();
             const IClassDesc * elemClassDesc = GetClassDescriptor(elemClassName);
             VG_ASSERT(elemClassDesc);
             if (elemClassDesc)
             {
-                void * data = elemClassDesc->ResizeVector(_dstObj, (uint)_srcProp->GetOffset(), (uint)srcVecCount);
+                elemClassDesc->ResizeVector(_dstObj, (uint)_srcProp->GetOffset(), (uint)srcVecCount);
 
                 for (uint i = 0; i < srcVecCount; ++i)
                 {
@@ -1373,7 +1365,6 @@ namespace vg::core
 
                     if (i < vector->size())
                     {
-                        auto * obj = (*vector)[i];
                         RestoreProperties((*vector)[i], _bufferType);
                     }
                     else
@@ -2982,7 +2973,6 @@ namespace vg::core
                 } while ('|' != *p && '\0' != *p);
                 temp[index] = '\0';
 
-                auto xmlEnumString = xmlValue->Value();
                 for (uint e = 0; e < _prop->GetEnumCount(); ++e)
                 {
                     auto name = _prop->GetEnumName(e);

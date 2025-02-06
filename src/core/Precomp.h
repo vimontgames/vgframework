@@ -163,6 +163,12 @@ namespace vg::core
 
 #define VG_STRINGIFY(quoteMe) #quoteMe
 
+//#ifdef __clang__
+#define VG_OFFSETOF(class, member) (reinterpret_cast<std::ptrdiff_t>(&reinterpret_cast<class *>(0)->member)) // cannot always use offsetof with clang (warning : offset of on non-standard-layout type)
+//#else
+//#define VG_OFFSETOF(class, member) (offsetof(class, member))
+//#endif
+
 //--------------------------------------------------------------------------------------
 // standard includes
 //--------------------------------------------------------------------------------------
@@ -187,7 +193,7 @@ namespace vg::core
 //--------------------------------------------------------------------------------------
 // core
 //--------------------------------------------------------------------------------------
-#include "core.h"
+#include "Core.h"
 
 namespace vg
 {

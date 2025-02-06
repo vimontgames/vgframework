@@ -37,10 +37,10 @@ namespace vg::core
         const vector<string>        GetExtensions           () const override;;
         void                        OnResourcePathChanged   (const string & _oldPath, const string & _newPath) override;
 
-        bool                        Cook                    (const core::string & _file) const;
+        bool                        Cook                    (const core::string & _file) const override;
 
-        core::IObject *             Load                    (const core::string & _file);
-        void                        Unload                  (const core::string & _file);
+        core::IObject *             Load                    (const core::string & _file) override;
+        void                        Unload                  (const core::string & _file) override;
 
         void                        LoadSubResources        () override;
         void                        UnloadSubResources      () override;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/IPlugin.h"
+#include "core/IPlugin.h"
 #include "core/Types/Types.h"
 
 namespace vg::core

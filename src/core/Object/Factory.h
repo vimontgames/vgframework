@@ -65,8 +65,8 @@ namespace vg::core
         bool                                        serializeObjectFromMemory       (IObject * _object, io::Buffer & _buffer, BufferType _bufferType);
         void                                        serializePropertyFromMemory     (IObject * _object, const IProperty * _prop, io::Buffer & _buffer, BufferType _bufferType);
 
-        void                                        ReleaseAsync                    (core::IObject * _object);
-        void                                        FlushReleaseAsync               ();
+        void                                        ReleaseAsync                    (core::IObject * _object) final override;
+        void                                        FlushReleaseAsync               () final override;
 
          template <typename T> static string        getEnumFlagsPropertyAsString    (T _value, const IProperty * _prop);
 

@@ -19,7 +19,7 @@ namespace vg::core
             m_enable = _enable;
         }
 
-        bool IsEnable() const
+        bool IsEnable() const final override
         {
             return m_enable;
         }
@@ -29,7 +29,7 @@ namespace vg::core
             return (IProperty*) &m_prop;
         }
 
-        bool RegisterUID();
+        bool RegisterUID() final override;
 
         virtual void CopyProperty(const IProperty * _prop) = 0;
 
@@ -102,7 +102,7 @@ namespace vg::core
         void CopyProperty(const IProperty * _prop) override
         {
             m_prop = *(Property *)_prop;
-            m_prop.SetOffset(offsetof(DynamicPropertyT, m_value));
+            m_prop.SetOffset(VG_OFFSETOF(DynamicPropertyT, m_value));
         }
 
     protected:

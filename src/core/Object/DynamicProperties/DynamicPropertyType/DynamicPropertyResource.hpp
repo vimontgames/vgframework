@@ -69,6 +69,6 @@ namespace vg::core
     void DynamicPropertyResource::CopyProperty(const IProperty * _prop)
     {
         m_prop = *(Property *)_prop;
-        m_prop.SetOffset(offsetof(DynamicPropertyResource, m_value));
+        m_prop.SetOffset(VG_OFFSETOF(DynamicPropertyResource, m_value));
     }
 }

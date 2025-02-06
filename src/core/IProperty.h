@@ -224,14 +224,14 @@ namespace vg::core
 #define registerProperty(className, propertyName, displayName)									            registerPropertyEx(className, propertyName, displayName, vg::core::PropertyFlags::None)
 
 // Register property for an Object or an Object container type
-#define registerPropertyObjectEx(className, propertyName, displayName, flags)                               _desc.RegisterProperty(#className, #propertyName, (core::IObject*)offsetof(className, propertyName), displayName, flags);
+#define registerPropertyObjectEx(className, propertyName, displayName, flags)                               _desc.RegisterProperty(#className, #propertyName, (core::IObject*)VG_OFFSETOF(className, propertyName), displayName, flags);
 #define registerPropertyObject(className, propertyName, displayName)                                        registerPropertyObjectEx(className, propertyName, displayName, vg::core::PropertyFlags::None)
 
 #define registerPropertyObjectVectorEx(className, propertyName, elementType, displayName, flags)            _desc.RegisterProperty(#className, #propertyName, sizeof(elementType), &((className*)nullptr)->propertyName, displayName, flags);
 #define registerPropertyObjectVector(className, propertyName, elementType, displayName)                     registerPropertyObjectVectorEx(className, propertyName, elementType, displayName, vg::core::PropertyFlags::None)
 
 // Register property for an Object* or an Object* container  type
-#define registerPropertyObjectPtrEx(className, propertyName, displayName, flags)                            _desc.RegisterProperty(#className, #propertyName, (core::IObject**)offsetof(className, propertyName), displayName, flags);
+#define registerPropertyObjectPtrEx(className, propertyName, displayName, flags)                            _desc.RegisterProperty(#className, #propertyName, (core::IObject**)VG_OFFSETOF(className, propertyName), displayName, flags);
 #define registerPropertyObjectPtr(className, propertyName, displayName)                                     registerPropertyObjectPtrEx(className, propertyName, displayName, vg::core::PropertyFlags::None)
 
 #define registerPropertyObjectPtrVectorEx(className, propertyName, displayName, flags)                      _desc.RegisterPropertyT(#className, #propertyName, &((className*)nullptr)->propertyName, displayName, flags);
@@ -241,13 +241,13 @@ namespace vg::core
 #define registerPropertyObjectPtrDictionary(className, propertyName, displayName)                           registerPropertyObjectPtrDictionaryEx(className, propertyName, displayName, vg::core::PropertyFlags::None)
 
 // Register property for an Resource* or an Resource* container  type
-#define registerPropertyResourceEx(className, propertyName, displayName, flags)                             _desc.RegisterPropertyResource(#className, #propertyName, (core::IResource*) offsetof(className, propertyName), displayName, flags | vg::core::PropertyFlags::Resource);
+#define registerPropertyResourceEx(className, propertyName, displayName, flags)                             _desc.RegisterPropertyResource(#className, #propertyName, (core::IResource*)VG_OFFSETOF(className, propertyName), displayName, flags | vg::core::PropertyFlags::Resource);
 #define registerPropertyResource(className, propertyName, displayName)                                      registerPropertyResourceEx(className, propertyName, displayName, vg::core::PropertyFlags::None)    
 
 #define registerPropertyResourceVectorEx(className, propertyName, elementType, displayName, flags)          registerPropertyObjectVectorEx(className, propertyName, elementType, displayName, flags | vg::core::PropertyFlags::Resource)
 #define registerPropertyResourceVector(className, propertyName, elementType, displayName)                   registerPropertyResourceVectorEx(className, propertyName, elementType, displayName, vg::core::PropertyFlags::None)    
 
-#define registerPropertyResourcePtrEx(className, propertyName, displayName, flags)                          _desc.RegisterPropertyResourcePtr(#className, #propertyName, (core::IResource**)offsetof(className, propertyName), displayName, flags | vg::core::PropertyFlags::Resource);
+#define registerPropertyResourcePtrEx(className, propertyName, displayName, flags)                          _desc.RegisterPropertyResourcePtr(#className, #propertyName, (core::IResource**)VG_OFFSETOF(className, propertyName), displayName, flags | vg::core::PropertyFlags::Resource);
 #define registerPropertyResourcePtr(className, propertyName, displayName)                                   registerPropertyResourcePtrEx(className, propertyName, displayName, vg::core::PropertyFlags::None)   
 
 #define registerPropertyResourcePtrVectorEx(className, propertyName, displayName, flags)                    registerPropertyObjectPtrVectorEx(className, propertyName, displayName, flags | vg::core::PropertyFlags::Resource) 

@@ -34,7 +34,7 @@ namespace vg::core
         UpdateFlags                 GetUpdateFlags          () const final override;
         void                        EnableUpdateFlags       (UpdateFlags _flags, bool _enabled = true) final override;
 
-        bool                        TryGetAABB              (AABB & _aabb) const { return false; }
+        bool                        TryGetAABB              (AABB & _aabb) const override { return false; }
 
         const core::string          GetSubObjectName        (core::uint _subObjectIndex) const override;
 

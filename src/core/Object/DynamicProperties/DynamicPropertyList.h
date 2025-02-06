@@ -5,7 +5,7 @@
 
 namespace vg::core
 {
-    class DynamicPropertyList : public IDynamicPropertyList
+    class DynamicPropertyList final : public IDynamicPropertyList
     {
     public:
         VG_CLASS_DECL(DynamicPropertyList, IDynamicPropertyList);
@@ -13,8 +13,8 @@ namespace vg::core
         DynamicPropertyList(const core::string & _name, core::IObject * _parent);
         ~DynamicPropertyList();
 
-        void OnLoad() override;
-        bool RegisterUID();
+        void OnLoad() final override;
+        bool RegisterUID() final override;
         bool CanCopyUID() const final override { return true; }
         const IDynamicProperty * GetProperty(const IProperty * _prop) const override;
 

@@ -333,7 +333,6 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i8 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i8 * _enumValues, PropertyFlags _flags)
     {
-        const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
         pushProperty({ _className, _propertyName, PropertyType::EnumI8, (uint_ptr)_offset, (u32)sizeof(i8), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
@@ -342,7 +341,6 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i16 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i16 * _enumValues, PropertyFlags _flags)
     {
-        const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
         pushProperty({ _className, _propertyName, PropertyType::EnumI16, (uint_ptr)_offset, (u32)sizeof(i16), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
@@ -351,7 +349,6 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i32 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i32 * _enumValues, PropertyFlags _flags)
     {
-        const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
         pushProperty({ _className, _propertyName, PropertyType::EnumI32, (uint_ptr)_offset, (u32)sizeof(i32), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
@@ -360,7 +357,6 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void ClassDesc::RegisterEnum(const char * _className, const char * _propertyName, const char * _enumTypeName, core::i64 * _offset, const char * _displayName, uint _enumCount, const char * _enumNames, const i64 * _enumValues, PropertyFlags _flags)
     {
-        const bool bitfield = asBool(PropertyFlags::Bitfield & _flags);
         pushProperty({ _className, _propertyName, PropertyType::EnumI64, (uint_ptr)_offset, (u32)sizeof(i64), _displayName, _flags, _enumCount, _enumNames, _enumValues });
         auto & prop = properties.back();
         prop.SetEnumTypeName(_enumTypeName);
@@ -508,14 +504,17 @@ namespace vg::core
     template <> struct TypeToEnum<dictionary<core::IObject*>> { static constexpr auto value = PropertyType::ObjectPtrDictionary; };
 
     //--------------------------------------------------------------------------------------
+    template <typename SRC> const u32 safeOffsetCast(SRC _value)
+    {
+        const size_t addr = (size_t)_value;
+        VG_ASSERT(addr <= 0xFFFFFFFF);
+        return (u32)addr;
+    }
+
+    //--------------------------------------------------------------------------------------
     template <typename T> void ClassDesc::registerClassMemberT(const char * _className, const char * _propertyName, T * _offset, const char * _displayName, PropertyFlags _flags)
     {
-#pragma warning(push)
-#pragma warning (disable: 4302)
-#pragma warning (disable: 4311)
-        const u32 offset = (u32)(_offset);
-#pragma warning( pop )
-
+        const u32 offset = safeOffsetCast(_offset);
         pushProperty({ _className, _propertyName, TypeToEnum<T>::value, offset, (u32)sizeof(T), _displayName, _flags });
     }
 
@@ -527,8 +526,6 @@ namespace vg::core
         
         if (asBool(PropertyFlags::Resource & _flags))
             VG_ASSERT(type == PropertyType::Resource);
-        //else
-        //    VG_ASSERT(type == PropertyType::Object);
 
         pushProperty({ _className, _propertyName, type, (uint_ptr)_offset, _elementSize, _displayName, PropertyFlags::EnumArray | _flags, _enumCount, _enumNames, _enumValues, _enumSizeOf });
     }

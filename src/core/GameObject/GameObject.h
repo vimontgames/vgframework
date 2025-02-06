@@ -62,7 +62,7 @@ namespace vg::core
         IComponent *                                    AddComponent                (const char * _className, const string & _name) final override;
         bool                                            RemoveComponent             (IComponent * _component) final override;
         const vector<IComponent *> &                    GetComponents               () const final override;
-        core::uint                                      GetComponentIndex           (const IComponent * _component) const;
+        core::uint                                      GetComponentIndex           (const IComponent * _component) const final override;
 
         IComponent *                                    GetComponentByType          (const char * _className, bool _searchInParent = false, bool _searchInChildren = false) const final override;
         vector<IComponent *>                            GetComponentsByType         (const char * _className, bool _searchInParent = false, bool _searchInChildren = false) const final override;
