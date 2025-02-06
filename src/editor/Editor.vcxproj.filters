@@ -15,9 +15,6 @@
     <ClCompile Include="ImGui\Toolbar\ImGuiToolbar.cpp">
       <Filter>ImGui\Toolbar</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\PropertyHandler\ImGuiPropertyHandler.cpp">
-      <Filter>ImGui\PropertyHandler</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\ImGui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -90,9 +87,6 @@
     <ClInclude Include="ImGui\Menu\Scene\ImGuiSceneMenu.hpp">
       <Filter>ImGui\Menu\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\ImGuiCustomHandler.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\ObjectHandler\ImGuiObjectHandler.h">
       <Filter>ImGui\ObjectHandler</Filter>
     </ClInclude>
@@ -134,9 +128,6 @@
     </ClInclude>
     <ClInclude Include="ImGui\Window\Resource\ImGuiResource.hpp">
       <Filter>ImGui\Window\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\PropertyHandler\ImGuiPropertyHandler.h">
-      <Filter>ImGui\PropertyHandler</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\ImGui.h">
       <Filter>ImGui</Filter>
@@ -366,9 +357,6 @@
     </Filter>
     <Filter Include="ImGui\Window\Resource">
       <UniqueIdentifier>{afa91243-88b9-437d-8479-0e58a8150449}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui\PropertyHandler">
-      <UniqueIdentifier>{69ca5e28-65aa-4917-8853-ad680abc06d9}</UniqueIdentifier>
     </Filter>
     <Filter Include="ImGui\Window\Plugin">
       <UniqueIdentifier>{855e2d63-7d8e-45c9-af65-6961b2818e72}</UniqueIdentifier>

@@ -35,6 +35,25 @@
 #endif
 
 //--------------------------------------------------------------------------------------
+// Compiler
+// When compiling using Clang under Visual studio then both _MSC_VER and __clang__ are defined
+// because it means we are using Clang with the MSVC tool chain.
+//--------------------------------------------------------------------------------------
+#ifdef _MSC_VER
+#define VG_MSVC 1
+#endif
+
+#ifdef __clang__
+#define VG_CLANG 1
+#endif
+
+#if VG_CLANG
+#define VG_OFFSETOF(class, member) (reinterpret_cast<std::ptrdiff_t>(&reinterpret_cast<class *>(0)->member)) // cannot always use offsetof with clang (warning : offset of on non-standard-layout type)
+#else
+#define VG_OFFSETOF(class, member) (offsetof(class, member))
+#endif
+
+//--------------------------------------------------------------------------------------
 // Debug macros
 //--------------------------------------------------------------------------------------
 #ifdef VG_DEBUG
@@ -162,12 +181,6 @@ namespace vg::core
 #define VG_UNREFERENCED_VARIABLE(x) (void)(x)
 
 #define VG_STRINGIFY(quoteMe) #quoteMe
-
-//#ifdef __clang__
-#define VG_OFFSETOF(class, member) (reinterpret_cast<std::ptrdiff_t>(&reinterpret_cast<class *>(0)->member)) // cannot always use offsetof with clang (warning : offset of on non-standard-layout type)
-//#else
-//#define VG_OFFSETOF(class, member) (offsetof(class, member))
-//#endif
 
 //--------------------------------------------------------------------------------------
 // standard includes

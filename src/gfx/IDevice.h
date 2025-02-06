@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/object/Object.h"
-#include "gfx/device/Device_consts.h"
+#include "core/Object/Object.h"
+#include "gfx/Device/Device_consts.h"
 
 namespace vg::gfx
 {

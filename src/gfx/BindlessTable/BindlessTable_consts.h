@@ -1,6 +1,6 @@
 #pragma once
 
-#include "shaders/system/table.hlsl.h"
+#include "Shaders/system/table.hlsl.h"
 #include "core/Math/Math.h"
 
 #define VG_BINDLESSTABLE_USE_SCALAR 1

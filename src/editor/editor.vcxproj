@@ -42,7 +42,6 @@
     <ClCompile Include="ImGui\ImGui.cpp" />
     <ClCompile Include="ImGui\Menu\ImGuiMenu.cpp" />
     <ClCompile Include="ImGui\ObjectHandler\ImGuiObjectHandler.cpp" />
-    <ClCompile Include="ImGui\PropertyHandler\ImGuiPropertyHandler.cpp" />
     <ClCompile Include="ImGui\Toolbar\ImGuiToolbar.cpp" />
     <ClCompile Include="ImGui\Window\ImGuiWindow.cpp" />
     <ClCompile Include="ImGui\Window\Options\ImGuiOptionsWindow.cpp" />
@@ -68,7 +67,6 @@
     <ClInclude Include="ImGui\Extensions\imGuiExtensions.h" />
     <ClInclude Include="ImGui\Extensions\ImGuizmo\ImGuizmoAdapter.h" />
     <ClInclude Include="ImGui\ImGui.h" />
-    <ClInclude Include="ImGui\ImGuiCustomHandler.h" />
     <ClInclude Include="ImGui\Menu\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.h" />
     <ClInclude Include="ImGui\Menu\GameObject\SceneEditor\ImGuiGameObjectSceneEditorMenu.hpp" />
     <ClInclude Include="ImGui\Menu\ImGuiMenu.h" />
@@ -91,7 +89,6 @@
     <ClInclude Include="ImGui\ObjectHandler\ImGuiResourceListHandler.hpp" />
     <ClInclude Include="ImGui\ObjectHandler\Texture\ImGuiTextureHandler.hpp" />
     <ClInclude Include="ImGui\ObjectHandler\Texture\ImGuiTextureResourceHandler.hpp" />
-    <ClInclude Include="ImGui\PropertyHandler\ImGuiPropertyHandler.h" />
     <ClInclude Include="ImGui\Toolbar\ImGuiToolbar.h" />
     <ClInclude Include="ImGui\Toolbar\Main\ImGuiMainToolbar.h" />
     <ClInclude Include="ImGui\Toolbar\Main\ImGuiMainToolbar.hpp" />

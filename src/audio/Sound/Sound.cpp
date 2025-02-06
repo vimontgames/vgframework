@@ -63,7 +63,7 @@ namespace vg::audio
         else if (ext == "flac")
             return AudioSourceType::Flac;
 
-        VG_WARNING("[Audio] Could not get AudioSourceType for file \"%s\"", _filename);
+        VG_WARNING("[Audio] Could not get AudioSourceType for file \"%s\"", _filename.c_str());
         return AudioSourceType::None;
     }
 }

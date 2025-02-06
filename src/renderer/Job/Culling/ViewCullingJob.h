@@ -73,8 +73,8 @@ namespace vg::renderer
     struct SharedCullingJobOutput
     {
         SharedCullingJobOutput() :
-            m_skins(4096),
-            m_instances(16384)
+            m_instances(16384),
+            m_skins(4096)
         {
 
         }

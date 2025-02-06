@@ -8,7 +8,7 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL_ABSTRACT(ICameraInstance, GraphicInstance);
 
-        bool    Cull        (CullingResult * _cullingResult, View * _view) const = 0;
-        void    Draw        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const = 0;
+        bool    Cull        (CullingResult * _cullingResult, View * _view) const override = 0;
+        void    Draw        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const override = 0;
     };
 }
