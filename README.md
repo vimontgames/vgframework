@@ -54,6 +54,44 @@ Press `F5` to enter game mode and `F11` to maximize game view and press `ESC` to
 **Final** versions are compiled without the editor, they will start directly in game mode and maximized.
 
 First run might take a few seconds because files are cooking.
+
+## IDE
+Recommended IDE is [VS Studio 2022 Community](https://visualstudio.microsoft.com/fr/vs/community/) and project files currently provided are compatible with this version.
+
+However, the engine is currently being ported to other platforms than Windows so ultimately a project generator solution will be used.
+
+To compile the solution you will need the following components if they are not already installed:
+- MSVC v143 - VS 2022 C++ x64/x86 build tools (latest)
+- C++ ATL for latest v143 build tools (x86 & x64)
+
+You will also need if you want to build the ARM64EC versions:
+- MSVC v143 - VS 2022 C++ ARM64/ARM64EC build tools (latest)
+- C++ ATL for latest v143 build tools (ARM64/ARM64EC)
+
+![Screenshot](doc/img/vsbuild.png)
+
+### Solution Configuration
+Use the 'Configuration' combo to select build configuration:
+
+![Screenshot](doc/img/SolutionConfiguration.png)
+
+| Config      | #define         | Runtime | Optimization | Inlining | Edit & Continue | Assert   
+| ----------- | --------------- | ------- | ------------ | -------- | --------------- | -------
+| Debug       | `VG_DEBUG`      | /MDd    | /Od          | /Ob0     | Yes             | Yes
+| Development | `VG_DEVELOPMENT`| /MD     | /Od          | /Ob0     | Yes             | Yes
+| Release     | `VG_RELEASE`    | /MD     | /O2          | /Ob2     | No              | Yes
+| Final       | `VG_FINAL`      | /MD     | /O2          | /Ob2     | No              | No
+
+### Solution Platform
+Use the 'Platform' combo to select target architecture and graphics API:
+
+![Screenshot](doc/img/SolutionPlatformName.png)
+
+### Working Directory
+
+Set your working directory to **$(SolutionDir)** so that the program can find data and code.
+
+![Screenshot](doc/img/SolutionDir.png)
  
 ## Command-line args
 
@@ -97,44 +135,6 @@ First run might take a few seconds because files are cooking.
 | `Ctrl+Shift-Q`      | Quit application
 
 ✨ You can keep **shift** pressed while moving objects to duplicate them.
-
-
-## IDE
-VS Studio 2022 Community\
-https://visualstudio.microsoft.com/fr/vs/community/
-
-To compile the solution you will need the following components if they are not already installed:
-- MSVC v143 - VS 2022 C++ x64/x86 build tools (latest)
-- C++ ATL for latest v143 build tools (x86 & x64)
-
-You will also need if you want to build the ARM64EC versions:
-- MSVC v143 - VS 2022 C++ ARM64/ARM64EC build tools (latest)
-- C++ ATL for latest v143 build tools (ARM64/ARM64EC)
-
-![Screenshot](doc/img/vsbuild.png)
-
-### Solution Configuration
-Use the 'Configuration' combo to select build configuration:
-
-![Screenshot](doc/img/SolutionConfiguration.png)
-
-| Config      | #define         | Runtime | Optimization | Inlining | Edit & Continue | Assert   
-| ----------- | --------------- | ------- | ------------ | -------- | --------------- | -------
-| Debug       | `VG_DEBUG`      | /MDd    | /Od          | /Ob0     | Yes             | Yes
-| Development | `VG_DEVELOPMENT`| /MD     | /Od          | /Ob0     | Yes             | Yes
-| Release     | `VG_RELEASE`    | /MD     | /O2          | /Ob2     | No              | Yes
-| Final       | `VG_FINAL`      | /MD     | /O2          | /Ob2     | No              | No
-
-### Solution Platform
-Use the 'Platform' combo to select target architecture and graphics API:
-
-![Screenshot](doc/img/SolutionPlatformName.png)
-
-### Working Directory
-
-Set your working directory to **$(SolutionDir)** so that the program can find data and code.
-
-![Screenshot](doc/img/SolutionDir.png)
 
 
 ## SDKs
