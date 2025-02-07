@@ -45,11 +45,11 @@ namespace vg::renderer
                                                                                                 registerPropertyEnum(className, enumName, propertyName[Quality::VeryHigh],displayName);            \
                                                                                                 setPropertyHiddenCallbackQualityEx(className, propertyName, func);
                                                                                  
-    #define setPropertyDescriptionQuality(className, propertyName, desc)                        setPropertyDescription(className, propertyName[Quality::VeryLow], desc##" in 'VeryLow' quality mode");  \
-                                                                                                setPropertyDescription(className, propertyName[Quality::Low],     desc##" in 'Low' quality mode");      \
-                                                                                                setPropertyDescription(className, propertyName[Quality::Medium],  desc##" in 'Medium' quality mode");   \
-                                                                                                setPropertyDescription(className, propertyName[Quality::High],    desc##" in 'High' quality mode");     \
-                                                                                                setPropertyDescription(className, propertyName[Quality::VeryHigh],desc##" in 'VeryHigh' quality mode");
+    #define setPropertyDescriptionQuality(className, propertyName, desc)                        setPropertyDescription(className, propertyName[Quality::VeryLow], desc " in 'VeryLow' quality mode");  \
+                                                                                                setPropertyDescription(className, propertyName[Quality::Low],     desc " in 'Low' quality mode");      \
+                                                                                                setPropertyDescription(className, propertyName[Quality::Medium],  desc " in 'Medium' quality mode");   \
+                                                                                                setPropertyDescription(className, propertyName[Quality::High],    desc " in 'High' quality mode");     \
+                                                                                                setPropertyDescription(className, propertyName[Quality::VeryHigh],desc " in 'VeryHigh' quality mode");
 
     //--------------------------------------------------------------------------------------
     bool isQualityPropertyHidden(const IObject * _object, const IProperty * _prop, Quality _quality)

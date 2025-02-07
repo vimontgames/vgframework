@@ -152,8 +152,8 @@ namespace vg::renderer
                 {
                     if (!m_enableAlbedo)
                     {
-                        bs.m_renderTargetBlend[0].colorWrite = (ColorWrite)0x0;
-                        bs.m_flags = BlendStateFlags::IndependantBlend;
+                        bs.setColorWriteMask(0, (ColorWrite)0x0);
+                        bs.enableIndependantBlend(true);
                     }
                 }
                     

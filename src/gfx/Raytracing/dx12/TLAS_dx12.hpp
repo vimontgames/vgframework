@@ -86,7 +86,8 @@ namespace vg::gfx::dx12
     void TLAS::addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID)
     {
         D3D12_RAYTRACING_INSTANCE_DESC desc = {};
-        memcpy(desc.Transform, &(float&)transpose(_world), sizeof(desc.Transform));
+        float4x4 worldT = transpose(_world);
+        memcpy(desc.Transform, (void**)&worldT, sizeof(desc.Transform));
         desc.InstanceID = _instanceID;
         desc.InstanceMask = 0xFF;
         desc.InstanceContributionToHitGroupIndex = 0;

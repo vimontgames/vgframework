@@ -33,7 +33,7 @@ using namespace vg::core;
 
 namespace vg::gfx
 {
-    ProfilerContext Profiler::s_contextTLS;
+    VG_THREAD_LOCAL ProfilerContext Profiler::s_contextTLS{};
 
     //--------------------------------------------------------------------------------------
     void Profiler::Init()

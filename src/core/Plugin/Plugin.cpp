@@ -113,6 +113,18 @@ namespace vg::core
 		#endif
 	}
 
+    //--------------------------------------------------------------------------------------
+    string Plugin::getCompiler()
+	{
+		#if VG_CLANG
+		return "LLVM - clang-cl";
+		#elif VG_MSVC
+		return "MSVC";
+		#else
+		#error No compiler defined
+		#endif
+	}
+
 	//--------------------------------------------------------------------------------------
 	string Plugin::getExtension()
 	{

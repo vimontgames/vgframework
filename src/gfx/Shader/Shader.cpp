@@ -1,6 +1,6 @@
 #include "gfx/Precomp.h"
 #include "core/string/string.h"
-#include "gfx/device/Device.h"
+#include "gfx/Device/Device.h"
 #include "shader.h"
 #include "ShaderCompiler.h"
 #include "ShaderManager.h"

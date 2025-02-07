@@ -88,7 +88,7 @@ public:
         return prev - 1;
     }
 
-    ~CustomIncludeHandler()
+    virtual ~CustomIncludeHandler()
     {
         if (m_dxcUtils)
             m_dxcUtils->Release();
@@ -115,7 +115,7 @@ namespace vg::gfx::dxc
 		{
 			CComHeapPtr<char> VersionString;
 			VG_VERIFY_SUCCEEDED(pCompilerVersion3->GetCustomVersionString(&VersionString));
-			VG_INFO("[Shader] Using DXC Shader Compiler Version %s", VersionString);
+			VG_INFO("[Shader] Using DXC Shader Compiler Version %s", VersionString.m_pData);
 		}
 		else
 		{
@@ -286,7 +286,7 @@ namespace vg::gfx::dxc
                     break;
                 default:
 
-                    VG_ASSERT(false, "Unhandled API \"%s\" (%u)", asString(_api), _api);
+                    VG_ASSERT(false, "Unhandled API \"%s\" (%u)", asString(_api).c_str(), _api);
                     break;
             }
 

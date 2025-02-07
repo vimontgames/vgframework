@@ -163,6 +163,28 @@ namespace vg::gfx
             }
         }
 
+        inline void setColorWriteMask(core::uint _renderTargetIndex, ColorWrite _colorWriteMask)
+        {
+            VG_ASSERT(_renderTargetIndex < maxRenderTarget);
+            m_renderTargetBlend[_renderTargetIndex].colorWrite = _colorWriteMask;
+        }
+
+        inline void enableAlphaToCoverage(bool _enable)
+        {
+            if (_enable)
+                m_flags = (BlendStateFlags)(core::u32(m_flags) | core::u32(BlendStateFlags::AlphaToCoverage));
+            else
+                m_flags = (BlendStateFlags)(core::u32(m_flags) & ~core::u32(BlendStateFlags::AlphaToCoverage));
+        }
+
+        inline void enableIndependantBlend(bool _enable)
+        {
+            if (_enable)
+                m_flags = (BlendStateFlags)(core::u32(m_flags) | core::u32(BlendStateFlags::IndependantBlend));
+            else
+                m_flags = (BlendStateFlags)(core::u32(m_flags) & ~core::u32(BlendStateFlags::IndependantBlend));
+        }
+
         static bool isBlendEnabled(const RenderTargetBlend & _renderTargetBlend)
         {
             if (_renderTargetBlend.srcBlend == BlendFactor::One && _renderTargetBlend.dstBlend == BlendFactor::Zero)

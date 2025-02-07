@@ -85,6 +85,10 @@ IRenderer * CreateNew()
 	return new Renderer("Renderer", nullptr);
 }
 
+#ifdef _WIN32
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+#endif
+
 //--------------------------------------------------------------------------------------
 namespace vg::renderer
 {
@@ -92,8 +96,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     LRESULT CALLBACK Renderer::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
-        extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
         if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
             return true;
 

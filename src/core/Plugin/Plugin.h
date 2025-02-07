@@ -14,6 +14,7 @@ namespace vg::core
 
 		static string					getPlatform		();
 		static string					getConfiguration();
+		static string					getCompiler		();
 		static string					getExtension	();
 
 	public:

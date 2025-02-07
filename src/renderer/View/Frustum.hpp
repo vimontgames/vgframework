@@ -102,10 +102,10 @@ namespace vg::renderer
             float3 vmin = select(cmp, worldAABB.m_min, worldAABB.m_max);
             float3 vmax = select(cmp, worldAABB.m_max, worldAABB.m_min);
  
-            if (dot(plane.xyz, vmin) < -plane.w)
+            if ( (float)dot(plane, float4(vmin, 1.0f)) < 0.0f)
                 return FrustumTest::Outside;
 
-            if (dot(plane.xyz, vmax) <= -plane.w)
+            if ( (float)dot(plane, float4(vmax, 1.0f)) <= 0.0f)
                 result = FrustumTest::Intersect;
         }
 

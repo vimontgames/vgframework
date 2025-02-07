@@ -235,9 +235,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     // MessageBox at application start before engine init
     bool attachDebugger;
     if (cmdLine.getBool("attachDebugger", attachDebugger) && attachDebugger)
-        vg::core::messageBox(vg::core::MessageBoxIcon::Info, vg::core::MessageBoxType::OK, "attach=true", "You can attach debugger now");
+        vg::core::messageBox(vg::core::MessageBoxIcon::Info, vg::core::MessageBoxType::OK, "attachDebugger=true", "You can attach debugger now");
 
-	core::string title = fmt::sprintf("VGFramework %s build | %s - %s", core::Plugin::getConfiguration(), core::Plugin::getPlatform(), core::asString(engineParams.renderer.device.api));
+	core::string title = fmt::sprintf("VGFramework %s %s build | %s - %s", core::Plugin::getCompiler(), core::Plugin::getConfiguration(), core::Plugin::getPlatform(), core::asString(engineParams.renderer.device.api));
     if (engineParams.renderer.device.debugDevice)
         title += " (debug device)";
 

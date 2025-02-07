@@ -1,6 +1,6 @@
 #pragma once
 
-#include "gfx/device/Device.h"
+#include "gfx/Device/Device.h"
 #include "core/Pool/IndexPool.h"
 
 namespace D3D12MA
