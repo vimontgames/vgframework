@@ -3,10 +3,6 @@ name: "Reusable Build Workflow"
 on:
   workflow_call:
     inputs:
-      build_name:
-        description: "Name of the build job"
-        required: true
-        type: string
       build_platform:
         description: "Platform to build (Win64 DX12, ARM64EC Vulkan, etc.)"
         required: true
@@ -27,7 +23,7 @@ permissions:
 
 jobs:
   build:
-    name: ${{ inputs.build_name }}
+    name: "${{ inputs.build_platform }}${{ inputs.build_configuration }}"
     runs-on: windows-latest
 
     steps:

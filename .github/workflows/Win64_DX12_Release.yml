@@ -29,7 +29,6 @@ jobs:
   build:
     uses: ./.github/workflows/Build.yml
     with:
-      build_name: "Win64 DX12 Release"
       build_platform: "Win64 DX12"
       build_configuration: "Release"
     secrets:
