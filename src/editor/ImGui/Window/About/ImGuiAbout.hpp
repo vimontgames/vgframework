@@ -11,7 +11,7 @@ namespace vg::editor
         const char * url;
     };
 
-    static const float columnWidth[3] = { 220, 150, 750 };
+    static const float columnWidth[2] = { 256, 128 };
 
     //--------------------------------------------------------------------------------------
     ImGuiAbout::ImGuiAbout() :
@@ -20,36 +20,37 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiAbout::drawLibraryDescriptionList(const char * _label, LibraryDescription * _infos, core::uint _count)
+    void ImGuiAbout::drawLibraryDescriptionList(const char * _label, const char * _column0Label, const char * _column1Label, LibraryDescription * _infos, core::uint _count)
     {
-        Columns(1);
         ImGui::PushStyle(renderer::FontStyle::Bold);
-        Text(_label);
-        Text("");
+        ImGui::Text("%s", _label); // Display the label before the table
         ImGui::PopStyle();
 
-        Columns(3, _label, false);
+        if (ImGui::BeginTable(_label, 2, ImGuiTableFlags_SizingStretchSame | ImGuiTableFlags_RowBg))
+        {
+            ImGui::TableSetupColumn(_column0Label, ImGuiTableColumnFlags_WidthStretch);
+            ImGui::TableSetupColumn(_column1Label, ImGuiTableColumnFlags_WidthFixed, 256);
 
-        SetColumnWidth(0, columnWidth[0]);
-        SetColumnWidth(1, columnWidth[1]);
-        SetColumnWidth(2, columnWidth[2]);
+            ImGui::TableHeadersRow(); 
+            ImGui::TableNextRow();
 
-        for (uint i = 0; i < _count; ++i)
-            Text(_infos[i].name);
+            ImGui::TableSetColumnIndex(0);
 
-        NextColumn();
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
 
-        for (uint i = 0; i < _count; ++i)
-            Text(_infos[i].version);
+            for (uint i = 0; i < _count; ++i)
+                textURL(_infos[i].name, _infos[i].url);
 
-        NextColumn();
+            ImGui::TableSetColumnIndex(1);
 
-        for (uint i = 0; i < _count; ++i)
-            textURL(_infos[i].url + strlen("https://"), _infos[i].url);
+            for (uint i = 0; i < _count; ++i)
+                ImGui::Text("%s", _infos[i].version);
 
-        Text("");
-
-        Separator();
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::EndTable();
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -64,22 +65,8 @@ namespace vg::editor
             Text("");
             ImGui::PopStyle();
 
-            Columns(3, "author", false);
-
-            SetColumnWidth(0, columnWidth[0]);
-            SetColumnWidth(1, columnWidth[1]);
-            SetColumnWidth(2, columnWidth[2]);
-
-            Text("GitHub");
-            Text("Mastodon");
-            Text("");
-
-            NextColumn();
-            NextColumn();
-
-            textURL("github.com/vimontgames/vgframework",       "https://github.com/vimontgames/vgframework");
-            textURL("@benoitvimont@mastodon.gamedev.place",     "https://mastodon.gamedev.place/@benoitvimont");
-            Text("");
+            textURL("GitHub", "https://github.com/vimontgames/vgframework");
+            textURL("Mastodon", "https://mastodon.gamedev.place/@benoitvimont");
 
             Separator();
 
@@ -89,7 +76,7 @@ namespace vg::editor
                 { "Vulkan SDK",             "1.3.290.0",        "https://vulkan.lunarg.com/sdk/home" },
             };
 
-            drawLibraryDescriptionList("SDK", SDKs, (uint)countof(SDKs));
+            drawLibraryDescriptionList("SDK", "Name", "Version", SDKs, (uint)countof(SDKs));
 
             LibraryDescription externLibs[] =
             {
@@ -109,6 +96,7 @@ namespace vg::editor
                 { "meta_enum_lite",         "1.0",              "https://github.com/vimontgames/meta_enum_lite" },
                 { "optick",                 "1.3.1",            "https://github.com/bombomby/optick" },
                 { "px_sched",               "",                 "https://github.com/pplux/px" },
+                { "Sharpmake",              "0.75.0 ",          "https://github.com/ubisoft/Sharpmake/releases/tag/0.75.0" },
                 { "SoLoud",                 "August 2024",      "https://github.com/jarikomppa/soloud" },
                 { "stb_image",              "2.30",             "https://github.com/nothings/stb" },
                 { "tinyXML2",               "10.0.0",           "https://github.com/leethomason/tinyxml2" },
@@ -117,7 +105,7 @@ namespace vg::editor
                 { "WinPixEventRuntime",     "1.0.231030001",    "https://www.nuget.org/packages/WinPixEventRuntime" },
             };
 
-            drawLibraryDescriptionList("Extern libs", externLibs, (uint)countof(externLibs));
+            drawLibraryDescriptionList("Extern libs", "Name", "Version", externLibs, (uint)countof(externLibs));
 
             LibraryDescription fonts[] =
             {
@@ -127,7 +115,7 @@ namespace vg::editor
                 { "UbuntuMono",     "1.0",  "https://fonts.google.com/specimen/Ubuntu+Mono" }
             };
 
-            drawLibraryDescriptionList("Fonts", fonts, (uint)countof(fonts));
+            drawLibraryDescriptionList("Fonts", "Name", "Version", fonts, (uint)countof(fonts));
 
             LibraryDescription models[] =
             {
@@ -140,7 +128,7 @@ namespace vg::editor
                 { "Soccergoal",           "NorbertVarga",       "https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894" }
             };
 
-            drawLibraryDescriptionList("Models", models, (uint)countof(models));
+            drawLibraryDescriptionList("Models", "Name", "Author", models, (uint)countof(models));
 
             LibraryDescription environmentMaps[] =
             {
@@ -156,14 +144,13 @@ namespace vg::editor
                 { "Retro Bonus Pickup",   "suntemple",            "https://freesound.org/people/suntemple/sounds/253172/" }
             };
 
-            drawLibraryDescriptionList("Sound", sound, (uint)countof(sound));
+            drawLibraryDescriptionList("Sound", "Name", "Author", sound, (uint)countof(sound));
 
             Columns(1);
             ImGui::PushStyle(renderer::FontStyle::Bold);
             Text("Special thanks");
-            Text("");
             ImGui::PopStyle();
-            Text("JOYxt, Onduril, SlavSquat, Bob, Guigui, Marcel, Hamilcar and all the old guard.");
+            Text("JOYxt, Onduril, Karim, SlavSquat, Bob, Guigui, Marcel, Hamilcar.");
 
             ImGui::PopFont();
             End();            

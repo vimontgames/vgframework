@@ -1,0 +1,114 @@
+# Sharpmake GitHub Actions CI configuration
+name: build
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+  schedule:
+    # Run at 02:17 every day
+    - cron: '17 2 * * *'
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+  DOTNET_NOLOGO: true
+
+jobs:
+  builds:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-2022]
+        framework: [net6.0]
+        configuration: [Debug, Release]
+    uses: ./.github/workflows/build.yml
+    with:
+      os: ${{ matrix.os }}
+      framework: ${{ matrix.framework }}
+      configuration: ${{ matrix.configuration }}
+
+  functional_test:
+    needs: [builds]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2019] # only windows for now, but ideally should be all. TODO: add windows-2022
+        framework: [net6.0]
+
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4.2.2
+
+      - name: Download sharpmake ${{ matrix.framework }} ${{ runner.os }}-release binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: 'Sharpmake-${{ matrix.framework }}-${{ runner.os }}-${{ github.sha }}'
+          path: Sharpmake.Application/bin/Release/${{ matrix.framework }}
+
+      - name: FunctionalTest
+        if: runner.os == 'Windows'
+        run: python functional_test.py --sharpmake_exe "Sharpmake.Application/bin/release/${{ matrix.framework }}/Sharpmake.Application.exe"
+
+  generate_samples_matrix:
+    needs: [builds]
+    runs-on: ubuntu-latest
+    outputs:
+          matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4.2.2
+
+      - name: Generate samples matrix
+        id: set-matrix
+        shell: pwsh
+        run: |
+          $sampleMatrix = .\.github\Get-SamplesMatrixJson.ps1
+          echo $sampleMatrix
+          $eof = [Convert]::ToBase64String((Get-Random -InputObject (0..255) -Count 15 | ForEach-Object { [byte]$_ }))
+          echo "matrix<<$eof" >> $env:GITHUB_OUTPUT
+          echo $sampleMatrix >> $env:GITHUB_OUTPUT
+          echo "$eof" >> $env:GITHUB_OUTPUT
+
+  samples:
+    needs: [generate_samples_matrix]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJSON(needs.generate_samples_matrix.outputs.matrix)}}
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v4.2.2
+
+      # Setting a VS_VERSION_SUFFIX variable for use by steps that are using solutions specific to VS2019 or VS2022
+      - name: SetVSVersionSuffix-VS2019
+        if: runner.os == 'Windows' && matrix.os == 'windows-2019'
+        run: |
+          "VS_VERSION_SUFFIX=vs2019" >> $env:GITHUB_ENV
+
+      - name: SetVSVersionSuffix-VS2022
+        if: runner.os == 'Windows' && matrix.os == 'windows-2022'
+        run: |
+          "VS_VERSION_SUFFIX=vs2022" >> $env:GITHUB_ENV
+
+      - name: Download sharpmake ${{ matrix.framework }} ${{ runner.os }}-release binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: 'Sharpmake-${{ matrix.framework }}-${{ runner.os }}-${{ github.sha }}'
+          path: Sharpmake.Application/bin/Release/${{ matrix.framework }}
+
+      - name: Run sample ${{ matrix.name }} ${{ matrix.os }} ${{ matrix.framework }} ${{ matrix.configuration }}
+        shell: pwsh
+        run: |
+          foreach ($configuration in '${{ matrix.configurations }}'.Split(','))
+          {
+            .\RunSample.ps1 -sampleName "${{ matrix.name }}" -configuration $configuration -framework ${{ matrix.framework }} -os ${{ matrix.os }} -vsVersionSuffix ${env:VS_VERSION_SUFFIX}
+          }
+
+      - name: Store MSBuild binary logs
+        if: ${{ failure() && runner.os == 'Windows' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharpmake-sample-msbuild-logs-${{ matrix.name }}-${{ matrix.framework }}-${{ runner.os }}-${{ github.sha }}-${{ matrix.configuration }}
+          path: samples/**/*.binlog

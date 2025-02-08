@@ -1,0 +1,60 @@
+# Samples and FunctionalTests generated files
+samples/**/*.csproj
+samples/**/*.sln
+samples/**/projects/*
+samples/**/codebase/temp/*
+Sharpmake.Application/Properties/launchSettings.json
+Sharpmake.FunctionalTests/**/projects/*
+Sharpmake.FunctionalTests/**/blob/*
+Sharpmake.FunctionalTests/**/sharpmake_debug*.vs*.*
+Sharpmake.FunctionalTests/**/sharpmake_package*.vs*.csproj
+!**/reference/**
+
+## Ignore Visual Studio temporary files, build results, and
+sharpmakeautocleanupdb*.bin
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.nuget.targets
+*.nuget.props
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Visual Studio 2015 cache/options directory
+.vs/
+
+# NUNIT
+*.VisualState.xml
+TestResult.xml
+
+# ReSharper is a .NET coding add-in
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# Other
+*.orig
+.project
+Sharpmake.VC.db
+.vscode
+.idea
+
+# Smart commandline Visual Studio extension configuration file
+Sharpmake.Application.args.json
+
+# Desktop Services Store on MacOS
+**/.DS_Store

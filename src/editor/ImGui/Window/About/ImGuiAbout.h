@@ -14,6 +14,6 @@ namespace vg::editor
         virtual void DrawGUI() final override;
 
     private:
-        void drawLibraryDescriptionList(const char * _label, LibraryDescription * _infos, core::uint _count);
+        void drawLibraryDescriptionList(const char * _label, const char * _column0Label, const char * _column1Label, LibraryDescription * _infos, core::uint _count);
     };
 }

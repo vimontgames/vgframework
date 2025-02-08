@@ -152,8 +152,8 @@ The SDKs are not included with the sources. You need to install them.
 
 The external libraries are included with the sources for convenience. Follow the link for details about the licence used.
 
-| Name <img width=256/>			                                                                                        | Version <img width=100/>   
-| --------------------------------------------------------------------------------------------------------------------- | ------------- 
+| Name <img width=256/>			                                                                                             | Version <img width=100/>   
+| -------------------------------------------------------------------------------------------------------------------------- | ------------- 
 | [D3D12 Memory Allocator](  https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator                           )    |               
 | [D3D12 HDR Sample](        https://github.com/microsoft/directx-graphics-samples/tree/master/Samples/Desktop/D3D12HDR )    |               
 | [Dear ImGui](              https://github.com/ocornut/imgui/commit/c59a2267d0977d7261a78c884ccf7735345c4060           )    | 1.91.8 WIP                          
@@ -168,7 +168,8 @@ The external libraries are included with the sources for convenience. Follow the
 | [JoltPhysics](             https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0                                  )    | 5.0.0                            
 | [meta_enum_lite](          https://github.com/vimontgames/meta_enum_lite                                              )    |                       
 | [optick](                  https://github.com/bombomby/optick                                                         ) ✨ | 1.3.1                                                  
-| [px_sched](                https://github.com/pplux/px                                                                )    |                
+| [px_sched](                https://github.com/pplux/px                                                                )    | 
+| [Sharpmake](               https://github.com/ubisoft/Sharpmake/releases/tag/0.75.0                                   )    | 0.75.0    
 | [SoLoud](                  https://github.com/jarikomppa/soloud                                                       )    | August 2024    
 | [stb](                     https://github.com/nothings/stb                                                            )    | 2.30                                                          
 | [tinyXML2](                https://github.com/leethomason/tinyxml2/releases/tag/10.0.0                                )    | 10.0.0                     
@@ -212,7 +213,7 @@ The following assets are provided under permissive licenses. Please follow the p
 
 ### Fonts
 
-| Name<img width=140/>                                                   | Info<img width=200/> 											
+| Name<img width=140/>                                                   | Version<img width=200/> 											
 | ---------------------------------------------------------------------- | -------------
 | [Font-Awesome]( https://github.com/FortAwesome/Font-Awesome/tree/6.x ) | 6.x   
 | [Rowdies](      https://github.com/magictype/rowdy                   ) |      
@@ -221,7 +222,7 @@ The following assets are provided under permissive licenses. Please follow the p
 
 ### Models
 
-| Name<img width=140/>                                                                                                                         | Info<img width=200/>								
+| Name<img width=140/>                                                                                                                         | Author<img width=200/>								
 | -------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- 
 | [3D Football](          https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball                                                   ) | prabath-weerapana
 | [Baseball Bat](         https://www.cgtrader.com/free-3d-models/military/melee/baseball-bat-5c0d0b8c-0ff9-40f8-b49d-779978a2801b           ) | sepandjahrominejad
@@ -233,14 +234,14 @@ The following assets are provided under permissive licenses. Please follow the p
 
 ### Environment maps
 
-| Name<img width=140/>                                                                                      | Info<img width=200/> 	            											
+| Name<img width=140/>                                                                                      | Author<img width=200/> 	            											
 | --------------------------------------------------------------------------------------------------------- | ------------------- 
 | [Free HDR Map 779](     https://hdri-skies.com/free-hdris/hdr-map-779/           )                        | [hdri-skies.com](hdri-skies.com)               
 
 
 ### Sounds
 
-| Name<img width=140/>                                                                                      | Info<img width=200/> 	            											
+| Name<img width=140/>                                                                                      | Author<img width=200/> 	            											
 | --------------------------------------------------------------------------------------------------------- | ------------------- 
 | [FX - Swoosh - normal]( https://freesound.org/people/bolkmar/sounds/451127/                             ) | bolkmar               
 | [Large sword swing](    https://freesound.org/people/Luis0413/sounds/737748/                            ) | Luis0413              

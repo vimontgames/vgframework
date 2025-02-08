@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\codebase\floatanglespinbox.cpp" />
+    <ClCompile Include="..\codebase\floatcosanglespinbox.cpp" />
+    <ClCompile Include="..\codebase\main.cpp" />
+    <ClCompile Include="..\codebase\privatewidget.cpp" />
+    <ClCompile Include="..\codebase\stdafx.cpp" />
+    <ClCompile Include="obj\win64\qt\debug\moc_floatanglespinbox.cpp">
+      <Filter>projects\obj\win64\qt\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="obj\win64\qt\debug\qrc_exec.cpp">
+      <Filter>projects\obj\win64\qt\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="obj\win64\qt\release\moc_floatanglespinbox.cpp">
+      <Filter>projects\obj\win64\qt\release</Filter>
+    </ClCompile>
+    <ClCompile Include="obj\win64\qt\release\qrc_exec.cpp">
+      <Filter>projects\obj\win64\qt\release</Filter>
+    </ClCompile>
+    <ClCompile Include="obj\win64\qt\retail\moc_floatanglespinbox.cpp">
+      <Filter>projects\obj\win64\qt\retail</Filter>
+    </ClCompile>
+    <ClCompile Include="obj\win64\qt\retail\qrc_exec.cpp">
+      <Filter>projects\obj\win64\qt\retail</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\codebase\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\codebase\exec.qrc" />
+    <CustomBuild Include="..\codebase\floatanglespinbox.h" />
+    <CustomBuild Include="..\codebase\floatcosanglespinbox.h" />
+    <CustomBuild Include="..\codebase\privatewidget.h" />
+    <CustomBuild Include="..\codebase\privatewidget.ui" />
+    <CustomBuild Include="obj\win64\qt\debug\privatewidget.inl">
+      <Filter>projects\obj\win64\qt\debug</Filter>
+    </CustomBuild>
+    <CustomBuild Include="obj\win64\qt\release\privatewidget.inl">
+      <Filter>projects\obj\win64\qt\release</Filter>
+    </CustomBuild>
+    <CustomBuild Include="obj\win64\qt\retail\privatewidget.inl">
+      <Filter>projects\obj\win64\qt\retail</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="projects">
+      <UniqueIdentifier>{4c86a235-4e31-6743-eb16-84bfe126a967}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="projects\obj">
+      <UniqueIdentifier>{5e02705e-e6d7-a0b7-5f30-ae822b4373fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="projects\obj\win64">
+      <UniqueIdentifier>{021c73ca-da3f-8dd7-8fdf-1a18eb9caeeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="projects\obj\win64\qt">
+      <UniqueIdentifier>{a346b13f-5fe2-9d43-30bb-6924e2c4b996}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="projects\obj\win64\qt\debug">
+      <UniqueIdentifier>{7b5e3782-f2ec-e19f-79db-e4c2c3b04162}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="projects\obj\win64\qt\release">
+      <UniqueIdentifier>{4cac9ba4-e353-f0a7-2077-c7fe9b3a0669}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="projects\obj\win64\qt\retail">
+      <UniqueIdentifier>{0c1cac42-9efe-2709-9144-e6c1aa03849b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

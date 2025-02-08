@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <PlatformTarget Condition=" '$(Platform)' == '' ">x86</PlatformTarget>
+    <ProjectGuid>{D8944B38-E49F-A515-A9FE-1DDCC3F16528}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TestCSharpConsole</RootNamespace>
+    <AssemblyName>TestCSharpConsole</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>output\vs2017\v4_6_2\debug</OutputPath>
+    <IntermediateOutputPath>temp\testcsharpconsole\vs2017\v4_6_2\debug</IntermediateOutputPath>
+    <DefineConstants>DEBUG;TRACE;WIN32</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>output\vs2017\v4_6_2\release</OutputPath>
+    <IntermediateOutputPath>temp\testcsharpconsole\vs2017\v4_6_2\release</IntermediateOutputPath>
+    <DefineConstants>TRACE;WIN32</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\codebase\TestCSharpConsole\Program.cs">
+      <Link>Program.cs</Link>
+    </Compile>
+    <Compile Include="..\codebase\TestCSharpConsole\Properties\AssemblyInfo.cs">
+      <Link>Properties\AssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="clrcppproj.vs2017.v4_6_2.vcxproj">
+      <Project>{c0644b52-bb9c-2014-b639-85c0c52355de}</Project>
+      <Name>CLRCPPProj</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
