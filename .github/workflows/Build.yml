@@ -61,8 +61,10 @@ jobs:
           $repo = "${{ github.repository }}"
           $serverUrl = "${{ github.server_url }}"
           $jobsApiUrl = "https://api.github.com/repos/$repo/actions/runs/$runId/jobs"
-          $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl | ConvertFrom-Json).jobs | Where-Object { $_.name -eq $jobName } | Select-Object -ExpandProperty id
-          $jobUrl = "$serverUrl/$repo/actions/runs/$runId/job/$jobId" 
+          # $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl | ConvertFrom-Json).jobs | Where-Object { $_.name -eq $jobName } | Select-Object -ExpandProperty id
+          $jobsApiResponse = curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl
+          $jobs = $jobsApiResponse | ConvertFrom-Json
+          $jobId = ($jobs.jobs | Where-Object { $_.name -eq $jobName }).id
           $commitSha = "${{ github.sha }}"
           $shortCommitSha = $commitSha.Substring(0, 7)
 
@@ -114,8 +116,10 @@ jobs:
           $repo = "${{ github.repository }}"
           $serverUrl = "${{ github.server_url }}"
           $jobsApiUrl = "https://api.github.com/repos/$repo/actions/runs/$runId/jobs"
-          $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl | ConvertFrom-Json).jobs | Where-Object { $_.name -eq $jobName } | Select-Object -ExpandProperty id
-          Write-Output "API Response: $jobsApiResponse"
+          # $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl | ConvertFrom-Json).jobs | Where-Object { $_.name -eq $jobName } | Select-Object -ExpandProperty id
+          $jobsApiResponse = curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl
+          $jobs = $jobsApiResponse | ConvertFrom-Json
+          $jobId = ($jobs.jobs | Where-Object { $_.name -eq $jobName }).id
           $jobUrl = "$serverUrl/$repo/actions/runs/$runId/job/$jobId"
           $commitSha = "${{ github.sha }}"
           $shortCommitSha = $commitSha.Substring(0, 7)
