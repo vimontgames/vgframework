@@ -56,22 +56,13 @@ jobs:
           $commitMessage = @"
           ${{ github.event.head_commit.message }}
           "@
-          $jobNameShort = "${{ github.job }}"
-          Write-Output "jobNameShort: $jobNameShort"
           $jobName = "${{ github.job }} / ${{ inputs.build_platform }} ${{ inputs.build_configuration }}"
-          Write-Output "jobName: $jobName"
           $runId = "${{ github.run_id }}"
-          Write-Output "runId: $runId"
           $repo = "${{ github.repository }}"
-          Write-Output "repo: $repo"
           $serverUrl = "${{ github.server_url }}"
-          Write-Output "serverUrl: $serverUrl"
           $jobsApiUrl = "https://api.github.com/repos/$repo/actions/runs/$runId/jobs"
-          Write-Output "jobsApiUrl: $jobsApiUrl"
           $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl | ConvertFrom-Json).jobs | Where-Object { $_.name -eq $jobName } | Select-Object -ExpandProperty id
-          Write-Output "jobId: $jobId"
           $jobUrl = "$serverUrl/$repo/actions/runs/$runId/job/$jobId" 
-          Write-Output "jobUrl: $jobUrl"
           $commitSha = "${{ github.sha }}"
           $shortCommitSha = $commitSha.Substring(0, 7)
 
@@ -118,13 +109,13 @@ jobs:
           $commitMessage = @"
           ${{ github.event.head_commit.message }}
           "@
-          $jobName = "${{ github.job }}"
+          $jobName = "${{ github.job }} / ${{ inputs.build_platform }} ${{ inputs.build_configuration }}"
           $runId = "${{ github.run_id }}"
           $repo = "${{ github.repository }}"
           $serverUrl = "${{ github.server_url }}"
           $jobsApiUrl = "https://api.github.com/repos/$repo/actions/runs/$runId/jobs"
           $jobId = (curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $jobsApiUrl | ConvertFrom-Json).jobs | Where-Object { $_.name -eq $jobName } | Select-Object -ExpandProperty id
-          $jobUrl = "$serverUrl/$repo/actions/runs/$runId/job/$jobId"
+          $jobUrl = "$serverUrl/$repo/actions/runs/$runId/job/$jobId" 
           $commitSha = "${{ github.sha }}"
           $shortCommitSha = $commitSha.Substring(0, 7)
 
