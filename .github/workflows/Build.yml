@@ -59,7 +59,7 @@ jobs:
           $jobNameShort = "${{ github.job }}"
           Write-Output "jobNameShort: $jobNameShort"
           $jobName = "${{ github.job }} / ${{ inputs.build_platform }} ${{ inputs.build_configuration }}"
-          Write-Output "jobNameShort: $jobName"
+          Write-Output "jobName: $jobName"
           $runId = "${{ github.run_id }}"
           Write-Output "runId: $runId"
           $repo = "${{ github.repository }}"
