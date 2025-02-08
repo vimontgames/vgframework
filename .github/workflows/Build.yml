@@ -1,0 +1,96 @@
+name: "Reusable Build Workflow"
+
+on:
+  workflow_call:
+    inputs:
+      build_name:
+        description: "Name of the build job"
+        required: true
+        type: string
+      build_platform:
+        description: "Platform to build (Win64 DX12, ARM64EC Vulkan, etc.)"
+        required: true
+        type: string
+      build_configuration:
+        description: "Build configuration (Debug, Development, Release, Final)"
+        required: true
+        type: string
+    secrets:
+      DISCORD_BUILD_WEBHOOK_URL:
+        required: true
+      GITHUB_TOKEN:
+        required: true
+
+env:
+  SOLUTION_FILE_PATH: vgframework.sln
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: ${{ inputs.build_name }}
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add MSBuild to PATH
+        uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: '[17.11.2, 18.0.0)'
+
+      - name: Restore NuGet packages
+        run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
+
+      - name: Build
+        run: |
+          msbuild /m /p:Configuration=${{ inputs.build_configuration }} /p:Platform="${{ inputs.build_platform }}" ${{ env.SOLUTION_FILE_PATH }}
+
+      - name: Send Success Notification
+        if: ${{ success() }}
+        run: |
+          $DISCORD_BUILD_WEBHOOK_URL = "${{ secrets.DISCORD_BUILD_WEBHOOK_URL }}"
+          $commitMessage = "${{ github.event.head_commit.message }}"
+          $shortCommitSha = "${{ github.sha }}"[0..6]
+          $jobUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          
+          $jsonPayload = @"
+          {
+            "username": "Gros Covid",
+            "embeds": [
+              {
+                "title": "Build Succeeded: ``$shortCommitSha``",
+                "description": "$commitMessage",
+                "color": 38912,
+                "url": "$jobUrl"
+              }
+            ]
+          }
+          "@
+
+          curl -H "Content-Type: application/json" -X POST -d $jsonPayload $DISCORD_BUILD_WEBHOOK_URL
+
+      - name: Send Failure Notification
+        if: ${{ failure() }}
+        run: |
+          $DISCORD_BUILD_WEBHOOK_URL = "${{ secrets.DISCORD_BUILD_WEBHOOK_URL }}"
+          $commitMessage = "${{ github.event.head_commit.message }}"
+          $shortCommitSha = "${{ github.sha }}"[0..6]
+          $jobUrl = "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          
+          $jsonPayload = @"
+          {
+            "username": "Gros Covid",
+            "embeds": [
+              {
+                "title": "Build Failed: ``$shortCommitSha``",
+                "description": "$commitMessage",
+                "color": 16515049,
+                "url": "$jobUrl"
+              }
+            ]
+          }
+          "@
+
+          curl -H "Content-Type: application/json" -X POST -d $jsonPayload $DISCORD_BUILD_WEBHOOK_URL
