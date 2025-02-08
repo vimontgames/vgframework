@@ -1,0 +1,6 @@
+projects
+Properties
+*.csproj
+*.sln
+*.json
+.vs
