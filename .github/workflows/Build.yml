@@ -7,18 +7,16 @@ on:
         description: "Name of the build job"
         required: true
         type: string
+      build_configuration:
+        description: "Build configuration (Debug, Release, etc.)"
+        required: true
+        type: string
       build_platform:
         description: "Platform to build (Win64 DX12, ARM64EC Vulkan, etc.)"
         required: true
         type: string
-      build_configuration:
-        description: "Build configuration (Debug, Development, Release, Final)"
-        required: true
-        type: string
     secrets:
       DISCORD_BUILD_WEBHOOK_URL:
-        required: true
-      GITHUB_TOKEN:
         required: true
 
 env:

@@ -34,4 +34,3 @@ jobs:
       build_configuration: "Release"
     secrets:
       DISCORD_BUILD_WEBHOOK_URL: ${{ secrets.DISCORD_BUILD_WEBHOOK_URL }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
