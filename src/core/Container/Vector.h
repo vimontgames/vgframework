@@ -11,7 +11,7 @@ namespace vg::core
         //--------------------------------------------------------------------------------------
         template <typename T> inline T & find(const std::vector<T> & _vector, const T & _element)
         {
-            if (auto it = std::find(this->begin(), this->end(), _element) != this->end())
+            if (auto it = std::find(_vector.begin(), _vector.end(), _element) != _vector.end())
                 return *it;
             else
                 return nullptr;
@@ -20,7 +20,7 @@ namespace vg::core
         //--------------------------------------------------------------------------------------
         template <typename T> inline bool exists(const std::vector<T> & _vector, const T & _element)
         {
-            return find(_vector.begin(), _vector.end(), _element) != _vector.end();
+            return find(_vector, _element) != _vector.end();
         }
 
         //--------------------------------------------------------------------------------------
