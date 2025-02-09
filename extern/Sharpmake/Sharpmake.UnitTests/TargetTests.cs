@@ -51,11 +51,12 @@ namespace Sharpmake.UnitTests
 
         [TestCase(Optimization.Release, true)]
         [TestCase(Optimization.Debug, false)]
-        [TestCase(Optimization.Retail, false)]
+        [TestCase(Optimization.Debug, false)]
+        [TestCase(Optimization.Final, false)]
         [TestCase(IncludeType.Relative, false)]
         [TestCase(Optimization.Release | Optimization.Debug, false)]
-        [TestCase(Optimization.Release | Optimization.Retail, false)]
-        [TestCase(Optimization.Release | Optimization.Debug | Optimization.Retail, false)]
+        [TestCase(Optimization.Release | Optimization.Final, false)]
+        [TestCase(Optimization.Release | Optimization.Debug | Optimization.Final, false)]
         public void TestFragment_With1Argument_ReturnsExpected(object test, bool expected)
         {
             var target = new Target(Platform.win64, DevEnv.VisualStudio, Optimization.Release);
@@ -69,11 +70,11 @@ namespace Sharpmake.UnitTests
 
         [TestCase(Optimization.Release, true)]
         [TestCase(Optimization.Debug, true)]
-        [TestCase(Optimization.Retail, false)]
+        [TestCase(Optimization.Final, false)]
         [TestCase(IncludeType.Relative, false)]
         [TestCase(Optimization.Release | Optimization.Debug, true)]
-        [TestCase(Optimization.Release | Optimization.Retail, false)]
-        [TestCase(Optimization.Release | Optimization.Debug | Optimization.Retail, false)]
+        [TestCase(Optimization.Release | Optimization.Final, false)]
+        [TestCase(Optimization.Release | Optimization.Debug | Optimization.Final, false)]
         public void TestFragment_With2Arguments_ReturnsExpected(object test, bool expected)
         {
             var target = new Target(Platform.win64, DevEnv.VisualStudio, Optimization.Release | Optimization.Debug);
@@ -125,11 +126,11 @@ namespace Sharpmake.UnitTests
 
         [TestCase(Optimization.Release, true)]
         [TestCase(Optimization.Debug, false)]
-        [TestCase(Optimization.Retail, false)]
+        [TestCase(Optimization.Final, false)]
         [TestCase(IncludeType.Relative, true)] // Verify the behavior: nonexistent field returns true
         [TestCase(Optimization.Release | Optimization.Debug, true)]
-        [TestCase(Optimization.Release | Optimization.Retail, true)]
-        [TestCase(Optimization.Release | Optimization.Debug | Optimization.Retail, true)]
+        [TestCase(Optimization.Release | Optimization.Final, true)]
+        [TestCase(Optimization.Release | Optimization.Debug | Optimization.Final, true)]
         public void AndMask_With1Argument_ReturnsExpected(object test, bool expected)
         {
             var target = new Target(Platform.win64, DevEnv.VisualStudio, Optimization.Release);
@@ -143,11 +144,11 @@ namespace Sharpmake.UnitTests
 
         [TestCase(Optimization.Release, false)]
         [TestCase(Optimization.Debug, false)]
-        [TestCase(Optimization.Retail, false)]
+        [TestCase(Optimization.Final, false)]
         [TestCase(IncludeType.Relative, true)] // Verify the behavior: nonexistent field returns true
         [TestCase(Optimization.Release | Optimization.Debug, true)]
-        [TestCase(Optimization.Release | Optimization.Retail, false)]
-        [TestCase(Optimization.Release | Optimization.Debug | Optimization.Retail, true)]
+        [TestCase(Optimization.Release | Optimization.Final, false)]
+        [TestCase(Optimization.Release | Optimization.Debug | Optimization.Final, true)]
         public void AndMask_With2Arguments_ReturnsExpected(object test, bool expected)
         {
             var target = new Target(Platform.win64, DevEnv.VisualStudio, Optimization.Release | Optimization.Debug);

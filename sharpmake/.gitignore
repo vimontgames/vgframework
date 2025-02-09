@@ -4,3 +4,4 @@ Properties
 *.sln
 *.json
 .vs
+debug

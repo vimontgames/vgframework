@@ -511,7 +511,7 @@ namespace QTFileCustomBuild
             AddTargets(new Target(
                     Platform.win64,
                     DevEnv.vs2019,
-                    Optimization.Debug | Optimization.Release | Optimization.Retail,
+                    Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final,
                     OutputType.Dll
             ));
 
@@ -577,7 +577,7 @@ namespace QTFileCustomBuild
             AddTargets(new Target(
                     Platform.win64,
                     DevEnv.vs2019,
-                    Optimization.Debug | Optimization.Release | Optimization.Retail,
+                    Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final,
                     OutputType.Dll
             ));
 

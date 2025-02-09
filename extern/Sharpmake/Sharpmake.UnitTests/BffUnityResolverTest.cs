@@ -157,7 +157,7 @@ namespace Sharpmake.UnitTests
                 SourceRootPath = Directory.GetCurrentDirectory() + "/[project.Name]";
                 AddTargets(new Target(Platform.win64,
                                       GlobalSettings.DefaultDevEnvs,
-                                      Optimization.Debug | Optimization.Release | Optimization.Retail,
+                                      Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final,
                                       OutputType.Lib,
                                       Blob.FastBuildUnitys,
                                       BuildSystem.FastBuild));
@@ -179,7 +179,7 @@ namespace Sharpmake.UnitTests
                     conf.FastBuildUnityUseRelativePaths = true;
 
                 // For a given devenv version, unity config is identical between debug and release, retail is different
-                if (target.Optimization == Optimization.Retail)
+                if (target.Optimization == Optimization.Final)
                 {
                     conf.FastBuildUnityInputIsolateWritableFiles = false;
                     conf.FastBuildUnityInputIsolateWritableFilesLimit = 0;

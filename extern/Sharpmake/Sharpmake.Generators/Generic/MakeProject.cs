@@ -91,15 +91,17 @@ namespace Sharpmake.Generators.Generic
             public ProjectSettings(Project project, List<Project.Configuration> configurations, Resolver resolver)
             {
                 Project.Configuration configurationDebug = configurations.FirstOrDefault(conf => conf.Target.GetFragment<Optimization>() == Optimization.Debug);
+                Project.Configuration configurationDevelopment = configurations.FirstOrDefault(conf => conf.Target.GetFragment<Optimization>() == Optimization.Development);
                 Project.Configuration configurationRelease = configurations.FirstOrDefault(conf => conf.Target.GetFragment<Optimization>() == Optimization.Release);
-                Project.Configuration configurationRetail = configurations.FirstOrDefault(conf => conf.Target.GetFragment<Optimization>() == Optimization.Retail);
+                Project.Configuration configurationFinal = configurations.FirstOrDefault(conf => conf.Target.GetFragment<Optimization>() == Optimization.Final);
 
-                if (configurationDebug == null || configurationRelease == null || configurationRetail == null)
+                if (configurationDebug == null || configurationRelease == null || configurationFinal == null)
                     throw new Error("Android makefiles require a debug, release and final configuration. ");
 
                 configurationDebug.Defines.Add("_DEBUG");
                 configurationRelease.Defines.Add("NDEBUG");
-                configurationRetail.Defines.Add("NDEBUG");
+                configurationRelease.Defines.Add("NDEBUG");
+                configurationFinal.Defines.Add("NDEBUG");
 
                 _includePaths = "";
                 foreach (string includePath in configurationDebug.IncludePaths)
@@ -147,24 +149,25 @@ namespace Sharpmake.Generators.Generic
 
                 Strings compilerFlagsDebug = Options.GetStrings<Options.AndroidMakefile.CompilerFlags>(configurationDebug);
                 Strings compilerFlagsRelease = Options.GetStrings<Options.AndroidMakefile.CompilerFlags>(configurationRelease);
-                Strings compilerFlagsFinal = Options.GetStrings<Options.AndroidMakefile.CompilerFlags>(configurationRetail);
+                Strings compilerFlagsFinal = Options.GetStrings<Options.AndroidMakefile.CompilerFlags>(configurationFinal);
 
                 _cFlagsDebug = configurationDebug.Defines.Select(define => "-D" + define).Union(compilerFlagsDebug).DefaultIfEmpty("").Aggregate((first, next) => first + " " + next);
                 _cFlagsRelease = configurationRelease.Defines.Select(define => "-D" + define).Union(compilerFlagsRelease).DefaultIfEmpty("").Aggregate((first, next) => first + " " + next);
-                _cFlagsFinal = configurationRetail.Defines.Select(define => "-D" + define).Union(compilerFlagsFinal).DefaultIfEmpty("").Aggregate((first, next) => first + " " + next);
+                _cFlagsFinal = configurationFinal.Defines.Select(define => "-D" + define).Union(compilerFlagsFinal).DefaultIfEmpty("").Aggregate((first, next) => first + " " + next);
 
                 //Strings compilerExportedFlagsDebug = Options.GetStrings<Options.AndroidMakefile.CompilerExportedFlags>(configurationDebug);
                 //Strings compilerExportedFlagsRelease = Options.GetStrings<Options.AndroidMakefile.CompilerExportedFlags>(configurationRelease);
-                //Strings compilerExportedFlagsFinal = Options.GetStrings<Options.AndroidMakefile.CompilerExportedFlags>(configurationRetail);
+                //Strings compilerExportedFlagsFinal = Options.GetStrings<Options.AndroidMakefile.CompilerExportedFlags>(configurationFinal);
                 Strings exportedDefinesDebug = Options.GetStrings<Options.AndroidMakefile.ExportedDefines>(configurationDebug);
                 Strings exportedDefinesRelease = Options.GetStrings<Options.AndroidMakefile.ExportedDefines>(configurationRelease);
-                Strings exportedDefinesFinal = Options.GetStrings<Options.AndroidMakefile.ExportedDefines>(configurationRetail);
+                Strings exportedDefinesFinal = Options.GetStrings<Options.AndroidMakefile.ExportedDefines>(configurationFinal);
 
                 _cFlagsExportedDebug = exportedDefinesDebug.Select(define => "-D" + define).Union(compilerFlagsDebug).DefaultIfEmpty("").Aggregate((first, next) => first + " " + next);
                 _cFlagsExportedRelease = exportedDefinesRelease.Select(define => "-D" + define).Union(compilerFlagsRelease).DefaultIfEmpty("").Aggregate((first, next) => first + " " + next);
                 _cFlagsExportedFinal = exportedDefinesFinal.Select(define => "-D" + define).Union(compilerFlagsFinal).DefaultIfEmpty("").Aggregate((first, next) => first + " " + next);
 
                 List<PrebuiltStaticLibrary> allPrebuiltStaticLibrariesDebug = new List<PrebuiltStaticLibrary>();
+                List<PrebuiltStaticLibrary> allPrebuiltStaticLibrariesDevelopment = new List<PrebuiltStaticLibrary>();
                 List<PrebuiltStaticLibrary> allPrebuiltStaticLibrariesRelease = new List<PrebuiltStaticLibrary>();
                 List<PrebuiltStaticLibrary> allPrebuiltStaticLibrariesFinal = new List<PrebuiltStaticLibrary>();
                 foreach (var library in Options.GetObjects<Options.AndroidMakefile.PrebuiltStaticLibraries>(configurationDebug))
@@ -172,12 +175,17 @@ namespace Sharpmake.Generators.Generic
                     PrebuiltStaticLibrary internalLibrary = new PrebuiltStaticLibrary(project, library);
                     allPrebuiltStaticLibrariesDebug.Add(internalLibrary);
                 }
+                foreach (var library in Options.GetObjects<Options.AndroidMakefile.PrebuiltStaticLibraries>(configurationDevelopment))
+                {
+                    PrebuiltStaticLibrary internalLibrary = new PrebuiltStaticLibrary(project, library);
+                    allPrebuiltStaticLibrariesDevelopment.Add(internalLibrary);
+                }
                 foreach (var library in Options.GetObjects<Options.AndroidMakefile.PrebuiltStaticLibraries>(configurationRelease))
                 {
                     PrebuiltStaticLibrary internalLibrary = new PrebuiltStaticLibrary(project, library);
                     allPrebuiltStaticLibrariesRelease.Add(internalLibrary);
                 }
-                foreach (var library in Options.GetObjects<Options.AndroidMakefile.PrebuiltStaticLibraries>(configurationRetail))
+                foreach (var library in Options.GetObjects<Options.AndroidMakefile.PrebuiltStaticLibraries>(configurationFinal))
                 {
                     PrebuiltStaticLibrary internalLibrary = new PrebuiltStaticLibrary(project, library);
                     allPrebuiltStaticLibrariesFinal.Add(internalLibrary);

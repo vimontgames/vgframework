@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "Sharpmake.Application/0.75.0": {
+      "Sharpmake.Application/0.75.0-5-gcaff965a": {
         "dependencies": {
           "GitInfo": "3.3.5",
           "Sharpmake": "1.0.0",
@@ -17,7 +17,7 @@
           "Sharpmake.Application.dll": {}
         }
       },
-      "Basic.Reference.Assemblies.Net60/1.7.9": {
+      "Basic.Reference.Assemblies.Net60/1.8.0": {
         "dependencies": {
           "Microsoft.CodeAnalysis.Common": "4.12.0"
         },
@@ -232,7 +232,7 @@
       },
       "Sharpmake/1.0.0": {
         "dependencies": {
-          "Basic.Reference.Assemblies.Net60": "1.7.9",
+          "Basic.Reference.Assemblies.Net60": "1.8.0",
           "Microsoft.CodeAnalysis.CSharp": "4.12.0",
           "Microsoft.VisualStudio.Setup.Configuration.Interop": "3.12.2149",
           "Microsoft.Win32.Registry": "5.0.0"
@@ -270,17 +270,17 @@
     }
   },
   "libraries": {
-    "Sharpmake.Application/0.75.0": {
+    "Sharpmake.Application/0.75.0-5-gcaff965a": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "Basic.Reference.Assemblies.Net60/1.7.9": {
+    "Basic.Reference.Assemblies.Net60/1.8.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-EHD8W4nbU2S2HUrlVgktg6JB+m9wEPb/UGdv6zbEGclhXtC7bmUmCTtyHSp7440w/Kvu5pnw1K+Qwk2zZfVeug==",
-      "path": "basic.reference.assemblies.net60/1.7.9",
-      "hashPath": "basic.reference.assemblies.net60.1.7.9.nupkg.sha512"
+      "sha512": "sha512-4GYI0Kn8O1eA5rnmB7lDdnYg8h3qrmQCpE6xE/ENq7XxJbP6G8cAg7NrN6qT+Na75SZPEPtfrajDzEV+iM6HUw==",
+      "path": "basic.reference.assemblies.net60/1.8.0",
+      "hashPath": "basic.reference.assemblies.net60.1.8.0.nupkg.sha512"
     },
     "GitInfo/3.3.5": {
       "type": "package",

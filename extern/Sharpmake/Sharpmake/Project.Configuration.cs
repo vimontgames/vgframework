@@ -2838,7 +2838,7 @@ namespace Sharpmake
 
                 System.Threading.Interlocked.Increment(ref s_count);
 
-                if (target.TestFragment(Optimization.Release) || target.TestFragment(Optimization.Retail))
+                if (target.TestFragment(Optimization.Release) || target.TestFragment(Optimization.Final))
                     DefaultOption = Sharpmake.Options.DefaultTarget.Release;
                 Project project = (Project)owner;
 

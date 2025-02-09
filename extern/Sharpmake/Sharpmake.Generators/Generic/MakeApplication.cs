@@ -97,8 +97,9 @@ namespace Sharpmake.Generators.Generic
             public ApplicationSettings(List<Solution.Configuration> configurations)
             {
                 Solution.Configuration configurationDebug = configurations.FirstOrDefault(conf => conf.Target.GetFragment<Optimization>() == Optimization.Debug);
+                Solution.Configuration configurationDevelopment = configurations.FirstOrDefault(conf => conf.Target.GetFragment<Optimization>() == Optimization.Development);
                 Solution.Configuration configurationRelease = configurations.FirstOrDefault(conf => conf.Target.GetFragment<Optimization>() == Optimization.Release);
-                Solution.Configuration configurationFinal = configurations.FirstOrDefault(conf => conf.Target.GetFragment<Optimization>() == Optimization.Retail);
+                Solution.Configuration configurationFinal = configurations.FirstOrDefault(conf => conf.Target.GetFragment<Optimization>() == Optimization.Final);
 
                 if (configurationDebug == null || configurationRelease == null || configurationFinal == null)
                     throw new Error("Android makefiles require a debug, release and final configuration. ");

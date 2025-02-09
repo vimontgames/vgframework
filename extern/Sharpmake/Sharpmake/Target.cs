@@ -195,8 +195,9 @@ namespace Sharpmake
     public enum Optimization
     {
         Debug = 0x01,
-        Release = 0x02,
-        Retail = 0x04
+        Development = 0x02,
+        Release = 0x04,
+        Final = 0x08
     }
 
     [Fragment, Flags]

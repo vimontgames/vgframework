@@ -1,8 +1,6 @@
 using Sharpmake;
 
-[module: Sharpmake.DebugProjectName("Sharpmake.Lib.Core")]
-
-namespace VG
+namespace vg
 {
     public abstract class BaseProject : Project
     {
@@ -14,9 +12,9 @@ namespace VG
             Type = type;
 
             AddTargets(new Target(
-                    Platform.win32 | Platform.win64,
+                    Platform.win64,
                     DevEnv.vs2022,
-                    Optimization.Debug | Optimization.Release
+                    Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final
             ));
 
             switch (Type)
@@ -330,37 +328,13 @@ namespace VG
         }
     }
 
-    [Sharpmake.Generate]
-    public class VGSolution : Sharpmake.Solution
-    {
-        public VGSolution()
-        {
-            Name = "VG";
-
-            AddTargets(new Target(
-                    Platform.win32 | Platform.win64,
-                    DevEnv.vs2022,
-                    Optimization.Debug | Optimization.Release
-            ));
-        }
-
-        [Configure()]
-        public void ConfigureAll(Configuration conf, Target target)
-        {
-            conf.SolutionFileName = "[solution.Name]_[target.DevEnv]_[target.Platform]";
-            conf.SolutionPath = @"[solution.SharpmakeCsPath]\projects";
-
-            conf.AddProject<ApplicationProject>(target);
-        }
-    }
-
     public static class Main
     {
         [Sharpmake.Main]
         public static void SharpmakeMain(Sharpmake.Arguments arguments)
         {
             KitsRootPaths.SetUseKitsRootForDevEnv(DevEnv.vs2022, KitsRootEnum.KitsRoot10, Options.Vc.General.WindowsTargetPlatformVersion.Latest);
-            arguments.Generate<VGSolution>();
+            arguments.Generate<VGFrameworkSolution>();
         }
     }
 }
