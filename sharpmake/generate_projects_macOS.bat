@@ -1,0 +1,1 @@
+app\Sharpmake.Application.exe "/sources(@'main.sharpmake.cs') /generateDebugSolution /debugSolutionPath('debug/macOS')""
