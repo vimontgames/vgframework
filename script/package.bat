@@ -1,5 +1,4 @@
 cd..
-
 del *.lib
 del *.ipdb
 del *.iobj
@@ -35,4 +34,8 @@ cd ..
 cd ..
 del package.bat
 del build_all.bat
-
+rmdir sharpmake /S /Q
+rem set FOLDER=%~dp0
+rem del /f /q "%~f0"
+rem timeout /t 1 /nobreak > nul
+rem rmdir /S /Q "%FOLDER%"
