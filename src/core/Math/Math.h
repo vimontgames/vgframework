@@ -1,7 +1,6 @@
 #pragma once
 
 #include "core/Types/Types.h"
-#include <intrin.h>
 #include "StorageVector.h"
 
 namespace vg::core
