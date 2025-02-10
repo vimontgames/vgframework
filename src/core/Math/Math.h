@@ -3,6 +3,8 @@
 #include "core/Types/Types.h"
 #include "StorageVector.h"
 
+#include <cfloat>
+
 namespace vg::core
 {
     const float PI = 3.14159265359f;
