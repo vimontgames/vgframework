@@ -1,8 +1,6 @@
 #include "Property.h"
 #include "core/Types/Traits.h"
 
-#include <cstring>
-
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
