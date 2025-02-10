@@ -126,6 +126,12 @@ void operator delete[](void * _ptr) noexcept;
 	#error "Unsupported platform"
 #endif
 
+#ifdef _WIN32
+	#define CALL_CONV __cdecl
+#else
+	#define CALL_CONV
+#endif
+
 #if VG_ENABLE_ASSERT
 namespace vg::core
 {

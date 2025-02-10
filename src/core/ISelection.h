@@ -20,7 +20,7 @@ namespace vg::core
     class ISelection : public core::Object
     {
     public:
-        using OnSelectionChangedCallback = void(__cdecl *)(core::IObject * _this, SelectionChangeType _selectionChangeType);
+        using OnSelectionChangedCallback = void(CALL_CONV *)(core::IObject * _this, SelectionChangeType _selectionChangeType);
 
         virtual core::IObject *                     GetSelectedObject                   () = 0;
         virtual core::vector<core::IObject *> &     GetSelectedObjects                  () = 0;

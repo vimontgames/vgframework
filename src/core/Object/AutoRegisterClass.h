@@ -63,7 +63,7 @@ namespace vg::core
 {
     struct AutoRegisterClassInfo
     {
-        using Func = bool(__cdecl *)(IFactory &);
+        using Func = bool(CALL_CONV *)(IFactory &);
 
         const char *                name = nullptr;
         Func                        func = nullptr;

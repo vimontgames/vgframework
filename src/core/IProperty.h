@@ -109,10 +109,10 @@ namespace vg::core
     {
     public:
 
-        using ActionCallback             = bool (__cdecl*)(IObject*);
-        using PropertyRangeCallback      = core::float2(__cdecl *)(const IObject *, const IProperty *, core::uint _index);
-        using IsPropertyHiddenCallback   = bool(__cdecl *)(const IObject *, const IProperty *, core::uint _index);
-        using IsPropertyReadOnlyCallback = bool(__cdecl *)(const IObject *, const IProperty *, core::uint _index);
+        using ActionCallback             = bool (CALL_CONV *)(IObject*);
+        using PropertyRangeCallback      = core::float2(CALL_CONV *)(const IObject *, const IProperty *, core::uint _index);
+        using IsPropertyHiddenCallback   = bool(CALL_CONV *)(const IObject *, const IProperty *, core::uint _index);
+        using IsPropertyReadOnlyCallback = bool(CALL_CONV *)(const IObject *, const IProperty *, core::uint _index);
 
         virtual void                            SetInterface                    (const char * _interface) = 0;
         virtual void                            SetRange                        (float2 _range) = 0;
