@@ -201,16 +201,6 @@ namespace vg::core
 
     private:
         template <typename T> inline T *        GetPropertyUnderlyingType       (const IObject * _object) const;
-
-        template <> inline i8 *                 GetPropertyUnderlyingType<i8>   (const IObject * _object) const { return GetPropertyInt8(_object); }
-        template <> inline i16 *                GetPropertyUnderlyingType<i16>  (const IObject * _object) const { return GetPropertyInt16(_object); }
-        template <> inline i32 *                GetPropertyUnderlyingType<i32>  (const IObject * _object) const { return GetPropertyInt32(_object); }
-        template <> inline i64 *                GetPropertyUnderlyingType<i64>  (const IObject * _object) const { return GetPropertyInt64(_object); }
-
-        template <> inline u8 *                 GetPropertyUnderlyingType<u8>   (const IObject * _object) const { return GetPropertyUint8(_object); }
-        template <> inline u16 *                GetPropertyUnderlyingType<u16>  (const IObject * _object) const { return GetPropertyUint16(_object); }
-        template <> inline u32 *                GetPropertyUnderlyingType<u32>  (const IObject * _object) const { return GetPropertyUint32(_object); }
-        template <> inline u64 *                GetPropertyUnderlyingType<u64>  (const IObject * _object) const { return GetPropertyUint64(_object); }
     }; 
 }
 

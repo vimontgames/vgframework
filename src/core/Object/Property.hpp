@@ -477,6 +477,16 @@ namespace vg::core
         return (u64 *)(uint_ptr(_object) + offset);
     }
 
+    template <> i8* IProperty::GetPropertyUnderlyingType<i8>(const IObject* _object) const { return GetPropertyInt8(_object); }
+    template <> i16* IProperty::GetPropertyUnderlyingType<i16>(const IObject* _object) const { return GetPropertyInt16(_object); }
+    template <> i32* IProperty::GetPropertyUnderlyingType<i32>(const IObject* _object) const { return GetPropertyInt32(_object); }
+    template <> i64* IProperty::GetPropertyUnderlyingType<i64>(const IObject* _object) const { return GetPropertyInt64(_object); }
+
+    template <> u8* IProperty::GetPropertyUnderlyingType<u8>(const IObject* _object) const { return GetPropertyUint8(_object); }
+    template <> u16* IProperty::GetPropertyUnderlyingType<u16>(const IObject* _object) const { return GetPropertyUint16(_object); }
+    template <> u32* IProperty::GetPropertyUnderlyingType<u32>(const IObject* _object) const { return GetPropertyUint32(_object); }
+    template <> u64* IProperty::GetPropertyUnderlyingType<u64>(const IObject* _object) const { return GetPropertyUint64(_object); }
+
     //--------------------------------------------------------------------------------------
     BitMask * Property::GetPropertyBitMask(const IObject * _object) const
     {
