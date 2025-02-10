@@ -302,11 +302,29 @@ namespace Sharpmake
         KitsRoot10
     }
 
+    [Fragment, Flags]
+    public enum GraphicsAPI
+    {
+        None   = 0x01,
+        DX12   = 0x02,
+        Vulkan = 0x04
+    };
+
+    [Fragment, Flags]
+    public enum Compiler
+    {
+        MSVC    = 0x01,
+        ClangCL = 0x02
+    };
+
     // Default Target, user may define its own if needed
     public class Target : ITarget
     {
         public Optimization Optimization;
         public Platform Platform;
+        public GraphicsAPI GfxAPI = GraphicsAPI.None;
+        public Compiler Compiler;
+
         public string ToolchainPlatform { get { return Util.GetToolchainPlatformString(Platform, this); } }
         public BuildSystem BuildSystem;
         public DevEnv DevEnv;
@@ -317,7 +335,23 @@ namespace Sharpmake
 
         public override string Name
         {
-            get { return Optimization.ToString(); }
+            get { return GetName(); }
+        }
+
+        public override string GetName(GraphicsAPI overrideGfxAPI = (GraphicsAPI)(-1))
+        {
+            string name = Optimization.ToString();
+            GraphicsAPI api = GfxAPI;
+
+            if (overrideGfxAPI != (GraphicsAPI)(-1))
+                api = overrideGfxAPI;
+
+            if (api != GraphicsAPI.None)
+                name += $" {api.ToString()}";
+
+            name += $" {Compiler.ToString()}";
+
+            return name;
         }
 
         public Target() { }
@@ -378,6 +412,11 @@ namespace Sharpmake
         public virtual string Name
         {
             get { return GetTargetString(); }
+        }
+
+        public virtual string GetName(GraphicsAPI overrideGfxAPI = (GraphicsAPI)(-1))
+        {
+            return Name;
         }
 
         public virtual string ProjectConfigurationName
