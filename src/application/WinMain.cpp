@@ -196,6 +196,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	core::CmdLine cmdLine(lpCmdLine);
 
     g_engine = core::Plugin::create<engine::IEngine>("engine");
+	if (nullptr == g_engine)
+		return -1;
 
     engine::EngineCreationParams engineParams;
 								 engineParams.renderer.device.resolution = core::uint2(width, height);
@@ -205,7 +207,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	engineParams.renderer.device.api = gfx::API::DirectX12;
 	#elif VG_VULKAN
 	engineParams.renderer.device.api = gfx::API::Vulkan;
-	#elif 
+	#else 
 	#error No GFX API defined
 	#endif
 

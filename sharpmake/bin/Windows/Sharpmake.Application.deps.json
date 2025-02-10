@@ -6,7 +6,7 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "Sharpmake.Application/0.75.0-5-gcaff965a": {
+      "Sharpmake.Application/0.76.0-1-g1b48141c": {
         "dependencies": {
           "GitInfo": "3.3.5",
           "Sharpmake": "1.0.0",
@@ -240,7 +240,7 @@
         "runtime": {
           "Sharpmake.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "0.75.0.0"
+            "fileVersion": "0.76.0.0"
           }
         }
       },
@@ -252,7 +252,7 @@
         "runtime": {
           "Sharpmake.CommonPlatforms.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "0.75.0.0"
+            "fileVersion": "0.76.0.0"
           }
         }
       },
@@ -263,14 +263,14 @@
         "runtime": {
           "Sharpmake.Generators.dll": {
             "assemblyVersion": "1.0.0",
-            "fileVersion": "0.75.0.0"
+            "fileVersion": "0.76.0.0"
           }
         }
       }
     }
   },
   "libraries": {
-    "Sharpmake.Application/0.75.0-5-gcaff965a": {
+    "Sharpmake.Application/0.76.0-1-g1b48141c": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -176,10 +176,10 @@ The external libraries are included with the sources for convenience. Follow the
 | [ImGuiFileDialog](         https://github.com/aiekick/ImGuiFileDialog                                                 )    | 0.6.7          
 | [ImGuizmo](                https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83                              )    | 1.83                       
 | [JoltPhysics](             https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0                                  )    | 5.0.0                            
-| [meta_enum_lite](          https://github.com/vimontgames/meta_enum_lite                                              )    |                       
+| [meta_enum_lite](          https://github.com/vimontgames/meta_enum_lite                                              )    | 2.0 (Custom)                       
 | [optick](                  https://github.com/bombomby/optick                                                         ) ✨ | 1.3.1                                                  
 | [px_sched](                https://github.com/pplux/px                                                                )    | 
-| [Sharpmake](               https://github.com/ubisoft/Sharpmake/releases/tag/0.75.0                                   )    | 0.75.0    
+| [Sharpmake](               https://github.com/vimontgames/Sharpmake                                                   )    | 0.75.0 (Custom)    
 | [SoLoud](                  https://github.com/jarikomppa/soloud                                                       )    | August 2024    
 | [stb](                     https://github.com/nothings/stb                                                            )    | 2.30                                                          
 | [tinyXML2](                https://github.com/leethomason/tinyxml2/releases/tag/10.0.0                                )    | 10.0.0                     

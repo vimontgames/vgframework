@@ -3215,11 +3215,6 @@ namespace Sharpmake
                     throw new Error(messageBuilder.ToString());
                 }
 
-                if (!dependencyConf.Target.IsEqualTo(pair.Value))
-                    throw new Error(
-                        "resolving dependencies for {0}: project {1} cannot depends other project on many target: {2} {3} (induced by {4})",
-                        Owner.GetType().ToNiceTypeName(), dependencyProject.GetType().ToNiceTypeName(), dependencyConf.Target, pair.Value, visitedConfiguration.ToString());
-
                 return dependencyConf;
             }
 

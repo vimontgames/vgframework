@@ -1670,6 +1670,12 @@ namespace Sharpmake
             bool hasConfig = ConfigurationsCache.TryGetValue(target, out config);
             if (!hasConfig)
             {
+                foreach(var other in ConfigurationsCache)
+                {
+                    if (other.Key.GetName(GraphicsAPI.None) == target.GetName(GraphicsAPI.None))
+                        return other.Value;
+                }
+
                 ReportError($"ConfigurationsCache in project '{Name}' does not contain configuration for '{target}'");
             }
 
