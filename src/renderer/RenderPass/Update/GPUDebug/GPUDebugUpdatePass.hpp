@@ -139,7 +139,7 @@ namespace vg::renderer
                                     static bool skip = false;								
                                     const auto filename = ShaderManager::get()->getShaderFilePathFromID(fileID);
                                     if (vg::core::assertmsg("[GPUAssert]", __func__, filename->c_str(), line, skip, "%s", tempString.c_str()))
-                                        __debugbreak();																        
+                                        DEBUG_BREAK();
                                 }
                                 break;
                             } 
