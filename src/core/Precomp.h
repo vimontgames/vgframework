@@ -118,10 +118,10 @@ void operator delete[](void * _ptr) noexcept;
 
 #ifdef _WIN32
 	#include <intrin.h>
-	#define DEBUG_BREAK() __debugbreak()
+	#define VG_DEBUG_BREAK() __debugbreak()
 #elif defined(__linux__) || defined(__APPLE__)
 	#include <signal.h>
-	#define DEBUG_BREAK() raise(SIGTRAP)
+	#define VG_DEBUG_BREAK() raise(SIGTRAP)
 #else
 	#error "Unsupported platform"
 #endif
@@ -145,7 +145,7 @@ namespace vg::core
 		{																					        \
 			static bool skip = false;														        \
 			if (vg::core::assertmsg(#condition, __func__, __FILE__, __LINE__, skip, ##__VA_ARGS__))	\
-				DEBUG_BREAK();																        \
+				VG_DEBUG_BREAK();																        \
 		}																					        \
 	}																						        \
 	while(0)
