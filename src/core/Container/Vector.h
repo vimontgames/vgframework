@@ -1,5 +1,7 @@
 #pragma once
 
+#include <optional>
+
 namespace vg::core
 {
     namespace vector_helper
@@ -9,27 +11,25 @@ namespace vg::core
         //--------------------------------------------------------------------------------------
 
         //--------------------------------------------------------------------------------------
-        template <typename T> inline T & find(const std::vector<T> & _vector, const T & _element)
+        template <typename T> inline std::optional<T&> find(const std::vector<T>& _vector, const T& _element)
         {
-            if (auto it = std::find(_vector.begin(), _vector.end(), _element) != _vector.end())
+            if (auto it{ std::find(cbegin(_vector), cend(_vector), _element) }; it != cend(_vector))
                 return *it;
-            else
-                return nullptr;
+            return {};
         }
 
         //--------------------------------------------------------------------------------------
-        template <typename T> inline bool exists(const std::vector<T> & _vector, const T & _element)
+        template <typename T> inline bool exists(const std::vector<T>& _vector, const T& _element)
         {
-            return find(_vector, _element) != _vector.end();
+            return std::find(cbegin(_vector), cend(_vector), _element) != cend(_vector);
         }
 
         //--------------------------------------------------------------------------------------
-        template <typename T> inline bool remove(std::vector<T> & _vector, const T & _element)
+        template <typename T> inline bool remove(std::vector<T>& _vector, const T& _element)
         {
-            auto end = std::remove_if(_vector.begin(), _vector.end(), [=](auto s) { return s == _element; });
-            if (end != _vector.end())
+            if (auto it{ std::remove_if(begin(_vector), end(_vector), [=](auto s) { return s == _element; }) }; it != end(_vector))
             {
-                _vector.erase(end);
+                _vector.erase(it);
                 return true;
             }
             return false;
