@@ -122,6 +122,7 @@ void operator delete[](void * _ptr) noexcept;
 #elif defined(__linux__) || defined(__APPLE__)
 	#include <signal.h>
 	#include <cstring>
+	#include <x86intrin.h>
 	#define VG_DEBUG_BREAK() raise(SIGTRAP)
 #else
 	#error "Unsupported platform"

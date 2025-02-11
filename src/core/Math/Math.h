@@ -190,9 +190,21 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     template<> inline core::u32 ctz(core::u32 value)
     {
-        DWORD trailing_zero = 0;
+        static const auto func = [](core::u32* index, uint32_t mask) -> bool {
+#ifdef _MSC_VER
+            DWORD value;
+            bool result = _BitScanForward(&value, mask);
+			*index = value;
+			return result;
+#else
+            if (mask == 0) return false;
+            *index = __builtin_ctz(mask);
+            return true;
+#endif
+        };
 
-        if (_BitScanForward(&trailing_zero, value))
+        core::u32 trailing_zero = 0;
+        if (func(&trailing_zero, value))
             return trailing_zero;
         else
             return 32;
@@ -201,9 +213,21 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     template<> inline core::u64 ctz(core::u64 value)
     {
-        DWORD trailing_zero = 0;
+        static const auto func = [](core::u64* index, core::u64 mask) -> bool {
+#ifdef _MSC_VER
+            DWORD value;
+            bool result = _BitScanForward64(&value, mask);
+            *index = value;
+            return result;
+#else
+            if (mask == 0) return false;
+            *index = __builtin_ctzll(mask);
+            return true;
+#endif
+        };
 
-        if (_BitScanForward64(&trailing_zero, value))
+        core::u64 trailing_zero = 0;
+        if (func(&trailing_zero, value))
             return trailing_zero;
         else
             return 64;
@@ -212,21 +236,47 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     template<> inline core::u32 clz(core::u32 value)
     {
-        DWORD leading_zero = 0;
-        if (_BitScanReverse(&leading_zero, value))
-            return 31 - leading_zero;
-        else
-            return 32;
+        static const auto func = [](core::u32* index, uint32_t mask) -> bool {
+#ifdef _MSC_VER
+			DWORD value;
+			bool result = _BitScanReverse(&value, mask);
+			*index = value;
+			return result;
+#else
+			if (mask == 0) return false;
+			*index = 31 - __builtin_clz(mask);
+			return true;
+#endif
+		};
+
+		core::u32 leading_zero = 0;
+		if (func(&leading_zero, value))
+			return 31 - leading_zero;
+		else
+			return 32;
     }
 
     //--------------------------------------------------------------------------------------
     template<> inline core::u64 clz(core::u64 value)
     {
-        DWORD leading_zero = 0;
-        if (_BitScanReverse64(&leading_zero, value))
-            return 63 - leading_zero;
-        else
-            return 63;
+        static const auto func = [](core::u64* index, core::u64 mask) -> bool {
+#ifdef _MSC_VER
+			DWORD value;
+			bool result = _BitScanReverse64(&value, mask);
+			*index = value;
+			return result;
+#else
+			if (mask == 0) return false;
+			*index = 63 - __builtin_clzll(mask);
+			return true;
+#endif
+		};
+
+		core::u64 leading_zero = 0;
+		if (func(&leading_zero, value))
+			return 63 - leading_zero;
+		else
+			return 64;
     }
 
     //--------------------------------------------------------------------------------------
