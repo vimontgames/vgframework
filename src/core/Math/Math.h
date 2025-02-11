@@ -184,99 +184,72 @@ namespace vg::core
 
     #define crc64(str) std::integral_constant<u64, computeCRC64(str, sizeof(str)-1)>::value
 
-    template <typename T> inline T ctz(T _value);
-    template <typename T> inline T clz(T _value);
-
     //--------------------------------------------------------------------------------------
-    template<> inline core::u32 ctz(core::u32 value)
+    inline core::u32 ctz(core::u32 value)
     {
-        static const auto func = [](core::u32* index, uint32_t mask) -> bool {
-#ifdef _MSC_VER
-            DWORD value;
-            bool result = _BitScanForward(&value, mask);
-			*index = value;
-			return result;
-#else
-            if (mask == 0) return false;
-            *index = __builtin_ctz(mask);
-            return true;
-#endif
-        };
-
-        core::u32 trailing_zero = 0;
-        if (func(&trailing_zero, value))
+        #ifdef _MSC_VER
+        DWORD trailing_zero = 0;
+        if (_BitScanForward(&trailing_zero, value))
             return trailing_zero;
         else
             return 32;
+        #else
+        if (0 != value)
+            return __builtin_ctz(value);
+        else
+            return 32;
+        #endif
     }
 
     //--------------------------------------------------------------------------------------
-    template<> inline core::u64 ctz(core::u64 value)
+    inline core::u64 ctz(core::u64 value)
     {
-        static const auto func = [](core::u64* index, core::u64 mask) -> bool {
-#ifdef _MSC_VER
-            DWORD value;
-            bool result = _BitScanForward64(&value, mask);
-            *index = value;
-            return result;
-#else
-            if (mask == 0) return false;
-            *index = __builtin_ctzll(mask);
-            return true;
-#endif
-        };
-
-        core::u64 trailing_zero = 0;
-        if (func(&trailing_zero, value))
+        #ifdef _MSC_VER
+        DWORD trailing_zero = 0;
+        if (_BitScanForward64(&trailing_zero, value))
             return trailing_zero;
         else
             return 64;
-    }    
-
-    //--------------------------------------------------------------------------------------
-    template<> inline core::u32 clz(core::u32 value)
-    {
-        static const auto func = [](core::u32* index, uint32_t mask) -> bool {
-#ifdef _MSC_VER
-			DWORD value;
-			bool result = _BitScanReverse(&value, mask);
-			*index = value;
-			return result;
-#else
-			if (mask == 0) return false;
-			*index = 31 - __builtin_clz(mask);
-			return true;
-#endif
-		};
-
-		core::u32 leading_zero = 0;
-		if (func(&leading_zero, value))
-			return 31 - leading_zero;
-		else
-			return 32;
+        #else
+        if (0 != value)
+            return __builtin_ctzll(value);
+        else
+            return 64;
+        #endif
     }
 
     //--------------------------------------------------------------------------------------
-    template<> inline core::u64 clz(core::u64 value)
+    inline core::u32 clz(core::u32 value)
     {
-        static const auto func = [](core::u64* index, core::u64 mask) -> bool {
-#ifdef _MSC_VER
-			DWORD value;
-			bool result = _BitScanReverse64(&value, mask);
-			*index = value;
-			return result;
-#else
-			if (mask == 0) return false;
-			*index = 63 - __builtin_clzll(mask);
-			return true;
-#endif
-		};
+        #ifdef _MSC_VER
+        DWORD leading_zero = 0;
+        if (_BitScanReverse(&leading_zero, value))
+            return 31 - leading_zero;
+        else
+            return 32;
+        #else
+        if (0 != value)
+            return 31 - __builtin_clz(value);
+        else
+            return 32;
+        #endif
+    }
 
-		core::u64 leading_zero = 0;
-		if (func(&leading_zero, value))
-			return 63 - leading_zero;
-		else
-			return 64;
+    //--------------------------------------------------------------------------------------
+    inline core::u64 clz(core::u64 value)
+    {
+        #ifdef _MSC_VER
+        DWORD leading_zero = 0;
+        if (_BitScanReverse64(&leading_zero, value))
+            return 63 - leading_zero;
+        else
+            return 64;
+        #else
+        if (0 != value)
+            return 63 - __builtin_clzll(value);
+        else
+            return 64;
+        #endif
     }
 
     //--------------------------------------------------------------------------------------
