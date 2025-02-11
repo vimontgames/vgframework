@@ -8,17 +8,14 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Timer::init()
     {
-        LARGE_INTEGER li;
-        VG_VERIFY(QueryPerformanceFrequency(&li));
-        s_freq = double(li.QuadPart) / 1000.0;
+        s_freq = 1.0 / 1000.0;
     }
 
     //--------------------------------------------------------------------------------------
     Ticks Timer::getTick()
     {
-        LARGE_INTEGER li;
-        QueryPerformanceCounter(&li);
-        return li.QuadPart;
+		using namespace std::chrono;
+        return duration_cast<microseconds>(high_resolution_clock::now().time_since_epoch()).count();
     }
 
     //--------------------------------------------------------------------------------------
