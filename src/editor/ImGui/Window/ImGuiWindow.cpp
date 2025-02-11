@@ -1665,7 +1665,7 @@ namespace vg::editor
 
                     const uint sizeOf = _prop->GetSizeOf();
                     const size_t count = _prop->GetPropertyObjectVectorCount(_object);
-                    const byte * data = _prop->GetPropertyObjectVectorData(_object);
+                    const u8 * data = _prop->GetPropertyObjectVectorData(_object);
 
                     string treeNodeName = fmt::sprintf("%s[%u]", displayName, count); 
 
@@ -2049,7 +2049,7 @@ namespace vg::editor
 
                     const uint sizeOf = _prop->GetSizeOf();
                     const size_t count = _prop->GetPropertyResourceVectorCount(_object);
-                    const byte * data = _prop->GetPropertyResourceVectorData(_object);
+                    const u8 * data = _prop->GetPropertyResourceVectorData(_object);
 
                     string treeNodeName = (string)displayName + " (" + to_string(count) + ")";
 

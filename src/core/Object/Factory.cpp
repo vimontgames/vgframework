@@ -2505,7 +2505,7 @@ namespace vg::core
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const uint sizeOf = prop->GetSizeOf();
                     const size_t count = prop->GetPropertyResourceVectorCount(_object);
-                    const byte * data = prop->GetPropertyResourceVectorData(_object);
+                    const u8 * data = prop->GetPropertyResourceVectorData(_object);
 
                     for (uint i = 0; i < count; ++i)
                     {
@@ -2539,7 +2539,7 @@ namespace vg::core
                     VG_ASSERT(!isEnumArray, "EnumArray serialization to XML not implemented for type '%s'", asString(type).c_str());
                     const uint sizeOf = prop->GetSizeOf();
                     const size_t count = prop->GetPropertyObjectVectorCount(_object);
-                    const byte * data = prop->GetPropertyObjectVectorData(_object);
+                    const u8 * data = prop->GetPropertyObjectVectorData(_object);
 
                     for (uint i = 0; i < count; ++i)
                     {
