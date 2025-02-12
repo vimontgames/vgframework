@@ -1,5 +1,18 @@
-#include "Precomp.h"
-#include "core/Math/Math.h"
+#define VG_INLINE inline
+
+#include <unordered_set>
+#include <unordered_map>
+#include <vector>
+#include <map>
+#include <set>
+#include <algorithm>
+#include <atomic>
+#include <cstring>
+
+#include <hlsl++.h>
+#include <gtest/gtest.h>
+
+#include <core/Math/Math.h>
 
 namespace vg::core::tests
 {

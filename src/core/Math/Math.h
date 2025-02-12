@@ -229,7 +229,7 @@ namespace vg::core
             return 32;
         #else
         if (0 != value)
-            return 31 - __builtin_clz(value);
+            return __builtin_clz(value);
         else
             return 32;
         #endif
@@ -246,7 +246,7 @@ namespace vg::core
             return 64;
         #else
         if (0 != value)
-            return 63 - __builtin_clzll(value);
+            return __builtin_clzll(value);
         else
             return 64;
         #endif
