@@ -169,8 +169,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A6056C5D-D628-4DFE-945D-0938671C5BA8}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\Build.yml = .github\workflows\Build.yml
-		.github\workflows\Submit.yml = .github\workflows\Submit.yml
 		.github\workflows\Build_Version.yml = .github\workflows\Build_Version.yml
+		.github\workflows\Submit.yml = .github\workflows\Submit.yml
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "audio", "src\audio\audio.vcxproj", "{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}"
@@ -249,6 +249,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "preview", "preview", "{35BF
 		data\Shaders\preview\preview.hlsl = data\Shaders\preview\preview.hlsl
 		data\Shaders\preview\preview.hlsl.h = data\Shaders\preview\preview.hlsl.h
 		data\Shaders\preview\preview.hlsli = data\Shaders\preview\preview.hlsli
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core.tests", "tests\core.tests\core.tests.vcxproj", "{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{257A93DC-9206-4770-9560-7A22DFF0AC01} = {257A93DC-9206-4770-9560-7A22DFF0AC01}
 	EndProjectSection
 EndProject
 Global
@@ -559,6 +564,38 @@ Global
 		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Release|Win64 DX12.Build.0 = Release|x64
 		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Release|Win64 Vulkan.ActiveCfg = Release|x64
 		{FFF9F2AC-6FD7-4B6D-A82F-91D014EB7F58}.Release|Win64 Vulkan.Build.0 = Release|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Debug|ARM64EC DX12.ActiveCfg = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Debug|ARM64EC DX12.Build.0 = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Debug|ARM64EC Vulkan.ActiveCfg = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Debug|ARM64EC Vulkan.Build.0 = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Debug|Win64 DX12.ActiveCfg = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Debug|Win64 DX12.Build.0 = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Debug|Win64 Vulkan.ActiveCfg = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Debug|Win64 Vulkan.Build.0 = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Development|ARM64EC DX12.ActiveCfg = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Development|ARM64EC DX12.Build.0 = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Development|ARM64EC Vulkan.ActiveCfg = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Development|ARM64EC Vulkan.Build.0 = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Development|Win64 DX12.ActiveCfg = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Development|Win64 DX12.Build.0 = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Development|Win64 Vulkan.ActiveCfg = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Development|Win64 Vulkan.Build.0 = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Final|ARM64EC DX12.ActiveCfg = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Final|ARM64EC DX12.Build.0 = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Final|ARM64EC Vulkan.ActiveCfg = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Final|ARM64EC Vulkan.Build.0 = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Final|Win64 DX12.ActiveCfg = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Final|Win64 DX12.Build.0 = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Final|Win64 Vulkan.ActiveCfg = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Final|Win64 Vulkan.Build.0 = Debug|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Release|ARM64EC DX12.ActiveCfg = Release|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Release|ARM64EC DX12.Build.0 = Release|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Release|ARM64EC Vulkan.ActiveCfg = Release|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Release|ARM64EC Vulkan.Build.0 = Release|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Release|Win64 DX12.ActiveCfg = Release|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Release|Win64 DX12.Build.0 = Release|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Release|Win64 Vulkan.ActiveCfg = Release|x64
+		{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}.Release|Win64 Vulkan.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
