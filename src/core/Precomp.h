@@ -84,11 +84,12 @@
 
 //--------------------------------------------------------------------------------------
 // Overrides
-// e.g. use #define VG_OVERRIDE_GLOBAL_NEW_DELETE 1 to force enable or #define VG_OVERRIDE_GLOBAL_NEW_DELETE 0 to force disable
+// e.g. use #define VG_OVERRIDE_ENABLE_GLOBAL_NEW_DELETE 1 to force VG_ENABLE_GLOBAL_NEW_DELETE to 1 
+// or #define VG_OVERRIDE_ENABLE_GLOBAL_NEW_DELETE 0 to force VG_ENABLE_GLOBAL_NEW_DELETE to 0
 //--------------------------------------------------------------------------------------
-#ifdef VG_OVERRIDE_GLOBAL_NEW_DELETE 
+#ifdef VG_OVERRIDE_ENABLE_GLOBAL_NEW_DELETE 
 #undef VG_ENABLE_GLOBAL_NEW_DELETE
-#define VG_ENABLE_GLOBAL_NEW_DELETE VG_OVERRIDE_GLOBAL_NEW_DELETE
+#define VG_ENABLE_GLOBAL_NEW_DELETE VG_OVERRIDE_ENABLE_GLOBAL_NEW_DELETE
 #endif
 
 #if VG_ENABLE_GLOBAL_NEW_DELETE 
