@@ -82,6 +82,15 @@
 	#define VG_ENABLE_CHECK_STATIC_CAST	0 
 #endif
 
+//--------------------------------------------------------------------------------------
+// Overrides
+// e.g. use #define VG_OVERRIDE_GLOBAL_NEW_DELETE 1 to force enable or #define VG_OVERRIDE_GLOBAL_NEW_DELETE 0 to force disable
+//--------------------------------------------------------------------------------------
+#ifdef VG_OVERRIDE_GLOBAL_NEW_DELETE 
+#undef VG_ENABLE_GLOBAL_NEW_DELETE
+#define VG_ENABLE_GLOBAL_NEW_DELETE VG_OVERRIDE_GLOBAL_NEW_DELETE
+#endif
+
 #if VG_ENABLE_GLOBAL_NEW_DELETE 
 
 void * operator new(std::size_t _size);
