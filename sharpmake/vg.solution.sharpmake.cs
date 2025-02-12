@@ -8,19 +8,18 @@ namespace vg
         public Solution() 
         {
             Name = "vgframework";
-
             AddTargets(Project.GetDefaultTargets(true));
         }
 
         [Configure()]
         public void ConfigureAll(Configuration conf, Target target)
         {
-            conf.SolutionFileName = "[solution.Name]_[target.DevEnv]_[target.Platform]";
-            conf.SolutionPath = @"[solution.SharpmakeCsPath]\projects";
+            conf.SolutionFileName = $"{Name}_{target.DevEnv}";
+            conf.SolutionPath = @"[solution.SharpmakeCsPath]\..\";
 
             string platformName = target.Platform.ToString();
 
-            switch(target.Platform)
+            switch (target.Platform)
             {
                 case Platform.win64:
                     platformName = "Win64";
@@ -31,10 +30,10 @@ namespace vg
                     break;
             };
 
+            platformName += $" {target.Compiler.ToString()}";
+
             if (GraphicsAPI.None != target.GfxAPI)
                 platformName += $" {target.GfxAPI.ToString()}";
-
-            platformName += $" {target.Compiler.ToString()}";
 
             conf.PlatformName = platformName;
             conf.Name = $"{target.Optimization}";

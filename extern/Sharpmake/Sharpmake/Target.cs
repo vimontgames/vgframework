@@ -341,6 +341,9 @@ namespace Sharpmake
         public override string GetName(GraphicsAPI overrideGfxAPI = (GraphicsAPI)(-1))
         {
             string name = Optimization.ToString();
+
+            name += $" {Compiler.ToString()}";
+
             GraphicsAPI api = GfxAPI;
 
             if (overrideGfxAPI != (GraphicsAPI)(-1))
@@ -348,8 +351,6 @@ namespace Sharpmake
 
             if (api != GraphicsAPI.None)
                 name += $" {api.ToString()}";
-
-            name += $" {Compiler.ToString()}";
 
             return name;
         }

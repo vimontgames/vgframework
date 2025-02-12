@@ -1,5 +1,6 @@
 cd..
-
+del Game.exe
+del Editor.exe
 del VGFramework*.exe
 del *.lib
 ren dxcompiler.dll dxcompiler.dll.bak
