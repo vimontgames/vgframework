@@ -16,4 +16,20 @@ namespace vg
             base.ConfigureAll(conf, target);
         }
     }
+
+    [Sharpmake.Generate]
+    public class CoreTests : Project
+    {
+        public CoreTests() : base("core.tests", Type.UnitTests)
+        {
+
+        }
+
+        public override void ConfigureAll(Configuration conf, Target target)
+        {
+            base.ConfigureAll(conf, target);
+
+            conf.AddPublicDependency<Core>(target);
+        }
+    }
 }

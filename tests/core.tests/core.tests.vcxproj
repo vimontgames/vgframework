@@ -45,6 +45,14 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Development|ARM64EC'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Final|ARM64EC'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Development|ARM64EC'">core.tests/Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64EC'">core.tests/Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Final|ARM64EC'">core.tests/Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|ARM64EC'">core.tests/Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Development|x64'">core.tests/Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">core.tests/Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Final|x64'">core.tests/Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">core.tests/Precomp.h</PrecompiledHeaderFile>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,9 +196,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)tests;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>core.tests/Precomp.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>VG_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
@@ -212,9 +220,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)tests;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>core.tests/Precomp.h</PrecompiledHeaderFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>VG_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
@@ -235,9 +243,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)tests;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>core.tests/Precomp.h</PrecompiledHeaderFile>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -260,9 +268,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)tests;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>core.tests/Precomp.h</PrecompiledHeaderFile>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>VG_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -287,9 +295,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)tests;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>core.tests/Precomp.h</PrecompiledHeaderFile>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -312,9 +320,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)tests;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>core.tests/Precomp.h</PrecompiledHeaderFile>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <PreprocessorDefinitions>VG_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -338,9 +346,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)tests;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>core.tests/Precomp.h</PrecompiledHeaderFile>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <PreprocessorDefinitions>VG_FINAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
@@ -363,9 +371,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)tests\core.tests;$(SolutionDir)src;$(SolutionDir)extern;$(SolutionDir)tests;$(SolutionDir)extern\googletest\googletest\include;$(SolutionDir)extern\googletest\googletest</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>Precomp.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>core.tests/Precomp.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>VG_FINAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/Zc:__cplusplus %(AdditionalOptions)</AdditionalOptions>
       <WholeProgramOptimization>false</WholeProgramOptimization>

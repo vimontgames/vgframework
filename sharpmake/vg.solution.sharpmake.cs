@@ -39,6 +39,7 @@ namespace vg
             conf.Name = $"{target.Optimization}";
 
             conf.AddProject<Application>(target);
+            conf.AddProject<CoreTests>(target);
         }
     }
 }

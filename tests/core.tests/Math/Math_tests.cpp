@@ -1,4 +1,4 @@
-#include "Precomp.h"
+#include "core.tests/Precomp.h"
 
 #include <core/Math/Math.h>
 

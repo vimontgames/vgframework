@@ -23,6 +23,7 @@ namespace vg
         public enum Type
         {
             Executable,
+            UnitTests,
             StaticLibrary,
             DynamicLibrary,
             Data
@@ -37,7 +38,20 @@ namespace vg
             bool useGfxAPIs = 0 != (flags & Flags.GfxAPIDefines);
             AddTargets(GetDefaultTargets(useGfxAPIs));
 
-            SourceRootPath = $@"[project.SharpmakeCsPath]\..\src\{Name}";
+            switch(projectType)
+            {
+                default:
+                    SourceRootPath = $@"[project.SharpmakeCsPath]\..\src\{Name}";
+                    break;
+
+                case Type.UnitTests:
+                    SourceRootPath = $@"[project.SharpmakeCsPath]\..\tests\{Name}";
+                    break;
+
+                case Type.Data:
+                    SourceRootPath = $@"[project.SharpmakeCsPath]\..\data\{Name}";
+                    break;
+            }
         }
 
         public static Target[] GetDefaultTargets(bool useGfxAPIs = false)
@@ -96,10 +110,6 @@ namespace vg
         [Configure]
         public virtual void ConfigureVSCompilerGeneral(Configuration conf, Target target)
         {
-            conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\src");
-            conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern");
-            conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern\fmt\include");
-
             conf.Options.Add(Options.Vc.General.WarningLevel.Level3);
             conf.Options.Add(Options.Vc.General.TreatWarningsAsErrors.Disable);
             conf.Options.Add(Options.Vc.General.DiagnosticsFormat.ColumnInfo);
@@ -156,6 +166,8 @@ namespace vg
                     break;
 
                 case Type.StaticLibrary:
+                    conf.Output = Configuration.OutputType.Utility;
+                    conf.Output = Configuration.OutputType.Lib;
                     break;
 
                 case Type.DynamicLibrary:
@@ -166,7 +178,30 @@ namespace vg
                 case Type.Executable:
                     conf.Output = Configuration.OutputType.Exe;
                     conf.Options.Add(Options.Vc.Linker.SubSystem.Windows);
-                    break;         
+                    break;
+
+                case Type.UnitTests:
+                    conf.Output = Configuration.OutputType.Exe;
+                    conf.Options.Add(Options.Vc.Linker.SubSystem.Console);
+                    break;
+            }
+
+            switch (_Type)
+            {
+                default:
+                    conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\src");
+                    conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern");
+                    conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern\fmt\include");
+                    break;
+
+                case Type.Data:
+                    break;
+
+                case Type.UnitTests:
+                    conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\tests");
+                    conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern\googletest\googletest");
+                    conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern\googletest\googletest\include");
+                    break;
             }
         }
     
@@ -178,36 +213,27 @@ namespace vg
             // conf.IntermediatePath = $@"[project.SharpmakeCsPath]\projects\obj\{Name}\[target.Platform]\[target.Configuration]";
 
             // Precompiled header path
-            conf.PrecompHeader = $@"{Name}/Precomp.h";
-            conf.PrecompSource = $@"{Name}/Precomp.cpp";
+            
 
             switch (_Type)
             {
-                case Type.Data:
-                    conf.Output = Configuration.OutputType.Utility;
+                default:
+                    conf.PrecompHeader = $@"{Name}/Precomp.h";
+                    conf.PrecompSource = $@"{Name}/Precomp.cpp";
                     break;
 
-                case Type.StaticLibrary:
-                    conf.Output = Configuration.OutputType.Lib;
-                    break;
-
-                case Type.DynamicLibrary:
-                    conf.Output = Configuration.OutputType.Dll;
-                    break;
-
-                case Type.Executable:
-                    conf.Output = Configuration.OutputType.Exe;
-                    break;
-
-                //case 2:
-                //    conf.Output = Configuration.OutputType.Dll;
+                //case Type.UnitTests:
                 //    conf.PrecompHeader = $@"Precomp.h";
                 //    conf.PrecompSource = $@"Precomp.cpp";
-                //    conf.IncludePaths.Add($@"[project.SharpmakeCsPath]\..\projects\{Name}\src");
-                //    break;         
+                //    break;
+
+                case Type.Data:
+                    conf.PrecompHeader = string.Empty;
+                    conf.PrecompSource = string.Empty;
+                    break;
             }
 
-            switch(target.GfxAPI)
+            switch (target.GfxAPI)
             {
                 case GraphicsAPI.DX12:
                     conf.Defines.Add("VG_DX12");
