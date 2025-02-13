@@ -213,7 +213,6 @@ namespace vg
             // conf.IntermediatePath = $@"[project.SharpmakeCsPath]\projects\obj\{Name}\[target.Platform]\[target.Configuration]";
 
             // Precompiled header path
-            
 
             switch (_Type)
             {

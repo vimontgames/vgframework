@@ -38,6 +38,10 @@ namespace vg
             conf.PlatformName = platformName;
             conf.Name = $"{target.Optimization}";
 
+            conf.AddProject<GitHub>(target, false, "data");
+            conf.AddProject<ReadMe>(target, false, "data");
+            conf.AddProject<Shaders>(target, false, "data");
+
             conf.AddProject<Application>(target);
             conf.AddProject<CoreTests>(target);
         }
