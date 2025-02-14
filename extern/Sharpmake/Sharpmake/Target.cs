@@ -156,6 +156,11 @@ namespace Sharpmake
         /// </summary>
         maccatalyst = 1 << 14,
 
+        /// <summary>
+        /// Allows mixing ARM64 and x64 code within the same process on Windows 11 for ARM
+        /// </summary>
+        arm64ec = 1 << 15,
+
         // This is a reverse-growing section for undisclosed platforms
         _reserved10 = 1 << 21, // ACTIVE
         _reserved9  = 1 << 22, // ACTIVE

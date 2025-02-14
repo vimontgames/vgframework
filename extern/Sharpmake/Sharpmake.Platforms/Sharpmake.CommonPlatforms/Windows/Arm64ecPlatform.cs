@@ -13,7 +13,7 @@ namespace Sharpmake
 {
     public static partial class Windows
     {
-        [PlatformImplementation(Platform.win64,
+        [PlatformImplementation(Platform.arm64ec,
             typeof(IPlatformDescriptor),
             typeof(Project.Configuration.IConfigurationTasks),
             typeof(IFastBuildCompilerSettings),
@@ -21,11 +21,53 @@ namespace Sharpmake
             typeof(IPlatformBff),
             typeof(IMicrosoftPlatformBff),
             typeof(IPlatformVcxproj))]
-        public class Win64Platform : BaseWindowsPlatform
+        public sealed class Arm64ecPlatform : Win64Platform
         {
             #region IPlatformDescriptor implementation
-            public override string SimplePlatformString => "Win64";
-            public override string GetToolchainPlatformString(ITarget target) => "x64";
+            public override string SimplePlatformString => "ARM64EC";
+            public override string GetToolchainPlatformString(ITarget target) => "ARM64EC";
+            #endregion
+
+            #region IMicrosoftPlatformBff implementation
+            public override string BffPlatformDefine => "ARM64EC";
+            #endregion
+
+            #region IPlatformVcxproj implementation
+            public override void SetupPlatformTargetOptions(IGenerationContext context)
+            {
+                switch (context.Configuration.Output)
+                {
+                    case Project.Configuration.OutputType.Exe:
+                        context.Options["TargetMachine"] = "MachineARM64EC";
+                        context.CommandLineOptions["TargetMachine"] = "/MACHINE:ARM64EC";
+                        break;
+
+                    default:
+                    case Project.Configuration.OutputType.Lib:
+                        context.Options["TargetMachine"] = "MachineARM64X";
+                        context.CommandLineOptions["TargetMachine"] = "/MACHINE:ARM64X";
+                        break;
+                }
+            }
+            #endregion
+        }
+    }
+
+    /*public static partial class Windows
+    {
+        [PlatformImplementation(Platform.arm64ec,
+            typeof(IPlatformDescriptor),
+            typeof(Project.Configuration.IConfigurationTasks),
+            typeof(IFastBuildCompilerSettings),
+            typeof(IWindowsFastBuildCompilerSettings),
+            typeof(IPlatformBff),
+            typeof(IMicrosoftPlatformBff),
+            typeof(IPlatformVcxproj))]
+        public sealed class Arm64ecPlatform : BaseWindowsPlatform
+        {
+            #region IPlatformDescriptor implementation
+            public override string SimplePlatformString => "ARM64EC";
+            public override string GetToolchainPlatformString(ITarget target) => "ARM64EC";
 
             public override EnvironmentVariableResolver GetPlatformEnvironmentResolver(params VariableAssignment[] assignments)
             {
@@ -34,7 +76,7 @@ namespace Sharpmake
             #endregion
 
             #region IMicrosoftPlatformBff implementation
-            public override string BffPlatformDefine => "WIN64";
+            public override string BffPlatformDefine => "ARM64EC";
             public override bool SupportsResourceFiles => true;
 
             public override string CConfigName(Configuration conf)
@@ -359,8 +401,20 @@ namespace Sharpmake
 
             public override void SetupPlatformTargetOptions(IGenerationContext context)
             {
-                context.Options["TargetMachine"] = "MachineX64";
-                context.CommandLineOptions["TargetMachine"] = "/MACHINE:X64";
+                switch (context.Configuration.Output)
+                {
+                    case Project.Configuration.OutputType.Exe:
+                        context.Options["TargetMachine"] = "MachineARM64EC";
+                        context.CommandLineOptions["TargetMachine"] = "/MACHINE:ARM64EC";
+                        break;
+
+                    default:
+                    case Project.Configuration.OutputType.Lib:
+                        context.Options["TargetMachine"] = "MachineARM64X";
+                        context.CommandLineOptions["TargetMachine"] = "/MACHINE:ARM64X";
+                        break;
+                }
+
                 context.CommandLineOptions["NasmCompilerFormat"] = "-fwin64";
             }
 
@@ -487,5 +541,5 @@ namespace Sharpmake
             }
             #endregion
         }
-    }
+    }*/
 }
