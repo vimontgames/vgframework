@@ -48,12 +48,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharpmake.Generators", "Sha
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sharpmake.UnitTests", "Sharpmake.UnitTests\Sharpmake.UnitTests.csproj", "{3776B212-14C5-4038-9B97-2AACB2D10987}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "sharpmake_debug.vs2022", "..\..\sharpmake\debug\Windows\sharpmake_debug.vs2022.csproj", "{8F867E0D-D60E-46FC-95F5-C647AB97E529}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37CF3EE3-AFD3-3CC8-8F8E-B423292D491F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37CF3EE3-AFD3-3CC8-8F8E-B423292D491F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37CF3EE3-AFD3-3CC8-8F8E-B423292D491F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37CF3EE3-AFD3-3CC8-8F8E-B423292D491F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{60452228-D411-4461-91D7-0894482D940C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{60452228-D411-4461-91D7-0894482D940C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60452228-D411-4461-91D7-0894482D940C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -62,10 +68,6 @@ Global
 		{15F793C7-9E88-64A9-591C-7244FCC6B771}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15F793C7-9E88-64A9-591C-7244FCC6B771}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15F793C7-9E88-64A9-591C-7244FCC6B771}.Release|Any CPU.Build.0 = Release|Any CPU
-		{37CF3EE3-AFD3-3CC8-8F8E-B423292D491F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{37CF3EE3-AFD3-3CC8-8F8E-B423292D491F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{37CF3EE3-AFD3-3CC8-8F8E-B423292D491F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{37CF3EE3-AFD3-3CC8-8F8E-B423292D491F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3B476462-28E6-4640-4257-7942657699ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3B476462-28E6-4640-4257-7942657699ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B476462-28E6-4640-4257-7942657699ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -82,6 +84,10 @@ Global
 		{3776B212-14C5-4038-9B97-2AACB2D10987}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3776B212-14C5-4038-9B97-2AACB2D10987}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3776B212-14C5-4038-9B97-2AACB2D10987}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F867E0D-D60E-46FC-95F5-C647AB97E529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F867E0D-D60E-46FC-95F5-C647AB97E529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F867E0D-D60E-46FC-95F5-C647AB97E529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F867E0D-D60E-46FC-95F5-C647AB97E529}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

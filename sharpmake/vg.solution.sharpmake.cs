@@ -17,18 +17,7 @@ namespace vg
             conf.SolutionFileName = $"{Name}_{target.DevEnv}";
             conf.SolutionPath = @"[solution.SharpmakeCsPath]\..\";
 
-            string platformName = target.Platform.ToString();
-
-            switch (target.Platform)
-            {
-                case Platform.win64:
-                    platformName = "Win64";
-                    break;
-
-                default:
-                    platformName = target.Platform.ToString();
-                    break;
-            };
+            string platformName = Util.GetSimplePlatformString(target.GetPlatform());
 
             platformName += $" {target.Compiler.ToString()}";
 
@@ -38,12 +27,16 @@ namespace vg
             conf.PlatformName = platformName;
             conf.Name = $"{target.Optimization}";
 
+            // "Solution folders" here for conveniency (e.g. edit shaders or README.md in IDE)
             conf.AddProject<GitHub>(target, false, "data");
             conf.AddProject<ReadMe>(target, false, "data");
             conf.AddProject<Shaders>(target, false, "data");
 
+            // Main application (editor & standalone)
             conf.AddProject<Application>(target);
+            conf.AddProject<Core>(target);
             conf.AddProject<CoreTests>(target);
+            conf.AddProject<Engine>(target);
         }
     }
 }

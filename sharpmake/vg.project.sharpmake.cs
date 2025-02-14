@@ -70,15 +70,30 @@ namespace vg
                 gfxAPIs = GraphicsAPI.Vulkan | GraphicsAPI.DX12;
             else
                 gfxAPIs = GraphicsAPI.None;
-
-            Compiler compiler;
-            compiler = Compiler.MSVC;
+            
+            targets.Add(new Target(Platform.win64 , DevEnv.vs2022, Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final)
+            {
+                Compiler = Compiler.MSVC ,
+                GfxAPI = gfxAPIs
+            });
 
             targets.Add(new Target(Platform.win64, DevEnv.vs2022, Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final)
             {
-                Compiler = compiler,
+                Compiler = Compiler.ClangCL,
                 GfxAPI = gfxAPIs
             });
+
+            targets.Add(new Target(Platform.arm64ec, DevEnv.vs2022, Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final)
+            {
+                Compiler = Compiler.MSVC ,
+                GfxAPI = gfxAPIs
+            });
+
+            //targets.Add(new Target(Platform.arm64ec, DevEnv.vs2022, Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final)
+            //{
+            //    Compiler = Compiler.ClangCL,
+            //    GfxAPI = gfxAPIs
+            //});
 
             return targets;
         }
@@ -87,7 +102,6 @@ namespace vg
         public virtual void ConfigureVSAdvanced(Configuration conf, Target target)
         {
             conf.Options.Add(Options.Vc.General.CharacterSet.Unicode);
-            conf.Options.Add(Options.Vc.General.WholeProgramOptimization.LinkTime);
         }
 
         private void ConfigureVSEditAndContinue(Configuration conf, Target target, bool enable)
@@ -100,7 +114,6 @@ namespace vg
             }
             else
             {
-
                 conf.Options.Add(Options.Vc.General.DebugInformation.ProgramDatabase);
                 conf.Options.Add(Options.Vc.General.WholeProgramOptimization.LinkTime);
                 conf.Options.Add(Options.Vc.Linker.Incremental.Disable);
@@ -110,6 +123,9 @@ namespace vg
         [Configure]
         public virtual void ConfigureVSCompilerGeneral(Configuration conf, Target target)
         {
+            if (target.Compiler == Compiler.ClangCL)
+                conf.Options.Add(Options.Vc.General.PlatformToolset.ClangCL);
+
             conf.Options.Add(Options.Vc.General.WarningLevel.Level3);
             conf.Options.Add(Options.Vc.General.TreatWarningsAsErrors.Disable);
             conf.Options.Add(Options.Vc.General.DiagnosticsFormat.ColumnInfo);
@@ -118,12 +134,23 @@ namespace vg
             conf.Options.Add(Options.Vc.Compiler.MultiProcessorCompilation.Enable);
             conf.Options.Add(Options.Vc.Compiler.FunctionLevelLinking.Enable);
             conf.Options.Add(Options.Vc.Compiler.ConformanceMode.Enable);
-            conf.Options.Add(Options.Vc.Compiler.EnhancedInstructionSet.AdvancedVectorExtensions);
             conf.Options.Add(Options.Vc.Compiler.Intrinsic.Enable);
             conf.Options.Add(Options.Vc.Compiler.Exceptions.Enable);
             conf.Options.Add(Options.Vc.Compiler.BufferSecurityCheck.Enable);
             conf.Options.Add(Options.Vc.Compiler.FloatingPointModel.Precise);
             conf.Options.Add(Options.Vc.Compiler.RTTI.Enable);
+
+            switch (target.Platform)
+            {
+                default:
+                    if (target.Compiler == Compiler.MSVC)
+                        conf.Options.Add(Options.Vc.Compiler.EnhancedInstructionSet.AdvancedVectorExtensions);
+                    break;
+
+                case Platform.arm64ec:
+                    //conf.Options.Add(Options.Vc.Compiler.EnhancedInstructionSet.AdvancedVectorExtensions); // ignoring unknown option '/arch:AVX'
+                    break;
+            }
 
             switch (target.Optimization)
             {
@@ -178,6 +205,7 @@ namespace vg
                 case Type.Executable:
                     conf.Output = Configuration.OutputType.Exe;
                     conf.Options.Add(Options.Vc.Linker.SubSystem.Windows);
+                    conf.TargetPath = @"[project.SharpmakeCsPath]\.."; // "[conf.ProjectPath]\\output\\[target.Platform]\\[conf.Name]"
                     break;
 
                 case Type.UnitTests:
@@ -192,6 +220,7 @@ namespace vg
                     conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\src");
                     conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern");
                     conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern\fmt\include");
+                    conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\data");
                     break;
 
                 case Type.Data:
@@ -201,6 +230,7 @@ namespace vg
                     conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\tests");
                     conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern\googletest\googletest");
                     conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern\googletest\googletest\include");
+                    conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\data");
                     break;
             }
         }
@@ -210,6 +240,7 @@ namespace vg
         {
             //conf.ProjectFileName = "[project.Name]_[target.DevEnv]_[target.Platform]";
             conf.ProjectPath = $@"[project.SharpmakeCsPath]\projects\{Name}";
+            conf.ProjectFileName = $@"[project.Name]_[target.DevEnv]";
             // conf.IntermediatePath = $@"[project.SharpmakeCsPath]\projects\obj\{Name}\[target.Platform]\[target.Configuration]";
 
             // Precompiled header path

@@ -379,17 +379,17 @@ namespace Sharpmake
                             }
                             else
                             {
-                                if (!configurationProjectDependency.Target.IsEqualTo(dependencyProjectTarget))
-                                {
-                                    throw new Error("In solution configuration (solution: {3}, config: {4}) the parent project {5} generates multiple dependency targets for the same child project {0}: {1} and {2}. Look for all AddPublicDependency() and AddPrivateDependency() calls for the child project and follow the dependency chain.",
-                                        configurationProjectDependency.Project?.GetType().ToString(),
-                                        configurationProjectDependency.Target,
-                                        dependencyProjectTarget,
-                                        solutionConfiguration.SolutionFileName,
-                                        solutionConfiguration.Target,
-                                        project.Name
-                                    );
-                                }
+                                //if (!configurationProjectDependency.Target.IsEqualTo(dependencyProjectTarget))
+                                //{
+                                //    throw new Error("In solution configuration (solution: {3}, config: {4}) the parent project {5} generates multiple dependency targets for the same child project {0}: {1} and {2}. Look for all AddPublicDependency() and AddPrivateDependency() calls for the child project and follow the dependency chain.",
+                                //        configurationProjectDependency.Project?.GetType().ToString(),
+                                //        configurationProjectDependency.Target,
+                                //        dependencyProjectTarget,
+                                //        solutionConfiguration.SolutionFileName,
+                                //        solutionConfiguration.Target,
+                                //        project.Name
+                                //    );
+                                //}
 
                                 if (configurationProjectDependency.Project == null)
                                     configurationProjectDependency.Project = dependencyProject;

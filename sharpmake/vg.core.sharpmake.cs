@@ -28,8 +28,7 @@ namespace vg
         public override void ConfigureAll(Configuration conf, Target target)
         {
             base.ConfigureAll(conf, target);
-
-            conf.AddPublicDependency<Core>(target);
+            conf.AddPrivateDependency<Core>(target);
         }
     }
 }
