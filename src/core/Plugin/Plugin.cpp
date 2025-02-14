@@ -33,6 +33,8 @@ namespace vg::core
 	IPlugin * Plugin::createInternal(const string & _name, const string & _configSuffix)
 	{
 		string filename;
+		string buildFilename;
+		string precompiledFilename;
 
 		const auto platform = getPlatform();
 		const auto config = getConfiguration();
@@ -40,18 +42,25 @@ namespace vg::core
 
 		// First, look for the locally compiled version in the "build" folder
 		if (_configSuffix.empty())
-			filename = fmt::sprintf("build/bin/%s/%s/%s.%s", platform, config, _name, extension);
+			buildFilename = fmt::sprintf("build/bin/%s/%s/%s.%s", platform, config, _name, extension);
 		else
-			filename = fmt::sprintf("build/bin/%s/%s_%s/%s.%s", platform, config, _configSuffix, _name, extension);
+			buildFilename = fmt::sprintf("build/bin/%s/%s_%s/%s.%s", platform, config, _configSuffix, _name, extension);
 
 		// If it does not exist, then use the prebuilt version
-		if (!io::exists(filename))
+		if (io::exists(buildFilename))
+		{
+			filename = buildFilename;
+		}
+		else
 		{
             if (_configSuffix.empty())
-                filename = fmt::sprintf("bin/%s/%s/%s.%s", platform, config, _name, extension);
+				precompiledFilename = fmt::sprintf("bin/%s/%s/%s.%s", platform, config, _name, extension);
             else
-                filename = fmt::sprintf("bin/%s/%s_%s/%s.%s", platform, config, _configSuffix, _name, extension);
+				precompiledFilename = fmt::sprintf("bin/%s/%s_%s/%s.%s", platform, config, _configSuffix, _name, extension);
+			filename = precompiledFilename;
 		}
+
+		VG_ASSERT(io::exists(filename), "Could not find file for plugin \"%s\":\n- %s\nor\n- %s\n\nCurrent working directory is \"%s\".\n\nIf you are running from the IDE, please make sure that $(SolutionDir) is your working directory.", _name.c_str(), buildFilename.c_str(), precompiledFilename.c_str(), io::getCurrentWorkingDirectory().c_str());
 		
 		IPlugin * instance = nullptr;
 
@@ -68,10 +77,11 @@ namespace vg::core
         else
         {
             DWORD error = GetLastError();
-			VG_ASSERT(hModule, "Error 0x%08X: %s\nCould not load \"%s\" plugin.\n\nIf you are running from the IDE, please make sure that $(SolutionDir) is your working directory.", 
+			VG_ASSERT(hModule, "Error 0x%08X: %s\nCould not load \"%s\" plugin (\"%s\")", 
 				error,
 				GetWin32ErrorAsString(error).c_str(),
-				_name.c_str());
+				_name.c_str(),
+				filename.c_str());
         }
 		#endif
 
