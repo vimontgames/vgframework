@@ -1,6 +1,10 @@
 #include "core/Precomp.h"
 #include "Timer.h"
 
+#ifdef VG_WINDOWS
+#define VG_USE_QUERYPERFORMANCECOUNTER 1
+#endif
+
 namespace vg::core
 {
     double Timer::s_freq = 0.0f;
@@ -8,14 +12,26 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void Timer::init()
     {
-        s_freq = 1.0 / 1000.0;
+    #if VG_USE_QUERYPERFORMANCECOUNTER
+        LARGE_INTEGER li;
+        VG_VERIFY(QueryPerformanceFrequency(&li));
+        s_freq = double(li.QuadPart) / 1000.0;
+    #else
+        s_freq = 1000.0;
+    #endif
     }
-
+    
     //--------------------------------------------------------------------------------------
     Ticks Timer::getTick()
     {
-		using namespace std::chrono;
+    #if VG_USE_QUERYPERFORMANCECOUNTER
+        LARGE_INTEGER li;
+        QueryPerformanceCounter(&li);
+        return li.QuadPart;
+    #else
+        using namespace std::chrono;
         return duration_cast<microseconds>(high_resolution_clock::now().time_since_epoch()).count();
+    #endif
     }
 
     //--------------------------------------------------------------------------------------
