@@ -11,9 +11,8 @@ namespace vg::core
 
         static Ticks getTick();
         static double getEnlapsedTime(Ticks _start, Ticks _end);
-        static double getCPUFrequency() { return s_freq; }
         
     private:
-        static double s_freq;
+        static double s_oneOverFrequency;
     };
 }

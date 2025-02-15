@@ -7,7 +7,7 @@
 
 namespace vg::core
 {
-    double Timer::s_freq = 0.0f;
+    double Timer::s_oneOverFrequency = 0.0f;
 
     //--------------------------------------------------------------------------------------
     void Timer::init()
@@ -15,9 +15,9 @@ namespace vg::core
     #if VG_USE_QUERYPERFORMANCECOUNTER
         LARGE_INTEGER li;
         VG_VERIFY(QueryPerformanceFrequency(&li));
-        s_freq = double(li.QuadPart) / 1000.0;
+        s_oneOverFrequency = 1000.0 / double(li.QuadPart);
     #else
-        s_freq = 1000.0;
+        s_oneOverFrequency = 1.0 / 1000.0;
     #endif
     }
     
@@ -37,7 +37,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     double Timer::getEnlapsedTime(Ticks _start, Ticks _end)
     {
-        VG_ASSERT(s_freq > 0.0);
-        return double(_end - _start) / s_freq;
+        VG_ASSERT(s_oneOverFrequency != 0.0);
+        return double(_end - _start) * s_oneOverFrequency;
     }
 }
