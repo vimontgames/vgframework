@@ -14,7 +14,7 @@ namespace vg::gfx::vulkan
         switch (m_resourceType)
         {
             default:
-                VG_ASSERT(false, "Unhandled ResourceType \"%s\" (%u)", asString(m_resourceType), m_resourceType);
+                VG_ASSERT(false, "Unhandled ResourceType \"%s\" (%u)", asString(m_resourceType).c_str(), m_resourceType);
                 break;
             case ResourceType::Texture:
                 if (!testResourceFlags(ResourceFlags::Backbuffer))
@@ -54,7 +54,7 @@ namespace vg::gfx::vulkan
         auto * allocator = device->getVulkanMemoryAllocator();
 
         Map result;
-        VG_VERIFY_VULKAN(vmaMapMemory(allocator, m_vma_alloc, &result.data));
+        VG_VERIFY_VULKAN(vmaMapMemory(allocator, m_vma_alloc, (void** VG_RESTRICT)&result.data));
 
         //if (1) // flush for read
         //    vmaFlushAllocation(allocator, m_vma_alloc, _read.begin, _read.end - _read.begin);

@@ -14,7 +14,9 @@
 // Configuration
 //--------------------------------------------------------------------------------------
 #if !defined(VG_DEBUG) && !defined(VG_DEVELOPMENT) && !defined(VG_FINAL)
+#ifndef VG_RELEASE
 #define VG_RELEASE
+#endif
 #endif
 
 //--------------------------------------------------------------------------------------

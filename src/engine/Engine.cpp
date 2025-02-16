@@ -609,7 +609,7 @@ namespace vg::engine
             VG_SAFE_RELEASE(m_editor);
         }
 
-        // ~dtor time is too late to unload world resource we have to use ptr so as to do it manually before the ResourceMananger shutdowns
+        // Editor time is too late to unload world resource we have to use ptr so as to do it manually before the ResourceMananger shutdowns
         VG_SAFE_RELEASE(m_worldResource);
 
         // Release resources directly referenced by the renderer before releasing the resource manager

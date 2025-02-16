@@ -100,7 +100,8 @@ namespace vg::gfx::vulkan
     void TLAS::addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID)
     {
         VkAccelerationStructureInstanceKHR tlasStructure = {};
-        memcpy(&tlasStructure.transform, &(float &)transpose(_world), sizeof(tlasStructure));
+        const float4x4 worldT = transpose(_world);
+        memcpy(&tlasStructure.transform, (void **)&worldT, sizeof(tlasStructure));
         tlasStructure.mask = 0xff;
         tlasStructure.instanceCustomIndex = _instanceID;
         tlasStructure.instanceShaderBindingTableRecordOffset = 0;

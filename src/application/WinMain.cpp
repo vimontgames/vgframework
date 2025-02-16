@@ -24,14 +24,6 @@ using namespace vg;
 engine::IEngine * g_engine = nullptr;
 renderer::IRenderer * g_renderer = nullptr;
 
-#define VG_TEST 1
-#ifdef VG_TEST
-#define VG_TEST_CLZ_CTZ 1
-#ifdef VG_TEST_CLZ_CTZ
-#include "core/Math/Math.h"
-#endif
-#endif
-
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -170,53 +162,6 @@ bool CreateGameWindow(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow, core::
 
 	return true;
 }
-
-#if VG_TEST
-void runTests()
-{
-#define VG_EXPECT_EQ(expr, expected) { bool vgtest = (expr == expected); VG_ASSERT(vgtest, "%s\n\nReturned '%u' instead of expected value '%u'.", #expr, expr, expected); }
-
-	using namespace vg::core;
-
-	#ifdef VG_TEST_CLZ_CTZ
-    // ctz for u32
-    VG_EXPECT_EQ(ctz(u32(0x00000001)), 0);
-    VG_EXPECT_EQ(ctz(u32(0x00000002)), 1);
-    VG_EXPECT_EQ(ctz(u32(0x00000004)), 2);
-    VG_EXPECT_EQ(ctz(u32(0x00000008)), 3);
-    VG_EXPECT_EQ(ctz(u32(0x00000010)), 4);
-    VG_EXPECT_EQ(ctz(u32(0x00000000)), 32);  // Zero case
-    VG_EXPECT_EQ(ctz(u32(0x80000000)), 31);  // High bit set
-
-    // ctz for u64
-    VG_EXPECT_EQ(ctz(u64(0x0000000000000001)), 0);
-    VG_EXPECT_EQ(ctz(u64(0x0000000000000002)), 1);
-    VG_EXPECT_EQ(ctz(u64(0x0000000000000004)), 2);
-    VG_EXPECT_EQ(ctz(u64(0x0000000000000008)), 3);
-    VG_EXPECT_EQ(ctz(u64(0x0000000000000010)), 4);
-    VG_EXPECT_EQ(ctz(u64(0x0000000000000000)), 64);  // Zero case
-    VG_EXPECT_EQ(ctz(u64(0x8000000000000000)), 63);  // High bit set
-
-    // clz for u32
-    VG_EXPECT_EQ(clz(u32(0x00000001)), 31);
-    VG_EXPECT_EQ(clz(u32(0x00000002)), 30);
-    VG_EXPECT_EQ(clz(u32(0x00000004)), 29);
-    VG_EXPECT_EQ(clz(u32(0x00000008)), 28);
-    VG_EXPECT_EQ(clz(u32(0x00000010)), 27);
-    VG_EXPECT_EQ(clz(u32(0x80000000)), 0);  // High bit set
-    VG_EXPECT_EQ(clz(u32(0x00000000)), 32);  // Zero case
-
-    // clz for u64
-    VG_EXPECT_EQ(clz(u64(0x0000000000000001)), 63);
-    VG_EXPECT_EQ(clz(u64(0x0000000000000002)), 62);
-    VG_EXPECT_EQ(clz(u64(0x0000000000000004)), 61);
-    VG_EXPECT_EQ(clz(u64(0x0000000000000008)), 60);
-    VG_EXPECT_EQ(clz(u64(0x0000000000000010)), 59);
-    VG_EXPECT_EQ(clz(u64(0x8000000000000000)), 0);  // High bit set
-    VG_EXPECT_EQ(clz(u64(0x0000000000000000)), 64);  // Zero case
-	#endif
-}
-#endif
 
 //--------------------------------------------------------------------------------------
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
