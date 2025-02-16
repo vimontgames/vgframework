@@ -1,0 +1,35 @@
+name: "Win64 DX12 MSVC Debug"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
+    paths:
+      - '**/*.vcxproj'
+      - '**/*.h'
+      - '**/*.hpp'
+      - '**/*.c'
+      - '**/*.cpp'
+      - '**/*.inl'
+      - '**/*.hlsli'
+      - '**/*.hlsl.h'
+  pull_request:
+    branches: [ "master" ]
+    paths:
+      - '**/*.vcxproj'
+      - '**/*.h'
+      - '**/*.hpp'
+      - '**/*.c'
+      - '**/*.cpp'
+      - '**/*.inl'
+      - '**/*.hlsli'
+      - '**/*.hlsl.h'
+
+jobs:
+  build:
+    uses: ./.github/workflows/Build_vs2022.yml
+    with:
+      build_platform: "Win64 MSVC DX12"
+      build_configuration: "Debug"
+    secrets:
+      DISCORD_BUILD_WEBHOOK_URL: ${{ secrets.DISCORD_BUILD_WEBHOOK_URL }}

@@ -268,7 +268,7 @@ namespace vg
         [Configure]
         public virtual void ConfigureAll(Configuration conf, Target target)
         {
-            conf.ProjectPath = $@"[project.SharpmakeCsPath]\projects\{Name}";
+            conf.ProjectPath = $@"[project.SharpmakeCsPath]\projects\{target.DevEnv}\{Name}";
             conf.ProjectFileName = $@"[project.Name]_[target.DevEnv]";
 
             switch (_Type)
