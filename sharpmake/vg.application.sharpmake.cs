@@ -20,7 +20,7 @@ namespace vg
             // Explicitly link with the full path since the project depends on a non-Gfx API lib.
             // This ensures the linker searches in the correct directory.
             //conf.AddPrivateDependency<Core>(target);
-            conf.LibraryFiles.Add($"{SolutionDir}\\build\\lib\\{target.Optimization} {target.Compiler}\\core.lib");
+            conf.LibraryFiles.Add($"{SolutionDir}\\build\\lib\\{target.Platform}\\{target.Optimization} {target.Compiler}\\core.lib");
 
             conf.AddPrivateDependency<Core>(target, DependencySetting.OnlyBuildOrder);
             

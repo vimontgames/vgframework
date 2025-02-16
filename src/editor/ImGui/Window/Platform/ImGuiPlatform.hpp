@@ -19,6 +19,7 @@ namespace vg::editor
             const auto & deviceParams = Editor::get()->getRenderer()->GetDeviceCreationParams();
 
             ImGui::Text("Platform:");
+            ImGui::Text("Compiler:");
             ImGui::Text("Configuration:");
             ImGui::Text("Graphics API:");
             ImGui::Text("Debug Device:");
@@ -26,6 +27,7 @@ namespace vg::editor
             ImGui::NextColumn();
             
             ImGui::Text(Plugin::getPlatform().c_str());
+            ImGui::Text(Plugin::getCompiler().c_str());
             ImGui::Text(Plugin::getConfiguration().c_str());
             ImGui::Text(asString(deviceParams.api).c_str());
             ImGui::Text(deviceParams.debugDevice ? "True" : "False");
