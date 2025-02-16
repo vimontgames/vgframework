@@ -17,7 +17,13 @@ namespace vg
 
             conf.TargetFileName = $"VGFramework_{target.Platform}_{target.Compiler}_{target.GfxAPI}_{target.Optimization}";
 
-            conf.AddPrivateDependency<Core>(target);
+            // Explicitly link with the full path since the project depends on a non-Gfx API lib.
+            // This ensures the linker searches in the correct directory.
+            //conf.AddPrivateDependency<Core>(target);
+            conf.LibraryFiles.Add($"{SolutionDir}\\build\\lib\\{target.Optimization} {target.Compiler}\\core.lib");
+
+            conf.AddPrivateDependency<Core>(target, DependencySetting.OnlyBuildOrder);
+            
             conf.AddPrivateDependency<Engine>(target, DependencySetting.OnlyBuildOrder);
             conf.AddPrivateDependency<Renderer>(target, DependencySetting.OnlyBuildOrder);
             conf.AddPrivateDependency<Audio>(target, DependencySetting.OnlyBuildOrder);

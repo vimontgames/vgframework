@@ -17,7 +17,11 @@ namespace vg
             conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\data\Shaders");
             conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern\imgui");
 
-            conf.AddPrivateDependency<Core>(target);
+            // Explicitly link with the full path since the project depends on a non-Gfx API lib.
+            // This ensures the linker searches in the correct directory.
+            //conf.AddPrivateDependency<Core>(target);
+            conf.LibraryFiles.Add($"{SolutionDir}\\build\\lib\\{target.Platform}\\{target.Optimization} {target.Compiler}\\core.lib");
+
             conf.AddPrivateDependency<Gfx>(target);
         }
     }
