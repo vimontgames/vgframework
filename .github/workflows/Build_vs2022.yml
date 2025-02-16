@@ -31,6 +31,7 @@ jobs:
   
       - name: Generate Projects
         working-directory: ./sharpmake
+        shell: cmd
         run: generate_projects_Windows.bat
 
       - name: Add MSBuild to PATH
