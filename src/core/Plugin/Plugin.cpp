@@ -29,6 +29,35 @@ namespace vg::core
 	}
 #endif
 
+    //--------------------------------------------------------------------------------------
+    string Plugin::getDynamicLibraryPath(const string & _name, const string & _configSuffix, bool _precompiledBuild)
+	{
+		const string rootFolder = _precompiledBuild ? "bin" : "build/bin";
+
+        const auto platform = getPlatform();
+        const auto config = getConfiguration();
+        const auto extension = getExtension();
+		const auto compiler = getCompiler();
+
+		string path;
+
+		#ifdef VG_SHARPMAKE
+        if (_configSuffix.empty())
+            path = fmt::sprintf("%s/%s/%s %s/%s.%s", rootFolder, platform, config, compiler, _name, extension);
+        else
+            path = fmt::sprintf("%s/%s/%s %s %s/%s.%s", rootFolder, platform, config, compiler, _configSuffix, _name, extension);
+		#else
+		if (_configSuffix.empty())
+			path = fmt::sprintf("%s/%s/%s/%s.%s", rootFolder, platform, config, _name, extension);
+		else
+			path = fmt::sprintf("%s/%s/%s_%s/%s.%s", rootFolder, platform, config, _configSuffix, _name, extension);
+		#endif
+
+		path = tolower(path);
+
+		return path;
+	}
+
 	//--------------------------------------------------------------------------------------
 	IPlugin * Plugin::createInternal(const string & _name, const string & _configSuffix)
 	{
@@ -36,15 +65,8 @@ namespace vg::core
 		string buildFilename;
 		string precompiledFilename;
 
-		const auto platform = getPlatform();
-		const auto config = getConfiguration();
-		const auto extension = getExtension();
-
 		// First, look for the locally compiled version in the "build" folder
-		if (_configSuffix.empty())
-			buildFilename = fmt::sprintf("build/bin/%s/%s/%s.%s", platform, config, _name, extension);
-		else
-			buildFilename = fmt::sprintf("build/bin/%s/%s_%s/%s.%s", platform, config, _configSuffix, _name, extension);
+		buildFilename = getDynamicLibraryPath(_name, _configSuffix, false);
 
 		// If it does not exist, then use the prebuilt version
 		if (io::exists(buildFilename))
@@ -53,14 +75,11 @@ namespace vg::core
 		}
 		else
 		{
-            if (_configSuffix.empty())
-				precompiledFilename = fmt::sprintf("bin/%s/%s/%s.%s", platform, config, _name, extension);
-            else
-				precompiledFilename = fmt::sprintf("bin/%s/%s_%s/%s.%s", platform, config, _configSuffix, _name, extension);
+			precompiledFilename = getDynamicLibraryPath(_name, _configSuffix, true);
 			filename = precompiledFilename;
 		}
 
-		VG_ASSERT(io::exists(filename), "Could not find file for plugin \"%s\":\n- %s\nor\n- %s\n\nCurrent working directory is \"%s\".\n\nIf you are running from the IDE, please make sure that $(SolutionDir) is your working directory.", _name.c_str(), buildFilename.c_str(), precompiledFilename.c_str(), io::getCurrentWorkingDirectory().c_str());
+		VG_ASSERT(io::exists(filename), "Could not find the \"%s\" plugin file in any of the following locations:\n- %s\nor\n- %s\n\nCurrent working directory is \"%s\".\n\nIf you are running from the IDE, please make sure that $(SolutionDir) is your working directory.", _name.c_str(), buildFilename.c_str(), precompiledFilename.c_str(), io::getCurrentWorkingDirectory().c_str());
 		
 		IPlugin * instance = nullptr;
 
@@ -71,13 +90,14 @@ namespace vg::core
 		if (hModule)
 		{
 			CreateFunc createFunc = (CreateFunc)GetProcAddress(hModule, "CreateNew");
+			VG_ASSERT(nullptr != createFunc, "Could not find function \"CreateNew\" in \"%s\" plugin", filename.c_str());
 			if (createFunc)
 				instance = createFunc();
 		}
         else
         {
             DWORD error = GetLastError();
-			VG_ASSERT(hModule, "Error 0x%08X: %s\nCould not load \"%s\" plugin (\"%s\")", 
+			VG_ASSERT(hModule, "Error 0x%08X: %s\nCould not load the \"%s\" plugin (\"%s\")", 
 				error,
 				GetWin32ErrorAsString(error).c_str(),
 				_name.c_str(),
@@ -102,7 +122,11 @@ namespace vg::core
 			#elif defined(_M_ARM64)
 				return "ARM64";
 			#else
+				#ifdef VG_SHARPMAKE
+				return "Win64"; // Sharpmake-generated projects use "Win64" instead of "x64" for 64-bits Windows
+				#else
 				return "x64";
+				#endif
 			#endif
 		#endif
 	}
@@ -127,7 +151,7 @@ namespace vg::core
     string Plugin::getCompiler()
 	{
 		#if VG_CLANG
-		return "LLVM - clang-cl";
+		return "ClangCL";
 		#elif VG_MSVC
 		return "MSVC";
 		#else

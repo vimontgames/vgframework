@@ -1,5 +1,4 @@
 using Sharpmake;
-using System.Collections.Generic;
 
 namespace vg
 {

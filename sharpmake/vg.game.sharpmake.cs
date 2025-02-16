@@ -3,9 +3,9 @@ using Sharpmake;
 namespace vg
 {
     [Sharpmake.Generate]
-    public class Engine : Project
+    public class Game : Project
     {
-        public Engine() : base("engine", Type.DynamicLibrary)
+        public Game() : base("game", Type.Game)
         {
 
         }
@@ -14,7 +14,6 @@ namespace vg
         {
             base.ConfigureAll(conf, target);
             conf.AddPrivateDependency<Core>(target);
-            conf.LibraryFiles.Add("dinput8.lib", "dxguid.lib");
         }
     }
 }

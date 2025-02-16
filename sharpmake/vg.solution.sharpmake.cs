@@ -15,7 +15,7 @@ namespace vg
         public void ConfigureAll(Configuration conf, Target target)
         {
             conf.SolutionFileName = $"{Name}_{target.DevEnv}";
-            conf.SolutionPath = @"[solution.SharpmakeCsPath]\..\";
+            conf.SolutionPath = Project.GetSolutionDirFromSharpmakeCsPath(SharpmakeCsPath);
 
             string platformName = Util.GetSimplePlatformString(target.GetPlatform());
 
@@ -27,16 +27,38 @@ namespace vg
             conf.PlatformName = platformName;
             conf.Name = $"{target.Optimization}";
 
-            // "Solution folders" here for conveniency (e.g. edit shaders or README.md in IDE)
+            // "Solution folders" here for convenience (e.g. edit shaders or README.md in IDE)
             conf.AddProject<GitHub>(target, false, "data");
             conf.AddProject<ReadMe>(target, false, "data");
             conf.AddProject<Shaders>(target, false, "data");
 
-            // Main application (editor & standalone)
-            conf.AddProject<Application>(target);
+            // All projects must be explicitly added here, deducing them from dependencies is not enough and will generate incorrect platform configurations
             conf.AddProject<Core>(target);
             conf.AddProject<CoreTests>(target);
+
+            conf.AddProject<Gfx>(target);
+            //conf.AddProject<GfxTests>(target);
+
+            conf.AddProject<Renderer>(target);
+            //conf.AddProject<RendererTests>(target);
+
             conf.AddProject<Engine>(target);
+            //conf.AddProject<EngineTests>(target);
+
+            conf.AddProject<Audio>(target);
+            //conf.AddProject<AudioTests>(target);
+
+            conf.AddProject<Physics>(target);
+            //conf.AddProject<PhysicsTests>(target);
+
+            conf.AddProject<Editor>(target);
+            //conf.AddProject<EditorTests>(target);
+
+            conf.AddProject<Game>(target);
+            //conf.AddProject<GameTests>(target);
+
+            conf.AddProject<Application>(target);
+            //conf.AddProject<ApplicationTests>(target);
         }
     }
 }

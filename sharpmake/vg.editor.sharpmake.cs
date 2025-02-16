@@ -3,9 +3,9 @@ using Sharpmake;
 namespace vg
 {
     [Sharpmake.Generate]
-    public class Engine : Project
+    public class Editor : Project
     {
-        public Engine() : base("engine", Type.DynamicLibrary)
+        public Editor() : base("editor", Type.DynamicLibrary)
         {
 
         }
@@ -13,8 +13,10 @@ namespace vg
         public override void ConfigureAll(Configuration conf, Target target)
         {
             base.ConfigureAll(conf, target);
+            
+            conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern\imgui");
+
             conf.AddPrivateDependency<Core>(target);
-            conf.LibraryFiles.Add("dinput8.lib", "dxguid.lib");
         }
     }
 }

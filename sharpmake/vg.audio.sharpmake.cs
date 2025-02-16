@@ -3,9 +3,9 @@ using Sharpmake;
 namespace vg
 {
     [Sharpmake.Generate]
-    public class Engine : Project
+    public class Audio : Project
     {
-        public Engine() : base("engine", Type.DynamicLibrary)
+        public Audio() : base("audio", Type.DynamicLibrary)
         {
 
         }
@@ -13,8 +13,10 @@ namespace vg
         public override void ConfigureAll(Configuration conf, Target target)
         {
             base.ConfigureAll(conf, target);
+
+            conf.IncludePaths.Add($"{SolutionDir}\\extern\\soloud\\include");
+
             conf.AddPrivateDependency<Core>(target);
-            conf.LibraryFiles.Add("dinput8.lib", "dxguid.lib");
         }
     }
 }

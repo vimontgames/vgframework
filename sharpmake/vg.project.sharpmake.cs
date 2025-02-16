@@ -1,8 +1,6 @@
 using Sharpmake;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.Intrinsics.X86;
 
 namespace vg
 {
@@ -26,6 +24,7 @@ namespace vg
             UnitTests,
             StaticLibrary,
             DynamicLibrary,
+            Game,
             Data
         };
 
@@ -48,10 +47,17 @@ namespace vg
                     SourceRootPath = $@"[project.SharpmakeCsPath]\..\tests\{Name}";
                     break;
 
+                case Type.Game:
+                    SourceRootPath = $"{SolutionDir}\\Projects\\{Name}";
+                    break;
+
                 case Type.Data:
                     SourceRootPath = $@"[project.SharpmakeCsPath]\..\data\{Name}";
                     break;
             }
+
+            if (projectType == Type.DynamicLibrary || projectType == Type.Game)
+                SourceFilesExtensions.Add(".def");
         }
 
         public static Target[] GetDefaultTargets(bool useGfxAPIs = false)
@@ -73,13 +79,7 @@ namespace vg
             
             targets.Add(new Target(Platform.win64 , DevEnv.vs2022, Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final)
             {
-                Compiler = Compiler.MSVC ,
-                GfxAPI = gfxAPIs
-            });
-
-            targets.Add(new Target(Platform.win64, DevEnv.vs2022, Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final)
-            {
-                Compiler = Compiler.ClangCL,
+                Compiler = Compiler.MSVC| Compiler.ClangCL,
                 GfxAPI = gfxAPIs
             });
 
@@ -88,12 +88,6 @@ namespace vg
                 Compiler = Compiler.MSVC ,
                 GfxAPI = gfxAPIs
             });
-
-            //targets.Add(new Target(Platform.arm64ec, DevEnv.vs2022, Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final)
-            //{
-            //    Compiler = Compiler.ClangCL,
-            //    GfxAPI = gfxAPIs
-            //});
 
             return targets;
         }
@@ -110,21 +104,38 @@ namespace vg
             {
                 conf.Options.Add(Options.Vc.General.DebugInformation.ProgramDatabaseEnC);
                 conf.Options.Add(Options.Vc.General.WholeProgramOptimization.Disable);
+                conf.Options.Add(Options.Vc.Linker.LinkTimeCodeGeneration.Default);
                 conf.Options.Add(Options.Vc.Linker.Incremental.Enable);
             }
             else
             {
                 conf.Options.Add(Options.Vc.General.DebugInformation.ProgramDatabase);
                 conf.Options.Add(Options.Vc.General.WholeProgramOptimization.LinkTime);
+                conf.Options.Add(Options.Vc.Linker.LinkTimeCodeGeneration.UseLinkTimeCodeGeneration);
                 conf.Options.Add(Options.Vc.Linker.Incremental.Disable);
             }
+        }
+        public string SolutionDir
+        {
+            get
+            {
+                return GetSolutionDirFromSharpmakeCsPath(SharpmakeCsPath);
+            }
+        }
+
+        public static string GetSolutionDirFromSharpmakeCsPath(string sharpmakeCsPath)
+        {
+            return $"{sharpmakeCsPath}\\..";
         }
     
         [Configure]
         public virtual void ConfigureVSCompilerGeneral(Configuration conf, Target target)
         {
             if (target.Compiler == Compiler.ClangCL)
+            {
                 conf.Options.Add(Options.Vc.General.PlatformToolset.ClangCL);
+                conf.AdditionalCompilerOptions.Add("-mlzcnt -mfma -mf16c -mavx ");
+            }
 
             conf.Options.Add(Options.Vc.General.WarningLevel.Level3);
             conf.Options.Add(Options.Vc.General.TreatWarningsAsErrors.Disable);
@@ -195,24 +206,37 @@ namespace vg
                 case Type.StaticLibrary:
                     conf.Output = Configuration.OutputType.Utility;
                     conf.Output = Configuration.OutputType.Lib;
+                    conf.TargetPath = $"{SolutionDir}\\build\\lib\\{target.Platform}\\{target.Name}";
                     break;
 
                 case Type.DynamicLibrary:
                     conf.Output = Configuration.OutputType.Dll;
                     conf.Options.Add(Options.Vc.Linker.SubSystem.Windows);
+                    conf.TargetPath = $"{SolutionDir}\\build\\bin\\{target.Platform}\\{target.Name}";
+                    conf.ModuleDefinitionFile = $"{Name}.def";
+                    break;
+
+                case Type.Game:
+                    conf.Output = Configuration.OutputType.Dll;
+                    conf.Options.Add(Options.Vc.Linker.SubSystem.Windows);
+                    conf.TargetPath = $"{SolutionDir}\\build\\bin\\{target.Platform}\\{target.Name}";
+                    conf.ModuleDefinitionFile = $"src\\{Name}.def";
                     break;
 
                 case Type.Executable:
                     conf.Output = Configuration.OutputType.Exe;
                     conf.Options.Add(Options.Vc.Linker.SubSystem.Windows);
-                    conf.TargetPath = @"[project.SharpmakeCsPath]\.."; // "[conf.ProjectPath]\\output\\[target.Platform]\\[conf.Name]"
+                    conf.TargetPath = $"{SolutionDir}";
                     break;
 
                 case Type.UnitTests:
                     conf.Output = Configuration.OutputType.Exe;
                     conf.Options.Add(Options.Vc.Linker.SubSystem.Console);
+                    conf.TargetPath = $"{SolutionDir}\\build\\tests\\{target.Platform}\\{target.Name}";
                     break;
             }
+
+            conf.IntermediatePath = $"{SolutionDir}\\tmp\\{Name}\\{target.Platform}\\{target.Name}";
 
             switch (_Type)
             {
@@ -221,6 +245,12 @@ namespace vg
                     conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern");
                     conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern\fmt\include");
                     conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\data");
+                    break;
+
+                case Type.Game:
+                    conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\src");
+                    conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern");
+                    conf.IncludePaths.Add($"{SolutionDir}\\Projects\\{Name}\\src");
                     break;
 
                 case Type.Data:
@@ -238,12 +268,8 @@ namespace vg
         [Configure]
         public virtual void ConfigureAll(Configuration conf, Target target)
         {
-            //conf.ProjectFileName = "[project.Name]_[target.DevEnv]_[target.Platform]";
             conf.ProjectPath = $@"[project.SharpmakeCsPath]\projects\{Name}";
             conf.ProjectFileName = $@"[project.Name]_[target.DevEnv]";
-            // conf.IntermediatePath = $@"[project.SharpmakeCsPath]\projects\obj\{Name}\[target.Platform]\[target.Configuration]";
-
-            // Precompiled header path
 
             switch (_Type)
             {
@@ -252,10 +278,10 @@ namespace vg
                     conf.PrecompSource = $@"{Name}/Precomp.cpp";
                     break;
 
-                //case Type.UnitTests:
-                //    conf.PrecompHeader = $@"Precomp.h";
-                //    conf.PrecompSource = $@"Precomp.cpp";
-                //    break;
+                case Type.Game:
+                    conf.PrecompHeader = "Precomp.h";
+                    conf.PrecompSource = "Precomp.cpp";
+                    break;
 
                 case Type.Data:
                     conf.PrecompHeader = string.Empty;
@@ -267,12 +293,39 @@ namespace vg
             {
                 case GraphicsAPI.DX12:
                     conf.Defines.Add("VG_DX12");
+
+                    if (0 != (_Flags & Flags.GfxAPILink))
+                    {
+                        conf.LibraryFiles.Add($"{SolutionDir}\\extern\\winpixeventruntime\\bin\\x64\\WinPixEventRuntime.lib");
+                        conf.LibraryFiles.Add($"{SolutionDir}\\extern\\dxc\\lib\\x64\\dxcompiler.lib");
+                        conf.LibraryFiles.Add("d3d12.lib");
+                        conf.LibraryFiles.Add("dxgi.lib");
+                        conf.LibraryFiles.Add("dxguid.lib");
+                    }
+
                     break;
 
                 case GraphicsAPI.Vulkan:
                     conf.Defines.Add("VG_VULKAN");
+
+                    if (0 != (_Flags & Flags.GfxAPIInclude))
+                    {
+                        conf.IncludePaths.Add("$(VULKAN_SDK)\\include");
+                    }
+
+                    if (0 != (_Flags & Flags.GfxAPILink))
+                    {
+                        conf.LibraryFiles.Add($"{SolutionDir}\\extern\\dxc\\lib\\x64\\dxcompiler.lib");
+                        conf.LibraryFiles.Add("dxgi.lib");
+                        conf.LibraryFiles.Add("$(VULKAN_SDK)\\Lib\\vulkan-1.lib");
+                    }
+
                     break;
             }
+
+            // This is a temp define used during the transition to sharpmake, to search for DLL in correct path
+            // e.g.: Load engine DLL from "build\bin\win64\debug msvc" instead of "build\bin\x64\debug"
+            conf.Defines.Add("VG_SHARPMAKE");
         }
     }
     

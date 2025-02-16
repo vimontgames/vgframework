@@ -12,16 +12,17 @@ namespace vg::core
 	public:
 		template <class T> static T *	create(const string & _name, string _configSuffix = "") { return dynamic_cast<T*>(createInternal(_name, _configSuffix)); }
 
-		static string					getPlatform		();
-		static string					getConfiguration();
-		static string					getCompiler		();
-		static string					getExtension	();
+		static string					getPlatform				();
+		static string					getConfiguration		();
+		static string					getCompiler				();
+		static string					getExtension			();
 
 	public:
-										Plugin			(const core::string & _name, core::IObject * _parent);
-										~Plugin			();
+										Plugin					(const core::string & _name, core::IObject * _parent);
+										~Plugin					();
 
 	private:
-		static IPlugin *				createInternal	(const string & _name, const string & _configSuffix);
+		static IPlugin *				createInternal			(const string & _name, const string & _configSuffix);
+		static string					getDynamicLibraryPath	(const string & _name, const string & _configSuffix, bool _precompiledBuild);
 	};
 }

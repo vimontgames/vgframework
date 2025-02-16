@@ -15,14 +15,6 @@ Yet another work-in-progress game and graphic engine project.
 
 # Build status
 
-<!-- | Configuration | <img src="doc/img/arm64ec.gif" alt="ARM64EC" title="ARM64EC"> <img src="doc/img/dx12.gif" alt="DirectX 12" title="DirectX 12">                                                                | <img src="doc/img/arm64ec.gif" alt="ARM64EC" title="ARM64EC"> <img src="doc/img/vulkan.gif" alt="Vulkan" title="Vulkan">                                                | <img src="doc/img/x64.gif" alt="Win64" title="Win64"> <img src="doc/img/dx12.gif" alt="DirectX 12" title="DirectX 12">                                          | <img src="doc/img/x64.gif" alt="Win64" title="Win64"> <img src="doc/img/vulkan.gif" alt="Vulkan" title="Vulkan">                                                      -->                                                     
-<!-- |-------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |---------------------------------------------------------------------------------------------------------------------------------------------------------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -->
-<!-- | Debug         | ![ARM64EC DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Debug.yml?branch=master&label=)                                       | ![ARM64EC Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Debug.yml?branch=master&label=)             | ![Win64 DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Debug.yml?branch=master&label=)             | ![Win64 Vulkan Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Debug.yml?branch=master&label=)             | -->
-<!-- | Development   | ![ARM64EC DX12 Development Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Development.yml?branch=master&label=)                           | ![ARM64EC Vulkan Development Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Development.yml?branch=master&label=) | ![Win64 DX12 Development Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Development.yml?branch=master&label=) | ![Win64 Vulkan Development Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Development.yml?branch=master&label=) | -->
-<!-- | Release       | ![ARM64EC DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Release.yml?branch=master&label=)                                   | ![ARM64EC Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Release.yml?branch=master&label=)         | ![Win64 DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Release.yml?branch=master&label=)         | ![Win64 Vulkan Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Release.yml?branch=master&label=)         | -->
-<!-- | Final         | ![ARM64EC DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Final.yml?branch=master&label=)                                       | ![ARM64EC Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_Vulkan_Final.yml?branch=master&label=)             | ![Win64 DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_DX12_Final.yml?branch=master&label=)             | ![Win64 Vulkan Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/Win64_Vulkan_Final.yml?branch=master&label=)             | -->
-
-
 | Configuration       | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Debug &nbsp;&nbsp;&nbsp;&nbsp;                                                                                                       | Development                                                                                                                                                      | &nbsp;&nbsp;&nbsp; Release &nbsp;&nbsp;&nbsp;                                                                                                                                                   | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Final &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                                                                                                                                                  |
 |-------------------- |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | ARM64EC DX12 MSVC   | <div align="center">![ARM64EC DX12 Debug Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Debug.yml?branch=master&label=)    </div> | <div align="center">![ARM64EC DX12 Development Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Development.yml?branch=master&label=)    </div> | <div align="center">![ARM64EC DX12 Release Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Release.yml?branch=master&label=)    </div> | <div align="center">![ARM64EC DX12 Final Status](https://img.shields.io/github/actions/workflow/status/vimontgames/vgframework/ARM64EC_DX12_Final.yml?branch=master&label=)    </div> |
@@ -53,7 +45,7 @@ The program will use these locally built files if they are present; otherwise, i
 
 - Sync the depot.
 - Install the required SDKs and configure the environment variables.
-- Open the `vgframework.sln` solution in Visual Studio 2022 Community IDE.
+- [Generate solution](#Generate-solution) and open it in your favorite development environment.
 - Select solution [Configuration](#Solution-Configuration) and [Platform](#Solution-Platform)
 - Select the solution folder for [Working Directory](#Working-Directory)
 - Build & Run
@@ -64,6 +56,22 @@ Press `F5` to enter game mode and `F11` to maximize game view and press `ESC` to
 **Final** versions are compiled without the editor, they will start directly in game mode and maximized.
 
 First run might take a few seconds because files are cooking.
+
+## Generate solution
+
+VGFramework is currenlty transitionning to [Sharpmake](https://github.com/ubisoft/Sharpmake) to generate its solution and projects for all platforms.
+There is currently two options:
+
+### Legacy static VS2022 solution
+
+For now you can still use the old `vgframework.sln` solution for Visual Studio 2022. 
+It should work until it's too much work to maintain, but you will miss some compilation targets like Win64 ClangCL.
+
+### New generated solution
+
+You can generate the solutions using `Sharpmake\generates_projects_XXX.bat` where `XXX` is your development environement. 
+
+e.g. `Sharpmake\generates_projects_XXX.bat` will generate `vgframework_vs2022.sln` in the root folder.
 
 ## IDE
 Recommended IDE is [VS Studio 2022 Community](https://visualstudio.microsoft.com/fr/vs/community/) and project files currently provided are compatible with this version.

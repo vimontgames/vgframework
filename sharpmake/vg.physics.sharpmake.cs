@@ -3,9 +3,9 @@ using Sharpmake;
 namespace vg
 {
     [Sharpmake.Generate]
-    public class Engine : Project
+    public class Physics : Project
     {
-        public Engine() : base("engine", Type.DynamicLibrary)
+        public Physics() : base("physics", Type.DynamicLibrary)
         {
 
         }
@@ -14,7 +14,7 @@ namespace vg
         {
             base.ConfigureAll(conf, target);
             conf.AddPrivateDependency<Core>(target);
-            conf.LibraryFiles.Add("dinput8.lib", "dxguid.lib");
+            conf.IncludePaths.Add($"{SolutionDir}\\extern\\JoltPhysics");
         }
     }
 }
