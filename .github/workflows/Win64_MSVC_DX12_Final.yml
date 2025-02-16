@@ -1,4 +1,4 @@
-name: "Win64 MSVC DX12 Debug"
+name: "Win64 MSVC DX12 Final"
 
 on:
   workflow_dispatch:
@@ -30,6 +30,6 @@ jobs:
     uses: ./.github/workflows/Build_vs2022.yml
     with:
       build_platform: "Win64 MSVC DX12"
-      build_configuration: "Debug"
+      build_configuration: "Final"
     secrets:
       DISCORD_BUILD_WEBHOOK_URL: ${{ secrets.DISCORD_BUILD_WEBHOOK_URL }}

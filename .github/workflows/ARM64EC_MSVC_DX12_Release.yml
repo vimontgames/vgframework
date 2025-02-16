@@ -1,4 +1,4 @@
-name: "Win64 MSVC DX12 Debug"
+name: "ARM64EC MSVC DX12 Release"
 
 on:
   workflow_dispatch:
@@ -27,9 +27,9 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/Build_vs2022.yml
+    uses: ./.github/workflows/Build.yml
     with:
-      build_platform: "Win64 MSVC DX12"
-      build_configuration: "Debug"
+      build_platform: "ARM64EC MSVC DX12"
+      build_configuration: "Release"
     secrets:
       DISCORD_BUILD_WEBHOOK_URL: ${{ secrets.DISCORD_BUILD_WEBHOOK_URL }}
