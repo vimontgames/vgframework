@@ -34,6 +34,11 @@ jobs:
         shell: cmd
         run: generate_projects_Windows.bat
 
+      - name: Generate Version Header
+        working-directory: ./script
+        shell: cmd
+        run: generate_version_header.bat
+
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2
         with:
