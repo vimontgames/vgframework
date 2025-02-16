@@ -24,6 +24,9 @@ namespace vg
             conf.AddPrivateDependency<Physics>(target, DependencySetting.OnlyBuildOrder);
             conf.AddPrivateDependency<Game>(target, DependencySetting.OnlyBuildOrder);
             conf.AddPrivateDependency<Editor>(target, DependencySetting.OnlyBuildOrder);
+
+            conf.EventPreBuild.Add("$(SolutionDir)script\\generate_version_header_vs2022.bat");
+            conf.EventPreBuildDescription = "Generate 'commit.h' file using current git revision";
         }
     }
 }

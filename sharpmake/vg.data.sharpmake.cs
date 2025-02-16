@@ -37,6 +37,22 @@ namespace vg
     }
 
     [Sharpmake.Generate]
+    public class Scripts : Project
+    {
+        public Scripts() :
+            base("script", Type.Data)
+        {
+            SourceRootPath = $@"[project.SharpmakeCsPath]\..\script";
+            SourceFilesExtensions.Add(".bat");
+        }
+
+        public override void ConfigureAll(Configuration conf, Target target)
+        {
+            base.ConfigureAll(conf, target);
+        }
+    }
+
+    [Sharpmake.Generate]
     public class ReadMe : Project
     {
         public ReadMe() :

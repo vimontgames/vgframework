@@ -31,6 +31,7 @@ namespace vg
             conf.AddProject<GitHub>(target, false, "data");
             conf.AddProject<ReadMe>(target, false, "data");
             conf.AddProject<Shaders>(target, false, "data");
+            conf.AddProject<Scripts>(target, false, "data");
 
             // All projects must be explicitly added here, deducing them from dependencies is not enough and will generate incorrect platform configurations
             conf.AddProject<Core>(target);
