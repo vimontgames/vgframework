@@ -63,7 +63,6 @@ namespace vg
             SourceFilesExtensions.Add(".md");
             SourceFilesExcludeRegex.Add(@".*\\data(\.*)?");
             SourceFilesExcludeRegex.Add(@".*\\extern(\.*)?");
-            //SourceFilesExcludeRegex.Add(@".*\\projects(\.*)?");
             
             SourceFilesExcludeRegex.Add(@".*\.asm\.*");
             SourceFilesExcludeRegex.Add(@".*\.nasm\.*");
@@ -73,6 +72,34 @@ namespace vg
             SourceFilesExcludeRegex.Add(@".*\.cpp\.*");
             SourceFilesExcludeRegex.Add(@".*\.hlsl\.*");
             SourceFilesExcludeRegex.Add(@".*\.hlsli\.*");
+        }
+
+        public override void ConfigureAll(Configuration conf, Target target)
+        {
+            base.ConfigureAll(conf, target);
+        }
+    }
+
+    [Sharpmake.Generate]
+    public class Version : Project
+    {
+        public Version() :
+            base("version", Type.Data)
+        {
+            SourceRootPath = $@"[project.SharpmakeCsPath]\..\src";
+
+            SourceFilesExtensions.Add(".h");
+
+            //SourceFilesExcludeRegex.Add(@"^.*\\[^\\]+\\.*$");
+
+            SourceFilesExcludeRegex.Add(@".*\\application(\.*)?");
+            SourceFilesExcludeRegex.Add(@".*\\audio(\.*)?");
+            SourceFilesExcludeRegex.Add(@".*\\core(\.*)?");
+            SourceFilesExcludeRegex.Add(@".*\\editor(\.*)?");
+            SourceFilesExcludeRegex.Add(@".*\\engine(\.*)?");
+            SourceFilesExcludeRegex.Add(@".*\\gfx(\.*)?");
+            SourceFilesExcludeRegex.Add(@".*\\physics(\.*)?");
+            SourceFilesExcludeRegex.Add(@".*\\renderer(\.*)?");
         }
 
         public override void ConfigureAll(Configuration conf, Target target)
