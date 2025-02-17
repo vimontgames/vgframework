@@ -1,4 +1,4 @@
-name: "Reusable Build Workflow"
+name: "Build VS2022 Target"
 
 on:
   workflow_call:
@@ -16,7 +16,7 @@ on:
         required: true
 
 env:
-  SOLUTION_FILE_PATH: vgframework.sln
+  SOLUTION_FILE_PATH: vgframework_vs2022.sln
 
 permissions:
   contents: read
@@ -28,6 +28,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+  
+      - name: Generate Projects
+        working-directory: ./sharpmake
+        shell: cmd
+        run: generate_projects_Windows.bat
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2

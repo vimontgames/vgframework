@@ -27,7 +27,7 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/Build_vs2022.yml
+    uses: ./.github/workflows/Build_Target_vs2022.yml
     with:
       build_platform: "ARM64EC MSVC Vulkan"
       build_configuration: "Debug"

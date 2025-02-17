@@ -7,8 +7,8 @@ on:
       - "src/version.h"
 
 env:
-  SOLUTION_FILE_PATH: vgframework.sln
-  BUILD_PLATFORM: '"Win64 DX12"'
+  SOLUTION_FILE_PATH_WIN64: vgframework.sln
+  BUILD_PLATFORM_WIN64: '"Win64 DX12"'
 
 permissions:
   contents: write
@@ -25,10 +25,10 @@ jobs:
          vs-version: '[17.11.2, 18.0.0)'
 
      - name: Restore NuGet packages
-       run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
+       run: nuget restore ${{ env.SOLUTION_FILE_PATH_WIN64 }}
 
      - name: Build Release
-       run: msbuild /m /p:Configuration=Release /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
+       run: msbuild /m /p:Configuration=Release /p:Platform=${{ env.BUILD_PLATFORM_WIN64 }} ${{ env.SOLUTION_FILE_PATH_WIN64 }}
 
      - name: Upload Release Artifacts
        if: success()
@@ -37,13 +37,13 @@ jobs:
          name: release-artifacts
          path: |
            src/commit.h
-           VGFramework_x64_Release_DX12.exe
-           build\bin\x64\Release\audio.dll
-           build\bin\x64\Release\editor.dll
-           build\bin\x64\Release\engine.dll
-           build\bin\x64\Release\game.dll
-           build\bin\x64\Release\physics.dll
-           build\bin\x64\Release_DX12\renderer.dll
+           vgframework_win64_msvc_dx12_release.exe
+           build\bin\win64\release msvc\audio.dll
+           build\bin\win64\release msvc\editor.dll
+           build\bin\win64\release msvc\engine.dll
+           build\bin\win64\release msvc\game.dll
+           build\bin\win64\release msvc\physics.dll
+           build\bin\win64\release msvc DX12\renderer.dll
 
   build_game:
     runs-on: windows-latest
@@ -68,13 +68,12 @@ jobs:
           name: final-artifacts
           path: |
             src/commit.h
-            VGFramework_x64_Final_DX12.exe
-            build\bin\x64\Final\audio.dll
-            build\bin\x64\Final\editor.dll
-            build\bin\x64\Final\engine.dll
-            build\bin\x64\Final\game.dll
-            build\bin\x64\Final\physics.dll
-            build\bin\x64\Final_DX12\renderer.dll
+            vgframework_win64_msvc_dx12_final.exe
+            build\bin\win64\final msvc\audio.dll
+            build\bin\win64\final msvc\engine.dll
+            build\bin\win64\final msvc\game.dll
+            build\bin\win64\final msvc\physics.dll
+            build\bin\win64\final msvc DX12\renderer.dll
 
   submit_binaries:
     runs-on: windows-latest
@@ -135,22 +134,21 @@ jobs:
           git config user.email "VGF_Boy@users.noreply.github.com"
 
           # Stage Editor files
-          git add -f "Editor.exe"
-          git add -f "bin\x64\Release\audio.dll"
-          git add -f "bin\x64\Release\editor.dll"
-          git add -f "bin\x64\Release\engine.dll"
-          git add -f "bin\x64\Release\game.dll"
-          git add -f "bin\x64\Release\physics.dll"
-          git add -f "bin\x64\Release_DX12\renderer.dll"
+          git add -f "Editor.exe"         
+          git add -f "bin\win64\release msvc\audio.dll"
+          git add -f "bin\win64\release msvc\editor.dll"
+          git add -f "bin\win64\release msvc\engine.dll"
+          git add -f "bin\win64\release msvc\game.dll"
+          git add -f "bin\win64\release msvc\physics.dll"
+          git add -f "bin\win64\release msvc DX12\renderer.dll"
           
           # Stage Game files
           git add -f "Game.exe"
-          git add -f "bin\x64\Final\audio.dll"
-          git add -f "bin\x64\Final\editor.dll"
-          git add -f "bin\x64\Final\engine.dll"
-          git add -f "bin\x64\Final\game.dll"
-          git add -f "bin\x64\Final\physics.dll"
-          git add -f "bin\x64\Final_DX12\renderer.dll"
+          git add -f "bin\win64\final msvc\audio.dll"
+          git add -f "bin\win64\final msvc\engine.dll"
+          git add -f "bin\win64\final msvc\game.dll"
+          git add -f "bin\win64\final msvc\physics.dll"
+          git add -f "bin\win64\final msvc DX12\renderer.dll"
 
           git commit -m "$commitMessage"
           git push
@@ -203,7 +201,7 @@ jobs:
               {
                 "type": "rich",
                 "title": "VGFramework $fullVersion ``$gitRevision``",
-                "description": "A new version of VGFramework is available",
+                "description": "New vgframework version available",
                 "color": 15579707,
                 "thumbnail": {
                   "url": "https://github.com/vimontgames/vgframework/blob/master/doc/img/version.png?raw=true"

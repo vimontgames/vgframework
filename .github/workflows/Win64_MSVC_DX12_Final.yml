@@ -27,7 +27,7 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/Build_vs2022.yml
+    uses: ./.github/workflows/Build_Target_vs2022.yml
     with:
       build_platform: "Win64 MSVC DX12"
       build_configuration: "Final"

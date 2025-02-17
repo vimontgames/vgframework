@@ -53,14 +53,17 @@ namespace vg
             conf.AddProject<Physics>(target);
             //conf.AddProject<PhysicsTests>(target, false, "tests");
 
-            conf.AddProject<Editor>(target);
-            //conf.AddProject<EditorTests>(target, false, "tests");
-
             conf.AddProject<Game>(target);
             //conf.AddProject<GameTests>(target, false, "tests");
 
             conf.AddProject<Application>(target);
             //conf.AddProject<ApplicationTests>(target);
+
+            //if (target.Optimization != Optimization.Final)
+            {
+                conf.AddProject<Editor>(target);
+                //conf.AddProject<EditorTests>(target, false, "tests");
+            }
         }
     }
 }

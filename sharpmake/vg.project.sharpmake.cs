@@ -1,6 +1,7 @@
 using Sharpmake;
 using System;
 using System.Collections.Generic;
+using static vg.Project;
 
 namespace vg
 {
@@ -15,7 +16,8 @@ namespace vg
         {
             GfxAPIDefines = 0x00000001,
             GfxAPIInclude = 0x00000002,
-            GfxAPILink    = 0x00000004
+            GfxAPILink    = 0x00000004,
+            EditorOnly    = 0x00000008
         };
 
         public enum Type
@@ -35,7 +37,7 @@ namespace vg
             _Flags = flags;
 
             bool useGfxAPIs = 0 != (flags & Flags.GfxAPIDefines);
-            AddTargets(GetDefaultTargets(useGfxAPIs));
+            AddTargets(GetDefaultTargets(useGfxAPIs, flags));
 
             switch(projectType)
             {
@@ -60,13 +62,13 @@ namespace vg
                 SourceFilesExtensions.Add(".def");
         }
 
-        public static Target[] GetDefaultTargets(bool useGfxAPIs = false)
+        public static Target[] GetDefaultTargets(bool useGfxAPIs = false, Flags flags = 0x0)
         {
-            var targets = GetWindowsTargets(useGfxAPIs); 
+            var targets = GetWindowsTargets(useGfxAPIs, flags); 
             return targets.ToArray();
         }
 
-        public static List<Target> GetWindowsTargets(bool useGfxAPIs = false)
+        public static List<Target> GetWindowsTargets(bool useGfxAPIs = false, Flags flags = 0x0)
         {
             var targets = new List<Target>();
 
@@ -76,7 +78,8 @@ namespace vg
                 gfxAPIs = GraphicsAPI.Vulkan | GraphicsAPI.DX12;
             else
                 gfxAPIs = GraphicsAPI.None;
-            
+
+
             targets.Add(new Target(Platform.win64 , DevEnv.vs2022, Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final)
             {
                 Compiler = Compiler.MSVC| Compiler.ClangCL,
@@ -235,6 +238,10 @@ namespace vg
                     conf.TargetPath = $"{SolutionDir}\\build\\tests\\{target.Platform}\\{target.Name}";
                     break;
             }
+
+            // Disable this configuration in Final builds
+            if (0 != (Flags.EditorOnly & _Flags) && target.Optimization == Optimization.Final)
+                conf.Output = Configuration.OutputType.Utility;
 
             conf.IntermediatePath = $"{SolutionDir}\\tmp\\{Name}\\{target.Platform}\\{target.Name}";
 

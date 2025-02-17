@@ -1,7 +1,7 @@
-copy /y "VGFramework_x64_Release_DX12.exe" "Editor.exe"
-xcopy build\bin\x64\Release bin\x64\Release /E /H /C /I /Y
-xcopy build\bin\x64\Release_DX12 bin\x64\Release_DX12 /E /H /C /I /Y
+copy /y "vgframework_win64_msvc_dx12_release.exe" "Editor.exe"
+xcopy "build\bin\Win64\release MSVC" "bin\Win64\release MSVC" /E /H /C /I /Y
+xcopy "build\bin\Win64\release MSVC DX12" "bin\Win64\release MSVC DX12" /E /H /C /I /Y
 
-copy /y "VGFramework_x64_Final_DX12.exe" "Game.exe"
-xcopy build\bin\x64\Final bin\x64\Final /E /H /C /I /Y
-xcopy build\bin\x64\Final_DX12 bin\x64\Final_DX12 /E /H /C /I /Y
+copy /y "vgframework_win64_msvc_dx12_final.exe" "Game.exe"
+xcopy "build\bin\Win64\final MSVC" "bin\Win64\final MSVC" /E /H /C /I /Y
+xcopy "build\bin\Win64\final MSVC DX12" "bin\Win64\final MSVC DX12" /E /H /C /I /Y
