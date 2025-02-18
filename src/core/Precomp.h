@@ -96,6 +96,8 @@
 
 #if VG_ENABLE_GLOBAL_NEW_DELETE 
 
+#include <cstddef>
+
 void * operator new(std::size_t _size);
 void operator delete(void * ptr) noexcept;
 void * operator new(std::size_t _size, const char * _file, int _line);

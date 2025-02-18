@@ -50,7 +50,7 @@ namespace vg
                     break;
 
                 case Type.Game:
-                    SourceRootPath = $"{SolutionDir}\\Projects\\{Name}";
+                    SourceRootPath = $"{SolutionDir}\\projects\\{Name}";
                     break;
 
                 case Type.Data:
@@ -64,10 +64,10 @@ namespace vg
 
         public static Target[] GetDefaultTargets(bool useGfxAPIs = false, Flags flags = 0x0)
         {
-            var targets = GetWindowsTargets(useGfxAPIs, flags); 
+            var targets = GetWindowsTargets(useGfxAPIs, flags);
             return targets.ToArray();
         }
-
+        
         public static List<Target> GetWindowsTargets(bool useGfxAPIs = false, Flags flags = 0x0)
         {
             var targets = new List<Target>();
@@ -257,7 +257,7 @@ namespace vg
                 case Type.Game:
                     conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\src");
                     conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern");
-                    conf.IncludePaths.Add($"{SolutionDir}\\Projects\\{Name}\\src");
+                    conf.IncludePaths.Add($"{SolutionDir}\\projects\\{Name}\\src");
                     break;
 
                 case Type.Data:

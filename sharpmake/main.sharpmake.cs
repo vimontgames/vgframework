@@ -1,5 +1,7 @@
 using Sharpmake;
 
+[module: Sharpmake.Include("vg.*.sharpmake.cs")]
+
 namespace vg
 {
     public static class Main
