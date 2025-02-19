@@ -1,2 +1,2 @@
-.\bin\windows\Sharpmake.Application.exe "/sources('main.sharpmake.cs', 'vg.project.sharpmake.cs', 'vg.data.sharpmake.cs', 'vg.solution.sharpmake.cs', 'vg.application.sharpmake.cs', 'vg.core.sharpmake.cs', 'vg.engine.sharpmake.cs', 'vg.gfx.sharpmake.cs', 'vg.renderer.sharpmake.cs', 'vg.physics.sharpmake.cs', 'vg.audio.sharpmake.cs', 'vg.game.sharpmake.cs', 'vg.editor.sharpmake.cs') /generateDebugSolution /debugSolutionPath('debug/Windows')"
+.\bin\windows\Sharpmake.Application.exe "/sources('main.sharpmake.cs') /generateDebugSolution /debugSolutionPath('debug/Windows')"
 
