@@ -228,6 +228,7 @@ namespace vg::core
 #include <unordered_map>
 #include <functional>
 #include <algorithm>
+#include <thread>
 
 //--------------------------------------------------------------------------------------
 // external includes
