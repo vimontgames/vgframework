@@ -1,4 +1,5 @@
 #pragma once
+#include <random>
 
 namespace vg::core
 {
@@ -13,5 +14,6 @@ namespace vg::core
 
     private:
         static inline bool s_initialized = false;
+        static inline std::mt19937 s_rng;
     };
 }

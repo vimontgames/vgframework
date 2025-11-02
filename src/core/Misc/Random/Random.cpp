@@ -1,19 +1,21 @@
 #include "core/Precomp.h"
 #include "core/Misc/Random/Random.h"
+#include "core/Kernel.h"
 #include <cstdlib>
 #include <ctime>
 
 using namespace std;
 using namespace vg::core;
 
-VG_STATIC_ASSERT(RAND_MAX == 0x7FFF || RAND_MAX == 0xFFFF, "Unexpected RAND_MAX value");
-
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
     void Random::init()
     {
-        srand((uint)time(nullptr));
+        const auto t = static_cast<uint32_t>(time(nullptr));
+        VG_INFO("[Random] Use random seed 0x%08X", t);
+
+        s_rng.seed(t);
         s_initialized = true;
     }
 
@@ -22,8 +24,9 @@ namespace vg::core
     {
         if (!s_initialized)
             init();
-        const u32 value = _min + (rand() % (_max - _min + 1));
-        return value;
+
+        std::uniform_int_distribution<u16> dist(_min, _max);
+        return dist(s_rng);
     }
 
     //--------------------------------------------------------------------------------------
@@ -31,8 +34,9 @@ namespace vg::core
     {
         if (!s_initialized)
             init();
-        const u32 value = _min + ((rand()|(rand()<<16)) % (_max - _min + 1));
-        return value;
+
+        std::uniform_int_distribution<u32> dist(_min, _max);
+        return dist(s_rng);
     }
 
     //--------------------------------------------------------------------------------------
@@ -40,8 +44,9 @@ namespace vg::core
     {
         if (!s_initialized)
             init();
-        const float random = (float)(rand()) / (float)(RAND_MAX);
-        return _min + random * (_max - _min);
+
+        std::uniform_real_distribution<float> dist(_min, _max);
+        return dist(s_rng);
     }
 
     //--------------------------------------------------------------------------------------
@@ -49,7 +54,11 @@ namespace vg::core
     {
         if (!s_initialized)
             init();
-        const float3 random = float3((float)rand(), (float)rand(), (float)rand()) / (float)(RAND_MAX);
-        return _min + random * (_max - _min);
+
+        std::uniform_real_distribution<float> distX(_min.x, _max.x);
+        std::uniform_real_distribution<float> distY(_min.y, _max.y);
+        std::uniform_real_distribution<float> distZ(_min.z, _max.z);
+
+        return float3(distX(s_rng), distY(s_rng), distZ(s_rng));
     }
 }
