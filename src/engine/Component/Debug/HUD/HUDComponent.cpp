@@ -42,33 +42,30 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void HUDComponent::Update(const Context & _context)
     {
-        if (_context.m_playing)
+        const auto time = Engine::get()->getTime();
+
+        if (auto * gameobject = m_fpsText.get<IGameObject>())
         {
-            const auto time = Engine::get()->getTime();
+            if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
+                uiTextComponent->SetText(fmt::sprintf("%.0f FPS", time.smoothed.m_fps));
+        }
 
-            if (auto * gameobject = m_fpsText.get<IGameObject>())
-            {
-                if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
-                    uiTextComponent->SetText(fmt::sprintf("%.0f FPS", time.smoothed.m_fps));
-            }
+        if (auto * gameobject = m_frameText.get<IGameObject>())
+        {
+            if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
+                uiTextComponent->SetText(fmt::sprintf("%.2f ms", time.smoothed.m_dt * 1000.0f));
+        }
 
-            if (auto * gameobject = m_frameText.get<IGameObject>())
-            {
-                if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
-                    uiTextComponent->SetText(fmt::sprintf("%.2f ms", time.smoothed.m_dt * 1000.0f));
-            }
+        if (auto * gameobject = m_cpuText.get<IGameObject>())
+        {
+            if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
+                uiTextComponent->SetText(fmt::sprintf("%.2f ms", time.smoothed.m_dt * 1000.0f - time.smoothed.m_gpuWait));
+        }
 
-            if (auto * gameobject = m_cpuText.get<IGameObject>())
-            {
-                if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
-                    uiTextComponent->SetText(fmt::sprintf("%.2f ms", time.smoothed.m_dt * 1000.0f - time.smoothed.m_gpuWait));
-            }
-
-            if (auto * gameobject = m_gpuText.get<IGameObject>())
-            {
-                if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
-                    uiTextComponent->SetText(fmt::sprintf("%.2f ms", time.smoothed.m_gpu));
-            }
+        if (auto * gameobject = m_gpuText.get<IGameObject>())
+        {
+            if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
+                uiTextComponent->SetText(fmt::sprintf("%.2f ms", time.smoothed.m_gpu));
         }
     }
 }

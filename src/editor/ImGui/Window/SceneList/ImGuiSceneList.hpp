@@ -495,16 +495,19 @@ namespace vg::editor
 
             ImGui::SetCursorPosX(bakePos.x);
             ImGui::SetCursorPosY(bakePos.y);
+
+            if (open)
+            {
+                for (uint j = 0; j < children.size(); ++j)
+                {
+                    IGameObject * child = children[j];
+                    displayGameObject(child);
+                }
+            }
         }
 
         if (open)
         {
-            for (uint j = 0; j < children.size(); ++j)
-            {
-                IGameObject* child = children[j];
-                displayGameObject(child);
-            }
-
             ImGui::TreePop();
         }
 
