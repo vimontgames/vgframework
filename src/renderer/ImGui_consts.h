@@ -15,6 +15,8 @@ namespace vg::renderer
         Light
     );
 
+    using FontSize = core::u16;
+
     vg_enum_class(vg::renderer, Theme, core::u8,
         ImGui_Classic,
         ImGui_Dark,

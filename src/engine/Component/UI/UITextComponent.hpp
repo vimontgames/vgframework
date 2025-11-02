@@ -13,7 +13,9 @@ namespace vg::engine
 
         //registerPropertyEnumEx(UITextComponent, renderer::Font, m_font, "Font", PropertyFlags::AlphabeticalOrder);
         registerPropertyEnum(UITextComponent, renderer::Font, m_font, "Font");
-        registerPropertyEnum(UITextComponent, renderer::FontStyle, m_style, "Style");
+        registerPropertyEnum(UITextComponent, renderer::FontStyle, m_style, "Font Style");
+        registerProperty(UITextComponent, m_fontSize, "Font Size");
+        setPropertyRange(UITextComponent, m_fontSize, uint2(5, 64));
         registerProperty(UITextComponent, m_text, "Text");
 
         return true;
@@ -41,6 +43,6 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void UITextComponent::Update(const Context & _context)
     {
-        getUIManager()->AddText(getCanvas(), getUIItem(), m_text, m_font, m_style, _context.m_world);
+        getUIManager()->AddText(getCanvas(), getUIItem(), m_text, m_font, m_style, m_fontSize, _context.m_world);
     }
 }

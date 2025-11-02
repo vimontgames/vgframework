@@ -21,9 +21,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void UIManager::AddText(const UICanvas * _canvas, const UIItem & _desc, const core::string & _text, Font _font, FontStyle _style, core::IWorld * _world)
+    void UIManager::AddText(const UICanvas * _canvas, const UIItem & _desc, const core::string & _text, Font _font, FontStyle _fontStyle, FontSize _fontSize, core::IWorld * _world)
     {
-        addUIElement(UIElement(_canvas, _desc, _text, _font, _style), _world);
+        addUIElement(UIElement(_canvas, _desc, _text, _font, _fontStyle, _fontSize), _world);
     }
 
     //--------------------------------------------------------------------------------------

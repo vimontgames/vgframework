@@ -215,7 +215,7 @@
     <ClInclude Include="RenderPass\ImGui\ImGui.hpp">
       <Filter>Pass\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="RenderPass\ImGui\imguiAdapter.h">
+    <ClInclude Include="RenderPass\ImGui\ImguiAdapter.h">
       <Filter>Pass\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="RenderPass\ImGui\ImGuiAdapter.hpp">
@@ -566,6 +566,9 @@
     </ClInclude>
     <ClInclude Include="Geometry\Vertex\DebugDrawLitVertex.h">
       <Filter>Geometry\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPass\ImGui\ImguiFont.h">
+      <Filter>Pass\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

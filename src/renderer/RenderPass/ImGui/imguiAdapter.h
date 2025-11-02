@@ -4,6 +4,7 @@
 #include "renderer/RenderPass/Render2D/Preview/Texture/TexturePreview.h"
 #include "gfx/BindlessTable/BindlessTable_consts.h"
 #include "ImGuiSettings.h"
+#include "ImguiFont.h"
 
 typedef vg::core::u64 ImTextureID;
 
@@ -53,12 +54,13 @@ namespace vg
             void                    render                          (gfx::CommandList * _cmdList);
 
             void                    AddBeginFrameCallback           (BeginFrameCallback _func);
-            ImFont *                GetFont                         (Font _font, FontStyle _style = FontStyle::Regular) final override;
+            ImFont *                GetFont                         (Font _font, FontStyle _style, FontSize _size) final override;
             const char *            GetFontPath                     (Font _font, FontStyle _style) const final override;
 
             void                    PushDefaultFont                 () final override;
             void                    PushFont                        (vg::renderer::Font _font) final override;
             void                    PushFont                        (vg::renderer::Font _font, vg::renderer::FontStyle _style) final override;
+            void                    PushFont                        (vg::renderer::Font _font, vg::renderer::FontStyle _style, vg::renderer::FontSize _size) final override;
             void                    PopFont                         () final override;
 
             void                    PushFontStyle                   (vg::renderer::FontStyle _style) final override;
@@ -77,7 +79,8 @@ namespace vg
             void                    releaseTextureID                (const gfx::Texture * _texture);
             void                    releaseUserDescriptors          ();
 
-            bool                    createFont                      (Font _font, FontStyle _style);
+            ImFontInfo &            getOrCreateFontInfo             (Font _font, FontStyle _style, FontSize _size);
+            bool                    createFont                      (Font _font, FontStyle _style, FontSize _size);
             void                    updateFonts                     ();
 
             void                    resetGUITheme                   ();
@@ -106,7 +109,7 @@ namespace vg
 
             Font                                m_currentFont;
             FontStyle                           m_currentFontStyle;
-            core::u8                            m_currentFontSize;
+            FontSize                            m_currentFontSize;
 
             core::vector<BeginFrameCallback>    m_beginFrameCallbacks;
 
@@ -137,16 +140,8 @@ namespace vg
             ImVec4                              m_errorColor;
             ImVec4                              m_unsavedPropertyColor;
             ImVec4                              m_prefabOverridePropertyColor;
-
-            struct ImFontInfo
-            {
-                bool     needed = false;
-                bool     failed = false;
-                ImFont * ptr    = nullptr;
-            };
-            ImFontInfo                          m_imGuiFont[core::enumCount<Font>()][core::enumCount<FontStyle>()];
-
             ImGuiSettings                       m_settingsHandler;
+            core::unordered_map<ImFontKey, ImFontInfo, ImFontKey::hash> m_imGuiFont;
             core::unordered_map<TexturePreviewKey, TexturePreviewData, TexturePreviewKey::hash> m_previewTextures;
         };
     }

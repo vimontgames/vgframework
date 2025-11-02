@@ -229,8 +229,9 @@
     <ClInclude Include="RenderPass\ImGui\Extensions\FontStyle\ImGuiFontStyleExtension.hpp" />
     <ClInclude Include="RenderPass\ImGui\ImGui.h" />
     <ClInclude Include="RenderPass\ImGui\ImGui.hpp" />
-    <ClInclude Include="RenderPass\ImGui\imguiAdapter.h" />
+    <ClInclude Include="RenderPass\ImGui\ImguiAdapter.h" />
     <ClInclude Include="RenderPass\ImGui\ImGuiAdapter.hpp" />
+    <ClInclude Include="RenderPass\ImGui\ImguiFont.h" />
     <ClInclude Include="RenderPass\ImGui\ImGuiSettings.h" />
     <ClInclude Include="RenderPass\ImGui\ImGuiPass.h" />
     <ClInclude Include="RenderPass\ImGui\ImGuiSettings.hpp" />

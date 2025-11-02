@@ -57,9 +57,9 @@ namespace vg::renderer
         }
 
         // Mandatory fonts
-        m_imGuiFont[asInteger(s_defaultFont)][asInteger(FontStyle::Regular)].needed = true;
-        m_imGuiFont[asInteger(s_defaultFont)][asInteger(FontStyle::Bold)].needed = true;
-        m_imGuiFont[asInteger(s_defaultFont)][asInteger(FontStyle::Italic)].needed = true;
+        getOrCreateFontInfo(s_defaultFont, FontStyle::Regular, (FontSize)editor::style::font::DefaultFontHeight).needed = true;
+        getOrCreateFontInfo(s_defaultFont, FontStyle::Bold, (FontSize)editor::style::font::DefaultFontHeight).needed = true;
+        getOrCreateFontInfo(s_defaultFont, FontStyle::Italic, (FontSize)editor::style::font::DefaultFontHeight).needed = true;
 
         updateFonts();
 
@@ -125,22 +125,37 @@ namespace vg::renderer
     };
 
     //--------------------------------------------------------------------------------------
-    bool ImGuiAdapter::createFont(Font _font, FontStyle _style)
+    ImFontInfo & ImGuiAdapter::getOrCreateFontInfo(Font _font, FontStyle _style, FontSize _size)
+    {
+        ImFontKey key(_font, _style, _size);
+        auto it = m_imGuiFont.find(key);
+        if (it != m_imGuiFont.end())
+        {
+            return it->second;
+        }
+        else
+        {
+            ImFontInfo info;
+            return m_imGuiFont.insert({ key, info }).first->second;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ImGuiAdapter::createFont(Font _font, FontStyle _style, FontSize _size)
     {
         VG_PROFILE_CPU("createFont");
 
         const auto fontPath = GetFontPath(_font, _style);
-        auto & slot = m_imGuiFont[asInteger(_font)][asInteger(_style)];
+        auto & slot = getOrCreateFontInfo(_font, _style, _size);
 
         if (fontPath)
         {
             string fontFullPath = fmt::sprintf("data/Engine/Fonts/%s", fontPath);
 
             ImGuiIO & io = ImGui::GetIO();
-            io.Fonts->AddFontFromFileTTF(fontFullPath.c_str(), editor::style::font::DefaultFontHeight);
+            io.Fonts->AddFontFromFileTTF(fontFullPath.c_str(), _size);
 
-            float baseFontSize = editor::style::font::DefaultFontHeight;
-            float iconFontSize = baseFontSize;
+            float iconFontSize = _size;
 
             // merge in icons from Font Awesome
             static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
@@ -159,33 +174,29 @@ namespace vg::renderer
     {
         bool dirty = false;
 
-        for (uint j = 0; j < enumCount<Font>(); ++j)
+        for (auto & pair : m_imGuiFont)
         {
-            for (uint i = 0; i < enumCount<FontStyle>(); ++i)
+            auto & key = pair.first;
+            auto & slot = pair.second;
+
+            if (slot.ptr == nullptr && slot.needed && !slot.failed)
             {
-                auto & slot = m_imGuiFont[j][i];
-                if (slot.ptr == nullptr && slot.needed && !slot.failed)
+                const char * path = GetFontPath(key.font, key.style);
+
+                if (createFont(key.font, key.style, key.size))
                 {
-                    auto font = (Font)j;
-                    auto style = (FontStyle)i;
+                    dirty = true;
 
-                    const char * path = GetFontPath(font, style);
+                    VG_INFO("[UI] Created font texture {%s,%s,%u} from file \"%s\"", asString(key.font).c_str(), asString(key.style).c_str(), key.size, path);
+                }
+                else
+                {
+                    slot.failed = true;
 
-                    if (createFont(font, style))
-                    {
-                        dirty = true;
-
-                        VG_INFO("[UI] Created font texture [%s][%s] from file \"%s\"", asString(font).c_str(), asString(style).c_str(), path);
-                    }
+                    if (path)
+                        VG_ERROR("[UI] Could not create font texture {%s,%s,%u} from file \"%s\"", asString(key.font).c_str(), asString(key.style).c_str(), key.size, path);
                     else
-                    {
-                        slot.failed = true;
-
-                        if (path)
-                            VG_ERROR("[UI] Could not create font texture [%s][%s] from file \"%s\"", asString(font).c_str(), asString(style).c_str(), path);
-                        else
-                            VG_ERROR("[UI] Could not create font texture [%s][%s]", asString(font).c_str(), asString(style).c_str());
-                    }
+                        VG_ERROR("[UI] Could not create font texture {%s,%s,%u}", asString(key.font).c_str(), asString(key.style).c_str(), key.size);
                 }
             }
         }
@@ -607,9 +618,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    ImFont * ImGuiAdapter::GetFont(Font _font, FontStyle _style)
+    ImFont * ImGuiAdapter::GetFont(Font _font, FontStyle _style, FontSize _size)
     {
-        auto & info = m_imGuiFont[asInteger(_font)][asInteger(_style)];
+        auto & info = getOrCreateFontInfo(_font,_style,_size);
 
         if (!info.ptr)
         {
@@ -617,7 +628,7 @@ namespace vg::renderer
 
             // Fallback to regular style if not found
             if (_style != FontStyle::Regular)
-                return GetFont(_font, FontStyle::Regular);
+                return GetFont(_font, FontStyle::Regular, _size);
         }
 
         return info.ptr;
@@ -626,7 +637,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::PushDefaultFont()
     {
-        ImGui::PushFont(GetFont(s_defaultFont, s_defaultFontStyle));
+        ImGui::PushFont(GetFont(s_defaultFont, s_defaultFontStyle, s_defaultFontSize));
         m_currentFont = s_defaultFont;
         m_currentFontStyle = s_defaultFontStyle;
     }
@@ -634,17 +645,27 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::PushFont(vg::renderer::Font _font)
     {
-        ImGui::PushFont(GetFont(_font, m_currentFontStyle));
+        ImGui::PushFont(GetFont(_font, m_currentFontStyle, m_currentFontSize));
         m_currentFont = _font;
     }
 
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::PushFont(vg::renderer::Font _font, vg::renderer::FontStyle _style)
     {
-        auto * font = GetFont(_font, _style);
+        auto * font = GetFont(_font, _style, m_currentFontSize);
         ImGui::PushFont(font);
         m_currentFont = _font;
         m_currentFontStyle = _style;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::PushFont(vg::renderer::Font _font, vg::renderer::FontStyle _style, vg::renderer::FontSize _size)
+    {
+        auto * font = GetFont(_font, _style, _size);
+        ImGui::PushFont(font);
+        m_currentFont = _font;
+        m_currentFontStyle = _style;
+        m_currentFontSize = _size;
     }
 
     //--------------------------------------------------------------------------------------
@@ -656,7 +677,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::PushFontStyle(vg::renderer::FontStyle _style)
     {
-        ImGui::PushFont(GetFont(m_currentFont, _style));
+        ImGui::PushFont(GetFont(m_currentFont, _style, m_currentFontSize));
         m_currentFontStyle = _style;
     }
 
