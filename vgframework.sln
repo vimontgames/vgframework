@@ -168,7 +168,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{7C17C1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{A6056C5D-D628-4DFE-945D-0938671C5BA8}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Build.yml = .github\workflows\Build.yml
+		.github\workflows\Build_Target_vs2022.yml = .github\workflows\Build_Target_vs2022.yml
 		.github\workflows\Build_Version.yml = .github\workflows\Build_Version.yml
 		.github\workflows\Submit.yml = .github\workflows\Submit.yml
 	EndProjectSection
@@ -182,36 +182,36 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Win64", "Win64", "{8006A66E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DX12", "DX12", "{10B0BBE1-BF80-4ECD-8F14-8194F451766D}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Win64_DX12_Debug.yml = .github\workflows\Win64_DX12_Debug.yml
-		.github\workflows\Win64_DX12_Development.yml = .github\workflows\Win64_DX12_Development.yml
-		.github\workflows\Win64_DX12_Final.yml = .github\workflows\Win64_DX12_Final.yml
-		.github\workflows\Win64_DX12_Release.yml = .github\workflows\Win64_DX12_Release.yml
+		.github\workflows\Win64_ClangCL_DX12_Debug.yml = .github\workflows\Win64_ClangCL_DX12_Debug.yml
+		.github\workflows\Win64_ClangCL_DX12_Development.yml = .github\workflows\Win64_ClangCL_DX12_Development.yml
+		.github\workflows\Win64_ClangCL_DX12_Final.yml = .github\workflows\Win64_ClangCL_DX12_Final.yml
+		.github\workflows\Win64_ClangCL_DX12_Release.yml = .github\workflows\Win64_ClangCL_DX12_Release.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vulkan", "Vulkan", "{E092AAFC-AD5F-4267-B76E-A8B5E8D544B5}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\Win64_Vulkan_Debug.yml = .github\workflows\Win64_Vulkan_Debug.yml
-		.github\workflows\Win64_Vulkan_Development.yml = .github\workflows\Win64_Vulkan_Development.yml
-		.github\workflows\Win64_Vulkan_Final.yml = .github\workflows\Win64_Vulkan_Final.yml
-		.github\workflows\Win64_Vulkan_Release.yml = .github\workflows\Win64_Vulkan_Release.yml
+		.github\workflows\Win64_ClangCL_Vulkan_Debug.yml = .github\workflows\Win64_ClangCL_Vulkan_Debug.yml
+		.github\workflows\Win64_ClangCL_Vulkan_Development.yml = .github\workflows\Win64_ClangCL_Vulkan_Development.yml
+		.github\workflows\Win64_ClangCL_Vulkan_Final.yml = .github\workflows\Win64_ClangCL_Vulkan_Final.yml
+		.github\workflows\Win64_ClangCL_Vulkan_Release.yml = .github\workflows\Win64_ClangCL_Vulkan_Release.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ARM64EC", "ARM64EC", "{1521C3BF-A6FF-43FE-A2C4-0214FE9C0E56}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DX12", "DX12", "{98E46C92-0EB4-4952-A209-EE9FCB60C9BC}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\ARM64EC_DX12_Debug.yml = .github\workflows\ARM64EC_DX12_Debug.yml
-		.github\workflows\ARM64EC_DX12_Development.yml = .github\workflows\ARM64EC_DX12_Development.yml
-		.github\workflows\ARM64EC_DX12_Final.yml = .github\workflows\ARM64EC_DX12_Final.yml
-		.github\workflows\ARM64EC_DX12_Release.yml = .github\workflows\ARM64EC_DX12_Release.yml
+		.github\workflows\ARM64EC_MSVC_DX12_Debug.yml = .github\workflows\ARM64EC_MSVC_DX12_Debug.yml
+		.github\workflows\ARM64EC_MSVC_DX12_Development.yml = .github\workflows\ARM64EC_MSVC_DX12_Development.yml
+		.github\workflows\ARM64EC_MSVC_DX12_Final.yml = .github\workflows\ARM64EC_MSVC_DX12_Final.yml
+		.github\workflows\ARM64EC_MSVC_DX12_Release.yml = .github\workflows\ARM64EC_MSVC_DX12_Release.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vulkan", "Vulkan", "{A5BEB808-297E-4924-838D-D74404C7025C}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\ARM64EC_Vulkan_Debug.yml = .github\workflows\ARM64EC_Vulkan_Debug.yml
-		.github\workflows\ARM64EC_Vulkan_Development.yml = .github\workflows\ARM64EC_Vulkan_Development.yml
-		.github\workflows\ARM64EC_Vulkan_Final.yml = .github\workflows\ARM64EC_Vulkan_Final.yml
-		.github\workflows\ARM64EC_Vulkan_Release.yml = .github\workflows\ARM64EC_Vulkan_Release.yml
+		.github\workflows\ARM64EC_MSVC_Vulkan_Debug.yml = .github\workflows\ARM64EC_MSVC_Vulkan_Debug.yml
+		.github\workflows\ARM64EC_MSVC_Vulkan_Development.yml = .github\workflows\ARM64EC_MSVC_Vulkan_Development.yml
+		.github\workflows\ARM64EC_MSVC_Vulkan_Final.yml = .github\workflows\ARM64EC_MSVC_Vulkan_Final.yml
+		.github\workflows\ARM64EC_MSVC_Vulkan_Release.yml = .github\workflows\ARM64EC_MSVC_Vulkan_Release.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "script", "script", "{4E477101-4D7A-4D13-AE06-9F27F1965883}"
@@ -254,6 +254,28 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core.tests", "tests\core.tests\core.tests.vcxproj", "{22309D03-63DF-4F8C-B314-C9B2B3E5DFF5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{257A93DC-9206-4770-9560-7A22DFF0AC01} = {257A93DC-9206-4770-9560-7A22DFF0AC01}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSVC", "MSVC", "{2C6FCA43-B42A-443F-9AEA-367418168F02}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClangCL", "ClangCL", "{FCE4706E-C35A-4267-BA03-409854210A76}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MSVC", "MSVC", "{19A142E6-2D6E-4AD2-B3C5-FAC42A5FA283}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DX12", "DX12", "{F2F0AE91-E95B-4AF4-94BE-0D7E3E34D4A0}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\Win64_MSVC_DX12_Debug.yml = .github\workflows\Win64_MSVC_DX12_Debug.yml
+		.github\workflows\Win64_MSVC_DX12_Development.yml = .github\workflows\Win64_MSVC_DX12_Development.yml
+		.github\workflows\Win64_MSVC_DX12_Final.yml = .github\workflows\Win64_MSVC_DX12_Final.yml
+		.github\workflows\Win64_MSVC_DX12_Release.yml = .github\workflows\Win64_MSVC_DX12_Release.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vulkan", "Vulkan", "{49498311-2770-4A53-86FF-E57D12F52CE1}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\Win64_MSVC_Vulkan_Debug.yml = .github\workflows\Win64_MSVC_Vulkan_Debug.yml
+		.github\workflows\Win64_MSVC_Vulkan_Development.yml = .github\workflows\Win64_MSVC_Vulkan_Development.yml
+		.github\workflows\Win64_MSVC_Vulkan_Final.yml = .github\workflows\Win64_MSVC_Vulkan_Final.yml
+		.github\workflows\Win64_MSVC_Vulkan_Release.yml = .github\workflows\Win64_MSVC_Vulkan_Release.yml
 	EndProjectSection
 EndProject
 Global
@@ -613,14 +635,19 @@ Global
 		{4AD9B61D-1402-4E76-ACBA-5D3B57B9F408} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{A6056C5D-D628-4DFE-945D-0938671C5BA8} = {7C17C12C-1875-4215-8A0B-C4FBC50907FE}
 		{8006A66E-08DC-4060-8760-77F0CE8CF997} = {A6056C5D-D628-4DFE-945D-0938671C5BA8}
-		{10B0BBE1-BF80-4ECD-8F14-8194F451766D} = {8006A66E-08DC-4060-8760-77F0CE8CF997}
-		{E092AAFC-AD5F-4267-B76E-A8B5E8D544B5} = {8006A66E-08DC-4060-8760-77F0CE8CF997}
+		{10B0BBE1-BF80-4ECD-8F14-8194F451766D} = {FCE4706E-C35A-4267-BA03-409854210A76}
+		{E092AAFC-AD5F-4267-B76E-A8B5E8D544B5} = {FCE4706E-C35A-4267-BA03-409854210A76}
 		{1521C3BF-A6FF-43FE-A2C4-0214FE9C0E56} = {A6056C5D-D628-4DFE-945D-0938671C5BA8}
-		{98E46C92-0EB4-4952-A209-EE9FCB60C9BC} = {1521C3BF-A6FF-43FE-A2C4-0214FE9C0E56}
-		{A5BEB808-297E-4924-838D-D74404C7025C} = {1521C3BF-A6FF-43FE-A2C4-0214FE9C0E56}
+		{98E46C92-0EB4-4952-A209-EE9FCB60C9BC} = {2C6FCA43-B42A-443F-9AEA-367418168F02}
+		{A5BEB808-297E-4924-838D-D74404C7025C} = {2C6FCA43-B42A-443F-9AEA-367418168F02}
 		{204113B2-C64F-4F4C-9C7A-49F562C088B3} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
 		{C1DE9EC7-954C-4C24-9956-879DDFE9A748} = {204113B2-C64F-4F4C-9C7A-49F562C088B3}
 		{35BFEE77-154C-40F6-90F6-D378EC135F20} = {3A24AFD2-079B-45FC-8488-70058ACACD89}
+		{2C6FCA43-B42A-443F-9AEA-367418168F02} = {1521C3BF-A6FF-43FE-A2C4-0214FE9C0E56}
+		{FCE4706E-C35A-4267-BA03-409854210A76} = {8006A66E-08DC-4060-8760-77F0CE8CF997}
+		{19A142E6-2D6E-4AD2-B3C5-FAC42A5FA283} = {8006A66E-08DC-4060-8760-77F0CE8CF997}
+		{F2F0AE91-E95B-4AF4-94BE-0D7E3E34D4A0} = {19A142E6-2D6E-4AD2-B3C5-FAC42A5FA283}
+		{49498311-2770-4A53-86FF-E57D12F52CE1} = {19A142E6-2D6E-4AD2-B3C5-FAC42A5FA283}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B437215B-B736-4FF0-8DA1-E6B35C780CE1}
