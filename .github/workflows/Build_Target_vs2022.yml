@@ -29,6 +29,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
   
+      - name: List installed Windows SDKs
+        run: |
+          echo "==== Windows SDK Include folders ===="
+          dir "C:\Program Files (x86)\Windows Kits\10\Include"
+          echo "==== Windows SDK Lib folders ===="
+          dir "C:\Program Files (x86)\Windows Kits\10\Lib"
+          echo "==== Windows SDK bin folders ===="
+          dir "C:\Program Files (x86)\Windows Kits\10\bin"
+  
       - name: Generate Projects
         working-directory: ./sharpmake
         shell: cmd
