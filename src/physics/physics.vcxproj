@@ -120,7 +120,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{F9F268C0-B4CB-4B80-B857-C75C7555E09B}</ProjectGuid>
     <RootNamespace>Game</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
     <ProjectName>physics</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

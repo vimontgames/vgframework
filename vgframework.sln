@@ -278,6 +278,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Vulkan", "Vulkan", "{494983
 		.github\workflows\Win64_MSVC_Vulkan_Release.yml = .github\workflows\Win64_MSVC_Vulkan_Release.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sharpmake", "sharpmake", "{2D336558-0124-424B-910D-88E557C4B84E}"
+	ProjectSection(SolutionItems) = preProject
+		sharpmake\generate_projects_Linux.bat = sharpmake\generate_projects_Linux.bat
+		sharpmake\generate_projects_macOS.bat = sharpmake\generate_projects_macOS.bat
+		sharpmake\generate_projects_Windows.bat = sharpmake\generate_projects_Windows.bat
+		sharpmake\main.sharpmake.cs = sharpmake\main.sharpmake.cs
+		sharpmake\vg.application.sharpmake.cs = sharpmake\vg.application.sharpmake.cs
+		sharpmake\vg.audio.sharpmake.cs = sharpmake\vg.audio.sharpmake.cs
+		sharpmake\vg.core.sharpmake.cs = sharpmake\vg.core.sharpmake.cs
+		sharpmake\vg.data.sharpmake.cs = sharpmake\vg.data.sharpmake.cs
+		sharpmake\vg.editor.sharpmake.cs = sharpmake\vg.editor.sharpmake.cs
+		sharpmake\vg.engine.sharpmake.cs = sharpmake\vg.engine.sharpmake.cs
+		sharpmake\vg.game.sharpmake.cs = sharpmake\vg.game.sharpmake.cs
+		sharpmake\vg.gfx.sharpmake.cs = sharpmake\vg.gfx.sharpmake.cs
+		sharpmake\vg.physics.sharpmake.cs = sharpmake\vg.physics.sharpmake.cs
+		sharpmake\vg.project.sharpmake.cs = sharpmake\vg.project.sharpmake.cs
+		sharpmake\vg.renderer.sharpmake.cs = sharpmake\vg.renderer.sharpmake.cs
+		sharpmake\vg.solution.sharpmake.cs = sharpmake\vg.solution.sharpmake.cs
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64EC DX12 = Debug|ARM64EC DX12

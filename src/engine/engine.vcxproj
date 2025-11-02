@@ -204,7 +204,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{42797D89-56C0-4B42-846D-DEB042288DCF}</ProjectGuid>
     <RootNamespace>Game</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.26100.0</WindowsTargetPlatformVersion>
     <ProjectName>engine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
