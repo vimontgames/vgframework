@@ -38,12 +38,38 @@ jobs:
          path: |
            src/commit.h
            vgframework_win64_msvc_dx12_release.exe
-           build\bin\win64\release msvc\audio.dll
-           build\bin\win64\release msvc\editor.dll
-           build\bin\win64\release msvc\engine.dll
-           build\bin\win64\release msvc\game.dll
-           build\bin\win64\release msvc\physics.dll
-           build\bin\win64\release msvc DX12\renderer.dll
+           build/bin/win64/release msvc/audio.dll
+           build/bin/win64/release msvc/editor.dll
+           build/bin/win64/release msvc/engine.dll
+           build/bin/win64/release msvc/game.dll
+           build/bin/win64/release msvc/physics.dll
+           build/bin/win64/release msvc DX12\renderer.dll
+
+     - name: Verify Uploaded Release Artifacts
+       shell: pwsh
+       run: |
+         $expectedFiles = @(
+           "src/commit.h",
+           "vgframework_win64_msvc_dx12_release.exe",
+           "build/bin/win64/release msvc/audio.dll",
+           "build/bin/win64/release msvc/editor.dll",
+           "build/bin/win64/release msvc/engine.dll",
+           "build/bin/win64/release msvc/game.dll",
+           "build/bin/win64/release msvc/physics.dll",
+           "build/bin/win64/release msvc DX12/renderer.dll"
+         )
+         $missing = @()
+         foreach ($file in $expectedFiles) {
+           if (-not (Test-Path $file)) {
+             $missing += $file
+           }
+         }
+         if ($missing.Count -gt 0) {
+           Write-Host "Missing files:" $missing
+           exit 1
+         } else {
+           Write-Host "All expected release files found and uploaded."
+         }
 
   build_game:
     runs-on: windows-latest
@@ -69,11 +95,36 @@ jobs:
           path: |
             src/commit.h
             vgframework_win64_msvc_dx12_final.exe
-            build\bin\win64\final msvc\audio.dll
-            build\bin\win64\final msvc\engine.dll
-            build\bin\win64\final msvc\game.dll
-            build\bin\win64\final msvc\physics.dll
-            build\bin\win64\final msvc DX12\renderer.dll
+            build/bin/win64/final msvc/audio.dll
+            build/bin/win64/final msvc/engine.dll
+            build/bin/win64/final msvc/game.dll
+            build/bin/win64/final msvc/physics.dll
+            build/bin/win64/final msvc DX12\renderer.dll
+
+      - name: Verify Uploaded Final Artifacts
+        shell: pwsh
+        run: |
+          $expectedFiles = @(
+            "src/commit.h",
+            "vgframework_win64_msvc_dx12_final.exe",
+            "build/bin/win64/final msvc/audio.dll",
+            "build/bin/win64/final msvc/engine.dll",
+            "build/bin/win64/final msvc/game.dll",
+            "build/bin/win64/final msvc/physics.dll",
+            "build/bin/win64/final msvc DX12/renderer.dll"
+          )
+          $missing = @()
+          foreach ($file in $expectedFiles) {
+            if (-not (Test-Path $file)) {
+              $missing += $file
+            }
+          }
+          if ($missing.Count -gt 0) {
+            Write-Host "Missing files:" $missing
+            exit 1
+          } else {
+            Write-Host "All expected final files found and uploaded."
+          }
 
   submit_binaries:
     runs-on: windows-latest
