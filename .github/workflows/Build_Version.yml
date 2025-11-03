@@ -195,7 +195,7 @@ jobs:
           git config user.email "VGF_Boy@users.noreply.github.com"
 
           # Stage Editor files
-          git add -f "Editor.exe"         
+          git add -f "editor.exe"         
           git add -f "bin\win64\release msvc\audio.dll"
           git add -f "bin\win64\release msvc\editor.dll"
           git add -f "bin\win64\release msvc\engine.dll"
@@ -204,7 +204,7 @@ jobs:
           git add -f "bin\win64\release msvc DX12\renderer.dll"
           
           # Stage Game files
-          git add -f "Game.exe"
+          git add -f "game.exe"
           git add -f "bin\win64\final msvc\audio.dll"
           git add -f "bin\win64\final msvc\engine.dll"
           git add -f "bin\win64\final msvc\game.dll"
