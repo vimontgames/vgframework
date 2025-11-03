@@ -3,6 +3,7 @@ del Game.exe
 del Editor.exe
 del VGFramework*.exe
 del *.lib
+del *.map
 ren dxcompiler.dll dxcompiler.dll.bak
 ren dxil.dll dxil.dll.bak
 ren WinPixEventRuntime.dll WinPixEventRuntime.dll.bak

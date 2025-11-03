@@ -7,8 +7,8 @@ on:
       - "src/version.h"
 
 env:
-  SOLUTION_FILE_PATH_WIN64: vgframework.sln
-  BUILD_PLATFORM_WIN64: '"Win64 DX12"'
+  SOLUTION_FILE_PATH_WIN64: vgframework_vs2022.sln
+  BUILD_PLATFORM_WIN64: '"Win64 MSVC DX12"'
 
 permissions:
   contents: write
@@ -18,6 +18,11 @@ jobs:
     runs-on: windows-latest
     steps:
      - uses: actions/checkout@v4
+  
+     - name: Generate Projects
+       working-directory: ./sharpmake
+       shell: cmd
+       run: generate_projects_Windows.bat
 
      - name: Add MSBuild to PATH
        uses: microsoft/setup-msbuild@v2
@@ -75,6 +80,11 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+  
+      - name: Generate Projects
+        working-directory: ./sharpmake
+        shell: cmd
+        run: generate_projects_Windows.bat
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@v2

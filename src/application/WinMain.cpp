@@ -239,15 +239,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     if (cmdLine.getBool("attachDebugger", attachDebugger) && attachDebugger)
         vg::core::messageBox(vg::core::MessageBoxIcon::Info, vg::core::MessageBoxType::OK, "attachDebugger=true", "You can attach debugger now");
 
-	core::string title = fmt::sprintf("VGFramework %s %s build | %s - %s", core::Plugin::getCompiler(), core::Plugin::getConfiguration(), core::Plugin::getPlatform(), core::asString(engineParams.renderer.device.api));
-    if (engineParams.renderer.device.debugDevice)
-        title += " (debug device)";
+	core::string title = fmt::sprintf("VGFramework %u.%u.%u", VG_FRAMEWORK_VERSION_MAJOR, VG_FRAMEWORK_VERSION_MINOR, VG_FRAMEWORK_VERSION_PATCH);
 
-	title += fmt::sprintf(" - Version %u.%u.%u", VG_FRAMEWORK_VERSION_MAJOR, VG_FRAMEWORK_VERSION_MINOR, VG_FRAMEWORK_VERSION_PATCH);
-	
 	#ifdef GIT_REVISION
 	title += fmt::sprintf(" (commit %s)", GIT_REVISION);
 	#endif
+
+	title += fmt::sprintf(" - %s | %s %s %s", core::Plugin::getConfiguration(), core::Plugin::getCompiler(), core::Plugin::getPlatform(), core::asString(engineParams.renderer.device.api));
+    if (engineParams.renderer.device.debugDevice)
+        title += " (debug device)";
 
 	SetWindowTextA(g_hWnd, title.c_str());
 
