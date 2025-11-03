@@ -27,12 +27,17 @@ namespace vg
             conf.PlatformName = platformName;
             conf.Name = $"{target.Optimization}";
 
-            // "Solution folders" here for convenience (e.g. edit shaders or README.md in IDE)
-            conf.AddProject<GitHub>(target, false, "data");
-            conf.AddProject<ReadMe>(target, false, "data");
+            // Build folders
+            conf.AddProject<GitHub>(target, false, "build");
+            conf.AddProject<Scripts>(target, false, "build");
+            conf.AddProject<Version>(target, false, "build");
+            conf.AddProject<GenerateSolution>(target, false, "build");
+           
+            // Data folders
             conf.AddProject<Shaders>(target, false, "data");
-            conf.AddProject<Scripts>(target, false, "data");
-            conf.AddProject<Version>(target, false, "data");
+
+            // Misc folders
+            conf.AddProject<ReadMe>(target, false, "misc");
 
             // All projects must be explicitly added here, deducing them from dependencies is not enough and will generate incorrect platform configurations
             conf.AddProject<Core>(target);

@@ -42,7 +42,7 @@ jobs:
          name: release-artifacts
          path: |
            src/commit.h
-           vgframework_win64_msvc_dx12_release.exe
+           editor.exe
            build/bin/win64/release msvc/audio.dll
            build/bin/win64/release msvc/editor.dll
            build/bin/win64/release msvc/engine.dll
@@ -55,7 +55,7 @@ jobs:
        run: |
          $expectedFiles = @(
            "src/commit.h",
-           "vgframework_win64_msvc_dx12_release.exe",
+           "editor.exe",
            "build/bin/win64/release msvc/audio.dll",
            "build/bin/win64/release msvc/editor.dll",
            "build/bin/win64/release msvc/engine.dll",
@@ -104,7 +104,7 @@ jobs:
           name: final-artifacts
           path: |
             src/commit.h
-            vgframework_win64_msvc_dx12_final.exe
+            game.exe
             build/bin/win64/final msvc/audio.dll
             build/bin/win64/final msvc/engine.dll
             build/bin/win64/final msvc/game.dll
@@ -116,7 +116,7 @@ jobs:
         run: |
           $expectedFiles = @(
             "src/commit.h",
-            "vgframework_win64_msvc_dx12_final.exe",
+            "game.exe",
             "build/bin/win64/final msvc/audio.dll",
             "build/bin/win64/final msvc/engine.dll",
             "build/bin/win64/final msvc/game.dll",

@@ -37,6 +37,18 @@ namespace vg
 
             conf.EventPreBuild.Add("$(SolutionDir)script\\generate_version_header_vs2022.bat");
             conf.EventPreBuildDescription = "Generate 'commit.h' file using current git revision";
+
+            if (target.Optimization == Optimization.Release && target.Platform == Platform.win64 && target.Compiler == Compiler.MSVC)
+            {
+                conf.EventPostBuild.Add($"copy /y \"$(TargetDir){conf.TargetFileName.ToLower()}.exe\" \"$(TargetDir)editor.exe\"");
+                conf.EventPostBuildDescription = "Copy \"editor.exe\"";
+            }
+
+            if (target.Optimization == Optimization.Final && target.Platform == Platform.win64 && target.Compiler == Compiler.MSVC)
+            {
+                conf.EventPostBuild.Add($"copy /y \"$(TargetDir){conf.TargetFileName.ToLower()}.exe\" \"$(TargetDir)game.exe\"");
+                conf.EventPostBuildDescription = "Copy \"game.exe\"";
+            }
         }
     }
 }

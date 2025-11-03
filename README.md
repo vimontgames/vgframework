@@ -1,6 +1,6 @@
 ﻿<img src="doc/img/version.png" alt="VGF boy" title="VGF boy" align="right" height="74" />
 
-# VGFramework 0.48
+# VGFramework 0.50
 Yet another work-in-progress game and graphic engine project.
 
 ![Demo](doc/img/breakable.gif)
@@ -31,12 +31,12 @@ You have two options depending on whether you want to build from source or use t
 
 ## Using precompiled binaries (users)
 
-- Run `Editor.exe` to launch the editor.
-- Run `Game.exe` to start the game.
+- Run `editor.exe` to launch the editor.
+- Run `game.exe` to start the game.
 
 ## Building from sources (programmers)
 
-By default, VGFramework uses the precompiled binaries: `Editor.exe`, `Game.exe`, and the DLLs located in the `bin/` folder. 
+By default, VGFramework uses the precompiled binaries: `editor.exe`, `game.exe`, and the DLLs located in the `bin/` folder. 
 
 When you build locally, executable files will be created in your `build/` folder.\
 The program will use these locally built files if they are present; otherwise, it will fallback to the precompiled binaries.
@@ -100,10 +100,14 @@ Use the 'Configuration' combo to select build configuration:
 | Release     | `VG_RELEASE`    | /MD     | /O2          | /Ob2     | No              | Yes
 | Final       | `VG_FINAL`      | /MD     | /O2          | /Ob2     | No              | No
 
+The recommended default configuration is `Development` as it's a good compromise between debugging information, performance and it allow 'Edit & Continue'.
+
 ### Solution Platform
 Use the 'Platform' combo to select target architecture and graphics API:
 
 ![Screenshot](doc/img/SolutionPlatformName.png)
+
+The recommended default solution under Windows is `Win64 MSVC DX12` as it's the primary OS, compiler, and API used by the author.
 
 ### Working Directory
 

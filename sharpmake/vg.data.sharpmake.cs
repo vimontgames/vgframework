@@ -3,6 +3,23 @@ using Sharpmake;
 namespace vg
 {
     [Sharpmake.Generate]
+    public class GenerateSolution : Project
+    {
+        public GenerateSolution() :
+            base("sharpmake", Type.Data)
+        {
+            SourceRootPath = $@"[project.SharpmakeCsPath]\..\sharpmake";
+            SourceFilesExtensions.Add(".cs");
+            SourceFilesExtensions.Add(".bat");
+        }
+
+        public override void ConfigureAll(Configuration conf, Target target)
+        {
+            base.ConfigureAll(conf, target);
+        }
+    }
+
+    [Sharpmake.Generate]
     public class Shaders : Project
     {
         public Shaders() : 
