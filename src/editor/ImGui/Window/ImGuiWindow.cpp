@@ -1119,10 +1119,9 @@ namespace vg::editor
 
         if (_objectContext.m_treeNodes.size() > 0)
         {
-            auto & nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
-            if (!nodeInfo.treeNodeOpen)
+            for (auto & node : _objectContext.m_treeNodes)
             {
-                if (PropertyType::LayoutElement != type)
+                if (!node.treeNodeOpen && !(type == PropertyType::LayoutElement))
                     return false;
             }
         }
@@ -1136,7 +1135,7 @@ namespace vg::editor
                 if (layoutType == PropertyLayoutElement::GroupBegin)
                     _objectContext.m_treeNodeHideLevel = (uint)_objectContext.m_treeNodes.size();
             }
-
+        
             return false;
         }
 
@@ -1279,21 +1278,26 @@ namespace vg::editor
 
                         case PropertyLayoutElement::GroupBegin:
                         {
-                            if (_objectContext.m_treeNodes.size() == 0 || _objectContext.m_treeNodes.back().treeNodeOpen)
+                            bool * toggle = nullptr;
+                            bool previous;
+                            if (asBool(PropertyFlags::Optional & flags))
                             {
-                                auto & newInfo = _objectContext.m_treeNodes.emplace_back();
+                                toggle = _prop->GetPropertyBool(_object);
+                                previous = *toggle;
+                            }
 
-                                bool * toggle = nullptr;
-                                bool previous;
-                                if (asBool(PropertyFlags::Optional & flags))
-                                {
-                                    toggle = _prop->GetPropertyBool(_object);
-                                    previous = *toggle;
-                                }
+                            bool open;
+                            if (_objectContext.m_treeNodes.size() == 0 || _objectContext.m_treeNodes.back().treeNodeOpen)
+                                open = ImGui::PersistentCollapsingHeader(_prop->GetDisplayName(), _object, _prop, toggle);
+                            else
+                                open = false;
 
-                                newInfo.treeNodeOpen = ImGui::PersistentCollapsingHeader(_prop->GetDisplayName(), _object, _prop, toggle);
-                                newInfo.treeNodeIsCollapsingHeader = true;
+                            auto & newInfo = _objectContext.m_treeNodes.emplace_back();
+                            newInfo.treeNodeOpen = open;
+                            newInfo.treeNodeIsCollapsingHeader = true;
 
+                            if (open)
+                            {
                                 if (toggle)
                                 {
                                     if (*toggle != previous)
@@ -1316,28 +1320,28 @@ namespace vg::editor
                             {
                                 if (_objectContext.m_treeNodes.size() > 0)
                                 {
-                                    ImGui::Unindent();
-
                                     auto & nodeInfo = _objectContext.m_treeNodes[_objectContext.m_treeNodes.size() - 1];
 
                                     if (nodeInfo.treeNodeOpen)
                                     {
+                                        ImGui::Unindent();
+
                                         if (!nodeInfo.treeNodeIsCollapsingHeader)
                                             ImGui::TreePop();
 
                                         ImGui::Spacing();
-                                    }
 
-                                    if (nodeInfo.treeNodeContentDisabled)
-                                        ImGui::PopDisabledStyle();
-
-                                    _objectContext.m_treeNodes.erase(_objectContext.m_treeNodes.begin() + _objectContext.m_treeNodes.size() - 1);
+                                        if (nodeInfo.treeNodeContentDisabled)
+                                            ImGui::PopDisabledStyle();
+                                    }                                                                   
                                 }
                             }
                             else
                             {
                                 _objectContext.m_treeNodeHideLevel = -1;
                             }
+
+                            _objectContext.m_treeNodes.erase(_objectContext.m_treeNodes.begin() + _objectContext.m_treeNodes.size() - 1);
                         }
                         break;
                     }
@@ -1667,7 +1671,7 @@ namespace vg::editor
                     const size_t count = _prop->GetPropertyObjectVectorCount(_object);
                     const u8 * data = _prop->GetPropertyObjectVectorData(_object);
 
-                    string treeNodeName = fmt::sprintf("%s[%u]", displayName, count); 
+                    string treeNodeName = fmt::sprintf("%s [%u]", displayName, count); 
 
                     auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -1690,7 +1694,7 @@ namespace vg::editor
                     auto * vec = _prop->GetPropertyObjectPtrVector(_object);
                     const auto count = vec->size();
 
-                    string treeNodeName = fmt::sprintf("%s[%u]", displayName, count);
+                    string treeNodeName = fmt::sprintf("%s [%u]", displayName, count);
 
                     auto treeNodeFlags = ImGuiTreeNodeFlags_OpenOnArrow;
 
@@ -1865,16 +1869,29 @@ namespace vg::editor
                             auto availableWidth = ImGui::GetContentRegionAvail().x + GetCursorPosX() - style.FramePadding.x;
                             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
-                            ImGui::PushStyleColor(ImGuiCol_Header, style.Colors[ImGuiCol_WindowBg]);
-                            ImGui::PushStyleColor(ImGuiCol_HeaderActive, style.Colors[ImGuiCol_ButtonActive]);
-                            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, style.Colors[ImGuiCol_ButtonHovered]);
-                            ImGui::PushStyleColor(ImGuiCol_Button, style.Colors[ImGuiCol_Header]);
-                            ImGui::PushStyleColor(ImGuiCol_ButtonActive, style.Colors[ImGuiCol_HeaderActive]);
-                            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, style.Colors[ImGuiCol_HeaderHovered]);
+                            // Display top-level prefab properties using regular CollapsingHeader
+                            bool isPrefab = false;
+                            if (IGameObject * go = dynamic_cast<core::IGameObject *>(_object))
+                            {
+                                if (go->IsPrefab())
+                                    isPrefab = true;
+                            }
+
+                            if (!isPrefab)
+                            {
+                                ImGui::PushStyleColor(ImGuiCol_Header, style.Colors[ImGuiCol_WindowBg]);
+                                ImGui::PushStyleColor(ImGuiCol_HeaderActive, style.Colors[ImGuiCol_ButtonActive]);
+                                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, style.Colors[ImGuiCol_ButtonHovered]);
+                                ImGui::PushStyleColor(ImGuiCol_Button, style.Colors[ImGuiCol_Header]);
+                                ImGui::PushStyleColor(ImGuiCol_ButtonActive, style.Colors[ImGuiCol_HeaderActive]);
+                                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, style.Colors[ImGuiCol_HeaderHovered]);
+                            }
                             ImGui::PushID("CollapsingHeader");
                             bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel(treeNodeName, _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
                             ImGui::PopID();
-                            ImGui::PopStyleColor(6);
+
+                            if (!isPrefab)
+                                ImGui::PopStyleColor(6);
 
                             bool add = false, remove = false;
                             int removeAt = -1;

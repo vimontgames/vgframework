@@ -17,7 +17,7 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerPropertyResource(PrefabGameObject, m_prefabResource, "File");
-        registerPropertyObjectPtrVector(PrefabGameObject, m_dynamicProperties, "Property Overrides");
+        registerPropertyObjectPtrVector(PrefabGameObject, m_dynamicProperties, "Override");
         
         return true;
     }

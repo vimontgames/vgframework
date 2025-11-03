@@ -277,7 +277,7 @@ namespace vg::core
         {
             default:
                 //VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                VG_WARNING("[Factory] Cannot serialize Property (%s)\"%s\" to memory", asString(type).c_str(), name);
+                VG_ERROR("[Factory] Cannot serialize Property (%s) \"%s\" to memory in %s \"%s\"", asString(type).c_str(), name, _object->GetClassName(), _object->GetName().c_str());
                 break;
 
             // Do nothing
@@ -1118,7 +1118,7 @@ namespace vg::core
         {
             default:
                 //VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
-                VG_WARNING("[Factory] Cannot serialize Property (%s)\"%s\" from memory", asString(type).c_str(), name);
+                VG_ERROR("[Factory] Cannot serialize Property (%s) \"%s\" from memory in %s \"%s\"", asString(type).c_str(), name, _object->GetClassName(), _object->GetName().c_str());
                 break;
 
             // Do nothing
