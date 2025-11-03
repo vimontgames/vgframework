@@ -16,6 +16,7 @@
 namespace vg::core
 {
     using Ticks = i64;
+    struct GPUMemoryInfo;
 }
 
 namespace vg::gfx

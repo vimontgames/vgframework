@@ -14,17 +14,87 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyGroupBegin(EngineOptions, "Project");
+        registerPropertyGroupBegin(EngineOptions, "Animation");
         {
-            registerPropertyEx(EngineOptions, m_gamePath, "Game Path", PropertyFlags::IsFolder);
-            setPropertyDescription(EngineOptions, m_gamePath, "Game root folder used to load game library");
+            registerPropertyEnumBitfield(EngineOptions, AnimationOptionFlags, m_animationOptionFlags, "Flags");
+            setPropertyDescription(EngineOptions, m_animationOptionFlags, "Option flags for animations");
+        }
+        registerPropertyGroupEnd(EngineOptions);
 
-            registerPropertyEx(EngineOptions, m_startWorld, "Start World", PropertyFlags::IsFile);
-            setPropertyDescription(EngineOptions, m_startWorld, "Default world to load at startup");
-            setPropertyDefaultFolder(EngineOptions, m_startWorld, "data/Worlds")
+        registerPropertyGroupBegin(EngineOptions, "Loading");
+        {
+            registerPropertyEnumBitfield(EngineOptions, LoadingOptionFlags, m_loadingOptionFlags, "Flags");
+            setPropertyDescription(EngineOptions, m_loadingOptionFlags, "Option flags for loading");
+        }
+        registerPropertyGroupEnd(EngineOptions);
 
-            registerPropertyEnumArray(EngineOptions, string, core::Tag, m_gameObjectTags, "GameObject Tags");
-            setPropertyDescription(EngineOptions, m_gameObjectTags, "Use GameObject Tags to categorize objects (e.g., Player, Enemy ...)")
+        registerPropertyGroupBegin(EngineOptions, "Memory");
+        {
+            registerPropertyGroupBegin(EngineOptions, "CPU");
+            {
+                registerPropertyGroupBegin(EngineOptions, "Physical");
+                {
+                    registerPropertyEx(EngineOptions, m_cpuMemory.m_totalPhys, "Total", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_cpuMemory.m_totalPhys, "Total physical memory installed (MB)");
+
+                    registerPropertyEx(EngineOptions, m_cpuMemory.m_usedPhys, "Used", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_cpuMemory.m_usedPhys, "Used physical memory (MB)");
+
+                    registerPropertyEx(EngineOptions, m_cpuMemory.m_availPhys, "Available", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_cpuMemory.m_availPhys, "Available physical memory (MB)");
+                }
+                registerPropertyGroupEnd(EngineOptions);
+
+                registerPropertyGroupBegin(EngineOptions, "Virtual");
+                {
+                    registerPropertyEx(EngineOptions, m_cpuMemory.m_totalPageFile, "Total", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_cpuMemory.m_totalPageFile, "Total virtual memory (MB)");
+
+                    registerPropertyEx(EngineOptions, m_cpuMemory.m_usedPageFile, "Used", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_cpuMemory.m_usedPageFile, "Used virtual memory (MB)");
+
+                    registerPropertyEx(EngineOptions, m_cpuMemory.m_availPageFile, "Available", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_cpuMemory.m_availPageFile, "Available virtual memory (MB)");
+                }
+                registerPropertyGroupEnd(EngineOptions);
+            }
+            registerPropertyGroupEnd(EngineOptions);
+
+            registerPropertyGroupBegin(EngineOptions, "GPU");
+            {
+                registerPropertyGroupBegin(EngineOptions, "Local");
+                {
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_budgetLocal, "Budget", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_gpuMemory.m_budgetLocal, "Local video memory available to the application (MB)");
+
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_currentUsageLocal, "Used", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_gpuMemory.m_currentUsageLocal, "Local video memory is currently used (MB)");
+
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_availableForReservationLocal, "Available", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_gpuMemory.m_availableForReservationLocal, "Local video memory the application can reserve (MB)");
+
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_currentReservationLocal, "Reserved", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_gpuMemory.m_currentReservationLocal, "Local video memory reserved (MB)");
+                }
+                registerPropertyGroupEnd(EngineOptions);
+
+                registerPropertyGroupBegin(EngineOptions, "Shared");
+                {
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_budgetShared, "Budget", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_gpuMemory.m_budgetShared, "Shared memory available to the application (MB)");
+
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_currentUsageShared, "Used", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_gpuMemory.m_currentUsageShared, "Shared memory is currently used (MB)");
+
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_availableForReservationShared, "Available", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_gpuMemory.m_availableForReservationShared, "Shared memory the application can reserve (MB)");
+
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_currentReservationShared, "Reserved", PropertyFlags::ReadOnly);
+                    setPropertyDescription(EngineOptions, m_gpuMemory.m_currentReservationShared, "Shared memory reserved (MB)");
+                }
+                registerPropertyGroupEnd(EngineOptions);
+            }
+            registerPropertyGroupEnd(EngineOptions);
         }
         registerPropertyGroupEnd(EngineOptions);
 
@@ -41,6 +111,20 @@ namespace vg::engine
         }
         registerPropertyGroupEnd(EngineOptions);
 
+        registerPropertyGroupBegin(EngineOptions, "Project");
+        {
+            registerPropertyEx(EngineOptions, m_gamePath, "Game Path", PropertyFlags::IsFolder);
+            setPropertyDescription(EngineOptions, m_gamePath, "Game root folder used to load game library");
+
+            registerPropertyEx(EngineOptions, m_startWorld, "Start World", PropertyFlags::IsFile);
+            setPropertyDescription(EngineOptions, m_startWorld, "Default world to load at startup");
+            setPropertyDefaultFolder(EngineOptions, m_startWorld, "data/Worlds")
+
+            registerPropertyEnumArray(EngineOptions, string, core::Tag, m_gameObjectTags, "GameObject Tags");
+            setPropertyDescription(EngineOptions, m_gameObjectTags, "Use GameObject Tags to categorize objects (e.g., Player, Enemy ...)")
+        }
+        registerPropertyGroupEnd(EngineOptions);
+
         registerPropertyGroupBegin(EngineOptions, "Time");
         {
             registerOptionalProperty(EngineOptions, m_useTimeScale, m_timeScale, "Time Scale");
@@ -54,20 +138,6 @@ namespace vg::engine
             registerOptionalProperty(EngineOptions, m_useFixedDT, m_fixedDT, "Fixed DT");
             setPropertyDescription(EngineOptions, m_fixedDT, "Use a fixed time delta between frames (ms)\nThis can be useful when stepping in the debugger");
             setPropertyRange(EngineOptions, m_fixedDT, float2(0.0f, 1000.0f / 20.0f));
-        }
-        registerPropertyGroupEnd(EngineOptions);
-
-        registerPropertyGroupBegin(EngineOptions, "Animation");
-        {
-            registerPropertyEnumBitfield(EngineOptions, AnimationOptionFlags, m_animationOptionFlags, "Flags");
-            setPropertyDescription(EngineOptions, m_animationOptionFlags, "Option flags for animations");
-        }
-        registerPropertyGroupEnd(EngineOptions);
-
-        registerPropertyGroupBegin(EngineOptions, "Loading");
-        {
-            registerPropertyEnumBitfield(EngineOptions, LoadingOptionFlags, m_loadingOptionFlags, "Flags");
-            setPropertyDescription(EngineOptions, m_loadingOptionFlags, "Option flags for loading");
         }
         registerPropertyGroupEnd(EngineOptions);
 
@@ -200,6 +270,7 @@ namespace vg::engine
 
         return false;
     }
+
     //--------------------------------------------------------------------------------------
     bool EngineOptions::TryGetMaxDT(float & _maxDT) const 
     { 
@@ -210,5 +281,17 @@ namespace vg::engine
         } 
         
         return false; 
+    }
+
+    //--------------------------------------------------------------------------------------
+    void EngineOptions::SetCpuMemoryInfo(const core::CPUMemoryInfo & _cpuMem)
+    {
+        m_cpuMemory = _cpuMem;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void EngineOptions::SetGpuMemoryInfo(const core::GPUMemoryInfo & _gpuMem)
+    {
+        m_gpuMemory = _gpuMem;
     }
 }

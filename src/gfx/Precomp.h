@@ -29,6 +29,10 @@
 #define VG_VERIFY_SUCCEEDED(f) { HRESULT hr = f; VG_ASSERT(SUCCEEDED(hr), "%s\n\n%s", #f, std::system_category().message(hr).c_str()); }
 #endif
 
+#ifdef VG_WINDOWS
+#define VG_DXGI 1 // Use Windows DXGI interface to get HDR monitor status or video memory available 
+#endif
+
 #ifdef VG_DX12
 //--------------------------------------------------------------------------------------
 // d3d12

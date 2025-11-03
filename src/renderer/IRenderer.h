@@ -10,6 +10,7 @@ namespace vg::core
     class IProfiler;
     struct Singletons;
     struct JobSync;
+    struct GPUMemoryInfo;
 }
 
 namespace vg::gfx
@@ -138,5 +139,7 @@ namespace vg::renderer
 
         virtual double                              GetGpuFrameTime         () const = 0;
         virtual double                              GetGpuWaitTime          () const = 0;
+
+        virtual bool                                GetGpuMemoryInfo        (core::GPUMemoryInfo & _gpuMem) const = 0;
     };
 }

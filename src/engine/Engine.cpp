@@ -34,6 +34,10 @@
 #include "editor/IEditorOptions.h"
 #include "application/IGame.h"
 
+#ifdef VG_WINDOWS
+#include <psapi.h>
+#endif
+
 #if !VG_ENABLE_INLINE
 #include "Engine.inl"
 #endif
@@ -751,6 +755,38 @@ namespace vg::engine
         m_resourceManager->updateMainThread();
     }
 
+    //--------------------------------------------------------------------------------------
+    void Engine::updateMemoryBudgets()
+    {
+        #if VG_WINDOWS
+        core::CPUMemoryInfo cpuMem;
+
+        MEMORYSTATUSEX memInfo = {};
+        memInfo.dwLength = sizeof(memInfo);
+        if (GlobalMemoryStatusEx(&memInfo))
+        {
+            cpuMem.m_totalPhys = (core::u64)round(float(memInfo.ullTotalPhys) / (1024.0f * 1024.0f));
+            cpuMem.m_availPhys = (core::u64)round(float(memInfo.ullAvailPhys) / (1024.0f * 1024.0f));
+            cpuMem.m_totalPageFile = (core::u64)round(float(memInfo.ullTotalPageFile) / (1024.0f*1024.0f));
+            cpuMem.m_availPageFile = (core::u64)round(float(memInfo.ullAvailPageFile) / (1024.0f*1024.0f));
+        }
+
+        PROCESS_MEMORY_COUNTERS_EX pmc;
+        if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS *)&pmc, sizeof(pmc)))
+        {
+            cpuMem.m_usedPhys = (core::u64)round(float(pmc.WorkingSetSize) / (1024.0f*1024.0f));
+            cpuMem.m_usedPageFile = (core::u64)round(float(pmc.PagefileUsage) / (1024.0f * 1024.0f));
+
+            GetOptions()->SetCpuMemoryInfo(cpuMem);
+        }
+
+        core::GPUMemoryInfo gpuMem;
+        if (m_renderer->GetGpuMemoryInfo(gpuMem))
+            GetOptions()->SetGpuMemoryInfo(gpuMem);
+
+        #endif
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Engine::RunOneFrame()
 	{
@@ -759,6 +795,8 @@ namespace vg::engine
         g_RunningOneFrame = true;
 
         VG_PROFILE_CPU("Engine");  
+
+        updateMemoryBudgets();
 
         EngineOptions::get()->Update();
 

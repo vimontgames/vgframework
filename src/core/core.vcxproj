@@ -82,6 +82,7 @@
     <ClInclude Include="Math\StorageVector.h" />
     <ClInclude Include="Math\StorageVector.hpp" />
     <ClInclude Include="Memory\MemoryAllocator.h" />
+    <ClInclude Include="Memory\MemoryInfo.h" />
     <ClInclude Include="Memory\NewDelete.h" />
     <ClInclude Include="Misc\AABB\AABB.h" />
     <ClCompile Include="Curve\Curve.cpp" />

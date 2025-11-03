@@ -1,6 +1,7 @@
 #pragma once
 #include "core/Singleton/Singleton.h"
 #include "core/IGameObject.h"
+#include "core/Memory/MemoryInfo.h"
 #include "engine/IEngineOptions.h"
 #include "physics/Physics_Consts.h"
 
@@ -37,6 +38,9 @@ namespace vg::engine
 
         core::Tag                   GetGameObjectTag            (const core::string & _name) const final override;
         physics::Category           GetPhysicsCategory          (const core::string & _name) const final override;
+
+        void                        SetCpuMemoryInfo            (const core::CPUMemoryInfo & _cpuMem) final override;
+        void                        SetGpuMemoryInfo            (const core::GPUMemoryInfo & _gpuMem) final override;
 
         core::vector<core::string>  getPhysicsCategoryNames     () const;
 
@@ -77,5 +81,9 @@ namespace vg::engine
 
         // Loading
         LoadingOptionFlags          m_loadingOptionFlags = LoadingOptionFlags::ResourcePriority;
+
+        // Memory
+        core::CPUMemoryInfo         m_cpuMemory;
+        core::GPUMemoryInfo         m_gpuMemory;
     };
 }

@@ -137,6 +137,8 @@ namespace vg::engine
         void                                    pause               ();
         void                                    resume              ();
 
+        void                                    updateMemoryBudgets ();
+
         static bool                             shouldCollide       (core::IObject * _obj1, core::IObject * _obj2);
 
 	private:

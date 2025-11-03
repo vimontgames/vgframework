@@ -4,6 +4,8 @@
 namespace vg::core
 {
     enum class Tag : core::u64;
+    struct CPUMemoryInfo;
+    struct GPUMemoryInfo;
 }
 
 namespace vg::physics
@@ -27,5 +29,8 @@ namespace vg::engine
 
         virtual core::Tag               GetGameObjectTag    (const core::string & _name) const = 0;
         virtual physics::Category       GetPhysicsCategory  (const core::string & _name) const = 0;
+
+        virtual void                    SetCpuMemoryInfo    (const core::CPUMemoryInfo & _cpuMem) = 0;
+        virtual void                    SetGpuMemoryInfo    (const core::GPUMemoryInfo & _gpuMem) = 0;
     };
 }

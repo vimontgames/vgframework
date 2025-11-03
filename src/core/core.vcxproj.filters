@@ -486,6 +486,9 @@
     <ClInclude Include="Curve\FloatCurve.hpp">
       <Filter>Curve</Filter>
     </ClInclude>
+    <ClInclude Include="Memory\MemoryInfo.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Math.cpp">

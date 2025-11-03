@@ -1321,6 +1321,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool Renderer::GetGpuMemoryInfo(core::GPUMemoryInfo & _gpuMem) const
+    {
+        return m_device.GetGpuMemoryInfo(_gpuMem);
+    }
+
+    //--------------------------------------------------------------------------------------
     const gfx::DeviceCaps & Renderer::getDeviceCaps() const
     {
         return m_device.getDeviceCaps();

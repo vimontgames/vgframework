@@ -147,6 +147,58 @@ namespace vg::gfx::vulkan
 	}
 
 	//--------------------------------------------------------------------------------------
+	bool Device::GetGpuMemoryInfo(core::GPUMemoryInfo & _gpuMem) const
+	{
+		if (m_EXT_DebugUtils.isEnabled())
+		{
+			memset(&_gpuMem, sizeof(core::GPUMemoryInfo), 0);
+
+            VkPhysicalDeviceMemoryProperties2 memProps2 = {};
+            memProps2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2;
+
+            VkPhysicalDeviceMemoryBudgetPropertiesEXT budgetProps = {};
+            budgetProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_BUDGET_PROPERTIES_EXT;
+
+            memProps2.pNext = &budgetProps;
+
+            vkGetPhysicalDeviceMemoryProperties2(m_vkPhysicalDevice, &memProps2);
+
+            for (uint32_t i = 0; i < memProps2.memoryProperties.memoryHeapCount; ++i)
+            {
+                const VkMemoryHeap & heap = memProps2.memoryProperties.memoryHeaps[i];
+                VkDeviceSize usage = budgetProps.heapUsage[i];
+                VkDeviceSize budget = budgetProps.heapBudget[i];
+
+                const bool isLocal = (heap.flags & VK_MEMORY_HEAP_DEVICE_LOCAL_BIT) != 0;
+
+				if (isLocal)
+				{
+					_gpuMem.m_currentUsageLocal += (u64)round((float)usage / (1024.0f*1024.0f));
+					_gpuMem.m_budgetLocal += (u64)round((float)budget / (1024.0f * 1024.0f));
+				
+	
+				}
+				else
+				{
+					_gpuMem.m_currentUsageShared += (u64)round((float)usage / (1024.0f * 1024.0f));
+					_gpuMem.m_budgetShared += (u64)round((float)budget / (1024.0f * 1024.0f));
+
+				}
+            }
+
+			_gpuMem.m_availableForReservationLocal = _gpuMem.m_budgetLocal - _gpuMem.m_currentUsageLocal;
+			_gpuMem.m_currentReservationLocal = 0;
+
+			_gpuMem.m_availableForReservationShared = _gpuMem.m_budgetShared - _gpuMem.m_currentUsageShared;
+            _gpuMem.m_currentReservationShared = 0;
+
+			return true;
+		}
+
+		return false;
+	}
+
+	//--------------------------------------------------------------------------------------
 	bool Device::onDebugMessage(VkDebugUtilsMessageSeverityFlagBitsEXT _severity, VkDebugUtilsMessageTypeFlagsEXT _flags, const VkDebugUtilsMessengerCallbackDataEXT * _data)
 	{
         if (m_captureInProgress)
@@ -317,6 +369,7 @@ namespace vg::gfx::vulkan
 		m_deviceExtensionList.registerExtension(m_KHR_Ray_Query);
 		//m_deviceExtensionList.registerExtension(m_KHR_Multiview);		// This is not useful
 		m_deviceExtensionList.registerExtension(m_EXT_HDR_Metadata);	// Unused for now
+		m_deviceExtensionList.registerExtension(m_EXT_MemoryBudget);	// Unused for now
 
 		#if VG_ENABLE_GPU_MARKER
 		m_instanceExtensionList.registerExtension(m_EXT_DebugUtils);
@@ -363,8 +416,10 @@ namespace vg::gfx::vulkan
 	{
 		super::init(_params);
 
-		#ifdef VG_WINDOWS
+		#if VG_DXGI
 		m_caps.hdr = DXGIHelper::getHDRCaps((HWND)m_deviceParams.window);
+		#else
+		VG_ERROR("[Device] Could not get HDR caps");
 		#endif
 
 		registerExtensions(_params);

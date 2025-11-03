@@ -40,6 +40,8 @@ namespace vg::gfx::dx12
             void							beginCapture				();
 			void							endCapture					();
 
+			bool							GetGpuMemoryInfo			(core::GPUMemoryInfo & _gpuMem) const;
+
 		protected:
 			void							init						(const DeviceParams & _params);
 			void							deinit						();

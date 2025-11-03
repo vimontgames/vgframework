@@ -1,6 +1,7 @@
 #include "gfx/Precomp.h"
 #include "Device.h"
 #include "core/Timer/Timer.h"
+#include "core/Memory/MemoryInfo.h"
 #include "gfx/CommandQueue/CommandQueue.h"
 #include "gfx/CommandPool/CommandPool.h"
 #include "gfx/CommandList/CommandList.h"

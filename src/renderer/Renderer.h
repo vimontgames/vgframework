@@ -136,6 +136,8 @@ namespace vg::renderer
         double                                  GetGpuFrameTime             () const final override;
         double                                  GetGpuWaitTime              () const final override;
 
+        bool                                    GetGpuMemoryInfo            (core::GPUMemoryInfo & _gpuMem) const final override;
+
         const gfx::DeviceCaps &                 getDeviceCaps               () const;
 
         gfx::Texture *                          getSpecularBRDF             () const;

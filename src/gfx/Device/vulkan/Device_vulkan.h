@@ -3,6 +3,7 @@
 #include "gfx/Device/Device.h"
 #include "gfx/Device/vulkan/Extension/ExtensionList_vulkan.h"
 #include "gfx/Device/vulkan/Extension/Device/EXT_hdr_metadata.h"
+#include "gfx/Device/vulkan/Extension/Device/EXT_memory_budget.h"
 #include "gfx/Device/vulkan/Extension/Device/KHR_Acceleration_Structure.h"
 #include "gfx/Device/vulkan/Extension/Device/KHR_Buffer_Device_Address.h"
 #include "gfx/Device/vulkan/Extension/Device/KHR_Deferred_Host_Operations.h"
@@ -72,6 +73,8 @@ namespace vg::gfx::vulkan
 		 void							beginCapture						();
 		 void							endCapture							();
 
+		 bool							GetGpuMemoryInfo					(core::GPUMemoryInfo & _gpuMem) const;
+
 	private:
 		void							registerExtensions					(const DeviceParams & _params);
 
@@ -109,6 +112,7 @@ namespace vg::gfx::vulkan
 
 			DeviceExtensionList			m_deviceExtensionList;
 			EXT_HDR_Metadata			m_EXT_HDR_Metadata;
+			EXT_MemoryBudget			m_EXT_MemoryBudget;
 			KHR_Acceleration_Structure	m_KHR_Acceleration_Structure;
 			KHR_BufferDeviceAddress		m_KHR_Buffer_Device_Address;
 			KHR_DeferredHostOperations	m_KHR_Deferred_Host_Operations;

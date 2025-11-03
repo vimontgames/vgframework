@@ -204,6 +204,44 @@ namespace vg::gfx::dx12
 	}
 
     //--------------------------------------------------------------------------------------
+    bool Device::GetGpuMemoryInfo(core::GPUMemoryInfo & _gpuMem) const
+    {        
+        DXGI_QUERY_VIDEO_MEMORY_INFO localInfo = {};
+        DXGI_QUERY_VIDEO_MEMORY_INFO nonLocalInfo = {};
+
+        bool local = false;
+        bool shared = false;
+
+        IDXGIAdapter3* adapter3;
+        if (SUCCEEDED(getd3d12Adapter()->QueryInterface(IID_PPV_ARGS(&adapter3))))
+        {
+            if (SUCCEEDED(adapter3->QueryVideoMemoryInfo(0, DXGI_MEMORY_SEGMENT_GROUP_LOCAL, &localInfo)))
+            {
+                _gpuMem.m_budgetLocal = (u64)round((float)localInfo.Budget / (1024.0f * 1024.0f));
+                _gpuMem.m_currentUsageLocal = (u64)round((float)localInfo.CurrentUsage / (1024.0f * 1024.0f));
+                _gpuMem.m_availableForReservationLocal = (u64)round((float)localInfo.AvailableForReservation / (1024.0f * 1024.0f));
+                _gpuMem.m_currentReservationLocal = (u64)round((float)localInfo.CurrentReservation / (1024.0f * 1024.0f));
+
+                local = true;
+            }
+
+            if (SUCCEEDED(adapter3->QueryVideoMemoryInfo(0, DXGI_MEMORY_SEGMENT_GROUP_NON_LOCAL, &nonLocalInfo)))
+            {
+                _gpuMem.m_budgetShared = (u64)round((float)nonLocalInfo.Budget / (1024.0f * 1024.0f));
+                _gpuMem.m_currentUsageShared = (u64)round((float)nonLocalInfo.CurrentUsage / (1024.0f * 1024.0f));
+                _gpuMem.m_availableForReservationShared = (u64)round((float)nonLocalInfo.AvailableForReservation / (1024.0f * 1024.0f));
+                _gpuMem.m_currentReservationShared = (u64)round((float)nonLocalInfo.CurrentReservation / (1024.0f * 1024.0f));
+
+                shared = true;
+            }
+
+            adapter3->Release();
+        }
+ 
+        return local && shared;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool Device::checkMSAASupport(DXGI_FORMAT _format, UINT _sampleCount) const
     {
         if (_sampleCount == 1)

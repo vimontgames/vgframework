@@ -50,7 +50,7 @@ The program will use these locally built files if they are present; otherwise, i
 - Select the solution folder for [Working Directory](#Working-Directory)
 - Build & Run
 
-**Debug**, **Development*** and **Release** versions will start with the editor:
+**Debug**, **Development** and **Release** versions will start with the editor:
 Press `F5` to enter game mode and `F11` to maximize game view and press `ESC` to go back Editor mode.
 
 **Final** versions are compiled without the editor, they will start directly in game mode and maximized.
@@ -69,9 +69,9 @@ It should work until it's too much work to maintain, but you will miss some comp
 
 ### [Option 2] Use the new generated solution
 
-You can generate the solutions using `Sharpmake\generates_projects_XXX.bat` where `XXX` is your development environement. 
+You can generate the solutions using `Sharpmake\generates_projects_XXX.bat` where `XXX` is your development environment. 
 
-e.g. `Sharpmake\generates_projects_XXX.bat` will generate `vgframework_vs2022.sln` in the root folder.
+e.g. `Sharpmake\generates_projects_Windows.bat` will generate `vgframework_vs2022.sln` in the root folder.
 
 ## IDE
 Recommended IDE is [VS Studio 2022 Community](https://visualstudio.microsoft.com/fr/vs/community/) and project files currently provided are compatible with this version.
@@ -161,7 +161,7 @@ The SDKs are not included with the sources. You need to install them.
 
 | Name <img width=256/>			                                                    | Version <img width=100/>       
 | --------------------------------------------------------------------------------- | -------------  
-| [Win10 SDK](https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/) | 10.0.22621.0
+| [Win10 SDK](https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/) | 10.0.26100.0
 | [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) ✨                               | 1.3.290.0 
 
 ✨ Only required to build Vulkan version. **$(VULKAN_SDK)** should point the Vulkan SDK installation dir (e.g., `C:\SDK\Vulkan\1.3.290.0`).

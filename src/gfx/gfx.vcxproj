@@ -385,6 +385,7 @@
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Query.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Ray_Tracing_Pipeline.h" />
     <ClInclude Include="Device\vulkan\Extension\Device\KHR_Swapchain.h" />
+    <ClInclude Include="Device\vulkan\Extension\Device\EXT_memory_budget.h" />
     <ClInclude Include="Device\vulkan\Extension\ExtensionList_vulkan.h" />
     <ClInclude Include="Device\vulkan\Extension\ExtensionList_vulkan.hpp" />
     <ClInclude Include="Device\vulkan\Extension\Instance\EXT_DebugUtils.h" />

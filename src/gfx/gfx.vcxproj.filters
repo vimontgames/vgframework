@@ -691,6 +691,9 @@
     <ClInclude Include="Importer\MeshImporterSettings.h">
       <Filter>Importer</Filter>
     </ClInclude>
+    <ClInclude Include="Device\vulkan\Extension\Device\EXT_memory_budget.h">
+      <Filter>Device\vulkan\Extension\Device</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Device">
