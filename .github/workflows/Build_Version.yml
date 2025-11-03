@@ -27,7 +27,7 @@ jobs:
      - name: Restore NuGet packages
        run: nuget restore ${{ env.SOLUTION_FILE_PATH_WIN64 }}
 
-     - name: Build Release
+     - name: Build Editor Release
        run: msbuild /m /p:Configuration=Release /p:Platform=${{ env.BUILD_PLATFORM_WIN64 }} ${{ env.SOLUTION_FILE_PATH_WIN64 }}
 
      - name: Upload Release Artifacts
@@ -56,10 +56,10 @@ jobs:
           vs-version: '[17.11.2, 18.0.0)'
 
       - name: Restore NuGet packages
-        run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
+        run: nuget restore ${{ env.SOLUTION_FILE_PATH_WIN64 }}
 
-      - name: Build Final
-        run: msbuild /m /p:Configuration=Final /p:Platform=${{ env.BUILD_PLATFORM }} ${{ env.SOLUTION_FILE_PATH }}
+      - name: Build Game Final
+        run: msbuild /m /p:Configuration=Final /p:Platform=${{ env.BUILD_PLATFORM_WIN64 }} ${{ env.SOLUTION_FILE_PATH_WIN64 }}
 
       - name: Upload Final Artifacts
         if: success()
