@@ -87,6 +87,19 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    core::float4 UIComponent::GetColor() const
+    {
+        return getColor();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void UIComponent::SetColor(const core::float4 & _color)
+    {
+        m_useColor = true;
+        m_color = _color;
+    }
+
+    //--------------------------------------------------------------------------------------
     const renderer::UICanvas * UIComponent::getCanvas() const
     {
         if (auto * canvas = GetGameObject()->GetComponentInParentsT<UICanvasComponent>())

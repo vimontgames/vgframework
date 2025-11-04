@@ -32,6 +32,9 @@ namespace vg::engine
         core::uint2                         GetSize         () const override;
         void                                SetSize         (const core::uint2 _size) override;
 
+        core::float4                        GetColor        () const final override;
+        void                                SetColor        (const core::float4 & _color) final override;
+
         VG_INLINE core::uint2               getSize         () const;
         VG_INLINE void                      setSize         (core::uint2 _size);
 

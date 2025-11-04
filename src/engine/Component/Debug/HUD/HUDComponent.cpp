@@ -4,6 +4,9 @@
 #include "engine/IUITextComponent.h"
 #include "core/string/string.h"
 #include "engine/Engine.h"
+#include "engine/EngineOptions.h"
+#include "renderer/IRenderer.h"
+#include "renderer/IRendererOptions.h"
 
 using namespace vg::core;
 
@@ -18,10 +21,15 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
+        // FPS
         registerProperty(HUDComponent, m_fpsText, "FPS");
         registerProperty(HUDComponent, m_frameText, "Frame");
         registerProperty(HUDComponent, m_cpuText, "CPU");
         registerProperty(HUDComponent, m_gpuText, "GPU");
+
+        // Memory
+        registerProperty(HUDComponent, m_ramText, "RAM");
+        registerProperty(HUDComponent, m_vramText, "VRAM");        
 
         return true;
     }
@@ -42,12 +50,25 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void HUDComponent::Update(const Context & _context)
     {
-        const auto time = Engine::get()->getTime();
+         const auto time = Engine::get()->getTime();
 
+        // TODO: get screen frequency and display fps/ms in red when over budget
+        //const auto * renderer = Engine::get()->GetRenderer();
+        //const auto & rendererOptions = renderer->GetOptions();
+        //const float targetFPS = rendererOptions->
+
+        // FPS
         if (auto * gameobject = m_fpsText.get<IGameObject>())
         {
             if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
+            {
                 uiTextComponent->SetText(fmt::sprintf("%.0f FPS", time.smoothed.m_fps));
+                //uiTextComponent->SetColor(float4(1, 0, 0, 1));
+            }
+        }
+        else
+        {
+            VG_WARNING("[HUD] Could not find m_fpsText");
         }
 
         if (auto * gameobject = m_frameText.get<IGameObject>())
@@ -66,6 +87,26 @@ namespace vg::engine
         {
             if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
                 uiTextComponent->SetText(fmt::sprintf("%.2f ms", time.smoothed.m_gpu));
+        }
+
+        // Memory
+        const auto * options = EngineOptions::get();
+        if (nullptr != options)
+        {
+            const CPUMemoryInfo & cpuMem = options->GetCpuMemoryInfo();
+            const GPUMemoryInfo & gpuMem = options->GetGpuMemoryInfo();
+        
+            if (auto * gameobject = m_ramText.get<IGameObject>())
+            {
+                if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
+                    uiTextComponent->SetText(fmt::sprintf("%.2f GB", (float)cpuMem.m_usedPhys/1000.0f));
+            }
+        
+            if (auto * gameobject = m_vramText.get<IGameObject>())
+            {
+                if (auto * uiTextComponent = gameobject->GetComponentT<IUITextComponent>())
+                    uiTextComponent->SetText(fmt::sprintf("%.2f GB", (float)gpuMem.m_currentUsageLocal/1000.0f)); 
+            }
         }
     }
 }

@@ -290,8 +290,20 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    const core::CPUMemoryInfo & EngineOptions::GetCpuMemoryInfo() const
+    {
+        return m_cpuMemory;
+    }
+
+    //--------------------------------------------------------------------------------------
     void EngineOptions::SetGpuMemoryInfo(const core::GPUMemoryInfo & _gpuMem)
     {
         m_gpuMemory = _gpuMem;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::GPUMemoryInfo & EngineOptions::GetGpuMemoryInfo() const
+    {
+        return m_gpuMemory;
     }
 }

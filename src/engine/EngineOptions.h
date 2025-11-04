@@ -40,7 +40,9 @@ namespace vg::engine
         physics::Category           GetPhysicsCategory          (const core::string & _name) const final override;
 
         void                        SetCpuMemoryInfo            (const core::CPUMemoryInfo & _cpuMem) final override;
+        const core::CPUMemoryInfo & GetCpuMemoryInfo            () const final override;
         void                        SetGpuMemoryInfo            (const core::GPUMemoryInfo & _gpuMem) final override;
+        const core::GPUMemoryInfo & GetGpuMemoryInfo            () const final override;
 
         core::vector<core::string>  getPhysicsCategoryNames     () const;
 

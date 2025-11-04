@@ -160,14 +160,19 @@ namespace vg::core
 
                     case PropertyType::ObjectHandle:
                     {
-                        if (const ObjectHandle * obj = prop->GetPropertyObjectHandle(_object))
+                        if (const ObjectHandle * objHandle = prop->GetPropertyObjectHandle(_object))
                         {
-                            return obj->getObject();
+                            if (const auto * obj = objHandle->getObject())
+                            {
+                                if (obj != _object)
+                                {
+                                    if (auto * found = findByOriginalUID((Object *)obj, _originalUID))
+                                        return obj;
+                                }
+                            }
                         }
                     }
                     break;
-
-                    //TODO: other 'Object' types
 
                     case PropertyType::ObjectPtrVector:
                     {

@@ -16,9 +16,14 @@ namespace vg::engine
         void            Update(const Context & _context) final override;
 
     protected:
+        // FPS
         vg::core::ObjectHandle  m_fpsText;
         vg::core::ObjectHandle  m_frameText;
         vg::core::ObjectHandle  m_cpuText;
-        vg::core::ObjectHandle  m_gpuText;        
+        vg::core::ObjectHandle  m_gpuText;      
+
+        // Memory
+        vg::core::ObjectHandle  m_ramText;
+        vg::core::ObjectHandle  m_vramText;
     };
 }
