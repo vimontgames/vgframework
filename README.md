@@ -59,19 +59,17 @@ First run might take a few seconds because files are cooking.
 
 ## Generate solution
 
-VGFramework is currenlty transitionning to [Sharpmake](https://github.com/ubisoft/Sharpmake) to generate its solution and projects for all platforms.\
-There is currently two options available:
+VGFramework is using [Sharpmake](https://github.com/ubisoft/Sharpmake) to generate its solution and projects files for all supported platforms.\
 
-### [Option 1] Use the legacy static VS2022 solution
+You can generate the solutions using `sharpmake\generates_projects_XXX.bat` where `XXX` is your development environment. 
 
-For now you can still use the old `vgframework.sln` solution for Visual Studio 2022. 
-It should work until it's too much work to maintain, but you will miss some compilation targets like Win64 ClangCL.
+e.g. `sharpmake\generates_projects_Windows.bat` will generate `vgframework_vs2022.sln` for Windows in the root folder.
 
-### [Option 2] Use the new generated solution
-
-You can generate the solutions using `Sharpmake\generates_projects_XXX.bat` where `XXX` is your development environment. 
-
-e.g. `Sharpmake\generates_projects_Windows.bat` will generate `vgframework_vs2022.sln` in the root folder.
+| Config                             | Platform | Format             | Files
+| ---------------------------------- | -------- | ------------------ | ----------------
+| **generate_projects_Windows.bat**  |  Windows | Visual Studio 2022 | *.sln; *.vxcproj; *.vcxproj.filters
+| **generate_projects_macOS.bat**    |  macOS   | XCode              | *.xcodeproj
+| **generate_projects_Linux.bat**    |  Linux   | Make               | Makefile
 
 ## IDE
 Recommended IDE is [VS Studio 2022 Community](https://visualstudio.microsoft.com/fr/vs/community/) and project files currently provided are compatible with this version.

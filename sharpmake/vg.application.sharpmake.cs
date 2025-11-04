@@ -8,7 +8,9 @@ namespace vg
         public Application() : 
             base("application", Type.Executable, Flags.GfxAPIDefines)
         {
-  
+            SourceFilesExtensions.Add(".rc");
+            SourceFilesExtensions.Add(".ico");
+
         }
 
         public override void ConfigureAll(Configuration conf, Target target)
