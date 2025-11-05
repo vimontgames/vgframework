@@ -638,17 +638,20 @@ namespace vg::engine
             for (uint i = 0; i < m_resourcesLoaded.size(); ++i)
             {
                 const auto & res = m_resourcesLoaded[i];
+                VG_ASSERT(nullptr != res, "nullptr resource found in loaded resources list");
+                if (nullptr != res)
+                {
+                    auto it = resourceInfoMap.find(res->GetResourcePath());
+                    auto & info = it->second;
 
-                auto it = resourceInfoMap.find(res->GetResourcePath());
-                auto & info = it->second;
-
-                // Set Shared Resource Object and Notify owner
-                res->SetObject(info->m_object);
-                res->LoadSubResources();
-                IObject * resOwner = res->GetParent();
-                VG_ASSERT(nullptr != resOwner);
-                if (nullptr != resOwner)
-                    resOwner->OnResourceLoaded(res);
+                    // Set Shared Resource Object and Notify owner
+                    res->SetObject(info->m_object);
+                    res->LoadSubResources();
+                    IObject * resOwner = res->GetParent();
+                    VG_ASSERT(nullptr != resOwner);
+                    if (nullptr != resOwner)
+                        resOwner->OnResourceLoaded(res);
+                }
             }
             m_resourcesLoaded.clear();
 
