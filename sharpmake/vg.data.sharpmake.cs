@@ -20,6 +20,35 @@ namespace vg
     }
 
     [Sharpmake.Generate]
+    public class Natvis : Project
+    {
+        public Natvis() :
+            base("natvis", Type.Data)
+        {
+            SourceRootPath = $@"[project.SharpmakeCsPath]\..";
+
+            SourceFilesExcludeRegex.Add(@".*\\extern\\Sharpmake(\.*)?");
+            SourceFilesExcludeRegex.Add(@".*\\data(\.*)?");
+
+            SourceFilesExcludeRegex.Add(@".*\.asm\.*");
+            SourceFilesExcludeRegex.Add(@".*\.nasm\.*");
+            SourceFilesExcludeRegex.Add(@".*\.h\.*");
+            SourceFilesExcludeRegex.Add(@".*\.hpp\.*");
+            SourceFilesExcludeRegex.Add(@".*\.inl\.*");
+            SourceFilesExcludeRegex.Add(@".*\.cpp\.*");
+            SourceFilesExcludeRegex.Add(@".*\.c\.*");
+            SourceFilesExcludeRegex.Add(@".*\.cc\.*");
+            SourceFilesExcludeRegex.Add(@".*\.hlsl\.*");
+            SourceFilesExcludeRegex.Add(@".*\.hlsli\.*");
+        }
+
+        public override void ConfigureAll(Configuration conf, Target target)
+        {
+            base.ConfigureAll(conf, target);
+        }
+    }
+
+    [Sharpmake.Generate]
     public class Shaders : Project
     {
         public Shaders() : 
@@ -79,16 +108,19 @@ namespace vg
             
             SourceFilesExtensions.Add(".md");
             SourceFilesExcludeRegex.Add(@".*\\data(\.*)?");
+            SourceFilesExcludeRegex.Add(@".*\\src(\.*)?");
             SourceFilesExcludeRegex.Add(@".*\\extern(\.*)?");
-            
             SourceFilesExcludeRegex.Add(@".*\.asm\.*");
             SourceFilesExcludeRegex.Add(@".*\.nasm\.*");
             SourceFilesExcludeRegex.Add(@".*\.h\.*");
             SourceFilesExcludeRegex.Add(@".*\.hpp\.*");
             SourceFilesExcludeRegex.Add(@".*\.inl\.*");
             SourceFilesExcludeRegex.Add(@".*\.cpp\.*");
+            SourceFilesExcludeRegex.Add(@".*\.c\.*");
+            SourceFilesExcludeRegex.Add(@".*\.cc\.*");
             SourceFilesExcludeRegex.Add(@".*\.hlsl\.*");
             SourceFilesExcludeRegex.Add(@".*\.hlsli\.*");
+            SourceFilesExcludeRegex.Add(@".*\.natvis\.*");
         }
 
         public override void ConfigureAll(Configuration conf, Target target)

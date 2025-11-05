@@ -38,6 +38,7 @@ namespace vg
 
             // Misc folders
             conf.AddProject<ReadMe>(target, false, "misc");
+            conf.AddProject<Natvis>(target, false, "misc");
 
             // All projects must be explicitly added here, deducing them from dependencies is not enough and will generate incorrect platform configurations
             conf.AddProject<Core>(target);
