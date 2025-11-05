@@ -18,8 +18,8 @@
                 <Property type="ObjectPtrVector" name="m_children">
                     <Object class="GameObject">
                         <Property type="String" name="m_name" value="PlayerCamera"/>
-                        <Property type="Uint32" name="m_uid" value="4239511411"/>
-                        <Property type="Uint32" name="m_originalUID" value="1065651505"/>
+                        <Property type="Uint32" name="m_uid" value="1065651505"/>
+                        <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
@@ -38,8 +38,8 @@
                             </Object>
                             <Object class="CameraComponent">
                                 <Property type="String" name="m_name" value="CameraComponent #0"/>
-                                <Property type="Uint32" name="m_uid" value="125303515"/>
-                                <Property type="Uint32" name="m_originalUID" value="1553686324"/>
+                                <Property type="Uint32" name="m_uid" value="1553686324"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
                                 <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_target" value="Game"/>
