@@ -31,7 +31,7 @@
                         <Property type="String" name="m_name" value="Cameras"/>
                         <Property type="Uint32" name="m_uid" value="114612410"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="24" Ty="0" Tz="0" Tw="1"/>
@@ -206,7 +206,7 @@
                         <Property type="String" name="m_name" value="UI"/>
                         <Property type="Uint32" name="m_uid" value="1177627180"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -411,7 +411,7 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                 <Property type="Bool" name="m_shadow" value="true"/>
                                                 <Property type="Float2" name="m_shadowRange" x="0.1" y="100"/>
-                                                <Property type="Float" name="m_shadowBias" value="0.1"/>
+                                                <Property type="Float" name="m_shadowBias" value="0.050000001"/>
                                                 <Property type="Uint2" name="m_shadowSize" x="50" y="50"/>
                                                 <Property type="EnumI8" name="m_shadowResolution" value="ShadowResolution_High"/>
                                                 <Property type="Float" name="m_shadowIntensity" value="1"/>
