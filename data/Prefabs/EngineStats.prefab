@@ -48,7 +48,7 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="1.1754944e-38" Ky="0" Kz="1" Kw="0" Tx="-2" Ty="2" Tz="0" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="1.1754944e-38" Ky="0" Kz="1" Kw="0" Tx="-4" Ty="2" Tz="0" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="UICanvasComponent">
@@ -77,9 +77,48 @@
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children">
                                     <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Background"/>
+                                        <Property type="Uint32" name="m_uid" value="1924139351"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components">
+                                            <Object class="UIImageComponent">
+                                                <Property type="String" name="m_name" value="New UIImageComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="435587836"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU8" name="m_horizontal" value="Right"/>
+                                                <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                <Property type="EnumFlagsU32" name="m_UIFlags" value=""/>
+                                                <Property type="Uint2" name="m_size" x="112" y="148"/>
+                                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                <Property type="Bool" name="m_useOffset" value="true"/>
+                                                <Property type="Float3" name="m_offset" x="4" y="-2" z="0"/>
+                                                <Property type="Bool" name="m_useColor" value="true"/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="0.25098041"/>
+                                                <Property type="Resource" name="m_image">
+                                                    <Object class="TextureResource">
+                                                        <Property type="String" name="m_name" value=""/>
+                                                        <Property type="Uint32" name="m_uid" value="4293908620"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Textures/Black.tga"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                    </Object>
+                                    <Object class="GameObject">
                                         <Property type="String" name="m_name" value="FPS"/>
                                         <Property type="Uint32" name="m_uid" value="852509354"/>
-                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="Uint32" name="m_originalUID" value="3735928559"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
@@ -105,7 +144,7 @@
                                                 <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
                                                 <Property type="EnumU8" name="m_style" value="Regular"/>
                                                 <Property type="Uint16" name="m_fontSize" value="28"/>
-                                                <Property type="String" name="m_text" value="135 FPS"/>
+                                                <Property type="String" name="m_text" value="144 FPS"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -139,7 +178,7 @@
                                                 <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
                                                 <Property type="EnumU8" name="m_style" value="Regular"/>
                                                 <Property type="Uint16" name="m_fontSize" value="14"/>
-                                                <Property type="String" name="m_text" value="7.40 ms"/>
+                                                <Property type="String" name="m_text" value="6.95 ms"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -207,7 +246,7 @@
                                                 <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
                                                 <Property type="EnumU8" name="m_style" value="Regular"/>
                                                 <Property type="Uint16" name="m_fontSize" value="14"/>
-                                                <Property type="String" name="m_text" value="7.40 ms"/>
+                                                <Property type="String" name="m_text" value="5.42 ms"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -241,7 +280,7 @@
                                                 <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
                                                 <Property type="EnumU8" name="m_style" value="Regular"/>
                                                 <Property type="Uint16" name="m_fontSize" value="14"/>
-                                                <Property type="String" name="m_text" value="1.20 GB"/>
+                                                <Property type="String" name="m_text" value="1.04 GB"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -309,7 +348,7 @@
                                                 <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
                                                 <Property type="EnumU8" name="m_style" value="Regular"/>
                                                 <Property type="Uint16" name="m_fontSize" value="14"/>
-                                                <Property type="String" name="m_text" value="1.76 ms"/>
+                                                <Property type="String" name="m_text" value="2.01 ms"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -343,7 +382,7 @@
                                                 <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
                                                 <Property type="EnumU8" name="m_style" value="Regular"/>
                                                 <Property type="Uint16" name="m_fontSize" value="14"/>
-                                                <Property type="String" name="m_text" value="3.08 GB"/>
+                                                <Property type="String" name="m_text" value="3.85 GB"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
