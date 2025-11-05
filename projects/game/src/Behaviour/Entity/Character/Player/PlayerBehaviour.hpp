@@ -216,202 +216,206 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
             vg::engine::ICharacterControllerComponent * charaController = playerGO->GetComponentT<vg::engine::ICharacterControllerComponent>();
 
             bool jump = false;
-            if (input.IsJoyButtonJustPressed(joyID, JoyButton::A))
-            {
-                if (charaController && vg::physics::GroundState::Grounded == charaController->GetGroundState())
-                    jump = true;
-            }
 
-            if (charaController && vg::physics::GroundState::InAir == charaController->GetGroundState())
+            if (MoveState::Die != m_moveState)
             {
-                m_moveState = MoveState::Jump;
-
-                if (IAnimationResource * anim = animationComponent->GetAnimation(m_moveAnim[asInteger(MoveState::Jump)]))
+                if (input.IsJoyButtonJustPressed(joyID, JoyButton::A))
                 {
-                    if (anim->IsFinished())
-                        m_moveState = MoveState::Idle;
-                }                    
-            } 
+                    if (charaController && vg::physics::GroundState::Grounded == charaController->GetGroundState())
+                        jump = true;
+                }
 
-            const float pickupDist = 1.0f;
-            const float3 playerPos = playerGO->GetGlobalMatrix()[3].xyz;
-            const float time = Game::get()->Engine().GetTime().m_enlapsedTimeSinceStartScaled;
-
-            if (input.IsJoyButtonJustPressed(joyID, JoyButton::X))
-            {
-                // Pick closest weapon
-                if (nullptr == m_rightHandItem)
+                if (charaController && vg::physics::GroundState::InAir == charaController->GetGroundState())
                 {
-                    auto & weapons = Game::get()->getWeapons();
-                    float closestDist = pickupDist + 1;
-                    IGameObject * closestWeaponGO = nullptr;
-                    WeaponBehaviour * closestWeaponBehaviour = nullptr;
-                    for (uint i = 0; i < weapons.size(); ++i)
-                    {
-                        auto * weaponBehaviour = weapons[i];
-                        IGameObject * weaponGO = weaponBehaviour->GetGameObject();
-                        float3 delta = weaponGO->GetGlobalMatrix()[3].xyz - playerPos;
-                        float dist = length(delta);
-                        if (dist < closestDist && dist < pickupDist && !weaponBehaviour->CanPick())
-                        {
-                            closestDist = dist;
-                            closestWeaponBehaviour = weaponBehaviour;
-                            closestWeaponGO = closestWeaponBehaviour->GetGameObject();
-                        }
-                    }
+                    m_moveState = MoveState::Jump;
 
-                    if (closestWeaponBehaviour)
+                    if (IAnimationResource * anim = animationComponent->GetAnimation(m_moveAnim[asInteger(MoveState::Jump)]))
                     {
-                        closestWeaponBehaviour->SetOwner(playerGO);
-                        m_rightHandItem = closestWeaponBehaviour;
-
-                        if (auto * physicsBody = closestWeaponGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
-                            physicsBody->SetTrigger(true);
+                        if (anim->IsFinished())
+                            m_moveState = MoveState::Idle;
                     }
                 }
-                else
+
+                const float pickupDist = 1.0f;
+                const float3 playerPos = playerGO->GetGlobalMatrix()[3].xyz;
+                const float time = Game::get()->Engine().GetTime().m_enlapsedTimeSinceStartScaled;
+
+                if (input.IsJoyButtonJustPressed(joyID, JoyButton::X))
                 {
-                    // HIT
-                    if (FightState::None == m_fightState)
+                    // Pick closest weapon
+                    if (nullptr == m_rightHandItem)
                     {
-                        if (auto * weaponBehaviour = dynamic_cast<WeaponBehaviour *>(m_rightHandItem))
+                        auto & weapons = Game::get()->getWeapons();
+                        float closestDist = pickupDist + 1;
+                        IGameObject * closestWeaponGO = nullptr;
+                        WeaponBehaviour * closestWeaponBehaviour = nullptr;
+                        for (uint i = 0; i < weapons.size(); ++i)
                         {
-                            switch (weaponBehaviour->getWeaponType())
+                            auto * weaponBehaviour = weapons[i];
+                            IGameObject * weaponGO = weaponBehaviour->GetGameObject();
+                            float3 delta = weaponGO->GetGlobalMatrix()[3].xyz - playerPos;
+                            float dist = length(delta);
+                            if (dist < closestDist && dist < pickupDist && !weaponBehaviour->CanPick())
                             {
-                                case WeaponType::Melee:
-                                    m_fightState = FightState::Hit;
-                                    playFightAnim(FightState::Hit, false);
-                                    if (auto * soundComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
-                                        soundComponent->Play(0);
-                                    break;
+                                closestDist = dist;
+                                closestWeaponBehaviour = weaponBehaviour;
+                                closestWeaponGO = closestWeaponBehaviour->GetGameObject();
+                            }
+                        }
 
-                                case WeaponType::Pistol:
-                                    m_fightState = FightState::Shoot;
-                                    playFightAnim(FightState::Shoot, false);
-                                    m_nextShootTime = time + 0.3f; // first shoot cooldown
-                                    break;
-                            };                            
+                        if (closestWeaponBehaviour)
+                        {
+                            closestWeaponBehaviour->SetOwner(playerGO);
+                            m_rightHandItem = closestWeaponBehaviour;
+
+                            if (auto * physicsBody = closestWeaponGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
+                                physicsBody->SetTrigger(true);
+                        }
+                    }
+                    else
+                    {
+                        // HIT
+                        if (FightState::None == m_fightState)
+                        {
+                            if (auto * weaponBehaviour = dynamic_cast<WeaponBehaviour *>(m_rightHandItem))
+                            {
+                                switch (weaponBehaviour->getWeaponType())
+                                {
+                                    case WeaponType::Melee:
+                                        m_fightState = FightState::Hit;
+                                        playFightAnim(FightState::Hit, false);
+                                        if (auto * soundComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
+                                            soundComponent->Play(0);
+                                        break;
+
+                                    case WeaponType::Pistol:
+                                        m_fightState = FightState::Shoot;
+                                        playFightAnim(FightState::Shoot, false);
+                                        m_nextShootTime = time + 0.3f; // first shoot cooldown
+                                        break;
+                                };
+                            }
                         }
                     }
                 }
-            }
 
-            if (FightState::Hit == m_fightState || FightState::Shoot == m_fightState)
-            {
+                if (FightState::Hit == m_fightState || FightState::Shoot == m_fightState)
+                {
+                    if (IAnimationResource * anim = animationComponent->GetAnimation(m_fightAnim[asInteger(m_fightState)]))
+                    {
+                        if (!anim->IsPlaying() || anim->IsFinished())
+                        {
+                            if (FightState::Shoot != m_fightState || !input.IsJoyButtonPressed(joyID, JoyButton::X))
+                            {
+                                stopFightAnim(m_fightState);
+                                m_fightState = FightState::None;
+                                m_nextShootTime = -1.0f;
+                            }
+                        }
+                    }
+                }
+
                 if (IAnimationResource * anim = animationComponent->GetAnimation(m_fightAnim[asInteger(m_fightState)]))
                 {
-                    if (!anim->IsPlaying() || anim->IsFinished())
+                    if (input.IsJoyButtonPressed(joyID, JoyButton::X) && FightState::Shoot == m_fightState && time >= m_nextShootTime)
                     {
-                        if (FightState::Shoot != m_fightState || !input.IsJoyButtonPressed(joyID, JoyButton::X))
+                        // Keep shooting
+                        //VG_DEBUGPRINT("[PlayerBehaviour] Shoot\n");
+
+                        //VG_WARNING("[Player] Shoot banana");
+                        if (nullptr != m_rightHandItem)
                         {
-                            stopFightAnim(m_fightState);
-                            m_fightState = FightState::None;
-                            m_nextShootTime = -1.0f;
+                            WeaponBehaviour * weapon = VG_SAFE_STATIC_CAST(WeaponBehaviour, m_rightHandItem);
+                            if (nullptr != weapon)
+                            {
+                                GameObject * projectileModelGO = weapon->getProjectile().get<GameObject>();
+                                if (nullptr != projectileModelGO)
+                                {
+                                    IGameObject * newProjectileGO = (IGameObject *)projectileModelGO->Instanciate();
+                                    newProjectileGO->SetInstanceFlags(InstanceFlags::Enabled | InstanceFlags::Temporary, true);
+                                    projectileModelGO->GetScene()->GetRoot()->AddChild(newProjectileGO);
+                                    GameObject * weaponGO = weapon->getGameObject();
+                                    float4x4 projectileMatrix = weaponGO->getGlobalMatrix();
+                                    float3 projectileDir = normalize(projectileMatrix[1].xyz);
+                                    projectileMatrix[3].xyz += projectileDir * 0.6f + float3(0, 0, 0.1f); // TODO: expose projectile placement parameters?
+                                    newProjectileGO->SetGlobalMatrix(projectileMatrix);
+                                    newProjectileGO->OnPlay();
+
+                                    if (auto * physicsBody = newProjectileGO->GetComponentInChildrenT<vg::engine::IPhysicsBodyComponent>())
+                                        physicsBody->AddImpulse(float3(projectileDir.x, projectileDir.y, 0.15f) * 3.5f);
+
+                                    if (auto * item = newProjectileGO->GetComponentInChildrenT<ItemBehaviour>())
+                                        item->SetOwner(playerGO); // Make current player the owner of the projectile (e.g. for scoring)
+
+                                    if (auto * soundComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
+                                        soundComponent->Play(0);
+
+                                    VG_SAFE_RELEASE(newProjectileGO);
+                                }
+                            }
+
+                            // next shoot cooldown
+                            m_nextShootTime = time + 0.3f;
                         }
                     }
                 }
-            }
 
-            if (IAnimationResource * anim = animationComponent->GetAnimation(m_fightAnim[asInteger(m_fightState)]))
-            {
-                if (input.IsJoyButtonPressed(joyID, JoyButton::X) && FightState::Shoot == m_fightState && time >= m_nextShootTime)
+                if (input.IsJoyButtonJustPressed(joyID, JoyButton::B))
                 {
-                    // Keep shooting
-                    //VG_DEBUGPRINT("[PlayerBehaviour] Shoot\n");
+                    // Kick default all ball items
+                    for (uint j = 0; j < enumCount<ItemType>(); ++j)
+                    {
+                        const auto itemType = (ItemType)j;
 
-                    //VG_WARNING("[Player] Shoot banana");
+                        switch (itemType)
+                        {
+                            default:
+                                continue;
+
+                            case ItemType::Default:
+                            case ItemType::Ball:
+                                break;
+                        }
+
+                        auto & balls = Game::get()->getItem(itemType);
+                        for (uint i = 0; i < balls.size(); ++i)
+                        {
+                            auto * ballBehaviour = balls[i];
+                            auto * ballGO = ballBehaviour->GetGameObject();
+
+                            float3 delta = ballGO->GetGlobalMatrix()[3].xyz - playerPos;
+                            float dist = length(delta);
+                            if (dist < pickupDist)
+                            {
+                                float3 dir = normalize(delta);
+                                ballBehaviour->SetOwner(ballGO);
+                                if (auto * physicsBody = ballGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
+                                {
+                                    //VG_INFO("[Player] Kick ball %u (dist = %.2f, dir = %.2f, %.2f, %.2f)", i, dist, dir.x, dir.y, dir.z);
+                                    float kickStrength = lerp(3.0f, 4.5f, runAmount);
+                                    physicsBody->AddImpulse(dir * kickStrength);
+
+                                    // Play sound
+                                    if (auto * soundComponent = ballGO->GetComponentT<vg::engine::ISoundComponent>())
+                                        soundComponent->Play(0);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (input.IsJoyButtonJustPressed(joyID, JoyButton::Y))
+                {
                     if (nullptr != m_rightHandItem)
                     {
-                        WeaponBehaviour * weapon = VG_SAFE_STATIC_CAST(WeaponBehaviour, m_rightHandItem);
-                        if (nullptr != weapon)
-                        {
-                            GameObject * projectileModelGO = weapon->getProjectile().get<GameObject>();
-                            if (nullptr != projectileModelGO)
-                            {
-                                IGameObject * newProjectileGO = (IGameObject *)projectileModelGO->Instanciate();
-                                newProjectileGO->SetInstanceFlags(InstanceFlags::Enabled | InstanceFlags::Temporary, true);
-                                projectileModelGO->GetScene()->GetRoot()->AddChild(newProjectileGO);
-                                GameObject * weaponGO = weapon->getGameObject();
-                                float4x4 projectileMatrix = weaponGO->getGlobalMatrix();
-                                float3 projectileDir = normalize(projectileMatrix[1].xyz);
-                                projectileMatrix[3].xyz += projectileDir * 0.6f + float3(0, 0, 0.1f); // TODO: expose projectile placement parameters?
-                                newProjectileGO->SetGlobalMatrix(projectileMatrix);
-                                newProjectileGO->OnPlay();
+                        // drop
+                        m_rightHandItem->SetOwner(nullptr);
 
-                                if (auto * physicsBody = newProjectileGO->GetComponentInChildrenT<vg::engine::IPhysicsBodyComponent>())
-                                    physicsBody->AddImpulse(float3(projectileDir.x, projectileDir.y, 0.15f) * 3.5f);
+                        if (auto * physicsBody = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsBodyComponent>())
+                            physicsBody->SetTrigger(false);
 
-                                if (auto * item = newProjectileGO->GetComponentInChildrenT<ItemBehaviour>())
-                                    item->SetOwner(playerGO); // Make current player the owner of the projectile (e.g. for scoring)
-
-                                if (auto * soundComponent = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::ISoundComponent>())
-                                    soundComponent->Play(0);
-
-                                VG_SAFE_RELEASE(newProjectileGO);
-                            }
-                        }
-
-                        // next shoot cooldown
-                        m_nextShootTime = time + 0.3f;
+                        m_rightHandItem = nullptr;
                     }
-                }
-            }
-
-            if (input.IsJoyButtonJustPressed(joyID, JoyButton::B))
-            {
-                // Kick default all ball items
-                for (uint j = 0; j < enumCount<ItemType>(); ++j)
-                {
-                    const auto itemType = (ItemType)j;
-
-                    switch (itemType)
-                    {
-                        default:
-                            continue;
-
-                        case ItemType::Default:
-                        case ItemType::Ball:
-                            break;
-                    }
-
-                    auto & balls = Game::get()->getItem(itemType);
-                    for (uint i = 0; i < balls.size(); ++i)
-                    {
-                        auto * ballBehaviour = balls[i];
-                        auto * ballGO = ballBehaviour->GetGameObject();
-
-                        float3 delta = ballGO->GetGlobalMatrix()[3].xyz - playerPos;
-                        float dist = length(delta);
-                        if (dist < pickupDist)
-                        {
-                            float3 dir = normalize(delta);
-                            ballBehaviour->SetOwner(ballGO);
-                            if (auto * physicsBody = ballGO->GetComponentT<vg::engine::IPhysicsBodyComponent>())
-                            {
-                                //VG_INFO("[Player] Kick ball %u (dist = %.2f, dir = %.2f, %.2f, %.2f)", i, dist, dir.x, dir.y, dir.z);
-                                float kickStrength = lerp(3.0f, 4.5f, runAmount);
-                                physicsBody->AddImpulse(dir * kickStrength);
-
-                                // Play sound
-                                if (auto * soundComponent = ballGO->GetComponentT<vg::engine::ISoundComponent>())
-                                    soundComponent->Play(0);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (input.IsJoyButtonJustPressed(joyID, JoyButton::Y))
-            {
-                if (nullptr != m_rightHandItem)
-                {
-                    // drop
-                    m_rightHandItem->SetOwner(nullptr);
-
-                    if (auto * physicsBody = m_rightHandItem->GetGameObject()->GetComponentT<vg::engine::IPhysicsBodyComponent>())
-                        physicsBody->SetTrigger(false);
-
-                    m_rightHandItem = nullptr;
                 }
             }
 

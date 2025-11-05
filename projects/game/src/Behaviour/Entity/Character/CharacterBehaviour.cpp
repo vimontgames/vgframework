@@ -231,6 +231,7 @@ void CharacterBehaviour::OnDeath(const Context & _context)
                 charaController->SetPosition(m_startPos + float3(0, 0, 16));
 
             m_hp = 100;
+            m_moveState = MoveState::Jump;
         }
     }
 }
