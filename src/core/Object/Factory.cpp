@@ -429,6 +429,43 @@ namespace vg::core
             }
             break;
 
+            case PropertyType::ObjectVector:
+            {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyToMemory is not implemented for type '%s'", asString(type).c_str());
+
+                auto count = _prop->GetPropertyObjectVectorCount(_object);
+                VG_VERIFY(_buffer.write((u64)count));
+
+                if (count > 0)
+                {
+                    const char * className = _prop->GetPropertyObjectVectorElement(_object, 0)->GetClassName();
+                    VG_VERIFY(_buffer.write((u32)strlen(className)));
+                    VG_VERIFY(_buffer.write(className, strlen(className)));
+
+                    for (uint i = 0; i < count; ++i)
+                    {
+                        IObject * obj = _prop->GetPropertyObjectVectorElement(_object, i);
+                        auto uid = obj->GetUID();
+                        VG_VERIFY(_buffer.write(uid));
+                        SaveProperties(obj, _bufferType);
+                    }
+                }
+            }
+            break;
+
+            case PropertyType::FloatCurveData:
+            {
+                const FloatCurveData * src = _prop->GetPropertyFloatCurveData(_object);
+                auto count = src->m_points.size();
+                VG_VERIFY(_buffer.write(count));
+                for (uint i = 0; i < count; ++i)
+                {
+                    VG_VERIFY(_buffer.write(src->m_points[i].t));
+                    VG_VERIFY(_buffer.write(src->m_points[i].value));
+                }
+            }
+            break;
+
             case PropertyType::ObjectPtr:
             {
                 VG_ASSERT(!isEnumArray, "EnumArray serializePropertyToMemory is not implemented for type '%s'", asString(type).c_str());
@@ -747,9 +784,9 @@ namespace vg::core
             {
                 if (!canCopyUID)
                 {
-                    if (_srcObj->GetOriginalUID(false)) // equivalent to HasValidOriginalUID
-                        _dstObj->SetOriginalUID(_srcObj->GetOriginalUID());
-                    else
+                    //if (_srcObj->GetOriginalUID(false)) // equivalent to HasValidOriginalUID
+                    //    _dstObj->SetOriginalUID(_srcObj->GetOriginalUID());
+                    //else
                         _dstObj->SetOriginalUID(_srcObj->GetUID());
 
                     _dstObj->RegisterUID();
@@ -1229,6 +1266,59 @@ namespace vg::core
                 auto path = obj->GetResourcePath();
                 if (!path.empty() && nullptr == obj->GetObject())
                     obj->OnResourcePathChanged("", path);
+            }
+            break;
+
+            case PropertyType::ObjectVector:
+            {
+                VG_ASSERT(!isEnumArray, "EnumArray serializePropertyFromMemory is not implemented for type '%s'", asString(type).c_str());
+
+                u64 count = 0;
+                VG_VERIFY(_buffer.read(&count));
+
+                if (count > 0)
+                {
+                    u32 stringSize = 0;
+                    char className[1024];
+                    VG_ASSERT(stringSize < 1024);
+                    VG_VERIFY(_buffer.restore(&stringSize, sizeof(u32), changed));
+                    VG_VERIFY(_buffer.restore(className, stringSize, changed));
+                    className[stringSize] = '\0';
+
+                    const IClassDesc * elemClassDesc = GetClassDescriptor(className);
+                    VG_ASSERT(elemClassDesc);
+                    if (count != _prop->GetPropertyObjectVectorCount(_object))
+                        elemClassDesc->ResizeVector(_object, (uint)_prop->GetOffset(), (uint)count);
+
+                    for (uint i = 0; i < count; ++i)
+                    {
+                        UID uid = 0;
+                        VG_VERIFY(_buffer.restore(&uid, sizeof(UID), changed));
+
+                        IObject * obj = _prop->GetPropertyObjectVectorElement(_object, i);
+                        obj->SetUID(uid);
+                        obj->SetParent(_object);
+                        RestoreProperties(obj, _bufferType);
+                    }
+                }
+            }
+            break;
+
+            case PropertyType::FloatCurveData:
+            {
+                u64 count = 0;
+                VG_VERIFY(_buffer.read(&count));
+
+                if (count > 0)
+                {
+                    FloatCurveData * dst = _prop->GetPropertyFloatCurveData(_object);
+                    dst->m_points.resize(count);
+                    for (uint i = 0; i < count; ++i)
+                    {
+                        VG_VERIFY(_buffer.read(&dst->m_points[i].t));
+                        VG_VERIFY(_buffer.read(&dst->m_points[i].value));
+                    }
+                }
             }
             break;
 

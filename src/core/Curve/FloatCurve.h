@@ -14,7 +14,7 @@ namespace vg::core
         core::vector<FloatCurvePoint> m_points;
     };
 
-    class FloatCurveDataContainer : Object
+    class FloatCurveDataContainer : public Object
     {
     public:
         VG_CLASS_DECL(FloatCurveDataContainer, Object);

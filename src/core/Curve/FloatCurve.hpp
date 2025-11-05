@@ -44,12 +44,11 @@ namespace vg::core
     FloatCurve::FloatCurve(const string & _name, IObject * _parent) :
         super(_name, _parent)
     {
-        FloatCurveDataContainer curve;
-        
+        FloatCurveDataContainer & curve = m_data.emplace_back();
+        curve.RegisterUID();
+
         curve.m_curve.m_points.push_back({ 0.0f, 0.0f });
         curve.m_curve.m_points.push_back({ 1.0f, 1.0f });
-        
-        m_data.push_back(curve);
     }
 
     //--------------------------------------------------------------------------------------
