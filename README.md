@@ -252,6 +252,12 @@ The following assets are provided under permissive licenses. Please follow the p
 | [Traffic Cone](         https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c ) | hinndia             
 | [Soccergoal](           https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894                                                   ) | NorbertVarga        
 
+### Textures
+
+| Name<img width=140/>                                                                                      | Author<img width=200/> 	            											
+| --------------------------------------------------------------------------------------------------------- | ------------------- 
+| [Concrete020](    https://ambientcg.com/view?id=Concrete020           )                                   | [ambientcg.com](https://ambientcg.com)    
+
 ### Environment maps
 
 | Name<img width=140/>                                                                                      | Author<img width=200/> 	            											

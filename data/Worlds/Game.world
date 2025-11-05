@@ -20,13 +20,6 @@
                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                 <Property type="String" name="m_resourcePath" value="data/Scenes/Aiguelongue.scene"/>
             </Object>
-            <Object class="SceneResource">
-                <Property type="String" name="m_name" value="PBR"/>
-                <Property type="Uint32" name="m_uid" value="3887152833"/>
-                <Property type="Uint32" name="m_originalUID" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                <Property type="String" name="m_resourcePath" value="data/Scenes/PBR.scene"/>
-            </Object>
         </Property>
         <Property type="ResourcePtrVector" name="m_prefabsResources"/>
     </Object>
