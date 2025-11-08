@@ -21,14 +21,9 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool RayTracingManager::enableRayTracing(bool _enable)
     {
-        if (_enable != m_rayTracingEnabled)
+        if (m_rayTracingRequested != _enable)
         {
-            if (_enable)
-                onEnableRayTracing();
-            else
-                onDisableRayTracing();
-
-            m_rayTracingEnabled = _enable;
+            m_rayTracingRequested = _enable;
             return true;
         }
 
@@ -125,6 +120,20 @@ namespace vg::renderer
         // TODO : Use 'DirtyBLAS' + atomic to avoid search?
         if(!vector_helper::exists(m_meshInstanceUpdateQueue, _meshInstance))
             m_meshInstanceUpdateQueue.push_back(_meshInstance);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RayTracingManager::beginFrame()
+    {
+        if (m_rayTracingRequested != m_rayTracingEnabled)
+        {
+            m_rayTracingEnabled = m_rayTracingRequested;
+
+            if (m_rayTracingRequested)
+                onEnableRayTracing();
+            else
+                onDisableRayTracing();            
+        }
     }
 
     //--------------------------------------------------------------------------------------

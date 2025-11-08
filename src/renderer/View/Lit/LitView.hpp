@@ -13,6 +13,7 @@
 #include "renderer/RenderPass/Compute/ComputeDeferredLighting/ComputeDeferredLightingPass.h"
 #include "renderer/RenderPass/Render2D/FinalBlit/FinalBlitPass.h"
 #include "renderer/RenderPass/Update/TLAS/TLASUpdatePass.h"
+#include "renderer/RayTracing/RayTracingManager.h"
 #include "renderer/Renderer.h"
 #include "renderer/Options/RendererOptions.h"
 
@@ -61,7 +62,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool LitView::IsUsingRayTracing() const
     {
-        return RendererOptions::get()->isRayTracingEnabled();
+        return RayTracingManager::get()->isRayTracingEnabled();
     }
 
     //--------------------------------------------------------------------------------------

@@ -80,7 +80,7 @@ namespace vg::renderer
     {
         const MeshModel * meshModel = getMeshModel(Lod::Lod0);
 
-        bool raytracing = RendererOptions::get()->isRayTracingEnabled();
+        bool raytracing = RayTracingManager::get()->isRayTracingEnabled();
 
         if (nullptr != meshModel)
         {
@@ -202,7 +202,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool MeshInstance::updateInstanceBLAS()
     {
-        if (!isSkinned() && RendererOptions::get()->isRayTracingEnabled())
+        if (!isSkinned() && RayTracingManager::get()->isRayTracingEnabled())
         {
             auto * blas = getInstanceBLAS();
 

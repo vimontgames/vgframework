@@ -19,6 +19,8 @@ namespace vg::renderer
     {
     public:
 
+        void    beginFrame              ();
+
         void    update                  (gfx::CommandList * _cmdList, gfx::Buffer * _skinningBuffer);
         void    updateView              (gfx::CommandList * _cmdList, View * _view);
 
@@ -37,7 +39,8 @@ namespace vg::renderer
         void    onDisableRayTracing     ();
 
     private:    
-        bool    m_rayTracingEnabled = false;
+        bool    m_rayTracingRequested   = false;
+        bool    m_rayTracingEnabled     = false;
 
         core::vector<MeshModel *>       m_meshModels;
         core::vector<MeshInstance *>    m_meshInstances;

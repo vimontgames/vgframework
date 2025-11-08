@@ -21,6 +21,9 @@ namespace vg::gfx::vulkan
             case PixelFormat::B8G8R8A8_unorm_sRGB:
                 return VK_FORMAT_B8G8R8A8_SRGB;
 
+            case PixelFormat::R16G16B16A16_unorm:
+                return VK_FORMAT_R16G16B16A16_UNORM;
+
             case PixelFormat::R10G10B10A2_unorm:
                 return VK_FORMAT_A2B10G10R10_UNORM_PACK32;
 
