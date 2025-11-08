@@ -2187,14 +2187,31 @@ namespace vg::editor
                 bool overriden = propContext.m_isPrefabOverride;
                 bool notOverriden = !overriden;
 
-                ImGui::MenuItem("Prefab override", nullptr, false, false);
+                ImGui::MenuItem("Prefab", nullptr, false, false);
                 ImGui::Separator();
 
-                if (ImGui::MenuItem("Use original value", nullptr, &notOverriden))
-                    propContext.m_prefab->ToggleOverride(propContext.m_originalObject, propContext.m_originalProp, false);
+                bool overrideExists = propContext.m_prefab->GetDynamicProperty(propContext.m_originalObject, propContext.m_originalProp);
 
-                if (ImGui::MenuItem("Use override value", nullptr, &overriden))
-                    propContext.m_prefab->ToggleOverride(propContext.m_originalObject, propContext.m_originalProp, true);
+                if (overrideExists)
+                {
+                    if (ImGui::MenuItem("Use original value", nullptr, &notOverriden))
+                        propContext.m_prefab->EnablePropertyOverride(propContext.m_originalObject, propContext.m_originalProp, false);
+
+                    if (ImGui::MenuItem("Use override value", nullptr, &overriden))
+                        propContext.m_prefab->EnablePropertyOverride(propContext.m_originalObject, propContext.m_originalProp, true);
+
+                    ImGui::Separator();
+                    if (ImGui::MenuItem("Remove override"))
+                    {
+                        propContext.m_prefab->EnablePropertyOverride(propContext.m_originalObject, propContext.m_originalProp, false);
+                        propContext.m_prefab->DestroyDynamicOverride(propContext.m_originalObject, propContext.m_originalProp);
+                    }
+                }
+                else
+                {
+                    if (ImGui::MenuItem("Create override value"))
+                        propContext.m_prefab->EnablePropertyOverride(propContext.m_originalObject, propContext.m_originalProp, true);
+                }
 
                 ImGui::EndDisabled();
 
@@ -2304,8 +2321,21 @@ namespace vg::editor
 
                 if (_propContext.m_propOverride)
                 {
-                    ((DynamicPropertyResource *)_propContext.m_propOverride)->SetValue(relativePath);
-                    _propContext.m_propOverride->Enable(true);
+                    switch (_propContext.m_propOverride->GetProperty()->GetType())
+                    {
+                        default:
+                        {
+                            VG_ASSERT(false);
+                        }
+                        break;
+
+                        case PropertyType::Resource:
+                        {
+                            ((DynamicPropertyResource *)_propContext.m_propOverride)->SetValue(relativePath);
+                            _propContext.m_propOverride->Enable(true);
+                        }
+                        break;
+                    }
                 }
                 _resource->SetResourcePath(relativePath);
             }

@@ -47,8 +47,9 @@ namespace vg::core
         IDynamicProperty *                              GetDynamicProperty          (const IObject * _object, const IProperty * _prop) const override;
         bool                                            CanOverrideProperty         (const IObject * _object, const IProperty * _prop) const override;
         IDynamicProperty *                              CreateDynamicProperty       (const IObject * _object, const IProperty * _prop) override;
+        bool                                            DestroyDynamicOverride      (const IObject * _object, const IProperty * _prop) override;
         void                                            OverrideGameObjectProperties(IGameObject * _gameObject, const IDynamicProperty * _dynProp) override;
-        bool                                            ToggleOverride              (const IObject * _object, const IProperty * _prop, bool _override) override;
+        bool                                            EnablePropertyOverride      (const IObject * _object, const IProperty * _prop, bool _override) override;
 
         using Context = GameObjectUpdateContext;
 

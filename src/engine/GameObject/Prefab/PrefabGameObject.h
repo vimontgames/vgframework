@@ -45,8 +45,9 @@ namespace vg::engine
         core::IDynamicProperty *                            GetDynamicProperty          (const core::IObject * _object, const core::IProperty * _prop) const override;
         bool                                                CanOverrideProperty         (const core::IObject * _object, const core::IProperty * _prop) const override;
         core::IDynamicProperty *                            CreateDynamicProperty       (const core::IObject * _object, const core::IProperty * _prop) override;
+        bool                                                DestroyDynamicOverride      (const core::IObject * _object, const core::IProperty * _prop) override;
         void                                                OverrideGameObjectProperties(core::IGameObject * _gameObject, const core::IDynamicProperty * _dynProp) override;
-        bool                                                ToggleOverride              (const core::IObject * _object, const core::IProperty * _prop, bool _override) override;
+        bool                                                EnablePropertyOverride      (const core::IObject * _object, const core::IProperty * _prop, bool _override) override;
 
     private:
         core::DynamicPropertyList *                         getDynamicPropertyList      (const core::IObject * _object) const;
@@ -55,6 +56,7 @@ namespace vg::engine
         core::DynamicProperty *                             getDynamicProperty          (const core::IObject * _object, const core::IProperty * _prop) const;
         bool                                                canOverrideProperty         (const core::IObject * _object, const core::IProperty * _prop) const;
         core::DynamicProperty *                             createDynamicProperty       (const core::IObject * _object, const core::IProperty * _prop);
+       bool                                                 destroyDynamicProperty      (const core::IObject * _object, const core::IProperty * _prop);
 
         void                                                patchPrefabGameObjectUIDs   (const core::IObject * _root, core::IObject * _object);
 

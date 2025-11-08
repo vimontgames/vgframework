@@ -318,7 +318,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool GameObject::ToggleOverride(const IObject * _object, const IProperty * _prop, bool _override)
+    bool GameObject::EnablePropertyOverride(const IObject * _object, const IProperty * _prop, bool _override)
+    {
+        VG_ASSERT_NOT_IMPLEMENTED();
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool GameObject::DestroyDynamicOverride(const IObject * _object, const IProperty * _prop)
     {
         VG_ASSERT_NOT_IMPLEMENTED();
         return false;

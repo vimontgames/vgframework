@@ -27,7 +27,7 @@ namespace vg::engine
         super(_name, _parent)
     {
         string lowerName = tolower(_name);
-        if (string::npos != lowerName.find("_albedo") || string::npos != lowerName.find("_diffuse"))
+        if (string::npos != lowerName.find("_albedo") || string::npos != lowerName.find("_diffuse") || string::npos != lowerName.find("_basecolor"))
             this->m_importSettings.m_sRGB = true;
         else
             this->m_importSettings.m_sRGB = false;

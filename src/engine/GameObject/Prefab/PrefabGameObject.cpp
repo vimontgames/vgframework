@@ -89,6 +89,12 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    bool PrefabGameObject::DestroyDynamicOverride(const IObject * _object, const IProperty * _prop)
+    {
+        return destroyDynamicProperty(_object, _prop);
+    }
+
+    //--------------------------------------------------------------------------------------
     core::DynamicPropertyList * PrefabGameObject::getDynamicPropertyList(const core::IObject * _object) const
     {
         const auto uid = _object->GetOriginalUID(false);
@@ -342,6 +348,38 @@ namespace vg::engine
             }
             break;
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool PrefabGameObject::destroyDynamicProperty(const core::IObject * _object, const core::IProperty * _prop)
+    {
+        if (auto * propList = getDynamicPropertyList(_object))
+        {
+            for (uint i = 0; i < propList->m_properties.size(); ++i)
+            {
+                auto & prop = propList->m_properties[i];
+                if (prop->GetName() == _prop->GetName())
+                {
+                    propList->m_properties.erase(propList->m_properties.begin() + i);
+
+                    if (propList->m_properties.size() == 0)
+                    {
+                        for (uint i = 0; i < m_dynamicProperties.size(); ++i)
+                        {
+                            if (m_dynamicProperties[i] == propList)
+                            {
+                                m_dynamicProperties.erase(m_dynamicProperties.begin() + i);
+                                return true;
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+            }            
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -756,7 +794,7 @@ namespace vg::engine
     // _override = true => Enable property override, Set to Override value
     // _override = false => Disable property override, Reset to original value
     //--------------------------------------------------------------------------------------
-    bool PrefabGameObject::ToggleOverride(const IObject * _object, const IProperty * _prop, bool _override)
+    bool PrefabGameObject::EnablePropertyOverride(const IObject * _object, const IProperty * _prop, bool _override)
     {
         if (_override)
         {

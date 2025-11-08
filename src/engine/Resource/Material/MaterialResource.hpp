@@ -40,7 +40,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MaterialResource::~MaterialResource()
     {
-       
+        UnregisterUID();
     }
 
     //--------------------------------------------------------------------------------------
@@ -71,6 +71,7 @@ namespace vg::engine
             {
                 // Create the material, textures aren't loaded yet
                 object->CreateRendererMaterial();
+                object->RegisterUID();
                 return object;
             }
         }

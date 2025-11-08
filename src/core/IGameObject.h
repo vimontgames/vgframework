@@ -65,8 +65,9 @@ namespace vg::core
         virtual IDynamicProperty *              GetDynamicProperty              (const IObject * _object, const IProperty * _prop) const = 0;
         virtual bool                            CanOverrideProperty             (const IObject * _object, const IProperty * _prop) const = 0;
         virtual IDynamicProperty *              CreateDynamicProperty           (const IObject * _object, const IProperty * _prop) = 0;
+        virtual bool                            DestroyDynamicOverride          (const IObject * _object, const IProperty * _prop) = 0;
         virtual void                            OverrideGameObjectProperties    (IGameObject * _gameObject, const IDynamicProperty * _dynProp) = 0;
-        virtual bool                            ToggleOverride                  (const IObject * _object, const IProperty * _prop, bool _override) = 0;
+        virtual bool                            EnablePropertyOverride          (const IObject * _object, const IProperty * _prop, bool _override) = 0;
 
         virtual void                            OnCollisionEnter                (IGameObject * _other) = 0;
         virtual void                            OnCollisionStay                 (IGameObject * _other) = 0;
