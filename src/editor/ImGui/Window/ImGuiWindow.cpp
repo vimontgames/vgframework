@@ -1007,7 +1007,7 @@ namespace vg::editor
                         if (_propContext.m_readOnly)
                         {
                             ImGui::SameLine();
-                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), " Read-only");
+                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
                         }                            
                     }
                     else if (_propContext.m_isPrefabInstance)
@@ -1018,15 +1018,17 @@ namespace vg::editor
                             ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
                         else if (_propContext.m_canPrefabOverride)
                         {
-                            ImGui::TextColored(imGuiAdapter->GetTextColor(), "Overridable");
+                            ImGui::TextColored(imGuiAdapter->GetTextColor(), "Can override");
                         }
                         else
-                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Not-Overridable");
+                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Cannot override");
                     }
                     else
                     {
                         if (_propContext.m_readOnly)
                             ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
+                        else
+                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Cannot override");
                     }
                 }
 
@@ -2289,7 +2291,29 @@ namespace vg::editor
         string resPath = _resource->GetResourcePath();
 
         if (_propContext.m_propOverride && _propContext.m_propOverride->IsEnable())
-            resPath = ((DynamicPropertyResource *)_propContext.m_propOverride)->GetValue();
+        {
+            const auto propType = _propContext.m_propOverride->GetProperty()->GetType();
+            switch (propType)
+            {
+                default:
+                {
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
+                }
+                break;
+
+                case PropertyType::Resource:
+                {
+                    resPath = ((DynamicPropertyResource *)_propContext.m_propOverride)->GetValue();
+                }
+                break;
+
+                case PropertyType::ResourceVector:
+                {
+                    resPath = ((DynamicPropertyResourceVector *)_propContext.m_propOverride)->getValueAt(_index);
+                }
+                break;
+            }
+        }
 
         char buffer[1024];
         sprintf_s(buffer, resPath.c_str());
@@ -2321,17 +2345,25 @@ namespace vg::editor
 
                 if (_propContext.m_propOverride)
                 {
-                    switch (_propContext.m_propOverride->GetProperty()->GetType())
+                    const auto propType = _propContext.m_propOverride->GetProperty()->GetType();
+                    switch (propType)
                     {
                         default:
                         {
-                            VG_ASSERT(false);
+                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
                         }
                         break;
 
                         case PropertyType::Resource:
                         {
                             ((DynamicPropertyResource *)_propContext.m_propOverride)->SetValue(relativePath);
+                            _propContext.m_propOverride->Enable(true);
+                        }
+                        break;
+
+                        case PropertyType::ResourceVector:
+                        {
+                            ((DynamicPropertyResourceVector *)_propContext.m_propOverride)->setValueAt(_index, relativePath);
                             _propContext.m_propOverride->Enable(true);
                         }
                         break;

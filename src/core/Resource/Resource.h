@@ -52,6 +52,7 @@ namespace vg::core
         bool                        CanSaveFile             () const override { return false; }
 
         IResourceMeta *             CreateResourceMeta      (const core::string & _path) const override;
+        bool                        CanOverrideProperties   () const override;
 
 	protected:
         string                      m_resourcePath;

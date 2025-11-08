@@ -377,4 +377,12 @@ namespace vg::engine
             }
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    // As opposed to other resources types, WorldResource are parent of Prefabs and it is possible to override children properties (unlike e.g. materials)
+    //--------------------------------------------------------------------------------------
+    bool WorldResource::CanOverrideProperties() const
+    {
+        return true;
+    }
 }

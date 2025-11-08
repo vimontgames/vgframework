@@ -47,7 +47,7 @@ namespace vg::engine
     void AttachToNodeComponent::OnLoad()
     {
         super::OnLoad();
-        updateCache();
+        updateCache(true);
     }
 
     //--------------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool AttachToNodeComponent::updateCache()
+    bool AttachToNodeComponent::updateCache(bool loading)
     {
         clearCache();
 
@@ -129,15 +129,24 @@ namespace vg::engine
 
         if (m_useTarget)
         {
-            if (gameObject = m_target.get<GameObject>())
+            if (m_target.getUID())
             {
-                if (const MeshComponent * mc = gameObject->GetComponentT<MeshComponent>())
+                if (gameObject = m_target.get<GameObject>())
                 {
-                    if (const renderer::IMeshInstance * mi = mc->getMeshInstance())
+                    if (const MeshComponent * mc = gameObject->GetComponentT<MeshComponent>())
                     {
-                        if (const renderer::ISkeleton * sk = mi->GetSkeleton())
-                            skeleton = sk;
+                        if (const renderer::IMeshInstance * mi = mc->getMeshInstance())
+                        {
+                            if (const renderer::ISkeleton * sk = mi->GetSkeleton())
+                                skeleton = sk;
+                        }
                     }
+                }
+                else
+                {
+                    // During loading it can happen because children are not yet serialized
+                    if (!loading)
+                        VG_WARNING("[Undo/Redo] Cannot find target 0x%08X in AttachToNodeComponent %s", m_target.getUID(), GetGameObject()->GetFullName().c_str());
                 }
             }
         }

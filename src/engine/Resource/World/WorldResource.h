@@ -36,5 +36,7 @@ namespace vg::engine
 
         bool                                CanCreateFile               () const final override { return true; };
         bool                                CanSaveFile                 () const final override { return true; };
+
+        bool                                CanOverrideProperties       () const override;
     };
 }

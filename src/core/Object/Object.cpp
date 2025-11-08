@@ -566,4 +566,10 @@ namespace vg::core
         VG_ASSERT(false);
         return false;
     }	
+
+    //--------------------------------------------------------------------------------------
+    bool Object::CanOverrideProperties() const
+    {
+        return true;
+    }
 }

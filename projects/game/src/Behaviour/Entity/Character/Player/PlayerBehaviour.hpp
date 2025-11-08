@@ -417,26 +417,25 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                         m_rightHandItem = nullptr;
                     }
                 }
-            }
+           
+                if (charaController)
+                {
+                    float3 currentVelocity = charaController->GetVelocity();
+                    float3 targetVelocity = translation.xyz;
+                    float3 updatedVelocity;
+                    updatedVelocity.xy = smoothdamp(currentVelocity.xy, targetVelocity.xy, m_velocitySmoothdamp, 0.02f, _context.m_dt);
+                    updatedVelocity.z = currentVelocity.z;
+                    if (abs((float)currentVelocity.z) <= 0.0001f && m_moveState == MoveState::Jump)
+                        m_moveState = MoveState::Idle;
 
-            if (charaController)
-            {
-                float3 currentVelocity = charaController->GetVelocity();
-                float3 targetVelocity = translation.xyz;
-                float3 updatedVelocity;
-                updatedVelocity.xy = smoothdamp(currentVelocity.xy, targetVelocity.xy, m_velocitySmoothdamp, 0.02f, _context.m_dt);
-                updatedVelocity.z = currentVelocity.z;
+                    if (jump)
+                        updatedVelocity += float3(0, 0, running ? m_runJumpSpeed : m_jumpSpeed);
 
-                if (abs((float)currentVelocity.z) <= 0.0001f && m_moveState == MoveState::Jump)
-                    m_moveState = MoveState::Idle;
+                    m_velocityNorm = (updatedVelocity.x != 0 || updatedVelocity.y != 0) ? (float)length(updatedVelocity) / _context.m_dt : 0.0f;
 
-                if (jump)
-                    updatedVelocity += float3(0, 0, running? m_runJumpSpeed : m_jumpSpeed);
-
-                m_velocityNorm = (updatedVelocity.x != 0 || updatedVelocity.y != 0) ? (float)length(updatedVelocity) / _context.m_dt : 0.0f;
-
-                charaController->SetVelocity(updatedVelocity);
-                charaController->SetRotation(quaternion::rotation_z(degreesToRadians(m_currentRotation)));
+                    charaController->SetVelocity(updatedVelocity);
+                    charaController->SetRotation(quaternion::rotation_z(degreesToRadians(m_currentRotation)));
+                }
             }
         }
         else

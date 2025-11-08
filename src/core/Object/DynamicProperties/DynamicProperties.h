@@ -23,4 +23,5 @@
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyInt4.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyObjectHandle.h"
 #include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyResource.h"
+#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyResourceVector.h"
 #include "core/Object/DynamicProperties/DynamicPropertyList.h"

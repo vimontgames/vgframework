@@ -39,72 +39,74 @@ namespace vg::core
 	public:
 		VG_CLASS_DECL(Object, IObject);
 
-		void                        SetClassDesc		(const IClassDesc * _classDesc) final override;
-        const IClassDesc *          GetClassDesc        () const final override;
-		bool                        IsRegisteredClass	() const final override;
+		void                        SetClassDesc			(const IClassDesc * _classDesc) final override;
+        const IClassDesc *          GetClassDesc			() const final override;
+		bool                        IsRegisteredClass		() const final override;
 
-								    Object		        (const string & _name, IObject * _parent = nullptr);
-									Object				(const Object & _other);
-								    Object		        ();
-								    ~Object		        ();
+								    Object					(const string & _name, IObject * _parent = nullptr);
+									Object					(const Object & _other);
+								    Object					();
+								    ~Object					();
 
-		bool						RegisterUID			() override;
-		bool                        UnregisterUID		() override;
-		bool                        HasValidUID			() const final override;
+		bool						RegisterUID				() override;
+		bool                        UnregisterUID			() override;
+		bool                        HasValidUID				() const final override;
 
-		UID							GetUID				(bool _mustBeValid = true) const final override;
-		void						SetUID				(UID _uid) override;
-		bool						CanCopyUID			() const override { return false; }
+		UID							GetUID					(bool _mustBeValid = true) const final override;
+		void						SetUID					(UID _uid) override;
+		bool						CanCopyUID				() const override { return false; }
 
-       UID							GetOriginalUID		(bool _mustBeValid = true) const final override;
-       void							SetOriginalUID		(UID _uid) final override;
+       UID							GetOriginalUID			(bool _mustBeValid = true) const final override;
+       void							SetOriginalUID			(UID _uid) final override;
                                 
-		ObjectFlags                 GetObjectFlags		() const final override;
-		void                        SetObjectFlags		(ObjectFlags _flags, bool _enabled) final override;
+		ObjectFlags                 GetObjectFlags			() const final override;
+		void                        SetObjectFlags			(ObjectFlags _flags, bool _enabled) final override;
 
-		const IObject *				FindByOriginalUID	(UID _originalUID) const final override;
+		const IObject *				FindByOriginalUID		(UID _originalUID) const final override;
 
-		IObject *					Instanciate			() const override;
+		IObject *					Instanciate				() const override;
 
-		void                        OnLoad				() override;
-		void                        OnSave				() override;
+		void                        OnLoad					() override;
+		void                        OnSave					() override;
 
-        void                        OnPlay				() override;
-        void                        OnStop				() override;
+        void                        OnPlay					() override;
+        void                        OnStop					() override;
 
-		void                        OnEnable			() override;
-		void                        OnDisable			() override;
+		void                        OnEnable				() override;
+		void                        OnDisable				() override;
 
-        void                        SetParent           (IObject * _parent) override;
-        IObject *                   GetParent           () const final override;
-		IGameObject *				GetParentGameObject	() const final override;
-		IComponent *				GetParentComponent	() const final override;
+        void                        SetParent				(IObject * _parent) override;
+        IObject *                   GetParent				() const final override;
+		IGameObject *				GetParentGameObject		() const final override;
+		IComponent *				GetParentComponent		() const final override;
 
-        void                        OnPropertyChanged   (IObject * _object, const IProperty & _prop, bool _notifyParent) override;
-		void						SetPropertyValue	(const IProperty & _prop, void * _previousValue, void * _newValue) override;
+        void                        OnPropertyChanged		(IObject * _object, const IProperty & _prop, bool _notifyParent) override;
+		void						SetPropertyValue		(const IProperty & _prop, void * _previousValue, void * _newValue) override;
 		
-        void                        OnResourceLoaded    (IResource * _resource) override;
-		void                        OnResourceUnloaded	(IResource * _resource) override;
+        void                        OnResourceLoaded		(IResource * _resource) override;
+		void                        OnResourceUnloaded		(IResource * _resource) override;
 
-		void					    SetName		        (const string & _name) override;
-		const string &			    GetName		        () const override;
-		const string 				GetFullName			() const override;
-		const string                GetShortName		() const override;
+		void					    SetName					(const string & _name) override;
+		const string &			    GetName					() const override;
+		const string 				GetFullName				() const override;
+		const string                GetShortName			() const override;
 
-        bool                        HasFile             () const override;
-        void					    SetFile             (const string & _file) override;
-        const string &			    GetFile             () const override;
+        bool                        HasFile					() const override;
+        void					    SetFile					(const string & _file) override;
+        const string &			    GetFile					() const override;
 
-		u32						    AddRef		        () override;
-		u32						    Release		        () override;
-		u32                         GetRefCount			() const override;
+		u32						    AddRef					() override;
+		u32						    Release					() override;
+		u32                         GetRefCount				() const override;
 
-        VG_INLINE void				setParent			(IObject * _parent);
-		VG_INLINE IObject *			getParent			() const;
-        VG_INLINE ObjectFlags       getObjectFlags		() const;
-        VG_INLINE void              setObjectFlags		(ObjectFlags _flags, bool _enabled);
+		bool                        CanOverrideProperties	() const;
 
-		static bool					resizeVector		(core::IObject * _parent, core::uint _offset, core::uint _count, void ** _data);
+        VG_INLINE void				setParent				(IObject * _parent);
+		VG_INLINE IObject *			getParent				() const;
+        VG_INLINE ObjectFlags       getObjectFlags			() const;
+        VG_INLINE void              setObjectFlags			(ObjectFlags _flags, bool _enabled);
+
+		static bool					resizeVector			(core::IObject * _parent, core::uint _offset, core::uint _count, void ** _data);
 
 	private:
         atomic<u32>				    m_refCount;

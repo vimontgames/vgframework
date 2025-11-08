@@ -18,6 +18,21 @@ namespace vg::editor
 
         if (m_gameobject && _object->GetUID(false))
         {
+            // Cannot override value in resource referenced by Prefab instance
+            bool isResourceChild = false;
+            IObject * parent = _object;
+            while (nullptr != parent)
+            {
+                if (!parent->CanOverrideProperties())
+                {
+                    isResourceChild = true;
+                    break;
+                }
+                parent = parent->GetParent();
+            }
+            if (isResourceChild)
+                return;
+
             m_prefab = m_gameobject->GetParentPrefab();
             m_isPrefabInstance = nullptr != m_prefab;
 

@@ -684,6 +684,8 @@ namespace vg::core
 
             if (m_uidObjectHash.end() != it)
                 return it->second;
+
+            VG_INFO("[Undo/Redo] Cannot find object with UID 0x%08X", _uid);
         }
 
         return nullptr;

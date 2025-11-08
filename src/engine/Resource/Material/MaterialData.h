@@ -31,6 +31,8 @@ namespace vg::engine
 
         void                                OnPropertyChanged           (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
+        void                                OnLoad                      () override;
+
         void                                OnResourceLoaded            (core::IResource * _resource) override;
         void                                OnResourceUnloaded          (core::IResource * _resource) override;
 

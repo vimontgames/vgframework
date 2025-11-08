@@ -635,10 +635,11 @@ namespace vg::engine
         {
             VG_PROFILE_CPU("OnResourceLoaded");
 
+            const auto resLoadedCount = m_resourcesLoaded.size();
             for (uint i = 0; i < m_resourcesLoaded.size(); ++i)
             {
                 const auto & res = m_resourcesLoaded[i];
-                VG_ASSERT(nullptr != res, "nullptr resource found in loaded resources list");
+                VG_ASSERT(nullptr != res, "nullptr resource found in loaded resources list at index %u/%u", i, m_resourcesLoaded.size());
                 if (nullptr != res)
                 {
                     auto it = resourceInfoMap.find(res->GetResourcePath());

@@ -181,7 +181,7 @@ namespace vg::engine
 
             case PropertyType::ResourceVector:
             {
-                return false; // TODO
+                return true; 
             }
 
             case PropertyType::String:
@@ -415,6 +415,10 @@ namespace vg::engine
                     newDynProp = new DynamicPropertyResource(_prop->GetName());
                     break;
 
+                case PropertyType::ResourceVector:
+                    newDynProp = new DynamicPropertyResourceVector(_prop->GetName());
+                    break;
+
                 case PropertyType::Bool:
                     newDynProp = new DynamicPropertyBool(_prop->GetName());
                     break;
@@ -526,7 +530,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    // In case of Prefab during editition, we copy we simply create a new PrefabGameObject and copy Prefab path.
+    // In case of Prefab during edition, we copy we simply create a new PrefabGameObject and copy Prefab path.
     // At runtime, a full copy is made so that the object can be used immediately
     //--------------------------------------------------------------------------------------
     IObject * PrefabGameObject::Instanciate() const

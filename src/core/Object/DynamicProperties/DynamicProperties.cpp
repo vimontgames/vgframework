@@ -27,4 +27,5 @@
 #include "DynamicPropertyType/DynamicPropertyInt4.hpp"
 #include "DynamicPropertyType/DynamicPropertyObjectHandle.hpp"
 #include "DynamicPropertyType/DynamicPropertyResource.hpp"
+#include "core/Object/DynamicProperties/DynamicPropertyType/DynamicPropertyResourceVector.hpp"
 #include "DynamicPropertyList.hpp"

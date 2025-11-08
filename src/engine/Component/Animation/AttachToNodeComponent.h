@@ -32,7 +32,7 @@ namespace vg::engine
         void                            SetTarget           (core::IGameObject * _target) final override;
         void                            SetBoneName         (const core::string & _boneName) final override;
 
-        bool                            updateCache         ();
+        bool                            updateCache         (bool loading = false);
         void                            clearCache          ();
 
     private:

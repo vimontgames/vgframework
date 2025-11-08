@@ -228,4 +228,10 @@ namespace vg::core
     {
         return nullptr;
     }
+
+    //--------------------------------------------------------------------------------------
+    bool Resource::CanOverrideProperties() const
+    {
+        return false;
+    }
 }

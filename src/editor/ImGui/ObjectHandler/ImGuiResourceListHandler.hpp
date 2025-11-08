@@ -87,7 +87,7 @@ namespace vg::editor
                     {
                         PropertyContext propContext(_object, prop);
 
-                        resourceCount = prop->GetPropertyResourceVectorCount(_object);
+                        resourceCount = propContext.m_originalProp->GetPropertyResourceVectorCount(propContext.m_originalObject);
 
                         int removeAt = -1;
 
@@ -97,7 +97,7 @@ namespace vg::editor
                             availableWidth = ImGui::GetContentRegionAvail().x + ImGui::GetCursorPosX() - style.FramePadding.x;
 
                             ImGui::PushID(i);
-                            auto resource = prop->GetPropertyResourceVectorElement(_object, i);
+                            auto resource = propContext.m_originalProp->GetPropertyResourceVectorElement(propContext.m_originalObject, i);
 
                             string itemLabel;
 

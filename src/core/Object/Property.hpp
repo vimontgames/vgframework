@@ -673,7 +673,7 @@ namespace vg::core
     IObject * Property::GetPropertyObjectVectorElement(const IObject * _object, uint _index) const
     {
         VG_ASSERT(_index<GetPropertyObjectVectorCount(_object)); 
-        return (IObject *)(GetPropertyObjectVectorData(_object) + sizeOf * _index * GetSizeOf());
+        return (IObject *)(GetPropertyObjectVectorData(_object) + _index * GetSizeOf());
     }
 
     //--------------------------------------------------------------------------------------
