@@ -71,4 +71,16 @@ namespace vg::core
         m_prop = *(Property *)_prop;
         m_prop.SetOffset(VG_OFFSETOF(DynamicPropertyResource, m_value));
     }
+
+    //--------------------------------------------------------------------------------------
+    void DynamicPropertyResource::SetValue(const string & _value)
+    {
+        m_value = _value;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const string & DynamicPropertyResource::GetValue() const
+    {
+        return m_value;
+    }
 }

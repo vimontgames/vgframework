@@ -97,21 +97,21 @@ namespace vg::editor
                             availableWidth = ImGui::GetContentRegionAvail().x + ImGui::GetCursorPosX() - style.FramePadding.x;
 
                             ImGui::PushID(i);
-                            auto obj = prop->GetPropertyResourceVectorElement(_object, i);
+                            auto resource = prop->GetPropertyResourceVectorElement(_object, i);
 
                             string itemLabel;
 
-                            string itemPath = io::getFileName(obj->GetResourcePath());
+                            string itemPath = io::getFileName(resource->GetResourcePath());
 
-                            if (!obj->GetName().empty())
-                                itemLabel = obj->GetName();
+                            if (!resource->GetName().empty())
+                                itemLabel = resource->GetName();
                             else
                                 itemLabel = itemPath;
 
                             if (itemPath.empty())
                                 ImGui::PushDisabledStyle(true);       
 
-                            bool open = ImGui::PersistentCollapsingHeader(itemLabel, obj, prop);
+                            bool open = ImGui::PersistentCollapsingHeader(itemLabel, resource, prop);
 
                             if (itemPath.empty())
                                 ImGui::PopDisabledStyle();
@@ -125,7 +125,7 @@ namespace vg::editor
 
                             if (open)
                             {
-                                changed |= ImGuiWindow::displayResource(obj, prop, i, propContext);
+                                changed |= ImGuiWindow::displayResource(resource, _object, prop, i, propContext);
                                 //ImGui::TreePop();
                             }
 

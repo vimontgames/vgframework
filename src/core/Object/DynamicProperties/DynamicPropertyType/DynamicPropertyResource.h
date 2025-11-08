@@ -19,7 +19,10 @@ namespace vg::core
 
         void CopyProperty(const IProperty * _prop) override;
 
-    //private:
+        void SetValue(const string & _value);
+        const string & GetValue() const;
+
+    private:
         string m_original;
         string m_value;
     };

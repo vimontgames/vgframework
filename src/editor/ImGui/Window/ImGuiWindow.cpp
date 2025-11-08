@@ -204,6 +204,7 @@ namespace vg::editor
 
     template <> struct TypeToDynamicPropertyTypeEnum<string> { using type = core::DynamicPropertyString; };
     template <> struct TypeToDynamicPropertyTypeEnum<ObjectHandle> { using type = core::DynamicPropertyU32; };
+    template <> struct TypeToDynamicPropertyTypeEnum<Resource> { using type = core::DynamicPropertyResource; };
 
     template <typename T> bool equals(T a, T b)                 {  return a == b; }
 
@@ -1017,10 +1018,10 @@ namespace vg::editor
                             ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
                         else if (_propContext.m_canPrefabOverride)
                         {
-                            //ImGui::TextColored(imGuiAdapter->GetTextColor(), "This property can be overriden");
+                            ImGui::TextColored(imGuiAdapter->GetTextColor(), "Overridable");
                         }
                         else
-                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Cannot override");
+                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Not-Overridable");
                     }
                     else
                     {
@@ -2081,7 +2082,7 @@ namespace vg::editor
                             if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
                             {
                                 ImGui::Indent();
-                                displayResource(pResource, _prop, 0, propContext);
+                                displayResource(pResource, _object, _prop, 0, propContext);
                                 ImGui::Unindent();
                                 ImGui::TreePop();
                             }
@@ -2109,7 +2110,7 @@ namespace vg::editor
                                 if (ImGui::TreeNodeEx(_prop->GetEnumName(e).c_str(), /*ImGuiTreeNodeFlags_OpenOnArrow |*/ ImGuiTreeNodeFlags_DefaultOpen))
                                 {
                                     if (nullptr != pResource)
-                                        changed |= displayResource(pResource, _prop, e, propContext);
+                                        changed |= displayResource(pResource, _object, _prop, e, propContext);
 
                                     ImGui::TreePop();
                                 }
@@ -2121,7 +2122,7 @@ namespace vg::editor
                     {
                         IResource * pResource = ref ? *propContext.m_originalProp->GetPropertyResourcePtr(propContext.m_originalObject) : propContext.m_originalProp->GetPropertyResource(propContext.m_originalObject);
                         if (nullptr != pResource)
-                            changed |= displayResource(pResource, _prop, 0, propContext);
+                            changed |= displayResource(pResource, _object, _prop, 0, propContext);
                     }
                 }
                 break;
@@ -2232,11 +2233,15 @@ namespace vg::editor
     // Display Resource Object
     // Display Resource properties 1st, then path and referenced object properties 2nd
     //--------------------------------------------------------------------------------------
-    bool ImGuiWindow::displayResource(core::IResource * _resource, const core::IProperty * _prop, core::uint _index, PropertyContext & _propContext)
+    bool ImGuiWindow::displayResource(core::IResource * _resource, IObject * _object, const core::IProperty * _prop, core::uint _index, PropertyContext & _propContext)
     {
         const char * className = _resource->GetClassName();
         const auto * factory = Kernel::getFactory();
         const auto * classDesc = factory->GetClassDescriptor(className);
+
+        //_propContext.m_originalObject = _resource;
+        //_propContext.m_originalProp = _prop;
+        _propContext.m_canPrefabOverride = _propContext.m_prefab ? _propContext.m_prefab->CanOverrideProperty(_resource, _prop) : false;
 
         ImGui::PushID(_resource);
         ImGui::PushID(_prop);
@@ -2267,7 +2272,7 @@ namespace vg::editor
         string resPath = _resource->GetResourcePath();
 
         if (_propContext.m_propOverride && _propContext.m_propOverride->IsEnable())
-            resPath = ((DynamicPropertyResource *)_propContext.m_propOverride)->m_value;
+            resPath = ((DynamicPropertyResource *)_propContext.m_propOverride)->GetValue();
 
         char buffer[1024];
         sprintf_s(buffer, resPath.c_str());
@@ -2275,15 +2280,35 @@ namespace vg::editor
 
         const float buttonWidth = style::button::SizeSmall.x;
 
-        auto storePath = [=](const char * _resPath)
+        auto storePath = [&](const char * _resPath)
         {
             string relativePath = io::getRelativePath((string)_resPath);
-            if (_propContext.m_propOverride)
+
+            if (resPath != relativePath)
             {
-                ((DynamicPropertyResource *)_propContext.m_propOverride)->m_value = relativePath;
-                _propContext.m_propOverride->Enable(true);
+                // Create dynamic property if needed
+                if (!_propContext.m_readOnly && _propContext.m_isPrefabInstance && !_propContext.m_isPrefabOverride && !asBool(_prop->GetFlags() & PropertyFlags::Transient))
+                {
+                    if ( _propContext.m_canPrefabOverride)
+                    {
+                        if (_propContext.m_propOverride = _propContext.m_prefab->CreateDynamicProperty(_object, _prop))
+                        {
+                            _prop = _propContext.m_propOverride->GetProperty();
+                        }
+                        else
+                        {
+                            VG_ASSERT(false, "[Factory] Could not create DynamicProperty \"%s\" for class \"%s\"", _prop->GetName(), _resource->GetClassName());
+                        }
+                    }
+                }
+
+                if (_propContext.m_propOverride)
+                {
+                    ((DynamicPropertyResource *)_propContext.m_propOverride)->SetValue(relativePath);
+                    _propContext.m_propOverride->Enable(true);
+                }
+                _resource->SetResourcePath(relativePath);
             }
-            _resource->SetResourcePath(relativePath);
         };
 
         const ImGuiStyle & style = ImGui::GetStyle();

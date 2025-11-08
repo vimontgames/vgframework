@@ -173,6 +173,11 @@ namespace vg::engine
             }
             break;
 
+            case PropertyType::ResourceVector:
+            {
+                return false; // TODO
+            }
+
             case PropertyType::String:
             {
                 if (isFile || isFolder)
