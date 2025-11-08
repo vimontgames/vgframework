@@ -153,10 +153,11 @@ namespace vg::gfx::dx12
         }
 
         m_caps.gpuName = description;
+        m_caps.d3d12.headerVersion = D3D12_SDK_VERSION;
 
         uint major = (m_caps.d3d12.featureLevel & 0xF000) >> 12;
         uint minor = (m_caps.d3d12.featureLevel & 0x0F00) >> 8;
-        VG_INFO("[Device] Init DX%u.%u %sdevice (SDK %u) - %s - %s", major, minor, m_d3d12debug ? "debug " : "", D3D12_SDK_VERSION, asString(m_caps.shaderModel).c_str(), m_caps.gpuName.c_str());
+        VG_INFO("[Device] Init DirectX %u.%u %sdevice (SDK %u) - %s - %s", major, minor, m_d3d12debug ? "debug " : "", m_caps.d3d12.headerVersion, asString(m_caps.shaderModel).c_str(), m_caps.gpuName.c_str());
 
         m_memoryAllocator = new gfx::MemoryAllocator();
 

@@ -24,9 +24,6 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     BindlessTable::~BindlessTable()
     {
-        auto * device = gfx::Device::get();
-        auto * d3d12device = device->getd3d12Device();
-
         VG_SAFE_RELEASE(m_srvCPUDescriptorHeap);
         VG_SAFE_RELEASE(m_srvGPUDescriptorHeap);
     }

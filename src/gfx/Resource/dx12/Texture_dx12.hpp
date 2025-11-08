@@ -361,7 +361,7 @@ namespace vg::gfx::dx12
                         break;
 
                     case TextureType::Texture2DMS:
-                        srvDesc.Texture2DMS;
+                        // Nothing to define
                         break;
 
                     case TextureType::TextureCube:
@@ -496,8 +496,6 @@ namespace vg::gfx::dx12
 
         if (nullptr != _initData && !_texDesc.isBackbuffer())
         {
-            auto & context = device->getCurrentFrameContext();
-
             const auto fmtSize = getPixelFormatSize(_texDesc.format);
             if (-1 != fmtSize)
             {

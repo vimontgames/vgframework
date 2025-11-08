@@ -10,7 +10,7 @@ namespace vg::gfx::vulkan
         const gfx::DeviceCaps & caps = device->getDeviceCaps();
 
         // alloc TLAS scratch buffer 
-        BufferDesc scratchBufferDesc(Usage::Default, BindFlags::UnorderedAccess, CPUAccessFlags::None, BufferFlags::None, VG_TLAS_SCRATCH_SIZE, 1, caps.rayTracingAccelerationStructureScratchOffsetAlignment);
+        BufferDesc scratchBufferDesc(Usage::Default, BindFlags::UnorderedAccess, CPUAccessFlags::None, BufferFlags::None, VG_TLAS_SCRATCH_SIZE, 1, caps.vulkan.rayTracingAccelerationStructureScratchOffsetAlignment);
         m_scratchBuffer = device->createBuffer(scratchBufferDesc, "TLASScratchBuffer");
 
         // alloc TLAS result buffer 

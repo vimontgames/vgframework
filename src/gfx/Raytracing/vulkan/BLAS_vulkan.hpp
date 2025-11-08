@@ -126,7 +126,7 @@ namespace vg::gfx::vulkan
 
         if (m_scratchBuffer == nullptr || m_scratchBuffer->getBufDesc().getSize() != scratchSize)
         {
-            BufferDesc scratchBufferDesc(Usage::Default, BindFlags::UnorderedAccess, CPUAccessFlags::None, BufferFlags::None, (uint)scratchSize, 1, caps.rayTracingAccelerationStructureScratchOffsetAlignment);
+            BufferDesc scratchBufferDesc(Usage::Default, BindFlags::UnorderedAccess, CPUAccessFlags::None, BufferFlags::None, (uint)scratchSize, 1, caps.vulkan.rayTracingAccelerationStructureScratchOffsetAlignment);
             m_scratchBuffer = device->createBuffer(scratchBufferDesc, "TLASScratchBuffer");
         }
 

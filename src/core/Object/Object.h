@@ -99,7 +99,7 @@ namespace vg::core
 		u32						    Release					() override;
 		u32                         GetRefCount				() const override;
 
-		bool                        CanOverrideProperties	() const;
+		bool                        CanOverrideProperties	() const override;
 
         VG_INLINE void				setParent				(IObject * _parent);
 		VG_INLINE IObject *			getParent				() const;

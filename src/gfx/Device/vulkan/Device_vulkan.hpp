@@ -149,7 +149,7 @@ namespace vg::gfx::vulkan
 	//--------------------------------------------------------------------------------------
 	bool Device::GetGpuMemoryInfo(core::GPUMemoryInfo & _gpuMem) const
 	{
-		if (m_EXT_DebugUtils.isEnabled())
+		if (nullptr != vkGetPhysicalDeviceMemoryProperties2)
 		{
 			memset(&_gpuMem, sizeof(core::GPUMemoryInfo), 0);
 
@@ -601,7 +601,7 @@ namespace vg::gfx::vulkan
             m_caps.rayTracing.supported = false;
 
 		if (m_KHR_Buffer_Device_Address.isEnabled())
-			m_caps.deviceAddress = true;
+			m_caps.vulkan.deviceAddress = true;
 
         #if VG_ENABLE_GPU_MARKER
         VG_VERIFY_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &m_vkDebugMessenger));
@@ -663,14 +663,14 @@ namespace vg::gfx::vulkan
             vkEnumerateInstanceVersion(&instanceVersion);
 
         // You can also use the VK_API_VERSION_1_0 or VK_API_VERSION_1_1 macros if you need to
-        u32 major = VK_VERSION_MAJOR(instanceVersion);
-        u32 minor = VK_VERSION_MINOR(instanceVersion);
-        u32 patch = VK_VERSION_PATCH(instanceVersion);
-        u32 header = VK_HEADER_VERSION;
+        m_caps.vulkan.majorVersion = VK_VERSION_MAJOR(instanceVersion);
+        m_caps.vulkan.minorVersion = VK_VERSION_MINOR(instanceVersion);
+        m_caps.vulkan.patchVersion = VK_VERSION_PATCH(instanceVersion);
+        m_caps.vulkan.headerVersion = VK_HEADER_VERSION;
 
         m_caps.gpuName = m_vkPhysicalDeviceProperties.deviceName;
 
-        VG_INFO("[Device] Init Vulkan %sdevice (SDK %u.%u.%u) - %s - %s", validationLayer ? "debug " : "", major, minor, header, asString(m_caps.shaderModel).c_str(), m_caps.gpuName.c_str());
+        VG_INFO("[Device] Init Vulkan %u.%u.%u %sdevice (SDK %u) - %s - %s", m_caps.vulkan.majorVersion, m_caps.vulkan.minorVersion, m_caps.vulkan.patchVersion, validationLayer ? "debug " : "", m_caps.vulkan.headerVersion, asString(m_caps.shaderModel).c_str(), m_caps.gpuName.c_str());
 
 		VkWin32SurfaceCreateInfoKHR createInfo;
 									createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
@@ -1260,7 +1260,7 @@ namespace vg::gfx::vulkan
 
 		// Query RayTracing acceleration structure alignment
         if (m_caps.rayTracing.supported)
-            m_caps.rayTracingAccelerationStructureScratchOffsetAlignment = accelerationStructureProps.minAccelerationStructureScratchOffsetAlignment;
+            m_caps.vulkan.rayTracingAccelerationStructureScratchOffsetAlignment = accelerationStructureProps.minAccelerationStructureScratchOffsetAlignment;
 
         VkPhysicalDeviceRayQueryFeaturesKHR rayQueryFeatures = {};
 		rayQueryFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_QUERY_FEATURES_KHR;

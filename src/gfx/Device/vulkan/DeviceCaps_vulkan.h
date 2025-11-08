@@ -10,7 +10,15 @@ namespace vg::gfx::vulkan
     public:
         VG_CLASS_DECL(DeviceCaps, base::DeviceCaps);
 
-        bool        deviceAddress = false;
-        core::uint  rayTracingAccelerationStructureScratchOffsetAlignment = 0;
+        struct
+        {
+            u32 majorVersion = 0;
+            u32 minorVersion = 0;
+            u32 patchVersion = 0;
+            u32 headerVersion = 0;
+
+            bool deviceAddress = false;
+            core::uint  rayTracingAccelerationStructureScratchOffsetAlignment = 0;
+         } vulkan;
     };
 }

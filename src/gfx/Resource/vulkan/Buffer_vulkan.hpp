@@ -54,7 +54,7 @@ namespace vg::gfx::vulkan
         else if (device->getDeviceCaps().rayTracing.supported)
             vkBufferCreate.usage |= VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
 
-        if (device->getDeviceCaps().deviceAddress)
+        if (device->getDeviceCaps().vulkan.deviceAddress)
             vkBufferCreate.usage |= VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT;
 
         VkBuffer vkBuffer;

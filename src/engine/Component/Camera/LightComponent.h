@@ -18,15 +18,15 @@ namespace vg::engine
         LightComponent(const core::string & _name, core::IObject * _parent);
         ~LightComponent();
 
-        void                        OnLoad              () override;
-        void                        Update              (const Context & _context) override;
-        void                        OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent);
-        void                        EnableComponentFlags   (core::ComponentFlags _flags, bool _enabled = true) final override;
-        bool                        TryGetAABB          (core::AABB & _aabb) const final override;
+        void                        OnLoad                  () override;
+        void                        Update                  (const Context & _context) override;
+        void                        OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
+        void                        EnableComponentFlags    (core::ComponentFlags _flags, bool _enabled = true) final override;
+        bool                        TryGetAABB              (core::AABB & _aabb) const final override;
 
     protected:
-        bool                        createLightDesc     ();
-        bool                        createLight         ();
+        bool                        createLightDesc         ();
+        bool                        createLight             ();
 
     private:
         renderer::LightType         m_lightType;

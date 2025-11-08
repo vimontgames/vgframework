@@ -245,9 +245,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	title += fmt::sprintf(" (commit %s)", GIT_REVISION);
 	#endif
 
-	title += fmt::sprintf(" - %s | %s %s %s", core::Plugin::getConfiguration(), core::Plugin::getCompiler(), core::Plugin::getPlatform(), core::asString(engineParams.renderer.device.api));
-    if (engineParams.renderer.device.debugDevice)
-        title += " (debug device)";
+	title += fmt::sprintf(" - %s | %s %s - %s", core::Plugin::getConfiguration(), core::Plugin::getCompiler(), core::Plugin::getPlatform(), core::asString(engineParams.renderer.device.api));
+	if (engineParams.renderer.device.debugDevice)
+		title += " debug device";
+	else
+		title += " device";
 
 	SetWindowTextA(g_hWnd, title.c_str());
 
