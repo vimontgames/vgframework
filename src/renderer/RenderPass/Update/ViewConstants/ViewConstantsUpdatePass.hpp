@@ -235,7 +235,7 @@ namespace vg::renderer
                 DirectionalLightConstants * constants = (DirectionalLightConstants *)(data + offset);
 
                 constants->setColor(directional->getColor().rgb * directional->getIntensity());
-                constants->setDirection(directional->getGlobalMatrix()[2].xyz);
+                constants->setDirection(-directional->getGlobalMatrix()[2].xyz);
                 constants->setShadowBias(directional->m_shadowBias);
                 constants->setShadowInstensity(directional->m_shadowIntensity);
 

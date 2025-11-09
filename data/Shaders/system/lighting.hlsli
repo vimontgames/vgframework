@@ -187,7 +187,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		DirectionalLightConstants directional = lights.Load<DirectionalLightConstants>(offset);
 		offset += sizeof(DirectionalLightConstants);
 
-		float3 lightDir = -directional.getDirection();
+		float3 lightDir = directional.getDirection();
 		float3 Li = normalize(lightDir);
 		float cosLi = max(0.0f, dot(_worldNormal, Li));
 
@@ -257,7 +257,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 
 				shadow = 1.0f - ((1.0f-shadow) * si);
 
-				#ifdef _TOOLMODE
+				#if !_RAYTRACING && _TOOLMODE
 				if (DisplayMode::Lighting_DirectionalShadow == _viewConstants.getDisplayMode())
 				{
 					if (all(saturate(shadowUV) == shadowUV))
