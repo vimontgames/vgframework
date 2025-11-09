@@ -87,29 +87,66 @@ namespace vg::renderer
                 ShadowView * shadowView = new ShadowView(this, _view->getWorld(), getShadowResolution());
                 _view->addShadowView(shadowView);
 
-                float4x4 shadowMatrix = this->getGlobalMatrix(); 
-                shadowMatrix[0].xyz *= -1;
-                shadowMatrix[1].xyz *= -1;
-                shadowMatrix[2].xyz *= -1;
+                float4x4 lightWorld = getGlobalMatrix();
+                lightWorld[0].xyz *= -1;
+                lightWorld[1].xyz *= -1;
+                lightWorld[2].xyz *= -1;
 
-                if (m_shadowCameraOffset)
-                    shadowMatrix[3].xyz = _view->getViewInvMatrix()[3].xyz;
-
-                // Find the bounding box in world-space
-                float3 minBounds = (float3)FLT_MAX;
-                float3 maxBounds = (float3)-FLT_MAX;
-
-                const auto & corners = frustum.getCorners();
-                for (uint i = 0; i < countof(corners); ++i)
+                switch (m_shadowCameraMode)
                 {
-                    const float3 corner = corners[i];
-                    float3 p = mul(float4(corner.xyz, 1.0f), shadowMatrix).xyz;
+                    default:
+                    case ShadowCameraMode::Fixed:
+                    {
+                        shadowView->SetupOrthographicCamera(lightWorld, m_shadowSize, m_shadowRange);
+                    }
+                    break;
 
-                    minBounds = min(minBounds, p);
-                    maxBounds = max(maxBounds, p);
+                    case ShadowCameraMode::FollowCameraTranslation:
+                    {
+                        lightWorld[3].xyz += _view->getViewInvMatrix()[3].xyz;
+                        shadowView->SetupOrthographicCamera(lightWorld, m_shadowSize, m_shadowRange);
+                    }
+                    break;
+
+                    case ShadowCameraMode::FitCameraFrustum:
+                    {
+                        // Find the bounding box in world-space
+                        float3 frustumCenter = (float3)0.0f;
+
+                        const auto & corners = frustum.getCorners();
+                        for (uint i = 0; i < countof(corners); ++i)
+                        {
+                            const float3 corner = corners[i];
+                            float3 p = corner.xyz;
+                            frustumCenter += p;
+                        }
+                        frustumCenter /= (float)countof(corners);
+
+                        float3 lightDir = -normalize(lightWorld[2].xyz);
+                        float3 lightUp = lightWorld[1].xyz;
+
+                        float3 eye = frustumCenter - lightDir * m_shadowRange.y;
+                        float3 target = frustumCenter;
+
+                        float4x4 lightView = View::lookAtRH(eye, target, lightUp);
+
+                        float3 lightSpaceMin = (float3)FLT_MAX;
+                        float3 lightSpaceMax = (float3)-FLT_MAX;
+
+                        for (uint i = 0; i < countof(corners); ++i)
+                        {
+                            float4 p = mul(float4(corners[i], 1.0f), lightView);
+                            lightSpaceMin = min(lightSpaceMin, p.xyz);
+                            lightSpaceMax = max(lightSpaceMax, p.xyz);
+                        }
+
+                        float nearZ = lightSpaceMin.z;
+                        float farZ = lightSpaceMax.z;
+
+                        shadowView->SetupOrthographicCameraOffCenter(inverse(lightView), lightSpaceMin.x, lightSpaceMax.x, lightSpaceMin.y, lightSpaceMax.y, nearZ, farZ);
+                    }
+                    break;
                 }
-
-                shadowView->SetupOrthographicCamera(shadowMatrix, m_shadowSize, m_shadowRange);
 
                 _cullingResult->m_output->add(shadowView);
 

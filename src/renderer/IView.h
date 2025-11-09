@@ -79,69 +79,70 @@ namespace vg::renderer
     class IView : public gfx::IFrameGraphView
     {
     public:
-        virtual void                    SetupPerspectiveCamera      (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset = core::float2(0, 0), core::float2 _viewportScale = core::float2(1, 1), const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) = 0;
-        virtual void                    SetupOrthographicCamera     (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar, const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) = 0;
-        virtual void                    SetupPhysicalCamera         (const core::float4x4 & _cameraWorldMatrix, const ICameraSettings * _cameraSettings, core::float2 _viewportOffset = core::float2(0, 0), core::float2 _viewportScale = core::float2(1, 1), const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) = 0;
+        virtual void                    SetupPerspectiveCamera              (const core::float4x4 & _cameraWorldMatrix, core::float2 _nearFar, float _fovY, core::float2 _viewportOffset = core::float2(0, 0), core::float2 _viewportScale = core::float2(1, 1), const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) = 0;
+        virtual void                    SetupOrthographicCamera             (const core::float4x4 & _cameraWorldMatrix, core::uint2 _size, core::float2 _nearFar, const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) = 0;
+        virtual void                    SetupOrthographicCameraOffCenter    (const core::float4x4 & _cameraWorldMatrix, float _left, float _right, float _bottom, float _top, float _nearZ, float _farZ, const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) = 0;
+        virtual void                    SetupPhysicalCamera                 (const core::float4x4 & _cameraWorldMatrix, const ICameraSettings * _cameraSettings, core::float2 _viewportOffset = core::float2(0, 0), core::float2 _viewportScale = core::float2(1, 1), const core::IGameObject * _cameraGO = nullptr, PickingID _pickingID = 0) = 0;
 
-        virtual void                    SetFlags                    (ViewFlags _flagsToSet, ViewFlags _flagsToRemove = (ViewFlags)0) = 0;
-        virtual ViewFlags               GetFlags                    () const = 0;
+        virtual void                    SetFlags                            (ViewFlags _flagsToSet, ViewFlags _flagsToRemove = (ViewFlags)0) = 0;
+        virtual ViewFlags               GetFlags                            () const = 0;
 
-        virtual const core::float4x4 &  GetViewInvMatrix            () const = 0;
-        virtual const core::float4x4 &  GetViewMatrix               () const = 0;
-        virtual const core::float4x4 &  GetProjectionMatrix         () const = 0;
-        virtual core::float2            GetCameraNearFar            () const = 0;
-        virtual float                   GetCameraFovY               () const = 0;
+        virtual const core::float4x4 &  GetViewInvMatrix                    () const = 0;
+        virtual const core::float4x4 &  GetViewMatrix                       () const = 0;
+        virtual const core::float4x4 &  GetProjectionMatrix                 () const = 0;
+        virtual core::float2            GetCameraNearFar                    () const = 0;
+        virtual float                   GetCameraFovY                       () const = 0;
 
-        virtual void                    SetWorld                    (core::IWorld * _world) = 0;
-        virtual core::IWorld *          GetWorld                    () const = 0;
+        virtual void                    SetWorld                            (core::IWorld * _world) = 0;
+        virtual core::IWorld *          GetWorld                            () const = 0;
 
-        virtual void                    SetRenderTargetSize         (core::uint2 _size) = 0;
-        virtual core::uint2             GetRenderTargetSize         () const = 0;
+        virtual void                    SetRenderTargetSize                 (core::uint2 _size) = 0;
+        virtual core::uint2             GetRenderTargetSize                 () const = 0;
 
-        virtual core::uint2             GetSize                     () const = 0;
-        virtual core::int2              GetOffset                   () const = 0;
+        virtual core::uint2             GetSize                             () const = 0;
+        virtual core::int2              GetOffset                           () const = 0;
 
-        virtual core::float2            GetViewportOffset           () const = 0;
-        virtual core::float2            GetViewportScale            () const = 0;
-        virtual IViewport *             GetViewport                 () const = 0;
+        virtual core::float2            GetViewportOffset                   () const = 0;
+        virtual core::float2            GetViewportScale                    () const = 0;
+        virtual IViewport *             GetViewport                         () const = 0;
 
-        virtual void                    SetRenderTarget             (gfx::ITexture * _renderTarget) = 0;
-        virtual gfx::ITexture *         GetRenderTarget             () const = 0;
+        virtual void                    SetRenderTarget                     (gfx::ITexture * _renderTarget) = 0;
+        virtual gfx::ITexture *         GetRenderTarget                     () const = 0;
 
-        // "Focused" means this is the view the user is interacting with in Editor
-        virtual void                    SetFocused                  (bool _active) = 0;
-        virtual bool                    IsFocused                   () const = 0;
+        // "Focused" means this is the view the user is interacting         with in Editor
+        virtual void                    SetFocused                          (bool _active) = 0;
+        virtual bool                    IsFocused                           () const = 0;
 
         // "Visible" means the view is visible on screen
-        virtual void                    SetVisible                  (bool _visible) = 0;
-        virtual bool                    IsVisible                   () const = 0;
+        virtual void                    SetVisible                          (bool _visible) = 0;
+        virtual bool                    IsVisible                           () const = 0;
 
-        // "Render" means the view was updated by an active camera this frame and thus should render this frame
-        virtual void                    SetRender                   (bool _render) = 0;
-        virtual bool                    IsRender                    () const = 0;
+        // "Render" means the view was updated by an active camera t        his frame and thus should render this frame
+        virtual void                    SetRender                           (bool _render) = 0;
+        virtual bool                    IsRender                            () const = 0;
 
-        virtual void                    SetMouseOffset              (const core::uint2 & _mouseOffset) = 0;
-        virtual core::int2              GetRelativeMousePos         () const = 0;
-        virtual bool                    IsMouseOverView             () const = 0;
+        virtual void                    SetMouseOffset                      (const core::uint2 & _mouseOffset) = 0;
+        virtual core::int2              GetRelativeMousePos                 () const = 0;
+        virtual bool                    IsMouseOverView                     () const = 0;
 
-        virtual const core::string      GetFrameGraphID             (const core::string & _name) const = 0;
+        virtual const core::string      GetFrameGraphID                     (const core::string & _name) const = 0;
 
-        virtual bool                    IsToolmode                  () const = 0;
-        virtual bool                    IsOrtho                     () const = 0;
-        virtual bool                    IsLit                       () const = 0;
-        virtual bool                    IsUsingRayTracing           () const = 0;
-        virtual bool                    IsComputePostProcessNeeded  () const = 0;
-        virtual bool                    IsOutlinePassNeeded         () const = 0;
+        virtual bool                    IsToolmode                          () const = 0;
+        virtual bool                    IsOrtho                             () const = 0;
+        virtual bool                    IsLit                               () const = 0;
+        virtual bool                    IsUsingRayTracing                   () const = 0;
+        virtual bool                    IsComputePostProcessNeeded          () const = 0;
+        virtual bool                    IsOutlinePassNeeded                 () const = 0;
       
-        virtual void                    SetPickingData              (const PickingData & _pickingData) = 0;
-        virtual const PickingHit &      GetPickingHit               (core::uint _index) const = 0;
-        virtual core::uint              GetPickingHitCount          () const = 0;
-        virtual core::uint              GetPickingRequestedHitCount () const = 0;
-        virtual const PickingHit &      GetPickingClosestHit        () const = 0;
-        virtual void                    AddPickingHit               (const PickingHit & _hit) = 0;
+        virtual void                    SetPickingData                      (const PickingData & _pickingData) = 0;
+        virtual const PickingHit &      GetPickingHit                       (core::uint _index) const = 0;
+        virtual core::uint              GetPickingHitCount                  () const = 0;
+        virtual core::uint              GetPickingRequestedHitCount         () const = 0;
+        virtual const PickingHit &      GetPickingClosestHit                () const = 0;
+        virtual void                    AddPickingHit                       (const PickingHit & _hit) = 0;
 
-        virtual ViewCullingStats        GetViewCullingStats         () const = 0;
-        virtual IUIRenderer *           GetUIRenderer               () const = 0;
-        virtual const ICameraSettings * GetCameraSettings           () const = 0;
+        virtual ViewCullingStats        GetViewCullingStats                 () const = 0;
+        virtual IUIRenderer *           GetUIRenderer                       () const = 0;
+        virtual const ICameraSettings * GetCameraSettings                   () const = 0;
     };
 }

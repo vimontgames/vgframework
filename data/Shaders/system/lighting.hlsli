@@ -247,7 +247,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 					   shadowUV.xy = shadowUV.xy*0.5f+0.5f;
 					   shadowUV.y = 1-shadowUV.y;
 		
-				if (all(shadowUV.xy == saturate(shadowUV.xy) ))
+				if (all(shadowUV.xyz == saturate(shadowUV.xyz) ))
 				{			
 					Texture2D shadowMap = getTexture2D(directional.getShadowMapTextureHandle());
 					float bias = directional.getShadowBias();
@@ -260,7 +260,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 				#if !_RAYTRACING && _TOOLMODE
 				if (DisplayMode::Lighting_DirectionalShadow == _viewConstants.getDisplayMode())
 				{
-					if (all(saturate(shadowUV) == shadowUV))
+					if (all(saturate(shadowUV.xyz) == shadowUV.xyz))
 						_albedo = lerp(_albedo, float3(0,1,0), 0.5);
 					else
 						_albedo = lerp(_albedo, float3(1,0,0), 0.5);

@@ -80,8 +80,6 @@ namespace vg::renderer
     {
         const MeshModel * meshModel = getMeshModel(Lod::Lod0);
 
-        bool raytracing = RayTracingManager::get()->isRayTracingEnabled();
-
         if (nullptr != meshModel)
         {
             const core::AABB & aabb = meshModel->getGeometry()->getAABB();

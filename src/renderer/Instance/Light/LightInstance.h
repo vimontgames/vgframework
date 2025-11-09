@@ -4,11 +4,17 @@
 namespace vg::renderer
 {
     vg_enum_class(vg::renderer, ShadowResolution, core::i8,
-        ShadowResolution_VeryLow  = -2,
-        ShadowResolution_Low      = -1,
-        ShadowResolution_Medium   = 0,
-        ShadowResolution_High     = 1,
-        ShadowResolution_VeryHigh = 2
+        VeryLow  = -2,
+        Low      = -1,
+        Medium   = 0,
+        High     = 1,
+        VeryHigh = 2
+    );
+
+    vg_enum_class(vg::renderer, ShadowCameraMode, core::u8,
+        Fixed = 0,
+        FollowCameraTranslation = 1,
+        FitCameraFrustum = 2
     );
 
     class LightDesc : public ILightDesc
@@ -18,15 +24,15 @@ namespace vg::renderer
 
         LightType       GetLightType() const = 0;
 
-        bool                m_shadow                = false;
-        bool                m_shadowCameraOffset    = false;   
-        core::float2        m_shadowRange           = core::float2(0.1f, 100.0f);
-        float               m_shadowBias            = 0.01f;
-        core::uint2         m_shadowSize            = core::uint2(16, 16);
-        ShadowResolution    m_shadowResolution      = ShadowResolution::ShadowResolution_Medium;
-        float               m_shadowIntensity       = 1.0f;
-        core::float4        m_color                 = core::float4(1, 1, 1, 1);
-        float               m_intensity             = 1.0f;
+        bool                m_shadow            = false;
+        ShadowCameraMode    m_shadowCameraMode  = ShadowCameraMode::Fixed;
+        core::float2        m_shadowRange       = core::float2(0.1f, 100.0f);
+        float               m_shadowBias        = 0.01f;
+        core::uint2         m_shadowSize        = core::uint2(16, 16);
+        ShadowResolution    m_shadowResolution  = ShadowResolution::Medium;
+        float               m_shadowIntensity   = 1.0f;
+        core::float4        m_color             = core::float4(1, 1, 1, 1);
+        float               m_intensity         = 1.0f;
     };
 
     class ShadowView;
@@ -48,7 +54,7 @@ namespace vg::renderer
         VG_INLINE float                 getIntensity        () const { return m_intensity; }
 
         bool                            m_shadow;
-        bool                            m_shadowCameraOffset = false;
+        ShadowCameraMode                m_shadowCameraMode;
         core::float2                    m_shadowRange;
         float                           m_shadowBias;
         core::uint2                     m_shadowSize;

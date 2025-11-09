@@ -51,8 +51,8 @@ namespace vg::renderer
             setPropertyRange(LightDesc, m_shadowIntensity, float2(0.0f, 1.0f));
             setPropertyDescription(LightDesc, m_shadowIntensity, "Amound of light occluded in shadowed areas");
 
-            registerProperty(LightDesc, m_shadowCameraOffset, "Camera offset");
-            setPropertyDescription(LightDesc, m_shadowCameraOffset, "Offset light position with camera");
+            registerPropertyEnum(LightDesc, ShadowCameraMode, m_shadowCameraMode, "Camera mode");
+            setPropertyDescription(LightDesc, m_shadowCameraMode, "How shadow behaves when camera moves/rotates");
         }
         registerPropertyOptionalGroupEnd(LightDesc);
         setPropertyHiddenCallback(LightDesc, Shadows, HideCastShadow);
@@ -84,7 +84,7 @@ namespace vg::renderer
         super(_name, _parent)
     {
         m_shadow = _lightDesc->m_shadow;
-        m_shadowCameraOffset = _lightDesc->m_shadowCameraOffset;
+        m_shadowCameraMode = _lightDesc->m_shadowCameraMode;
         m_shadowRange = _lightDesc->m_shadowRange;
         m_shadowBias = _lightDesc->m_shadowBias * 0.01f;
         m_shadowSize = _lightDesc->m_shadowSize;

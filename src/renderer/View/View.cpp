@@ -155,11 +155,53 @@ namespace vg::renderer
         (
             2.0f/_w, 0,           0,   0,
                   0, 2.0f/_h,     0,   0,
-                  0, 0,       1.0f/d, 0,
+                  0, 0,       1.0f/d,  0,
                   0, 0,      _near/d,  1
         );
 
         return mProj;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Setup Right-Handed orthographic projection matrix:
+    //--------------------------------------------------------------------------------------
+    core::float4x4 View::setOrthoProjectionOffCenterRH(float _left, float _right, float _bottom, float _top, float _nearZ, float _farZ)
+    {
+        const float d = _nearZ - _farZ; // même convention que setOrthoProjectionRH
+        const float w = _right - _left;
+        const float h = _top - _bottom;
+
+        core::float4x4 mProj
+        (
+            2.0f / w, 0.0f, 0.0f, 0.0f,
+            0.0f, 2.0f / h, 0.0f, 0.0f,
+            0.0f, 0.0f, 1.0f / d, 0.0f,
+            -(_right + _left) / w, -(_top + _bottom) / h, _nearZ / d, 1.0f
+        );
+
+        return mProj;
+
+        return mProj;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Right-Handed lookAt matrix:
+    //--------------------------------------------------------------------------------------
+    float4x4 View::lookAtRH(const core::float3 & _eye, const core::float3 & _target, const core::float3 & _up)
+    {
+        float3 zaxis = normalize(_eye - _target);       // Forward 
+        float3 xaxis = normalize(cross(_up, zaxis));    // Right
+        float3 yaxis = cross(zaxis, xaxis);             // Up
+
+        float4x4 matrix
+        (
+            xaxis.x, yaxis.x, zaxis.x, 0.0f,
+            xaxis.y, yaxis.y, zaxis.y, 0.0f,
+            xaxis.z, yaxis.z, zaxis.z, 0.0f,
+           -dot(xaxis, _eye), -dot(yaxis, _eye), -dot(zaxis, _eye), 1.0f
+        );
+
+        return matrix;
     }
 
     //--------------------------------------------------------------------------------------
@@ -197,6 +239,23 @@ namespace vg::renderer
         m_cameraNearFar = _nearFar;
 
         m_proj = setOrthoProjectionRH((float)_size.x, (float)_size.y, _nearFar.x, _nearFar.y);
+ 
+        m_projInv = inverse(m_proj);
+        m_viewProj = mul(m_view, m_proj);
+
+        computeCameraFrustum();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::SetupOrthographicCameraOffCenter(const core::float4x4 & _cameraWorldMatrix, float _left, float _right, float _bottom, float _top, float _nearZ, float _farZ, const core::IGameObject * _cameraGO, PickingID _pickingID)
+    {
+        m_cameraGO = _cameraGO;
+        m_pickingID = _pickingID;
+        m_viewInv = _cameraWorldMatrix;
+        m_view = inverse(_cameraWorldMatrix);
+        m_cameraNearFar = float2(_nearZ, _farZ);
+
+        m_proj = setOrthoProjectionOffCenterRH(_left, _right, _bottom, _top, _nearZ, _farZ);
 
         m_projInv = inverse(m_proj);
         m_viewProj = mul(m_view, m_proj);
@@ -226,19 +285,6 @@ namespace vg::renderer
 
         switch (gateFitMode)
         {
-            //case GateFitMode::None:
-            //    if (screenAspectRatio > sensorAspectRatio)
-            //    {
-            //        fovY = 2.0f * std::atan(sensorSize.y / (2.0f * focalLenght));
-            //        fovX = 2.0f * std::atan(std::tan(fovY / 2.0f) * screenAspectRatio);
-            //    }
-            //    else
-            //    {
-            //        fovX = 2.0f * std::atan(sensorSize.x / (2.0f * focalLenght));
-            //        fovY = 2.0f * std::atan(std::tan(fovX / 2.0f) / screenAspectRatio);
-            //    }
-            //    break;
-
             case GateFitMode::Horizontal:
                 fovX = 2.0f * std::atan(sensorSize.x / (2.0f * focalLenght));
                 fovY = 2.0f * std::atan((sensorSize.x / screenAspectRatio) / (2.0f * focalLenght));
