@@ -51,6 +51,7 @@ vg_enum_class_global(DisplayMode, uint,
     Lighting_EnvironmentDiffuse,
     Lighting_EnvironmentSpecular,
     Lighting_EnvironmentSpecularBRDF,
+    Lighting_DirectionalShadow,
     Lighting_RayCount,
 
     RayTracing_Committed_Hit,

@@ -257,10 +257,15 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 
 				shadow = 1.0f - ((1.0f-shadow) * si);
 
-				//if (all(saturate(shadowUV) == shadowUV))
-				//	_albedo = lerp(_albedo, float3(0,1,0), 0.5);
-				//else
-				//	_albedo = lerp(_albedo, float3(1,0,0), 0.5);
+				#ifdef _TOOLMODE
+				if (DisplayMode::Lighting_DirectionalShadow == _viewConstants.getDisplayMode())
+				{
+					if (all(saturate(shadowUV) == shadowUV))
+						_albedo = lerp(_albedo, float3(0,1,0), 0.5);
+					else
+						_albedo = lerp(_albedo, float3(1,0,0), 0.5);
+				}
+				#endif
 			}
 
 			output.addLightContribution(Lo, cosLo, cosLi, Lr, F0, Li, Lradiance * shadow, _worldNormal, roughness, metalness);
