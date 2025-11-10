@@ -24,7 +24,7 @@ namespace vg::core
     public:
         virtual                 ~IInput                     () = default;
 
-        virtual void            OnPlay                      () = 0;
+        virtual void            DetectDevices               () = 0;
 
         virtual void            EnableInput                 (InputType _inputType, bool _enabled) = 0;
         virtual bool            IsInputEnabled              (InputType _inputType) const = 0;

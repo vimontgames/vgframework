@@ -17,7 +17,7 @@ namespace vg::engine::win32
         Input(const vg::core::WinHandle & _appHandle);
         ~Input();
 
-        void            OnPlay                      () final override;
+        void            DetectDevices               () final override;
 
         bool            Update                      () override;
 
@@ -72,6 +72,7 @@ namespace vg::engine::win32
         IDirectInput8A *			            m_directInputDevice   = nullptr;
         IDirectInputDevice8A *		            m_directInputKeyboard = nullptr;
         IDirectInputDevice8A *		            m_directInputMouse    = nullptr;
+        HDEVNOTIFY                              m_hDevNotify          = nullptr;
         core::vector<IDirectInputDevice8A *>    m_directInputJoystick;
         bool                                    m_wasFocused          = false;
         bool                                    m_justFocused         = false;

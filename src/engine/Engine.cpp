@@ -36,6 +36,7 @@
 
 #ifdef VG_WINDOWS
 #include <psapi.h>
+#include <Dbt.h>
 #endif
 
 #if !VG_ENABLE_INLINE
@@ -72,24 +73,29 @@ namespace vg::engine
             }
 
             case WM_SIZE:
-                if (m_renderer)
-                {
-                    const uint width = uint(lParam & 0xFFFF);
-                    const uint height = uint(lParam >> 16);
-                    m_renderer->Resize(width, height);
-                }
-                break;
+            if (m_renderer)
+            {
+                const uint width = uint(lParam & 0xFFFF);
+                const uint height = uint(lParam >> 16);
+                m_renderer->Resize(width, height);
+            }
+            break;
 
             case WM_MOVE:
+            {
                 if (m_renderer)
                     m_renderer->Move();
-                break;
+            }
+            break;
 
             case WM_PAINT:
+            {
                 //RunOneFrame();
-                break;
+            }
+            break;
 
             case WM_KEYDOWN:
+            {
                 switch (wParam)
                 {
                     case VK_F1:
@@ -164,7 +170,24 @@ namespace vg::engine
                         toggleFullscreen();
                         break;
                 }
-                break;
+            }
+            break;
+
+            case WM_DEVICECHANGE:
+            {
+                if (wParam == DBT_DEVICEARRIVAL || wParam == DBT_DEVICEREMOVECOMPLETE)
+                {
+                    PDEV_BROADCAST_HDR pHdr = (PDEV_BROADCAST_HDR)lParam;
+                    if (pHdr && pHdr->dbch_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
+                    {
+                        if (auto * input = Kernel::getInput())
+                        {
+                            input->DetectDevices();
+                        }
+                    }
+                }
+            }
+            break;
         }
 
         return 0;
@@ -1055,8 +1078,8 @@ namespace vg::engine
         m_time.m_enlapsedTimeSinceStartScaled = 0.0f;
         m_timeInternal.reset();
 
-        // Detect joypads
-        Kernel::getInput()->OnPlay();
+        // Detect input devices (This is not strictly needed on platforms that can detect joystick being plug/unplug)
+        Kernel::getInput()->DetectDevices();
 
         if (auto * mainWorld = GetMainWorld())
             mainWorld->OnPlay();

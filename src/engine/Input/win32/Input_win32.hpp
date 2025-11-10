@@ -3,6 +3,9 @@
 #endif
 
 #include <dinput.h>
+#include <dbt.h>
+#include <initguid.h>
+#include <Hidclass.h>
 #include "core/Math/Math.h"
 
 using namespace vg::core;
@@ -214,12 +217,18 @@ namespace vg::engine::win32
             m_directInputMouse->SetCooperativeLevel(handle, DISCL_NONEXCLUSIVE);
         }
 
-        initJoysticks();
-    }
+        // register notifications
+        DEV_BROADCAST_DEVICEINTERFACE NotificationFilter;
+        ZeroMemory(&NotificationFilter, sizeof(NotificationFilter));
+        NotificationFilter.dbcc_size = sizeof(DEV_BROADCAST_DEVICEINTERFACE);
+        NotificationFilter.dbcc_devicetype = DBT_DEVTYP_DEVICEINTERFACE;
+        NotificationFilter.dbcc_classguid = GUID_DEVINTERFACE_HID; // require <dbt.h> and <initguid.h>
 
-    //--------------------------------------------------------------------------------------
-    void Input::OnPlay()
-    {
+        m_hDevNotify = RegisterDeviceNotification((HDEVNOTIFY)handle, &NotificationFilter, DEVICE_NOTIFY_WINDOW_HANDLE);
+        if (m_hDevNotify == nullptr)
+            VG_WARNING("[Input] RegisterDeviceNotification failed");
+
+
         initJoysticks();
     }
 
@@ -240,8 +249,20 @@ namespace vg::engine::win32
             m_directInputMouse = nullptr;
         }
 
+        if (m_hDevNotify)
+        {
+            UnregisterDeviceNotification(m_hDevNotify);
+            m_hDevNotify = nullptr;
+        }
+
         m_directInputDevice->Release();
         m_directInputDevice = nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Input::DetectDevices()
+    {
+        initJoysticks();
     }
 
     //--------------------------------------------------------------------------------------
@@ -514,10 +535,16 @@ namespace vg::engine::win32
     //--------------------------------------------------------------------------------------
     void Input::initJoysticks()
     {
+        const auto joystickCount = m_joystickData.size();
+
         m_directInputJoystick.clear();
         m_joystickData.clear();
+
         HRESULT hr = m_directInputDevice->EnumDevices(DI8DEVCLASS_GAMECTRL, &enumJoysticksCallback, this, DIEDFL_ATTACHEDONLY);
         VG_ASSERT(SUCCEEDED(hr) && "Could not enum joystick input devices");
+
+        if (joystickCount != m_joystickData.size())
+            VG_INFO("[Input] %u joystick(s) detected", m_joystickData.size());
     }
 
     //--------------------------------------------------------------------------------------
