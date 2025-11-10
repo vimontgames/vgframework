@@ -14,7 +14,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(HUDComponent, "HUD", "Debug", "Display FPS in HUD", editor::style::icon::Script, 1);
+    VG_REGISTER_COMPONENT_CLASS(HUDComponent, "HUD", "Engine", "Display FPS in HUD", editor::style::icon::Script, 1);
 
     //--------------------------------------------------------------------------------------
     bool HUDComponent::registerProperties(IClassDesc & _desc)

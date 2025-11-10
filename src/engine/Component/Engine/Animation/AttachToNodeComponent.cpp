@@ -2,7 +2,7 @@
 #include "AttachToNodeComponent.h"
 #include "core/GameObject/GameObject.h"
 #include "editor/Editor_Consts.h"
-#include "engine/Component/Mesh/MeshComponent.h"
+#include "engine/Component/Renderer/Instance/Mesh/MeshComponent.h"
 #include "renderer/IMeshInstance.h"
 #include "renderer/ISkeleton.h"
 
@@ -10,7 +10,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(AttachToNodeComponent, "AttachToNode", "Animation", "Attach object to an animation node", editor::style::icon::Link, 0);
+    VG_REGISTER_COMPONENT_CLASS(AttachToNodeComponent, "AttachToNode", "Engine", "Attach object to an animation node", editor::style::icon::Link, 0);
 
     //--------------------------------------------------------------------------------------
     bool AttachToNodeComponent::registerProperties(IClassDesc & _desc)

@@ -1,5 +1,5 @@
 #pragma once
-#include "engine/Component/UI/UIComponent.h"
+#include "engine/Component/Renderer/UI/UIComponent.h"
 
 namespace vg::engine
 {

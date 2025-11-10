@@ -12,9 +12,9 @@
 #include "engine/Job/Animation/AnimationJob.h"
 #include "engine/Job/Animation/DrawSkeletonJob.h"
 #include "engine/Job/Animation/DrawSkeletonJob.h"
-#include "engine/Component/Animation/AnimationComponent.h"
-
-#include "MaterialResourceList.hpp"
+#include "engine/Component/Engine/Animation/AnimationComponent.h"
+#include "engine/Resource/Material/MaterialResourceData.h"
+#include "engine/Component/Renderer/MaterialResourceList.h"
 
 #if !VG_ENABLE_INLINE
 #include "MeshComponent.inl"

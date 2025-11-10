@@ -4,7 +4,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(UICanvasComponent, "UICanvas", "UI", "UI Canvas", editor::style::icon::Canvas, 2);
+    VG_REGISTER_COMPONENT_CLASS(UICanvasComponent, "UICanvas", "Renderer", "UI Canvas", editor::style::icon::Canvas, 2);
 
     //--------------------------------------------------------------------------------------
     bool UICanvasComponent::registerProperties(IClassDesc & _desc)

@@ -2,7 +2,7 @@
 #include "AnimationComponent.h"
 #include "AnimationResourceList.hpp"
 #include "core/GameObject/GameObject.h"
-#include "engine/Component/Mesh/MeshComponent.h"
+#include "engine/Component/Renderer/Instance/Mesh/MeshComponent.h"
 #include "engine/Engine.h"
 #include "renderer/IMeshInstance.h"
 #include "renderer/IAnimation.h"
@@ -16,7 +16,7 @@ using namespace vg::renderer;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(AnimationComponent, "Animation", "Animation", "List of animations to use with a skinned Mesh component", editor::style::icon::Animation, 0);
+    VG_REGISTER_COMPONENT_CLASS(AnimationComponent, "Animation", "Engine", "List of animations to use with a skinned Mesh component", editor::style::icon::Animation, 0);
 
     //--------------------------------------------------------------------------------------
     bool AnimationComponent::registerProperties(IClassDesc & _desc)

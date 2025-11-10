@@ -3,7 +3,7 @@
 #include "core/GameObject/GameObject.h"
 #include "core/Math/Math.h"
 #include "core/IInput.h"
-#include "engine/Component/Camera/CameraComponent.h"
+#include "engine/Component/Renderer/Instance/Camera/CameraComponent.h"
 #include "engine/Engine.h"
 #include "renderer/IRenderer.h"
 #include "editor/Editor_Consts.h"
@@ -12,7 +12,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(FreeCamBehaviour, "Free Camera", "Renderer", "Keyboard/Mouse First-Person Camera behaviour", editor::style::icon::Script, 0);
+    VG_REGISTER_COMPONENT_CLASS(FreeCamBehaviour, "Free Camera", "Behaviour", "Keyboard/Mouse First-Person Camera behaviour", editor::style::icon::Script, 0);
 
     //--------------------------------------------------------------------------------------
     bool FreeCamBehaviour::registerProperties(IClassDesc& _desc)

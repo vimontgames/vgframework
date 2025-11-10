@@ -7,7 +7,7 @@ using namespace vg::core;
 
 namespace vg::engine
 {
-    VG_REGISTER_COMPONENT_CLASS(TestComponent, "Test", "Debug", "Test Serialization", editor::style::icon::Error, 1);
+    VG_REGISTER_COMPONENT_CLASS(TestComponent, "Test", "Engine", "Test Serialization", editor::style::icon::Error, 1);
 
     //--------------------------------------------------------------------------------------
     bool TestComponent::registerProperties(IClassDesc & _desc)

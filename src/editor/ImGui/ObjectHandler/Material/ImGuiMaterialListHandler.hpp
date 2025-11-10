@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/Component/Mesh/MaterialResourceList.h"
+#include "engine/Component/Renderer/MaterialResourceList.h"
 #include "core/File/File.h"
 
 using namespace vg::core;

@@ -13,9 +13,9 @@
 #include "UIComponent.inl"
 #endif
 
-#include "UICanvasComponent.hpp"
-#include "UITextComponent.hpp"
-#include "UIImageComponent.hpp"
+#include "Canvas/UICanvasComponent.hpp"
+#include "Text/UITextComponent.hpp"
+#include "Image/UIImageComponent.hpp"
 
 using namespace vg::core;
 

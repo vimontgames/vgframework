@@ -2,7 +2,7 @@
 
 #include "core/Component/Component.h"
 #include "engine/Resource/Mesh/MeshResource.h"
-#include "MaterialResourceList.h"
+#include "engine/Component/Renderer/MaterialResourceList.h"
 #include "core/Misc/BitMask/BitMask.h"
 
 namespace vg::renderer

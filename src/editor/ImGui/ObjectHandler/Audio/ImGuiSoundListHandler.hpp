@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/Component/Animation/AnimationResourceList.h"
+#include "engine/Component/Engine/Animation/AnimationResourceList.h"
 #include "core/File/File.h"
 
 using namespace vg::core;

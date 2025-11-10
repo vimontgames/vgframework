@@ -1,3 +1,4 @@
+#include "engine/Precomp.h"
 #include "NotifyParentComponent.h"
 #include "editor/Editor_Consts.h"
 #include "core/IGameObject.h"

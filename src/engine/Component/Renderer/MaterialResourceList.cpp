@@ -1,5 +1,5 @@
+#include "engine/Precomp.h"
 #include "MaterialResourceList.h"
-#include "engine/Resource/Material/MaterialResourceData.h"
 
 using namespace vg::core;
 
