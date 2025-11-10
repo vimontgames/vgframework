@@ -2,7 +2,7 @@
 #include "core/File/File.h"
 #include "renderer/IMeshModel.h"
 #include "renderer/IMaterialModel.h"
-#include "engine/Component/Mesh/MaterialResourceList.h"
+#include "engine/Component/Renderer/MaterialResourceList.h"
 
 using namespace vg::core;
 

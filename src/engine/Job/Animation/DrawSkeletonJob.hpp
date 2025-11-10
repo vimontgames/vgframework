@@ -1,5 +1,5 @@
 #include "Animation/DrawSkeletonJob.h"
-#include "engine/Component/Mesh/MeshComponent.h"
+#include "engine/Component/Renderer/Instance/Mesh/MeshComponent.h"
 #include "renderer/IMeshInstance.h"
 #include "core/GameObject/GameObject.h"
 
