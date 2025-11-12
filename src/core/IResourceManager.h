@@ -39,6 +39,7 @@ namespace vg::core
 
         // Return 'true' if any resource is currently loading 
         virtual bool HasAnyLoadingInProgress() const = 0;
+        virtual core::uint GetLoadingInProgressCount() const = 0;
         
         // Get number of registered resources
         virtual uint GetResourceCount() const = 0;
