@@ -1,6 +1,6 @@
 #pragma once
 
-#include "engine/Resource/ResourceList.h"
+#include "core/Resource/ResourceList.h"
 #include "engine/Resource/Material/MaterialResource.h"
 
 namespace vg::engine

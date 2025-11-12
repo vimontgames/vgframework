@@ -1,11 +1,11 @@
 #pragma once
 
-#include "engine/Resource/ResourceList.h"
+#include "core/Resource/ResourceList.h"
 #include "engine/Resource/Audio/SoundResource.h"
 
 namespace vg::engine
 {
-    class SoundResourceList final : public ResourceList<SoundResource>
+    class SoundResourceList final : public core::ResourceList<SoundResource>
     {
     public:
         VG_CLASS_DECL(SoundResourceList, ResourceList);

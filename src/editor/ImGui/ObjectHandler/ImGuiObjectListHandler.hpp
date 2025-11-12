@@ -1,47 +1,46 @@
 #pragma once
 #include "core/File/File.h"
-#include "core/IResource.h"
-#include "core/IResourceList.h"
+#include "core/IObject.h"
+#include "core/IObjectList.h"
 
 using namespace vg::core;
 
 namespace vg::editor
 {
-    class ImGuiResourceListHandler : public ImGuiObjectHandler
+    class ImGuiObjectListHandler : public ImGuiObjectHandler
     {
     public:
         //--------------------------------------------------------------------------------------
         bool displayObject(IObject * _object, ObjectContext & _objectContext, const PropertyContext * _propContext)
         {
-            return displayResourceList(_object, _propContext->m_originalProp->GetDisplayName(), "m_resources", _propContext);
+            return displayObjectList(_object, _propContext->m_originalProp->GetDisplayName(), "m_objects", _propContext);
         }
 
         //--------------------------------------------------------------------------------------
-        bool displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName, const PropertyContext * _propContext)
+        bool displayObjectList(IObject * _object, const core::string & _label, const core::string & _vectorPropName, const PropertyContext * _propContext)
         {
             ImGuiStyle & style = ImGui::GetStyle();
             bool changed = false;
 
             const auto * factory = Kernel::getFactory();
             const auto * classDesc = factory->GetClassDescriptor(_object->GetClassName());
-            auto list = dynamic_cast<IResourceList *>(_object);
-            VG_ASSERT(list, "[Editor] Object is not a Resource list");
+            auto list = dynamic_cast<IObjectList *>(_object);
+            VG_ASSERT(list, "[Editor] Object is not an Object list");
             if (nullptr == list)
                 return false;
+            auto availableWidth = ImGui::GetContentRegionAvail().x + ImGui::GetCursorPosX() - style.FramePadding.x * 2 + 1;
 
-            auto availableWidth = ImGui::GetContentRegionAvail().x + ImGui::GetCursorPosX() - style.FramePadding.x *2 +1;
-
-            uint resourceCount = 0;
+            uint objectCount = 0;
             for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
             {
                 const IProperty * prop = classDesc->GetPropertyByIndex(i);
                 if (!strcmp(prop->GetName(), _vectorPropName.c_str()))
-                    resourceCount = prop->GetPropertyResourceVectorCount(_object);
+                    objectCount = prop->GetPropertyObjectVectorCount(_object);
             }
 
             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
-            string label = fmt::sprintf("%s (%u)", _label.c_str(), resourceCount);
+            string label = fmt::sprintf("%s (%u)", _label.c_str(), objectCount);
 
             ImGui::PushID("CollapsingHeader");
             bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
@@ -52,8 +51,8 @@ namespace vg::editor
             if (readOnly)
                 ImGui::PushDisabledStyle(true);
 
-            ImGui::CollapsingHeaderLabel(collapsingHeaderPos, label.c_str(), true);            
-            
+            ImGui::CollapsingHeaderLabel(collapsingHeaderPos, label.c_str(), true);
+
             if (open)
                 ImGui::Indent();
 
@@ -84,33 +83,26 @@ namespace vg::editor
                     {
                         PropertyContext propContext(_object, prop);
 
-                        resourceCount = propContext.m_originalProp->GetPropertyResourceVectorCount(propContext.m_originalObject);
+                        objectCount = propContext.m_originalProp->GetPropertyObjectVectorCount(propContext.m_originalObject);
 
                         int removeAt = -1;
 
-                        for (uint i = 0; i < resourceCount; ++i)
+                        for (uint i = 0; i < objectCount; ++i)
                         {
                             collapsingHeaderPos.y = ImGui::GetCursorPos().y;
                             availableWidth = ImGui::GetContentRegionAvail().x + ImGui::GetCursorPosX() - style.FramePadding.x;
 
                             ImGui::PushID(i);
-                            auto resource = propContext.m_originalProp->GetPropertyResourceVectorElement(propContext.m_originalObject, i);
+                            auto object = propContext.m_originalProp->GetPropertyObjectVectorElement(propContext.m_originalObject, i);
 
-                            string itemLabel;
+                            string itemLabel = io::getFileName(object->GetName());
 
-                            string itemPath = io::getFileName(resource->GetResourcePath());
+                            if (itemLabel.empty())
+                                ImGui::PushDisabledStyle(true);
 
-                            if (!resource->GetName().empty())
-                                itemLabel = resource->GetName();
-                            else
-                                itemLabel = itemPath;
+                            bool open = ImGui::PersistentCollapsingHeader(itemLabel, object, prop);
 
-                            if (itemPath.empty())
-                                ImGui::PushDisabledStyle(true);       
-
-                            bool open = ImGui::PersistentCollapsingHeader(itemLabel, resource, prop);
-
-                            if (itemPath.empty())
+                            if (itemLabel.empty())
                                 ImGui::PopDisabledStyle();
 
                             ImGui::BeginDisabled(readOnly);
@@ -121,7 +113,8 @@ namespace vg::editor
                             ImGui::EndDisabled();
 
                             if (open)
-                                changed |= ImGuiWindow::displayResource(resource, _object, prop, i, propContext);
+                                changed |= ImGuiWindow::displayObject(object);
+                                //changed |= ImGuiWindow::displayResource(resource, _object, prop, i, propContext);
 
                             ImGui::PopID();
                         }
@@ -146,10 +139,10 @@ namespace vg::editor
                 list->Pop();
 
             return changed;
-        }        
+        }
     };
 
-    VG_AUTO_REGISTER_IMGUI_OBJECT_HANDLER(ResourceList, ImGuiResourceListHandler);
+    VG_AUTO_REGISTER_IMGUI_OBJECT_HANDLER(ObjectList, ImGuiObjectListHandler);
 }
 
 

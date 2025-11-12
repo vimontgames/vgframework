@@ -194,6 +194,7 @@ namespace vg::core
                 if (SerializeFromXML(_object, xmlDoc))
                 {
                     _object->SetFile(relativePath.c_str());
+                    _object->RegisterUID();
                     return true;
                 }
             }

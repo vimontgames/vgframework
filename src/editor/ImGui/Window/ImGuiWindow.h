@@ -34,6 +34,8 @@ namespace vg::gfx
 
 namespace vg::editor
 {
+    class ImGuiObjectHandler;
+
     class ImGuiWindow : public core::Object
     {
     public:
@@ -45,67 +47,69 @@ namespace vg::editor
             StartVisible    = 0x00000001,
             AddMenuEntry    = 0x00000002
         };
-                                                ImGuiWindow         (const core::string & _icon, const core::string & _path, const core::string & _name, Flags _flags);
-        virtual                                 ~ImGuiWindow        () {}
+                                                ImGuiWindow             (const core::string & _icon, const core::string & _path, const core::string & _name, Flags _flags);
+        virtual                                 ~ImGuiWindow            () {}
 
-        virtual core::string                    GetTitle            () const { VG_ASSERT_NOT_IMPLEMENTED(); return ""; } //= 0;
-        virtual void                            DrawGUI             () = 0;
+        virtual core::string                    GetTitle                () const { VG_ASSERT_NOT_IMPLEMENTED(); return ""; } //= 0;
+        virtual void                            DrawGUI                 () = 0;
 
-        bool                                    isVisible           () const;
-        void                                    setVisible          (bool _visible);
+        bool                                    isVisible               () const;
+        void                                    setVisible              (bool _visible);
 
-        VG_INLINE const core::string &          getIcon             () const;
-        VG_INLINE const core::string &          getPath             () const;
-        VG_INLINE Flags                         getFlags            () const;
+        VG_INLINE const core::string &          getIcon                 () const;
+        VG_INLINE const core::string &          getPath                 () const;
+        VG_INLINE Flags                         getFlags                () const;
 
-        VG_INLINE const core::string            getIconizedName     () const;
+        VG_INLINE const core::string            getIconizedName         () const;
 
-        static bool                             displayObject       (core::IObject * _object);
-        static bool                             displayObject       (core::IObject * _object, ObjectContext & _objectContext, const PropertyContext * _propContext);
+        static bool                             displayObject           (core::IObject * _object);
+        static bool                             displayObject           (core::IObject * _object, ObjectContext & _objectContext, const PropertyContext * _propContext);
 
-        static bool                             displayProperty     (core::IObject * _object, const core::IProperty * _prop);
-        static bool                             displayProperty     (core::IObject * _object, const core::IProperty * _prop, ObjectContext & _objectContext);
+        static bool                             displayProperty         (core::IObject * _object, const core::IProperty * _prop);
+        static bool                             displayProperty         (core::IObject * _object, const core::IProperty * _prop, ObjectContext & _objectContext);
 
-        static bool                             displayResource     (core::IResource * _resource, core::IObject * _object, const core::IProperty * _prop, core::uint _index, PropertyContext & _propContext);
+        static bool                             displayResource         (core::IResource * _resource, core::IObject * _object, const core::IProperty * _prop, core::uint _index, PropertyContext & _propContext);
 
-        static bool                             editBool            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & _label, float _availableWidth, bool _singleLine, core::uint _index = 0);
-        static bool                             editFloat4x4        (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
-        static bool                             editString          (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & _label, core::uint _index = 0);
-        static bool                             editObjectHandle    (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
-        static bool                             editBitMask         (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
-        template <typename T> static bool       editEnum            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
-        template <typename T> static bool       editEnumFlags       (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
-        template <typename T> static bool       editCurve           (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
+        static bool                             editBool                (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & _label, float _availableWidth, bool _singleLine, core::uint _index = 0);
+        static bool                             editFloat4x4            (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
+        static bool                             editString              (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext, const core::string & _label, core::uint _index = 0);
+        static bool                             editObjectHandle        (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
+        static bool                             editBitMask             (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
+        template <typename T> static bool       editEnum                (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
+        template <typename T> static bool       editEnumFlags           (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
+        template <typename T> static bool       editCurve               (core::IObject * _object, const core::IProperty * _prop, PropertyContext & _propContext);
 
-        static core::string                     getFileBrowserExt   (const core::IResource * _resource);
-        static core::string                     getDefaultFolder    (const core::IResource * _resource);
-        static core::string                     getDefaultFolder    (const core::string & _resourceTypeName);
+        static core::string                     getFileBrowserExt       (const core::IResource * _resource);
+        static core::string                     getDefaultFolder        (const core::IResource * _resource);
+        static core::string                     getDefaultFolder        (const core::string & _resourceTypeName);
 
-        static engine::IEngine *                getEngine           ();
-        static core::ISelection *               getSelection        ();
+        static engine::IEngine *                getEngine               ();
+        static core::ISelection *               getSelection            ();
+
+        static ImGuiObjectHandler *             getCustomDisplayHandler (const core::IObject * _object);
 
     //protected:
-        static float                            getDragSpeedFloat   (const core::IObject * _object, const core::IProperty * _prop);
-        static float                            getDragSpeedInt     (const core::IObject * _object, const core::IProperty * _prop);
-        static void                             underLine           (const ImColor & _color);
-        static void                             textURL             (const char * _text, const char * _url);
+        static float                            getDragSpeedFloat       (const core::IObject * _object, const core::IProperty * _prop);
+        static float                            getDragSpeedInt         (const core::IObject * _object, const core::IProperty * _prop);
+        static void                             underLine               (const ImColor & _color);
+        static void                             textURL                 (const char * _text, const char * _url);
 
-        static bool                             isItemClicked       ();
-        static bool                             updateSelection     (core::IObject * _object);
+        static bool                             isItemClicked           ();
+        static bool                             updateSelection         (core::IObject * _object);
 
-        static void                             displayArrayObject  (core::IObject * _object, core::uint _index, const char * _name);
+        static void                             displayArrayObject      (core::IObject * _object, core::uint _index, const char * _name);
 
-        static core::string                     getButtonLabel      (core::string _baseName, core::IObject * _object);
+        static core::string                     getButtonLabel          (core::string _baseName, core::IObject * _object);
 
-        static bool                             isPropertyVisible   (const core::IObject * _object, const core::IProperty * _prop);
-        static core::string                     getPropertyLabel    (const core::string & _label, core::uint _index = 0);
-        static ImVec4                           getPropertyColor    (const PropertyContext & _propContext);
-        static void                             drawPropertyLabel   (const PropertyContext & _propContext, const core::IProperty * _prop, core::uint _index = 0);
-        static void                             drawPropertyLabel   (const PropertyContext & _propContext, const char * _label, const char * _description, core::uint _index = 0);
-        static void                             drawPropertyTooltip (const PropertyContext & _propContext, const char * _description, core::uint _index = 0);
+        static bool                             isPropertyVisible       (const core::IObject * _object, const core::IProperty * _prop);
+        static core::string                     getPropertyLabel        (const core::string & _label, core::uint _index = 0);
+        static ImVec4                           getPropertyColor        (const PropertyContext & _propContext);
+        static void                             drawPropertyLabel       (const PropertyContext & _propContext, const core::IProperty * _prop, core::uint _index = 0);
+        static void                             drawPropertyLabel       (const PropertyContext & _propContext, const char * _label, const char * _description, core::uint _index = 0);
+        static void                             drawPropertyTooltip     (const PropertyContext & _propContext, const char * _description, core::uint _index = 0);
 
-        static renderer::IImGuiAdapter *        getImGuiAdapter     ();
-        static ImVec2                           getImGuiPreviewSize ();
+        static renderer::IImGuiAdapter *        getImGuiAdapter         ();
+        static ImVec2                           getImGuiPreviewSize     ();
 
     protected:
         core::string                            m_icon;

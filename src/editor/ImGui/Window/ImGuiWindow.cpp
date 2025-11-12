@@ -17,6 +17,8 @@
 #include "core/Object/DynamicProperties/DynamicProperties.h"
 #include "core/Object/ObjectHandle.h"
 #include "core/Types/Traits.h"
+#include "core/IObjectList.h"
+#include "core/IResourceList.h"
 #include "renderer/IRenderer.h"
 #include "engine/IEngine.h"
 #include "editor/ImGui/ImGui.h"
@@ -817,6 +819,28 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
+    ImGuiObjectHandler * ImGuiWindow::getCustomDisplayHandler(const core::IObject * _object)
+    {
+        if (ImGuiObjectHandler * handler = ImGuiObjectHandler::Find(_object->GetClassName()))
+            return handler;
+
+        // Default display handlers (would be better if ImGuiObjectHandler::Find could handle inheritance)
+        if (dynamic_cast<const IResourceList *>(_object))
+        {
+            if (ImGuiObjectHandler * handler = ImGuiObjectHandler::Find("ResourceList"))
+                return handler;
+        }
+
+        if (dynamic_cast<const IObjectList *>(_object))
+        {
+            if (ImGuiObjectHandler * handler = ImGuiObjectHandler::Find("ObjectList"))
+                return handler;
+        }
+
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
     // Returns 'true' if any object property has changed
     //--------------------------------------------------------------------------------------
     bool ImGuiWindow::displayObject(core::IObject * _object, ObjectContext & _objectContext, const PropertyContext * _propContext)
@@ -846,7 +870,8 @@ namespace vg::editor
         ImGui::PushID(_object);
         bool changed = false;
 
-        auto customDisplayHandler = ImGuiObjectHandler::Find(_object->GetClassName());
+        auto customDisplayHandler = getCustomDisplayHandler(_object);
+
         if (nullptr != customDisplayHandler)
         {
             changed = customDisplayHandler->displayObject(_object, _objectContext, _propContext);
@@ -1027,8 +1052,8 @@ namespace vg::editor
                     {
                         if (_propContext.m_readOnly)
                             ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
-                        else
-                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Cannot override");
+                        //else
+                        //    ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Cannot override");
                     }
                 }
 
@@ -2560,7 +2585,7 @@ namespace vg::editor
         }
 
         ImGui::Indent();
-        auto customDisplayHandler = ImGuiObjectHandler::Find(_resource->GetClassName());
+        auto customDisplayHandler = getCustomDisplayHandler(_resource);
         if (nullptr != customDisplayHandler)
         {
             changed = customDisplayHandler->displayObject(_resource, objectContext, &_propContext);

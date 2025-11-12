@@ -42,6 +42,27 @@ namespace vg::core
         SetParent(_parent);
 	}
 
+    //--------------------------------------------------------------------------------------
+    Object & Object::operator=(const Object & _from)
+    {
+        m_refCount = 1;
+
+        m_uid = _from.m_uid;
+        m_originalUID = _from.m_originalUID;
+        m_objectFlags = _from.m_objectFlags;
+        m_parent = _from.m_parent;
+
+        #ifndef VG_FINAL
+        m_parentNameDbg = _from.m_parentNameDbg;
+        #endif
+
+        m_name = _from.m_name;
+        m_file = _from.m_file;
+        m_classDesc = _from.m_classDesc;
+
+        return *this;
+    }
+
 	//--------------------------------------------------------------------------------------
 	Object::Object() :
         m_refCount(1)

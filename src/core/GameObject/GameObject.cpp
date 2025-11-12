@@ -799,8 +799,12 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::removeGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
     {
-        if (vector_helper::remove(m_graphicInstances, _graphicInstance))
-            VG_SAFE_RELEASE(_graphicInstance);
+        if (nullptr != _graphicInstance)
+        {
+            _graphicInstance->setParent(nullptr);
+            if (vector_helper::remove(m_graphicInstances, _graphicInstance))
+                VG_SAFE_RELEASE(_graphicInstance);
+        }
     }
 
     //--------------------------------------------------------------------------------------

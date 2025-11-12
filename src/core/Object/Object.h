@@ -48,6 +48,8 @@ namespace vg::core
 								    Object					();
 								    ~Object					();
 
+		Object &					operator =				(const Object & _from);
+
 		bool						RegisterUID				() override;
 		bool                        UnregisterUID			() override;
 		bool                        HasValidUID				() const final override;

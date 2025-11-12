@@ -1,20 +1,22 @@
 #pragma once
 
-#include "engine/IResourceList.h"
+#include "core/IResourceList.h"
 
-namespace vg::engine
+namespace vg::core
 {
     template <class T> class ResourceList : public IResourceList
     {
     public:
         VG_CLASS_DECL(ResourceList, IResourceList);
 
+        //--------------------------------------------------------------------------------------
         ResourceList(const core::string & _name, core::IObject * _parent) :
             super(_name, _parent)
         {
             m_resources.reserve(256);
         }
 
+        //--------------------------------------------------------------------------------------
         ~ResourceList()
         {
 
@@ -97,7 +99,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectVectorEx(ResourceList<T>, m_resources, T, "File", core::PropertyFlags::Resource);
+        registerPropertyObjectVectorEx(ResourceList<T>, m_resources, T, "Resources", core::PropertyFlags::Resource);
 
         return true;
     }

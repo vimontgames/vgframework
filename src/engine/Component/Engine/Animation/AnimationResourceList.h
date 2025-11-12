@@ -1,11 +1,11 @@
 #pragma once
 
-#include "engine/Resource/ResourceList.h"
+#include "core/Resource/ResourceList.h"
 #include "engine/Resource/Animation/AnimationResource.h"
 
 namespace vg::engine
 {
-    class AnimationResourceList final : public ResourceList<AnimationResource>
+    class AnimationResourceList final : public core::ResourceList<AnimationResource>
     {
     public:
         VG_CLASS_DECL(AnimationResourceList, ResourceList<AnimationResource>);
