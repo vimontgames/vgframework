@@ -40,6 +40,8 @@ namespace vg::engine
         void                        Unlock                      () const final override;
 
         bool                        HasAnyLoadingInProgress     () const final override;
+        core::uint                  GetLoadingInProgressCount   () const final override;
+
         core::uint                  GetResourceCount            () const final override;
         const core::IResourceInfo & GetResourceInfo             (core::uint _index) const final override;
 

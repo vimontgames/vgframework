@@ -19,10 +19,18 @@ namespace vg::editor
         {
             IResourceManager * rm = Editor::get()->getEngine()->GetResourceManager();
 
-            bool enabled = rm != nullptr && !rm->HasAnyLoadingInProgress();
+            const uint loadingCount = rm->GetLoadingInProgressCount();
+            const bool enabled = (loadingCount == 0);
 
-            if (ImGui::TooltipButton(fmt::sprintf("%s Reload Resources", style::icon::Reload).c_str(), enabled, enabled, "Reload Resources (F7)", style::button::SizeLarge))
-                rm->UpdateResources();
+            if (enabled)
+            {
+                if (ImGui::TooltipButton(fmt::sprintf("%s Reload Resources", style::icon::Reload).c_str(), true, true, "Reload Resources (F7)", style::button::SizeLarge))
+                    rm->UpdateResources();
+            }
+            else
+            {
+                ImGui::TooltipButton(fmt::sprintf("%s %u Loading ...", style::icon::Reload, loadingCount).c_str(), false, false, "Reload Resources (F7)", style::button::SizeLarge);
+            }
 
             ImGui::Separator();
 

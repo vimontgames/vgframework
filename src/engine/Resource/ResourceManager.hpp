@@ -44,11 +44,27 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool ResourceManager::HasAnyLoadingInProgress() const
     {
+        bool hasResourceLoading;
         Lock();
-        bool hasResourceLoading = m_resourcesToLoad.size() != 0 || m_resourcesLoaded.size() != 0 || m_resourcesToLoadAsync.size() != 0 || m_resourcesLoadedAsync.size() != 0;
+        {
+            hasResourceLoading = m_resourcesToLoad.size() != 0 || m_resourcesLoaded.size() != 0 || m_resourcesToLoadAsync.size() != 0 || m_resourcesLoadedAsync.size() != 0;
+        }
         Unlock();
 
         return hasResourceLoading;
+    }
+
+    //--------------------------------------------------------------------------------------
+    uint ResourceManager::GetLoadingInProgressCount() const
+    {
+        uint count;
+        Lock();
+        {
+            count = (uint)(m_resourcesToLoad.size() + m_resourcesLoaded.size() + m_resourcesToLoadAsync.size() + m_resourcesLoadedAsync.size());
+        }
+        Unlock();
+
+        return count;
     }
 
     //--------------------------------------------------------------------------------------
@@ -315,7 +331,13 @@ namespace vg::engine
             auto & info = it->second;
             VG_ASSERT(info->m_object == nullptr);
             loadOneResource(*info);
-            m_resourcesLoadedAsync.push_back(res);
+            VG_ASSERT(uint_ptr(res) != 0xcdcdcdcdcdcdcdcd);
+            
+            // test mutex
+            {
+                lock_guard lock(m_resourceLoadedAsyncMutex);
+                m_resourcesLoadedAsync.push_back(res); // hum elements can be push from both loading and main thread (use another container here that we sync in main to avoid mutex?) // loading thread
+            }
         }
 
         // Remove loaded resource from list
@@ -356,7 +378,13 @@ namespace vg::engine
                 if (loaded.m_object != nullptr)
                 {
                     // already loaded? Add to resource to update BUT is several clients requested the resource at the same frame it could be not ready yet and dropped :(
-                    m_resourcesLoadedAsync.push_back(_resource);
+                    VG_ASSERT(uint_ptr(_resource) != 0xcdcdcdcdcdcdcdcd);
+
+                    // test mutex
+                    {
+                        lock_guard lock(m_resourceLoadedAsyncMutex);
+                        m_resourcesLoadedAsync.push_back(_resource); // main thread
+                    }
                 }
             }
         }
@@ -604,8 +632,12 @@ namespace vg::engine
             m_resourcesLoaded.reserve(m_resourcesLoaded.size() + asyncLoadedCount);
 
             for (uint i = 0; i < asyncLoadedCount; ++i)
-                m_resourcesLoaded.push_back(m_resourcesLoadedAsync[i]);
-
+            {
+                core::IResource * resLoaded = m_resourcesLoadedAsync[i];
+                VG_ASSERT(uint_ptr(resLoaded) != 0xcdcdcdcdcdcdcdcd);
+                VG_ASSERT(asyncLoadedCount == m_resourcesLoadedAsync.size());
+                m_resourcesLoaded.push_back(resLoaded);
+            }
             m_resourcesLoadedAsync.clear();
         }
     }
