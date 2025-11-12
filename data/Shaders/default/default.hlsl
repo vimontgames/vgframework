@@ -167,18 +167,21 @@ PS_Output PS_Forward(VS_Output _input)
 
     #if _TOOLMODE && !_ZONLY
     // Picking
-    if (output.color0.a > 0)
+    if (0 == (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())) // Disable picking in wireframe to avoid too much hits
     {
-        uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
-        if (0xFFFF != toolmodeRWBufferID)
+        if (output.color0.a > 0)
         {
-            uint2 inputPos = _input.pos.xy;
-            float depth = _input.pos.z;
-            uint2 mousePos = viewConstants.getMousePos();
-            uint4 pickingID = uint4(rootConstants3D.getPickingID(), rootConstants3D.getMatID(), 0, 0);
+            uint toolmodeRWBufferID = viewConstants.getToolmodeRWBufferID();
+            if (0xFFFF != toolmodeRWBufferID)
+            {
+                uint2 inputPos = _input.pos.xy;
+                float depth = _input.pos.z;
+                uint2 mousePos = viewConstants.getMousePos();
+                uint4 pickingID = uint4(rootConstants3D.getPickingID(), rootConstants3D.getMatID(), 0, 0);
     
-            if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, depth, worldPos, mousePos, screenSize, pickingID))
-                output.color0 = lerp(output.color0, float4(0,1,0,1), 0.25f);
+                if (ProcessPicking(toolmodeRWBufferID, 0, inputPos, depth, worldPos, mousePos, screenSize, pickingID))
+                    output.color0 = lerp(output.color0, float4(0,1,0,1), 0.25f);
+            }
         }
     }
     #endif // #if _TOOLMODE && !_ZONLY

@@ -8,20 +8,20 @@
 #define GPU_INSTANCE_DATA_ALIGNMENT 16
 
 //--------------------------------------------------------------------------------------
-// 1xGPUInstanceData, N*GPUBatchData : In instance stream, 1 'GPUInstanceData' is followed by N 'GPUBatchData' for every batch (<=>material)
+// 1xGPUInstanceData, N*GPUBatchData : In instance stream, 1 'GPUInstanceData' is followed by N 'GPUBatchData' for every batch (1 batch <=> 1 material)
 //--------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------
-// GPUInstanceData
-// Materials use 16-bits indices and up to 16 materials per instance are supported
+// GPUBatchData
+// material index is 16 bits, but startIndex can be 32 bits to support large meshes and shared vertex buffer used by skinning
 //--------------------------------------------------------------------------------------
 struct GPUBatchData
 {
-    uint m_material;
-    uint m_startIndex;
+    uint m_material;    // Only low 16 bits are actually used
+    uint m_startIndex;  // Full 32 bits potentially used
 
-    void setMaterialIndex               (uint _handle)                                      { m_material = _handle; }
-    uint getMaterialBytesOffset         ()                                                  { return m_material * sizeof(GPUMaterialData); }
+    void setMaterialIndex               (uint _handle)                                      { m_material = packUint16low(m_material, _handle); }
+    uint getMaterialBytesOffset         ()                                                  { return unpackUint16low(m_material) * sizeof(GPUMaterialData); }
 
     void setStartIndex                  (uint _startIndex)                                  { m_startIndex = _startIndex; }
     uint getStartIndex                  ()                                                  { return m_startIndex; }
@@ -33,7 +33,6 @@ struct GPUBatchData
 
 //--------------------------------------------------------------------------------------
 // GPUInstanceData
-// Materials use 16-bits indices and up to 16 materials per instance are supported
 //--------------------------------------------------------------------------------------
 struct GPUInstanceData
 {
