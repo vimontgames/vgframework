@@ -16,8 +16,10 @@ namespace vg::core
         //--------------------------------------------------------------------------------------
         void clear()
         {
-            memset(m_data.data(), 0x0, m_data.size() * sizeof(T));
-            m_counter = 0;
+            if (0 != m_counter.exchange(0))
+            {
+                memset(m_data.data(), 0x0, m_data.size() * sizeof(T));
+            }
         }
 
         //--------------------------------------------------------------------------------------
@@ -34,6 +36,12 @@ namespace vg::core
 
         //--------------------------------------------------------------------------------------
         inline const T & operator[] (size_t _index) const
+        {
+            return m_data.data()[_index];
+        }
+
+        //--------------------------------------------------------------------------------------
+        inline T & operator[] (size_t _index)
         {
             return m_data.data()[_index];
         }

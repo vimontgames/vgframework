@@ -19,6 +19,8 @@ namespace vg::editor
         //--------------------------------------------------------------------------------------
         bool displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName, const PropertyContext * _propContext)
         {
+            string label = removeTrailingChar(_label, 's');
+
             ImGuiStyle & style = ImGui::GetStyle();
             bool changed = false;
 
@@ -41,7 +43,7 @@ namespace vg::editor
 
             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
-            string label = fmt::sprintf("%s (%u)", _label.c_str(), resourceCount);
+            string headerLabel = fmt::sprintf("%s (%u)", _label.c_str(), resourceCount);
 
             ImGui::PushID("CollapsingHeader");
             bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
@@ -52,7 +54,7 @@ namespace vg::editor
             if (readOnly)
                 ImGui::PushDisabledStyle(true);
 
-            ImGui::CollapsingHeaderLabel(collapsingHeaderPos, label.c_str(), true);            
+            ImGui::CollapsingHeaderLabel(collapsingHeaderPos, headerLabel.c_str(), true);
             
             if (open)
                 ImGui::Indent();
@@ -61,11 +63,14 @@ namespace vg::editor
 
             ImGui::BeginDisabled(readOnly);
             {
-                if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Plus, fmt::sprintf("Add %s", _label), 0))
-                    list->Add();
+                if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Plus, fmt::sprintf("Add %s", label), 0))
+                {
+                    list->Add(fmt::sprintf("new %s", label));
+                    changed = true;
+                }
 
                 ImGui::BeginDisabled(list->Size() == 0);
-                if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Minus, fmt::sprintf("Remove %s", _label), 1))
+                if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth, _object, style::icon::Minus, fmt::sprintf("Remove %s", label), 1))
                     remove = true;
                 ImGui::EndDisabled();
             }

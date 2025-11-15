@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Singleton/Singleton.h"
+#include "core/Scheduler/Mutex.h"
 #include "renderer/IPicking.h"
 
 struct PickingHit;
@@ -29,6 +30,7 @@ namespace vg::renderer
         bool                decodePickingHit    (const PickingHit & _hit, PickingHitInfo & _info) const;
 
     private:
+        core::Mutex                     m_mutex = core::Mutex("Mutex - Picking");
         core::vector<core::IObject*>    m_pickingID;
     };
 }

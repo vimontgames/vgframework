@@ -82,7 +82,7 @@ namespace vg::core
         {
             const bool isAlreadyUsed = _prop.GetName()[0] != '\0' && !strcmp(_prop.GetName(), prop.GetName());
 
-            if (isAlreadyUsed)
+            if (isAlreadyUsed && !asBool(_prop.GetFlags() & PropertyFlags::Transient))
             {
                 VG_ASSERT(!isAlreadyUsed, "[Factory] Property \"%s\" from \"%s\" is already declared in \"%s\"", _prop.GetName(), _prop.GetClassName(), prop.GetClassName());
                 return false;

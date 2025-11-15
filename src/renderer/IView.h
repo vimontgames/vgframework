@@ -2,6 +2,11 @@
 
 #include "gfx/IFrameGraphView.h"
 
+namespace vg::gfx
+{
+    class Buffer;
+}
+
 namespace vg::renderer
 {
     class IViewport;
@@ -30,16 +35,18 @@ namespace vg::renderer
         gfx::ITexture * dest     = nullptr;
     };
 
+    // When culling debug is implemented in render we can remove this
     struct ViewCullingStats
     {
-        core::uint opaque      = 0;
-        core::uint alphatest   = 0;
-        core::uint transparent = 0;
-        core::uint decal       = 0;
-        core::uint outline    = 0;
-        core::uint directional = 0;
-        core::uint omni        = 0;
-        core::uint spot        = 0;
+        core::uint opaque           = 0;
+        core::uint alphatest        = 0;
+        core::uint transparent      = 0;
+        core::uint particleSystem   = 0;
+        core::uint decal            = 0;
+        core::uint outline          = 0;
+        core::uint directional      = 0;
+        core::uint omni             = 0;
+        core::uint spot             = 0;
     };
 
     vg_enum_class(vg::renderer, ViewFlags, core::u32,
@@ -144,5 +151,7 @@ namespace vg::renderer
         virtual ViewCullingStats        GetViewCullingStats                 () const = 0;
         virtual IUIRenderer *           GetUIRenderer                       () const = 0;
         virtual const ICameraSettings * GetCameraSettings                   () const = 0;
+
+        virtual const gfx::Buffer *     GetParticleVertexBuffer             () const = 0;
     };
 }

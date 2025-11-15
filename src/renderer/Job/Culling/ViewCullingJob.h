@@ -18,6 +18,7 @@ namespace vg::renderer
     class IGraphicInstance;
     class MeshInstance;
     class CameraInstance;
+    class ParticleSystemInstance;
     class Frustum;
 
     vg_enum_class(vg::renderer, GraphicInstanceListType, core::u8,
@@ -25,6 +26,7 @@ namespace vg::renderer
         Opaque,
         AlphaTest,
         Transparent,
+        Particle,
         Decal,
         Outline
     );
@@ -74,7 +76,8 @@ namespace vg::renderer
     {
         SharedCullingJobOutput() :
             m_instances(16384),
-            m_skins(4096)
+            m_skins(4096),
+            m_particleSystems(4096)
         {
 
         }
@@ -83,22 +86,44 @@ namespace vg::renderer
         {
             m_skins.clear();
             m_instances.clear();
+            m_particleSystems.clear();
         }
 
-        void addInstance(const GraphicInstance * _graphicInstance)
+        // Add Instance/SkinMesh/ParticleSystem only once using an atomic flag check and return 'true' if just added
+
+        bool addInstance(const GraphicInstance * _graphicInstance)
         {
-            if (_graphicInstance->setAtomicFlags(GraphicInstance::AtomicFlags::Instance))
+            if (_graphicInstance->setAtomicFlags(GraphicInstance::AtomicFlags::InstanceList))
+            {
                 m_instances.push_back_atomic(const_cast<GraphicInstance *>(_graphicInstance));
+                return true;
+            }
+            return false;
         }
 
-        void addSkinMesh(const MeshInstance * _skinMeshInstance)
+        bool addSkinMesh(const MeshInstance * _skinMeshInstance)
         {
-            if (((GraphicInstance*)_skinMeshInstance)->setAtomicFlags(GraphicInstance::AtomicFlags::SkinLOD0))
+            if (((GraphicInstance*)_skinMeshInstance)->setAtomicFlags(GraphicInstance::AtomicFlags::SkinList))
+            {
                 m_skins.push_back_atomic(const_cast<MeshInstance *>(_skinMeshInstance));
+                return true;
+            }
+            return false;
         }
 
-        core::atomicvector<GraphicInstance *>   m_instances;    // all visible mesh instances, used to fill instance data
-        core::atomicvector<MeshInstance *>      m_skins;        // all mesh instances with skin visible in one view or more
+        bool addParticleSystem(const ParticleSystemInstance * _particleSystemInstance)
+        {
+            if (((GraphicInstance *)_particleSystemInstance)->setAtomicFlags(GraphicInstance::AtomicFlags::ParticleList))
+            {
+                m_particleSystems.push_back_atomic(const_cast<ParticleSystemInstance *>(_particleSystemInstance));
+                return true;
+            }
+            return false;
+        }
+
+        core::atomicvector<GraphicInstance *>           m_instances;        // all mesh instances visible in at least one view (used to fill instance data)
+        core::atomicvector<MeshInstance *>              m_skins;            // all skinned mesh instances visible at least one view (used to fill skinning data)
+        core::atomicvector<ParticleSystemInstance *>    m_particleSystems;  // all simulated particle systems (used to fill particle data)
     };
 
     struct CullingResult

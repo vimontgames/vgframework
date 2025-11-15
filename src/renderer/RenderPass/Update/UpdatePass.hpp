@@ -3,6 +3,7 @@
 #include "Update/GPUDebug/GPUDebugUpdatePass.hpp"
 #include "Update/InstanceData/InstanceDataUpdatePass.hpp"
 #include "Update/MaterialData/MaterialDataUpdatePass.hpp"
+#include "Update/ParticleData/ParticleRenderDataUpdatePass.hpp"
 #include "Update/TLAS/TLASUpdatePass.hpp"
 #include "Update/BLAS/BLASUpdatePass.hpp"
 #include "Update/ViewConstants/ViewConstantsUpdatePass.hpp"

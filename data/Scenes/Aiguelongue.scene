@@ -8791,7 +8791,7 @@
                         <Property type="String" name="m_name" value="Debug"/>
                         <Property type="Uint32" name="m_uid" value="1949923508"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -8863,6 +8863,56 @@
                                             </Object>
                                         </Property>
                                         <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="ParticleTest"/>
+                                <Property type="Uint32" name="m_uid" value="802902371"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="ParticleComponent">
+                                        <Property type="String" name="m_name" value="New ParticleComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2156259464"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Uint16" name="m_maxParticleCount" value="1"/>
+                                        <Property type="Object" name="m_particleEmitters">
+                                            <Object class="ParticleEmitterList">
+                                                <Property type="String" name="m_name" value="New ParticleComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3084151811"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectVector" name="m_objects">
+                                                    <Object class="ParticleEmitterDesc">
+                                                        <Property type="String" name="m_name" value="Emitter B"/>
+                                                        <Property type="Uint32" name="m_uid" value="3912404846"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                        <Property type="Float" name="m_params.m_spawnRate" value="2"/>
+                                                        <Property type="Float" name="m_params.m_lifeTime" value="5"/>
+                                                        <Property type="Uint16" name="m_params.m_maxParticleCount" value="4"/>
+                                                        <Property type="Float3" name="m_params.m_size" x="0.25" y="0.25" z="0"/>
+                                                        <Property type="Resource" name="m_materialResource">
+                                                            <Object class="MaterialResource">
+                                                                <Property type="String" name="m_name" value="ParticleTest"/>
+                                                                <Property type="Uint32" name="m_uid" value="2339230819"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                                <Property type="String" name="m_resourcePath" value="data/Materials/Particle/ParticleTest.mat"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtrVector" name="m_children"/>

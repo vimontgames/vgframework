@@ -355,6 +355,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Property::SetDisplayName(const char * _displayName)
+    {
+        displayName = _displayName;
+    }
+
+    //--------------------------------------------------------------------------------------
     PropertyType Property::GetType() const
     {
         return type;

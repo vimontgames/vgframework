@@ -31,6 +31,39 @@ namespace vg::renderer
             pos[2] = _pos.z;
         }
 
+        void setNormal(const core::float3 & _nrm)
+        {
+            nrm[0] = _nrm.x;
+            nrm[1] = _nrm.y;
+            nrm[2] = _nrm.z;
+        }
+
+        void setBinormal(const core::float3 & _bin)
+        {
+            bin[0] = _bin.x;
+            bin[1] = _bin.y;
+            bin[2] = _bin.z;
+        }
+
+        void setTangent(const core::float3 & _tan)
+        {
+            tan[0] = _tan.x;
+            tan[1] = _tan.y;
+            tan[2] = _tan.z;
+        }
+
+        void setUV0(const core::float2 & _uv0)
+        {
+            uv[0][0] = _uv0.x;
+            uv[0][1] = _uv0.y;
+        }
+
+        void setUV1(const core::float2 & _uv1)
+        {
+            uv[1][0] = _uv1.x;
+            uv[1][1] = _uv1.y;
+        }
+
         void setColor(const core::float4 & _color)
         {
             color = packRGBA8(_color);

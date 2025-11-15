@@ -9,7 +9,7 @@ namespace vg::core
     public:
         VG_CLASS_DECL_ABSTRACT(IObjectList, Object)
 
-        virtual bool    Add         () = 0;
+        virtual bool    Add         (const string & _name) = 0;
         virtual bool    Pop         () = 0;
         virtual bool    RemoveAt    (size_t _index) = 0;
         virtual size_t  Size        () const = 0;

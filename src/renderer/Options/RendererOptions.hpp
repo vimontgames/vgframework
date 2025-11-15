@@ -130,33 +130,31 @@ namespace vg::renderer
         registerOptionalPropertyEnum(RendererOptions, m_useCustomQualityLevel, Quality, m_customQualityLevel, "Quality");
         setPropertyDescription(RendererOptions, m_customQualityLevel, "Quality level for rendering. Leave unchecked for automatic quality level based on your GPU.");
 
+        registerPropertyGroupBegin(RendererOptions, "Device");
+        {
+            registerPropertyEnum(RendererOptions, gfx::HDR, m_HDRmode, "HDR");
+            setPropertyDescription(RendererOptions, m_HDRmode, "High-dynamic range display mode");
+
+            registerPropertyEnumQuality(RendererOptions, gfx::MSAA, m_msaa, "MSAA", isQualityPropertyHidden);
+            setPropertyDescriptionQuality(RendererOptions, m_msaa, "MSAA sample count for antialiasing");
+
+            registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
+            setPropertyDescription(RendererOptions, m_VSync, "Sync display frequency with monitor refresh rate");
+
+            registerPropertyGroupBegin(RendererOptions, "Caps");
+            {
+                registerPropertyObjectPtrEx(RendererOptions, m_deviceCaps, "Caps", PropertyFlags::Flatten | PropertyFlags::Transient);
+            }
+            registerPropertyGroupEnd(RendererOptions);
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
         registerPropertyGroupBegin(RendererOptions, "Lighting");
         {
             registerPropertyEnum(RendererOptions, LightingMode, m_lightingMode, "Mode");
             setPropertyDescription(RendererOptions, m_lightingMode, "Lighting monde will affect how lights are computed.\nIn \"Forward\" mode lighting is computed on the fly in pixel shader\nIn \"Defered\" mode lighting is computed in screen-space");
 
-            registerPropertyGroupBegin(RendererOptions, "PBR");
-            {
-                registerPropertyEnumBitfield(RendererOptions, PBRFlags, m_pbrFlags, "Flags");
-                setPropertyDescription(RendererOptions, m_pbrFlags, "Physically-based rendering flags");
-
-                registerPropertyResourcePtr(RendererOptions, m_pbrBakedBRDFTexture, "Baked BRDF");
-                setPropertyDescription(RendererOptions, m_pbrBakedBRDFTexture, "Baked specular BRDF texture used when \"Generate specular BRDF\" is not selected.")
-            }
-            registerPropertyGroupEnd(RendererOptions);
-             
-            registerPropertyGroupBegin(RendererOptions, "Shadows");
-            {
-                registerPropertyQuality(RendererOptions, m_shadows, "Cast shadows", isQualityPropertyHidden);
-                setPropertyDescriptionQuality(RendererOptions, m_shadows, "Enable realtime shadows");
-
-                registerPropertyEnumQuality(RendererOptions, ShadowDefaultResolution, m_shadowsResolution, "Resolution", isQualityPropertyHidden);
-                setPropertyDescriptionQuality(RendererOptions, m_shadowsResolution, "Default resolution for realtime shadows");
-                setPropertyReadOnlyCallbackQuality(RendererOptions, m_shadowsResolution, isShadowPropertyReadOnly);
-            }
-            registerPropertyGroupEnd(RendererOptions);
-
-            registerPropertyGroupBegin(RendererOptions, "Default environment");
+            registerPropertyGroupBegin(RendererOptions, "Environment");
             {
                 registerPropertyEx(RendererOptions, m_defaultEnvironmentColor, "Color", PropertyFlags::Color);
                 setPropertyDescription(RendererOptions, m_defaultEnvironmentColor, "Default environment color is used as fallback when no environment cubemap is provided");
@@ -174,26 +172,34 @@ namespace vg::renderer
                 setPropertyDescription(RendererOptions, m_defaultSpecularReflectionIntensity, "Default specular reflection intensity\nAdjusts the strength of reflections on shiny surfaces");
             }
             registerPropertyGroupEnd(RendererOptions);
-        }
-        registerPropertyGroupEnd(RendererOptions);
 
-        registerPropertyGroupBegin(RendererOptions, "Presentation"); 
-        {
-            registerPropertyEnum(RendererOptions, gfx::HDR, m_HDRmode, "HDR");
-            setPropertyDescription(RendererOptions, m_HDRmode, "High-dynamic range display mode");
+            registerPropertyGroupBegin(RendererOptions, "PBR");
+            {
+                registerPropertyEnumBitfield(RendererOptions, PBRFlags, m_pbrFlags, "Flags");
+                setPropertyDescription(RendererOptions, m_pbrFlags, "Physically-based rendering flags");
 
-            registerPropertyEnumQuality(RendererOptions, gfx::MSAA, m_msaa, "MSAA", isQualityPropertyHidden);
-            setPropertyDescriptionQuality(RendererOptions, m_msaa, "MSAA sample count for antialiasing");
+                registerPropertyResourcePtr(RendererOptions, m_pbrBakedBRDFTexture, "Baked BRDF");
+                setPropertyDescription(RendererOptions, m_pbrBakedBRDFTexture, "Baked specular BRDF texture used when \"Generate specular BRDF\" is not selected.")
+            }
+            registerPropertyGroupEnd(RendererOptions);
 
-            registerPropertyEnum(RendererOptions, gfx::VSync, m_VSync, "VSync");
-            setPropertyDescription(RendererOptions, m_VSync, "Sync display frequency with monitor refresh rate");
-        }
-        registerPropertyGroupEnd(RendererOptions);
+            registerPropertyGroupBegin(RendererOptions, "Raytracing");
+            {
+                registerProperty(RendererOptions, m_rayTracing, "Enable");
+                setPropertyDescription(RendererOptions, m_rayTracing, "Enable Raytracing");
+            }
+            registerPropertyGroupEnd(RendererOptions);
 
-        registerPropertyGroupBegin(RendererOptions, "Raytracing");
-        {
-            registerProperty(RendererOptions, m_rayTracing, "Enable");
-            setPropertyDescription(RendererOptions, m_rayTracing, "Enable Raytracing");
+            registerPropertyGroupBegin(RendererOptions, "Shadows");
+            {
+                registerPropertyQuality(RendererOptions, m_shadows, "Cast shadows", isQualityPropertyHidden);
+                setPropertyDescriptionQuality(RendererOptions, m_shadows, "Enable realtime shadows");
+
+                registerPropertyEnumQuality(RendererOptions, ShadowDefaultResolution, m_shadowsResolution, "Resolution", isQualityPropertyHidden);
+                setPropertyDescriptionQuality(RendererOptions, m_shadowsResolution, "Default resolution for realtime shadows");
+                setPropertyReadOnlyCallbackQuality(RendererOptions, m_shadowsResolution, isShadowPropertyReadOnly);
+            }
+            registerPropertyGroupEnd(RendererOptions);
         }
         registerPropertyGroupEnd(RendererOptions);
 
@@ -212,33 +218,32 @@ namespace vg::renderer
         }
         registerPropertyGroupEnd(RendererOptions);
 
-        registerPropertyGroupBegin(RendererOptions, "Framegraph");
-        {
-            registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
-        }
-        registerPropertyGroupEnd(RendererOptions);
-
-        registerPropertyGroupBegin(RendererOptions, "Materials");
-        {
-            registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Features");
-        }
-        registerPropertyGroupEnd(RendererOptions);
-
         registerPropertyGroupBegin(RendererOptions, "Misc");
         {
-            registerPropertyEx(RendererOptions, m_wireframe, "Wireframe", PropertyFlags::SingleLine);
-            setPropertyDescription(RendererOptions, m_wireframe, "Show Wireframe");
-
-            registerPropertyEx(RendererOptions, m_aabb, "AABB", PropertyFlags::SingleLine);
+            registerProperty(RendererOptions, m_aabb, "AABB");
             setPropertyDescription(RendererOptions, m_aabb, "Show Bounding Boxes");
 
-            registerPropertyEx(RendererOptions, m_debugUI, "Debug UI", PropertyFlags::SingleLine);
-            setPropertyDescription(RendererOptions, m_debugUI, "Show UI debug");
-        }
-        registerPropertyGroupEnd(RendererOptions);
+            registerProperty(RendererOptions, m_particles, "Particles");
+            setPropertyDescription(RendererOptions, m_particles, "Show particles");
 
-        registerPropertyGroupBegin(RendererOptions, "Multithreading");
-        {
+            registerProperty(RendererOptions, m_wireframe, "Wireframe");
+            setPropertyDescription(RendererOptions, m_wireframe, "Show wireframe");
+
+            registerProperty(RendererOptions, m_debugUI, "UI Debug");
+            setPropertyDescription(RendererOptions, m_debugUI, "Show UI debug");
+
+            registerPropertyGroupBegin(RendererOptions, "Framegraph");
+            {
+                registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
+            }
+            registerPropertyGroupEnd(RendererOptions);
+
+            registerPropertyGroupBegin(RendererOptions, "Materials");
+            {
+                registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Features");
+            }
+            registerPropertyGroupEnd(RendererOptions);
+
             registerPropertyGroupBegin(RendererOptions, "Render jobs");
             {
                 registerProperty(RendererOptions, m_renderJobs, "Enable");
@@ -266,12 +271,6 @@ namespace vg::renderer
                 setPropertyReadOnlyCallback(RendererOptions, m_renderJobsWorkerMinBufferSizeInMB, isRenderJobOptionReadOnly);
             }
             registerPropertyGroupEnd(RendererOptions);
-        }
-        registerPropertyGroupEnd(RendererOptions);
-
-        registerPropertyGroupBegin(RendererOptions, "Device");
-        {
-            registerPropertyObjectPtrEx(RendererOptions, m_deviceCaps, "Device Caps", PropertyFlags::Flatten | PropertyFlags::Transient);
         }
         registerPropertyGroupEnd(RendererOptions);
 

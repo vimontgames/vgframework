@@ -10,6 +10,7 @@
 #include "gfx/FrameGraph/RenderPassContext.h"
 
 #include "Mesh/MeshInstance.hpp"
+#include "ParticleSystem/ParticleEmitter.hpp"
 #include "ParticleSystem/ParticleSystemInstance.hpp"
 #include "Light/LightInstance.hpp"
 #include "Camera/CameraInstance.hpp"
@@ -64,6 +65,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool GraphicInstance::SetMaterialCount(core::uint _count)
+    {
+        return setMaterialCount(_count);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool GraphicInstance::SetMaterial(core::uint _index, IMaterialModel * _materialModel)
     {
         return setMaterial(_index, (MaterialModel*)_materialModel);
@@ -79,6 +86,25 @@ namespace vg::renderer
     void GraphicInstance::SetBatchMask(const core::BitMask & _batchMask)
     {
         m_batchMask = _batchMask;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool GraphicInstance::setMaterialCount(core::uint _count)
+    {
+        if (_count != m_materials.size())
+        {
+            if (_count < m_materials.size())
+            {
+                for (uint i = _count; i < m_materials.size(); ++i)
+                {
+                    VG_SAFE_RELEASE(m_materials[i]);
+                }
+                m_materials.resize(_count);
+                OnMaterialChanged(-1);
+            }
+            return true;
+        }
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -106,5 +132,12 @@ namespace vg::renderer
             return m_materials[_index];
         else
             return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GraphicInstance::setDynamicBuffer(const gfx::Buffer * _buffer, uint _offset)
+    {
+        m_dynamicMeshBuffer = _buffer;
+        m_dynamicMeshBufferOffset = _offset;
     }
 }

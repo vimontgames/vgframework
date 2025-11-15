@@ -557,6 +557,8 @@ namespace vg::editor
                             const auto rectColor = 0x7F000000;
                             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0, 1, 0, 1));
 
+                            // TODO: move debugCulling flag and implementation to renderer options and implement in renderer view code 
+                            // (previously ImGui was only available in editor but now it's also available in renderer)
                             if (view && debugCulling)
                             {
                                 const auto & stats = view->GetViewCullingStats();
@@ -571,7 +573,7 @@ namespace vg::editor
                                 ImVec2 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text(text.c_str(), stats.opaque);
+                                ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
@@ -579,7 +581,7 @@ namespace vg::editor
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text(text.c_str(), stats.alphatest);
+                                ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
@@ -587,7 +589,15 @@ namespace vg::editor
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text(text.c_str(), stats.transparent);
+                                ImGui::Text(text.c_str());
+
+                                ImGui::SameLine();
+                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                text = fmt::sprintf("Particles %u", stats.particleSystem);
+                                textSize = ImGui::CalcTextSize(text.c_str());
+                                ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
+                                pos.y += style::font::DefaultFontHeight;
+                                ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
@@ -595,7 +605,7 @@ namespace vg::editor
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text(text.c_str(), stats.decal);
+                                ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
@@ -603,7 +613,7 @@ namespace vg::editor
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text(text.c_str(), stats.outline);
+                                ImGui::Text(text.c_str());
 
                                 // Lights
                                 pos.y += style::font::DefaultFontHeight;
@@ -614,7 +624,7 @@ namespace vg::editor
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text(text.c_str(), stats.directional);
+                                ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
@@ -622,7 +632,7 @@ namespace vg::editor
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text(text.c_str(), stats.omni);
+                                ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
                                 ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
@@ -630,7 +640,7 @@ namespace vg::editor
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
                                 pos.y += style::font::DefaultFontHeight;
-                                ImGui::Text(text.c_str(), stats.spot);
+                                ImGui::Text(text.c_str());
                             }
 
                             ImGui::PopStyleColor();

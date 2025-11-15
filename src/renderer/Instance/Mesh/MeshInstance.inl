@@ -9,18 +9,6 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE const gfx::Buffer * MeshInstance::getSkinnedMeshBuffer() const
-    {
-        return m_skinnedMeshBuffer;
-    }
-
-    //--------------------------------------------------------------------------------------
-    VG_INLINE const core::uint MeshInstance::getSkinnedMeshBufferOffset() const
-    {
-        return m_skinnedMeshBufferOffset;
-    }
-
-    //--------------------------------------------------------------------------------------
     VG_INLINE void MeshInstance::setInstanceBLAS(gfx::BLAS * _BLAS)
     {
         if (_BLAS != m_instanceBLAS)

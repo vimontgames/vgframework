@@ -148,7 +148,7 @@ struct GPUMaterialData
             break;
 
             case UVSource::PlanarY:
-            uv = _worldPos.xz;
+            uv = float2(_worldPos.x, -_worldPos.z);
             break;
 
             case UVSource::PlanarZ:

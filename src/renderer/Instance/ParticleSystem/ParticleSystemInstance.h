@@ -2,22 +2,70 @@
 
 #include "renderer/IParticleSystemInstance.h"
 #include "gfx/BindlessTable/BindlessTable_consts.h"
+#include "core/Container/AtomicVector.h"
+#include "renderer/Geometry/Vertex/VertexFormat.h"
 
 namespace vg::renderer
 {
+    // For each view, store the offsets used to access GPU instance data and geometry data
+    struct PerViewParticleData
+    {
+        const View * m_view = nullptr;
+        core::uint   m_instanceDataOffset = -1;
+        core::uint   m_geometryDataOffset = -1;
+    };
+
+    // TODO: SOA?
+    struct Particle
+    {
+        float3  position;
+        float3  velocity;
+        float   lifetime;
+        float   age;
+        float3  size;
+        float4  color;
+        bool    alive;
+    };
+
+    using ParticleVertex = DefaultVertex; // TODO: packed vertex format for particles? (must stay compatible with raytracing)
+
     class ParticleSystemInstance final : public IParticleSystemInstance
     {
     public:
         VG_CLASS_DECL(ParticleSystemInstance, IParticleSystemInstance);
 
-                ParticleSystemInstance      (const core::string & _name, core::IObject * _parent);
-                ~ParticleSystemInstance     ();
+                                                    ParticleSystemInstance      (const core::string & _name, core::IObject * _parent);
+                                                    ~ParticleSystemInstance     ();
 
-        void    SetModel                    (core::Lod _lod, core::IModel * _model) final override;
-        bool    TryGetAABB                  (core::AABB & _aabb) const final override;
-        bool    Cull                        (CullingResult * _cullingResult, View * _view) const final override;
-        bool    OnUpdateRayTracing          (gfx::CommandList * _cmdList, View * _view, core::uint _index) final override;
-        void    Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
+        bool                                        TryGetAABB                  (core::AABB & _aabb) const final override;
+        bool                                        Cull                        (CullingResult * _cullingResult, View * _view) const final override;
+        bool                                        OnUpdateRayTracing          (gfx::CommandList * _cmdList, View * _view, core::uint _index) final override;
+        void                                        Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
+
+        bool                                        SetEmitterCount             (core::uint _count) final override;
+        bool                                        SetEmitterParams            (core::uint _index, const ParticleEmitterParams & _emitterParams) final override;
+
+        void                                        UpdateTime                  (float _dt) final override;
+
+        core::uint                                  GetGPUInstanceDataSize      () const final override;
+        core::uint                                  FillGPUInstanceData         (const core::u8 * VG_RESTRICT _data) const final override;
+
+        core::uint                                  GetGPURenderDataSize        () const override;
+        core::uint                                  FillGPURenderData           (const core::u8 * VG_RESTRICT _data) override;
+
+        void                                        updateSimulation            ();
+
+    private:
+        float m_dt = 0.0f;
+
+        struct EmitterData
+        {
+            ParticleEmitterParams   m_params;
+            float                   m_timeSinceLastSpawn = 0.0f;
+            core::vector<Particle>  m_particles;
+            core::u16               m_aliveParticles = 0;
+        };
+        core::vector<EmitterData> m_emitters;
     };
 }
 

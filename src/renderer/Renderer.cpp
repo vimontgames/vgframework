@@ -25,6 +25,7 @@
 #include "renderer/RenderPass/Update/InstanceData/InstanceDataUpdatePass.h"
 #include "renderer/RenderPass/Update/MaterialData/MaterialDataUpdatePass.h"
 #include "renderer/RenderPass/Compute/ComputeSkinning/ComputeSkinningPass.h"
+#include "renderer/RenderPass/Update/ParticleData/ParticleRenderDataUpdatePass.h"
 #include "renderer/RenderPass/Update/BLAS/BLASUpdatePass.h"
 #include "renderer/RenderPass/Render2D/HDROutput/HDROutputPass.h"
 #include "renderer/RenderPass/Render2D/Preview/Texture/TexturePreviewPass.h"
@@ -47,6 +48,7 @@
 #include "renderer/Instance/Light/Omni/OmniLightInstance.h"
 #include "renderer/UI/UIManager.h"
 #include "renderer/Model/Material/MaterialManager.h"
+#include "renderer/Particle/ParticleManager.h"
 #include "renderer/Camera/CameraLens.h"
 
 #if !VG_ENABLE_INLINE
@@ -224,6 +226,7 @@ namespace vg::renderer
             m_instanceDataUpdatePass = new InstanceDataUpdatePass();
             m_materialDataUpdatePass = new MaterialDataUpdatePass();
             m_computeSkinningPass = new ComputeSkinningPass();
+            m_particleDataUpdatePass = new ParticleRenderDataUpdatePass();
             m_computeSpecularBRDFPass = new ComputeSpecularBRDFPass();
             m_computeIBLCubemapsPass = new ComputeIBLCubemapsPass();
             m_BLASUpdatePass = new BLASUpdatePass();
@@ -237,6 +240,7 @@ namespace vg::renderer
             RendererOptions * options = new RendererOptions("Renderer Options", this);
 
             m_materialManager = new MaterialManager();
+            m_particleManager = new ParticleManager();
 
             initDefaultTextures();
             initDefaultMaterials();
@@ -337,6 +341,7 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_instanceDataUpdatePass);
         VG_SAFE_RELEASE(m_materialDataUpdatePass);
         VG_SAFE_DELETE(m_computeSkinningPass);
+        VG_SAFE_DELETE(m_particleDataUpdatePass);
         VG_SAFE_DELETE(m_computeSpecularBRDFPass);
         VG_SAFE_DELETE(m_computeIBLCubemapsPass);
         VG_SAFE_DELETE(m_BLASUpdatePass);
@@ -348,6 +353,7 @@ namespace vg::renderer
         
 		m_device.deinit();
 
+        VG_SAFE_DELETE(m_particleManager);
         VG_SAFE_DELETE(m_materialManager);
         VG_SAFE_RELEASE(m_picking);
 	}
@@ -486,6 +492,8 @@ namespace vg::renderer
 
 		m_device.beginFrame();
 		{
+            m_particleManager->updateSimulation();
+
             //--------------------------------------------------------------------------------------
             // Culling all views : 
             // - a job a created for each view to fill View::m_cullingJobResult & synced
@@ -529,6 +537,9 @@ namespace vg::renderer
 
                 // Skinning shall be computed before instances so that instances can store the vertex data offset in GPUInstanceData
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_computeSkinningPass, "Skinning");
+
+                if (options->isParticlesEnabled())
+                    m_frameGraph.addUserPass(mainViewRenderPassContext, m_particleDataUpdatePass, "ParticleData Update");
 
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_instanceDataUpdatePass, "Instance Data");
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_materialDataUpdatePass, "Material Data");

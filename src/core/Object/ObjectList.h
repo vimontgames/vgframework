@@ -23,10 +23,11 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        bool Add() override
+        bool Add(const string & _name) override
         {
-            T & res = m_objects.emplace_back();
-            res.RegisterUID();
+            T & obj = m_objects.emplace_back();
+            obj.SetName(_name);
+            obj.RegisterUID();
 
             for (auto & res : m_objects)
                 res.SetParent(this);
@@ -63,13 +64,13 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        const core::vector<T> & getResources() const
+        const core::vector<T> & getObjects() const
         {
             return m_objects;
         }
 
         //--------------------------------------------------------------------------------------
-        core::vector<T> & getResources()
+        core::vector<T> & getObjects()
         {
             return m_objects;
         }

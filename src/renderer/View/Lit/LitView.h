@@ -24,16 +24,15 @@ namespace vg::renderer
     public:
         using super = View;
 
-        const char *                    GetClassName        () const final override { return "ForwardView"; }
+        const char *                    GetClassName            () const final override { return "ForwardView"; }
 
-                                        LitView             (const CreateViewParams & _params);
-                                        ~LitView            ();
+                                        LitView                 (const CreateViewParams & _params);
+                                        ~LitView                ();
 
-        bool                            IsLit               () const { return true; }
-        bool                            IsUsingRayTracing   () const final override;
+        bool                            IsLit                   () const { return true; }
+        bool                            IsUsingRayTracing       () const final override;
 
-
-        void                            RegisterFrameGraph  (const gfx::RenderPassContext & _renderPassContext, gfx::FrameGraph & _frameGraph) override;
+        void                            RegisterFrameGraph      (const gfx::RenderPassContext & _renderPassContext, gfx::FrameGraph & _frameGraph) override;
 
     private:
         BackgroundPass *                m_backgroundPass            = nullptr;

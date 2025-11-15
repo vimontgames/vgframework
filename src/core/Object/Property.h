@@ -35,6 +35,7 @@ namespace vg::core
         void                            SetDescription                  (const char * _description) final override;
         void                            SetEnumTypeName                 (const char * _enumTypeName) final override;
         bool                            SetEnumValueFlags               (u64 _value, EnumValueFlags _flags, bool _enabled) final override;
+        void                            SetDisplayName                  (const char * _displayName) final override;
         EnumValueFlags                  GetUnsignedEnumValueFlags       (u64 _value) const final override;
         EnumValueFlags                  GetSignedEnumValueFlags         (i64 _value) const final override;
         const char *                    GetInterface                    () const final override;

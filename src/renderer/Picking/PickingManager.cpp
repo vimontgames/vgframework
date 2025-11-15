@@ -30,6 +30,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     PickingID PickingManager::CreatePickingID(IObject * _object)
     {
+        lock_guard lock(m_mutex);
+
         VG_ASSERT(nullptr != dynamic_cast<core::IComponent *>(_object), "Picking is expecting a IComponent object");
 
         PickingID id = -1;
@@ -56,6 +58,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void PickingManager::ReleasePickingID(PickingID _id)
     {
+        lock_guard lock(m_mutex);
+
         VG_ASSERT(0 != _id);
         VG_ASSERT(_id < m_pickingID.size());
         m_pickingID[_id] = nullptr;

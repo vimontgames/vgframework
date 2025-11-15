@@ -15,6 +15,7 @@ namespace vg::renderer
     {
         setIsAdditionalView(true);
         setOrtho(true);
+        SetName(fmt::sprintf("%s Shadow", _light->GetName()));
         m_shadowMapPass = new ShadowMapPass();
     }
 

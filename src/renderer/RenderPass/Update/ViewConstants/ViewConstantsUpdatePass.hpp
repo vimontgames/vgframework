@@ -269,8 +269,6 @@ namespace vg::renderer
                 constants->setShadowBias(omni->m_shadowBias);
                 constants->setShadowInstensity(omni->m_shadowIntensity);
 
-                //auto shadowMapID = static_cast<const View *>(_renderPassContext.m_view)->findShadowMapID(omnis[i]);
-
                 offset += sizeof(OmniLightConstants);
             }            
         }

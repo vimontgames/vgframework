@@ -114,6 +114,8 @@ namespace vg::renderer
         ViewCullingStats                    GetViewCullingStats                 () const final override;
         IUIRenderer *                       GetUIRenderer                       () const final override;
         const ICameraSettings *             GetCameraSettings                   () const final override;
+
+        const gfx::Buffer *                 GetParticleVertexBuffer             () const override { return nullptr; }
         
         core::vector<gfx::FrameGraphResourceID>  getShadowMaps                  () const;
 

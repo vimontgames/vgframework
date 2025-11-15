@@ -120,6 +120,7 @@ namespace vg::renderer
                         case GraphicInstanceListType::Opaque:
                         case GraphicInstanceListType::AlphaTest:
                         case GraphicInstanceListType::Decal:
+                        case GraphicInstanceListType::Particle:
                             break;
 
                         case GraphicInstanceListType::Transparent:

@@ -23,9 +23,10 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        bool Add() override
+        bool Add(const string & _name) override
         {
             T & res = m_resources.emplace_back();
+            res.SetName(_name);
             res.RegisterUID();
 
             for (auto & res : m_resources)
@@ -99,7 +100,7 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectVectorEx(ResourceList<T>, m_resources, T, "Resources", core::PropertyFlags::Resource);
+        registerPropertyObjectVectorEx(ResourceList<T>, m_resources, T, "File", core::PropertyFlags::Resource);
 
         return true;
     }

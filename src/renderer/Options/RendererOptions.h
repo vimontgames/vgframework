@@ -62,7 +62,7 @@ namespace vg::renderer
         bool                    IsToolModeEnabled                       () const final override { return isToolModeEnabled(); };
         bool                    IsRayTracingEnabled                     () const final override { return isRayTracingEnabled(); };
 
-        bool                    IsShadowEnabled                       () const final override;
+        bool                    IsShadowEnabled                         () const final override;
         core::uint2             GetShadowDefaultResolution              () const final override;
 
         gfx::MSAA               GetMSAA                                 () const final override;
@@ -93,6 +93,7 @@ namespace vg::renderer
         bool				    isAABBEnabled                           () const { return m_aabb; }
         bool				    isWireframeEnabled                      () const { return m_wireframe; }
         bool				    isDebugUIEnabled                        () const { return m_debugUI; }
+        bool 			        isParticlesEnabled                      () const { return m_particles; }
 
         bool                    isZPrepassEnabled                       () const { return core::asBool(RenderPassFlags::ZPrepass & m_renderPassFlags); }
         bool				    isOpaqueEnabled			                () const { return core::asBool(RenderPassFlags::Opaque & m_renderPassFlags); }
@@ -149,6 +150,7 @@ namespace vg::renderer
         bool                    m_aabb                                  = false;
         bool				    m_wireframe                             = false;
         bool                    m_debugUI                               = false;
+        bool                    m_particles                             = true;
         bool                    m_postProcess                           = true;
         bool                    m_rayTracing                            = false;
         gfx::HDR                m_HDRmode                               = gfx::HDR::None;

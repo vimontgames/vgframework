@@ -43,11 +43,6 @@ namespace vg::renderer
         VG_ASSERT(nullptr != cullingJobOutput);
         const auto & instances = cullingJobOutput->m_instances;
 
-        const auto * defaultMaterial = renderer->getDefaultMaterial();
-        VG_ASSERT(defaultMaterial);
-        const auto defaultMaterialIndex = defaultMaterial->getGPUMaterialDataIndex();
-        VG_ASSERT(defaultMaterialIndex == 0);
-
         uint offset = 0;
 
         for (uint i = 0; i < instances.size(); ++i)
@@ -61,7 +56,7 @@ namespace vg::renderer
             offset += instanceDataSize;
 
             // Clear atomic flag
-            instance->removeAtomicFlags(GraphicInstance::AtomicFlags::Instance);
+            instance->removeAtomicFlags(GraphicInstance::AtomicFlags::InstanceList);
         }
 
         m_mapSize = offset;
@@ -75,17 +70,13 @@ namespace vg::renderer
         VG_ASSERT(nullptr != cullingJobOutput);
 
         const auto & instances = cullingJobOutput->m_instances;
-        const auto * defaultMaterial = renderer->getDefaultMaterial();
-        VG_ASSERT(defaultMaterial);
-        const auto defaultMaterialIndex = defaultMaterial->getGPUMaterialDataIndex();
-        VG_ASSERT(defaultMaterialIndex == 0);
 
         size_t mapSize = m_mapSize;
 
         if (mapSize > 0)
         {
-            // Alloc temp write buffer for instance data + max 64 materials per instance
-            const uint bufferMaxSize = sizeof(GPUInstanceData) + 64 * sizeof(GPUMaterialData);
+            // Alloc temp write buffer for instance data + max 256 materials per instance
+            const uint bufferMaxSize = sizeof(GPUInstanceData) + 256 * sizeof(GPUMaterialData);
             u8 * buffer = (u8 *)alignUp((uint_ptr)alloca(bufferMaxSize + GPU_INSTANCE_DATA_ALIGNMENT - 1), (uint_ptr)GPU_INSTANCE_DATA_ALIGNMENT);
             VG_ASSERT_IS_ALIGNED(buffer, GPU_INSTANCE_DATA_ALIGNMENT);
 

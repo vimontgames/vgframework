@@ -104,7 +104,7 @@ namespace vg::renderer
             _frameGraph.popPassGroup();
         }
 
-        // Update view constants after rendering shadowmaps
+        // Update view constants after rendering shadow maps
         super::RegisterFrameGraph(_renderPassContext, _frameGraph);
 
         // Because the ZPrepass is optional, the "Background" pass will always initialize the buffers used during opaque

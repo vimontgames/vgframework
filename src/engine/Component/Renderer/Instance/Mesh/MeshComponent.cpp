@@ -138,7 +138,18 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void MeshComponent::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
-        if (!strcmp(_prop.GetName(), "m_batchMask"))
+        // TODO: handle add/remove materials the same way ParticleComponent does
+        if (!strcmp(_prop.GetName(), "m_meshMaterials"))
+        {
+            const auto & matResources = m_meshMaterials.getResources();
+            m_meshInstance->SetMaterialCount((uint)matResources.size());
+            for (uint i = 0; i < matResources.size(); ++i)
+            {
+                MaterialResourceData * matResData = dynamic_cast<MaterialResourceData *>(matResources[i].GetObject());
+                m_meshInstance->SetMaterial(i, matResData ? matResData->m_materialModel : nullptr);
+            }
+        }
+        else if (!strcmp(_prop.GetName(), "m_batchMask"))
         {
             if (nullptr != m_meshInstance)
                 m_meshInstance->SetBatchMask(m_batchMask);

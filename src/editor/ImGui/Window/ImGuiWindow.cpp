@@ -1018,49 +1018,62 @@ namespace vg::editor
 
                 PushDisabledStyle(false);
                 ImGui::PushStyleColor(ImGuiCol_Text, imGuiAdapter->GetTextColor());
-                ImGui::Text("(%s)%s::%s", asString(_propContext.m_originalProp->GetType()).c_str(), _propContext.m_originalProp->GetClassName(), _propContext.m_originalProp->GetName());
-
-                imGuiAdapter->PushFontStyle(renderer::FontStyle::Italic);
-                imGuiAdapter->PopFontStyle();
-
-                if (_propContext.m_originalProp->GetType() != core::PropertyType::Callback)
+                imGuiAdapter->PushFontStyle(renderer::FontStyle::Bold);
                 {
-                    if (asBool(PropertyFlags::Transient & _propContext.m_originalProp->GetFlags()))
-                    {
-                        ImGui::TextColored(imGuiAdapter->GetTransientPropertyColor(), "Not saved");
-
-                        if (_propContext.m_readOnly)
-                        {
-                            ImGui::SameLine();
-                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
-                        }                            
-                    }
-                    else if (_propContext.m_isPrefabInstance)
-                    {
-                        if (_propContext.m_isPrefabOverride)
-                            ImGui::TextColored(imGuiAdapter->GetPrefabOverridePropertyColor(), "Overriden");
-                        else if (_propContext.m_readOnly)
-                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
-                        else if (_propContext.m_canPrefabOverride)
-                        {
-                            ImGui::TextColored(imGuiAdapter->GetTextColor(), "Can override");
-                        }
-                        else
-                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Cannot override");
-                    }
-                    else
-                    {
-                        if (_propContext.m_readOnly)
-                            ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
-                        //else
-                        //    ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Cannot override");
-                    }
+                    ImGui::Text("%s", _propContext.m_originalProp->GetDisplayName());
                 }
+                imGuiAdapter->PopFontStyle();
+                ImGui::Text("(%s)%s::%s", asString(_propContext.m_originalProp->GetType()).c_str(), _propContext.m_originalProp->GetClassName(), _propContext.m_originalProp->GetName());
+                ImGui::Separator();
 
                 if (_description && '\0' != _description[0])
                 {
-                    imGuiAdapter->PushFontStyle(renderer::FontStyle::Italic);
+                    imGuiAdapter->PushFontStyle(renderer::FontStyle::Regular);
                     ImGui::Text("%s", _description);
+                    imGuiAdapter->PopFontStyle();
+                }
+                else
+                {
+                    ImGui::Text("");
+                }
+                
+                if (_propContext.m_originalProp->GetType() != core::PropertyType::Callback)
+                {
+                    ImGui::Separator();
+
+                    imGuiAdapter->PushFontStyle(renderer::FontStyle::Italic);
+                    {
+                        if (asBool(PropertyFlags::Transient & _propContext.m_originalProp->GetFlags()))
+                        {
+                            ImGui::TextColored(imGuiAdapter->GetTransientPropertyColor(), "Not saved");
+
+                            if (_propContext.m_readOnly)
+                            {
+                                ImGui::SameLine();
+                                ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
+                            }
+                        }
+                        else if (_propContext.m_isPrefabInstance)
+                        {
+                            if (_propContext.m_isPrefabOverride)
+                                ImGui::TextColored(imGuiAdapter->GetPrefabOverridePropertyColor(), "Overriden");
+                            else if (_propContext.m_readOnly)
+                                ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
+                            else if (_propContext.m_canPrefabOverride)
+                            {
+                                ImGui::TextColored(imGuiAdapter->GetTextColor(), "Can override");
+                            }
+                            else
+                                ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Cannot override");
+                        }
+                        else
+                        {
+                            if (_propContext.m_readOnly)
+                                ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
+                            //else
+                            //    ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Cannot override");
+                        }
+                    }
                     imGuiAdapter->PopFontStyle();
                 }
 
@@ -2077,7 +2090,7 @@ namespace vg::editor
                             if (treenNodeOpen)
                             {
                                 if (pObject)
-                                    displayObject(pObject, _objectContext, &propContext);
+                                    changed = displayObject(pObject, _objectContext, &propContext);
 
                                 if (needTreeNode)
                                     ImGui::TreePop();

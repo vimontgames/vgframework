@@ -18,7 +18,13 @@ namespace vg::core
     core::vector<core::string> getLines(const core::string & _string);
 
     // Check file extension
-    bool endsWith(const core::string & str, const core::string & suffix);
+    bool endsWith(const core::string & str, const core::string & _suffix);
+
+    // Remove last character if present
+    string removeTrailingChar(const core::string & _str, const char _char);
+
+    // Remove _suffix at the end of _str if is present
+    string removeTrailingString(const core::string & _str, const core::string _suffix);
 
     // Forward namespace ::fmt to core::fmt in case we change fmt implementation
     namespace fmt = ::fmt;

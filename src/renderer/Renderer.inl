@@ -29,4 +29,10 @@ namespace vg::renderer
     {
         return m_materialManager;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE ParticleManager * Renderer::getParticleManager() const
+    {
+        return m_particleManager;
+    }
 }

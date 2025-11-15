@@ -90,9 +90,6 @@ namespace vg::renderer
         const MeshModel *               getMeshModel                (core::Lod _lod) const;
 
         bool                            updateSkeleton              ();
-        void                            setSkinnedMesh              (const gfx::Buffer * _skinnedBuffer, core::uint _skinnedBufferOffset);
-        VG_INLINE const gfx::Buffer *   getSkinnedMeshBuffer        () const;
-        VG_INLINE const core::uint      getSkinnedMeshBufferOffset  () const;
 
         VG_INLINE void                  setInstanceBLAS             (gfx::BLAS * _BLAS);
         VG_INLINE gfx::BLAS *           getInstanceBLAS             () const;
@@ -106,8 +103,6 @@ namespace vg::renderer
 
     private:
         Skeleton *                      m_instanceSkeleton = nullptr;
-        const gfx::Buffer *             m_skinnedMeshBuffer = nullptr;
-        core::uint                      m_skinnedMeshBufferOffset = -1;
         gfx::BLAS *                     m_instanceBLAS = nullptr;
         core::vector<AnimationBinding>  m_animationBindings;
     };

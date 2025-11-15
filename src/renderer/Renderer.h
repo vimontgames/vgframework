@@ -21,6 +21,7 @@ namespace vg::renderer
     class InstanceDataUpdatePass;
     class MaterialDataUpdatePass;
     class ComputeSkinningPass;
+    class ParticleRenderDataUpdatePass;
     class BLASUpdatePass;
     class ComputeSpecularBRDFPass;
     class ComputeIBLCubemapsPass;
@@ -32,6 +33,7 @@ namespace vg::renderer
     class Viewport;
     class DebugDraw;
     class MaterialManager;
+    class ParticleManager;
 
     struct SharedCullingJobOutput;
 
@@ -148,6 +150,7 @@ namespace vg::renderer
         VG_INLINE ImGuiAdapter *                getImGuiAdapter             () const;
         VG_INLINE SharedCullingJobOutput *      getSharedCullingJobOutput   () const;
         VG_INLINE MaterialManager *             getMaterialManager          () const;
+        VG_INLINE ParticleManager *             getParticleManager          () const;
 
     private:
         void                                    registerShaders             ();
@@ -174,6 +177,7 @@ namespace vg::renderer
         InstanceDataUpdatePass *                m_instanceDataUpdatePass    = nullptr;
         MaterialDataUpdatePass *                m_materialDataUpdatePass    = nullptr;
         ComputeSkinningPass *                   m_computeSkinningPass       = nullptr;
+        ParticleRenderDataUpdatePass *          m_particleDataUpdatePass    = nullptr;
         BLASUpdatePass *                        m_BLASUpdatePass            = nullptr;
         ComputeSpecularBRDFPass *               m_computeSpecularBRDFPass   = nullptr;
         ComputeIBLCubemapsPass *                m_computeIBLCubemapsPass    = nullptr;
@@ -199,6 +203,7 @@ namespace vg::renderer
 
         gfx::Texture *                          m_generatedSpecularBRDF     = nullptr;
         MaterialManager *                       m_materialManager           = nullptr;
+        ParticleManager *                       m_particleManager           = nullptr;
         ICameraLens *                           m_defaultCameraLens         = nullptr;
 	};
 }

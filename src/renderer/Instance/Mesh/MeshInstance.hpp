@@ -28,10 +28,10 @@ using namespace vg::gfx;
 
 namespace vg::renderer
 {
-    VG_REGISTER_OBJECT_CLASS_EX(MeshInstance, "Mesh Instance", core::ClassDescFlags::Instance);
+    VG_REGISTER_OBJECT_CLASS_EX(MeshInstance, "Mesh Instance", ClassDescFlags::Instance);
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::registerProperties(core::IClassDesc & _desc)
+    bool MeshInstance::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
@@ -41,7 +41,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    MeshInstance::MeshInstance(const core::string & _name, core::IObject * _parent) :
+    MeshInstance::MeshInstance(const string & _name, IObject * _parent) :
         super(_name, _parent)
     {
         auto * rtManager = RayTracingManager::get(false);
@@ -64,7 +64,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::TryGetAABB(core::AABB & _aabb) const
+    bool MeshInstance::TryGetAABB(AABB & _aabb) const
     {
         if (auto * model = getMeshModel(Lod::Lod0))
         {
@@ -82,14 +82,14 @@ namespace vg::renderer
 
         if (nullptr != meshModel)
         {
-            const core::AABB & aabb = meshModel->getGeometry()->getAABB();
-
-            bool visible = _view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside || asBool(ObjectFlags::NoCulling & getObjectFlags());
+            const AABB & aabb = meshModel->getGeometry()->getAABB();
+            const bool visible = _view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside || asBool(ObjectFlags::NoCulling & getObjectFlags());
 
             if (visible)
             {
                 _cullingResult->m_output->add(GraphicInstanceListType::All, this);
 
+                // TODO: make a func?
                 bool hasOpaque = false;
                 bool hasAlphaTest = false;
                 bool hasAlphaBlend = false;
@@ -227,14 +227,14 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshInstance::OnMaterialChanged(core::uint _index)
+    void MeshInstance::OnMaterialChanged(uint _index)
     {
         if (Model * model = getModel(Lod::Lod0))
             updateInstanceBLAS();
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::OnUpdateRayTracing(gfx::CommandList * _cmdList, View * _view, core::uint _index)
+    bool MeshInstance::OnUpdateRayTracing(gfx::CommandList * _cmdList, View * _view, uint _index)
     {
         auto * tlas = _view->getTLAS();
 
@@ -255,7 +255,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    uint MeshInstance::FillGPUInstanceData(const core::u8 * VG_RESTRICT _data) const
+    uint MeshInstance::FillGPUInstanceData(const u8 * VG_RESTRICT _data) const
     {
         const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
         const MeshGeometry * geo = nullptr;
@@ -285,8 +285,8 @@ namespace vg::renderer
 
             if (isSkinned())
             {
-                vbHandle = m_skinnedMeshBuffer->getBufferHandle();
-                vbOffset = m_skinnedMeshBufferOffset;
+                vbHandle = getSkinnedMeshBuffer()->getBufferHandle();
+                vbOffset = getSkinnedMeshBufferOffset();
             }
             else
             {
@@ -327,7 +327,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::GetIndexBuffer(gfx::BindlessBufferHandle & _ib, core::uint & _offset, core::uint & _indexSize) const
+    bool MeshInstance::GetIndexBuffer(gfx::BindlessBufferHandle & _ib, uint & _offset, uint & _indexSize) const
     {
         const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
         VG_ASSERT(model);
@@ -347,7 +347,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::GetVertexBuffer(gfx::BindlessBufferHandle & _vb, core::uint & _offset) const
+    bool MeshInstance::GetVertexBuffer(gfx::BindlessBufferHandle & _vb, uint & _offset) const
     {
         const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
         VG_ASSERT(model);
@@ -359,8 +359,8 @@ namespace vg::renderer
 
             if (IsSkinned())
             {
-                _vb = m_skinnedMeshBuffer->getBufferHandle();
-                _offset = m_skinnedMeshBufferOffset;
+                _vb = getSkinnedMeshBuffer()->getBufferHandle();
+                _offset = getSkinnedMeshBufferOffset();
             }
             else
             {
@@ -391,7 +391,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint MeshInstance::GetBatchCount() const
+    uint MeshInstance::GetBatchCount() const
     {
         const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
         VG_ASSERT(model);
@@ -407,7 +407,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint MeshInstance::GetBatchOffset(core::uint _index) const
+    uint MeshInstance::GetBatchOffset(uint _index) const
     {
         const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
         VG_ASSERT(model);
@@ -533,7 +533,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    const MeshModel * MeshInstance::getMeshModel(core::Lod _lod) const
+    const MeshModel * MeshInstance::getMeshModel(Lod _lod) const
     {
         return (MeshModel *)getModel(_lod);
     }
@@ -563,13 +563,6 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshInstance::setSkinnedMesh(const gfx::Buffer * _skinnedBuffer, core::uint _skinnedBufferOffset)
-    {
-        m_skinnedMeshBuffer = _skinnedBuffer;
-        m_skinnedMeshBufferOffset = _skinnedBufferOffset;
-    }
-
-    //--------------------------------------------------------------------------------------
     bool MeshInstance::updateSkeleton()
     {
         VG_PROFILE_CPU("Skeleton Update");
@@ -579,7 +572,7 @@ namespace vg::renderer
         if (nullptr != m_instanceSkeleton)
         {
             Skeleton & skeleton = *m_instanceSkeleton;
-            core::vector<MeshImporterNode> & skeletonNodes = skeleton.getNodes();
+            vector<MeshImporterNode> & skeletonNodes = skeleton.getNodes();
 
             // Compute T-Pose weight for each layer
             float sum[MaxAnimationLayerCount];
@@ -832,7 +825,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::SetAnimationLayer(ISkeletalAnimation * _animation, core::uint _layer)
+    bool MeshInstance::SetAnimationLayer(ISkeletalAnimation * _animation, uint _layer)
     {
         VG_ASSERT(_layer < MaxAnimationLayerCount);
         _layer = min(_layer, MaxAnimationLayerCount-1);
@@ -883,7 +876,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    core::string MeshInstance::GetBatchName(core::uint _batchIndex) const
+    string MeshInstance::GetBatchName(uint _batchIndex) const
     {
         if (const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0)))
         {
@@ -916,7 +909,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::DrawSkeleton(const core::IWorld * _world) const
+    bool MeshInstance::DrawSkeleton(const IWorld * _world) const
     {
         VG_PROFILE_CPU("Skeleton Draw");
 

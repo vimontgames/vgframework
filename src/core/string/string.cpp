@@ -73,8 +73,29 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool endsWith(const core::string & _str, const core::string & _suffix)
+    bool endsWith(const string & _str, const string & _suffix)
     {
         return _str.size() >= _suffix.size() && _str.compare(_str.size() - _suffix.size(), _suffix.size(), _suffix) == 0;
+    }
+
+    //--------------------------------------------------------------------------------------
+    string removeTrailingChar(const string & _str, const char _char)
+    {
+        string str = _str;
+        if (!str.empty() && str.back() == _char)
+            str.pop_back();
+        return str;
+    }
+
+    //--------------------------------------------------------------------------------------
+    string removeTrailingString(const core::string & _str, const core::string _suffix)
+    {
+        if (endsWith(_str, _suffix)) 
+        {
+            string str = _str;
+            str.erase(str.size() - _suffix.size());
+            return str;
+        }
+        return _str;
     }
 }

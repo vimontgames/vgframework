@@ -36,4 +36,16 @@ namespace vg::renderer
     {
         return m_batchMask;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const gfx::Buffer * GraphicInstance::getSkinnedMeshBuffer() const
+    {
+        return m_dynamicMeshBuffer;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const core::uint GraphicInstance::getSkinnedMeshBufferOffset() const
+    {
+        return m_dynamicMeshBufferOffset;
+    }
 }

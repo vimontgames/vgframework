@@ -85,8 +85,8 @@ namespace vg::renderer
             const uint vertexCount = meshGeo->getVertexCount();
             const uint vertexSize = meshGeo->getVertexSize();
 
-            meshInstance->setSkinnedMesh(dstBuffer, dstVertOffset);
-            meshInstance->removeAtomicFlags(GraphicInstance::AtomicFlags::SkinLOD0);
+            meshInstance->setDynamicBuffer(dstBuffer, dstVertOffset);
+            meshInstance->removeAtomicFlags(GraphicInstance::AtomicFlags::SkinList);
 
             dstVertOffset += vertexCount * vertexSize;
             totalBoneCount += boneCount;

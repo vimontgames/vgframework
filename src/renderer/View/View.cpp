@@ -692,8 +692,9 @@ namespace vg::renderer
         stats.opaque        = (uint)m_cullingJobResult.get(GraphicInstanceListType::Opaque).m_instances.size();
         stats.alphatest     = (uint)m_cullingJobResult.get(GraphicInstanceListType::AlphaTest).m_instances.size();
         stats.transparent   = (uint)m_cullingJobResult.get(GraphicInstanceListType::Transparent).m_instances.size();
+        stats.particleSystem = (uint)m_cullingJobResult.get(GraphicInstanceListType::Particle).m_instances.size();
         stats.decal         = (uint)m_cullingJobResult.get(GraphicInstanceListType::Decal).m_instances.size();
-        stats.outline      = (uint)m_cullingJobResult.get(GraphicInstanceListType::Outline).m_instances.size();
+        stats.outline       = (uint)m_cullingJobResult.get(GraphicInstanceListType::Outline).m_instances.size();
 
         stats.directional   = (uint)m_cullingJobResult.get(LightType::Directional).m_instances.size();
         stats.omni          = (uint)m_cullingJobResult.get(LightType::Omni).m_instances.size();

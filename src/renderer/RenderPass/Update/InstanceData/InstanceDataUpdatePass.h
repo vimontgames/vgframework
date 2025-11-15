@@ -18,9 +18,9 @@ namespace vg::renderer
         InstanceDataUpdatePass();
         ~InstanceDataUpdatePass();
         
-        core::u64       GetCostEstimate (const gfx::RenderPassContext & _renderContext) const final override;
-        void            BeforeAll         (const gfx::RenderPassContext & _renderContext) final override;
-        void            BeforeRender    (const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
+        core::u64       GetCostEstimate             (const gfx::RenderPassContext & _renderContext) const final override;
+        void            BeforeAll                   (const gfx::RenderPassContext & _renderContext) final override;
+        void            BeforeRender                (const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
 
     private:
         gfx::Buffer *   m_instanceDataBuffer = nullptr;
