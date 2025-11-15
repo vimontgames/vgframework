@@ -290,38 +290,27 @@ namespace vg::renderer
 
         uint dataOffset = 0;
 
-        //for (uint i = 0; i < viewCount; ++i)
+        BindlessBufferHandle vbHandle = getSkinnedMeshBuffer()->getBufferHandle();
+        const uint vbOffset = getSkinnedMeshBufferOffset();
+
+        GPUInstanceData * VG_RESTRICT instanceData = (GPUInstanceData * VG_RESTRICT)(_data + dataOffset);
+            
+        instanceData->setMaterialCount(batchCount);
+        instanceData->setVertexFormat(vertexFormat);
+        instanceData->setInstanceColor(getColor());
+        //instanceData->setIndexBuffer(ibHandle, indexSize, ibOffset); // use not index buffer for particles or use default particle index buffer? ({0,1,2}, {1,2,3} ...)
+        instanceData->setVertexBuffer(vbHandle, vbOffset);
+
+        for (uint b = 0; b < batchCount; ++b)
         {
-            //const PerViewParticleData & perViewParticleData = m_perViewParticleData[i];
+            GPUBatchData * VG_RESTRICT batchData = (GPUBatchData * VG_RESTRICT)(_data + dataOffset + sizeof(GPUInstanceData) + b * sizeof(GPUBatchData));
             
-            //BindlessBufferHandle vbHandle = perViewParticleData.m_view->GetParticleVertexBuffer()->getBufferHandle();
-            //const uint vbOffset = perViewParticleData.m_geometryDataOffset;
-
-            BindlessBufferHandle vbHandle = getSkinnedMeshBuffer()->getBufferHandle();
-            const uint vbOffset = getSkinnedMeshBufferOffset();
-
-            GPUInstanceData * VG_RESTRICT instanceData = (GPUInstanceData * VG_RESTRICT)(_data + dataOffset);
-            
-            instanceData->setMaterialCount(batchCount);
-            instanceData->setVertexFormat(vertexFormat);
-            instanceData->setInstanceColor(getColor());
-            //instanceData->setIndexBuffer(ibHandle, indexSize, ibOffset); // use not index buffer for particles or use default particle index buffer? ({0,1,2}, {1,2,3} ...)
-            instanceData->setVertexBuffer(vbHandle, vbOffset);
-
-            for (uint b = 0; b < batchCount; ++b)
-            {
-                GPUBatchData * VG_RESTRICT batchData = (GPUBatchData * VG_RESTRICT)(_data + dataOffset + sizeof(GPUInstanceData) + b * sizeof(GPUBatchData));
-            
-                const MaterialModel * mat = getMaterial(b);
-                GPUMaterialDataIndex matIndex = (nullptr != mat) ? mat->getGPUMaterialDataIndex() : defaultMaterialIndex;
-                batchData->setMaterialIndex(matIndex);
-            
-                //uint batchOffset = 0; // TODO support multiple particle batchs (nullptr != geo && b < geo->batches().size()) ? geo->batches()[b].offset : 0;
-                //batchData->setStartIndex(batchOffset);
-            }
-
-            dataOffset += gpuInstanceDataSize;
+            const MaterialModel * mat = getMaterial(b);
+            GPUMaterialDataIndex matIndex = (nullptr != mat) ? mat->getGPUMaterialDataIndex() : defaultMaterialIndex;
+            batchData->setMaterialIndex(matIndex);
         }
+
+        dataOffset += gpuInstanceDataSize;
 
         return dataOffset;
     }
@@ -341,8 +330,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     core::uint ParticleSystemInstance::FillGPURenderData(const core::u8 * VG_RESTRICT _data)
     {
-        //const PerViewParticleData * perViewParticleData = getPerViewParticleData(_view);
-        //const uint offset = perViewParticleData->m_geometryDataOffset;
         const uint offset = getSkinnedMeshBufferOffset();
         ParticleVertex * VG_RESTRICT particleVertexData = (ParticleVertex * VG_RESTRICT)((u8 *)_data + offset);
 
@@ -363,12 +350,12 @@ namespace vg::renderer
                 ParticleVertex verts[6];
 
                 float3 offset = particle.position;
-                float3 scale = particle.size; // view->getViewID().id == 0 ? float3(0.5f, 0.5f, 0.5f) : float3(0.5f, 0.5f, 1.0f);
-                u32 color = 0xFFFFFFFF; // view->getViewID().id == 0 ? 0xFFFF0000 : 0xFF0000FF;
+                float3 size = particle.size;
+                u32 color = 0xFFFFFFFF; 
 
-                verts[0].setPos(offset + float3(-scale.x, 0.0f, +scale.y));
-                verts[1].setPos(offset + float3(+scale.x, 0.0f, -scale.y));
-                verts[2].setPos(offset + float3(-scale.x, 0.0f, -scale.y));
+                verts[0].setPos(offset + float3(-size.x, 0.0f, +size.y));
+                verts[1].setPos(offset + float3(+size.x, 0.0f, -size.y));
+                verts[2].setPos(offset + float3(-size.x, 0.0f, -size.y));
 
                 verts[0].setColor(color);
                 verts[1].setColor(color);
@@ -394,9 +381,9 @@ namespace vg::renderer
                 verts[1].setUV1(float2(1, 1));
                 verts[2].setUV1(float2(0, 1));
 
-                verts[3].setPos(offset + float3(+scale.x, 0.0f, -scale.y));
-                verts[4].setPos(offset + float3(-scale.x, 0.0f, +scale.y));
-                verts[5].setPos(offset + float3(+scale.x, 0.0f, +scale.y));
+                verts[3].setPos(offset + float3(+size.x, 0.0f, -size.y));
+                verts[4].setPos(offset + float3(-size.x, 0.0f, +size.y));
+                verts[5].setPos(offset + float3(+size.x, 0.0f, +size.y));
 
                 verts[3].setColor(color);
                 verts[4].setColor(color);
@@ -436,33 +423,18 @@ namespace vg::renderer
         auto * renderer = Renderer::get();
         const float4x4 world = getGlobalMatrix();
 
-        //const View * view = (View *)_renderContext.m_renderPass->getView();
-        //const PerViewParticleData * perViewParticleData = getPerViewParticleData(view);
-
-       // VG_ASSERT(nullptr != perViewParticleData);
-        //if (nullptr == perViewParticleData)
-        //    return;
 
         RootConstants3D root3D;
         root3D.setWorldMatrix(transpose(world));
-
-        //const uint gpuInstanceDataSize = alignUp((uint)(sizeof(GPUInstanceData) + 1 * sizeof(GPUBatchData)), (uint)GPU_INSTANCE_DATA_ALIGNMENT);
-        //root3D.setGPUInstanceDataOffset(getGPUInstanceDataOffset() + perViewParticleData->m_instanceDataOffset * gpuInstanceDataSize);
         root3D.setGPUInstanceDataOffset(getGPUInstanceDataOffset());
 
-        //BindlessBufferHandle vbHandle = view->GetParticleVertexBuffer()->getBufferHandle();
-        //uint vbOffset = perViewParticleData->m_geometryDataOffset;
         BindlessBufferHandle vbHandle = getSkinnedMeshBuffer()->getBufferHandle();
         uint vbOffset = getSkinnedMeshBufferOffset();
-        //VG_VERIFY(GetVertexBuffer(vbHandle, vbOffset));
-
-        root3D.setVertexBufferHandle(vbHandle, vbOffset);
 
         u16 flags = 0;
         root3D.setFlags(flags);
 
         VertexFormat vertexFormat = VertexFormat::Default;
-        //VG_VERIFY(GetVertexFormat(vertexFormat));
         root3D.setVertexFormat(vertexFormat);
 
         auto pickingID = GetPickingID();
@@ -475,46 +447,45 @@ namespace vg::renderer
         for (uint i = 0; i < emitters.size(); ++i)
         {
             const auto & emitter = emitters[i];
-            if (!emitter.m_aliveParticles)
-                continue;
-
-            bool draw = false;
-
-            const MaterialModel * material = getMaterial(i);
-            if (nullptr == material)
-                material = renderer->getDefaultMaterial();
-
-            auto surfaceType = material->getSurfaceType();
-
-            if (_renderContext.m_surfaceType != surfaceType && !_renderContext.m_wireframe && !_renderContext.m_outline)
-                continue;
-
-            switch (_renderContext.m_shaderPass)
+            const uint particleCount = (uint)emitter.m_aliveParticles;
+            if (particleCount > 0)
             {
-                default:
-                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderContext.m_shaderPass);
-                    continue;
-                    break;
+                const MaterialModel * material = getMaterial(i);
+                if (nullptr == material)
+                    material = renderer->getDefaultMaterial();
 
-                case ShaderPass::ZOnly:
-                case ShaderPass::Forward:
-                case ShaderPass::Deferred:
-                case ShaderPass::Outline:
-                    material->Setup(_renderContext, _cmdList, &root3D, i);
-                    break;
+                auto surfaceType = material->getSurfaceType();
 
-                case ShaderPass::Transparent:
-                    material->Setup(_renderContext, _cmdList, &root3D, i);
-                    break;
+                if (_renderContext.m_surfaceType == surfaceType || _renderContext.m_wireframe || _renderContext.m_outline)
+                {
+                    switch (_renderContext.m_shaderPass)
+                    {
+                        default:
+                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderContext.m_shaderPass);
+                            continue;
+                            break;
+
+                        case ShaderPass::ZOnly:
+                        case ShaderPass::Forward:
+                        case ShaderPass::Deferred:
+                        case ShaderPass::Outline:
+                            material->Setup(_renderContext, _cmdList, &root3D, i);
+                            break;
+
+                        case ShaderPass::Transparent:
+                            material->Setup(_renderContext, _cmdList, &root3D, i);
+                            break;
+                    }
+
+                    const uint vertexOffset = vbOffset;
+
+                    root3D.setVertexBufferHandle(vbHandle, vbOffset);
+                    _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
+                    _cmdList->draw(particleCount * 6, 0);
+                }
             }
 
-            const uint vertexCount = (uint)emitter.m_aliveParticles;
-            const uint vertexOffset = vbOffset;
-
-            _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
-            _cmdList->draw(vertexCount*6, 0);
-
-            vbOffset += vertexCount * sizeof(ParticleVertex);
+            vbOffset += particleCount * 6 * sizeof(ParticleVertex);
         }
     }
 }
