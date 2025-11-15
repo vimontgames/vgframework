@@ -21,7 +21,8 @@ namespace vg::renderer
             m_toolmode(false),
             m_raytracing(false),
             m_wireframe(false),
-            m_outline(false)
+            m_outline(false),
+            m_particle(false)
         {
 
         }
@@ -34,6 +35,7 @@ namespace vg::renderer
         bool                            m_raytracing   : 1;
         bool                            m_wireframe    : 1;
         bool                            m_outline      : 1;
+        bool                            m_particle     : 1;
         gfx::SurfaceType                m_surfaceType = (gfx::SurfaceType)-1;
     };
 }

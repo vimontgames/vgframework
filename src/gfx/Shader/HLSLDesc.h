@@ -14,12 +14,13 @@ namespace vg::gfx
     public:
         enum Flags : ShaderKey::Flags
         {
-            // Flags 11..15 are reserved and should be common for all shaders 
-            Surface     = 11, // 2 bits
+            // Flags 10..15 are reserved and should be common for all shaders 
+            Particle    = 10,   // Shader is used to render a quad particle (1 bit)
+            Surface     = 11,   // SurfaceType (Opaque/AlphaTest/AlphaBlend/Decal) (2 bits)
 
-            ZOnly       = 13, 
-            RayTracing  = 14,           
-            Toolmode    = 15
+            ZOnly       = 13,   // Depth-only shader (depth pre-pass or shadow pass) (1 bit)
+            RayTracing  = 14,   // Shader is used with ray tracing enabled (1 bit)
+            Toolmode    = 15    // Enable tool mode
         };
 
         struct Technique

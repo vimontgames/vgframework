@@ -421,8 +421,11 @@ namespace vg::renderer
     void ParticleSystemInstance::Draw(const RenderContext & _renderContext, gfx::CommandList * _cmdList) const
     {
         auto * renderer = Renderer::get();
-        const float4x4 world = getGlobalMatrix();
 
+        RenderContext renderContext = _renderContext;
+        renderContext.m_particle = true;
+
+        const float4x4 world = getGlobalMatrix();
 
         RootConstants3D root3D;
         root3D.setWorldMatrix(transpose(world));
@@ -456,12 +459,12 @@ namespace vg::renderer
 
                 auto surfaceType = material->getSurfaceType();
 
-                if (_renderContext.m_surfaceType == surfaceType || _renderContext.m_wireframe || _renderContext.m_outline)
+                if (renderContext.m_surfaceType == surfaceType || renderContext.m_wireframe || renderContext.m_outline)
                 {
-                    switch (_renderContext.m_shaderPass)
+                    switch (renderContext.m_shaderPass)
                     {
                         default:
-                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderContext.m_shaderPass);
+                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(renderContext.m_shaderPass);
                             continue;
                             break;
 
@@ -469,11 +472,11 @@ namespace vg::renderer
                         case ShaderPass::Forward:
                         case ShaderPass::Deferred:
                         case ShaderPass::Outline:
-                            material->Setup(_renderContext, _cmdList, &root3D, i);
+                            material->Setup(renderContext, _cmdList, &root3D, i);
                             break;
 
                         case ShaderPass::Transparent:
-                            material->Setup(_renderContext, _cmdList, &root3D, i);
+                            material->Setup(renderContext, _cmdList, &root3D, i);
                             break;
                     }
 

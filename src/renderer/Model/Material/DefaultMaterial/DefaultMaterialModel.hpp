@@ -176,7 +176,12 @@ namespace vg::renderer
                 key.setFlag(DefaultHLSLDesc::Toolmode, false);
             }
             break;
-        }       
+        }   
+
+        if (_renderContext.m_particle)
+        {
+            key.setFlag(DefaultHLSLDesc::Particle, true);
+        }
 
         CullMode cullMode;
         switch (m_cullMode)
