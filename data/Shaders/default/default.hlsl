@@ -142,6 +142,10 @@ PS_Output PS_Forward(VS_Output _input)
 
     output.color0.rgb = applyLighting(albedo.rgb, lighting, mode);
     output.color0.a = albedo.a; 
+
+    #if _DECAL
+    clip(albedo.a-(1.0/255.0f));
+    #endif
     
     #if _TOOLMODE && !_ZONLY
     output.color0 = forwardDebugDisplay(output.color0, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
@@ -281,6 +285,10 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     output.albedo = albedo.rgba;
     output.normal = float4(worldNormal.xyz, albedo.a);
     output.pbr = float4(pbr.rgb, albedo.a);
+
+    #if _DECAL
+    clip(output.albedo.a-(1.0/255.0f));
+    #endif
 
     #if _TOOLMODE && !_ZONLY
     // If any 'Forward' debug display mode is enabled then its result is stored into the 'Albedo' buffer

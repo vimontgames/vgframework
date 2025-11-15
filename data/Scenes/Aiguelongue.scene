@@ -1209,7 +1209,7 @@
                                 <Property type="String" name="m_name" value="Floor"/>
                                 <Property type="Uint32" name="m_uid" value="1697175564"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -7181,7 +7181,7 @@
                                         <Property type="String" name="m_name" value="Decals"/>
                                         <Property type="Uint32" name="m_uid" value="63146555"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -7286,7 +7286,7 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="6.9296527" Iy="1.1446667" Iz="0" Iw="0" Jx="-2.868772" Jy="2.7730393" Jz="0" Jw="0" Kx="0" Ky="0" Kz="2" Kw="0" Tx="-0.037159208" Ty="-10.999999" Tz="0.069768809" Tw="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="2.8109863" Iy="1.1740823" Iz="0" Iw="0" Jx="-1.1637061" Jy="2.844301" Jz="0" Jw="0" Kx="0" Ky="0" Kz="2" Kw="0" Tx="-0.037159208" Ty="-10.999999" Tz="0.069768809" Tw="1"/>
                                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                                 <Property type="ObjectPtrVector" name="m_components"/>
                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -7294,28 +7294,6 @@
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value="Dec_DeadGrass_02"/>
                                                         <Property type="Uint32" name="m_uid" value="607709615"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="3558105523"/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/Dec_DeadGrass.prefab"/>
-                                                    </Object>
-                                                </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
-                                            </Object>
-                                            <Object class="PrefabGameObject">
-                                                <Property type="String" name="m_name" value="Dec_DeadGrass_03"/>
-                                                <Property type="Uint32" name="m_uid" value="2480343862"/>
-                                                <Property type="Uint32" name="m_originalUID" value="12422894"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
-                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="6.9296527" Iy="1.1446667" Iz="0" Iw="0" Jx="-2.868772" Jy="2.7730393" Jz="0" Jw="0" Kx="0" Ky="0" Kz="2" Kw="0" Tx="-0.037159443" Ty="-13.999999" Tz="0.069768809" Tw="1"/>
-                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                                <Property type="ObjectPtrVector" name="m_components"/>
-                                                <Property type="ObjectPtrVector" name="m_children"/>
-                                                <Property type="Resource" name="m_prefabResource">
-                                                    <Object class="PrefabResource">
-                                                        <Property type="String" name="m_name" value="Dec_DeadGrass_03"/>
-                                                        <Property type="Uint32" name="m_uid" value="2016832555"/>
                                                         <Property type="Uint32" name="m_originalUID" value="3558105523"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Dec_DeadGrass.prefab"/>
