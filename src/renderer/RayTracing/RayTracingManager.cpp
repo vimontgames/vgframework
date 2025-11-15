@@ -246,8 +246,8 @@ namespace vg::renderer
                     const uint ibOffset = meshGeo->getIndexBufferOffset();
 
                     const gfx::Buffer * modelVB = meshGeo->getVertexBuffer();
-                    const gfx::Buffer * skinVB = skin->getSkinnedMeshBuffer();
-                    const uint skinVBOffset = skin->getSkinnedMeshBufferOffset();
+                    const gfx::Buffer * skinVB = skin->getInstanceVertexBuffer();
+                    const uint skinVBOffset = skin->getInstanceVertexBufferOffset();
 
                     VertexFormat vtxFmt = meshGeo->getVertexFormat();
                     const uint vertexStride = getVertexFormatStride(vtxFmt);
@@ -273,6 +273,8 @@ namespace vg::renderer
 
                 if (nullptr != _skinningBuffer)
                     _cmdList->transitionResource(_skinningBuffer, gfx::ResourceState::NonPixelShaderResource, gfx::ResourceState::UnorderedAccess);
+            
+                // TODO: primitives for quad particle
             }
         }
     }

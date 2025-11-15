@@ -148,15 +148,6 @@ namespace vg::renderer
                 if (asBool(ObjectFlags::Selected & objectFlags))
                     _cullingResult->m_output->add(GraphicInstanceListType::Outline, this);
 
-                // In case of particles, each view needs its own instance data
-                //if (!_view->isAdditionalView()) // TODO: register for "original" view in case of shadow maps (shadow map will use the same geometry as the view that is using it)
-                //{
-                //    PerViewParticleData perViewParticleData;
-                //    perViewParticleData.m_view = _view;
-                //    const auto index = m_perViewParticleData.push_back_atomic(perViewParticleData);
-                //    m_perViewParticleData[index].m_instanceDataOffset = (uint)index;
-                //}
-
                 return true;
             }
         }
@@ -262,11 +253,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     uint ParticleSystemInstance::GetGPUInstanceDataSize() const
     {
-        //const uint viewCount = (uint)m_perViewParticleData.size();
-        //const uint batchCount = (uint)m_emitters.size();
-        //const uint gpuInstanceDataSize = alignUp((uint)(sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData)), (uint)GPU_INSTANCE_DATA_ALIGNMENT);
-        //return gpuInstanceDataSize * viewCount;
-
         const uint batchCount = (uint)m_emitters.size();
         const uint gpuInstanceDataSize = alignUp((uint)(sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData)), (uint)GPU_INSTANCE_DATA_ALIGNMENT);
         return gpuInstanceDataSize;
@@ -275,7 +261,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     uint ParticleSystemInstance::FillGPUInstanceData(const core::u8 * VG_RESTRICT _data) const
     {
-        //const uint viewCount = (uint)m_perViewParticleData.size();
         const uint batchCount = (uint)m_emitters.size();
 
         const uint gpuInstanceDataSize = alignUp((uint)(sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData)), (uint)GPU_INSTANCE_DATA_ALIGNMENT);
@@ -290,15 +275,19 @@ namespace vg::renderer
 
         uint dataOffset = 0;
 
-        BindlessBufferHandle vbHandle = getSkinnedMeshBuffer()->getBufferHandle();
-        const uint vbOffset = getSkinnedMeshBufferOffset();
+        BindlessBufferHandle ibHandle = getInstanceIndexBuffer()->getBufferHandle();
+        const uint ibOffset = getInstanceIndexBufferOffset();
+        const uint indexSize = getInstanceIndexBuffer()->getBufDesc().elementSize;
+
+        BindlessBufferHandle vbHandle = getInstanceVertexBuffer()->getBufferHandle();
+        const uint vbOffset = getInstanceVertexBufferOffset();
 
         GPUInstanceData * VG_RESTRICT instanceData = (GPUInstanceData * VG_RESTRICT)(_data + dataOffset);
             
         instanceData->setMaterialCount(batchCount);
         instanceData->setVertexFormat(vertexFormat);
         instanceData->setInstanceColor(getColor());
-        //instanceData->setIndexBuffer(ibHandle, indexSize, ibOffset); // use not index buffer for particles or use default particle index buffer? ({0,1,2}, {1,2,3} ...)
+        instanceData->setIndexBuffer(ibHandle, indexSize, ibOffset); // use not index buffer for particles or use default particle index buffer? ({0,1,2}, {1,2,3} ...)
         instanceData->setVertexBuffer(vbHandle, vbOffset);
 
         for (uint b = 0; b < batchCount; ++b)
@@ -330,7 +319,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     core::uint ParticleSystemInstance::FillGPURenderData(const core::u8 * VG_RESTRICT _data)
     {
-        const uint offset = getSkinnedMeshBufferOffset();
+        const uint offset = getInstanceVertexBufferOffset();
         ParticleVertex * VG_RESTRICT particleVertexData = (ParticleVertex * VG_RESTRICT)((u8 *)_data + offset);
 
         for (uint i = 0; i < m_emitters.size(); ++i)
@@ -340,7 +329,7 @@ namespace vg::renderer
 
             for (uint p = 0; p < particles.size(); ++p)
             {
-                const uint baseIndex = p * 6;
+                const uint baseIndex = p * 4;
                 const auto & particle = particles[p];
 
                 if (!particle.alive)
@@ -352,65 +341,44 @@ namespace vg::renderer
                 float3 offset = particle.position;
                 float3 size = particle.size;
                 u32 color = 0xFFFFFFFF; 
-
-                verts[0].setPos(offset + float3(-size.x, 0.0f, +size.y));
-                verts[1].setPos(offset + float3(+size.x, 0.0f, -size.y));
-                verts[2].setPos(offset + float3(-size.x, 0.0f, -size.y));
-
+               
+                verts[0].setPos(offset + float3(-size.x, 0.0f, -size.y));
+                verts[1].setPos(offset + float3(-size.x, 0.0f, +size.y));
+                verts[2].setPos(offset + float3(+size.x, 0.0f, -size.y));
+                verts[3].setPos(offset + float3(+size.x, 0.0f, +size.y));
+               
                 verts[0].setColor(color);
                 verts[1].setColor(color);
                 verts[2].setColor(color);
-
+                verts[3].setColor(color);                
+                
                 verts[0].setNormal(float3(0.0f, 1.0f, 0.0f));
                 verts[1].setNormal(float3(0.0f, 1.0f, 0.0f));
                 verts[2].setNormal(float3(0.0f, 1.0f, 0.0f));
-
+                verts[3].setNormal(float3(0.0f, 1.0f, 0.0f));
+                
                 verts[0].setBinormal(float3(1.0f, 0.0f, 0.0f));
                 verts[1].setBinormal(float3(1.0f, 0.0f, 0.0f));
                 verts[2].setBinormal(float3(1.0f, 0.0f, 0.0f));
+                verts[3].setBinormal(float3(1.0f, 0.0f, 0.0f));
 
                 verts[0].setTangent(float3(0.0f, 0.0f, 1.0f));
                 verts[1].setTangent(float3(0.0f, 0.0f, 1.0f));
                 verts[2].setTangent(float3(0.0f, 0.0f, 1.0f));
-
-                verts[0].setUV0(float2(0, 0));
-                verts[1].setUV0(float2(1, 1));
-                verts[2].setUV0(float2(0, 1));
-
-                verts[0].setUV1(float2(0, 0));
-                verts[1].setUV1(float2(1, 1));
-                verts[2].setUV1(float2(0, 1));
-
-                verts[3].setPos(offset + float3(+size.x, 0.0f, -size.y));
-                verts[4].setPos(offset + float3(-size.x, 0.0f, +size.y));
-                verts[5].setPos(offset + float3(+size.x, 0.0f, +size.y));
-
-                verts[3].setColor(color);
-                verts[4].setColor(color);
-                verts[5].setColor(color);
-
-                verts[3].setNormal(float3(0.0f, 1.0f, 0.0f));
-                verts[4].setNormal(float3(0.0f, 1.0f, 0.0f));
-                verts[5].setNormal(float3(0.0f, 1.0f, 0.0f));
-
-                verts[3].setBinormal(float3(1.0f, 0.0f, 0.0f));
-                verts[4].setBinormal(float3(1.0f, 0.0f, 0.0f));
-                verts[5].setBinormal(float3(1.0f, 0.0f, 0.0f));
-
                 verts[3].setTangent(float3(0.0f, 0.0f, 1.0f));
-                verts[4].setTangent(float3(0.0f, 0.0f, 1.0f));
-                verts[5].setTangent(float3(0.0f, 0.0f, 1.0f));
 
-                verts[3].setUV0(float2(1, 1));
-                verts[4].setUV0(float2(0, 0));
-                verts[5].setUV0(float2(1, 0));
+                verts[0].setUV0(float2(0, 1));
+                verts[1].setUV0(float2(0, 0));
+                verts[2].setUV0(float2(1, 1));
+                verts[3].setUV0(float2(1, 0));
 
-                verts[3].setUV1(float2(1, 1));
-                verts[4].setUV1(float2(0, 0));
-                verts[5].setUV1(float2(1, 0));
+                verts[0].setUV1(float2(0, 1));
+                verts[1].setUV1(float2(0, 0));
+                verts[2].setUV1(float2(1, 1));
+                verts[3].setUV1(float2(1, 0));
 
                 memcpy(particleVertexData, verts, sizeof(verts));
-                particleVertexData += 6;
+                particleVertexData += 4;
             }
         }
 
@@ -431,8 +399,11 @@ namespace vg::renderer
         root3D.setWorldMatrix(transpose(world));
         root3D.setGPUInstanceDataOffset(getGPUInstanceDataOffset());
 
-        BindlessBufferHandle vbHandle = getSkinnedMeshBuffer()->getBufferHandle();
-        uint vbOffset = getSkinnedMeshBufferOffset();
+        Buffer * ib = getInstanceIndexBuffer();
+        _cmdList->setIndexBuffer(ib);
+
+        BindlessBufferHandle vbHandle = getInstanceVertexBuffer()->getBufferHandle();
+        uint vbOffset = getInstanceVertexBufferOffset();
 
         u16 flags = 0;
         root3D.setFlags(flags);
@@ -484,11 +455,11 @@ namespace vg::renderer
 
                     root3D.setVertexBufferHandle(vbHandle, vbOffset);
                     _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
-                    _cmdList->draw(particleCount * 6, 0);
+                    _cmdList->drawIndexed(particleCount * 6, 0);
                 }
             }
 
-            vbOffset += particleCount * 6 * sizeof(ParticleVertex);
+            vbOffset += particleCount * 4 * sizeof(ParticleVertex);
         }
     }
 }

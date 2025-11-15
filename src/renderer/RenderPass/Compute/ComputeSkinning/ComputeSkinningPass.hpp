@@ -72,7 +72,7 @@ namespace vg::renderer
         uint dstVertOffset = 0;
         uint totalBoneCount = 0;
 
-        const Buffer * dstBuffer = getRWBuffer("SkinningRWBuffer");
+        Buffer * dstBuffer = getRWBuffer("SkinningRWBuffer");
 
         for (uint i = 0; i < skinnedMeshes.size(); ++i)
         {
@@ -85,7 +85,7 @@ namespace vg::renderer
             const uint vertexCount = meshGeo->getVertexCount();
             const uint vertexSize = meshGeo->getVertexSize();
 
-            meshInstance->setDynamicBuffer(dstBuffer, dstVertOffset);
+            meshInstance->setInstanceVertexBuffer(dstBuffer, dstVertOffset);
             meshInstance->removeAtomicFlags(GraphicInstance::AtomicFlags::SkinList);
 
             dstVertOffset += vertexCount * vertexSize;
@@ -178,8 +178,8 @@ namespace vg::renderer
                 _cmdList->dispatch(threadGroupCount);
 
                 // Store skinned VB and offset in mesh
-                VG_ASSERT(dstBuffer == meshInstance->getSkinnedMeshBuffer());
-                VG_ASSERT(dstVertOffset == meshInstance->getSkinnedMeshBufferOffset());
+                VG_ASSERT(dstBuffer == meshInstance->getInstanceVertexBuffer());
+                VG_ASSERT(dstVertOffset == meshInstance->getInstanceVertexBufferOffset());
 
                 dstVertOffset += vertexCount * vertexSize;
                 dstMatOffset += boneCount * sizeof(float4x4);

@@ -50,12 +50,12 @@ namespace vg::gfx::dx12
         {
             D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
             srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-            srvDesc.Format = DXGI_FORMAT_R32_TYPELESS;// DXGI_FORMAT_UNKNOWN;
+            srvDesc.Format = DXGI_FORMAT_R32_TYPELESS;
 
             srvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
             srvDesc.Buffer.FirstElement = 0;
             srvDesc.Buffer.NumElements = _bufDesc.getSize() / sizeof(u32);
-            srvDesc.Buffer.StructureByteStride = 0;// _bufDesc.elementSize;
+            srvDesc.Buffer.StructureByteStride = 0;
             srvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_RAW;
 
             VG_ASSERT(m_resource.getd3d12BufferResource());

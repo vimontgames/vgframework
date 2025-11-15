@@ -24,10 +24,12 @@ namespace vg::renderer
         void                BeforeAll                   (const gfx::RenderPassContext & _renderContext) final override;
         void                BeforeRender                (const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
 
-        const gfx::Buffer * getVertexBuffer             () const { return m_particleRenderDataBuffer; }
+        const gfx::Buffer * getIndexBuffer              () const { return m_particleStaticIndexBuffer; }
+        const gfx::Buffer * getVertexBuffer             () const { return m_particleDynamicVertexBuffer; }
 
     private:
-        gfx::Buffer *       m_particleRenderDataBuffer = nullptr;
+        gfx::Buffer *       m_particleStaticIndexBuffer     = nullptr;
+        gfx::Buffer *       m_particleDynamicVertexBuffer   = nullptr;
         core::uint          m_mapSize = 0;
     };
 }

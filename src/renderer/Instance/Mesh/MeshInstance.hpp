@@ -285,8 +285,8 @@ namespace vg::renderer
 
             if (isSkinned())
             {
-                vbHandle = getSkinnedMeshBuffer()->getBufferHandle();
-                vbOffset = getSkinnedMeshBufferOffset();
+                vbHandle = getInstanceVertexBuffer()->getBufferHandle();
+                vbOffset = getInstanceVertexBufferOffset();
             }
             else
             {
@@ -359,8 +359,8 @@ namespace vg::renderer
 
             if (IsSkinned())
             {
-                _vb = getSkinnedMeshBuffer()->getBufferHandle();
-                _offset = getSkinnedMeshBufferOffset();
+                _vb = getInstanceVertexBuffer()->getBufferHandle();
+                _offset = getInstanceVertexBufferOffset();
             }
             else
             {

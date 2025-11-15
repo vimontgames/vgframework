@@ -1,28 +1,53 @@
 #include "ParticleRenderDataUpdatePass.h"
 #include "renderer/Instance/ParticleSystem/ParticleSystemInstance.h"
 
-#define GPU_PARTICLE_ALIGNMENT 16
-#define GPU_PARTICLE_MAX_COUNT 4096
+#define GPU_PARTICLE_MAX_COUNT_PER_EMITTER 4096     // Max particle count per emitter
+#define GPU_PARTICLE_MAX_COUNT_PER_FRAME 16384      // Total max particle count rendered per frame
 
 namespace vg::renderer
 {
-    static const uint s_SimulatedParticleDataBufferSize = sizeof(ParticleVertex) * GPU_PARTICLE_MAX_COUNT;
-
     //--------------------------------------------------------------------------------------
     ParticleRenderDataUpdatePass::ParticleRenderDataUpdatePass() :
         UpdatePass("ParticleDataUpdatePass")
     {
         auto * device = Device::get();
 
+        u16 * ibInitData = new u16[GPU_PARTICLE_MAX_COUNT_PER_EMITTER * 6]; // 6 indices and 4 vertices per quad
+        for (uint i = 0; i < GPU_PARTICLE_MAX_COUNT_PER_EMITTER; ++i)
+        {
+            const uint indexOffset = i * 6;
+            const uint quadOffset = i * 4;
+
+            // 0------1
+            // | \    |
+            // |  \   |
+            // |   \  |
+            // |    \ |
+            // |     \|
+            // 3------2
+
+            ibInitData[indexOffset + 0] = quadOffset + 0;
+            ibInitData[indexOffset + 1] = quadOffset + 1;
+            ibInitData[indexOffset + 2] = quadOffset + 2;
+
+            ibInitData[indexOffset + 3] = quadOffset + 2;
+            ibInitData[indexOffset + 4] = quadOffset + 1;
+            ibInitData[indexOffset + 5] = quadOffset + 3;
+        }
+
+        BufferDesc particleStaticIndexBufferDesc = BufferDesc(Usage::Default, BindFlags::IndexBuffer, CPUAccessFlags::None, BufferFlags::None, sizeof(u16), 6 * GPU_PARTICLE_MAX_COUNT_PER_EMITTER);
+        m_particleStaticIndexBuffer = device->createBuffer(particleStaticIndexBufferDesc, "ParticleIndexBuffer", ibInitData);
+
         // TODO: share buffer with other CPU write buffers like InstanceData, MaterialInstanceData, etc..?
-        BufferDesc particleRenderDataBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, s_SimulatedParticleDataBufferSize);
-        m_particleRenderDataBuffer = device->createBuffer(particleRenderDataBufferDesc, "ParticleRenderData");
+        BufferDesc particleDynamicVertexBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, sizeof(ParticleVertex), GPU_PARTICLE_MAX_COUNT_PER_FRAME);
+        m_particleDynamicVertexBuffer = device->createBuffer(particleDynamicVertexBufferDesc, "ParticleVertexBuffer");
     }
 
     //--------------------------------------------------------------------------------------
     ParticleRenderDataUpdatePass::~ParticleRenderDataUpdatePass()
     {
-        VG_SAFE_RELEASE(m_particleRenderDataBuffer);
+        VG_SAFE_RELEASE(m_particleStaticIndexBuffer);
+        VG_SAFE_RELEASE(m_particleDynamicVertexBuffer);
     }
 
     //--------------------------------------------------------------------------------------
@@ -54,7 +79,8 @@ namespace vg::renderer
             ParticleSystemInstance * particleSystem = VG_SAFE_STATIC_CAST(ParticleSystemInstance, particleSystemInstances[i]);
 
             const uint particleDataSize = particleSystem->GetGPURenderDataSize(); 
-            particleSystem->setDynamicBuffer(m_particleRenderDataBuffer, offset);
+            particleSystem->setInstanceIndexBuffer(m_particleStaticIndexBuffer, 0);
+            particleSystem->setInstanceVertexBuffer(m_particleDynamicVertexBuffer, offset);
             offset += particleDataSize;
             particleSystem->removeAtomicFlags(GraphicInstance::AtomicFlags::ParticleList);
         }
@@ -72,7 +98,7 @@ namespace vg::renderer
 
         if (mapSize > 0)
         {
-            const u8 * VG_RESTRICT data = (const u8 * VG_RESTRICT)_cmdList->map(m_particleRenderDataBuffer, mapSize).data;
+            const u8 * VG_RESTRICT data = (const u8 * VG_RESTRICT)_cmdList->map(m_particleDynamicVertexBuffer, mapSize).data;
             {
                 for (uint i = 0; i < particleSystemInstances.size(); ++i)
                 {
@@ -80,7 +106,7 @@ namespace vg::renderer
                     particleSystem->FillGPURenderData(data);                    
                 }
             }
-            _cmdList->unmap(m_particleRenderDataBuffer);
+            _cmdList->unmap(m_particleDynamicVertexBuffer);
         }
     }
 }

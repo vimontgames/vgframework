@@ -135,9 +135,16 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void GraphicInstance::setDynamicBuffer(const gfx::Buffer * _buffer, uint _offset)
+    void GraphicInstance::setInstanceIndexBuffer(gfx::Buffer * _buffer, uint _offset)
     {
-        m_dynamicMeshBuffer = _buffer;
-        m_dynamicMeshBufferOffset = _offset;
+        m_instanceIndexBuffer = _buffer;
+        m_instanceIndexBufferOffset = _offset;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GraphicInstance::setInstanceVertexBuffer(gfx::Buffer * _buffer, uint _offset)
+    {
+        m_instanceVertexBuffer = _buffer;
+        m_instanceVertexBufferOffset = _offset;
     }
 }

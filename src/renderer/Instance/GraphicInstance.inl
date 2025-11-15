@@ -38,14 +38,26 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE const gfx::Buffer * GraphicInstance::getSkinnedMeshBuffer() const
+    VG_INLINE gfx::Buffer * GraphicInstance::getInstanceIndexBuffer() const
     {
-        return m_dynamicMeshBuffer;
+        return m_instanceIndexBuffer;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE const core::uint GraphicInstance::getSkinnedMeshBufferOffset() const
+    VG_INLINE core::uint GraphicInstance::getInstanceIndexBufferOffset() const
     {
-        return m_dynamicMeshBufferOffset;
+        return m_instanceIndexBufferOffset;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE gfx::Buffer * GraphicInstance::getInstanceVertexBuffer() const
+    {
+        return m_instanceVertexBuffer;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::uint GraphicInstance::getInstanceVertexBufferOffset() const
+    {
+        return m_instanceVertexBufferOffset;
     }
 }
