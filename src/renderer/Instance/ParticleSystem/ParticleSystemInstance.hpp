@@ -36,7 +36,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool ParticleSystemInstance::TryGetAABB(core::AABB & _aabb) const
     {
-        _aabb = AABB(float3(-1,-1,-1), float3(1,1,1));  // TODO
+        _aabb = m_aabb;
         return true;
     }
 
@@ -172,7 +172,9 @@ namespace vg::renderer
     void ParticleSystemInstance::updateSimulation()
     {
         removeAtomicFlags(GraphicInstance::AtomicFlags::ParticleList);
-        //m_perViewParticleData.clear(); 
+
+        AABB aabb;
+        aabb.reset();
 
         for (uint i = 0; i < m_emitters.size(); ++i)
         {
@@ -242,11 +244,17 @@ namespace vg::renderer
                 particle.velocity = float3(0, 0, 100) * m_dt;
                 particle.position += particle.velocity * m_dt;
 
+                const float radius = max(particle.size.x, max(particle.size.y, particle.size.z)) * 0.5f;
+
+                aabb.grow(particle.position - radius);
+                aabb.grow(particle.position + radius);
+
                 aliveParticles++;
             }
 
             emitter.m_aliveParticles = aliveParticles;
         }
+        m_aabb = aabb;
     }
 
     //--------------------------------------------------------------------------------------

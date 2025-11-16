@@ -4,6 +4,7 @@
 #include "gfx/BindlessTable/BindlessTable_consts.h"
 #include "core/Container/AtomicVector.h"
 #include "renderer/Geometry/Vertex/VertexFormat.h"
+#include "core/Misc/AABB/AABB.h"
 
 namespace vg::renderer
 {
@@ -64,6 +65,7 @@ namespace vg::renderer
             core::u16               m_aliveParticles = 0;
         };
         core::vector<EmitterData> m_emitters;
+        core::AABB m_aabb;
     };
 }
 
