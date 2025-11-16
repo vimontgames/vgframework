@@ -41,7 +41,7 @@ namespace vg::renderer
         VG_SAFE_DELETE(ibInitData);
 
         // TODO: share buffer with other CPU write buffers like InstanceData, MaterialInstanceData, etc..?
-        BufferDesc particleDynamicVertexBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, sizeof(ParticleVertex), GPU_PARTICLE_MAX_COUNT_PER_FRAME);
+        BufferDesc particleDynamicVertexBufferDesc = BufferDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::Write, BufferFlags::None, sizeof(ParticleQuadVertex), GPU_PARTICLE_MAX_COUNT_PER_FRAME);
         m_particleDynamicVertexBuffer = device->createBuffer(particleDynamicVertexBufferDesc, "ParticleVertexBuffer");
     }
 

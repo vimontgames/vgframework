@@ -8870,14 +8870,14 @@
                                                 <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                 <Property type="ObjectVector" name="m_objects">
                                                     <Object class="ParticleEmitterDesc">
-                                                        <Property type="String" name="m_name" value="Emitter B"/>
+                                                        <Property type="String" name="m_name" value="Emitter A"/>
                                                         <Property type="Uint32" name="m_uid" value="3912404846"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                                        <Property type="Float" name="m_params.m_spawnRate" value="2"/>
-                                                        <Property type="Float" name="m_params.m_lifeTime" value="5"/>
-                                                        <Property type="Uint16" name="m_params.m_maxParticleCount" value="4"/>
-                                                        <Property type="Float3" name="m_params.m_size" x="0.25" y="0.25" z="0"/>
+                                                        <Property type="Float" name="m_params.m_spawnRate" value="1"/>
+                                                        <Property type="Float" name="m_params.m_lifeTime" value="10"/>
+                                                        <Property type="Uint16" name="m_params.m_maxParticleCount" value="3"/>
+                                                        <Property type="Float3" name="m_params.m_size" x="1" y="1" z="0"/>
                                                         <Property type="Resource" name="m_materialResource">
                                                             <Object class="MaterialResource">
                                                                 <Property type="String" name="m_name" value="ParticleTest"/>

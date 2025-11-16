@@ -3,6 +3,7 @@
 
 #include "types.hlsli"
 #include "packing.hlsli"
+#include "view.hlsli"
 
 #define GPU_VERTEXBUFFER_OFFSET_ALIGNMENT 4
 
@@ -11,7 +12,8 @@ vg_enum_class_global(VertexFormat, uint,
     Default         = 0,
     Skinning_4Bones = 1,
     DebugDrawUnlit  = 2,
-    DebugDrawLit    = 3
+    DebugDrawLit    = 3,
+    ParticleQuad    = 4
 );
 
 //--------------------------------------------------------------------------------------
@@ -42,6 +44,9 @@ inline constexpr uint getVertexFormatStride(VertexFormat _format)
             
         case VertexFormat::Skinning_4Bones:
             return 80;
+        
+        case VertexFormat::ParticleQuad:
+            return 28;
     }
 }
 
@@ -161,7 +166,62 @@ struct Vertex
         color = 0xFFFFFFFF;
     }
     
-    void Load(ByteAddressBuffer _buffer, VertexFormat _format, uint _vertexID, uint _offset = 0)
+    #if _PARTICLE
+    void Load(ByteAddressBuffer _buffer, VertexFormat _format, uint _vertexID, uint _offset, float4x4 _viewInv)
+    {       
+        uint particleVertexID = _vertexID / 4;
+        uint cornerIndex = _vertexID % 4;
+    
+        uint offset = _offset + particleVertexID * getVertexFormatStride(_format);   
+    
+        Clear(); 
+    
+        pos.xyz = _buffer.Load<float3>(offset); 
+        offset += 3 * sizeof(float);
+    
+        float frame = _buffer.Load<float>(offset); 
+        offset += sizeof(float); 
+    
+        float2 size = _buffer.Load<float2>(offset); 
+        offset += 2 * sizeof(float); 
+    
+         color = _buffer.Load<uint>(offset);
+        offset += sizeof(uint);
+    
+        // Particle billboard position
+        float2 quadOffsets[4] =
+        {
+            float2(-1, -1),
+            float2(-1, +1),
+            float2(+1, -1),
+            float2(+1, +1)
+        };
+    
+        float2 quadOffset = quadOffsets[cornerIndex] * size;
+        
+        float3 up    = _viewInv[1].xyz;
+        float3 right = _viewInv[0].xyz;
+        float3 forward = _viewInv[2].xyz;
+    
+        pos = pos + right * quadOffset.x + up * quadOffset.y;
+    
+        // Particle billboard tangent-space
+        nrm = forward;
+        bin = right;
+        tan = up;
+    
+        float2 quadUV[4] = 
+        {
+            float2(0,1),
+            float2(0,0),
+            float2(1,1),
+            float2(1,0)
+        };
+        uv[0] = quadUV[cornerIndex];
+    }
+    #else
+    
+    void Load(ByteAddressBuffer _buffer, VertexFormat _format, uint _vertexID, uint _offset = 0, float4x4 _unusedViewInv = (float4x4) 0.0f)
     {
         uint offset = _offset + _vertexID * getVertexFormatStride(_format);    
 
@@ -203,7 +263,7 @@ struct Vertex
         if (hasColor(_format))
         {
             color = _buffer.Load<uint>(offset);
-            offset += 4;
+            offset += sizeof(uint);
         }
         
         if (hasSkinning(_format))
@@ -225,6 +285,7 @@ struct Vertex
             offset += 4;
         }
     }
+    #endif
     
     void Store(RWByteAddressBuffer _rwbuffer, VertexFormat _format, uint _vertexID, uint _offset = 0)
     {

@@ -41,3 +41,4 @@ namespace vg::renderer
 #include "SkinningVertex.h"
 #include "DebugDrawUnlitVertex.h"
 #include "DebugDrawLitVertex.h"
+#include "ParticleQuadVertex.h"

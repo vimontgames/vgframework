@@ -23,7 +23,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     ParticleSystemInstance::ParticleSystemInstance(const core::string & _name, core::IObject * _parent) :
         super(_name, _parent)
-        //m_perViewParticleData(16)
     {
         ParticleManager::get()->registerParticleSystemInstance(this);
     }
@@ -311,7 +310,7 @@ namespace vg::renderer
         for (uint i = 0; i < m_emitters.size(); ++i)
         {
             const auto & emitter = m_emitters[i];
-            totalSize += (uint)emitter.m_aliveParticles * sizeof(ParticleVertex) * 6; // Alloc 6 vertices per particle
+            totalSize += (uint)emitter.m_aliveParticles * sizeof(ParticleQuadVertex); // Alloc 1 "Vertex" per particle
         }
         return totalSize;
     }
@@ -320,69 +319,39 @@ namespace vg::renderer
     core::uint ParticleSystemInstance::FillGPURenderData(const core::u8 * VG_RESTRICT _data)
     {
         const uint offset = getInstanceVertexBufferOffset();
-        ParticleVertex * VG_RESTRICT particleVertexData = (ParticleVertex * VG_RESTRICT)((u8 *)_data + offset);
+        ParticleQuadVertex * VG_RESTRICT particleQuadData = (ParticleQuadVertex * VG_RESTRICT)((u8 *)_data + offset);
 
         for (uint i = 0; i < m_emitters.size(); ++i)
         {
             const auto & emitter = m_emitters[i];
             const auto & particles = emitter.m_particles;
 
+            // TODO: Format is 28 bytes, so in order to get multiples of 128 bytes for faster memcpy we should process by 32 (16*32=896=7*128) 
+            // SOA using waves of 32 particles for simulation + transpose would be even better
             for (uint p = 0; p < particles.size(); ++p)
             {
-                const uint baseIndex = p * 4;
                 const auto & particle = particles[p];
 
                 if (!particle.alive)
                     continue;
 
                 // For now just create a quad per particle
-                ParticleVertex verts[6];
+                ParticleQuadVertex quad;
 
-                float3 offset = particle.position;
                 float3 size = particle.size;
-                u32 color = 0xFFFFFFFF; 
+                u32 color = packRGBA8(particle.color); 
                
-                verts[0].setPos(offset + float3(-size.x, 0.0f, -size.y));
-                verts[1].setPos(offset + float3(-size.x, 0.0f, +size.y));
-                verts[2].setPos(offset + float3(+size.x, 0.0f, -size.y));
-                verts[3].setPos(offset + float3(+size.x, 0.0f, +size.y));
-               
-                verts[0].setColor(color);
-                verts[1].setColor(color);
-                verts[2].setColor(color);
-                verts[3].setColor(color);                
+                quad.setPos(particle.position);
+                quad.setFrame(0);
+                quad.setSize(particle.size.xy * 0.5f);
+                quad.setColor(color);               
                 
-                verts[0].setNormal(float3(0.0f, 1.0f, 0.0f));
-                verts[1].setNormal(float3(0.0f, 1.0f, 0.0f));
-                verts[2].setNormal(float3(0.0f, 1.0f, 0.0f));
-                verts[3].setNormal(float3(0.0f, 1.0f, 0.0f));
-                
-                verts[0].setBinormal(float3(1.0f, 0.0f, 0.0f));
-                verts[1].setBinormal(float3(1.0f, 0.0f, 0.0f));
-                verts[2].setBinormal(float3(1.0f, 0.0f, 0.0f));
-                verts[3].setBinormal(float3(1.0f, 0.0f, 0.0f));
-
-                verts[0].setTangent(float3(0.0f, 0.0f, 1.0f));
-                verts[1].setTangent(float3(0.0f, 0.0f, 1.0f));
-                verts[2].setTangent(float3(0.0f, 0.0f, 1.0f));
-                verts[3].setTangent(float3(0.0f, 0.0f, 1.0f));
-
-                verts[0].setUV0(float2(0, 1));
-                verts[1].setUV0(float2(0, 0));
-                verts[2].setUV0(float2(1, 1));
-                verts[3].setUV0(float2(1, 0));
-
-                verts[0].setUV1(float2(0, 1));
-                verts[1].setUV1(float2(0, 0));
-                verts[2].setUV1(float2(1, 1));
-                verts[3].setUV1(float2(1, 0));
-
-                memcpy(particleVertexData, verts, sizeof(verts));
-                particleVertexData += 4;
+                memcpy(particleQuadData, &quad, sizeof(ParticleQuadVertex));
+                particleQuadData++;
             }
         }
 
-        return (uint)(uint_ptr(_data + offset) - (uint_ptr)particleVertexData);
+        return (uint)(uint_ptr(_data + offset) - (uint_ptr)particleQuadData);
     }
 
     //--------------------------------------------------------------------------------------
@@ -407,9 +376,7 @@ namespace vg::renderer
 
         u16 flags = 0;
         root3D.setFlags(flags);
-
-        VertexFormat vertexFormat = VertexFormat::Default;
-        root3D.setVertexFormat(vertexFormat);
+        root3D.setVertexFormat(VertexFormat::ParticleQuad);
 
         auto pickingID = GetPickingID();
         root3D.setPickingID(pickingID);
@@ -455,11 +422,11 @@ namespace vg::renderer
 
                     root3D.setVertexBufferHandle(vbHandle, vbOffset);
                     _cmdList->setGraphicRootConstants(0, (u32 *)&root3D, RootConstants3DCount);
-                    _cmdList->drawIndexed(particleCount * 6, 0);
+                    _cmdList->drawIndexed(particleCount * 6);
                 }
             }
 
-            vbOffset += particleCount * 4 * sizeof(ParticleVertex);
+            vbOffset += particleCount * sizeof(ParticleQuadVertex);
         }
     }
 }

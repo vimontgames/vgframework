@@ -45,11 +45,11 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
     GPUMaterialData materialData = instanceData.loadGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
 
-    Vertex vert;
-           vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
-
     ViewConstants viewConstants;
-    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+                  viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+    
+    Vertex vert;
+           vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset(), viewConstants.getViewInv());
 
     DisplayFlags flags = viewConstants.getDisplayFlags();
     DisplayMode mode = viewConstants.getDisplayMode();
@@ -63,8 +63,28 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     output.uv = float4(vert.getUV(0), vert.getUV(1));
     output.col = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags, mode);
     
+    float4x4 world = rootConstants3D.getWorldMatrix();  
     float3 modelPos = vert.getPos();
-    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
+    
+    #if _PARTICLE
+    
+    //float3 camPos = viewConstants.getCameraPos();  
+    //float3 camUp = float3(0,0,1);
+    //float3 worldCenter = world[3].xyz;
+    //
+    //float3 viewDir = normalize(camPos - worldCenter);
+    //float3 right   = normalize(cross(camUp, viewDir));
+    //float3 up      = cross(viewDir, right);
+    
+    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), world).xyz;
+    //float3 worldPos = worldCenter + modelPos.x * right + modelPos.y * up;
+    
+    #else
+    
+    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), world).xyz;
+    
+    #endif
+   
     output.wpos = worldPos.xyz;
     float4 viewPos = mul(float4(worldPos.xyz, 1.0f), view);
 
@@ -206,11 +226,11 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
     GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
     GPUMaterialData materialData = instanceData.loadGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
 
-    Vertex vert;
-           vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
-
     ViewConstants viewConstants;
-    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+                  viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+    
+    Vertex vert;
+           vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset(), viewConstants.getViewInv());
 
     DisplayFlags flags = viewConstants.getDisplayFlags();
     DisplayMode mode = viewConstants.getDisplayMode();
@@ -339,11 +359,11 @@ VS_Output_Outline VS_Outline(uint _vertexID : VertexID)
 {
     VS_Output_Outline output;
 
-    Vertex vert;
-           vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset());
-
     ViewConstants viewConstants;
                   viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+    
+    Vertex vert;
+           vert.Load(getBuffer(rootConstants3D.getVertexBufferHandle()), rootConstants3D.getVertexFormat(), _vertexID, rootConstants3D.getVertexBufferOffset(), viewConstants.getViewInv());
 
     float4x4 view = viewConstants.getView();
     float4x4 proj = viewConstants.getProj();

@@ -27,8 +27,6 @@ namespace vg::renderer
         bool    alive;
     };
 
-    using ParticleVertex = DefaultVertex; // TODO: packed vertex format for particles? (must stay compatible with raytracing)
-
     class ParticleSystemInstance final : public IParticleSystemInstance
     {
     public:
