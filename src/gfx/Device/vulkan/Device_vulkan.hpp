@@ -371,10 +371,13 @@ namespace vg::gfx::vulkan
 		m_deviceExtensionList.registerExtension(m_EXT_HDR_Metadata);	// Unused for now
 		m_deviceExtensionList.registerExtension(m_EXT_MemoryBudget);	// Unused for now
 
-		#if VG_ENABLE_GPU_MARKER
-		m_instanceExtensionList.registerExtension(m_EXT_DebugUtils);
+		#ifndef VG_ENABLE_GPU_MARKER
+		if (_params.debugDevice)
 		#endif
-
+		{
+			// m_EXT_DebugUtils is necessary for debug messages *and* GPU markers
+			m_instanceExtensionList.registerExtension(m_EXT_DebugUtils);
+		}
 		m_instanceExtensionList.registerExtension(m_EXT_SwapChain_Colorspace);
 		//m_instanceExtensionList.registerExtension(m_KHR_Get_Surface_Capabilities2);	// Unused
         m_instanceExtensionList.registerExtension(m_KHR_Surface);
@@ -430,10 +433,8 @@ namespace vg::gfx::vulkan
 		bool validationLayer = _params.debugDevice;
         const char * validationLayerName = "VK_LAYER_KHRONOS_validation";
 
-        #if VG_ENABLE_GPU_MARKER
         if (_params.debugDevice)
             validationLayer = enableInstanceLayer(validationLayerName);
-        #endif
 
 		// Look for instance extensions 
 		m_instanceExtensionList.init();
@@ -449,19 +450,18 @@ namespace vg::gfx::vulkan
 			VK_API_VERSION_1_3
 		};
 
-		VkInstanceCreateInfo inst_info = 
-		{
-			VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,					
-			nullptr,
-			0,
-			&app,
-            validationLayer ? 1UL : 0,
-			(const char *const *)&validationLayerName,
-			m_instanceExtensionList.getEnabledExtensionCount(),
-			m_instanceExtensionList.getEnabledExtensionNames(),
-		};
+		VkInstanceCreateInfo inst_info = {};
+							 inst_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+							 inst_info.pNext = nullptr;
+							 inst_info.flags = 0;
+							 inst_info.pApplicationInfo = &app;
+							 inst_info.enabledLayerCount = validationLayer ? 1UL : 0;
+							 inst_info.ppEnabledLayerNames = (const char * const *)&validationLayerName;
+							 inst_info.enabledExtensionCount = m_instanceExtensionList.getEnabledExtensionCount();
+							 inst_info.ppEnabledExtensionNames = m_instanceExtensionList.getEnabledExtensionNames();
 
-		VkDebugUtilsMessengerCreateInfoEXT dbg_messenger_create_info;
+
+		VkDebugUtilsMessengerCreateInfoEXT dbg_messenger_create_info = {};
 		if (validationLayer) 
 		{
 			// VK_EXT_debug_utils style
@@ -603,9 +603,8 @@ namespace vg::gfx::vulkan
 		if (m_KHR_Buffer_Device_Address.isEnabled())
 			m_caps.vulkan.deviceAddress = true;
 
-        #if VG_ENABLE_GPU_MARKER
-        VG_VERIFY_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &m_vkDebugMessenger));
-        #endif
+        if (_params.debugDevice)
+			VG_VERIFY_VULKAN(m_EXT_DebugUtils.m_pfnCreateDebugUtilsMessengerEXT(m_vkInstance, &dbg_messenger_create_info, nullptr, &m_vkDebugMessenger));
 
 		vkGetPhysicalDeviceProperties(m_vkPhysicalDevice, &m_vkPhysicalDeviceProperties);
 
@@ -1252,7 +1251,7 @@ namespace vg::gfx::vulkan
         accelerationStructureProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ACCELERATION_STRUCTURE_PROPERTIES_KHR;
         accelerationStructureProps.pNext = &rayTracingProperties;
 
-		VkPhysicalDeviceProperties2 physicalDeviceProps;
+		VkPhysicalDeviceProperties2 physicalDeviceProps = {};
 		physicalDeviceProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
 		physicalDeviceProps.pNext = &accelerationStructureProps;
 
@@ -1317,7 +1316,7 @@ namespace vg::gfx::vulkan
         CheckVulkanFeature(supportedFeatures.features, enabledFeatures, samplerAnisotropy, true);
 		CheckVulkanFeature(supportedFeatures.features, enabledFeatures, independentBlend, true);
 
-		VkDeviceCreateInfo deviceCreateInfo; 
+		VkDeviceCreateInfo deviceCreateInfo = {};
 						   deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 						   deviceCreateInfo.pNext = nullptr;
 						   deviceCreateInfo.flags = 0;
