@@ -48,7 +48,7 @@ namespace vg
             //conf.AddProject<GfxTests>(target, false, "tests");
 
             conf.AddProject<Renderer>(target);
-            //conf.AddProject<RendererTests>(target, false, "tests");
+            conf.AddProject<RendererTests>(target, false, "tests");
 
             conf.AddProject<Engine>(target);
             //conf.AddProject<EngineTests>(target, false, "tests");

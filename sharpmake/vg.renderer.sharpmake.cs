@@ -25,4 +25,22 @@ namespace vg
             conf.AddPrivateDependency<Gfx>(target);
         }
     }
+
+    [Sharpmake.Generate]
+    public class RendererTests : Project
+    {
+        public RendererTests() : base("renderer.tests", Type.UnitTests)
+        {
+
+        }
+
+        public override void ConfigureAll(Configuration conf, Target target)
+        {
+            base.ConfigureAll(conf, target);
+            conf.AddPrivateDependency<Core>(target);
+
+            conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\data\Shaders");
+            conf.IncludePaths.Add(@"[project.SharpmakeCsPath]\..\extern\imgui");
+        }
+    }
 }

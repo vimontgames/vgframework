@@ -43,17 +43,21 @@ inline uint unpackA8(uint _packed)
     return (0xFF000000 & _packed) >> 24; // 0xFF000000 mask is unnecessary, will the compiler remove it?
 }
 
-// Current version of HLSLPP does not implement 'dot' for integer types
-//inline uint dot(uint4 a, uint4 b)
-//{
-//    return (a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w);
-//}
+// Pack uint with mask 'mask' at bit position 'shift'
+inline uint packUint(uint _packed, uint _value, uint mask, uint shift)
+{
+    return (_packed & (~(mask << shift))) | ((_value & mask) << shift);
+}
+
+inline uint unpackUint(uint _packed, uint mask, uint shift)
+{
+    return (_packed >> shift) & mask;
+}
 
 inline uint packRGBA8(float4 _color)
 {
     uint4 color = clamp((uint4)(_color * 255.5f), (uint4)0, (uint4)255);
     return (color.a << 24) | (color.b << 16) | (color.g << 8) | color.r; 
-    //return dot(color, uint4(1, 1<<8, 1<<16, 1<<24 ));
 }
 
 inline uint packRGBA8(float _r, float _g, float _b, float _a)
@@ -68,7 +72,7 @@ inline uint packRGBA8(float _r, float _g, float _b, float _a)
 
 inline float4 unpackRGBA8(uint _value)
 {
-    return float4(_value & 0xFF, (_value >> 8) & 0xFF, (_value >> 16) & 0xFF, (_value >> 24) & 0xFF) / 255.5f;
+    return float4(_value & 0xFF, (_value >> 8) & 0xFF, (_value >> 16) & 0xFF, (_value >> 24) & 0xFF) / 255.0f;
 }
 
 inline uint packUint16(uint2 _value)
