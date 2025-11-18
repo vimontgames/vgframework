@@ -37,4 +37,9 @@ using namespace vg::core;
 #define vg_enum_global(Type, UnderlyingType, ...)       enum Type : UnderlyingType { __VA_ARGS__};
 #define vg_enum_class_global(Type, UnderlyingType, ...) enum class Type : UnderlyingType { __VA_ARGS__};
 
+//--------------------------------------------------------------------------------------
+// Workaround for Visual Studio HLSL syntax highlighting. Use to declare macros values for easier source code reading.
+//--------------------------------------------------------------------------------------
+#define _SHADER_COMPILER 1
+
 #endif

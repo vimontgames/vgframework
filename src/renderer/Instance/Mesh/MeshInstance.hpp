@@ -185,7 +185,7 @@ namespace vg::renderer
                 {
                     if (const auto * mat = materials[i])
                     {
-                        if (gfx::SurfaceType::Opaque != mat->getSurfaceType())
+                        if (SurfaceType::Opaque != mat->getSurfaceType())
                             key |= bit;
                     }                   
                 }

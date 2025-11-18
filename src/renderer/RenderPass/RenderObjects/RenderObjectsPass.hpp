@@ -50,19 +50,19 @@ namespace vg::renderer
             case GraphicInstanceListType::All:
             case GraphicInstanceListType::Outline:
             case GraphicInstanceListType::Opaque:
-                renderContext.m_surfaceType = gfx::SurfaceType::Opaque;
+                renderContext.m_surfaceType = SurfaceType::Opaque;
                 break;
 
             case GraphicInstanceListType::Transparent:
-                renderContext.m_surfaceType = gfx::SurfaceType::AlphaBlend;
+                renderContext.m_surfaceType = SurfaceType::AlphaBlend;
                 break;
 
             case GraphicInstanceListType::AlphaTest:
-                renderContext.m_surfaceType = gfx::SurfaceType::AlphaTest;
+                renderContext.m_surfaceType = SurfaceType::AlphaTest;
                 break;
 
             case GraphicInstanceListType::Decal:
-                renderContext.m_surfaceType = gfx::SurfaceType::Decal;
+                renderContext.m_surfaceType = SurfaceType::Decal;
                 break;
         }
 

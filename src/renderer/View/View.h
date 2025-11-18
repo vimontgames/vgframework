@@ -100,7 +100,9 @@ namespace vg::renderer
         bool                                IsComputePostProcessNeeded          () const override;
         bool                                IsOutlinePassNeeded                 () const override;
 
-        void                                setTLAS                             (gfx::TLAS * _tlas);
+        void                                createTLAS                          ();
+        void                                destroyTLAS                         ();
+        void                                resetTLAS                           ();
         gfx::TLAS *                         getTLAS                             () const;
         gfx::BindlessTLASHandle             getTLASHandle                       () const;
 
@@ -198,7 +200,8 @@ namespace vg::renderer
         PickingData                         m_rawPickingData;
         core::vector<PickingHit>            m_pickingHits;
         mutable core::AssertMutex           m_pickingHitsAssertMutex            = core::AssertMutex("PickingHits");
-        gfx::TLAS *                         m_tlas                              = nullptr;
+        gfx::TLAS *                         m_tlas[1]                           = { nullptr };
+        core::uint                          m_tlasIndex                         = 0;
         Frustum                             m_frustum;
         ViewCullingJobOutput                m_cullingJobResult;
         core::vector<ShadowView*>           m_shadowViews;

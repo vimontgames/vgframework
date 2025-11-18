@@ -1624,6 +1624,39 @@ namespace vg::core
                             {
                                 const bool isEnumArray = asBool(PropertyFlags::EnumArray & prop->GetFlags());
 
+                                if (prop->GetType() != type)
+                                {
+                                    // Try to read compatible types when possible
+
+                                    // Destination
+                                    bool compatible = false;
+                                    switch (prop->GetType())
+                                    {
+                                        case PropertyType::EnumU32:
+                                        {
+                                            // Source
+                                            switch (type)
+                                            {
+                                                case PropertyType::EnumU16:
+                                                case PropertyType::EnumU8:
+                                                    compatible = true;
+                                                break;
+                                            }
+                                        }
+                                        break;
+                                    }
+
+                                    if (compatible)
+                                    {
+                                        VG_WARNING("[Factory] Property \"%s\" from class \"%s\" has been converted from type \"%s\" to \"%s\"", name, className, typeName, asString(prop->GetType()).c_str());
+                                        type = prop->GetType();
+                                    }
+                                    else
+                                    {
+                                        VG_WARNING("[Factory] Type \"%s\" of Property \"%s\" from class \"%s\" does not match type \"%s\" declared in ClassDesc", typeName, name, className, asString(prop->GetType()).c_str());
+                                    }
+                                }
+
                                 if (prop->GetType() == type)
                                 {
                                     const auto offset = prop->GetOffset();
@@ -2387,10 +2420,6 @@ namespace vg::core
                                             serializeIntegerPropertyFromXML<i64>(_object, prop, xmlPropElem);
                                             break;
                                     }
-                                }
-                                else
-                                {
-                                    VG_WARNING("[Factory] Serialized Object type \"%s\" for Property \"%s\" from class \"%s\" does not match type \"%s\" declared in ClassDesc\n", typeName, name, className, asString(prop->GetType()).c_str());
                                 }
                             }
                         }

@@ -17,6 +17,7 @@ namespace vg::gfx
             VG_INLINE BLASUpdateType    getUpdateType   () const { return m_updateType; }
             VG_INLINE BLASVariantKey    getKey          () const { return m_key; }
             VG_INLINE gfx::Buffer *     getBuffer       () const { return m_resultBuffer; }
+            VG_INLINE bool              isInitialized   () const { return m_initDone; }
 
         protected:
             BLASUpdateType  m_updateType;

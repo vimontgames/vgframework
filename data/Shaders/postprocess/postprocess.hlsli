@@ -1,10 +1,17 @@
-#pragma once
+#ifndef _POSTPROCESS_HLSLI__H_
+#define _POSTPROCESS_HLSLI__H_
 
 #define POSTPROCESS_THREADGROUP_SIZE_X 16
 #define POSTPROCESS_THREADGROUP_SIZE_Y 16
 
 #include "system/constants.hlsli"
 #include "system/packing.hlsli"
+
+#if !_SHADER_COMPILER
+// The following #defines here have no effect on compilation and are only used for syntax highlighting
+#define _TOOLMODE 1
+#define _RAYTRACING 1
+#endif
 
 struct PostProcessConstants
 {
@@ -24,8 +31,8 @@ struct PostProcessConstants
     void setScreenSize          (uint2 _size)   { m_screensize = packUint16(_size.xy);}
     uint2 getScreenSize         ()              { return unpackUint16(m_screensize); }
 
-    void setSource               (uint _color)  { m_src_dst = packUint16low(m_src_dst, _color); }
-    uint getSource               ()             { return unpackUint16low(m_src_dst); }
+    void setSource              (uint _color)   { m_src_dst = packUint16low(m_src_dst, _color); }
+    uint getSource              ()              { return unpackUint16low(m_src_dst); }
 
     void setRWBufferOut         (uint _rwbuffer){ m_src_dst = packUint16high(m_src_dst, _rwbuffer); }
     uint getRWBufferOut         ()              { return unpackUint16high(m_src_dst); }
@@ -57,3 +64,5 @@ struct PostProcessConstants
 #ifndef __cplusplus
 DECL_ROOTCONSTANTS(PostProcessConstants, postProcessConstants, 0, 0);
 #endif
+
+#endif // _POSTPROCESS_HLSLI__H_

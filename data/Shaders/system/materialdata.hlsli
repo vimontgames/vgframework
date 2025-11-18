@@ -47,47 +47,50 @@ struct GPUMaterialData
     }   
     #endif 
 
-    uint4  textures;         // .x = albedo | normal, .y = pbr | unused, .y = unused, .w = flags
+    uint4  textures;         // .x = albedo | normal, .y = pbr | unused, .y = unused, .w = {.r = ? | .g = ? | .b = ? | .a = UVSource}
     float4 albedoColor;
     float4 multipliers;
     float4 tilingOffset;
-    float4 misc;
+    float4 misc;            // .x = depth fade (AlphaBlend) 
 
-    void        setAlbedoTextureHandle  (uint _value)   { textures.x = packUint16low(textures.x, _value); }
-    uint        getAlbedoTextureHandle  ()              { return unpackUint16low(textures.x); }
+    void            setAlbedoTextureHandle  (uint _value)           { textures.x = packUint16low(textures.x, _value); }
+    uint            getAlbedoTextureHandle  ()                      { return unpackUint16low(textures.x); }
 
-    void        setNormalTextureHandle  (uint _value)   { textures.x = packUint16high(textures.x, _value); }
-    uint        getNormalTextureHandle  ()              { return unpackUint16high(textures.x); }
+    void            setNormalTextureHandle  (uint _value)           { textures.x = packUint16high(textures.x, _value); }
+    uint            getNormalTextureHandle  ()                      { return unpackUint16high(textures.x); }
 
-    void        setPBRTextureHandle     (uint _value)   { textures.y = packUint16low(textures.y, _value); }
-    uint        getPBRTextureHandle     ()              { return unpackUint16low(textures.y); }
+    void            setPBRTextureHandle     (uint _value)           { textures.y = packUint16low(textures.y, _value); }
+    uint            getPBRTextureHandle     ()                      { return unpackUint16low(textures.y); }
 
-    void        setUVSource             (UVSource _value) { textures.w = packA8(textures.w, (uint)_value); }
-    UVSource    getUVSource             ()              { return (UVSource)unpackA8(textures.w);}
-
-    void        setAlbedoColor          (float4 _value) { albedoColor = _value; }
-    float4      getAlbedoColor          ()              { return albedoColor; }
+    void            setUVSource             (UVSource _value)       { textures.w = packUint(textures.w, (uint)_value, 0x07, 24); }    // Use bits 24..26
+    UVSource        getUVSource             ()                      { return (UVSource)unpackUint(textures.w, 0x07, 24); }
     
-    void        setNormalStrength       (float _value)  { multipliers.w = _value; }
-    float       getNormalStrength       ()              { return multipliers.w; }
-    
-    void        setOcclusion            (float _value)  { multipliers.x = _value; }
-    float       getOcclusion            ()              { return multipliers.x; }
-    
-    void        setRoughness            (float _value)  { multipliers.y = _value; }
-    float       getRoughness            ()              { return multipliers.y; }
-    
-    void        setMetalness            (float _value)  { multipliers.z = _value; }
-    float       getMetalness            ()              { return multipliers.z; }
+    void            setSurfaceType          (SurfaceType _value)    { textures.w = packUint(textures.w, (uint)_value, 0x03, 27); }    // Use bits 27..28
+    SurfaceType     getSurfaceType          ()                      { return (SurfaceType)unpackUint(textures.w, 0x03, 27); }
 
-    void        setTiling               (float2 _value) { tilingOffset.xy = _value; }
-    float2      getTiling               ()              { return tilingOffset.xy; }
+    void            setAlbedoColor          (float4 _value)         { albedoColor = _value; }
+    float4          getAlbedoColor          ()                      { return albedoColor; }
+    
+    void            setNormalStrength       (float _value)          { multipliers.w = _value; }
+    float           getNormalStrength       ()                      { return multipliers.w; }
+    
+    void            setOcclusion            (float _value)          { multipliers.x = _value; }
+    float           getOcclusion            ()                      { return multipliers.x; }
+    
+    void            setRoughness            (float _value)          { multipliers.y = _value; }
+    float           getRoughness            ()                      { return multipliers.y; }
+    
+    void            setMetalness            (float _value)          { multipliers.z = _value; }
+    float           getMetalness            ()                      { return multipliers.z; }
 
-    void        setOffset               (float2 _value) { tilingOffset.zw = _value; }
-    float2      getOffset               ()              { return tilingOffset.zw; }
+    void            setTiling               (float2 _value)         { tilingOffset.xy = _value; }
+    float2          getTiling               ()                      { return tilingOffset.xy; }
 
-    void        setDepthFade            (float _value)  { misc.x = 1.0f / _value; }
-    float       getInvDepthFade         ()              { return misc.x; }
+    void            setOffset               (float2 _value)         { tilingOffset.zw = _value; }
+    float2          getOffset               ()                      { return tilingOffset.zw; }
+
+    void            setDepthFade            (float _value)          { misc.x = 1.0f / _value; }
+    float           getInvDepthFade         ()                      { return misc.x; }
 
     #ifndef __cplusplus
     //--------------------------------------------------------------------------------------

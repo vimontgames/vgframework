@@ -1,4 +1,4 @@
-#include "postprocess.hlsli"
+﻿#include "postprocess.hlsli"
 #include "system/bindless.hlsli"
 #include "system/samplers.hlsli"
 #include "system/view.hlsli"
@@ -7,6 +7,7 @@
 #include "system/instancedata.hlsli"
 #include "system/gamma.hlsli"
 #include "system/outlinemask.hlsli"
+#include "system/debugdisplay.hlsli"
 
 #if _FXAA
 #include "FXAA.hlsli"
@@ -194,10 +195,190 @@ void outlineEdge(Texture2D<uint4> _tex, int2 _coords, inout float _visible, inou
         _hidden += 1.0;
 }
 
+//--------------------------------------------------------------------------------------
+// Returns interpolated value of vertex attributes at ray intersection position.
+// (Only works for indexed geometry)
+//--------------------------------------------------------------------------------------
+Vertex getRaytracingInterpolatedVertex(GPUInstanceData instanceData, GPUBatchData batchData, uint primitiveIndex, float2 barycentrics)
+{
+    ByteAddressBuffer ib = getNonUniformBuffer(instanceData.getIndexBufferHandle());
+    uint index[3];
+    uint triangleStartIndex = primitiveIndex*3 + batchData.getStartIndex();
+                    
+    if (instanceData.getIndexSize() == 2)
+    {
+        uint load0 = ib.Load( ((triangleStartIndex & ~1)<<1) + 0);
+        uint load1 = ib.Load( ((triangleStartIndex & ~1)<<1) + 4);
+        if (triangleStartIndex & 1)
+        {
+            index[0] = load0 >> 16;
+            index[1] = load1 & 0xFFFF;
+            index[2] = load1 >> 16;
+        }
+        else    
+        {
+            index[0] = load0 & 0xFFFF;
+            index[1] = load0 >> 16;
+            index[2] = load1 & 0xFFFF;
+        }
+    }
+    else
+    {
+        index[0] = ib.Load((triangleStartIndex<<2) + 0);
+        index[1] = ib.Load((triangleStartIndex<<2) + 4);
+        index[2] = ib.Load((triangleStartIndex<<2) + 8);
+    }
+
+    ByteAddressBuffer vb = getNonUniformBuffer(instanceData.getVertexBufferHandle());
+    uint vbOffset = instanceData.getVertexBufferOffset();
+    VertexFormat vertexFormat = instanceData.getVertexFormat();
+
+    Vertex verts[3];
+    verts[0].Load(vb, vertexFormat, index[0], vbOffset);
+    verts[1].Load(vb, vertexFormat, index[1], vbOffset);
+    verts[2].Load(vb, vertexFormat, index[2], vbOffset);
+
+    float3 bary = float3(0, barycentrics);
+    bary.x = (1-bary.y-bary.z);
+                    
+    Vertex vert;
+    vert.Interpolate(verts, bary);
+        
+    return vert;
+}
+
+struct MaterialSample
+{
+    uint matID;
+    SurfaceType surfaceType;
+    float2 uv0;
+    float4 albedo;
+};
+
+template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, uint geometryIndex, uint primitiveIndex, float2 triangleBarycentrics, float3 rayT, float3 worldRayOrigin, float3 worldRayDirection, ViewConstants viewConstants)
+{
+    MaterialSample mat;
+    
+    DisplayMode mode = viewConstants.getDisplayMode();
+    DisplayFlags flags = viewConstants.getDisplayFlags();
+    
+    // Get instance data from raytracing instance ID
+    uint instanceDataOffset = instanceID * GPU_INSTANCE_DATA_ALIGNMENT;
+    GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load < GPUInstanceData > (instanceDataOffset);
+    float4 instanceColor = instanceData.getInstanceColor();
+              
+    // Get batch data from raytracing geometry index and load material
+    GPUBatchData batchData = instanceData.loadGPUBatchData(instanceDataOffset, geometryIndex);
+    GPUMaterialData materialData = batchData.loadGPUMaterialData();
+    float4 materialColor = materialData.getAlbedoColor();
+             
+    // Use barycentrics to get interpolated attribute values
+    Vertex vert = getRaytracingInterpolatedVertex(instanceData, batchData, primitiveIndex, triangleBarycentrics);
+
+    float3 worldPosition = worldRayOrigin + rayT * worldRayDirection;
+    float2 uv0 = materialData.GetUV0(vert.uv[0], vert.uv[1], worldPosition);
+                    
+    float4 vertexColor = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags, mode);
+    
+    mat.matID = geometryIndex;
+    mat.surfaceType = materialData.getSurfaceType();
+    mat.uv0 = uv0;
+    mat.albedo = materialData.getAlbedo(uv0, vertexColor, flags, mode, true);
+        
+    #ifdef _TOOLMODE
+    switch (mode)
+    {
+        default:
+        case DisplayMode::RayTracing_Committed_Hit:
+        case DisplayMode::RayTracing_Committed_InstanceID:
+        case DisplayMode::RayTracing_Committed_GeometryIndex:
+        case DisplayMode::RayTracing_Committed_PrimitiveIndex:
+        case DisplayMode::RayTracing_Committed_Barycentrics:
+        case DisplayMode::RayTracing_Committed_WorldPosition:
+            // TODO
+        break;
+        
+        case DisplayMode::RayTracing_Attributes_MaterialID:
+            mat.albedo.rgb = sRGB2Linear(getMatIDColor(mat.matID));
+            break;
+        
+        case DisplayMode::RayTracing_Attributes_Albedo:
+            mat.albedo.rgb = mat.albedo.rgb;
+            break;
+        
+        case DisplayMode::RayTracing_Attributes_UV0:
+            mat.albedo.rgb = sRGB2Linear(float3(mat.uv0, 0));
+            break;
+        
+        case DisplayMode::RayTracing_Attributes_SurfaceType:
+            mat.albedo.rgb = getSurfaceTypeColor(mat.surfaceType).rgb;
+            break;
+    }
+    #endif
+    
+    return mat;    
+}
+
+template <typename Q> MaterialSample getRaytracingCandidateMaterial(Q query, ViewConstants viewConstants)
+{
+    return getRaytracingMaterial<Q>(query.CandidateInstanceID(), 
+                                    query.CandidateGeometryIndex(), 
+                                    query.CandidatePrimitiveIndex(),
+                                    query.CandidateTriangleBarycentrics(),
+                                    query.CandidateTriangleRayT(),
+                                    query.WorldRayOrigin(),
+                                    query.WorldRayDirection(),
+                                    viewConstants);
+}
+
+template <typename Q> MaterialSample getRaytracingCommittedMaterial(Q query, ViewConstants viewConstants)
+{
+    return getRaytracingMaterial<Q>(query.CommittedInstanceID(), 
+                                    query.CommittedGeometryIndex(), 
+                                    query.CommittedPrimitiveIndex(),
+                                    query.CommittedTriangleBarycentrics(),
+                                    query.CommittedRayT(),
+                                    query.WorldRayOrigin(),
+                                    query.WorldRayDirection(),
+                                    viewConstants);
+}
+
+#if _TOOLMODE
+bool IsRaytracingDebugDisplayMode(DisplayMode mode)
+{
+    switch (mode)
+    {
+        default:
+            return false;
+        
+        case DisplayMode::RayTracing_Committed_Hit:
+        case DisplayMode::RayTracing_Committed_InstanceID:
+        case DisplayMode::RayTracing_Committed_GeometryIndex:
+        case DisplayMode::RayTracing_Committed_PrimitiveIndex:
+        case DisplayMode::RayTracing_Committed_Barycentrics:
+        case DisplayMode::RayTracing_Committed_WorldPosition:
+        case DisplayMode::RayTracing_Attributes_MaterialID:
+        case DisplayMode::RayTracing_Attributes_SurfaceType:
+        case DisplayMode::RayTracing_Attributes_UV0:
+        case DisplayMode::RayTracing_Attributes_Albedo:
+            return true;
+    }
+}
+#endif
+
 #if _TOOLMODE
 #if _RAYTRACING
 float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants viewConstants)
 {
+    DisplayMode mode = viewConstants.getDisplayMode();
+    DisplayFlags flags = viewConstants.getDisplayFlags();
+    
+    if (!IsRaytracingDebugDisplayMode(mode))
+        return color;
+    
+    // Clear background
+    color = 0; 
+    
     float4x4 viewInv = viewConstants.getViewInv();
 
     float nearDist = viewConstants.getCameraNearFar().x;
@@ -212,20 +393,20 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
     float3 nearCenter = camPos + camForward * nearDist;
     float3 farCenter = camPos + camForward * farDist;
 
-    float nearHeight = 2.0f * tan(fovRadians/ 2.0f) * nearDist;
+    float nearHeight = 2.0f * tan(fovRadians / 2.0f) * nearDist;
     float farHeight = 2.0f * tan(fovRadians / 2.0f) * farDist;
     float nearWidth = nearHeight * viewRatio;
-    float farWidth  = farHeight * viewRatio;
+    float farWidth = farHeight * viewRatio;
 
-    float3 farTopLeft = farCenter - camUp * (farHeight*0.5f) + camRight * (farWidth*0.5f);
-    float3 farTopRight = farCenter - camUp * (farHeight*0.5f) - camRight * (farWidth*0.5f);
-    float3 farBottomLeft = farCenter + camUp * (farHeight*0.5f) + camRight * (farWidth*0.5f);
-    float3 farBottomRight = farCenter + camUp * (farHeight*0.5f) - camRight * (farWidth*0.5f);
+    float3 farTopLeft = farCenter - camUp * (farHeight * 0.5f) + camRight * (farWidth * 0.5f);
+    float3 farTopRight = farCenter - camUp * (farHeight * 0.5f) - camRight * (farWidth * 0.5f);
+    float3 farBottomLeft = farCenter + camUp * (farHeight * 0.5f) + camRight * (farWidth * 0.5f);
+    float3 farBottomRight = farCenter + camUp * (farHeight * 0.5f) - camRight * (farWidth * 0.5f);
 
-    float3 nearTopLeft = nearCenter - camUp * (nearHeight*0.5f) + camRight * (nearWidth*0.5f);
-    float3 nearTopRight = nearCenter - camUp * (nearHeight*0.5f) - camRight * (nearWidth*0.5f);
-    float3 nearBottomLeft = nearCenter + camUp * (nearHeight*0.5f) + camRight * (nearWidth*0.5f);
-    float3 nearBottomRight = nearCenter + camUp * (nearHeight*0.5f) - camRight * (nearWidth*0.5f);
+    float3 nearTopLeft = nearCenter - camUp * (nearHeight * 0.5f) + camRight * (nearWidth * 0.5f);
+    float3 nearTopRight = nearCenter - camUp * (nearHeight * 0.5f) - camRight * (nearWidth * 0.5f);
+    float3 nearBottomLeft = nearCenter + camUp * (nearHeight * 0.5f) + camRight * (nearWidth * 0.5f);
+    float3 nearBottomRight = nearCenter + camUp * (nearHeight * 0.5f) - camRight * (nearWidth * 0.5f);
 
     float3 origin = camPos;
 
@@ -237,188 +418,59 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
     float3 nearDir = nearTopLeft * w00 + nearTopRight * w01 + nearBottomLeft * w10 + nearBottomRight * w11;
     float3 farDir = farTopLeft * w00 + farTopRight * w01 + farBottomLeft * w10 + farBottomRight * w11;
     float3 dir = normalize(farDir - nearDir);
+    
+    #if 0
         
-    RayQuery<RAY_FLAG_FORCE_OPAQUE> query;
+    #else
+                
+    RayQuery<RAY_FLAG_NONE> query;
+
     RayDesc ray;
     ray.Origin    = origin;
     ray.Direction = dir;
     ray.TMin      = nearDist;
     ray.TMax      = farDist;
-    query.TraceRayInline(getTLAS(viewConstants.getTLASHandle()), 0, 0xff, ray);
-    query.Proceed();
-
-    DisplayMode mode = viewConstants.getDisplayMode();
-
-    float3 colors[6] = 
-    {
-        float3(1,0,0),
-        float3(0,1,0),
-        float3(1,1,0),
-        float3(0,0,1),
-        float3(1,0,1),
-        float3(0,1,1)
-    };
         
-    switch(query.CommittedStatus())
-    {
-        case COMMITTED_NOTHING:
-        {
-            switch(mode)
-            {
-                default:
-                break;
+    query.TraceRayInline(getTLAS(viewConstants.getTLASHandle()), RAY_FLAG_NONE, 0xff, ray);
+        
+    while (query.Proceed())
+	{
+		switch (query.CandidateType())
+		{
+			case CANDIDATE_NON_OPAQUE_TRIANGLE:
+			{
+				MaterialSample mat = getRaytracingCandidateMaterial(query, viewConstants);
+                float candidateDist = query.CandidateTriangleRayT();
 
-                case DisplayMode::RayTracing_Committed_Hit:
-                color.rgb = lerp(color.rgb, float3(1,0,0), 0.5f);
-                break;
-            }
-            
-        }       
+                if (mat.albedo.a > 0) 
+                {
+                    query.CommitNonOpaqueTriangleHit(); 
+                    break;
+                }
+			}
+            break;
+		}
+	}
+        
+    switch (query.CommittedStatus())
+	{
+		case COMMITTED_TRIANGLE_HIT:
+		{
+			// Triangle hit
+            MaterialSample mat = getRaytracingCommittedMaterial(query, viewConstants);
+            color = mat.albedo;
+        }
         break;
-
-        case COMMITTED_TRIANGLE_HIT:
-        {
-            switch(mode)
-            {
-                default:
-                break;
-
-                case DisplayMode::RayTracing_Committed_Hit:
-                color.rgb = lerp(color.rgb, float3(0,1,0), 0.5f);
-                break;
-
-                case DisplayMode::RayTracing_Committed_InstanceID:
-                {
-                    uint instanceID = query.CommittedInstanceID();
-                    color.rgb = float3(colors[instanceID % 6]);
-                }
-                break;
-
-                case DisplayMode::RayTracing_Committed_GeometryIndex:
-                {
-                    uint geoIndex = query.CommittedGeometryIndex();
-                    color.rgb = float3(frac(geoIndex.xxx / 16.0f));
-                }
-                break;
-
-                case DisplayMode::RayTracing_Committed_PrimitiveIndex:
-                {
-                    uint primitiveIndex = query.CommittedPrimitiveIndex();
-                    color.rgb = float3(frac(primitiveIndex.xxx / 256.0f));
-                }
-                break;
-
-                case DisplayMode::RayTracing_Committed_Barycentrics:
-                color.rgb = float3(query.CommittedTriangleBarycentrics(), 0);
-                break;
-                
-                case DisplayMode::RayTracing_Committed_WorldPosition:
-                case DisplayMode::RayTracing_Attributes_UV0:
-                case DisplayMode::RayTracing_Attributes_Albedo:
-                {
-                    uint instanceDataOffset = query.CommittedInstanceID() * GPU_INSTANCE_DATA_ALIGNMENT;
-                    GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load<GPUInstanceData>(instanceDataOffset);
-                    float4 instanceColor = instanceData.getInstanceColor();
-                    
-                    uint batchIndex = query.CommittedGeometryIndex();                  
-                    GPUBatchData batchData = instanceData.loadGPUBatchData(instanceDataOffset, batchIndex);
-                    GPUMaterialData materialData = batchData.loadGPUMaterialData();
-                    float4 materialColor = materialData.getAlbedoColor();                
-                    
-                    uint primitiveIndex = query.CommittedPrimitiveIndex();
-                    ByteAddressBuffer ib = getNonUniformBuffer(instanceData.getIndexBufferHandle());
-                    uint index[3];
-                    uint triangleStartIndex = primitiveIndex*3 + batchData.getStartIndex();
-                    
-                    if (instanceData.getIndexSize() == 2)
-                    {
-                        uint load0 = ib.Load( ((triangleStartIndex & ~1)<<1) + 0);
-                        uint load1 = ib.Load( ((triangleStartIndex & ~1)<<1) + 4);
-                        if (triangleStartIndex & 1)
-                        {
-                            index[0] = load0 >> 16;
-                            index[1] = load1 & 0xFFFF;
-                            index[2] = load1 >> 16;
-                        }
-                        else    
-                        {
-                            index[0] = load0 & 0xFFFF;
-                            index[1] = load0 >> 16;
-                            index[2] = load1 & 0xFFFF;
-                        }
-                    }
-                    else
-                    {
-                         index[0] = ib.Load((triangleStartIndex<<2) + 0);
-                         index[1] = ib.Load((triangleStartIndex<<2) + 4);
-                         index[2] = ib.Load((triangleStartIndex<<2) + 8);
-                    }
-
-                    ByteAddressBuffer vb = getNonUniformBuffer(instanceData.getVertexBufferHandle());
-                    uint vbOffset = instanceData.getVertexBufferOffset();
-                    VertexFormat vertexFormat = instanceData.getVertexFormat();
-
-                    Vertex verts[3];
-                    verts[0].Load(vb, vertexFormat, index[0], vbOffset);
-                    verts[1].Load(vb, vertexFormat, index[1], vbOffset);
-                    verts[2].Load(vb, vertexFormat, index[2], vbOffset);
-
-                    float3 bary = float3(0, query.CommittedTriangleBarycentrics());
-                           bary.x = (1-bary.y-bary.z);
-                    
-                    Vertex vert;
-                    vert.Interpolate(verts, bary);
-
-                    DisplayFlags flags = viewConstants.getDisplayFlags();
-                    DisplayMode mode = viewConstants.getDisplayMode();
-
-                    float3 rayOrigin = query.WorldRayOrigin();        
-                    float3 rayDirection = query.WorldRayDirection();  
-                    float hitDistance = query.CommittedRayT();        
-                    float3 worldPosition = rayOrigin + hitDistance * rayDirection;
-
-                    float2 uv0 = materialData.GetUV0(vert.uv[0], vert.uv[1], worldPosition);
-                    
-                    float4 vertexColor = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags, mode);
-                    float4 albedo = materialData.getAlbedo(uv0, vertexColor, flags, mode, true);
-
-                    switch(mode)
-                    {
-                        default:
-                        break;
-
-                        case DisplayMode::RayTracing_Committed_WorldPosition:
-                        color.rgb = /*sRGB2Linear*/(float3(frac(worldPosition)));
-                        break;
-                        
-                        case DisplayMode::RayTracing_Attributes_UV0:
-                        color.rgb = sRGB2Linear(float3(frac(uv0), any(saturate(uv0) != uv0) ? 1 : 0));
-                        break;
-                        
-                        case DisplayMode::RayTracing_Attributes_Albedo:
-                        color.rgb = albedo.rgb;
-                        break;
-                    }
-                }
-                break;
-            }
-        }       
+        
+		// We do not need this case because we initialize the values by default to be as if the ray missed
+		case COMMITTED_NOTHING:
+		{
+			color.rgb = float3(1,0,1);
+		}
         break;
-
-        case COMMITTED_PROCEDURAL_PRIMITIVE_HIT:
-        {
-            switch(mode)
-            {
-                default:
-                break;
-
-                case DisplayMode::RayTracing_Committed_Hit:
-                color.rgb = lerp(color.rgb, float3(0,0,1), 0.5f);
-                break;
-            }
-        }       
-        break;
-    }
+	}
+    
+    #endif
 
     return color;
 }

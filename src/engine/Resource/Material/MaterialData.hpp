@@ -13,7 +13,7 @@ namespace vg::engine
     bool IsDepthFadePropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
     {
         const MaterialData * mat = VG_SAFE_STATIC_CAST(const MaterialData, _object);
-        return gfx::SurfaceType::AlphaBlend != mat->getSurfaceType();
+        return SurfaceType::AlphaBlend != mat->getSurfaceType();
     }
 
     //--------------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ namespace vg::engine
 
         setPropertyFlag(MaterialData, m_name, PropertyFlags::Hidden | PropertyFlags::Transient, true);
 
-        registerPropertyEnum(MaterialData, gfx::SurfaceType, m_surfaceType, "Surface");
+        registerPropertyEnum(MaterialData, SurfaceType, m_surfaceType, "Surface");
         setPropertyDescription(MaterialData, m_surfaceType, "Surface type determines how the material deal with alpha transparency");
 
         //registerPropertyGroupBegin(MaterialData, "AlphaBlend");
@@ -45,7 +45,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     MaterialData::MaterialData(const core::string & _name, IObject * _parent) :
         super(_name, _parent),
-        m_surfaceType(gfx::SurfaceType::Opaque),
+        m_surfaceType(SurfaceType::Opaque),
         m_depthFade(0.1f),
         m_cullMode(gfx::CullMode::Back)
     {

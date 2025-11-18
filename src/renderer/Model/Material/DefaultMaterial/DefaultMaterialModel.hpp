@@ -62,6 +62,7 @@ namespace vg::renderer
     void DefaultMaterialModel::FillGPUMaterialData(GPUMaterialData * _data) const
     {
         _data->setUVSource(m_UVSource);
+        _data->setSurfaceType(m_surfaceType);
         _data->setTiling(m_tiling);
         _data->setOffset(m_offset);
         _data->setDepthFade(m_depthFade);

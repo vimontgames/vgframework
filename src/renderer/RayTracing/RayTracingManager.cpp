@@ -79,7 +79,7 @@ namespace vg::renderer
             for (uint j = 0; j < views.size(); ++j)
             {
                 auto view = ((View *)views[j]);
-                view->setTLAS(nullptr);
+                view->destroyTLAS();
             }
         }
     }
@@ -189,14 +189,14 @@ namespace vg::renderer
 
                         for (uint m = 0; m < batches.size(); ++m)
                         {
-                            gfx::SurfaceType surfaceType = gfx::SurfaceType::Opaque;
+                            SurfaceType surfaceType = SurfaceType::Opaque;
                             const MaterialModel * mat = m < materials.size() ? materials[m] : nullptr;
                             if (mat)
                                 surfaceType = mat->getSurfaceType();
 
                             const Batch & batch = batches[m];
                             VG_ASSERT(blas);
-                            blas->addIndexedGeometry(ib, ibOffset, batch.offset, batch.count, modelVB, 0, modelVB->getBufDesc().getElementCount(), vertexStride, (gfx::SurfaceType::Opaque == surfaceType) ? true : false);
+                            blas->addIndexedGeometry(ib, ibOffset, batch.offset, batch.count, modelVB, 0, modelVB->getBufDesc().getElementCount(), vertexStride, (SurfaceType::Opaque == surfaceType) ? true : false);
                         }
 
                         blas->update(_cmdList);
@@ -257,13 +257,13 @@ namespace vg::renderer
 
                     for (uint m = 0; m < batches.size(); ++m)
                     {
-                        gfx::SurfaceType surfaceType = gfx::SurfaceType::Opaque;
+                        SurfaceType surfaceType = SurfaceType::Opaque;
                         const MaterialModel * mat = m < materials.size() ? materials[m] : nullptr;
                         if (mat)
                             surfaceType = mat->getSurfaceType();
 
                         const Batch & batch = batches[m];
-                        blas->addIndexedGeometry(ib, ibOffset, batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, (gfx::SurfaceType::Opaque == surfaceType) ? true : false);
+                        blas->addIndexedGeometry(ib, ibOffset, batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, (SurfaceType::Opaque == surfaceType) ? true : false);
                     }
 
                     //VG_INFO("[Renderer] Update BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
@@ -290,16 +290,9 @@ namespace vg::renderer
         {
             if (_view->IsVisible() && _view->IsUsingRayTracing())
             {
+                // Should not access TLAS before resetTLAS because of double-buffer
+                _view->resetTLAS();
                 gfx::TLAS * tlas = _view->getTLAS();
-                if (nullptr == tlas)
-                {
-                    const auto startBuildTLAS = Timer::getTick();
-                    tlas = new gfx::TLAS();
-                    _view->setTLAS(tlas);
-                    VG_INFO("[Renderer] Built TLAS for View \"%s\" in %.2f ms", _view->GetName().c_str(), Timer::getEnlapsedTime(startBuildTLAS, Timer::getTick()));
-                }
-
-                tlas->reset();
 
                 bool updateTLAS = false;
 
@@ -337,7 +330,7 @@ namespace vg::renderer
             }
             else
             {
-                _view->setTLAS(nullptr);
+                _view->destroyTLAS();
             }
         }
     }

@@ -1,30 +1,53 @@
 #pragma once
 
 #include "displaymodes.hlsli"
+#include "material_consts.hlsli"
 
 //--------------------------------------------------------------------------------------
 // This file is only included in HLSL shader files. 
 //--------------------------------------------------------------------------------------
 
 float3 getMatIDColor(uint _matID)
-{
+{       
+    float grey = 1.0 - pow((_matID - _matID % 6) / 300.0f, 0.25);
+    
     switch (_matID % 6)
     {
         case 0:
-            return float3(1, 0, 0);
+            return grey * float3(1, 0, 0);
         case 1:
-            return float3(0, 1, 0);
+            return grey * float3(0, 1, 0);
         case 2:
-            return float3(1, 1, 0);
+            return grey * float3(1, 1, 0);
         case 3:
-            return float3(0, 0, 1);
+            return grey * float3(0, 0, 1);
         case 4:
-            return float3(1, 0, 1);
+            return grey * float3(1, 0, 1);
         case 5:
-            return float3(0, 1, 1);
+            return grey * float3(0, 1, 1);
     }
 
     return 0;
+}
+
+float3 getSurfaceTypeColor(SurfaceType _surfaceType)
+{
+    switch (_surfaceType)
+    {
+        case SurfaceType::Opaque:
+            return float3(0, 1, 0);
+        
+        case SurfaceType::AlphaTest:
+            return float3(1, 1, 0);
+
+        case SurfaceType::AlphaBlend:
+            return float3(1, 0, 0);
+
+        case SurfaceType::Decal:
+            return float3(0, 0, 1);
+    }
+    
+    return float3(0, 0, 0);
 }
 
 float4 forwardDebugDisplay(float4 _color, DisplayMode _mode, uint _matID, float3 _tan, float3 _bin, float3 _nrm, float4 _col, float2 _uv0, float2 _uv1, float2 _screenPos, float3 _worldPos, float3 _albedo, float3 _normal, float3 _worldNormal, float3 _pbr)
@@ -83,13 +106,13 @@ float4 forwardDebugDisplay(float4 _color, DisplayMode _mode, uint _matID, float3
 
         case DisplayMode::Forward_SurfaceType:
             #if _ALPHABLEND
-            return sRGBA2Linear(float4(1,0,0, 1));
+            return sRGBA2Linear(float4(getSurfaceTypeColor(SurfaceType::AlphaBlend), 1));
             #elif _ALPHATEST
-            return sRGBA2Linear(float4(1,1,0, 0));
+            return sRGBA2Linear(float4(getSurfaceTypeColor(SurfaceType::AlphaTest), 1));
             #elif _DECAL
-            return sRGBA2Linear(float4(0,0,1, 0));
+            return sRGBA2Linear(float4(getSurfaceTypeColor(SurfaceType::Decal), 1));
             #else
-            return sRGBA2Linear(float4(0,1,0, 1));
+            return sRGBA2Linear(float4(getSurfaceTypeColor(SurfaceType::Opaque), 1));
             #endif
     }
 }

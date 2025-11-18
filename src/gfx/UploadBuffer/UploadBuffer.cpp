@@ -100,13 +100,12 @@ namespace vg::gfx
             const bool previousFrameOverlap = isOverlaping(alloc, m_previousRanges);
             if (previousFrameOverlap)
             {
-                VG_ASSERT(!previousFrameOverlap, "Could not allocated %u bytes in upload buffer %u (%u kb) because the buffer is too small for current and previous frames. Please increase upload buffer sizes in Renderer Options > Multithreading > Render Jobs.", (alloc.end - alloc.begin), m_index, m_buffer->getBufDesc().getSize() >> 10);
-
+                VG_ASSERT(!previousFrameOverlap, "Could not allocated %u bytes in upload buffer %u (%u kb) because the buffer is too small for current and previous frames. Please increase upload buffer sizes in Renderer Options > Misc > Render Jobs.", (alloc.end - alloc.begin), m_index, m_buffer->getBufDesc().getSize() >> 10);
             }
             else
             {
                 const bool frameOverlap = isOverlaping(alloc, m_ranges);
-                VG_ASSERT(!frameOverlap, "Could not allocated %u bytes in upload buffer %u (%u kb) because the buffer is too small for current frame. Please increase upload buffer sizes in Renderer Options > Multithreading > Render Jobs.", (alloc.end - alloc.begin), m_index, m_buffer->getBufDesc().getSize() >> 10);
+                VG_ASSERT(!frameOverlap, "Could not allocated %u bytes in upload buffer %u (%u kb) because the buffer is too small for current frame. Please increase upload buffer sizes in Renderer Options > Misc > Render Jobs.", (alloc.end - alloc.begin), m_index, m_buffer->getBufDesc().getSize() >> 10);
             }
             #endif
 

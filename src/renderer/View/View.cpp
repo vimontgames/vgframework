@@ -62,7 +62,9 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_renderTarget);
         VG_SAFE_RELEASE(m_cullingJob);
         VG_SAFE_RELEASE(m_viewConstantsUpdatePass);
-        VG_SAFE_RELEASE(m_tlas);
+
+        for (uint i = 0; i < countof(m_tlas); ++i)
+            VG_SAFE_RELEASE(m_tlas[i]);
     }
 
     //--------------------------------------------------------------------------------------
@@ -568,19 +570,42 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::setTLAS(TLAS * _tlas)
+    void View::createTLAS()
     {
-        if (_tlas != m_tlas)
+        for (uint i = 0; i < countof(m_tlas); ++i)
         {
-            VG_SAFE_RELEASE_ASYNC(m_tlas)
-            m_tlas = _tlas;
+            VG_ASSERT(nullptr == m_tlas[i]);
+            m_tlas[i] = new gfx::TLAS();
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::resetTLAS()
+    {
+        m_tlasIndex = (m_tlasIndex+1) % countof(m_tlas);
+        TLAS * tlas = getTLAS();
+
+        if (nullptr == tlas)
+        {
+            createTLAS();
+            tlas = getTLAS();
+            VG_INFO("[Renderer] Create double-buffered TLAS for View \"%s\"", GetName().c_str());
+        }
+
+        tlas->reset();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void View::destroyTLAS()
+    {
+        for (uint i = 0; i < countof(m_tlas); ++i)
+            VG_SAFE_RELEASE_ASYNC(m_tlas[i])
     }
 
     //--------------------------------------------------------------------------------------
     TLAS * View::getTLAS() const
     {
-        return m_tlas;
+        return m_tlas[m_tlasIndex];
     }
 
     //--------------------------------------------------------------------------------------

@@ -48,13 +48,13 @@ namespace vg::renderer
 
         virtual void                    Setup                   (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3DConstants, core::uint _index) const = 0;
 
-        VG_INLINE gfx::SurfaceType      getSurfaceType          () const { return m_surfaceType; }
+        VG_INLINE SurfaceType           getSurfaceType          () const { return m_surfaceType; }
         VG_INLINE GPUMaterialDataIndex  getGPUMaterialDataIndex () const { return m_gpuMaterialDataIndex; }
 
     protected:
 
         GPUMaterialDataIndex            m_gpuMaterialDataIndex = (GPUMaterialDataIndex)-1;
-        gfx::SurfaceType                m_surfaceType;
+        SurfaceType                     m_surfaceType;
         float                           m_depthFade = 0.1f;
         gfx::CullMode                   m_cullMode;
         gfx::RootSignatureHandle        m_rootSignature;

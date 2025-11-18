@@ -456,7 +456,7 @@ namespace vg::gfx::vulkan
 							 inst_info.flags = 0;
 							 inst_info.pApplicationInfo = &app;
 							 inst_info.enabledLayerCount = validationLayer ? 1UL : 0;
-							 inst_info.ppEnabledLayerNames = (const char * const *)&validationLayerName;
+							 inst_info.ppEnabledLayerNames = validationLayer ? (const char * const *)&validationLayerName : nullptr;
 							 inst_info.enabledExtensionCount = m_instanceExtensionList.getEnabledExtensionCount();
 							 inst_info.ppEnabledExtensionNames = m_instanceExtensionList.getEnabledExtensionNames();
 

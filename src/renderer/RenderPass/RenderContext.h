@@ -1,9 +1,10 @@
 #pragma once
 
+enum class SurfaceType : uint;
+
 namespace vg::gfx
 {
     class RenderPassContext;
-    enum class SurfaceType: core::u8;
 }
 
 namespace vg::renderer
@@ -22,7 +23,8 @@ namespace vg::renderer
             m_raytracing(false),
             m_wireframe(false),
             m_outline(false),
-            m_particle(false)
+            m_particle(false),
+            m_surfaceType((SurfaceType)-1)
         {
 
         }
@@ -36,6 +38,6 @@ namespace vg::renderer
         bool                            m_wireframe    : 1;
         bool                            m_outline      : 1;
         bool                            m_particle     : 1;
-        gfx::SurfaceType                m_surfaceType = (gfx::SurfaceType)-1;
+        SurfaceType                     m_surfaceType  : 8;
     };
 }

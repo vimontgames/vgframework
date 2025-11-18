@@ -61,6 +61,8 @@ vg_enum_class_global(DisplayMode, uint,
     RayTracing_Committed_Barycentrics,
     RayTracing_Committed_WorldPosition,
 
+    RayTracing_Attributes_MaterialID,
+    RayTracing_Attributes_SurfaceType,
     RayTracing_Attributes_UV0, 
     RayTracing_Attributes_Albedo, 
 
