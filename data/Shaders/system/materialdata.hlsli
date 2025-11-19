@@ -62,11 +62,11 @@ struct GPUMaterialData
     void            setPBRTextureHandle     (uint _value)           { textures.y = packUint16low(textures.y, _value); }
     uint            getPBRTextureHandle     ()                      { return unpackUint16low(textures.y); }
 
-    void            setUVSource             (UVSource _value)       { textures.w = packUint(textures.w, (uint)_value, 0x07, 24); }    // Use bits 24..26
-    UVSource        getUVSource             ()                      { return (UVSource)unpackUint(textures.w, 0x07, 24); }
+    void            setUVSource             (UVSource _value)       { textures.w = packUint(textures.w, (uint)_value, 0xF, 24); }    // Use bits 24..27 
+    UVSource        getUVSource             ()                      { return (UVSource)unpackUint(textures.w, 0xF, 24); }            // As crazy as it seems, using 0x7 here instead of 0xF provokes lost device in Vulkan debug
     
-    void            setSurfaceType          (SurfaceType _value)    { textures.w = packUint(textures.w, (uint)_value, 0x03, 27); }    // Use bits 27..28
-    SurfaceType     getSurfaceType          ()                      { return (SurfaceType)unpackUint(textures.w, 0x03, 27); }
+    void            setSurfaceType          (SurfaceType _value)    { textures.w = packUint(textures.w, (uint)_value, 0xF, 28); }    // Use bits 28..31
+    SurfaceType     getSurfaceType          ()                      { return (SurfaceType)unpackUint(textures.w, 0xF, 28); }
 
     void            setAlbedoColor          (float4 _value)         { albedoColor = _value; }
     float4          getAlbedoColor          ()                      { return albedoColor; }
@@ -149,11 +149,11 @@ struct GPUMaterialData
             case UVSource::PlanarX:
             uv = _worldPos.yz;
             break;
-
+            
             case UVSource::PlanarY:
             uv = float2(_worldPos.x, -_worldPos.z);
             break;
-
+            
             case UVSource::PlanarZ:
             uv = _worldPos.xy;
             break;
