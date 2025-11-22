@@ -220,7 +220,8 @@ namespace vg::renderer
                 constants->setColor(float3(0.95f, 0.95f, 0.95f));
                 constants->setDirection(normalize(float3(0.5f,-0.75f,1)));
                 constants->setShadowBias(0);
-                constants->setShadowInstensity(0);
+                constants->setShadowIntensity(0);
+                constants->setShadowFarDist(0);
                 constants->setShadowMapTextureHandle(0);
                 constants->setShadowMatrix(float4x4::identity());
 
@@ -237,7 +238,8 @@ namespace vg::renderer
                 constants->setColor(directional->getColor().rgb * directional->getIntensity());
                 constants->setDirection(-directional->getGlobalMatrix()[2].xyz);
                 constants->setShadowBias(directional->m_shadowBias);
-                constants->setShadowInstensity(directional->m_shadowIntensity);
+                constants->setShadowIntensity(directional->m_shadowIntensity);
+                constants->setShadowFarDist(directional->m_shadowRange.y);
 
                 auto shadowView = view->findShadowView(directionals[i]);
                 if (shadowView && shadowView->isUsingShadowMap())
@@ -267,7 +269,7 @@ namespace vg::renderer
                 constants->setPosition(omni->getGlobalMatrix()[3].xyz);
                 constants->setRadius(omni->getMaxRadius());
                 constants->setShadowBias(omni->m_shadowBias);
-                constants->setShadowInstensity(omni->m_shadowIntensity);
+                constants->setShadowIntensity(omni->m_shadowIntensity);
 
                 offset += sizeof(OmniLightConstants);
             }            

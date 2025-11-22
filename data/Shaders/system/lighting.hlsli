@@ -4,6 +4,12 @@
 #include "system/shared_consts.hlsli"
 #include "system/pbr.hlsli"
 
+#if !_SHADER_COMPILER
+// The following #defines here have no effect on compilation and are only used for syntax highlighting
+#define _TOOLMODE 1
+#define _RAYTRACING 1
+#endif
+
 //--------------------------------------------------------------------------------------
 float3 heatmapGradient(float x, float _green, float _yellow, float _red)
 {
@@ -195,10 +201,12 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		{
 			float3 Lradiance = directional.getColor();
 			float shadow = 1.0f;
-			float si = directional.getShadowInstensity();
+			float si = directional.getShadowIntensity();
 
 			if (si > 0.0f)
 			{
+				float bias = directional.getShadowBias();
+				
 				#ifdef _RAYTRACING
 				shadow = 1;		
 
@@ -219,10 +227,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 				while(query.Proceed())
 				{
 					switch(query.CandidateType())
-					{
-						default:
-						break;
-				
+					{				
 						case CANDIDATE_NON_OPAQUE_TRIANGLE:
 						shadow = 0.5f;
 						break;
@@ -250,7 +255,6 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 				if (all(shadowUV.xyz == saturate(shadowUV.xyz) ))
 				{			
 					Texture2D shadowMap = getTexture2D(directional.getShadowMapTextureHandle());
-					float bias = directional.getShadowBias();
 					shadow = SampleDirectionalShadowMap(shadowMap, shadowUV.xyz, bias);
 				}
 				#endif		
@@ -291,7 +295,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 			{
 				float3 Lradiance = att * color;
 				float shadow = 1.0f;
-				float si = omni.getShadowInstensity();
+				float si = omni.getShadowIntensity();
 
 				if (si > 0.0f)
 				{

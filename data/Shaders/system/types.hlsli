@@ -40,6 +40,8 @@ using namespace vg::core;
 //--------------------------------------------------------------------------------------
 // Workaround for Visual Studio HLSL syntax highlighting. Use to declare macros values for easier source code reading.
 //--------------------------------------------------------------------------------------
+#if defined(_VULKAN) || defined(_DX12)
 #define _SHADER_COMPILER 1
+#endif
 
 #endif
