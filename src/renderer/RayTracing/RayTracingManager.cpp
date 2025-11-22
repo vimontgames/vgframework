@@ -19,8 +19,7 @@ using namespace vg::core;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    RayTracingManager::RayTracingManager() :
-        m_visibleGraphicInstances(256)
+    RayTracingManager::RayTracingManager()
     {
 
     }
@@ -150,29 +149,26 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void RayTracingManager::beforeAll()
-    {
-
-    }
-
+    // Prepare BLAS to create and update
     //--------------------------------------------------------------------------------------
-    // Update is not a right time to create BLAS, because an instance can belong to several view
-    // Instead, during culling instances that have no BLAS should be added to a list of instances that need to allocate BLAS
-    //--------------------------------------------------------------------------------------
-    void RayTracingManager::update(gfx::CommandList * _cmdList, gfx::Buffer * _skinningBuffer)
+    void RayTracingManager::prepareBLAS()
     {
-        if (isRayTracingEnabled())
+        VG_ASSERT(isRayTracingEnabled());
+        VG_PROFILE_CPU("Prepare BLAS");
+        
+        // Non-skins require update when model or material surface types change, but BLAS can be shared
+        if (m_meshInstanceUpdateQueue.size() > 0)
         {
-            // Non-skins require update when model or material surface types change, but BLAS can be shared
+            VG_PROFILE_CPU("Static");
             for (uint i = 0; i < m_meshInstanceUpdateQueue.size(); ++i)
             {
                 MeshInstance * instance = m_meshInstanceUpdateQueue[i];
                 VG_ASSERT(!instance->IsSkinned());
                 auto * blas = instance->getInstanceBLAS();
-                MeshModel * meshModel = (MeshModel*)instance->getMeshModel(Lod::Lod0);
+                MeshModel * meshModel = (MeshModel *)instance->getMeshModel(Lod::Lod0);
                 VG_ASSERT(nullptr != meshModel);
                 if (nullptr == meshModel)
-                    return;
+                    continue;
 
                 // Create BLAS collection if it does not exist yet or it's key changed
                 gfx::BLASVariantKey key = instance->computeBLASVariantKey();
@@ -187,7 +183,6 @@ namespace vg::renderer
                     {
                         blas = it->second;
                         instance->setInstanceBLAS(blas);    // This will increase RefCount
-                        VG_INFO("[Renderer] Use existing BLAS 0x%016X for instance \"%s\" with key 0x%016X", it->second, instance->GetName().c_str(), key);
                     }
                     else
                     {
@@ -221,84 +216,127 @@ namespace vg::renderer
                             blas->addIndexedGeometry(ib, ibOffset, batch.offset, batch.count, modelVB, 0, modelVB->getBufDesc().getElementCount(), vertexStride, (SurfaceType::Opaque == surfaceType) ? true : false);
                         }
 
-                        blas->update(_cmdList);
-
                         BLASMap.insert(std::pair(key, blas));
 
-                        VG_INFO("[Renderer] Create BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, instance->GetName().c_str(), key);
+                        if (blas->isInitialized())
+                        {
+                            //VG_INFO("[Renderer] Update static BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, instance->GetName().c_str(), key);
+                            blas->init(true);
+                            m_blasToUpdate.push_back(blas);
+                        }
+                        else
+                        {
+                            VG_INFO("[Renderer] Create static BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, instance->GetName().c_str(), key);
+                            blas->init(false);
+                            m_blasToCreate.push_back(blas);
+                        }
                     }
                 }
-            }
-            m_meshInstanceUpdateQueue.clear();
-
-            // Skins require BLAS update every frame
-            const auto & skins = Renderer::get()->getSharedCullingJobOutput()->m_skins;
-            if (skins.size() > 0)
-            {
-                VG_PROFILE_GPU("Skins");
-
-                // D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS: "The memory pointed to must be in state D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE."
-                // https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_build_raytracing_acceleration_structure_inputs
-                if (nullptr != _skinningBuffer)
-                    _cmdList->transitionResource(_skinningBuffer, gfx::ResourceState::UnorderedAccess, gfx::ResourceState::NonPixelShaderResource);
-               
-                for (uint i = 0; i < skins.size(); ++i)
-                {
-                    MeshInstance * skin = skins[i];
-                    auto * blas = skin->getInstanceBLAS();
-
-                    // Create BLAS collection if it does not exist yet or it's key changed
-                    gfx::BLASVariantKey key = skin->computeBLASVariantKey();
-
-                    if (nullptr == blas || blas->getKey() != key)
-                    {
-                        // Create instance BLAS from model geometry
-                        blas = new gfx::BLAS(gfx::BLASUpdateType::Dynamic, key);
-                        skin->setInstanceBLAS(blas);
-                        blas->Release();
-                        VG_INFO("[Renderer] Create BLAS 0x%016X for skinned instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
-                    }
-
-                    blas->clear();
-
-                    const MeshModel * meshModel = skin->getMeshModel(Lod::Lod0);
-
-                    const MeshGeometry * meshGeo = meshModel->getGeometry();
-                    gfx::Buffer * ib = meshGeo->getIndexBuffer();
-                    const uint ibOffset = meshGeo->getIndexBufferOffset();
-
-                    const gfx::Buffer * modelVB = meshGeo->getVertexBuffer();
-                    const gfx::Buffer * skinVB = skin->getInstanceVertexBuffer();
-                    const uint skinVBOffset = skin->getInstanceVertexBufferOffset();
-
-                    VertexFormat vtxFmt = meshGeo->getVertexFormat();
-                    const uint vertexStride = getVertexFormatStride(vtxFmt);
-
-                    const auto batches = meshGeo->batches();
-                    const auto & materials = skin->getMaterials();
-
-                    for (uint m = 0; m < batches.size(); ++m)
-                    {
-                        SurfaceType surfaceType = SurfaceType::Opaque;
-                        const MaterialModel * mat = m < materials.size() ? materials[m] : nullptr;
-                        if (mat)
-                            surfaceType = mat->getSurfaceType();
-
-                        const Batch & batch = batches[m];
-                        blas->addIndexedGeometry(ib, ibOffset, batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, (SurfaceType::Opaque == surfaceType) ? true : false);
-                    }
-
-                    //VG_INFO("[Renderer] Update BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
-
-                    blas->update(_cmdList);
-                }
-
-                if (nullptr != _skinningBuffer)
-                    _cmdList->transitionResource(_skinningBuffer, gfx::ResourceState::NonPixelShaderResource, gfx::ResourceState::UnorderedAccess);
-            
-                // TODO: primitives for quad particle
             }
         }
+
+
+        // Skins require BLAS update every frame
+        const auto & skins = Renderer::get()->getSharedCullingJobOutput()->m_skins;
+        if (skins.size() > 0)
+        {
+            VG_PROFILE_CPU("Skins");
+
+            for (uint i = 0; i < skins.size(); ++i)
+            {
+                MeshInstance * skin = skins[i];
+                auto * blas = skin->getInstanceBLAS();
+
+                // Create BLAS collection if it does not exist yet or it's key changed
+                gfx::BLASVariantKey key = skin->computeBLASVariantKey();
+
+                if (nullptr == blas || blas->getKey() != key)
+                {
+                    // Create instance BLAS from model geometry
+                    blas = new gfx::BLAS(gfx::BLASUpdateType::Dynamic, key);
+                    skin->setInstanceBLAS(blas);
+                    blas->Release();
+                }
+
+                blas->clear();
+
+                const MeshModel * meshModel = skin->getMeshModel(Lod::Lod0);
+
+                const MeshGeometry * meshGeo = meshModel->getGeometry();
+                gfx::Buffer * ib = meshGeo->getIndexBuffer();
+                const uint ibOffset = meshGeo->getIndexBufferOffset();
+
+                const gfx::Buffer * modelVB = meshGeo->getVertexBuffer();
+                const gfx::Buffer * skinVB = skin->getInstanceVertexBuffer();
+                const uint skinVBOffset = skin->getInstanceVertexBufferOffset();
+
+                VertexFormat vtxFmt = meshGeo->getVertexFormat();
+                const uint vertexStride = getVertexFormatStride(vtxFmt);
+
+                const auto batches = meshGeo->batches();
+                const auto & materials = skin->getMaterials();
+
+                for (uint m = 0; m < batches.size(); ++m)
+                {
+                    SurfaceType surfaceType = SurfaceType::Opaque;
+                    const MaterialModel * mat = m < materials.size() ? materials[m] : nullptr;
+                    if (mat)
+                        surfaceType = mat->getSurfaceType();
+
+                    const Batch & batch = batches[m];
+                    blas->addIndexedGeometry(ib, ibOffset, batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, (SurfaceType::Opaque == surfaceType) ? true : false);
+                }
+
+                //VG_INFO("[Renderer] Update BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
+                if (blas->isInitialized())
+                {
+                    //VG_INFO("[Renderer] Update skin BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
+                    blas->init(true);
+                    m_blasToUpdate.push_back(blas);
+                }
+                else
+                {
+                    VG_INFO("[Renderer] Create skin BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
+                    blas->init(false);
+                    m_blasToCreate.push_back(blas);
+                }
+            }
+
+            // TODO: primitives for quad particle
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Update is not a right time to create BLAS, because an instance can belong to several view
+    // Instead, during culling instances that have no BLAS should be added to a list of instances that need to allocate BLAS
+    //--------------------------------------------------------------------------------------
+    void RayTracingManager::updateBLAS(gfx::CommandList * _cmdList, gfx::Buffer * _skinningBuffer)
+    {
+        VG_PROFILE_GPU("Update BLAS");
+
+        // D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS: "The memory pointed to must be in state D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE."
+        // https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_build_raytracing_acceleration_structure_inputs
+        if (nullptr != _skinningBuffer)
+            _cmdList->transitionResource(_skinningBuffer, gfx::ResourceState::UnorderedAccess, gfx::ResourceState::NonPixelShaderResource);
+
+        for (uint i = 0; i < m_blasToCreate.size(); ++i)
+        {
+            gfx::BLAS * blas = m_blasToCreate[i];
+            blas->build(_cmdList, false);
+            blas->setInitialized();
+        }
+        m_blasToCreate.clear();
+
+        for (uint i = 0; i < m_blasToUpdate.size(); ++i)
+        {
+            gfx::BLAS * blas = m_blasToUpdate[i];
+            blas->build(_cmdList, true);
+            blas->setInitialized();
+        }
+        m_blasToUpdate.clear();
+
+        if (nullptr != _skinningBuffer)
+            _cmdList->transitionResource(_skinningBuffer, gfx::ResourceState::NonPixelShaderResource, gfx::ResourceState::UnorderedAccess);
     }
 
     //--------------------------------------------------------------------------------------
@@ -306,8 +344,10 @@ namespace vg::renderer
     // Not only the visible objects have to be added to TLAS, but also the ones visible from 
     // shadow casters if raytraced shadows are used for those lights.
     //--------------------------------------------------------------------------------------
-    void RayTracingManager::updateViewMain(View * _view)
+    void RayTracingManager::prepareTLAS(View * _view)
     {
+        VG_PROFILE_CPU("Prepare TLAS");
+
         VG_ASSERT(_view);
         if (_view)
         {
@@ -322,8 +362,10 @@ namespace vg::renderer
     // Build the TLAS on the GPU
     // TODO: instead of using a set to eliminate duplicates, add instance directly to TLAS during culling using an atomic flag 
     //--------------------------------------------------------------------------------------
-    void RayTracingManager::updateView(gfx::CommandList * _cmdList, View * _view)
+    void RayTracingManager::updateTLAS(gfx::CommandList * _cmdList, View * _view)
     {
+        VG_PROFILE_GPU("Update TLAS");
+
         VG_ASSERT(_view);
         if (_view)
         {

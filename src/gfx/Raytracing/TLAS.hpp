@@ -66,7 +66,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void TLAS::build(gfx::CommandList * _cmdList)
     {
-        VG_PROFILE_GPU("TLAS build");
+        VG_PROFILE_GPU("Build TLAS");
         super::build(_cmdList);
     }
 

@@ -27,7 +27,7 @@ namespace vg::renderer
     void BLASUpdatePass::BeforeAll(const RenderPassContext & _renderPassContext)
     {
         RayTracingManager * rtManager = RayTracingManager::get();
-        rtManager->beforeAll();
+        rtManager->prepareBLAS();
     }
 
     //--------------------------------------------------------------------------------------
@@ -35,6 +35,6 @@ namespace vg::renderer
     {
         RayTracingManager * rtManager = RayTracingManager::get();
         Buffer * skinningBuffer = getRWBuffer("SkinningRWBuffer");
-        rtManager->update(_cmdList, skinningBuffer);
+        rtManager->updateBLAS(_cmdList, skinningBuffer);
     }
 }

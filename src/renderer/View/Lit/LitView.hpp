@@ -85,7 +85,7 @@ namespace vg::renderer
         const bool computePostProcess = view->IsComputePostProcessNeeded();
 
         if (view->IsUsingRayTracing())
-            _frameGraph.addUserPass(_renderPassContext, m_TLASUpdatePass, "TLAS Update");
+            _frameGraph.addUserPass(_renderPassContext, m_TLASUpdatePass, "TLAS");
 
         // Render shadow maps
         {

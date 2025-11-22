@@ -1119,12 +1119,18 @@ namespace vg::gfx
         {
             VG_PROFILE_CPU("GatherResources");
             for (auto & node : m_userPassInfoTree.m_children)
+            {
+                VG_PROFILE_CPU(node.m_name.c_str());
                 gatherResources(node);
+            }
         }
         {
             VG_PROFILE_CPU("BeforeAll");
             for (auto & node : m_userPassInfoTree.m_children)
+            {
+                VG_PROFILE_CPU(node.m_name.c_str());
                 beforeAll(node);
+            }
         }
 
         if (maxRenderJobCount > 0)

@@ -8,6 +8,7 @@ namespace vg::gfx
 {
     class CommandList;
     class Buffer;
+    class BLAS;
 }
 
 namespace vg::renderer
@@ -25,11 +26,11 @@ namespace vg::renderer
 
         void    beginFrame              ();
 
-        void    beforeAll               ();
-        void    update                  (gfx::CommandList * _cmdList, gfx::Buffer * _skinningBuffer);
+        void    prepareBLAS             ();
+        void    updateBLAS              (gfx::CommandList * _cmdList, gfx::Buffer * _skinningBuffer);
 
-        void    updateViewMain          (View * _view);
-        void    updateView              (gfx::CommandList * _cmdList, View * _view);
+        void    prepareTLAS             (View * _view);
+        void    updateTLAS              (gfx::CommandList * _cmdList, View * _view);
 
         bool    enableRayTracing        (bool _enable);
         bool    isRayTracingEnabled     () const;
@@ -54,6 +55,7 @@ namespace vg::renderer
         core::vector<MeshInstance *>    m_meshInstanceUpdateQueue;
         mutable core::Mutex             m_addRTMeshInstanceMutex = core::Mutex("Mutex - AddRTMeshInstance");
 
-        core::atomicvector<GraphicInstance *> m_visibleGraphicInstances;
+        core::vector<gfx::BLAS *>       m_blasToCreate;
+        core::vector<gfx::BLAS *>       m_blasToUpdate;
     };
 }

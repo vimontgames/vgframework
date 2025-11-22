@@ -115,7 +115,7 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void BLAS::build(gfx::CommandList * _cmdList, bool _update)
     {
-        VG_PROFILE_GPU("BLAS");
+        VG_PROFILE_GPU("Build BLAS");
 
         D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC desc{};
         desc.Inputs = m_DXRAccelStructInputs;

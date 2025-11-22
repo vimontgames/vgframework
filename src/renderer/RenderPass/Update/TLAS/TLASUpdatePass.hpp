@@ -30,7 +30,7 @@ namespace vg::renderer
     void TLASUpdatePass::BeforeAll(const gfx::RenderPassContext & _renderPassContext)
     {
         RayTracingManager * rtManager = RayTracingManager::get();
-        rtManager->updateViewMain(static_cast<View *>(_renderPassContext.getViewMutable()));
+        rtManager->prepareTLAS(static_cast<View *>(_renderPassContext.getViewMutable()));
     }
 
     //--------------------------------------------------------------------------------------
@@ -40,6 +40,6 @@ namespace vg::renderer
     void TLASUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
         RayTracingManager * rtManager = RayTracingManager::get();
-        rtManager->updateView(_cmdList, static_cast<View*>(_renderPassContext.getViewMutable()));
+        rtManager->updateTLAS(_cmdList, static_cast<View*>(_renderPassContext.getViewMutable()));
     }
 }

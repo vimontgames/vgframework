@@ -545,7 +545,7 @@ namespace vg::renderer
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_materialDataUpdatePass, "Material Data");
 
                 if (RayTracingManager::get()->isRayTracingEnabled())
-                    m_frameGraph.addUserPass(mainViewRenderPassContext, m_BLASUpdatePass, "BLAS Update");
+                    m_frameGraph.addUserPass(mainViewRenderPassContext, m_BLASUpdatePass, "BLAS");
 
                 if (asBool(PBRFlags::GenerateSpecularBRDF & options->getPBRFlags()))
                 {
