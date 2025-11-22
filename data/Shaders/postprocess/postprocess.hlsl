@@ -275,7 +275,8 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     // Use barycentrics to get interpolated attribute values
     Vertex vert = getRaytracingInterpolatedVertex(instanceData, batchData, primitiveIndex, triangleBarycentrics);
 
-    float3 worldPosition = worldRayOrigin + rayT * worldRayDirection;
+    float nearDist = viewConstants.getCameraNearFar().x;
+    float3 worldPosition = worldRayOrigin + (rayT-nearDist) * worldRayDirection;
     float2 uv0 = materialData.GetUV0(vert.uv[0], vert.uv[1], worldPosition);
                     
     float4 vertexColor = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags, mode);
@@ -290,7 +291,7 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     {
         default:
         case DisplayMode::RayTracing_Instance_WorldPosition:
-            // TODO
+            mat.albedo.rgb = sRGB2Linear(frac(worldPosition));
         break;
         
         case DisplayMode::RayTracing_Instance_MaterialID:
@@ -414,7 +415,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
     
     // 1. Opaque + alphatest
     {                    
-        RayQuery < RAY_FLAG_NONE > query;
+        RayQuery<RAY_FLAG_NONE> query;
 
         RayDesc ray;
         ray.Origin = origin;
