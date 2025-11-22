@@ -83,7 +83,7 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void TLAS::addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID)
+    void TLAS::addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID, TLASInstanceFlags _flags)
     {
         D3D12_RAYTRACING_INSTANCE_DESC desc = {};
         const float4x4 worldT = transpose(_world);
@@ -91,7 +91,14 @@ namespace vg::gfx::dx12
         desc.InstanceID = _instanceID;
         desc.InstanceMask = 0xFF;
         desc.InstanceContributionToHitGroupIndex = 0;
-        desc.Flags = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
+
+        VG_ASSERT(!asBool(TLASInstanceFlags::Opaque & _flags) || !asBool(TLASInstanceFlags::NotOpaque & _flags));
+        if (asBool(TLASInstanceFlags::Opaque & _flags))
+            desc.Flags = D3D12_RAYTRACING_INSTANCE_FLAG_FORCE_OPAQUE;
+        else if (asBool(TLASInstanceFlags::NotOpaque & _flags))
+            desc.Flags = D3D12_RAYTRACING_INSTANCE_FLAG_FORCE_NON_OPAQUE;
+        else
+            desc.Flags = D3D12_RAYTRACING_INSTANCE_FLAG_NONE;
 
         desc.AccelerationStructure = _blas->getBuffer()->getResource().getd3d12BufferResource()->GetGPUVirtualAddress();
 

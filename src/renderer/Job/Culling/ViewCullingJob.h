@@ -30,6 +30,12 @@ namespace vg::renderer
         Decal,
         Outline
     );
+
+    struct CullingOptions
+    {
+        View * m_view = nullptr;
+        bool m_raytracing = false;
+    };
  
     struct ViewCullingJobOutput
     {
@@ -91,7 +97,7 @@ namespace vg::renderer
 
         // Add Instance/SkinMesh/ParticleSystem only once using an atomic flag check and return 'true' if just added
 
-        bool addInstance(const GraphicInstance * _graphicInstance)
+        bool addInstance(GraphicInstance * _graphicInstance)
         {
             if (_graphicInstance->setAtomicFlags(GraphicInstance::AtomicFlags::InstanceList))
             {
@@ -101,7 +107,7 @@ namespace vg::renderer
             return false;
         }
 
-        bool addSkinMesh(const MeshInstance * _skinMeshInstance)
+        bool addSkinMesh(MeshInstance * _skinMeshInstance)
         {
             if (((GraphicInstance*)_skinMeshInstance)->setAtomicFlags(GraphicInstance::AtomicFlags::SkinList))
             {
@@ -111,7 +117,7 @@ namespace vg::renderer
             return false;
         }
 
-        bool addParticleSystem(const ParticleSystemInstance * _particleSystemInstance)
+        bool addParticleSystem(ParticleSystemInstance * _particleSystemInstance)
         {
             if (((GraphicInstance *)_particleSystemInstance)->setAtomicFlags(GraphicInstance::AtomicFlags::ParticleList))
             {
@@ -141,7 +147,7 @@ namespace vg::renderer
         void Run() override;
 
     protected:
-        void cullGameObjectRecur(const core::GameObject * _go, View * _view);
+        void cullGameObjectRecur(const CullingOptions & _cullingOptions, const core::GameObject * _gameobject);
 
     private:
         VG_INLINE void add(GraphicInstanceListType _type, const IGraphicInstance * _instance);

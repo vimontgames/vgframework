@@ -70,22 +70,24 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // This method is called once for each view, thus we can compute a view-dependent matrix for directional lights
     //--------------------------------------------------------------------------------------
-    bool DirectionalLightInstance::Cull(CullingResult * _cullingResult, View * _view) const
+    bool DirectionalLightInstance::Cull(const CullingOptions & _cullingOptions, CullingResult * _cullingResult)
     {
         // Directional light is never culled
         if (1)
         {
-            super::Cull(_cullingResult, _view);
+            super::Cull(_cullingOptions, _cullingResult);
 
-            if (!_view->isAdditionalView() && IsCastShadow())
+            View * view = _cullingOptions.m_view;
+
+            if (!view->isAdditionalView() && IsCastShadow())
             {
                 // Create view and start culling immediately
                 Renderer * renderer = Renderer::get();
 
-                const Frustum & frustum = _view->getCameraFrustum();
+                const Frustum & frustum = view->getCameraFrustum();
 
-                ShadowView * shadowView = new ShadowView(this, _view->getWorld(), getShadowResolution());
-                _view->addShadowView(shadowView);
+                ShadowView * shadowView = new ShadowView(this, view->getWorld(), getShadowResolution());
+                view->addShadowView(shadowView);
 
                 float4x4 lightWorld = getGlobalMatrix();
                 lightWorld[0].xyz *= -1;
@@ -103,7 +105,7 @@ namespace vg::renderer
 
                     case ShadowCameraMode::FollowCameraTranslation:
                     {
-                        lightWorld[3].xyz += _view->getViewInvMatrix()[3].xyz;
+                        lightWorld[3].xyz += view->getViewInvMatrix()[3].xyz;
                         shadowView->SetupOrthographicCamera(lightWorld, m_shadowSize, m_shadowRange);
                     }
                     break;

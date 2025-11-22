@@ -19,6 +19,19 @@ using namespace vg::core;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
+    RayTracingManager::RayTracingManager() :
+        m_visibleGraphicInstances(256)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    RayTracingManager::~RayTracingManager()
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
     bool RayTracingManager::enableRayTracing(bool _enable)
     {
         if (m_rayTracingRequested != _enable)
@@ -136,6 +149,15 @@ namespace vg::renderer
         }
     }
 
+    //--------------------------------------------------------------------------------------
+    void RayTracingManager::beforeAll()
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Update is not a right time to create BLAS, because an instance can belong to several view
+    // Instead, during culling instances that have no BLAS should be added to a list of instances that need to allocate BLAS
     //--------------------------------------------------------------------------------------
     void RayTracingManager::update(gfx::CommandList * _cmdList, gfx::Buffer * _skinningBuffer)
     {
@@ -280,8 +302,25 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    // Create the TLAS for the view and populate with GraphicInstances:
     // Not only the visible objects have to be added to TLAS, but also the ones visible from 
     // shadow casters if raytraced shadows are used for those lights.
+    //--------------------------------------------------------------------------------------
+    void RayTracingManager::updateViewMain(View * _view)
+    {
+        VG_ASSERT(_view);
+        if (_view)
+        {
+            if (_view->IsVisible() && _view->IsUsingRayTracing())
+                _view->resetTLAS();
+            else
+                _view->destroyTLAS();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Build the TLAS on the GPU
+    // TODO: instead of using a set to eliminate duplicates, add instance directly to TLAS during culling using an atomic flag 
     //--------------------------------------------------------------------------------------
     void RayTracingManager::updateView(gfx::CommandList * _cmdList, View * _view)
     {
@@ -290,47 +329,42 @@ namespace vg::renderer
         {
             if (_view->IsVisible() && _view->IsUsingRayTracing())
             {
-                // Should not access TLAS before resetTLAS because of double-buffer
-                _view->resetTLAS();
                 gfx::TLAS * tlas = _view->getTLAS();
-
+                VG_ASSERT(tlas);
+                
                 bool updateTLAS = false;
-
+                
                 const GraphicInstanceList & instances = _view->getCullingJobResult().get(GraphicInstanceListType::All);
-
+                
                 core::set<GraphicInstance *> set;
-
+                
                 for (uint i = 0; i < instances.m_instances.size(); ++i)
                 {
                     GraphicInstance * instance = (GraphicInstance *)instances.m_instances[i];
                     set.insert(instance);
                 }     
-
+                
                 const auto shadowViews = _view->getShadowViews();
                 for (ShadowView * shadowView : shadowViews)
                 {
                     const GraphicInstanceList & instances = shadowView->getCullingJobResult().get(GraphicInstanceListType::All);
-
+                
                     for (uint i = 0; i < instances.m_instances.size(); ++i)
                     {
                         GraphicInstance * instance = (GraphicInstance *)instances.m_instances[i];
                         set.insert(instance);
                     }
                 }
-
+                
                 uint index = 0;
                 for (GraphicInstance * instance : set)
                 {
                     updateTLAS |= instance->OnUpdateRayTracing(_cmdList, _view, index);
                     index++;
                 }
-
+                
                 if (updateTLAS)
                     tlas->build(_cmdList);
-            }
-            else
-            {
-                _view->destroyTLAS();
             }
         }
     }

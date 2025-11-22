@@ -1,19 +1,31 @@
+#if GPUDATAOFFSET_FRAME_COUNTER
+#include "renderer/Renderer.h"
+#endif
+
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-// Returns true if the flag was just set
-//--------------------------------------------------------------------------------------
-    VG_INLINE bool GraphicInstance::setAtomicFlags(AtomicFlags _flag) const
+    // Returns true if the flag was just set
+    //--------------------------------------------------------------------------------------
+    VG_INLINE bool GraphicInstance::setAtomicFlags(AtomicFlags _flags)
     {
-        return 0 == (_flag & m_atomicFlags.fetch_or(_flag));
+        return 0 == (_flags & m_atomicFlags.fetch_or(_flags));
     }
 
     //--------------------------------------------------------------------------------------
     // Returns true if the flag was just removed
     //--------------------------------------------------------------------------------------
-    VG_INLINE bool GraphicInstance::removeAtomicFlags(AtomicFlags _flag)
+    VG_INLINE bool GraphicInstance::removeAtomicFlags(AtomicFlags _flags)
     {
-        return 0 != (_flag & m_atomicFlags.fetch_and(~_flag));
+        return 0 != (_flags & m_atomicFlags.fetch_and(~_flags));
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Returns true if the flag was just removed
+    //--------------------------------------------------------------------------------------
+    VG_INLINE bool GraphicInstance::testAtomicFlags(AtomicFlags _flags) const
+    {
+        return 0 != (_flags & m_atomicFlags.load());
     }
 
     //--------------------------------------------------------------------------------------
@@ -22,12 +34,20 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     VG_INLINE void GraphicInstance::setGPUInstanceDataOffset(core::uint _offset)
     {
+        #if GPUDATAOFFSET_FRAME_COUNTER
+        m_gpuInstanceDataFrameIndex = Renderer::get()->getFrameCounter();
+        #endif
+
         m_gpuInstanceDataHandle = _offset;
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE core::uint GraphicInstance::getGPUInstanceDataOffset() const
     {
+        #if GPUDATAOFFSET_FRAME_COUNTER
+        VG_ASSERT(m_gpuInstanceDataFrameIndex == Renderer::get()->getFrameCounter());
+        #endif
+
         return m_gpuInstanceDataHandle;
     }  
 

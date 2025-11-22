@@ -183,7 +183,7 @@ namespace vg::engine
                 const auto & emitter = emitters[i];
                 if (&emitter.getMaterialResource() == matRes)
                 {
-                    m_particleSystemInstance->OnMaterialChanged(i);
+                    m_particleSystemInstance->OnMaterialChanged();
                     break;
                 }
             }

@@ -14,6 +14,7 @@ namespace vg::core
 
 namespace vg::gfx
 {
+    enum class TLASInstanceFlags : core::u32;
     class Buffer;
     class BLAS;
     using BLASVariantKey = core::u64;
@@ -70,8 +71,8 @@ namespace vg::renderer
         core::string                    GetBatchName                (core::uint _batchIndex) const final override;
 
         bool                            TryGetAABB                  (core::AABB & _aabb) const final override;
-        bool                            Cull                        (CullingResult * _cullingResult, View * _view) const final override;
-        void                            OnMaterialChanged           (core::uint _index) final override;
+        bool                            Cull                        (const CullingOptions & _cullingOptions, CullingResult * _cullingResult) final override;
+        void                            OnMaterialChanged           () final override;
         bool                            OnUpdateRayTracing          (gfx::CommandList * _cmdList, View * _view, core::uint _index) final override;
 
         void                            Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
@@ -96,6 +97,7 @@ namespace vg::renderer
 
         gfx::BLASVariantKey             computeBLASVariantKey       () const;
         bool                            updateInstanceBLAS          ();
+        gfx::TLASInstanceFlags          getTLASInstanceFlags        () const;
 
     private:
         AnimationBinding *              getAnimationBinding         (ISkeletalAnimation * _animation);

@@ -5,6 +5,11 @@
 
 namespace vg::gfx
 {
+    vg_enum_class(vg::gfx, TLASInstanceFlags, core::u32,
+        Opaque = 0x00000001,
+        NotOpaque = 0x00000002
+    );
+
     namespace base
     {
         class TLAS : public core::Object
@@ -44,7 +49,7 @@ namespace vg::gfx
 
         void                        reset           ();
         void                        build           (gfx::CommandList * _cmdList);
-        void                        addInstance     (const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID);
+        void                        addInstance     (const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID, TLASInstanceFlags _flags);
 
         TLAS();
         ~TLAS();

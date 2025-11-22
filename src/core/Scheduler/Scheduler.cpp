@@ -72,10 +72,10 @@ namespace vg::core
         if (m_registeredThreads.end() != m_registeredThreads.find(threadId))
             return;  
 
-        if (_count == 1)
-            VG_INFO("[Profiler] Register %s thread", asCString(_threadType));
-        else
-            VG_INFO("[Profiler] Register %s thread %2u/%-2u", asCString(_threadType), _index, _count);
+        //if (_count == 1)
+        //    VG_INFO("[Profiler] Register %s thread", asCString(_threadType));
+        //else
+        //    VG_INFO("[Profiler] Register %s thread %2u/%-2u", asCString(_threadType), _index, _count);
 
         // Set thread name for debug
         SetThreadDescription(GetCurrentThread(), core::wstring_convert((string)_name).c_str());

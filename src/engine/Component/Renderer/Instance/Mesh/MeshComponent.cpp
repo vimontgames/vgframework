@@ -183,7 +183,7 @@ namespace vg::engine
             {
                 if (&matResources[i] == matRes)
                 {
-                    m_meshInstance->OnMaterialChanged(i);
+                    m_meshInstance->OnMaterialChanged();
                     break;
                 }
             }

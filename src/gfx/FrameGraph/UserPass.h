@@ -27,10 +27,10 @@ namespace vg::gfx
 		// Called when building FrameGraph, no access to CommandList
 		virtual void		Setup				(const RenderPassContext & _renderPassContext) = 0;
 
-        // An heuristic used during job dispatch where 1 ~= 1 draw call. It can be a fixed cost and/or variable cost
+        // An heuristic used during job dispatch where 1 ~= 1 draw call. It can be a fixed cost and/or variable cost and is used only to balance scheduling
         virtual core::u64	GetCostEstimate		(const RenderPassContext & _renderPassContext) const { return 1; }
 
-		// Called on main thread for all nodes before rendering using multiple threads (e.g., compute offsets used in other RenderJobs)
+		// Called on main thread for all nodes before rendering using multiple threads (e.g., compute offsets used in other RenderJobs, but not in other 'BeforeAll' callbacks!)
 		virtual void		BeforeAll			(const RenderPassContext & _renderPassContext) {};
 
 		// Called before entering RenderPass (e.g., write buffers from CPU to the GPU)

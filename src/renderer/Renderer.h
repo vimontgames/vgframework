@@ -144,6 +144,8 @@ namespace vg::renderer
 
         gfx::Texture *                          getSpecularBRDF             () const;
 
+        core::u64                               getFrameCounter            () const;
+
     public: // internal
         gfx::Texture *                          getBackbuffer               () const;
 

@@ -4,6 +4,7 @@
 #include "core/Misc/BitMask/BitMask.h"
 
 enum class VertexFormat : vg::core::uint;
+enum class SurfaceTypeFlags : vg::core::uint;
 
 namespace vg::core
 {
@@ -16,11 +17,16 @@ namespace vg::gfx
     class Buffer;
 }
 
+#ifndef VG_OPTIMIZED
+#define GPUDATAOFFSET_FRAME_COUNTER 1
+#endif
+
 namespace vg::renderer
 {
     class MaterialModel;
     class View;
     class Frustum;
+    struct CullingOptions;
     struct CullingResult;
 
     class GraphicInstance : public IGraphicInstance
@@ -28,9 +34,9 @@ namespace vg::renderer
     public:
         enum AtomicFlags : core::u32
         {
-            InstanceList = 0x00000001,  // Has been added to instance list
-            SkinList     = 0x00000002,  // Has been added to skin list
-            ParticleList = 0x00000004   // Has been added to particle system list
+            InstanceList    = 0x00000001,  // Has been added to instance list
+            SkinList        = 0x00000002,  // Has been added to skin list
+            ParticleList    = 0x00000004,  // Has been added to particle system list
         };
 
         VG_CLASS_DECL(GraphicInstance, IGraphicInstance);
@@ -50,8 +56,8 @@ namespace vg::renderer
         PickingID                                       GetPickingID                    () const override;
 
         // New virtual functions added to GraphicInstance
-        virtual bool                                    Cull                            (CullingResult * _cullingResult, View * _view) const = 0;
-        virtual void                                    OnMaterialChanged               (core::uint _index) {}
+        virtual bool                                    Cull                            (const CullingOptions & _cullingOptions, CullingResult * _cullingResult) = 0;
+        virtual void                                    OnMaterialChanged               ();
         virtual bool                                    OnUpdateRayTracing              (gfx::CommandList * _cmdList, View * _view, core::uint _index) { return false; }
 
         // Size returned by 'GetGPUInstanceDataSize' and written by 'FillGPUInstance    Data' must match
@@ -77,8 +83,9 @@ namespace vg::renderer
         void                                            setInstanceVertexBuffer         (gfx::Buffer * _buffer, core::uint _offset);
   
         VG_INLINE const core::vector<MaterialModel *> & getMaterials                    () const { return m_materials;}
-        VG_INLINE bool                                  setAtomicFlags                  (AtomicFlags _flag) const;
-        VG_INLINE bool                                  removeAtomicFlags               (AtomicFlags _flag);
+        VG_INLINE bool                                  setAtomicFlags                  (AtomicFlags _flags);
+        VG_INLINE bool                                  removeAtomicFlags               (AtomicFlags _flags);
+        VG_INLINE bool                                  testAtomicFlags                 (AtomicFlags _flags) const;
         VG_INLINE void                                  setGPUInstanceDataOffset        (core::uint _offset);
         VG_INLINE core::uint                            getGPUInstanceDataOffset        () const;
         VG_INLINE const core::BitMask &                 getBatchMask                    () const;
@@ -86,10 +93,14 @@ namespace vg::renderer
         VG_INLINE gfx::Buffer *                         getInstanceIndexBuffer          () const;
         VG_INLINE core::uint                            getInstanceIndexBufferOffset    () const;  
         VG_INLINE gfx::Buffer *                         getInstanceVertexBuffer         () const;
-        VG_INLINE core::uint                            getInstanceVertexBufferOffset   () const;   
+        VG_INLINE core::uint                            getInstanceVertexBufferOffset   () const;  
+
+        VG_INLINE void                                  setSurfaceTypeFlags             (SurfaceTypeFlags _flag, bool _enabled);
+        VG_INLINE SurfaceTypeFlags                      computeSurfaceTypeFlags         () const;
 
     private:
-        mutable core::atomic<core::u32>                 m_atomicFlags;
+         core::atomic<core::u32>                        m_atomicFlags;
+        SurfaceTypeFlags                                m_surfaceTypes                  = (SurfaceTypeFlags)0x0;
         core::uint                                      m_gpuInstanceDataHandle         = -1;
         PickingID                                       m_pickingID;
         core::vector<MaterialModel *>                   m_materials;
@@ -98,6 +109,10 @@ namespace vg::renderer
         core::uint                                      m_instanceIndexBufferOffset     = -1;
         gfx::Buffer *                                   m_instanceVertexBuffer          = nullptr;
         core::uint                                      m_instanceVertexBufferOffset    = -1;
+
+        #if GPUDATAOFFSET_FRAME_COUNTER
+        core::u64                                       m_gpuInstanceDataFrameIndex     = -1; // Used to check the frame GPUInstanceData offset has been set
+        #endif
     };
 }
 

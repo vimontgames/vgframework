@@ -2,6 +2,7 @@
 #include "core/Object/Object.h"
 #include "core/Singleton/Singleton.h"
 #include "core/Scheduler/Mutex.h"
+#include "core/Container/atomicvector.h"
 
 namespace vg::gfx
 {
@@ -14,14 +15,20 @@ namespace vg::renderer
     class MeshModel;
     class MeshInstance;
     class View;
+    class GraphicInstance;
 
     class RayTracingManager final : public core::Object, public core::Singleton<RayTracingManager>
     {
     public:
+        RayTracingManager();
+        ~RayTracingManager();
 
         void    beginFrame              ();
 
+        void    beforeAll               ();
         void    update                  (gfx::CommandList * _cmdList, gfx::Buffer * _skinningBuffer);
+
+        void    updateViewMain          (View * _view);
         void    updateView              (gfx::CommandList * _cmdList, View * _view);
 
         bool    enableRayTracing        (bool _enable);
@@ -46,5 +53,7 @@ namespace vg::renderer
         core::vector<MeshInstance *>    m_meshInstances;
         core::vector<MeshInstance *>    m_meshInstanceUpdateQueue;
         mutable core::Mutex             m_addRTMeshInstanceMutex = core::Mutex("Mutex - AddRTMeshInstance");
+
+        core::atomicvector<GraphicInstance *> m_visibleGraphicInstances;
     };
 }

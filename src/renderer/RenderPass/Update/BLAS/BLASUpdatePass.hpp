@@ -24,6 +24,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void BLASUpdatePass::BeforeAll(const RenderPassContext & _renderPassContext)
+    {
+        RayTracingManager * rtManager = RayTracingManager::get();
+        rtManager->beforeAll();
+    }
+
+    //--------------------------------------------------------------------------------------
     void BLASUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
         RayTracingManager * rtManager = RayTracingManager::get();

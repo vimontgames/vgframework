@@ -36,8 +36,15 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool ParticleSystemInstance::TryGetAABB(core::AABB & _aabb) const
     {
-        _aabb = m_aabb;
-        return true;
+        if (m_aabb.isFinite())
+        {
+            _aabb = m_aabb;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -71,12 +78,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool ParticleSystemInstance::Cull(CullingResult * _cullingResult, View * _view) const
+    bool ParticleSystemInstance::Cull(const CullingOptions & _cullingOptions, CullingResult * _cullingResult)
     {
         core::AABB aabb;
         if (TryGetAABB(aabb))
         {
-            const bool visible = _view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside || asBool(ObjectFlags::NoCulling & getObjectFlags());
+            const bool visible = _cullingOptions.m_view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside || asBool(ObjectFlags::NoCulling & getObjectFlags());
 
             if (visible)
             {
@@ -89,54 +96,15 @@ namespace vg::renderer
                 // All instances list (used e.g. to draw AABB)
                 _cullingResult->m_output->add(GraphicInstanceListType::All, this);
 
-                bool hasOpaque = false;
-                bool hasAlphaTest = false;
-                bool hasAlphaBlend = false;
-                bool hasDecal = false;
+                const auto surfaceTypes = computeSurfaceTypeFlags();
 
-                auto materials = getMaterials();
-                if (materials.size() > 0)
-                {
-                    for (auto * material : materials)
-                    {
-                        if (material)
-                        {
-                            auto surf = material->getSurfaceType();
-
-                            switch (surf)
-                            {
-                                case SurfaceType::Opaque:
-                                    hasOpaque = true;
-                                    break;
-
-                                case SurfaceType::AlphaTest:
-                                    hasAlphaTest = true;
-                                    break;
-
-                                case SurfaceType::AlphaBlend:
-                                    hasAlphaBlend = true;
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            hasOpaque = true;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    hasOpaque = true;
-                }
-
-                if (hasOpaque)
+                if (asBool(SurfaceTypeFlags::Opaque & surfaceTypes))
                     _cullingResult->m_output->add(GraphicInstanceListType::Opaque, this);
 
-                if (hasAlphaTest)
+                if (asBool(SurfaceTypeFlags::AlphaTest & surfaceTypes))
                     _cullingResult->m_output->add(GraphicInstanceListType::AlphaTest, this);
 
-                if (hasAlphaBlend)
+                if (asBool(SurfaceTypeFlags::AlphaBlend & surfaceTypes))
                     _cullingResult->m_output->add(GraphicInstanceListType::Transparent, this);
 
                 // Particle systems in this view (used to fill GPU data)

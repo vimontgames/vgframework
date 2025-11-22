@@ -289,29 +289,24 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     switch (mode)
     {
         default:
-        case DisplayMode::RayTracing_Committed_Hit:
-        case DisplayMode::RayTracing_Committed_InstanceID:
-        case DisplayMode::RayTracing_Committed_GeometryIndex:
-        case DisplayMode::RayTracing_Committed_PrimitiveIndex:
-        case DisplayMode::RayTracing_Committed_Barycentrics:
-        case DisplayMode::RayTracing_Committed_WorldPosition:
+        case DisplayMode::RayTracing_Instance_WorldPosition:
             // TODO
         break;
         
-        case DisplayMode::RayTracing_Attributes_MaterialID:
+        case DisplayMode::RayTracing_Instance_MaterialID:
             mat.albedo.rgb = sRGB2Linear(getMatIDColor(mat.matID));
             break;
-        
-        case DisplayMode::RayTracing_Attributes_Albedo:
-            mat.albedo.rgb = mat.albedo.rgb;
-            break;
-        
-        case DisplayMode::RayTracing_Attributes_UV0:
+                
+        case DisplayMode::RayTracing_Geometry_UV0:
             mat.albedo.rgb = sRGB2Linear(float3(mat.uv0, 0));
             break;
         
-        case DisplayMode::RayTracing_Attributes_SurfaceType:
+        case DisplayMode::RayTracing_Material_SurfaceType:
             mat.albedo.rgb = getSurfaceTypeColor(mat.surfaceType).rgb;
+            break;
+        
+        case DisplayMode::RayTracing_Material_Albedo:
+            mat.albedo.rgb = mat.albedo.rgb;
             break;
     }
     #endif
@@ -351,16 +346,11 @@ bool IsRaytracingDebugDisplayMode(DisplayMode mode)
         default:
             return false;
         
-        case DisplayMode::RayTracing_Committed_Hit:
-        case DisplayMode::RayTracing_Committed_InstanceID:
-        case DisplayMode::RayTracing_Committed_GeometryIndex:
-        case DisplayMode::RayTracing_Committed_PrimitiveIndex:
-        case DisplayMode::RayTracing_Committed_Barycentrics:
-        case DisplayMode::RayTracing_Committed_WorldPosition:
-        case DisplayMode::RayTracing_Attributes_MaterialID:
-        case DisplayMode::RayTracing_Attributes_SurfaceType:
-        case DisplayMode::RayTracing_Attributes_UV0:
-        case DisplayMode::RayTracing_Attributes_Albedo:
+        case DisplayMode::RayTracing_Instance_WorldPosition:
+        case DisplayMode::RayTracing_Instance_MaterialID:
+        case DisplayMode::RayTracing_Geometry_UV0: 
+        case DisplayMode::RayTracing_Material_SurfaceType:
+        case DisplayMode::RayTracing_Material_Albedo: 
             return true;
     }
 }
@@ -419,59 +409,115 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
     float3 farDir = farTopLeft * w00 + farTopRight * w01 + farBottomLeft * w10 + farBottomRight * w11;
     float3 dir = normalize(farDir - nearDir);
     
-    #if 0
-        
-    #else
-                
-    RayQuery<RAY_FLAG_NONE> query;
-
-    RayDesc ray;
-    ray.Origin    = origin;
-    ray.Direction = dir;
-    ray.TMin      = nearDist;
-    ray.TMax      = farDist;
-        
-    query.TraceRayInline(getTLAS(viewConstants.getTLASHandle()), RAY_FLAG_NONE, 0xff, ray);
-        
-    while (query.Proceed())
-	{
-		switch (query.CandidateType())
-		{
-			case CANDIDATE_NON_OPAQUE_TRIANGLE:
-			{
-				MaterialSample mat = getRaytracingCandidateMaterial(query, viewConstants);
-                float candidateDist = query.CandidateTriangleRayT();
-
-                if (mat.albedo.a > 0) 
-                {
-                    query.CommitNonOpaqueTriangleHit(); 
-                    break;
-                }
-			}
-            break;
-		}
-	}
-        
-    switch (query.CommittedStatus())
-	{
-		case COMMITTED_TRIANGLE_HIT:
-		{
-			// Triangle hit
-            MaterialSample mat = getRaytracingCommittedMaterial(query, viewConstants);
-            color = mat.albedo;
-        }
-        break;
-        
-		// We do not need this case because we initialize the values by default to be as if the ray missed
-		case COMMITTED_NOTHING:
-		{
-			color.rgb = float3(1,0,1);
-		}
-        break;
-	}
+    bool hitOpaque = false;
+    float hitOpaqueDist = farDist;
     
-    #endif
+    // 1. Opaque + alphatest
+    {                    
+        RayQuery < RAY_FLAG_NONE > query;
 
+        RayDesc ray;
+        ray.Origin = origin;
+        ray.Direction = dir;
+        ray.TMin = nearDist;
+        ray.TMax = farDist;
+        
+        query.TraceRayInline(getTLAS(viewConstants.getTLASHandle()), RAY_FLAG_NONE, 0xff, ray);
+        
+        while (query.Proceed())
+        {
+            switch (query.CandidateType())
+            {
+                case CANDIDATE_NON_OPAQUE_TRIANGLE:
+			    {
+                    MaterialSample mat = getRaytracingCandidateMaterial(query, viewConstants);
+
+                    if (mat.surfaceType != SurfaceType::AlphaBlend && mat.albedo.a > 0)
+                    {
+                        query.CommitNonOpaqueTriangleHit();
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+            
+        switch (query.CommittedStatus())
+        {
+            case COMMITTED_TRIANGLE_HIT:
+		    {
+			    // Triangle hit
+                hitOpaque = true;
+                hitOpaqueDist = query.CommittedRayT();
+            
+                MaterialSample mat = getRaytracingCommittedMaterial(query, viewConstants);
+                color = mat.albedo;
+            }
+            break;
+        
+		    // We do not need this case because we initialize the values by default to be as if the ray missed
+            case COMMITTED_NOTHING:
+		    {
+                color.rgb = float3(1, 0, 1);
+            }
+            break;
+        }
+    }
+    
+    // 2. Alphablend
+    {
+        RayQuery<RAY_FLAG_NONE> query;
+
+        RayDesc ray;
+        ray.Origin = origin;
+        ray.Direction = dir;
+        ray.TMin = nearDist;
+        ray.TMax = hitOpaqueDist;
+        
+        query.TraceRayInline(getTLAS(viewConstants.getTLASHandle()), RAY_FLAG_NONE, 0xff, ray);
+        
+        while (query.Proceed())
+        {
+            switch (query.CandidateType())
+            {
+                case CANDIDATE_NON_OPAQUE_TRIANGLE:
+			    {
+                    if (query.CandidateTriangleRayT() < hitOpaqueDist)
+                    {
+                        MaterialSample mat = getRaytracingCandidateMaterial(query, viewConstants);
+
+                        if (mat.surfaceType == SurfaceType::AlphaBlend && mat.albedo.a > 0)
+                        {
+                            float3 srcColor = mat.albedo.rgb;
+                            float srcAlpha = mat.albedo.a * 0.5;
+                            
+                            float3 dstColor = color.rgb;
+                            
+                            color.rgb = srcColor * srcAlpha + dstColor * (1-srcAlpha);
+                        }
+                    }
+                }
+                break;
+            }
+        }
+            
+        switch (query.CommittedStatus())
+        {
+            case COMMITTED_TRIANGLE_HIT:
+		    {       
+                MaterialSample mat = getRaytracingCommittedMaterial(query, viewConstants);
+                 //mat.albedo;
+            }
+            break;
+        
+            case COMMITTED_NOTHING:
+		    {
+
+            }
+            break;
+        }
+    }
+    
     return color;
 }
 #endif // _RAYTRACING

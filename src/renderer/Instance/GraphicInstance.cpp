@@ -86,6 +86,61 @@ namespace vg::renderer
     void GraphicInstance::SetBatchMask(const core::BitMask & _batchMask)
     {
         m_batchMask = _batchMask;
+        OnMaterialChanged();
+    }
+
+    //--------------------------------------------------------------------------------------
+    SurfaceTypeFlags GraphicInstance::computeSurfaceTypeFlags() const
+    {
+        SurfaceTypeFlags flags = (SurfaceTypeFlags)0x0;
+
+        auto materials = getMaterials();
+        if (materials.size() > 0)
+        {
+            for (auto * material : materials)
+            {
+                if (material)
+                {
+                    auto surf = material->getSurfaceType();
+
+                    switch (surf)
+                    {
+                        case SurfaceType::Opaque:
+                            flags |= SurfaceTypeFlags::Opaque;
+                            break;
+
+                        case SurfaceType::AlphaTest:
+                            flags |= SurfaceTypeFlags::AlphaTest;
+                            break;
+
+                        case SurfaceType::AlphaBlend:
+                            flags |= SurfaceTypeFlags::AlphaBlend;
+                            break;
+
+                        case SurfaceType::Decal:
+                            flags |= SurfaceTypeFlags::Decal;
+                            break;
+                    }
+                }
+                else
+                {
+                    flags |= SurfaceTypeFlags::Opaque;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            flags |= SurfaceTypeFlags::Opaque;
+        }
+
+        return flags;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GraphicInstance::OnMaterialChanged()
+    {
+        
     }
 
     //--------------------------------------------------------------------------------------
@@ -100,7 +155,7 @@ namespace vg::renderer
                     VG_SAFE_RELEASE(m_materials[i]);
                 }
                 m_materials.resize(_count);
-                OnMaterialChanged(-1);
+                OnMaterialChanged();
             }
             return true;
         }
@@ -118,7 +173,7 @@ namespace vg::renderer
             VG_SAFE_RELEASE(m_materials[_index]);
             VG_SAFE_INCREASE_REFCOUNT(_materialModel);
             m_materials[_index] = _materialModel;
-            OnMaterialChanged(_index);
+            OnMaterialChanged();
             return true;
         }
 

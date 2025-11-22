@@ -32,7 +32,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool CameraInstance::Cull(CullingResult * _cullingResult, View * _view) const
+    bool CameraInstance::Cull(const CullingOptions & _cullingOptions, CullingResult * _cullingResult)
     {
         _cullingResult->m_output->add((const CameraInstance*)this);
 

@@ -20,7 +20,7 @@ namespace vg::gfx::dx12
 
         void reset();
         void build(gfx::CommandList * _cmdList);
-        void addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID);
+        void addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID, TLASInstanceFlags _flags);
         BindlessTLASHandle getBindlessHandle() const;
 
     private:

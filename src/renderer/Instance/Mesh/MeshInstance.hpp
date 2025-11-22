@@ -76,75 +76,31 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::Cull(CullingResult * _cullingResult, View * _view) const
+    bool MeshInstance::Cull(const CullingOptions & _cullingOptions, CullingResult * _cullingResult)
     {
         const MeshModel * meshModel = getMeshModel(Lod::Lod0);
 
         if (nullptr != meshModel)
         {
             const AABB & aabb = meshModel->getGeometry()->getAABB();
-            const bool visible = _view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside || asBool(ObjectFlags::NoCulling & getObjectFlags());
+            const bool visible = _cullingOptions.m_view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside || asBool(ObjectFlags::NoCulling & getObjectFlags());
 
             if (visible)
             {
                 _cullingResult->m_output->add(GraphicInstanceListType::All, this);
 
-                // TODO: make a func?
-                bool hasOpaque = false;
-                bool hasAlphaTest = false;
-                bool hasAlphaBlend = false;
-                bool hasDecal = false;
+                const auto surfaceTypes = computeSurfaceTypeFlags();
 
-                auto materials = getMaterials();
-                if (materials.size() > 0)
-                {
-                    for (auto * material : materials)
-                    {
-                        if (material)
-                        {
-                            auto surf = material->getSurfaceType();
-
-                            switch (surf)
-                            {
-                                case SurfaceType::Opaque:
-                                    hasOpaque = true;
-                                    break;
-
-                                case SurfaceType::AlphaTest:
-                                    hasAlphaTest = true;
-                                    break;
-
-                                case SurfaceType::AlphaBlend:
-                                    hasAlphaBlend = true;
-                                    break;
-
-                                case SurfaceType::Decal:
-                                    hasDecal = true;
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            hasOpaque = true;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    hasOpaque = true;
-                }
-
-                if (hasOpaque)
+                if (asBool(SurfaceTypeFlags::Opaque & surfaceTypes))
                     _cullingResult->m_output->add(GraphicInstanceListType::Opaque, this);
 
-                if (hasAlphaTest)
+                if (asBool(SurfaceTypeFlags::AlphaTest & surfaceTypes))
                     _cullingResult->m_output->add(GraphicInstanceListType::AlphaTest, this);
 
-                if (hasAlphaBlend)
+                if (asBool(SurfaceTypeFlags::AlphaBlend & surfaceTypes))
                     _cullingResult->m_output->add(GraphicInstanceListType::Transparent, this);
 
-                if (hasDecal)
+                if (asBool(SurfaceTypeFlags::Decal & surfaceTypes))
                     _cullingResult->m_output->add(GraphicInstanceListType::Decal, this);
 
                 _cullingResult->m_sharedOutput->addInstance(this);
@@ -198,6 +154,19 @@ namespace vg::renderer
     }    
 
     //--------------------------------------------------------------------------------------
+    gfx::TLASInstanceFlags MeshInstance::getTLASInstanceFlags() const
+    {
+        const SurfaceTypeFlags flags = computeSurfaceTypeFlags();
+
+        if ((SurfaceTypeFlags::Opaque & flags) == flags)
+            return gfx::TLASInstanceFlags::Opaque;
+        else if (((SurfaceTypeFlags::AlphaTest | SurfaceTypeFlags::AlphaBlend | SurfaceTypeFlags::Decal) & flags) == flags)
+            return gfx::TLASInstanceFlags::NotOpaque;
+
+        return (gfx::TLASInstanceFlags)0x0;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool MeshInstance::updateInstanceBLAS()
     {
         if (!isSkinned() && RayTracingManager::get()->isRayTracingEnabled())
@@ -227,8 +196,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshInstance::OnMaterialChanged(uint _index)
+    // This is not working as expected during edition because only the original instance gets notified, but not its instances.
+    // Instead, we should check in non-render job code if the BLAS needs update.
+    //--------------------------------------------------------------------------------------
+    void MeshInstance::OnMaterialChanged()
     {
+        super::OnMaterialChanged();     
+        
         if (Model * model = getModel(Lod::Lod0))
             updateInstanceBLAS();
     }
@@ -240,8 +214,8 @@ namespace vg::renderer
 
         if (const auto * blas = getInstanceBLAS())
         {
-            u32 rayTracingID = getGPUInstanceDataOffset() / GPU_INSTANCE_DATA_ALIGNMENT;
-            tlas->addInstance(blas, getGlobalMatrix(), rayTracingID);
+            const u32 rayTracingID = getGPUInstanceDataOffset() / GPU_INSTANCE_DATA_ALIGNMENT;
+            tlas->addInstance(blas, getGlobalMatrix(), rayTracingID, getTLASInstanceFlags());
         }
 
         return true;

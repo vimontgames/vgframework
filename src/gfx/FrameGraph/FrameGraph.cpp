@@ -1326,7 +1326,7 @@ namespace vg::gfx
                                     }
 
                                     // Split in two lists, new list starts with the biggest node
-                                    if (maxNodeCostIndex > 0)
+                                    if (maxNodeCostIndex > 0 && maxNodeCostIndex != -1)
                                     {
                                         uint newNodeListSize = (uint)nodeListToSplit.nodes.size() - maxNodeCostIndex;
                                         NodeList newNodeList;

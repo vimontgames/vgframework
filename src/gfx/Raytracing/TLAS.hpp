@@ -12,6 +12,8 @@
 #error Undefined GFXAPI
 #endif
 
+
+
 namespace vg::gfx
 {
     namespace base
@@ -69,9 +71,9 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    void TLAS::addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID)
+    void TLAS::addInstance(const gfx::BLAS * _blas, const core::float4x4 & _world, const core::u32 _instanceID, TLASInstanceFlags _flags)
     {
         VG_ASSERT(_blas->isInitialized());
-        super::addInstance(_blas, _world, _instanceID);
+        super::addInstance(_blas, _world, _instanceID, _flags);
     }
 }

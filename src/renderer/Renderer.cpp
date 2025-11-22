@@ -1383,4 +1383,10 @@ namespace vg::renderer
 
         return false;
     }
+
+    //--------------------------------------------------------------------------------------
+    core::u64 Renderer::getFrameCounter() const
+    {
+        return m_device.getFrameCounter();
+    }
 }

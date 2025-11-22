@@ -18,4 +18,11 @@ vg_enum_class_global(SurfaceType, uint,
     Decal
 );
 
+vg_enum_class_global(SurfaceTypeFlags, uint,
+    Opaque      =  1U << (uint)SurfaceType::Opaque,
+    AlphaTest   =  1U << (uint)SurfaceType::AlphaTest,
+    AlphaBlend  =  1U << (uint)SurfaceType::AlphaBlend,
+    Decal       =  1U << (uint)SurfaceType::Decal
+);
+
 #endif

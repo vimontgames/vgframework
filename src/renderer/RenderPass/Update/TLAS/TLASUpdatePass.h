@@ -18,6 +18,7 @@ namespace vg::renderer
         TLASUpdatePass();
         ~TLASUpdatePass();
 
+        void    BeforeAll(const gfx::RenderPassContext & _renderPassContext) final override;
         void	Setup(const gfx::RenderPassContext & _renderPassContext) final override;
         void	BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList) final override;
     };
