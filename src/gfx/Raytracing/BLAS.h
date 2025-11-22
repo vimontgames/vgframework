@@ -17,8 +17,8 @@ namespace vg::gfx
             VG_INLINE BLASUpdateType    getUpdateType   () const { return m_updateType; }
             VG_INLINE BLASVariantKey    getKey          () const { return m_key; }
             VG_INLINE gfx::Buffer *     getBuffer       () const { return m_resultBuffer; }
-            VG_INLINE bool              isInitialized   () const { return m_initDone; }
-            VG_INLINE void              setInitialized  () { m_initDone = true; }
+            VG_INLINE bool              isInitDone      () const { return m_initDone; }
+            VG_INLINE bool              isBuildDone     () const { return m_buildDone; }
 
         protected:
             BLASUpdateType  m_updateType;
@@ -26,6 +26,7 @@ namespace vg::gfx
             gfx::Buffer *   m_resultBuffer = nullptr;
             gfx::Buffer *   m_scratchBuffer = nullptr;
             bool            m_initDone = false;
+            bool            m_buildDone = false;
         };
     }
 }
@@ -50,5 +51,9 @@ namespace vg::gfx
 
         BLAS(BLASUpdateType _blasUpdateType, BLASVariantKey _key);
         ~BLAS();
+
+        bool    init    ();
+        void    build   (gfx::CommandList * _cmdList);
+        void    update  (gfx::CommandList * _cmdList);
     };
 }

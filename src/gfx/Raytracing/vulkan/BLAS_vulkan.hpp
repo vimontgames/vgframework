@@ -180,13 +180,4 @@ namespace vg::gfx::vulkan
 
         _cmdList->buildAccelerationStructures(1, &m_VKRTAccelStructInputs, blasRanges);
     }
-
-    //--------------------------------------------------------------------------------------
-    void BLAS::update(gfx::CommandList * _cmdList)
-    {
-        bool update = m_initDone;
-        init(update);
-        build(_cmdList, update);
-        m_initDone = true;
-    }
 }

@@ -218,17 +218,15 @@ namespace vg::renderer
 
                         BLASMap.insert(std::pair(key, blas));
 
-                        if (blas->isInitialized())
+                        if (blas->init())
                         {
-                            //VG_INFO("[Renderer] Update static BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, instance->GetName().c_str(), key);
-                            blas->init(true);
-                            m_blasToUpdate.push_back(blas);
+                            VG_INFO("[Renderer] Create static BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, instance->GetName().c_str(), key);
+                            m_blasToCreate.push_back(blas);
                         }
                         else
                         {
-                            VG_INFO("[Renderer] Create static BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, instance->GetName().c_str(), key);
-                            blas->init(false);
-                            m_blasToCreate.push_back(blas);
+                            //VG_INFO("[Renderer] Update static BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, instance->GetName().c_str(), key);
+                            m_blasToUpdate.push_back(blas);
                         }
                     }
                 }
@@ -288,17 +286,15 @@ namespace vg::renderer
                 }
 
                 //VG_INFO("[Renderer] Update BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
-                if (blas->isInitialized())
+                if (blas->init())
                 {
-                    //VG_INFO("[Renderer] Update skin BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
-                    blas->init(true);
-                    m_blasToUpdate.push_back(blas);
+                    VG_INFO("[Renderer] Create skin BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
+                    m_blasToCreate.push_back(blas);
                 }
                 else
                 {
-                    VG_INFO("[Renderer] Create skin BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
-                    blas->init(false);
-                    m_blasToCreate.push_back(blas);
+                    //VG_INFO("[Renderer] Update skin BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
+                    m_blasToUpdate.push_back(blas);
                 }
             }
 
@@ -322,16 +318,14 @@ namespace vg::renderer
         for (uint i = 0; i < m_blasToCreate.size(); ++i)
         {
             gfx::BLAS * blas = m_blasToCreate[i];
-            blas->build(_cmdList, false);
-            blas->setInitialized();
+            blas->build(_cmdList);
         }
         m_blasToCreate.clear();
 
         for (uint i = 0; i < m_blasToUpdate.size(); ++i)
         {
             gfx::BLAS * blas = m_blasToUpdate[i];
-            blas->build(_cmdList, true);
-            blas->setInitialized();
+            blas->update(_cmdList);
         }
         m_blasToUpdate.clear();
 

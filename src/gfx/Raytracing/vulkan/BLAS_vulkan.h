@@ -19,10 +19,10 @@ namespace vg::gfx::vulkan
 
         void addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, const core::uint _batchIndexOffset, core::uint _batchIndexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, bool _opaque);
         void clear();
+
+    protected:
         void init(bool _update = false);
-        void update(gfx::CommandList * _cmdList);
         void build(gfx::CommandList * _cmdList, bool _update = false);
-        void wait(gfx::CommandList * _cmdList);
 
     private:
         core::vector<VkAccelerationStructureGeometryKHR>        m_VKRTGeometries = {};

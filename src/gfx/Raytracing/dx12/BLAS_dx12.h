@@ -19,9 +19,10 @@ namespace vg::gfx::dx12
 
         void addIndexedGeometry(const gfx::Buffer * _ib, core::uint _ibOffset, const core::uint _batchIndexOffset, core::uint _batchIndexCount, const gfx::Buffer * _vb, core::uint _vbOffset, core::uint _vertexCount, core::uint _vbStride, bool _opaque);
         void clear();
+
+    protected:
         void init(bool _update = false);
         void build(gfx::CommandList * _cmdList, bool _update = false);
-        void update(gfx::CommandList * _cmdList);
 
     private:
         core::vector<D3D12_RAYTRACING_GEOMETRY_DESC>            m_DXRGeometries = {};

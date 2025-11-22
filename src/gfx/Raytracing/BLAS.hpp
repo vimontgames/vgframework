@@ -40,4 +40,30 @@ namespace vg::gfx
         VG_SAFE_RELEASE(m_resultBuffer);
         VG_SAFE_RELEASE(m_scratchBuffer);
     }
+
+    //--------------------------------------------------------------------------------------
+    // Return 'true' if first init, 'false' if update
+    //--------------------------------------------------------------------------------------
+    bool BLAS::init()
+    {
+        const bool update = m_initDone;
+        super::init(update);
+        m_initDone = true;
+        return !update;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void BLAS::build(gfx::CommandList * _cmdList)
+    {
+        VG_ASSERT(!m_buildDone);
+        super::build(_cmdList, false);
+        m_buildDone = true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void BLAS::update(gfx::CommandList * _cmdList)
+    {
+        VG_ASSERT(m_buildDone);
+        super::build(_cmdList, true);
+    }
 }

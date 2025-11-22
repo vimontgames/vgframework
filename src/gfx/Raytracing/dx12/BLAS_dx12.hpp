@@ -130,11 +130,11 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    void BLAS::update(gfx::CommandList * _cmdList)
-    {
-        bool update = m_initDone;
-        init(update);
-        build(_cmdList, update);
-        m_initDone = true;
-    }
+    //void BLAS::update(gfx::CommandList * _cmdList)
+    //{
+    //    bool update = m_initDone;
+    //    init(update);
+    //    build(_cmdList, update);
+    //    m_initDone = true;
+    //}
 }
