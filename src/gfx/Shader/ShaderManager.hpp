@@ -3,6 +3,7 @@
 #include "core/string/string.h"
 #include "core/Math/Math.h"
 #include "core/Timer/Timer.h"
+#include "core/File/File.h"
 #include "gfx/PipelineState/Graphic/GraphicPipelineState.h"
 #include "gfx/PipelineState/Graphic/GraphicPipelineStateCache.h"
 #include "gfx/PipelineState/Compute/ComputePipelineState.h"
@@ -25,11 +26,13 @@ namespace vg::gfx
         if (m_shaderRootPath.back() != '/' && m_shaderRootPath.back() != '\\')
             m_shaderRootPath += "/";
 
-        // TODO: read dir to root folders names used #include ?
-        m_shaderRootFolders.push_back("system");
-        m_shaderRootFolders.push_back("background");
-        m_shaderRootFolders.push_back("raytracing");
-        m_shaderRootFolders.push_back("extern");
+        core::vector<io::FileInfo> files = io::getFilesInFolder(_shaderRootPath);
+        for (uint i = 0; i < files.size(); ++i)
+        {
+            auto & file = files[i];
+            if (file.isFolder && file.name != "." && file.name != "..")
+                m_shaderRootFolders.push_back(file.name);
+        }
 
         // TODO: command line to select level
         #ifdef VG_DEBUG
