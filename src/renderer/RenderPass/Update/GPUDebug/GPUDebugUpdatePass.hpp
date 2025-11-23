@@ -30,15 +30,15 @@ namespace vg::renderer
         {
             u32 * data = (u32*)m_GPUDebugBufferStaging->getResource().map().data;
             {
-                const uint totalSize = data[0];
+                const uint requested = data[0];
+                VG_ASSERT(requested < (uint)GPUDEBUG_TOTAL_BUFFER_SIZE, "[GPUDebug] The GPUDebugBuffer is %u bytes but trying to write %u bytes.\n Please increase buffer size or reduce GPU debug output size.", GPUDEBUG_TOTAL_BUFFER_SIZE, requested);
+                const uint totalSize = min(data[0], (uint)GPUDEBUG_TOTAL_BUFFER_SIZE);
 
                 if (totalSize > 0)
                 {
                     const string rootFolder = core::io::getRootDirectory() + "/";
 
                     u8 * p = (u8 *)&data[1];
-
-                    //(uint_ptr&)p = ^(uint_ptr)p;
 
                     while ((p - (u8*)data) < totalSize)
                     {
@@ -51,12 +51,19 @@ namespace vg::renderer
                         uint line = (header >> 16);
                         p += 4;
 
-                        while (*p != 0)
+                        uint stringSize = *p;
+                        p += 4;
+
+                        u8 * c = p;
+                        while (*c != 0)
                         {
-                            temp[index] = *p;
+                            temp[index] = *c;
                             ++index;
-                            ++p;
+                            ++c;
                         }
+
+                        p = p + stringSize;
+
                         if (index > 0)
                         {
                             temp[index] = 0;
@@ -75,18 +82,31 @@ namespace vg::renderer
                             u32 * args = (u32*)core::alignUp((uint_ptr)p, (uint_ptr)4);
 
                             // skip {'0','0','0','0'} footer
-                            while (*args == 0x00000000 && (args- (u32 *)data) < totalSize)
-                                args++;
+                            //while (*args == 0x00000000 && (args- (u32 *)data) < totalSize)
+                            //    args++;
 
                             for (uint i = 0; i < argCount; ++i)
                             {
                                 size_t endArg = tempString.length();
-
+                            
+                                bool started = false;
                                 for (auto j = argPos; j < tempString.length(); ++j)
                                 {
                                     char c = tempString[j];
                                     if ((c >= '0' && c <= '9') || c == '.' || c == '%' || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'A'))
                                     {
+                                        if (c == '%')
+                                        {
+                                            if (started)
+                                            {
+                                                endArg = j;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                started = true;
+                                            }
+                                        }
                                         continue;
                                     }
                                     else
@@ -95,7 +115,7 @@ namespace vg::renderer
                                         break;
                                     }
                                 }                               
-
+                            
                                 string arg = tempString.substr(argPos, endArg-argPos);
                                 char argType = arg[arg.length() - 1];
                                 switch (argType)
@@ -103,20 +123,39 @@ namespace vg::renderer
                                     default:
                                         VG_ASSERT("[GPUDebug] Unknow arg type \"%s\" used. Only \"%u\" and \"%%f\" args are supported", arg.c_str());
                                         break;
-
+                            
                                     case 'u':
                                         tempString.replace(argPos, arg.length(), fmt::sprintf(arg, args[i]));
                                         break;
 
+                                    case 'i':
+                                        tempString.replace(argPos, arg.length(), fmt::sprintf(arg, (int &)args[i]));
+                                        break;
+                            
                                     case 'f':
                                         tempString.replace(argPos, arg.length(), fmt::sprintf(arg, (float &)args[i]));
                                         break;
                                 }
-
+                            
                                 argPos = tempString.find('%', argPos + 1);
                             }
+                            
+                            //p = (u8 *)(args+argCount);
 
-                            p = (u8 *)(args+argCount);
+                            p = (u8 *)args;
+
+                            // skip four fake args
+                            uint arg0 = *p;
+                            p += 4;
+
+                            uint arg1 = *p;
+                            p += 4;
+
+                            uint arg2 = *p;
+                            p += 4;
+
+                            uint arg3 = *p;
+                            p += 4;
 
                             const auto shaderManager = ShaderManager::get();
                             const string * pfilename = shaderManager->getShaderFilePathFromID(fileID);
@@ -148,13 +187,13 @@ namespace vg::renderer
                                 case GPUDebugMsgType::Assert:
                                 {
                                     static bool skip = false;								
-                                    if (vg::core::assertmsg("[GPUAssert]", __func__, pfilename->c_str(), line, skip, "%s", tempString.c_str()))
+                                    if (vg::core::assertmsg("[GPUAssert]", __func__, pfilename? pfilename->c_str() : "", line, skip, "%s", tempString.c_str()))
                                         VG_DEBUG_BREAK();
                                 }
                                 break;
                             } 
 
-                            p += 4;
+                            //p += 4;
                         }
                         else
                         {
