@@ -39,7 +39,7 @@ namespace vg::renderer
 
             registerProperty(LightDesc, m_shadowBias, "Bias");
             setPropertyRange(LightDesc, m_shadowBias, float2(0.0f, 1.0f));
-            setPropertyDescription(LightDesc, m_shadowBias, "Bias shadow distance");
+            setPropertyDescription(LightDesc, m_shadowBias, "Bias shadow distance (in cm)");
 
             registerProperty(LightDesc, m_shadowSize, "Size");
             setPropertyDescription(LightDesc, m_shadowSize, "Shadow map size in world-space");

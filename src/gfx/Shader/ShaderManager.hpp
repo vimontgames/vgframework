@@ -28,6 +28,7 @@ namespace vg::gfx
         // TODO: read dir to root folders names used #include ?
         m_shaderRootFolders.push_back("system");
         m_shaderRootFolders.push_back("background");
+        m_shaderRootFolders.push_back("raytracing");
         m_shaderRootFolders.push_back("extern");
 
         // TODO: command line to select level
