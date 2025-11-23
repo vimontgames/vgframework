@@ -773,6 +773,7 @@ namespace vg::editor
                     m_focusedGameObjects.clear();
                 }
             }
+            ImGui::Dummy(ImVec2(0,0));
             ImGui::EndChild();
         }
         ImGui::End();

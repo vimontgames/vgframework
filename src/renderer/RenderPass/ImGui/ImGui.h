@@ -1,6 +1,6 @@
 #pragma once
 #define IMGUI_DEFINE_MATH_OPERATORS
-//#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 
 #pragma push_macro("new")
 #undef new

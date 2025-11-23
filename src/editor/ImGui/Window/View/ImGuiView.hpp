@@ -567,7 +567,12 @@ namespace vg::editor
                             const auto options = EditorOptions::get();
                             bool debugCulling = options->IsDebugCulling();
 
-                            const auto rectPos = ImGui::GetWindowPos() + ImGui::GetWindowContentRegionMin();
+                            #ifdef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+                            const ImVec2 rectPos = ImGui::GetCurrentWindow()->InnerRect.Min + ImVec2(1,1);
+                            #else
+                            const ImVec2 rectPos = ImGui::GetWindowPos() + ImGui::GetWindowContentRegionMin();
+                            #endif
+
                             const auto rectColor = 0x7F000000;
                             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0, 1, 0, 1));
 
@@ -582,7 +587,7 @@ namespace vg::editor
 
                                 // Instances
                                 ImGui::SameLine();
-                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                ImGui::SetCursorPos(window->ContentRegionRect.Min - window->Pos + pos);
                                 string text = fmt::sprintf("Opaque %u", stats.opaque);
                                 ImVec2 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
@@ -590,7 +595,7 @@ namespace vg::editor
                                 ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
-                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                ImGui::SetCursorPos(window->ContentRegionRect.Min - window->Pos + pos);
                                 text = fmt::sprintf("AlphaTest %u", stats.alphatest);
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
@@ -598,7 +603,7 @@ namespace vg::editor
                                 ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
-                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                ImGui::SetCursorPos(window->ContentRegionRect.Min - window->Pos + pos);
                                 text = fmt::sprintf("Transparent %u", stats.transparent);
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
@@ -606,7 +611,7 @@ namespace vg::editor
                                 ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
-                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                ImGui::SetCursorPos(window->ContentRegionRect.Min - window->Pos + pos);
                                 text = fmt::sprintf("Particles %u", stats.particleSystem);
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
@@ -614,7 +619,7 @@ namespace vg::editor
                                 ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
-                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                ImGui::SetCursorPos(window->ContentRegionRect.Min - window->Pos + pos);
                                 text = fmt::sprintf("Decal %u", stats.decal);
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
@@ -622,7 +627,7 @@ namespace vg::editor
                                 ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
-                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                ImGui::SetCursorPos(window->ContentRegionRect.Min - window->Pos + pos);
                                 text = fmt::sprintf("Outline %u", stats.outline);
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
@@ -633,7 +638,7 @@ namespace vg::editor
                                 pos.y += style::font::DefaultFontHeight;
 
                                 ImGui::SameLine();
-                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                ImGui::SetCursorPos(window->ContentRegionRect.Min - window->Pos + pos);
                                 text = fmt::sprintf("Directional %u", stats.directional);
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
@@ -641,7 +646,7 @@ namespace vg::editor
                                 ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
-                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                ImGui::SetCursorPos(window->ContentRegionRect.Min - window->Pos + pos);
                                 text = fmt::sprintf("Omni %u", stats.omni);
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
@@ -649,7 +654,7 @@ namespace vg::editor
                                 ImGui::Text(text.c_str());
 
                                 ImGui::SameLine();
-                                ImGui::SetCursorPos(ImGui::GetWindowContentRegionMin() + pos);
+                                ImGui::SetCursorPos(window->ContentRegionRect.Min - window->Pos + pos);
                                 text = fmt::sprintf("Spot %u", stats.spot);
                                 textSize = ImGui::CalcTextSize(text.c_str());
                                 ImGui::GetWindowDrawList()->AddRectFilled(rectPos + pos, rectPos + pos + textSize, rectColor);
@@ -779,6 +784,7 @@ namespace vg::editor
 
         if (_view && _view->IsToolmode() && selectedObjects.size() > 0)
         {
+            const auto window = ImGui::GetCurrentWindow();
             const auto options = EditorOptions::get();
             const GizmoOptions & gizmoOptions = options->getGizmoOptions();
 
@@ -840,14 +846,18 @@ namespace vg::editor
 
             // get window and viewport coords
             ImVec2 pos = ImGui::GetWindowPos() + ImVec2(offset.x, offset.y);
+
+            #ifdef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+            ImVec2 vMin = window->InnerRect.Min - pos + ImVec2(1,1);
+            #else
             ImVec2 vMin = ImGui::GetWindowContentRegionMin();
-            ImVec2 vMax = ImGui::GetWindowContentRegionMax();
+            #endif            
 
             // set viewport size for Gizmo rendering
             ImGuizmo::SetRect(pos.x + vMin.x, pos.y + vMin.y, size.x, size.y);
 
             // clip gizmo rendering to viewport
-            ImGui::PushClipRect(ImVec2(pos.x + vMin.x, pos.y + vMin.y), ImVec2(pos.x + vMin.x + size.x, pos.y + vMin.y + size.y), false);
+            ImGui::PushClipRect(ImVec2(pos.x + vMin.x, pos.y + vMin.y), ImVec2(pos.x + vMin.x + size.x -1, pos.y + vMin.y + size.y-1), false);
             {
                 const float * viewMatrix = (float *)&_view->GetViewMatrix();
                 const float * projMatrix = (float *)&_view->GetProjectionMatrix();

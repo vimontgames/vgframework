@@ -67,8 +67,10 @@ namespace vg::renderer
         ImGui_ImplWin32_Init(_winHandle);
         #endif
 
+        #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
         BindlessTable * bindlessTable = _device.getBindlessTable();
         m_fontTexHandle = bindlessTable->allocBindlessTextureHandle((Texture *)nullptr, ReservedSlot::ImGuiFontTexSrv); 
+        #endif
 
         #ifdef VG_DX12
         d3d12Init();
@@ -228,18 +230,87 @@ namespace vg::renderer
     }
 
     #ifdef VG_DX12
+
+    #ifdef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+    struct ImGuiDX12DescriptorInfo
+    {
+        BindlessTextureHandle texHandle;
+        D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle;
+        D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle;
+        bool dirty;
+    };
+    core::vector<ImGuiDX12DescriptorInfo> g_ImGuiDX12DescriptorInfos;
+   
+    //--------------------------------------------------------------------------------------
+    void AllocDescriptor(ImGui_ImplDX12_InitInfo * info, D3D12_CPU_DESCRIPTOR_HANDLE * out_cpu_desc_handle, D3D12_GPU_DESCRIPTOR_HANDLE * out_gpu_desc_handle)
+    {
+        gfx::Device * device = Device::get();
+        BindlessTable * bindlessTable = device->getBindlessTable();
+
+        ImGuiDX12DescriptorInfo descInfo;
+        descInfo.texHandle = bindlessTable->allocBindlessTextureHandle(nullptr);
+        descInfo.cpuHandle = bindlessTable->getd3d12CPUDescriptorHandle(descInfo.texHandle);
+        descInfo.gpuHandle = bindlessTable->getd3d12GPUDescriptorHandle(descInfo.texHandle);
+        descInfo.dirty = true;
+
+        g_ImGuiDX12DescriptorInfos.push_back(descInfo);
+
+        *out_cpu_desc_handle = descInfo.cpuHandle;
+        *out_gpu_desc_handle = descInfo.gpuHandle;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FreeDescriptor(ImGui_ImplDX12_InitInfo * info, D3D12_CPU_DESCRIPTOR_HANDLE cpu_desc_handle, D3D12_GPU_DESCRIPTOR_HANDLE gpu_desc_handle)
+    {
+        gfx::Device * device = Device::get();
+        BindlessTable * bindlessTable = device->getBindlessTable();
+        
+        uint index = -1;
+        for (uint i = 0; i < g_ImGuiDX12DescriptorInfos.size(); ++i)
+        {
+            ImGuiDX12DescriptorInfo & descInfo = g_ImGuiDX12DescriptorInfos[i];
+            if (cpu_desc_handle.ptr == descInfo.cpuHandle.ptr)
+            {
+                index = i;
+                break;
+            }
+        }
+        if (-1 != index)
+        {
+            ImGuiDX12DescriptorInfo & descInfo = g_ImGuiDX12DescriptorInfos[index];
+            bindlessTable->freeBindlessTextureHandle(descInfo.texHandle);
+            g_ImGuiDX12DescriptorInfos.erase(g_ImGuiDX12DescriptorInfos.begin() + index);
+        }
+    }
+    #endif
+
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::d3d12Init()
     {
         gfx::Device * device = Device::get();
-
-        const PixelFormat fmt = getOutputPixelFormat();
         BindlessTable * bindlessTable = device->getBindlessTable();
+        const PixelFormat fmt = getOutputPixelFormat();
+
+        #ifdef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+
+        ImGui_ImplDX12_InitInfo init_info = {};
+        init_info.Device = device->getd3d12Device();
+        init_info.NumFramesInFlight = max_frame_latency;
+        init_info.RTVFormat = Texture::getd3d12SurfaceFormat(fmt);
+        init_info.SrvDescriptorHeap = bindlessTable->getd3d12GPUDescriptorHeap();
+        init_info.SrvDescriptorAllocFn = [](ImGui_ImplDX12_InitInfo * info, D3D12_CPU_DESCRIPTOR_HANDLE * out_cpu_handle, D3D12_GPU_DESCRIPTOR_HANDLE * out_gpu_handle) { return AllocDescriptor(info, out_cpu_handle, out_gpu_handle); };
+        init_info.SrvDescriptorFreeFn = [](ImGui_ImplDX12_InitInfo * info, D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle, D3D12_GPU_DESCRIPTOR_HANDLE gpu_handle) { return FreeDescriptor(info, cpu_handle, gpu_handle); };
+
+        ImGui_ImplDX12_Init(&init_info);
+
+        #else        
 
         D3D12_CPU_DESCRIPTOR_HANDLE fontCpuHandle = bindlessTable->getd3d12CPUDescriptorHandle(m_fontTexHandle);
         D3D12_GPU_DESCRIPTOR_HANDLE fontGpuHandle = bindlessTable->getd3d12GPUDescriptorHandle(m_fontTexHandle);
 
         ImGui_ImplDX12_Init(device->getd3d12Device(), max_frame_latency, Texture::getd3d12SurfaceFormat(fmt), bindlessTable->getd3d12GPUDescriptorHeap(), fontCpuHandle, fontGpuHandle);
+
+        #endif
     }
     #elif defined(VG_VULKAN)
     //--------------------------------------------------------------------------------------
@@ -365,8 +436,10 @@ namespace vg::renderer
 
         clearPreviewTextures();
 
+        #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
         BindlessTable * bindlessTable = device->getBindlessTable();
         bindlessTable->freeBindlessTextureHandle(m_fontTexHandle);
+        #endif
 
         #ifdef VG_DX12
 
@@ -426,29 +499,52 @@ namespace vg::renderer
         VG_PROFILE_CPU("beginFrame");
 
         gfx::Device * device = Device::get();
- 
+
         updateFonts();
         updateBackbufferFormat();
 
-        #ifdef VG_DX12
+        #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
         static bool first = true;
+        #endif
 
+        #ifdef VG_DX12
+        bool dirtyFonts = false;
         if (m_rebuildFontTex)
         {
             VG_PROFILE_CPU("CreateFonts");
             ImGui_ImplDX12_CreateFontsTexture();
             m_rebuildFontTex = false;
+            dirtyFonts = true;
+
+            #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
             first = true;
+            #endif
         }
 
         ImGui_ImplDX12_NewFrame();
-  
+
+        BindlessTable * bindlessTable = device->getBindlessTable();
+
+        #ifdef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+        
+        for (uint i = 0; i < g_ImGuiDX12DescriptorInfos.size(); ++i)
+        {
+            if (g_ImGuiDX12DescriptorInfos[i].dirty || dirtyFonts)
+            {
+                bindlessTable->updated3d12descriptor(g_ImGuiDX12DescriptorInfos[i].texHandle);
+                g_ImGuiDX12DescriptorInfos[i].dirty = false;
+            }
+        }
+
+        #else
+        
         if (first)
         {
-            BindlessTable * bindlessTable = device->getBindlessTable();
             bindlessTable->updated3d12descriptor(m_fontTexHandle);
             first = false;
         }
+
+        #endif
 
         #elif defined(VG_VULKAN)
 
@@ -516,9 +612,24 @@ namespace vg::renderer
         {
             auto * renderer = Renderer::get();
             renderer->WaitGPUIdle();
+
+            #ifdef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+
+            ImGui_ImplDX12_Data * bd = ImGui_ImplDX12_GetBackendData();
+            if (bd && bd->pd3dDevice)
+            {
+                SafeRelease(bd->pRootSignature);
+                SafeRelease(bd->pPipelineState);
+                bd->RTVFormat = renderOutputFormat;
+            }
+
+            #else           
+
             ImGui_ImplDX12_InvalidateDeviceObjects();
             bd->RTVFormat = renderOutputFormat;
             ImGui_ImplDX12_CreateDeviceObjects();
+            #endif
+
             m_rebuildFontTex = true;
         }
 
