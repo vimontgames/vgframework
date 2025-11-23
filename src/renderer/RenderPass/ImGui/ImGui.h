@@ -1,5 +1,6 @@
 #pragma once
 #define IMGUI_DEFINE_MATH_OPERATORS
+//#define IMGUI_DISABLE_OBSOLETE_FUNCTIONS
 
 #pragma push_macro("new")
 #undef new
@@ -18,12 +19,6 @@ inline vg::core::float2 ImVec2ToFloat2(const ImVec2 & _vec2)
 {
     return vg::core::float2(_vec2.x, _vec2.y);
 }
-
-//--------------------------------------------------------------------------------------
-//ImVec3 float4ToImVec3(const vg::core::float3 & _f3)
-//{
-//    return ImVec3(_f3.x, _f3.y, _f3.z);
-//}
 
 //--------------------------------------------------------------------------------------
 inline ImVec4 float4ToImVec4(const vg::core::float4 & _f4)

@@ -1859,7 +1859,7 @@ namespace vg::editor
                                 const bool isOpen = asBool(ObjectFlags::Opened & pComponent->GetObjectFlags());
                                 ImGui::SetNextItemOpen(isOpen);
 
-                                const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", componentShortName, pComponent).c_str(), nullptr, /*ImGuiTreeNodeFlags_InvisibleArrow |*/ ImGuiTreeNodeFlags_AllowItemOverlap);
+                                const bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", componentShortName, pComponent).c_str(), nullptr, /*ImGuiTreeNodeFlags_InvisibleArrow |*/ ImGuiTreeNodeFlags_AllowOverlap);
 
                                 // Save Open/Close state
                                 if (open != isOpen)
@@ -1928,7 +1928,7 @@ namespace vg::editor
                                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, style.Colors[ImGuiCol_HeaderHovered]);
                             }
                             ImGui::PushID("CollapsingHeader");
-                            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel(treeNodeName, _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
+                            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel(treeNodeName, _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap);
                             ImGui::PopID();
 
                             if (!isPrefab)

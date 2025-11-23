@@ -42,7 +42,7 @@ namespace vg::editor
             ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 
             ImGui::PushID("CollapsingHeader");
-            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
+            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap);
             ImGui::PopID();
 
             const bool readOnly = _propContext && _propContext->m_readOnly;

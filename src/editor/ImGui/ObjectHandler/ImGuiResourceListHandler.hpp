@@ -46,7 +46,7 @@ namespace vg::editor
             string headerLabel = fmt::sprintf("%s (%u)", _label.c_str(), resourceCount);
 
             ImGui::PushID("CollapsingHeader");
-            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
+            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", _object).c_str(), nullptr, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap);
             ImGui::PopID();
 
             const bool readOnly = _propContext && _propContext->m_readOnly;

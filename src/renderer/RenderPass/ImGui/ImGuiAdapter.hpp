@@ -817,9 +817,9 @@ namespace vg::renderer
         colors[ImGuiCol_ResizeGripActive] = ImVec4(0.33f, 0.42f, 0.60f, 0.77f);
         colors[ImGuiCol_Tab] = ImVec4(0.33f, 0.42f, 0.60f, 0.50f);
         colors[ImGuiCol_TabHovered] = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
-        colors[ImGuiCol_TabActive] = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
-        colors[ImGuiCol_TabUnfocused] = ImVec4(0.54f, 0.54f, 0.54f, 0.19f);
-        colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.54f, 0.54f, 0.54f, 0.38f);
+        colors[ImGuiCol_TabSelected] = ImVec4(0.33f, 0.42f, 0.60f, 1.00f);
+        colors[ImGuiCol_TabDimmed] = ImVec4(0.54f, 0.54f, 0.54f, 0.19f);
+        colors[ImGuiCol_TabDimmedSelected] = ImVec4(0.54f, 0.54f, 0.54f, 0.38f);
         colors[ImGuiCol_DockingPreview] = ImVec4(0.20f, 0.29f, 0.43f, 0.77f);
         colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
         colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
@@ -833,7 +833,7 @@ namespace vg::renderer
         colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
         colors[ImGuiCol_TextSelectedBg] = ImVec4(0.73f, 0.73f, 0.73f, 0.35f);
         colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
-        colors[ImGuiCol_NavHighlight] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+        colors[ImGuiCol_NavCursor] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
         colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
         colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
         colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
@@ -906,9 +906,9 @@ namespace vg::renderer
         colors[ImGuiCol_ResizeGripActive] = ImVec4(0.91f, 0.72f, 0.08f, 1.00f);
         colors[ImGuiCol_Tab] = ImVec4(0.07f, 0.32f, 0.59f, 1.00f);
         colors[ImGuiCol_TabHovered] = ImVec4(0.01f, 0.40f, 0.84f, 1.00f);
-        colors[ImGuiCol_TabActive] = ImVec4(0.01f, 0.40f, 0.84f, 1.00f);
-        colors[ImGuiCol_TabUnfocused] = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
-        colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.14f, 0.16f, 0.18f, 1.00f);
+        colors[ImGuiCol_TabSelected] = ImVec4(0.01f, 0.40f, 0.84f, 1.00f);
+        colors[ImGuiCol_TabDimmed] = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
+        colors[ImGuiCol_TabDimmedSelected] = ImVec4(0.14f, 0.16f, 0.18f, 1.00f);
         colors[ImGuiCol_DockingPreview] = ImVec4(0.01f, 0.40f, 0.84f, 1.00f);
         colors[ImGuiCol_DockingEmptyBg] = ImVec4(0.13f, 0.13f, 0.15f, 1.00f);
         colors[ImGuiCol_PlotLines] = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
@@ -922,7 +922,7 @@ namespace vg::renderer
         colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
         colors[ImGuiCol_TextSelectedBg] = ImVec4(0.73f, 0.73f, 0.73f, 0.35f);
         colors[ImGuiCol_DragDropTarget] = ImVec4(1.00f, 0.78f, 0.00f, 1.00f);
-        colors[ImGuiCol_NavHighlight] = ImVec4(0.91f, 0.72f, 0.08f, 1.00f);
+        colors[ImGuiCol_NavCursor] = ImVec4(0.91f, 0.72f, 0.08f, 1.00f);
         colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
         colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
         colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);

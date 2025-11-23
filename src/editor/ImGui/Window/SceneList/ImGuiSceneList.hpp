@@ -146,17 +146,24 @@ namespace vg::editor
 
         m_count++;
 
-        const bool disabled = !_gameObject->IsEnabledInHierarchy();// !asBool(InstanceFlags::Enabled & _gameObject->GetInstanceFlags());
+        const bool disabled = !_gameObject->IsEnabledInHierarchy();
 
         bool open = false;
+
+        // This is actually full window width we want here
+        #if 1 // IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+        //auto availableWidth = GetContentRegionAvail().x;
+        float availableWidth = ImGui::GetCurrentWindow()->WorkRect.GetWidth();
+        #else
         auto availableWidth = ImGui::GetContentRegionMax().x;
+        #endif
 
         const bool isPrefab = _gameObject->IsPrefab();
         const bool isPrefabChild = !isPrefab && nullptr != _gameObject->GetParentPrefab();
 
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_SpanAvailWidth;
         if (children.size() > 0)
-            flags |= ImGuiTreeNodeFlags_OpenOnArrow /* | ImGuiTreeNodeFlags_DefaultOpen*/;
+            flags |= ImGuiTreeNodeFlags_OpenOnArrow;
         else
             flags |= ImGuiTreeNodeFlags_Leaf;
 
@@ -718,7 +725,7 @@ namespace vg::editor
                             ImGui::PushID("SceneTree");
 
                             IGameObject* root = scene->GetRoot();
-                            auto flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_DefaultOpen;
+                            auto flags = ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_AllowOverlap | ImGuiTreeNodeFlags_DefaultOpen;
                             if (nullptr != root)
                                 flags |= ImGuiTreeNodeFlags_None;
                             else

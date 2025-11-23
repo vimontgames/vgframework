@@ -244,7 +244,7 @@ namespace vg::editor
                                 ImGui::SetNextItemSelectionUserData(n);
                                 string displayName = fmt::sprintf("%s %s", classDesc->GetIcon(), classDesc->GetClassDisplayName());
                                 
-                                if (ImGui::Selectable(displayName.c_str(), isSelected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowOverlap | ImGuiSelectableFlags_DontClosePopups))
+                                if (ImGui::Selectable(displayName.c_str(), isSelected, ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowOverlap | ImGuiSelectableFlags_NoAutoClosePopups))
                                 {
                                     m_selectedClass = classDesc;
                                 }    

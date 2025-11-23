@@ -52,7 +52,7 @@ namespace vg::editor
             //else if (isPrefabInstanced)
             //    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 
-            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", gameObjectLabel, go).c_str(), /*ImGuiTreeNodeFlags_InvisibleArrow |*/ ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
+            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel("", gameObjectLabel, go).c_str(), /*ImGuiTreeNodeFlags_InvisibleArrow |*/ ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap);
 
             if (isPrefab)
                 ImGui::PopStyleColor(1);

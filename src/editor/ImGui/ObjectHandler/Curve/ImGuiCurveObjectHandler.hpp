@@ -167,7 +167,7 @@ namespace vg::editor
             string curveLabel = fmt::sprintf("%s %s", editor::style::icon::Curve, _propContext->m_originalProp->GetDisplayName());
             auto * imGuiAdapter = ImGuiWindow::getImGuiAdapter();
 
-            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel(curveLabel, curve).c_str(),  ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap);
+            bool open = ImGui::CollapsingHeader(ImGui::getObjectLabel(curveLabel, curve).c_str(),  ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowOverlap);
 
             if (open)
             {

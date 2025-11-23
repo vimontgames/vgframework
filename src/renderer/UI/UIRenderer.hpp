@@ -105,7 +105,12 @@ namespace vg::renderer
         const float2 scale = getScale();
         const float2 offset = getOffset();
 
+        #if 1 //  IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+        float2 screenSizeInPixels = ImVec2ToFloat2(ImGui::GetContentRegionAvail()); 
+        #else
         float2 screenSizeInPixels = ImVec2ToFloat2(ImGui::GetWindowContentRegionMax() - ImGui::GetWindowContentRegionMin());
+        #endif
+
         float2 viewSizeInPixels = screenSizeInPixels * scale;
         float2 windowOffset = ImVec2ToFloat2(ImGui::GetCursorPos()) + screenSizeInPixels * offset;
         float2 windowPos = float2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);

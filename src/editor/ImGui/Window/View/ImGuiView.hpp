@@ -342,7 +342,7 @@ namespace vg::editor
 
         const bool active = m_viewport && m_viewport->AnyFocused();
         if (active)
-            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGui::GetStyleColorVec4(ImGuiCol_TabActive));
+            ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGui::GetStyleColorVec4(ImGuiCol_TabSelected));
 
         extern const char * g_previousFocusedWindowName;
         if (g_previousFocusedWindowName && !strcmp(g_previousFocusedWindowName, title.c_str()))
@@ -383,16 +383,30 @@ namespace vg::editor
             }
             float toolbarHeight = ImGui::GetCursorPosY() - posY;
 
-            // Compute Window content size
             const auto windowPos = ImGui::GetWindowPos();
-            const auto windowRegionMin = ImGui::GetWindowContentRegionMin();
-            const auto windowRegionMax = ImGui::GetWindowContentRegionMax();
+
+            // Compute Window content size
+
+            #if 1 // IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+
+            auto * curWin = ImGui::GetCurrentWindow();
+            ImVec2 vMin = curWin->InnerRect.Min;
+            ImVec2 vMax = curWin->InnerRect.Max;
+            ImVec2 windowRegionMin = curWin->InnerRect.Min - curWin->Pos;
+            ImVec2 windowRegionMax = curWin->InnerRect.Max - curWin->Pos;
+
+            #else
+
+            ImVec2 windowRegionMin = ImGui::GetWindowContentRegionMin();
+            ImVec2 windowRegionMax = ImGui::GetWindowContentRegionMax();
             ImVec2 vMin = windowRegionMin;
             ImVec2 vMax = windowRegionMax;
             vMin.x += windowPos.x;
             vMin.y += windowPos.y;
             vMax.x += windowPos.x;
             vMax.y += windowPos.y;
+
+            #endif
 
             //VG_ASSERT(vMax.x > vMin.x && vMax.y > vMin.y, "vMin = (%f,%f) vMax = (%f, %f)", vMin.x, vMin.y, vMax.x, vMax.y);
 
