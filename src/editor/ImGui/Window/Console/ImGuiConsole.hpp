@@ -257,10 +257,20 @@ namespace vg::editor
   
                     char fullmsg[8192];
                     
-                    if (item.count > 1)
-                        sprintf(fullmsg, "[%s] %s (x%u)", item.category.c_str(), item.message.c_str(), item.count);
+                    if (item.category.empty())
+                    {
+                        if (item.count > 1)
+                            sprintf(fullmsg, "%s (x%u)", item.message.c_str(), item.count);
+                        else
+                            sprintf(fullmsg, "%s", item.message.c_str());
+                    }
                     else
-                        sprintf(fullmsg, "[%s] %s", item.category.c_str(), item.message.c_str());
+                    {
+                        if (item.count > 1)
+                            sprintf(fullmsg, "[%s] %s (x%u)", item.category.c_str(), item.message.c_str(), item.count);
+                        else
+                            sprintf(fullmsg, "[%s] %s", item.category.c_str(), item.message.c_str());
+                    }
 
                     if (!m_filter.PassFilter(fullmsg))
                         continue;

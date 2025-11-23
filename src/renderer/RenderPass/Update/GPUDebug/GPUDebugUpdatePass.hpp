@@ -1,5 +1,6 @@
 #include "GPUDebugUpdatePass.h"
 #include "Shaders/system/debug.hlsli"
+#include "core/File/File.h"
 
 namespace vg::renderer
 {
@@ -29,11 +30,17 @@ namespace vg::renderer
         {
             u32 * data = (u32*)m_GPUDebugBufferStaging->getResource().map().data;
             {
-                if (data[0] != 0)
+                const uint totalSize = data[0];
+
+                if (totalSize > 0)
                 {
+                    const string rootFolder = core::io::getRootDirectory() + "/";
+
                     u8 * p = (u8 *)&data[1];
 
-                    while ((p - (u8*)data) < data[0])
+                    //(uint_ptr&)p = ^(uint_ptr)p;
+
+                    while ((p - (u8*)data) < totalSize)
                     {
                         char temp[256];
                         uint index = 0;
@@ -42,7 +49,6 @@ namespace vg::renderer
                         GPUDebugMsgType msgType = (GPUDebugMsgType)(header & 0xF);
                         uint fileID = (header >> 4) & 0xFFF;
                         uint line = (header >> 16);
-
                         p += 4;
 
                         while (*p != 0)
@@ -69,7 +75,7 @@ namespace vg::renderer
                             u32 * args = (u32*)core::alignUp((uint_ptr)p, (uint_ptr)4);
 
                             // skip {'0','0','0','0'} footer
-                            while (*args == 0x00000000)
+                            while (*args == 0x00000000 && (args- (u32 *)data) < totalSize)
                                 args++;
 
                             for (uint i = 0; i < argCount; ++i)
@@ -112,6 +118,11 @@ namespace vg::renderer
 
                             p = (u8 *)(args+argCount);
 
+                            const auto shaderManager = ShaderManager::get();
+                            const string * pfilename = shaderManager->getShaderFilePathFromID(fileID);
+                            string formattedFilename = pfilename ? *pfilename : "";
+                            formattedFilename = rootFolder + formattedFilename;
+
                             switch (msgType)
                             {
                                 default:
@@ -119,26 +130,25 @@ namespace vg::renderer
                                     break;
 
                                 case GPUDebugMsgType::None:
-                                    VG_DEBUGPRINT("[GPUDebug] %s\n", tempString.c_str()); // Unlike VG_INFO/VG_WARNING/VG_ERROR, VG_DEBUGPRINT does not automatically add EOL
-                                    break;
+                                    VG_DEBUGPRINT("%s(%u): %s\n", formattedFilename.c_str(), line, tempString.c_str()); // Unlike VG_INFO/VG_WARNING/VG_ERROR, VG_DEBUGPRINT does not automatically add EOL
+                                break;
 
                                 case GPUDebugMsgType::Info:
-                                    VG_INFO("[GPUDebug] %s", tempString.c_str());
+                                    VG_INFO("%s(%u): %s", formattedFilename.c_str(), line, tempString.c_str());
                                     break;
 
                                 case GPUDebugMsgType::Warning:
-                                    VG_WARNING("[GPUDebug] %s", tempString.c_str());
+                                    VG_WARNING("%s(%u): %s", formattedFilename.c_str(), line, tempString.c_str());
                                     break;
 
                                 case GPUDebugMsgType::Error:
-                                    VG_ERROR("[GPUDebug] %s", tempString.c_str());
+                                    VG_ERROR("%s(%u): %s", formattedFilename.c_str(), line, tempString.c_str());
                                     break;
 
                                 case GPUDebugMsgType::Assert:
                                 {
                                     static bool skip = false;								
-                                    const auto filename = ShaderManager::get()->getShaderFilePathFromID(fileID);
-                                    if (vg::core::assertmsg("[GPUAssert]", __func__, filename->c_str(), line, skip, "%s", tempString.c_str()))
+                                    if (vg::core::assertmsg("[GPUAssert]", __func__, pfilename->c_str(), line, skip, "%s", tempString.c_str()))
                                         VG_DEBUG_BREAK();
                                 }
                                 break;

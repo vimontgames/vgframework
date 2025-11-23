@@ -1,6 +1,8 @@
 #include "core/Precomp.h"
 #include "Logger.h"
 #include "core/Math/Math.h"
+#include "core/File/File.h"
+#include "core/string/string.h"
 
 namespace vg::core
 {
@@ -72,7 +74,28 @@ namespace vg::core
     {
         Lock();
         {
-            VG_DEBUGPRINT("[%s] %s\n", asString(_level).c_str(), _msg);
+            // In case we have an error message containing a path, it must remain clickable 
+            // in Visual Studio output so we move the [Info/Warning/Error] tag after the path:
+            // D:/GitHub/vimontgames/vgframework/data/shaders/lighting/deferredlighting.hlsl(171): TEST A 170 187
+            // will output
+            // D:/GitHub/vimontgames/vgframework/data/shaders/lighting/deferredlighting.hlsl(171): [Warning] TEST A 170 187
+            // instead of 
+            // [Warning] D:/GitHub/vimontgames/vgframework/data/shaders/lighting/deferredlighting.hlsl(171): TEST A 170 187
+
+            if (strstr(_msg, core::io::getRootDirectory().c_str()))
+            {
+                string msg = _msg;
+                auto it = msg.find("):");
+                if (it != string::npos)
+                {
+                    msg.replace(it, 2, fmt::sprintf("): [%s]", asString(_level)));
+                }
+                VG_DEBUGPRINT("%s\n", msg.c_str());
+            }
+            else
+            {
+                VG_DEBUGPRINT("[%s] %s\n", asString(_level).c_str(), _msg);
+            }
 
             string category;
             string message = _msg;

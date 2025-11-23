@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _DEBUG__HLSLI_
+#define _DEBUG__HLSLI_
 
 #define GPUDEBUG_TOTAL_BUFFER_SIZE     4096
 #define GPUDEBUG_STRING_SIZE            256
@@ -23,12 +24,12 @@ template<uint SIZE> void DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint
     uint alignedSize = ((SIZE + 3) & ~3) + 4;
 
     uint offset;
-    buffer.InterlockedAdd(0, alignedSize+4+4, offset);  // +4 for message type, +4 for ending (uint)'\0' to end string 
+    buffer.InterlockedAdd(0, 8 + alignedSize, offset);  // +4 for message type, +4 for ending (uint)'\0' to end string 
 
     // Save message type (4 bits, [0..16], file guid (12 bits, [0..4096] files), and line (16 bits, [0..65535] lines)
     uint header = (uint)_type | (_file<<4) | (_line<<16);
     buffer.Store(offset+4, header); 
-
+    
     for (uint i = 0; i < alignedSize / 4; ++i)
     {
         uint offset0 = i*4+0;
@@ -43,10 +44,8 @@ template<uint SIZE> void DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint
 
         uint value = char3<<24 | char2<<16 | char1<<8 | char0;
 
-        buffer.Store(offset + 4 + 4 + 4*i, value);  // +4 for counter at the beginning of the buffer, +4 for message type before message
+        buffer.Store(offset + 8 + 4 * i, value);  // +4 for counter at the beginning of the buffer, +4 for header type before message
     }
-
-    buffer.Store(offset + 4 + 4 + alignedSize, 0); // (uint)'\0'
 }
 
 void StoreArg(uint _value)
@@ -103,10 +102,24 @@ template<typename T0, typename T1, typename T2, typename T3> void DebugPrintArgs
 }                                                           \
 while (0)
 
+#ifdef _TOOLMODE
 #define VG_DEBUGPRINT(_str, ...)    VG_GPUDEBUGMSG(GPUDebugMsgType::None,    g_File, __LINE__, _str, __VA_ARGS__)
 #define VG_INFO(_str, ...)          VG_GPUDEBUGMSG(GPUDebugMsgType::Info,    g_File, __LINE__, _str, __VA_ARGS__)
 #define VG_WARNING(_str, ...)       VG_GPUDEBUGMSG(GPUDebugMsgType::Warning, g_File, __LINE__, _str, __VA_ARGS__)
 #define VG_ERROR(_str, ...)         VG_GPUDEBUGMSG(GPUDebugMsgType::Error,   g_File, __LINE__, _str, __VA_ARGS__)
 #define VG_ASSERT(_cond, _str, ...) do { if (_cond == false) { VG_GPUDEBUGMSG(GPUDebugMsgType::Assert, g_File, __LINE__, _str, __VA_ARGS__); } } while (0)
 
+#else
+#define HLSL_NOOP do {} while(0)
+
+#define VG_DEBUGPRINT(_str, ...)    HLSL_NOOP   
+#define VG_INFO(_str, ...)          HLSL_NOOP
+#define VG_WARNING(_str, ...)       HLSL_NOOP
+#define VG_ERROR(_str, ...)         HLSL_NOOP
+#define VG_ASSERT(_cond, _str, ...) HLSL_NOOP
+
+#endif
+
 #endif // !__cplusplus
+
+#endif // _DEBUG__HLSLI_
