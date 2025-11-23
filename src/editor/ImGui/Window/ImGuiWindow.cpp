@@ -1382,7 +1382,8 @@ namespace vg::editor
                                 _objectContext.m_treeNodeHideLevel = -1;
                             }
 
-                            _objectContext.m_treeNodes.erase(_objectContext.m_treeNodes.begin() + _objectContext.m_treeNodes.size() - 1);
+                            if (_objectContext.m_treeNodes.size() > 0)
+                                _objectContext.m_treeNodes.erase(_objectContext.m_treeNodes.begin() + _objectContext.m_treeNodes.size() - 1);
                         }
                         break;
                     }

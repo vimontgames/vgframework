@@ -1161,6 +1161,7 @@ namespace vg::gfx::vulkan
         VkSurfaceFormatKHR selectedSurfaceFormat = { VK_FORMAT_UNDEFINED };
 
 		vector<PixelFormat> targetPixelFormats;
+		VkColorSpaceKHR targetColorSpace;
 
 		switch (m_HDRMode)
 		{
@@ -1170,14 +1171,17 @@ namespace vg::gfx::vulkan
 			case HDR::None:
 				targetPixelFormats.push_back(PixelFormat::R8G8B8A8_unorm);
 				targetPixelFormats.push_back(PixelFormat::B8G8R8A8_unorm);
+				targetColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
 				break;
 
 			case HDR::HDR10:
 				targetPixelFormats.push_back(PixelFormat::R10G10B10A2_unorm);
+				targetColorSpace = VK_COLOR_SPACE_HDR10_ST2084_EXT;
 				break;
 
             case HDR::HDR16:
                 targetPixelFormats.push_back(PixelFormat::R16G16B16A16_float);
+				targetColorSpace = VK_COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT;
                 break;
 		}
 
@@ -1192,7 +1196,7 @@ namespace vg::gfx::vulkan
 			{
 				VkFormat vkTargetFormat = Texture::getVulkanPixelFormat(targetPixelFormats[j]);
 
-				if (vkTargetFormat == vkSurfaceFmt)
+				if (vkTargetFormat == vkSurfaceFmt && availableSurfaceFormats[i].colorSpace == targetColorSpace)
 				{
 					//VG_INFO("[Device] Backbuffer uses %s format", asString(Texture::getPixelFormat(vkSurfaceFmt)).c_str());
                     selectedSurfaceFormat = curSurfaceFormat;
