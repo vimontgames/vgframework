@@ -66,7 +66,8 @@ vg_enum_class_global(DisplayMode, uint,
     PostProcess_DepthOfField,
     PostProcess_FXAAEdges,
     PostProcess_WorldPos,
-    PostProcess_OutlineMask
+    PostProcess_OutlineMask,
+    PostProcess_PixelChecker
 );
 
 vg_enum_global(DisplayFlags, uint,

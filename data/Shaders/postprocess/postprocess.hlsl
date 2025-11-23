@@ -376,7 +376,7 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
     float2 uv = ((float2)dispatchThreadID.xy + 0.5) / (float2)screenSize.xy;
 
     if (all(dispatchThreadID.xy < screenSize))
-    {
+    {        
         ViewConstants viewConstants;
         viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
 
@@ -517,6 +517,23 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
                 float alpha = (sample & 0x80000000) ? 0.5 : 1.0;
                 color.rgb = (0 != id.x) ? frac(float3(id.x * 31.0, id.x * 17.0, id.x * 59.0) / 255.0) : float3(0,0,0);
                 color.rgb *= alpha;
+            }
+            break;
+            
+            case DisplayMode::PostProcess_PixelChecker:
+            {
+                 switch (coords.x & 0x3)
+                {
+                    case 0 : color.rgb = float3(1,0,0); break;
+                    case 1 : color.rgb = float3(0,1,0); break;
+                    case 2 : color.rgb = float3(0,0,1); break;
+                    case 3 : color.rgb = float3(1,1,1); break;
+                }
+                
+                if ((coords.x>>2 & 1) == (coords.y>>2 & 1))
+                {
+                    color.rgb *= 0.25;
+                }
             }
             break;
         }
