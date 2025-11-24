@@ -12,12 +12,12 @@
 // - Max four args
 //--------------------------------------------------------------------------------------       
 
-#define GPUDEBUG_TOTAL_BUFFER_SIZE     4096
-#define GPUDEBUG_STRING_SIZE            256
+#define GPUDEBUG_TOTAL_BUFFER_SIZE  4096
+#define GPUDEBUG_MAX_ARG_COUNT      4
 
 enum GPUDebugMsgType
 {
-    None,
+    None = 0,
     Info,
     Warning,
     Error,
@@ -28,15 +28,13 @@ enum GPUDebugMsgType
 
 static uint g_File = 0;
 static uint g_ArgOffset = 0;
-
-#define GPUDEBUG_MAX_ARG_COUNT 4
     
 template<uint SIZE> void DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint _file, uint _line)
 {
     RWByteAddressBuffer buffer = getRWBuffer(RESERVEDSLOT_RWBUFFER_GPUDEBUG);
 
     uint stringSize = ((SIZE + 3) & ~3) + 4; // string size rounded up to 4 bytes
-    uint elementSize = 4 + stringSize + 4 + GPUDEBUG_MAX_ARG_COUNT * 4;
+    uint elementSize = 4 + 4 + stringSize + GPUDEBUG_MAX_ARG_COUNT * 4;
     
     uint offset;
     buffer.InterlockedAdd(0, elementSize, offset);  // header + message size (rounded up to 4 bytes) + 4 bytes per arg
@@ -44,14 +42,15 @@ template<uint SIZE> void DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint
     
     if (offset + elementSize > GPUDEBUG_TOTAL_BUFFER_SIZE)
         return;
-
-    // Save message type (4 bits, [0..16], file guid (12 bits, [0..4096] files), and line (16 bits, [0..65535] lines)
-    uint header = (uint)_type | (_file<<4) | (_line<<16);
-    buffer.Store(offset, header); 
-    offset += 4; // skip header
     
-    buffer.Store(offset, stringSize); 
-    offset += 4; // skip header
+    // Save message type (4 bits, [0..16], file guid (12 bits, [0..4096] files), and line (16 bits, [0..65535] lines)
+    uint header1 = (uint)_type | ((stringSize & 0xFFFF) <<16);
+    buffer.Store(offset, header1); 
+    offset += 4;
+    
+    uint header2 = _line | ((_file & 0xFFFF) << 16);
+    buffer.Store(offset, header2); 
+    offset += 4;
     
     for (uint i = 0; i < stringSize / 4; ++i)
     {
@@ -73,20 +72,13 @@ template<uint SIZE> void DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint
     
     g_ArgOffset = offset;
     
-    // clear args for debug (must not be 0x00000000)
-    buffer.Store(offset + 0,  0xFFFFFFFF);  
-    buffer.Store(offset + 4,  0xFFFFFFFF);  
-    buffer.Store(offset + 8, 0xFFFFFFFF);  
-    buffer.Store(offset + 12, 0xFFFFFFFF);  
+    // clear args for debug (not strictly necessary)
+    //for (uint i = 0; i < GPUDEBUG_MAX_ARG_COUNT; ++i)
+    //    buffer.Store(offset + i * 4,  0xFFFFFFFF); 
 }
 
 void StoreArg(uint _value)
-{
-    //RWByteAddressBuffer buffer = getRWBuffer(RESERVEDSLOT_RWBUFFER_GPUDEBUG);
-    //uint offset;
-    //buffer.InterlockedAdd(0, 4, offset);
-    //buffer.Store(offset, _value);
-    
+{    
     RWByteAddressBuffer buffer = getRWBuffer(RESERVEDSLOT_RWBUFFER_GPUDEBUG);
     buffer.Store(g_ArgOffset, _value);
     g_ArgOffset += 4;

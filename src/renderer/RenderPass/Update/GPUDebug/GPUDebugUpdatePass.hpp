@@ -45,13 +45,14 @@ namespace vg::renderer
                         char temp[256];
                         uint index = 0;
 
-                        uint header = (*(uint *)p);
-                        GPUDebugMsgType msgType = (GPUDebugMsgType)(header & 0xF);
-                        uint fileID = (header >> 4) & 0xFFF;
-                        uint line = (header >> 16);
+                        uint header1 = (*(uint *)p);
+                        const GPUDebugMsgType msgType = (GPUDebugMsgType)(header1 & 0xFFFF);
+                        const uint stringSize = header1 >> 16;
                         p += 4;
 
-                        uint stringSize = *p;
+                        uint header2 = (*(uint *)p);
+                        uint line = header2 & 0xFFFF;
+                        uint fileID = header2 >> 16;
                         p += 4;
 
                         u8 * c = p;
@@ -80,10 +81,6 @@ namespace vg::renderer
                             auto argPos = tempString.find('%');
 
                             u32 * args = (u32*)core::alignUp((uint_ptr)p, (uint_ptr)4);
-
-                            // skip {'0','0','0','0'} footer
-                            //while (*args == 0x00000000 && (args- (u32 *)data) < totalSize)
-                            //    args++;
 
                             for (uint i = 0; i < argCount; ++i)
                             {
@@ -140,21 +137,20 @@ namespace vg::renderer
                                 argPos = tempString.find('%', argPos + 1);
                             }
                             
-                            //p = (u8 *)(args+argCount);
 
                             p = (u8 *)args;
 
-                            // skip four fake args
-                            uint arg0 = *p;
+                            // skip four args
+                            uint arg0 = *(uint*)p;
                             p += 4;
 
-                            uint arg1 = *p;
+                            uint arg1 = *(uint *)p;
                             p += 4;
 
-                            uint arg2 = *p;
+                            uint arg2 = *(uint *)p;
                             p += 4;
 
-                            uint arg3 = *p;
+                            uint arg3 = *(uint *)p;
                             p += 4;
 
                             const auto shaderManager = ShaderManager::get();
@@ -192,8 +188,6 @@ namespace vg::renderer
                                 }
                                 break;
                             } 
-
-                            //p += 4;
                         }
                         else
                         {
