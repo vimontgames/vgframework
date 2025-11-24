@@ -46,7 +46,8 @@ namespace vg::renderer
                         uint index = 0;
 
                         uint header1 = (*(uint *)p);
-                        const GPUDebugMsgType msgType = (GPUDebugMsgType)(header1 & 0xFFFF);
+                        const GPUDebugMsgType msgType = (GPUDebugMsgType)(header1 & 0xFF);
+                        const uint msgArgCount = (header1 >> 8) & 0xFF;
                         const uint stringSize = header1 >> 16;
                         p += 4;
 
@@ -54,6 +55,11 @@ namespace vg::renderer
                         uint line = header2 & 0xFFFF;
                         uint fileID = header2 >> 16;
                         p += 4;
+
+                        const auto shaderManager = ShaderManager::get();
+                        const string * pfilename = shaderManager->getShaderFilePathFromID(fileID);
+                        string formattedFilename = pfilename ? *pfilename : "";
+                        formattedFilename = rootFolder + formattedFilename;
 
                         u8 * c = p;
                         while (*c != 0)
@@ -76,6 +82,9 @@ namespace vg::renderer
                                 if (temp[i] == '%')
                                     argCount++;
                             }
+
+                            VG_ASSERT(msgArgCount == argCount, "String format \"%s\" expects %u args, but %u were provided in file %s(%u) ", temp, argCount, msgArgCount, formattedFilename.c_str(), line);
+                            argCount = min(argCount, msgArgCount);
 
                             string tempString = temp;
                             auto argPos = tempString.find('%');
@@ -140,23 +149,12 @@ namespace vg::renderer
 
                             p = (u8 *)args;
 
-                            // skip four args
-                            uint arg0 = *(uint*)p;
-                            p += 4;
-
-                            uint arg1 = *(uint *)p;
-                            p += 4;
-
-                            uint arg2 = *(uint *)p;
-                            p += 4;
-
-                            uint arg3 = *(uint *)p;
-                            p += 4;
-
-                            const auto shaderManager = ShaderManager::get();
-                            const string * pfilename = shaderManager->getShaderFilePathFromID(fileID);
-                            string formattedFilename = pfilename ? *pfilename : "";
-                            formattedFilename = rootFolder + formattedFilename;
+                            // skip args
+                            for (uint a = 0; a < msgArgCount; ++a)
+                            {
+                                uint value = *(uint *)p;
+                                p += 4;
+                            }                           
 
                             switch (msgType)
                             {

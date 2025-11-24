@@ -9,11 +9,11 @@
 //
 // Know limitation:
 // - Only float, int and uint args are supported
-// - Max four args
+// - Max height args
 //--------------------------------------------------------------------------------------       
 
 #define GPUDEBUG_TOTAL_BUFFER_SIZE  4096
-#define GPUDEBUG_MAX_ARG_COUNT      4
+#define GPUDEBUG_MAX_ARG_COUNT      8
 
 enum GPUDebugMsgType
 {
@@ -29,12 +29,12 @@ enum GPUDebugMsgType
 static uint g_File = 0;
 static uint g_ArgOffset = 0;
     
-template<uint SIZE> void DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint _file, uint _line)
+template<uint SIZE> void DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint _file, uint _line, uint _argCount)
 {
     RWByteAddressBuffer buffer = getRWBuffer(RESERVEDSLOT_RWBUFFER_GPUDEBUG);
 
     uint stringSize = ((SIZE + 3) & ~3) + 4; // string size rounded up to 4 bytes
-    uint elementSize = 4 + 4 + stringSize + GPUDEBUG_MAX_ARG_COUNT * 4;
+    uint elementSize = 4 + 4 + stringSize + _argCount * 4;
     
     uint offset;
     buffer.InterlockedAdd(0, elementSize, offset);  // header + message size (rounded up to 4 bytes) + 4 bytes per arg
@@ -43,8 +43,8 @@ template<uint SIZE> void DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint
     if (offset + elementSize > GPUDEBUG_TOTAL_BUFFER_SIZE)
         return;
     
-    // Save message type (4 bits, [0..16], file guid (12 bits, [0..4096] files), and line (16 bits, [0..65535] lines)
-    uint header1 = (uint)_type | ((stringSize & 0xFFFF) <<16);
+    // Save debug message header
+    uint header1 = ((uint)_type & 0x000F) | (_argCount << 8) | ((stringSize & 0xFFFF) <<16);
     buffer.Store(offset, header1); 
     offset += 4;
     
@@ -73,7 +73,7 @@ template<uint SIZE> void DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint
     g_ArgOffset = offset;
     
     // clear args for debug (not strictly necessary)
-    //for (uint i = 0; i < GPUDEBUG_MAX_ARG_COUNT; ++i)
+    //for (uint i = 0; i < _argCount; ++i)
     //    buffer.Store(offset + i * 4,  0xFFFFFFFF); 
 }
 
@@ -129,10 +129,55 @@ template<typename T0, typename T1, typename T2, typename T3> void DebugPrintArgs
     DebugPrintArgs(arg3);
 }
 
-#define VG_GPUDEBUGMSG(_type, _file, _line, _str, ...) do { \
-    DebugPrint(_str, _type, _file, _line);                  \
-    DebugPrintArgs(__VA_ARGS__);                            \
-}                                                           \
+template<typename T0, typename T1, typename T2, typename T3, typename T4> void DebugPrintArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+{
+    DebugPrintArgs(arg0);
+    DebugPrintArgs(arg1);
+    DebugPrintArgs(arg2);
+    DebugPrintArgs(arg3);
+    DebugPrintArgs(arg4);
+}
+
+template<typename T0, typename T1, typename T2, typename T3, typename T4, typename T5> void DebugPrintArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+{
+    DebugPrintArgs(arg0);
+    DebugPrintArgs(arg1);
+    DebugPrintArgs(arg2);
+    DebugPrintArgs(arg3);
+    DebugPrintArgs(arg4);
+    DebugPrintArgs(arg5);
+}
+
+template<typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6> void DebugPrintArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+{
+    DebugPrintArgs(arg0);
+    DebugPrintArgs(arg1);
+    DebugPrintArgs(arg2);
+    DebugPrintArgs(arg3);
+    DebugPrintArgs(arg4);
+    DebugPrintArgs(arg5);
+    DebugPrintArgs(arg6);
+}
+
+template<typename T0, typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7> void DebugPrintArgs(T0 arg0, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+{
+    DebugPrintArgs(arg0);
+    DebugPrintArgs(arg1);
+    DebugPrintArgs(arg2);
+    DebugPrintArgs(arg3);
+    DebugPrintArgs(arg4);
+    DebugPrintArgs(arg5);
+    DebugPrintArgs(arg6);
+    DebugPrintArgs(arg7);
+}
+
+#define VARIADIC_ARG_COUNT(...) VARIADIC_ARG_COUNT_IMPL(_0, ##__VA_ARGS__, 8,7,6,5,4,3,2,1,0)
+#define VARIADIC_ARG_COUNT_IMPL(_0,_1,_2,_3,_4,_5,_6,_7,_8,_N,...) _N
+
+#define VG_GPUDEBUGMSG(_type, _file, _line, _str, ...) do {         \
+    DebugPrint(_str, _type, _file, _line, VARIADIC_ARG_COUNT(__VA_ARGS__));    \
+    DebugPrintArgs(__VA_ARGS__);                                    \
+}                                                                   \
 while (0)
 
 #ifdef _TOOLMODE
