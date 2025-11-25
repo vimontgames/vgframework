@@ -563,7 +563,7 @@
                         <Property type="String" name="m_name" value="Level"/>
                         <Property type="Uint32" name="m_uid" value="1093025436"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-1" Iy="-8.7422777e-08" Iz="0" Iw="0" Jx="8.7422777e-08" Jy="-1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999976" Kw="0" Tx="18" Ty="0" Tz="0" Tw="1"/>
@@ -8446,7 +8446,7 @@
                         <Property type="String" name="m_name" value="Objects"/>
                         <Property type="Uint32" name="m_uid" value="1002808616"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="24" Ty="0" Tz="0" Tw="1"/>
@@ -9383,7 +9383,7 @@
                                 <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-6" Ty="11" Tz="0.60000002" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="0.38268358" Iy="-0.92387962" Iz="0" Iw="0" Jx="0.92387962" Jy="0.38268358" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-41" Ty="2.5000019" Tz="0.60000002" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -9392,6 +9392,72 @@
                                         <Property type="String" name="m_name" value=""/>
                                         <Property type="Uint32" name="m_uid" value="2526043830"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/VGF_Boy.prefab"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                            </Object>
+                            <Object class="PrefabGameObject">
+                                <Property type="String" name="m_name" value="VGF_Boy_01"/>
+                                <Property type="Uint32" name="m_uid" value="3470386763"/>
+                                <Property type="Uint32" name="m_originalUID" value="3747761093"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="0.70710677" Iy="0.70710707" Iz="0" Iw="0" Jx="-0.70710707" Jy="0.70710677" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-42.5" Ty="2.5" Tz="0.60000002" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components"/>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                                <Property type="Resource" name="m_prefabResource">
+                                    <Object class="PrefabResource">
+                                        <Property type="String" name="m_name" value="VGF_Boy_01"/>
+                                        <Property type="Uint32" name="m_uid" value="3929559943"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2526043830"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/VGF_Boy.prefab"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                            </Object>
+                            <Object class="PrefabGameObject">
+                                <Property type="String" name="m_name" value="VGF_Boy_02"/>
+                                <Property type="Uint32" name="m_uid" value="1298576959"/>
+                                <Property type="Uint32" name="m_originalUID" value="3470386763"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-0.70686257" Iy="-0.70735097" Iz="0" Iw="0" Jx="0.70735097" Jy="-0.70686257" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-40" Ty="0.5" Tz="0.60000002" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components"/>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                                <Property type="Resource" name="m_prefabResource">
+                                    <Object class="PrefabResource">
+                                        <Property type="String" name="m_name" value="VGF_Boy_02"/>
+                                        <Property type="Uint32" name="m_uid" value="815903814"/>
+                                        <Property type="Uint32" name="m_originalUID" value="3929559943"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/VGF_Boy.prefab"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                            </Object>
+                            <Object class="PrefabGameObject">
+                                <Property type="String" name="m_name" value="VGF_Boy_03"/>
+                                <Property type="Uint32" name="m_uid" value="3318364863"/>
+                                <Property type="Uint32" name="m_originalUID" value="1298576959"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-0.70710695" Iy="0.70710683" Iz="0" Iw="0" Jx="-0.70710683" Jy="-0.70710695" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-42" Ty="0.5" Tz="0.60000002" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components"/>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                                <Property type="Resource" name="m_prefabResource">
+                                    <Object class="PrefabResource">
+                                        <Property type="String" name="m_name" value="VGF_Boy_03"/>
+                                        <Property type="Uint32" name="m_uid" value="3397879421"/>
+                                        <Property type="Uint32" name="m_originalUID" value="815903814"/>
                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/VGF_Boy.prefab"/>
                                     </Object>
@@ -9552,28 +9618,6 @@
                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
                         <Property type="ObjectPtrVector" name="m_components"/>
                         <Property type="ObjectPtrVector" name="m_children">
-                            <Object class="PrefabGameObject">
-                                <Property type="String" name="m_name" value="TestComponent"/>
-                                <Property type="Uint32" name="m_uid" value="3740073557"/>
-                                <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
-                                <Property type="EnumFlagsU32" name="m_flags" value=""/>
-                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                <Property type="ObjectPtrVector" name="m_components"/>
-                                <Property type="ObjectPtrVector" name="m_children"/>
-                                <Property type="Resource" name="m_prefabResource">
-                                    <Object class="PrefabResource">
-                                        <Property type="String" name="m_name" value=""/>
-                                        <Property type="Uint32" name="m_uid" value="1972524383"/>
-                                        <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/TestComponent.prefab"/>
-                                    </Object>
-                                </Property>
-                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
-                            </Object>
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="Sphere"/>
                                 <Property type="Uint32" name="m_uid" value="1871269719"/>
@@ -9651,9 +9695,36 @@
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="Float" name="m_params.m_spawnRate" value="1"/>
-                                                        <Property type="Float" name="m_params.m_lifeTime" value="10"/>
+                                                        <Property type="Float" name="m_params.m_lifeTime" value="3"/>
                                                         <Property type="Uint16" name="m_params.m_maxParticleCount" value="3"/>
                                                         <Property type="Float3" name="m_params.m_size" x="1" y="1" z="0"/>
+                                                        <Property type="Object" name="m_params.m_opacity">
+                                                            <Object class="FloatCurve">
+                                                                <Property type="String" name="m_name" value=""/>
+                                                                <Property type="Uint32" name="m_uid" value="373800924"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                                <Property type="EnumU8" name="m_type" value="Float"/>
+                                                                <Property type="EnumU8" name="m_interpolation" value="Smooth"/>
+                                                                <Property type="Float2" name="m_rangeX" x="0" y="2"/>
+                                                                <Property type="Float2" name="m_rangeY" x="0" y="1"/>
+                                                                <Property type="ObjectVector" name="m_data">
+                                                                    <Object class="FloatCurveDataContainer">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="3411046253"/>
+                                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                                        <Property type="FloatCurveData" name="m_curve" count="4">
+                                                                            <Point t="0" value="0.020661175"/>
+                                                                            <Point t="0.31818181" value="1"/>
+                                                                            <Point t="1.6033058" value="0.99999994"/>
+                                                                            <Point t="2" value="0.031807542"/>
+                                                                        </Property>
+                                                                        <Property type="Bool" name="m_isVisible" value="true"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                        </Property>
                                                         <Property type="Resource" name="m_materialResource">
                                                             <Object class="MaterialResource">
                                                                 <Property type="String" name="m_name" value="ParticleTest"/>
