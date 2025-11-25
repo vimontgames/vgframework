@@ -97,9 +97,6 @@ namespace vg::editor
                     }
                 }
 
-                auto buttonSize = style::button::SizeSmall;
-                buttonSize.x *= 2;
-
                 ImVec2 size = GetWindowContentRegionSize();
                 ImGuiStyle & style = ImGui::GetStyle();
 
@@ -118,7 +115,7 @@ namespace vg::editor
                 auto errorLabelWidth = ImGui::CalcTextSize(errorLabel).x + style.FramePadding.x * 2.0f;
                 strcat(errorLabel, "###ShowError");
 
-                float offset = size.x - infoLabelWidth - warningLabelWidth - errorLabelWidth - style.FramePadding.x;
+                float offset = size.x - max(infoLabelWidth, style::button::SizeMedium.x) - max(warningLabelWidth, style::button::SizeMedium.x) - max(errorLabelWidth, style::button::SizeMedium.x) - style.FramePadding.x;
 
                 auto & options = getConsoleOptions();
 
@@ -129,7 +126,7 @@ namespace vg::editor
                     ImGui::SetCursorPosX(offset);
 
                     showInfos = asBool(LevelFlags::Info & options.m_levels);
-                    if (ImGui::TooltipButton(infoLabel, showInfos, true, "Show Infos"))
+                    if (ImGui::TooltipButton(infoLabel, showInfos, true, "Show Infos", style::button::SizeMedium))
                     {
                         showInfos = !showInfos;
 
@@ -144,7 +141,7 @@ namespace vg::editor
                     if (warningCount > 0)
                         ImGui::PushStyleColor(ImGuiCol_Text, warningColor);
                     showWarnings = asBool(LevelFlags::Warning & options.m_levels);
-                    if (ImGui::TooltipButton(warningLabel, showWarnings, true, "Show Warnings"))
+                    if (ImGui::TooltipButton(warningLabel, showWarnings, true, "Show Warnings", style::button::SizeMedium))
                     {
                         showWarnings = !showWarnings;
 
@@ -161,7 +158,7 @@ namespace vg::editor
                     if (errorCount > 0)
                         ImGui::PushStyleColor(ImGuiCol_Text, errorColor);
                     showErrors = asBool(LevelFlags::Error & options.m_levels);
-                    if (ImGui::TooltipButton(errorLabel, showErrors, true, "Show Errors"))
+                    if (ImGui::TooltipButton(errorLabel, showErrors, true, "Show Errors", style::button::SizeMedium))
                     {
                         showErrors = !showErrors;
 

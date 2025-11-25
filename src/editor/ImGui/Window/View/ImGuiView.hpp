@@ -516,7 +516,7 @@ namespace vg::editor
             {
                 // TODO: Vulkan we have to hide the texture for one frame when view is closed/reopened? because it happens during ImGui render? SetVisibleAsync?
                 ImTextureID texID = imGuiAdapter->GetTextureID(texture);
-                ImGui::Image(texID, ImVec2((float)m_size.x, (float)m_size.y), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, alpha));
+                ImGui::ImageWithBg(texID, ImVec2((float)m_size.x, (float)m_size.y), ImVec2(0, 0), ImVec2(1, 1), ImVec4(1, 1, 1, alpha));
             }
             else
             {

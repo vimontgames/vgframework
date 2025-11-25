@@ -61,11 +61,11 @@ namespace vg::renderer
         getOrCreateFontInfo(s_defaultFont, FontStyle::Bold, (FontSize)editor::style::font::DefaultFontHeight).needed = true;
         getOrCreateFontInfo(s_defaultFont, FontStyle::Italic, (FontSize)editor::style::font::DefaultFontHeight).needed = true;
 
-        updateFonts();
-
         #ifdef _WIN32
         ImGui_ImplWin32_Init(_winHandle);
         #endif
+
+        io.BackendFlags &= ~ImGuiBackendFlags_PlatformHasViewports; // Not supported by 1.92.5 Vulkan backend
 
         #ifdef VG_DX12
         d3d12Init();
@@ -152,15 +152,13 @@ namespace vg::renderer
             ImGuiIO & io = ImGui::GetIO();
             io.Fonts->AddFontFromFileTTF(fontFullPath.c_str(), _size);
 
-            float iconFontSize = _size;
-
             // merge in icons from Font Awesome
-            static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+            static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
             ImFontConfig icons_config;
             icons_config.MergeMode = true;
             icons_config.PixelSnapH = true;
-            icons_config.GlyphMinAdvanceX = iconFontSize;
-            slot.ptr = io.Fonts->AddFontFromFileTTF("data/Engine/Fonts/Font-Awesome-6.x/" FONT_ICON_FILE_NAME_FAS, iconFontSize, &icons_config, icons_ranges);
+            icons_config.GlyphMinAdvanceX = _size;
+            slot.ptr = io.Fonts->AddFontFromFileTTF("data/Engine/Fonts/Font-Awesome-6.x/" FONT_ICON_FILE_NAME_FAS, _size, &icons_config, icons_ranges);
         }
 
         return nullptr != slot.ptr;
@@ -169,7 +167,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::updateFonts()
     {
-        bool dirty = false;
+        //bool dirty = false;
 
         for (auto & pair : m_imGuiFont)
         {
@@ -182,7 +180,7 @@ namespace vg::renderer
 
                 if (createFont(key.font, key.style, key.size))
                 {
-                    dirty = true;
+                    //dirty = true;
 
                     VG_INFO("[UI] Created font texture {%s,%s,%u} from file \"%s\"", asString(key.font).c_str(), asString(key.style).c_str(), key.size, path);
                 }
@@ -196,14 +194,6 @@ namespace vg::renderer
                         VG_ERROR("[UI] Could not create font texture {%s,%s,%u}", asString(key.font).c_str(), asString(key.style).c_str(), key.size);
                 }
             }
-        }
-        
-        if (dirty)
-        {
-            VG_PROFILE_CPU("updateFonts");
-            ImGuiIO & io = ImGui::GetIO();
-            io.Fonts->Build();
-            m_rebuildFontTex = true;
         }
     }
 
@@ -287,6 +277,7 @@ namespace vg::renderer
 
         ImGui_ImplDX12_InitInfo init_info = {};
         init_info.Device = device->getd3d12Device();
+        init_info.CommandQueue = device->getCommandQueue(CommandQueueType::Graphics)->getd3d12CommandQueue();
         init_info.NumFramesInFlight = max_frame_latency;
         init_info.RTVFormat = Texture::getd3d12SurfaceFormat(fmt);
         init_info.SrvDescriptorHeap = bindlessTable->getd3d12GPUDescriptorHeap();
@@ -340,7 +331,7 @@ namespace vg::renderer
         init_info.MinImageCount = max_frame_latency;
         init_info.ImageCount = max_frame_latency;
         init_info.CheckVkResultFn = nullptr;
-        init_info.RenderPass = m_vkImguiRenderPass;
+        init_info.PipelineInfoMain.RenderPass = m_vkImguiRenderPass;
 
         ImGui_ImplVulkan_Init(&init_info);
 
@@ -482,23 +473,14 @@ namespace vg::renderer
         updateBackbufferFormat();
 
         #ifdef VG_DX12
-        bool dirtyFonts = false;
-        if (m_rebuildFontTex)
-        {
-            VG_PROFILE_CPU("CreateFonts");
-            ImGui_ImplDX12_CreateFontsTexture();
-            m_rebuildFontTex = false;
-            dirtyFonts = true;
-        }
 
         ImGui_ImplDX12_NewFrame();
 
         BindlessTable * bindlessTable = device->getBindlessTable();
-
         
         for (uint i = 0; i < g_ImGuiDX12DescriptorInfos.size(); ++i)
         {
-            if (g_ImGuiDX12DescriptorInfos[i].dirty || dirtyFonts)
+            if (g_ImGuiDX12DescriptorInfos[i].dirty /* || dirtyFonts*/)
             {
                 bindlessTable->updated3d12descriptor(g_ImGuiDX12DescriptorInfos[i].texHandle);
                 g_ImGuiDX12DescriptorInfos[i].dirty = false;
@@ -508,12 +490,6 @@ namespace vg::renderer
         #elif defined(VG_VULKAN)
 
         ImGui_ImplVulkan_NewFrame();
-        if (m_rebuildFontTex)
-        {
-            VG_PROFILE_CPU("CreateFonts");
-            ImGui_ImplVulkan_CreateFontsTexture();
-            m_rebuildFontTex = false;
-        }
 
         #endif
 
@@ -572,15 +548,22 @@ namespace vg::renderer
             auto * renderer = Renderer::get();
             renderer->WaitGPUIdle();
 
+            //ImGui_ImplDX12_Shutdown();
+
             ImGui_ImplDX12_Data * bd = ImGui_ImplDX12_GetBackendData();
             if (bd && bd->pd3dDevice)
             {
+                // Do not destroy all DeviceObjects as we don't want to recreate everything and doing so is also unstable
+                //ImGui_ImplDX12_InvalidateDeviceObjects();
+
                 SafeRelease(bd->pRootSignature);
                 SafeRelease(bd->pPipelineState);
+                SafeRelease(bd->pdxgiFactory);
+                SafeRelease(bd->pTexCmdAllocator);
+                SafeRelease(bd->pTexCmdList);
+                SafeRelease(bd->Fence);
                 bd->RTVFormat = renderOutputFormat;
             }
-
-            m_rebuildFontTex = true;
         }
 
         #elif defined(VG_VULKAN)
@@ -602,12 +585,14 @@ namespace vg::renderer
             vkDestroyPipeline(device->getVulkanDevice(), bd->Pipeline, v->Allocator);
             bd->Pipeline = nullptr;
 
-            vkDestroyRenderPass(device->getVulkanDevice(), v->RenderPass, nullptr);
-            v->RenderPass = nullptr;
+            vkDestroyRenderPass(device->getVulkanDevice(), v->PipelineInfoMain.RenderPass, nullptr);
+            v->PipelineInfoMain.RenderPass = nullptr;
 
             createVulkanRenderPass();
 
-            v->RenderPass = m_vkImguiRenderPass;
+            v->PipelineInfoMain.RenderPass = m_vkImguiRenderPass;
+            v->PipelineInfoMain.Subpass = 0;
+            v->PipelineInfoMain.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
 
             ImGui_ImplVulkan_CreateDeviceObjects();
             m_vkRenderTargetFormat = renderOutputFormat;

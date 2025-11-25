@@ -104,8 +104,6 @@ namespace vg
             static const FontStyle              s_defaultFontStyle;
             static const core::u8               s_defaultFontSize;
 
-            bool                                m_rebuildFontTex = false;
-
             Font                                m_currentFont;
             FontStyle                           m_currentFontStyle;
             FontSize                            m_currentFontSize;
