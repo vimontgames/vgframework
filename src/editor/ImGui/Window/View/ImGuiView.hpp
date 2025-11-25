@@ -386,27 +386,11 @@ namespace vg::editor
             const auto windowPos = ImGui::GetWindowPos();
 
             // Compute Window content size
-
-            #if 1 // IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-
             auto * curWin = ImGui::GetCurrentWindow();
-            ImVec2 vMin = curWin->InnerRect.Min;
-            ImVec2 vMax = curWin->InnerRect.Max;
-            ImVec2 windowRegionMin = curWin->InnerRect.Min - curWin->Pos;
-            ImVec2 windowRegionMax = curWin->InnerRect.Max - curWin->Pos;
-
-            #else
-
-            ImVec2 windowRegionMin = ImGui::GetWindowContentRegionMin();
-            ImVec2 windowRegionMax = ImGui::GetWindowContentRegionMax();
-            ImVec2 vMin = windowRegionMin;
-            ImVec2 vMax = windowRegionMax;
-            vMin.x += windowPos.x;
-            vMin.y += windowPos.y;
-            vMax.x += windowPos.x;
-            vMax.y += windowPos.y;
-
-            #endif
+            const ImVec2 vMin = curWin->InnerRect.Min;
+            const ImVec2 vMax = curWin->InnerRect.Max;
+            const ImVec2 windowRegionMin = curWin->InnerRect.Min - curWin->Pos;
+            const ImVec2 windowRegionMax = curWin->InnerRect.Max - curWin->Pos;
 
             //VG_ASSERT(vMax.x > vMin.x && vMax.y > vMin.y, "vMin = (%f,%f) vMax = (%f, %f)", vMin.x, vMin.y, vMax.x, vMax.y);
 
@@ -567,11 +551,7 @@ namespace vg::editor
                             const auto options = EditorOptions::get();
                             bool debugCulling = options->IsDebugCulling();
 
-                            #ifdef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
                             const ImVec2 rectPos = ImGui::GetCurrentWindow()->InnerRect.Min + ImVec2(1,1);
-                            #else
-                            const ImVec2 rectPos = ImGui::GetWindowPos() + ImGui::GetWindowContentRegionMin();
-                            #endif
 
                             const auto rectColor = 0x7F000000;
                             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0, 1, 0, 1));
@@ -846,13 +826,8 @@ namespace vg::editor
 
             // get window and viewport coords
             ImVec2 pos = ImGui::GetWindowPos() + ImVec2(offset.x, offset.y);
-
-            #ifdef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
             ImVec2 vMin = window->InnerRect.Min - pos + ImVec2(1,1);
-            #else
-            ImVec2 vMin = ImGui::GetWindowContentRegionMin();
-            #endif            
-
+         
             // set viewport size for Gizmo rendering
             ImGuizmo::SetRect(pos.x + vMin.x, pos.y + vMin.y, size.x, size.y);
 

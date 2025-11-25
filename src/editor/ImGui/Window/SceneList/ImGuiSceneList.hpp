@@ -151,13 +151,7 @@ namespace vg::editor
         bool open = false;
 
         // This is actually full window width we want here
-        #if 1 // IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-        //auto availableWidth = GetContentRegionAvail().x;
-        float availableWidth = ImGui::GetCurrentWindow()->WorkRect.GetWidth();
-        #else
-        auto availableWidth = ImGui::GetContentRegionMax().x;
-        #endif
-
+        const float availableWidth = ImGui::GetCurrentWindow()->WorkRect.GetWidth();
         const bool isPrefab = _gameObject->IsPrefab();
         const bool isPrefabChild = !isPrefab && nullptr != _gameObject->GetParentPrefab();
 

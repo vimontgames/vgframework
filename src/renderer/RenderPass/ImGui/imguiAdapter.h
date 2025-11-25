@@ -104,9 +104,6 @@ namespace vg
             static const FontStyle              s_defaultFontStyle;
             static const core::u8               s_defaultFontSize;
 
-            #ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-            gfx::BindlessTextureHandle          m_fontTexHandle;
-            #endif
             bool                                m_rebuildFontTex = false;
 
             Font                                m_currentFont;

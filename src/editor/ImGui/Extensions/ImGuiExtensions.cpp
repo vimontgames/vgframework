@@ -373,22 +373,9 @@ namespace ImGui
     //--------------------------------------------------------------------------------------
     ImVec2 GetWindowContentRegionSize()
     {
-        #if 1 // IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-
         const auto * window = ImGui::GetCurrentWindow();
         const ImVec2 padding = ImGui::GetStyle().WindowPadding;
         return ImVec2(window->Size.x - padding.x * 2.0f, window->Size.y - padding.y * 2.0f);
-
-        #else
-
-        ImVec2 vMin = ImGui::GetWindowContentRegionMin();
-        ImVec2 vMax = ImGui::GetWindowContentRegionMax();
-        vMin.x += ImGui::GetWindowPos().x;
-        vMin.y += ImGui::GetWindowPos().y;
-        vMax.x += ImGui::GetWindowPos().x;
-        return ImVec2(vMax.x - vMin.x, vMax.y - vMin.y);
-
-        #endif
     }
 
     //--------------------------------------------------------------------------------------
