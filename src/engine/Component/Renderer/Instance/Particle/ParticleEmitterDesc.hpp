@@ -46,6 +46,9 @@ namespace vg::engine
         //setPropertyDescription(ParticleEmitterDesc, m_params.m_size, "Particle size");
         //setPropertyRange(ParticleEmitterDesc, m_params.m_size, uint2(0.0f, 1.0f));
 
+        registerProperty(ParticleEmitterDesc, m_params.m_opacity, "Opacity");
+        setPropertyDescription(ParticleEmitterDesc, m_params.m_opacity, "Opacity over lifetime");
+
         registerPropertyGroupBegin(ParticleEmitterDesc, "Material");
         {
             registerPropertyResource(ParticleEmitterDesc, m_materialResource, "Material");

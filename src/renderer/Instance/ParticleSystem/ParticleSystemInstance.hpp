@@ -212,6 +212,31 @@ namespace vg::renderer
                 particle.velocity = float3(0, 0, 100) * m_dt;
                 particle.position += particle.velocity * m_dt;
 
+                const ParticleEmitterParams & params = emitter.m_params;
+                const FloatCurve & opacityCurve = params.m_opacity;
+
+                if (opacityCurve.getCurveCount() == 1)
+                {
+                    const float t = particle.age;
+
+                    float4 color = float4(1, 1, 1, 1);
+                    color.a = opacityCurve.getValue(t, 0);
+
+                    particle.color = color;
+                }
+                else if (opacityCurve.getCurveCount() == 4)
+                {
+                    const float t = particle.age;
+
+                    float4 color = float4(1, 1, 1, 1);
+                    color.r = opacityCurve.getValue(t, 0);
+                    color.g = opacityCurve.getValue(t, 1);
+                    color.b = opacityCurve.getValue(t, 2);
+                    color.a = opacityCurve.getValue(t, 3);
+
+                    particle.color = color;
+                }
+
                 const float radius = max(particle.size.x, max(particle.size.y, particle.size.z)) * 0.5f;
 
                 aabb.grow(particle.position - radius);

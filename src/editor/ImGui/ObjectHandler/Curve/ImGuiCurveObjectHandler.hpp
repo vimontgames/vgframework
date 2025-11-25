@@ -22,7 +22,7 @@ namespace vg::editor
 
         bool IsVisible(size_t _curveIndex) final override
         {
-            return true;
+            return m_curve->IsVisible((uint)_curveIndex);
         }
 
         size_t GetPointCount(size_t _curveIndex) final override
@@ -44,7 +44,7 @@ namespace vg::editor
                     return 0xFFFF0000;
 
                 default:
-                    return 0xFF7F7F7F;
+                    return 0xFFCFCFCF;
             }
         }
 
@@ -121,12 +121,12 @@ namespace vg::editor
 
         ImVec2 GetLowerBounds() const final override
         {
-            return ImVec2(m_curve->getRange().x, -1000);
+            return ImVec2(m_curve->getHorizontalRange().x, m_curve->getVerticalRange().x);
         }
 
         ImVec2 GetUpperBounds() const final override
         {
-            return ImVec2(m_curve->getRange().y, +1000);
+            return ImVec2(m_curve->getHorizontalRange().y, m_curve->getVerticalRange().y);
         }
 
         ImVec2 & GetMin() final override
@@ -185,13 +185,7 @@ namespace vg::editor
                         {
                             FloatCurveEdit floatCurveEdit((FloatCurve*)curve);
 
-                            ImRect rc;
-                            rc.Min = ImGui::GetCursorPos();
-                            rc.Max = rc.Min + ImVec2(availableWidth, availableWidth);
-
-                            ImRect clip;
-                            clip.Min = ImGui::GetCursorScreenPos();
-                            clip.Max = clip.Min + ImVec2(availableWidth, availableWidth);
+                            
 
                             //if (curve->getInterpolationType() == CurveInterpolationType::Constant)
                             //{
@@ -199,18 +193,24 @@ namespace vg::editor
                             //}
                             //else
                             {
-                                ImCurveEdit::Edit(floatCurveEdit, rc.Max - rc.Min, (uint)(uint_ptr)curve, &clip);
+                                if (ImGui::Button(ImGui::getObjectLabel(editor::style::icon::ResetRange, curve).c_str(), style::button::SizeSmall))
+                                    curve->ResetBounds();
 
-                                if (ImGui::Button(editor::style::icon::Maximize, style::button::SizeSmall))
-                                {
-                                    curve->Fit();
-                                }
                                 if (ImGui::IsItemHovered())
-                                    ImGui::SetTooltip("Fit");
+                                    ImGui::SetTooltip("Reset to show full curve range");
 
                                 ImGui::SameLine();
 
-                                ImGui::Button(editor::style::icon::About, style::button::SizeSmall);
+                                if (ImGui::Button(ImGui::getObjectLabel(editor::style::icon::FitVertical, curve).c_str(), style::button::SizeSmall))
+                                    curve->FitVerticalBounds();
+
+                                if (ImGui::IsItemHovered())
+                                    ImGui::SetTooltip("Fit curve vertically");
+
+                                ImGui::SameLine();
+
+                                ImGui::Button(ImGui::getObjectLabel(editor::style::icon::About, curve).c_str(), style::button::SizeSmall);
+
                                 if (ImGui::IsItemHovered())
                                 {
                                     ImGui::BeginTooltip();
@@ -224,6 +224,7 @@ namespace vg::editor
 
                                         ImGui::TableSetColumnIndex(0);
                                         ImGui::Text("Pan");
+                                        ImGui::Text("Zoom");
                                         ImGui::Text("Vertical Zoom");
                                         ImGui::Text("Horizontal Zoom");
                                         ImGui::Text("Add point");
@@ -233,7 +234,8 @@ namespace vg::editor
                                         imGuiAdapter->PushFontStyle(renderer::FontStyle::Italic);
                                         ImGui::Text("Middle mouse button");
                                         ImGui::Text("Ctrl + Mouse wheel");
-                                        ImGui::Text("Ctrl + Alt + Mouse wheel");
+                                        ImGui::Text("Ctrl + Mouse wheel + Shift");
+                                        ImGui::Text("Ctrl + Mouse wheel + Alt");
                                         ImGui::Text("Double-click left mouse button");
                                         ImGui::Text("Alt + Left mouse button");
                                         imGuiAdapter->PopFontStyle();
@@ -242,6 +244,54 @@ namespace vg::editor
 
                                     ImGui::EndTooltip();
                                 }
+
+                                ImGui::SameLine();
+
+                                FloatCurve * floatCurve = (FloatCurve *)curve;
+
+                                float available = ImGui::GetContentRegionAvail().x;
+
+                                const char * curveShortNames[] =
+                                {
+                                    "R", "G", "B", "A"
+                                };
+
+                                const char * curveLongNames[] =
+                                {
+                                    "Red", "Green", "Blue", "Alpha"
+                                };
+
+                                float cbWidth = style::button::SizeSmall.x + ImGui::GetStyle().FramePadding.x; // ImGui::CalcTextSize("R").x + ImGui::GetStyle().FramePadding.x * 2;
+                                const auto posX = ImGui::GetCursorPosX();
+                                for (uint c = 0; c < 4; ++c)
+                                {
+                                    ImGui::SameLine();
+
+                                    ImGui::SetCursorPosX(posX + available - (4-c) * cbWidth);
+
+                                    bool clickable = c < floatCurve->getCurveCount();
+                                    bool enabled = clickable && floatCurve->IsVisible(c);
+
+                                    ImGui::BeginDisabled(c >= floatCurve->getCurveCount());
+                                    {
+                                        if (ImGui::TooltipButton(ImGui::getObjectLabel(curveShortNames[c], curve).c_str(), enabled, clickable, fmt::sprintf("%s %s curve", enabled? "Hide" : "Show", curveLongNames[c]), style::button::SizeSmall))
+                                        {
+                                            floatCurve->SetVisible(c, !floatCurve->IsVisible(c));
+                                            changed = true;
+                                        }
+                                    }
+                                    ImGui::EndDisabled();
+                                }
+
+                                ImRect rc;
+                                rc.Min = ImGui::GetCursorPos();
+                                rc.Max = rc.Min + ImVec2(availableWidth, availableWidth);
+
+                                ImRect clip;
+                                clip.Min = ImGui::GetCursorScreenPos();
+                                clip.Max = clip.Min + ImVec2(availableWidth, availableWidth);
+
+                                changed = 0 != ImCurveEdit::Edit(floatCurveEdit, rc.Max - rc.Min, (uint)(uint_ptr)curve, &clip);
                             }
                         }
                         else

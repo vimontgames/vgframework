@@ -65,7 +65,7 @@ namespace vg::editor
             inline static const char * Checked              = ICON_FA_SQUARE_CHECK;
             inline static const char * Console              = ICON_FA_TABLE_LIST;
             inline static const char * Clock                = ICON_FA_CLOCK;
-            inline static const char * Curve                = ICON_FA_BEZIER_CURVE;
+            inline static const char * Curve                = ICON_FA_CHART_LINE;
             inline static const char * Destroy              = ICON_FA_CIRCLE_XMARK;
             inline static const char * Edit                 = ICON_FA_PEN_TO_SQUARE;
             inline static const char * Editor               = ICON_FA_SCREWDRIVER_WRENCH;
@@ -75,6 +75,7 @@ namespace vg::editor
             inline static const char * Environment          = ICON_FA_CLOUD_MOON;
             inline static const char * File                 = ICON_FA_FILE;
             inline static const char * Fire                 = ICON_FA_FIRE;
+            inline static const char * FitVertical          = ICON_FA_ARROWS_UP_DOWN;
             inline static const char * Font                 = ICON_FA_FONT;
             inline static const char * FPS                  = ICON_FA_STOPWATCH;
             inline static const char * Folder               = ICON_FA_FOLDER_OPEN;
@@ -101,6 +102,7 @@ namespace vg::editor
             inline static const char * Plus                 = ICON_FA_SQUARE_PLUS;
             inline static const char * Plugin               = ICON_FA_PLUG;
             inline static const char * Prefab               = ICON_FA_PUZZLE_PIECE;
+            inline static const char * ResetRange           = ICON_FA_VECTOR_SQUARE;
             inline static const char * Reload               = ICON_FA_ROTATE_RIGHT;
             inline static const char * Renderer             = ICON_FA_DISPLAY;
             inline static const char * Resource             = ICON_FA_DATABASE;

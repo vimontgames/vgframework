@@ -24,10 +24,17 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnum(Curve, CurveType, m_type, "Type");
+        registerPropertyEnum(Curve, CurveType, m_type, "Value type");
         registerPropertyEnum(Curve, CurveInterpolationType, m_interpolation, "Interpolation");
-        registerProperty(Curve, m_range, "Range");
+        registerProperty(Curve, m_rangeX, "Horizontal range");
+        registerProperty(Curve, m_rangeY, "Vertical range");
 
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Curve::OnLoad()
+    {
+        ResetBounds();
     }
 }

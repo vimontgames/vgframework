@@ -23,18 +23,27 @@ namespace vg::core
             Curve(const string & _name = "", IObject * _parent = nullptr);
             ~Curve();
 
-            virtual void Fit() = 0;
+            virtual void            ResetBounds         () = 0;
+            virtual void            FitVerticalBounds   () = 0;
+            virtual bool            IsVisible           (uint _curveIndex) const = 0;
+            virtual void            SetVisible          (uint _curveIndex, bool _visible) = 0;
 
-            CurveInterpolationType getInterpolationType() const { return m_interpolation; }
-            core::float2 getRange() const { return m_range; }
+            virtual void            OnLoad              () override;
 
-            core::float2 & getDisplayMin() { return m_displayMin; }
-            core::float2 & getDisplayMax() { return m_displayMax; }
+            CurveType               getCurveValueType   () const { return m_type; }
+            CurveInterpolationType  getInterpolationType() const { return m_interpolation; }
+
+            const core::float2 &    getHorizontalRange  () const { return m_rangeX; }
+            const core::float2 &    getVerticalRange    () const { return m_rangeY; }
+
+            core::float2 &          getDisplayMin       () { return m_displayMin; }
+            core::float2 &          getDisplayMax       () { return m_displayMax; }
 
         protected:
             CurveType               m_type = CurveType::Float;
             CurveInterpolationType  m_interpolation = CurveInterpolationType::Linear;
-            core::float2            m_range = core::float2(0, 1);
+            core::float2            m_rangeX = core::float2(0, 1);
+            core::float2            m_rangeY = core::float2(0, 1);
 
             // display range
             core::float2            m_displayMin = core::float2(0, 0);

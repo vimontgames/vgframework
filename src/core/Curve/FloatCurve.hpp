@@ -33,7 +33,8 @@ namespace vg::core
         super::registerProperties(_desc);
 
         registerProperty(FloatCurveDataContainer, m_curve, "Curve");
-        registerResizeVectorFunc(WorldResource, ResizeFloatCurveDataContainerVector);
+        registerProperty(FloatCurveDataContainer, m_isVisible, "Visible");
+        registerResizeVectorFunc(FloatCurveDataContainer, ResizeFloatCurveDataContainerVector);
 
         return true;
     }
@@ -98,13 +99,22 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void FloatCurve::Fit()
+    void FloatCurve::ResetBounds()
     {
-        m_displayMin.x = m_range.x;
-        m_displayMax.x = m_range.y;
+        m_displayMin.x = m_rangeX.x;
+        m_displayMax.x = m_rangeX.y;
 
-        float minY = FLT_MAX;
-        float maxY = -FLT_MAX;
+        m_displayMin.y = m_rangeY.x;
+        m_displayMax.y = m_rangeY.y;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FloatCurve::FitVerticalBounds()
+    {
+        ResetBounds();
+
+        float2 minimum = (float2)FLT_MAX;
+        float2 maximum = (float2)-FLT_MAX;
 
         for (uint i = 0; i < m_data.size(); ++i)
         {
@@ -112,13 +122,13 @@ namespace vg::core
             auto & points = curve.m_curve.m_points;
             for (uint j = 0; j < points.size(); ++j)
             {
-                minY = min(minY, points[j].value);
-                maxY = max(maxY, points[j].value);
+                minimum.xy = min(minimum.xy, float2(points[j].t, points[j].value));
+                maximum.xy = max(maximum.xy, float2(points[j].t, points[j].value));
             }
         }
 
-        m_displayMin.y = minY;
-        m_displayMax.y = maxY;
+        m_displayMin.y = minimum.y;
+        m_displayMax.y = maximum.y;
 
         const float eps = 0.1f;
         if (abs((float)m_displayMin.x - (float)m_displayMax.x) < eps)
@@ -132,5 +142,92 @@ namespace vg::core
             m_displayMin.y -= eps / 2.0f;
             m_displayMax.y += eps / 2.0f;
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool FloatCurve::IsVisible(uint _curveIndex) const
+    {
+        if (_curveIndex < m_data.size())
+            return m_data[_curveIndex].m_isVisible;
+        else
+            return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FloatCurve::SetVisible(uint _curveIndex, bool _visible)
+    {
+        if (_curveIndex < m_data.size())
+            m_data[_curveIndex].m_isVisible = _visible;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float FloatCurve::getValue(float _time, uint _curveIndex) const
+    {
+        if (_curveIndex < m_data.size())
+        {
+            const FloatCurveDataContainer & curve = m_data[_curveIndex];
+            return curve.m_curve.getValue(_time, getInterpolationType());
+        }
+
+        return 0.0f;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float FloatCurveData::getValue(float _time, CurveInterpolationType _interpolationType) const
+    {
+        const size_t count = m_points.size();
+
+        // No points -> return 0
+        if (count == 0)
+            return 0.0f;
+
+        // Single point -> always return its value
+        if (count == 1)
+            return m_points[0].value;
+
+        // Before first point -> clamp
+        if (_time <= m_points.front().t)
+            return m_points.front().value;
+
+        // After last point -> clamp
+        if (_time >= m_points.back().t)
+            return m_points.back().value;
+
+        // Find the segment that contains _time
+        // (simple linear search; can be optimized with binary search if needed)
+        size_t i = 0;
+        for (; i < count - 1; ++i)
+        {
+            const FloatCurvePoint & p0 = m_points[i];
+            const FloatCurvePoint & p1 = m_points[i + 1];
+
+            if (_time >= p0.t && _time <= p1.t)
+            {
+                const float dt = p1.t - p0.t;
+                const float alpha = (_time - p0.t) / dt;
+
+                switch (_interpolationType)
+                {
+                    case CurveInterpolationType::Constant:
+                        // Step interpolation
+                        return p0.value;
+
+                    default:
+                    case CurveInterpolationType::Linear:
+                        // Standard lerp
+                        return p0.value + (p1.value - p0.value) * alpha;
+
+                    case CurveInterpolationType::Smooth:
+                    {
+                        // Smoothstep interpolation
+                        float s = alpha * alpha * (3.0f - 2.0f * alpha);
+                        return p0.value + (p1.value - p0.value) * s;
+                    }
+                }
+            }
+        }
+
+        // Should never reach here, but just in case
+        return m_points.back().value;
     }
 }
