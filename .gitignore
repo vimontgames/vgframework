@@ -2,7 +2,6 @@ src/commit.h
 Game.exe
 Editor.exe
 lib/*
-bin/*
 tmp/*
 cache/*
 .vs/*
@@ -32,9 +31,10 @@ enc_temp_folder/*
 *.vsidx
 *.filelistabsolute.txt
 *.sln
-!dxcompiler.dll
-!dxcompiler.lib
-!dxil.dll
+!bin/win64/dxcompiler.dll
+!bin/win64/dxil.dll
+!bin/arm64ec/dxcompiler.dll
+!bin/arm64ec/dxil.dll
 !WinPixEventRuntime.dll
 !WinPixEventRuntime.lib
 !extern/JoltPhysics/Lib/x64/Debug/*
