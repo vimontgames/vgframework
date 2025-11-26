@@ -1,6 +1,7 @@
 #include "dxc/inc/dxcapi.h"
 #include "gfx/Shader/ShaderManager.h"
 #include "core/File/File.h"
+#include "core/Plugin/Plugin.h"
 
 #pragma push_macro("new")
 #undef new
@@ -16,16 +17,42 @@
 #include <wrl/client.h>
 #include "core/string/string.h"
 
+HMODULE g_dxcompilerDllHandle = nullptr;
+
+//--------------------------------------------------------------------------------------
+// TODO: LoadLibrary once and keep handle
+//--------------------------------------------------------------------------------------
+template <typename T> HRESULT CreateDxcInstance(REFCLSID clsid, REFIID iid, T *& _out)
+{
+    _out = nullptr;
+
+    if (nullptr == g_dxcompilerDllHandle)
+    {
+        const string dxcompilerDllPath = fmt::sprintf("bin/%s/dxcompiler.dll", Plugin::getPlatform());
+        VG_INFO("[Shader] Loading %s", dxcompilerDllPath.c_str());
+        g_dxcompilerDllHandle = (LoadLibraryExA(dxcompilerDllPath.c_str(), nullptr, 0));
+    }
+
+    using DxcCreateInstanceProc = HRESULT(__stdcall *)(REFCLSID, REFIID, void **);
+
+    auto fn = reinterpret_cast<DxcCreateInstanceProc>(GetProcAddress(g_dxcompilerDllHandle, "DxcCreateInstance"));
+    if (!fn)
+        return HRESULT_FROM_WIN32(GetLastError());
+
+    return fn(clsid, iid, reinterpret_cast<void **>(&_out));
+}
+
 class CustomIncludeHandler : public IDxcIncludeHandler
 {
 public:
+
     HRESULT STDMETHODCALLTYPE LoadSource(_In_ LPCWSTR pFilename, _COM_Outptr_result_maybenull_ IDxcBlob ** ppIncludeSource) override
     {
         using namespace Microsoft::WRL;
         using namespace vg::gfx;
 
         if (nullptr == m_dxcUtils)
-            VG_VERIFY_SUCCEEDED(DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(m_dxcUtils.GetAddressOf())));
+            VG_VERIFY_SUCCEEDED(CreateDxcInstance(CLSID_DxcUtils, __uuidof(IDxcUtils), m_dxcUtils));
 
         ComPtr<IDxcBlobEncoding> pEncoding;
 
@@ -90,13 +117,12 @@ public:
 
     virtual ~CustomIncludeHandler()
     {
-        if (m_dxcUtils)
-            m_dxcUtils->Release();
+        VG_SAFE_RELEASE(m_dxcUtils);
     }
 
     atomic<u32>                         m_refCount = 1;
     std::unordered_set<std::string>     m_includedFiles;
-    Microsoft::WRL::ComPtr<IDxcUtils>   m_dxcUtils;
+    IDxcUtils *                         m_dxcUtils = nullptr;
 };
 #endif
 
@@ -105,8 +131,8 @@ namespace vg::gfx::dxc
     //--------------------------------------------------------------------------------------
     ShaderCompiler::ShaderCompiler()
     {
-        VG_VERIFY_SUCCEEDED(DxcCreateInstance(CLSID_DxcLibrary, IID_PPV_ARGS(&m_d3d12dxcLibrary)));
-        VG_VERIFY_SUCCEEDED(DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&m_d3d12dxcCompiler)));
+        VG_VERIFY_SUCCEEDED(CreateDxcInstance(CLSID_DxcLibrary, __uuidof(IDxcLibrary), m_d3d12dxcLibrary));
+        VG_VERIFY_SUCCEEDED(CreateDxcInstance(CLSID_DxcCompiler, __uuidof(IDxcCompiler), m_d3d12dxcCompiler));
 
 		CComPtr<IDxcVersionInfo3> pCompilerVersion3;
 		m_d3d12dxcCompiler->QueryInterface(&pCompilerVersion3);
@@ -144,6 +170,12 @@ namespace vg::gfx::dxc
         VG_SAFE_RELEASE(m_d3d12dxcCompiler);
         VG_SAFE_RELEASE(m_d3d12dxcLibrary);
         VG_SAFE_RELEASE(m_d3d12dxcIncludeHandler);
+        
+        if (nullptr != g_dxcompilerDllHandle)
+        {
+            FreeLibrary(g_dxcompilerDllHandle);
+            g_dxcompilerDllHandle = nullptr;
+        }
     }
 
     //--------------------------------------------------------------------------------------

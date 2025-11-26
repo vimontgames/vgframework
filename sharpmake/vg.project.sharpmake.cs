@@ -304,7 +304,6 @@ namespace vg
                     if (0 != (_Flags & Flags.GfxAPILink))
                     {
                         conf.LibraryFiles.Add($"{SolutionDir}\\extern\\winpixeventruntime\\bin\\x64\\WinPixEventRuntime.lib");
-                        conf.LibraryFiles.Add($"{SolutionDir}\\extern\\dxc\\lib\\x64\\dxcompiler.lib");
                         conf.LibraryFiles.Add("d3d12.lib");
                         conf.LibraryFiles.Add("dxgi.lib");
                         conf.LibraryFiles.Add("dxguid.lib");
@@ -322,7 +321,6 @@ namespace vg
 
                     if (0 != (_Flags & Flags.GfxAPILink))
                     {
-                        conf.LibraryFiles.Add($"{SolutionDir}\\extern\\dxc\\lib\\x64\\dxcompiler.lib");
                         conf.LibraryFiles.Add("dxgi.lib");
                         conf.LibraryFiles.Add("$(VULKAN_SDK)\\Lib\\vulkan-1.lib");
                     }
