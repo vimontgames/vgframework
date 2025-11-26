@@ -100,18 +100,32 @@ namespace vg::editor
                 ImVec2 size = GetWindowContentRegionSize();
                 ImGuiStyle & style = ImGui::GetStyle();
 
+                auto getNumSpaces = [](uint _digits) -> size_t 
+                {
+                    if (_digits < 10)
+                        return 4;
+                    else if (_digits < 100)
+                        return 3;
+                    else if (_digits < 1000)
+                        return 2;
+                    else if (_digits < 10000)
+                        return 1;
+                    else
+                        return 0;
+                };
+
                 char infoLabel[256];
-                sprintf_s(infoLabel, "%s %u", style::icon::Info, infoCount);
+                sprintf_s(infoLabel, " %s%*s%u", style::icon::Info, (int)getNumSpaces(infoCount), "", infoCount);
                 auto infoLabelWidth = ImGui::CalcTextSize(infoLabel).x + style.FramePadding.x * 2.0f;
                 strcat(infoLabel, "###ShowInfo");
 
                 char warningLabel[256];
-                sprintf_s(warningLabel, "%s %u", style::icon::Warning, warningCount);
+                sprintf_s(warningLabel, " %s%*s%u", style::icon::Warning, (int)getNumSpaces(warningCount), "", warningCount);
                 auto warningLabelWidth = ImGui::CalcTextSize(warningLabel).x + style.FramePadding.x * 2.0f;
                 strcat(warningLabel, "###ShowWarning");
 
                 char errorLabel[256];
-                sprintf_s(errorLabel, "%s %u", style::icon::Error, errorCount);
+                sprintf_s(errorLabel, " %s%*s%u", style::icon::Error, (int)getNumSpaces(errorCount), "" ,errorCount);
                 auto errorLabelWidth = ImGui::CalcTextSize(errorLabel).x + style.FramePadding.x * 2.0f;
                 strcat(errorLabel, "###ShowError");
 
