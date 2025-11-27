@@ -316,7 +316,7 @@ namespace vg::renderer
                     break;
 
                 case VerticalAligment::Center:
-                    elemPos.y += canvasSizeInPixel.y * 0.5f - center.y * 0.5f;
+                    elemPos.y += canvasSizeInPixel.y * 0.5f - center.y;
                     break;
 
                 case VerticalAligment::Bottom:

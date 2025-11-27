@@ -15,7 +15,7 @@ namespace vg::engine
         registerPropertyEnum(UITextComponent, renderer::Font, m_font, "Font");
         registerPropertyEnum(UITextComponent, renderer::FontStyle, m_style, "Font Style");
         registerProperty(UITextComponent, m_fontSize, "Font Size");
-        setPropertyRange(UITextComponent, m_fontSize, uint2(5, 64));
+        setPropertyRange(UITextComponent, m_fontSize, uint2(4, 512));
         registerProperty(UITextComponent, m_text, "Text");
 
         return true;

@@ -31,6 +31,7 @@ enc_temp_folder/*
 *.vsidx
 *.filelistabsolute.txt
 *.sln
+*.giw
 !bin/win64/dxcompiler.dll
 !bin/win64/dxil.dll
 !bin/arm64ec/dxcompiler.dll
