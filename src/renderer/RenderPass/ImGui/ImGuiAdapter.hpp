@@ -222,7 +222,7 @@ namespace vg::renderer
         D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle;
         bool dirty;
     };
-    core::vector<ImGuiDX12DescriptorInfo> g_ImGuiDX12DescriptorInfos;
+    core::vector<ImGuiDX12DescriptorInfo> g_ImGuiDescriptors; // Descriptors in use by ImGui
    
     //--------------------------------------------------------------------------------------
     void AllocDescriptor(ImGui_ImplDX12_InitInfo * info, D3D12_CPU_DESCRIPTOR_HANDLE * out_cpu_desc_handle, D3D12_GPU_DESCRIPTOR_HANDLE * out_gpu_desc_handle)
@@ -236,7 +236,7 @@ namespace vg::renderer
         descInfo.gpuHandle = bindlessTable->getd3d12GPUDescriptorHandle(descInfo.texHandle);
         descInfo.dirty = true;
 
-        g_ImGuiDX12DescriptorInfos.push_back(descInfo);
+        g_ImGuiDescriptors.push_back(descInfo);
 
         *out_cpu_desc_handle = descInfo.cpuHandle;
         *out_gpu_desc_handle = descInfo.gpuHandle;
@@ -249,9 +249,9 @@ namespace vg::renderer
         BindlessTable * bindlessTable = device->getBindlessTable();
         
         uint index = -1;
-        for (uint i = 0; i < g_ImGuiDX12DescriptorInfos.size(); ++i)
+        for (uint i = 0; i < g_ImGuiDescriptors.size(); ++i)
         {
-            ImGuiDX12DescriptorInfo & descInfo = g_ImGuiDX12DescriptorInfos[i];
+            ImGuiDX12DescriptorInfo & descInfo = g_ImGuiDescriptors[i];
             if (cpu_desc_handle.ptr == descInfo.cpuHandle.ptr)
             {
                 index = i;
@@ -260,9 +260,25 @@ namespace vg::renderer
         }
         if (-1 != index)
         {
-            ImGuiDX12DescriptorInfo & descInfo = g_ImGuiDX12DescriptorInfos[index];
+            ImGuiDX12DescriptorInfo & descInfo = g_ImGuiDescriptors[index];
             bindlessTable->freeBindlessTextureHandle(descInfo.texHandle);
-            g_ImGuiDX12DescriptorInfos.erase(g_ImGuiDX12DescriptorInfos.begin() + index);
+            g_ImGuiDescriptors.erase(g_ImGuiDescriptors.begin() + index);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FlushDX12Descriptors()
+    {
+        gfx::Device * device = Device::get();
+        BindlessTable * bindlessTable = device->getBindlessTable();
+
+        for (uint i = 0; i < g_ImGuiDescriptors.size(); ++i)
+        {
+            if (g_ImGuiDescriptors[i].dirty)
+            {
+                bindlessTable->updated3d12descriptor(g_ImGuiDescriptors[i].texHandle);
+                g_ImGuiDescriptors[i].dirty = false;
+            }
         }
     }
 
@@ -475,17 +491,6 @@ namespace vg::renderer
 
         ImGui_ImplDX12_NewFrame();
 
-        BindlessTable * bindlessTable = device->getBindlessTable();
-        
-        for (uint i = 0; i < g_ImGuiDX12DescriptorInfos.size(); ++i)
-        {
-            if (g_ImGuiDX12DescriptorInfos[i].dirty /* || dirtyFonts*/)
-            {
-                bindlessTable->updated3d12descriptor(g_ImGuiDX12DescriptorInfos[i].texHandle);
-                g_ImGuiDX12DescriptorInfos[i].dirty = false;
-            }
-        }
-
         #elif defined(VG_VULKAN)
 
         ImGui_ImplVulkan_NewFrame();
@@ -607,6 +612,7 @@ namespace vg::renderer
         #ifdef VG_DX12
         ImGui::Render();
         ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), _cmdList->getd3d12GraphicsCommandList());
+        FlushDX12Descriptors();
 
         #elif defined(VG_VULKAN)
         ImGui::Render();
