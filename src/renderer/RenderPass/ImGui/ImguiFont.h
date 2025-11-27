@@ -20,21 +20,19 @@ namespace vg::renderer
     class ImFontKey
     {
     public:
-        ImFontKey(Font _font = Font::Rowndies, FontStyle _style = FontStyle::Regular, FontSize _size = 16.0f) :
+        ImFontKey(Font _font = Font::Rowndies, FontStyle _style = FontStyle::Regular) :
             font(_font),
-            style(_style),
-            size(_size)
+            style(_style)
         {
 
         }
 
         Font font;
         FontStyle style;
-        FontSize size;
 
         bool operator==(const ImFontKey & other) const noexcept
         {
-            return font == other.font && style == other.style && size == other.size;
+            return font == other.font && style == other.style;
         }
 
         struct hash
@@ -43,12 +41,9 @@ namespace vg::renderer
             {
                 size_t h1 = std::hash<vg::renderer::Font>{}(key.font);
                 size_t h2 = std::hash<vg::renderer::FontStyle>{}(key.style);
-                size_t h3 = std::hash<vg::renderer::FontSize>{}(key.size);
 
-                // Combine hashes — simple and effective:
-                size_t seed = h1;
-                seed ^= h2 + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-                seed ^= h3 + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+                size_t seed  = h1;
+                       seed ^= h2 + 0x9e3779b9 + (seed << 6) + (seed >> 2);
                 return seed;
             }
         };

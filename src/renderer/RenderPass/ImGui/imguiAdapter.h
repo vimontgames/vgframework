@@ -54,7 +54,7 @@ namespace vg
             void                    render                          (gfx::CommandList * _cmdList);
 
             void                    AddBeginFrameCallback           (BeginFrameCallback _func);
-            ImFont *                GetFont                         (Font _font, FontStyle _style, FontSize _size) final override;
+            ImFont *                GetFont                         (Font _font, FontStyle _style) final override;
             const char *            GetFontPath                     (Font _font, FontStyle _style) const final override;
 
             void                    PushDefaultFont                 () final override;
@@ -65,6 +65,9 @@ namespace vg
 
             void                    PushFontStyle                   (vg::renderer::FontStyle _style) final override;
             void                    PopFontStyle                    () final override;
+
+            void                    PushFontSize                    (vg::renderer::FontSize _size) final override;
+            void                    PopFontSize                     () final override;
 
             CustomImGuiData &       GetCustomData                   (const core::string & _name) final override;
 
@@ -79,8 +82,8 @@ namespace vg
             void                    releaseTextureID                (const gfx::Texture * _texture);
             void                    releaseUserDescriptors          ();
 
-            ImFontInfo &            getOrCreateFontInfo             (Font _font, FontStyle _style, FontSize _size);
-            bool                    createFont                      (Font _font, FontStyle _style, FontSize _size);
+            ImFontInfo &            getOrCreateFontInfo             (Font _font, FontStyle _style);
+            bool                    createFont                      (Font _font, FontStyle _style);
             void                    updateFonts                     ();
 
             void                    resetGUITheme                   ();
