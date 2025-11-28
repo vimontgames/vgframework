@@ -29,7 +29,7 @@ enum GPUDebugMsgType
 static uint g_File = 0;
 static uint g_ArgOffset = 0;
     
-template<uint SIZE> void DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint _file, uint _line, uint _argCount)
+template<uint SIZE> bool DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint _file, uint _line, uint _argCount)
 {
     RWByteAddressBuffer buffer = getRWBuffer(RESERVEDSLOT_RWBUFFER_GPUDEBUG);
 
@@ -41,7 +41,7 @@ template<uint SIZE> void DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint
     offset += 4; // skip global counter
     
     if (offset + elementSize > GPUDEBUG_TOTAL_BUFFER_SIZE)
-        return;
+        return false;
     
     // Save debug message header
     uint header1 = ((uint)_type & 0x000F) | (_argCount << 8) | ((stringSize & 0xFFFF) <<16);
@@ -75,6 +75,7 @@ template<uint SIZE> void DebugPrint(uint _msg[SIZE], GPUDebugMsgType _type, uint
     // clear args for debug (not strictly necessary)
     //for (uint i = 0; i < _argCount; ++i)
     //    buffer.Store(offset + i * 4,  0xFFFFFFFF); 
+    return true;
 }
 
 void StoreArg(uint _value)
@@ -174,10 +175,10 @@ template<typename T0, typename T1, typename T2, typename T3, typename T4, typena
 #define VARIADIC_ARG_COUNT(...) VARIADIC_ARG_COUNT_IMPL(_0, ##__VA_ARGS__, 8,7,6,5,4,3,2,1,0)
 #define VARIADIC_ARG_COUNT_IMPL(_0,_1,_2,_3,_4,_5,_6,_7,_8,_N,...) _N
 
-#define VG_GPUDEBUGMSG(_type, _file, _line, _str, ...) do {         \
-    DebugPrint(_str, _type, _file, _line, VARIADIC_ARG_COUNT(__VA_ARGS__));    \
-    DebugPrintArgs(__VA_ARGS__);                                    \
-}                                                                   \
+#define VG_GPUDEBUGMSG(_type, _file, _line, _str, ...) do {                         \
+    if (DebugPrint(_str, _type, _file, _line, VARIADIC_ARG_COUNT(__VA_ARGS__)))     \
+        DebugPrintArgs(__VA_ARGS__);                                                \
+}                                                                                   \
 while (0)
 
 #ifdef _TOOLMODE
