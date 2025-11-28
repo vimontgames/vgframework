@@ -37,4 +37,8 @@ protected:
 
     bool                    m_useImpulse = false;
     vg::core::float3        m_impulse = float3(0,0,0);
+
+    vg::core::i32           m_giveLifes = 0;
+    float                   m_giveHP = 0.0f;
+    vg::core::i32           m_giveScore = 0;
 };

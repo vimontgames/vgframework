@@ -30,6 +30,19 @@ bool BreakableBehaviour::registerProperties(IClassDesc & _desc)
     registerPropertyEnum(BreakableBehaviour, BreakableType, m_breakableType, "Type");
     setPropertyDescription(BreakableBehaviour, m_breakableType, "Chest type");
 
+    registerPropertyGroupBegin(BreakableBehaviour, "Bonus")
+    {
+        registerProperty(BreakableBehaviour, m_giveLifes, "Life");
+        setPropertyDescription(BreakableBehaviour, m_giveLifes, "Amount of life received when broken");
+
+        registerProperty(BreakableBehaviour, m_giveHP, "HP");
+        setPropertyDescription(BreakableBehaviour, m_giveHP, "Amount of HP received when broken");
+
+        registerProperty(BreakableBehaviour, m_giveScore, "Score");
+        setPropertyDescription(BreakableBehaviour, m_giveScore, "Amount of score received when broken");
+    }
+    registerPropertyGroupEnd(BreakableBehaviour);
+
     registerPropertyGroupBegin(BreakableBehaviour, "Default")
     {
         registerProperty(BreakableBehaviour, m_default, "GameObject");
@@ -109,6 +122,18 @@ bool BreakableBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
                 VG_INFO("[Entity] \"%s\" was hit by \"%s\"", thisGameObject->GetName().c_str(), attackerGO->GetName().c_str());
 
             m_breakableState = BreakableState::Destroyed;
+
+            if (_attacker)
+            {
+                if (m_giveLifes > 0)
+                    _attacker->addLifes(m_giveLifes);
+
+                if (m_giveHP)
+                    _attacker->addHP(m_giveHP);
+
+                if (m_giveScore)
+                    _attacker->addScore(m_giveScore);
+            }
 
             //if (m_useDestroyAnim)
             //{

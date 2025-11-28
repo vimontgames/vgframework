@@ -243,6 +243,18 @@ void CharacterBehaviour::addScore(vg::core::i32 _points)
 }
 
 //--------------------------------------------------------------------------------------
+void CharacterBehaviour::addLifes(vg::core::i32 _count)
+{
+    m_life = min(s_maxLife, m_life + _count);
+}
+
+//--------------------------------------------------------------------------------------
+void CharacterBehaviour::addHP(float _hp)
+{
+    m_hp = min(s_maxHP, m_hp + _hp);
+}
+
+//--------------------------------------------------------------------------------------
 bool CharacterBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour * _weapon)
 {
     if (m_moveState != MoveState::Hurt)
