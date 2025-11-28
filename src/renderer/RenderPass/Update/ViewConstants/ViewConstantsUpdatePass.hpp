@@ -236,7 +236,12 @@ namespace vg::renderer
                 DirectionalLightConstants * constants = (DirectionalLightConstants *)(data + offset);
 
                 constants->setColor(directional->getColor().rgb * directional->getIntensity());
+                #ifdef __clang__
+                // temp workaround for clang issue in HLSL++
+                constants->setDirection(-1.0f * directional->getGlobalMatrix()[2].xyz);
+                #else
                 constants->setDirection(-directional->getGlobalMatrix()[2].xyz);
+                #endif
                 constants->setShadowBias(directional->m_shadowBias);
                 constants->setShadowIntensity(directional->m_shadowIntensity);
                 constants->setShadowFarDist(directional->m_shadowRange.y);
