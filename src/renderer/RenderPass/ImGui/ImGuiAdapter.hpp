@@ -1,4 +1,3 @@
-
 #include "ImGui.h"
 #include "imguiAdapter.h"
 #include "gfx/Device/Device.h"
@@ -12,8 +11,36 @@
 #include "renderer/Model/Material/Material_Consts.h"
 #include "renderer/RenderPass/Render2D/Preview/Texture/TexturePreviewPass.h"
 
+#ifdef VG_DX12
+#include "dx12/ImGuiAdapter_dx12.hpp"
+#elif defined(VG_VULKAN)
+#include "vulkan/ImGuiAdapter_vulkan.hpp"
+#else
+#error Undefined GFXAPI
+#endif
+
 using namespace vg::core;
 using namespace vg::gfx;
+
+namespace vg::renderer::base
+{
+    //--------------------------------------------------------------------------------------
+    // Returns the pixel format used for ImGui rendering
+    //--------------------------------------------------------------------------------------
+    gfx::PixelFormat ImGuiAdapter::getOutputPixelFormat() const
+    {
+        gfx::Device * device = Device::get();
+        const PixelFormat backbufferFormat = device->getBackbufferFormat();
+        const PixelFormat hdrOutputFormat = gfx::PixelFormat::R16G16B16A16_float;
+
+        auto * renderer = Renderer::get();
+
+        if (HDR::None != renderer->GetHDR())
+            return hdrOutputFormat;
+        else
+            return backbufferFormat;
+    }
+}
 
 namespace vg::renderer
 {
@@ -21,7 +48,7 @@ namespace vg::renderer
 
     const Font      ImGuiAdapter::s_defaultFont      = Font::UbuntuMono;
     const FontStyle ImGuiAdapter::s_defaultFontStyle = FontStyle::Regular;
-    const core::u8  ImGuiAdapter::s_defaultFontSize  = (core::u8)round(style::font::DefaultFontHeight);
+    const FontSize  ImGuiAdapter::s_defaultFontSize  = (FontSize)round(style::font::DefaultFontHeight);
 
     //--------------------------------------------------------------------------------------
     // TODO: move themes to editor?
@@ -42,36 +69,19 @@ namespace vg::renderer
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
         io.ConfigDockingTransparentPayload = true;
 
-        for (uint j = 0; j < enumCount<Font>(); ++j)
-        {
-            for (uint i = 0; i < enumCount<FontStyle>(); ++i)
-            {
-                const auto font = (Font)j;
-                const auto style = (FontStyle)i;
-
-                //const auto fontPath = getFontPath(font, style);
-
-                // Do not create all fonts upfront, create on-demand instead
-                //createFont(font, style);
-            }
-        }
-
-        // Mandatory fonts
-        getOrCreateFontInfo(s_defaultFont, FontStyle::Regular).needed = true;
-        getOrCreateFontInfo(s_defaultFont, FontStyle::Bold).needed = true;
-        getOrCreateFontInfo(s_defaultFont, FontStyle::Italic).needed = true;
-
         #ifdef _WIN32
         ImGui_ImplWin32_Init(_winHandle);
         #endif
 
-        io.BackendFlags &= ~ImGuiBackendFlags_PlatformHasViewports; // Not supported by 1.92.5 Vulkan backend
+        io.BackendFlags &= ~ImGuiBackendFlags_PlatformHasViewports; // Not supported by 1.92.5 Vulkan backend        
 
-        #ifdef VG_DX12
-        d3d12Init();
-        #elif defined(VG_VULKAN)
-        vulkanInit();
-        #endif 
+        init();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ImGuiAdapter::init()
+    {
+        super::init();
     }
 
     //--------------------------------------------------------------------------------------
@@ -166,8 +176,6 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::updateFonts()
     {
-        //bool dirty = false;
-
         for (auto & pair : m_imGuiFont)
         {
             auto & key = pair.first;
@@ -179,8 +187,6 @@ namespace vg::renderer
 
                 if (createFont(key.font, key.style))
                 {
-                    //dirty = true;
-
                     VG_INFO("[UI] Created font texture {%s,%s} from file \"%s\"", asString(key.font).c_str(), asString(key.style).c_str(), path);
                 }
                 else
@@ -197,227 +203,6 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    // Returns the pixel format used for ImGui rendering
-    //--------------------------------------------------------------------------------------
-    gfx::PixelFormat ImGuiAdapter::getOutputPixelFormat() const
-    {
-        gfx::Device * device = Device::get();
-        const PixelFormat backbufferFormat = device->getBackbufferFormat();
-        const PixelFormat hdrOutputFormat = gfx::PixelFormat::R16G16B16A16_float;
-
-        auto * renderer = Renderer::get();
-
-        if (HDR::None != renderer->GetHDR())
-            return hdrOutputFormat;
-        else
-            return backbufferFormat;
-    }
-
-    #ifdef VG_DX12
-
-    struct ImGuiDX12DescriptorInfo
-    {
-        BindlessTextureHandle texHandle;
-        D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle;
-        D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle;
-        bool dirty;
-    };
-    core::vector<ImGuiDX12DescriptorInfo> g_ImGuiDescriptors; // Descriptors in use by ImGui
-   
-    //--------------------------------------------------------------------------------------
-    void AllocDescriptor(ImGui_ImplDX12_InitInfo * info, D3D12_CPU_DESCRIPTOR_HANDLE * out_cpu_desc_handle, D3D12_GPU_DESCRIPTOR_HANDLE * out_gpu_desc_handle)
-    {
-        gfx::Device * device = Device::get();
-        BindlessTable * bindlessTable = device->getBindlessTable();
-
-        ImGuiDX12DescriptorInfo descInfo;
-        descInfo.texHandle = bindlessTable->allocBindlessTextureHandle(nullptr);
-        descInfo.cpuHandle = bindlessTable->getd3d12CPUDescriptorHandle(descInfo.texHandle);
-        descInfo.gpuHandle = bindlessTable->getd3d12GPUDescriptorHandle(descInfo.texHandle);
-        descInfo.dirty = true;
-
-        g_ImGuiDescriptors.push_back(descInfo);
-
-        *out_cpu_desc_handle = descInfo.cpuHandle;
-        *out_gpu_desc_handle = descInfo.gpuHandle;
-    }
-
-    //--------------------------------------------------------------------------------------
-    void FreeDescriptor(ImGui_ImplDX12_InitInfo * info, D3D12_CPU_DESCRIPTOR_HANDLE cpu_desc_handle, D3D12_GPU_DESCRIPTOR_HANDLE gpu_desc_handle)
-    {
-        gfx::Device * device = Device::get();
-        BindlessTable * bindlessTable = device->getBindlessTable();
-        
-        uint index = -1;
-        for (uint i = 0; i < g_ImGuiDescriptors.size(); ++i)
-        {
-            ImGuiDX12DescriptorInfo & descInfo = g_ImGuiDescriptors[i];
-            if (cpu_desc_handle.ptr == descInfo.cpuHandle.ptr)
-            {
-                index = i;
-                break;
-            }
-        }
-        if (-1 != index)
-        {
-            ImGuiDX12DescriptorInfo & descInfo = g_ImGuiDescriptors[index];
-            bindlessTable->freeBindlessTextureHandle(descInfo.texHandle);
-            g_ImGuiDescriptors.erase(g_ImGuiDescriptors.begin() + index);
-        }
-    }
-
-    //--------------------------------------------------------------------------------------
-    void FlushDX12Descriptors()
-    {
-        gfx::Device * device = Device::get();
-        BindlessTable * bindlessTable = device->getBindlessTable();
-
-        for (uint i = 0; i < g_ImGuiDescriptors.size(); ++i)
-        {
-            if (g_ImGuiDescriptors[i].dirty)
-            {
-                bindlessTable->updated3d12descriptor(g_ImGuiDescriptors[i].texHandle);
-                g_ImGuiDescriptors[i].dirty = false;
-            }
-        }
-    }
-
-    //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::d3d12Init()
-    {
-        gfx::Device * device = Device::get();
-        BindlessTable * bindlessTable = device->getBindlessTable();
-        const PixelFormat fmt = getOutputPixelFormat();
-
-
-        ImGui_ImplDX12_InitInfo init_info = {};
-        init_info.Device = device->getd3d12Device();
-        init_info.CommandQueue = device->getCommandQueue(CommandQueueType::Graphics)->getd3d12CommandQueue();
-        init_info.NumFramesInFlight = max_frame_latency;
-        init_info.RTVFormat = Texture::getd3d12SurfaceFormat(fmt);
-        init_info.SrvDescriptorHeap = bindlessTable->getd3d12GPUDescriptorHeap();
-        init_info.SrvDescriptorAllocFn = [](ImGui_ImplDX12_InitInfo * info, D3D12_CPU_DESCRIPTOR_HANDLE * out_cpu_handle, D3D12_GPU_DESCRIPTOR_HANDLE * out_gpu_handle) { return AllocDescriptor(info, out_cpu_handle, out_gpu_handle); };
-        init_info.SrvDescriptorFreeFn = [](ImGui_ImplDX12_InitInfo * info, D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle, D3D12_GPU_DESCRIPTOR_HANDLE gpu_handle) { return FreeDescriptor(info, cpu_handle, gpu_handle); };
-
-        ImGui_ImplDX12_Init(&init_info);
-    }
-    #elif defined(VG_VULKAN)
-    //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::vulkanInit()
-    {
-        gfx::Device * device = Device::get();
-
-        VkDescriptorPoolSize imguiDescriptorPoolSizes[] =
-        {
-            { VK_DESCRIPTOR_TYPE_SAMPLER, 1 },
-            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 16 },
-            { VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1 },
-            { VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1 },
-            { VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1 },
-            { VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1 },
-            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1 },
-            { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1 },
-            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1 },
-            { VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1 },
-            { VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1 }
-        };
-
-        VkDescriptorPoolCreateInfo imguiDescriptorDesc = {};
-        imguiDescriptorDesc.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
-        imguiDescriptorDesc.pNext = nullptr;
-        imguiDescriptorDesc.maxSets = max_frame_latency * s_maxImGuiTexDisplayedPerFrame;
-        imguiDescriptorDesc.poolSizeCount = (uint)countof(imguiDescriptorPoolSizes);
-        imguiDescriptorDesc.pPoolSizes = imguiDescriptorPoolSizes;
-        imguiDescriptorDesc.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT | VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-
-        VG_VERIFY_VULKAN(vkCreateDescriptorPool(device->getVulkanDevice(), &imguiDescriptorDesc, nullptr, &m_vkImguiDescriptorPool));
-
-        createVulkanRenderPass();
-
-        ImGui_ImplVulkan_InitInfo init_info = {};
-        init_info.Instance = device->getVulkanInstance();
-        init_info.PhysicalDevice = device->getVulkanPhysicalDevice();
-        init_info.Device = device->getVulkanDevice();
-        init_info.QueueFamily = device->getVulkanCommandQueueFamilyIndex(CommandListType::Graphics);
-        init_info.Queue = device->getCommandQueue(CommandQueueType::Graphics)->getVulkanCommandQueue();
-        init_info.PipelineCache = VK_NULL_HANDLE;
-        init_info.DescriptorPool = m_vkImguiDescriptorPool;
-        init_info.Allocator = nullptr;
-        init_info.MinImageCount = max_frame_latency;
-        init_info.ImageCount = max_frame_latency;
-        init_info.CheckVkResultFn = nullptr;
-        init_info.PipelineInfoMain.RenderPass = m_vkImguiRenderPass;
-
-        ImGui_ImplVulkan_Init(&init_info);
-
-        VkSamplerCreateInfo sampler_info = {};
-        sampler_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
-        sampler_info.magFilter = VK_FILTER_LINEAR;
-        sampler_info.minFilter = VK_FILTER_LINEAR;
-        sampler_info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-        sampler_info.addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        sampler_info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        sampler_info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
-        sampler_info.minLod = 0;
-        sampler_info.maxLod = 0;
-        sampler_info.maxAnisotropy = 0.0f;
-        sampler_info.borderColor = VK_BORDER_COLOR_FLOAT_TRANSPARENT_BLACK;
-        sampler_info.compareEnable = false;
-        sampler_info.compareOp = VK_COMPARE_OP_ALWAYS;
-        VG_VERIFY_VULKAN(vkCreateSampler(device->getVulkanDevice(), &sampler_info, nullptr, &m_vkSampler));
-    }
-    #endif
-
-#ifdef VG_VULKAN
-    //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::createVulkanRenderPass()
-    {
-        gfx::Device * device = Device::get();
-
-        const PixelFormat fmt = getOutputPixelFormat();
-        m_vkRenderTargetFormat = Texture::getVulkanPixelFormat(fmt);
-
-        VkAttachmentDescription attachment = {};
-        attachment.format = m_vkRenderTargetFormat;
-        attachment.samples = VK_SAMPLE_COUNT_1_BIT;
-        attachment.loadOp = VK_ATTACHMENT_LOAD_OP_LOAD;
-        attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-        attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-        attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-        attachment.initialLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-        attachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
-
-        VkAttachmentReference color_attachment = {};
-        color_attachment.attachment = 0;
-        color_attachment.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
-        VkSubpassDescription subpass = {};
-        subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-        subpass.colorAttachmentCount = 1;
-        subpass.pColorAttachments = &color_attachment;
-
-        VkSubpassDependency dependency = {};
-        dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
-        dependency.dstSubpass = 0;
-        dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-        dependency.srcAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-        dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-
-        VkRenderPassCreateInfo info = {};
-        info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
-        info.attachmentCount = 1;
-        info.pAttachments = &attachment;
-        info.subpassCount = 1;
-        info.pSubpasses = &subpass;
-        info.dependencyCount = 1;
-        info.pDependencies = &dependency;
-
-        VG_VERIFY_VULKAN(vkCreateRenderPass(device->getVulkanDevice(), &info, nullptr, &m_vkImguiRenderPass));
-    }
-#endif
-
-    //--------------------------------------------------------------------------------------
     ImGuiAdapter::~ImGuiAdapter()
     {
         gfx::Device * device = Device::get();
@@ -425,18 +210,7 @@ namespace vg::renderer
 
         clearPreviewTextures();
 
-        #ifdef VG_DX12
-
-        ImGui_ImplDX12_Shutdown();
-
-        #elif defined(VG_VULKAN)
-
-        ImGui_ImplVulkan_Shutdown();
-        vkDestroyDescriptorPool(device->getVulkanDevice(), m_vkImguiDescriptorPool, nullptr);
-        vkDestroyRenderPass(device->getVulkanDevice(), m_vkImguiRenderPass, nullptr);
-        vkDestroySampler(device->getVulkanDevice(), m_vkSampler, nullptr);
-
-        #endif
+        super::deinit();
 
         #ifdef _WIN32
         ImGui_ImplWin32_Shutdown();
@@ -485,17 +259,10 @@ namespace vg::renderer
         gfx::Device * device = Device::get();
 
         updateFonts();
-        updateBackbufferFormat();
 
-        #ifdef VG_DX12
+        super::updateBackbufferFormat();
 
-        ImGui_ImplDX12_NewFrame();
-
-        #elif defined(VG_VULKAN)
-
-        ImGui_ImplVulkan_NewFrame();
-
-        #endif
+        super::beginFrame();
 
         releaseUserDescriptors();
 
@@ -517,11 +284,9 @@ namespace vg::renderer
         for (const auto & data : descriptorSetsFrameData.m_descriptorSetAllocs)
         {
             VG_ASSERT(data.second.m_refCount == 0, "ImTextureID %u from Texture \"%s\" still has a RefCount of %u and was not released", data.second.m_id, data.first->GetName().c_str(), data.second.m_refCount);
-
-            #ifdef VG_VULKAN
+            
             if (0 == data.second.m_refCount)
-                ImGui_ImplVulkan_RemoveTexture((VkDescriptorSet)data.second.m_id);
-            #endif
+                super::removeTexture(data.second.m_id);
         }
 
         descriptorSetsFrameData.m_descriptorSetAllocs.clear();
@@ -535,89 +300,11 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ImGuiAdapter::updateBackbufferFormat()
-    {
-        auto device = gfx::Device::get();
-
-        #ifdef VG_DX12
-
-        // update backbuffer format
-        ImGui_ImplDX12_Data * bd = ImGui_ImplDX12_GetBackendData();
-
-        auto fmt = getOutputPixelFormat();
-        auto renderOutputFormat = Texture::getd3d12ResourceFormat(fmt);
-
-        if (bd->RTVFormat != renderOutputFormat)
-        {
-            auto * renderer = Renderer::get();
-            renderer->WaitGPUIdle();
-
-            //ImGui_ImplDX12_Shutdown();
-
-            ImGui_ImplDX12_Data * bd = ImGui_ImplDX12_GetBackendData();
-            if (bd && bd->pd3dDevice)
-            {
-                // Do not destroy all DeviceObjects as we don't want to recreate everything and doing so is also unstable
-                //ImGui_ImplDX12_InvalidateDeviceObjects();
-
-                SafeRelease(bd->pRootSignature);
-                SafeRelease(bd->pPipelineState);
-                SafeRelease(bd->pdxgiFactory);
-                SafeRelease(bd->pTexCmdAllocator);
-                SafeRelease(bd->pTexCmdList);
-                SafeRelease(bd->Fence);
-                bd->RTVFormat = renderOutputFormat;
-            }
-        }
-
-        #elif defined(VG_VULKAN)
-
-        ImGui_ImplVulkan_Data * bd = ImGui_ImplVulkan_GetBackendData();
-
-        auto renderOutputFormat = Texture::getVulkanPixelFormat(getOutputPixelFormat());
-
-        if (m_vkRenderTargetFormat != renderOutputFormat)
-        {
-            // Do not destroy all DeviceObjects, we just need to destroy PipelineLayout and Pipeline object and re-create RenderPass
-            //ImGui_ImplVulkan_DestroyDeviceObjects();
-
-            ImGui_ImplVulkan_InitInfo * v = &bd->VulkanInitInfo;
-
-            vkDestroyPipelineLayout(device->getVulkanDevice(), bd->PipelineLayout, v->Allocator);
-            bd->PipelineLayout = nullptr;
-
-            vkDestroyPipeline(device->getVulkanDevice(), bd->Pipeline, v->Allocator);
-            bd->Pipeline = nullptr;
-
-            vkDestroyRenderPass(device->getVulkanDevice(), v->PipelineInfoMain.RenderPass, nullptr);
-            v->PipelineInfoMain.RenderPass = nullptr;
-
-            createVulkanRenderPass();
-
-            v->PipelineInfoMain.RenderPass = m_vkImguiRenderPass;
-            v->PipelineInfoMain.Subpass = 0;
-            v->PipelineInfoMain.MSAASamples = VK_SAMPLE_COUNT_1_BIT;
-
-            ImGui_ImplVulkan_CreateDeviceObjects();
-            m_vkRenderTargetFormat = renderOutputFormat;
-        }
-        #endif
-    }
-
-    //--------------------------------------------------------------------------------------
     void ImGuiAdapter::render(gfx::CommandList * _cmdList)
     {
         VG_PROFILE_CPU("render");
 
-        #ifdef VG_DX12
-        ImGui::Render();
-        ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), _cmdList->getd3d12GraphicsCommandList());
-        FlushDX12Descriptors();
-
-        #elif defined(VG_VULKAN)
-        ImGui::Render();
-        ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), _cmdList->getVulkanCommandBuffer(), nullptr);
-        #endif   
+        super::render(_cmdList);
 
         // Clear gfx state cache after rendering ImGui because it could have changed any gfx state
         _cmdList->clearStateCache();
@@ -635,13 +322,7 @@ namespace vg::renderer
 
         if (descriptorSetsFrameData.m_descriptorSetAllocs.end() == it)
         {
-            #ifdef VG_DX12
-            gfx::BindlessTable * bindlessTable = device->getBindlessTable();
-            id = (ImTextureID)bindlessTable->getd3d12GPUDescriptorHandle(_texture->getTextureHandle()).ptr;
-            #elif defined(VG_VULKAN)
-            // In case of crash increase size of VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER in ImguiAdapter::vulkanInit()
-            id = (ImTextureID)ImGui_ImplVulkan_AddTexture(m_vkSampler, _texture->getVulkanImageView(), VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
-            #endif
+            id = super::addTexture(_texture);
 
             DescriptorSetsFrameData::AllocData allocData;
             allocData.m_id = id;
@@ -742,13 +423,21 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::PushFontSize(vg::renderer::FontSize _size)
     {
-        VG_ASSERT(false); // TODO: implement stack of font sizes that restores m_currentFontSize when pop
+        m_fontSizeStack.push_back(m_currentFontSize);
+        m_currentFontSize = _size;
+        ImGui::PushFont(GetFont(m_currentFont, m_currentFontStyle), m_currentFontSize);
     }
 
     //--------------------------------------------------------------------------------------
     void ImGuiAdapter::PopFontSize()
     {
-
+        VG_ASSERT(m_fontSizeStack.size() > 0);
+        if (m_fontSizeStack.size() > 0)
+        {
+            m_currentFontSize = m_fontSizeStack.back();
+            m_fontSizeStack.pop_back();
+        }
+        ImGui::PopFont();
     }
 
     //--------------------------------------------------------------------------------------
