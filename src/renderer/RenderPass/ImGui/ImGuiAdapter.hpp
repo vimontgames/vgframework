@@ -44,7 +44,10 @@ namespace vg::renderer::base
 
 namespace vg::renderer
 {
-    const core::uint ImGuiAdapter::s_maxImGuiTexDisplayedPerFrame = 64;
+    namespace base
+    {
+        const core::uint ImGuiAdapter::s_maxImGuiTexDisplayedPerFrame = 64;
+    }
 
     const Font      ImGuiAdapter::s_defaultFont      = Font::UbuntuMono;
     const FontStyle ImGuiAdapter::s_defaultFontStyle = FontStyle::Regular;
