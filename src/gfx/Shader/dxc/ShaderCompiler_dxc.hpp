@@ -86,6 +86,8 @@ public:
 
         #if VG_SHADER_SOURCE_IN_MEMORY
         const string * pSource = shaderManager->getShaderSource(path);
+        if (nullptr == pSource)
+            return HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND);
         HRESULT hr = m_dxcUtils->CreateBlob(pSource->data(), (uint)pSource->size(), CP_UTF8, pEncoding.GetAddressOf());
         #else
         wstring filename = wstring_convert(path);
