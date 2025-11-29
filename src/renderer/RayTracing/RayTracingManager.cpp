@@ -192,6 +192,7 @@ namespace vg::renderer
                         }
 
                         BLASMap.insert(std::pair(key, blas));
+                        VG_SAFE_INCREASE_REFCOUNT(blas);
 
                         if (blas->init())
                         {

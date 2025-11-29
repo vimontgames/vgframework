@@ -3,6 +3,7 @@
 #include "MeshModel.h"
 #include "gfx/Device/Device.h"
 #include "gfx/Resource/Buffer.h"
+#include "gfx/Raytracing/BLAS.h"
 #include "renderer/Geometry/Mesh/MeshGeometry.h"
 #include "renderer/Geometry/Vertex/VertexFormat.h"
 #include "renderer/Importer/SceneImporterData.h"
@@ -76,8 +77,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void MeshModel::clearBLASes()
     {
-        //for (auto & BLASes : m_BLASCollectionMap)
-        //    VG_SAFE_RELEASE(BLASes.second);
+        for (auto & BLASes : m_BLASMap)
+            VG_SAFE_RELEASE(BLASes.second);
         m_BLASMap.clear();
     }
 
