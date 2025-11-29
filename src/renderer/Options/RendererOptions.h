@@ -46,6 +46,16 @@ namespace vg::renderer
         ShadowDefaultResolution_4096 = 4096
     );
 
+    // Safe copy for multithread access from rendering jobs
+    // Should pass as part of context to avoid mistakes?
+    struct RendererOptionsData
+    {
+        void sync(const RendererOptionsData & _other);
+
+        bool m_toolMode = true;
+        bool m_rayTracing = false;
+    };
+
     class RendererOptions final : public IRendererOptions, public core::Singleton<RendererOptions>
     {
     public:
@@ -54,13 +64,14 @@ namespace vg::renderer
 							    RendererOptions			                (const core::string & _name, core::IObject * _parent = nullptr);
                                 ~RendererOptions                        ();
 
+        // Virtual functions exposed outside renderer should return the 'engine' value                            
         const core::float4 &    GetDefaultClearColor                    () const final override { return m_defaultEnvironmentColor; }
         gfx::ITexture *         GetDefaultCubemap                       () const final override;
         float                   GetDefaultIrradianceIntensity           () const final override { return m_defaultIrradianceIntensity; }
         float                   GetDefaultSpecularReflectionIntensity   () const final override { return m_defaultSpecularReflectionIntensity; }
-        gfx::ITexture *         GetBakedSpecularBRDF                    () const  final override;
-        bool                    IsToolModeEnabled                       () const final override { return isToolModeEnabled(); };
-        bool                    IsRayTracingEnabled                     () const final override { return isRayTracingEnabled(); };
+        gfx::ITexture *         GetBakedSpecularBRDF                    () const final override;
+        bool                    IsToolModeEnabled                       () const final override { return m_engine.m_toolMode; };
+        bool                    IsRayTracingEnabled                     () const final override { return m_engine.m_rayTracing; };
 
         bool                    IsShadowEnabled                         () const final override;
         core::uint2             GetShadowDefaultResolution              () const final override;
@@ -82,7 +93,8 @@ namespace vg::renderer
 
         void                    OnPropertyChanged                       (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
-        bool				    isToolModeEnabled                       () const { return m_toolMode; }
+        // Non-virtual functions for internal renderer use should return the 'renderer' value
+        bool				    isToolModeEnabled                       () const { return m_renderer.m_toolMode; }
 
         LightingMode            getLightingMode                         () const { return m_lightingMode; }
         PBRFlags                getPBRFlags                             () const { return m_pbrFlags; }
@@ -100,7 +112,7 @@ namespace vg::renderer
         bool				    isTransparencyEnabled                   () const { return core::asBool(RenderPassFlags::Transparency & m_renderPassFlags); }
 
         bool                    isPostProcessEnabled                    () const { return m_postProcess; }
-        bool                    isRayTracingEnabled                     () const { return m_rayTracing; }
+        bool                    isRayTracingEnabled                     () const { return m_renderer.m_rayTracing; }
         bool                    anyRayTracingDebugDisplay               () const;
 
         bool                    isDisplayMatIDEnabled                   () const { return DisplayMode::Geometry_MaterialID    == m_debugDisplayMode;}
@@ -127,6 +139,11 @@ namespace vg::renderer
         VG_INLINE core::uint    getMaxRenderTotalBufferSize             () const;
         VG_INLINE core::uint    getMaxRenderMinBufferSize               () const;
 
+         void                    sync                                   () { m_renderer.sync(m_engine); }
+
+        //static RendererOptionsData &        getEngineData               () { return get()->m_engine; }
+        //static const RendererOptionsData &  getRendererData             () { return get()->m_renderer; }       
+
     protected:
         Quality                 autodetectQualityLevel                  ();
 
@@ -136,6 +153,10 @@ namespace vg::renderer
         void                    applyQualityLevel                       (const core::IProperty * _prop);
 
     private:
+
+        RendererOptionsData     m_engine;
+        RendererOptionsData     m_renderer;
+
         bool                    m_useCustomQualityLevel                 = false;
         Quality                 m_customQualityLevel                    = Quality::Medium;
         Quality                 m_autodetectedQualityLevel              = Quality::Medium;
@@ -146,13 +167,13 @@ namespace vg::renderer
         core::IResource *       m_defaultEnvironmentCubemap             = nullptr;
         float                   m_defaultIrradianceIntensity            = 1.0f;
         float                   m_defaultSpecularReflectionIntensity    = 1.0f;
-        bool				    m_toolMode                              = true;
+
         bool                    m_aabb                                  = false;
         bool				    m_wireframe                             = false;
         bool                    m_debugUI                               = false;
         bool                    m_particles                             = true;
         bool                    m_postProcess                           = true;
-        bool                    m_rayTracing                            = false;
+  
         gfx::HDR                m_HDRmode                               = gfx::HDR::None;
         gfx::MSAA               m_msaa[core::enumCount<Quality>()];
         gfx::AAPostProcess      m_aaPostProcess                         = gfx::AAPostProcess::None;

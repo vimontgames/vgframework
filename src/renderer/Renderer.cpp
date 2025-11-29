@@ -482,6 +482,8 @@ namespace vg::renderer
         RendererOptions * options = RendererOptions::get(false);
         if (!options)
             return;
+
+        options->sync();
         
         options->Update();
 
@@ -544,7 +546,7 @@ namespace vg::renderer
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_instanceDataUpdatePass, "Instance Data");
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_materialDataUpdatePass, "Material Data");
 
-                if (RayTracingManager::get()->isRayTracingEnabled())
+                if (RendererOptions::get()->isRayTracingEnabled())
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_BLASUpdatePass, "BLAS");
 
                 if (asBool(PBRFlags::GenerateSpecularBRDF & options->getPBRFlags()))

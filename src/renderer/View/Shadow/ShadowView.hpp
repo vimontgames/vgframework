@@ -29,7 +29,7 @@ namespace vg::renderer
     bool ShadowView::isUsingShadowMap() const
     {
         if (m_light)
-            return m_light->m_shadow && !RayTracingManager::get()->isRayTracingEnabled();
+            return m_light->m_shadow && !RendererOptions::get()->isRayTracingEnabled();
 
         return false;
     }

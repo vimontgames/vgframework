@@ -62,7 +62,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool LitView::IsUsingRayTracing() const
     {
-        return RayTracingManager::get()->isRayTracingEnabled();
+        return RendererOptions::get()->isRayTracingEnabled();
     }
 
     //--------------------------------------------------------------------------------------

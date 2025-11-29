@@ -73,7 +73,7 @@ namespace vg::renderer
 
         CullingOptions cullingOptions;
         cullingOptions.m_view = (View *)GetParent();
-        cullingOptions.m_raytracing = RayTracingManager::get()->isRayTracingEnabled();
+        cullingOptions.m_raytracing = RendererOptions::get()->isRayTracingEnabled();
         
         gfx::ViewID viewID = cullingOptions.m_view->getViewID();
 

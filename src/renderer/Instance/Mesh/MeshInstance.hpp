@@ -169,7 +169,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool MeshInstance::updateInstanceBLAS()
     {
-        if (!isSkinned() && RayTracingManager::get()->isRayTracingEnabled())
+        if (!isSkinned() && RendererOptions::get()->isRayTracingEnabled())
         {
             auto * blas = getInstanceBLAS();
 

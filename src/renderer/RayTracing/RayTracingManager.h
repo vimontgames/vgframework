@@ -32,9 +32,6 @@ namespace vg::renderer
         void    prepareTLAS             (View * _view);
         void    updateTLAS              (gfx::CommandList * _cmdList, View * _view);
 
-        bool    enableRayTracing        (bool _enable);
-        bool    isRayTracingEnabled     () const;
-
         void    addMeshModel            (MeshModel * _meshModel);
         void    removeMeshModel         (MeshModel * _meshModel);
 
@@ -42,13 +39,10 @@ namespace vg::renderer
         void    removeMeshInstance      (MeshInstance * _meshInstance);
         void    updateMeshInstance      (MeshInstance * _meshInstance);
 
-    private:
         void    onEnableRayTracing      ();
         void    onDisableRayTracing     ();
 
     private:    
-        bool    m_rayTracingRequested   = false;
-        bool    m_rayTracingEnabled     = false;
 
         core::vector<MeshModel *>       m_meshModels;
         core::vector<MeshInstance *>    m_meshInstances;

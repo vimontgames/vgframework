@@ -17,6 +17,27 @@ using namespace vg::core;
 
 namespace vg::renderer
 {
+    //--------------------------------------------------------------------------------------
+    void RendererOptionsData::sync(const RendererOptionsData & _other)
+    {
+        m_toolMode = _other.m_toolMode;
+
+        if (m_rayTracing != _other.m_rayTracing)
+        {
+            if (_other.m_rayTracing)
+            {
+                m_rayTracing = true;
+                RayTracingManager::get()->onEnableRayTracing();
+            }
+            else
+            {
+                m_rayTracing = false;
+                RayTracingManager::get()->onDisableRayTracing();
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_REGISTER_OBJECT_CLASS(RendererOptions, "Renderer Options");
 
     #define setPropertyHiddenCallbackQualityEx(className, propertyName, func)                   setPropertyHiddenCallback(className, propertyName[Quality::VeryLow],  func##VeryLow);   \
@@ -121,8 +142,8 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerProperty(RendererOptions, m_toolMode, "Toolmode");
-        setPropertyDescription(RendererOptions, m_toolMode, "Enable Toolmode in Game views");
+        registerProperty(RendererOptions, m_engine.m_toolMode, "Toolmode");
+        setPropertyDescription(RendererOptions, m_engine.m_toolMode, "Enable Toolmode in Game views");
 
         //registerPropertyEnumEx(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug", PropertyFlags::AlphabeticalOrder);
         registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug");
@@ -185,8 +206,8 @@ namespace vg::renderer
 
             registerPropertyGroupBegin(RendererOptions, "Raytracing");
             {
-                registerProperty(RendererOptions, m_rayTracing, "Enable");
-                setPropertyDescription(RendererOptions, m_rayTracing, "Enable Raytracing");
+                registerProperty(RendererOptions, m_engine.m_rayTracing, "Enable");
+                setPropertyDescription(RendererOptions, m_engine.m_rayTracing, "Enable Raytracing");
             }
             registerPropertyGroupEnd(RendererOptions);
 
@@ -355,7 +376,6 @@ namespace vg::renderer
         auto * renderer = Renderer::get();
         renderer->SetVSync(m_VSync);
         renderer->SetHDR(m_HDRmode);
-        RayTracingManager::get()->enableRayTracing(m_rayTracing);
 
         auto * classDesc = GetClassDesc();
         m_hdrProp = classDesc->GetPropertyByName("m_HDRmode");
@@ -458,10 +478,6 @@ namespace vg::renderer
             const auto backgroundColor = m_defaultEnvironmentColor;
             m_defaultEnvironmentColor = (float4)0.0f;
             setDefaultClearColor(backgroundColor);
-        }
-        else if (!strcmp(name, "m_rayTracing"))
-        {
-            RayTracingManager::get()->enableRayTracing(isRayTracingEnabled());
         }
         else if (!strcmp(name, "m_useCustomQualityLevel"))
         {

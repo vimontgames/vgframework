@@ -13,6 +13,7 @@
 #include "renderer/View/Shadow/ShadowView.h"
 #include "renderer/Instance/Mesh/MeshInstance.h"
 #include "renderer/Model/Material/MaterialModel.h"
+#include "renderer/Options/RendererOptions.h"
 
 using namespace vg::core;
 
@@ -28,24 +29,6 @@ namespace vg::renderer
     RayTracingManager::~RayTracingManager()
     {
 
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool RayTracingManager::enableRayTracing(bool _enable)
-    {
-        if (m_rayTracingRequested != _enable)
-        {
-            m_rayTracingRequested = _enable;
-            return true;
-        }
-
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool RayTracingManager::isRayTracingEnabled() const
-    {
-        return m_rayTracingEnabled;
     }
 
     //--------------------------------------------------------------------------------------
@@ -137,15 +120,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void RayTracingManager::beginFrame()
     {
-        if (m_rayTracingRequested != m_rayTracingEnabled)
-        {
-            m_rayTracingEnabled = m_rayTracingRequested;
-
-            if (m_rayTracingRequested)
-                onEnableRayTracing();
-            else
-                onDisableRayTracing();            
-        }
+        
     }
 
     //--------------------------------------------------------------------------------------
@@ -153,7 +128,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void RayTracingManager::prepareBLAS()
     {
-        VG_ASSERT(isRayTracingEnabled());
+        VG_ASSERT(RendererOptions::get()->isRayTracingEnabled());
         VG_PROFILE_CPU("Prepare BLAS");
         
         // Non-skins require update when model or material surface types change, but BLAS can be shared
