@@ -24,7 +24,7 @@
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                        <Property type="EnumFlagsU64" name="m_tags" value="Chest|"/>
+                        <Property type="EnumFlagsU64" name="m_tags" value="Chest"/>
                         <Property type="ObjectPtrVector" name="m_components">
                             <Object class="BreakableBehaviour">
                                 <Property type="String" name="m_name" value="New BreakableBehaviour"/>
@@ -35,7 +35,12 @@
                                 <Property type="Float" name="m_damage" value="0"/>
                                 <Property type="Float" name="m_push" value="0"/>
                                 <Property type="EnumU8" name="m_breakableType" value="LootBox"/>
+                                <Property type="Int32" name="m_giveLifes" value="0"/>
+                                <Property type="Float" name="m_giveHP" value="0"/>
+                                <Property type="Int32" name="m_giveScore" value="1000"/>
                                 <Property type="ObjectHandle" name="m_default" value="334830589"/>
+                                <Property type="Bool" name="m_useRotation" value="false"/>
+                                <Property type="Float3" name="m_rotation" x="0" y="0" z="1"/>
                                 <Property type="ObjectHandle" name="m_destroyed" value="2120495652"/>
                                 <Property type="Bool" name="m_useDestroySound" value="true"/>
                                 <Property type="String" name="m_destroySound" value="Boom"/>
@@ -79,7 +84,7 @@
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                                <Property type="EnumFlagsU64" name="m_tags" value="Chest|"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value="Chest"/>
                                 <Property type="ObjectPtrVector" name="m_components">
                                     <Object class="PhysicsShapeComponent">
                                         <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>

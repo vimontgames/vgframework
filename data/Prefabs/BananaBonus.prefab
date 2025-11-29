@@ -36,7 +36,7 @@
                                 <Property type="Float" name="m_push" value="0"/>
                                 <Property type="EnumU8" name="m_breakableType" value="LootBox"/>
                                 <Property type="Int32" name="m_giveLifes" value="1"/>
-                                <Property type="Float" name="m_giveHP" value="100"/>
+                                <Property type="Float" name="m_giveHP" value="0"/>
                                 <Property type="Int32" name="m_giveScore" value="500"/>
                                 <Property type="ObjectHandle" name="m_default" value="2705444"/>
                                 <Property type="Bool" name="m_useRotation" value="true"/>
