@@ -270,7 +270,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
             {
                 case CANDIDATE_NON_OPAQUE_TRIANGLE:
 			    {
-                    MaterialSample mat = getRaytracingCandidateMaterial(query, viewConstants);
+                    MaterialSample mat = getRaytracingCandidateMaterial(query, flags, mode);
 
                     if (mat.surfaceType != SurfaceType::AlphaBlend && mat.albedo.a > 0)
                     {
@@ -290,7 +290,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
                 hitOpaque = true;
                 hitOpaqueDist = query.CommittedRayT();
             
-                MaterialSample mat = getRaytracingCommittedMaterial(query, viewConstants);
+                MaterialSample mat = getRaytracingCommittedMaterial(query, flags, mode);
                 color = mat.albedo;
             }
             break;
@@ -324,7 +324,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
 			    {
                     if (query.CandidateTriangleRayT() < hitOpaqueDist)
                     {
-                        MaterialSample mat = getRaytracingCandidateMaterial(query, viewConstants);
+                        MaterialSample mat = getRaytracingCandidateMaterial(query, flags, mode);
 
                         if (mat.surfaceType == SurfaceType::AlphaBlend && mat.albedo.a > 0)
                         {
@@ -345,7 +345,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
         {
             case COMMITTED_TRIANGLE_HIT:
 		    {       
-                MaterialSample mat = getRaytracingCommittedMaterial(query, viewConstants);
+                MaterialSample mat = getRaytracingCommittedMaterial(query, flags, mode);
                  //mat.albedo;
             }
             break;

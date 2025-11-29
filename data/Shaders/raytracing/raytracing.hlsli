@@ -65,14 +65,10 @@ struct MaterialSample
     float4 albedo;
 };
 
-template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, uint geometryIndex, uint primitiveIndex, float2 triangleBarycentrics, float3 rayT, float3 worldRayOrigin, float3 worldRayDirection, ViewConstants viewConstants)
+template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, uint geometryIndex, uint primitiveIndex, float2 triangleBarycentrics, float3 rayT, float3 worldRayOrigin, float rayTMin, float3 worldRayDirection, DisplayFlags _flags, DisplayMode _mode)
 {
     MaterialSample mat;
-    
-    // Raytracing should not be view-dependent, it only works for primary ray!
-    DisplayMode mode = viewConstants.getDisplayMode();
-    DisplayFlags flags = viewConstants.getDisplayFlags();
-    
+        
     // Get instance data from raytracing instance ID
     uint instanceDataOffset = instanceID * GPU_INSTANCE_DATA_ALIGNMENT;
     GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load < GPUInstanceData > (instanceDataOffset);
@@ -86,19 +82,18 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     // Use barycentrics to get interpolated attribute values
     Vertex vert = getRaytracingInterpolatedVertex(instanceData, batchData, primitiveIndex, triangleBarycentrics);
 
-    float nearDist = viewConstants.getCameraNearFar().x;
-    float3 worldPosition = worldRayOrigin + (rayT-nearDist) * worldRayDirection;
+    float3 worldPosition = worldRayOrigin + (rayT-rayTMin) * worldRayDirection;
     float2 uv0 = materialData.GetUV0(vert.uv[0], vert.uv[1], worldPosition);
                     
-    float4 vertexColor = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags, mode);
+    float4 vertexColor = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), _flags, _mode);
     
     mat.matID = geometryIndex;
     mat.surfaceType = materialData.getSurfaceType();
     mat.uv0 = uv0;
-    mat.albedo = materialData.getAlbedo(uv0, vertexColor, flags, mode, true);
+    mat.albedo = materialData.getAlbedo(uv0, vertexColor, _flags, _mode, true);
         
     #ifdef _TOOLMODE
-    switch (mode)
+    switch (_mode)
     {
         default:
         case DisplayMode::RayTracing_Instance_WorldPosition:
@@ -126,7 +121,7 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     return mat;    
 }
 
-template <typename Q> MaterialSample getRaytracingCandidateMaterial(Q query, ViewConstants viewConstants)
+template <typename Q> MaterialSample getRaytracingCandidateMaterial(Q query, DisplayFlags _flags = (DisplayFlags)0, DisplayMode _mode = DisplayMode::None)
 {
     return getRaytracingMaterial<Q>(query.CandidateInstanceID(), 
                                     query.CandidateGeometryIndex(), 
@@ -134,11 +129,13 @@ template <typename Q> MaterialSample getRaytracingCandidateMaterial(Q query, Vie
                                     query.CandidateTriangleBarycentrics(),
                                     query.CandidateTriangleRayT(),
                                     query.WorldRayOrigin(),
+                                    query.RayTMin(),
                                     query.WorldRayDirection(),
-                                    viewConstants);
+                                    _flags,
+                                    _mode);
 }
 
-template <typename Q> MaterialSample getRaytracingCommittedMaterial(Q query, ViewConstants viewConstants)
+template <typename Q> MaterialSample getRaytracingCommittedMaterial(Q query, DisplayFlags _flags = (DisplayFlags)0, DisplayMode _mode = DisplayMode::None)
 {
     return getRaytracingMaterial<Q>(query.CommittedInstanceID(), 
                                     query.CommittedGeometryIndex(), 
@@ -146,8 +143,10 @@ template <typename Q> MaterialSample getRaytracingCommittedMaterial(Q query, Vie
                                     query.CommittedTriangleBarycentrics(),
                                     query.CommittedRayT(),
                                     query.WorldRayOrigin(),
+                                    query.RayTMin(),
                                     query.WorldRayDirection(),
-                                    viewConstants);
+                                     _flags,
+                                    _mode);
 }
 
 #if _TOOLMODE
