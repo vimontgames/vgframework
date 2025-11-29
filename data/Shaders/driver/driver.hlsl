@@ -1,7 +1,7 @@
 #include "system/bindless.hlsli"
 #include "system/semantics.hlsli"
 #include "system/samplers.hlsli"
-#include "system/gamma.hlsli"
+#include "system/color.hlsli"
 #include "system/rootConstants2D.hlsli"
 #include "system/color.hlsli"
 #include "system/view.hlsli" 
@@ -83,7 +83,7 @@ PS_Output_Quad PS_Copy(PS_Input_Quad _input)
     const float hdrBoost = 7.53749 * 0.5f;
 
     #if _GAMMA
-    output.color0.rgb = Linear2sRGB(output.color0.rgb);
+    output.color0.rgb = LinearToSRGB(output.color0.rgb);
     #endif // _GAMMA
 
     #if _HDR10

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _INSTANCE_DATA__HLSLI_
+#define _INSTANCE_DATA__HLSLI_
 
 #include "system/packing.hlsli"
 #include "system/table.hlsli"
@@ -79,3 +80,5 @@ struct GPUInstanceData
     }
     #endif
 };
+
+#endif // _INSTANCE_DATA__HLSLI_

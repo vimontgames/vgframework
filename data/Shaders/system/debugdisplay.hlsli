@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _DEBUG_DISPLAY__HLSLI_
+#define _DEBUG_DISPLAY__HLSLI_
 
 #include "displaymodes.hlsli"
 #include "material_consts.hlsli"
@@ -59,25 +60,25 @@ float4 forwardDebugDisplay(float4 _color, DisplayMode _mode, uint _matID, float3
             return _color;
     
         case DisplayMode::Geometry_MaterialID:
-            return sRGBA2Linear(float4(getMatIDColor(_matID), 1.0f));
+            return SRGBAToLinear(float4(getMatIDColor(_matID), 1.0f));
             
         case DisplayMode::Geometry_VertexTangent:
-            return sRGBA2Linear(float4(normalize(_tan) * 0.5f + 0.5f, 1.0f));
+            return SRGBAToLinear(float4(normalize(_tan) * 0.5f + 0.5f, 1.0f));
         
         case DisplayMode::Geometry_VertexBinormal:
-            return sRGBA2Linear(float4(normalize(_bin) * 0.5f + 0.5f, 1.0f));
+            return SRGBAToLinear(float4(normalize(_bin) * 0.5f + 0.5f, 1.0f));
 
         case DisplayMode::Geometry_VertexNormal:
-            return sRGBA2Linear(float4(normalize(_nrm) * 0.5f + 0.5f, 1.0f));
+            return SRGBAToLinear(float4(normalize(_nrm) * 0.5f + 0.5f, 1.0f));
         
         case DisplayMode::Geometry_VertexColor:
             return _col;
         
         case DisplayMode::Geometry_UV0:
-            return sRGBA2Linear(float4(frac(_uv0.xy), any(saturate(_uv0) != _uv0) ? 1 : 0, 1));
+            return SRGBAToLinear(float4(frac(_uv0.xy), any(saturate(_uv0) != _uv0) ? 1 : 0, 1));
         
         case DisplayMode::Geometry_UV1:
-            return sRGBA2Linear(float4(frac(_uv1.xy), any(saturate(_uv0) != _uv0) ? 1 : 0, 1));
+            return SRGBAToLinear(float4(frac(_uv1.xy), any(saturate(_uv0) != _uv0) ? 1 : 0, 1));
         
         case DisplayMode::Instance_Color:
         case DisplayMode::Material_Albedo:
@@ -93,26 +94,28 @@ float4 forwardDebugDisplay(float4 _color, DisplayMode _mode, uint _matID, float3
             return float4(_pbr.bbb, 1);
         
         case DisplayMode::Material_NormalMap:
-            return sRGBA2Linear(float4(_normal.xyz * 0.5 + 0.5, 1));
+            return SRGBAToLinear(float4(_normal.xyz * 0.5 + 0.5, 1));
 
         case DisplayMode::Forward_WorldNormal:
-            return sRGBA2Linear(float4(_worldNormal.xyz * 0.5 + 0.5, 1));
+            return SRGBAToLinear(float4(_worldNormal.xyz * 0.5 + 0.5, 1));
 
         case DisplayMode::Forward_WorldPosition:
-            return sRGBA2Linear(float4(frac(_worldPos.xyz), 1));
+            return SRGBAToLinear(float4(frac(_worldPos.xyz), 1));
         
         case DisplayMode::Forward_ScreenPos:
-            return sRGBA2Linear(float4(_screenPos.xy, 0, 1));
+            return SRGBAToLinear(float4(_screenPos.xy, 0, 1));
 
         case DisplayMode::Forward_SurfaceType:
             #if _ALPHABLEND
-            return sRGBA2Linear(float4(getSurfaceTypeColor(SurfaceType::AlphaBlend), 1));
+            return SRGBAToLinear(float4(getSurfaceTypeColor(SurfaceType::AlphaBlend), 1));
             #elif _ALPHATEST
-            return sRGBA2Linear(float4(getSurfaceTypeColor(SurfaceType::AlphaTest), 1));
+            return SRGBAToLinear(float4(getSurfaceTypeColor(SurfaceType::AlphaTest), 1));
             #elif _DECAL
-            return sRGBA2Linear(float4(getSurfaceTypeColor(SurfaceType::Decal), 1));
+            return SRGBAToLinear(float4(getSurfaceTypeColor(SurfaceType::Decal), 1));
             #else
-            return sRGBA2Linear(float4(getSurfaceTypeColor(SurfaceType::Opaque), 1));
+            return SRGBAToLinear(float4(getSurfaceTypeColor(SurfaceType::Opaque), 1));
             #endif
     }
 }
+
+#endif

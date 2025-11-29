@@ -5,7 +5,7 @@
 #include "system/depthstencil.hlsli"
 #include "system/msaa.hlsli"
 #include "system/instancedata.hlsli"
-#include "system/gamma.hlsli"
+#include "system/color.hlsli"
 #include "system/outlinemask.hlsli"
 #include "system/debugdisplay.hlsli"
 #include "raytracing/raytracing.hlsli"
@@ -314,7 +314,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
         ray.TMin = nearDist;
         ray.TMax = hitOpaqueDist;
         
-        query.TraceRayInline(getTLAS(viewConstants.getTLASHandle()), RAY_FLAG_NONE, 0xff, ray);
+        query.TraceRayInline(getTLAS(viewConstants.getTLASHandle()), RAY_FLAG_CULL_FRONT_FACING_TRIANGLES, 0xff, ray);
         
         while (query.Proceed())
         {

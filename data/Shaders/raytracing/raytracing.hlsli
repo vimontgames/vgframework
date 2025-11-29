@@ -1,5 +1,10 @@
 #pragma once
 
+#include "system/instancedata.hlsli"
+#include "system/vertex.hlsli"
+#include "system/color.hlsli"
+#include "system/debugdisplay.hlsli"
+
 //--------------------------------------------------------------------------------------
 // Returns interpolated value of vertex attributes at ray intersection position.
 // (Only works for indexed geometry)
@@ -64,6 +69,7 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
 {
     MaterialSample mat;
     
+    // Raytracing should not be view-dependent, it only works for primary ray!
     DisplayMode mode = viewConstants.getDisplayMode();
     DisplayFlags flags = viewConstants.getDisplayFlags();
     
@@ -96,15 +102,15 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     {
         default:
         case DisplayMode::RayTracing_Instance_WorldPosition:
-            mat.albedo.rgb = sRGB2Linear(frac(worldPosition));
+            mat.albedo.rgb = SRGBToLinear(frac(worldPosition));
         break;
         
         case DisplayMode::RayTracing_Instance_MaterialID:
-            mat.albedo.rgb = sRGB2Linear(getMatIDColor(mat.matID));
+            mat.albedo.rgb = SRGBToLinear(getMatIDColor(mat.matID));
             break;
                 
         case DisplayMode::RayTracing_Geometry_UV0:
-            mat.albedo.rgb = sRGB2Linear(float3(mat.uv0, 0));
+            mat.albedo.rgb = SRGBToLinear(float3(mat.uv0, 0));
             break;
         
         case DisplayMode::RayTracing_Material_SurfaceType:

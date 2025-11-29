@@ -2,7 +2,7 @@
 #include "system/semantics.hlsli"
 #include "system/samplers.hlsli"
 #include "system/vertex.hlsli"
-#include "system/gamma.hlsli"
+#include "system/color.hlsli"
 #include "system/view.hlsli"
 #include "system/depthbias.hlsli"
 #include "system/picking.hlsl"

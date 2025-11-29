@@ -4,9 +4,10 @@
 #include "system/view.hlsli"
 #include "system/depthbias.hlsli"
 #include "system/picking.hlsl"
-#include "debugdraw.hlsli"
 #include "system/outlinemask.hlsli"
 #include "system/transparency.hlsli"
+#include "system/view.hlsli" // TODO: remove me
+#include "debugdraw.hlsli"
 
 struct VS_Output
 {

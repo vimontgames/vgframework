@@ -3,6 +3,8 @@
 #include "system/lightsBuffer.hlsli"
 #include "system/shared_consts.hlsli"
 #include "system/pbr.hlsli"
+#include "system/debug.hlsli"
+#include "raytracing/raytracing.hlsli"
 
 #if !_SHADER_COMPILER
 // The following #defines here have no effect on compilation and are only used for syntax highlighting
@@ -194,6 +196,9 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		offset += sizeof(DirectionalLightConstants);
 
 		float3 lightDir = directional.getDirection();
+		
+		//VG_DEBUGPRINT("lightDir = %f %f %f", lightDir.x, lightDir.y, lightDir.z);
+		
 		float3 Li = normalize(lightDir);
 		float cosLi = max(0.0f, dot(_worldNormal, Li));
 
@@ -206,16 +211,29 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 			if (si > 0.0f)
 			{
 				float bias = directional.getShadowBias();
+				float far = directional.getShadowFarDist();
 				
 				#ifdef _RAYTRACING
 				shadow = 1;		
-
+					
+				#if 1
+				
+				RayDesc ray;
+				ray.Origin    = _worldPos + _worldNormal.xyz *  bias * 100.0f; // use geometric normal!
+				ray.Direction = lightDir;
+				ray.TMin      = 0; // OK because we bias origin
+				ray.TMax      = far;
+				
+				#else
+				
 				RayDesc ray;
 				ray.Origin    = _worldPos;
 				ray.Direction = lightDir;
-				ray.TMin      = 0.0325f;
-				ray.TMax      = 100;
-
+				ray.TMin      = 0.005;
+				ray.TMax      = far;
+				
+				#endif
+				
 				RayQuery<RAY_FLAG_NONE> query;
 				query.TraceRayInline(tlas, RAY_FLAG_NONE, 0xff, ray);
 
@@ -229,7 +247,10 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 					switch(query.CandidateType())
 					{				
 						case CANDIDATE_NON_OPAQUE_TRIANGLE:
-						shadow = 0.5f;
+						{
+							//MaterialSample mat = getRaytracingCandidateMaterial(query, _viewConstants);
+							shadow = 0.5f;
+						}
 						break;
 					}
 				}
@@ -241,9 +262,12 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 					break;
 
 					case COMMITTED_TRIANGLE_HIT:
-					shadow = 0.0f;
-					break;
-				}
+					{
+						float dist = query.CommittedRayT();
+                        shadow = 0;
+                    }
+                    break;
+                }
 				
 				#else // _RAYTRACING
 
@@ -303,7 +327,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 					RayDesc ray;
 					ray.Origin    = _worldPos;
 					ray.Direction = lightDir;
-					ray.TMin      = 0.0325f;
+					ray.TMin      = 0.005;
 					ray.TMax      = 10;
 
 					RayQuery<RAY_FLAG_FORCE_OPAQUE> query;

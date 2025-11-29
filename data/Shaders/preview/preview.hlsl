@@ -1,7 +1,7 @@
 #include "system/bindless.hlsli"
 #include "system/semantics.hlsli"
 #include "system/samplers.hlsli"
-#include "system/gamma.hlsli"
+#include "system/color.hlsli"
 #include "system/rootConstants2D.hlsli"
 #include "system/color.hlsli"
 #include "system/view.hlsli" 
@@ -61,7 +61,7 @@ PS_Output PS_Preview(PS_Input _input)
 
     #endif
 
-    ps_out.color0.rgb = Linear2sRGB( ps_out.color0.rgb);
+    ps_out.color0.rgb = LinearToSRGB( ps_out.color0.rgb);
 
     return ps_out;
 }

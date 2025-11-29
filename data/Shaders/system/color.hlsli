@@ -1,3 +1,6 @@
+#ifndef _COLOR__HLSLI__H_
+#define _COLOR__HLSLI__H_
+
 //*********************************************************
 //
 // Copyright (c) Microsoft. All rights reserved.
@@ -50,10 +53,21 @@ float3 LinearToSRGB(float3 color)
     return select(color < 0.0031308,12.92 * color, 1.055 * pow(abs(color), 1.0 / 2.4) - 0.055);
 }
 
+float4 LinearToSRGBA(float4 color)
+{
+    return float4(LinearToSRGB(color.rgb), 1.0f);
+}
+
 float3 SRGBToLinear(float3 color)
 {
     // Approximately pow(color, 2.2)
     return select(color < 0.04045, color / 12.92, pow(abs(color + 0.055) / 1.055, 2.4));
+}
+
+float4 SRGBAToLinear(float4 color)
+{
+    // Approximately pow(color, 2.2)
+    return float4(SRGBToLinear(color.rgb), 1.0f);
 }
 
 float3 Rec709ToRec2020(float3 color)
@@ -88,3 +102,5 @@ float3 LinearToST2084(float3 color)
     float3 cp = pow(abs(color), m1);
     return pow((c1 + c2 * cp) / (1 + c3 * cp), m2);
 }
+
+#endif
