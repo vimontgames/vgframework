@@ -11,7 +11,8 @@ namespace vg::renderer
     vg_enum_class(vg::renderer, MaterialTextureType, core::u8,
         Albedo = 0,
         Normal,
-        PBR
+        PBR,
+        Emissive
     );
 
     vg_enum_class(vg::renderer, MaterialColorType, core::u8,

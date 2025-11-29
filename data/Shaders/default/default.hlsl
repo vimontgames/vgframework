@@ -154,13 +154,14 @@ PS_Output PS_Forward(VS_Output _input)
     float4 albedo = materialData.getAlbedo(uv0, _input.col, flags, mode);
     float3 normal = materialData.getNormal(uv0, flags).xyz;
     float4 pbr = materialData.getPBR(uv0);
+    float4 emissive = materialData.getEmissive(uv0);
 
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
     // Compute & Apply lighting
     LightingResult lighting = computeDirectLighting(viewConstants, camPos, worldPos, albedo.rgb, worldNormal.xyz, pbr);
 
-    output.color0.rgb = applyLighting(albedo.rgb, lighting, mode);
+    output.color0.rgb = applyLighting(albedo.rgb, lighting, mode) + emissive.rgb;
     output.color0.a = albedo.a; 
 
     #if _DECAL
@@ -265,6 +266,7 @@ struct PS_OutputDeferred
     float4 albedo   : Color0;
     float4 normal   : Color1;
     float4 pbr      : Color2;
+    float4 emissive : Color3;
 };
 
 //--------------------------------------------------------------------------------------
@@ -299,12 +301,14 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     float4 albedo = materialData.getAlbedo(uv0, _input.col, flags, mode);
     float4 normal = materialData.getNormal(uv0, flags);
     float4 pbr = materialData.getPBR(uv0);
+    float4 emissive = materialData.getEmissive(uv0);
     
     float3 worldNormal = getWorldNormal(normal.xyz, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
     output.albedo = albedo.rgba;
     output.normal = float4(worldNormal.xyz, albedo.a);
     output.pbr = float4(pbr.rgb, albedo.a);
+    output.emissive = float4(emissive.rgb, albedo.a);
 
     #if _DECAL
     clip(output.albedo.a-(1.0/255.0f));
@@ -327,6 +331,7 @@ PS_OutputDeferred PS_Deferred(VS_Output _input)
     output.albedo.a = 1;
     output.normal.a = 1;
     output.pbr.a = 1;
+    output.emissive.a = 1;
     #endif
 
     #if _TOOLMODE && !_ZONLY

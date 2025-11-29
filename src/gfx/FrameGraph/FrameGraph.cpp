@@ -1544,7 +1544,7 @@ namespace vg::gfx
             if (slot.used)
             {
                 Texture * tex = slot.tex;
-                VG_WARNING("[FrameGraph] Texture \"%s\" (%u) was not released", tex->GetName().c_str(), i);
+                VG_WARNING("[FrameGraph] Texture \"%s\" (%u) was not released.", tex->GetName().c_str(), i);
                 releaseTextureFromPool(tex);
             }
         }

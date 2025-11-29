@@ -38,7 +38,8 @@
 
 vg_enum_class_global(ReservedSlot, uint,
     // Texture
-    ImGuiFontTexSrv         = BINDLESS_TEXTURE_INVALID - 5,
+    ImGuiFontTexSrv         = BINDLESS_TEXTURE_INVALID - 6,
+    DefaultEmissiveTexSrv   = BINDLESS_TEXTURE_INVALID - 5,
     DefaultPBRTexSrv        = BINDLESS_TEXTURE_INVALID - 4,
     DefaultNormalTexSrv     = BINDLESS_TEXTURE_INVALID - 3,
     DefaultAlbedoTexSrv     = BINDLESS_TEXTURE_INVALID - 2,
@@ -78,7 +79,8 @@ vg_enum_class_global(ReservedSlot, uint,
     None                    = 0x80000000
 );
 
-//// Texture SRV
+// Texture SRV
+#define RESERVEDSLOT_TEXSRV_DEFAULT_EMISSIVE    (BINDLESS_TEXTURE_INVALID - 5)
 #define RESERVEDSLOT_TEXSRV_DEFAULT_PBR         (BINDLESS_TEXTURE_INVALID - 4)
 #define RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL      (BINDLESS_TEXTURE_INVALID - 3)
 #define RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO      (BINDLESS_TEXTURE_INVALID - 2)

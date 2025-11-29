@@ -2,6 +2,7 @@
 
 #include "system/packing.hlsli"
 #include "system/table.hlsli"
+#include "system/packing.hlsli"
 #include "system/material_consts.hlsli"
 
 #if 1
@@ -22,6 +23,12 @@
 #define pbrSampler linearRepeat 
 #endif
 
+#if 0
+#define emissiveSampler anisotropicRepeat 
+#else
+#define emissiveSampler linearRepeat 
+#endif
+
 struct GPUMaterialData
 {
     #ifdef __cplusplus
@@ -36,6 +43,7 @@ struct GPUMaterialData
         setAlbedoTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO);
         setNormalTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
         setPBRTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
+        setEmissiveTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_EMISSIVE);
         
         setAlbedoColor(float4(1,1,1,1));
         setNormalStrength(1.0);
@@ -44,14 +52,15 @@ struct GPUMaterialData
         setMetalness(0.0);
         setTiling(float2(1.0, 1.0));
         setOffset(float2(0.0, 0.0));
+        setEmissiveColor(float4(0,0,0,0));
     }   
     #endif 
 
-    uint4  textures;         // .x = albedo | normal, .y = pbr | unused, .y = unused, .w = {.r = ? | .g = ? | .b = ? | .a = UVSource}
-    float4 albedoColor;
+    uint4  textures;        // .x = normal<<16 | albedo, .y = emissive<<16 | pbr, .z = unused, .w = { SurfaceType(31..28) |  UVSource (27..24) | unused (23..0) }
+    float4 albedoColor;     // TODO: pack as RGBE?
     float4 multipliers;
     float4 tilingOffset;
-    float4 misc;            // .x = depth fade (AlphaBlend) 
+    float4 misc;            // .x = depth fade (used only with alphablend) | .y = emissive color (RGBA32) | .z = emissive intensity | w = unused 
 
     void            setAlbedoTextureHandle  (uint _value)           { textures.x = packUint16low(textures.x, _value); }
     uint            getAlbedoTextureHandle  ()                      { return unpackUint16low(textures.x); }
@@ -61,7 +70,10 @@ struct GPUMaterialData
 
     void            setPBRTextureHandle     (uint _value)           { textures.y = packUint16low(textures.y, _value); }
     uint            getPBRTextureHandle     ()                      { return unpackUint16low(textures.y); }
-
+    
+    void            setEmissiveTextureHandle(uint _value)           { textures.y = packUint16high(textures.y, _value); }
+    uint            getEmissiveTextureHandle()                      { return unpackUint16high(textures.y); }
+    
     void            setUVSource             (UVSource _value)       { textures.w = packUint(textures.w, (uint)_value, 0xF, 24); }    // Use bits 24..27 
     UVSource        getUVSource             ()                      { return (UVSource)unpackUint(textures.w, 0xF, 24); }            // As crazy as it seems, using 0x7 here instead of 0xF provokes lost device in Vulkan debug
     
@@ -91,6 +103,12 @@ struct GPUMaterialData
 
     void            setDepthFade            (float _value)          { misc.x = 1.0f / _value; }
     float           getInvDepthFade         ()                      { return misc.x; }
+    
+    void            setEmissiveColor        (float4 _value)         { misc.y = asfloat(packRGBA8(_value)); }
+    float4          getEmissiveColor        ()                      { return unpackRGBA8(asuint((float)misc.y)); }
+    
+    void            setEmissiveIntensity    (float _value)          { misc.z = _value; }
+    float           getEmissiveIntensity    ()                      { return misc.z; }
 
     #ifndef __cplusplus
     //--------------------------------------------------------------------------------------
@@ -218,6 +236,16 @@ struct GPUMaterialData
         pbr.b *= getMetalness();
 
         return pbr;
+    }
+    
+    //--------------------------------------------------------------------------------------
+    float4 getEmissive(float2 _uv, bool _nonUniform = false)
+    {
+        float4 emissive = sampleTexture2D(getEmissiveTextureHandle(), emissiveSampler, _uv, _nonUniform);
+
+        emissive.rgb *= getEmissiveColor().rgb * getEmissiveIntensity();
+
+        return emissive;
     }
 
     #endif // !__cplusplus

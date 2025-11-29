@@ -40,6 +40,11 @@ namespace vg::renderer
         registerPropertyEx(DefaultMaterialModel, m_metalness, "Metalness", PropertyFlags::Transient);
         setPropertyRange(DefaultMaterialModel, m_metalness, float2(0.0f, 1.0f));
 
+        registerPropertyEx(DefaultMaterialModel, m_enableEmissive, "Enable Emissive", PropertyFlags::Transient);
+        registerPropertyObjectEx(DefaultMaterialModel, m_emissiveMap, "Emissive Map", PropertyFlags::Transient);
+        registerPropertyEx(DefaultMaterialModel, m_emissiveColor, "Emissive Color", PropertyFlags::Transient);
+        registerPropertyEx(DefaultMaterialModel, m_emissiveIntensity, "Emissive Intensity", PropertyFlags::Transient);
+
         return super::registerProperties(_desc);
     }
 
@@ -61,24 +66,32 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DefaultMaterialModel::FillGPUMaterialData(GPUMaterialData * _data) const
     {
+        // Common
         _data->setUVSource(m_UVSource);
         _data->setSurfaceType(m_surfaceType);
         _data->setTiling(m_tiling);
         _data->setOffset(m_offset);
         _data->setDepthFade(m_depthFade);
 
+        // Albedo
         const bool enableAlbedo = (SurfaceType::Decal == m_surfaceType) | m_enableAlbedo;
-
         _data->setAlbedoTextureHandle(enableAlbedo && m_albedoMap ? m_albedoMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_ALBEDO);
         _data->setAlbedoColor(m_albedoColor);
 
+        // Normal
         _data->setNormalTextureHandle(m_enableNormal && m_normalMap ? m_normalMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_NORMAL);
         _data->setNormalStrength(m_normalStrength);
 
+        // PBR
         _data->setPBRTextureHandle(m_enablePbr && m_pbrMap ? m_pbrMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
         _data->setOcclusion(m_occlusion);
         _data->setRoughness(m_roughness);
         _data->setMetalness(m_metalness);
+
+        // Emissive
+        _data->setEmissiveTextureHandle(m_enableEmissive && m_emissiveMap ? m_emissiveMap->getTextureHandle() : RESERVEDSLOT_TEXSRV_DEFAULT_EMISSIVE);
+        _data->setEmissiveColor(m_emissiveColor);
+        _data->setEmissiveIntensity(m_emissiveIntensity);
     }
 
     //--------------------------------------------------------------------------------------
@@ -227,11 +240,15 @@ namespace vg::renderer
     void DefaultMaterialModel::SetTexture(const core::string & _name, ITexture * _value)
     {
         if (_name == "m_albedoMap")
-            assignTexture((Texture**)&m_albedoMap, (Texture *)_value);
+            assignTexture((Texture **)&m_albedoMap, (Texture *)_value);
         else if (_name == "m_normalMap")
-            assignTexture((Texture**)&m_normalMap, (Texture *)_value);
+            assignTexture((Texture **)&m_normalMap, (Texture *)_value);
         else if (_name == "m_pbrMap")
             assignTexture((Texture **)&m_pbrMap, (Texture *)_value);
+        else if (_name == "m_emissiveMap")
+            assignTexture((Texture **)&m_emissiveMap, (Texture *)_value);
+        else
+            VG_WARNING("[Material] Texture \"%s\" not found", _name.c_str());
     }
 
     //--------------------------------------------------------------------------------------

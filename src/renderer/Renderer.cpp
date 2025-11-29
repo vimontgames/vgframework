@@ -1163,6 +1163,11 @@ namespace vg::renderer
                     data = 0x007F7FFF;    // Blue: Metalness Green: Roughness Red: Occlusion 
                     reservedSlot = ReservedSlot::DefaultPBRTexSrv;
                     break;
+
+                case MaterialTextureType::Emissive:
+                    data = 0x00000000;    
+                    reservedSlot = ReservedSlot::DefaultEmissiveTexSrv;
+                    break;
             }
 
             TextureDesc texDesc = TextureDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, TextureType::Texture2D, PixelFormat::R8G8B8A8_unorm, TextureFlags::None, 1, 1);

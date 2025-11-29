@@ -42,6 +42,9 @@ namespace vg::renderer
         const auto pbrGBufferID = _renderPassContext.getFrameGraphID("PBRGBuffer");
         readRenderTarget(pbrGBufferID);
 
+        const auto emissiveGBufferID = _renderPassContext.getFrameGraphID("EmissiveGBuffer");
+        readRenderTarget(emissiveGBufferID);
+
         const auto depthStencilID = _renderPassContext.getFrameGraphID("DepthStencil");
         readDepthStencil(depthStencilID);
 
@@ -126,6 +129,7 @@ namespace vg::renderer
         auto albedoID = getRenderTarget(_renderPassContext.getFrameGraphID("AlbedoGBuffer"))->getTextureHandle();
         auto normalID = getRenderTarget(_renderPassContext.getFrameGraphID("NormalGBuffer"))->getTextureHandle();
         auto pbrID = getRenderTarget(_renderPassContext.getFrameGraphID("PBRGBuffer"))->getTextureHandle();
+        auto emissiveID = getRenderTarget(_renderPassContext.getFrameGraphID("EmissiveGBuffer"))->getTextureHandle();
 
         auto depthstencilTex = getDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
         auto depthID = depthstencilTex->getDepthTextureHandle();
@@ -154,6 +158,7 @@ namespace vg::renderer
         deferredLighting.setAlbedoGBuffer(albedoID);
         deferredLighting.setNormalGBuffer(normalID);
         deferredLighting.setPBRGBuffer(pbrID);
+        deferredLighting.setEmissiveGBuffer(emissiveID);
         deferredLighting.setDepth(depthID);
         deferredLighting.setStencil(stencilID);
         deferredLighting.setRWBufferOut(dstTex->getRWTextureHandle());

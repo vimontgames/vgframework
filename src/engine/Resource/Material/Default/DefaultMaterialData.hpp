@@ -9,6 +9,7 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
+        // Common
         registerPropertyEnum(DefaultMaterialData, UVSource, m_UVSource, "UV Source");
         setPropertyDescription(DefaultMaterialData, m_UVSource, "Select UV source to use in shader");
 
@@ -20,6 +21,7 @@ namespace vg::engine
         setPropertyDescription(DefaultMaterialData, m_offset, "Texture coordinates offset");
         setPropertyRange(DefaultMaterialData, m_offset, float2(-8, 8));
 
+        // Albedo
         registerPropertyEx(DefaultMaterialData, m_enableAlbedo, "Albedo", PropertyFlags::Hidden);
         registerPropertyOptionalGroupBegin(DefaultMaterialData, m_enableAlbedo, "Albedo");
         {
@@ -31,6 +33,7 @@ namespace vg::engine
         }
         registerPropertyOptionalGroupEnd(DefaultMaterialData);
 
+        // Normal
         registerPropertyEx(DefaultMaterialData, m_enableNormal, "Enable Normal", PropertyFlags::Hidden);
         registerPropertyOptionalGroupBegin(DefaultMaterialData, m_enableNormal, "Normal");
         {
@@ -43,6 +46,7 @@ namespace vg::engine
         }
         registerPropertyOptionalGroupEnd(DefaultMaterialData);
 
+        // PBR
         registerPropertyEx(DefaultMaterialData, m_enablePbr, "Enable PBR", PropertyFlags::Hidden);
         registerPropertyOptionalGroupBegin(DefaultMaterialData, m_enablePbr, "PBR");
         {
@@ -63,6 +67,22 @@ namespace vg::engine
         }
         registerPropertyOptionalGroupEnd(DefaultMaterialData);
 
+        // Emissive
+        registerPropertyEx(DefaultMaterialData, m_enableEmissive, "Emissive", PropertyFlags::Hidden);
+        registerPropertyOptionalGroupBegin(DefaultMaterialData, m_enableEmissive, "Emissive");
+        {
+            registerPropertyResource(DefaultMaterialData, m_emissiveMap, "Emissive Map");
+            setPropertyDescription(DefaultMaterialData, m_emissiveMap, "Emissive texture");
+
+            registerPropertyEx(DefaultMaterialData, m_emissiveColor, "Emissive Color", PropertyFlags::Color);
+            setPropertyDescription(DefaultMaterialData, m_emissiveColor, "Emissive Color");
+
+            registerProperty(DefaultMaterialData, m_emissiveIntensity, "Emissive Intensity");
+            setPropertyDescription(DefaultMaterialData, m_emissiveIntensity, "Emissive Color");
+            setPropertyRange(DefaultMaterialData, m_emissiveIntensity, float2(0.0f, 1000.0f));
+        }
+        registerPropertyOptionalGroupEnd(DefaultMaterialData);
+
         return true;
     }
 
@@ -73,6 +93,7 @@ namespace vg::engine
         m_albedoMap.SetParent(this);
         m_normalMap.SetParent(this);
         m_pbrMap.SetParent(this);
+        m_emissiveMap.SetParent(this);
     }
 
     //--------------------------------------------------------------------------------------
@@ -118,6 +139,7 @@ namespace vg::engine
         result &= m_albedoMap.RegisterUID();
         result &= m_normalMap.RegisterUID();
         result &= m_pbrMap.RegisterUID();
+        result &= m_emissiveMap.RegisterUID();
 
         return result;
     }

@@ -99,33 +99,33 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     
     mat.albedo = materialData.getAlbedo(uv0, vertexColor, _flags, _mode, true);   
 
-    //#ifdef _TOOLMODE
-    //switch (_mode)
-    //{
-    //    default:
-    //    break;
-    //
-    //    case DisplayMode::RayTracing_Instance_WorldPosition:
-    //        mat.albedo.rgb = SRGBToLinear(frac(worldPosition));
-    //    break;
-    //    
-    //    case DisplayMode::RayTracing_Instance_MaterialID:
-    //        mat.albedo.rgb = SRGBToLinear(getMatIDColor(mat.matID));
-    //        break;
-    //            
-    //    case DisplayMode::RayTracing_Geometry_UV0:
-    //        mat.albedo.rgb = SRGBToLinear(float3(mat.uv0, 0));
-    //        break;
-    //    
-    //    case DisplayMode::RayTracing_Material_SurfaceType:
-    //        mat.albedo.rgb = getSurfaceTypeColor(mat.surfaceType).rgb;
-    //        break;
-    //    
-    //    case DisplayMode::RayTracing_Material_Albedo:
-    //        mat.albedo.rgb = mat.albedo.rgb;
-    //        break;
-    //}
-    //#endif
+    #ifdef _TOOLMODE
+    switch (_mode)
+    {
+        default:
+        break;
+    
+        case DisplayMode::RayTracing_Instance_WorldPosition:
+            mat.albedo.rgb = SRGBToLinear(frac(worldPosition));
+        break;
+        
+        case DisplayMode::RayTracing_Instance_MaterialID:
+            mat.albedo.rgb = SRGBToLinear(getMatIDColor(mat.matID));
+            break;
+                
+        case DisplayMode::RayTracing_Geometry_UV0:
+            mat.albedo.rgb = SRGBToLinear(float3(mat.uv0, 0));
+            break;
+        
+        case DisplayMode::RayTracing_Material_SurfaceType:
+            mat.albedo.rgb = getSurfaceTypeColor(mat.surfaceType).rgb;
+            break;
+        
+        case DisplayMode::RayTracing_Material_Albedo:
+            mat.albedo.rgb = mat.albedo.rgb;
+            break;
+    }
+    #endif
 
     return mat;    
 }

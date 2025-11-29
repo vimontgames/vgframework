@@ -17,8 +17,11 @@ struct DeferredLightingConstants
     void setNormalGBuffer   (uint _normal)  { albedo_normal = packUint16high(albedo_normal, _normal); }
     uint getNormalGBuffer   ()              { return unpackUint16high(albedo_normal); }
 
-    void setPBRGBuffer      (uint _pbr)     { pbr_unused = packUint16high(pbr_unused, _pbr); }
-    uint getPBRGBuffer      ()              { return unpackUint16high(pbr_unused); }
+    void setPBRGBuffer      (uint _pbr)     { pbr_emissive = packUint16low(pbr_emissive, _pbr); }
+    uint getPBRGBuffer      ()              { return unpackUint16low(pbr_emissive); }
+    
+    void setEmissiveGBuffer (uint _emissive){ pbr_emissive = packUint16high(pbr_emissive, _emissive); }
+    uint getEmissiveGBuffer ()              { return unpackUint16high(pbr_emissive); }
 
     void setDepth           (uint _depth)   { depth_stencil = packUint16low(depth_stencil, _depth); }
     uint getDepth           ()              { return unpackUint16low(depth_stencil); }
@@ -31,7 +34,7 @@ struct DeferredLightingConstants
 
     uint width_height;
     uint albedo_normal;
-    uint pbr_unused;
+    uint pbr_emissive;
     uint depth_stencil;
     uint rwbuffer;
 };

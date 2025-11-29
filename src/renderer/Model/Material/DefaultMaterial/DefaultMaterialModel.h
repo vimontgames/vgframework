@@ -30,18 +30,27 @@ namespace vg::renderer
         core::float2            m_tiling            = core::float2(1,1);
         core::float2            m_offset            = core::float2(0,0);
 
+        // Albedo
         bool                    m_enableAlbedo      = true;
         gfx::Texture *          m_albedoMap         = nullptr;
         core::float4            m_albedoColor       = core::float4(1,1,1,1);
 
+        // Normal
         bool                    m_enableNormal      = true;
         gfx::Texture *          m_normalMap         = nullptr;
         float                   m_normalStrength    = 1.0f;
 
+        // PBR
         bool                    m_enablePbr         = true;
         gfx::Texture *          m_pbrMap            = nullptr;
         float                   m_occlusion         = 1.0f;
         float                   m_roughness         = 1.0f;
         float                   m_metalness         = 1.0f;
+
+        // Emissive
+        bool                    m_enableEmissive    = true;
+        gfx::Texture *          m_emissiveMap       = nullptr;
+        core::float4            m_emissiveColor     = core::float4(1,1,1,1);
+        float                   m_emissiveIntensity = 1.0f;
     };
 }

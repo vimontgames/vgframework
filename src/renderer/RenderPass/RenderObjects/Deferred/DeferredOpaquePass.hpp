@@ -90,6 +90,22 @@ namespace vg::renderer
             writeRenderTarget(2, pbrGBufferID);
         }
 
+        // Emissive
+        {
+            FrameGraphTextureResourceDesc emissiveGBufferDesc;
+            emissiveGBufferDesc.type = texType;
+            emissiveGBufferDesc.msaa = msaa;
+            emissiveGBufferDesc.format = PixelFormat::R16G16B16A16_float;
+            emissiveGBufferDesc.width = size.x;
+            emissiveGBufferDesc.height = size.y;
+            emissiveGBufferDesc.clearColor = defaultOptimizedClearColor;
+            emissiveGBufferDesc.initState = FrameGraphResource::InitState::Clear;
+
+            const auto emissiveGBufferID = _renderPassContext.getFrameGraphID("EmissiveGBuffer");
+            createRenderTarget(emissiveGBufferID, emissiveGBufferDesc);
+            writeRenderTarget(3, emissiveGBufferID);
+        }
+
         writeDepthStencil(_renderPassContext.getFrameGraphID("DepthStencil"));
 
         readRWBuffer("SkinningRWBuffer");
