@@ -205,7 +205,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 		if (cosLi > 0.0f)
 		{
 			float3 Lradiance = directional.getColor();
-			float shadow = 1.0f;
+			float3 shadow = (float3)1.0f;
 			float si = directional.getShadowIntensity();
 
 			if (si > 0.0f)
@@ -214,60 +214,8 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 				float far = directional.getShadowFarDist();
 				
 				#ifdef _RAYTRACING
-				shadow = 1;		
-					
-				#if 1
 				
-				RayDesc ray;
-				ray.Origin    = _worldPos + _worldNormal.xyz *  bias * 100.0f; // use geometric normal!
-				ray.Direction = lightDir;
-				ray.TMin      = 0; // OK because we bias origin
-				ray.TMax      = far;
-				
-				#else
-				
-				RayDesc ray;
-				ray.Origin    = _worldPos;
-				ray.Direction = lightDir;
-				ray.TMin      = 0.005;
-				ray.TMax      = far;
-				
-				#endif
-				
-				RayQuery<RAY_FLAG_NONE> query;
-				query.TraceRayInline(tlas, RAY_FLAG_NONE, 0xff, ray);
-
-				#ifdef _TOOLMODE
-				rayCount++;
-				#endif
-
-				// https://microsoft.github.io/DirectX-Specs/d3d/Raytracing.html#tracerayinline-example-2
-				while(query.Proceed())
-				{
-					switch(query.CandidateType())
-					{				
-						case CANDIDATE_NON_OPAQUE_TRIANGLE:
-						{
-							//MaterialSample mat = getRaytracingCandidateMaterial(query, _viewConstants);
-							shadow = 0.5f;
-						}
-						break;
-					}
-				}
-
-				switch(query.CommittedStatus())
-				{
-					default:
-					case COMMITTED_NOTHING:
-					break;
-
-					case COMMITTED_TRIANGLE_HIT:
-					{
-						float dist = query.CommittedRayT();
-                        shadow = 0;
-                    }
-                    break;
-                }
+				shadow = getRaytracedShadow(tlas, _worldPos, _worldNormal, bias, lightDir, far);						
 				
 				#else // _RAYTRACING
 

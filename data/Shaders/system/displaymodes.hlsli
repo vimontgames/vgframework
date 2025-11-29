@@ -78,4 +78,6 @@ vg_enum_global(DisplayFlags, uint,
     InstanceColor   = 0x00000010 
 );
 
+#define DefaultDisplayFlags (DisplayFlags::AlbedoMap | DisplayFlags::NormalMap | DisplayFlags::VertexColor | DisplayFlags::MaterialColor | DisplayFlags::InstanceColor)
+
 #endif

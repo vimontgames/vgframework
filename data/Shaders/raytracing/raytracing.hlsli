@@ -38,11 +38,14 @@ Vertex getRaytracingInterpolatedVertex(GPUInstanceData instanceData, GPUBatchDat
         index[1] = ib.Load((triangleStartIndex<<2) + 4);
         index[2] = ib.Load((triangleStartIndex<<2) + 8);
     }
+    
+    Vertex vert;
 
     ByteAddressBuffer vb = getNonUniformBuffer(instanceData.getVertexBufferHandle());
     uint vbOffset = instanceData.getVertexBufferOffset();
     VertexFormat vertexFormat = instanceData.getVertexFormat();
 
+    #if !_PARTICLE // need to figure out the solution for particles
     Vertex verts[3];
     verts[0].Load(vb, vertexFormat, index[0], vbOffset);
     verts[1].Load(vb, vertexFormat, index[1], vbOffset);
@@ -50,13 +53,16 @@ Vertex getRaytracingInterpolatedVertex(GPUInstanceData instanceData, GPUBatchDat
 
     float3 bary = float3(0, barycentrics);
     bary.x = (1-bary.y-bary.z);
-                    
-    Vertex vert;
+    
     vert.Interpolate(verts, bary);
+    #endif
         
     return vert;
 }
 
+//--------------------------------------------------------------------------------------
+// Retrieves material information at ray intersection point.
+//--------------------------------------------------------------------------------------
 struct MaterialSample
 {
     uint matID;
@@ -90,38 +96,44 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     mat.matID = geometryIndex;
     mat.surfaceType = materialData.getSurfaceType();
     mat.uv0 = uv0;
-    mat.albedo = materialData.getAlbedo(uv0, vertexColor, _flags, _mode, true);
-        
-    #ifdef _TOOLMODE
-    switch (_mode)
-    {
-        default:
-        case DisplayMode::RayTracing_Instance_WorldPosition:
-            mat.albedo.rgb = SRGBToLinear(frac(worldPosition));
-        break;
-        
-        case DisplayMode::RayTracing_Instance_MaterialID:
-            mat.albedo.rgb = SRGBToLinear(getMatIDColor(mat.matID));
-            break;
-                
-        case DisplayMode::RayTracing_Geometry_UV0:
-            mat.albedo.rgb = SRGBToLinear(float3(mat.uv0, 0));
-            break;
-        
-        case DisplayMode::RayTracing_Material_SurfaceType:
-            mat.albedo.rgb = getSurfaceTypeColor(mat.surfaceType).rgb;
-            break;
-        
-        case DisplayMode::RayTracing_Material_Albedo:
-            mat.albedo.rgb = mat.albedo.rgb;
-            break;
-    }
-    #endif
     
+    mat.albedo = materialData.getAlbedo(uv0, vertexColor, _flags, _mode, true);   
+
+    //#ifdef _TOOLMODE
+    //switch (_mode)
+    //{
+    //    default:
+    //    break;
+    //
+    //    case DisplayMode::RayTracing_Instance_WorldPosition:
+    //        mat.albedo.rgb = SRGBToLinear(frac(worldPosition));
+    //    break;
+    //    
+    //    case DisplayMode::RayTracing_Instance_MaterialID:
+    //        mat.albedo.rgb = SRGBToLinear(getMatIDColor(mat.matID));
+    //        break;
+    //            
+    //    case DisplayMode::RayTracing_Geometry_UV0:
+    //        mat.albedo.rgb = SRGBToLinear(float3(mat.uv0, 0));
+    //        break;
+    //    
+    //    case DisplayMode::RayTracing_Material_SurfaceType:
+    //        mat.albedo.rgb = getSurfaceTypeColor(mat.surfaceType).rgb;
+    //        break;
+    //    
+    //    case DisplayMode::RayTracing_Material_Albedo:
+    //        mat.albedo.rgb = mat.albedo.rgb;
+    //        break;
+    //}
+    //#endif
+
     return mat;    
 }
 
-template <typename Q> MaterialSample getRaytracingCandidateMaterial(Q query, DisplayFlags _flags = (DisplayFlags)0, DisplayMode _mode = DisplayMode::None)
+//--------------------------------------------------------------------------------------
+// Helper functions to get candidate material from ray query
+//--------------------------------------------------------------------------------------
+template <typename Q> MaterialSample getRaytracingCandidateMaterial(Q query, DisplayFlags _flags = DefaultDisplayFlags, DisplayMode _mode = DisplayMode::None)
 {
     return getRaytracingMaterial<Q>(query.CandidateInstanceID(), 
                                     query.CandidateGeometryIndex(), 
@@ -135,7 +147,9 @@ template <typename Q> MaterialSample getRaytracingCandidateMaterial(Q query, Dis
                                     _mode);
 }
 
-template <typename Q> MaterialSample getRaytracingCommittedMaterial(Q query, DisplayFlags _flags = (DisplayFlags)0, DisplayMode _mode = DisplayMode::None)
+//--------------------------------------------------------------------------------------
+// Helper functions to get committed material from ray query
+template <typename Q> MaterialSample getRaytracingCommittedMaterial(Q query, DisplayFlags _flags = DefaultDisplayFlags, DisplayMode _mode = DisplayMode::None)
 {
     return getRaytracingMaterial<Q>(query.CommittedInstanceID(), 
                                     query.CommittedGeometryIndex(), 
@@ -150,6 +164,9 @@ template <typename Q> MaterialSample getRaytracingCommittedMaterial(Q query, Dis
 }
 
 #if _TOOLMODE
+//--------------------------------------------------------------------------------------
+// Return 'true' if the current display mode is a raytracing debug display mode
+//--------------------------------------------------------------------------------------
 bool IsRaytracingDebugDisplayMode(DisplayMode mode)
 {
     switch (mode)
@@ -166,3 +183,68 @@ bool IsRaytracingDebugDisplayMode(DisplayMode mode)
     }
 }
 #endif
+
+//--------------------------------------------------------------------------------------
+// Raytraced shadow calculation (0.0f = completely shadowed, 1.0f = no shadow)
+//--------------------------------------------------------------------------------------
+float3 getRaytracedShadow(RaytracingAccelerationStructure _tlas, float3 _worldPos, float3 _worldNormal, float _bias, float3 _lightDir, float _lightFar)
+{
+    float3 shadow = (float3)1;	
+    			
+    #if 1
+    // Use world normal for bias
+	RayDesc ray;
+	ray.Origin    = _worldPos + _worldNormal.xyz *  _bias * 10.0f; // TODO: use geometric normal
+	ray.Direction = _lightDir;
+	ray.TMin      = 0; // OK because we bias origin
+	ray.TMax      = _lightFar;
+	#else
+	// Fixed bias		
+	RayDesc ray;
+	ray.Origin    = _worldPos;
+	ray.Direction = _lightDir;
+	ray.TMin      = 0.005;
+	ray.TMax      = _lightFar;
+	#endif
+				
+	RayQuery<RAY_FLAG_NONE> query;
+	query.TraceRayInline(_tlas, RAY_FLAG_NONE, 0xff, ray);
+
+	while(query.Proceed())
+	{
+		if (query.CandidateType() == CANDIDATE_NON_OPAQUE_TRIANGLE)
+		{				
+			MaterialSample mat = getRaytracingCandidateMaterial(query);
+
+            // Ignore decals (doesn't cast shadow)
+            if (mat.surfaceType == SurfaceType::AlphaTest)
+            {
+                if (mat.albedo.a > 0.5f)
+                {
+                    query.CommitNonOpaqueTriangleHit();
+                    break;
+                }
+            }
+            else if (mat.surfaceType == SurfaceType::AlphaBlend && mat.albedo.a > 0.0f)
+            {
+                shadow *= lerp(1, mat.albedo.rgb, mat.albedo.a);  
+            }
+		}
+	}
+
+	switch(query.CommittedStatus())
+	{
+		default:
+		case COMMITTED_NOTHING:
+		break;
+
+		case COMMITTED_TRIANGLE_HIT:
+		{
+			float dist = query.CommittedRayT();
+            shadow = (float3)0;
+        }
+        break;
+    }
+    
+    return shadow;
+}
