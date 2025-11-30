@@ -1,6 +1,6 @@
 bl_info = {
     "name": "Export Coords & FBX Batch",
-    "author": "Ton Nom",
+    "author": "JoyXT",
     "version": (1, 0),
     "blender": (2, 80, 0),
     "location": "View3D > Sidebar > Export Tools",
