@@ -26,8 +26,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     core::float4x4 AABB::getLocalSpaceUnitCubeMatrix() const
     {
-        float3 size = m_max - m_min;
-        float3 center = m_max + m_min;
+        float3 size = getSize();
+        float3 center = getCenter();
 
         // Boost scale so that the bounding box of a box is visible
         float s = 0.5f * 1.001f;

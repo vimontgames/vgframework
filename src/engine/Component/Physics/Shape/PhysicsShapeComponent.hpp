@@ -1,12 +1,15 @@
 #include "PhysicsShapeComponent.h"
 #include "core/IGameObject.h"
 #include "core/IWorld.h"
+#include "core/GameObject/GameObject.h"
 #include "engine/Engine.h"
 #include "engine/EngineOptions.h"
+#include "engine/Component/Renderer/Instance/Mesh/MeshComponent.h"
 #include "engine/Resource/Mesh/MeshResource.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IMeshModel.h"
 #include "renderer/IDebugDraw.h"
+#include "renderer/IMeshInstance.h"
 #include "physics/IShape.h"
 #include "editor/Editor_Consts.h"
 
@@ -26,7 +29,42 @@ namespace vg::engine
 
         registerPropertyObjectPtrEx(PhysicsShapeComponent, m_shapeDesc, "Shape", PropertyFlags::Flatten);
 
+        registerPropertyCallbackEx(PhysicsShapeComponent, initializeFromAABB, "Initialize from AABB", PropertyFlags::SingleLine);
+
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool PhysicsShapeComponent::InitializeFromAABB()
+    {
+        return initializeFromAABB(this);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool PhysicsShapeComponent::initializeFromAABB(IObject * _object)
+    {
+        PhysicsShapeComponent * comp = VG_SAFE_STATIC_CAST(PhysicsShapeComponent, _object);
+
+        if (const MeshComponent * meshComp = comp->getGameObject()->GetComponentT<MeshComponent>())
+        {
+            if (renderer::IMeshInstance * meshInstance = meshComp->getMeshInstance())
+            {
+                AABB aabb;
+                if (meshInstance->TryGetAABB(aabb))
+                {
+                    comp->m_shapeType = physics::ShapeType::Box;
+                    comp->createShapeDesc();
+                    if (physics::IShapeDesc * shapeDesc = comp->getShapeDesc())
+                    {
+                        shapeDesc->InitializeFromAABB(aabb);
+                    }      
+                    comp->createShape();
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------

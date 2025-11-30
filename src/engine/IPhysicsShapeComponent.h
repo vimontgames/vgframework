@@ -8,5 +8,7 @@ namespace vg::engine
     {
     public:
         VG_CLASS_DECL_ABSTRACT(IPhysicsShapeComponent, core::Component);
+
+        virtual bool InitializeFromAABB() = 0;
     };
 }

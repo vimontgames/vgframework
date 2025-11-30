@@ -29,6 +29,9 @@ namespace vg::core
 
         core::float4x4 getLocalSpaceUnitCubeMatrix() const;
 
+        core::float3 getSize() const { return m_max - m_min; }
+        core::float3 getCenter() const { return m_max + m_min; }
+
         bool read(core::io::Buffer & _buffer);
         bool write(core::io::Buffer & _buffer) const;
 

@@ -27,12 +27,14 @@ namespace vg::engine
         void                                                    OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
         void                                                    OnResourceLoaded        (core::IResource * _resource) final override;
         bool                                                    TryGetAABB              (core::AABB & _aabb) const final override;
+        bool                                                    InitializeFromAABB      () final override;
 
         physics::IShape *                                       getPhysicsShape         () const { return m_shape; }
         physics::IShapeDesc *                                   getShapeDesc            () const { return m_shapeDesc; }
 
         static const core::vector<renderer::ColliderTriangle> * getColliderTriangles    (const physics::IShape * _shape);
         static void                                             drawShapeCallback       (const physics::IShape * _shape, const core::IWorld * _world, const core::float4x4 & _matrix);
+        static bool                                             initializeFromAABB      (IObject * _object);
     
     private:
         PhysicsBodyComponent *                                  getBodyComponent        ();

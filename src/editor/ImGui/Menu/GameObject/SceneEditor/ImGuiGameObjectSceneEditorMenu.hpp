@@ -1,5 +1,6 @@
 #include "ImGuiGameObjectSceneEditorMenu.h"
 #include "core/IGameObject.h"
+#include "core/IComponent.h"
 #include "core/IResource.h"
 #include "core/ISelection.h"
 #include "core/IInput.h"
@@ -7,6 +8,7 @@
 #include "core/IBaseScene.h"
 #include "core/File/File.h"
 #include "engine/IEngine.h"
+#include "engine/IPhysicsShapeComponent.h"
 #include "editor/ImGui/Window/ImGuiWindow.h"
 #include "editor/ImGui/Extensions/imGuiExtensions.h"
 #include "editor/ImGui/Extensions/FileDialog/ImGuiFileDialog.h"
@@ -17,9 +19,39 @@
 #include "engine/IWorldResource.h"
 
 using namespace vg::core;
+using namespace vg::engine;
 
 namespace vg::editor
 {
+    //--------------------------------------------------------------------------------------
+    // For each children with a mesh with no collider, create the collider from AABB
+    //--------------------------------------------------------------------------------------
+    bool createPhysicsCollidersFromAABB(IObject * _object)
+    {
+        IGameObject * root = VG_SAFE_STATIC_CAST(IGameObject, _object);
+
+        auto meshComponents = root->GetComponentsByType("MeshComponent", false, true);
+
+        for (uint i = 0; i < meshComponents.size(); ++i)
+        {
+            IComponent * comp = meshComponents[i];
+            IGameObject * go = comp->GetGameObject();
+
+            if (!go->GetComponentByType("PhysicsBodyComponent"))
+            {
+                go->AddComponent("PhysicsBodyComponent", "Generated PhysicsBodyComponent");
+            }
+
+            if (!go->GetComponentByType("PhysicsShapeComponent"))
+            {
+                IPhysicsShapeComponent * physicsShapeComponent = (IPhysicsShapeComponent*)go->AddComponent("PhysicsShapeComponent", "Generated PhysicsShapeComponent");
+                physicsShapeComponent->InitializeFromAABB();
+            }
+        }
+
+        return false;
+    }
+
     //--------------------------------------------------------------------------------------
     ImGuiMenu::Status ImGuiGameObjectSceneEditorMenu::Display(core::IObject * _object)
     {
@@ -136,6 +168,44 @@ namespace vg::editor
                 ImGui::EndMenu();
             }
             //ImGui::EndDisabled();
+
+            ImGui::Separator();
+
+            if (ImGui::BeginMenu("Components"))
+            {
+                // TODO: generate from class descriptors (to include user categories) and add helpers after component list
+                //if (ImGui::BeginMenu("Audio"))
+                //{
+                //
+                //    ImGui::EndMenu();
+                //}
+                //
+                //if (ImGui::BeginMenu("Audio"))
+                //{
+                //
+                //    ImGui::EndMenu();
+                //}
+
+                if (ImGui::BeginMenu("Physics"))
+                {
+                    // TODO: list Physics components to create
+                    //ImGui::Separator();
+
+                    // CreateColliders
+                    ImGui::BeginDisabled(isPrefabOrPartOfPrefab);
+                    if (ImGui::MenuItem("Create colliders from AABB"))
+                    {
+                        createPhysicsCollidersFromAABB(_object);
+                    }
+                    ImGui::EndDisabled();
+
+                    if (ImGui::IsItemHovered())
+                        ImGui::SetTooltip("Create physics colliders automatically from mesh AABB");
+                    ImGui::EndMenu();
+                }
+
+                ImGui::EndMenu();
+            }
 
             ImGui::Separator();
 

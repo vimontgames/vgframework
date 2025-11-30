@@ -19,6 +19,7 @@ namespace vg::physics
         virtual ShapeType GetShapeType() const = 0;
         virtual const core::IResource * GetResource() const = 0;
         virtual bool TryGetAABB(core::AABB & _aabb) const = 0;
+        virtual void InitializeFromAABB(const core::AABB & _aabb) = 0;
     };
 
     class IShape : public core::Object
