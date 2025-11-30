@@ -36,7 +36,17 @@ namespace vg::audio
                 VG_VERIFY(SoLoud::SO_NO_ERROR == ((SoLoud::Wav*)m_slAudioSource)->load(_name.c_str()));
                 break;
 
+            case AudioSourceType::Ogg:
+                m_slAudioSource = new SoLoud::Wav();
+                VG_VERIFY(SoLoud::SO_NO_ERROR == ((SoLoud::Wav *)m_slAudioSource)->load(_name.c_str()));
+                break;
+
             case AudioSourceType::Mp3:
+                m_slAudioSource = new SoLoud::Wav();
+                VG_VERIFY(SoLoud::SO_NO_ERROR == ((SoLoud::Wav *)m_slAudioSource)->load(_name.c_str()));
+                break;
+
+            case AudioSourceType::Flac:
                 m_slAudioSource = new SoLoud::Wav();
                 VG_VERIFY(SoLoud::SO_NO_ERROR == ((SoLoud::Wav *)m_slAudioSource)->load(_name.c_str()));
                 break;
