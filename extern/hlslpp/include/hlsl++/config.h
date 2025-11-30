@@ -1,6 +1,18 @@
 #pragma once
 
-// Note: The HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN warning behaves differently
+// C++ Version
+
+#if defined(_MSVC_LANG)
+
+	#define HLSLPP_CPPVERSION _MSVC_LANG
+
+#elif defined(__cplusplus)
+
+	#define HLSLPP_CPPVERSION __cplusplus
+
+#endif
+
+// Note: The HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_BEGIN warning behaves differently
 // between GCC and Clang. In GCC, we need to apply the warning to the call site, i.e.
 // wherever we call the copy constructor. In Clang, we need to apply it to the class
 // itself. This means we seem to add the same warning suppression to multiple places,
@@ -16,12 +28,18 @@
 	#define HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_BEGIN
 	#define HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_END
 
-	#define HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN \
+	#define HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_BEGIN \
 		_Pragma("clang diagnostic push") \
 		_Pragma("clang diagnostic ignored \"-Wdeprecated\"")
 
-	#define HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END \
+	#define HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END \
 		_Pragma("clang diagnostic pop")
+
+	#define HLSLPP_WARNING_PADDING_BEGIN
+	#define HLSLPP_WARNING_PADDING_END
+
+	#define HLSLPP_WARNING_INVALID_SHUFFLE_BEGIN
+	#define HLSLPP_WARNING_INVALID_SHUFFLE_END
 
 #elif defined(__GNUG__)
 
@@ -33,12 +51,18 @@
 	#define HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_BEGIN
 	#define HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_END
 
-	#define HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN \
+	#define HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_BEGIN \
 	    _Pragma("GCC diagnostic push") \
 		_Pragma("GCC diagnostic ignored \"-Wdeprecated-copy\"")
 
-	#define HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END \
+	#define HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END \
 		_Pragma("GCC diagnostic pop")
+
+	#define HLSLPP_WARNING_PADDING_BEGIN
+	#define HLSLPP_WARNING_PADDING_END
+
+	#define HLSLPP_WARNING_INVALID_SHUFFLE_BEGIN
+	#define HLSLPP_WARNING_INVALID_SHUFFLE_END
 
 #elif defined(_MSC_VER)
 
@@ -56,8 +80,30 @@
 
 	#define HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_END __pragma(warning(pop))
 
-	#define HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
-	#define HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
+	#define HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_BEGIN
+	#define HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END
+
+	#define HLSLPP_WARNING_PADDING_BEGIN  \
+			__pragma(warning(push)) \
+			__pragma(warning(disable : 4324))
+
+	#define HLSLPP_WARNING_PADDING_END __pragma(warning(pop))
+
+	// If we have constexpr if the invalid condition won't be evaluated, so only disable it
+	// in older versions where it gets compile time validated even though it won't ever run
+	#if defined(__cpp_if_constexpr)
+
+	#define HLSLPP_WARNING_INVALID_SHUFFLE_BEGIN
+	#define HLSLPP_WARNING_INVALID_SHUFFLE_END
+
+	#else
+
+		#define HLSLPP_WARNING_INVALID_SHUFFLE_BEGIN \
+			__pragma(warning(push)) \
+			__pragma(warning(disable : 4556))
+		#define HLSLPP_WARNING_INVALID_SHUFFLE_END __pragma(warning(pop))
+
+	#endif
 
 #else
 
@@ -65,14 +111,21 @@
 
 #endif
 
-#if (__cplusplus >= 201702L) || (_MSVC_LANG >= 201702L)
+#if HLSLPP_CPPVERSION >= 201702L
 	#define hlslpp_nodiscard [[nodiscard]]
 #else
 	#define hlslpp_nodiscard
 #endif
 
+#if HLSLPP_CPPVERSION >= 201103L
+	#define hlslpp_constructor_delete = delete
+#else
+	#define hlslpp_constructor_delete
+#endif
+
 // Versions previous to VS2015 need special attention
 #if defined(_MSC_VER) && _MSC_VER < 1900
+
 	#define hlslpp_noexcept
 	#define hlslpp_swizzle_start struct {
 	#define hlslpp_swizzle_end };
@@ -81,6 +134,7 @@
 	#define hlslpp_alignof(T) __alignof(T)
 
 #else
+
 	#define hlslpp_noexcept noexcept
 	#define hlslpp_swizzle_start
 	#define hlslpp_swizzle_end
@@ -117,11 +171,6 @@
 #define HLSLPP_MASK_Y 1
 #define HLSLPP_MASK_Z 2
 #define HLSLPP_MASK_W 3
-
-#define HLSLPP_MASK_A 4
-#define HLSLPP_MASK_B 5
-#define HLSLPP_MASK_C 6
-#define HLSLPP_MASK_D 7
 
 #define HLSLPP_SHUFFLE_MASK(X, Y, Z, W)		(((W) << 6) | ((Z) << 4) | ((Y) << 2) | (X))
 #define HLSLPP_SHUFFLE_MASK_PD(X, Y)		(((Y) << 1) | (X))

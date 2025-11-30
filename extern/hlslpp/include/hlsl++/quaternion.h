@@ -26,7 +26,7 @@ hlslpp_module_export namespace hlslpp
 		// q0.y * q1.x + q0.x * q1.w, q0.z * q1.x + q0.y * q1.w, q0.z * q1.w + q0.x * q1.y, q0.y * q1.y + q0.x * q1.x
 		n128 tmp_mad_1 = _hlslpp_madd_ps(_hlslpp_perm_yzzy_ps(q0), _hlslpp_perm_zxwy_ps(q1), tmp_mul_0);
 
-		const n128i signMask = _hlslpp_set_epi32(0, 0, 0, 0x80000000);
+		const n128i signMask = _hlslpp_set_epi32(0, 0, 0, (int)0x80000000);
 		n128 tmp_sign = _hlslpp_xor_ps(tmp_mad_1, _hlslpp_castsi128_ps(signMask)); // Flip the sign from the last row (w)
 
 		// q0.w * q1.x + q0.y * q1.x + q0.x * q1.w, 
@@ -45,7 +45,7 @@ hlslpp_module_export namespace hlslpp
 
 	hlslpp_inline n128 _hlslpp_quat_conjugate_ps(const n128 q)
 	{
-		static const n128i signMask = _hlslpp_set_epi32(0x80000000, 0x80000000, 0x80000000, 0);
+		static const n128i signMask = _hlslpp_set_epi32((int)0x80000000, (int)0x80000000, (int)0x80000000, 0);
 		return _hlslpp_xor_ps(q, _hlslpp_castsi128_ps(signMask)); // Flip the sign bits of the vector part of the quaternion
 	}
 
@@ -132,7 +132,7 @@ hlslpp_module_export namespace hlslpp
 		n128 CzSzCzSz	= _hlslpp_blend_ps(_hlslpp_perm_zzzz_ps(sin), _hlslpp_perm_zzzz_ps(cos), HLSLPP_BLEND_MASK(0, 1, 0, 1));
 
 		n128 term2		= _hlslpp_mul_ps(SxSxSxSx, _hlslpp_mul_ps(CyCySySy, CzSzCzSz));
-		const n128i signMask = _hlslpp_set_epi32(0, 0x80000000, 0x80000000, 0);
+		const n128i signMask = _hlslpp_set_epi32(0, (int)0x80000000, (int)0x80000000, 0);
 		term2			= _hlslpp_xor_ps(term2, _hlslpp_castsi128_ps(signMask)); // Flip the sign bits
 
 		n128 result		= _hlslpp_add_ps(term1, term2);
@@ -153,9 +153,9 @@ hlslpp_module_export namespace hlslpp
 		// Small imprecisions in the incoming quaternions can cause the dot product to be very slightly larger than 1 which will cause a nan in acos
 		cosHalfTheta            = _hlslpp_clamp_ps(cosHalfTheta, f4_minus1, f4_1);
 
-		n128 t4 = _hlslpp_shuf_xxxx_ps(t, f4_1); // Contains t, t, 1, unused
-		n128 oneMinusT = _hlslpp_sub_ps(f4_1, t4);      // Contains 1 - t, 1 - t, 0, unused
-		n128 lerpFactors = _hlslpp_blend_ps(oneMinusT, t4, HLSLPP_BLEND_MASK(1, 0, 0, 1)); // Contains (1 - t), t, 1, unused
+		n128 t4                 = _hlslpp_shuf_xxxx_ps(t, f4_1); // Contains t, t, 1, unused
+		n128 oneMinusT          = _hlslpp_sub_ps(f4_1, t4);      // Contains 1 - t, 1 - t, 0, unused
+		n128 lerpFactors        = _hlslpp_blend_ps(oneMinusT, t4, HLSLPP_BLEND_MASK(1, 0, 0, 1)); // Contains (1 - t), t, 1, unused
 
 		n128 halfTheta          = _hlslpp_acos_ps(cosHalfTheta);
 		
@@ -167,10 +167,10 @@ hlslpp_module_export namespace hlslpp
 
 		// If theta -> 0, the result converges to lerp(q0, q1, t). As there is a division by 0 in this case, 
 		// we can select between those two in the case where sinTheta4 is 0 or some threshold
-		sinVecDiv = _hlslpp_sel_ps(sinVecDiv, lerpFactors, _hlslpp_cmpeq_ps(sinTheta4, _hlslpp_setzero_ps()));
+		sinVecDiv        = _hlslpp_sel_ps(sinVecDiv, lerpFactors, _hlslpp_cmpeq_ps(sinTheta4, _hlslpp_setzero_ps()));
 
-		n128 q1_minus_q0 = _hlslpp_sub_ps(q1, q0); // q1 - q0
-		n128 result      = _hlslpp_madd_ps(_hlslpp_perm_xxxx_ps(sinVecDiv), q1_minus_q0, q0); // q0 * (1 - t) + q1 * t
+		n128 q0_sinTheta = _hlslpp_mul_ps(q0, _hlslpp_perm_xxxx_ps(sinVecDiv));
+		n128 result      = _hlslpp_madd_ps(_hlslpp_perm_yyyy_ps(sinVecDiv), q1, q0_sinTheta);
 
 		return result;
 	}
@@ -247,7 +247,7 @@ hlslpp_module_export namespace hlslpp
 	hlslpp_inline void _hlslpp_quat_to_4x4_ps(const n128 q, n128& row0, n128& row1, n128& row2, n128& row3)
 	{
 		_hlslpp_quat_to_3x3_ps(q, row0, row1, row2);
-		const n128 zeroLast = _hlslpp_castsi128_ps(_hlslpp_set_epi32(0xffffffff, 0xffffffff, 0xffffffff, 0));
+		const n128 zeroLast = _hlslpp_castsi128_ps(_hlslpp_set_epi32((int)0xffffffff, (int)0xffffffff, (int)0xffffffff, 0));
 		row0 = _hlslpp_and_ps(row0, zeroLast);
 		row1 = _hlslpp_and_ps(row1, zeroLast);
 		row2 = _hlslpp_and_ps(row2, zeroLast);

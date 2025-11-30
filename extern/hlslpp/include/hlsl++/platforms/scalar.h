@@ -5,7 +5,7 @@
 
 namespace hlslpp
 {
-	struct hlslpp_alignas(16) vector_float4
+	struct vector_float4
 	{
 		hlslpp_inline vector_float4() {}
 		hlslpp_inline vector_float4(float f) : x(f), y(f), z(f), w(f) {}
@@ -29,7 +29,7 @@ namespace hlslpp
 		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
-	struct hlslpp_alignas(16) vector_int4
+	struct vector_int4
 	{
 		static const int32_t Max =  2147483647;
 		static const int32_t Min = -2147483647 - 1;
@@ -51,7 +51,7 @@ namespace hlslpp
 		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
-	struct hlslpp_alignas(16) vector_uint4
+	struct vector_uint4
 	{
 		static const uint32_t Max = 4294967295;
 
@@ -846,6 +846,10 @@ HLSLPP_WARNING_POTENTIAL_DIVIDE_BY_0_END
 			v1.z > 1 ? 1 : v1.z,
 			v1.w > 1 ? 1 : v1.w);
 	}
+
+	// https://stackoverflow.com/questions/13153584/mm-shuffle-ps-equivalent-for-integer-vectors-m128i
+	#define _hlslpp_perm_epu32(x, X, Y, Z, W)		perm4<X, Y, Z, W>((x))
+	#define _hlslpp_shuffle_epu32(x, y, X, Y, A, B)	shuf4<X, Y, A, B>((x), (y))
 
 	hlslpp_inline vector_uint4 _hlslpp_and_si128(const vector_uint4& v1, const vector_uint4& v2)
 	{

@@ -121,12 +121,6 @@ hlslpp_module_export namespace hlslpp
 		return result;
 	}
 
-	// Reference http://www.liranuna.com/sse-intrinsics-optimizations-in-popular-compilers/
-	hlslpp_inline n128d _hlslpp_sign_pd(n128d x)
-	{
-		return _hlslpp_and_pd(_hlslpp_or_pd(_hlslpp_and_pd(x, d2minusOne), d2_1), _hlslpp_cmpneq_pd(x, _hlslpp_setzero_pd()));
-	}
-
 	// Hlsl, glsl and Cg behavior is to swap the operands.
 	// http://http.developer.nvidia.com/Cg/step.html
 	// https://www.opengl.org/sdk/docs/man/html/step.xhtml
@@ -186,12 +180,6 @@ hlslpp_module_export namespace hlslpp
 		n256d x_one_minus_a = _hlslpp256_msub_pd(x, x, a); // x * (1 - a)
 		n256d result = _hlslpp256_madd_pd(y, a, x_one_minus_a);
 		return result;
-	}
-
-	// Reference http://www.liranuna.com/sse-intrinsics-optimizations-in-popular-compilers/
-	hlslpp_inline n256d _hlslpp256_sign_pd(n256d x)
-	{
-		return _hlslpp256_and_pd(_hlslpp256_or_pd(_hlslpp256_and_pd(x, d4minusOne), d4_1), _hlslpp256_cmpneq_pd(x, _hlslpp256_setzero_pd()));
 	}
 	
 	// Hlsl, glsl and Cg behavior is to swap the operands.
@@ -609,7 +597,7 @@ hlslpp_module_export namespace hlslpp
 	hlslpp_inline double3& operator %= (double3& f1, const double3& f2) { f1 = f1 % f2; return f1; }
 	hlslpp_inline double4& operator %= (double4& f1, const double4& f2) { f1 = f1 % f2; return f1; }
 
-HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
+HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_BEGIN
 
 	// Pre-increment
 
@@ -663,7 +651,7 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
 	template<int X, int Y, int Z, int W>
 	hlslpp_inline dswizzle4<X, Y, Z, W> operator -- (dswizzle4<X, Y, Z, W>& f, int) { dswizzle4<X, Y, Z, W> tmp = f; f = f - double4(1.0); return tmp; }
 
-HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
+HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END
 
 	//--------------------------------------------------------------------------------------------------------------------
 	// double1 and dswizzle1 need special overloads to disambiguate between our operators/functions and built-in operators
@@ -846,6 +834,34 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 		return double4(_hlslpp256_clamp_pd(f.vec, minf.vec, maxf.vec));
 #else
 		return double4(_hlslpp_clamp_pd(f.vec0, minf.vec0, maxf.vec0), _hlslpp_clamp_pd(f.vec1, minf.vec1, maxf.vec1));
+#endif
+	}
+
+	hlslpp_inline double1 copysign(const double1& from, const double1& to)
+	{
+		return double1(_hlslpp_copysign_pd(from.vec, to.vec));
+	}
+
+	hlslpp_inline double2 copysign(const double2& from, const double2& to)
+	{
+		return double2(_hlslpp_copysign_pd(from.vec, to.vec));
+	}
+
+	hlslpp_inline double3 copysign(const double3& from, const double3& to)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_256)
+		return double3(_hlslpp256_copysign_pd(from.vec, to.vec));
+#else
+		return double3(_hlslpp_copysign_pd(from.vec0, to.vec0), _hlslpp_copysign_pd(from.vec0, to.vec1));
+#endif
+	}
+
+	hlslpp_inline double4 copysign(const double4& from, const double4& to)
+	{
+#if defined(HLSLPP_SIMD_REGISTER_256)
+		return double4(_hlslpp256_copysign_pd(from.vec, to.vec));
+#else
+		return double4(_hlslpp_copysign_pd(from.vec0, to.vec0), _hlslpp_copysign_pd(from.vec0, to.vec1));
 #endif
 	}
 
@@ -1524,62 +1540,6 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 		swizzle<0, 1, 2, 3, X, Y, Z, W>(f.vec0, f.vec1, vec[0], vec[1]);
 #endif
 		return *this;
-	}
-
-	hlslpp_inline void store(const double1& v, double* f)
-	{
-		_hlslpp_store1_pd(f, v.vec);
-	}
-
-	hlslpp_inline void store(const double2& v, double* f)
-	{
-		_hlslpp_store2_pd(f, v.vec);
-	}
-
-	hlslpp_inline void store(const double3& v, double* f)
-	{
-#if defined(HLSLPP_SIMD_REGISTER_256)
-		_hlslpp256_store3_pd(f, v.vec);
-#else
-		_hlslpp_store3_pd(f, v.vec0, v.vec1);
-#endif
-	}
-
-	hlslpp_inline void store(const double4& v, double* f)
-	{
-#if defined(HLSLPP_SIMD_REGISTER_256)
-		_hlslpp256_store4_pd(f, v.vec);
-#else
-		_hlslpp_store4_pd(f, v.vec0, v.vec1);
-#endif
-	}
-
-	hlslpp_inline void load(double1& v, double* f)
-	{
-		_hlslpp_load1_pd(f, v.vec);
-	}
-
-	hlslpp_inline void load(double2& v, double* f)
-	{
-		_hlslpp_load2_pd(f, v.vec);
-	}
-
-	hlslpp_inline void load(double3& v, double* f)
-	{
-#if defined(HLSLPP_SIMD_REGISTER_256)
-		_hlslpp256_load3_pd(f, v.vec);
-#else
-		_hlslpp_load3_pd(f, v.vec0, v.vec1);
-#endif
-	}
-
-	hlslpp_inline void load(double4& v, double* f)
-	{
-#if defined(HLSLPP_SIMD_REGISTER_256)
-		_hlslpp256_load4_pd(f, v.vec);
-#else
-		_hlslpp_load4_pd(f, v.vec0, v.vec1);
-#endif
 	}
 }
 

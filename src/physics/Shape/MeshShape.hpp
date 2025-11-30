@@ -103,7 +103,8 @@ namespace vg::physics
         }
 
         // Jolt cannot compute mass for mesh shapes, then use the AABB as a quick estimate
-        m_mass = max(maxPos.x - minPos.x, 0.01f) * max(maxPos.y - minPos.y, 0.01f) * max(maxPos.z - minPos.z, 0.01f);
+        const float eps = 0.01f;
+        m_mass = max(float(maxPos.x - minPos.x), eps) * max(float(maxPos.y - minPos.y), eps) * max(float(maxPos.z - minPos.z), eps);
 
         JPH::MeshShapeSettings meshShapeSettings(triangleList);
         JPH::Shape::ShapeResult result;

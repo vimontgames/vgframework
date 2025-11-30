@@ -30,6 +30,34 @@ hlslpp_module_export namespace hlslpp
 		return u;
 	}
 
+	hlslpp_inline n128u _hlslpp_dot2_epu32(n128u x, n128u y)
+	{
+		n128u multi = _hlslpp_mul_epu32(x, y); // Multiply components together
+		n128u shuf1 = _hlslpp_perm_epu32(multi, MaskY, MaskY, MaskY, MaskY); // Move y into x
+		n128u result = _hlslpp_add_epu32(shuf1, multi); // Contains x+y, _, _, _
+		return result;
+	}
+
+	hlslpp_inline n128u _hlslpp_dot3_epu32(n128u x, n128u y)
+	{
+		n128u multi  = _hlslpp_mul_epu32(x, y);         // Multiply components together
+		n128u shuf1  = _hlslpp_perm_yyyy_epi32(multi);  // Move y into x
+		n128u add1   = _hlslpp_add_epu32(shuf1, multi); // Contains x+y, _, _, _
+		n128u shuf2  = _hlslpp_perm_zzzz_epu32(multi);  // Move z into x
+		n128u result = _hlslpp_add_epu32(add1, shuf2);  // Contains x+y+z, _, _, _
+		return result;
+	}
+
+	hlslpp_inline n128u _hlslpp_dot4_epu32(n128u x, n128u y)
+	{
+		n128u multi  = _hlslpp_mul_epu32(x, y);         // Multiply components together
+		n128u shuf1  = _hlslpp_perm_epu32(multi, MaskY, MaskX, MaskW, MaskX);  // Move y into x and w into z (ignore the rest)
+		n128u add1   = _hlslpp_add_epu32(shuf1, multi); // Contains x+y, _, z+w, _
+		n128u shuf2  = _hlslpp_perm_zzzz_epu32(multi);  // Move z+w into x
+		n128u result = _hlslpp_add_epu32(add1, shuf2);  // Contains x+y+z+w, _, _, _
+		return result;
+	}
+
 	// https://stackoverflow.com/questions/10439242/count-leading-zeroes-in-an-int32
 	hlslpp_inline n128u _hlslpp_firstbithigh_epu32(const n128u u)
 	{
@@ -124,7 +152,7 @@ hlslpp_module_export namespace hlslpp
 	//hlslpp_inline uint3 operator % (const uint3& i1, const uint3& i2) { return uint3(_hlslpp_imod_epi32(i1.vec, i2.vec)); }
 	//hlslpp_inline uint4 operator % (const uint4& i1, const uint4& i2) { return uint4(_hlslpp_imod_epi32(i1.vec, i2.vec)); }
 
-HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
+HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_BEGIN
 
 	// Pre-increment
 
@@ -178,7 +206,7 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
 	template<int X, int Y, int Z, int W>
 	hlslpp_inline uswizzle4<X, Y, Z, W> operator -- (uswizzle4<X, Y, Z, W>& i, int) { uswizzle4<X, Y, Z, W> tmp = i; i = i - uint4(u4_1); return tmp; }
 
-HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
+HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END
 
 	//------------------------------------------------------------------------------------------------------------------------//
 	// uint1 and uswizzle1 need special overloads to disambiguate between our operators/functions and built-in float operators //
@@ -397,6 +425,11 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 	hlslpp_inline uint3 countbits(const uint3& i) { return uint3(_hlslpp_countbits_epu32(i.vec)); }
 	hlslpp_inline uint4 countbits(const uint4& i) { return uint4(_hlslpp_countbits_epu32(i.vec)); }
 	
+	hlslpp_inline uint1 dot(const uint1& i1, const uint1& i2) { return uint1(_hlslpp_mul_epu32(i1.vec, i2.vec)); }
+	hlslpp_inline uint1 dot(const uint2& i1, const uint2& i2) { return uint1(_hlslpp_dot2_epu32(i1.vec, i2.vec)); }
+	hlslpp_inline uint1 dot(const uint3& i1, const uint3& i2) { return uint1(_hlslpp_dot3_epu32(i1.vec, i2.vec)); }
+	hlslpp_inline uint1 dot(const uint4& i1, const uint4& i2) { return uint1(_hlslpp_dot4_epu32(i1.vec, i2.vec)); }
+
 	hlslpp_inline uint1 firstbithigh(const uint1& i) { return uint1(_hlslpp_firstbithigh_epu32(i.vec)); }
 	hlslpp_inline uint2 firstbithigh(const uint2& i) { return uint2(_hlslpp_firstbithigh_epu32(i.vec)); }
 	hlslpp_inline uint3 firstbithigh(const uint3& i) { return uint3(_hlslpp_firstbithigh_epu32(i.vec)); }
@@ -542,45 +575,5 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 		static_assert(X != Y && X != Z && X != W && Y != Z && Y != W && Z != W, "\"l-value specifies const object\" No component can be equal for assignment.");
 		vec = hlslpp_uswizzle4_swizzle(0, 1, 2, 3, X, Y, Z, W, i.vec);
 		return *this;
-	}
-
-	hlslpp_inline void store(const uint1& v, uint32_t* i)
-	{
-		_hlslpp_store1_epu32(i, v.vec);
-	}
-
-	hlslpp_inline void store(const uint2& v, uint32_t* i)
-	{
-		_hlslpp_store2_epu32(i, v.vec);
-	}
-
-	hlslpp_inline void store(const uint3& v, uint32_t* i)
-	{
-		_hlslpp_store3_epu32(i, v.vec);
-	}
-
-	hlslpp_inline void store(const uint4& v, uint32_t* i)
-	{
-		_hlslpp_store4_epu32(i, v.vec);
-	}
-
-	hlslpp_inline void load(uint1& v, uint32_t* i)
-	{
-		_hlslpp_load1_epu32(i, v.vec);
-	}
-
-	hlslpp_inline void load(uint2& v, uint32_t* i)
-	{
-		_hlslpp_load2_epu32(i, v.vec);
-	}
-
-	hlslpp_inline void load(uint3& v, uint32_t* i)
-	{
-		_hlslpp_load3_epu32(i, v.vec);
-	}
-
-	hlslpp_inline void load(uint4& v, uint32_t* i)
-	{
-		_hlslpp_load4_epu32(i, v.vec);
 	}
 }

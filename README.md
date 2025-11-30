@@ -181,7 +181,7 @@ The external libraries are included with the sources for convenience. Follow the
 | [Dirent](                  https://github.com/tronkko/dirent                                                          )    | 1.23.2                                                                   
 | [fmt](                     https://github.com/fmtlib/fmt/releases/tag/10.1.1                                          )    | 10.1.1            
 | [FXAA](                    https://github.com/GameTechDev/CMAA2/blob/master/Projects/CMAA2/FXAA/Fxaa3_11.h            )    | 3.11           
-| [hlslpp](                  https://github.com/redorav/hlslpp/releases/tag/3.5.3                                       )    | 3.5.3 4dd067b                             
+| [hlsl++](                  https://github.com/redorav/hlslpp/releases/tag/3.7                                         )    | 3.7                             
 | [IconFont CppHeaders](     https://github.com/juliettef/IconFontCppHeaders                                            )    |                                                                     
 | [ImGuiFileDialog](         https://github.com/aiekick/ImGuiFileDialog                                                 )    | 0.6.7          
 | [ImGuizmo](                https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83                              )    | 1.83                       

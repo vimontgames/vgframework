@@ -86,8 +86,22 @@ The only required features are a C++ compiler supporting anonymous unions, and S
 * Windows has defines for min and max so if you're using this library and the <windows.h> header remember to #define NOMINMAX before including it
 * To force the scalar version of the library, define ```HLSLPP_SCALAR``` globally. The scalar library is only different from the SIMD version in its use of regular floats to represent vectors. It should only be used if your platform (e.g. embedded) does not have native SIMD support. It can also be used to compare performance
 * To enable the transforms feature, define ```HLSLPP_FEATURE_TRANSFORM``` globally
-* The f32 members of floatN (and other types) and the [ ] operators make use of the union directly, so the generated code is up to the compiler. Use with care
-* The f32 members of floatN (and other types) have the & operator overridden to take the address of the individual float. This is very useful to pass to libraries that expect data pointers like imgui
+* The [ ] operators make use of the union directly, so the generated code is up to the compiler. Use with care
+* Individual swizzle members (such as .x, .y) have the & operator overridden to take the address of the individual component. This is very useful to pass to libraries that expect data pointers like imgui
+
+## Interoperability
+
+This section mainly applies to shaders. As HLSL++'s internal types are SIMD vectors, care has to be taken when uploading or copying the memory around for systems that expect different data layouts. Shader metadata can be used to create C++ structs to make it convenient to upload to the GPU, so we allow for a subset of HLSL++ to be declared in a way that will be compatible with constant buffers. The interop namespace provides alternate classes that can copy from the SIMD vectors, and don't assume anything about alignment. For example, a struct declared in this way
+```cpp
+struct alignas(16) MyData
+{
+  hlslpp::interop::float4 data0;
+  hlslpp::interop::float3 data1;
+  float data2;
+  hlslpp::interop::float3x4 data3;
+};
+```
+will work correctly between C++ and shaders as the packing rules are compatible, whereas with the non-interop versions of these classes this would have been an error. As always, be careful to add the necessary padding between types and align as necessary. A reflection system should be able to align structs appropriately (e.g. for constant buffers) and ensure sizes are respected. For many more details on data layout rules for HLSL read [this](https://maraneshi.github.io/HLSL-ConstantBufferLayoutVisualizer).
 
 ## Features
 
@@ -102,8 +116,10 @@ The only required features are a C++ compiler supporting anonymous unions, and S
 * Efficient swizzling for all vector types
 * Basic operators +, *, -, / for all vector and matrix types
 * Per-component comparison operators ==, !=, >, <, >=, <= (no ternary operator as overloading is disallowed in C++)
-* hlsl vector functions: abs, acos, all, any, asin, atan, atan2, ceil, clamp, cos, cosh, cross, degrees, distance, dot, floor, fmod, frac, exp, exp2, isfinite, isinf, isnan, length, lerp, log, log2, log10, max, mad, min, modf, normalize, pow, radians, reflect, refract, round, rsqrt, saturate, sign, sin, sincos, sinh, smoothstep, sqrt, step, trunc, tan, tanh
-* Additional matrix functions: determinant, transpose, inverse (not in hlsl but very useful)
+* HLSL float functions: abs, acos, all, any, asin, atan, atan2, ceil, clamp, cos, cosh, cross, degrees, distance, dot, exp, exp2, floor, fmod, frac, isfinite, isinf, isnan, length, lerp, log, log2, log10, mad, max, min, modf, normalize, pow, radians, rcp, reflect, refract, round, rsqrt, saturate, select, sign, sin, sincos, sinh, smoothstep, sqrt, step, tan, tanh, trunc
+* HLSL int/uint functions: countbits, firstbithigh, firstbitlow, reversebits
+* Additional functions not in HLSL: copysign
+* Additional matrix functions: determinant, transpose, inverse, adjoint
 * Matrix multiplication for all NxM matrix combinations
 * Data packing functions such as pack_float4_rgba8_unorm or pack_float3_rg11b10f
 * Transformation matrices for scale, rotation and translation, as well as world-to-view look_at and view-to-projection orthographic/perspective coordinate transformations. These static functions are optionally available for matrix types float2x2, float3x3, float4x4 when hlsl++.h is compiled with HLSLPP_FEATURE_TRANSFORM definition.

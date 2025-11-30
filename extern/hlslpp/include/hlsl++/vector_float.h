@@ -625,6 +625,14 @@ hlslpp_module_export namespace hlslpp
 	hlslpp_inline float3 operator % (const float3& f1, const float3& f2) { return float3(_hlslpp_fmod_ps(f1.vec, f2.vec)); }
 	hlslpp_inline float4 operator % (const float4& f1, const float4& f2) { return float4(_hlslpp_fmod_ps(f1.vec, f2.vec)); }
 
+	hlslpp_inline float2 operator % (const float2& f1, const float1& f2) { return float2(_hlslpp_fmod_ps(f1.vec, _hlslpp_perm_xxxx_ps(f2.vec))); }
+	hlslpp_inline float3 operator % (const float3& f1, const float1& f2) { return float3(_hlslpp_fmod_ps(f1.vec, _hlslpp_perm_xxxx_ps(f2.vec))); }
+	hlslpp_inline float4 operator % (const float4& f1, const float1& f2) { return float4(_hlslpp_fmod_ps(f1.vec, _hlslpp_perm_xxxx_ps(f2.vec))); }
+
+	hlslpp_inline float2 operator % (const float1& f1, const float2& f2) { return float2(_hlslpp_fmod_ps(_hlslpp_perm_xxxx_ps(f1.vec), f2.vec)); }
+	hlslpp_inline float3 operator % (const float1& f1, const float3& f2) { return float3(_hlslpp_fmod_ps(_hlslpp_perm_xxxx_ps(f1.vec), f2.vec)); }
+	hlslpp_inline float4 operator % (const float1& f1, const float4& f2) { return float4(_hlslpp_fmod_ps(_hlslpp_perm_xxxx_ps(f1.vec), f2.vec)); }
+
 	hlslpp_inline float1& operator += (float1& f1, const float1& f2) { f1 = f1 + f2; return f1; }
 	hlslpp_inline float2& operator += (float2& f1, const float2& f2) { f1 = f1 + f2; return f1; }
 	hlslpp_inline float3& operator += (float3& f1, const float3& f2) { f1 = f1 + f2; return f1; }
@@ -650,7 +658,27 @@ hlslpp_module_export namespace hlslpp
 	hlslpp_inline float3& operator %= (float3& f1, const float3& f2) { f1 = f1 % f2; return f1; }
 	hlslpp_inline float4& operator %= (float4& f1, const float4& f2) { f1 = f1 % f2; return f1; }
 
-HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
+	hlslpp_inline float2& operator += (float2& f1, const float1& f2) { f1 = f1 + float2(f2.vec); return f1; }
+	hlslpp_inline float3& operator += (float3& f1, const float1& f2) { f1 = f1 + float3(f2.vec); return f1; }
+	hlslpp_inline float4& operator += (float4& f1, const float1& f2) { f1 = f1 + float4(f2.vec); return f1; }
+
+	hlslpp_inline float2& operator -= (float2& f1, const float1& f2) { f1 = f1 - float2(f2.vec); return f1; }
+	hlslpp_inline float3& operator -= (float3& f1, const float1& f2) { f1 = f1 - float3(f2.vec); return f1; }
+	hlslpp_inline float4& operator -= (float4& f1, const float1& f2) { f1 = f1 - float4(f2.vec); return f1; }
+
+	hlslpp_inline float2& operator *= (float2& f1, const float1& f2) { f1 = f1 * float2(f2.vec); return f1; }
+	hlslpp_inline float3& operator *= (float3& f1, const float1& f2) { f1 = f1 * float3(f2.vec); return f1; }
+	hlslpp_inline float4& operator *= (float4& f1, const float1& f2) { f1 = f1 * float4(f2.vec); return f1; }
+
+	hlslpp_inline float2& operator /= (float2& f1, const float1& f2) { f1 = f1 / float2(f2.vec); return f1; }
+	hlslpp_inline float3& operator /= (float3& f1, const float1& f2) { f1 = f1 / float3(f2.vec); return f1; }
+	hlslpp_inline float4& operator /= (float4& f1, const float1& f2) { f1 = f1 / float4(f2.vec); return f1; }
+
+	hlslpp_inline float2& operator %= (float2& f1, const float1& f2) { f1 = f1 % float2(f2.vec); return f1; }
+	hlslpp_inline float3& operator %= (float3& f1, const float1& f2) { f1 = f1 % float3(f2.vec); return f1; }
+	hlslpp_inline float4& operator %= (float4& f1, const float1& f2) { f1 = f1 % float4(f2.vec); return f1; }
+
+HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_BEGIN
 
 	// Pre-increment
 
@@ -704,7 +732,7 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
 	template<int X, int Y, int Z, int W>
 	hlslpp_inline swizzle4<X, Y, Z, W> operator -- (swizzle4<X, Y, Z, W>& f, int) { swizzle4<X, Y, Z, W> tmp = f; f = f - float4(f4_1); return tmp; }
 
-HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
+HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END
 
 	//------------------------------------------------------------------------------------------------------------------------
 	// float1 and swizzle1 need special overloads to disambiguate between our operators/functions and built-in float operators
@@ -760,6 +788,31 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float2) operator % (T f1, const float2& f2) { return float2(f1) % f2; }
 	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float3) operator % (T f1, const float3& f2) { return float3(f1) % f2; }
 	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float4) operator % (T f1, const float4& f2) { return float4(f1) % f2; }
+
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float1&) operator += (float1& f1, T f2) { f1 = f1 + float1(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float2&) operator += (float2& f1, T f2) { f1 = f1 + float2(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float3&) operator += (float3& f1, T f2) { f1 = f1 + float3(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float4&) operator += (float4& f1, T f2) { f1 = f1 + float4(f2); return f1; }
+
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float1&) operator -= (float1& f1, T f2) { f1 = f1 - float1(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float2&) operator -= (float2& f1, T f2) { f1 = f1 - float2(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float3&) operator -= (float3& f1, T f2) { f1 = f1 - float3(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float4&) operator -= (float4& f1, T f2) { f1 = f1 - float4(f2); return f1; }
+
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float1&) operator *= (float1& f1, T f2) { f1 = f1 * float1(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float2&) operator *= (float2& f1, T f2) { f1 = f1 * float2(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float3&) operator *= (float3& f1, T f2) { f1 = f1 * float3(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float4&) operator *= (float4& f1, T f2) { f1 = f1 * float4(f2); return f1; }
+
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float1&) operator /= (float1& f1, T f2) { f1 = f1 / float1(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float2&) operator /= (float2& f1, T f2) { f1 = f1 / float2(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float3&) operator /= (float3& f1, T f2) { f1 = f1 / float3(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float4&) operator /= (float4& f1, T f2) { f1 = f1 / float4(f2); return f1; }
+
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float1&) operator %= (float1& f1, T f2) { f1 = f1 % float1(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float2&) operator %= (float2& f1, T f2) { f1 = f1 % float2(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float3&) operator %= (float3& f1, T f2) { f1 = f1 % float3(f2); return f1; }
+	template<typename T> hlslpp_inline hlslpp_enable_if_return(T, float4&) operator %= (float4& f1, T f2) { f1 = f1 % float4(f2); return f1; }
 
 	template<int X, typename T> hlslpp_inline hlslpp_enable_if_return(T, float1) operator + (const swizzle1<X>& f1, T f2) { return float1(f1) + float1(f2); }
 	template<int X, typename T> hlslpp_inline hlslpp_enable_if_return(T, float1) operator + (T f1, const swizzle1<X>& f2) { return float1(f1) + float1(f2); }
@@ -880,6 +933,11 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 	hlslpp_inline float2 clamp(const float2& f, const float2& minf, const float2& maxf) { return float2(_hlslpp_clamp_ps(f.vec, minf.vec, maxf.vec)); }
 	hlslpp_inline float3 clamp(const float3& f, const float3& minf, const float3& maxf) { return float3(_hlslpp_clamp_ps(f.vec, minf.vec, maxf.vec)); }
 	hlslpp_inline float4 clamp(const float4& f, const float4& minf, const float4& maxf) { return float4(_hlslpp_clamp_ps(f.vec, minf.vec, maxf.vec)); }
+
+	hlslpp_inline float1 copysign(const float1& from, const float1& to) { return float1(_hlslpp_copysign_ps(from.vec, to.vec)); }
+	hlslpp_inline float2 copysign(const float2& from, const float2& to) { return float2(_hlslpp_copysign_ps(from.vec, to.vec)); }
+	hlslpp_inline float3 copysign(const float3& from, const float3& to) { return float3(_hlslpp_copysign_ps(from.vec, to.vec)); }
+	hlslpp_inline float4 copysign(const float4& from, const float4& to) { return float4(_hlslpp_copysign_ps(from.vec, to.vec)); }
 
 	hlslpp_inline float1 cos(const float1& f) { return float1(_hlslpp_cos_ps(f.vec)); }
 	hlslpp_inline float2 cos(const float2& f) { return float2(_hlslpp_cos_ps(f.vec)); }
@@ -1033,11 +1091,6 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 	hlslpp_inline float3 pow(const float3& f1, const float3& f2) { return float3(_hlslpp_exp2_ps(_hlslpp_mul_ps(f2.vec, _hlslpp_log2_ps(f1.vec)))); }
 	hlslpp_inline float4 pow(const float4& f1, const float4& f2) { return float4(_hlslpp_exp2_ps(_hlslpp_mul_ps(f2.vec, _hlslpp_log2_ps(f1.vec)))); }
 
-	hlslpp_inline float1 select(const float1& condition, const float1& f1, const float1& f2) { return float1(_hlslpp_sel_ps(f1.vec, f2.vec, _hlslpp_cmpeq_ps(condition.vec, _hlslpp_setzero_ps()))); }
-	hlslpp_inline float2 select(const float2& condition, const float2& f1, const float2& f2) { return float2(_hlslpp_sel_ps(f1.vec, f2.vec, _hlslpp_cmpeq_ps(condition.vec, _hlslpp_setzero_ps()))); }
-	hlslpp_inline float3 select(const float3& condition, const float3& f1, const float3& f2) { return float3(_hlslpp_sel_ps(f1.vec, f2.vec, _hlslpp_cmpeq_ps(condition.vec, _hlslpp_setzero_ps()))); }
-	hlslpp_inline float4 select(const float4& condition, const float4& f1, const float4& f2) { return float4(_hlslpp_sel_ps(f1.vec, f2.vec, _hlslpp_cmpeq_ps(condition.vec, _hlslpp_setzero_ps()))); }
-
 	hlslpp_inline float1 radians(const float1& f) { return float1(_hlslpp_mul_ps(f.vec, f4_deg2rad)); }
 	hlslpp_inline float2 radians(const float2& f) { return float2(_hlslpp_mul_ps(f.vec, f4_deg2rad)); }
 	hlslpp_inline float3 radians(const float3& f) { return float3(_hlslpp_mul_ps(f.vec, f4_deg2rad)); }
@@ -1058,20 +1111,25 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 	hlslpp_inline float3 refract(const float3& i, const float3& n, const float1& ior) { return float3(_hlslpp_refract3_ps(i.vec, n.vec, ior.vec)); }
 	hlslpp_inline float4 refract(const float4& i, const float4& n, const float1& ior) { return float4(_hlslpp_refract4_ps(i.vec, n.vec, ior.vec)); }
 
-	hlslpp_inline float1 rsqrt(const float1& f) { return float1(_hlslpp_rsqrt_ps(f.vec)); }
-	hlslpp_inline float2 rsqrt(const float2& f) { return float2(_hlslpp_rsqrt_ps(f.vec)); }
-	hlslpp_inline float3 rsqrt(const float3& f) { return float3(_hlslpp_rsqrt_ps(f.vec)); }
-	hlslpp_inline float4 rsqrt(const float4& f) { return float4(_hlslpp_rsqrt_ps(f.vec)); }
-
 	hlslpp_inline float1 round(const float1& f) { return float1(_hlslpp_round_ps(f.vec)); }
 	hlslpp_inline float2 round(const float2& f) { return float2(_hlslpp_round_ps(f.vec)); }
 	hlslpp_inline float3 round(const float3& f) { return float3(_hlslpp_round_ps(f.vec)); }
 	hlslpp_inline float4 round(const float4& f) { return float4(_hlslpp_round_ps(f.vec)); }
 
+	hlslpp_inline float1 rsqrt(const float1& f) { return float1(_hlslpp_rsqrt_ps(f.vec)); }
+	hlslpp_inline float2 rsqrt(const float2& f) { return float2(_hlslpp_rsqrt_ps(f.vec)); }
+	hlslpp_inline float3 rsqrt(const float3& f) { return float3(_hlslpp_rsqrt_ps(f.vec)); }
+	hlslpp_inline float4 rsqrt(const float4& f) { return float4(_hlslpp_rsqrt_ps(f.vec)); }
+
 	hlslpp_inline float1 saturate(const float1& f) { return float1(_hlslpp_sat_ps(f.vec)); }
 	hlslpp_inline float2 saturate(const float2& f) { return float2(_hlslpp_sat_ps(f.vec)); }
 	hlslpp_inline float3 saturate(const float3& f) { return float3(_hlslpp_sat_ps(f.vec)); }
 	hlslpp_inline float4 saturate(const float4& f) { return float4(_hlslpp_sat_ps(f.vec)); }
+
+	hlslpp_inline float1 select(const float1& condition, const float1& f1, const float1& f2) { return float1(_hlslpp_sel_ps(f1.vec, f2.vec, _hlslpp_cmpeq_ps(condition.vec, _hlslpp_setzero_ps()))); }
+	hlslpp_inline float2 select(const float2& condition, const float2& f1, const float2& f2) { return float2(_hlslpp_sel_ps(f1.vec, f2.vec, _hlslpp_cmpeq_ps(condition.vec, _hlslpp_setzero_ps()))); }
+	hlslpp_inline float3 select(const float3& condition, const float3& f1, const float3& f2) { return float3(_hlslpp_sel_ps(f1.vec, f2.vec, _hlslpp_cmpeq_ps(condition.vec, _hlslpp_setzero_ps()))); }
+	hlslpp_inline float4 select(const float4& condition, const float4& f1, const float4& f2) { return float4(_hlslpp_sel_ps(f1.vec, f2.vec, _hlslpp_cmpeq_ps(condition.vec, _hlslpp_setzero_ps()))); }
 
 	hlslpp_inline float1 sign(const float1& f) { return float1(_hlslpp_sign_ps(f.vec)); }
 	hlslpp_inline float2 sign(const float2& f) { return float2(_hlslpp_sign_ps(f.vec)); }
@@ -1192,6 +1250,8 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 	template<int X, int Y> hlslpp_inline float1 operator <  (const swizzle1<X>& f1, const swizzle1<Y>& f2) { return float1(f1) <  float1(f2); }
 	template<int X, int Y> hlslpp_inline float1 operator <= (const swizzle1<X>& f1, const swizzle1<Y>& f2) { return float1(f1) <= float1(f2); }
 
+	HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_BEGIN
+
 	template<int X>
 	hlslpp_inline swizzle1<X>& swizzle1<X>::operator = (float f)
 	{
@@ -1291,43 +1351,5 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 		return *this;
 	}
 
-	hlslpp_inline void store(const float1& v, float* f)
-	{
-		_hlslpp_store1_ps(f, v.vec);
-	}
-
-	hlslpp_inline void store(const float2& v, float* f)
-	{
-		_hlslpp_store2_ps(f, v.vec);
-	}
-
-	hlslpp_inline void store(const float3& v, float* f)
-	{
-		_hlslpp_store3_ps(f, v.vec);
-	}
-
-	hlslpp_inline void store(const float4& v, float* f)
-	{
-		_hlslpp_store4_ps(f, v.vec);
-	}
-
-	hlslpp_inline void load(float1& v, float* f)
-	{
-		_hlslpp_load1_ps(f, v.vec);
-	}
-
-	hlslpp_inline void load(float2& v, float* f)
-	{
-		_hlslpp_load2_ps(f, v.vec);
-	}
-
-	hlslpp_inline void load(float3& v, float* f)
-	{
-		_hlslpp_load3_ps(f, v.vec);
-	}
-
-	hlslpp_inline void load(float4& v, float* f)
-	{
-		_hlslpp_load4_ps(f, v.vec);
-	}
+	HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END
 }

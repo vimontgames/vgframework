@@ -8,18 +8,18 @@
 
 hlslpp_module_export namespace hlslpp
 {
-	const n128i i4_0x55555555 = _hlslpp_set1_epi32(0x55555555);
-	const n128i i4_0x33333333 = _hlslpp_set1_epi32(0x33333333);
-	const n128i i4_0x0f0f0f0f = _hlslpp_set1_epi32(0x0f0f0f0f);
-	const n128i i4_0x01010101 = _hlslpp_set1_epi32(0x01010101);
-	const n128i i4_0x0000003f = _hlslpp_set1_epi32(0x0000003f);
-	const n128i i4_0xaaaaaaaa = _hlslpp_set1_epi32(0xaaaaaaaa);
-	const n128i i4_0xcccccccc = _hlslpp_set1_epi32(0xcccccccc);
-	const n128i i4_0xf0f0f0f0 = _hlslpp_set1_epi32(0xf0f0f0f0);
-	const n128i i4_0x00ff00ff = _hlslpp_set1_epi32(0x00ff00ff);
-	const n128i i4_0xff00ff00 = _hlslpp_set1_epi32(0xff00ff00);
-	const n128i i4_0x0000ffff = _hlslpp_set1_epi32(0x0000ffff);
-	const n128i i4_0xffff0000 = _hlslpp_set1_epi32(0xffff0000);
+	const n128i i4_0x55555555 = _hlslpp_set1_epi32((int)0x55555555);
+	const n128i i4_0x33333333 = _hlslpp_set1_epi32((int)0x33333333);
+	const n128i i4_0x0f0f0f0f = _hlslpp_set1_epi32((int)0x0f0f0f0f);
+	const n128i i4_0x01010101 = _hlslpp_set1_epi32((int)0x01010101);
+	const n128i i4_0x0000003f = _hlslpp_set1_epi32((int)0x0000003f);
+	const n128i i4_0xaaaaaaaa = _hlslpp_set1_epi32((int)0xaaaaaaaa);
+	const n128i i4_0xcccccccc = _hlslpp_set1_epi32((int)0xcccccccc);
+	const n128i i4_0xf0f0f0f0 = _hlslpp_set1_epi32((int)0xf0f0f0f0);
+	const n128i i4_0x00ff00ff = _hlslpp_set1_epi32((int)0x00ff00ff);
+	const n128i i4_0xff00ff00 = _hlslpp_set1_epi32((int)0xff00ff00);
+	const n128i i4_0x0000ffff = _hlslpp_set1_epi32((int)0x0000ffff);
+	const n128i i4_0xffff0000 = _hlslpp_set1_epi32((int)0xffff0000);
 
 	// https://stackoverflow.com/questions/109023/how-to-count-the-number-of-set-bits-in-a-32-bit-integer
 	hlslpp_inline n128i _hlslpp_countbits_epi32(n128i i)
@@ -28,6 +28,34 @@ hlslpp_module_export namespace hlslpp
 		i = _hlslpp_add_epi32(_hlslpp_and_si128(i, i4_0x33333333), _hlslpp_and_si128(_hlslpp_srli_epi32(i, 2), i4_0x33333333));
 		i = _hlslpp_srli_epi32(_hlslpp_mul_epi32(_hlslpp_and_si128(_hlslpp_add_epi32(i, _hlslpp_srli_epi32(i, 4)), i4_0x0f0f0f0f), i4_0x01010101), 24);
 		return i;
+	}
+
+	hlslpp_inline n128i _hlslpp_dot2_epi32(n128i x, n128i y)
+	{
+		n128i multi  = _hlslpp_mul_epi32(x, y); // Multiply components together
+		n128i shuf1  = _hlslpp_perm_epi32(multi, MaskY, MaskY, MaskY, MaskY); // Move y into x
+		n128i result = _hlslpp_add_epi32(shuf1, multi); // Contains x+y, _, _, _
+		return result;
+	}
+
+	hlslpp_inline n128i _hlslpp_dot3_epi32(n128i x, n128i y)
+	{
+		n128i multi  = _hlslpp_mul_epi32(x, y);         // Multiply components together
+		n128i shuf1  = _hlslpp_perm_yyyy_epi32(multi);  // Move y into x
+		n128i add1   = _hlslpp_add_epi32(shuf1, multi); // Contains x+y, _, _, _
+		n128i shuf2  = _hlslpp_perm_zzzz_epi32(multi);  // Move z into x
+		n128i result = _hlslpp_add_epi32(add1, shuf2);  // Contains x+y+z, _, _, _
+		return result;
+	}
+
+	hlslpp_inline n128i _hlslpp_dot4_epi32(n128i x, n128i y)
+	{
+		n128i multi  = _hlslpp_mul_epi32(x, y);         // Multiply components together
+		n128i shuf1  = _hlslpp_perm_epi32(multi, MaskY, MaskX, MaskW, MaskX);  // Move y into x and w into z (ignore the rest)
+		n128i add1   = _hlslpp_add_epi32(shuf1, multi); // Contains x+y, _, z+w, _
+		n128i shuf2  = _hlslpp_perm_zzzz_epi32(multi);  // Move z+w into x
+		n128i result = _hlslpp_add_epi32(add1, shuf2);  // Contains x+y+z+w, _, _, _
+		return result;
 	}
 
 	// https://stackoverflow.com/questions/10439242/count-leading-zeroes-in-an-int32
@@ -112,7 +140,7 @@ hlslpp_module_export namespace hlslpp
 	hlslpp_inline int3 operator / (const int3& i1, const int3& i2) { return int3(_hlslpp_div_epi32(i1.vec, i2.vec)); }
 	hlslpp_inline int4 operator / (const int4& i1, const int4& i2) { return int4(_hlslpp_div_epi32(i1.vec, i2.vec)); }
 
-HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
+HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_BEGIN
 
 	// Pre-increment
 
@@ -166,7 +194,7 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
 	template<int X, int Y, int Z, int W>
 	hlslpp_inline iswizzle4<X, Y, Z, W> operator -- (iswizzle4<X, Y, Z, W>& i, int) { iswizzle4<X, Y, Z, W> tmp = i; i = i - int4(i4_1); return tmp; }
 
-HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
+HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END
 
 	//------------------------------------------------------------------------------------------------------------------------//
 	// int1 and iswizzle1 need special overloads to disambiguate between our operators/functions and built-in float operators //
@@ -395,6 +423,11 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 	hlslpp_inline int3 countbits(const int3& i) { return int3(_hlslpp_countbits_epi32(i.vec)); }
 	hlslpp_inline int4 countbits(const int4& i) { return int4(_hlslpp_countbits_epi32(i.vec)); }
 
+	hlslpp_inline int1 dot(const int1& i1, const int1& i2) { return int1(_hlslpp_mul_epi32(i1.vec, i2.vec)); }
+	hlslpp_inline int1 dot(const int2& i1, const int2& i2) { return int1(_hlslpp_dot2_epi32(i1.vec, i2.vec)); }
+	hlslpp_inline int1 dot(const int3& i1, const int3& i2) { return int1(_hlslpp_dot3_epi32(i1.vec, i2.vec)); }
+	hlslpp_inline int1 dot(const int4& i1, const int4& i2) { return int1(_hlslpp_dot4_epi32(i1.vec, i2.vec)); }
+
 	hlslpp_inline int1 firstbithigh(const int1& i) { return int1(_hlslpp_firstbithigh_epi32(i.vec)); }
 	hlslpp_inline int2 firstbithigh(const int2& i) { return int2(_hlslpp_firstbithigh_epi32(i.vec)); }
 	hlslpp_inline int3 firstbithigh(const int3& i) { return int3(_hlslpp_firstbithigh_epi32(i.vec)); }
@@ -546,45 +579,5 @@ HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
 		static_assert(X != Y && X != Z && X != W && Y != Z && Y != W && Z != W, "\"l-value specifies const object\" No component can be equal for assignment.");
 		vec = hlslpp_iswizzle4_swizzle(0, 1, 2, 3, X, Y, Z, W, i.vec);
 		return *this;
-	}
-
-	hlslpp_inline void store(const int1& v, int32_t* i)
-	{
-		_hlslpp_store1_epi32(i, v.vec);
-	}
-
-	hlslpp_inline void store(const int2& v, int32_t* i)
-	{
-		_hlslpp_store2_epi32(i, v.vec);
-	}
-	
-	hlslpp_inline void store(const int3& v, int32_t* i)
-	{
-		_hlslpp_store3_epi32(i, v.vec);
-	}
-	
-	hlslpp_inline void store(const int4& v, int32_t* i)
-	{
-		_hlslpp_store4_epi32(i, v.vec);
-	}
-	
-	hlslpp_inline void load(int1& v, int32_t* i)
-	{
-		_hlslpp_load1_epi32(i, v.vec);
-	}
-	
-	hlslpp_inline void load(int2& v, int32_t* i)
-	{
-		_hlslpp_load2_epi32(i, v.vec);
-	}
-	
-	hlslpp_inline void load(int3& v, int32_t* i)
-	{
-		_hlslpp_load3_epi32(i, v.vec);
-	}
-	
-	hlslpp_inline void load(int4& v, int32_t* i)
-	{
-		_hlslpp_load4_epi32(i, v.vec);
 	}
 }

@@ -2,12 +2,12 @@
 
 #include "hlsl++/common.h"
 
-HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
+HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_BEGIN
 
 hlslpp_module_export namespace hlslpp
 {
 	template<int X>
-	struct hlslpp_nodiscard	swizzle1
+	struct hlslpp_nodiscard swizzle1
 	{
 		template<int A> friend struct swizzle1;
 
@@ -37,7 +37,7 @@ hlslpp_module_export namespace hlslpp
 	};
 
 	template<int X, int Y>
-	struct hlslpp_nodiscard	swizzle2
+	struct hlslpp_nodiscard swizzle2
 	{
 		#define hlslpp_swizzle2_swizzle(E, F, A, B, v) \
 		    (_hlslpp_perm_ps(v, A == 0 ? E : B == 0 ? F : 0, \
@@ -58,7 +58,7 @@ hlslpp_module_export namespace hlslpp
 	};
 
 	template<int X, int Y, int Z>
-	struct hlslpp_nodiscard	swizzle3
+	struct hlslpp_nodiscard swizzle3
 	{
 		#define hlslpp_swizzle3_swizzle(E, F, G, A, B, C, v) \
 		    (_hlslpp_perm_ps(v, A == 0 ? E : B == 0 ? F : C == 0 ? G : 0, \
@@ -95,7 +95,7 @@ hlslpp_module_export namespace hlslpp
 		n128 vec;
 	};
 
-	struct hlslpp_nodiscard float1
+	struct hlslpp_nodiscard hlslpp_alignas(16) float1
 	{
 		hlslpp_inline float1() hlslpp_noexcept : vec(_hlslpp_setzero_ps()) {}
 		hlslpp_inline float1(const float1& f) hlslpp_noexcept : vec(f.vec) {}
@@ -140,7 +140,7 @@ hlslpp_module_export namespace hlslpp
 		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
-	struct hlslpp_nodiscard	float2
+	struct hlslpp_nodiscard hlslpp_alignas(16) float2
 	{
 		hlslpp_inline float2() hlslpp_noexcept : vec(_hlslpp_setzero_ps()) {}
 		hlslpp_inline float2(const float2& f) hlslpp_noexcept : vec(f.vec) {}
@@ -190,7 +190,7 @@ hlslpp_module_export namespace hlslpp
 		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
-	struct hlslpp_nodiscard	float3
+	struct hlslpp_nodiscard hlslpp_alignas(16) float3
 	{
 		hlslpp_inline float3() hlslpp_noexcept : vec(_hlslpp_setzero_ps()) {}
 		hlslpp_inline float3(const float3& f) hlslpp_noexcept : vec(f.vec) {}
@@ -246,7 +246,7 @@ hlslpp_module_export namespace hlslpp
 		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
-	struct hlslpp_nodiscard	float4
+	struct hlslpp_nodiscard hlslpp_alignas(16) float4
 	{
 		hlslpp_inline float4() hlslpp_noexcept : vec(_hlslpp_setzero_ps()) {}
 		hlslpp_inline float4(const float4& f) hlslpp_noexcept : vec(f.vec) {}
@@ -314,7 +314,73 @@ hlslpp_module_export namespace hlslpp
 		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
+	hlslpp_inline void store(const float1& v, float* f)
+	{
+		_hlslpp_store1_ps(f, v.vec);
+	}
+
+	hlslpp_inline void store(const float2& v, float* f)
+	{
+		_hlslpp_store2_ps(f, v.vec);
+	}
+
+	hlslpp_inline void store(const float3& v, float* f)
+	{
+		_hlslpp_store3_ps(f, v.vec);
+	}
+
+	hlslpp_inline void store(const float4& v, float* f)
+	{
+		_hlslpp_store4_ps(f, v.vec);
+	}
+
+	hlslpp_inline void load(float1& v, float* f)
+	{
+		_hlslpp_load1_ps(f, v.vec);
+	}
+
+	hlslpp_inline void load(float2& v, float* f)
+	{
+		_hlslpp_load2_ps(f, v.vec);
+	}
+
+	hlslpp_inline void load(float3& v, float* f)
+	{
+		_hlslpp_load3_ps(f, v.vec);
+	}
+
+	hlslpp_inline void load(float4& v, float* f)
+	{
+		_hlslpp_load4_ps(f, v.vec);
+	}
+
+	namespace interop
+	{
+		struct float4
+		{
+			float4() = default;
+			float4(const hlslpp::float4& f) { hlslpp::store(f, &x); }
+			float x, y, z, w;
+		};
+
+		struct float3
+		{
+			float3() = default;
+			float3(const hlslpp::float3& f) { hlslpp::store(f, &x); }
+			float x, y, z;
+		};
+
+		struct float2
+		{
+			float2() = default;
+			float2(const hlslpp::float2& f) { hlslpp::store(f, &x); }
+			float x, y;
+		};
+
+		typedef float float1;
+	};
+
 	static_assert(hlslpp_alignof(float4) == 16, "Mismatched alignment");
 };
 
-HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
+HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END

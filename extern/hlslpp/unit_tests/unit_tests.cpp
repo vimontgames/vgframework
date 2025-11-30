@@ -1,4 +1,5 @@
 #include "hlsl++.h"
+#include "hlsl++/data_packing.h"
 
 // Hacky but needs FLOAT64
 #include "unit_tests.h"
@@ -191,6 +192,14 @@ namespace hlslpp_unit
 			&& eq(v.y, y, tolerance)
 			&& eq(v.z, z, tolerance)
 			&& eq(v.w, w, tolerance);
+	}
+
+	bool eq(const quaternion& q1, const quaternion& q2, float tolerance /*= 0.0f*/)
+	{
+		return eq(q1.x, q2.x, tolerance)
+			&& eq(q1.y, q2.y, tolerance)
+			&& eq(q1.z, q2.z, tolerance)
+			&& eq(q1.w, q2.w, tolerance);
 	}
 
 #if defined(HLSLPP_FLOAT8)
@@ -685,12 +694,6 @@ void RunExperiments()
 
 	float4 p = rcp(test);
 
-	float2 a;
-
-	float3 lorry(1, 2, 3);
-
-	float3 intTexCoord = float3(1, 2, 3);
-
 	printf("Experiments completed\n\n");
 }
 HLSLPP_UNIT_UNUSED_VARIABLE_END
@@ -713,7 +716,7 @@ void RunUnitTests()
 
 	using namespace hlslpp_unit;
 
-	int seed = 0;// (int)time(NULL);
+	unsigned int seed = 0;// (int)time(NULL);
 	srand(seed);
 
 	RunUnitTestsVectorFloat();
@@ -802,6 +805,20 @@ void RunPerformanceTests()
 	const long int iter = 100000000;
 
 	float3x3 m = float3x3::rotation_y(3.1415f / 2.0f);
+
+	benchmark<float4, iter>("packing unpacking rgba8_unorm", [&]() -> float4
+	{
+		uint32_t rgba_unorm = pack_float4_rgba8_unorm(v4_1);
+		v4_1 = unpack_rgba8_unorm_float4(rgba_unorm);
+		return v4_1;
+	});
+
+	benchmark<float4, iter>("packing unpacking rgba8_snorm", [&]() -> float4
+	{
+		uint32_t rgba_snorm = pack_float4_rgba8_snorm(v4_1);
+		v4_1 = unpack_rgba8_snorm_float4(rgba_snorm);
+		return v4_1;
+	});
 
 	benchmark<float4x4, iter>("m4x4 add", [&]() -> float4x4 { m4x4_1 = m4x4_1 + m4x4_2; return m4x4_1; });
 

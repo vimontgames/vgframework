@@ -2,7 +2,7 @@
 
 #include "hlsl++/common.h"
 
-HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_BEGIN
+HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_BEGIN
 
 hlslpp_module_export namespace hlslpp
 {
@@ -102,7 +102,7 @@ hlslpp_module_export namespace hlslpp
 		n128i vec;
 	};
 
-	struct hlslpp_nodiscard int1
+	struct hlslpp_nodiscard hlslpp_alignas(16) int1
 	{
 		hlslpp_inline int1() hlslpp_noexcept : vec(_hlslpp_setzero_epi32()) {}
 		hlslpp_inline int1(const int1& i) hlslpp_noexcept : vec(i.vec) {}
@@ -146,7 +146,7 @@ hlslpp_module_export namespace hlslpp
 	};
 
 	
-	struct hlslpp_nodiscard int2
+	struct hlslpp_nodiscard hlslpp_alignas(16) int2
 	{
 		// Constructors
 
@@ -195,7 +195,7 @@ hlslpp_module_export namespace hlslpp
 		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
-	struct hlslpp_nodiscard int3
+	struct hlslpp_nodiscard hlslpp_alignas(16) int3
 	{
 		// Constructors
 
@@ -250,7 +250,7 @@ hlslpp_module_export namespace hlslpp
 		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
-	struct hlslpp_nodiscard int4
+	struct hlslpp_nodiscard hlslpp_alignas(16) int4
 	{
 		hlslpp_inline int4() hlslpp_noexcept : vec(_hlslpp_setzero_epi32()) {}
 		hlslpp_inline int4(const int4& i) hlslpp_noexcept : vec(i.vec) {}
@@ -316,7 +316,73 @@ hlslpp_module_export namespace hlslpp
 		HLSLPP_WARNING_ANONYMOUS_STRUCT_UNION_END
 	};
 
+	hlslpp_inline void store(const int1& v, int32_t* i)
+	{
+		_hlslpp_store1_epi32(i, v.vec);
+	}
+
+	hlslpp_inline void store(const int2& v, int32_t* i)
+	{
+		_hlslpp_store2_epi32(i, v.vec);
+	}
+
+	hlslpp_inline void store(const int3& v, int32_t* i)
+	{
+		_hlslpp_store3_epi32(i, v.vec);
+	}
+
+	hlslpp_inline void store(const int4& v, int32_t* i)
+	{
+		_hlslpp_store4_epi32(i, v.vec);
+	}
+
+	hlslpp_inline void load(int1& v, int32_t* i)
+	{
+		_hlslpp_load1_epi32(i, v.vec);
+	}
+
+	hlslpp_inline void load(int2& v, int32_t* i)
+	{
+		_hlslpp_load2_epi32(i, v.vec);
+	}
+
+	hlslpp_inline void load(int3& v, int32_t* i)
+	{
+		_hlslpp_load3_epi32(i, v.vec);
+	}
+
+	hlslpp_inline void load(int4& v, int32_t* i)
+	{
+		_hlslpp_load4_epi32(i, v.vec);
+	}
+
+	namespace interop
+	{
+		struct int4
+		{
+			int4() = default;
+			int4(const hlslpp::int4& f) { hlslpp::store(f, &x); }
+			int32_t x, y, z, w;
+		};
+
+		struct int3
+		{
+			int3() = default;
+			int3(const hlslpp::int3& f) { hlslpp::store(f, &x); }
+			int32_t x, y, z;
+		};
+
+		struct int2
+		{
+			int2() = default;
+			int2(const hlslpp::int2& f) { hlslpp::store(f, &x); }
+			int32_t x, y;
+		};
+
+		typedef int32_t int1;
+	};
+
 	static_assert(hlslpp_alignof(int4) == 16, "Mismatched alignment");
 };
 
-HLSLPP_WARNINGS_IMPLICIT_CONSTRUCTOR_END
+HLSLPP_WARNING_IMPLICIT_CONSTRUCTOR_END

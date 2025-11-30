@@ -77,6 +77,16 @@ typedef __m256i n256i;
 
 #endif
 
+#if defined(__AVX512F__)
+
+#define HLSLPP_SIMD_REGISTER_512
+
+typedef __m512  n512;
+typedef __m512d n512d;
+typedef __m512i n512i;
+
+#endif
+
 //------
 // Float
 //------
@@ -148,7 +158,7 @@ typedef __m256i n256i;
 
 hlslpp_inline n128 _hlslpp_blend_ps(n128 x, n128 y, int mask)
 {
-	n128 mask128 = _mm_castsi128_ps(_mm_set_epi32(((mask >> 3) & 1) * 0xffffffff, ((mask >> 2) & 1) * 0xffffffff, ((mask >> 1) & 1) * 0xffffffff, (mask & 1) * 0xffffffff));
+	n128 mask128 = _mm_castsi128_ps(_mm_set_epi32(int(((mask >> 3) & 1) * 0xffffffff), int(((mask >> 2) & 1) * 0xffffffff), int(((mask >> 1) & 1) * 0xffffffff), int((mask & 1) * 0xffffffff)));
 	return _hlslpp_sel_ps(x, y, mask128);
 }
 
@@ -393,7 +403,7 @@ hlslpp_inline void _hlslpp_load4x4_ps(float* p, n128& x0, n128& x1, n128& x2, n1
 // Float 256
 //----------
 
-#if defined(__AVX__)
+#if defined(HLSLPP_SIMD_REGISTER_256)
 
 #define _hlslpp256_set1_ps(x)						_mm256_set1_ps((x))
 
@@ -472,25 +482,55 @@ hlslpp_inline void _hlslpp_load4x4_ps(float* p, n128& x0, n128& x1, n128& x2, n1
 
 #define _hlslpp256_movehdup_ps(x)					_mm256_movehdup_ps((x))
 
+// We could make these functions use SFINAE and other template magic to select the appropriate implementation, but it makes it really hard to read
+// and debug. On older platforms without if constexpr the debug versions will incur in some overhead, on release it optimizes properly since these
+// are all compile time constants
 template<int X, int Y, int Z, int W, int A, int B, int C, int D>
 hlslpp_inline n256 permute_float(n256 x)
 {
-	// We need to statically assert for now until the permutes can cover more cases
 	static_assert
-		(
-			X >= 0 && X < 8 && Y >= 0 && Y < 8 && Z >= 0 && Z < 8 && W >= 0 && W < 8 &&
-			A >= 0 && A < 8 && B >= 0 && B < 8 && C >= 0 && C < 8 && D >= 0 && D < 8,
-			"Invalid value for permute indices!");
+	(
+		X >= 0 && X < 8 && Y >= 0 && Y < 8 && Z >= 0 && Z < 8 && W >= 0 && W < 8 &&
+		A >= 0 && A < 8 && B >= 0 && B < 8 && C >= 0 && C < 8 && D >= 0 && D < 8,
+		"Invalid value for permute indices"
+	);
 
-	// Covers all the cases where XYZW belong to the first vector, and ABCD cover the second vector
+	static_assert
+	(
+		(X < 4 && Y < 4 && Z < 4 && W < 4 && A >= 4 && B >= 4 && C >= 4 && D >= 4) ||
+		(A < 4 && B < 4 && C < 4 && D < 4 && X >= 4 && Y >= 4 && Z >= 4 && W >= 4),
+		"Permute combination not supported"
+	);
+
+	// Covers cases where XYZW belong to the first vector, and ABCD cover the second vector
 	hlslpp_constexpr_if(X < 4 && Y < 4 && Z < 4 && W < 4 && A >= 4 && B >= 4 && C >= 4 && D >= 4)
 	{
-		return _mm256_permutevar_ps(x, _mm256_setr_epi32(X, Y, Z, W, A, B, C, D));
+		hlslpp_constexpr_if(X == (A - 4) && Y == (B - 4) && Z == (C - 4) && W == (D - 4))
+		{
+			HLSLPP_WARNING_INVALID_SHUFFLE_BEGIN
+			return _mm256_permute_ps(x, HLSLPP_SHUFFLE_MASK(X, Y, Z, W));
+			HLSLPP_WARNING_INVALID_SHUFFLE_END
+		}
+		else
+		{
+			return _mm256_permutevar_ps(x, _mm256_setr_epi32(X, Y, Z, W, A, B, C, D));
+		}
 	}
+	// Covers cases where ABCD belong to the first vector, and XYZW cover the second vector
 	else hlslpp_constexpr_if(A < 4 && B < 4 && C < 4 && D < 4 && X >= 4 && Y >= 4 && Z >= 4 && W >= 4)
 	{
 		n256 swap = _mm256_permute2f128_ps(x, x, 0x3); // 0b00110000
-		return _mm256_permutevar_ps(swap, _mm256_setr_epi32(X, Y, Z, W, A, B, C, D));
+	
+		hlslpp_constexpr_if(A == (X - 4) && B == (Y - 4) && C == (Z - 4) && D == (W - 4))
+		{
+			HLSLPP_WARNING_INVALID_SHUFFLE_BEGIN
+			return _mm256_permute_ps(x, HLSLPP_SHUFFLE_MASK(A, B, C, D));
+			HLSLPP_WARNING_INVALID_SHUFFLE_END
+		}
+		else
+		{
+			return _mm256_permutevar_ps(swap, _mm256_setr_epi32(X, Y, Z, W, A, B, C, D));
+		}
 	}
 	else
 	{
@@ -512,7 +552,6 @@ hlslpp_inline n256 permute_float<0, 1, 2, 3, 4, 5, 6, 7>(n256 x)
 }
 
 #define _hlslpp256_perm_ps(x, X, Y, Z, W, A, B, C, D)	permute_float<X, Y, Z, W, A, B, C, D>(x)
-//#define _hlslpp256_shuffle_ps(x, y, mask)			_mm256_shuffle_ps((x), (y), (mask))
 
 #define _hlslpp256_unpacklo_ps(x, y)				_mm256_unpacklo_ps(x, y)
 #define _hlslpp256_unpackhi_ps(x, y)				_mm256_unpackhi_ps(x, y)
@@ -535,6 +574,15 @@ hlslpp_inline n256 permute_float<0, 1, 2, 3, 4, 5, 6, 7>(n256 x)
 #define _hlslpp256_hadd_ps(x, y)					_mm256_hadd_ps((x), (y))
 
 #define _hlslpp256_dot4_ps(x, y)					_mm256_dp_ps(x, y, 0xff)
+
+hlslpp_inline n256 _hlslpp256_reduce_add_ps(n256 x)
+{
+	n128 add1 = _mm_add_ps(_hlslpp256_low_ps(x), _hlslpp256_high_ps(x));
+	n128 shuf = _hlslpp_perm_ps(add1, 1, 0, 3, 0);
+	n128 add2 = _mm_add_ps(shuf, add1);
+	shuf = _mm_movehl_ps(shuf, add2);
+	return _mm256_castps128_ps256(_mm_add_ps(add2, shuf));
+}
 
 hlslpp_inline n256 _hlslpp256_dot8_ps(n256 x, n256 y)
 {
@@ -575,6 +623,214 @@ hlslpp_inline void _hlslpp256_load4x4_ps(float* p, n256& x0, n256& x1)
 	x1 = _mm256_loadu_ps(p + 8);
 }
 
+hlslpp_inline void _hlslpp256_transpose4x4_ps(const n256& x0, const n256& x1, n256& o0, n256& o1)
+{
+	n256 unpacklo = _mm256_unpacklo_ps(x0, x1);
+	n256 unpackhi = _mm256_unpackhi_ps(x0, x1);
+
+#if defined(__AVX2__)
+	o0 = _mm256_permutevar8x32_ps(unpacklo, _mm256_setr_epi32(0, 4, 1, 5, 2, 6, 3, 7));
+	o1 = _mm256_permutevar8x32_ps(unpackhi, _mm256_setr_epi32(0, 4, 1, 5, 2, 6, 3, 7));
+#else
+	n256 unpacklo_rev = _mm256_permute2f128_ps(unpacklo, unpacklo, 0x1);
+	n256 unpackhi_rev = _mm256_permute2f128_ps(unpackhi, unpackhi, 0x1);
+
+	n256 unpacklo_perm0 = _mm256_unpacklo_ps(unpacklo, unpacklo_rev);
+	n256 unpacklo_perm1 = _mm256_unpackhi_ps(unpacklo_rev, unpacklo);
+	o0 = _mm256_blend_ps(unpacklo_perm0, unpacklo_perm1, 0xf0);
+
+	n256 unpackhi_perm0 = _mm256_unpacklo_ps(unpackhi, unpackhi_rev);
+	n256 unpackhi_perm1 = _mm256_unpackhi_ps(unpackhi_rev, unpackhi);
+	o1 = _mm256_blend_ps(unpackhi_perm0, unpackhi_perm1, 0xf0);
+#endif
+}
+
+#endif
+
+//----------
+// Float 512
+//----------
+
+#if defined(HLSLPP_SIMD_REGISTER_512)
+
+#define _hlslpp512_set1_ps(x)						_mm512_set1_ps((x))
+
+#define _hlslpp512_set_ps(x0, y0, z0, w0, x1, y1, z1, w1, x2, y2, z2, w2, x3, y3, z3, w3) \
+	_mm512_set_ps((w3), (z3), (y3), (x3), (w2), (z2), (y2), (x2), (w1), (z1), (y1), (x1), (w0), (z0), (y0), (x0))
+#define _hlslpp512_setzero_ps()						_mm512_setzero_ps()
+
+#define _hlslpp512_set128_ps(a, b, c, d)			_mm512_insertf32x8(_mm512_castps256_ps512(_mm256_insertf128_ps(_mm256_castps128_ps256(a), b, 0x1)), _mm256_insertf128_ps(_mm256_castps128_ps256(c), d, 0x1), 0x1)
+
+#define _hlslpp512_add_ps(x, y)						_mm512_add_ps((x), (y))
+#define _hlslpp512_sub_ps(x, y)						_mm512_sub_ps((x), (y))
+#define _hlslpp512_mul_ps(x, y)						_mm512_mul_ps((x), (y))
+#define _hlslpp512_div_ps(x, y)						_mm512_div_ps((x), (y))
+
+#define _hlslpp512_rcp_ps(x)						_mm512_rcp14_ps((x))
+
+#define _hlslpp512_neg_ps(x)						_mm512_xor_ps((x), _mm512_castsi512_ps(_mm512_set1_epi32(0x80000000)))
+
+// http://www.liranuna.com/sse-intrinsics-optimizations-in-popular-compilers/
+//#define _hlslpp512_sign_ps(x)						_hlslpp512_and_ps(_hlslpp512_or_ps(_hlslpp512_and_ps((x), f4_minus1), f4_1), _hlslpp512_cmpneq_ps((x), _hlslpp512_setzero_ps()))
+
+#define _hlslpp512_madd_ps(x, y, z)					_mm512_fmadd_ps((x), (y), (z)) // x * y + z
+#define _hlslpp512_msub_ps(x, y, z)					_mm512_fmsub_ps((x), (y), (z)) // x * y - z
+#define _hlslpp512_subm_ps(x, y, z)					_mm512_fnmadd_ps((y), (z), (x)) // x - y * z
+
+// Reference http://www.liranuna.com/sse-intrinsics-optimizations-in-popular-compilers/
+#define _hlslpp512_abs_ps(x)						_mm512_and_ps(_mm512_castsi512_ps(_mm512_set1_epi32(0x7fffffff)), (x))
+
+#define _hlslpp512_sqrt_ps(x)						_mm512_sqrt_ps((x))
+#define _hlslpp512_rsqrt_ps(x)						_mm512_rsqrt14_ps((x))
+
+#define _hlslpp512_cmpeq_ps(x, y)					_mm512_maskz_expand_ps(_mm512_cmpeq_ps_mask((x), (y)), _mm512_castsi512_ps(_mm512_set1_epi32(0xffffffff)))
+#define _hlslpp512_cmpneq_ps(x, y)					_mm512_maskz_expand_ps(_mm512_cmpneq_ps_mask((x), (y)), _mm512_castsi512_ps(_mm512_set1_epi32(0xffffffff)))
+
+#define _hlslpp512_cmpgt_ps(x, y)					_mm512_maskz_expand_ps(_mm512_cmp_ps_mask((x), (y), _CMP_GT_OS), _mm512_castsi512_ps(_mm512_set1_epi32(0xffffffff)))
+#define _hlslpp512_cmpge_ps(x, y)					_mm512_maskz_expand_ps(_mm512_cmp_ps_mask((x), (y), _CMP_GE_OS), _mm512_castsi512_ps(_mm512_set1_epi32(0xffffffff)))
+
+#define _hlslpp512_cmplt_ps(x, y)					_mm512_maskz_expand_ps(_mm512_cmp_ps_mask((x), (y), _CMP_LT_OS), _mm512_castsi512_ps(_mm512_set1_epi32(0xffffffff)))
+#define _hlslpp512_cmple_ps(x, y)					_mm512_maskz_expand_ps(_mm512_cmp_ps_mask((x), (y), _CMP_LE_OS), _mm512_castsi512_ps(_mm512_set1_epi32(0xffffffff)))
+
+#define _hlslpp512_max_ps(x, y)						_mm512_max_ps((x), (y))
+#define _hlslpp512_min_ps(x, y)						_mm512_min_ps((x), (y))
+
+//#define _hlslpp512_sel_ps(x, y, mask)				_mm512_blendv_ps((x), (y), (mask))
+
+//#define _hlslpp512_blend_ps(x, y, mask)			_mm512_blend_ps((x), (y), (mask))
+
+#define _hlslpp512_trunc_ps(x)						_mm512_roundscale_ps((x), _MM_FROUND_TRUNC)
+#define _hlslpp512_floor_ps(x)						_mm512_roundscale_ps((x), _MM_FROUND_FLOOR)
+#define _hlslpp512_ceil_ps(x)						_mm512_roundscale_ps((x), _MM_FROUND_CEIL)
+
+// _MM_FROUND_TO_NEAREST_INT to match fxc behavior
+#define _hlslpp512_round_ps(x)						_mm512_roundscale_ps((x), _MM_FROUND_TO_NEAREST_INT)
+
+#define _hlslpp512_frac_ps(x)						_mm512_sub_ps((x), _hlslpp512_floor_ps(x))
+
+#define _hlslpp512_clamp_ps(x, minx, maxx)			_mm512_max_ps(_mm512_min_ps((x), (maxx)), (minx))
+#define _hlslpp512_sat_ps(x)						_mm512_max_ps(_mm512_min_ps((x), _mm512_set1_ps(1.0f)), _mm512_setzero_ps())
+
+#define _hlslpp512_and_ps(x, y)						_mm512_and_ps((x), (y))
+#define _hlslpp512_andnot_ps(x, y)					_mm512_andnot_ps((x), (y))
+#define _hlslpp512_not_ps(x)						_mm512_andnot_ps((x), f4_fff)
+#define _hlslpp512_or_ps(x, y)						_mm512_or_ps((x), (y))
+#define _hlslpp512_xor_ps(x, y)						_mm512_xor_ps((x), (y))
+
+#define HLSLPP_PERM_MASK_512(X, Y, Z, W, A, B, C, D, E, F, G, H, I, J, K, L) \
+	((L << 30) | (K << 28) | (J << 26) | (I << 24) | (H << 22) | (G << 20) | (F << 18) | (E << 16) | (D << 14) | (C << 12) | (B << 10) | (A << 8) | (W << 6) | (Z << 4) | (Y << 2) | (X))
+
+template
+<
+	int X, int Y, int Z, int W, 
+	int A, int B, int C, int D,
+	int E, int F, int G, int H,
+	int I, int J, int K, int L
+>
+hlslpp_inline n512 permute_float(n512 x)
+{
+	hlslpp_constexpr_if
+	(
+		X < 4   && Y < 4  && Z < 4   && W < 4  && 
+		A >= 4  && A < 8  && B >= 4  && B < 8  && C >= 4  && C < 8  && D >= 4  && D < 8 &&
+		E >= 8  && E < 12 && F >= 8  && F < 12 && G >= 8  && G < 12 && H >= 8  && H < 12 &&
+		I >= 12 && I < 16 && J >= 12 && J < 16 && K >= 12 && K < 16 && L >= 12 && L < 16
+	)
+	{
+		hlslpp_constexpr_if
+		(
+			X == (A - 4) && X == (E - 8) && X == (I - 12) &&
+			Y == (B - 4) && Y == (F - 8) && Y == (J - 12) &&
+			Z == (C - 4) && Z == (G - 8) && Z == (K - 12) &&
+			W == (D - 4) && W == (H - 8) && W == (L - 12)
+		)
+		{
+			HLSLPP_WARNING_INVALID_SHUFFLE_BEGIN
+			return _mm512_permute_ps(x, HLSLPP_SHUFFLE_MASK(X, Y, Z, W));
+			HLSLPP_WARNING_INVALID_SHUFFLE_END
+		}
+		else
+		{
+			return _mm512_permutevar_ps(x, _mm512_setr_epi32(X, Y, Z, W, A, B, C, D, E, F, G, H, I, J, K, L));
+		}
+	}
+	else
+	{
+		return _mm512_permutexvar_ps(_mm512_setr_epi32(X, Y, Z, W, A, B, C, D, E, F, G, H, I, J, K, L), x);
+	}
+}
+
+#define _hlslpp512_perm_ps(x, X, Y, Z, W, A, B, C, D, E, F, G, H, I, J, K, L) permute_float<X, Y, Z, W, A, B, C, D, E, F, G, H, I, J, K, L>(x)
+
+#define _hlslpp512_vec0_ps(x)						_mm512_castps512_ps128((x))
+#define _hlslpp512_vec1_ps(x)						_mm512_extractf32x4_ps((x), 1)
+#define _hlslpp512_vec2_ps(x)						_mm512_extractf32x4_ps((x), 2)
+#define _hlslpp512_vec3_ps(x)						_mm512_extractf32x4_ps((x), 3)
+
+#define _hlslpp512_low_ps(x)						_mm512_castps512_ps256((x))
+#define _hlslpp512_high_ps(x)						_mm512_extractf32x8_ps((x), 1)
+
+#define _hlslpp512_vec1230(x)						_mm512_extractf32x4_ps((x), 1)
+
+#define _hlslpp512_castps_si512(x)					_mm512_castps_si512((x))
+#define _hlslpp512_castsi512_ps(x)					_mm512_castsi512_ps((x))
+
+#define _hlslpp512_cvtepi32_ps(x)					_mm512_cvtepi32_ps((x))
+#define _hlslpp512_cvtps_epi32(x)					_mm512_cvttps_epi32((x))
+
+hlslpp_inline n512 _hlslpp512_reduce_add_ps(n512 x)
+{
+	n256 add0  = _mm256_add_ps(_hlslpp512_low_ps(x), _hlslpp512_high_ps(x));
+	n128 add1  = _mm_add_ps(_hlslpp256_low_ps(add0), _hlslpp256_high_ps(add0));
+	n128 shuf = _hlslpp_perm_ps(add1, 1, 0, 3, 0);
+	n128 add2 = _mm_add_ps(shuf, add1);
+	shuf = _mm_movehl_ps(shuf, add2);
+	return _mm512_castps128_ps512(_mm_add_ps(add2, shuf));
+}
+
+hlslpp_inline n512 _hlslpp512_dot16_ps(n512 x, n512 y)
+{
+	return _hlslpp512_reduce_add_ps(_hlslpp512_mul_ps(x, y));
+}
+
+hlslpp_inline bool _hlslpp512_any16_ps(n512 x)
+{
+	return _mm512_cmpeq_ps_mask(x, _mm512_setzero_ps()) != 0xffff;
+}
+
+hlslpp_inline bool _hlslpp512_all16_ps(n512 x)
+{
+	return _mm512_cmpeq_ps_mask(x, _mm512_setzero_ps()) == 0;
+}
+
+hlslpp_inline void _hlslpp512_store16_ps(float* p, const n512& x)
+{
+	_mm512_storeu_ps(p, x);
+}
+
+hlslpp_inline void _hlslpp512_load16_ps(float* p, n512& x)
+{
+	x = _mm512_loadu_ps(p);
+}
+
+hlslpp_inline void _hlslpp512_store4x4_ps(float* p, const n512& x)
+{
+	_mm512_storeu_ps(p, x);
+}
+
+hlslpp_inline void _hlslpp512_load4x4_ps(float* p, n512& x)
+{
+	x = _mm512_loadu_ps(p);
+}
+
+hlslpp_inline n512 _hlslpp512_transpose4x4_ps(const n512& x)
+{
+	return _hlslpp512_perm_ps(x, 0, 4, 8, 12, 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15);
+}
+
+#define _hlslpp512_set_epi32(x0, y0, z0, w0, x1, y1, z1, w1, x2, y2, z2, w2, x3, y3, z3, w3) \
+	_mm512_set_epi32((w3), (z3), (y3), (x3), (w2), (z2), (y2), (x2), (w1), (z1), (y1), (x1), (w0), (z0), (y0), (x0))
+
 #endif
 
 //--------
@@ -609,7 +865,7 @@ hlslpp_inline n128i _hlslpp_mul_epi32(n128i x, n128i y)
 #if defined(__SSSE3__)
 #define _hlslpp_neg_epi32(x)					_mm_sign_epi32((x), _mm_set1_epi32(-1))
 #else
-#define _hlslpp_neg_epi32(x)					_mm_add_epi32(_mm_xor_si128((x), i4fffMask), _mm_set1_epi32(1))
+#define _hlslpp_neg_epi32(x)					_mm_sub_epi32(_mm_setzero_si128(), (x))
 #endif
 
 #define _hlslpp_madd_epi32(x, y, z)				_mm_add_epi32(_hlslpp_mul_epi32((x), (y)), (z))
@@ -689,7 +945,7 @@ hlslpp_inline n128i _hlslpp_min_epi32(n128i x, n128i y)
 
 hlslpp_inline n128i _hlslpp_blend_epi32(n128i x, n128i y, int mask)
 {
-	n128i mask128 = _mm_set_epi32(((mask >> 3) & 1) * 0xffffffff, ((mask >> 2) & 1) * 0xffffffff, ((mask >> 1) & 1) * 0xffffffff, (mask & 1) * 0xffffffff);
+	n128i mask128 = _mm_set_epi32(int(((mask >> 3) & 1) * 0xffffffff), int(((mask >> 2) & 1) * 0xffffffff), int(((mask >> 1) & 1) * 0xffffffff), int((mask & 1) * 0xffffffff));
 	return _mm_xor_si128((x), _mm_and_si128(mask128, _mm_xor_si128((y), (x))));
 }
 
@@ -755,7 +1011,7 @@ inline n128i _hlslpp_sllv_epi32(n128i x, n128i count)
 	n128i count2 = _hlslpp_perm_epi32(count, 2, 0, 0, 0);
 	n128i count3 = _hlslpp_perm_epi32(count, 3, 0, 0, 0);
 
-	n128i ffMask = _mm_setr_epi32(0xffffffff, 0, 0, 0); // The shift instruction considers 64 bits so we need to mask out everything else
+	n128i ffMask = _mm_setr_epi32((int)0xffffffff, 0, 0, 0); // The shift instruction considers 64 bits so we need to mask out everything else
 
 	n128i imask0 = _mm_and_si128(count, ffMask);
 	n128i imask1 = _mm_and_si128(count1, ffMask);
@@ -779,7 +1035,7 @@ inline n128i _hlslpp_srlv_epi32(n128i x, n128i count)
 	n128i count2 = _hlslpp_perm_epi32(count, 2, 0, 0, 0);
 	n128i count3 = _hlslpp_perm_epi32(count, 3, 0, 0, 0);
 
-	n128i ffMask = _mm_setr_epi32(0xffffffff, 0, 0, 0); // The shift instruction considers 64 bits so we need to mask out everything else
+	n128i ffMask = _mm_setr_epi32((int)0xffffffff, 0, 0, 0); // The shift instruction considers 64 bits so we need to mask out everything else
 
 	n128i imask0 = _mm_and_si128(count, ffMask);
 	n128i imask1 = _mm_and_si128(count1, ffMask);
@@ -1018,8 +1274,8 @@ hlslpp_inline n256i _hlslpp256_or_si128(n256i x, n256i y)
 // Unsigned Integer
 //-----------------
 
-#define _hlslpp_set1_epu32(x)					_hlslpp_set1_epi32((x))
-#define _hlslpp_set_epu32(x, y, z, w)			_hlslpp_set_epi32((x), (y), (z), (w))
+#define _hlslpp_set1_epu32(x)					_hlslpp_set1_epi32(int(x))
+#define _hlslpp_set_epu32(x, y, z, w)			_hlslpp_set_epi32(int(x), int(y), int(z), int(w))
 #define _hlslpp_setzero_epu32()					_hlslpp_setzero_epi32()
 
 #define _hlslpp_add_epu32(x, y)					_hlslpp_add_epi32((x), (y))
@@ -1038,28 +1294,28 @@ hlslpp_inline n256i _hlslpp256_or_si128(n256i x, n256i y)
 
 hlslpp_inline n128u _hlslpp_cmpgt_epu32(n128u x, n128u y)
 {
-	return _mm_xor_si128(_mm_cmpgt_epi32(_mm_xor_si128(x, _mm_set1_epi32(0xf0000000)), _mm_xor_si128(y, _mm_set1_epi32(0xf0000000))), _mm_set1_epi32(0xf0000000));
+	return _mm_xor_si128(_mm_cmpgt_epi32(_mm_xor_si128(x, _mm_set1_epi32((int)0xf0000000)), _mm_xor_si128(y, _mm_set1_epi32((int)0xf0000000))), _mm_set1_epi32((int)0xf0000000));
 }
 
 hlslpp_inline n128i _hlslpp_cmpge_epu32(n128i x, n128i y)
 {
-	n128i xor_x = _mm_xor_si128(x, _mm_set1_epi32(0xf0000000));
-	n128i xor_y = _mm_xor_si128(y, _mm_set1_epi32(0xf0000000));
+	n128i xor_x = _mm_xor_si128(x, _mm_set1_epi32((int)0xf0000000));
+	n128i xor_y = _mm_xor_si128(y, _mm_set1_epi32((int)0xf0000000));
 
-	return _mm_xor_si128(_mm_or_si128(_mm_cmpgt_epi32(xor_x, xor_y), _mm_cmpeq_epi32(xor_x, xor_y)), _mm_set1_epi32(0xf0000000));
+	return _mm_xor_si128(_mm_or_si128(_mm_cmpgt_epi32(xor_x, xor_y), _mm_cmpeq_epi32(xor_x, xor_y)), _mm_set1_epi32((int)0xf0000000));
 }
 
 hlslpp_inline n128u _hlslpp_cmplt_epu32(n128u x, n128u y)
 {
-	return _mm_xor_si128(_mm_cmplt_epi32(_mm_xor_si128(x, _mm_set1_epi32(0xf0000000)), _mm_xor_si128(y, _mm_set1_epi32(0xf0000000))), _mm_set1_epi32(0xf0000000));
+	return _mm_xor_si128(_mm_cmplt_epi32(_mm_xor_si128(x, _mm_set1_epi32((int)0xf0000000)), _mm_xor_si128(y, _mm_set1_epi32((int)0xf0000000))), _mm_set1_epi32((int)0xf0000000));
 }
 
 hlslpp_inline n128i _hlslpp_cmple_epu32(n128i x, n128i y)
 {
-	n128i xor_x = _mm_xor_si128(x, _mm_set1_epi32(0xf0000000));
-	n128i xor_y = _mm_xor_si128(y, _mm_set1_epi32(0xf0000000));
+	n128i xor_x = _mm_xor_si128(x, _mm_set1_epi32((int)0xf0000000));
+	n128i xor_y = _mm_xor_si128(y, _mm_set1_epi32((int)0xf0000000));
 
-	return _mm_xor_si128(_mm_or_si128(_mm_cmplt_epi32(xor_x, xor_y), _mm_cmpeq_epi32(xor_x, xor_y)), _mm_set1_epi32(0xf0000000));
+	return _mm_xor_si128(_mm_or_si128(_mm_cmplt_epi32(xor_x, xor_y), _mm_cmpeq_epi32(xor_x, xor_y)), _mm_set1_epi32((int)0xf0000000));
 }
 
 #if defined(__SSE4_1__)
@@ -1073,12 +1329,12 @@ hlslpp_inline n128i _hlslpp_cmple_epu32(n128i x, n128i y)
 
 hlslpp_inline n128i _hlslpp_max_epu32(n128u x, n128u y)
 {
-	return _mm_xor_si128(_hlslpp_max_epi32(_mm_xor_si128(x, _mm_set1_epi32(0xf0000000)), _mm_xor_si128(y, _mm_set1_epi32(0xf0000000))), _mm_set1_epi32(0xf0000000));
+	return _mm_xor_si128(_hlslpp_max_epi32(_mm_xor_si128(x, _mm_set1_epi32((int)0xf0000000)), _mm_xor_si128(y, _mm_set1_epi32((int)0xf0000000))), _mm_set1_epi32((int)0xf0000000));
 }
 
 hlslpp_inline n128i _hlslpp_min_epu32(n128u x, n128u y)
 {
-	return _mm_xor_si128(_hlslpp_min_epi32(_mm_xor_si128(x, _mm_set1_epi32(0xf0000000)), _mm_xor_si128(y, _mm_set1_epi32(0xf0000000))), _mm_set1_epi32(0xf0000000));
+	return _mm_xor_si128(_hlslpp_min_epi32(_mm_xor_si128(x, _mm_set1_epi32((int)0xf0000000)), _mm_xor_si128(y, _mm_set1_epi32((int)0xf0000000))), _mm_set1_epi32((int)0xf0000000));
 }
 
 #endif
@@ -1088,6 +1344,10 @@ hlslpp_inline n128i _hlslpp_min_epu32(n128u x, n128u y)
 
 #define _hlslpp_clamp_epu32(x, minx, maxx)		_hlslpp_max_epu32(_hlslpp_min_epu32((x), (maxx)), (minx))
 #define _hlslpp_sat_epu32(x)					_hlslpp_max_epu32(_hlslpp_min_epu32((x), i4_1), i4_0)
+
+// https://stackoverflow.com/questions/13153584/mm-shuffle-ps-equivalent-for-integer-vectors-m128i
+#define _hlslpp_perm_epu32(x, X, Y, Z, W)		_mm_shuffle_epi32((x), HLSLPP_SHUFFLE_MASK(X, Y, Z, W))
+#define _hlslpp_shuffle_epu32(x, y, X, Y, A, B)	_mm_castps_si128(_mm_shuffle_ps(_mm_castsi128_ps(x), _mm_castsi128_ps(y), HLSLPP_SHUFFLE_MASK(X, Y, A, B)))
 
 #define _hlslpp_cvttps_epu32(x)					_hlslpp_cvttps_epi32((x))
 #define _hlslpp_cvtepu32_ps(x)					_hlslpp_cvtepi32_ps((x))
@@ -1185,7 +1445,7 @@ hlslpp_inline void _hlslpp_load4_epu32(uint32_t* p, n128u& x) { _hlslpp_load4_ep
 
 hlslpp_inline n128d _hlslpp_blend_pd(n128d x, n128d y, int mask)
 {
-	n128d mask128 = _mm_castsi128_pd(_mm_set_epi64x((((mask) >> 1) & 1) * 0xffffffffffffffff, ((mask) & 1) * 0xffffffffffffffff));
+	n128d mask128 = _mm_castsi128_pd(_mm_set_epi64x(int64_t((((mask) >> 1) & 1) * 0xffffffffffffffff), int64_t(((mask) & 1) * 0xffffffffffffffff)));
 	return _hlslpp_sel_pd(x, y, mask128);
 }
 
@@ -1215,7 +1475,7 @@ hlslpp_inline n128d _hlslpp_trunc_pd(n128d x)
 	exponent = _mm_sub_epi64(exponent, _mm_set1_epi64x(1023));
 
 	// Extract the sign
-	n128i sign = _mm_and_si128(xi, _mm_set1_epi64x(0x8000000000000000));
+	n128i sign = _mm_and_si128(xi, _mm_set1_epi64x((int64_t)0x8000000000000000));
 
 	// Subtract the mantissa size of a double from the exponent and extract it to the lower part
 	// as the shift right and left instructions only take the lower integers into account
@@ -1563,12 +1823,12 @@ hlslpp_inline uint32_t _hlslpp_pack_epu32_rgba8_unorm(__m128 v)
 	__m128i packed8 = _mm_packus_epi16(packed16, packed16);
 #endif
 
-	return _mm_cvtsi128_si32(packed8);
+	return (uint32_t)_mm_cvtsi128_si32(packed8);
 }
 
 hlslpp_inline __m128 _hlslpp_unpack_rgba8_unorm_epu32(uint32_t p)
 {
-	__m128i i = _mm_set1_epi32(p);
+	__m128i i = _mm_set1_epi32((int)p);
 	__m128 t = _mm_cvtepi32_ps(_hlslpp_cvtepi8_epi32(i));
 	return _mm_mul_ps(t, _hlslpp_set1_ps(1.0f / 255.0f));
 }
@@ -1576,7 +1836,7 @@ hlslpp_inline __m128 _hlslpp_unpack_rgba8_unorm_epu32(uint32_t p)
 hlslpp_inline uint32_t _hlslpp_pack_epu32_rgba8_snorm(__m128 v)
 {
 	// Copy sign from x to 0.5
-	__m128 vbias = _mm_or_ps(_mm_set1_ps(0.5f), _mm_and_ps(v, _mm_castsi128_ps(_mm_set1_epi32(0x80000000u))));
+	__m128 vbias = _mm_or_ps(_mm_set1_ps(0.5f), _mm_and_ps(v, _mm_castsi128_ps(_mm_set1_epi32((int)0x80000000u))));
 	__m128 v127f = _hlslpp_madd_ps(v, _mm_set1_ps(127.0f), vbias);
 	__m128i v127i = _mm_cvttps_epi32(v127f);
 #if defined(__SSSE3__)
@@ -1585,12 +1845,12 @@ hlslpp_inline uint32_t _hlslpp_pack_epu32_rgba8_snorm(__m128 v)
 	__m128i packed16 = _mm_packs_epi16(v127i, v127i);
 	__m128i packed8 = _mm_packs_epi16(packed16, packed16);
 #endif
-	return _mm_cvtsi128_si32(packed8);
+	return (uint32_t)_mm_cvtsi128_si32(packed8);
 }
 
 hlslpp_inline __m128 _hlslpp_unpack_rgba8_snorm_epu32(uint32_t p)
 {
-	__m128i i = _mm_set1_epi32(p);
+	__m128i i = _mm_set1_epi32((int)p);
 	__m128 t = _mm_cvtepi32_ps(_hlslpp_cvtepi8_epi32(i));
 	return _mm_mul_ps(t, _hlslpp_set1_ps(1.0f / 127.0f));
 }
