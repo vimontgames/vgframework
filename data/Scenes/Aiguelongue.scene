@@ -810,7 +810,7 @@
                                 <Property type="String" name="m_name" value="Billboards"/>
                                 <Property type="Uint32" name="m_uid" value="2532357560"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0.0625" Tw="1"/>
@@ -8446,13 +8446,35 @@
                         <Property type="String" name="m_name" value="Objects"/>
                         <Property type="Uint32" name="m_uid" value="1002808616"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="24" Ty="0" Tz="0" Tw="1"/>
                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
                         <Property type="ObjectPtrVector" name="m_components"/>
                         <Property type="ObjectPtrVector" name="m_children">
+                            <Object class="PrefabGameObject">
+                                <Property type="String" name="m_name" value="Mirror"/>
+                                <Property type="Uint32" name="m_uid" value="2819341229"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Prefab"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-1.0000001" Iy="5.5636278e-08" Iz="0" Iw="0" Jx="-5.5636278e-08" Jy="-1.0000001" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-10" Ty="15.5" Tz="0.25" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components"/>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                                <Property type="Resource" name="m_prefabResource">
+                                    <Object class="PrefabResource">
+                                        <Property type="String" name="m_name" value=""/>
+                                        <Property type="Uint32" name="m_uid" value="3629025441"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="String" name="m_resourcePath" value="data/Prefabs/Mirror.prefab"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                            </Object>
                             <Object class="GameObject">
                                 <Property type="String" name="m_name" value="Balls"/>
                                 <Property type="Uint32" name="m_uid" value="3776822647"/>
@@ -8628,7 +8650,7 @@
                                 <Property type="String" name="m_name" value="Weapons"/>
                                 <Property type="Uint32" name="m_uid" value="2238613537"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -8848,7 +8870,7 @@
                                 <Property type="String" name="m_name" value="Bonuses"/>
                                 <Property type="Uint32" name="m_uid" value="1210253354"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -8915,7 +8937,7 @@
                                                 <Property type="Resource" name="m_prefabResource">
                                                     <Object class="PrefabResource">
                                                         <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="811467045"/>
+                                                        <Property type="Uint32" name="m_uid" value="3069321069"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/BananaBonus.prefab"/>
