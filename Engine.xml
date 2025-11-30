@@ -4,14 +4,8 @@
         <Property type="Uint32" name="m_uid" value="1488493778"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-        <Property type="String" name="m_gamePath" value="projects/game"/>
-        <Property type="String" name="m_startWorld" value="data/Worlds/Game.world"/>
-        <Property type="String" name="m_gameObjectTags">
-            <Value name="Tag_0" value="Player"/>
-            <Value name="Tag_1" value="Enemy"/>
-            <Value name="Tag_2" value="Weapon"/>
-            <Value name="Tag_3" value="Chest"/>
-        </Property>
+        <Property type="EnumFlagsU32" name="m_animationOptionFlags" value="AnimationJobs|ShowSkeletons"/>
+        <Property type="EnumFlagsU32" name="m_loadingOptionFlags" value="ResourcePriority"/>
         <Property type="Bool" name="m_showRigidBodies" value="false"/>
         <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" value="Sphere|Box|Capsule|Cylinder|Mesh"/>
         <Property type="Bool" name="m_mergeStaticBodies" value="true"/>
@@ -22,13 +16,19 @@
             <Value name="Category_3" value="Player 3"/>
             <Value name="Category_4" value="Player 4"/>
         </Property>
+        <Property type="String" name="m_gamePath" value="projects/game"/>
+        <Property type="String" name="m_startWorld" value="data/Worlds/Game.world"/>
+        <Property type="String" name="m_gameObjectTags">
+            <Value name="Tag_0" value="Player"/>
+            <Value name="Tag_1" value="Enemy"/>
+            <Value name="Tag_2" value="Weapon"/>
+            <Value name="Tag_3" value="Breakable"/>
+        </Property>
         <Property type="Bool" name="m_useTimeScale" value="false"/>
         <Property type="Float" name="m_timeScale" value="1"/>
         <Property type="Bool" name="m_useMaxDT" value="true"/>
         <Property type="Float" name="m_maxDT" value="16.666666"/>
         <Property type="Bool" name="m_useFixedDT" value="false"/>
         <Property type="Float" name="m_fixedDT" value="16.666666"/>
-        <Property type="EnumFlagsU32" name="m_animationOptionFlags" value="AnimationJobs|ShowSkeletons"/>
-        <Property type="EnumFlagsU32" name="m_loadingOptionFlags" value="ResourcePriority"/>
     </Object>
 </Root>

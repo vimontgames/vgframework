@@ -949,30 +949,44 @@ namespace vg::editor
     }
 
     //--------------------------------------------------------------------------------------
-    ImVec4 ImGuiWindow::getPropertyColor(const PropertyContext & _propContext)
+    void ImGuiWindow::getPropertyColorStyle(const PropertyContext & _propContext, ImVec4 & _color, renderer::FontStyle & _fontStyle)
     {
         auto * imGuiAdapter = getImGuiAdapter();
 
-        if (asBool(PropertyFlags::Transient & _propContext.m_originalProp->GetFlags()))
-            return imGuiAdapter->GetTransientPropertyColor();
+        // Default
+        _color = imGuiAdapter->GetTextColor();
+        _fontStyle = renderer::FontStyle::Regular;
 
-        if (_propContext.m_isPrefabInstance) 
+        const PropertyFlags flags = _propContext.m_originalProp->GetFlags();
+        if (asBool(PropertyFlags::Transient & flags))
+        {
+            if (asBool(PropertyFlags::ReadOnly & flags))
+                _color = imGuiAdapter->GetTransientReadOnlyPropertyColor();
+            else
+                _color = imGuiAdapter->GetTransientPropertyColor();
+
+            _fontStyle = renderer::FontStyle::Italic;
+        }
+        else if (_propContext.m_isPrefabInstance) 
         {
             if (_propContext.m_isPrefabOverride)
-                return imGuiAdapter->GetPrefabOverridePropertyColor();
-            if (_propContext.m_readOnly)
-                return ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
+            {
+                _color = imGuiAdapter->GetPrefabOverridePropertyColor();
+                _fontStyle = renderer::FontStyle::Bold;
+            }
+            else if (_propContext.m_readOnly)
+                _color = ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
             else if (_propContext.m_canPrefabOverride)
-                return imGuiAdapter->GetTextColor();
+                _color = imGuiAdapter->GetTextColor();
             else
-                return ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
+                _color = ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
         }
         else
         {
             if (_propContext.m_readOnly)
-                return ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
+                _color = ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
             else
-                return imGuiAdapter->GetTextColor();
+                _color = imGuiAdapter->GetTextColor();
         }
     };
 
@@ -1050,7 +1064,7 @@ namespace vg::editor
                             if (_propContext.m_readOnly)
                             {
                                 ImGui::SameLine();
-                                ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), "Read-only");
+                                ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), " Read-only");
                             }
                         }
                         else if (_propContext.m_isPrefabInstance)
@@ -1294,7 +1308,12 @@ namespace vg::editor
 
         auto * imGuiAdapter = getImGuiAdapter();
 
-        ImGui::PushStyleColor(ImGuiCol_Text, getPropertyColor(propContext));
+        ImVec4 propColor;
+        renderer::FontStyle propFontStyle;
+        getPropertyColorStyle(propContext, propColor, propFontStyle);
+
+        ImGui::PushStyleColor(ImGuiCol_Text, propColor);
+        //ImGui::PushStyle(propFontStyle);
 
         //ImGui::BeginDisabled(readOnly);
         {
@@ -2170,6 +2189,7 @@ namespace vg::editor
             }
         }
         ImGui::PopStyleColor();
+        //ImGui::PopStyle();
 
         if (optionalChanged)
         {

@@ -49,8 +49,8 @@ void WeaponBehaviour::OnPlay()
     super::OnPlay();
     const auto & options = Game::get()->Engine().GetOptions();
     auto enemyTag = options->GetGameObjectTag("Enemy");
-    auto chestTag = options->GetGameObjectTag("Chest");
-    m_hitTags = enemyTag | chestTag;
+    auto breakableTag = options->GetGameObjectTag("Breakable");
+    m_hitTags = enemyTag | breakableTag;
 }
 
 //--------------------------------------------------------------------------------------

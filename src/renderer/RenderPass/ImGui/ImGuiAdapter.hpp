@@ -700,6 +700,14 @@ namespace vg::renderer
         m_unsavedPropertyColor = ImGui::GetStyleColorVec4(ImGuiCol_TextLink);
         m_prefabOverridePropertyColor = ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive);
 
+        const auto disabledColor = ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled);
+        m_unsavedReadOnlyPropertyColor = ImVec4(
+            lerp(m_unsavedPropertyColor.x, disabledColor.x, 0.5f),
+            lerp(m_unsavedPropertyColor.y, disabledColor.y, 0.5f),
+            lerp(m_unsavedPropertyColor.z, disabledColor.z, 0.5f),
+            lerp(m_unsavedPropertyColor.w, disabledColor.w, 0.5f)
+        );
+
         // update alternating row colors
         ImVec4 bgColor = ImGui::GetStyleColorVec4(ImGuiCol_WindowBg);
         float d1, d2;

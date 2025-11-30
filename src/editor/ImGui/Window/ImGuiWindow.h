@@ -25,6 +25,8 @@ namespace vg::renderer
 {
     class IRenderer;
     class IImGuiAdapter;
+    enum class Font : vg::core::u8;
+    enum class FontStyle : vg::core::u8;
 }
 
 namespace vg::gfx
@@ -103,7 +105,7 @@ namespace vg::editor
 
         static bool                             isPropertyVisible       (const core::IObject * _object, const core::IProperty * _prop);
         static core::string                     getPropertyLabel        (const core::string & _label, core::uint _index = 0);
-        static ImVec4                           getPropertyColor        (const PropertyContext & _propContext);
+        static void                             getPropertyColorStyle   (const PropertyContext & _propContext, ImVec4 & _color, renderer::FontStyle & _fontStyle);
         static void                             drawPropertyLabel       (const PropertyContext & _propContext, const core::IProperty * _prop, core::uint _index = 0);
         static void                             drawPropertyLabel       (const PropertyContext & _propContext, const char * _label, const char * _description, core::uint _index = 0);
         static void                             drawPropertyTooltip     (const PropertyContext & _propContext, const char * _description, core::uint _index = 0);

@@ -46,70 +46,71 @@ namespace vg::renderer
         ImGuiAdapter(core::WinHandle _winHandle, gfx::Device & _device);
         ~ImGuiAdapter();
 
-        void                    init                            ();
+        void                    init                                ();
 
-        void                    SetGUITheme                     (Theme _theme) final override;
-        bool                    IsCurrentThemeDark              () const final override;
+        void                    SetGUITheme                         (Theme _theme) final override;
+        bool                    IsCurrentThemeDark                  () const final override;
 
-        const ImVec4 &          GetTextColor                    () const final override { return m_textColor; }
-        const ImVec4 &          GetTransientPropertyColor       () const final override { return m_unsavedPropertyColor; }
-        const ImVec4 &          GetPrefabOverridePropertyColor  () const final override { return m_prefabOverridePropertyColor; }
+        const ImVec4 &          GetTextColor                        () const final override { return m_textColor; }
+        const ImVec4 &          GetTransientPropertyColor           () const final override { return m_unsavedPropertyColor; }
+        const ImVec4 &          GetTransientReadOnlyPropertyColor   () const final override { return m_unsavedReadOnlyPropertyColor; }
+        const ImVec4 &          GetPrefabOverridePropertyColor      () const final override { return m_prefabOverridePropertyColor; }
 
-        const ImVec4 &          GetRowColorEven                 () const final override { return m_rowColorEven;}
-        const ImVec4 &          GetRowColorOdd                  () const final override { return m_rowColorOdd; }
+        const ImVec4 &          GetRowColorEven                     () const final override { return m_rowColorEven;}
+        const ImVec4 &          GetRowColorOdd                      () const final override { return m_rowColorOdd; }
 
-        const ImVec4 &          GetWarningColor                 () const final override { return m_warningColor; }
-        const ImVec4 &          GetErrorColor                   () const final override { return m_errorColor; }
+        const ImVec4 &          GetWarningColor                     () const final override { return m_warningColor; }
+        const ImVec4 &          GetErrorColor                       () const final override { return m_errorColor; }
 
-        bool                    IsKeyboardFocused               () const final override;
-        bool                    IsMouseFocused                  () const final override;
+        bool                    IsKeyboardFocused                   () const final override;
+        bool                    IsMouseFocused                      () const final override;
 
-        ImTextureID             GetTextureID                    (const gfx::ITexture * _texture) final override;
-        void                    ReleaseTextureID                (const gfx::ITexture * _texture) final override;
+        ImTextureID             GetTextureID                        (const gfx::ITexture * _texture) final override;
+        void                    ReleaseTextureID                    (const gfx::ITexture * _texture) final override;
 
-        void                    beginFrame                      (gfx::CommandList * _cmdList);
-        void                    render                          (gfx::CommandList * _cmdList);
+        void                    beginFrame                          (gfx::CommandList * _cmdList);
+        void                    render                              (gfx::CommandList * _cmdList);
 
-        void                    AddBeginFrameCallback           (BeginFrameCallback _func);
-        ImFont *                GetFont                         (Font _font, FontStyle _style) final override;
-        const char *            GetFontPath                     (Font _font, FontStyle _style) const final override;
+        void                    AddBeginFrameCallback               (BeginFrameCallback _func);
+        ImFont *                GetFont                             (Font _font, FontStyle _style) final override;
+        const char *            GetFontPath                         (Font _font, FontStyle _style) const final override;
 
-        void                    PushDefaultFont                 () final override;
-        void                    PushFont                        (vg::renderer::Font _font) final override;
-        void                    PushFont                        (vg::renderer::Font _font, vg::renderer::FontStyle _style) final override;
-        void                    PushFont                        (vg::renderer::Font _font, vg::renderer::FontStyle _style, vg::renderer::FontSize _size) final override;
-        void                    PopFont                         () final override;
+        void                    PushDefaultFont                     () final override;
+        void                    PushFont                            (vg::renderer::Font _font) final override;
+        void                    PushFont                            (vg::renderer::Font _font, vg::renderer::FontStyle _style) final override;
+        void                    PushFont                            (vg::renderer::Font _font, vg::renderer::FontStyle _style, vg::renderer::FontSize _size) final override;
+        void                    PopFont                             () final override;
 
-        void                    PushFontStyle                   (vg::renderer::FontStyle _style) final override;
-        void                    PopFontStyle                    () final override;
+        void                    PushFontStyle                       (vg::renderer::FontStyle _style) final override;
+        void                    PopFontStyle                        () final override;
 
-        void                    PushFontSize                    (vg::renderer::FontSize _size) final override;
-        void                    PopFontSize                     () final override;
+        void                    PushFontSize                        (vg::renderer::FontSize _size) final override;
+        void                    PopFontSize                         () final override;
 
-        CustomImGuiData &       GetCustomData                   (const core::string & _name) final override;
+        CustomImGuiData &       GetCustomData                       (const core::string & _name) final override;
 
-        gfx::ITexture *         GetPreviewTexture               (gfx::ITexture * _originalTex) final override;
+        gfx::ITexture *         GetPreviewTexture                   (gfx::ITexture * _originalTex) final override;
 
-        void                    RegisterFrameGraph              (const gfx::RenderPassContext & _renderPassContext, gfx::FrameGraph & _frameGraph);
+        void                    RegisterFrameGraph                  (const gfx::RenderPassContext & _renderPassContext, gfx::FrameGraph & _frameGraph);
 
     protected:
-        void                    clearPreviewTextures            ();
+        void                    clearPreviewTextures                ();
 
-        ImTextureID             getTextureID                    (const gfx::Texture * _texture);
-        void                    releaseTextureID                (const gfx::Texture * _texture);
-        void                    releaseUserDescriptors          ();
+        ImTextureID             getTextureID                        (const gfx::Texture * _texture);
+        void                    releaseTextureID                    (const gfx::Texture * _texture);
+        void                    releaseUserDescriptors              ();
 
-        ImFontInfo &            getOrCreateFontInfo             (Font _font, FontStyle _style);
-        bool                    createFont                      (Font _font, FontStyle _style);
-        void                    updateFonts                     ();
+        ImFontInfo &            getOrCreateFontInfo                 (Font _font, FontStyle _style);
+        bool                    createFont                          (Font _font, FontStyle _style);
+        void                    updateFonts                         ();
 
-        void                    resetGUITheme                   ();
-        void                    setGUITheme_ImGui_Classic       ();
-        void                    setGUITheme_ImGui_Dark          ();
-        void                    setGUITheme_ImGui_Light         ();
-        void                    setGUIThemeVimontGames_Grey     ();
-        void                    setGUIThemeVimontGames_Dark     ();
-        void                    onGUIThemeChanged               ();
+        void                    resetGUITheme                       ();
+        void                    setGUITheme_ImGui_Classic           ();
+        void                    setGUITheme_ImGui_Dark              ();
+        void                    setGUITheme_ImGui_Light             ();
+        void                    setGUIThemeVimontGames_Grey         ();
+        void                    setGUIThemeVimontGames_Dark         ();
+        void                    onGUIThemeChanged                   ();
 
     private:
         static const Font                   s_defaultFont;
@@ -141,6 +142,7 @@ namespace vg::renderer
         ImVec4                              m_warningColor;
         ImVec4                              m_errorColor;
         ImVec4                              m_unsavedPropertyColor;
+        ImVec4                              m_unsavedReadOnlyPropertyColor;
         ImVec4                              m_prefabOverridePropertyColor;
         ImGuiSettings                       m_settingsHandler;
         core::unordered_map<ImFontKey, ImFontInfo, ImFontKey::hash> m_imGuiFont;

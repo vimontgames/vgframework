@@ -34,26 +34,26 @@ namespace vg::engine
             {
                 registerPropertyGroupBegin(EngineOptions, "Physical");
                 {
-                    registerPropertyEx(EngineOptions, m_cpuMemory.m_totalPhys, "Total", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_cpuMemory.m_totalPhys, "Total", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_cpuMemory.m_totalPhys, "Total physical memory installed (MB)");
 
-                    registerPropertyEx(EngineOptions, m_cpuMemory.m_usedPhys, "Used", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_cpuMemory.m_usedPhys, "Used", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_cpuMemory.m_usedPhys, "Used physical memory (MB)");
 
-                    registerPropertyEx(EngineOptions, m_cpuMemory.m_availPhys, "Available", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_cpuMemory.m_availPhys, "Available", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_cpuMemory.m_availPhys, "Available physical memory (MB)");
                 }
                 registerPropertyGroupEnd(EngineOptions);
 
                 registerPropertyGroupBegin(EngineOptions, "Virtual");
                 {
-                    registerPropertyEx(EngineOptions, m_cpuMemory.m_totalPageFile, "Total", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_cpuMemory.m_totalPageFile, "Total", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_cpuMemory.m_totalPageFile, "Total virtual memory (MB)");
 
-                    registerPropertyEx(EngineOptions, m_cpuMemory.m_usedPageFile, "Used", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_cpuMemory.m_usedPageFile, "Used", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_cpuMemory.m_usedPageFile, "Used virtual memory (MB)");
 
-                    registerPropertyEx(EngineOptions, m_cpuMemory.m_availPageFile, "Available", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_cpuMemory.m_availPageFile, "Available", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_cpuMemory.m_availPageFile, "Available virtual memory (MB)");
                 }
                 registerPropertyGroupEnd(EngineOptions);
@@ -64,32 +64,32 @@ namespace vg::engine
             {
                 registerPropertyGroupBegin(EngineOptions, "Local");
                 {
-                    registerPropertyEx(EngineOptions, m_gpuMemory.m_budgetLocal, "Budget", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_budgetLocal, "Budget", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_gpuMemory.m_budgetLocal, "Local video memory available to the application (MB)");
 
-                    registerPropertyEx(EngineOptions, m_gpuMemory.m_currentUsageLocal, "Used", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_currentUsageLocal, "Used", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_gpuMemory.m_currentUsageLocal, "Local video memory is currently used (MB)");
 
-                    registerPropertyEx(EngineOptions, m_gpuMemory.m_availableForReservationLocal, "Available", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_availableForReservationLocal, "Available", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_gpuMemory.m_availableForReservationLocal, "Local video memory the application can reserve (MB)");
 
-                    registerPropertyEx(EngineOptions, m_gpuMemory.m_currentReservationLocal, "Reserved", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_currentReservationLocal, "Reserved", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_gpuMemory.m_currentReservationLocal, "Local video memory reserved (MB)");
                 }
                 registerPropertyGroupEnd(EngineOptions);
 
                 registerPropertyGroupBegin(EngineOptions, "Shared");
                 {
-                    registerPropertyEx(EngineOptions, m_gpuMemory.m_budgetShared, "Budget", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_budgetShared, "Budget", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_gpuMemory.m_budgetShared, "Shared memory available to the application (MB)");
 
-                    registerPropertyEx(EngineOptions, m_gpuMemory.m_currentUsageShared, "Used", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_currentUsageShared, "Used", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_gpuMemory.m_currentUsageShared, "Shared memory is currently used (MB)");
 
-                    registerPropertyEx(EngineOptions, m_gpuMemory.m_availableForReservationShared, "Available", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_availableForReservationShared, "Available", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_gpuMemory.m_availableForReservationShared, "Shared memory the application can reserve (MB)");
 
-                    registerPropertyEx(EngineOptions, m_gpuMemory.m_currentReservationShared, "Reserved", PropertyFlags::ReadOnly);
+                    registerPropertyEx(EngineOptions, m_gpuMemory.m_currentReservationShared, "Reserved", PropertyFlags::ReadOnly | PropertyFlags::Transient);
                     setPropertyDescription(EngineOptions, m_gpuMemory.m_currentReservationShared, "Shared memory reserved (MB)");
                 }
                 registerPropertyGroupEnd(EngineOptions);

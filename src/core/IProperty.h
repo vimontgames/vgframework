@@ -74,7 +74,7 @@ namespace vg::core
 
     vg_enum_class(vg::core, PropertyFlags, u64,
         None                = 0x0000000000000000,
-        ReadOnly            = 0x0000000000000001,   // A property that is visible, but edition is disabled
+        ReadOnly            = 0x0000000000000001,   // A property that is visible, but edition is disabled (still saved! Also use 'Transient' to prevent serialization)
         Color               = 0x0000000000000002,   // Type represents a color (e.g., float4 or u32)
         IsFolder            = 0x0000000000000004,   // String is a folder
         IsFile              = 0x0000000000000008,   // String is a folder

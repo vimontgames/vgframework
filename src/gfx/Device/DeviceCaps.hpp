@@ -17,28 +17,28 @@ namespace vg::gfx
     {
         super::registerProperties(_desc);
 
-        registerPropertyEx(DeviceCaps, gpuName, "GPU", PropertyFlags::ReadOnly);
+        registerPropertyEx(DeviceCaps, gpuName, "GPU", PropertyFlags::ReadOnly | PropertyFlags::ReadOnly);
         setPropertyDescription(DeviceCaps, gpuName, "GPU model name");
 
-		registerPropertyEnumEx(DeviceCaps, ShaderModel, shaderModel, "Shaders", PropertyFlags::ReadOnly);
+		registerPropertyEnumEx(DeviceCaps, ShaderModel, shaderModel, "Shaders", PropertyFlags::ReadOnly | PropertyFlags::ReadOnly);
 		setPropertyDescription(DeviceCaps, shaderModel, "Highest shader model available");
 
-        registerPropertyEx(DeviceCaps, rayTracing.supported, "RayTracing", PropertyFlags::ReadOnly);
+        registerPropertyEx(DeviceCaps, rayTracing.supported, "RayTracing", PropertyFlags::ReadOnly | PropertyFlags::ReadOnly);
         setPropertyDescription(DeviceCaps, rayTracing.supported, "Is ray tracing supported on hardware");
 
-		registerPropertyEnumBitfieldEx(DeviceCaps, MSAA, msaa.modes, "MSAA", PropertyFlags::ReadOnly);
+		registerPropertyEnumBitfieldEx(DeviceCaps, MSAA, msaa.modes, "MSAA", PropertyFlags::ReadOnly | PropertyFlags::ReadOnly);
 		setPropertyDescription(DeviceCaps, msaa.modes, "Supported multisampling modes");
 
-        registerPropertyEnumBitfieldEx(DeviceCaps, HDRFlags, hdr.modes, "HDR", PropertyFlags::ReadOnly);
+        registerPropertyEnumBitfieldEx(DeviceCaps, HDRFlags, hdr.modes, "HDR", PropertyFlags::ReadOnly | PropertyFlags::ReadOnly);
         setPropertyDescription(DeviceCaps, hdr.modes, "Supported HDR modes");
 
-		registerPropertyEx(DeviceCaps, memory.dedicated, "Video Memory", PropertyFlags::ReadOnly);
+		registerPropertyEx(DeviceCaps, memory.dedicated, "Video Memory", PropertyFlags::ReadOnly | PropertyFlags::ReadOnly);
 		setPropertyDescription(DeviceCaps, memory.dedicated, "Dedicated video memory (MB)");
 
-		registerPropertyEx(DeviceCaps, memory.system, "System Memory", PropertyFlags::ReadOnly);
+		registerPropertyEx(DeviceCaps, memory.system, "System Memory", PropertyFlags::ReadOnly | PropertyFlags::ReadOnly);
 		setPropertyDescription(DeviceCaps, memory.system, "Dedicated system memory (MB)");
 
-		registerPropertyEx(DeviceCaps, memory.shared, "Shared Memory", PropertyFlags::ReadOnly);
+		registerPropertyEx(DeviceCaps, memory.shared, "Shared Memory", PropertyFlags::ReadOnly | PropertyFlags::ReadOnly);
 		setPropertyDescription(DeviceCaps, memory.shared, "Shared system memory (MB)");
 
         return true;

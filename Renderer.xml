@@ -4,31 +4,18 @@
         <Property type="Uint32" name="m_uid" value="4100248654"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-        <Property type="Bool" name="m_toolMode" value="false"/>
+        <Property type="Bool" name="m_engine.m_toolMode" value="false"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
         <Property type="Bool" name="m_useCustomQualityLevel" value="false"/>
         <Property type="EnumI8" name="m_customQualityLevel" value="High"/>
+        <Property type="EnumU8" name="m_HDRmode" value="None"/>
+        <Property type="EnumU8" name="m_msaa[Quality::VeryLow]" value="None"/>
+        <Property type="EnumU8" name="m_msaa[Quality::Low]" value="None"/>
+        <Property type="EnumU8" name="m_msaa[Quality::Medium]" value="None"/>
+        <Property type="EnumU8" name="m_msaa[Quality::High]" value="MSAA4X"/>
+        <Property type="EnumU8" name="m_msaa[Quality::VeryHigh]" value="None"/>
+        <Property type="EnumU8" name="m_VSync" value="VSync_1"/>
         <Property type="EnumU8" name="m_lightingMode" value="Deferred"/>
-        <Property type="EnumFlagsU32" name="m_pbrFlags" value="GenerateIrradianceCubemap|GenerateSpecularReflectionCubemap|GenerateSpecularBRDF"/>
-        <Property type="ResourcePtr" name="m_pbrBakedBRDFTexture">
-            <Object class="TextureResource">
-                <Property type="String" name="m_name" value="TextureResource #1"/>
-                <Property type="Uint32" name="m_uid" value="388369360"/>
-                <Property type="Uint32" name="m_originalUID" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                <Property type="String" name="m_resourcePath" value="data/Engine/BRDF/CookTorrance.png"/>
-            </Object>
-        </Property>
-        <Property type="Bool" name="m_shadows[Quality::VeryLow]" value="false"/>
-        <Property type="Bool" name="m_shadows[Quality::Low]" value="true"/>
-        <Property type="Bool" name="m_shadows[Quality::Medium]" value="true"/>
-        <Property type="Bool" name="m_shadows[Quality::High]" value="true"/>
-        <Property type="Bool" name="m_shadows[Quality::VeryHigh]" value="true"/>
-        <Property type="EnumU16" name="m_shadowsResolution[Quality::VeryLow]" value="ShadowDefaultResolution_512"/>
-        <Property type="EnumU16" name="m_shadowsResolution[Quality::Low]" value="ShadowDefaultResolution_1024"/>
-        <Property type="EnumU16" name="m_shadowsResolution[Quality::Medium]" value="ShadowDefaultResolution_2048"/>
-        <Property type="EnumU16" name="m_shadowsResolution[Quality::High]" value="ShadowDefaultResolution_4096"/>
-        <Property type="EnumU16" name="m_shadowsResolution[Quality::VeryHigh]" value="ShadowDefaultResolution_4096"/>
         <Property type="Float4" name="m_defaultEnvironmentColor" x="0.1" y="0.1" z="0.1" w="1"/>
         <Property type="Bool" name="m_useDefaultEnvironmentCubemap" value="true"/>
         <Property type="ResourcePtr" name="m_defaultEnvironmentCubemap">
@@ -42,14 +29,27 @@
         </Property>
         <Property type="Float" name="m_defaultIrradianceIntensity" value="1"/>
         <Property type="Float" name="m_defaultSpecularReflectionIntensity" value="1"/>
-        <Property type="EnumU8" name="m_HDRmode" value="None"/>
-        <Property type="EnumU8" name="m_msaa[Quality::VeryLow]" value="None"/>
-        <Property type="EnumU8" name="m_msaa[Quality::Low]" value="None"/>
-        <Property type="EnumU8" name="m_msaa[Quality::Medium]" value="None"/>
-        <Property type="EnumU8" name="m_msaa[Quality::High]" value="MSAA4X"/>
-        <Property type="EnumU8" name="m_msaa[Quality::VeryHigh]" value="None"/>
-        <Property type="EnumU8" name="m_VSync" value="VSync_1"/>
-        <Property type="Bool" name="m_rayTracing" value="false"/>
+        <Property type="EnumFlagsU32" name="m_pbrFlags" value="GenerateIrradianceCubemap|GenerateSpecularReflectionCubemap|GenerateSpecularBRDF"/>
+        <Property type="ResourcePtr" name="m_pbrBakedBRDFTexture">
+            <Object class="TextureResource">
+                <Property type="String" name="m_name" value="TextureResource #1"/>
+                <Property type="Uint32" name="m_uid" value="388369360"/>
+                <Property type="Uint32" name="m_originalUID" value="0"/>
+                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                <Property type="String" name="m_resourcePath" value="data/Engine/BRDF/CookTorrance.png"/>
+            </Object>
+        </Property>
+        <Property type="Bool" name="m_engine.m_rayTracing" value="false"/>
+        <Property type="Bool" name="m_shadows[Quality::VeryLow]" value="false"/>
+        <Property type="Bool" name="m_shadows[Quality::Low]" value="true"/>
+        <Property type="Bool" name="m_shadows[Quality::Medium]" value="true"/>
+        <Property type="Bool" name="m_shadows[Quality::High]" value="true"/>
+        <Property type="Bool" name="m_shadows[Quality::VeryHigh]" value="true"/>
+        <Property type="EnumU16" name="m_shadowsResolution[Quality::VeryLow]" value="ShadowDefaultResolution_512"/>
+        <Property type="EnumU16" name="m_shadowsResolution[Quality::Low]" value="ShadowDefaultResolution_1024"/>
+        <Property type="EnumU16" name="m_shadowsResolution[Quality::Medium]" value="ShadowDefaultResolution_2048"/>
+        <Property type="EnumU16" name="m_shadowsResolution[Quality::High]" value="ShadowDefaultResolution_4096"/>
+        <Property type="EnumU16" name="m_shadowsResolution[Quality::VeryHigh]" value="ShadowDefaultResolution_4096"/>
         <Property type="Bool" name="m_postProcess" value="true"/>
         <Property type="EnumU8" name="m_aaPostProcess" value="FXAA"/>
         <Property type="EnumU8" name="m_depthOfField[Quality::VeryLow]" value="Default"/>
@@ -57,11 +57,12 @@
         <Property type="EnumU8" name="m_depthOfField[Quality::Medium]" value="Default"/>
         <Property type="EnumU8" name="m_depthOfField[Quality::High]" value="Default"/>
         <Property type="EnumU8" name="m_depthOfField[Quality::VeryHigh]" value="Default"/>
+        <Property type="Bool" name="m_aabb" value="false"/>
+        <Property type="Bool" name="m_particles" value="true"/>
+        <Property type="Bool" name="m_wireframe" value="false"/>
+        <Property type="Bool" name="m_debugUI" value="false"/>
         <Property type="EnumFlagsU32" name="m_renderPassFlags" value="ZPrepass|Opaque|Transparency"/>
         <Property type="EnumFlagsU32" name="m_displayFlags" value="AlbedoMap|NormalMap|VertexColor|MaterialColor|InstanceColor"/>
-        <Property type="Bool" name="m_wireframe" value="false"/>
-        <Property type="Bool" name="m_aabb" value="false"/>
-        <Property type="Bool" name="m_debugUI" value="false"/>
         <Property type="Bool" name="m_renderJobs" value="true"/>
         <Property type="Bool" name="m_forceRenderJobsCount" value="false"/>
         <Property type="Uint16" name="m_renderJobsCount" value="2"/>
