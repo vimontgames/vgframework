@@ -56,9 +56,10 @@ namespace vg::gfx
 		void                            importRenderTarget          (const FrameGraphResourceID & _resID, Texture * _tex, core::float4 _clearColor = defaultOptimizedClearColor, FrameGraphResource::InitState _initState = FrameGraphResource::InitState::Clear);
 		void                            setGraphOutput              (const FrameGraphResourceID & _destTexResID);
 
-		void                            setup                       ();
-		void                            build                       ();
-		void                            render                      ();
+        void                            resize                      ();
+        void                            setup                       ();
+        void                            build                       ();
+        void                            render                      ();
 
         void                            pushPassGroup               (const core::string & _name);
         void                            popPassGroup                ();
@@ -106,7 +107,7 @@ namespace vg::gfx
 
         void                            cleanup                     ();
 
-	private:
+	//private:
         using resource_unordered_map = core::unordered_map<FrameGraphResourceID, FrameGraphResource*, core::hash<FrameGraphResourceID>>;
         resource_unordered_map		    m_resources;
 

@@ -504,7 +504,7 @@ namespace vg::gfx
         }
 
         RenderPass * renderPass = new RenderPass(userPass->getUserPassType(), renderPassKey);
-        renderPass->m_colorAttachments = std::move(colorAttachments); // transient resources will be lazy allocated before the actuel RenderPass begins
+        renderPass->m_colorAttachments = std::move(colorAttachments); // transient resources will be lazy allocated before the actual RenderPass begins
         renderPass->m_depthStencilAttachment = depthStencilAttachment;
 
         SubPass * subPass = new SubPass();
@@ -524,11 +524,6 @@ namespace vg::gfx
 	void FrameGraph::build()
 	{
         VG_PROFILE_CPU("Build");
-
-        // Cleanup
-		for (auto * renderPass : m_renderPasses)
-			VG_SAFE_RELEASE(renderPass);
-		m_renderPasses.clear();
 
         Device * device = Device::get();
 
@@ -1559,18 +1554,22 @@ namespace vg::gfx
             }
         }
 
-        cleanup();
-
-        if (m_resized)
-        {
-            destroyTransientResources();
-            m_resized = false;
-        }        
+        cleanup();      
 	}
 
     //--------------------------------------------------------------------------------------
     void FrameGraph::setResized()
     {
         m_resized = true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FrameGraph::resize()
+    {
+        if (m_resized)
+        {
+            destroyTransientResources();
+            m_resized = false;
+        }
     }
 }
