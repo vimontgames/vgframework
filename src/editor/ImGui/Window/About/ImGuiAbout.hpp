@@ -61,12 +61,19 @@ namespace vg::editor
             ImGui::PushDefaultFont();
 
             ImGui::PushStyle(renderer::FontStyle::Bold);
-            Text("VG Framework %u.%u.%u", VG_FRAMEWORK_VERSION_MAJOR, VG_FRAMEWORK_VERSION_MINOR, VG_FRAMEWORK_VERSION_PATCH);
+            textURL(fmt::sprintf("VG Framework %u.%u.%u", VG_FRAMEWORK_VERSION_MAJOR, VG_FRAMEWORK_VERSION_MINOR, VG_FRAMEWORK_VERSION_PATCH).c_str(), "https://github.com/vimontgames/vgframework");
             Text("");
             ImGui::PopStyle();
+            
+            LibraryDescription contributors[] =
+            {
+                { "Benualdo",             "GPU whisperer",        "https://github.com/Benualdo" },
+                { "Joyxt",                "FBX exorcist",         "https://github.com/Joyxt" },
+                { "kdridi",               "Linux evangelist",     "https://github.com/kdridi" },
+                { "Onduril",              "ARM enjoyer",          "https://github.com/Onduril" }
+            };
 
-            textURL("GitHub", "https://github.com/vimontgames/vgframework");
-            textURL("Mastodon", "https://mastodon.gamedev.place/@benoitvimont");
+            drawLibraryDescriptionList("Contributors", "Name", "Role", contributors, (uint)countof(contributors));
 
             Separator();
 
@@ -141,16 +148,11 @@ namespace vg::editor
                 { "Large sword swing",    "Luis0413",             "https://freesound.org/people/Luis0413/sounds/737748/" },
                 { "Tally Dub",            "Brotheration Records", "https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/" },
                 { "Chainsaw",             "pblzr",                "https://freesound.org/people/pblzr/sounds/512875/" },
-                { "Retro Bonus Pickup",   "suntemple",            "https://freesound.org/people/suntemple/sounds/253172/" }
+                { "Retro Bonus Pickup",   "suntemple",            "https://freesound.org/people/suntemple/sounds/253172/" },
+                { "The broken mirror",    "urupin",               "https://freesound.org/people/urupin/sounds/414047/" }
             };
 
-            drawLibraryDescriptionList("Sound", "Name", "Author", sound, (uint)countof(sound));
-
-            Columns(1);
-            ImGui::PushStyle(renderer::FontStyle::Bold);
-            Text("Special thanks");
-            ImGui::PopStyle();
-            Text("JOYxt, Onduril, Karim, SlavSquat, Bob, Guigui, Marcel, Hamilcar.");
+            drawLibraryDescriptionList("Sounds", "Name", "Author", sound, (uint)countof(sound));
 
             ImGui::PopFont();
             End();            

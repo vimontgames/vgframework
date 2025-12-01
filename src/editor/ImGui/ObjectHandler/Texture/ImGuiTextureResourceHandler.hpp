@@ -45,11 +45,11 @@ namespace vg::editor
 
                 if (!strcmp(_resource->GetClassName(), "TextureResource"))
                 {
-                    // Dummy texture preview
-                    ImDrawList * draw_list = ImGui::GetWindowDrawList();
-                    ImVec2 cursor_pos = ImGui::GetCursorScreenPos();
-                    draw_list->AddRectFilled(cursor_pos, cursor_pos + texturePreviewSize, IM_COL32(0, 0, 0, 255));
-                    ImGui::Dummy(texturePreviewSize);
+                    // Dummy texture preview (should display actual replacement texture or display nothing : a black square is useless)
+                    //ImDrawList * draw_list = ImGui::GetWindowDrawList();
+                    //ImVec2 cursor_pos = ImGui::GetCursorScreenPos();
+                    //draw_list->AddRectFilled(cursor_pos, cursor_pos + texturePreviewSize, IM_COL32(0, 0, 0, 255));
+                    //ImGui::Dummy(texturePreviewSize);
                 }
             }
 
@@ -66,24 +66,24 @@ namespace vg::editor
             else
             {
                 // Dummy meta
-                if (!strcmp(_resource->GetClassName(), "TextureResource"))
-                {
-                    ImGui::BeginDisabled();
-                    const float backupAlpha = ImGui::GetStyle().Alpha;
-                    ImGui::GetStyle().Alpha = 0;
-                    const auto * factory = Kernel::getFactory();
-                    resourceMeta = (IResourceMeta *)factory->CreateObject("TextureResourceMeta");
-
-                    if (ImGui::TreeNodeEx(metaLabel.c_str(), ImGuiTreeNodeFlags_None))
-                    {
-                        changed |= ImGuiWindow::displayObject(resourceMeta);
-                        ImGui::TreePop();
-                    }
-
-                    ImGui::GetStyle().Alpha = backupAlpha;
-                    ImGui::EndDisabled();
-                    VG_SAFE_DELETE(resourceMeta);
-                }
+                //if (!strcmp(_resource->GetClassName(), "TextureResource"))
+                //{
+                //    ImGui::BeginDisabled();
+                //    const float backupAlpha = ImGui::GetStyle().Alpha;
+                //    ImGui::GetStyle().Alpha = 0;
+                //    const auto * factory = Kernel::getFactory();
+                //    resourceMeta = (IResourceMeta *)factory->CreateObject("TextureResourceMeta");
+                //
+                //    if (ImGui::TreeNodeEx(metaLabel.c_str(), ImGuiTreeNodeFlags_None))
+                //    {
+                //        changed |= ImGuiWindow::displayObject(resourceMeta);
+                //        ImGui::TreePop();
+                //    }
+                //
+                //    ImGui::GetStyle().Alpha = backupAlpha;
+                //    ImGui::EndDisabled();
+                //    VG_SAFE_DELETE(resourceMeta);
+                //}
             }
 
             return changed;

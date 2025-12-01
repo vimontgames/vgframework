@@ -39,7 +39,7 @@ namespace vg::engine
         float                       m_metalness         = 1.0f;
 
         // Emissive
-        bool                        m_enableEmissive    = false;       
+        bool                        m_enableEmissive    = true;
         TextureResource             m_emissiveMap;
         core::float4                m_emissiveColor     = core::float4(1,1,1,1); 
         float                       m_emissiveIntensity = 1.0f;
