@@ -36,7 +36,7 @@
 
 // Allocate fixed Textures/Buffers SRVs/UAVs slots top-down (dynamic slots are allocated bottom-up)
 
-vg_enum_class_global(ReservedSlot, uint,
+vg_enum_class_global(ReservedSlot, u32,
     // Texture
     ImGuiFontTexSrv         = BINDLESS_TEXTURE_INVALID - 6,
     DefaultEmissiveTexSrv   = BINDLESS_TEXTURE_INVALID - 5,

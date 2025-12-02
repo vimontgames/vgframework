@@ -3,8 +3,8 @@
 #include "renderer/IGraphicInstance.h"
 #include "core/Misc/BitMask/BitMask.h"
 
-enum class VertexFormat : vg::core::uint;
-enum class SurfaceTypeFlags : vg::core::uint;
+enum class VertexFormat : vg::core::u8;
+enum class SurfaceTypeFlags : vg::core::u8;
 
 namespace vg::core
 {

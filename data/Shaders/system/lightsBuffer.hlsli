@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _LIGHTSBUFFER__HLSLI_
+#define _LIGHTSBUFFER__HLSLI_
 
 #ifdef __cplusplus
 #define VG_CHECK_ALIGN(var, align)	VG_ASSERT(0 == (uint_ptr(&var) & (align-1)), "%s should be aligned to %u bytes", #var, align)
@@ -95,3 +96,5 @@ struct DirectionalLightConstants
 	void		setShadowFarDist			(float _dist)		{ m_shadow.w = asuint((float)_dist); }
 	float		getShadowFarDist			()					{ return asfloat((uint)m_shadow.w); }
 };
+
+#endif // _LIGHTSBUFFER__HLSLI_

@@ -1,6 +1,6 @@
 #pragma once
 
-enum class SurfaceType : uint;
+enum class SurfaceType : vg::core::u8;
 
 namespace vg::gfx
 {

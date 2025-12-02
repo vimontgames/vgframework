@@ -34,8 +34,8 @@ using namespace vg::core;
 //--------------------------------------------------------------------------------------
 // When compiling HLSL, process vg_enum[_class] shared declarations as regular enum [class] declarations
 //--------------------------------------------------------------------------------------
-#define vg_enum_global(Type, UnderlyingType, ...)       enum Type : UnderlyingType { __VA_ARGS__};
-#define vg_enum_class_global(Type, UnderlyingType, ...) enum class Type : UnderlyingType { __VA_ARGS__};
+#define vg_enum_global(Type, UnderlyingType, ...)       enum Type : uint { __VA_ARGS__};
+#define vg_enum_class_global(Type, UnderlyingType, ...) enum class Type : uint { __VA_ARGS__};
 
 //--------------------------------------------------------------------------------------
 // Workaround for Visual Studio HLSL syntax highlighting. Use to declare macros values for easier source code reading.
@@ -44,4 +44,17 @@ using namespace vg::core;
 #define _SHADER_COMPILER 1
 #endif
 
+#endif
+
+//--------------------------------------------------------------------------------------
+// HLSL does only accept int/uint enum class types but we might want smaller types in engine
+//--------------------------------------------------------------------------------------
+#if __cplusplus
+using u8  = vg::core::u8;
+using u16 = vg::core::u16;
+using u32 = vg::core::u32;
+#else
+using u8  = uint;
+using u16 = uint;
+using u32 = uint;
 #endif

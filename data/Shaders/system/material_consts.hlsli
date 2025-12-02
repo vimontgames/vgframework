@@ -3,7 +3,7 @@
 
 #include "types.hlsli"
 
-vg_enum_class_global(UVSource, uint,
+vg_enum_class_global(UVSource, u8,
     UV0 = 0,
     UV1,
     PlanarX,
@@ -11,14 +11,14 @@ vg_enum_class_global(UVSource, uint,
     PlanarZ
 );
 
-vg_enum_class_global(SurfaceType, uint,
+vg_enum_class_global(SurfaceType, u8,
     Opaque = 0,
     AlphaTest,
     AlphaBlend,
     Decal
 );
 
-vg_enum_class_global(SurfaceTypeFlags, uint,
+vg_enum_class_global(SurfaceTypeFlags, u8,
     Opaque      =  1U << (uint)SurfaceType::Opaque,
     AlphaTest   =  1U << (uint)SurfaceType::AlphaTest,
     AlphaBlend  =  1U << (uint)SurfaceType::AlphaBlend,

@@ -3,7 +3,7 @@
 
 #include "types.hlsli"
 
-vg_enum_class_global(CubemapFace, uint,
+vg_enum_class_global(CubemapFace, u8,
 	PositiveX = 0,
 	NegativeX,
 	PositiveY,

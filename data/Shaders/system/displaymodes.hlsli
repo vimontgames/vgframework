@@ -8,7 +8,7 @@
 // All shader-only code should be added to displaymode.hlsl instead
 //--------------------------------------------------------------------------------------
 
-vg_enum_class_global(DisplayMode, uint,
+vg_enum_class_global(DisplayMode, u32,
 	None = 0,
 
     Instance_Color,
@@ -62,6 +62,7 @@ vg_enum_class_global(DisplayMode, uint,
     RayTracing_Geometry_UV0, 
     RayTracing_Material_SurfaceType,
     RayTracing_Material_Albedo, 
+    RayTracing_Lighting_DirectDiffuse,
 
     PostProcess_Depth,
     PostProcess_Stencil,
@@ -73,7 +74,7 @@ vg_enum_class_global(DisplayMode, uint,
     PostProcess_PixelChecker
 );
 
-vg_enum_global(DisplayFlags, uint,
+vg_enum_global(DisplayFlags, u32,
     AlbedoMap       = 0x00000001,
     NormalMap       = 0x00000002,
     VertexColor     = 0x00000004,
