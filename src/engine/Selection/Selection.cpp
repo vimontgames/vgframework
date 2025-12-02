@@ -54,7 +54,7 @@ namespace vg::engine
     {
         bool selected = false;
         if (const core::Instance * instance = dynamic_cast<const core::Instance *>(_object))
-            selected = asBool(core::ObjectFlags::Selected & instance->getObjectFlags());
+            selected = asBool(core::ObjectRuntimeFlags::Selected & instance->getObjectRuntimeFlags());
 
         return selected;
     }
@@ -154,13 +154,13 @@ namespace vg::engine
         GameObject * go = dynamic_cast<GameObject *>(_object);
         if (nullptr != go)
         {
-            go->setObjectFlags(ObjectFlags::Selected, _selected);
+            go->setObjectRuntimeFlags(ObjectRuntimeFlags::Selected, _selected);
 
             auto graphicInstances = go->getGraphicInstances();
             for (uint i = 0; i < graphicInstances.size(); ++i)
             {
                 auto instance = graphicInstances[i];
-                instance->setObjectFlags(ObjectFlags::Selected, _selected);
+                instance->setObjectRuntimeFlags(ObjectRuntimeFlags::Selected, _selected);
             }
         }
     }

@@ -111,8 +111,7 @@ namespace vg::renderer
                 _cullingResult->m_output->add(GraphicInstanceListType::Particle, this);
 
                 // Selection outline
-                const ObjectFlags objectFlags = this->getObjectFlags();
-                if (asBool(ObjectFlags::Selected & objectFlags))
+                if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()))
                     _cullingResult->m_output->add(GraphicInstanceListType::Outline, this);
 
                 return true;

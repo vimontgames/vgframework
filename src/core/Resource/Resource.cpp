@@ -193,7 +193,7 @@ namespace vg::core
         //VG_INFO("[Resource] Unload %s \"%s\"", GetClassName(), _file.c_str());
         if (auto * object = GetObject())
         {
-            object->SetObjectFlags(ObjectFlags::Unloaded, true);
+            object->SetObjectRuntimeFlags(ObjectRuntimeFlags::Unloaded, true);
             object->SetName(object->GetName() + " (Unloaded)");
         }
     }

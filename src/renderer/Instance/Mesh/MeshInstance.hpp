@@ -108,9 +108,7 @@ namespace vg::renderer
                 if (isSkinned())
                     _cullingResult->m_sharedOutput->addSkinMesh(this);
 
-                const ObjectFlags objectFlags = this->getObjectFlags();
-
-                if (asBool(ObjectFlags::Selected & objectFlags))
+                if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()))
                     _cullingResult->m_output->add(GraphicInstanceListType::Outline, this);
 
                 return true;

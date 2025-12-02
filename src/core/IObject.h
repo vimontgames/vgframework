@@ -10,25 +10,20 @@ namespace vg::core
     class IGameObject;
     class IComponent;
 
-    // TODO: handle changing type for a smaller one and use u16 for 'serialized' flags and another u16 for 'runtime' flags instead? Or add serialization 'mask' for enum flag values?
-    vg_enum_class(vg::core, ObjectFlags, u32,
-        NotSerialized   = 0x00000001,   // Object is not saved when its parent is serialized (e.g., for objects instantiated at runtime)    (Runtime)
-        DirtySave       = 0x00000002,   // Object has been modified and needs to be saved again or changes will be lost                     (Runtime)
-        Opened          = 0x00000004,   // Object shows its children                                                                        (Serialized)
-        Prefab          = 0x00000008,   // Object (e.g., World or GameObject) is a prefab                                                   (Runtime)
-        Selected        = 0x00000010,   // Object is selected                                                                               (Serialized)
-        NoCulling       = 0x00000020,   // Object is not influenced by any culling                                                          (Serialized)
-        Unloaded        = 0x00000040    // Object is being unloaded                                                                         (Runtime)
+    // These flags are serialized
+    vg_enum_class(vg::core, ObjectFlags, u16,
+        Opened          = 0x0004,   // Object shows its children              
+        NoCulling       = 0x0020    // Object is not influenced by any culling
     );
 
-    // TODO: replace ObjectFlags
+    // These flags are not serialized and used only at runtime
     vg_enum_class(vg::core, ObjectRuntimeFlags, u16,
-        //NotSerialized   = 0x0001,   // Object is not saved when its parent is serialized (e.g., for objects instantiated at runtime)    (Runtime)
-        //DirtySave       = 0x0002,   // Object has been modified and needs to be saved again or changes will be lost                     (Runtime)
-        //Unloaded        = 0x0004,   // Object is being unloaded                                                                         (Runtime)
-        //
-        //Prefab          = 0x0010,   // Object (e.g., World or GameObject) is a prefab                                                   (Runtime)
-        Instance        = 0x0020    // Object (e.g., World or GameObject) is a prefab                                                   (Runtime)
+        NotSerialized   = 0x0001,   // Object is not saved when its parent is serialized (e.g., for objects instantiated at runtime)
+        DirtySave       = 0x0002,   // Object has been modified and needs to be saved again or changes will be lost                 
+        Unloaded        = 0x0004,   // Object is being unloaded                                                                     
+        Selected        = 0x0010,   // Object is selected                                                                           
+        Prefab          = 0x0100,   // Object (e.g., World or GameObject) is a prefab                                               
+        Instance        = 0x0200    // Object (e.g., World or GameObject) is an Instance                                               
     );
 
     using UID = core::u32;

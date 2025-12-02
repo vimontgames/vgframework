@@ -27,7 +27,7 @@ namespace vg::engine
         GameObject(_name, _parent)
     {
         m_prefabResource.SetParent(this);
-        setObjectFlags(ObjectFlags::Prefab, true);
+        setObjectRuntimeFlags(ObjectRuntimeFlags::Prefab, true);
     }
 
     //--------------------------------------------------------------------------------------
@@ -565,7 +565,7 @@ namespace vg::engine
                 if (prefabChildren.size() == 0)
                 {
                     IGameObject * instance = VG_SAFE_STATIC_CAST(IGameObject, prefabRoot->Instanciate());
-                    instance->SetObjectFlags(ObjectFlags::NotSerialized, true);
+                    instance->SetObjectRuntimeFlags(ObjectRuntimeFlags::NotSerialized, true);
                     instance->SetParent(this);
 
                     // If an object in a Prefab references another object from the same Prefab using UID, 
@@ -851,7 +851,7 @@ namespace vg::engine
     void PrefabGameObject::OnLoad()
     {
         super::OnLoad();
-        setObjectFlags(ObjectFlags::Prefab, true);
+        setObjectRuntimeFlags(ObjectRuntimeFlags::Prefab, true);
     }
 
     //--------------------------------------------------------------------------------------

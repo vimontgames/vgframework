@@ -32,7 +32,7 @@ namespace vg::core
         registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectFlags, "Serialized flags", PropertyFlags::Debug);
         setPropertyDescription(Object, m_objectFlags, "Object flags that are serialized");
 
-        registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectRuntimeFlags, "Runtime flags", PropertyFlags::Debug | PropertyFlags::Transient);
+        registerPropertyEnumBitfieldEx(Object, ObjectRuntimeFlags, m_objectRuntimeFlags, "Runtime flags", PropertyFlags::Debug | PropertyFlags::Transient);
         setPropertyDescription(Object, m_objectRuntimeFlags, "Object flags that are only runtime");
 
         return true;
@@ -249,8 +249,6 @@ namespace vg::core
         auto selection = Kernel::getSelection();
         if (selection->IsSelectedObject(this))
             selection->Remove(this);    // Unselect object on load
-
-        SetObjectFlags(ObjectFlags::Selected, false); 
 
         if (!HasValidUID())
             RegisterUID();

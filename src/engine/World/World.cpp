@@ -106,7 +106,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool World::IsPrefabWorld() const
     {
-        return asBool(ObjectFlags::Prefab & getObjectFlags());
+        return asBool(ObjectRuntimeFlags::Prefab & getObjectRuntimeFlags());
     }
 
     //--------------------------------------------------------------------------------------

@@ -604,7 +604,7 @@ namespace vg::core
                         auto * current = it->second;
                         while (current)
                         {
-                            if (asBool(ObjectFlags::Unloaded & current->GetObjectFlags()))
+                            if (asBool(ObjectRuntimeFlags::Unloaded & current->GetObjectRuntimeFlags()))
                             {
                                 hasUnloadedParent = true;
                                 current = nullptr;
@@ -2538,7 +2538,7 @@ namespace vg::core
 
         if (auto instance = dynamic_cast<const IInstance *>(_object))
         {
-            if (asBool(ObjectFlags::NotSerialized & instance->GetObjectFlags()))
+            if (asBool(ObjectRuntimeFlags::NotSerialized & instance->GetObjectRuntimeFlags()))
                 return false;
         }
 
