@@ -3,7 +3,7 @@
         <Property type="String" name="m_name" value="EngineOptions"/>
         <Property type="Uint32" name="m_uid" value="1488493778"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="EnumFlagsU32" name="m_animationOptionFlags" value="AnimationJobs|ShowSkeletons"/>
         <Property type="EnumFlagsU32" name="m_loadingOptionFlags" value="ResourcePriority"/>
         <Property type="Bool" name="m_showRigidBodies" value="false"/>

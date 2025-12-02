@@ -3,13 +3,13 @@
         <Property type="String" name="m_name" value="Road_3x6_Horizontal_Pedestrian"/>
         <Property type="Uint32" name="m_uid" value="1112702016"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="ObjectPtr" name="m_root">
             <Object class="GameObject">
                 <Property type="String" name="m_name" value="Root"/>
                 <Property type="Uint32" name="m_uid" value="2364368027"/>
                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -20,7 +20,7 @@
                         <Property type="String" name="m_name" value="Road"/>
                         <Property type="Uint32" name="m_uid" value="2684980661"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="3" Iy="0" Iz="0" Iw="0" Jx="-0.0026932589" Jy="5.9999995" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.125" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -30,7 +30,7 @@
                                 <Property type="String" name="m_name" value="New SnapComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2083348831"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Bool" name="m_snapTranslation" value="true"/>
                                 <Property type="Float3" name="m_translation" x="1.5" y="1.5" z="1"/>
@@ -43,7 +43,7 @@
                                 <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
                                 <Property type="Uint32" name="m_uid" value="1205293934"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_category" value="Default"/>
                                 <Property type="Bool" name="m_useCollisionMask" value="false"/>
@@ -53,7 +53,7 @@
                                         <Property type="String" name="m_name" value="PhysicsBodyDesc #132"/>
                                         <Property type="Uint32" name="m_uid" value="3469783036"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="Bool" name="m_trigger" value="false"/>
                                         <Property type="Bool" name="m_softBody" value="false"/>
                                         <Property type="EnumU16" name="m_layer" value="NonMoving"/>
@@ -70,7 +70,7 @@
                                 <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
                                 <Property type="Uint32" name="m_uid" value="380457863"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_shapeType" value="Box"/>
                                 <Property type="ObjectPtr" name="m_shapeDesc">
@@ -78,9 +78,9 @@
                                         <Property type="String" name="m_name" value="BoxShapeDesc #106"/>
                                         <Property type="Uint32" name="m_uid" value="3523589633"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
-                                        <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                        <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
                                         <Property type="Float3" name="m_size" x="3" y="6" z="0.125"/>
                                     </Object>
                                 </Property>
@@ -89,14 +89,14 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="680292731"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="919933710"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/unitcube.fbx"/>
                                     </Object>
                                 </Property>
@@ -105,13 +105,13 @@
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="2932827259"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Asphalt"/>
                                                 <Property type="Uint32" name="m_uid" value="3588158064"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Asphalt/Asphalt.mat"/>
                                             </Object>
                                         </Property>
@@ -126,7 +126,7 @@
                         <Property type="String" name="m_name" value="Decal"/>
                         <Property type="Uint32" name="m_uid" value="1228668689"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999028" Kw="0" Tx="0.89999998" Ty="0.12502378" Tz="0.064999998" Tw="0.99999028"/>
@@ -136,14 +136,14 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2792946877"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="2783718645"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Decal/Sign-Street/Decal_Road_Sign_Line.fbx"/>
                                     </Object>
                                 </Property>
@@ -152,13 +152,13 @@
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="264018284"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Road decals"/>
                                                 <Property type="Uint32" name="m_uid" value="446632680"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Decal/RoadDecals.mat"/>
                                             </Object>
                                         </Property>
@@ -173,7 +173,7 @@
                         <Property type="String" name="m_name" value="Decal_01"/>
                         <Property type="Uint32" name="m_uid" value="984107181"/>
                         <Property type="Uint32" name="m_originalUID" value="1228668689"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999028" Kw="0" Tx="0.89999998" Ty="0.62501895" Tz="0.064999998" Tw="0.99999028"/>
@@ -183,14 +183,14 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="560458023"/>
                                 <Property type="Uint32" name="m_originalUID" value="2792946877"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="3533762592"/>
                                         <Property type="Uint32" name="m_originalUID" value="2783718645"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Decal/Sign-Street/Decal_Road_Sign_Line.fbx"/>
                                     </Object>
                                 </Property>
@@ -199,13 +199,13 @@
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="3789788300"/>
                                         <Property type="Uint32" name="m_originalUID" value="264018284"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Road decals"/>
                                                 <Property type="Uint32" name="m_uid" value="3620602272"/>
                                                 <Property type="Uint32" name="m_originalUID" value="446632680"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Decal/RoadDecals.mat"/>
                                             </Object>
                                         </Property>
@@ -220,7 +220,7 @@
                         <Property type="String" name="m_name" value="Decal_02"/>
                         <Property type="Uint32" name="m_uid" value="2982801626"/>
                         <Property type="Uint32" name="m_originalUID" value="1228668689"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999028" Kw="0" Tx="0.89999998" Ty="1.125019" Tz="0.064999998" Tw="0.99999028"/>
@@ -230,14 +230,14 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2176914723"/>
                                 <Property type="Uint32" name="m_originalUID" value="2792946877"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="2352755531"/>
                                         <Property type="Uint32" name="m_originalUID" value="2783718645"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Decal/Sign-Street/Decal_Road_Sign_Line.fbx"/>
                                     </Object>
                                 </Property>
@@ -246,13 +246,13 @@
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="2029254065"/>
                                         <Property type="Uint32" name="m_originalUID" value="264018284"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Road decals"/>
                                                 <Property type="Uint32" name="m_uid" value="1952223625"/>
                                                 <Property type="Uint32" name="m_originalUID" value="446632680"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Decal/RoadDecals.mat"/>
                                             </Object>
                                         </Property>
@@ -267,7 +267,7 @@
                         <Property type="String" name="m_name" value="Decal_03"/>
                         <Property type="Uint32" name="m_uid" value="1881982536"/>
                         <Property type="Uint32" name="m_originalUID" value="1228668689"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999028" Kw="0" Tx="0.89999998" Ty="1.625019" Tz="0.064999998" Tw="0.99999028"/>
@@ -277,14 +277,14 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2612652700"/>
                                 <Property type="Uint32" name="m_originalUID" value="2792946877"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="1992406066"/>
                                         <Property type="Uint32" name="m_originalUID" value="2783718645"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Decal/Sign-Street/Decal_Road_Sign_Line.fbx"/>
                                     </Object>
                                 </Property>
@@ -293,13 +293,13 @@
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="2271121060"/>
                                         <Property type="Uint32" name="m_originalUID" value="264018284"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Road decals"/>
                                                 <Property type="Uint32" name="m_uid" value="1856904580"/>
                                                 <Property type="Uint32" name="m_originalUID" value="446632680"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Decal/RoadDecals.mat"/>
                                             </Object>
                                         </Property>
@@ -314,7 +314,7 @@
                         <Property type="String" name="m_name" value="Decal_04"/>
                         <Property type="Uint32" name="m_uid" value="2251580301"/>
                         <Property type="Uint32" name="m_originalUID" value="1228668689"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999028" Kw="0" Tx="0.89999998" Ty="2.1250188" Tz="0.064999998" Tw="0.99999028"/>
@@ -324,14 +324,14 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2222466248"/>
                                 <Property type="Uint32" name="m_originalUID" value="2792946877"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="3496787419"/>
                                         <Property type="Uint32" name="m_originalUID" value="2783718645"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Decal/Sign-Street/Decal_Road_Sign_Line.fbx"/>
                                     </Object>
                                 </Property>
@@ -340,13 +340,13 @@
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="3283362179"/>
                                         <Property type="Uint32" name="m_originalUID" value="264018284"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Road decals"/>
                                                 <Property type="Uint32" name="m_uid" value="4052696257"/>
                                                 <Property type="Uint32" name="m_originalUID" value="446632680"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Decal/RoadDecals.mat"/>
                                             </Object>
                                         </Property>
@@ -361,7 +361,7 @@
                         <Property type="String" name="m_name" value="Decal_05"/>
                         <Property type="Uint32" name="m_uid" value="2715220353"/>
                         <Property type="Uint32" name="m_originalUID" value="1228668689"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999028" Kw="0" Tx="0.89999998" Ty="2.6250188" Tz="0.064999998" Tw="0.99999028"/>
@@ -371,14 +371,14 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="3149970859"/>
                                 <Property type="Uint32" name="m_originalUID" value="2792946877"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="3790802301"/>
                                         <Property type="Uint32" name="m_originalUID" value="2783718645"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Decal/Sign-Street/Decal_Road_Sign_Line.fbx"/>
                                     </Object>
                                 </Property>
@@ -387,13 +387,13 @@
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="2803044309"/>
                                         <Property type="Uint32" name="m_originalUID" value="264018284"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Road decals"/>
                                                 <Property type="Uint32" name="m_uid" value="1648253840"/>
                                                 <Property type="Uint32" name="m_originalUID" value="446632680"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Decal/RoadDecals.mat"/>
                                             </Object>
                                         </Property>
@@ -408,7 +408,7 @@
                         <Property type="String" name="m_name" value="Decal_06"/>
                         <Property type="Uint32" name="m_uid" value="4128459296"/>
                         <Property type="Uint32" name="m_originalUID" value="1228668689"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999028" Kw="0" Tx="0.89999998" Ty="-0.37497139" Tz="0.064999998" Tw="0.99999028"/>
@@ -418,14 +418,14 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="4138186502"/>
                                 <Property type="Uint32" name="m_originalUID" value="2792946877"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="1306832708"/>
                                         <Property type="Uint32" name="m_originalUID" value="2783718645"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Decal/Sign-Street/Decal_Road_Sign_Line.fbx"/>
                                     </Object>
                                 </Property>
@@ -434,13 +434,13 @@
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="1079592240"/>
                                         <Property type="Uint32" name="m_originalUID" value="264018284"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Road decals"/>
                                                 <Property type="Uint32" name="m_uid" value="3968017182"/>
                                                 <Property type="Uint32" name="m_originalUID" value="446632680"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Decal/RoadDecals.mat"/>
                                             </Object>
                                         </Property>
@@ -455,7 +455,7 @@
                         <Property type="String" name="m_name" value="Decal_07"/>
                         <Property type="Uint32" name="m_uid" value="3472327643"/>
                         <Property type="Uint32" name="m_originalUID" value="1228668689"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999028" Kw="0" Tx="0.89999998" Ty="-0.87497133" Tz="0.064999998" Tw="0.99999028"/>
@@ -465,14 +465,14 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="331173386"/>
                                 <Property type="Uint32" name="m_originalUID" value="2792946877"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="2189326521"/>
                                         <Property type="Uint32" name="m_originalUID" value="2783718645"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Decal/Sign-Street/Decal_Road_Sign_Line.fbx"/>
                                     </Object>
                                 </Property>
@@ -481,13 +481,13 @@
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="1564591422"/>
                                         <Property type="Uint32" name="m_originalUID" value="264018284"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Road decals"/>
                                                 <Property type="Uint32" name="m_uid" value="3065400666"/>
                                                 <Property type="Uint32" name="m_originalUID" value="446632680"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Decal/RoadDecals.mat"/>
                                             </Object>
                                         </Property>
@@ -502,7 +502,7 @@
                         <Property type="String" name="m_name" value="Decal_08"/>
                         <Property type="Uint32" name="m_uid" value="4258301542"/>
                         <Property type="Uint32" name="m_originalUID" value="1228668689"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999028" Kw="0" Tx="0.89999998" Ty="-1.3749713" Tz="0.064999998" Tw="0.99999028"/>
@@ -512,14 +512,14 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="3437839896"/>
                                 <Property type="Uint32" name="m_originalUID" value="2792946877"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="191236313"/>
                                         <Property type="Uint32" name="m_originalUID" value="2783718645"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Decal/Sign-Street/Decal_Road_Sign_Line.fbx"/>
                                     </Object>
                                 </Property>
@@ -528,13 +528,13 @@
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="3003979583"/>
                                         <Property type="Uint32" name="m_originalUID" value="264018284"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Road decals"/>
                                                 <Property type="Uint32" name="m_uid" value="2271439164"/>
                                                 <Property type="Uint32" name="m_originalUID" value="446632680"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Decal/RoadDecals.mat"/>
                                             </Object>
                                         </Property>
@@ -549,7 +549,7 @@
                         <Property type="String" name="m_name" value="Decal_09"/>
                         <Property type="Uint32" name="m_uid" value="3618288848"/>
                         <Property type="Uint32" name="m_originalUID" value="1228668689"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999028" Kw="0" Tx="0.89999998" Ty="-1.8749713" Tz="0.064999998" Tw="0.99999028"/>
@@ -559,14 +559,14 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2067848238"/>
                                 <Property type="Uint32" name="m_originalUID" value="2792946877"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="1968652039"/>
                                         <Property type="Uint32" name="m_originalUID" value="2783718645"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Decal/Sign-Street/Decal_Road_Sign_Line.fbx"/>
                                     </Object>
                                 </Property>
@@ -575,13 +575,13 @@
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="2472259496"/>
                                         <Property type="Uint32" name="m_originalUID" value="264018284"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Road decals"/>
                                                 <Property type="Uint32" name="m_uid" value="2347662388"/>
                                                 <Property type="Uint32" name="m_originalUID" value="446632680"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Decal/RoadDecals.mat"/>
                                             </Object>
                                         </Property>
@@ -596,7 +596,7 @@
                         <Property type="String" name="m_name" value="Decal_10"/>
                         <Property type="Uint32" name="m_uid" value="413178105"/>
                         <Property type="Uint32" name="m_originalUID" value="1228668689"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-8.9406967e-08" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-8.9406967e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999028" Kw="0" Tx="0.89999998" Ty="-2.3749664" Tz="0.064999998" Tw="0.99999028"/>
@@ -606,14 +606,14 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="906588317"/>
                                 <Property type="Uint32" name="m_originalUID" value="2792946877"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="4143831558"/>
                                         <Property type="Uint32" name="m_originalUID" value="2783718645"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Meshes/Decal/Sign-Street/Decal_Road_Sign_Line.fbx"/>
                                     </Object>
                                 </Property>
@@ -622,13 +622,13 @@
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="3777750298"/>
                                         <Property type="Uint32" name="m_originalUID" value="264018284"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="ResourceVector" name="m_resources">
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Road decals"/>
                                                 <Property type="Uint32" name="m_uid" value="3403734190"/>
                                                 <Property type="Uint32" name="m_originalUID" value="446632680"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Decal/RoadDecals.mat"/>
                                             </Object>
                                         </Property>

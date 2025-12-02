@@ -3,13 +3,13 @@
         <Property type="String" name="m_name" value="HealthBar"/>
         <Property type="Uint32" name="m_uid" value="4218047207"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="ObjectPtr" name="m_root">
             <Object class="GameObject">
                 <Property type="String" name="m_name" value="Root"/>
                 <Property type="Uint32" name="m_uid" value="2936680143"/>
                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -20,7 +20,7 @@
                         <Property type="String" name="m_name" value="HealthBar"/>
                         <Property type="Uint32" name="m_uid" value="2197187471"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -30,7 +30,7 @@
                                 <Property type="String" name="m_name" value="New HealthBarBehaviour"/>
                                 <Property type="Uint32" name="m_uid" value="3833046945"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float" name="m_width" value="0"/>
                                 <Property type="Float" name="m_currentHP" value="0"/>
@@ -40,7 +40,7 @@
                                 <Property type="String" name="m_name" value="New UICanvasComponent"/>
                                 <Property type="Uint32" name="m_uid" value="52539760"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_horizontal" value="Center"/>
                                 <Property type="EnumU8" name="m_vertical" value="Center"/>
@@ -65,7 +65,7 @@
                                 <Property type="String" name="m_name" value="Background"/>
                                 <Property type="Uint32" name="m_uid" value="2439692122"/>
                                 <Property type="Uint32" name="m_originalUID" value="3226805358"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -75,7 +75,7 @@
                                         <Property type="String" name="m_name" value="New UIImageComponent"/>
                                         <Property type="Uint32" name="m_uid" value="2171310607"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                         <Property type="EnumU8" name="m_vertical" value="Center"/>
@@ -92,7 +92,7 @@
                                                 <Property type="String" name="m_name" value=""/>
                                                 <Property type="Uint32" name="m_uid" value="719438103"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Textures/White.tga"/>
                                             </Object>
                                         </Property>
@@ -104,7 +104,7 @@
                                 <Property type="String" name="m_name" value="Life"/>
                                 <Property type="Uint32" name="m_uid" value="876803178"/>
                                 <Property type="Uint32" name="m_originalUID" value="3226805358"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -114,7 +114,7 @@
                                         <Property type="String" name="m_name" value="New UIImageComponent"/>
                                         <Property type="Uint32" name="m_uid" value="2611496819"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="EnumU8" name="m_horizontal" value="Left"/>
                                         <Property type="EnumU8" name="m_vertical" value="Center"/>
@@ -131,7 +131,7 @@
                                                 <Property type="String" name="m_name" value=""/>
                                                 <Property type="Uint32" name="m_uid" value="4274968656"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Textures/White.tga"/>
                                             </Object>
                                         </Property>
@@ -140,7 +140,7 @@
                                         <Property type="String" name="m_name" value="New UITextComponent"/>
                                         <Property type="Uint32" name="m_uid" value="1958517721"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="EnumU8" name="m_horizontal" value="Center"/>
                                         <Property type="EnumU8" name="m_vertical" value="Center"/>
@@ -154,6 +154,7 @@
                                         <Property type="Float4" name="m_color" x="0" y="0" z="0" w="0.66666669"/>
                                         <Property type="EnumU8" name="m_font" value="Rowndies"/>
                                         <Property type="EnumU8" name="m_style" value="Regular"/>
+                                        <Property type="Uint16" name="m_fontSize" value="14"/>
                                         <Property type="String" name="m_text" value="100 HP"/>
                                     </Object>
                                 </Property>

@@ -3,13 +3,13 @@
         <Property type="String" name="m_name" value="RoboATT2M"/>
         <Property type="Uint32" name="m_uid" value="90143121"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="ObjectPtr" name="m_root">
             <Object class="GameObject">
                 <Property type="String" name="m_name" value="Root"/>
                 <Property type="Uint32" name="m_uid" value="597551051"/>
                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -19,20 +19,20 @@
                         <Property type="String" name="m_name" value="New AnimationComponent"/>
                         <Property type="Uint32" name="m_uid" value="1208536219"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Object" name="m_animations">
                             <Object class="AnimationResourceList">
                                 <Property type="String" name="m_name" value="New AnimationComponent"/>
                                 <Property type="Uint32" name="m_uid" value="4249614978"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="ResourceVector" name="m_resources">
                                     <Object class="AnimationResource">
                                         <Property type="String" name="m_name" value="Walk"/>
                                         <Property type="Uint32" name="m_uid" value="3578960931"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Animations/RoboATT/RoboATT_WALK_2M.fbx"/>
                                         <Property type="Bool" name="m_play" value="false"/>
                                         <Property type="Bool" name="m_loop" value="true"/>
@@ -45,7 +45,7 @@
                                         <Property type="String" name="m_name" value="Jump"/>
                                         <Property type="Uint32" name="m_uid" value="3140686366"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Animations/RoboATT/RoboATT_JUMP_2M.fbx"/>
                                         <Property type="Bool" name="m_play" value="false"/>
                                         <Property type="Bool" name="m_loop" value="true"/>
@@ -58,7 +58,7 @@
                                         <Property type="String" name="m_name" value="Run"/>
                                         <Property type="Uint32" name="m_uid" value="3646436057"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Animations/RoboATT/RoboATT_RUN_2M.fbx"/>
                                         <Property type="Bool" name="m_play" value="false"/>
                                         <Property type="Bool" name="m_loop" value="true"/>
@@ -71,7 +71,7 @@
                                         <Property type="String" name="m_name" value="Hit"/>
                                         <Property type="Uint32" name="m_uid" value="3255161952"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Animations/RoboATT/RoboATT_HIT_2M.fbx"/>
                                         <Property type="Bool" name="m_play" value="false"/>
                                         <Property type="Bool" name="m_loop" value="true"/>
@@ -84,7 +84,7 @@
                                         <Property type="String" name="m_name" value="Idle"/>
                                         <Property type="Uint32" name="m_uid" value="1347171979"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Animations/RoboATT/RoboATT_IDLE_01_2M.fbx"/>
                                         <Property type="Bool" name="m_play" value="false"/>
                                         <Property type="Bool" name="m_loop" value="true"/>
@@ -97,7 +97,7 @@
                                         <Property type="String" name="m_name" value="Hello"/>
                                         <Property type="Uint32" name="m_uid" value="3648470084"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="String" name="m_resourcePath" value="data/Animations/RoboATT/RoboATT_IDLE_2M.fbx"/>
                                         <Property type="Bool" name="m_play" value="false"/>
                                         <Property type="Bool" name="m_loop" value="true"/>
@@ -114,14 +114,14 @@
                         <Property type="String" name="m_name" value="New MeshComponent"/>
                         <Property type="Uint32" name="m_uid" value="3340246462"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Resource" name="m_meshResource">
                             <Object class="MeshResource">
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="282079093"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="String" name="m_resourcePath" value="data/Meshes/RoboATT/RoboATT_2M.fbx"/>
                             </Object>
                         </Property>
@@ -130,7 +130,7 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2049495486"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="ResourceVector" name="m_resources"/>
                             </Object>
                         </Property>

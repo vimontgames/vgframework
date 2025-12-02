@@ -3,7 +3,7 @@
         <Property type="String" name="m_name" value="Editor Options"/>
         <Property type="Uint32" name="m_uid" value="3465924071"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="EnumU8" name="m_theme" value="VimontGames_Dark"/>
         <Property type="EnumU8" name="m_gizmo.m_type" value="Translate"/>
         <Property type="EnumU8" name="m_gizmo.m_space" value="World"/>
@@ -18,7 +18,7 @@
                 <Property type="String" name="m_name" value="CameraSettings #0"/>
                 <Property type="Uint32" name="m_uid" value="2211450374"/>
                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="Float" name="m_near" value="0.1"/>
                 <Property type="Float" name="m_far" value="1000"/>
                 <Property type="ResourcePtr" name="m_lensRes">
@@ -26,7 +26,7 @@
                         <Property type="String" name="m_name" value="LensResource #0"/>
                         <Property type="Uint32" name="m_uid" value="2572224046"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="String" name="m_resourcePath" value=""/>
                         <Property type="ObjectPtr" name="m_cameraLens"/>
                     </Object>

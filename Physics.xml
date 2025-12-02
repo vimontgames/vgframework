@@ -1,9 +1,9 @@
 <Root>
     <Object class="PhysicsOptions">
-        <Property type="Uint32" name="m_uid" flags="Debug|Hexadecimal" value="0"/>
-        <Property type="Uint32" name="m_originalUID" flags="Debug|Hexadecimal" value="0"/>
-        <Property type="String" name="m_name" flags="NotVisible" value="PhysicsOptions"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" flags="Debug|Bitfield" value=""/>
+        <Property type="String" name="m_name" value="PhysicsOptions"/>
+        <Property type="Uint32" name="m_uid" value="3237757050"/>
+        <Property type="Uint32" name="m_originalUID" value="0"/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="Float3" name="m_gravity" x="0" y="0" z="-9.8100004"/>
     </Object>
 </Root>

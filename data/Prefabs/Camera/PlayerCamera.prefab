@@ -3,13 +3,13 @@
         <Property type="String" name="m_name" value="PlayerCamera"/>
         <Property type="Uint32" name="m_uid" value="1664855196"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="ObjectPtr" name="m_root">
             <Object class="GameObject">
                 <Property type="String" name="m_name" value="Root"/>
                 <Property type="Uint32" name="m_uid" value="3158081566"/>
                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -20,7 +20,7 @@
                         <Property type="String" name="m_name" value="PlayerCamera"/>
                         <Property type="Uint32" name="m_uid" value="1065651505"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -30,7 +30,7 @@
                                 <Property type="String" name="m_name" value="GameCameraBehaviour #0"/>
                                 <Property type="Uint32" name="m_uid" value="884797414"/>
                                 <Property type="Uint32" name="m_originalUID" value="1740531556"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="ObjectHandle" name="m_target" value="0"/>
                                 <Property type="Float3" name="m_offset" x="0" y="-17" z="14.5"/>
@@ -40,7 +40,7 @@
                                 <Property type="String" name="m_name" value="CameraComponent #0"/>
                                 <Property type="Uint32" name="m_uid" value="1553686324"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_target" value="Game"/>
                                 <Property type="Uint8" name="m_viewportIndex" value="0"/>
@@ -52,7 +52,7 @@
                                         <Property type="String" name="m_name" value="CameraSettings #2"/>
                                         <Property type="Uint32" name="m_uid" value="2257072415"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="Float" name="m_near" value="1"/>
                                         <Property type="Float" name="m_far" value="500"/>
                                         <Property type="ResourcePtr" name="m_lensRes">
@@ -60,7 +60,7 @@
                                                 <Property type="String" name="m_name" value="LensResource #4"/>
                                                 <Property type="Uint32" name="m_uid" value="3582750266"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Lens/CanonRF24-70mmf2.8.lens"/>
                                                 <Property type="ObjectPtr" name="m_cameraLens"/>
                                             </Object>

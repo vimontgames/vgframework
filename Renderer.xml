@@ -3,7 +3,7 @@
         <Property type="String" name="m_name" value="Renderer Options"/>
         <Property type="Uint32" name="m_uid" value="4100248654"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="Bool" name="m_engine.m_toolMode" value="false"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
         <Property type="Bool" name="m_useCustomQualityLevel" value="false"/>
@@ -23,7 +23,7 @@
                 <Property type="String" name="m_name" value="TextureResource #0"/>
                 <Property type="Uint32" name="m_uid" value="2526968992"/>
                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="String" name="m_resourcePath" value="data/Textures/EnvMaps/Default.psd"/>
             </Object>
         </Property>
@@ -35,7 +35,7 @@
                 <Property type="String" name="m_name" value="TextureResource #1"/>
                 <Property type="Uint32" name="m_uid" value="388369360"/>
                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="String" name="m_resourcePath" value="data/Engine/BRDF/CookTorrance.png"/>
             </Object>
         </Property>
@@ -64,6 +64,7 @@
         <Property type="EnumFlagsU32" name="m_renderPassFlags" value="ZPrepass|Opaque|Transparency"/>
         <Property type="EnumFlagsU32" name="m_displayFlags" value="AlbedoMap|NormalMap|VertexColor|MaterialColor|InstanceColor"/>
         <Property type="Bool" name="m_renderJobs" value="true"/>
+        <Property type="Bool" name="m_renderJobsSeparateKicks" value="false"/>
         <Property type="Bool" name="m_forceRenderJobsCount" value="false"/>
         <Property type="Uint16" name="m_renderJobsCount" value="2"/>
         <Property type="EnumU8" name="m_renderJobsPolicy" value="RecursiveSplit"/>

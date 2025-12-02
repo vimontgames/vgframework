@@ -3,13 +3,13 @@
         <Property type="String" name="m_name" value="EngineStats"/>
         <Property type="Uint32" name="m_uid" value="3734891452"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
-        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="ObjectPtr" name="m_root">
             <Object class="GameObject">
                 <Property type="String" name="m_name" value="Root"/>
                 <Property type="Uint32" name="m_uid" value="1258467263"/>
                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -20,7 +20,7 @@
                         <Property type="String" name="m_name" value="EngineStats"/>
                         <Property type="Uint32" name="m_uid" value="2153177869"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -30,7 +30,7 @@
                                 <Property type="String" name="m_name" value="New HUDComponent"/>
                                 <Property type="Uint32" name="m_uid" value="1836995825"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="ObjectHandle" name="m_fpsText" value="852509354"/>
                                 <Property type="ObjectHandle" name="m_frameText" value="433434260"/>
@@ -45,7 +45,7 @@
                                 <Property type="String" name="m_name" value="Top-right Canvas"/>
                                 <Property type="Uint32" name="m_uid" value="568607132"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="1.1754944e-38" Ky="0" Kz="1" Kw="0" Tx="-4" Ty="2" Tz="0" Tw="1"/>
@@ -55,7 +55,7 @@
                                         <Property type="String" name="m_name" value="New UICanvasComponent"/>
                                         <Property type="Uint32" name="m_uid" value="4061799965"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                         <Property type="EnumU8" name="m_vertical" value="Top"/>
@@ -80,7 +80,7 @@
                                         <Property type="String" name="m_name" value="Background"/>
                                         <Property type="Uint32" name="m_uid" value="1924139351"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -90,7 +90,7 @@
                                                 <Property type="String" name="m_name" value="New UIImageComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="435587836"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
@@ -107,7 +107,7 @@
                                                         <Property type="String" name="m_name" value=""/>
                                                         <Property type="Uint32" name="m_uid" value="4293908620"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Textures/Black.tga"/>
                                                     </Object>
                                                 </Property>
@@ -119,7 +119,7 @@
                                         <Property type="String" name="m_name" value="FPS"/>
                                         <Property type="Uint32" name="m_uid" value="852509354"/>
                                         <Property type="Uint32" name="m_originalUID" value="3735928559"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -129,7 +129,7 @@
                                                 <Property type="String" name="m_name" value="New UITextComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="363825769"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
@@ -144,7 +144,7 @@
                                                 <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
                                                 <Property type="EnumU8" name="m_style" value="Regular"/>
                                                 <Property type="Uint16" name="m_fontSize" value="28"/>
-                                                <Property type="String" name="m_text" value="144 FPS"/>
+                                                <Property type="String" name="m_text" value="117 FPS"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -153,7 +153,7 @@
                                         <Property type="String" name="m_name" value="Frame"/>
                                         <Property type="Uint32" name="m_uid" value="433434260"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -163,7 +163,7 @@
                                                 <Property type="String" name="m_name" value="New UITextComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="2074992369"/>
                                                 <Property type="Uint32" name="m_originalUID" value="363825769"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
@@ -178,7 +178,7 @@
                                                 <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
                                                 <Property type="EnumU8" name="m_style" value="Regular"/>
                                                 <Property type="Uint16" name="m_fontSize" value="14"/>
-                                                <Property type="String" name="m_text" value="6.95 ms"/>
+                                                <Property type="String" name="m_text" value="8.55 ms"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -187,7 +187,7 @@
                                         <Property type="String" name="m_name" value="CPU_Label"/>
                                         <Property type="Uint32" name="m_uid" value="815106952"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -197,7 +197,7 @@
                                                 <Property type="String" name="m_name" value="New UITextComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="472174215"/>
                                                 <Property type="Uint32" name="m_originalUID" value="363825769"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
@@ -221,7 +221,7 @@
                                         <Property type="String" name="m_name" value="CPU"/>
                                         <Property type="Uint32" name="m_uid" value="1829163074"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -231,7 +231,7 @@
                                                 <Property type="String" name="m_name" value="New UITextComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="2215235266"/>
                                                 <Property type="Uint32" name="m_originalUID" value="363825769"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
@@ -246,7 +246,7 @@
                                                 <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
                                                 <Property type="EnumU8" name="m_style" value="Regular"/>
                                                 <Property type="Uint16" name="m_fontSize" value="14"/>
-                                                <Property type="String" name="m_text" value="5.42 ms"/>
+                                                <Property type="String" name="m_text" value="8.55 ms"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -255,7 +255,7 @@
                                         <Property type="String" name="m_name" value="RAM"/>
                                         <Property type="Uint32" name="m_uid" value="3928736005"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -265,7 +265,7 @@
                                                 <Property type="String" name="m_name" value="New UITextComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="1628526402"/>
                                                 <Property type="Uint32" name="m_originalUID" value="2816121597"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
@@ -280,7 +280,7 @@
                                                 <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
                                                 <Property type="EnumU8" name="m_style" value="Regular"/>
                                                 <Property type="Uint16" name="m_fontSize" value="14"/>
-                                                <Property type="String" name="m_text" value="1.04 GB"/>
+                                                <Property type="String" name="m_text" value="1.24 GB"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -289,7 +289,7 @@
                                         <Property type="String" name="m_name" value="GPU_Label"/>
                                         <Property type="Uint32" name="m_uid" value="3140603788"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -299,7 +299,7 @@
                                                 <Property type="String" name="m_name" value="New UITextComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="3247443791"/>
                                                 <Property type="Uint32" name="m_originalUID" value="363825769"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
@@ -323,7 +323,7 @@
                                         <Property type="String" name="m_name" value="GPU"/>
                                         <Property type="Uint32" name="m_uid" value="3160631276"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -333,7 +333,7 @@
                                                 <Property type="String" name="m_name" value="New UITextComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="2816121597"/>
                                                 <Property type="Uint32" name="m_originalUID" value="363825769"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
@@ -348,7 +348,7 @@
                                                 <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
                                                 <Property type="EnumU8" name="m_style" value="Regular"/>
                                                 <Property type="Uint16" name="m_fontSize" value="14"/>
-                                                <Property type="String" name="m_text" value="2.01 ms"/>
+                                                <Property type="String" name="m_text" value="1.35 ms"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -357,7 +357,7 @@
                                         <Property type="String" name="m_name" value="VRAM"/>
                                         <Property type="Uint32" name="m_uid" value="1651428292"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU32" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -367,7 +367,7 @@
                                                 <Property type="String" name="m_name" value="New UITextComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="2018911044"/>
                                                 <Property type="Uint32" name="m_originalUID" value="2816121597"/>
-                                                <Property type="EnumFlagsU32" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_horizontal" value="Right"/>
                                                 <Property type="EnumU8" name="m_vertical" value="Top"/>
@@ -382,7 +382,7 @@
                                                 <Property type="EnumU8" name="m_font" value="UbuntuMono"/>
                                                 <Property type="EnumU8" name="m_style" value="Regular"/>
                                                 <Property type="Uint16" name="m_fontSize" value="14"/>
-                                                <Property type="String" name="m_text" value="3.85 GB"/>
+                                                <Property type="String" name="m_text" value="3.24 GB"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
