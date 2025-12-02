@@ -16,6 +16,21 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE ObjectRuntimeFlags Object::getObjectRuntimeFlags() const
+    {
+        return m_objectRuntimeFlags;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void Object::setObjectRuntimeFlags(ObjectRuntimeFlags _flags, bool _enabled)
+    {
+        if (_enabled)
+            m_objectRuntimeFlags |= _flags;
+        else
+            m_objectRuntimeFlags &= ~_flags;
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE void Object::setParent(IObject * _parent)
     {
         m_parent = (Object *)_parent;

@@ -94,7 +94,7 @@ namespace vg::renderer
     {
         SurfaceTypeFlags flags = (SurfaceTypeFlags)0x0;
 
-        auto materials = getMaterials();
+        const auto & materials = getMaterials();
         if (materials.size() > 0)
         {
             for (auto * material : materials)

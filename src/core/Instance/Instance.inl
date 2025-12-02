@@ -27,8 +27,9 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     VG_INLINE void Instance::setGlobalMatrix(const float4x4 & _global)
     {
-        if (Instance * parent = dynamic_cast<Instance *>(GetParent()))
-            m_local = mul(_global, inverse(parent->getGlobalMatrix()));
+        const Object * parent = (Object*)getParent();
+        if (parent && asBool(ObjectRuntimeFlags::Instance & parent->getObjectRuntimeFlags()))
+            m_local = mul(_global, inverse(((Instance *)parent)->getGlobalMatrix()));
         else
             m_local = _global;
     }
@@ -37,8 +38,9 @@ namespace vg::core
     VG_INLINE const float4x4 Instance::getGlobalMatrix() const
     {
         float4x4 global = m_local;
-        if (Instance * parent = dynamic_cast<Instance *>(GetParent()))
-            global = mul(global, parent->getGlobalMatrix());
+        const Object * parent = (Object *)getParent();
+        if (parent && asBool(ObjectRuntimeFlags::Instance & parent->getObjectRuntimeFlags()))
+            global = mul(global, ((Instance*)parent)->getGlobalMatrix());
         return global;
     }
 

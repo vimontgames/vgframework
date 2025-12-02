@@ -16,6 +16,7 @@ namespace vg::core
         IInstance(_name, _parent),
         m_flags(InstanceFlags::Enabled)
     {
+        setObjectRuntimeFlags(ObjectRuntimeFlags::Instance, true);
     }
 
     //--------------------------------------------------------------------------------------

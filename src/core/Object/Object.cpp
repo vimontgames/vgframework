@@ -29,8 +29,11 @@ namespace vg::core
         registerPropertyEx(Object, m_originalUID, "UID (Source)", PropertyFlags::Debug | PropertyFlags::Hexadecimal | PropertyFlags::ReadOnly);
         setPropertyDescription(Object, m_originalUID, "Source object's unique ID");
 
-        registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectFlags, "Flags", PropertyFlags::Debug);
-        setPropertyDescription(Object, m_objectFlags, "Object flags");
+        registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectFlags, "Serialized flags", PropertyFlags::Debug);
+        setPropertyDescription(Object, m_objectFlags, "Object flags that are serialized");
+
+        registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectRuntimeFlags, "Runtime flags", PropertyFlags::Debug | PropertyFlags::Transient);
+        setPropertyDescription(Object, m_objectRuntimeFlags, "Object flags that are only runtime");
 
         return true;
     }
@@ -161,6 +164,18 @@ namespace vg::core
     void Object::SetObjectFlags(ObjectFlags _flags, bool _enabled)
     {
         setObjectFlags(_flags, _enabled);
+    }
+
+    //--------------------------------------------------------------------------------------
+    ObjectRuntimeFlags Object::GetObjectRuntimeFlags() const
+    {
+        return getObjectRuntimeFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Object::SetObjectRuntimeFlags(ObjectRuntimeFlags _flags, bool _enabled)
+    {
+        setObjectRuntimeFlags(_flags, _enabled);
     }
 
     //--------------------------------------------------------------------------------------
