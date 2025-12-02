@@ -30,7 +30,7 @@ namespace vg::core
         bool                                        LoadFromXML                     (IObject * _object, const string & _xmlFile) const final;
         bool                                        SaveToXML                       (IObject * _object, const string & _xmlFile) const final;
 
-        bool                                        SerializeFromXML                (IObject * _object, XMLDoc & _xmlDoc) const final;
+        bool                                        SerializeFromXML                (IObject * _object, XMLDoc & _xmlDoc, const string & _xmlFile) const final;
         bool                                        SerializeToXML                  (IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent = nullptr) const final;
 
         bool                                        SaveProperties                  (core::IObject * _object, BufferType _bufferType) final override;
@@ -48,7 +48,7 @@ namespace vg::core
         IObject *                                   FindByUID                       (UID _uid) const final override;
 
     //protected:
-        bool                                        SerializeFromXML                (IObject * _object, const XMLElem * _xmlElem) const;
+        bool                                        SerializeFromXML                (IObject * _object, const XMLElem * _xmlElem, const string & _xmlFile) const;
 
         template <typename T> void                  serializeIntegerPropertyFromXML (IObject * _object, const IProperty * _prop, const XMLElem * _xmlElem, core::uint _index = 0) const;
         template <typename T> void                  serializeIntegerPropertyToXML   (const IObject * _object, const IProperty * _prop, XMLElem * _xmlElem, core::uint _index = 0) const;

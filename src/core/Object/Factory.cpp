@@ -191,7 +191,7 @@ namespace vg::core
             XMLNode * xmlRoot = xmlDoc.FirstChild();
             if (xmlRoot != nullptr)
             {
-                if (SerializeFromXML(_object, xmlDoc))
+                if (SerializeFromXML(_object, xmlDoc, _xmlFile))
                 {
                     _object->SetFile(relativePath.c_str());
                     _object->RegisterUID();
@@ -1542,11 +1542,11 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::SerializeFromXML(IObject* _object, XMLDoc & _xmlDoc) const
+    bool Factory::SerializeFromXML(IObject* _object, XMLDoc & _xmlDoc, const string & _xmlFile) const
     {
         auto * parent = _xmlDoc.RootElement();
         const XMLElement * xmlObject = parent->FirstChildElement("Object");
-        bool result = SerializeFromXML(_object, xmlObject);
+        bool result = SerializeFromXML(_object, xmlObject, _xmlFile);
         return result;
     }
 
@@ -1561,7 +1561,7 @@ namespace vg::core
     };
 
     //--------------------------------------------------------------------------------------
-    bool Factory::SerializeFromXML(IObject * _object, const XMLElem * xmlObject) const
+    bool Factory::SerializeFromXML(IObject * _object, const XMLElem * xmlObject, const string & _xmlFile) const
     {
         if (_object == nullptr)
         {
@@ -1627,16 +1627,30 @@ namespace vg::core
                                 if (prop->GetType() != type)
                                 {
                                     // Try to read compatible types when possible
-
-                                    // Destination
                                     bool compatible = false;
-                                    switch (prop->GetType())
+
+                                    // 1. When the new destination type is LARGER than the source type and bitwise (e.g.u8 to u16, u8 to u32 etc...) then we can simply read the value and higher bits will be clear
+                                    // TODO
+                                    
+                                    // 2. When the new destination type is SMALLER than source type and bitwise, we must mask writes if enough
+                                    // TODO
+                                    
+                                    // 3. Compatible types
+                                    switch (prop->GetType())    
                                     {
+                                        // Enum types are compatible when serializing them from XML because we read them as string
+
+                                        // Destination type
+                                        case PropertyType::EnumU64:
                                         case PropertyType::EnumU32:
+                                        case PropertyType::EnumU16:
+                                        case PropertyType::EnumU8:
                                         {
-                                            // Source
+                                            // Source type
                                             switch (type)
                                             {
+                                                case PropertyType::EnumU64:
+                                                case PropertyType::EnumU32:
                                                 case PropertyType::EnumU16:
                                                 case PropertyType::EnumU8:
                                                     compatible = true;
@@ -1644,16 +1658,98 @@ namespace vg::core
                                             }
                                         }
                                         break;
+
+                                        // Destination type
+                                        case PropertyType::EnumI64:
+                                        case PropertyType::EnumI32:
+                                        case PropertyType::EnumI16:
+                                        case PropertyType::EnumI8:
+                                        {
+                                            // Source type
+                                            switch (type)
+                                            {
+                                                case PropertyType::EnumI64:
+                                                case PropertyType::EnumI32:
+                                                case PropertyType::EnumI16:
+                                                case PropertyType::EnumI8:
+                                                    compatible = true;
+                                                    break;
+                                            }
+                                        }
+                                        break;
+
+                                        // Destination type
+                                        case PropertyType::EnumFlagsU64:
+                                        case PropertyType::EnumFlagsU32:
+                                        case PropertyType::EnumFlagsU16:
+                                        case PropertyType::EnumFlagsU8:
+                                        {
+                                            // Source type
+                                            switch (type)
+                                            {
+                                                case PropertyType::EnumFlagsU64:
+                                                case PropertyType::EnumFlagsU32:
+                                                case PropertyType::EnumFlagsU16:
+                                                case PropertyType::EnumFlagsU8:
+                                                    compatible = true;
+                                                    break;
+                                            }
+                                        }
+                                        break;
+
+                                        // Signed/unsigned integer types are reinterpreted_cast and clamped
+                                        
+                                        // Destination type
+                                        case PropertyType::Int8:
+                                        case PropertyType::Int16:
+                                        case PropertyType::Int32:
+                                        case PropertyType::Int64:
+                                        case PropertyType::Uint8:
+                                        case PropertyType::Uint16:
+                                        case PropertyType::Uint32:
+                                        //case PropertyType::Uint64:
+                                        {
+                                            // Source type
+                                            switch (type)
+                                            {
+                                                case PropertyType::Int8:
+                                                case PropertyType::Int16:
+                                                case PropertyType::Int32:
+                                                case PropertyType::Int64:
+                                                case PropertyType::Uint8:
+                                                case PropertyType::Uint16:
+                                                case PropertyType::Uint32:
+                                                //case PropertyType::Uint64:
+                                                    compatible = true;
+                                                    break;
+                                            }
+                                        }
+                                        break;
+                                    }
+                                    
+                                    switch (prop->GetType())
+                                    {
+                                        // Destination type
+                                        case PropertyType::EnumU16:
+                                        {
+                                            // Source type
+                                            switch (type)
+                                            {
+                                                case PropertyType::EnumU32:
+                                                    compatible = true;
+                                                break;
+                                            }
+                                        }
                                     }
 
                                     if (compatible)
                                     {
-                                        VG_WARNING("[Factory] Property \"%s\" from class \"%s\" has been converted from type \"%s\" to \"%s\"", name, className, typeName, asString(prop->GetType()).c_str());
+                                        VG_WARNING("[Factory] Property \"%s\" from class \"%s\" in file \"%s\" has been converted from type \"%s\" to \"%s\"", name, className, _xmlFile.c_str(), typeName, asString(prop->GetType()).c_str());
                                         type = prop->GetType();
                                     }
                                     else
                                     {
-                                        VG_WARNING("[Factory] Type \"%s\" of Property \"%s\" from class \"%s\" does not match type \"%s\" declared in ClassDesc", typeName, name, className, asString(prop->GetType()).c_str());
+                                        VG_ERROR("[Factory] Type \"%s\" of Property \"%s\" from class \"%s\" in file \"%s\" does not match type \"%s\" declared in ClassDesc", typeName, name, className, _xmlFile.c_str(), asString(prop->GetType()).c_str());
                                     }
                                 }
 
@@ -1766,7 +1862,7 @@ namespace vg::core
                                                     if (nullptr != classDescRef)
                                                     {
                                                         // TODO: clear contents?
-                                                        VG_VERIFY(SerializeFromXML(pObjectRef, xmlObjectRef));
+                                                        VG_VERIFY(SerializeFromXML(pObjectRef, xmlObjectRef, _xmlFile));
                                                         pObjectRef->SetParent(_object);
                                                     }
                                                 }
@@ -1792,7 +1888,7 @@ namespace vg::core
                                                         classDescRef = GetClassDescriptor(classNameRef);
                                                         if (nullptr != classDescRef)
                                                         {
-                                                            if (SerializeFromXML(_resource, xmlObjectRef))
+                                                            if (SerializeFromXML(_resource, xmlObjectRef, _xmlFile))
                                                             {
                                                                 _resource->SetParent(_object);
                                                                 _resource->OnResourcePathChanged("", _resource->GetResourcePath());
@@ -1856,7 +1952,7 @@ namespace vg::core
                                                             if (nullptr != classDescRef)
                                                             {
                                                                 IResource * resource = (IResource*)CreateObject(classNameRef, "", _object);
-                                                                if (SerializeFromXML(resource, xmlObjectRef))
+                                                                if (SerializeFromXML(resource, xmlObjectRef, _xmlFile))
                                                                 {
                                                                     resource->SetParent(_object);
                                                                     resource->OnResourcePathChanged("", resource->GetResourcePath());
@@ -1922,7 +2018,7 @@ namespace vg::core
                                                             if (nullptr != classDescRef)
                                                             {
                                                                 IResource * pResource = (IResource *)(uint_ptr(data) + index * sizeOf);
-                                                                if (SerializeFromXML(pResource, xmlObjectRef))
+                                                                if (SerializeFromXML(pResource, xmlObjectRef, _xmlFile))
                                                                 {
                                                                     pResource->SetParent(_object);
                                                                     pResource->OnResourcePathChanged("", pResource->GetResourcePath());
@@ -1985,7 +2081,7 @@ namespace vg::core
                                                             if (nullptr != classDescRef)
                                                             {
                                                                 IObject * pObject = (IObject *)(uint_ptr(data) + index * sizeOf);
-                                                                if (SerializeFromXML(pObject, xmlObjectRef))
+                                                                if (SerializeFromXML(pObject, xmlObjectRef, _xmlFile))
                                                                     pObject->SetParent(_object);
                                                                 index++;
                                                             }
@@ -2015,7 +2111,7 @@ namespace vg::core
                                                     if (nullptr != classDescRef)
                                                     {
                                                         pObjectRef = CreateObject(classNameRef, "", _object);
-                                                        if (!SerializeFromXML(pObjectRef, xmlObjectRef))
+                                                        if (!SerializeFromXML(pObjectRef, xmlObjectRef, _xmlFile))
                                                             VG_SAFE_DELETE(pObjectRef);
                                                     }
                                                 }
@@ -2050,7 +2146,7 @@ namespace vg::core
                                                             if (nullptr != classDescRef)
                                                             {
                                                                 pObjectRef = CreateObject(classNameRef, "", _object);
-                                                                if (SerializeFromXML(pObjectRef, xmlObjectRef))
+                                                                if (SerializeFromXML(pObjectRef, xmlObjectRef, _xmlFile))
                                                                 {
                                                                     vector->push_back(pObjectRef);
                                                                 }

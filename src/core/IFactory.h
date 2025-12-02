@@ -43,7 +43,7 @@ namespace vg::core
         virtual bool                        LoadFromXML                 (IObject * _object, const string & _XMLfilename) const = 0;
         virtual bool                        SaveToXML                   (IObject * _object, const string & _xmlFile) const  = 0;
 
-        virtual bool                        SerializeFromXML            (IObject * _object, XMLDoc & _xmlDoc) const = 0;
+        virtual bool                        SerializeFromXML            (IObject * _object, XMLDoc & _xmlDoc, const string & _xmlFile) const = 0;
         virtual bool                        SerializeToXML              (IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent = nullptr) const = 0;
 
         virtual void                        ReleaseAsync                (core::IObject * _object) = 0;
