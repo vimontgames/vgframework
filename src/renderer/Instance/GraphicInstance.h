@@ -27,7 +27,7 @@ namespace vg::renderer
     class MaterialModel;
     class View;
     class Frustum;
-    struct CullingOptions;
+    struct ViewCullingOptions;
     struct CullingResult;
 
     class GraphicInstance : public IGraphicInstance
@@ -46,6 +46,7 @@ namespace vg::renderer
         ~GraphicInstance();
 
         // IGraphicInstance default implementations
+        GraphicInstanceType                             GetGraphicIntanceType           () const override = 0;
         bool                                            IsSkinned                       () const override { return false; }
         bool                                            TryGetAABB                      (core::AABB & _aabb) const override { return false; }
         bool                                            SetMaterialCount                (core::uint _count) override;
@@ -57,7 +58,7 @@ namespace vg::renderer
         PickingID                                       GetPickingID                    () const override;
 
         // New virtual functions added to GraphicInstance
-        virtual bool                                    Cull                            (const CullingOptions & _cullingOptions, CullingResult * _cullingResult) = 0;
+        virtual bool                                    Cull                            (const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult) = 0;
         virtual void                                    OnMaterialChanged               ();
         virtual bool                                    UpdateTLAS                      (gfx::CommandList * _cmdList, gfx::TLAS * _tlas) { return false; }
 

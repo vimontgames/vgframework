@@ -50,6 +50,7 @@
 #include "renderer/Model/Material/MaterialManager.h"
 #include "renderer/Particle/ParticleManager.h"
 #include "renderer/Camera/CameraLens.h"
+#include "renderer/Job/Culling/WorldCullingJob.h"
 
 #if !VG_ENABLE_INLINE
 #include "Renderer.inl"
@@ -246,7 +247,8 @@ namespace vg::renderer
             initDefaultMaterials();
 
             // Shared job output (must be created before views because it's needed to init View culling jobs
-            m_sharedCullingJobOutput = new SharedCullingJobOutput();
+            m_sharedWorldCullingJobOutput = new SharedWorldCullingJobOutput();
+            m_sharedViewCullingJobOutput = new SharedViewCullingJobOutput();
 
             // Create "Game" viewport for "Game" views
             auto gameViewportParams = CreateViewportParams(ViewportTarget::Game, GetBackbufferSize());
@@ -299,7 +301,8 @@ namespace vg::renderer
 	{
         VG_SAFE_RELEASE(m_defaultCameraLens);
         VG_SAFE_RELEASE(m_generatedSpecularBRDF);
-        VG_SAFE_DELETE(m_sharedCullingJobOutput);
+        VG_SAFE_DELETE(m_sharedViewCullingJobOutput);
+        VG_SAFE_DELETE(m_sharedWorldCullingJobOutput);
         VG_SAFE_RELEASE(m_hdrOutput);
 
         UnregisterClasses();
@@ -468,55 +471,9 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    // Get visible world and its views
-    //--------------------------------------------------------------------------------------
-    core::vector<VisibleWorld> Renderer::getVisibleWorlds() const
-    {
-        core::vector<VisibleWorld> visibleWorlds;
-
-        for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
-        {
-            auto target = gfx::ViewTarget(j);
-
-            if (m_fullscreen)
-            {
-                if (gfx::ViewTarget::Editor == target)
-                    continue;
-            }
-
-            auto & views = m_views[j];
-            for (uint i = 0; i < views.size(); ++i)
-            {
-                auto * view = (View *)views[i];
-                if (nullptr != view)
-                {
-                    if (!view->IsRender())
-                        continue;
-
-                    auto * world = view->GetWorld();
-
-                    if (nullptr != world)
-                    {
-                        auto it = std::find_if(visibleWorlds.begin(), visibleWorlds.end(), [&](const VisibleWorld & _other) { return _other.world == world; });
-                        VisibleWorld * visibleWorld;
-                        if (visibleWorlds.end() != it)
-                            visibleWorld = &(*it);
-                        else
-                            visibleWorld = &visibleWorlds.emplace_back(world);
-
-                        visibleWorld->views.push_back(view);
-                    }
-                }
-            }
-        }
-
-        return visibleWorlds;
-    }
-
-    //--------------------------------------------------------------------------------------
     // TODO: detect the source envmap used to compute irradiance/specular only once 
     //--------------------------------------------------------------------------------------
-    void Renderer::updateIBLCubemaps(const vector<VisibleWorld> & _visibleWorlds)
+    void Renderer::updateIBLCubemaps()
     {
         RendererOptions * options = RendererOptions::get();
 
@@ -524,9 +481,11 @@ namespace vg::renderer
         
         bool anyRecompute = false;
 
-        for (uint i = 0; i < _visibleWorlds.size(); ++i)
+        const auto & visibleWorlds = getSharedWorldCullingJobOutput()->m_allVisibleWorlds;
+
+        for (uint i = 0; i < visibleWorlds.size(); ++i)
         {
-            auto * world = _visibleWorlds[i].world;
+            auto * world = visibleWorlds[i].m_world;
 
             bool recomputeIrradiance = false, recomputeSpecularReflection = false;
 
@@ -637,16 +596,19 @@ namespace vg::renderer
 
 		m_device.beginFrame();
 		{
-            const auto visibleWorlds = getVisibleWorlds();
+            //--------------------------------------------------------------------------------------
+            // List all worlds and their visible views, and instances (but no frustum culling)
+            //--------------------------------------------------------------------------------------
+            cullWorlds();
 
-            // Update world IBL cubemaps if needed
-            updateIBLCubemaps(visibleWorlds);
+            // Update world IBL cubemaps if needed (must happen after cullWorlds)
+            updateIBLCubemaps();
 
             // Update all particles (visible or not) before culling
             m_particleManager->updateSimulation();
 
             //--------------------------------------------------------------------------------------
-            // Cull all views  and wait (TODO: split in several jobs per view)
+            // Cull all views and wait (TODO: split in several jobs per view)
             //--------------------------------------------------------------------------------------
             cullViews();
 
@@ -737,9 +699,11 @@ namespace vg::renderer
                     }
                 }
 
+                const auto & visibleWorlds = getSharedWorldCullingJobOutput()->m_allVisibleWorlds;
+
                 for (uint w = 0; w < visibleWorlds.size(); ++w)
                 {
-                    const auto & visibleViews = visibleWorlds[w].views;
+                    const auto & visibleViews = visibleWorlds[w].m_views;
                     for (uint v = 0; v < visibleViews.size(); ++v)
                     {
                         View * view = (View *)visibleViews[v];
@@ -799,19 +763,102 @@ namespace vg::renderer
         }
 	}
 
+    static volatile int counter = 0;
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::cullWorlds()
+    {
+        VG_ASSERT(m_sharedWorldCullingJobOutput);
+        m_sharedWorldCullingJobOutput->clear();
+
+        auto & visibleWorlds = m_sharedWorldCullingJobOutput->m_allVisibleWorlds;
+      
+        counter = 0;
+        for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
+        {
+            auto target = gfx::ViewTarget(j);
+
+            if (m_fullscreen)
+            {
+                if (gfx::ViewTarget::Editor == target)
+                    continue;
+            }
+
+            auto & views = m_views[j];
+            for (uint i = 0; i < views.size(); ++i)
+            {
+                auto * view = (View *)views[i];
+                if (nullptr != view)
+                {
+                    if (!view->IsRender())
+                        continue;
+
+                    auto * world = view->GetWorld();
+
+                    if (nullptr != world)
+                    {
+                        auto it = std::find_if(visibleWorlds.begin(), visibleWorlds.end(), [&](const WorldCullingJobOutput & _other) { return _other.m_world == world; });
+                        WorldCullingJobOutput * visibleWorld;
+                        if (visibleWorlds.end() != it)
+                            visibleWorld = &(*it);
+                        else
+                            visibleWorld = &visibleWorlds.emplace_back(world);
+
+                        visibleWorld->m_views.push_back(view);
+                        counter++;
+                    }
+                }
+            }
+        }
+
+        core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
+        auto jobSync = GetJobSync(RendererJobType::WorldCulling);
+
+        uint jobStartCounter = 0;
+        for (uint w = 0; w < visibleWorlds.size(); ++w)
+        {
+            WorldCullingJobOutput & visibleWorld = visibleWorlds[w];
+
+            auto * job = visibleWorld.getCullingJob();
+            jobScheduler->Start(job, jobSync);
+            jobStartCounter++;
+        }
+
+        if (jobStartCounter > 0)
+        {
+            VG_PROFILE_CPU("Wait World Culling");
+            WaitJobSync(RendererJobType::WorldCulling);
+        }
+    }
+
     //--------------------------------------------------------------------------------------
     void Renderer::cullViews()
     {
-        if (!m_sharedCullingJobOutput)
-            return;
-
-        m_sharedCullingJobOutput->clear();
+        VG_ASSERT(m_sharedViewCullingJobOutput);
+        m_sharedViewCullingJobOutput->clear();
 
         core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
-        auto jobSync = GetJobSync(RendererJobType::Culling);
+        auto jobSync = GetJobSync(RendererJobType::ViewCulling);
 
         // Perform culling for each view (might want to split views later)
         uint jobStartCounter = 0;
+
+        #if 1
+        const SharedWorldCullingJobOutput * worldCulling = getSharedWorldCullingJobOutput();
+
+        for (uint w = 0; w < worldCulling->m_allVisibleWorlds.size(); ++w)
+        {
+            const auto & views = worldCulling->m_allVisibleWorlds[w].m_views;
+            for (uint v = 0; v < views.size(); ++v)
+            {
+                View * view = (View*)views[v];
+                auto * job = view->getCullingJob();
+                jobScheduler->Start(job, jobSync);
+                jobStartCounter++;
+            }
+        }
+        #else
+  
         for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
         {
             const auto & views = m_views[j];
@@ -826,11 +873,12 @@ namespace vg::renderer
                 }
             }
         }
+        #endif
 
         if (jobStartCounter > 0)
         {
-            VG_PROFILE_CPU("Wait Culling");
-            WaitJobSync(RendererJobType::Culling);
+            VG_PROFILE_CPU("Wait View Culling");
+            WaitJobSync(RendererJobType::ViewCulling);
         }
     }
 

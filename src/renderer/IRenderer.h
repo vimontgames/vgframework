@@ -46,7 +46,8 @@ namespace vg::renderer
     struct CreateViewportParams;
 
     vg_enum_class(vg::renderer, RendererJobType, core::u8,
-        Culling,
+        WorldCulling,
+        ViewCulling,
         DebugDraw
     );
 

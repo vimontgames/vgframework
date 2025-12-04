@@ -33,25 +33,27 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL(ParticleSystemInstance, IParticleSystemInstance);
 
-                                                    ParticleSystemInstance      (const core::string & _name, core::IObject * _parent);
-                                                    ~ParticleSystemInstance     ();
+                                    ParticleSystemInstance      (const core::string & _name, core::IObject * _parent);
+                                    ~ParticleSystemInstance     ();
 
-        bool                                        TryGetAABB                  (core::AABB & _aabb) const final override;
-        bool                                        Cull                        (const CullingOptions & _cullingOptions, CullingResult * _cullingResult) final override;
-        void                                        Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
+        GraphicInstanceType         GetGraphicIntanceType       () const final override { return GraphicInstanceType::ParticleSystem; }
 
-        bool                                        SetEmitterCount             (core::uint _count) final override;
-        bool                                        SetEmitterParams            (core::uint _index, const ParticleEmitterParams & _emitterParams) final override;
+        bool                        TryGetAABB                  (core::AABB & _aabb) const final override;
+        bool                        Cull                        (const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult) final override;
+        void                        Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
-        void                                        UpdateTime                  (float _dt) final override;
+        bool                        SetEmitterCount             (core::uint _count) final override;
+        bool                        SetEmitterParams            (core::uint _index, const ParticleEmitterParams & _emitterParams) final override;
 
-        core::uint                                  GetGPUInstanceDataSize      () const final override;
-        core::uint                                  FillGPUInstanceData         (const core::u8 * VG_RESTRICT _data) const final override;
+        void                        UpdateTime                  (float _dt) final override;
 
-        core::uint                                  GetGPURenderDataSize        () const override;
-        core::uint                                  FillGPURenderData           (const core::u8 * VG_RESTRICT _data) override;
+        core::uint                  GetGPUInstanceDataSize      () const final override;
+        core::uint                  FillGPUInstanceData         (const core::u8 * VG_RESTRICT _data) const final override;
 
-        void                                        updateSimulation            ();
+        core::uint                  GetGPURenderDataSize        () const override;
+        core::uint                  FillGPURenderData           (const core::u8 * VG_RESTRICT _data) override;
+
+        void                        updateSimulation            ();
 
     private:
         float m_dt = 0.0f;

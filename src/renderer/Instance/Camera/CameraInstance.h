@@ -11,8 +11,10 @@ namespace vg::renderer
         CameraInstance(const core::string & _name, core::IObject * _parent);
         ~CameraInstance();
 
-        bool    Cull                    (const CullingOptions & _cullingOptions, CullingResult * _cullingResult) final override;
-        void    Draw                    (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
+        GraphicInstanceType     GetGraphicIntanceType   () const final override { return GraphicInstanceType::Camera; }
+
+        bool                    Cull                    (const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult) final override;
+        void                    Draw                    (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
     };
 }
 

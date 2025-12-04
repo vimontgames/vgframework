@@ -1594,7 +1594,7 @@ namespace vg::core
                                 auto it = m_oldTypeNames.find(typeName);
                                 if (m_oldTypeNames.end() != it)
                                 {
-                                    VG_WARNING("[Factory] Deprecated type \"%s\" for property \"%s\" replaced by \"%s\" in \"%s\"", typeName, name, asString(it->second).c_str(), _object->GetShortName().c_str());
+                                    VG_WARNING("[Factory] Deprecated type \"%s\" for property \"%s\" replaced by \"%s\" in file \"%s\"", typeName, name, asString(it->second).c_str(), _xmlFile.c_str());
                                     type = it->second;
                                 }
                             }
@@ -1606,13 +1606,13 @@ namespace vg::core
                                 auto it = m_oldPropertyNames.find(name);
                                 if (m_oldPropertyNames.end() != it)
                                 {
-                                    VG_WARNING("[Factory] Deprecated name for property \"%s\" replaced by \"%s\" in \"%s\"", name, it->second.c_str(), _object->GetShortName().c_str());
+                                    VG_WARNING("[Factory] Deprecated name for property \"%s\" replaced by \"%s\" in file \"%s\"", name, it->second.c_str(), _xmlFile.c_str());
                                     name = it->second.c_str();
                                     prop = classDesc->GetPropertyByName(name);
                                 }
                                 else
                                 {
-                                    VG_WARNING("[Factory] Class \"%s\" has no property \"%s\" of type '%s' in \"%s\"", className, name, typeName, _object->GetShortName().c_str());
+                                    VG_WARNING("[Factory] Class \"%s\" has no property \"%s\" of type '%s' in file \"%s\"", className, name, typeName, _xmlFile.c_str());
                                 }
                             }
                             

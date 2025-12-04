@@ -78,7 +78,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool ParticleSystemInstance::Cull(const CullingOptions & _cullingOptions, CullingResult * _cullingResult)
+    bool ParticleSystemInstance::Cull(const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult)
     {
         core::AABB aabb;
         if (TryGetAABB(aabb))

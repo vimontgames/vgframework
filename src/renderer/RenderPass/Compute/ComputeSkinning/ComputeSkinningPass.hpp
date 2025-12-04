@@ -2,6 +2,7 @@
 #include "renderer/Instance/Mesh/MeshInstance.h"
 #include "renderer/Animation/Skeleton.h"
 #include "renderer/RayTracing/RayTracingManager.h"
+#include "renderer/Job/Culling/WorldCullingJob.h"
 #include "Shaders/skinning/skinning.hlsli"
 
 namespace vg::renderer
@@ -46,16 +47,17 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     core::span<MeshInstance *> ComputeSkinningPass::getSkinnedMeshes() const
     {
-        RendererOptions * options = RendererOptions::get();
+        const Renderer * renderer = Renderer::get();
+        const RendererOptions * options = RendererOptions::get();
         if (options->isRayTracingEnabled() && options->getRayTracingTLASMode() == TLASMode::PerWorld)
         {
-            // skin all skinned meshes in the world
-            return RayTracingManager::get()->getSkinnedMeshInstances();
+            // All skins from visible worlds
+            return renderer->getSharedWorldCullingJobOutput()->m_allVisibleSkinnedMeshInstances;
         }
         else
         {
-            // Skin only visible skins
-            return Renderer::get()->getSharedCullingJobOutput()->m_skins;
+            // Only skins visible in at least one view
+            return renderer->getSharedCullingJobOutput()->m_skins;
         }
     }
 

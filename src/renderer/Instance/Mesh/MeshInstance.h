@@ -52,6 +52,8 @@ namespace vg::renderer
         MeshInstance(const core::string & _name, core::IObject * _parent);
         ~MeshInstance();
 
+        GraphicInstanceType             GetGraphicIntanceType       () const final override { return GraphicInstanceType::Mesh;}
+
         void                            SetModel                    (core::Lod _lod, core::IModel * _model) final override;
 
         bool                            IsSkinned                   () const final override;
@@ -71,7 +73,7 @@ namespace vg::renderer
         core::string                    GetBatchName                (core::uint _batchIndex) const final override;
 
         bool                            TryGetAABB                  (core::AABB & _aabb) const final override;
-        bool                            Cull                        (const CullingOptions & _cullingOptions, CullingResult * _cullingResult) final override;
+        bool                            Cull                        (const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult) final override;
         void                            OnMaterialChanged           () final override;
         bool                            UpdateTLAS                  (gfx::CommandList * _cmdList, gfx::TLAS * _tlas) final override;
 
@@ -99,9 +101,10 @@ namespace vg::renderer
         bool                            updateInstanceBLAS          ();
         gfx::TLASInstanceFlags          getTLASInstanceFlags        () const;
 
+        VG_INLINE bool                  isSkinned                   () const;
+
     private:
         AnimationBinding *              getAnimationBinding         (ISkeletalAnimation * _animation);
-        VG_INLINE bool                  isSkinned                   () const;
 
     private:
         Skeleton *                      m_instanceSkeleton = nullptr;

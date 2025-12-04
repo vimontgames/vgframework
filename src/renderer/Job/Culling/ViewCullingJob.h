@@ -31,10 +31,9 @@ namespace vg::renderer
         Outline
     );
 
-    struct CullingOptions
+    struct ViewCullingOptions
     {
         View * m_view = nullptr;
-        bool m_raytracing = false;
     };
  
     struct ViewCullingJobOutput
@@ -78,9 +77,9 @@ namespace vg::renderer
         core::vector<CameraInstance *>  m_cameras;
     };
 
-    struct SharedCullingJobOutput
+    struct SharedViewCullingJobOutput
     {
-        SharedCullingJobOutput() :
+        SharedViewCullingJobOutput() :
             m_instances(16384),
             m_skins(4096),
             m_particleSystems(4096)
@@ -134,8 +133,8 @@ namespace vg::renderer
 
     struct CullingResult
     {
-        ViewCullingJobOutput *      m_output        = nullptr;
-        SharedCullingJobOutput *    m_sharedOutput  = nullptr;        
+        ViewCullingJobOutput *          m_output        = nullptr;
+        SharedViewCullingJobOutput *    m_sharedOutput  = nullptr;        
     };
 
     class ViewCullingJob : public core::Job
@@ -143,11 +142,11 @@ namespace vg::renderer
     public:
         const char * GetClassName() const final { return "ViewCullingJob"; }
 
-        ViewCullingJob(const core::string & _name, core::IObject * _parent, ViewCullingJobOutput * const _output, SharedCullingJobOutput * const _sharedOutput);
+        ViewCullingJob(const core::string & _name, core::IObject * _parent, ViewCullingJobOutput * const _output, SharedViewCullingJobOutput * const _sharedOutput);
         void Run() override;
 
     protected:
-        void cullGameObjectRecur(const CullingOptions & _cullingOptions, const core::GameObject * _gameobject);
+        void cullViewGameObjectRecur(const ViewCullingOptions & _cullingOptions, const core::GameObject * _gameobject);
 
     private:
         VG_INLINE void add(GraphicInstanceListType _type, const IGraphicInstance * _instance);

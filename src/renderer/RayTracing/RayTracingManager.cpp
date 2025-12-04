@@ -15,6 +15,7 @@
 #include "renderer/Instance/Mesh/MeshInstance.h"
 #include "renderer/Model/Material/MaterialModel.h"
 #include "renderer/Options/RendererOptions.h"
+#include "renderer/Job/Culling/WorldCullingJob.h"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -136,6 +137,16 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    core::span<MeshInstance *> RayTracingManager::getSkinnedMeshInstances() const
+    {
+        const auto & options = RendererOptions::get();
+        if (options->getRayTracingTLASMode() == TLASMode::PerView)
+            return Renderer::get()->getSharedCullingJobOutput()->m_skins;
+        else
+            return Renderer::get()->getSharedWorldCullingJobOutput()->m_allVisibleSkinnedMeshInstances;
+    }
+
+    //--------------------------------------------------------------------------------------
     // Prepare BLAS to create and update
     //--------------------------------------------------------------------------------------
     void RayTracingManager::prepareBLAS()
@@ -222,8 +233,7 @@ namespace vg::renderer
         }
 
         // Skins require BLAS update every frame (TODO: only skins from visible worlds?)
-        const auto & options = RendererOptions::get();
-        const auto skins = (options->getRayTracingTLASMode() == TLASMode::PerView) ? span<MeshInstance *>(Renderer::get()->getSharedCullingJobOutput()->m_skins) : span<MeshInstance *>(getSkinnedMeshInstances());
+        const auto & skins = getSkinnedMeshInstances();
 
         if (skins.size() > 0)
         {

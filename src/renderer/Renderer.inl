@@ -19,9 +19,15 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE SharedCullingJobOutput * Renderer::getSharedCullingJobOutput() const
+    VG_INLINE SharedWorldCullingJobOutput * Renderer::getSharedWorldCullingJobOutput() const
     {
-        return m_sharedCullingJobOutput; 
+        return m_sharedWorldCullingJobOutput;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE SharedViewCullingJobOutput * Renderer::getSharedCullingJobOutput() const
+    {
+        return m_sharedViewCullingJobOutput; 
     }
 
     //--------------------------------------------------------------------------------------

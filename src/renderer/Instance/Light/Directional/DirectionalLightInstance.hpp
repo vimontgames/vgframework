@@ -70,7 +70,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     // This method is called once for each view, thus we can compute a view-dependent matrix for directional lights
     //--------------------------------------------------------------------------------------
-    bool DirectionalLightInstance::Cull(const CullingOptions & _cullingOptions, CullingResult * _cullingResult)
+    bool DirectionalLightInstance::Cull(const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult)
     {
         // Directional light is never culled
         if (1)
@@ -155,7 +155,7 @@ namespace vg::renderer
                 _cullingResult->m_output->add(shadowView);
 
                 core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
-                jobScheduler->Start(shadowView->getCullingJob(), renderer->GetJobSync(RendererJobType::Culling));
+                jobScheduler->Start(shadowView->getCullingJob(), renderer->GetJobSync(RendererJobType::ViewCulling));
             }
 
             return true;

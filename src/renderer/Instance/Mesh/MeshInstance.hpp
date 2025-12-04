@@ -76,7 +76,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::Cull(const CullingOptions & _cullingOptions, CullingResult * _cullingResult)
+    bool MeshInstance::Cull(const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult)
     {
         const MeshModel * meshModel = getMeshModel(Lod::Lod0);
 

@@ -128,7 +128,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool LightInstance::Cull(const CullingOptions & _cullingOptions, CullingResult * _cullingResult)
+    bool LightInstance::Cull(const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult)
     {
         _cullingResult->m_output->add(GetLightType(), this);
 

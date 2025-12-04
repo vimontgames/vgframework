@@ -2,7 +2,7 @@
 #include "core/Object/Object.h"
 #include "core/Singleton/Singleton.h"
 #include "core/Scheduler/Mutex.h"
-#include "core/Container/atomicvector.h"
+#include "core/Container/Span.h"
 
 namespace vg::gfx
 {
@@ -24,25 +24,25 @@ namespace vg::renderer
         RayTracingManager();
         ~RayTracingManager();
 
-        void                                    beginFrame              ();
+        void                            beginFrame              ();
 
-        void                                    prepareBLAS             ();
-        void                                    updateBLAS              (gfx::CommandList * _cmdList, gfx::Buffer * _skinningBuffer);
+        void                            prepareBLAS             ();
+        void                            updateBLAS              (gfx::CommandList * _cmdList, gfx::Buffer * _skinningBuffer);
 
-        void                                    prepareTLAS             (View * _view);
-        void                                    updateTLAS              (gfx::CommandList * _cmdList, View * _view);
+        void                            prepareTLAS             (View * _view);
+        void                            updateTLAS              (gfx::CommandList * _cmdList, View * _view);
 
-        void                                    addMeshModel            (MeshModel * _meshModel);
-        void                                    removeMeshModel         (MeshModel * _meshModel);
+        void                            addMeshModel            (MeshModel * _meshModel);
+        void                            removeMeshModel         (MeshModel * _meshModel);
 
-        void                                    addMeshInstance         (MeshInstance * _meshInstance);
-        void                                    removeMeshInstance      (MeshInstance * _meshInstance);
-        void                                    updateMeshInstance      (MeshInstance * _meshInstance);
+        void                            addMeshInstance         (MeshInstance * _meshInstance);
+        void                            removeMeshInstance      (MeshInstance * _meshInstance);
+        void                            updateMeshInstance      (MeshInstance * _meshInstance);
 
-        void                                    onEnableRayTracing      ();
-        void                                    onDisableRayTracing     ();
+        void                            onEnableRayTracing      ();
+        void                            onDisableRayTracing     ();
 
-        const core::vector<MeshInstance *> &    getSkinnedMeshInstances () const { return m_skinnedMeshUpdateQueue;}
+        core::span<MeshInstance *>      getSkinnedMeshInstances () const;
 
     private:    
 

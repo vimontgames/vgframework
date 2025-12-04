@@ -8,7 +8,7 @@ namespace vg::editor
         m_prefabRes((core::IResource*)_prefabRes)
     {
         IFactory * factory = Kernel::getFactory();
-        m_prefabWorld = (IWorld *)factory->CreateObject("World", _prefabRes->GetResourcePath());
+        m_prefabWorld = (IWorld *)factory->CreateObject("World", io::getFileNameWithoutExt(_prefabRes->GetResourcePath()));
         m_prefabWorld->SetObjectRuntimeFlags(ObjectRuntimeFlags::Prefab, true);
         VG_SAFE_INCREASE_REFCOUNT(m_prefabRes);
     }

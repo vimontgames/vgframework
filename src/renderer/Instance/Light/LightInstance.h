@@ -45,22 +45,24 @@ namespace vg::renderer
         LightInstance(const core::string & _name, core::IObject * _parent, const LightDesc * _lightDesc = nullptr);
         ~LightInstance();
 
-        bool                            Cull                (const CullingOptions & _cullingOptions, CullingResult * _cullingResult) override;
-        void                            Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const override;
+        GraphicInstanceType         GetGraphicIntanceType   () const final override { return GraphicInstanceType::Light; }
 
-        LightType                       GetLightType        () const = 0;    
-        bool                            IsCastShadow        () const final override;
-        core::uint2                     getShadowResolution () const;
-        VG_INLINE float                 getIntensity        () const { return m_intensity; }
+        bool                        Cull                    (const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult) override;
+        void                        Draw                    (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const override;
 
-        bool                            m_shadow;
-        ShadowCameraMode                m_shadowCameraMode;
-        core::float2                    m_shadowRange;
-        float                           m_shadowBias;
-        core::uint2                     m_shadowSize;
-        ShadowResolution                m_shadowResolution;
-        float                           m_shadowIntensity;
-        float                           m_intensity;
+        LightType                   GetLightType            () const = 0;    
+        bool                        IsCastShadow            () const final override;
+        core::uint2                 getShadowResolution     () const;
+        VG_INLINE float             getIntensity            () const { return m_intensity; }
+
+        bool                        m_shadow;
+        ShadowCameraMode            m_shadowCameraMode;
+        core::float2                m_shadowRange;
+        float                       m_shadowBias;
+        core::uint2                 m_shadowSize;
+        ShadowResolution            m_shadowResolution;
+        float                       m_shadowIntensity;
+        float                       m_intensity;
     };
 }
 

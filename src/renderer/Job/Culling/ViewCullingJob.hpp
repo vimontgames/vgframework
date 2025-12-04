@@ -3,7 +3,6 @@
 #include "renderer/View/View.h"
 #include "core/IBaseScene.h"
 #include "core/GameObject/GameObject.h"
-#include "renderer/IGraphicInstance.h"
 #include "renderer/Instance/Mesh/MeshInstance.h"
 #include "renderer/Options/RendererOptions.h"
 #include "renderer/Renderer.h"
@@ -30,7 +29,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    ViewCullingJob::ViewCullingJob(const string & _name, IObject * _parent, ViewCullingJobOutput * const _output, SharedCullingJobOutput * const _sharedOutput) :
+    ViewCullingJob::ViewCullingJob(const string & _name, IObject * _parent, ViewCullingJobOutput * const _output, SharedViewCullingJobOutput * const _sharedOutput) :
         Job(_name, _parent)
     {
         VG_ASSERT(_output);
@@ -41,7 +40,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void ViewCullingJob::cullGameObjectRecur(const CullingOptions & _cullingOptions, const core::GameObject * _gameobject)
+    void ViewCullingJob::cullViewGameObjectRecur(const ViewCullingOptions & _cullingOptions, const core::GameObject * _gameobject)
     {
         // Visible? Then add it to the list
         if (asBool(InstanceFlags::Enabled & _gameobject->getInstanceFlags()))
@@ -61,7 +60,7 @@ namespace vg::renderer
             for (uint i = 0; i < childCount; ++i)
             {
                 const GameObject * child = VG_SAFE_STATIC_CAST(GameObject, children[i]);
-                cullGameObjectRecur(_cullingOptions, child);
+                cullViewGameObjectRecur(_cullingOptions, child);
             }
         }
     }
@@ -71,9 +70,8 @@ namespace vg::renderer
     {
         m_result.m_output->clear();
 
-        CullingOptions cullingOptions;
+        ViewCullingOptions cullingOptions;
         cullingOptions.m_view = (View *)GetParent();
-        cullingOptions.m_raytracing = RendererOptions::get()->isRayTracingEnabled();
         
         gfx::ViewID viewID = cullingOptions.m_view->getViewID();
 
@@ -86,7 +84,7 @@ namespace vg::renderer
                 return;
         }
        
-        string name = fmt::sprintf("Culling %s #%u", asString(viewID.target), viewID.index);
+        string name = fmt::sprintf("Culling \"%s\" View #%u", asString(viewID.target), viewID.index);
         VG_PROFILE_CPU(name.c_str());
         //VG_DEBUGPRINT("\"%s\" running on \"%s\" (0x%08X)\n", name.c_str(), Kernel::getScheduler()->GetCurrentThreadName().c_str(), Kernel::getScheduler()->GetCurrentThreadID());
 
@@ -101,7 +99,7 @@ namespace vg::renderer
                 const auto * root = (GameObject *)scene->GetRoot();
                 VG_ASSERT("[Culling] Scene has no root node");
                 if (root)
-                    cullGameObjectRecur(cullingOptions, root);
+                    cullViewGameObjectRecur(cullingOptions, root);
             }
 
             const float4x4 & viewMatrix = cullingOptions.m_view->GetViewInvMatrix();
