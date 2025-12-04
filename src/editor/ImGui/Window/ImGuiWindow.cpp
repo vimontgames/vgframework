@@ -667,7 +667,9 @@ namespace vg::editor
 
                 auto it = preview.find_last_of("_");
                 if (string::npos != it && it != preview.length())
-                    preview = camelCaseToSpaces(preview.substr(it+1));
+                    preview = camelCaseToSpaces(preview.substr(it + 1));
+                else
+                    preview = camelCaseToSpaces(preview);
 
                 break;
             }

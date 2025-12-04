@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer/RenderPass/Compute/ComputePass.h"
+#include "core/Container/Span.h"
 
 namespace vg::renderer
 {
@@ -16,10 +17,13 @@ namespace vg::renderer
         ComputeSkinningPass();
         ~ComputeSkinningPass();
 
-        core::u64   GetCostEstimate (const gfx::RenderPassContext & _renderContext) const;
-        void        Setup           (const gfx::RenderPassContext & _renderContext) final override;
-        void        BeforeAll         (const gfx::RenderPassContext & _renderContext) final override;
-        void        Render          (const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const final override;
+        core::u64                   GetCostEstimate     (const gfx::RenderPassContext & _renderContext) const;
+        void                        Setup               (const gfx::RenderPassContext & _renderContext) final override;
+        void                        BeforeAll           (const gfx::RenderPassContext & _renderContext) final override;
+        void                        Render              (const gfx::RenderPassContext & _renderContext, gfx::CommandList * _cmdList) const final override;
+
+    private:
+        core::span<MeshInstance *>  getSkinnedMeshes    () const;
 
     private:
         gfx::RootSignatureHandle    m_computeSkinningRootSignature;

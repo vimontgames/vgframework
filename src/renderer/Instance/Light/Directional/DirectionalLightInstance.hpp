@@ -81,6 +81,8 @@ namespace vg::renderer
 
             if (!view->isAdditionalView() && IsCastShadow())
             {
+                VG_PROFILE_CPU("AddShadow");
+
                 // Create view and start culling immediately
                 Renderer * renderer = Renderer::get();
 

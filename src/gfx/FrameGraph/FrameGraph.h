@@ -105,15 +105,14 @@ namespace vg::gfx
         Buffer *                        createBufferFromPool        (const core::string & _name, const FrameGraphBufferResourceDesc & _bufferResourceDesc, core::uint _createPassIndex, bool _uav);
         void                            releaseBufferFromPool       (Buffer *& _buffer);
 
-        void                            cleanup                     ();
+        void                            cleanup();
 
-	//private:
+	private:
         using resource_unordered_map = core::unordered_map<FrameGraphResourceID, FrameGraphResource*, core::hash<FrameGraphResourceID>>;
         resource_unordered_map		    m_resources;
 
 		core::vector<UserPassInfo>	    m_userPassInfo;
 		core::vector<RenderPass*>	    m_renderPasses;
-
 
         UserPassInfoNode                m_userPassInfoTree;
         UserPassInfoNode *              m_currentUserPass = &m_userPassInfoTree;

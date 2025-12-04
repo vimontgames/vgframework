@@ -46,14 +46,21 @@ namespace vg::renderer
         ShadowDefaultResolution_4096 = 4096
     );
 
+    vg_enum_class(vg::renderer, TLASMode, core::u8,
+        PerView= 0,
+        PerWorld
+    );
+
     // Safe copy for multithread access from rendering jobs
     // Should pass as part of context to avoid mistakes?
     struct RendererOptionsData
     {
         void sync(const RendererOptionsData & _other);
 
-        bool m_toolMode = true;
-        bool m_rayTracing = false;
+        bool                m_toolMode = true;
+
+        bool                m_rayTracing = false;
+        TLASMode  m_rayTracingTLASMode = TLASMode::PerView;
     };
 
     class RendererOptions final : public IRendererOptions, public core::Singleton<RendererOptions>
@@ -113,6 +120,7 @@ namespace vg::renderer
 
         bool                    isPostProcessEnabled                    () const { return m_postProcess; }
         bool                    isRayTracingEnabled                     () const { return m_renderer.m_rayTracing; }
+        TLASMode                getRayTracingTLASMode                   () const { return m_renderer.m_rayTracingTLASMode; }
         bool                    anyRayTracingDebugDisplay               () const;
 
         bool                    isDisplayMatIDEnabled                   () const { return DisplayMode::Geometry_MaterialID    == m_debugDisplayMode;}
@@ -133,6 +141,7 @@ namespace vg::renderer
         Quality                 getCurrentQualityLevel                  () const;
 
         VG_INLINE bool          isRenderJobsEnabled                     () const;
+        VG_INLINE bool          isRenderJobsSeparateKicksEnabled        () const;
         VG_INLINE bool          isForcedRenderJobsCount                 () const;
         core::uint              getRenderJobCount                       () const;
         VG_INLINE gfx::RenderJobsPolicy getRenderJobsPolicy             () const;

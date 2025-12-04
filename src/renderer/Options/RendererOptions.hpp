@@ -35,6 +35,8 @@ namespace vg::renderer
                 RayTracingManager::get()->onDisableRayTracing();
             }
         }
+
+        m_rayTracingTLASMode = _other.m_rayTracingTLASMode;
     }
 
     //--------------------------------------------------------------------------------------
@@ -208,6 +210,8 @@ namespace vg::renderer
             {
                 registerProperty(RendererOptions, m_engine.m_rayTracing, "Enable");
                 setPropertyDescription(RendererOptions, m_engine.m_rayTracing, "Enable Raytracing");
+
+                registerPropertyEnum(RendererOptions, TLASMode, m_engine.m_rayTracingTLASMode, "TLAS");
             }
             registerPropertyGroupEnd(RendererOptions);
 
@@ -268,7 +272,7 @@ namespace vg::renderer
             registerPropertyGroupBegin(RendererOptions, "Render jobs");
             {
                 registerProperty(RendererOptions, m_renderJobs, "Enable");
-                setPropertyDescription(RendererOptions, m_renderJobs, "Enable render jobs");
+                setPropertyDescription(RendererOptions, m_renderJobs, "Enable render jobs");           
 
                 registerProperty(RendererOptions, m_forceRenderJobsCount, "Force job count");
                 setPropertyDescription(RendererOptions, m_forceRenderJobsCount, "Override RenderJobs count");

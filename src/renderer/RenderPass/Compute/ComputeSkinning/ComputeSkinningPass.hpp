@@ -1,6 +1,7 @@
 #include "ComputeSkinningPass.h"
 #include "renderer/Instance/Mesh/MeshInstance.h"
 #include "renderer/Animation/Skeleton.h"
+#include "renderer/RayTracing/RayTracingManager.h"
 #include "Shaders/skinning/skinning.hlsli"
 
 namespace vg::renderer
@@ -39,13 +40,31 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    // Returns the skins to process. It can be:
+    // - Only visible skins
+    // - All world skins
+    //--------------------------------------------------------------------------------------
+    core::span<MeshInstance *> ComputeSkinningPass::getSkinnedMeshes() const
+    {
+        RendererOptions * options = RendererOptions::get();
+        if (options->isRayTracingEnabled() && options->getRayTracingTLASMode() == TLASMode::PerWorld)
+        {
+            // skin all skinned meshes in the world
+            return RayTracingManager::get()->getSkinnedMeshInstances();
+        }
+        else
+        {
+            // Skin only visible skins
+            return Renderer::get()->getSharedCullingJobOutput()->m_skins;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     // Estimate returns a cost of 1 per instance to update
     //--------------------------------------------------------------------------------------
     core::u64 ComputeSkinningPass::GetCostEstimate(const RenderPassContext & _renderContext) const
     {
-        auto renderer = Renderer::get();
-        const auto & skinnedMeshes = Renderer::get()->getSharedCullingJobOutput()->m_skins;
-        return skinnedMeshes.size();
+        return getSkinnedMeshes().size();
     }
 
     //--------------------------------------------------------------------------------------
@@ -66,7 +85,7 @@ namespace vg::renderer
     void ComputeSkinningPass::BeforeAll(const RenderPassContext & _renderContext)
     {
         VG_PROFILE_CPU("Skinning");
-        const auto & skinnedMeshes = Renderer::get()->getSharedCullingJobOutput()->m_skins;        
+        const auto & skinnedMeshes = getSkinnedMeshes();
 
         // Compute bones upload size
         uint dstVertOffset = 0;
@@ -100,7 +119,7 @@ namespace vg::renderer
     {
         uint dstMatOffset = 0;
 
-        const auto & skinnedMeshes = Renderer::get()->getSharedCullingJobOutput()->m_skins;
+        const auto & skinnedMeshes = getSkinnedMeshes();
 
         size_t mapSizeInBytes = m_mapSize;
 

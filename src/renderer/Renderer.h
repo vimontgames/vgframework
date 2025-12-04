@@ -35,6 +35,16 @@ namespace vg::renderer
     class MaterialManager;
     class ParticleManager;
 
+    struct VisibleWorld
+    {
+        VisibleWorld(core::IWorld * _world) : 
+            world(_world) 
+        {
+        }
+        core::IWorld * world;
+        core::vector<IView *> views;
+    };
+
     struct SharedCullingJobOutput;
 
     enum class MaterialTextureType : core::u8;
@@ -167,6 +177,9 @@ namespace vg::renderer
         void                                    cullViews                   ();
 
         void                                    releaseSpecularBRDF         ();
+
+        core::vector<VisibleWorld>              getVisibleWorlds            () const;
+        void                                    updateIBLCubemaps           (const core::vector<VisibleWorld> & _visibleWorlds);
 
 	private:
         bool                                    m_editor                    = false;

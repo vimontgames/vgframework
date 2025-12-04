@@ -35,6 +35,12 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
+        inline const T * data() const
+        {
+            return m_data.data();
+        }
+
+        //--------------------------------------------------------------------------------------
         inline const T & operator[] (size_t _index) const
         {
             return m_data.data()[_index];

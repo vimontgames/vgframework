@@ -167,27 +167,36 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool MeshInstance::updateInstanceBLAS()
     {
-        if (!isSkinned() && RendererOptions::get()->isRayTracingEnabled())
+        if (RendererOptions::get()->isRayTracingEnabled())
         {
-            auto * blas = getInstanceBLAS();
-
-            bool update = false;
-
-            if (nullptr == blas)
+            if (isSkinned())
             {
-                update = true;
+                // Always update skinned meshes
+                RayTracingManager::get()->updateMeshInstance(this);
             }
             else
             {
-                auto key = computeBLASVariantKey();
-                if (blas->getKey() != key)
-                    update = true;
-            }
+                // Update static meshes only if needed
+                auto * blas = getInstanceBLAS();
 
-            if (update)
-            {
-                RayTracingManager::get()->updateMeshInstance(this);
-                return true;
+                bool update = false;
+
+                if (nullptr == blas)
+                {
+                    update = true;
+                }
+                else
+                {
+                    auto key = computeBLASVariantKey();
+                    if (blas->getKey() != key)
+                        update = true;
+                }
+
+                if (update)
+                {
+                    RayTracingManager::get()->updateMeshInstance(this);
+                    return true;
+                }
             }
         }
         return false;
@@ -206,14 +215,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshInstance::OnUpdateRayTracing(gfx::CommandList * _cmdList, View * _view, uint _index)
+    bool MeshInstance::UpdateTLAS(gfx::CommandList * _cmdList, TLAS * _tlas)
     {
-        auto * tlas = _view->getTLAS();
-
         if (const auto * blas = getInstanceBLAS())
         {
             const u32 rayTracingID = getGPUInstanceDataOffset() / GPU_INSTANCE_DATA_ALIGNMENT;
-            tlas->addInstance(blas, getGlobalMatrix(), rayTracingID, getTLASInstanceFlags());
+            _tlas->addInstance(blas, getGlobalMatrix(), rayTracingID, getTLASInstanceFlags());
         }
 
         return true;

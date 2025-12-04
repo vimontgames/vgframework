@@ -29,6 +29,7 @@ namespace vg::renderer
     class ViewConstantsUpdatePass;
     class ShadowView;
     class UIRenderer;
+    enum class TLASMode : core::u8;
 
     //--------------------------------------------------------------------------------------
     // Base class for user views.
@@ -100,10 +101,9 @@ namespace vg::renderer
         bool                                IsComputePostProcessNeeded          () const override;
         bool                                IsOutlinePassNeeded                 () const override;
 
-        void                                createTLAS                          ();
-        void                                destroyTLAS                         ();
-        void                                resetTLAS                           ();
+        void                                setTLAS                             (gfx::TLAS * _tlas, TLASMode _mode = (TLASMode) - 1);
         gfx::TLAS *                         getTLAS                             () const;
+        TLASMode                            getTLASMode                         () const;
         gfx::BindlessTLASHandle             getTLASHandle                       () const;
 
         void                                SetPickingData                      (const PickingData & _pickingData) override;
@@ -200,8 +200,8 @@ namespace vg::renderer
         PickingData                         m_rawPickingData;
         core::vector<PickingHit>            m_pickingHits;
         mutable core::AssertMutex           m_pickingHitsAssertMutex            = core::AssertMutex("PickingHits");
-        gfx::TLAS *                         m_tlas[1]                           = { nullptr };
-        core::uint                          m_tlasIndex                         = 0;
+        gfx::TLAS *                         m_tlas                              = nullptr;
+        TLASMode                            m_tlasMode                          = (TLASMode)-1;
         Frustum                             m_frustum;
         ViewCullingJobOutput                m_cullingJobResult;
         core::vector<ShadowView*>           m_shadowViews;

@@ -38,7 +38,6 @@ namespace vg::renderer
 
         bool                                        TryGetAABB                  (core::AABB & _aabb) const final override;
         bool                                        Cull                        (const CullingOptions & _cullingOptions, CullingResult * _cullingResult) final override;
-        bool                                        OnUpdateRayTracing          (gfx::CommandList * _cmdList, View * _view, core::uint _index) final override;
         void                                        Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
         bool                                        SetEmitterCount             (core::uint _count) final override;

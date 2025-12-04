@@ -2,6 +2,7 @@
 #include "RayTracingManager.h"
 #include "core/Timer/Timer.h"
 #include "core/Scheduler/Scheduler.h"
+#include "core/Container/Span.h"
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/Resource/Buffer.h"
 #include "renderer/Model/Mesh/MeshModel.h"
@@ -16,6 +17,7 @@
 #include "renderer/Options/RendererOptions.h"
 
 using namespace vg::core;
+using namespace vg::gfx;
 
 namespace vg::renderer
 {
@@ -74,7 +76,7 @@ namespace vg::renderer
             for (uint j = 0; j < views.size(); ++j)
             {
                 auto view = ((View *)views[j]);
-                view->destroyTLAS();
+                view->setTLAS(nullptr);
             }
         }
     }
@@ -98,7 +100,7 @@ namespace vg::renderer
     {
         lock_guard lock(m_addRTMeshInstanceMutex);
         VG_ASSERT(!vector_helper::exists(m_meshInstances, _meshInstance));
-        m_meshInstances.push_back(_meshInstance);
+        m_meshInstances.push_back(_meshInstance);        
     }
 
     //--------------------------------------------------------------------------------------
@@ -110,11 +112,21 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    // TODO : Use 'DirtyBLAS' + atomic to avoid search? That list could get cleared before 
+    // the end of the frame because we keep track of the full instance list.
+    //--------------------------------------------------------------------------------------
     void RayTracingManager::updateMeshInstance(MeshInstance * _meshInstance)
     {
-        // TODO : Use 'DirtyBLAS' + atomic to avoid search?
-        if(!vector_helper::exists(m_meshInstanceUpdateQueue, _meshInstance))
-            m_meshInstanceUpdateQueue.push_back(_meshInstance);
+        if (_meshInstance->IsSkinned())
+        {
+            if (!vector_helper::exists(m_skinnedMeshUpdateQueue, _meshInstance))
+                m_skinnedMeshUpdateQueue.push_back(_meshInstance);
+        }
+        else
+        {
+            if (!vector_helper::exists(m_meshInstanceUpdateQueue, _meshInstance))
+                m_meshInstanceUpdateQueue.push_back(_meshInstance);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -209,9 +221,10 @@ namespace vg::renderer
             }
         }
 
+        // Skins require BLAS update every frame (TODO: only skins from visible worlds?)
+        const auto & options = RendererOptions::get();
+        const auto skins = (options->getRayTracingTLASMode() == TLASMode::PerView) ? span<MeshInstance *>(Renderer::get()->getSharedCullingJobOutput()->m_skins) : span<MeshInstance *>(getSkinnedMeshInstances());
 
-        // Skins require BLAS update every frame
-        const auto & skins = Renderer::get()->getSharedCullingJobOutput()->m_skins;
         if (skins.size() > 0)
         {
             VG_PROFILE_CPU("Skins");
@@ -316,15 +329,31 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void RayTracingManager::prepareTLAS(View * _view)
     {
-        VG_PROFILE_CPU("Prepare TLAS");
+        VG_PROFILE_CPU("Prepare View TLAS");
 
         VG_ASSERT(_view);
         if (_view)
         {
             if (_view->IsVisible() && _view->IsUsingRayTracing())
-                _view->resetTLAS();
+            {
+                if (_view->getTLAS() && _view->getTLASMode() != TLASMode::PerView)
+                    _view->setTLAS(nullptr);
+
+                TLAS * tlas = _view->getTLAS();
+
+                if (nullptr == tlas)
+                {
+                    tlas = new TLAS();
+                    _view->setTLAS(tlas, TLASMode::PerView);
+                    tlas->Release();
+                }
+
+                tlas->reset();
+            }
             else
-                _view->destroyTLAS();
+            {
+                _view->setTLAS(nullptr);
+            }
         }
     }
 
@@ -371,7 +400,7 @@ namespace vg::renderer
                 uint index = 0;
                 for (GraphicInstance * instance : set)
                 {
-                    updateTLAS |= instance->OnUpdateRayTracing(_cmdList, _view, index);
+                    updateTLAS |= instance->UpdateTLAS(_cmdList, tlas);
                     index++;
                 }
                 

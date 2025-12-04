@@ -1,23 +1,13 @@
 #pragma once
 
-#include <optional>
+//--------------------------------------------------------------------------------------
+// Helper functions for std::vector
+//--------------------------------------------------------------------------------------
 
 namespace vg::core
 {
     namespace vector_helper
     {
-        //--------------------------------------------------------------------------------------
-        // Helper funcs for std::vector
-        //--------------------------------------------------------------------------------------
-
-        //--------------------------------------------------------------------------------------
-        template <typename T> inline std::optional<T&> find(const std::vector<T>& _vector, const T& _element)
-        {
-            if (auto it{ std::find(cbegin(_vector), cend(_vector), _element) }; it != cend(_vector))
-                return *it;
-            return {};
-        }
-
         //--------------------------------------------------------------------------------------
         template <typename T> inline bool exists(const std::vector<T>& _vector, const T& _element)
         {

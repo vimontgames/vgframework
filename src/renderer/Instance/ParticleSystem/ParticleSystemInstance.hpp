@@ -122,12 +122,6 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool ParticleSystemInstance::OnUpdateRayTracing(gfx::CommandList * _cmdList, View * _view, core::uint _index)
-    {
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
     void ParticleSystemInstance::UpdateTime(float _dt)
     {
         m_dt = _dt;

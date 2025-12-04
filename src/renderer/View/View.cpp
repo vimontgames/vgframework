@@ -62,9 +62,7 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_renderTarget);
         VG_SAFE_RELEASE(m_cullingJob);
         VG_SAFE_RELEASE(m_viewConstantsUpdatePass);
-
-        for (uint i = 0; i < countof(m_tlas); ++i)
-            VG_SAFE_RELEASE(m_tlas[i]);
+        VG_SAFE_RELEASE(m_tlas);
     }
 
     //--------------------------------------------------------------------------------------
@@ -570,42 +568,30 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void View::createTLAS()
+    void View::setTLAS(gfx::TLAS * _tlas, TLASMode _mode)
     {
-        for (uint i = 0; i < countof(m_tlas); ++i)
+        VG_ASSERT(!_tlas || _mode != (TLASMode)-1, "You must specify TLAS mode when assigning TLAS to view");
+        VG_ASSERT(!m_tlas || !_tlas || _mode == m_tlasMode);
+
+        if (_tlas != m_tlas)
         {
-            VG_ASSERT(nullptr == m_tlas[i]);
-            m_tlas[i] = new gfx::TLAS();
+            VG_SAFE_RELEASE_ASYNC(m_tlas);
+            m_tlas = _tlas;
+            m_tlasMode = _mode;
+            VG_SAFE_INCREASE_REFCOUNT(_tlas);
         }
-    }
-
-    //--------------------------------------------------------------------------------------
-    void View::resetTLAS()
-    {
-        m_tlasIndex = (m_tlasIndex+1) % countof(m_tlas);
-        TLAS * tlas = getTLAS();
-
-        if (nullptr == tlas)
-        {
-            createTLAS();
-            tlas = getTLAS();
-            VG_INFO("[Renderer] Create double-buffered TLAS for View \"%s\"", GetName().c_str());
-        }
-
-        tlas->reset();
-    }
-
-    //--------------------------------------------------------------------------------------
-    void View::destroyTLAS()
-    {
-        for (uint i = 0; i < countof(m_tlas); ++i)
-            VG_SAFE_RELEASE_ASYNC(m_tlas[i])
     }
 
     //--------------------------------------------------------------------------------------
     TLAS * View::getTLAS() const
     {
-        return m_tlas[m_tlasIndex];
+        return m_tlas;
+    }
+
+    //--------------------------------------------------------------------------------------
+    TLASMode View::getTLASMode() const
+    {
+        return m_tlasMode;
     }
 
     //--------------------------------------------------------------------------------------

@@ -245,13 +245,13 @@ namespace vg::gfx
     }
 
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::setup()
-	{
+    void FrameGraph::setup()
+    {
         VG_PROFILE_CPU("Setup");
 
         for (UserPassInfoNode & node : m_userPassInfoTree.m_children)
             setupNode(node);
-	}  
+    }
 
     //--------------------------------------------------------------------------------------
     void FrameGraph::buildNode(UserPassInfoNode & _node)
@@ -521,15 +521,15 @@ namespace vg::gfx
     }
 
 	//--------------------------------------------------------------------------------------
-	void FrameGraph::build()
-	{
+    void FrameGraph::build()
+    {
         VG_PROFILE_CPU("Build");
 
         Device * device = Device::get();
 
-        for (auto & node : m_userPassInfoTree.m_children)
+        for (UserPassInfoNode & node : m_userPassInfoTree.m_children)
             buildNode(node);
-	}
+    }
 
     //--------------------------------------------------------------------------------------
     Texture * FrameGraph::createRenderTargetFromPool(const core::string & _name, const FrameGraphTextureResourceDesc & _textureResourceDesc, core::uint _createPassIndex)
@@ -1113,7 +1113,7 @@ namespace vg::gfx
         // Prepare nodes for rendering by determining the textures/buffers than will need to be allocated or reused
         {
             VG_PROFILE_CPU("GatherResources");
-            for (auto & node : m_userPassInfoTree.m_children)
+            for (UserPassInfoNode & node : m_userPassInfoTree.m_children)
             {
                 VG_PROFILE_CPU(node.m_name.c_str());
                 gatherResources(node);
@@ -1121,7 +1121,7 @@ namespace vg::gfx
         }
         {
             VG_PROFILE_CPU("BeforeAll");
-            for (auto & node : m_userPassInfoTree.m_children)
+            for (UserPassInfoNode & node : m_userPassInfoTree.m_children)
             {
                 VG_PROFILE_CPU(node.m_name.c_str());
                 beforeAll(node);
@@ -1552,9 +1552,9 @@ namespace vg::gfx
                 VG_WARNING("[FrameGraph] Buffer \"%s\" (%u) was not released", buffer->GetName().c_str(), i);
                 releaseBufferFromPool(buffer);
             }
-        }
+        }   
 
-        cleanup();      
+        cleanup();
 	}
 
     //--------------------------------------------------------------------------------------

@@ -47,7 +47,7 @@ namespace vg::renderer
 
         bool                            Cull                (const CullingOptions & _cullingOptions, CullingResult * _cullingResult) override;
         void                            Draw                (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const override;
-        bool                            OnUpdateRayTracing  (gfx::CommandList * _cmdList, View * _view, core::uint _index) override { return false; }
+
         LightType                       GetLightType        () const = 0;    
         bool                            IsCastShadow        () const final override;
         core::uint2                     getShadowResolution () const;
