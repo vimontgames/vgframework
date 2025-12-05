@@ -23,6 +23,7 @@ namespace vg::renderer
     class ComputeSkinningPass;
     class ParticleRenderDataUpdatePass;
     class BLASUpdatePass;
+    class TLASUpdatePass;
     class ComputeSpecularBRDFPass;
     class ComputeIBLCubemapsPass;
     class ImGuiPass;
@@ -186,6 +187,7 @@ namespace vg::renderer
         ComputeSkinningPass *                   m_computeSkinningPass           = nullptr;
         ParticleRenderDataUpdatePass *          m_particleDataUpdatePass        = nullptr;
         BLASUpdatePass *                        m_BLASUpdatePass                = nullptr;
+        TLASUpdatePass *                        m_TLASUpdatePass            = nullptr;
         ComputeSpecularBRDFPass *               m_computeSpecularBRDFPass       = nullptr;
         ComputeIBLCubemapsPass *                m_computeIBLCubemapsPass        = nullptr;
         ImGuiPass *                             m_imguiPass                     = nullptr; 

@@ -39,6 +39,33 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    const WorldCullingJobOutput * SharedWorldCullingJobOutput::getWorldCullingJobOutput(const core::IWorld * _world) const
+    {
+        for (uint i = 0; i < m_allVisibleWorlds.size(); ++i)
+        {
+            if (m_allVisibleWorlds[i].m_world == _world)
+                return &m_allVisibleWorlds[i];
+        }
+
+        VG_ASSERT(false);
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    WorldCullingJobOutput * SharedWorldCullingJobOutput::getWorldCullingJobOutput(const core::IWorld * _world)
+    {
+        for (uint i = 0; i < m_allVisibleWorlds.size(); ++i)
+        {
+            if (m_allVisibleWorlds[i].m_world == _world)
+                return &m_allVisibleWorlds[i];
+        }
+
+        VG_ASSERT(false);
+        return nullptr;
+    }
+
+
+    //--------------------------------------------------------------------------------------
     WorldCullingJob::WorldCullingJob(const core::string & _name, core::IObject * _parent, const core::IWorld * _world, SharedWorldCullingJobOutput * const _sharedOutput) :
         Job(_name, _parent)
     {
@@ -75,7 +102,7 @@ namespace vg::renderer
                             if (meshInstance->isSkinned())
                             {
                                 m_output->m_skinnedMeshInstances.push_back(meshInstance);
-                                m_sharedOutput->m_allVisibleSkinnedMeshInstances.push_back_atomic(meshInstance);
+                                m_sharedOutput->m_allSkinnedMeshInstances.push_back_atomic(meshInstance);
                             }
                             else
                                 m_output->m_staticMeshInstances.push_back(meshInstance);
@@ -85,6 +112,7 @@ namespace vg::renderer
                         case GraphicInstanceType::ParticleSystem:
                         {
                             m_output->m_particleSystemInstances.push_back((ParticleSystemInstance *)instance);
+                            m_sharedOutput->m_allParticleSystemInstances.push_back_atomic((ParticleSystemInstance *)instance);
                         }
                         break;
 
@@ -101,6 +129,8 @@ namespace vg::renderer
                         break;
 
                     }
+
+                    m_sharedOutput->m_allGraphicInstances.push_back_atomic(instance);
                 }
             }
         
@@ -117,15 +147,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void WorldCullingJob::Run()
     {
-        m_output = nullptr;
-        for (uint i = 0; i < m_sharedOutput->m_allVisibleWorlds.size(); ++i)
-        {
-            if (m_sharedOutput->m_allVisibleWorlds[i].m_world == m_world)
-            {
-                m_output = &m_sharedOutput->m_allVisibleWorlds[i];
-                break;
-            }
-        }
+        m_output = m_sharedOutput->getWorldCullingJobOutput(m_world);
 
         const string name = fmt::sprintf("Culling \"%s\" World", m_output->m_world->GetName());
         VG_PROFILE_CPU(name.c_str());

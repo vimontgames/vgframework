@@ -26,11 +26,18 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     core::u64 InstanceDataUpdatePass::GetCostEstimate(const RenderPassContext & _renderContext) const
     {
-        auto renderer = Renderer::get();
-        const auto * cullingJobOutput = renderer->getSharedCullingJobOutput();
-        VG_ASSERT(nullptr != cullingJobOutput);
-        const auto & instances = cullingJobOutput->m_instances;
-        return cullingJobOutput->m_instances.size();
+        return getGraphicInstances().size();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::span<GraphicInstance *> InstanceDataUpdatePass::getGraphicInstances() const
+    {
+        const Renderer * renderer = Renderer::get();
+        const RendererOptions * options = RendererOptions::get();
+        if (options->isRayTracingEnabled() && options->getRayTracingTLASMode() == TLASMode::PerWorld)
+            return renderer->getSharedWorldCullingJobOutput()->m_allGraphicInstances;
+        else
+            return renderer->getSharedCullingJobOutput()->m_instances;
     }
 
     //--------------------------------------------------------------------------------------
@@ -38,10 +45,7 @@ namespace vg::renderer
     {
         VG_PROFILE_CPU("InstanceData");
 
-        auto renderer = Renderer::get();
-        const auto * cullingJobOutput = renderer->getSharedCullingJobOutput();
-        VG_ASSERT(nullptr != cullingJobOutput);
-        const auto & instances = cullingJobOutput->m_instances;
+        const auto & instances = getGraphicInstances();
 
         uint offset = 0;
 
@@ -65,11 +69,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void InstanceDataUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
-        auto renderer = Renderer::get();
-        const auto * cullingJobOutput = renderer->getSharedCullingJobOutput();
-        VG_ASSERT(nullptr != cullingJobOutput);
-
-        const auto & instances = cullingJobOutput->m_instances;
+        const auto & instances = getGraphicInstances();
 
         size_t mapSize = m_mapSize;
 

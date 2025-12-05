@@ -13,6 +13,7 @@ namespace vg::renderer
 {
     class WorldCullingJob;
     class IView;
+    class GraphicInstance;
     class MeshInstance;
     class ParticleSystemInstance;
     class LightInstance;
@@ -52,11 +53,19 @@ namespace vg::renderer
 
     struct SharedWorldCullingJobOutput
     {
-        core::vector<WorldCullingJobOutput>     m_allVisibleWorlds;
-        core::atomicvector<MeshInstance *>      m_allVisibleSkinnedMeshInstances;
+        // This one does not not atomic because it's filled during serial phase at the beginning
+        core::vector<WorldCullingJobOutput>             m_allVisibleWorlds;
+
+        // Using atomics so as to fill multiple worlds at once, but in practice we usually have one big world + small worlds
+        // So we could just copy the largest array from worlds, then add the instances from other worlds to this copy instead
+        core::atomicvector<GraphicInstance *>           m_allGraphicInstances;
+        core::atomicvector<MeshInstance *>              m_allSkinnedMeshInstances;
+        core::atomicvector<ParticleSystemInstance *>    m_allParticleSystemInstances;
 
         SharedWorldCullingJobOutput() :
-            m_allVisibleSkinnedMeshInstances(4096)
+            m_allGraphicInstances(16384),
+            m_allSkinnedMeshInstances(4096),
+            m_allParticleSystemInstances(1024)
         {
          
         }
@@ -64,8 +73,13 @@ namespace vg::renderer
         void clear()
         {
             m_allVisibleWorlds.clear();
-            m_allVisibleSkinnedMeshInstances.clear();
-        }       
+            m_allGraphicInstances.clear();
+            m_allSkinnedMeshInstances.clear();
+            m_allParticleSystemInstances.clear();
+        }   
+
+        const WorldCullingJobOutput * getWorldCullingJobOutput(const core::IWorld * _world) const;
+        WorldCullingJobOutput * getWorldCullingJobOutput(const core::IWorld * _world);
     };
 
     struct WorldCullingOptions

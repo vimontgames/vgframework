@@ -4,6 +4,11 @@
 #include "core/Scheduler/Mutex.h"
 #include "core/Container/Span.h"
 
+namespace vg::core
+{
+    class IWorld;
+}
+
 namespace vg::gfx
 {
     class CommandList;
@@ -32,6 +37,9 @@ namespace vg::renderer
         void                            prepareTLAS             (View * _view);
         void                            updateTLAS              (gfx::CommandList * _cmdList, View * _view);
 
+        void                            prepareTLAS             (const core::IWorld * _world, core::vector<View *> & _views);
+        void                            updateTLAS              (gfx::CommandList * _cmdList, const core::IWorld * _world, core::vector<View *> & _views);
+
         void                            addMeshModel            (MeshModel * _meshModel);
         void                            removeMeshModel         (MeshModel * _meshModel);
 
@@ -43,6 +51,7 @@ namespace vg::renderer
         void                            onDisableRayTracing     ();
 
         core::span<MeshInstance *>      getSkinnedMeshInstances () const;
+        core::span<MeshInstance *>      getStaticMeshInstances  () const;
 
     private:    
 

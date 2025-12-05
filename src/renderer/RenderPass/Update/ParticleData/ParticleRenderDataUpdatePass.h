@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer/RenderPass/Update/UpdatePass.h"
+#include "core/Container/Span.h"
 
 namespace vg::gfx
 {
@@ -9,6 +10,8 @@ namespace vg::gfx
 
 namespace vg::renderer
 {
+    class ParticleSystemInstance;
+
     //--------------------------------------------------------------------------------------
     // The purpose of this pass is to upload particle vertex buffer to the GPU from simulation data
     //--------------------------------------------------------------------------------------
@@ -26,6 +29,8 @@ namespace vg::renderer
 
         const gfx::Buffer * getIndexBuffer              () const { return m_particleStaticIndexBuffer; }
         const gfx::Buffer * getVertexBuffer             () const { return m_particleDynamicVertexBuffer; }
+
+        core::span<ParticleSystemInstance *> getParticleSystemInstances() const;
 
     private:
         gfx::Buffer *       m_particleStaticIndexBuffer     = nullptr;

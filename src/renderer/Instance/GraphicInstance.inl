@@ -45,7 +45,7 @@ namespace vg::renderer
     VG_INLINE core::uint GraphicInstance::getGPUInstanceDataOffset() const
     {
         #if GPUDATAOFFSET_FRAME_COUNTER
-        VG_ASSERT(m_gpuInstanceDataFrameIndex == Renderer::get()->getFrameCounter());
+        VG_ASSERT(Renderer::get()->getFrameCounter() == m_gpuInstanceDataFrameIndex, "Trying to access GPUInstanceData at frame 0x%016llX but data has been udpated at frame 0x%016llX", (void *)Renderer::get()->getFrameCounter(), (void*)m_gpuInstanceDataFrameIndex);
         #endif
 
         return m_gpuInstanceDataHandle;

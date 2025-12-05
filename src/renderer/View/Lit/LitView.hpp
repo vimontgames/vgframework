@@ -84,7 +84,7 @@ namespace vg::renderer
         const bool toolmode = view->IsToolmode();
         const bool computePostProcess = view->IsComputePostProcessNeeded();
 
-        if (view->IsUsingRayTracing() /* && options->getRayTracingTLASMode() == TLASMode::PerView*/)
+        if (view->IsUsingRayTracing() && options->getRayTracingTLASMode() == TLASMode::PerView)
             _frameGraph.addUserPass(_renderPassContext, m_TLASUpdatePass, "View TLAS");
 
         // Render shadow maps

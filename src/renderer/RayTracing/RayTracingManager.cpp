@@ -110,6 +110,13 @@ namespace vg::renderer
         lock_guard lock(m_addRTMeshInstanceMutex);
         VG_ASSERT(vector_helper::exists(m_meshInstances, _meshInstance));
         vector_helper::remove(m_meshInstances, _meshInstance);
+
+        // Temp: Why do we need that update queue when we could use the shared world culling result? Just need to create m_staticMeshes (View culling) and m_allStaticMeshInstances (World culling) lists
+        if (vector_helper::exists(m_skinnedMeshUpdateQueue, _meshInstance))
+            vector_helper::remove(m_skinnedMeshUpdateQueue, _meshInstance);
+        
+        if(vector_helper::exists(m_meshInstanceUpdateQueue, _meshInstance))
+            vector_helper::remove(m_meshInstanceUpdateQueue, _meshInstance);
     }
 
     //--------------------------------------------------------------------------------------
@@ -143,8 +150,18 @@ namespace vg::renderer
         if (options->getRayTracingTLASMode() == TLASMode::PerView)
             return Renderer::get()->getSharedCullingJobOutput()->m_skins;
         else
-            return Renderer::get()->getSharedWorldCullingJobOutput()->m_allVisibleSkinnedMeshInstances;
+            return Renderer::get()->getSharedWorldCullingJobOutput()->m_allSkinnedMeshInstances;
     }
+
+    //--------------------------------------------------------------------------------------
+    //core::span<MeshInstance *> RayTracingManager::getStaticMeshInstances() const
+    //{
+    //    const auto & options = RendererOptions::get();
+    //    if (options->getRayTracingTLASMode() == TLASMode::PerView)
+    //        return Renderer::get()->getSharedCullingJobOutput()->m_staticMeshes;
+    //    else
+    //        return Renderer::get()->getSharedWorldCullingJobOutput()->m_allStaticMeshInstances;
+    //}
 
     //--------------------------------------------------------------------------------------
     // Prepare BLAS to create and update
@@ -164,7 +181,7 @@ namespace vg::renderer
                 VG_ASSERT(!instance->IsSkinned());
                 auto * blas = instance->getInstanceBLAS();
                 MeshModel * meshModel = (MeshModel *)instance->getMeshModel(Lod::Lod0);
-                VG_ASSERT(nullptr != meshModel);
+                //VG_ASSERT(nullptr != meshModel); // Can happen during hot reload
                 if (nullptr == meshModel)
                     continue;
 
@@ -340,31 +357,110 @@ namespace vg::renderer
     void RayTracingManager::prepareTLAS(View * _view)
     {
         VG_PROFILE_CPU("Prepare View TLAS");
+        VG_ASSERT(_view && _view->IsVisible() && _view->IsUsingRayTracing());
 
-        VG_ASSERT(_view);
-        if (_view)
+        if (_view->getTLAS() && _view->getTLASMode() != TLASMode::PerView)
+            _view->setTLAS(nullptr);
+
+        TLAS * tlas = _view->getTLAS();
+
+        if (nullptr == tlas)
         {
-            if (_view->IsVisible() && _view->IsUsingRayTracing())
+            tlas = new TLAS();
+            _view->setTLAS(tlas, TLASMode::PerView);
+            tlas->Release();
+        }
+
+        tlas->reset();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RayTracingManager::prepareTLAS(const core::IWorld * _world, core::vector<View *> & _views)
+    {
+        VG_PROFILE_CPU("Prepare World TLAS");
+        VG_ASSERT(_world);
+        VG_ASSERT(_views.size() >= 1);
+
+        // Release invalid TLAS
+        for (uint v = 0; v < _views.size(); ++v)
+        { 
+            auto & view = _views[v];
+            if (view->getTLAS() && view->getTLASMode() == TLASMode::PerView)
+                view->setTLAS(nullptr);
+        }
+
+        // find shared TLAS
+        TLAS * tlas = nullptr;
+        for (uint v = 0; v < _views.size(); ++v)
+        {
+            auto & view = _views[v];
+
+            if (view->getTLAS())
             {
-                if (_view->getTLAS() && _view->getTLASMode() != TLASMode::PerView)
-                    _view->setTLAS(nullptr);
-
-                TLAS * tlas = _view->getTLAS();
-
-                if (nullptr == tlas)
-                {
-                    tlas = new TLAS();
-                    _view->setTLAS(tlas, TLASMode::PerView);
-                    tlas->Release();
-                }
-
-                tlas->reset();
-            }
-            else
-            {
-                _view->setTLAS(nullptr);
+                tlas = view->getTLAS();
+                break;
             }
         }
+
+        // create new TLAS for world if needed
+        bool justCreated = false;
+        if (nullptr == tlas)
+        {
+            tlas = new TLAS();
+            justCreated = true;
+        }
+
+        // ensure all views of the world share the same TLAS
+        for (uint v = 0; v < _views.size(); ++v)
+        {
+            auto & view = _views[v];
+
+            VG_ASSERT(view->getTLAS() == nullptr || view->getTLAS() == tlas);
+
+            if (!view->getTLAS() || view->getTLAS() != tlas)
+                view->setTLAS(tlas, TLASMode::PerWorld);
+        }     
+
+        tlas->reset();
+
+        if (justCreated)
+            VG_SAFE_RELEASE(tlas);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RayTracingManager::updateTLAS(gfx::CommandList * _cmdList, const core::IWorld * _world, core::vector<View *> & _views)
+    {
+        VG_PROFILE_GPU("Update World TLAS");
+        VG_ASSERT(_world);
+
+        // find shared TLAS
+        TLAS * tlas = nullptr;
+        for (uint v = 0; v < _views.size(); ++v)
+        {
+            auto & view = _views[v];
+
+            if (view->getTLAS())
+            {
+                tlas = view->getTLAS();
+                break;
+            }
+        }
+        VG_ASSERT(tlas);
+
+        const SharedWorldCullingJobOutput * sharedWorldCulling = Renderer::get()->getSharedWorldCullingJobOutput();
+        const WorldCullingJobOutput * worldCulling = sharedWorldCulling->getWorldCullingJobOutput(_world);
+        VG_ASSERT(worldCulling);
+
+        bool updateTLAS = false;
+
+        for (GraphicInstance * instance : worldCulling->m_staticMeshInstances)
+            updateTLAS |= instance->UpdateTLAS(_cmdList, tlas);
+
+        for (GraphicInstance * instance : worldCulling->m_skinnedMeshInstances)
+            updateTLAS |= instance->UpdateTLAS(_cmdList, tlas);
+
+        if (updateTLAS)
+            tlas->build(_cmdList);
     }
 
     //--------------------------------------------------------------------------------------
@@ -373,50 +469,40 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void RayTracingManager::updateTLAS(gfx::CommandList * _cmdList, View * _view)
     {
-        VG_PROFILE_GPU("Update TLAS");
+        VG_PROFILE_GPU("Update View TLAS");
+        VG_ASSERT(_view && _view->IsVisible() && _view->IsUsingRayTracing());
 
-        VG_ASSERT(_view);
-        if (_view)
+        gfx::TLAS * tlas = _view->getTLAS();
+        VG_ASSERT(tlas);
+                                
+        const GraphicInstanceList & instances = _view->getCullingJobResult().get(GraphicInstanceListType::All);
+                
+        core::set<GraphicInstance *> set;
+                
+        for (uint i = 0; i < instances.m_instances.size(); ++i)
         {
-            if (_view->IsVisible() && _view->IsUsingRayTracing())
+            GraphicInstance * instance = (GraphicInstance *)instances.m_instances[i];
+            set.insert(instance);
+        }     
+                
+        const auto shadowViews = _view->getShadowViews();
+        for (ShadowView * shadowView : shadowViews)
+        {
+            const GraphicInstanceList & instances = shadowView->getCullingJobResult().get(GraphicInstanceListType::All);
+                
+            for (uint i = 0; i < instances.m_instances.size(); ++i)
             {
-                gfx::TLAS * tlas = _view->getTLAS();
-                VG_ASSERT(tlas);
-                
-                bool updateTLAS = false;
-                
-                const GraphicInstanceList & instances = _view->getCullingJobResult().get(GraphicInstanceListType::All);
-                
-                core::set<GraphicInstance *> set;
-                
-                for (uint i = 0; i < instances.m_instances.size(); ++i)
-                {
-                    GraphicInstance * instance = (GraphicInstance *)instances.m_instances[i];
-                    set.insert(instance);
-                }     
-                
-                const auto shadowViews = _view->getShadowViews();
-                for (ShadowView * shadowView : shadowViews)
-                {
-                    const GraphicInstanceList & instances = shadowView->getCullingJobResult().get(GraphicInstanceListType::All);
-                
-                    for (uint i = 0; i < instances.m_instances.size(); ++i)
-                    {
-                        GraphicInstance * instance = (GraphicInstance *)instances.m_instances[i];
-                        set.insert(instance);
-                    }
-                }
-                
-                uint index = 0;
-                for (GraphicInstance * instance : set)
-                {
-                    updateTLAS |= instance->UpdateTLAS(_cmdList, tlas);
-                    index++;
-                }
-                
-                if (updateTLAS)
-                    tlas->build(_cmdList);
+                GraphicInstance * instance = (GraphicInstance *)instances.m_instances[i];
+                set.insert(instance);
             }
         }
+
+        bool updateTLAS = false;
+                
+        for (GraphicInstance * instance : set)
+            updateTLAS |= instance->UpdateTLAS(_cmdList, tlas);
+                
+        if (updateTLAS)
+            tlas->build(_cmdList);
     }
 }

@@ -52,7 +52,7 @@ namespace vg::renderer
         if (options->isRayTracingEnabled() && options->getRayTracingTLASMode() == TLASMode::PerWorld)
         {
             // All skins from visible worlds
-            return renderer->getSharedWorldCullingJobOutput()->m_allVisibleSkinnedMeshInstances;
+            return renderer->getSharedWorldCullingJobOutput()->m_allSkinnedMeshInstances;
         }
         else
         {

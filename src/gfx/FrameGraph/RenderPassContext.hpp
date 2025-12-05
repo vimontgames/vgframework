@@ -11,13 +11,15 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     const string RenderPassContext::getFrameGraphID(const string & _name) const
     {
-        return MakeFrameGraphID(_name, m_view->GetViewID());
+        VG_ASSERT(m_views.size() == 1);
+        return MakeFrameGraphID(_name, m_views[0]->GetViewID());
     }
 
     //--------------------------------------------------------------------------------------
     const string RenderPassContext::getFrameGraphIDEx(const string & _name) const
     {
-        return MakeFrameGraphIDEx(_name, m_view->GetViewID(), m_parent->GetViewID());
+        VG_ASSERT(m_views.size() == 1);
+        return MakeFrameGraphIDEx(_name, m_views[0]->GetViewID(), m_parent->GetViewID());
     }
 
     //--------------------------------------------------------------------------------------

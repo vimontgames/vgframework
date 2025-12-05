@@ -53,15 +53,22 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    core::span<ParticleSystemInstance *> ParticleRenderDataUpdatePass::getParticleSystemInstances() const
+    {
+        auto renderer = Renderer::get();
+        const RendererOptions * options = RendererOptions::get();
+        if (options->isRayTracingEnabled() && options->getRayTracingTLASMode() == TLASMode::PerWorld)
+            return renderer->getSharedWorldCullingJobOutput()->m_allParticleSystemInstances;
+        else
+            return renderer->getSharedCullingJobOutput()->m_particleSystems;
+    }
+
+    //--------------------------------------------------------------------------------------
     // Estimate returns a cost of 1 per instance to update
     //--------------------------------------------------------------------------------------
     core::u64 ParticleRenderDataUpdatePass::GetCostEstimate(const RenderPassContext & _renderContext) const
     {
-        auto renderer = Renderer::get();
-        const auto * cullingJobOutput = renderer->getSharedCullingJobOutput();
-        VG_ASSERT(nullptr != cullingJobOutput);
-        const auto & instances = cullingJobOutput->m_particleSystems;
-        return cullingJobOutput->m_particleSystems.size();
+        return getParticleSystemInstances().size();
     }
 
     //--------------------------------------------------------------------------------------
@@ -72,7 +79,7 @@ namespace vg::renderer
     {
         VG_PROFILE_CPU("ParticleRenderData");
 
-        const auto & particleSystemInstances = Renderer::get()->getSharedCullingJobOutput()->m_particleSystems;
+        const auto & particleSystemInstances = getParticleSystemInstances();
                 
         uint offset = 0;
         
@@ -95,7 +102,7 @@ namespace vg::renderer
       //--------------------------------------------------------------------------------------
     void ParticleRenderDataUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
-        const auto & particleSystemInstances = Renderer::get()->getSharedCullingJobOutput()->m_particleSystems;
+        const auto & particleSystemInstances = getParticleSystemInstances();
         size_t mapSize = m_mapSize;
 
         if (mapSize > 0)

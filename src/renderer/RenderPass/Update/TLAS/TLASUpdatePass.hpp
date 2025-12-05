@@ -1,5 +1,6 @@
 #include "TLASUpdatePass.h"
 #include "renderer/RayTracing/RayTracingManager.h"
+#include "renderer/Options/RendererOptions.h"
 
 namespace vg::renderer
 {
@@ -30,7 +31,12 @@ namespace vg::renderer
     void TLASUpdatePass::BeforeAll(const gfx::RenderPassContext & _renderPassContext)
     {
         RayTracingManager * rtManager = RayTracingManager::get();
-        rtManager->prepareTLAS(static_cast<View *>(_renderPassContext.getViewMutable()));
+        const auto & rendererOptions = RendererOptions::get();
+
+        if (rendererOptions->getRayTracingTLASMode() == TLASMode::PerView)
+            rtManager->prepareTLAS(static_cast<View *>(_renderPassContext.getViewMutable()));
+        else
+            rtManager->prepareTLAS(_renderPassContext.getWorld(), (core::vector<View*>&)_renderPassContext.getViews());
     }
 
     //--------------------------------------------------------------------------------------
@@ -40,6 +46,12 @@ namespace vg::renderer
     void TLASUpdatePass::BeforeRender(const gfx::RenderPassContext & _renderPassContext, gfx::CommandList * _cmdList)
     {
         RayTracingManager * rtManager = RayTracingManager::get();
-        rtManager->updateTLAS(_cmdList, static_cast<View*>(_renderPassContext.getViewMutable()));
+
+        const auto & rendererOptions = RendererOptions::get();
+
+        if (rendererOptions->getRayTracingTLASMode() == TLASMode::PerView)
+            rtManager->updateTLAS(_cmdList, static_cast<View*>(_renderPassContext.getViewMutable()));
+        else
+            rtManager->updateTLAS(_cmdList, _renderPassContext.getWorld(), (core::vector<View *>&)_renderPassContext.getViews());
     }
 }

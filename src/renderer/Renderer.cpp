@@ -27,6 +27,7 @@
 #include "renderer/RenderPass/Compute/ComputeSkinning/ComputeSkinningPass.h"
 #include "renderer/RenderPass/Update/ParticleData/ParticleRenderDataUpdatePass.h"
 #include "renderer/RenderPass/Update/BLAS/BLASUpdatePass.h"
+#include "renderer/RenderPass/Update/TLAS/TLASUpdatePass.h"
 #include "renderer/RenderPass/Render2D/HDROutput/HDROutputPass.h"
 #include "renderer/RenderPass/Render2D/Preview/Texture/TexturePreviewPass.h"
 #include "renderer/RenderPass/Compute/ComputeSpecularBRDF/ComputeSpecularBRDFPass.h"
@@ -231,6 +232,7 @@ namespace vg::renderer
             m_computeSpecularBRDFPass = new ComputeSpecularBRDFPass();
             m_computeIBLCubemapsPass = new ComputeIBLCubemapsPass();
             m_BLASUpdatePass = new BLASUpdatePass();
+            m_TLASUpdatePass = new TLASUpdatePass();
             m_imguiPass = new ImGuiPass();
             m_hdrOutputPass = new HDROutputPass();
 
@@ -348,6 +350,7 @@ namespace vg::renderer
         VG_SAFE_DELETE(m_computeSpecularBRDFPass);
         VG_SAFE_DELETE(m_computeIBLCubemapsPass);
         VG_SAFE_DELETE(m_BLASUpdatePass);
+        VG_SAFE_DELETE(m_TLASUpdatePass);
         VG_SAFE_DELETE(m_imguiPass);
         VG_SAFE_DELETE(m_imgui);
         VG_SAFE_DELETE(m_hdrOutputPass);
@@ -657,7 +660,24 @@ namespace vg::renderer
                 m_frameGraph.addUserPass(mainViewRenderPassContext, m_materialDataUpdatePass, "Material Data");
 
                 if (RendererOptions::get()->isRayTracingEnabled())
+                {
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_BLASUpdatePass, "BLAS");
+                
+                    if (options->getRayTracingTLASMode() == TLASMode::PerWorld)
+                    {
+                        const core::vector<WorldCullingJobOutput> & visibleWorlds = getSharedWorldCullingJobOutput()->m_allVisibleWorlds;
+                        for (uint w = 0; w < visibleWorlds.size(); ++w)
+                        {
+                            const WorldCullingJobOutput & visibleWorld = visibleWorlds[w];
+
+                            RenderPassContext worldTLASRenderPassContext;
+                            worldTLASRenderPassContext.setWorld(visibleWorld.m_world);
+                            worldTLASRenderPassContext.setViews((core::vector<IFrameGraphView *>&)visibleWorld.m_views);
+
+                            m_frameGraph.addUserPass(worldTLASRenderPassContext, m_TLASUpdatePass, "World TLAS");
+                        }
+                    }
+                }
 
                 if (asBool(PBRFlags::GenerateSpecularBRDF & options->getPBRFlags()))
                 {

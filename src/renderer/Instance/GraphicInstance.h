@@ -113,7 +113,7 @@ namespace vg::renderer
         core::uint                                      m_instanceVertexBufferOffset    = -1;
 
         #if GPUDATAOFFSET_FRAME_COUNTER
-        core::u64                                       m_gpuInstanceDataFrameIndex     = -1; // Used to check the frame GPUInstanceData offset has been set
+        core::u64                                       m_gpuInstanceDataFrameIndex     = (core::u64)(-1L); // Used to check the frame GPUInstanceData offset has been set
         #endif
     };
 }

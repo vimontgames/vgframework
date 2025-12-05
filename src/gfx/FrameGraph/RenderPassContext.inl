@@ -3,19 +3,34 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     VG_INLINE const IFrameGraphView * RenderPassContext::getView() const
     {
-        return m_view;
+        VG_ASSERT(m_views.size() == 1);
+        return m_views[0];
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE IFrameGraphView * RenderPassContext::getViewMutable() const
     {
-        return m_view;
+        VG_ASSERT(m_views.size() == 1);
+        return m_views[0];
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE void RenderPassContext::setView(const IFrameGraphView * _view)
     {
-        m_view = const_cast<IFrameGraphView*>(_view);
+        m_views.resize(1);
+        m_views[0] = const_cast<IFrameGraphView *>(_view);
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE const core::vector<IFrameGraphView *> & RenderPassContext::getViews() const
+    {
+        return m_views;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void RenderPassContext::setViews(core::vector<IFrameGraphView *> & _views)
+    {
+        m_views = _views;
     }
 
     //--------------------------------------------------------------------------------------
