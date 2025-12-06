@@ -246,7 +246,7 @@ namespace vg::core
         const char * className = _object->GetClassName();
         const auto * classDesc = GetClassDescriptor(className);
 
-        //VG_DEBUGPRINT("[Factory] Serialize Object \"%s\" (write 0x%016X = %u)\n", _object->GetName().c_str(), &_buffer, _buffer.getWriteOffset());
+        //VG_DEBUGPRINT("[Factory] Serialize Object \"%s\" (write 0x%016llX = %u)\n", _object->GetName().c_str(), &_buffer, _buffer.getWriteOffset());
 
         for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
         {
@@ -272,7 +272,7 @@ namespace vg::core
         if (asBool(PropertyFlags::Transient & flags))
             return;
 
-        //VG_DEBUGPRINT("[Factory] Serialize Property %s->%s (write 0x%016X = %u)\n", _object->GetName().c_str(), _prop->GetName(), &_buffer, _buffer.getWriteOffset());
+        //VG_DEBUGPRINT("[Factory] Serialize Property %s->%s (write 0x%016llX = %u)\n", _object->GetName().c_str(), _prop->GetName(), &_buffer, _buffer.getWriteOffset());
 
         switch (type)
         {
@@ -1126,7 +1126,7 @@ namespace vg::core
         const char * className = _object->GetClassName();
         const auto * classDesc = GetClassDescriptor(className);
 
-        //VG_DEBUGPRINT("[Factory] Serialize Object \"%s\" (read 0x%016X = %u)\n", _object->GetName().c_str(), &_buffer, _buffer.getReadOffset());
+        //VG_DEBUGPRINT("[Factory] Serialize Object \"%s\" (read 0x%016llX = %u)\n", _object->GetName().c_str(), &_buffer, _buffer.getReadOffset());
 
         for (uint p = 0; p < classDesc->GetPropertyCount(); ++p)
         {
@@ -1150,7 +1150,7 @@ namespace vg::core
         if (asBool(PropertyFlags::Transient & flags))
             return;
 
-        //VG_DEBUGPRINT("[Factory] Serialize Property %s->%s (read 0x%016X = %u)\n", _object->GetName().c_str(), _prop->GetName(), &_buffer, _buffer.getReadOffset());
+        //VG_DEBUGPRINT("[Factory] Serialize Property %s->%s (read 0x%016llX = %u)\n", _object->GetName().c_str(), _prop->GetName(), &_buffer, _buffer.getReadOffset());
 
         bool changed = false;
 

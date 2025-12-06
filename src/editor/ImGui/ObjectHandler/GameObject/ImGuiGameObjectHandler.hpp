@@ -65,7 +65,7 @@ namespace vg::editor
 
             const bool debugInspector = EditorOptions::get()->IsDebugInspector();
             if (debugInspector)
-                gameObjectLabel += fmt::sprintf(" (0x%016X)", (u64)_object);
+                gameObjectLabel += fmt::sprintf(" (0x%016llX)", (u64)_object);
 
             if (isPrefab)
                 ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_HeaderActive));

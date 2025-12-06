@@ -35,23 +35,23 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void UndoRedoEntryGroup::Undo()
     {
-        VG_INFO("[Undo/Redo] Begin Undo Group \"%s\" (0x%016X)", GetEntryName().c_str(), this);
+        VG_INFO("[Undo/Redo] Begin Undo Group \"%s\" (0x%016llX)", GetEntryName().c_str(), this);
 
         for (auto * entry : m_subEntries)
             entry->Undo();
 
-        VG_INFO("[Undo/Redo] End Undo Group \"%s\" (0x%016X)", GetEntryName().c_str(), this);
+        VG_INFO("[Undo/Redo] End Undo Group \"%s\" (0x%016llX)", GetEntryName().c_str(), this);
     }
 
     //--------------------------------------------------------------------------------------
     void UndoRedoEntryGroup::Redo()
     {
-        VG_INFO("[Undo/Redo] Begin Redo Group \"%s\" (0x%016X)", GetEntryName().c_str(), this);
+        VG_INFO("[Undo/Redo] Begin Redo Group \"%s\" (0x%016llX)", GetEntryName().c_str(), this);
 
         for (auto * entry : m_subEntries)
             entry->Redo();
 
-        VG_INFO("[Undo/Redo] End Redo Group \"%s\" (0x%016X)", GetEntryName().c_str(), this);
+        VG_INFO("[Undo/Redo] End Redo Group \"%s\" (0x%016llX)", GetEntryName().c_str(), this);
     }
 
     //--------------------------------------------------------------------------------------

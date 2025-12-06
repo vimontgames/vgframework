@@ -740,7 +740,7 @@ namespace vg::gfx
             const auto startCreateGraphicsPSO = Timer::getTick();
             pso = GraphicPipelineState::createGraphicPipelineState(_key);
             m_graphicPipelineStateHash[_key] = pso;
-            VG_INFO("[Device] Created Graphics PipelineStateObject 0x%016X in %.2f ms", pso, Timer::getEnlapsedTime(startCreateGraphicsPSO, Timer::getTick()));
+            VG_INFO("[Device] Created Graphics PipelineStateObject 0x%016llX in %.2f ms", pso, Timer::getEnlapsedTime(startCreateGraphicsPSO, Timer::getTick()));
         }
         
         VG_SAFE_INCREASE_REFCOUNT(pso);
@@ -768,7 +768,7 @@ namespace vg::gfx
             const auto startCreateGraphicsPSO = Timer::getTick();
             pso = ComputePipelineState::createComputePipelineState(_key);
             m_computePipelineStateHash[_key] = pso;
-            VG_INFO("[Device] Created Compute PipelineStateObject 0x%016X in %.2f ms", pso, Timer::getEnlapsedTime(startCreateGraphicsPSO, Timer::getTick()));
+            VG_INFO("[Device] Created Compute PipelineStateObject 0x%016llX in %.2f ms", pso, Timer::getEnlapsedTime(startCreateGraphicsPSO, Timer::getTick()));
         }
 
         VG_SAFE_INCREASE_REFCOUNT(pso);

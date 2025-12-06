@@ -236,12 +236,12 @@ namespace vg::renderer
 
                         if (blas->init())
                         {
-                            VG_INFO("[Renderer] Create static BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, instance->GetName().c_str(), key);
+                            VG_INFO("[Renderer] Create static BLAS 0x%016llX for instance \"%s\" with key 0x%016llX", blas, instance->GetName().c_str(), key);
                             m_blasToCreate.push_back(blas);
                         }
                         else
                         {
-                            //VG_INFO("[Renderer] Update static BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, instance->GetName().c_str(), key);
+                            //VG_INFO("[Renderer] Update static BLAS 0x%016llX for instance \"%s\" with key 0x%016llX", blas, instance->GetName().c_str(), key);
                             m_blasToUpdate.push_back(blas);
                         }
                     }
@@ -301,15 +301,15 @@ namespace vg::renderer
                     blas->addIndexedGeometry(ib, ibOffset, batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, (SurfaceType::Opaque == surfaceType) ? true : false);
                 }
 
-                //VG_INFO("[Renderer] Update BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
+                //VG_INFO("[Renderer] Update BLAS 0x%016llX for instance \"%s\" with key 0x%016llX", blas, skin->GetName().c_str(), key);
                 if (blas->init())
                 {
-                    VG_INFO("[Renderer] Create skin BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
+                    VG_INFO("[Renderer] Create skin BLAS 0x%016llX for instance \"%s\" with key 0x%016llX", blas, skin->GetName().c_str(), key);
                     m_blasToCreate.push_back(blas);
                 }
                 else
                 {
-                    //VG_INFO("[Renderer] Update skin BLAS 0x%016X for instance \"%s\" with key 0x%016X", blas, skin->GetName().c_str(), key);
+                    //VG_INFO("[Renderer] Update skin BLAS 0x%016llX for instance \"%s\" with key 0x%016llX", blas, skin->GetName().c_str(), key);
                     m_blasToUpdate.push_back(blas);
                 }
             }

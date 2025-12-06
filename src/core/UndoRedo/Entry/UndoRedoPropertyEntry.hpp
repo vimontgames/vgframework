@@ -59,7 +59,7 @@ namespace vg::core
         if (auto * object = GetObject())
         {
             // Restore the original value serialized in memory before change
-            VG_INFO("[Undo/Redo] Undo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop.GetName(), &m_prop, m_objectName.c_str(), object);
+            VG_INFO("[Undo/Redo] Undo Property \"%s\" (0x%016llX) from Object \"%s\" (0x%016llX)", m_prop.GetName(), &m_prop, m_objectName.c_str(), object);
 
             m_original.resetRead();
             Factory * factory = (Factory *)Kernel::getFactory();
@@ -78,7 +78,7 @@ namespace vg::core
         }
         else
         {
-            VG_ERROR("[Undo/Redo] Cannot Undo Property \"%s\" (0x%016X) from Object \"%s\" (UID=0x%08X)", m_prop.GetName(), &m_prop, m_objectName.c_str(), m_objectUID);
+            VG_ERROR("[Undo/Redo] Cannot Undo Property \"%s\" (0x%016llX) from Object \"%s\" (UID=0x%08X)", m_prop.GetName(), &m_prop, m_objectName.c_str(), m_objectUID);
         }
     }
 
@@ -88,7 +88,7 @@ namespace vg::core
         if (auto * object = GetObject())
         {
             // Restore the modified value serialized in memory before change
-            VG_INFO("[Undo/Redo] Redo Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", m_prop.GetName(), &m_prop, m_objectName.c_str(), object);
+            VG_INFO("[Undo/Redo] Redo Property \"%s\" (0x%016llX) from Object \"%s\" (0x%016llX)", m_prop.GetName(), &m_prop, m_objectName.c_str(), object);
 
             m_modified.resetRead();
             Factory * factory = (Factory *)Kernel::getFactory();
@@ -107,7 +107,7 @@ namespace vg::core
         }
         else
         {
-            VG_ERROR("[Undo/Redo] Cannot Redo Property \"%s\" (0x%016X) from Object \"%s\" (UID=0x%08X)", m_prop.GetName(), &m_prop, m_objectName.c_str(), m_objectUID);
+            VG_ERROR("[Undo/Redo] Cannot Redo Property \"%s\" (0x%016llX) from Object \"%s\" (UID=0x%08X)", m_prop.GetName(), &m_prop, m_objectName.c_str(), m_objectUID);
         }
     }
 }

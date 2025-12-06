@@ -174,7 +174,7 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     string ImGuiWindow::getButtonLabel(string _baseName, IObject * _object)
     {
-        return fmt::sprintf("%s##%s_0x%016X", _baseName, _object->GetClassName(), (u64)_object);
+        return fmt::sprintf("%s##%s_0x%016llX", _baseName, _object->GetClassName(), (u64)_object);
     }
 
     template <typename T> struct TypeToDynamicPropertyTypeEnum;
@@ -386,7 +386,7 @@ namespace vg::editor
                 {
                     if (undoRedoManager->GetCurrentUndoRedoTarget() != undoRedoTarget)
                     {
-                        //VG_INFO("[Undo/Redo] Begin editing Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
+                        //VG_INFO("[Undo/Redo] Begin editing Property \"%s\" (0x%016llX) from Object \"%s\" (0x%016llX)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
                         editingState = EditingState::BeginEdit;
 
                         // Backup value before editing
@@ -403,7 +403,7 @@ namespace vg::editor
             
             if ( (_itemAfterEdit || ImGui::IsItemDeactivatedAfterEdit()) || (edited && InteractionType::Single == _interactionType))
             {
-                //VG_INFO("[Undo/Redo] End editing Property \"%s\" (0x%016X) from Object \"%s\" (0x%016X)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
+                //VG_INFO("[Undo/Redo] End editing Property \"%s\" (0x%016llX) from Object \"%s\" (0x%016llX)", _prop->GetName(), _prop, _object->getName().c_str(), _object);
                 editingState = EditingState::EndEdit;
                 undoRedoManager->ClearCurrentUndoRedoTarget();
                 edited = true;
@@ -857,7 +857,7 @@ namespace vg::editor
 
         // debug only
         if (EditorOptions::get()->IsDebugPropertyVisible())
-            ImGui::Text("Parent = 0x%016X (%s)", _object->GetParent(), _object->GetClassName());
+            ImGui::Text("Parent = 0x%016llX (%s)", _object->GetParent(), _object->GetClassName());
 
         if (_objectContext.m_treeNodes.size() > 0)
         {
@@ -1874,7 +1874,7 @@ namespace vg::editor
 
                                 const bool debugInspector = EditorOptions::get()->IsDebugInspector();
                                 if (debugInspector)
-                                    componentShortName += fmt::sprintf(" (0x%016X)", (u64)pComponent);
+                                    componentShortName += fmt::sprintf(" (0x%016llX)", (u64)pComponent);
 
                                 ImVec2 collapsingHeaderPos = ImGui::GetCursorPos();
 

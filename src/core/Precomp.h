@@ -202,7 +202,7 @@ namespace vg::core
 	#define VG_SAFE_STATIC_CAST(type, ptr) ((type*)ptr)
 #endif
 
-#define VG_ASSERT_IS_ALIGNED(address, alignment) VG_ASSERT(0 == (uint_ptr(address) & (alignment-1)), "%s (0x%016X) is not aligned to %u bytes", #address, address, alignment)
+#define VG_ASSERT_IS_ALIGNED(address, alignment) VG_ASSERT(0 == (uint_ptr(address) & (alignment-1)), "%s (0x%016llX) is not aligned to %u bytes", #address, address, alignment)
 
 
 #define VG_SAFE_FREE(p)	 { if (p) { free((void*)(p)); (p) = nullptr;} }

@@ -19,7 +19,7 @@ namespace vg::editor
 
         if (subs)
         {
-            const string nodeName = fmt::sprintf("%s###0x%016X", elem->GetEntryName(), (u64)elem);
+            const string nodeName = fmt::sprintf("%s###0x%016llX", elem->GetEntryName(), (u64)elem);
             bool open = ImGui::TreeNodeEx(nodeName.c_str(), ImGuiTreeNodeFlags_SpanAllColumns);           
 
             ImGui::TableNextColumn();
