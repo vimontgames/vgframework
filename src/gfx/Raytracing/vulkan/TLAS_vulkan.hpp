@@ -52,6 +52,9 @@ namespace vg::gfx::vulkan
         if (m_VKInstances.empty())
             return;
 
+        // Add memory barrier for previous BLAS updates
+        _cmdList->addRWGlobalBarrier();
+
         // Update instances
         auto device = gfx::Device::get();
 

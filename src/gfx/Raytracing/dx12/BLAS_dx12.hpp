@@ -126,6 +126,8 @@ namespace vg::gfx::dx12
         desc.ScratchAccelerationStructureData = m_scratchBuffer->getResource().getd3d12BufferResource()->GetGPUVirtualAddress();
         desc.DestAccelerationStructureData = m_resultBuffer->getResource().getd3d12BufferResource()->GetGPUVirtualAddress();
         _cmdList->getd3d12GraphicsCommandList()->BuildRaytracingAccelerationStructure(&desc, 0, nullptr);
-        _cmdList->addRWBufferBarrier(m_resultBuffer); // TODO: Implement a single barrier between BLAS and TLAS build (https://developer.nvidia.com/blog/rtx-best-practices/)
+
+        // Only single barrier between BLAS and TLAS build is needed (https://developer.nvidia.com/blog/rtx-best-practices/)
+        //_cmdList->addRWBufferBarrier(m_resultBuffer); 
     }
 }

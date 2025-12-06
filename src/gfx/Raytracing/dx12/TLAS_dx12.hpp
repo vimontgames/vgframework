@@ -41,6 +41,9 @@ namespace vg::gfx::dx12
 
         if (m_DXRInstanceDescriptors.size() > 0)
         {
+            // Add global memory barrier for previous BLAS updates
+            _cmdList->addRWGlobalBarrier();
+   
             VG_ASSERT(m_DXRInstanceDescriptors.size() < VG_TLAS_INSTANCECOUNT, "[Device] TLAS m_instanceBuffer is not big enough");
             const auto mapSizeInBytes = sizeof(D3D12_RAYTRACING_INSTANCE_DESC) * m_DXRInstanceDescriptors.size();
             D3D12_RAYTRACING_INSTANCE_DESC * data = (D3D12_RAYTRACING_INSTANCE_DESC *)_cmdList->map(m_instanceBuffer, mapSizeInBytes).data;

@@ -112,7 +112,7 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::addRWTextureBarrier(gfx::Texture * _texture)
     {
-        VG_ASSERT(_texture);
+        VG_ASSERT(_texture && _texture->getTexDesc().resource.testBindFlags(BindFlags::UnorderedAccess | BindFlags::RaytracingAccelerationStruct));
         if (_texture)
             super::addRWTextureBarrier(_texture);
     }
@@ -120,9 +120,15 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::addRWBufferBarrier(gfx::Buffer * _buffer)
     {
-        VG_ASSERT(_buffer);
+        VG_ASSERT(_buffer && _buffer->getBufDesc().resource.testBindFlags(BindFlags::UnorderedAccess | BindFlags::RaytracingAccelerationStruct));
         if (_buffer)
             super::addRWBufferBarrier(_buffer);
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void CommandList::addRWGlobalBarrier()
+    {
+        super::addRWGlobalBarrier();
     }
 
     //--------------------------------------------------------------------------------------

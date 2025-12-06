@@ -57,6 +57,7 @@ namespace vg::gfx::vulkan
 
         void								addRWTextureBarrier         (gfx::Texture * _texture);
         void								addRWBufferBarrier          (gfx::Buffer * _buffer);
+        void                                addRWGlobalBarrier          ();
 
         void								clearRWBuffer               (gfx::Buffer * _buffer, core::uint _clearValue);
 

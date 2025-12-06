@@ -230,6 +230,7 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void CommandList::addRWTextureBarrier(gfx::Texture * _texture)
     {
+        VG_ASSERT(_texture);
         D3D12_RESOURCE_BARRIER barrier;
         barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
         barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
@@ -240,11 +241,22 @@ namespace vg::gfx::dx12
     //--------------------------------------------------------------------------------------
     void CommandList::addRWBufferBarrier(gfx::Buffer * _buffer)
     {
+        VG_ASSERT(_buffer);
         D3D12_RESOURCE_BARRIER barrier;
         barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
         barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
         barrier.UAV.pResource = _buffer->getResource().getd3d12BufferResource();        
         m_d3d12graphicsCmdList->ResourceBarrier(1, &barrier);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::addRWGlobalBarrier()
+    {
+        D3D12_RESOURCE_BARRIER uavBarrier = {};
+        uavBarrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+        uavBarrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+        uavBarrier.UAV.pResource = nullptr;
+        m_d3d12graphicsCmdList->ResourceBarrier(1, &uavBarrier);
     }
 
     //--------------------------------------------------------------------------------------

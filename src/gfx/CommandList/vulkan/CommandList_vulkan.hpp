@@ -335,13 +335,13 @@ namespace vg::gfx::vulkan
         imageBarrier.image = _texture->getResource().getVulkanImage();
         imageBarrier.subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, desc.mipmaps, 0, 1 };
         
-        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, 0, nullptr, 0, nullptr, 1, &imageBarrier);
+        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 0, nullptr, 0, nullptr, 1, &imageBarrier);
     }
 
     //--------------------------------------------------------------------------------------
     void CommandList::addRWBufferBarrier(gfx::Buffer * _buffer)
     {
-        VkBufferMemoryBarrier bufferBarrier;
+        VkBufferMemoryBarrier bufferBarrier = {};
         bufferBarrier.sType = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
         bufferBarrier.pNext = nullptr;
         bufferBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
@@ -352,7 +352,18 @@ namespace vg::gfx::vulkan
         bufferBarrier.offset = 0;
         bufferBarrier.size = _buffer->getBufDesc().getSize();
 
-        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT, 0, 0, nullptr, 1, &bufferBarrier, 0, nullptr);
+        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 0, nullptr, 1, &bufferBarrier, 0, nullptr);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CommandList::addRWGlobalBarrier()
+    {
+        VkMemoryBarrier memBarrier{};
+        memBarrier.sType = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+        memBarrier.srcAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+        memBarrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+
+        vkCmdPipelineBarrier(m_vkCommandBuffer, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 1, &memBarrier, 0, nullptr, 0, nullptr);
     }
 
     //--------------------------------------------------------------------------------------
@@ -765,7 +776,8 @@ namespace vg::gfx::vulkan
     //--------------------------------------------------------------------------------------
     void CommandList::buildAccelerationStructures(core::u32 _infoCount, const VkAccelerationStructureBuildGeometryInfoKHR * _infos, const VkAccelerationStructureBuildRangeInfoKHR * const * _buildRangeInfos)
     {
-        VG_ASSERT(gfx::Device::get()->m_KHR_Acceleration_Structure.m_pfnCmdBuildAccelerationStructuresKHR);
-        gfx::Device::get()->m_KHR_Acceleration_Structure.m_pfnCmdBuildAccelerationStructuresKHR(m_vkCommandBuffer, _infoCount, _infos, _buildRangeInfos);
+        auto * device = gfx::Device::get();
+        VG_ASSERT(device->m_KHR_Acceleration_Structure.m_pfnCmdBuildAccelerationStructuresKHR);
+        device->m_KHR_Acceleration_Structure.m_pfnCmdBuildAccelerationStructuresKHR(m_vkCommandBuffer, _infoCount, _infos, _buildRangeInfos);
     }
 }

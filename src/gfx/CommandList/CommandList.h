@@ -144,6 +144,7 @@ namespace vg::gfx
 
         VG_INLINE void                  addRWTextureBarrier         (gfx::Texture * _texture);
         VG_INLINE void                  addRWBufferBarrier          (gfx::Buffer * _buffer);
+        VG_INLINE void                  addRWGlobalBarrier          ();
 
         VG_INLINE Map                   map                         (gfx::Buffer * _buffer, size_t _size);
         VG_INLINE void                  unmap                       (gfx::Buffer * _buffer);

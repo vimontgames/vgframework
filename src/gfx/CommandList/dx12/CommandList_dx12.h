@@ -65,6 +65,7 @@ namespace vg::gfx::dx12
 
 		void								addRWTextureBarrier			(gfx::Texture * _texture);
 		void								addRWBufferBarrier			(gfx::Buffer * _buffer);
+        void                                addRWGlobalBarrier          ();
 
         static D3D12_PRIMITIVE_TOPOLOGY     getd3d12PrimitiveTopology   (PrimitiveTopology _topology);
 
