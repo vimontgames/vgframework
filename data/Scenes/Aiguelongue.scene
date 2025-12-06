@@ -9750,7 +9750,7 @@
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="EnumU8" name="m_type" value="Float"/>
                                                                 <Property type="EnumU8" name="m_interpolation" value="Smooth"/>
-                                                                <Property type="Float2" name="m_rangeX" x="0" y="2"/>
+                                                                <Property type="Float2" name="m_rangeX" x="0" y="3"/>
                                                                 <Property type="Float2" name="m_rangeY" x="0" y="1"/>
                                                                 <Property type="ObjectVector" name="m_data">
                                                                     <Object class="FloatCurveDataContainer">
@@ -9760,9 +9760,9 @@
                                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                         <Property type="FloatCurveData" name="m_curve" count="4">
                                                                             <Point t="0" value="0.020661175"/>
-                                                                            <Point t="0.31818181" value="1"/>
-                                                                            <Point t="1.6033058" value="0.99999994"/>
-                                                                            <Point t="2" value="0.031807542"/>
+                                                                            <Point t="0.37741426" value="1"/>
+                                                                            <Point t="2.5510263" value="1"/>
+                                                                            <Point t="3" value="0.031807542"/>
                                                                         </Property>
                                                                         <Property type="Bool" name="m_isVisible" value="true"/>
                                                                     </Object>

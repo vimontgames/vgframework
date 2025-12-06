@@ -1,4 +1,5 @@
 #include "core/Curve/FloatCurve.h"
+#include "core/Math/Math.h"
 #include "editor/Editor_Consts.h"
 #include "editor/ImGui/Extensions/ImGuizmo/ImGuizmoAdapter.h"
 
@@ -88,6 +89,13 @@ namespace vg::editor
                     if (i != _pointIndex)
                         points[i].value = _value.y;
                 }
+            }
+
+            const float yMin = m_curve->getVerticalRange().x;
+            const float yMax = m_curve->getVerticalRange().y;
+            for (size_t i = 0; i < points.size(); i++)
+            {
+                points[i].value = clamp(points[i].value, yMin, yMax);
             }
 
             SortValues(_curveIndex);
