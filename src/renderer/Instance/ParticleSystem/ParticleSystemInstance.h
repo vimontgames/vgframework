@@ -44,9 +44,11 @@ namespace vg::renderer
 
         bool                        SetEmitterCount             (core::uint _count) final override;
         bool                        SetEmitterParams            (core::uint _index, const ParticleEmitterParams & _emitterParams) final override;
+        void                        ResetEmitter                (core::uint _index) final override;
 
         void                        UpdateTime                  (float _dt) final override;
-
+        void                        UpdateEmitterTime           (core::uint _index, float _dt) final override;
+      
         core::uint                  GetGPUInstanceDataSize      () const final override;
         core::uint                  FillGPUInstanceData         (const core::u8 * VG_RESTRICT _data) const final override;
 
@@ -56,14 +58,14 @@ namespace vg::renderer
         void                        updateSimulation            ();
 
     private:
-        float m_dt = 0.0f;
-
         struct EmitterData
         {
             ParticleEmitterParams   m_params;
+            float                   m_dt = 0.0f;
             float                   m_timeSinceLastSpawn = 0.0f;
             core::vector<Particle>  m_particles;
             core::u16               m_aliveParticles = 0;
+            bool                    m_reset = false;
         };
         core::vector<EmitterData> m_emitters;
         core::AABB m_aabb;

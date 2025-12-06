@@ -23,24 +23,50 @@ namespace vg::engine
     VG_REGISTER_COMPONENT_CLASS(ParticleComponent, "Particle", "Renderer", "Particle system for 3D rendering", editor::style::icon::Fire, 1)
 
     //--------------------------------------------------------------------------------------
+    bool ParticleComponent::playAllParticleEmitters(IObject * _object)
+    {
+        return ((ParticleComponent *)_object)->Play() && ((ParticleComponent *)_object)->Reset();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleComponent::pauseAllParticleEmitters(IObject * _object)
+    {
+        return ((ParticleComponent *)_object)->Pause();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleComponent::stopAllParticleEmitters(IObject * _object)
+    {
+        return ((ParticleComponent *)_object)->Stop();
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ParticleComponent::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        registerProperty(ParticleComponent, m_maxParticleCount, "Max particles");
-        setPropertyDescription(ParticleComponent, m_maxParticleCount, "Maximum particle count");
-        setPropertyRange(ParticleComponent, m_maxParticleCount, uint2(1, 4096));
+        registerPropertyCallbackEx(ParticleComponent, playAllParticleEmitters, editor::style::icon::Play, PropertyFlags::SingleLine);
+        setPropertyDescription(ParticleComponent, playAllParticleEmitters, "Play all emitters");
 
-        registerPropertyObjectPtrEx(ParticleComponent, m_particleSystemInstance, "ParticleSystemInstance", PropertyFlags::Transient | PropertyFlags::Flatten);
+        registerPropertyCallbackEx(ParticleComponent, pauseAllParticleEmitters, editor::style::icon::Pause, PropertyFlags::SingleLine);
+        setPropertyDescription(ParticleComponent, pauseAllParticleEmitters, "Pause all emitters");
+
+        registerPropertyCallbackEx(ParticleComponent, stopAllParticleEmitters, editor::style::icon::Stop, PropertyFlags::SingleLine);
+        setPropertyDescription(ParticleComponent, stopAllParticleEmitters, "Stop all emitters");
+
+        registerProperty(ParticleComponent, m_playOnStart, "Play On Start");
+        setPropertyDescription(ParticleComponent, m_playOnStart, "Play particle system when game starts");
 
         registerPropertyObject(ParticleComponent, m_particleEmitters, "Emitters");
+
+        registerPropertyObjectPtrEx(ParticleComponent, m_particleSystemInstance, "ParticleSystemInstance", PropertyFlags::Transient | PropertyFlags::Flatten);
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
     ParticleComponent::ParticleComponent(const core::string & _name, IObject * _parent) :
-        core::Component(_name, _parent),
+        super(_name, _parent),
         m_particleEmitters(_name, this)
     {
         m_particleSystemInstance = (IParticleSystemInstance *)CreateFactoryObject(ParticleSystemInstance, _name, this);
@@ -90,6 +116,82 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    bool ParticleComponent::Play()
+    {
+        auto & emitters = m_particleEmitters.getObjects();
+        for (uint i = 0; i < emitters.size(); ++i)
+        {
+            auto & params = emitters[i].getEmitterParams();
+            params.m_play = true;
+            params.m_spawn = true;
+            m_particleSystemInstance->SetEmitterParams(i, params);
+        }
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleComponent::Pause()
+    {
+        auto & emitters = m_particleEmitters.getObjects();
+        for (uint i = 0; i < emitters.size(); ++i)
+        {
+            auto & params = emitters[i].getEmitterParams();
+            params.m_play = !params.m_play;
+            m_particleSystemInstance->SetEmitterParams(i, params);
+        }
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleComponent::Stop()
+    {
+        auto & emitters = m_particleEmitters.getObjects();
+        for (uint i = 0; i < emitters.size(); ++i)
+        {
+            auto & params = emitters[i].getEmitterParams();
+            params.m_spawn = false;
+            m_particleSystemInstance->SetEmitterParams(i, params);
+        }
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleComponent::Reset()
+    {
+        auto & emitters = m_particleEmitters.getObjects();
+        for (uint i = 0; i < emitters.size(); ++i)
+        {
+            auto & params = emitters[i].getEmitterParams();
+            m_particleSystemInstance->ResetEmitter(i);
+        }
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleComponent::UpdateEmitter(core::uint _index)
+    {
+        const auto & emitters = m_particleEmitters.getObjects();
+        if (_index < emitters.size())
+        {
+            m_particleSystemInstance->SetEmitterParams(_index, emitters[_index].getEmitterParams());
+            return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleComponent::ResetEmitter(core::uint _index)
+    {
+        const auto & emitters = m_particleEmitters.getObjects();
+        if (_index < emitters.size())
+        {
+            m_particleSystemInstance->ResetEmitter(_index);
+            return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ParticleComponent::Update(const Context & _context)
     {
         if (nullptr != m_particleSystemInstance)
@@ -97,8 +199,26 @@ namespace vg::engine
             m_particleSystemInstance->setGlobalMatrix(_context.m_gameObject->getGlobalMatrix());
             m_particleSystemInstance->setColor(_context.m_gameObject->getColor());
             m_particleSystemInstance->setObjectFlags(ObjectFlags::NoCulling, asBool(ComponentFlags::NoCulling & getComponentFlags()));
-            m_particleSystemInstance->UpdateTime(_context.m_dt);
+
+            auto * engine = Engine::get();
+            const float dt = engine->IsPlaying() ? _context.m_dt : engine->getTime().m_realDeltaTime;
+            m_particleSystemInstance->UpdateTime(dt);
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ParticleComponent::OnPlay()
+    {
+        Reset();
+        if (m_playOnStart)
+            Play();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ParticleComponent::OnStop()
+    {
+        Stop();
+        Reset();
     }
 
     //--------------------------------------------------------------------------------------
@@ -108,6 +228,18 @@ namespace vg::engine
 
         if (m_particleSystemInstance)
             m_particleSystemInstance->SetInstanceFlags(InstanceFlags::Enabled, asBool(ComponentFlags::Enabled & GetComponentFlags()));
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::uint ParticleComponent::getEmitterIndex(ParticleEmitterDesc * _emitter) const
+    {
+        const auto & emitters = m_particleEmitters.getObjects();
+        for (uint i = 0; i < emitters.size(); ++i)
+        {
+            if (_emitter == &emitters[i])
+                return i;
+        }
+        return (uint)-1;
     }
 
     //--------------------------------------------------------------------------------------

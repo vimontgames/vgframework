@@ -9725,7 +9725,7 @@
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                        <Property type="Uint16" name="m_maxParticleCount" value="1"/>
+                                        <Property type="Bool" name="m_playOnStart" value="true"/>
                                         <Property type="Object" name="m_particleEmitters">
                                             <Object class="ParticleEmitterList">
                                                 <Property type="String" name="m_name" value="New ParticleComponent"/>

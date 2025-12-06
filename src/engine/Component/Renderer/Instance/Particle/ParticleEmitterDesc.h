@@ -15,8 +15,17 @@ namespace vg::engine
 
         void OnLoad() final override;
 
+        bool Play();
+        bool Pause();
+        bool Stop();
+
         const renderer::ParticleEmitterParams & getEmitterParams() const { return m_params; }
+        renderer::ParticleEmitterParams & getEmitterParams() { return m_params; }
         const MaterialResource & getMaterialResource() const { return m_materialResource; }
+
+        static bool playParticleEmitter(IObject * _object);
+        static bool pauseParticleEmitter(IObject * _object);
+        static bool stopParticleEmitter(IObject * _object);
 
     private:
         renderer::ParticleEmitterParams     m_params;

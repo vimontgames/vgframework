@@ -78,6 +78,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void ParticleSystemInstance::ResetEmitter(core::uint _index)
+    {
+        if (_index < m_emitters.size())
+            m_emitters[_index].m_reset = true;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ParticleSystemInstance::Cull(const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult)
     {
         core::AABB aabb;
@@ -124,9 +131,26 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void ParticleSystemInstance::UpdateTime(float _dt)
     {
-        m_dt = _dt;
         for (uint i = 0; i < m_emitters.size(); ++i)
-            m_emitters[i].m_timeSinceLastSpawn += _dt;
+            UpdateEmitterTime(i, _dt);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ParticleSystemInstance::UpdateEmitterTime(core::uint _index, float _dt)
+    {
+        if (_index < m_emitters.size())
+        {
+            EmitterData & emitter = m_emitters[_index];
+            if (emitter.m_params.m_play)
+            {
+                emitter.m_timeSinceLastSpawn += _dt;
+                emitter.m_dt = _dt;
+            }
+            else
+            {
+                emitter.m_dt = 0.0f;
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -141,47 +165,56 @@ namespace vg::renderer
         {
             auto & emitter = m_emitters[i];
 
-            // 1. Spawn
-            float spawnRate = emitter.m_params.m_spawnRate;
-            const uint numToSpawn = (int)floor(spawnRate * emitter.m_timeSinceLastSpawn);
-            if (numToSpawn > 0)
+            if (emitter.m_reset)
             {
-                emitter.m_timeSinceLastSpawn -= numToSpawn / spawnRate;
-                for (uint i = 0; i < numToSpawn; ++i)
-                {
-                    // Find dead particle
-                    uint index = -1;
-                    for (uint p = 0; p < emitter.m_particles.size(); ++p)
-                    {
-                        Particle & particle = emitter.m_particles[p];
-                        if (!particle.alive)
-                        {
-                            index = p;
-                            break;
-                        }
-                    }
-                    if (-1 == index)
-                    {
-                        if (emitter.m_particles.size() < emitter.m_params.m_maxParticleCount)
-                        {
-                            emitter.m_particles.emplace_back();
-                            index = (uint)emitter.m_particles.size() - 1;
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
+                emitter.m_particles.clear();
+                emitter.m_reset = false;
+            }
 
-                    // New particle
-                    Particle & particle = emitter.m_particles[index];
-                    particle.position = float3(0, 0, 0);
-                    particle.velocity = float3(0, 1, 0);
-                    particle.lifetime = emitter.m_params.m_lifeTime;
-                    particle.age = 0.0f;
-                    particle.size = emitter.m_params.m_size;
-                    particle.color = float4(1, 1, 1, 1);
-                    particle.alive = true;
+            // 1. Spawn
+            if (emitter.m_params.m_spawn)
+            {
+                float spawnRate = emitter.m_params.m_spawnRate;
+                const uint numToSpawn = (uint)(spawnRate * emitter.m_timeSinceLastSpawn);
+                if (numToSpawn > 0)
+                {
+                    emitter.m_timeSinceLastSpawn -= numToSpawn / spawnRate;
+                    for (uint i = 0; i < numToSpawn; ++i)
+                    {
+                        // Find dead particle
+                        uint index = -1;
+                        for (uint p = 0; p < emitter.m_particles.size(); ++p)
+                        {
+                            Particle & particle = emitter.m_particles[p];
+                            if (!particle.alive)
+                            {
+                                index = p;
+                                break;
+                            }
+                        }
+                        if (-1 == index)
+                        {
+                            if (emitter.m_particles.size() < emitter.m_params.m_maxParticleCount)
+                            {
+                                emitter.m_particles.emplace_back();
+                                index = (uint)emitter.m_particles.size() - 1;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+
+                        // New particle
+                        Particle & particle = emitter.m_particles[index];
+                        particle.position = float3(0, 0, 0);
+                        particle.velocity = float3(0, 1, 0);
+                        particle.lifetime = emitter.m_params.m_lifeTime;
+                        particle.age = 0.0f;
+                        particle.size = emitter.m_params.m_size;
+                        particle.color = float4(1, 1, 1, 1);
+                        particle.alive = true;
+                    }
                 }
             }
 
@@ -194,7 +227,7 @@ namespace vg::renderer
                 if (!particle.alive)
                     continue;
 
-                particle.age += m_dt;
+                particle.age += emitter.m_dt;
 
                 if (particle.age >= particle.lifetime)
                 {
@@ -202,8 +235,8 @@ namespace vg::renderer
                     continue;
                 }
 
-                particle.velocity = float3(0, 0, 100) * m_dt;
-                particle.position += particle.velocity * m_dt;
+                particle.velocity = float3(0, 0, 1);
+                particle.position += particle.velocity * emitter.m_dt;
 
                 const ParticleEmitterParams & params = emitter.m_params;
                 const FloatCurve & opacityCurve = params.m_opacity;

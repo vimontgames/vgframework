@@ -39,8 +39,8 @@ namespace vg::engine
         registerPropertyCallbackEx(AnimationResource, stopAnim, editor::style::icon::Stop, PropertyFlags::SingleLine);
         setPropertyDescription(AnimationResource, stopAnim, "Stop animation");
 
-        registerPropertyEx(AnimationResource, m_play, "Play", PropertyFlags::SingleLine | PropertyFlags::Debug);
-        registerPropertyEx(AnimationResource, m_loop, "Loop", PropertyFlags::SingleLine | PropertyFlags::Debug);
+        registerPropertyEx(AnimationResource, m_play, "Play", PropertyFlags::Transient | PropertyFlags::Debug);
+        registerPropertyEx(AnimationResource, m_loop, "Loop",    PropertyFlags::Debug);
 
         setPropertyFlag(AnimationResource, m_name, PropertyFlags::Hidden, false);
 
@@ -218,6 +218,17 @@ namespace vg::engine
     {
         setTime(0.0f);
         setWeight(0.0f);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void AnimationResource::OnLoad()
+    {
+        super::OnLoad();
+
+        // Fix for animation saved in "Play" mode but with a weight of 0.0f
+        // Not necessary because weight is transient!
+        //if (m_play && m_weight == 0.0f)
+        //    setWeight(0.0f);
     }
 
     //--------------------------------------------------------------------------------------

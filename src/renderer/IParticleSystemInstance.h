@@ -6,6 +6,8 @@ namespace vg::renderer
 {
     struct ParticleEmitterParams
     {
+        bool                m_play              = false;
+        bool                m_spawn             = false;
         float               m_spawnRate         = 1.0f;
         float               m_lifeTime          = 5.0f;
         core::u16           m_maxParticleCount  = 1;
@@ -14,7 +16,7 @@ namespace vg::renderer
 
         bool operator != (const ParticleEmitterParams & _other) const
         {
-            return m_maxParticleCount != _other.m_maxParticleCount || m_spawnRate != _other.m_spawnRate || m_lifeTime != _other.m_lifeTime || any(m_size != _other.m_size) || m_opacity != _other.m_opacity;
+            return m_play != _other.m_play || m_spawn != _other.m_spawn || m_maxParticleCount != _other.m_maxParticleCount || m_spawnRate != _other.m_spawnRate || m_lifeTime != _other.m_lifeTime || any(m_size != _other.m_size) || m_opacity != _other.m_opacity;
         }
     };
 
@@ -25,7 +27,9 @@ namespace vg::renderer
 
         virtual bool SetEmitterCount    (core::uint _count) = 0;
         virtual bool SetEmitterParams   (core::uint _index, const ParticleEmitterParams & _emitterParams) = 0;
+        virtual void ResetEmitter(core::uint _index) = 0;
 
         virtual void UpdateTime         (float _dt) = 0;
+        virtual void UpdateEmitterTime  (core::uint _index, float _dt) = 0;
     };
 }

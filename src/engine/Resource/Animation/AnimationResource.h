@@ -28,6 +28,7 @@ namespace vg::engine
         bool                                    Cook                    (const core::string & _file) const final override;
         core::IObject *                         Load                    (const core::string & _file) final override;
 
+        void                                    OnLoad                  () override;
         void                                    OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
         void                                    OnEnable                () final override;

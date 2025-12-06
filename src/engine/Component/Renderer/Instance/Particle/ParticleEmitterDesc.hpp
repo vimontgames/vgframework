@@ -19,11 +19,41 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    bool ParticleEmitterDesc::playParticleEmitter(IObject * _object)
+    {
+        return ((ParticleEmitterDesc *)_object)->Play();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleEmitterDesc::pauseParticleEmitter(IObject * _object)
+    {
+        return ((ParticleEmitterDesc *)_object)->Pause();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleEmitterDesc::stopParticleEmitter(IObject * _object)
+    {
+        return ((ParticleEmitterDesc *)_object)->Stop();
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ParticleEmitterDesc::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        setPropertyFlag(ParticleEmitterDesc, m_name, PropertyFlags::Hidden, false);
+        registerPropertyCallbackEx(ParticleEmitterDesc, playParticleEmitter, editor::style::icon::Play, PropertyFlags::SingleLine);
+        setPropertyDescription(ParticleEmitterDesc, playParticleEmitter, "Play emitter");
+
+        registerPropertyCallbackEx(ParticleEmitterDesc, pauseParticleEmitter, editor::style::icon::Pause, PropertyFlags::SingleLine);
+        setPropertyDescription(ParticleEmitterDesc, pauseParticleEmitter, "Pause emitter");
+
+        registerPropertyCallbackEx(ParticleEmitterDesc, stopParticleEmitter, editor::style::icon::Stop, PropertyFlags::SingleLine);
+        setPropertyDescription(ParticleEmitterDesc, stopParticleEmitter, "Stop emitter");        
+
+        setPropertyFlag(ParticleEmitterDesc, m_name, PropertyFlags::Hidden, false); // TODO: show icons *BEFORE* name would look better
+
+        registerPropertyEx(ParticleEmitterDesc, m_params.m_play, "Play", PropertyFlags::Transient | PropertyFlags::Debug);
+        registerPropertyEx(ParticleEmitterDesc, m_params.m_spawn, "Spawn", PropertyFlags::Transient | PropertyFlags::Debug);
 
         registerProperty(ParticleEmitterDesc, m_params.m_spawnRate, "Spawn rate");
         setPropertyDescription(ParticleEmitterDesc, m_params.m_spawnRate, "Number of particles spawn per second");
@@ -72,5 +102,58 @@ namespace vg::engine
     void ParticleEmitterDesc::OnLoad()
     {
         RegisterUID();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleEmitterDesc::Play() 
+    {
+        ParticleComponent * particleComp = ((ParticleComponent *)getParent()->GetParent());
+        auto index = particleComp->getEmitterIndex(this);
+        if (-1 != index)
+        {
+            m_params.m_play = true;
+            m_params.m_spawn = true;
+
+            particleComp->UpdateEmitter(index);
+            particleComp->ResetEmitter(index);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleEmitterDesc::Pause()
+    {
+        ParticleComponent * particleComp = ((ParticleComponent *)getParent()->GetParent());
+        auto index = particleComp->getEmitterIndex(this);
+        if (-1 != index)
+        {
+            m_params.m_play = !m_params.m_play;
+
+            particleComp->UpdateEmitter(index);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleEmitterDesc::Stop()
+    {
+        ParticleComponent * particleComp = ((ParticleComponent *)getParent()->GetParent());
+        auto index = particleComp->getEmitterIndex(this);
+        if (-1 != index)
+        {
+            m_params.m_spawn = false;
+
+            particleComp->UpdateEmitter(index);
+
+            return true;
+        }
+
+        return false;
     }
 }

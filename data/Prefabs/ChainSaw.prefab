@@ -30,7 +30,7 @@
                                 <Property type="String" name="m_name" value="New AnimationComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2657585764"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Object" name="m_animations">
                                     <Object class="AnimationResourceList">
@@ -45,7 +45,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Animations/ChainSaw/ChainSaw.fbx"/>
-                                                <Property type="Bool" name="m_play" value="true"/>
+                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" value="true"/>
                                                 <Property type="Uint32" name="m_layer" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="false"/>
