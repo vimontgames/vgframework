@@ -168,12 +168,6 @@ PS_Output PS_Forward(VS_Output _input)
     clip(albedo.a-(1.0/255.0f));
     #endif
     
-    #if _TOOLMODE && !_ZONLY
-    output.color0 = forwardDebugDisplay(output.color0, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
-    if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
-        output.color0 = float4(0,1,0,1);
-    #endif // _TOOLMODE
-
     #if _ALPHATEST
     if (output.color0.a < 0.5f)
     {
@@ -189,6 +183,12 @@ PS_Output PS_Forward(VS_Output _input)
     #if _ALPHABLEND
     applyDepthTransparency(output.color0.a, screenPos.xy, _input.vpos, materialData.getInvDepthFade());
     #endif
+    
+    #if _TOOLMODE && !_ZONLY
+    output.color0 = forwardDebugDisplay(output.color0, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
+    if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
+        output.color0 = float4(0,1,0,1);
+    #endif // _TOOLMODE
 
     #if _TOOLMODE && !_ZONLY
     // Picking

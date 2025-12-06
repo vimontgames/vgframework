@@ -115,6 +115,48 @@ float SampleDirectionalShadowMap(Texture2D _shadowMap, float3 _shadowUV, float _
 }
 
 //--------------------------------------------------------------------------------------
+// Raytraced specular ray
+//--------------------------------------------------------------------------------------
+float4 getRaytracedSpecular(RaytracingAccelerationStructure _tlas, float3 _worldPos, float3 Lr, float roughness)
+{
+    float4 rtSpecular = (float4)0.0f;
+    
+    if (roughness < 0.02)
+    {		
+        RayQuery<RAY_FLAG_NONE> query;
+		
+        RayDesc ray;
+        ray.Origin = _worldPos;
+        ray.Direction = Lr;
+        ray.TMin = 0.1; // prevent self-reflection
+        ray.TMax = 100;
+		
+        query.TraceRayInline(_tlas, RAY_FLAG_NONE, 0xff, ray);
+		
+        while (query.Proceed())
+        {
+            switch (query.CandidateType())
+            {
+                
+            }
+        }
+		
+        switch (query.CommittedStatus())
+        {
+            case COMMITTED_TRIANGLE_HIT:
+		    {
+				MaterialSample mat = getRaytracingCommittedMaterial(query);
+				
+                rtSpecular = float4(mat.albedo.rgb,1);
+            }
+            break;
+        }
+    }
+    
+    return rtSpecular;
+}
+
+//--------------------------------------------------------------------------------------
 LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePos, float3 _worldPos, inout float3 _albedo, float3 _worldNormal, float4 _pbr)
 {
     LightingResult output = (LightingResult)0;
@@ -170,6 +212,11 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 	}
 
 	// environment specular 
+	
+	#if _RAYTRACING
+	float4 rtSpecular = getRaytracedSpecular(getTLAS(_viewConstants.getTLASHandle()), _worldPos, Lr, roughness);
+	#endif
+	
 	uint specularReflectionCubemapHandle = _viewConstants.getSpecularReflectionCubemap();
 	if (ReservedSlot::InvalidTextureCube != (ReservedSlot)specularReflectionCubemapHandle)
 	{
@@ -186,7 +233,11 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 	{
 		output.envSpecular = _viewConstants.getEnvironmentColor();
 	}
-
+	
+	#if _RAYTRACING
+	output.envSpecular = lerp(output.envSpecular, rtSpecular.rgb, rtSpecular.a);
+	#endif
+	
 	output.envDiffuse *= occlusion * _viewConstants.getIrradianceIntensity();
 	output.envSpecular *= occlusion * _viewConstants.getSpecularReflectionIntensity();
 
