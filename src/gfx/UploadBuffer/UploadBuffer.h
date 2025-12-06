@@ -69,6 +69,8 @@ namespace vg::gfx
         void                    upload          (Texture * _dst, core::uint_ptr _from, size_t _size);
         void                    upload          (Buffer * _dst, core::uint_ptr _from, size_t _size);
         core::u8 *              map             (core::size_t _size, core::size_t _aligment, RingAllocCategory _category);
+   
+    private:
         core::uint_ptr          alloc           (core::size_t _size, core::size_t _alignment, RingAllocCategory _category);
         bool                    isOverlaping    (const Alloc & _alloc, const core::vector<Range> & _ranges) const;
 
