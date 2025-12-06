@@ -34,6 +34,9 @@ namespace vg::core
         virtual ThreadType              GetCurrentThreadType    () const = 0;
         virtual const core::string &    GetCurrentThreadName    () const = 0;
 
+        virtual ThreadType              GetThreadType           (ThreadID _threadID) const = 0;
+        virtual const core::string &    GetThreadName           (ThreadID _threadID) const = 0;
+
         virtual core::uint              GetWorkerThreadCount    () const = 0;
 
         virtual bool                    IsMainThread            () const = 0;

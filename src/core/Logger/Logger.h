@@ -24,6 +24,6 @@ namespace vg::core
 
     private:
         core::vector<LogEntry>  m_entries;
-        core::Mutex             m_mutex = core::Mutex("Mutex - Logger");
+        core::Mutex             m_mutex = core::Mutex("Logger");
     };    
 }

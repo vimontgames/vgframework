@@ -29,8 +29,10 @@ namespace vg::gfx
         void                    flush           (CommandList * _cmdList, bool _canBeEmpty = false);
         void                    sync            ();
 
-        VG_INLINE core::u8 *    getBaseAddress  () const;
         VG_INLINE Buffer *      getBuffer       () const;
+
+    private:
+        VG_INLINE core::u8 *    getBaseAddress  () const;
 
     private:
         struct Alloc
@@ -78,8 +80,9 @@ namespace vg::gfx
         core::vector<Range>     m_ranges;           // Current frame allocation ranges
         core::vector<Range>     m_previousRanges;   // Previous frame allocation ranges
 
-        // Mutex should be necessary only for UploadBuffer #0 that is used for loading (TODO: separate upload buffer/command list for loading?)
-        core::Mutex             m_mutex = core::Mutex("Mutex - UploadBuffer");
+        // Mutex should be necessary only for UploadBuffer #0 that is used both for loading and rendering with command list #0 (TODO: separate upload buffer/command list for loading?)
+        core::Mutex             m_mutex = core::Mutex("UploadBuffer");
+        //core::AssertMutex       m_mutex = core::AssertMutex("AssertMutex - UploadBuffer");
 
         struct ResourceUploadInfo
         {

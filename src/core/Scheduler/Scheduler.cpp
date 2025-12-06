@@ -168,17 +168,23 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     const ThreadInfo * Scheduler::getCurrentThreadInfo() const
     {
-        core::lock_guard lock(m_registerThreadMutex);
         const ThreadID threadId = GetCurrentThreadID();
+        return getThreadInfo(threadId);
+    }
 
-        auto it = m_registeredThreads.find(threadId);
+    //--------------------------------------------------------------------------------------
+    const ThreadInfo * Scheduler::getThreadInfo(ThreadID _threadID) const
+    {
+        core::lock_guard lock(m_registerThreadMutex);
+
+        auto it = m_registeredThreads.find(_threadID);
         if (it != m_registeredThreads.end())
         {
             return &it->second;
         }
         else
         {
-            VG_ASSERT(it != m_registeredThreads.end(), "Thread 0x%08X is not registered\n", threadId);
+            VG_ASSERT(it != m_registeredThreads.end(), "Thread 0x%08X is not registered\n", _threadID);
             return nullptr;
         }
     }
@@ -198,6 +204,26 @@ namespace vg::core
         static string unknown = "Unknown";
 
         if (const ThreadInfo * threadInfo = getCurrentThreadInfo())
+            return threadInfo->m_name;
+        else
+            return unknown;
+    }
+
+    //--------------------------------------------------------------------------------------
+    ThreadType Scheduler::GetThreadType(ThreadID _threadID) const
+    {
+        if (const ThreadInfo * threadInfo = getThreadInfo(_threadID))
+            return threadInfo->m_type;
+        else
+            return ThreadType::Unknown;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const string & Scheduler::GetThreadName(ThreadID _threadID) const
+    {
+        static string unknown = "Unknown";
+
+        if (const ThreadInfo * threadInfo = getThreadInfo(_threadID))
             return threadInfo->m_name;
         else
             return unknown;

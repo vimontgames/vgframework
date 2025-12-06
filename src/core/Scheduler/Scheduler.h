@@ -44,6 +44,9 @@ namespace vg::core
         ThreadType                  GetCurrentThreadType        () const final override;
         const string &              GetCurrentThreadName        () const final override;
 
+        ThreadType                  GetThreadType               (ThreadID _threadID) const final override;
+        const core::string &        GetThreadName               (ThreadID _threadID) const final override;
+
         core::uint                  GetWorkerThreadCount        () const final override;
 
         bool                        IsMainThread                () const final override;
@@ -51,12 +54,13 @@ namespace vg::core
         bool                        IsWorkerThread              () const final override;
 
     private:
+        const ThreadInfo *          getThreadInfo               (ThreadID _threadID) const;
         const ThreadInfo *          getCurrentThreadInfo        () const;
 
     private:
         px_sched::Scheduler *                               m_schd = nullptr;
         core::uint                                          m_threadCount = 0;
         core::unordered_map<ThreadID, const ThreadInfo>     m_registeredThreads;
-        mutable core::Mutex                                 m_registerThreadMutex = core::Mutex("Mutex - RegisterThread");
+        mutable core::Mutex                                 m_registerThreadMutex = core::Mutex("RegisterThread");
     };
 }

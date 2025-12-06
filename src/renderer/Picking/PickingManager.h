@@ -30,7 +30,7 @@ namespace vg::renderer
         bool                decodePickingHit    (const PickingHit & _hit, PickingHitInfo & _info) const;
 
     private:
-        core::Mutex                     m_mutex = core::Mutex("Mutex - Picking");
+        core::Mutex                     m_mutex = core::Mutex("Picking");
         core::vector<core::IObject*>    m_pickingID;
     };
 }

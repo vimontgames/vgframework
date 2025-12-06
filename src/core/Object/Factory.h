@@ -79,11 +79,11 @@ namespace vg::core
         dictionary<PropertyType>              m_oldTypeNames;
         dictionary<string>                    m_oldPropertyNames;
         dictionary<const char *>              m_oldClassNames;
-        Mutex                                 m_objectsToReleaseMutex = core::Mutex("Mutex - FactoryRelease");
+        Mutex                                 m_objectsToReleaseMutex = core::Mutex("FactoryRelease");
         vector<IObject*>                      m_objectsToRelease[2];
         u8                                    m_objectsToReleaseTableIndex = 0;
         unordered_map<UID, io::Buffer *>      m_buffers[enumCount<BufferType>()];
         UIDObjectHash                         m_uidObjectHash;
-        mutable Mutex                         m_uidObjectHashMutex = core::Mutex("Mutex - FactoryObjectHash");
+        mutable Mutex                         m_uidObjectHashMutex = core::Mutex("FactoryObjectHash");
     };    
 }

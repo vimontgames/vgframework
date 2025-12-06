@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Scheduler/AssertMutex.h"
+#include "core/Scheduler/Mutex.h"
 #include "gfx/Resource/Texture.h"
 #include "gfx/FrameGraph/FrameGraph_consts.h"
 #include "renderer/IView.h"

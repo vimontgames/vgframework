@@ -99,8 +99,8 @@ namespace vg::gfx
         #endif
 
         OnShadersUpdatedCallbackFunc        m_onShadersUpdatedCallbackFunc = nullptr;
-        core::Mutex                         m_graphicPipelineStateMutex = core::Mutex("Mutex - GraphicPSO");
-        core::Mutex                         m_computePipelineStateMutex = core::Mutex("Mutex - ComputePSO");
+        core::Mutex                         m_graphicPipelineStateMutex = core::Mutex("GraphicPSO");
+        core::Mutex                         m_computePipelineStateMutex = core::Mutex("ComputePSO");
 
         using GraphicPipelineStateHash = core::unordered_map<gfx::GraphicPipelineStateKey, gfx::GraphicPipelineState *, gfx::GraphicPipelineStateKey::hash>;
         GraphicPipelineStateHash            m_graphicPipelineStateHash;

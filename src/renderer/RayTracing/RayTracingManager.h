@@ -61,7 +61,7 @@ namespace vg::renderer
         core::vector<MeshInstance *>    m_meshInstanceUpdateQueue;
         core::vector<MeshInstance *>    m_skinnedMeshUpdateQueue;
 
-        mutable core::Mutex             m_addRTMeshInstanceMutex = core::Mutex("Mutex - AddRTMeshInstance");
+        mutable core::Mutex             m_addRTMeshInstanceMutex = core::Mutex("AddRTMeshInstance");
 
         core::vector<gfx::BLAS *>       m_blasToCreate;
         core::vector<gfx::BLAS *>       m_blasToUpdate;

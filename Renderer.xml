@@ -40,6 +40,7 @@
             </Object>
         </Property>
         <Property type="Bool" name="m_engine.m_rayTracing" value="false"/>
+        <Property type="EnumU8" name="m_engine.m_rayTracingTLASMode" value="PerView"/>
         <Property type="Bool" name="m_shadows[Quality::VeryLow]" value="false"/>
         <Property type="Bool" name="m_shadows[Quality::Low]" value="true"/>
         <Property type="Bool" name="m_shadows[Quality::Medium]" value="true"/>
@@ -64,7 +65,6 @@
         <Property type="EnumFlagsU32" name="m_renderPassFlags" value="ZPrepass|Opaque|Transparency"/>
         <Property type="EnumFlagsU32" name="m_displayFlags" value="AlbedoMap|NormalMap|VertexColor|MaterialColor|InstanceColor"/>
         <Property type="Bool" name="m_renderJobs" value="true"/>
-        <Property type="Bool" name="m_renderJobsSeparateKicks" value="false"/>
         <Property type="Bool" name="m_forceRenderJobsCount" value="false"/>
         <Property type="Uint16" name="m_renderJobsCount" value="2"/>
         <Property type="EnumU8" name="m_renderJobsPolicy" value="RecursiveSplit"/>

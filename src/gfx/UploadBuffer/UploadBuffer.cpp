@@ -21,6 +21,7 @@ namespace vg::gfx
         m_index(_index)
     {
         BufferDesc bufDesc(Usage::Upload, BindFlags::None, CPUAccessFlags::Write, BufferFlags::None, _size);
+        VG_INFO("[Upload] Create upload buffer #%u: %u MB", _index, _size / (1024 * 1024));
         m_buffer = new Buffer(bufDesc, _name);
         Map result = m_buffer->getResource().map();
         m_begin = (u8 *)result.data;
@@ -100,12 +101,12 @@ namespace vg::gfx
             const bool previousFrameOverlap = isOverlaping(alloc, m_previousRanges);
             if (previousFrameOverlap)
             {
-                VG_ASSERT(!previousFrameOverlap, "Could not allocated %u bytes in upload buffer %u (%u kb) because the buffer is too small for current and previous frames. Please increase upload buffer sizes in Renderer Options > Misc > Render Jobs.", (alloc.end - alloc.begin), m_index, m_buffer->getBufDesc().getSize() >> 10);
+                VG_ASSERT(!previousFrameOverlap, "Could not allocated %u bytes in upload buffer %u (%u MB) because the buffer is too small for current and previous frames.", (alloc.end - alloc.begin), m_index, m_buffer->getBufDesc().getSize() / (1024*1024));
             }
             else
             {
                 const bool frameOverlap = isOverlaping(alloc, m_ranges);
-                VG_ASSERT(!frameOverlap, "Could not allocated %u bytes in upload buffer %u (%u kb) because the buffer is too small for current frame. Please increase upload buffer sizes in Renderer Options > Misc > Render Jobs.", (alloc.end - alloc.begin), m_index, m_buffer->getBufDesc().getSize() >> 10);
+                VG_ASSERT(!frameOverlap, "Could not allocated %u bytes in upload buffer %u (%u MB) because the buffer is too small for current frame.", (alloc.end - alloc.begin), m_index, m_buffer->getBufDesc().getSize() >> 10);
             }
             #endif
 
