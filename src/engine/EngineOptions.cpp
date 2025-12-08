@@ -25,6 +25,10 @@ namespace vg::engine
         {
             registerPropertyEnumBitfield(EngineOptions, LoadingOptionFlags, m_loadingOptionFlags, "Flags");
             setPropertyDescription(EngineOptions, m_loadingOptionFlags, "Option flags for loading");
+            
+            registerProperty(EngineOptions, m_streamingUploadBufferSizeInMB, "Upload buffer");
+            setPropertyDescription(EngineOptions, m_streamingUploadBufferSizeInMB, "Size of the buffer used for GPU resource upload (MB)");
+            setPropertyRange(EngineOptions, m_streamingUploadBufferSizeInMB, int2(32, 4096));
         }
         registerPropertyGroupEnd(EngineOptions);
 

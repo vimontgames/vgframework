@@ -50,7 +50,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject* PrefabResource::Load(const string& _path)
+    LoadStatus PrefabResource::Load(const string & _path, IObject *& _object)
     {
         IFactory* factory = Kernel::getFactory();
         PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->CreateObject("PrefabScene"));
@@ -60,10 +60,14 @@ namespace vg::engine
             prefabScene->SetName(io::getFileName(_path));
 
             if (factory->LoadFromXML(prefabScene, _path))
-                return prefabScene;
+            {
+                _object = prefabScene;
+                return LoadStatus::Success;
+            }
         }
 
-        return nullptr;
+        _object = nullptr;
+        return LoadStatus::CannotCreateObject;
     }
 
     //--------------------------------------------------------------------------------------

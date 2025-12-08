@@ -29,7 +29,7 @@ namespace vg::engine
         void                                OnResourceUnloaded          (core::IResource * _resource) final override;
 
         bool                                Cook                        (const core::string & _file) const final override;
-        core::IObject *                     Load                        (const core::string & _path) final override;
+        core::LoadStatus                    Load                        (const core::string & _path, core::IObject *& _object) final override;
 
         bool                                CreateFile                  (const core::string & _path, core::IObject * _data = nullptr) final override;
         bool                                SaveFile                    (const core::string & _path) const override;

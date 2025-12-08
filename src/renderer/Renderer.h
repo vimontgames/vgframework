@@ -106,13 +106,13 @@ namespace vg::renderer
         IUIManager *                            GetUIManager                    () const final override;
 
         bool                                    CookMeshModel                   (const core::string & _file, const gfx::MeshImporterSettings * _importSettings) final override;
-        IMeshModel *                            LoadMeshModel                   (const core::string & _file) final override;
+        core::LoadStatus                        LoadMeshModel                   (const core::string & _file, IMeshModel *& _meshModel) final override;
 
         bool                                    CookTexture                     (const core::string & _file, const gfx::TextureImporterSettings * _importSettings) final override;
-        gfx::ITexture *                         LoadTexture                     (const core::string & _file) final override;
+        core::LoadStatus                        LoadTexture                     (const core::string & _file, gfx::ITexture *& _texture) final override;
 
         bool                                    CookAnimation                   (const core::string & _file) final override;
-        IAnimation *                            LoadAnimation                   (const core::string & _file) final override;
+        core::LoadStatus                        LoadAnimation                   (const core::string & _file, IAnimation *& _animation) final override;
 
         void                                    ReleaseAsync                    (core::IObject * _object) final override;
 
@@ -141,6 +141,10 @@ namespace vg::renderer
         double                                  GetGpuWaitTime                  () const final override;
 
         bool                                    GetGpuMemoryInfo                (core::GPUMemoryInfo & _gpuMem) const final override;
+
+        bool                                    IsReadyForStreaming             () const final override;
+        core::u64                               GetAvailableUploadSize          () const final override;
+        core::u64                               GetTotalUploadSize              () const final override;
 
         const gfx::DeviceCaps &                 getDeviceCaps                   () const;
 

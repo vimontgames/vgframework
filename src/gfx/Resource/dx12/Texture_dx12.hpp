@@ -264,6 +264,31 @@ namespace vg::gfx::dx12
         return resourceDesc;
     }
 
+    //--------------------------------------------------------------------------------------
+    core::size_t Texture::getRequiredUploadSize(const TextureDesc & _texDesc)
+    {
+        auto * device = gfx::Device::get();
+
+        // Build the resource description exactly like in your constructor
+        D3D12_RESOURCE_DESC resourceDesc = getd3d12ResourceDesc(_texDesc);
+
+        const uint32_t subResourceCount = _texDesc.mipmaps * _texDesc.slices;
+
+        // We don't need footprint/rows/strides except to satisfy the call:
+        std::vector<D3D12_PLACED_SUBRESOURCE_FOOTPRINT> footprints(subResourceCount);
+        std::vector<UINT> rows(subResourceCount);
+        std::vector<UINT64> rowSize(subResourceCount);
+
+        UINT64 totalBytes = 0;
+
+        device->getd3d12Device()->GetCopyableFootprints(&resourceDesc, 0, subResourceCount, 0, footprints.data(), rows.data(), rowSize.data(), &totalBytes);
+
+        auto * uploadBuffer = device->getStreamingUploadBuffer();
+        totalBytes = uploadBuffer->getAlignedSize(totalBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
+
+        return totalBytes;
+    }
+
 	//--------------------------------------------------------------------------------------
 	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
 		base::Texture(_texDesc, _name, _initData)
@@ -542,7 +567,11 @@ namespace vg::gfx::dx12
                 // Copy to upload buffer line by line
                 const auto * scheduler = Kernel::getScheduler();
                 VG_ASSERT(scheduler->IsMainThread() || scheduler->IsLoadingThread(), "Expected Main or Loading thread but current thread is \"%s\"", scheduler->GetCurrentThreadName().c_str());
-                auto * uploadBuffer = device->getUploadBuffer(0);
+
+                //auto * uploadBuffer = device->getUploadBuffer(0);
+                // TODO: get from current thread instead?
+                auto * uploadBuffer = device->getStreamingUploadBuffer();
+
                 core::u8 * dst = uploadBuffer->map((gfx::Texture *)this, d3d12TotalSizeInBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
                 if (nullptr != dst)
                 {

@@ -21,9 +21,9 @@ namespace vg::engine
         const core::vector<core::string>    GetExtensions           () const final;
         
         core::IResourceMeta *               CreateResourceMeta      (const core::string & _path) const final override;
-        bool                                Cook                    (const core::string & _file) const final override;
+        bool                                Cook                    (const core::string & _path) const final override;
 
-        core::IObject *                     Load                    (const core::string & _path) override;
+        core::LoadStatus                    Load                    (const core::string & _path, core::IObject *& _object) override;
         void                                Unload                  (const core::string & _path) override;
 
         void                                LoadSubResources        () override;

@@ -140,6 +140,75 @@ namespace vg::gfx::vulkan
         }
     }
 
+    //--------------------------------------------------------------------------------------
+    core::size_t Texture::getRequiredUploadSize(const TextureDesc & _texDesc)
+    {
+        auto * device = gfx::Device::get();
+        auto vkDevice = device->getVulkanDevice();
+
+        // ---- Build the same VkImageCreateInfo as in your constructor ----
+        VkImageCreateInfo imgDesc = {};
+        imgDesc.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+        imgDesc.imageType = getVulkanImageType(_texDesc.type);
+        imgDesc.format = getVulkanPixelFormat(_texDesc.format);
+        imgDesc.extent = { _texDesc.width, _texDesc.height, 1 };
+        imgDesc.mipLevels = _texDesc.mipmaps;
+        imgDesc.arrayLayers = _texDesc.slices;
+        imgDesc.samples = (VkSampleCountFlagBits)TextureDesc::getMSAASampleCount(_texDesc.msaa);
+        imgDesc.flags = 0;
+
+        if (_texDesc.type == TextureType::TextureCube ||
+            _texDesc.type == TextureType::TextureCubeArray)
+        {
+            imgDesc.flags |= VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT;
+        }
+
+        imgDesc.tiling = VK_IMAGE_TILING_OPTIMAL;
+
+        if (_texDesc.isRenderTarget())
+        {
+            imgDesc.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+            imgDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        }
+        else if (_texDesc.isDepthStencil())
+        {
+            imgDesc.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+            imgDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        }
+        else if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
+        {
+            imgDesc.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+            imgDesc.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+        }
+        else
+        {
+            imgDesc.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+            imgDesc.initialLayout = VK_IMAGE_LAYOUT_PREINITIALIZED;
+        }
+
+        if (_texDesc.isShaderResource())
+            imgDesc.usage |= VK_IMAGE_USAGE_SAMPLED_BIT;
+
+        if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))
+            imgDesc.usage |= VK_IMAGE_USAGE_STORAGE_BIT;
+
+        // Create a temporary image (no VMA, no binding needed)
+        VkImage tmpImage = VK_NULL_HANDLE;
+        VG_VERIFY_VULKAN(vkCreateImage(vkDevice, &imgDesc, nullptr, &tmpImage));
+
+        // Query memory requirements
+        VkMemoryRequirements mem_reqs = {};
+        vkGetImageMemoryRequirements(vkDevice, tmpImage, &mem_reqs);
+
+        // Destroy temporary image
+        vkDestroyImage(vkDevice, tmpImage, nullptr);
+
+        auto * uploadBuffer = device->getStreamingUploadBuffer();
+        size_t totalBytes = uploadBuffer->getAlignedSize(mem_reqs.size, mem_reqs.alignment);
+
+        return totalBytes;
+    }
+
 	//--------------------------------------------------------------------------------------
 	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
 		base::Texture(_texDesc, _name, _initData)
@@ -294,7 +363,7 @@ namespace vg::gfx::vulkan
                 u64 uploadBufferSize = mem_reqs.size;
                 const auto * scheduler = Kernel::getScheduler();
                 VG_ASSERT(scheduler->IsMainThread() || scheduler->IsLoadingThread(), "Expected Main or Loading thread but current thread is \"%s\"", scheduler->GetCurrentThreadName().c_str());
-                auto * uploadBuffer = device->getUploadBuffer(0);
+                auto * uploadBuffer = device->getStreamingUploadBuffer();
                 u8 * dst = uploadBuffer->map((gfx::Texture *)this, uploadBufferSize, (uint)mem_reqs.alignment);
                 if (nullptr != dst)
                 {

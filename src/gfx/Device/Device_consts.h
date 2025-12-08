@@ -59,5 +59,6 @@ namespace vg::gfx
         bool					debugDevice = false;
         bool					breakOnErrors = false;
         bool					breakOnWarnings = false;
+        core::size_t            streamingUploadBufferSizeInMB = 0; 
     };
 }

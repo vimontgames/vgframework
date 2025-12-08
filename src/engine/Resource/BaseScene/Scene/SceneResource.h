@@ -12,9 +12,9 @@ namespace vg::engine
 		SceneResource(const core::string & _name = "", IObject * _parent = nullptr);
 		~SceneResource();
 
-		const core::vector<core::string>    GetExtensions				() const final;
-		core::IObject *						Load						(const core::string & _path) final override;
-		bool                                CreateFile					(const core::string & _path, core::IObject * _data = nullptr) final override;
-		bool                                SaveFile					(const core::string & _path) const override;
+		const core::vector<core::string>    GetExtensions           () const final;
+		core::LoadStatus                    Load                    (const core::string & _path, core::IObject *& _object) final override;
+		bool                                CreateFile              (const core::string & _path, core::IObject * _data = nullptr) final override;
+		bool                                SaveFile                (const core::string & _path) const override;
 	};
 }

@@ -325,7 +325,7 @@ namespace vg::engine
     }
 
 	//--------------------------------------------------------------------------------------
-	void Engine::Init(const EngineCreationParams & _params, Singletons & _singletons)
+	void Engine::Init(EngineCreationParams & _params, Singletons & _singletons)
 	{
         Timer::init();
 
@@ -383,6 +383,9 @@ namespace vg::engine
         // Profiler has to be created by the renderer to be able to also profile the GPU
         Kernel::setProfiler(m_renderer->GetProfiler());
         _singletons.scheduler->RegisterCurrentThread("Main", ThreadType::Main, 0, 1);
+
+        if (_params.renderer.device.streamingUploadBufferSizeInMB == 0)
+            _params.renderer.device.streamingUploadBufferSizeInMB = engineOptions->getStreamingUploadBufferSizeInMB();
 
 		m_renderer->Init(_params.renderer, _singletons);
 

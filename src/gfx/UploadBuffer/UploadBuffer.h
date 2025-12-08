@@ -17,22 +17,30 @@ namespace vg::gfx
     class UploadBuffer : public core::Object
     {
     public:
-        UploadBuffer(const core::string & _name, core::uint _size, core::uint _index);
+        using super = core::Object;
+
+        UploadBuffer(const core::string & _name, core::size_t _size, core::uint _index);
         ~UploadBuffer();
 
-        core::u8 *              map             (Buffer * _buffer, core::size_t _size, core::size_t _aligment);
-        core::u8 *              map             (Texture * _buffer, core::size_t _size, core::size_t _aligment);
+        bool                    isReadyForStreaming     ();
+        core::u64               getAvailableUploadSize  ();
+        void                    setNextAllocSize        (core::size_t _size);  
+        core::u64               getTotalSize            ();
+        core::size_t            getAlignedSize          (core::size_t _size, core::size_t  _alignment) const;
 
-        void                    unmap           (Buffer * _buffer, core::u8 * _dst, size_t _size);
-        void                    unmap           (Texture * _texture, core::u8 * _dst, size_t _size);
+        core::u8 *              map                     (Buffer * _buffer, core::size_t _size, core::size_t _aligment);
+        core::u8 *              map                     (Texture * _buffer, core::size_t _size, core::size_t _aligment);
 
-        void                    flush           (CommandList * _cmdList, bool _canBeEmpty = false);
-        void                    sync            ();
+        void                    unmap                   (Buffer * _buffer, core::u8 * _dst, size_t _size);
+        void                    unmap                   (Texture * _texture, core::u8 * _dst, size_t _size);
 
-        VG_INLINE Buffer *      getBuffer       () const;
+        void                    flush                   (CommandList * _cmdList, bool _canBeEmpty = false);
+        void                    sync                    ();
+
+        VG_INLINE Buffer *      getBuffer               () const;
 
     private:
-        VG_INLINE core::u8 *    getBaseAddress  () const;
+        VG_INLINE core::u8 *    getBaseAddress          () const;
 
     private:
         struct Alloc
@@ -56,6 +64,13 @@ namespace vg::gfx
 
             }
 
+            inline Range(core::uint_ptr _begin, core::uint_ptr _end) :
+                begin(_begin),
+                end(_end)
+            {
+
+            }
+
             inline void grow(const Alloc & _alloc)
             {
                 begin = begin < _alloc.begin ? begin : _alloc.begin; // min
@@ -66,25 +81,28 @@ namespace vg::gfx
         };
 
     private:
-        void                    upload          (Texture * _dst, core::uint_ptr _from, size_t _size);
-        void                    upload          (Buffer * _dst, core::uint_ptr _from, size_t _size);
-        core::u8 *              map             (core::size_t _size, core::size_t _aligment, RingAllocCategory _category);
-   
-    private:
-        core::uint_ptr          alloc           (core::size_t _size, core::size_t _alignment, RingAllocCategory _category);
-        bool                    isOverlaping    (const Alloc & _alloc, const core::vector<Range> & _ranges) const;
+        void                    upload                  (Texture * _dst, core::uint_ptr _from, size_t _size);
+        void                    upload                  (Buffer * _dst, core::uint_ptr _from, size_t _size);
+        core::u8 *              map                     (core::size_t _size, core::size_t _aligment, RingAllocCategory _category);
+        core::uint_ptr          alloc                   (core::size_t _size, core::size_t _alignment, RingAllocCategory _category);
+        core::uint              isOverlaping            (const Alloc & _alloc, const core::vector<Range> & _ranges) const;
+        void                    lock                    ();
+        void                    unlock                  ();
 
     private:
         core::uint              m_index;
-        Buffer *                m_buffer        = nullptr;
-        core::u8 *              m_begin         = nullptr;
-        core::uint_ptr          m_currentOffset = 0;
-        core::vector<Range>     m_ranges;           // Current frame allocation ranges
-        core::vector<Range>     m_previousRanges;   // Previous frame allocation ranges
+        Buffer *                m_buffer                = nullptr;
+        core::u8 *              m_begin                 = nullptr;
+        core::uint_ptr          m_currentOffset         = 0;
+        core::vector<Range>     m_ranges;               // Current frame allocation ranges
+        core::vector<Range>     m_previousRanges;       // Previous frame allocation ranges
+        core::size_t            m_nextAllocSize         = (core::size_t)-1;
 
-        // Mutex should be necessary only for UploadBuffer #0 that is used both for loading and rendering with command list #0 (TODO: separate upload buffer/command list for loading?)
-        core::Mutex             m_mutex = core::Mutex("UploadBuffer");
-        //core::AssertMutex       m_mutex = core::AssertMutex("AssertMutex - UploadBuffer");
+        // Mutex is only necessary for main upload command buffer, other can just check
+        core::RecursiveMutex    m_mutex                 = core::RecursiveMutex("UploadBuffer");
+        core::AssertMutex       m_assertMutex           = core::AssertMutex("UploadBuffer");
+
+        bool                    m_firstFlushDone        = false;
 
         struct ResourceUploadInfo
         {

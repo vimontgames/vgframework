@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Types/Types.h"
+#include "core/IResource.h"
 
 namespace vg::core::io
 {
@@ -36,8 +37,8 @@ namespace vg::renderer
     class AnimImporterData
     {
     public:
-        bool load(const core::string & _file);
-        bool save(const core::string & _file) const;
+        core::LoadStatus    load(const core::string & _file);
+        bool                save(const core::string & _file) const;
 
         core::string                name;
         float                       time_begin;

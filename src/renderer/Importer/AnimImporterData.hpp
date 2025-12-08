@@ -40,7 +40,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool AnimImporterData::load(const core::string & _file)
+    LoadStatus AnimImporterData::load(const core::string & _file)
     {
         io::Buffer buffer;
 
@@ -49,25 +49,26 @@ namespace vg::renderer
             u32 version;
             buffer.read(&version);
 
-            if (version == AnimImporterDataVersion)
-            {
-                buffer.read(&name);
-                buffer.read(&time_begin);
-                buffer.read(&time_end);
-                buffer.read(&framerate);
-                buffer.read(&num_frames);
+            if (version != AnimImporterDataVersion)
+                return LoadStatus::Deprecated;
 
-                u32 animNodesCount;
-                buffer.read(&animNodesCount);
-                animNodes.resize(animNodesCount);
-                for (uint i = 0; i < animNodesCount; ++i)
-                    animNodes[i].read(buffer);
+            buffer.read(&name);
+            buffer.read(&time_begin);
+            buffer.read(&time_end);
+            buffer.read(&framerate);
+            buffer.read(&num_frames);
 
-                return true;
-            }
+            u32 animNodesCount;
+            buffer.read(&animNodesCount);
+            animNodes.resize(animNodesCount);
+            for (uint i = 0; i < animNodesCount; ++i)
+                animNodes[i].read(buffer);
+
+            return LoadStatus::Success;
+  
         }
 
-        return false;
+        return LoadStatus::CannotOpenFile;
     }
 
     //--------------------------------------------------------------------------------------

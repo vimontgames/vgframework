@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/IResource.h"
 #include "renderer/IMeshModel.h"
 #include "shaders/system/vertex.hlsli"
 
@@ -40,10 +41,10 @@ namespace vg::renderer
         void                                    setColliderTriangles    (const core::vector<ColliderTriangle> & _triangles);
         const core::vector<ColliderTriangle> &  GetColliderTriangles    () const final override { return m_colliderTriangles; }
 
-        static MeshModel *                      createFromImporterData  (const MeshImporterData & _data);
+        static core::LoadStatus                 createFromImporterData  (const MeshImporterData & _data, IMeshModel *& _meshModel);
 
     private:
-        template <VertexFormat F> static gfx::Buffer * createVertexBufferFromImporterData(const MeshImporterData & _data);
+        template <VertexFormat F> static core::LoadStatus createVertexBufferFromImporterData(const MeshImporterData & _data, gfx::Buffer *& _buffer);
 
     private:
         MeshGeometry *                          m_geometry  = nullptr;

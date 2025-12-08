@@ -182,9 +182,9 @@ namespace vg::core
     };
 
     //--------------------------------------------------------------------------------------
-    core::IObject * Resource::Load(const core::string & _file)
+    LoadStatus Resource::Load(const core::string & _file, core::IObject *& _object)
     {
-        return nullptr;
+        return LoadStatus::NotImplemented;
     };
 
     //--------------------------------------------------------------------------------------

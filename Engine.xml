@@ -6,6 +6,7 @@
         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="EnumFlagsU32" name="m_animationOptionFlags" value="AnimationJobs|ShowSkeletons"/>
         <Property type="EnumFlagsU32" name="m_loadingOptionFlags" value="ResourcePriority"/>
+        <Property type="Uint64" name="m_streamingUploadBufferSizeInMB" value="256"/>
         <Property type="Bool" name="m_showRigidBodies" value="false"/>
         <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" value="Sphere|Box|Capsule|Cylinder|Mesh"/>
         <Property type="Bool" name="m_mergeStaticBodies" value="true"/>

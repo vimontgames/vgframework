@@ -1,11 +1,13 @@
 #include "TextureImporterData.h"
 
+using namespace vg::core;
+
 namespace vg::renderer
 {
     static const u32 TextureImporterDataVersion = 5;
 
     //--------------------------------------------------------------------------------------
-    bool TextureImporterData::load(const core::string & _file)
+    LoadStatus TextureImporterData::load(const core::string & _file)
     {
         io::Buffer buffer;
 
@@ -14,22 +16,22 @@ namespace vg::renderer
             u32 version;
             buffer.read(&version);
 
-            if (version == TextureImporterDataVersion)
-            {
-                buffer.read(&name);
-                buffer.read(&desc, sizeof(gfx::TextureDesc));
+            if (version != TextureImporterDataVersion)
+                return LoadStatus::Deprecated;
+            
+            buffer.read(&name);
+            buffer.read(&desc, sizeof(gfx::TextureDesc));
 
-                u32 size;
-                buffer.read(&size);
-                texels.resize(size);
+            u32 size;
+            buffer.read(&size);
+            texels.resize(size);
 
-                buffer.read(texels.data(), size);
+            buffer.read(texels.data(), size);
 
-                return true;
-            }
+            return LoadStatus::Success;
         }
 
-        return false;
+        return LoadStatus::CannotOpenFile;
     }
 
     //--------------------------------------------------------------------------------------

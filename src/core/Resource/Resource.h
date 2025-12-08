@@ -39,7 +39,7 @@ namespace vg::core
 
         bool                        Cook                    (const core::string & _file) const override;
 
-        core::IObject *             Load                    (const core::string & _file) override;
+        core::LoadStatus            Load                    (const core::string & _file, core::IObject *& _object) override;
         void                        Unload                  (const core::string & _file) override;
 
         void                        LoadSubResources        () override;

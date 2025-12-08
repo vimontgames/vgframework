@@ -68,7 +68,7 @@
         <Property type="Bool" name="m_forceRenderJobsCount" value="false"/>
         <Property type="Uint16" name="m_renderJobsCount" value="2"/>
         <Property type="EnumU8" name="m_renderJobsPolicy" value="RecursiveSplit"/>
-        <Property type="Uint32" name="m_renderJobsTotalBufferSizeInMB" value="128"/>
+        <Property type="Uint32" name="m_renderJobsTotalBufferSizeInMB" value="64"/>
         <Property type="Uint32" name="m_renderJobsWorkerMinBufferSizeInMB" value="4"/>
     </Object>
 </Root>

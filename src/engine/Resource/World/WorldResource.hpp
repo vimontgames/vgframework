@@ -56,7 +56,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject * WorldResource::Load(const string & _path)
+    LoadStatus WorldResource::Load(const core::string & _path, core::IObject *& _object)
     {
         IFactory * factory = Kernel::getFactory();
         WorldResourceData * worldData = dynamic_cast<WorldResourceData *>(factory->CreateObject("WorldResourceData"));
@@ -67,11 +67,18 @@ namespace vg::engine
             {
                 worldData->createWorld();
 
-                return worldData;
+                _object = worldData;
+                return LoadStatus::Success;
+            }
+            else
+            {
+                VG_SAFE_RELEASE(worldData);
+                return LoadStatus::CannotOpenFile;                
             }
         }
 
-        return nullptr;
+        VG_SAFE_RELEASE(worldData);
+        return LoadStatus::CannotCreateObject;
     }
 
     //--------------------------------------------------------------------------------------

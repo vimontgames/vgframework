@@ -152,33 +152,36 @@ namespace vg::gfx
         }
 
         //--------------------------------------------------------------------------------------
-        void Device::createUploadBuffer()
+        void Device::createStreamingUploadBuffer()
         {
             VG_ASSERT(m_uploadBuffers.size() == 0);
-            m_uploadBuffers.push_back(new UploadBuffer("Upload #0", 512 * 1024 * 1024, 0)); // must implement upload limit per frame but for now just temporarily increase the upload buffer size 
+            size_t streamingUploadBufferSize = ((gfx::Device*)this)->getStreamingUploadBufferSize();
+            m_uploadBuffers.push_back(new UploadBuffer("Streaming Upload Buffer", streamingUploadBufferSize, 0));
         }
 
         //--------------------------------------------------------------------------------------
-        void Device::updateUploadBuffers()
+        // One big upload buffer used for cmdlist #0 + 1 smaller upload buffer per other command list used for render
+        //--------------------------------------------------------------------------------------
+        void Device::updateCommandListsUploadBuffers()
         {
             if (m_renderJobsDirty)
             {
-                // destroy existing buffers
+                // destroy all existing buffers but the first one used by uploads
                 for (uint i = 1; i < (uint)m_uploadBuffers.size(); ++i)
                     VG_SAFE_RELEASE_ASYNC(m_uploadBuffers[i]);
                 m_uploadBuffers.resize(1);                
 
-                // recreate them
+                // recreate N+1 buffers
                 VG_ASSERT(-1 != m_maxRenderJobCount);
-                const auto uploadBufferTargetCount = max((uint)1, m_maxRenderJobCount);
+                const auto uploadBufferTargetCount = max((uint)2, m_maxRenderJobCount + 1);
                 m_uploadBuffers.reserve(uploadBufferTargetCount);
 
                 if (uploadBufferTargetCount > 1)
                 {
-                    const uint uploadBufferSize = max(m_renderJobsWorkerMinBufferSize, m_renderJobsTotalBufferSize / (uploadBufferTargetCount-1));
+                    const size_t uploadBufferSize = max(m_renderJobsWorkerMinBufferSize, m_renderJobsTotalBufferSize / (uploadBufferTargetCount-1));
 
                     for (uint i = (uint)1; i < uploadBufferTargetCount; ++i)
-                        m_uploadBuffers.push_back(new UploadBuffer(fmt::sprintf("Upload #%u", i), uploadBufferSize, i));
+                        m_uploadBuffers.push_back(new UploadBuffer(fmt::sprintf("Worker #%u Upload Buffer", i), uploadBufferSize, i));
                 }
 
                 m_renderJobsDirty = false;
@@ -194,10 +197,16 @@ namespace vg::gfx
         }
 
         //--------------------------------------------------------------------------------------
-        UploadBuffer * Device::getUploadBuffer(core::uint _index)
+        UploadBuffer * Device::getStreamingUploadBuffer() const
         {
-            VG_ASSERT(_index < m_uploadBuffers.size());
-            return m_uploadBuffers[_index];
+            return m_uploadBuffers[0];
+        }
+
+        //--------------------------------------------------------------------------------------
+        UploadBuffer * Device::getCommandListUploadBuffer(core::uint _cmdListIndex) const
+        {
+            VG_ASSERT(_cmdListIndex < m_uploadBuffers.size());
+            return m_uploadBuffers[_cmdListIndex];
         }
 
 		//--------------------------------------------------------------------------------------
@@ -249,7 +258,7 @@ namespace vg::gfx
 
             // Alloc more command lists for render jobs if needed (Make sure we have as much CommandLists as worker threads)
             VG_ASSERT(-1 != m_maxRenderJobCount);
-            const auto cmdListTargetCount = max((uint)1, m_maxRenderJobCount);
+            const auto cmdListTargetCount = max((uint)2, m_maxRenderJobCount + 1);
 
             for (uint i = (uint)cmdPools.size(); i < cmdListTargetCount; ++i)
             {
@@ -424,9 +433,9 @@ namespace vg::gfx
 	//--------------------------------------------------------------------------------------
 	void Device::init(const DeviceParams & _params)
 	{
-        VG_PROFILE_CPU("Device");
+        VG_PROFILE_CPU("Device");   
 
-        const auto startDeviceInit = Timer::getTick();
+        m_streamingUploadBufferSize = _params.streamingUploadBufferSizeInMB * 1024 * 1024;
 
 		super::init(_params);
 		m_caps.init();
@@ -528,6 +537,17 @@ namespace vg::gfx
 
         for (uint i = 0; i < cmdLists.size(); ++i)
             m_uploadBuffers[i]->flush(cmdLists[i], true);
+
+        if (m_streamingUploadBufferDirty)
+        {
+            // resize upload buffer can only happen if no loading
+            //UploadBuffer *& streamingUploadBuffer = m_uploadBuffers[0];
+            //if (m_streamingUploadBufferSize != streamingUploadBuffer->getTotalSize())
+            //{
+            //    VG_SAFE_RELEASE(streamingUploadBuffer);
+            //    streamingUploadBuffer = new UploadBuffer("Streaming Upload Buffer", m_streamingUploadBufferSize, 0);
+            //}
+        }
     }
 
 	//--------------------------------------------------------------------------------------
@@ -539,33 +559,77 @@ namespace vg::gfx
 	}
 
     //--------------------------------------------------------------------------------------
-    Texture * Device::createTextureFromFile(const core::string & _path, ReservedSlot _reservedSlot)
+    LoadStatus Device::createResourceTexture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, Texture *& _texture)
     {
-        VG_PROFILE_CPU("createTextureFromFile");
-        TextureDesc texDesc;
-        core::vector<u8> texData;
-    
-        TextureImporterSettings settings;
-        settings.m_mipLevelCount = (TextureImporterMip)1;
-        settings.m_sRGB = false;
+        VG_ASSERT(Kernel::getScheduler()->IsLoadingThread());
 
-        if (m_textureImporter->importTextureData(_path, texDesc, texData, &settings))
+        UploadBuffer * streamingBuffer = getStreamingUploadBuffer();
+        const size_t requiredUploadSize = Texture::getRequiredUploadSize(_texDesc);
+        const size_t availableUploadSize = streamingBuffer->getAvailableUploadSize();
+        //VG_DEBUGPRINT("[Device] Required upload size for texture \"%s\" is %u bytes (%u MB)\n", _name.c_str(), requiredUploadSize, requiredUploadSize / (1024 * 1024));
+
+        if (requiredUploadSize > availableUploadSize)
         {
-            Texture * tex = createTexture(texDesc, _path, texData.data(), _reservedSlot);
-            return tex;
+            VG_WARNING("[Resource] Texture \"%s\" required %u MB for upload but only %u/%u MB were available at the moment.", _name.c_str(), requiredUploadSize / (1024 * 1024), availableUploadSize / (1024 * 1024), streamingBuffer->getTotalSize() / (1024 * 1024));
+            return LoadStatus::CannotUploadData;
         }
-        else
-        {
-            VG_ERROR("[Device] Failed to create texture from \"%s\"", _path.c_str());
-        }
-        return nullptr;
+                        
+        streamingBuffer->setNextAllocSize(requiredUploadSize);
+        _texture = createTexture(_texDesc, _name, _initData);
+
+        return LoadStatus::Success;
     }
+
+    //--------------------------------------------------------------------------------------
+    //Texture * Device::createTextureFromFile(const core::string & _path, ReservedSlot _reservedSlot)
+    //{
+    //    VG_PROFILE_CPU("createTextureFromFile");
+    //    TextureDesc texDesc;
+    //    core::vector<u8> texData;
+    //
+    //    TextureImporterSettings settings;
+    //    settings.m_mipLevelCount = (TextureImporterMip)1;
+    //    settings.m_sRGB = false;
+    //
+    //    if (m_textureImporter->importTextureData(_path, texDesc, texData, &settings))
+    //    {
+    //        Texture * tex = createTexture(texDesc, _path, texData.data(), _reservedSlot);
+    //        return tex;
+    //    }
+    //    else
+    //    {
+    //        VG_ERROR("[Device] Failed to create texture from \"%s\"", _path.c_str());
+    //    }
+    //    return nullptr;
+    //}
 
     //--------------------------------------------------------------------------------------
     Buffer * Device::createBuffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot)
     {
         VG_PROFILE_CPU("createBuffer");
         return new Buffer(_bufDesc, _name, _initData, _reservedSlot);
+    }
+
+    //--------------------------------------------------------------------------------------
+    LoadStatus Device::createResourceBuffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, Buffer *& _buffer)
+    {
+        VG_ASSERT(Kernel::getScheduler()->IsLoadingThread());
+
+        UploadBuffer * streamingBuffer = getStreamingUploadBuffer();
+        const size_t requiredUploadSize = Buffer::getRequiredUploadSize(_bufDesc);
+        const size_t availableUploadSize = getStreamingUploadBuffer()->getAvailableUploadSize();
+        //VG_DEBUGPRINT("[Device] Required upload size for buffer \"%s\" is %u bytes (%u MB)\n", _name.c_str(), requiredUploadSize, requiredUploadSize / (1024 * 1024));
+        
+        if (requiredUploadSize > availableUploadSize)
+        {
+            VG_WARNING("[Resource] Buffer \"%s\" required %u MB for upload but only %u / %u MB were available at the moment.", _name.c_str(), requiredUploadSize / (1024 * 1024), availableUploadSize / (1024 * 1024), streamingBuffer->getTotalSize() / (1024 * 1024));
+            return LoadStatus::CannotUploadData;
+        }
+
+        getStreamingUploadBuffer()->setNextAllocSize(requiredUploadSize);
+        _buffer = createBuffer(_bufDesc, _name, _initData);
+
+        return LoadStatus::Success;
     }
 
     //--------------------------------------------------------------------------------------
@@ -627,6 +691,24 @@ namespace vg::gfx
     void Device::waitGPUIdle()
     {
         super::waitGPUIdle();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::u64 Device::getAvailableUploadSize() const
+    {
+        return getStreamingUploadBuffer()->getAvailableUploadSize();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::u64 Device::getTotalUploadSize() const
+    {
+        return getStreamingUploadBuffer()->getTotalSize();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Device::isReadyForStreaming() const
+    {
+        return getStreamingUploadBuffer()->isReadyForStreaming();
     }
 
     //--------------------------------------------------------------------------------------

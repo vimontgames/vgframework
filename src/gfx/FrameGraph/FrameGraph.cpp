@@ -1136,8 +1136,8 @@ namespace vg::gfx
             for (auto & node : m_userPassInfoTree.m_children)
                 gatherNodes(node, nodes, totalEstimatedCost);
 
-            // temp: use default cmdlist
-            CommandList * defaultCmdList = cmdLists[0];
+            // temp: use default cmdlist (#0 is used only for streaming)
+            CommandList * defaultCmdList = cmdLists[1];
 
             // Select policy used to dispatch nodes into Render jobs
             const auto renderJobsPolicy = device->getRenderJobsPolicy();
@@ -1153,7 +1153,7 @@ namespace vg::gfx
                     // Render all nodes using several command list, but still on main thread (for debug purpose)
                     const uint nodesPerJob = ((uint)nodes.size() + maxRenderJobCount - 1) / maxRenderJobCount;
 
-                    uint cmdListIndex = 0;
+                    uint cmdListIndex = 1; // Render command lists start at 1
                     uint nodeCount = 0;
                     for (uint i = 0; i < nodes.size(); ++i)
                     {
@@ -1187,7 +1187,7 @@ namespace vg::gfx
                         {
                             VG_PROFILE_CPU("Reset");
                             for (uint i = 0; i < m_renderJobs.size(); ++i)
-                                m_renderJobs[i]->reset(cmdLists[i]);
+                                m_renderJobs[i]->reset(cmdLists[i+1]);
                         }
 
                         // Assign nodes to render jobs, sequentially
@@ -1460,7 +1460,7 @@ namespace vg::gfx
                             }
                         }
 
-                        device->setExecuteCommandListCount(gfx::CommandListType::Graphics, jobCount);
+                        device->setExecuteCommandListCount(gfx::CommandListType::Graphics, jobCount + 1);
                     }
 
                     // Kick jobs ...
@@ -1514,7 +1514,7 @@ namespace vg::gfx
         {
             // render all nodes sequentially using default command list
             {
-                CommandList * defaultCmdList = cmdLists[0];
+                CommandList * defaultCmdList = cmdLists[1];
 
                 VG_PROFILE_GPU_CONTEXT(defaultCmdList);
                 VG_PROFILE_GPU("Render");
@@ -1522,7 +1522,7 @@ namespace vg::gfx
                 for (auto & node : m_userPassInfoTree.m_children)
                     renderNode(node, defaultCmdList, true);
 
-                device->setExecuteCommandListCount(gfx::CommandListType::Graphics, 1);
+                device->setExecuteCommandListCount(gfx::CommandListType::Graphics, 2);
             }
         }
 

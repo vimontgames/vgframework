@@ -31,15 +31,21 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE core::uint Device::getMaxRenderTotalBufferSize() const
+    VG_INLINE core::size_t Device::getMaxRenderTotalBufferSize() const
     {
         return m_renderJobsTotalBufferSize;
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE core::uint Device::getMaxRenderMinBufferSize() const
+    VG_INLINE core::size_t Device::getMaxRenderMinBufferSize() const
     {
         return m_renderJobsWorkerMinBufferSize;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::size_t Device::getStreamingUploadBufferSize() const
+    {
+        return m_streamingUploadBufferSize;
     }
 }
 

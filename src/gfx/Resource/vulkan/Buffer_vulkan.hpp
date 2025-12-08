@@ -1,6 +1,65 @@
 namespace vg::gfx::vulkan
 {
     //--------------------------------------------------------------------------------------
+    core::size_t Buffer::getRequiredUploadSize(const BufferDesc & _bufferDesc)
+    {
+        auto * device = gfx::Device::get();
+        auto & vkDevice = device->getVulkanDevice();
+
+        VkBufferCreateInfo vkBufferCreate = {};
+        vkBufferCreate.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+        vkBufferCreate.size = _bufferDesc.getSize();
+
+        switch (_bufferDesc.resource.m_usage)
+        {
+            default:
+                VG_ASSERT(false, "Unhandled Usage \"%s\" (%u)", asString(_bufferDesc.resource.m_usage).c_str(), _bufferDesc.resource.m_usage);
+                break;
+
+            case Usage::Default:
+                vkBufferCreate.usage = VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+                break;
+
+            case Usage::Upload:
+                vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+                break;
+
+            case Usage::Staging:
+                vkBufferCreate.usage = VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
+                break;
+        }
+
+        if (_bufferDesc.testBindFlags(BindFlags::IndexBuffer))
+            vkBufferCreate.usage |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
+
+        if (_bufferDesc.testBindFlags(BindFlags::UnorderedAccess))
+            vkBufferCreate.usage |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
+
+        if (_bufferDesc.testBindFlags(BindFlags::RaytracingAccelerationStruct))
+            vkBufferCreate.usage |= VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_STORAGE_BIT_KHR;
+        else if (device->getDeviceCaps().rayTracing.supported)
+            vkBufferCreate.usage |= VK_BUFFER_USAGE_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT_KHR;
+
+        if (device->getDeviceCaps().vulkan.deviceAddress)
+            vkBufferCreate.usage |= VK_BUFFER_USAGE_SHADER_DEVICE_ADDRESS_BIT;
+
+        // Create temporary buffer to query memory requirements
+        VkBuffer tmpBuffer;
+        VG_VERIFY_VULKAN(vkCreateBuffer(vkDevice, &vkBufferCreate, nullptr, &tmpBuffer));
+
+        VkMemoryRequirements mem_reqs = {};
+        vkGetBufferMemoryRequirements(vkDevice, tmpBuffer, &mem_reqs);
+
+        // Destroy temporary buffer immediately
+        vkDestroyBuffer(vkDevice, tmpBuffer, nullptr);
+
+        auto * uploadBuffer = device->getStreamingUploadBuffer();
+        size_t alignedSize = uploadBuffer->getAlignedSize(mem_reqs.size, mem_reqs.alignment);
+
+        return alignedSize;
+    }
+
+    //--------------------------------------------------------------------------------------
     Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
         base::Buffer(_bufDesc, _name, _initData)
     {
@@ -125,7 +184,7 @@ namespace vg::gfx::vulkan
                 u64 uploadBufferSize = _bufDesc.getSize();
                 const auto * scheduler = Kernel::getScheduler();
                 VG_ASSERT(scheduler->IsMainThread() || scheduler->IsLoadingThread(), "Expected Main or Loading thread but current thread is \"%s\"", scheduler->GetCurrentThreadName().c_str());
-                auto * uploadBuffer = device->getUploadBuffer(0);
+                auto * uploadBuffer = device->getStreamingUploadBuffer();
                 u8 * dst = uploadBuffer->map((gfx::Buffer *)this, uploadBufferSize, (uint)mem_reqs.alignment);
                 if (nullptr != dst)
                 {

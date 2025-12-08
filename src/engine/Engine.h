@@ -65,7 +65,7 @@ namespace vg::engine
         LRESULT CALLBACK                        WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) final;
         #endif
 
-		void							        Init		        (const EngineCreationParams & _params, core::Singletons & _singletons) final;
+		void							        Init		        (EngineCreationParams & _params, core::Singletons & _singletons) final;
 		void							        Deinit		        () override;
 
         bool                                    IsPlaying           () const final override;

@@ -52,20 +52,28 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject * LensResource::Load(const string & _path)
+    LoadStatus LensResource::Load(const core::string & _file, core::IObject *& _object)
     {
         IFactory * factory = Kernel::getFactory();
         auto * object = (renderer::ICameraLens *)factory->CreateObject("CameraLens");
         if (nullptr != object)
         {
             object->SetParent(this);
-            object->SetName(io::getFileName(_path));
+            object->SetName(io::getFileName(_file));
 
-            if (factory->LoadFromXML(object, _path))
-                return object;
+            if (factory->LoadFromXML(object, _file))
+            {
+                if (object)
+                {
+                    _object = object;
+                    return LoadStatus::Success;
+                }
+            }
         }
 
-        return nullptr;
+        VG_SAFE_RELEASE(object);
+        _object = nullptr;
+        return LoadStatus::CannotCreateObject;
     }
 
     //--------------------------------------------------------------------------------------

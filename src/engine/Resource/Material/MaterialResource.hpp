@@ -58,25 +58,28 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject * MaterialResource::Load(const string & _path)
+    core::LoadStatus MaterialResource::Load(const core::string & _file, core::IObject *& _object)
     {
         IFactory * factory = Kernel::getFactory();
         MaterialResourceData * object = (MaterialResourceData*)factory->CreateObject("MaterialResourceData");
         if (nullptr != object)
         {
             object->SetParent(this);
-            object->SetName(io::getFileName(_path));
+            object->SetName(io::getFileName(_file));
 
-            if (factory->LoadFromXML(object, _path))
+            if (factory->LoadFromXML(object, _file))
             {
                 // Create the material, textures aren't loaded yet
                 object->CreateRendererMaterial();
                 object->RegisterUID();
-                return object;
+                _object = object;
+                return LoadStatus::Success;
             }
         }
 
-        return nullptr;
+        VG_SAFE_RELEASE(object);
+        _object = nullptr;
+        return LoadStatus::CannotCreateObject;
     }
 
     //--------------------------------------------------------------------------------------

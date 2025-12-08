@@ -89,10 +89,10 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject * AnimationResource::Load(const string & _file)
+    LoadStatus AnimationResource::Load(const core::string & _path, core::IObject *& _object)
     {
-        IAnimation * anim = Engine::get()->GetRenderer()->LoadAnimation(_file);
-        return anim;
+        auto * renderer = Engine::get()->GetRenderer();
+        return renderer->LoadAnimation(_path, (IAnimation *&)_object);
     }
 
     //--------------------------------------------------------------------------------------

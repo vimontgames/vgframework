@@ -13,7 +13,7 @@ namespace vg::engine
         ~PrefabResource();
 
         const core::vector<core::string>    GetExtensions               () const final;
-        core::IObject*                      Load                        (const core::string & _path) final override;
+        core::LoadStatus                    Load                        (const core::string & _path, core::IObject *& _object) final override;
         bool                                CreateFile                  (const core::string & _path, core::IObject * _data = nullptr) override;
         bool                                SaveFile                    (const core::string & _path) const override;
     };

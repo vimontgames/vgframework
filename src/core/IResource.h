@@ -7,6 +7,15 @@ namespace vg::core
     class IObject;
     class IResourceMeta;
 
+    vg_enum_class(vg::core, LoadStatus, u8,
+        Success = 0,       
+        Deprecated,
+        CannotCreateObject,
+        CannotOpenFile,
+        CannotUploadData,
+        NotImplemented
+    );
+
     //--------------------------------------------------------------------------------------
     // An IResource is an object that will from an external file with dependencies. 
     // e.g., a TextureResource used to reference a Texture in a MaterialResource used to reference a MaterialModel
@@ -41,7 +50,7 @@ namespace vg::core
 
         virtual bool                    Cook                    (const core::string & _file) const = 0;
 
-        virtual core::IObject *         Load                    (const core::string & _file) = 0;
+        virtual LoadStatus              Load                    (const core::string & _file, core::IObject *& _object) = 0;
         virtual void                    Unload                  (const core::string & _file) = 0;
 
         virtual void                    LoadSubResources        () = 0;

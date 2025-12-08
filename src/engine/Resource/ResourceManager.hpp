@@ -313,6 +313,16 @@ namespace vg::engine
         
         IResource * res = nullptr;
 
+        // Is device ready for streaming? (e.g. not during init)
+        auto * renderer = Engine::get()->GetRenderer();
+        if (!renderer->IsReadyForStreaming())
+        {
+            VG_PROFILE_CPU("Wait Streaming Ready");
+            VG_INFO("[Resource] Device is not yet ready for streaming");
+            Sleep(1);
+            return;
+        }
+
         // Is there any resource to load?
         if (m_resourcesToLoad.size() > 0)
         {
@@ -330,7 +340,29 @@ namespace vg::engine
             VG_ASSERT(m_resourceInfosMap.end() != it);
             auto & info = it->second;
             VG_ASSERT(info->m_object == nullptr);
-            loadOneResource(*info);
+
+            // TODO: lock outside this call? Once device is ready mutex should not be necessary because only loading thread shall access this buffer
+            const auto available = renderer->GetAvailableUploadSize();
+            const auto total = renderer->GetTotalUploadSize();
+            const auto required = total;
+
+            //if (required > available)
+            //{
+            //    Sleep(0);
+            //    VG_WARNING("[Resource] Loading is starving because %u MB are required but only (%u MB/%u MB) is available for streaming", required/(1024*1024) , available / (1024 * 1024), total / (1024 * 1024));
+            //    return;
+            //}
+
+            LoadStatus status = loadOneResource(*info);
+
+            if (status == LoadStatus::CannotUploadData)
+            {
+                // We need more space in upload buffer (TODO), return but do not skip the resource
+                Sleep(0);
+                //VG_WARNING("[Resource] Resource \"%s\" required %u MB for upload but only %u MB were available at the moment. Increase \"Upload buffer\" size (%u MB) to fix this warning.", info->GetName().c_str(), required/(1024*1024), available / (1024 * 1024), total / (1024 * 1024));
+                return;
+            }
+
             VG_ASSERT(uint_ptr(res) != 0xcdcdcdcdcdcdcdcd);
             
             // test mutex
@@ -482,7 +514,9 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void ResourceManager::loadOneResource(ResourceInfo & _info)
+    // Returns 'true' if the resource could be created
+    //--------------------------------------------------------------------------------------
+    LoadStatus ResourceManager::loadOneResource(ResourceInfo & _info)
     {
         VG_ASSERT(Kernel::getScheduler()->IsLoadingThread());
 
@@ -508,6 +542,8 @@ namespace vg::engine
         auto * cooker = clients[0];
 
         bool done = false;
+
+        LoadStatus status = (LoadStatus)-1;
 
         while (!done)
         {
@@ -537,27 +573,51 @@ namespace vg::engine
 
             VG_ASSERT(!path.empty());
 
-            // Cooked file may seem up to date but format version actually changed
-            _info.m_object = cooker->Load(path);
+            // Cooked file may seem up to date but if cooked file format version actually changed we can only know by tring to read the file
+            status = cooker->Load(path, _info.m_object);
 
-            if (nullptr != _info.m_object)
+            switch (status)
             {
-                VG_INFO("[Resource] File \"%s\" loaded in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
-                done = true;
-            }
-            else
-            {
-                if (CookStatus::UP_TO_DATE == needCook)
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(status);
+                    break;
+
+                case LoadStatus::Success:
                 {
-                    needCook = CookStatus::COOK_VERSION_DEPRECATED;
-                }
-                else
-                {
-                    VG_ERROR("[Resource] Could not load File \"%s\"", path.c_str());
+                    VG_ASSERT(_info.m_object);
+                    VG_INFO("[Resource] File \"%s\" loaded in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                     done = true;
                 }
+                break;
+
+                case LoadStatus::CannotCreateObject:
+                case LoadStatus::CannotOpenFile:
+                case LoadStatus::CannotUploadData:
+                {
+                    VG_ASSERT(nullptr == _info.m_object);
+                    done = true; // exit
+                }
+                break;
+
+                case LoadStatus::Deprecated:
+                {
+                    VG_ASSERT(nullptr == _info.m_object);
+                    if (CookStatus::UP_TO_DATE == needCook)
+                    {
+                        needCook = CookStatus::COOK_VERSION_DEPRECATED; // This should be handled by  case ResourceLoadingStatus::Deprecated:
+                        // Force recook and retry once
+                    }
+                    else
+                    {
+                        VG_ERROR("[Resource] Could not load File \"%s\"", path.c_str());
+                        done = true;
+                    }                    
+                }
+                break;
             }
-        }       
+        }    
+
+        return status;
     }
 
     //--------------------------------------------------------------------------------------

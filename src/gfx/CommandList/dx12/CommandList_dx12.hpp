@@ -529,8 +529,11 @@ namespace vg::gfx::dx12
             //VG_DEBUGPRINT("[Device] Map buffer \"%s\" from commandlist %u\n", _buffer->GetName().c_str(), m_index);
 
             auto * device = gfx::Device::get();
-            auto uploadBuffer = device->getUploadBuffer(m_index);
-            result.data = uploadBuffer->map(_buffer, _size, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+
+            //auto uploadBuffer = device->getUploadBuffer(m_index);
+            auto * uploadBuffer = device->getCommandListUploadBuffer(m_index);
+
+            result.data = uploadBuffer->map(_buffer, _size, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT); // Is that really needed just for upload?
         }
 
         result.rowPitch = 0;
@@ -554,7 +557,8 @@ namespace vg::gfx::dx12
 
             VG_ASSERT(nullptr != _data, "The '_data' parameter should not be NULL when mapping Resources for Upload");
             auto * device = gfx::Device::get();
-            auto uploadBuffer = device->getUploadBuffer(m_index);
+            //auto uploadBuffer = device->getUploadBuffer(m_index);
+            auto * uploadBuffer = device->getCommandListUploadBuffer(m_index);
             uploadBuffer->unmap(_buffer, (u8 *)_data, _size);
             uploadBuffer->flush((gfx::CommandList *)this);
         }
@@ -670,7 +674,8 @@ namespace vg::gfx::dx12
                 D3D12_TEXTURE_COPY_LOCATION src = {};
                 src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
                 src.PlacedFootprint = placedTexture2D;
-                src.pResource = device->getUploadBuffer(m_index)->getBuffer()->getResource().getd3d12BufferResource();
+                auto * uploadBuffer = device->getCommandListUploadBuffer(m_index);
+                src.pResource = uploadBuffer->getBuffer()->getResource().getd3d12BufferResource();
 
                 m_d3d12graphicsCmdList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
             }

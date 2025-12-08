@@ -19,15 +19,15 @@ namespace vg::engine
         MaterialResource                    (const core::string & _name = "", IObject * _parent = nullptr);
         ~MaterialResource                   ();
 
-        const core::vector<core::string>    GetExtensions                   () const final;
+        const core::vector<core::string>    GetExtensions   () const final;
 
-        bool                                Cook                            (const core::string & _file) const final override;
-        core::IObject *                     Load                            (const core::string & _path) final override;
+        bool                                Cook            (const core::string & _file) const final override;
+        core::LoadStatus                    Load            (const core::string & _file, core::IObject *& _object) final override;
 
-        bool                                CreateFile                      (const core::string & _path, core::IObject * _data) final override;
-        bool                                SaveFile                        (const core::string & _path) const override;
+        bool                                CreateFile      (const core::string & _path, core::IObject * _data) final override;
+        bool                                SaveFile        (const core::string & _path) const override;
 
-        bool                                CanCreateFile                   () const final override { return true; };
-        bool                                CanSaveFile                     () const final override { return true; };
+        bool                                CanCreateFile   () const final override { return true; };
+        bool                                CanSaveFile     () const final override { return true; };
     };
 }

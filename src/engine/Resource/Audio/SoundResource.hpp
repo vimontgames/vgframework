@@ -85,9 +85,16 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * SoundResource::Load(const string & _file)
+    LoadStatus SoundResource::Load(const core::string & _file, core::IObject *& _object)
     {
-        return Engine::get()->GetAudio()->CreateSound(_file); 
+        if (auto * sound = Engine::get()->GetAudio()->CreateSound(_file))
+        {
+            _object = sound;
+            return LoadStatus::Success;
+        }
+
+        _object = nullptr;
+        return LoadStatus::CannotCreateObject;
     }
 
     //--------------------------------------------------------------------------------------

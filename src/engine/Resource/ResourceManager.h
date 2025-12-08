@@ -35,7 +35,6 @@ namespace vg::engine
         ResourceManager(const core::string & _name, IObject * _parent);
         ~ResourceManager();
 
-        // Lock during editing
         void                        Lock                        () const final override;
         void                        Unlock                      () const final override;
 
@@ -67,7 +66,7 @@ namespace vg::engine
         static CookStatus           needsCook                   (const ResourceInfo & _info);
 
         void                        updateLoadingThread         ();
-        void                        loadOneResource             (ResourceInfo & _info);
+        core::LoadStatus            loadOneResource             (ResourceInfo & _info);
 
         core::uint                  updateResources             ();
         void                        reimport                    (core::IResource * _res);

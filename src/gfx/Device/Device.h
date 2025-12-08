@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/Types/Types.h"
+#include "core/IResource.h"
 #include "gfx/IDevice.h"
 #include "gfx/Device/Device_consts.h"
 #include "gfx/BindlessTable/BindlessTable_consts.h"
@@ -65,63 +66,64 @@ namespace vg::gfx
 		class Device : public gfx::IDevice
 		{
 		public:
-															Device					    ();
-															~Device					    ();
+															Device					        ();
+															~Device					        ();
 
-			void											init					    (const DeviceParams & _params);
-			void											deinit					    ();
+			void											init					        (const DeviceParams & _params);
+			void											deinit					        ();
 
-			void											beginFrame				    ();
-			void											endFrame				    ();
+			void											beginFrame				        ();
+			void											endFrame				        ();
 
-			gfx::Device *								    getDevice				    ();
-			const DeviceParams &							getDeviceParams			    () const;
+			gfx::Device *								    getDevice				        ();
+			const DeviceParams &							getDeviceParams			        () const;
 
-			gfx::CommandQueue *							    createCommandQueue		    (CommandQueueType _type);
-			gfx::CommandQueue * 			                getCommandQueue		        (CommandQueueType _type);
-			void											destroyCommandQueues	    ();
+			gfx::CommandQueue *							    createCommandQueue		        (CommandQueueType _type);
+			gfx::CommandQueue * 			                getCommandQueue		            (CommandQueueType _type);
+			void											destroyCommandQueues	        ();
 			
-            core::u64                                       getFrameCounter             () const;
+            core::u64                                       getFrameCounter                 () const;
 
-			void											createFrameContext		    (core::uint _frameContextIndex);
-            void                                            updateFrameContext          ();
-			void											destroyFrameContext		    (core::uint _frameContextIndex);
-			core::uint                                      getFrameContextIndex        () const;
-            FrameContext &									getCurrentFrameContext      ();
+			void											createFrameContext		        (core::uint _frameContextIndex);
+            void                                            updateFrameContext              ();
+			void											destroyFrameContext		        (core::uint _frameContextIndex);
+			core::uint                                      getFrameContextIndex            () const;
+            FrameContext &									getCurrentFrameContext          ();
 
-            void                                            createUploadBuffer          ();
-            void                                            updateUploadBuffers         ();
-            void                                            destroyUploadBuffers        ();
-            UploadBuffer *                                  getUploadBuffer             (core::uint _index);
+            void                                            createStreamingUploadBuffer     ();
+            void                                            updateCommandListsUploadBuffers ();
+            void                                            destroyUploadBuffers            ();
+            UploadBuffer *                                  getStreamingUploadBuffer        () const;
+            UploadBuffer *                                  getCommandListUploadBuffer      (core::uint _cmdListIndex) const;
 
-            void											createBackbuffer            (core::uint _backbufferIndex, void * _backbuffer);
-            void											destroyBackbuffer           (core::uint _backbufferIndex);
-            core::uint                                      getBackbufferIndex          () const;
-            BufferContext &									getCurrentBackbuffer        ();
+            void											createBackbuffer                (core::uint _backbufferIndex, void * _backbuffer);
+            void											destroyBackbuffer               (core::uint _backbufferIndex);
+            core::uint                                      getBackbufferIndex              () const;
+            BufferContext &									getCurrentBackbuffer            ();
 
-			core::vector<gfx::CommandList*> &			    getCommandLists			    (CommandListType _type);
-            void                                            setExecuteCommandListCount  (CommandListType _type, core::uint _count);
-			gfx::Texture *								    getBackbuffer			    ();
+			core::vector<gfx::CommandList*> &			    getCommandLists			        (CommandListType _type);
+            void                                            setExecuteCommandListCount      (CommandListType _type, core::uint _count);
+			gfx::Texture *								    getBackbuffer			        ();
 
-            BindlessTable *                                 getBindlessTable            () const;
-            gfx::PixelFormat                                getBackbufferFormat         () const { return m_backbufferFormat; }
-            gfx::ShaderManager *                            getShaderManager            () { return m_shaderManager;}
+            BindlessTable *                                 getBindlessTable                () const;
+            gfx::PixelFormat                                getBackbufferFormat             () const { return m_backbufferFormat; }
+            gfx::ShaderManager *                            getShaderManager                () { return m_shaderManager;}
 
-            const gfx::DeviceCaps &                         getDeviceCaps               () const { return m_caps; }
+            const gfx::DeviceCaps &                         getDeviceCaps                   () const { return m_caps; }
 
-            PixelFormat                                     getHDRBackbufferFormat      (HDR _mode) const;
-            ColorSpace                                      getHDRColorSpace            (HDR _mode) const;
+            PixelFormat                                     getHDRBackbufferFormat          (HDR _mode) const;
+            ColorSpace                                      getHDRColorSpace                (HDR _mode) const;
 
-            VG_INLINE double                                getGpuFrameTime             () const;
-            void                                            setGpuFrameTime             (double _gpuFrameTime);
+            VG_INLINE double                                getGpuFrameTime                 () const;
+            void                                            setGpuFrameTime                 (double _gpuFrameTime);
 
-            VG_INLINE double                                getGpuWaitTime              () const;
+            VG_INLINE double                                getGpuWaitTime                  () const;
 
-            void							                beginCapture                ();
-            void							                endCapture                  ();
+            void							                beginCapture                    ();
+            void							                endCapture                      ();
 
-            void                                            beginWaitGPU                ();
-            void                                            endWaitGPU                  ();
+            void                                            beginWaitGPU                    ();
+            void                                            endWaitGPU                      ();
 
 		protected:
             gfx::DeviceCaps                                 m_caps;
@@ -149,11 +151,13 @@ namespace vg::gfx
             core::Ticks                                     m_beginWaitGPUTicks = 0;
             double                                          m_gpuWaitTime = 0;
             bool                                            m_captureInProgress = false;
-            core::uint                                      m_maxRenderJobCount = -1;
+            core::uint                                      m_maxRenderJobCount = 0;
             gfx::RenderJobsPolicy                           m_renderJobsPolicy = gfx::RenderJobsPolicy::RecursiveSplit;
-            core::u32                                       m_renderJobsTotalBufferSize = 64 * 1024 * 1024;
-            core::u32                                       m_renderJobsWorkerMinBufferSize = 4 * 1024 * 1024;
+            core::size_t                                    m_renderJobsTotalBufferSize = 64 * 1024 * 1024;
+            core::size_t                                    m_renderJobsWorkerMinBufferSize = 4 * 1024 * 1024;
+            core::size_t                                    m_streamingUploadBufferSize = 128 * 1024 * 1024;
             bool                                            m_renderJobsDirty = true;
+            bool                                            m_streamingUploadBufferDirty = true;        
 		};
 	}
 }
@@ -186,8 +190,10 @@ namespace vg::gfx
 		void		            endFrame		            ();
 
 		Texture *	            createTexture	            (const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
-        Texture *	            createTextureFromFile       (const core::string & _path, ReservedSlot _reservedSlot = ReservedSlot::None);
         Buffer *                createBuffer                (const BufferDesc & _bufDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
+
+        core::LoadStatus	    createResourceTexture	    (const TextureDesc & _texDesc, const core::string & _name, const void * _initData, Texture *& _texture);
+        core::LoadStatus        createResourceBuffer        (const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, Buffer *& _buffer);
 
         RootSignatureHandle     addRootSignature            (const RootSignatureDesc & _desc);
         RootSignature *         getRootSignature            (const RootSignatureHandle & _handle);
@@ -208,10 +214,15 @@ namespace vg::gfx
 
         VG_INLINE core::uint    getMaxRenderJobCount        () const;
         VG_INLINE gfx::RenderJobsPolicy getRenderJobsPolicy () const;
-        VG_INLINE core::uint    getMaxRenderTotalBufferSize () const;
-        VG_INLINE core::uint    getMaxRenderMinBufferSize   () const;
+        VG_INLINE core::size_t    getMaxRenderTotalBufferSize () const;
+        VG_INLINE core::size_t    getMaxRenderMinBufferSize   () const;
+        VG_INLINE core::size_t    getStreamingUploadBufferSize() const;
 
         void                    waitGPUIdle                 ();
+
+        bool                    isReadyForStreaming         () const;
+        core::u64               getAvailableUploadSize      () const;
+        core::u64               getTotalUploadSize          () const;
 
 	private:
         TextureImporter *       m_textureImporter = nullptr;

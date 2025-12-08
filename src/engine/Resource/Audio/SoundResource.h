@@ -18,7 +18,7 @@ namespace vg::engine
         ~SoundResource();
 
         const core::vector<core::string>    GetExtensions       () const final;
-        core::IObject *                     Load                (const core::string & _file) final override;
+        core::LoadStatus                    Load                (const core::string & _file, core::IObject *& _object) final override;
         core::IResourceMeta *               CreateResourceMeta  (const core::string & _path) const final override;
         void                                OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent);
 

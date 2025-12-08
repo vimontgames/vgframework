@@ -1148,17 +1148,17 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    IMeshModel * Renderer::LoadMeshModel(const core::string & _file)
+    LoadStatus Renderer::LoadMeshModel(const core::string & _file, IMeshModel *& _meshModel)
     {
         MeshImporterData meshData;
 
-        if (meshData.load(io::getCookedPath(_file)))
-        {
-            IMeshModel * meshModel = MeshModel::createFromImporterData(meshData);
-            return meshModel;
-        }
+        LoadStatus status = meshData.load(io::getCookedPath(_file));
 
-        return nullptr;
+        if (status == LoadStatus::Success)
+            return MeshModel::createFromImporterData(meshData, _meshModel);
+
+        _meshModel = nullptr;
+        return status;
     }
 
     //--------------------------------------------------------------------------------------
@@ -1178,17 +1178,16 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    gfx::ITexture * Renderer::LoadTexture(const core::string & _file)
+    LoadStatus Renderer::LoadTexture(const core::string & _file, gfx::ITexture *& _texture)
     {
         TextureImporterData textureData;
 
-        if (textureData.load(io::getCookedPath(_file)))
-        {
-            ITexture * texture = m_device.createTexture(textureData.desc, textureData.name, textureData.texels.data());
-            return texture;
-        }
+        LoadStatus status = textureData.load(io::getCookedPath(_file));
+        if (status == LoadStatus::Success)
+            return m_device.createResourceTexture(textureData.desc, textureData.name, textureData.texels.data(), (gfx::Texture * &)_texture);
 
-        return nullptr;
+        _texture = nullptr;
+        return status;
     }
 
     //--------------------------------------------------------------------------------------
@@ -1211,17 +1210,28 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    IAnimation * Renderer::LoadAnimation(const core::string & _file) 
+    LoadStatus Renderer::LoadAnimation(const core::string & _file, IAnimation *& _animation)
     {
         AnimImporterData animData;
 
-        if (animData.load(io::getCookedPath(_file)))
+        LoadStatus status = animData.load(io::getCookedPath(_file));
+
+        if (status == LoadStatus::Success)
         {
-            IAnimation * animation = SkeletalAnimation::createFromImporterData(animData);
-            return animation;
+            if (IAnimation * anim = SkeletalAnimation::createFromImporterData(animData))
+            {
+                _animation = anim;
+                return LoadStatus::Success;
+            }
+            else
+            {
+                _animation = nullptr;
+                return LoadStatus::CannotCreateObject;
+            }
         }
 
-        return nullptr;
+        _animation = nullptr;
+        return LoadStatus::CannotOpenFile;
     }
 
     //--------------------------------------------------------------------------------------
@@ -1439,6 +1449,24 @@ namespace vg::renderer
     bool Renderer::GetGpuMemoryInfo(core::GPUMemoryInfo & _gpuMem) const
     {
         return m_device.GetGpuMemoryInfo(_gpuMem);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::u64 Renderer::GetAvailableUploadSize() const
+    {
+        return m_device.getAvailableUploadSize();
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::u64 Renderer::GetTotalUploadSize() const
+    {
+        return m_device.getTotalUploadSize();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Renderer::IsReadyForStreaming() const
+    {
+        return m_device.isReadyForStreaming();
     }
 
     //--------------------------------------------------------------------------------------

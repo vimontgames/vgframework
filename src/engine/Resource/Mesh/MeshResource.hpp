@@ -59,11 +59,10 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IObject * MeshResource::Load(const string & _path)
+    LoadStatus MeshResource::Load(const core::string & _path, core::IObject *& _object)
     {
         auto * renderer = Engine::get()->GetRenderer();
-        auto * meshModel = renderer->LoadMeshModel(_path);    
-        return meshModel;
+        return renderer->LoadMeshModel(_path, (renderer::IMeshModel*&)_object);
     }
 
     //--------------------------------------------------------------------------------------

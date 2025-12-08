@@ -49,7 +49,7 @@ namespace vg::engine
 	}
 
 	//--------------------------------------------------------------------------------------
-	core::IObject * SceneResource::Load(const string & _path)
+    LoadStatus SceneResource::Load(const core::string & _path, core::IObject *& _object)
 	{
 		IFactory * factory = Kernel::getFactory();
 		IBaseScene * scene = dynamic_cast<IBaseScene*>(factory->CreateObject("Scene"));
@@ -59,11 +59,13 @@ namespace vg::engine
 			if (factory->LoadFromXML(scene, _path))
 			{
 				//fixMissingUIDs(scene->GetRoot());
-				return scene;
+                _object = scene;
+                return LoadStatus::Success;
 			}
 		}
-
-		return nullptr;
+        VG_SAFE_RELEASE(scene);
+        _object = nullptr;
+        return LoadStatus::CannotCreateObject;
 	}
 
 	//--------------------------------------------------------------------------------------

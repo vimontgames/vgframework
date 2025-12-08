@@ -42,7 +42,7 @@ namespace vg::gfx
 			SetName(name);
 
             auto * device = gfx::Device::get();
-            m_uploadBuffer = device->getUploadBuffer(_index);
+             m_uploadBuffer = _index == 0? device->getStreamingUploadBuffer() : device->getCommandListUploadBuffer(_index);
 		}
 
 		//--------------------------------------------------------------------------------------

@@ -24,7 +24,7 @@ namespace vg::core
         {
             auto * scheduler = Kernel::getScheduler();
             ThreadID currentThread = scheduler->GetCurrentThreadID();
-            VG_ASSERT(false, "AssertMutex \"%s\" is entered by thread \"%s\" (0x%08X) but it was already entered by thread \"%s\" (0x%08X)", m_name, scheduler->GetThreadName(currentThread).c_str(), currentThread, scheduler->GetThreadName(m_threadID).c_str(), m_threadID);
+            VG_ASSERT(currentThread == m_threadID, "AssertMutex \"%s\" is entered by thread \"%s\" (0x%08X) but it was already entered by thread \"%s\" (0x%08X)", m_name, scheduler->GetThreadName(currentThread).c_str(), currentThread, scheduler->GetThreadName(m_threadID).c_str(), m_threadID);
         }
         else
         {

@@ -2,6 +2,7 @@
 
 #include "MaterialImporterData.h"
 #include "CollisionImporterData.h"
+#include "core/IResource.h"
 #include "core/Math/Math.h"
 #include "core/Misc/AABB/AABB.h"
 #include "renderer/Geometry/Batch/Batch.h"
@@ -46,8 +47,8 @@ namespace vg::renderer
     class MeshImporterData
     {
     public:
-        bool load(const core::string & _file);
-        bool save(const core::string & _file) const;
+        core::LoadStatus    load(const core::string & _file);
+        bool                save(const core::string & _file) const;
 
         core::string                        name;
         core::AABB                          aabb;

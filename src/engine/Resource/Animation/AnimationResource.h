@@ -26,7 +26,7 @@ namespace vg::engine
         const core::vector<core::string>        GetExtensions           () const final;
 
         bool                                    Cook                    (const core::string & _file) const final override;
-        core::IObject *                         Load                    (const core::string & _file) final override;
+        core::LoadStatus                        Load                    (const core::string & _file, core::IObject *& _object) final override;
 
         void                                    OnLoad                  () override;
         void                                    OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;

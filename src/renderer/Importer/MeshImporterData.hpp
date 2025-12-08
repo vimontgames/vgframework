@@ -88,7 +88,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool MeshImporterData::load(const core::string & _file)
+    LoadStatus MeshImporterData::load(const core::string & _file)
     {
         io::Buffer buffer;
 
@@ -97,45 +97,45 @@ namespace vg::renderer
             u32 version;
             buffer.read(&version);
 
-            if (version == MeshImporterDataVersion)
-            {
-                buffer.read(&name);
+            if (version != MeshImporterDataVersion)
+                return LoadStatus::Deprecated;
+            
+            buffer.read(&name);
 
-                aabb.read(buffer);
+            aabb.read(buffer);
 
-                u32 batchCount;
-                buffer.read(&batchCount);
-                batches.resize(batchCount);
-                for (uint i = 0; i < batchCount; ++i)
-                    batches[i].read(buffer);
+            u32 batchCount;
+            buffer.read(&batchCount);
+            batches.resize(batchCount);
+            for (uint i = 0; i < batchCount; ++i)
+                batches[i].read(buffer);
 
-                buffer.read(&indices);
-                buffer.read(&vertices);
+            buffer.read(&indices);
+            buffer.read(&vertices);
 
-                u32 matCount;
-                buffer.read(&matCount);
-                materials.resize(matCount);
-                for (uint i = 0; i < matCount; ++i)
-                    materials[i].read(buffer);
+            u32 matCount;
+            buffer.read(&matCount);
+            materials.resize(matCount);
+            for (uint i = 0; i < matCount; ++i)
+                materials[i].read(buffer);
 
-                buffer.read(&maxBonesCountPerVertex);
+            buffer.read(&maxBonesCountPerVertex);
                 
-                u32 nodeCount;
-                buffer.read(&nodeCount);
-                nodes.resize(nodeCount);
-                for (uint i = 0; i < nodeCount; ++i)
-                    nodes[i].read(buffer);
+            u32 nodeCount;
+            buffer.read(&nodeCount);
+            nodes.resize(nodeCount);
+            for (uint i = 0; i < nodeCount; ++i)
+                nodes[i].read(buffer);
 
-                buffer.read(&bonesIndices);
-                buffer.read(&bonesMatrices);
+            buffer.read(&bonesIndices);
+            buffer.read(&bonesMatrices);
 
-                buffer.read(&colliderTriangles);
+            buffer.read(&colliderTriangles);
 
-                return true;
-            }
+            return LoadStatus::Success;
         }        
 
-        return false;
+        return LoadStatus::CannotOpenFile;
     }
 
     //--------------------------------------------------------------------------------------

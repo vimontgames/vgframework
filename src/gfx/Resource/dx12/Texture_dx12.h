@@ -39,8 +39,10 @@ namespace vg::gfx::dx12
 		const D3D12_CPU_DESCRIPTOR_HANDLE &             getd3d12RTVHandle	                () const;
         const D3D12_CPU_DESCRIPTOR_HANDLE &             getd3d12DSVHandle	                () const;
 
-        void                                            setSubResourceData(core::uint _index, core::size_t _offset);
-        const SubResourceData &                         getSubResourceData(core::uint _index) const;
+        void                                            setSubResourceData                  (core::uint _index, core::size_t _offset);
+        const SubResourceData &                         getSubResourceData                  (core::uint _index) const;
+
+        static core::size_t                             getRequiredUploadSize               (const TextureDesc & _texDesc);
 
 	private:
         static const inline D3D12_CPU_DESCRIPTOR_HANDLE s_d3d12invalidSRVHandle = { (core::uint)-1 };

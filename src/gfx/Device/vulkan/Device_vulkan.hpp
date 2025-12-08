@@ -686,7 +686,7 @@ namespace vg::gfx::vulkan
 		m_vkPresentMode = VSyncToVkPresentModeKHR(m_VSync);
 		createSwapchain();
 
-		createUploadBuffer();
+		createStreamingUploadBuffer();
 
         for (uint i = 0; i < max_frame_latency; ++i)
             createFrameContext(i);
@@ -1518,7 +1518,7 @@ namespace vg::gfx::vulkan
 			m_currentFrameIndex = FrameIndex;
 
             // This will create additional upload buffers for command lists when needed
-            updateUploadBuffers();
+            updateCommandListsUploadBuffers();
 
             // This will create additional command list when needed (Must be done *AFTER* m_currentFrameIndex is assigned to get correct current frame index)
             updateFrameContext();

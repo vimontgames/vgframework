@@ -1,6 +1,55 @@
 namespace vg::gfx::dx12
 {
     //--------------------------------------------------------------------------------------
+    core::size_t Buffer::getRequiredUploadSize(const BufferDesc & _bufferDesc)
+    {
+        auto * device = gfx::Device::get();
+        auto * d3d12device = device->getd3d12Device();
+        D3D12MA::Allocator * allocator = device->getd3d12MemoryAllocator();
+
+        // Build resource desc and allocation desc as in constructor
+        D3D12_RESOURCE_DESC resourceDesc = getd3d12ResourceDesc(_bufferDesc);
+        D3D12MA::ALLOCATION_DESC allocDesc = getd3d12AllocationDesc(_bufferDesc);
+
+        // Determine resource state like in constructor
+        D3D12_RESOURCE_STATES resourceState;
+        const auto usage = _bufferDesc.resource.m_usage;
+        switch (usage)
+        {
+            case Usage::Upload:
+            case Usage::Default:
+                resourceState = D3D12_RESOURCE_STATE_GENERIC_READ;
+                break;
+            case Usage::Staging:
+                resourceState = D3D12_RESOURCE_STATE_COPY_DEST;
+                break;
+            default:
+                resourceState = D3D12_RESOURCE_STATE_COMMON;
+                break;
+        }
+
+        if (asBool(BindFlags::UnorderedAccess & _bufferDesc.resource.m_bindFlags))
+        {
+            resourceState = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
+            resourceDesc.Flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+        }
+
+        if (_bufferDesc.testBindFlags(BindFlags::RaytracingAccelerationStruct))
+            resourceState = D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE;
+
+        // Query allocation info without creating the resource
+        D3D12_RESOURCE_ALLOCATION_INFO allocInfo = d3d12device->GetResourceAllocationInfo(0, 1, &resourceDesc);
+
+        const UINT64 size = _bufferDesc.getSize(); // allocInfo.SizeInBytes;
+        const UINT64 alignment = allocInfo.Alignment ? allocInfo.Alignment : 1ULL;
+
+        auto * uploadBuffer = device->getStreamingUploadBuffer();
+        size_t alignedSize = uploadBuffer->getAlignedSize(size, alignment /*D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT*/);
+
+        return alignedSize;
+    }
+
+    //--------------------------------------------------------------------------------------
     Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
         base::Buffer(_bufDesc, _name, _initData)
     {
@@ -87,14 +136,22 @@ namespace vg::gfx::dx12
 
         if (nullptr != _initData)
         {
-            const size_t uploadBufferSize = _bufDesc.getSize();
+            // Query allocation info without creating the resource
+            D3D12_RESOURCE_ALLOCATION_INFO allocInfo = d3d12device->GetResourceAllocationInfo(0, 1, &resourceDesc);
+
+            const size_t uploadBufferSize = _bufDesc.getSize(); // allocInfo.SizeInBytes;
+            const UINT64 alignment = allocInfo.Alignment ? allocInfo.Alignment : 1ULL;
+
             const auto * scheduler = Kernel::getScheduler();
             VG_ASSERT(scheduler->IsMainThread() || scheduler->IsLoadingThread(), "Expected Main or Loading thread but current thread is \"%s\"", scheduler->GetCurrentThreadName().c_str());
-            auto * uploadBuffer = device->getUploadBuffer(0);
+            
+            //auto * uploadBuffer = device->getUploadBuffer(0);
+            // TODO: get from current thread instead?
+            auto * uploadBuffer = device->getStreamingUploadBuffer();
 
-            core::u8 * dst = uploadBuffer->map((gfx::Buffer *)this, uploadBufferSize, D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT);
+            core::u8 * dst = uploadBuffer->map((gfx::Buffer *)this, uploadBufferSize, alignment /*D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT*/);
             if (nullptr != dst)
-                memcpy(dst, _initData, uploadBufferSize);
+                memcpy(dst, _initData, _bufDesc.getSize());
 
             uploadBuffer->unmap((gfx::Buffer*)this, dst, uploadBufferSize);
         }

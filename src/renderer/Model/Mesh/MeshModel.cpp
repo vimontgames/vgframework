@@ -117,7 +117,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    template <VertexFormat F> Buffer * MeshModel::createVertexBufferFromImporterData(const MeshImporterData & _data)
+    template <VertexFormat F> LoadStatus MeshModel::createVertexBufferFromImporterData(const MeshImporterData & _data, Buffer *& _buffer)
     {
         auto * device = Device::get();
 
@@ -130,19 +130,18 @@ namespace vg::renderer
             verts[i].set(_data.vertices[i]);
 
         BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(VertexStorage<F>::type), vertexCount);
-        Buffer * vb = device->createBuffer(vbDesc, "VertexBuffer", verts.data());
 
-        return vb;
+        return device->createResourceBuffer(vbDesc, "VertexBuffer", verts.data(), _buffer);
     }
 
     //--------------------------------------------------------------------------------------
-    MeshModel * MeshModel::createFromImporterData(const MeshImporterData & _data)
+    LoadStatus MeshModel::createFromImporterData(const MeshImporterData & _data, IMeshModel *& _meshModel)
     {
         auto * device = Device::get();
 
         const uint indexCount = (uint)_data.indices.size();
         if (0 == indexCount)
-            return nullptr;
+            return LoadStatus::Success;
 
         const bool use32BitIndices = indexCount < 65536 ? false : true;
 
@@ -163,7 +162,13 @@ namespace vg::renderer
         }
 
         BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer | BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, use32BitIndices ? sizeof(u32) : sizeof(u16), indexCount);
-        Buffer * ib = device->createBuffer(ibDesc, "IndexBuffer", ibData);
+        Buffer * ib = nullptr;
+        LoadStatus status = device->createResourceBuffer(ibDesc, "IndexBuffer", ibData, ib);
+        if (status != LoadStatus::Success)
+        {
+            _meshModel = nullptr;
+            return status;
+        }
 
         Buffer * vb = nullptr;
 
@@ -192,11 +197,15 @@ namespace vg::renderer
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(vtxFmt);
 
             case VertexFormat::Default:
-                vb = createVertexBufferFromImporterData<VertexFormat::Default>(_data);
+                status = createVertexBufferFromImporterData<VertexFormat::Default>(_data, vb);
+                if (status != LoadStatus::Success)
+                    return status;
                 break;
 
             case VertexFormat::Skinning_4Bones:
-                vb = createVertexBufferFromImporterData<VertexFormat::Skinning_4Bones>(_data);
+                status = createVertexBufferFromImporterData<VertexFormat::Skinning_4Bones>(_data, vb);
+                if (status != LoadStatus::Success)
+                    return status;
                 break;
         }
 
@@ -236,7 +245,8 @@ namespace vg::renderer
 
         meshModel->setColliderTriangles(_data.colliderTriangles);
 
-        return meshModel;
+        _meshModel = meshModel;
+        return LoadStatus::Success;
     }
 
     //--------------------------------------------------------------------------------------

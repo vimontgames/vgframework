@@ -61,10 +61,10 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * TextureResource::Load(const string & _file)
+    LoadStatus TextureResource::Load(const core::string & _file, core::IObject *& _object)
     {
-        gfx::ITexture * texture = Engine::get()->GetRenderer()->LoadTexture(_file);
-        return texture;
+        VG_ASSERT(Kernel::getScheduler()->IsLoadingThread());
+        return Engine::get()->GetRenderer()->LoadTexture(_file, (gfx::ITexture*&)_object);
     }
 
     //--------------------------------------------------------------------------------------
