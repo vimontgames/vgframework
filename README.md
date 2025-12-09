@@ -5,6 +5,26 @@ Yet another work-in-progress game and graphic engine project.
 
 ![Demo](doc/img/breakable.gif)
 
+# Key features
+
+## Engine
+- Supports multiple operating systems, processor architectures, compilers, and graphics APIs.
+- Architected around DLLs communicating through pure abstract interfaces.
+- Hot reload and asynchronous resource streaming.
+- Jolt for physics.
+- SoLoud for audio.
+- Starting the editor takes a few seconds, as well as entering play mode.
+
+## Renderer
+- Framegraph-based multithreaded rendering using render jobs.
+- Fully bindless (the same materials can be used for Forward/Deferred/Raytracing).
+- Shaders use DXC for both DX12 and Vulkan.
+
+## Editor
+- ImGui-docking editor that supports editing multiple scenes and prefabs.
+- Property system providing automatic serialization, editing, and undo/redo.
+- Prefabs, nested prefabs, and prefab property overrides.
+
 # Table of contents
 [Build status](#Build-Status)\
 [Getting started](#Getting-started)\
@@ -63,13 +83,34 @@ VGFramework is using [Sharpmake](https://github.com/ubisoft/Sharpmake) to genera
 
 You can generate the solutions using `sharpmake\generates_projects_XXX.bat` where `XXX` is your development environment. 
 
-e.g. `sharpmake\generates_projects_Windows.bat` will generate `vgframework_vs2022.sln` for Windows in the root folder.
+e.g. `sharpmake\generates_projects_Windows.bat` will generate `vgframework_vs2022.sln` with all Windows targets.
 
-| Config                             | Platform | Format             | Files
-| ---------------------------------- | -------- | ------------------ | ----------------
-| **generate_projects_Windows.bat**  |  Windows | Visual Studio 2022 | *.sln; *.vxcproj; *.vcxproj.filters
-| **generate_projects_macOS.bat**    |  macOS   | XCode              | *.xcodeproj
-| **generate_projects_Linux.bat**    |  Linux   | Make               | Makefile
+| Config                                    | Description                   | Format             | Files
+| ----------------------------------------- | ----------------------------- | ------------------ | ------------------------------------
+| **generate_projects_Windows.bat**         |  All Windows targets          | Visual Studio 2022 | *.sln; *.vxcproj; *.vcxproj.filters
+| **generate_projects_Windows_msvc.bat**    |  MSVC Windows targets only    | Visual Studio 2022 | *.sln; *.vxcproj; *.vcxproj.filters
+| **generate_projects_Windows_arm64ec.bat** |  ARM64EC Windows targets only | Visual Studio 2022 | *.sln; *.vxcproj; *.vcxproj.filters
+| **generate_projects_macOS.bat**           |  All macOS targets            | XCode              | *.xcodeproj
+| **generate_projects_Linux.bat**           |  All Linux                    | Make               | makefile
+
+**generate_projects_Windows_msvc.bat** and **generate_projects_Windows_arm64ec.bat** have been added for convenience if you don't have the Clang compiler installed or you are working on an ARM Surface Pro device.
+
+You can customize the targets to build using the following switchs:
+
+| Name      | Type | Description		            
+| --------- | ---- | -----------------------
+| `arm64ec` | bool |  Generate ARM64EC platform targets       
+| `win64`   | bool |  Generate Win64 platform targets   
+| `msvc`    | bool |  Generate MSVC compiler targets       
+| `clang`   | bool |  Generate Clang compiler targets  
+| `dx12`    | bool |  Generate DX12 API targets       
+| `vulkan`  | bool |  Generate Vulkan API targets  
+
+e.g.:
+```bash
+.\bin\windows\Sharpmake.Application.exe "/sources('main.sharpmake.cs') /generateDebugSolution /debugSolutionPath('debug/Windows') /win64(true) /arm64ec(false) /clang(false) /msvc(true) /dx12(true) /vulkan(false)"
+```
+will generate only the Win64 targets using the MSVC compiler and the DirectX12 API.
 
 ## IDE
 Recommended IDE is [VS Studio 2022 Community](https://visualstudio.microsoft.com/fr/vs/community/) and project files currently provided are compatible with this version.
@@ -149,24 +190,28 @@ Set your working directory to **$(SolutionDir)** so that the program can find da
 | `ESCAPE`            | Exit Play mode and go back to Editor mode
 | `DELETE`            | Delete selected objects
 | `Ctrl+Mouse Wheel`  | Toggle Translation/Rotation/Scale gizmo
-| `Ctrl+D`            | Duplicate selected objects ✨
+| `Ctrl+D`            | Duplicate selected objects. 
+| `Shift+Translate`   | Keep **shift** pressed while moving objects to duplicate objects.
 | `Ctrl+S`            | Save
 | `Ctrl+U`            | Save Prefab & Update
 | `Ctrl+Shift-Q`      | Quit application
-
-✨ You can keep **shift** pressed while moving objects to duplicate them.
 
 
 ## SDKs
 
 The SDKs are not included with the sources. You need to install them.
 
-| Name <img width=256/>			                                                    | Version <img width=100/>       
-| --------------------------------------------------------------------------------- | -------------  
-| [Win10 SDK](https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/) | 10.0.26100.0
-| [Vulkan SDK](https://vulkan.lunarg.com/sdk/home) ✨                               | 1.3.290.0 
+| Name <img width=256/>			                                                     | Version <img width=100/>       
+| ---------------------------------------------------------------------------------- | -------------  
+| [Win10 SDK](https://developer.microsoft.com/fr-fr/windows/downloads/sdk-archive/)  | 10.0.26100.0
+| [.Net](https://dotnet.microsoft.com/fr-fr/download/dotnet/6.0)                     | 6.0 
+| [Vulkan SDK](https://vulkan.lunarg.com/sdk/home)                                   | 1.3.290.0 
 
-✨ Only required to build Vulkan version. **$(VULKAN_SDK)** should point the Vulkan SDK installation dir (e.g., `C:\SDK\Vulkan\1.3.290.0`).
+Win10 SDK and .Net 6.0 Runtime can be installed directly from Visual Studio in `Tools > Get Tools and Features ...`
+
+.Net 6.0 Runtime is only required for project generation using Sharpmake.
+
+Vulkan SDK is only required to build Vulkan version. **$(VULKAN_SDK)** should point the Vulkan SDK installation dir (e.g., `C:\SDK\Vulkan\1.3.290.0`).
 
 # Extern libs
 

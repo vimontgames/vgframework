@@ -1,6 +1,7 @@
 using Sharpmake;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using static vg.Project;
 
 namespace vg
@@ -72,25 +73,51 @@ namespace vg
         {
             var targets = new List<Target>();
 
-            GraphicsAPI gfxAPIs;
+            GraphicsAPI gfxAPIs = 0;
 
             if (useGfxAPIs)
-                gfxAPIs = GraphicsAPI.Vulkan | GraphicsAPI.DX12;
+            {
+                if (Globals.dx12)
+                    gfxAPIs |= GraphicsAPI.DX12;
+
+                if (Globals.vulkan)
+                    gfxAPIs |= GraphicsAPI.Vulkan;
+
+                if (gfxAPIs == 0)
+                    gfxAPIs = GraphicsAPI.None;
+            }
             else
+            {
                 gfxAPIs = GraphicsAPI.None;
+            }
 
+            Compiler win64Compilers = 0;
 
-            targets.Add(new Target(Platform.win64 , DevEnv.vs2022, Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final)
+            if (Globals.msvc)
+                win64Compilers |= Compiler.MSVC;
+
+            if (Globals.clang)
+                win64Compilers |= Compiler.ClangCL;
+            else
+                win64Compilers &= ~Compiler.ClangCL;
+
+            if (Globals.win64)
             {
-                Compiler = Compiler.MSVC| Compiler.ClangCL,
-                GfxAPI = gfxAPIs
-            });
+                targets.Add(new Target(Platform.win64, DevEnv.vs2022, Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final)
+                {
+                    Compiler = win64Compilers,
+                    GfxAPI = gfxAPIs
+                });
+            }
 
-            targets.Add(new Target(Platform.arm64ec, DevEnv.vs2022, Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final)
+            if (Globals.arm64ec)
             {
-                Compiler = Compiler.MSVC ,
-                GfxAPI = gfxAPIs
-            });
+                targets.Add(new Target(Platform.arm64ec, DevEnv.vs2022, Optimization.Debug | Optimization.Development | Optimization.Release | Optimization.Final)
+                {
+                    Compiler = Compiler.MSVC,
+                    GfxAPI = gfxAPIs
+                });
+            }
 
             return targets;
         }

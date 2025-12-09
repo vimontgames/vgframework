@@ -15,7 +15,7 @@ namespace vg
         public void ConfigureAll(Configuration conf, Target target)
         {
             conf.SolutionFileName = $"{Name}_{target.DevEnv}";
-            conf.SolutionPath = Project.GetSolutionDirFromSharpmakeCsPath(SharpmakeCsPath);
+            conf.SolutionPath = Project.GetSolutionDirFromSharpmakeCsPath(SharpmakeCsPath); 
 
             string platformName = Util.GetSimplePlatformString(target.GetPlatform());
 

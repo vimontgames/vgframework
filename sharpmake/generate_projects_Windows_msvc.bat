@@ -1,0 +1,1 @@
+.\bin\windows\Sharpmake.Application.exe "/sources('main.sharpmake.cs') /generateDebugSolution /debugSolutionPath('debug/Windows') /win64(true) /arm64ec(true) /clang(false) /msvc(true) /dx12(true) /vulkan(true)"
