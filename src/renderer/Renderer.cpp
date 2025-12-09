@@ -744,6 +744,7 @@ namespace vg::renderer
                 if (hdrOutput)
                     m_frameGraph.addUserPass(mainViewRenderPassContext, m_hdrOutputPass, "HDROutput");
 
+                m_frameGraph.resize();
                 m_frameGraph.setup();
                 m_frameGraph.build();
                 m_frameGraph.render();

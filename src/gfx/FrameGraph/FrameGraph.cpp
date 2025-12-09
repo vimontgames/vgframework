@@ -1560,16 +1560,16 @@ namespace vg::gfx
     //--------------------------------------------------------------------------------------
     void FrameGraph::setResized()
     {
-        m_resized = true;
+        m_resized.store(true);
     }
 
     //--------------------------------------------------------------------------------------
     void FrameGraph::resize()
     {
-        if (m_resized)
-        {
+        bool expected = true;
+        bool desired = false;
+
+        if (m_resized.compare_exchange_strong(expected, desired))
             destroyTransientResources();
-            m_resized = false;
-        }
     }
 }

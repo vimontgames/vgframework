@@ -135,7 +135,7 @@ namespace vg::gfx
 
 		FrameGraphResourceID            m_outputResID;
         FrameGraphTextureResource *     m_outputRes = nullptr;
-		bool							m_resized = false;
+		core::atomic<bool>  			m_resized = false;
 
         core::vector<gfx::RenderJob *>  m_renderJobs;
 	};
