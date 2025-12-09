@@ -35,6 +35,7 @@ namespace vg::renderer
     class DebugDraw;
     class MaterialManager;
     class ParticleManager;
+    class RendererOptions;
 
     struct SharedWorldCullingJobOutput;
     struct SharedViewCullingJobOutput;
@@ -181,6 +182,8 @@ namespace vg::renderer
 	private:
         bool                                    m_editor                        = false;
 		gfx::Device &		                    m_device;
+        RendererOptions *                       m_rendererOptionsMainThread     = nullptr;
+        RendererOptions *                       m_rendererOptionsSafeCopy       = nullptr;
         gfx::FrameGraph &                       m_frameGraph;
         gfx::Texture *                          m_hdrOutput                     = nullptr;
         ImGuiAdapter *                          m_imgui                         = nullptr;

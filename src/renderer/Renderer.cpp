@@ -240,7 +240,9 @@ namespace vg::renderer
 
             RayTracingManager * rtManager = new RayTracingManager();
 
-            RendererOptions * options = new RendererOptions("Renderer Options", this);
+            m_rendererOptionsMainThread = new RendererOptions("Renderer Options", this);
+            m_rendererOptionsSafeCopy = new RendererOptions("Renderer Options (Safe copy)", this, true);
+            m_rendererOptionsSafeCopy->sync(*m_rendererOptionsMainThread);
 
             m_materialManager = new MaterialManager();
             m_particleManager = new ParticleManager();
@@ -312,8 +314,8 @@ namespace vg::renderer
         deinitDefaultMaterials();
         deinitDefaultTextures();
 
-        RendererOptions * options = RendererOptions::get();
-        VG_SAFE_DELETE(options);
+        VG_SAFE_DELETE(m_rendererOptionsSafeCopy);
+        VG_SAFE_DELETE(m_rendererOptionsMainThread);
 
         UIManager * uiManager = (UIManager*)GetUIManager();
         VG_SAFE_RELEASE(uiManager);
@@ -367,13 +369,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void Renderer::CreateResources()
     {
-        RendererOptions::get()->createResources();
+        ((RendererOptions*)GetOptions())->createResources();
     }
 
     //--------------------------------------------------------------------------------------
     void Renderer::ReleaseResources()
     {
-        RendererOptions::get()->releaseResources();
+        ((RendererOptions *)GetOptions())->releaseResources();
     }
 
     //--------------------------------------------------------------------------------------
@@ -584,11 +586,12 @@ namespace vg::renderer
 
         VG_PROFILE_CPU("Renderer");
 
-        RendererOptions * options = RendererOptions::get(false);
+        RendererOptions * options = m_rendererOptionsMainThread;
         if (!options)
             return;
 
-        options->sync();
+        // Copy engine values for render
+        m_rendererOptionsSafeCopy->sync(*m_rendererOptionsMainThread);
         
         options->Update();
 
@@ -918,13 +921,17 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     const renderer::IRendererOptions * Renderer::GetOptions() const
     {
-        return RendererOptions::get();
+        if (auto * scheduler = Scheduler::get(false))
+            VG_ASSERT(scheduler->IsMainThread());
+        return m_rendererOptionsMainThread;
     }
 
     //--------------------------------------------------------------------------------------
     renderer::IRendererOptions * Renderer::GetOptions()
     {
-        return RendererOptions::get();
+        if (auto * scheduler = Scheduler::get(false))
+            VG_ASSERT(scheduler->IsMainThread());
+        return m_rendererOptionsMainThread;
     }
 
     //--------------------------------------------------------------------------------------

@@ -18,28 +18,6 @@ using namespace vg::core;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    void RendererOptionsData::sync(const RendererOptionsData & _other)
-    {
-        m_toolMode = _other.m_toolMode;
-
-        if (m_rayTracing != _other.m_rayTracing)
-        {
-            if (_other.m_rayTracing)
-            {
-                m_rayTracing = true;
-                RayTracingManager::get()->onEnableRayTracing();
-            }
-            else
-            {
-                m_rayTracing = false;
-                RayTracingManager::get()->onDisableRayTracing();
-            }
-        }
-
-        m_rayTracingTLASMode = _other.m_rayTracingTLASMode;
-    }
-
-    //--------------------------------------------------------------------------------------
     VG_REGISTER_OBJECT_CLASS(RendererOptions, "Renderer Options");
 
     #define setPropertyHiddenCallbackQualityEx(className, propertyName, func)                   setPropertyHiddenCallback(className, propertyName[Quality::VeryLow],  func##VeryLow);   \
@@ -144,8 +122,8 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerProperty(RendererOptions, m_engine.m_toolMode, "Toolmode");
-        setPropertyDescription(RendererOptions, m_engine.m_toolMode, "Enable Toolmode in Game views");
+        registerProperty(RendererOptions, m_toolMode, "Toolmode");
+        setPropertyDescription(RendererOptions, m_toolMode, "Enable Toolmode in Game views");
 
         //registerPropertyEnumEx(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug", PropertyFlags::AlphabeticalOrder);
         registerPropertyEnum(RendererOptions, DisplayMode, m_debugDisplayMode, "Debug");
@@ -208,10 +186,10 @@ namespace vg::renderer
 
             registerPropertyGroupBegin(RendererOptions, "Raytracing");
             {
-                registerProperty(RendererOptions, m_engine.m_rayTracing, "Enable");
-                setPropertyDescription(RendererOptions, m_engine.m_rayTracing, "Enable Raytracing");
+                registerProperty(RendererOptions, m_rayTracing, "Enable");
+                setPropertyDescription(RendererOptions, m_rayTracing, "Enable Raytracing");
 
-                registerPropertyEnum(RendererOptions, TLASMode, m_engine.m_rayTracingTLASMode, "TLAS");
+                registerPropertyEnum(RendererOptions, TLASMode, m_rayTracingTLASMode, "TLAS");
             }
             registerPropertyGroupEnd(RendererOptions);
 
@@ -303,33 +281,99 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    RendererOptions::RendererOptions(const core::string & _name, core::IObject * _parent) :
+    RendererOptions::RendererOptions(const core::string & _name, core::IObject * _parent, bool _safeCopy) :
         super(_name, _parent),
         m_renderPassFlags(RenderPassFlags::ZPrepass | RenderPassFlags::Opaque | RenderPassFlags::Transparency)
     {
-        SetFile("Renderer.xml");
-
-        for (uint i = 0; i < enumCount<Quality>(); ++i)
+        if (_safeCopy)
         {
-            m_msaa[i] = gfx::MSAA::None;
-            m_shadows[i] = true;
-            m_shadowsResolution[i] = ShadowDefaultResolution::ShadowDefaultResolution_1024;
-            m_depthOfField[i] = DepthOfFieldMode::Default;
+            s_rendererOptionsSafeCopy = this;
+        }
+        else
+        {
+            SetFile("Renderer.xml");
+
+            for (uint i = 0; i < enumCount<Quality>(); ++i)
+            {
+                m_msaa[i] = gfx::MSAA::None;
+                m_shadows[i] = true;
+                m_shadowsResolution[i] = ShadowDefaultResolution::ShadowDefaultResolution_1024;
+                m_depthOfField[i] = DepthOfFieldMode::Default;
+            }
+
+            // Default shadow quality
+            m_shadowsResolution[Quality::Low] = ShadowDefaultResolution::ShadowDefaultResolution_512;
+            m_shadows[Quality::Low] = false; // Disable shadows for the less detailed quality level
+
+            m_shadowsResolution[Quality::Low] = ShadowDefaultResolution::ShadowDefaultResolution_1024;
+            m_shadowsResolution[Quality::Medium] = ShadowDefaultResolution::ShadowDefaultResolution_2048;
+            m_shadowsResolution[Quality::High] = ShadowDefaultResolution::ShadowDefaultResolution_4096;
+            m_shadowsResolution[Quality::VeryHigh] = ShadowDefaultResolution::ShadowDefaultResolution_4096; // Will ultimately use RT anyway
+
+            // Disable DOF for lower quality level
+            m_depthOfField[Quality::Low] = DepthOfFieldMode::None;
+
+            m_customQualityLevel = autodetectQualityLevel();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void RendererOptions::sync(const RendererOptions & _other)
+    {
+        m_toolMode = _other.m_toolMode;
+        m_rayTracingTLASMode = _other.m_rayTracingTLASMode;
+        m_useCustomQualityLevel = _other.m_useCustomQualityLevel;
+        m_customQualityLevel = _other.m_customQualityLevel;
+        m_autodetectedQualityLevel = _other.m_autodetectedQualityLevel;
+        m_previousQualityLevel = _other.m_previousQualityLevel;
+        m_defaultEnvironmentColor = _other.m_defaultEnvironmentColor;
+        m_useDefaultEnvironmentCubemap = _other.m_useDefaultEnvironmentCubemap;
+        m_defaultEnvironmentCubemap = _other.m_defaultEnvironmentCubemap;
+        m_defaultIrradianceIntensity = _other.m_defaultIrradianceIntensity;
+        m_defaultSpecularReflectionIntensity = _other.m_defaultSpecularReflectionIntensity;
+        m_aabb = _other.m_aabb;
+        m_wireframe = _other.m_wireframe;
+        m_debugUI = _other.m_debugUI;
+        m_particles = _other.m_particles;
+        m_postProcess = _other.m_postProcess;
+        m_HDRmode = _other.m_HDRmode;
+        m_aaPostProcess = _other.m_aaPostProcess;
+        m_VSync = _other.m_VSync;
+        m_lightingMode = _other.m_lightingMode;
+        m_pbrFlags = _other.m_pbrFlags;
+        m_pbrBakedBRDFTexture = _other.m_pbrBakedBRDFTexture;
+        m_debugDisplayMode = _other.m_debugDisplayMode;
+        m_displayFlags = _other.m_displayFlags;
+        m_renderPassFlags = _other.m_renderPassFlags;
+        m_renderJobs = _other.m_renderJobs;
+        m_forceRenderJobsCount = _other.m_forceRenderJobsCount;
+        m_renderJobsCount = _other.m_renderJobsCount;
+        m_renderJobsPolicy = _other.m_renderJobsPolicy;
+        m_renderJobsTotalBufferSizeInMB = _other.m_renderJobsTotalBufferSizeInMB;
+        m_renderJobsWorkerMinBufferSizeInMB = _other.m_renderJobsWorkerMinBufferSizeInMB;
+        m_deviceCaps = _other.m_deviceCaps;
+
+        for (uint i = 0; i < core::enumCount<Quality>(); ++i)
+        {
+            m_depthOfField[i] = _other.m_depthOfField[i];
+            m_msaa[i] = _other.m_msaa[i];
+            m_shadows[i] = _other.m_shadows[i];
+            m_shadowsResolution[i] = _other.m_shadowsResolution[i];
         }
 
-        // Default shadow quality
-        m_shadowsResolution[Quality::Low] = ShadowDefaultResolution::ShadowDefaultResolution_512;
-        m_shadows[Quality::Low] = false; // Disable shadows for the less detailed quality level
-
-        m_shadowsResolution[Quality::Low] = ShadowDefaultResolution::ShadowDefaultResolution_1024;
-        m_shadowsResolution[Quality::Medium] = ShadowDefaultResolution::ShadowDefaultResolution_2048;
-        m_shadowsResolution[Quality::High] = ShadowDefaultResolution::ShadowDefaultResolution_4096;
-        m_shadowsResolution[Quality::VeryHigh] = ShadowDefaultResolution::ShadowDefaultResolution_4096; // Will ultimately use RT anyway
-
-        // Disable DOF for lower quality level
-        m_depthOfField[Quality::Low] = DepthOfFieldMode::None;
-
-        m_customQualityLevel = autodetectQualityLevel();
+        if (_other.m_rayTracing != m_rayTracing)
+        {
+            if (_other.m_rayTracing)
+            {
+                m_rayTracing = true;
+                RayTracingManager::get()->onEnableRayTracing();
+            }
+            else
+            {
+                m_rayTracing = false;
+                RayTracingManager::get()->onDisableRayTracing();
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------

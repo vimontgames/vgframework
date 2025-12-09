@@ -4,7 +4,7 @@
         <Property type="Uint32" name="m_uid" value="4100248654"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-        <Property type="Bool" name="m_engine.m_toolMode" value="false"/>
+        <Property type="Bool" name="m_toolMode" value="true"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
         <Property type="Bool" name="m_useCustomQualityLevel" value="false"/>
         <Property type="EnumI8" name="m_customQualityLevel" value="High"/>
@@ -39,8 +39,8 @@
                 <Property type="String" name="m_resourcePath" value="data/Engine/BRDF/CookTorrance.png"/>
             </Object>
         </Property>
-        <Property type="Bool" name="m_engine.m_rayTracing" value="false"/>
-        <Property type="EnumU8" name="m_engine.m_rayTracingTLASMode" value="PerView"/>
+        <Property type="Bool" name="m_rayTracing" value="false"/>
+        <Property type="EnumU8" name="m_rayTracingTLASMode" value="PerWorld"/>
         <Property type="Bool" name="m_shadows[Quality::VeryLow]" value="false"/>
         <Property type="Bool" name="m_shadows[Quality::Low]" value="true"/>
         <Property type="Bool" name="m_shadows[Quality::Medium]" value="true"/>
