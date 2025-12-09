@@ -1,3 +1,5 @@
+#pragma once
+
 #include "core/Precomp.h"
 #include "core/Kernel.h"
 #include "core/IInput.h"
