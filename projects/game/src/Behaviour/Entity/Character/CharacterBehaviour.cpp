@@ -75,6 +75,18 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
 }
 
 //--------------------------------------------------------------------------------------
+void CharacterBehaviour::show(bool visible)
+{
+    // Enable visual
+    if (auto * mesh = GetGameObject()->GetComponentByType("MeshComponent"))
+        mesh->Enable(visible);
+
+    // Enable physics body
+    if (auto * body = GetGameObject()->GetComponentByType("PhysicsBodyComponent"))
+        body->Enable(visible);
+}
+
+//--------------------------------------------------------------------------------------
 void CharacterBehaviour::OnEnable()
 {
     super::OnEnable();

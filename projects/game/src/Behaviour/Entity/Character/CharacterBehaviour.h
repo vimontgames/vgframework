@@ -38,6 +38,8 @@ public:
     VG_INLINE FightState    getFightState   () const;
     VG_INLINE float         getHealth       () const;
 
+    void                    show            (bool visible);
+
 protected:
     void                    initAnimations  ();
     void                    initSounds      ();

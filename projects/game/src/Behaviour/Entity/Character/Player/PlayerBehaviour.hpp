@@ -64,6 +64,9 @@ void PlayerBehaviour::OnPlay()
     const auto global = GetGameObject()->GetGlobalMatrix();
     m_currentRotation = -atan2(global[1].x, global[0].x) * 180.0f / PI;
 
+    // Hide character
+    show(false);
+
     // Hide UI until the player is active
     if (auto * uiGO = m_UI.get<IGameObject>())
         uiGO->SetInstanceFlags(InstanceFlags::Enabled, false);
@@ -74,6 +77,7 @@ void PlayerBehaviour::OnStop()
 {
     m_rightHandItem = nullptr;
     super::OnStop();
+    show(true);
 }
 
 //--------------------------------------------------------------------------------------
@@ -183,6 +187,8 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     
                     if (auto * uiGO = m_UI.get<IGameObject>())
                     {
+                        show(true);
+
                         uiGO->SetInstanceFlags(InstanceFlags::Enabled, true);
                         if (auto * uiCanvasComponent = uiGO->GetComponentInChildrenT<IUICanvasComponent>())
                             uiCanvasComponent->SetViewIndex(m_viewIndex);
