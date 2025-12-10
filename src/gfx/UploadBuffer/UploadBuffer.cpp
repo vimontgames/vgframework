@@ -87,7 +87,7 @@ namespace vg::gfx
         for (uint i = 0; i < count; ++i)
         {
             const Range & range = _ranges[i];
-            if (!(_alloc.end <= range.begin || range.end <= _alloc.begin))
+            if (_alloc.begin < range.end && range.begin < _alloc.end)
                 return i;
         }
         return -1;
