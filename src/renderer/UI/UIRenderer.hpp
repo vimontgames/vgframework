@@ -199,7 +199,7 @@ namespace vg::renderer
             }                
 
             float2 winOffset = ImVec2ToFloat2(GImGui->CurrentWindow->Pos) + windowOffset;
-            float2 canvasOffset = canvas.m_matrix[3].xy + float2(1, 1);
+            float2 canvasOffset = (float2)0.0f;
 
             // Align canvas
             if (canvas.m_canvasType == CanvasType::CanvasType_3D)
@@ -208,6 +208,8 @@ namespace vg::renderer
             }
             else
             {
+                canvasOffset.xy += canvas.m_matrix[3].xy;
+
                 switch (canvas.m_alignX)
                 {
                     default:

@@ -387,8 +387,8 @@ namespace vg::editor
 
             // Compute Window content size
             auto * curWin = ImGui::GetCurrentWindow();
-            const ImVec2 vMin = curWin->InnerRect.Min;
-            const ImVec2 vMax = curWin->InnerRect.Max;
+            const ImVec2 vMin = curWin->InnerRect.Min + ImVec2(1, 1);
+            const ImVec2 vMax = curWin->InnerRect.Max - ImVec2(1,1);
             const ImVec2 windowRegionMin = curWin->InnerRect.Min - curWin->Pos;
             const ImVec2 windowRegionMax = curWin->InnerRect.Max - curWin->Pos;
 
