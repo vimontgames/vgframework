@@ -55,7 +55,7 @@ namespace vg::renderer
 
         FrameGraphTextureResourceDesc colorDesc = {};
                                       colorDesc.type = texType;
-                                      colorDesc.format = renderer->getColorBufferFormat(), // PixelFormat::R16G16B16A16_float;
+                                      colorDesc.format = renderer->getLightingBufferFormat(), // PixelFormat::R16G16B16A16_float;
                                       colorDesc.width = size.x;
                                       colorDesc.height = size.y;
                                       colorDesc.clearColor = clearColor;
