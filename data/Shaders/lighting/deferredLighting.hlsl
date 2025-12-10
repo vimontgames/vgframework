@@ -6,6 +6,7 @@
 #include "system/msaa.hlsli"
 #include "system/environment.hlsli"
 #include "system/depthstencil.hlsli"
+#include "lighting/GBuffer.hlsli"
 
 struct DepthStencilSample
 {
@@ -25,28 +26,12 @@ struct DepthStencilSample
     }
 };
 
-struct GBufferSample
+GBufferSample LoadGBufferSample(int2 _coords, uint _sampleIndex)
 {
-    float4 albedo;
-    float4 normal;
-    float4 pbr; 
-    float4 emissive;
-
-    void Load(int2 _coords, uint _sampleIndex)
-    {
-        #if SAMPLE_COUNT > 1
-        albedo = getTexture2DMS(deferredLightingConstants.getAlbedoGBuffer()).Load(_coords, _sampleIndex);
-        normal = getTexture2DMS(deferredLightingConstants.getNormalGBuffer()).Load(_coords, _sampleIndex);
-        pbr = getTexture2DMS(deferredLightingConstants.getPBRGBuffer()).Load(_coords, _sampleIndex); 
-        emissive = getTexture2DMS(deferredLightingConstants.getEmissiveGBuffer()).Load(_coords, _sampleIndex); 
-        #else
-        albedo = getTexture2D(deferredLightingConstants.getAlbedoGBuffer()).Load(int3(_coords,0));
-        normal = getTexture2D(deferredLightingConstants.getNormalGBuffer()).Load(int3(_coords,0));
-        pbr = getTexture2D(deferredLightingConstants.getPBRGBuffer()).Load(int3(_coords,0));    
-        emissive = getTexture2D(deferredLightingConstants.getEmissiveGBuffer()).Load(int3(_coords,0));  
-        #endif
-    }
-};
+    GBufferSample sample;
+    sample.Load(_coords, deferredLightingConstants.getAlbedoGBuffer(), deferredLightingConstants.getNormalGBuffer(), deferredLightingConstants.getPBRGBuffer(), deferredLightingConstants.getEmissiveGBuffer(), _sampleIndex);
+    return sample;
+}
 
 float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, float2 _uv, ViewConstants _viewConstants)
 {
@@ -58,7 +43,7 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
     float3 worldPos = _viewConstants.getWorldPos(_uv, _depthStencil.depth);
     float3 camPos = _viewConstants.getCameraPos();
                         
-    LightingResult lighting = computeDirectLighting(_viewConstants, camPos, worldPos, _gbuffer.albedo.xyz, _gbuffer.normal.xyz, _gbuffer.pbr);
+    LightingResult lighting = computeLighting(_viewConstants, camPos, worldPos, _gbuffer.albedo.xyz, _gbuffer.normal.xyz, _gbuffer.pbr);
             
     float3 color = applyLighting(_gbuffer.albedo.rgb, lighting, _viewConstants.getDisplayMode()) + _gbuffer.emissive.rgb;
 
@@ -107,35 +92,19 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
         case DisplayMode::Deferred_Albedo:
             color = _gbuffer.albedo.rgb;
             break;
-
-        case DisplayMode::Deferred_AlbedoAlpha:
-            color = _gbuffer.albedo.aaa;
-            break;
                         
         case DisplayMode::Deferred_Normal:
             color = _gbuffer.normal.rgb*0.5f+0.5f;
             break;
-            
-        case DisplayMode::Deferred_NormalAlpha:
-            color = _gbuffer.normal.aaa;
-            break;
-            
+                        
         case DisplayMode::Deferred_PBR:
             color = _gbuffer.pbr.rgb;
             break;
-                        
-        case DisplayMode::Deferred_PBRAlpha:
-            color = _gbuffer.pbr.aaa;
-            break;
-    
+                            
         case DisplayMode::Deferred_Emissive:
             color = _gbuffer.emissive.rgb;
             break;
                         
-        case DisplayMode::Deferred_EmissiveAlpha:
-            color = _gbuffer.emissive.aaa;
-            break;
-
         case DisplayMode::Deferred_MSAAEdges:
             // Handled in CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
             break;
@@ -175,7 +144,7 @@ void CS_DeferredLighting(int2 dispatchThreadID : SV_DispatchThreadID)
         GBufferSample gbufferSamples[SAMPLE_COUNT];
         [unroll]
         for (uint i = 0; i < SAMPLE_COUNT; ++i)
-            gbufferSamples[i].Load(coords, i);
+            gbufferSamples[i] = LoadGBufferSample(coords, i);
 
         // Deferred shading result
         float3 color[SAMPLE_COUNT];

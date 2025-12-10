@@ -157,7 +157,7 @@ float4 getRaytracedSpecular(RaytracingAccelerationStructure _tlas, float3 _world
 }
 
 //--------------------------------------------------------------------------------------
-LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePos, float3 _worldPos, inout float3 _albedo, float3 _worldNormal, float4 _pbr)
+LightingResult computeLighting(ViewConstants _viewConstants, float3 _eyePos, float3 _worldPos, inout float3 _albedo, float3 _worldNormal, float3 _pbr)
 {
     LightingResult output = (LightingResult)0;
     
@@ -169,7 +169,7 @@ LightingResult computeDirectLighting(ViewConstants _viewConstants, float3 _eyePo
 	float3 Lo = normalize(_eyePos - _worldPos.xyz);
 
     // Angle between surface normal and outgoing light direction.
-	float cosLo = max(0.0, dot(_worldNormal, Lo));
+	float cosLo = saturate(max(0.0, dot(_worldNormal, Lo)));
 
     // Specular reflection vector.
 	float3 Lr = 2.0 * cosLo * _worldNormal - Lo;

@@ -26,6 +26,7 @@ namespace vg::renderer::base
 {
     //--------------------------------------------------------------------------------------
     // Returns the pixel format used for ImGui rendering
+    // It should always be the same format used in HDROutput pass!
     //--------------------------------------------------------------------------------------
     gfx::PixelFormat ImGuiAdapter::getOutputPixelFormat() const
     {
@@ -36,7 +37,7 @@ namespace vg::renderer::base
         auto * renderer = Renderer::get();
 
         if (HDR::None != renderer->GetHDR())
-            return hdrOutputFormat;
+           return hdrOutputFormat;
         else
             return backbufferFormat;
     }

@@ -37,13 +37,9 @@ vg_enum_class_global(DisplayMode, u32,
     Environment_SpecularReflectionCubemap, 
 
     Deferred_Albedo,
-    Deferred_AlbedoAlpha,
     Deferred_Normal,
-    Deferred_NormalAlpha,
     Deferred_PBR,
-    Deferred_PBRAlpha,
     Deferred_Emissive,
-    Deferred_EmissiveAlpha,
     Deferred_MSAAEdges,
 
     Lighting_Diffuse,

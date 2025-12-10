@@ -4,7 +4,7 @@ using namespace vg::core;
 
 namespace vg::renderer
 {
-    static const u32 TextureImporterDataVersion = 5;
+    static const u32 TextureImporterDataVersion = 6;
 
     //--------------------------------------------------------------------------------------
     LoadStatus TextureImporterData::load(const core::string & _file)

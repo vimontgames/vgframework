@@ -24,6 +24,9 @@ namespace vg::gfx::vulkan
             case PixelFormat::R16G16B16A16_unorm:
                 return VK_FORMAT_R16G16B16A16_UNORM;
 
+            case PixelFormat::R11G11B10_float:
+                return VK_FORMAT_B10G11R11_UFLOAT_PACK32;
+
             case PixelFormat::R10G10B10A2_unorm:
                 return VK_FORMAT_A2B10G10R10_UNORM_PACK32;
 
@@ -73,6 +76,9 @@ namespace vg::gfx::vulkan
 
             case VK_FORMAT_A2B10G10R10_UNORM_PACK32:
                 return PixelFormat::R10G10B10A2_unorm;
+
+            case VK_FORMAT_B10G11R11_UFLOAT_PACK32:
+                return PixelFormat::R11G11B10_float;
 
             case VK_FORMAT_R16G16B16A16_SFLOAT:
                 return PixelFormat::R16G16B16A16_float;

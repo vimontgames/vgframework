@@ -97,6 +97,7 @@ namespace vg::gfx
                     return -1;
                 case PixelFormat::R8G8B8A8_unorm:
                 case PixelFormat::R8G8B8A8_unorm_sRGB:
+                case PixelFormat::R11G11B10_float:
                     return sizeof(u8) * 4;
 
                 case PixelFormat::R16G16B16A16_unorm:

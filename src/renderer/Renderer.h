@@ -156,6 +156,9 @@ namespace vg::renderer
     public: // internal
         gfx::Texture *                          getBackbuffer                   () const;
 
+        gfx::PixelFormat                        getLightingBufferFormat            () const;
+        gfx::PixelFormat                        getGBufferFormat                () const;
+
         VG_INLINE ImGuiAdapter *                getImGuiAdapter                 () const;
         VG_INLINE SharedWorldCullingJobOutput * getSharedWorldCullingJobOutput  () const;
         VG_INLINE SharedViewCullingJobOutput *  getSharedCullingJobOutput       () const;

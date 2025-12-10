@@ -42,12 +42,15 @@ namespace vg::renderer
         const auto msaa = options->GetMSAA();
         const TextureType texType = (MSAA::None == msaa) ? TextureType::Texture2D : TextureType::Texture2DMS;
 
+        auto * device = gfx::Device::get();
+        PixelFormat fmt = Renderer::get()->getGBufferFormat();
+
         // Albedo
         {
             FrameGraphTextureResourceDesc albedoGBufferDesc;
                                           albedoGBufferDesc.type = texType;
                                           albedoGBufferDesc.msaa = msaa;
-                                          albedoGBufferDesc.format = PixelFormat::R16G16B16A16_float;
+                                          albedoGBufferDesc.format = fmt;
                                           albedoGBufferDesc.width = size.x;
                                           albedoGBufferDesc.height = size.y;
                                           albedoGBufferDesc.clearColor = defaultOptimizedClearColor;
@@ -63,7 +66,7 @@ namespace vg::renderer
             FrameGraphTextureResourceDesc normalGBufferDesc;
                                           normalGBufferDesc.type = texType;
                                           normalGBufferDesc.msaa = msaa;
-                                          normalGBufferDesc.format = PixelFormat::R16G16B16A16_float;
+                                          normalGBufferDesc.format = fmt;
                                           normalGBufferDesc.width = size.x;
                                           normalGBufferDesc.height = size.y;
                                           normalGBufferDesc.clearColor = defaultOptimizedClearColor;
@@ -79,7 +82,7 @@ namespace vg::renderer
             FrameGraphTextureResourceDesc pbrGBufferDesc;
                                           pbrGBufferDesc.type = texType;
                                           pbrGBufferDesc.msaa = msaa;
-                                          pbrGBufferDesc.format = PixelFormat::R16G16B16A16_float;
+                                          pbrGBufferDesc.format = fmt;
                                           pbrGBufferDesc.width = size.x;
                                           pbrGBufferDesc.height = size.y;
                                           pbrGBufferDesc.clearColor = defaultOptimizedClearColor;
@@ -95,7 +98,7 @@ namespace vg::renderer
             FrameGraphTextureResourceDesc emissiveGBufferDesc;
             emissiveGBufferDesc.type = texType;
             emissiveGBufferDesc.msaa = msaa;
-            emissiveGBufferDesc.format = PixelFormat::R16G16B16A16_float;
+            emissiveGBufferDesc.format = fmt;
             emissiveGBufferDesc.width = size.x;
             emissiveGBufferDesc.height = size.y;
             emissiveGBufferDesc.clearColor = defaultOptimizedClearColor;

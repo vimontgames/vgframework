@@ -181,6 +181,23 @@ namespace vg::renderer
 
     core::WinHandle g_winHandle = nullptr;
 
+    //--------------------------------------------------------------------------------------
+    gfx::PixelFormat Renderer::getLightingBufferFormat() const
+    {
+        //return PixelFormat::R16G16B16A16_float;
+        //if (m_device.getHDR() != HDR::None)
+            return PixelFormat::R11G11B10_float;
+        //else
+        //    return PixelFormat::R8G8B8A8_unorm;
+    }
+
+    //--------------------------------------------------------------------------------------
+    PixelFormat Renderer::getGBufferFormat() const
+    {
+        //return PixelFormat::R16G16B16A16_float;
+        return PixelFormat::R11G11B10_float;
+    }
+
 	//--------------------------------------------------------------------------------------
 	void Renderer::Init(const RendererCreationParams & _params, core::Singletons & _singletons)
 	{
@@ -632,7 +649,7 @@ namespace vg::renderer
                                                     gfx::BindFlags::ShaderResource,
                                                     gfx::CPUAccessFlags::None,
                                                     gfx::TextureType::Texture2D,
-                                                    gfx::PixelFormat::R16G16B16A16_float,
+                                                    gfx::PixelFormat::R16G16B16A16_float, // When using HDROutput the last buffer must be float16 even if the backbuffer is HDR10
                                                     gfx::TextureFlags::RenderTarget,
                                                     GetBackbufferSize().x,
                                                     GetBackbufferSize().y);
