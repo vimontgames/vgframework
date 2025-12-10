@@ -43,9 +43,9 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
     float3 worldPos = _viewConstants.getWorldPos(_uv, _depthStencil.depth);
     float3 camPos = _viewConstants.getCameraPos();
                         
-    LightingResult lighting = computeLighting(_viewConstants, camPos, worldPos, _gbuffer.albedo.xyz, _gbuffer.normal.xyz, _gbuffer.pbr);
+    LightingResult lighting = computeLighting(_viewConstants, camPos, worldPos, _gbuffer.albedo.xyz, _gbuffer.normal.xyz, _gbuffer.pbr, _gbuffer.emissive.rgb);
             
-    float3 color = applyLighting(_gbuffer.albedo.rgb, lighting, _viewConstants.getDisplayMode()) + _gbuffer.emissive.rgb;
+    float3 color = applyLighting(_gbuffer.albedo.rgb, lighting, _viewConstants.getDisplayMode());
 
     #if _TOOLMODE
     switch(_viewConstants.getDisplayMode())
@@ -60,6 +60,7 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
         case DisplayMode::Lighting_DirectSpecular:
         case DisplayMode::Lighting_Diffuse:
         case DisplayMode::Lighting_Specular:
+        case DisplayMode::Lighting_Emissive:
         case DisplayMode::Lighting_RayCount:
         case DisplayMode::Environment_Cubemap:
         case DisplayMode::Environment_IrradianceCubemap:

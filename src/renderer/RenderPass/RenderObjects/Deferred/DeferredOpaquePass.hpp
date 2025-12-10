@@ -6,6 +6,8 @@
 #include "renderer/View/View.h"
 #include "renderer/View/Shadow/ShadowView.h"
 
+#include "Shaders/lighting/gbuffer.hlsli"
+
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
@@ -43,14 +45,14 @@ namespace vg::renderer
         const TextureType texType = (MSAA::None == msaa) ? TextureType::Texture2D : TextureType::Texture2DMS;
 
         auto * device = gfx::Device::get();
-        PixelFormat fmt = Renderer::get()->getGBufferFormat();
+        auto * renderer = Renderer::get();
 
         // Albedo
         {
             FrameGraphTextureResourceDesc albedoGBufferDesc;
                                           albedoGBufferDesc.type = texType;
                                           albedoGBufferDesc.msaa = msaa;
-                                          albedoGBufferDesc.format = fmt;
+                                          albedoGBufferDesc.format = renderer->getGBufferFormat(GBuffer::Albedo);
                                           albedoGBufferDesc.width = size.x;
                                           albedoGBufferDesc.height = size.y;
                                           albedoGBufferDesc.clearColor = defaultOptimizedClearColor;
@@ -66,7 +68,7 @@ namespace vg::renderer
             FrameGraphTextureResourceDesc normalGBufferDesc;
                                           normalGBufferDesc.type = texType;
                                           normalGBufferDesc.msaa = msaa;
-                                          normalGBufferDesc.format = fmt;
+                                          normalGBufferDesc.format = renderer->getGBufferFormat(GBuffer::Normal);
                                           normalGBufferDesc.width = size.x;
                                           normalGBufferDesc.height = size.y;
                                           normalGBufferDesc.clearColor = defaultOptimizedClearColor;
@@ -82,7 +84,7 @@ namespace vg::renderer
             FrameGraphTextureResourceDesc pbrGBufferDesc;
                                           pbrGBufferDesc.type = texType;
                                           pbrGBufferDesc.msaa = msaa;
-                                          pbrGBufferDesc.format = fmt;
+                                          pbrGBufferDesc.format = renderer->getGBufferFormat(GBuffer::PBR);
                                           pbrGBufferDesc.width = size.x;
                                           pbrGBufferDesc.height = size.y;
                                           pbrGBufferDesc.clearColor = defaultOptimizedClearColor;
@@ -98,7 +100,7 @@ namespace vg::renderer
             FrameGraphTextureResourceDesc emissiveGBufferDesc;
             emissiveGBufferDesc.type = texType;
             emissiveGBufferDesc.msaa = msaa;
-            emissiveGBufferDesc.format = fmt;
+            emissiveGBufferDesc.format = renderer->getGBufferFormat(GBuffer::Emissive);
             emissiveGBufferDesc.width = size.x;
             emissiveGBufferDesc.height = size.y;
             emissiveGBufferDesc.clearColor = defaultOptimizedClearColor;

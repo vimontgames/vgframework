@@ -4,6 +4,8 @@
 #include "core/Singleton/Singleton.h"
 #include "core/IScheduler.h"
 
+enum class GBuffer : vg::core::u8;
+
 namespace vg::gfx
 {
 	class Device;
@@ -156,8 +158,8 @@ namespace vg::renderer
     public: // internal
         gfx::Texture *                          getBackbuffer                   () const;
 
-        gfx::PixelFormat                        getLightingBufferFormat            () const;
-        gfx::PixelFormat                        getGBufferFormat                () const;
+        gfx::PixelFormat                        getLightingBufferFormat         () const;
+        gfx::PixelFormat                        getGBufferFormat                (GBuffer _gbuffer) const;
 
         VG_INLINE ImGuiAdapter *                getImGuiAdapter                 () const;
         VG_INLINE SharedWorldCullingJobOutput * getSharedWorldCullingJobOutput  () const;

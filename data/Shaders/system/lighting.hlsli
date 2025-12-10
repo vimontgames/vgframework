@@ -32,6 +32,7 @@ struct LightingResult
 	float3 envSpecular;
     float3 directLightDiffuse;
     float3 directLightSpecular;
+    float3 emissive;
 
 	void addLightContribution(float3 Lo, float cosLo, float _cosLi, float3 Lr, float3 F0, float3 Li, float3 Lradiance, float3 _worldNormal, float roughness, float metalness)
 	{
@@ -157,9 +158,11 @@ float4 getRaytracedSpecular(RaytracingAccelerationStructure _tlas, float3 _world
 }
 
 //--------------------------------------------------------------------------------------
-LightingResult computeLighting(ViewConstants _viewConstants, float3 _eyePos, float3 _worldPos, inout float3 _albedo, float3 _worldNormal, float3 _pbr)
+LightingResult computeLighting(ViewConstants _viewConstants, float3 _eyePos, float3 _worldPos, inout float3 _albedo, float3 _worldNormal, float3 _pbr, float3 _emissive)
 {
     LightingResult output = (LightingResult)0;
+    
+    output.emissive = _emissive;
     
     float occlusion = _pbr.r;
     float roughness = _pbr.g;
@@ -169,7 +172,7 @@ LightingResult computeLighting(ViewConstants _viewConstants, float3 _eyePos, flo
 	float3 Lo = normalize(_eyePos - _worldPos.xyz);
 
     // Angle between surface normal and outgoing light direction.
-	float cosLo = saturate(max(0.0, dot(_worldNormal, Lo)));
+	float cosLo = saturate(dot(_worldNormal, Lo));
 
     // Specular reflection vector.
 	float3 Lr = 2.0 * cosLo * _worldNormal - Lo;
@@ -419,6 +422,9 @@ float3 applyLighting(float3 _albedo, LightingResult _lighting, DisplayMode _disp
 
 		case DisplayMode::Lighting_Diffuse:
 			return _lighting.envDiffuse.rgb + _lighting.directLightDiffuse.rgb;
+        
+        case DisplayMode::Lighting_Emissive:
+            return _lighting.emissive;
 
 		case DisplayMode::Lighting_Specular:
 			return _lighting.envSpecular.rgb + _lighting.directLightSpecular.rgb;
@@ -428,5 +434,5 @@ float3 applyLighting(float3 _albedo, LightingResult _lighting, DisplayMode _disp
 	}
 	#endif
 
-    return (_lighting.envDiffuse + _lighting.directLightDiffuse) * _albedo.rgb + (_lighting.envSpecular.rgb + _lighting.directLightSpecular.rgb);
+    return (_lighting.envDiffuse + _lighting.directLightDiffuse) * _albedo.rgb + (_lighting.envSpecular.rgb + _lighting.directLightSpecular.rgb) + _lighting.emissive.rgb;
 }

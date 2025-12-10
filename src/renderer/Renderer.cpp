@@ -67,6 +67,7 @@
 #include "shaders/lighting/deferredLighting.hlsl.h"
 #include "shaders/preview/preview.hlsl.h"
 #include "shaders/lighting/PrecomputeIBL.hlsl.h"
+#include "shaders/lighting/gbuffer.hlsli"
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -192,10 +193,16 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    PixelFormat Renderer::getGBufferFormat() const
+    PixelFormat Renderer::getGBufferFormat(GBuffer _gbuffer) const
     {
-        //return PixelFormat::R16G16B16A16_float;
-        return PixelFormat::R11G11B10_float;
+        switch (_gbuffer)
+        {
+            default:
+                return PixelFormat::R11G11B10_float;
+
+            case GBuffer::Normal:
+                return PixelFormat::R16G16B16A16_float;
+        }
     }
 
 	//--------------------------------------------------------------------------------------

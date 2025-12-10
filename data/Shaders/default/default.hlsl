@@ -160,9 +160,9 @@ PS_Output PS_Forward(VS_Output _input)
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 
     // Compute & Apply lighting
-    LightingResult lighting = computeLighting(viewConstants, camPos, worldPos, albedo.rgb, worldNormal.xyz, pbr.rgb);
+    LightingResult lighting = computeLighting(viewConstants, camPos, worldPos, albedo.rgb, worldNormal.xyz, pbr.rgb, emissive.rgb);
 
-    output.color0.rgb = applyLighting(albedo.rgb, lighting, mode) + emissive.rgb;
+    output.color0.rgb = applyLighting(albedo.rgb, lighting, mode);
     output.color0.a = albedo.a; 
 
     #if _DECAL
