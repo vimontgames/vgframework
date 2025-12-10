@@ -4,7 +4,7 @@
         <Property type="Uint32" name="m_uid" value="4100248654"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-        <Property type="Bool" name="m_toolMode" value="true"/>
+        <Property type="Bool" name="m_toolMode" value="false"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
         <Property type="Bool" name="m_useCustomQualityLevel" value="false"/>
         <Property type="EnumI8" name="m_customQualityLevel" value="High"/>
