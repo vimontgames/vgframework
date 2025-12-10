@@ -81,12 +81,12 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    core::uint UploadBuffer::isOverlaping(const struct Alloc & _alloc, const core::vector<struct Range> & _ranges) const
+    core::uint UploadBuffer::isOverlaping(const struct Alloc & _alloc, const core::vector<struct Alloc> & _ranges) const
     {
         const auto count = _ranges.size();
         for (uint i = 0; i < count; ++i)
         {
-            const Range & range = _ranges[i];
+            const Alloc & range = _ranges[i];
             if (_alloc.begin < range.end && range.begin < _alloc.end)
                 return i;
         }
@@ -116,11 +116,18 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
-    // Returns the size of the largest upload memory block
-    //--------------------------------------------------------------------------------------
     core::u64 UploadBuffer::getAvailableUploadSize()
     {
-        Range bestRange(0, 0);
+        Alloc dummyBestRange;
+        return getAvailableUploadSize(dummyBestRange);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Returns the size of the largest upload memory block
+    //--------------------------------------------------------------------------------------
+    core::u64 UploadBuffer::getAvailableUploadSize(Alloc & _bestRange)
+    {
+        Alloc bestRange(0, 0);
         u64 bestSize = 0;
 
         lock();
@@ -128,10 +135,10 @@ namespace vg::gfx
             const size_t totalSize = m_buffer->getBufDesc().getSize();
 
             // merge and sort all ranges
-            core::vector<Range> sortedRanges = m_previousRanges;
+            core::vector<Alloc> sortedRanges = m_previousRanges;
             for (uint i = 0; i < m_ranges.size(); ++i)
                 sortedRanges.push_back(m_ranges[i]);
-            sort(sortedRanges.begin(), sortedRanges.end(), [](Range & a, Range & b)
+            sort(sortedRanges.begin(), sortedRanges.end(), [](Alloc & a, Alloc & b)
                 {
                     return a.begin < b.begin;
                 }
@@ -140,13 +147,13 @@ namespace vg::gfx
             // No range? Then it's free real estate
             if (sortedRanges.size() == 0)
             {
-                bestRange = Range(0, totalSize);
+                bestRange = Alloc(0, totalSize);
                 bestSize = totalSize;
             }
             else
             {
                 // How much available before first range?
-                bestRange = Range(0, sortedRanges[0].begin);
+                bestRange = Alloc(0, sortedRanges[0].begin);
                 bestSize = sortedRanges[0].begin;
 
                 // How much available between ranges?
@@ -157,7 +164,7 @@ namespace vg::gfx
                     u64 gapSize = gapEnd - gapStart;
                     if (gapSize > bestSize)
                     {
-                        bestRange = Range(gapStart, gapEnd);
+                        bestRange = Alloc(gapStart, gapEnd);
                         bestSize = gapSize;
                     }
                 }
@@ -169,7 +176,7 @@ namespace vg::gfx
                     u64 gapSize = gapEnd - gapStart;
                     if (gapSize > bestSize)
                     {
-                        bestRange = Range(gapStart, gapEnd);
+                        bestRange = Alloc(gapStart, gapEnd);
                         bestSize = gapSize;
                     }
                 }
@@ -177,6 +184,7 @@ namespace vg::gfx
         }
         unlock();
 
+        _bestRange = bestRange;
         return bestSize;
     }
 
@@ -221,7 +229,8 @@ namespace vg::gfx
         if (alignedSize > totalSize)
             return -1;
 
-        core::u64 available = getAvailableUploadSize();
+        Alloc bestRange;
+        core::u64 available = getAvailableUploadSize(bestRange);
         VG_ASSERT(alignedSize <= available, "[Upload] Requested %u bytes (%u MB) but only %u bytes (%u/%u MB) are available in %s", alignedSize, alignedSize/(1024*1024), available, available/(1024*1024), totalSize/(1024*1024), GetName().c_str());
         if (alignedSize > available)
             return -1;
@@ -249,7 +258,7 @@ namespace vg::gfx
             }
             #endif
 
-            m_ranges.push_back(Range(alloc.begin, alloc.end));
+            m_ranges.push_back(Alloc(alloc.begin, alloc.end));
 
             m_currentOffset += alignedSize;
             
@@ -285,7 +294,7 @@ namespace vg::gfx
                 }
                 #endif
 
-                m_ranges.push_back(Range(alloc.begin, alloc.end));
+                m_ranges.push_back(Alloc(alloc.begin, alloc.end));
 
                 m_currentOffset = alignedSize;
 

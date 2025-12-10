@@ -14,6 +14,36 @@ namespace vg::gfx
         Texture
     );
 
+    struct Alloc
+    {
+        inline Alloc()
+        {
+
+        }
+
+        inline Alloc(core::uint_ptr _size) :
+            begin(_size),
+            end(0)
+        {
+
+        }
+
+        inline Alloc(core::uint_ptr _begin, core::uint_ptr _end) :
+            begin(_begin),
+            end(_end)
+        {
+
+        }
+
+        inline void grow(const Alloc & _alloc)
+        {
+            begin = begin < _alloc.begin ? begin : _alloc.begin; // min
+            end = end > _alloc.end ? end : _alloc.end;           // max
+        }
+
+        core::uint_ptr begin, end;
+    };
+
     class UploadBuffer : public core::Object
     {
     public:
@@ -24,6 +54,7 @@ namespace vg::gfx
 
         bool                    isReadyForStreaming     ();
         core::u64               getAvailableUploadSize  ();
+        core::u64               getAvailableUploadSize  (Alloc & _bestRange);
         void                    setNextAllocSize        (core::size_t _size);  
         core::u64               getTotalSize            ();
         core::size_t            getAlignedSize          (core::size_t _size, core::size_t  _alignment) const;
@@ -43,49 +74,11 @@ namespace vg::gfx
         VG_INLINE core::u8 *    getBaseAddress          () const;
 
     private:
-        struct Alloc
-        {
-            inline Alloc(core::uint_ptr _begin, core::uint_ptr _end) :
-                begin(_begin),
-                end(_end)
-            {
-
-            }
-
-            const core::uint_ptr begin, end;
-        };
-
-        struct Range
-        {
-            inline Range(core::uint_ptr _size) :
-                begin(_size),
-                end(0)
-            {
-
-            }
-
-            inline Range(core::uint_ptr _begin, core::uint_ptr _end) :
-                begin(_begin),
-                end(_end)
-            {
-
-            }
-
-            inline void grow(const Alloc & _alloc)
-            {
-                begin = begin < _alloc.begin ? begin : _alloc.begin; // min
-                end = end > _alloc.end ? end : _alloc.end;           // max
-            }
-
-            core::uint_ptr begin, end;
-        };
-
-    private:
         void                    upload                  (Texture * _dst, core::uint_ptr _from, size_t _size);
         void                    upload                  (Buffer * _dst, core::uint_ptr _from, size_t _size);
         core::u8 *              map                     (core::size_t _size, core::size_t _aligment, RingAllocCategory _category);
         core::uint_ptr          alloc                   (core::size_t _size, core::size_t _alignment, RingAllocCategory _category);
-        core::uint              isOverlaping            (const Alloc & _alloc, const core::vector<Range> & _ranges) const;
+        core::uint              isOverlaping            (const Alloc & _alloc, const core::vector<Alloc> & _ranges) const;
         void                    lock                    ();
         void                    unlock                  ();
 
@@ -94,13 +87,13 @@ namespace vg::gfx
         Buffer *                m_buffer                = nullptr;
         core::u8 *              m_begin                 = nullptr;
         core::uint_ptr          m_currentOffset         = 0;
-        core::vector<Range>     m_ranges;               // Current frame allocation ranges
-        core::vector<Range>     m_previousRanges;       // Previous frame allocation ranges
+        core::vector<Alloc>     m_ranges;               // Current frame allocation ranges
+        core::vector<Alloc>     m_previousRanges;       // Previous frame allocation ranges
         core::size_t            m_nextAllocSize         = (core::size_t)-1;
 
         // Mutex is only necessary for main upload command buffer, other can just check
-        core::RecursiveMutex    m_mutex                 = core::RecursiveMutex("UploadBuffer");
-        core::AssertMutex       m_assertMutex           = core::AssertMutex("UploadBuffer");
+        core::RecursiveMutex    m_mutex                 = core::RecursiveMutex("RecursiveMutex - UploadBuffer");
+        core::AssertMutex       m_assertMutex           = core::AssertMutex("AssertMutex - UploadBuffer");
 
         bool                    m_firstFlushDone        = false;
 

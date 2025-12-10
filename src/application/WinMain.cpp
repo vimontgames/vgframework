@@ -265,9 +265,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     // Start profiling as soon as possible
     int profileStartFrameCount = -1;
-	if (cmdLine.getInt("profileStart", profileStartFrameCount))
-		engineParams.renderer.profileStart = true;
-
+    if (cmdLine.getInt("profileStart", profileStartFrameCount))
+    {
+        if (profileStartFrameCount > 0)
+            engineParams.renderer.profileStart = true;
+    }
     core::Singletons singletons;
     g_engine->Init(engineParams, singletons);
 	g_renderer = g_engine->GetRenderer();

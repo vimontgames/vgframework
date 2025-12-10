@@ -613,12 +613,13 @@ namespace vg::engine
                                 const IObject * newTarget = _root->FindByOriginalUID(handle->getUID());
                                 if (newTarget)
                                 {
-                                    VG_INFO("[Prefab] Patched ObjectHandle UID 0x%08X from Property \"%s\" in Object \"%s\" of class %s to UID 0x%08X", handle->getUID(), prop->GetName(), _object->GetName().c_str(), classDesc->GetClassName(), newTarget->GetUID());
+                                    // No need to spam log when it's working ...
+                                    //VG_INFO("[Prefab] Patched ObjectHandle UID 0x%08X from Property \"%s\" in Object \"%s\" of class %s in Prefab \"%s\" to UID 0x%08X", handle->getUID(), prop->GetName(), _object->GetName().c_str(), classDesc->GetClassName(), GetName().c_str(), newTarget->GetUID());
                                     handle->setUID(newTarget->GetUID());
                                 }
                                 else
                                 {
-                                    VG_WARNING("[Prefab] Could not patch ObjectHandle UID 0x%08X from Property \"%s\" in Object \"%s\" of class %s", handle->getUID(), prop->GetName(), _object->GetName().c_str(), classDesc->GetClassName());
+                                    VG_WARNING("[Prefab] Could not patch ObjectHandle UID 0x%08X from Property \"%s\" in Object \"%s\" of class %s in Prefab \"%s\"", handle->getUID(), prop->GetName(), _object->GetName().c_str(), classDesc->GetClassName(), GetName().c_str());
                                 }
                             }
                         }

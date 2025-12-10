@@ -333,7 +333,7 @@ namespace vg::engine
         // Load resource without blocking mutex
         if (nullptr != res)
         {
-            VG_PROFILE_CPU("Loading");
+            VG_PROFILE_CPU("LoadingAsync");
             string resPath = res->GetResourcePath();
 
             auto it = m_resourceInfosMap.find(resPath);
@@ -346,20 +346,11 @@ namespace vg::engine
             const auto total = renderer->GetTotalUploadSize();
             const auto required = total;
 
-            //if (required > available)
-            //{
-            //    Sleep(0);
-            //    VG_WARNING("[Resource] Loading is starving because %u MB are required but only (%u MB/%u MB) is available for streaming", required/(1024*1024) , available / (1024 * 1024), total / (1024 * 1024));
-            //    return;
-            //}
-
             LoadStatus status = loadOneResource(*info);
 
             if (status == LoadStatus::CannotUploadData)
             {
-                // We need more space in upload buffer (TODO), return but do not skip the resource
                 Sleep(0);
-                //VG_WARNING("[Resource] Resource \"%s\" required %u MB for upload but only %u MB were available at the moment. Increase \"Upload buffer\" size (%u MB) to fix this warning.", info->GetName().c_str(), required/(1024*1024), available / (1024 * 1024), total / (1024 * 1024));
                 return;
             }
 
@@ -562,7 +553,7 @@ namespace vg::engine
                     const string cookFile = io::getCookedPath(path);
 
                     if (io::setLastWriteTime(cookFile, io::getCurrentFileTime()))
-                        VG_INFO("[Resource] File \"%s\" cooked in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
+                        VG_WARNING("[Resource] File \"%s\" cooked in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
                 }
             }
 ;
@@ -707,6 +698,8 @@ namespace vg::engine
     {
         VG_PROFILE_CPU("Loading");
 
+        lock_guard lock(m_addResourceToLoadRecursiveMutex);        
+
         // Update resources to reimport
         flushResourceToReimport();
 
@@ -716,20 +709,27 @@ namespace vg::engine
         // Add resources that were loaded async during previous frames
         flushResourcesLoadedAsync();
 
-        core::dictionary<ResourceInfo *> resourceInfoMap;
-        {
-            VG_PROFILE_CPU("CopyResourceInfoMap");
-            lock_guard lock(m_addResourceToLoadRecursiveMutex);
-            resourceInfoMap = m_resourceInfosMap;
-        }
+        const core::dictionary<ResourceInfo *> & resourceInfoMap = m_resourceInfosMap;
 
         // Sync point to notify resource loaded last frame
         {
             VG_PROFILE_CPU("OnResourceLoaded");
 
+            #define USE_CLIENT_LIMIT_PER_FRAME 1
+            #if USE_CLIENT_LIMIT_PER_FRAME
+            const float maxStreamingUpdateTimePerFrame = 2.0f; // 2 ms
+            const auto startStreamingUpdateTime = Timer::getTick();
+            uint currentClientCount = 0;
+            #endif
+
             const auto resLoadedCount = m_resourcesLoaded.size();
             for (uint i = 0; i < m_resourcesLoaded.size(); ++i)
             {
+                #if USE_CLIENT_LIMIT_PER_FRAME
+                if (Timer::getEnlapsedTime(startStreamingUpdateTime, Timer::getTick()) > maxStreamingUpdateTimePerFrame)
+                    continue;
+                #endif
+
                 const auto & res = m_resourcesLoaded[i];
                 VG_ASSERT(nullptr != res, "nullptr resource found in loaded resources list at index %u/%u", i, m_resourcesLoaded.size());
                 if (nullptr != res)
@@ -746,9 +746,18 @@ namespace vg::engine
                     VG_ASSERT(nullptr != resOwner);
                     if (nullptr != resOwner)
                         resOwner->OnResourceLoaded(res);
+
+                    #if USE_CLIENT_LIMIT_PER_FRAME
+                    currentClientCount++;
+                    #endif
                 }
             }
+
+            #if USE_CLIENT_LIMIT_PER_FRAME
+            m_resourcesLoaded.erase(m_resourcesLoaded.begin(), m_resourcesLoaded.begin() + currentClientCount);
+            #else
             m_resourcesLoaded.clear();
+            #endif
 
             // Update null entries in resources (e.g., several requests for the same resource object)
             for (auto pair : resourceInfoMap)
@@ -757,6 +766,11 @@ namespace vg::engine
                 auto & clients = info->m_clients;
                 for (uint i = 0; i < clients.size(); ++i)
                 {
+                    #if USE_CLIENT_LIMIT_PER_FRAME
+                    if (Timer::getEnlapsedTime(startStreamingUpdateTime, Timer::getTick()) > maxStreamingUpdateTimePerFrame)
+                        continue;
+                    #endif
+
                     auto & res = clients[i];
                     if (res->GetObject() == nullptr)
                     {
@@ -765,6 +779,10 @@ namespace vg::engine
                             res->SetObject(info->m_object);
                             res->LoadSubResources();
                             res->GetParent()->OnResourceLoaded(res);
+
+                            #if USE_CLIENT_LIMIT_PER_FRAME
+                            currentClientCount++;
+                            #endif
                         }
                     }
                 }

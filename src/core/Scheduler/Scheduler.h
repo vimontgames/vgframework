@@ -61,6 +61,6 @@ namespace vg::core
         px_sched::Scheduler *                               m_schd = nullptr;
         core::uint                                          m_threadCount = 0;
         core::unordered_map<ThreadID, const ThreadInfo>     m_registeredThreads;
-        mutable core::Mutex                                 m_registerThreadMutex = core::Mutex("RegisterThread");
+        mutable core::Mutex                                 m_registerThreadMutex = core::Mutex("Mutex - RegisterThread");
     };
 }
