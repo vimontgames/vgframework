@@ -269,7 +269,7 @@ namespace vg::core
         const auto flags = _prop->GetFlags();
         const bool isEnumArray = asBool(PropertyFlags::EnumArray & _prop->GetFlags());
 
-        if (asBool(PropertyFlags::Transient & flags))
+        if (asBool((PropertyFlags::Transient /*| PropertyFlags::Alias*/) & flags))
             return;
 
         //VG_DEBUGPRINT("[Factory] Serialize Property %s->%s (write 0x%016llX = %u)\n", _object->GetName().c_str(), _prop->GetName(), &_buffer, _buffer.getWriteOffset());
@@ -727,7 +727,7 @@ namespace vg::core
                     continue;
             }
 
-            if (asBool(PropertyFlags::Transient & propFlags))
+            if (asBool((PropertyFlags::Transient /*| PropertyFlags::Alias*/) & propFlags))
                 continue;
 
             CopyProperty(prop, _srcObj, prop, _dstObj, _copyPropertyFlags);
@@ -775,7 +775,7 @@ namespace vg::core
             return false;
         }
 
-        if (asBool(_srcProp->GetFlags() & PropertyFlags::Transient))
+        if (asBool(_srcProp->GetFlags() & (PropertyFlags::Transient /*| PropertyFlags::Alias*/)))
             return false;
 
         if (!strcmp(_srcProp->GetName(), "m_uid"))
@@ -1147,7 +1147,7 @@ namespace vg::core
         const auto flags = _prop->GetFlags();
         const bool isEnumArray = asBool(PropertyFlags::EnumArray & _prop->GetFlags());
 
-        if (asBool(PropertyFlags::Transient & flags))
+        if (asBool((PropertyFlags::Transient /* | PropertyFlags::Alias */) & flags))
             return;
 
         //VG_DEBUGPRINT("[Factory] Serialize Property %s->%s (read 0x%016llX = %u)\n", _object->GetName().c_str(), _prop->GetName(), &_buffer, _buffer.getReadOffset());
@@ -1616,7 +1616,7 @@ namespace vg::core
                                 }
                             }
                             
-                            if (nullptr == prop || asBool(PropertyFlags::Transient & prop->GetFlags()))
+                            if (nullptr == prop || asBool((PropertyFlags::Transient | PropertyFlags::Alias) & prop->GetFlags()))
                             {
 
                             }
@@ -2558,7 +2558,7 @@ namespace vg::core
             const auto offset = prop->GetOffset();
             const auto flags = prop->GetFlags();
 
-            if (asBool(PropertyFlags::Transient & flags) || type == PropertyType::LayoutElement)
+            if (asBool((PropertyFlags::Transient | PropertyFlags::Alias) & flags) || type == PropertyType::LayoutElement)
                 continue;
 
             XMLElement * xmlPropElem = _xmlDoc.NewElement("Property");

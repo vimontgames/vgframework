@@ -42,13 +42,19 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    // This is done in reverse order so that if several properties have the same name (alias)
+    // then the last one added is returned. Is that a hack? Yes. Can I live with it? Also yes.
+    //--------------------------------------------------------------------------------------
     uint ClassDesc::GetPropertyIndex(const char * _propertyName) const
     {
-        for (uint i = 0; i < properties.size(); ++i)
+        if (properties.size() > 0)
         {
-            const auto & prop = properties[i];
-            if (!strcmp(_propertyName, prop.GetName()))
-                return i;
+            for (int i = (int)properties.size() - 1; i >= 0; --i)
+            {
+                const auto & prop = properties[i];
+                if (!strcmp(_propertyName, prop.GetName()))
+                    return i;
+            }
         }
         return -1;
     }
@@ -82,7 +88,7 @@ namespace vg::core
         {
             const bool isAlreadyUsed = _prop.GetName()[0] != '\0' && !strcmp(_prop.GetName(), prop.GetName());
 
-            if (isAlreadyUsed && !asBool(_prop.GetFlags() & PropertyFlags::Transient))
+            if (isAlreadyUsed && !asBool(_prop.GetFlags() & (PropertyFlags::Transient| PropertyFlags::Alias)))
             {
                 VG_ASSERT(!isAlreadyUsed, "[Factory] Property \"%s\" from \"%s\" is already declared in \"%s\"", _prop.GetName(), _prop.GetClassName(), prop.GetClassName());
                 return false;

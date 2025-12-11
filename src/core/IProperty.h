@@ -92,7 +92,8 @@ namespace vg::core
         Hidden              = 0x0000000000008000,   // A property that is not visible
         Hexadecimal         = 0x0000000000010000,   // Display value using hexadecimal
         EulerAngle          = 0x0000000000020000,   // Edited value is Euler angle
-        AlphabeticalOrder   = 0x0000000000040000    // Sort multiple values in alphabetical order (e.g., enums)
+        AlphabeticalOrder   = 0x0000000000040000,   // Sort multiple values in alphabetical order (e.g., enums)
+        Alias               = 0x0000000000080000    // Property can alias another property of the same class. Other property must be the same type and same size or larger (e.g. can be a float2 aliasing a float3 but not the other way around)
     );
 
     vg_enum_class(vg::core, PropertyLayoutElement, u8,
@@ -214,6 +215,9 @@ namespace vg::core
 #define registerPropertyEx(className, propertyName, displayName, flags)								        _desc.RegisterProperty(#className, #propertyName, (&((className*)(nullptr))->propertyName), displayName, flags)
 #define registerProperty(className, propertyName, displayName)									            registerPropertyEx(className, propertyName, displayName, vg::core::PropertyFlags::None)
 
+#define registerPropertyAliasEx(className, typeName, propertyName, displayName, flags)						_desc.RegisterProperty(#className, #propertyName, (typeName*)(&((className*)(nullptr))->propertyName), displayName, flags | vg::core::PropertyFlags::Alias)
+#define registerPropertyAlias(className, typeName, propertyName, displayName)								registerPropertyAliasEx(className, typeName, propertyName, displayName, vg::core::PropertyFlags::None)
+
 // Register property for an Object or an Object container type
 #define registerPropertyObjectEx(className, propertyName, displayName, flags)                               _desc.RegisterProperty(#className, #propertyName, (core::IObject*)VG_OFFSETOF(className, propertyName), displayName, flags);
 #define registerPropertyObject(className, propertyName, displayName)                                        registerPropertyObjectEx(className, propertyName, displayName, vg::core::PropertyFlags::None)
@@ -283,9 +287,9 @@ namespace vg::core
 //--------------------------------------------------------------------------------------
 #define setPropertyFlag(className, propertyName, flags, value)												{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetFlags(value ? flags : (vg::core::PropertyFlags)0, value ? (vg::core::PropertyFlags)0 : flags); } else { VG_WARNING("[Factory] Could not set \"Flags\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 #define setPropertyRange(className, propertyName, range)												    { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetRange(range);                                                                                  } else { VG_WARNING("[Factory] Could not set \"Range\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
-#define setPropertyRangeCallback(className, propertyName, func)                                             { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetPropertyRangeCallback(func);                                                                   } else { VG_WARNING("[Factory] Could not set \"Range Callback\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
-#define setPropertyHiddenCallback(className, propertyName, func)                                            { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetPropertyHiddenCallback(func);                                                                  } else { VG_WARNING("[Factory] Could not set \"Range Callback\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
-#define setPropertyReadOnlyCallback(className, propertyName, func)                                          { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetPropertyReadOnlyCallback(func);                                                                } else { VG_WARNING("[Factory] Could not set \"Range Callback\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyRangeCallback(className, propertyName, func)                                             { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetPropertyRangeCallback(func);                                                                   } else { VG_WARNING("[Factory] Could not set \"Range\" callback for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyHiddenCallback(className, propertyName, func)                                            { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetPropertyHiddenCallback(func);                                                                  } else { VG_WARNING("[Factory] Could not set \"Hidden\" callback for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyReadOnlyCallback(className, propertyName, func)                                          { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetPropertyReadOnlyCallback(func);                                                                } else { VG_WARNING("[Factory] Could not set \"ReadOnly\" callback for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 #define setPropertyDefaultFolder(className, propertyName, defaultFolder)									{ if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetDefaultFolder(defaultFolder);                                                                  } else { VG_WARNING("[Factory] Could not set \"Default Folder\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 #define setPropertyDescription(className, propertyName, description)                                        { if (auto * prop = _desc.GetPropertyByName(#propertyName)) { prop->SetDescription(description);                                                                      } else { VG_WARNING("[Factory] Could not set \"Description\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 
