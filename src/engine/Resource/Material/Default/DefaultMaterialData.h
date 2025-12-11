@@ -18,8 +18,8 @@ namespace vg::engine
     private:
         // Common
         UVSource                    m_UVSource          = UVSource::UV0;
-        core::float2                m_tiling = core::float2(1, 1);
-        core::float2                m_offset = core::float2(0, 0);
+        core::float2                m_tiling            = core::float2(1, 1);
+        core::float2                m_offset            = core::float2(0, 0);
 
         // Albedo
         bool                        m_enableAlbedo      = true;
