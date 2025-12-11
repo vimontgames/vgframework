@@ -55,6 +55,9 @@ namespace vg::renderer
         ImGui::SetCursorScreenPos(ImVec2(0, 0));
         render(_renderUIType);
         
+        // Fix ImGui error "Code uses SetCursorPos()/SetCursorScreenPos() to extend window/parent boundaries." when editor=false 
+        ImGui::Dummy(ImVec2(0,0));
+
         if (!editor)
             ImGui::End();
 

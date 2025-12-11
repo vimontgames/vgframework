@@ -68,6 +68,18 @@ namespace vg::renderer
         ImGuiIO & io = ImGui::GetIO();
         io.ConfigWindowsMoveFromTitleBarOnly = true;
 
+        io.ConfigErrorRecovery               = true;    // Enable error recovery support. Some errors won't be detected and lead to direct crashes if recovery is disabled.
+
+        #ifdef VG_OPTIMIZED
+        io.ConfigErrorRecoveryEnableAssert   = false;
+        io.ConfigErrorRecoveryEnableDebugLog = false;
+        io.ConfigErrorRecoveryEnableTooltip  = false;
+        #else
+        io.ConfigErrorRecoveryEnableAssert   = true;    // Enable asserts on recoverable error. By default call IM_ASSERT() when returning from a failing IM_ASSERT_USER_ERROR()
+        io.ConfigErrorRecoveryEnableDebugLog = true;    // Enable debug log output on recoverable errors.
+        io.ConfigErrorRecoveryEnableTooltip  = true;    // Enable tooltip on recoverable errors. The tooltip include a way to enable asserts if they were disabled.
+        #endif
+
         m_settingsHandler.init();
 
         io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
