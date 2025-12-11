@@ -821,7 +821,7 @@
                                         <Property type="String" name="m_name" value="Billboard"/>
                                         <Property type="Uint32" name="m_uid" value="3869079134"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.00048832496" Iy="-0.99999988" Iz="0" Iw="0" Jx="0.99999988" Jy="-0.00048832496" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="7" Ty="-3.0597971e-07" Tz="0" Tw="1"/>
@@ -837,13 +837,39 @@
                                                 <Property type="String" name="m_resourcePath" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1854991771"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyResourceVector">
+                                                        <Property type="String" name="m_name" value="m_resources"/>
+                                                        <Property type="Uint32" name="m_uid" value="1693182158"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="ObjectVector" name="m_values">
+                                                            <Object class="ResourceOverrideData">
+                                                                <Property type="String" name="m_name" value=""/>
+                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="String" name="m_value" value="data/Materials/Soccer/Casa de Pablo.mat"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="Billboard_01"/>
                                         <Property type="Uint32" name="m_uid" value="1687051274"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.00048832496" Iy="-0.99999988" Iz="0" Iw="0" Jx="0.99999988" Jy="-0.00048832496" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="7" Ty="4.9999995" Tz="0" Tw="1"/>
@@ -859,7 +885,33 @@
                                                 <Property type="String" name="m_resourcePath" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1854991771"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyResourceVector">
+                                                        <Property type="String" name="m_name" value="m_resources"/>
+                                                        <Property type="Uint32" name="m_uid" value="1131009103"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="ObjectVector" name="m_values">
+                                                            <Object class="ResourceOverrideData">
+                                                                <Property type="String" name="m_name" value=""/>
+                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="String" name="m_value" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="Billboard_02"/>
@@ -887,7 +939,7 @@
                                         <Property type="String" name="m_name" value="Billboard_03"/>
                                         <Property type="Uint32" name="m_uid" value="2678965629"/>
                                         <Property type="Uint32" name="m_originalUID" value="3869079134"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.00048832496" Iy="-0.99999988" Iz="0" Iw="0" Jx="0.99999988" Jy="-0.00048832496" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="7" Ty="-5.0000005" Tz="0" Tw="1"/>
@@ -903,7 +955,33 @@
                                                 <Property type="String" name="m_resourcePath" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1854991771"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyResourceVector">
+                                                        <Property type="String" name="m_name" value="m_resources"/>
+                                                        <Property type="Uint32" name="m_uid" value="2287298598"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="ObjectVector" name="m_values">
+                                                            <Object class="ResourceOverrideData">
+                                                                <Property type="String" name="m_name" value=""/>
+                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="String" name="m_value" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="Billboard_04"/>
@@ -931,7 +1009,7 @@
                                         <Property type="String" name="m_name" value="Billboard_05"/>
                                         <Property type="Uint32" name="m_uid" value="1785525641"/>
                                         <Property type="Uint32" name="m_originalUID" value="485366274"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.00048829516" Iy="0.99999988" Iz="0" Iw="0" Jx="-0.99999988" Jy="0.00048829516" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-6.9999986" Ty="-9.9999981" Tz="0" Tw="1"/>
@@ -947,7 +1025,33 @@
                                                 <Property type="String" name="m_resourcePath" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1854991771"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyResourceVector">
+                                                        <Property type="String" name="m_name" value="m_resources"/>
+                                                        <Property type="Uint32" name="m_uid" value="3977544326"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="ObjectVector" name="m_values">
+                                                            <Object class="ResourceOverrideData">
+                                                                <Property type="String" name="m_name" value=""/>
+                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="String" name="m_value" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="Billboard_06"/>
@@ -1023,7 +1127,7 @@
                                         <Property type="String" name="m_name" value="Billboard_08"/>
                                         <Property type="Uint32" name="m_uid" value="997900624"/>
                                         <Property type="Uint32" name="m_originalUID" value="2678965629"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.00048829516" Iy="0.99999988" Iz="0" Iw="0" Jx="-0.99999988" Jy="0.00048829516" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-7" Ty="4.9999995" Tz="0" Tw="1"/>
@@ -1039,13 +1143,39 @@
                                                 <Property type="String" name="m_resourcePath" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1854991771"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyResourceVector">
+                                                        <Property type="String" name="m_name" value="m_resources"/>
+                                                        <Property type="Uint32" name="m_uid" value="3097805911"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="ObjectVector" name="m_values">
+                                                            <Object class="ResourceOverrideData">
+                                                                <Property type="String" name="m_name" value=""/>
+                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="String" name="m_value" value="data/Materials/Soccer/Casa de Pablo.mat"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="Billboard_09"/>
                                         <Property type="Uint32" name="m_uid" value="3790769567"/>
                                         <Property type="Uint32" name="m_originalUID" value="4008152876"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.00048829516" Iy="0.99999988" Iz="0" Iw="0" Jx="-0.99999988" Jy="0.00048829516" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-7.0000014" Ty="9.999999" Tz="0" Tw="1"/>
@@ -1061,13 +1191,39 @@
                                                 <Property type="String" name="m_resourcePath" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1854991771"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyResourceVector">
+                                                        <Property type="String" name="m_name" value="m_resources"/>
+                                                        <Property type="Uint32" name="m_uid" value="3145659070"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="ObjectVector" name="m_values">
+                                                            <Object class="ResourceOverrideData">
+                                                                <Property type="String" name="m_name" value=""/>
+                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="String" name="m_value" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="Billboard_10"/>
                                         <Property type="Uint32" name="m_uid" value="1434187609"/>
                                         <Property type="Uint32" name="m_originalUID" value="485366274"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.99999976" Iy="-0.00048826536" Iz="0" Iw="0" Jx="0.00048826536" Jy="0.99999976" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="4.0000005" Ty="13" Tz="0" Tw="1"/>
@@ -1083,13 +1239,39 @@
                                                 <Property type="String" name="m_resourcePath" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1854991771"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyResourceVector">
+                                                        <Property type="String" name="m_name" value="m_resources"/>
+                                                        <Property type="Uint32" name="m_uid" value="423256374"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="ObjectVector" name="m_values">
+                                                            <Object class="ResourceOverrideData">
+                                                                <Property type="String" name="m_name" value=""/>
+                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="String" name="m_value" value="data/Materials/Soccer/Casa de Pablo.mat"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="Billboard_11"/>
                                         <Property type="Uint32" name="m_uid" value="1461916274"/>
                                         <Property type="Uint32" name="m_originalUID" value="1434187609"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.99999976" Iy="-0.00048826536" Iz="0" Iw="0" Jx="0.00048826536" Jy="0.99999976" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-3.9999995" Ty="13" Tz="0" Tw="1"/>
@@ -1105,13 +1287,39 @@
                                                 <Property type="String" name="m_resourcePath" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
                                         </Property>
-                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1854991771"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyResourceVector">
+                                                        <Property type="String" name="m_name" value="m_resources"/>
+                                                        <Property type="Uint32" name="m_uid" value="1881478752"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="ObjectVector" name="m_values">
+                                                            <Object class="ResourceOverrideData">
+                                                                <Property type="String" name="m_name" value=""/>
+                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="String" name="m_value" value="data/Materials/Soccer/Billboard_HotDog.mat"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                     <Object class="PrefabGameObject">
                                         <Property type="String" name="m_name" value="Billboard_12"/>
                                         <Property type="Uint32" name="m_uid" value="4073244379"/>
                                         <Property type="Uint32" name="m_originalUID" value="4008152876"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.99999982" Iy="0.00048835477" Iz="0" Iw="0" Jx="-0.00048835477" Jy="-0.99999982" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="3.9999995" Ty="-13" Tz="0" Tw="1"/>
@@ -1159,7 +1367,7 @@
                                         <Property type="String" name="m_name" value="Billboard_13"/>
                                         <Property type="Uint32" name="m_uid" value="2439748343"/>
                                         <Property type="Uint32" name="m_originalUID" value="4073244379"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.99999982" Iy="0.00048835477" Iz="0" Iw="0" Jx="-0.00048835477" Jy="-0.99999982" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-4.0000005" Ty="-13" Tz="0" Tw="1"/>
@@ -1195,7 +1403,7 @@
                                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="Bool" name="m_enable" value="true"/>
-                                                                <Property type="String" name="m_value" value="data/Materials/Soccer/Billboard_Banyuls.mat"/>
+                                                                <Property type="String" name="m_value" value="data/Materials/Soccer/Casa de Pablo.mat"/>
                                                             </Object>
                                                         </Property>
                                                     </Object>
@@ -1209,7 +1417,7 @@
                                 <Property type="String" name="m_name" value="Floor"/>
                                 <Property type="Uint32" name="m_uid" value="1697175564"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -7991,7 +8199,7 @@
                                 <Property type="String" name="m_name" value="Houses"/>
                                 <Property type="Uint32" name="m_uid" value="80605140"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -8420,7 +8628,7 @@
                                         <Property type="String" name="m_name" value="House_Wall_3x3_20"/>
                                         <Property type="Uint32" name="m_uid" value="1399598037"/>
                                         <Property type="Uint32" name="m_originalUID" value="2147763759"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="33" Ty="-9.0000181" Tz="2.9999998" Tw="1"/>
