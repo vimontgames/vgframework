@@ -47,7 +47,7 @@
                                 <Property type="String" name="m_name" value="CharacterControllerComponent #2"/>
                                 <Property type="Uint32" name="m_uid" value="4281244651"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_category" value="Default"/>
                                 <Property type="Bool" name="m_useCollisionMask" value="false"/>
@@ -72,9 +72,9 @@
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="Float3" name="m_offset" x="0" y="0" z="0.625"/>
                                         <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
-                                        <Property type="Bool" name="m_tapered" value="false"/>
+                                        <Property type="Bool" name="m_tapered" value="true"/>
                                         <Property type="Float" name="m_topRadius" value="0.25"/>
-                                        <Property type="Float" name="m_bottomRadius" value="0.25"/>
+                                        <Property type="Float" name="m_bottomRadius" value="0.375"/>
                                         <Property type="Float" name="m_height" value="1.3"/>
                                     </Object>
                                 </Property>
@@ -89,7 +89,7 @@
                                 <Property type="String" name="m_name" value="AnimationComponent #2"/>
                                 <Property type="Uint32" name="m_uid" value="2375676162"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Object" name="m_animations">
                                     <Object class="AnimationResourceList">
@@ -104,7 +104,6 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Animations/Pablo/Pablo_idle_anim.fbx"/>
-                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" value="false"/>
                                                 <Property type="Uint32" name="m_layer" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="false"/>
@@ -117,7 +116,6 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Animations/Pablo/Pablo_hello_anim.fbx"/>
-                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" value="false"/>
                                                 <Property type="Uint32" name="m_layer" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="false"/>
@@ -130,7 +128,6 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Animations/Pablo/Pablo_walking_anim.fbx"/>
-                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" value="false"/>
                                                 <Property type="Uint32" name="m_layer" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="false"/>
@@ -143,7 +140,6 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Animations/Pablo/Pablo_running_anim.fbx"/>
-                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" value="false"/>
                                                 <Property type="Uint32" name="m_layer" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="false"/>
@@ -156,7 +152,6 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Animations/Pablo/Pablo_jump_anim.fbx"/>
-                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" value="false"/>
                                                 <Property type="Uint32" name="m_layer" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="false"/>
@@ -169,7 +164,6 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Animations/Pablo/Pablo_sword_hit.fbx"/>
-                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" value="false"/>
                                                 <Property type="Uint32" name="m_layer" value="1"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="true"/>
@@ -182,7 +176,6 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Animations/Pablo/pablo_kick_ball.fbx"/>
-                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" value="false"/>
                                                 <Property type="Uint32" name="m_layer" value="2"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="true"/>
@@ -195,7 +188,6 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Animations/Pablo/Pablo_shooting_anim.fbx"/>
-                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" value="false"/>
                                                 <Property type="Uint32" name="m_layer" value="1"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="true"/>
@@ -208,7 +200,6 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Animations/Pablo/Pablo_big_hit_to_head.fbx"/>
-                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" value="false"/>
                                                 <Property type="Uint32" name="m_layer" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="false"/>
@@ -221,7 +212,6 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Animations/Pablo/Pablo_dying_backwards.fbx"/>
-                                                <Property type="Bool" name="m_play" value="false"/>
                                                 <Property type="Bool" name="m_loop" value="false"/>
                                                 <Property type="Uint32" name="m_layer" value="0"/>
                                                 <Property type="Bool" name="m_useBodyParts" value="false"/>
