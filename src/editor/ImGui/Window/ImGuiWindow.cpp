@@ -2559,17 +2559,27 @@ namespace vg::editor
         // build extension list
         string ext = getFileBrowserExt(_resource);
 
+        string startFolder;
+        
+        if (createNewFile || openExistingFile || saveAsFile)
+        {
+            startFolder = io::getRelativePath(getDefaultFolder(_resource));
+            string currentFolder = (string)buffer;
+            if (currentFolder._Starts_with(startFolder))
+                startFolder = io::cleanPath(io::getFilePath(io::getFileDir(currentFolder)));
+        }
+
         if (createNewFile)
         {
-            ImGui::OpenFileDialog(newFileButtonName, ext, getDefaultFolder(_resource));
+            ImGui::OpenFileDialog(newFileButtonName, ext, startFolder);
         }
         else if (openExistingFile)
         {
-            ImGui::OpenFileDialog(openFileButtonName, ext, getDefaultFolder(_resource));
+            ImGui::OpenFileDialog(openFileButtonName, ext, startFolder);
         }
         else if (saveAsFile)
         {
-            ImGui::SaveFileDialog(saveAsFileButtonName, ext, getDefaultFolder(_resource));
+            ImGui::SaveFileDialog(saveAsFileButtonName, ext, startFolder);
         }
 
         // Create new file
