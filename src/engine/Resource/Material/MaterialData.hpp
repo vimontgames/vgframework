@@ -83,7 +83,7 @@ namespace vg::engine
         {
             if (_prop.GetType() != PropertyType::LayoutElement)
             {
-                if (factory->CanCopyProperty(&_prop, dstProp))
+                if (factory->CanCopyProperty(srcClassDesc , &_prop, dstClassDesc, dstProp))
                     factory->CopyProperty(&_prop, this, dstProp, material);
             }
         }

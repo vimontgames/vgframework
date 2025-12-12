@@ -8,7 +8,8 @@ vg_enum_class_global(UVSource, u8,
     UV1,
     PlanarX,
     PlanarY,
-    PlanarZ
+    PlanarZ,
+    FlipBook
 );
 
 vg_enum_class_global(SurfaceType, u8,

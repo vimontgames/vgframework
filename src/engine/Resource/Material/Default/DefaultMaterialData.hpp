@@ -5,6 +5,27 @@ namespace vg::engine
     VG_REGISTER_OBJECT_CLASS(DefaultMaterialData, "Default Material Data");
 
     //--------------------------------------------------------------------------------------
+    bool IsTilingAndOffsetHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const DefaultMaterialData * mat = VG_SAFE_STATIC_CAST(const DefaultMaterialData, _object);
+        return mat->getUVSource() == UVSource::FlipBook;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool IsAtlasSizeAndFrameHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const DefaultMaterialData * mat = VG_SAFE_STATIC_CAST(const DefaultMaterialData, _object);
+        return mat->getUVSource() != UVSource::FlipBook;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float2 getFlipBoolFrameRange(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const DefaultMaterialData * mat = VG_SAFE_STATIC_CAST(const DefaultMaterialData, _object);
+        return float2(0, mat->getFrameCount());
+    }
+
+    //--------------------------------------------------------------------------------------
     bool DefaultMaterialData::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
@@ -16,11 +37,24 @@ namespace vg::engine
         registerProperty(DefaultMaterialData, m_tiling, "Tiling");
         setPropertyDescription(DefaultMaterialData, m_tiling, "Texture coordordinates repetition rate");
         setPropertyRange(DefaultMaterialData, m_tiling, float2(0, 16));
+        setPropertyHiddenCallback(DefaultMaterialData, m_tiling, IsTilingAndOffsetHidden);
 
         registerProperty(DefaultMaterialData, m_offset, "Offset");
         setPropertyDescription(DefaultMaterialData, m_offset, "Texture coordinates offset");
         setPropertyRange(DefaultMaterialData, m_offset, float2(-8, 8));
+        setPropertyHiddenCallback(DefaultMaterialData, m_offset, IsTilingAndOffsetHidden);
 
+        registerPropertyAlias(DefaultMaterialData, float2, m_tiling, "Atlas size");
+        setPropertyDescription(DefaultMaterialData, m_tiling, "FlipBook atlas size");
+        setPropertyRange(DefaultMaterialData, m_tiling, float2(0, 256));
+        setPropertyHiddenCallback(DefaultMaterialData, m_tiling, IsAtlasSizeAndFrameHidden);
+
+        registerPropertyAlias(DefaultMaterialData, float, m_offset, "Frame");
+        setPropertyDescription(DefaultMaterialData, m_offset, "FlipBook frame");
+        setPropertyRange(DefaultMaterialData, m_offset, float2(0, 256));
+        setPropertyRangeCallback(CameraSettings, m_offset, getFlipBoolFrameRange); // Range depends on atlas size
+        setPropertyHiddenCallback(DefaultMaterialData, m_offset, IsAtlasSizeAndFrameHidden);
+        
         // Albedo
         registerPropertyEx(DefaultMaterialData, m_enableAlbedo, "Albedo", PropertyFlags::Hidden);
         registerPropertyOptionalGroupBegin(DefaultMaterialData, m_enableAlbedo, "Albedo");
@@ -122,7 +156,7 @@ namespace vg::engine
 
                 if (auto * dstProp = dstClassDesc->GetPropertyByName(srcProp->GetName()))
                 {
-                    if (factory->CanCopyProperty(srcProp, dstProp))
+                    if (factory->CanCopyProperty(srcClassDesc, srcProp, dstClassDesc, dstProp))
                         factory->CopyProperty(srcProp, this, dstProp, material);
                 }
             }

@@ -17,7 +17,7 @@ namespace vg::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    core::float2 getFocusDistanceRange(const IObject * _object, const IProperty * _prop, uint _index)
+    float2 getFocusDistanceRange(const IObject * _object, const IProperty * _prop, uint _index)
     {
         auto * cameraSettings = VG_SAFE_STATIC_CAST(const CameraSettings, _object);
         const renderer::ICameraLens * lens = cameraSettings->GetCameraLens();
@@ -25,7 +25,7 @@ namespace vg::renderer
     }
     
     //--------------------------------------------------------------------------------------
-    core::float2 getApertureRange(const IObject * _object, const IProperty * _prop, uint _index)
+    float2 getApertureRange(const IObject * _object, const IProperty * _prop, uint _index)
     {
         auto * cameraSettings = VG_SAFE_STATIC_CAST(const CameraSettings, _object);
         const renderer::ICameraLens * lens = cameraSettings->GetCameraLens();

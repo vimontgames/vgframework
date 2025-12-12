@@ -228,6 +228,7 @@ namespace vg::renderer
                     continue;
 
                 particle.age += emitter.m_dt;
+                particle.frame = particle.age * emitter.m_params.m_framerate;
 
                 if (particle.age >= particle.lifetime)
                 {
@@ -239,7 +240,7 @@ namespace vg::renderer
                 particle.position += particle.velocity * emitter.m_dt;
 
                 const ParticleEmitterParams & params = emitter.m_params;
-                const FloatCurve & opacityCurve = params.m_opacity;
+                const FloatCurve & opacityCurve = params.m_colorAndOpacityCurve;
 
                 if (opacityCurve.getCurveCount() == 1)
                 {
@@ -291,8 +292,6 @@ namespace vg::renderer
 
         const uint gpuInstanceDataSize = alignUp((uint)(sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData)), (uint)GPU_INSTANCE_DATA_ALIGNMENT);
 
-        VertexFormat vertexFormat = VertexFormat::Default;
-
         const auto * renderer = Renderer::get();
         const auto * defaultMaterial = renderer->getDefaultMaterial();
         VG_ASSERT(defaultMaterial);
@@ -311,7 +310,7 @@ namespace vg::renderer
         GPUInstanceData * VG_RESTRICT instanceData = (GPUInstanceData * VG_RESTRICT)(_data + dataOffset);
             
         instanceData->setMaterialCount(batchCount);
-        instanceData->setVertexFormat(vertexFormat);
+        instanceData->setVertexFormat(VertexFormat::ParticleQuad);
         instanceData->setInstanceColor(getColor());
         instanceData->setIndexBuffer(ibHandle, indexSize, ibOffset); // use not index buffer for particles or use default particle index buffer? ({0,1,2}, {1,2,3} ...)
         instanceData->setVertexBuffer(vbHandle, vbOffset);
@@ -371,7 +370,8 @@ namespace vg::renderer
                 quad.setPos(particle.position);
                 quad.setFrame(0);
                 quad.setSize(particle.size.xy * 0.5f);
-                quad.setColor(color);               
+                quad.setColor(color);  
+                quad.setFrame(particle.frame);
                 
                 memcpy(particleQuadData, &quad, sizeof(ParticleQuadVertex));
                 particleQuadData++;

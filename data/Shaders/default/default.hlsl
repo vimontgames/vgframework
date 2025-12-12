@@ -35,6 +35,10 @@ struct VS_Output
     float3 bin  : Binormal;
     float4 uv   : Texcoord0;
     float4 col  : Color;
+    
+    #if _PARTICLE
+    float frame : Frame;
+    #endif
 };
 
 //--------------------------------------------------------------------------------------
@@ -66,26 +70,9 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     
     float4x4 world = rootConstants3D.getWorldMatrix();  
     float3 modelPos = vert.getPos();
-    
-    #if _PARTICLE
-    
-    //float3 camPos = viewConstants.getCameraPos();  
-    //float3 camUp = float3(0,0,1);
-    //float3 worldCenter = world[3].xyz;
-    //
-    //float3 viewDir = normalize(camPos - worldCenter);
-    //float3 right   = normalize(cross(camUp, viewDir));
-    //float3 up      = cross(viewDir, right);
-    
+        
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), world).xyz;
-    //float3 worldPos = worldCenter + modelPos.x * right + modelPos.y * up;
-    
-    #else
-    
-    float3 worldPos = mul(float4(modelPos.xyz, 1.0f), world).xyz;
-    
-    #endif
-   
+       
     output.wpos = worldPos.xyz;
     float4 viewPos = mul(float4(worldPos.xyz, 1.0f), view);
 
@@ -96,6 +83,10 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
 
     #if EXPORT_VPOS
     output.vpos = viewPos;
+    #endif
+    
+    #if _PARTICLE
+    output.frame = vert.frame;
     #endif
 
     output.pos = mul(viewPos, proj);
@@ -148,14 +139,33 @@ PS_Output PS_Forward(VS_Output _input)
 
     // Material entries are only present once material is loaded, if matIndex is above limit then use the default material
     GPUMaterialData materialData = instanceData.loadGPUMaterialData(instanceDataOffset, rootConstants3D.getMatID());
-
-    float2 uv0 = materialData.GetUV0(_input.uv.xy,_input.uv.zw, worldPos);
+    
+    // In case of particles this would come from the particle instance data instead of material 
+    #if _PARTICLE
+    float frame = _input.frame;
+    #else
+    float frame = materialData.getOffset().x;
+    #endif
+    
+    float2 uv0 = materialData.GetUV0(_input.uv.xy,_input.uv.zw, worldPos, frame);
     float2 uv1 = _input.uv.zw;   
-
-    float4 albedo = materialData.getAlbedo(uv0, _input.col, flags, mode);
-    float3 normal = materialData.getNormal(uv0, flags).xyz;
-    float4 pbr = materialData.getPBR(uv0);
+    
+    float4 albedo   = materialData.getAlbedo(uv0, _input.col, flags, mode);
+    float3 normal   = materialData.getNormal(uv0, flags).xyz;
+    float4 pbr      = materialData.getPBR(uv0);
     float4 emissive = materialData.getEmissive(uv0);
+    
+    // FlipBook blend
+    if (materialData.getUVSource() == UVSource::FlipBook)
+    {
+        float2 uv0_blend = materialData.GetUV0(_input.uv.xy,_input.uv.zw, worldPos, frame+1.0f);
+        float frameBlend = frac(frame);
+        
+        albedo   = lerp(  albedo, materialData.getAlbedo(uv0, _input.col, flags, mode), frameBlend);
+        normal   = lerp(  normal, materialData.getNormal(uv0, flags).xyz, frameBlend);
+        pbr      = lerp(     pbr, materialData.getPBR(uv0), frameBlend);
+        emissive = lerp(emissive, materialData.getEmissive(uv0_blend), frameBlend);
+    }
 
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
 

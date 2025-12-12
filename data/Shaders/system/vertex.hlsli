@@ -179,13 +179,13 @@ struct Vertex
         pos.xyz = _buffer.Load<float3>(offset); 
         offset += 3 * sizeof(float);
     
-        float frame = _buffer.Load<float>(offset); 
+        frame = _buffer.Load<float>(offset); 
         offset += sizeof(float); 
     
         float2 size = _buffer.Load<float2>(offset); 
         offset += 2 * sizeof(float); 
     
-         color = _buffer.Load<uint>(offset);
+        color = _buffer.Load<uint>(offset);
         offset += sizeof(uint);
     
         // Particle billboard position
@@ -344,6 +344,7 @@ struct Vertex
         uv[0] = Interpolate(verts[0].getUV(0), verts[1].getUV(0), verts[2].getUV(0), _bary);
         uv[1] = Interpolate(verts[0].getUV(1), verts[1].getUV(1), verts[2].getUV(1), _bary);
         color = packRGBA8(Interpolate(verts[0].getColor(), verts[1].getColor(), verts[2].getColor(), _bary));
+        frame = Interpolate(verts[0].getFrame(), verts[1].getFrame(), verts[2].getFrame(), _bary);
     }
     #endif
 
@@ -353,6 +354,7 @@ struct Vertex
     float3 getTan()             { return tan; }
     float2 getUV(uint _index)   { return uv[_index]; }
     float4 getColor()           { return unpackRGBA8(color); }
+    float getFrame()            { return frame; }
 
     float3 pos;
     float3 nrm;
@@ -362,6 +364,7 @@ struct Vertex
     uint color;
     uint skinIndices[4];
     float skinWeights[4];
+    float frame;
 };
 
 #endif // _VERTEX__HLSLI_

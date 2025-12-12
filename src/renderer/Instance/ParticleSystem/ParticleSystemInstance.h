@@ -20,10 +20,11 @@ namespace vg::renderer
     struct Particle
     {
         float3  position;
-        float3  velocity;
         float   lifetime;
+        float3  velocity;
         float   age;
         float3  size;
+        float   frame;
         float4  color;
         bool    alive;
     };

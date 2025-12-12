@@ -34,7 +34,7 @@ namespace vg::engine
 
         registerPropertyResource(MeshComponent, m_meshResource, "Mesh");
         registerPropertyObjectPtrEx(MeshComponent, m_meshInstance, "MeshInstance", PropertyFlags::Transient | PropertyFlags::Flatten);
-        registerPropertyObjectEx(MeshComponent, m_meshMaterials, "Materials", PropertyFlags::Flatten);
+        registerPropertyObjectEx(MeshComponent, m_meshMaterials, editor::style::label::Materials, PropertyFlags::Flatten);
         registerProperty(MeshComponent, m_batchMask, "Batch Mask");
         
         return true;

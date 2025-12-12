@@ -150,7 +150,7 @@ struct GPUMaterialData
     }
 
     //--------------------------------------------------------------------------------------
-    float2 GetUV0(float2 _uv0, float2 _uv1, float3 _worldPos)
+    float2 GetUV0(float2 _uv0, float2 _uv1, float3 _worldPos, float _frame = 0.0f)
     {
         float2 uv;
         switch(getUVSource())
@@ -175,6 +175,15 @@ struct GPUMaterialData
             case UVSource::PlanarZ:
             uv = _worldPos.xy;
             break;
+            
+            case UVSource::FlipBook:
+            {
+                uint2 atlasSize = getTiling();
+                float atlasFrame = floor(_frame); 
+                uint2 atlasCoords = float2(atlasFrame % atlasSize.x, atlasFrame / atlasSize.x ); 
+                uv = (_uv0 + atlasCoords)/ atlasSize;
+                return uv;
+            }
         }
 
         return uv * getTiling() + getOffset();

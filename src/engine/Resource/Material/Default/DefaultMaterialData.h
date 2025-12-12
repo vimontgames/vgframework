@@ -15,6 +15,9 @@ namespace vg::engine
         bool                        RegisterUID                 () override;
         renderer::IMaterialModel *  CreateRendererMaterialModel () const final override;
 
+        UVSource                    getUVSource                 () const { return m_UVSource;}
+        core::uint                  getFrameCount               () const { return (getUVSource() == UVSource::FlipBook) ? core::uint(ceil((float)m_tiling.x) * ceil((float)m_tiling.y) - 1) : 0; }
+
     private:
         // Common
         UVSource                    m_UVSource          = UVSource::UV0;

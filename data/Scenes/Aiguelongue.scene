@@ -821,7 +821,7 @@
                                         <Property type="String" name="m_name" value="Billboard"/>
                                         <Property type="Uint32" name="m_uid" value="3869079134"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.00048832496" Iy="-0.99999988" Iz="0" Iw="0" Jx="0.99999988" Jy="-0.00048832496" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="7" Ty="-3.0597971e-07" Tz="0" Tw="1"/>
@@ -853,7 +853,7 @@
                                                         <Property type="ObjectVector" name="m_values">
                                                             <Object class="ResourceOverrideData">
                                                                 <Property type="String" name="m_name" value=""/>
-                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" value="2695772364"/>
                                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="Bool" name="m_enable" value="true"/>
@@ -869,7 +869,7 @@
                                         <Property type="String" name="m_name" value="Billboard_01"/>
                                         <Property type="Uint32" name="m_uid" value="1687051274"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.00048832496" Iy="-0.99999988" Iz="0" Iw="0" Jx="0.99999988" Jy="-0.00048832496" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="7" Ty="4.9999995" Tz="0" Tw="1"/>
@@ -901,7 +901,7 @@
                                                         <Property type="ObjectVector" name="m_values">
                                                             <Object class="ResourceOverrideData">
                                                                 <Property type="String" name="m_name" value=""/>
-                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" value="2850520036"/>
                                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="Bool" name="m_enable" value="true"/>
@@ -939,7 +939,7 @@
                                         <Property type="String" name="m_name" value="Billboard_03"/>
                                         <Property type="Uint32" name="m_uid" value="2678965629"/>
                                         <Property type="Uint32" name="m_originalUID" value="3869079134"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.00048832496" Iy="-0.99999988" Iz="0" Iw="0" Jx="0.99999988" Jy="-0.00048832496" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="7" Ty="-5.0000005" Tz="0" Tw="1"/>
@@ -971,7 +971,7 @@
                                                         <Property type="ObjectVector" name="m_values">
                                                             <Object class="ResourceOverrideData">
                                                                 <Property type="String" name="m_name" value=""/>
-                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" value="938052642"/>
                                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="Bool" name="m_enable" value="true"/>
@@ -1009,7 +1009,7 @@
                                         <Property type="String" name="m_name" value="Billboard_05"/>
                                         <Property type="Uint32" name="m_uid" value="1785525641"/>
                                         <Property type="Uint32" name="m_originalUID" value="485366274"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.00048829516" Iy="0.99999988" Iz="0" Iw="0" Jx="-0.99999988" Jy="0.00048829516" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-6.9999986" Ty="-9.9999981" Tz="0" Tw="1"/>
@@ -1041,7 +1041,7 @@
                                                         <Property type="ObjectVector" name="m_values">
                                                             <Object class="ResourceOverrideData">
                                                                 <Property type="String" name="m_name" value=""/>
-                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" value="865222664"/>
                                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="Bool" name="m_enable" value="true"/>
@@ -1127,7 +1127,7 @@
                                         <Property type="String" name="m_name" value="Billboard_08"/>
                                         <Property type="Uint32" name="m_uid" value="997900624"/>
                                         <Property type="Uint32" name="m_originalUID" value="2678965629"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.00048829516" Iy="0.99999988" Iz="0" Iw="0" Jx="-0.99999988" Jy="0.00048829516" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-7" Ty="4.9999995" Tz="0" Tw="1"/>
@@ -1159,7 +1159,7 @@
                                                         <Property type="ObjectVector" name="m_values">
                                                             <Object class="ResourceOverrideData">
                                                                 <Property type="String" name="m_name" value=""/>
-                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" value="2159125527"/>
                                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="Bool" name="m_enable" value="true"/>
@@ -1175,7 +1175,7 @@
                                         <Property type="String" name="m_name" value="Billboard_09"/>
                                         <Property type="Uint32" name="m_uid" value="3790769567"/>
                                         <Property type="Uint32" name="m_originalUID" value="4008152876"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.00048829516" Iy="0.99999988" Iz="0" Iw="0" Jx="-0.99999988" Jy="0.00048829516" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-7.0000014" Ty="9.999999" Tz="0" Tw="1"/>
@@ -1207,7 +1207,7 @@
                                                         <Property type="ObjectVector" name="m_values">
                                                             <Object class="ResourceOverrideData">
                                                                 <Property type="String" name="m_name" value=""/>
-                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" value="507128146"/>
                                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="Bool" name="m_enable" value="true"/>
@@ -1223,7 +1223,7 @@
                                         <Property type="String" name="m_name" value="Billboard_10"/>
                                         <Property type="Uint32" name="m_uid" value="1434187609"/>
                                         <Property type="Uint32" name="m_originalUID" value="485366274"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.99999976" Iy="-0.00048826536" Iz="0" Iw="0" Jx="0.00048826536" Jy="0.99999976" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="4.0000005" Ty="13" Tz="0" Tw="1"/>
@@ -1255,7 +1255,7 @@
                                                         <Property type="ObjectVector" name="m_values">
                                                             <Object class="ResourceOverrideData">
                                                                 <Property type="String" name="m_name" value=""/>
-                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" value="11930265"/>
                                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="Bool" name="m_enable" value="true"/>
@@ -1271,7 +1271,7 @@
                                         <Property type="String" name="m_name" value="Billboard_11"/>
                                         <Property type="Uint32" name="m_uid" value="1461916274"/>
                                         <Property type="Uint32" name="m_originalUID" value="1434187609"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="0.99999976" Iy="-0.00048826536" Iz="0" Iw="0" Jx="0.00048826536" Jy="0.99999976" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-3.9999995" Ty="13" Tz="0" Tw="1"/>
@@ -1303,7 +1303,7 @@
                                                         <Property type="ObjectVector" name="m_values">
                                                             <Object class="ResourceOverrideData">
                                                                 <Property type="String" name="m_name" value=""/>
-                                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                                <Property type="Uint32" name="m_uid" value="3929081693"/>
                                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="Bool" name="m_enable" value="true"/>
@@ -1319,7 +1319,7 @@
                                         <Property type="String" name="m_name" value="Billboard_12"/>
                                         <Property type="Uint32" name="m_uid" value="4073244379"/>
                                         <Property type="Uint32" name="m_originalUID" value="4008152876"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.99999982" Iy="0.00048835477" Iz="0" Iw="0" Jx="-0.00048835477" Jy="-0.99999982" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="3.9999995" Ty="-13" Tz="0" Tw="1"/>
@@ -1367,7 +1367,7 @@
                                         <Property type="String" name="m_name" value="Billboard_13"/>
                                         <Property type="Uint32" name="m_uid" value="2439748343"/>
                                         <Property type="Uint32" name="m_originalUID" value="4073244379"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.99999982" Iy="0.00048835477" Iz="0" Iw="0" Jx="-0.00048835477" Jy="-0.99999982" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-4.0000005" Ty="-13" Tz="0" Tw="1"/>
@@ -1417,7 +1417,7 @@
                                 <Property type="String" name="m_name" value="Floor"/>
                                 <Property type="Uint32" name="m_uid" value="1697175564"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -8145,7 +8145,24 @@
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Dec_DeadGrass.prefab"/>
                                                     </Object>
                                                 </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                                <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                                    <Object class="DynamicPropertyList">
+                                                        <Property type="String" name="m_name" value="DeadGrassDecal"/>
+                                                        <Property type="Uint32" name="m_uid" value="3646130288"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_properties">
+                                                            <Object class="DynamicPropertyFloat4">
+                                                                <Property type="String" name="m_name" value="m_color"/>
+                                                                <Property type="Uint32" name="m_uid" value="2222440340"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="Float4" name="m_value" x="1" y="1" z="1" w="0.50196081"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
                                             </Object>
                                             <Object class="PrefabGameObject">
                                                 <Property type="String" name="m_name" value="Dec_DeadGrass_01"/>
@@ -8167,7 +8184,24 @@
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Dec_DeadGrass.prefab"/>
                                                     </Object>
                                                 </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                                <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                                    <Object class="DynamicPropertyList">
+                                                        <Property type="String" name="m_name" value="DeadGrassDecal"/>
+                                                        <Property type="Uint32" name="m_uid" value="3646130288"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_properties">
+                                                            <Object class="DynamicPropertyFloat4">
+                                                                <Property type="String" name="m_name" value="m_color"/>
+                                                                <Property type="Uint32" name="m_uid" value="1432077802"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="Float4" name="m_value" x="1" y="1" z="1" w="0.75294119"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
                                             </Object>
                                             <Object class="PrefabGameObject">
                                                 <Property type="String" name="m_name" value="Dec_DeadGrass_02"/>
@@ -8189,7 +8223,24 @@
                                                         <Property type="String" name="m_resourcePath" value="data/Prefabs/Dec_DeadGrass.prefab"/>
                                                     </Object>
                                                 </Property>
-                                                <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                                <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                                                    <Object class="DynamicPropertyList">
+                                                        <Property type="String" name="m_name" value="DeadGrassDecal"/>
+                                                        <Property type="Uint32" name="m_uid" value="3646130288"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_properties">
+                                                            <Object class="DynamicPropertyFloat4">
+                                                                <Property type="String" name="m_name" value="m_color"/>
+                                                                <Property type="Uint32" name="m_uid" value="2458392456"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                                <Property type="Float4" name="m_value" x="1" y="1" z="1" w="0.39215687"/>
+                                                            </Object>
+                                                        </Property>
+                                                    </Object>
+                                                </Property>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -8628,7 +8679,7 @@
                                         <Property type="String" name="m_name" value="House_Wall_3x3_20"/>
                                         <Property type="Uint32" name="m_uid" value="1399598037"/>
                                         <Property type="Uint32" name="m_originalUID" value="2147763759"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="33" Ty="-9.0000181" Tz="2.9999998" Tw="1"/>
@@ -9950,10 +10001,10 @@
                                                         <Property type="Float" name="m_params.m_lifeTime" value="3"/>
                                                         <Property type="Uint16" name="m_params.m_maxParticleCount" value="3"/>
                                                         <Property type="Float3" name="m_params.m_size" x="1" y="1" z="0"/>
-                                                        <Property type="Object" name="m_params.m_opacity">
+                                                        <Property type="Object" name="m_params.m_colorAndOpacityCurve">
                                                             <Object class="FloatCurve">
                                                                 <Property type="String" name="m_name" value=""/>
-                                                                <Property type="Uint32" name="m_uid" value="373800924"/>
+                                                                <Property type="Uint32" name="m_uid" value="2359510064"/>
                                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="EnumU8" name="m_type" value="Float"/>
@@ -9963,20 +10014,20 @@
                                                                 <Property type="ObjectVector" name="m_data">
                                                                     <Object class="FloatCurveDataContainer">
                                                                         <Property type="String" name="m_name" value=""/>
-                                                                        <Property type="Uint32" name="m_uid" value="3411046253"/>
+                                                                        <Property type="Uint32" name="m_uid" value="4136381893"/>
                                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                        <Property type="FloatCurveData" name="m_curve" count="4">
-                                                                            <Point t="0" value="0.020661175"/>
-                                                                            <Point t="0.37741426" value="1"/>
-                                                                            <Point t="2.5510263" value="1"/>
-                                                                            <Point t="3" value="0.031807542"/>
+                                                                        <Property type="FloatCurveData" name="m_curve" count="3">
+                                                                            <Point t="0" value="0"/>
+                                                                            <Point t="1.4876033" value="0.99360538"/>
+                                                                            <Point t="3" value="0"/>
                                                                         </Property>
                                                                         <Property type="Bool" name="m_isVisible" value="true"/>
                                                                     </Object>
                                                                 </Property>
                                                             </Object>
                                                         </Property>
+                                                        <Property type="Float" name="m_params.m_framerate" value="1"/>
                                                         <Property type="Resource" name="m_materialResource">
                                                             <Object class="MaterialResource">
                                                                 <Property type="String" name="m_name" value="ParticleTest"/>

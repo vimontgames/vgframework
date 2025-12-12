@@ -57,7 +57,7 @@ namespace vg::engine
         registerProperty(ParticleComponent, m_playOnStart, "Play On Start");
         setPropertyDescription(ParticleComponent, m_playOnStart, "Play particle system when game starts");
 
-        registerPropertyObject(ParticleComponent, m_particleEmitters, "Emitters");
+        registerPropertyObject(ParticleComponent, m_particleEmitters, editor::style::label::Emitters);
 
         registerPropertyObjectPtrEx(ParticleComponent, m_particleSystemInstance, "ParticleSystemInstance", PropertyFlags::Transient | PropertyFlags::Flatten);
 
