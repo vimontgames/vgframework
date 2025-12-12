@@ -42,10 +42,39 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    // This is done in reverse order so that if several properties have the same name (alias)
-    // then the last one added is returned. Is that a hack? Yes. Can I live with it? Also yes.
+    IProperty * ClassDesc::GetLastPropertyByName(const char * _propertyName) const
+    {
+        {
+            uint index = GetLastPropertyIndex(_propertyName);
+            if (-1 != index)
+                return (IProperty *)&properties[index];
+
+            VG_WARNING("[Factory] Property \"%s\" not found in class '%s'", _propertyName, GetClassName());
+            return nullptr;
+        }
+    }
+
     //--------------------------------------------------------------------------------------
     uint ClassDesc::GetPropertyIndex(const char * _propertyName) const
+    {
+        if (properties.size() > 0)
+        {
+            for (uint i = 0; i < properties.size(); ++i)
+            {
+                const auto & prop = properties[i];
+                if (!strcmp(_propertyName, prop.GetName()))
+                    return i;
+            }
+        }
+        return -1;
+    }
+
+   //--------------------------------------------------------------------------------------
+   // Same as ClassDesc::GetPropertyIndex but done in reverse order so that if several 
+   // properties have the same name (alias) then the last one added is returned. 
+   // Is that a hack? Yes. Can I live with it? Also yes.
+   //--------------------------------------------------------------------------------------
+    uint ClassDesc::GetLastPropertyIndex(const char * _propertyName) const
     {
         if (properties.size() > 0)
         {
@@ -57,6 +86,27 @@ namespace vg::core
             }
         }
         return -1;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const IProperty * ClassDesc::GetAliasedProperty(const IProperty * _prop) const
+    {
+        if (asBool(PropertyFlags::Alias & _prop->GetFlags()))
+        {
+            for (uint i = 0; i < properties.size(); ++i)
+            {
+                const auto & prop = properties[i];
+                if (&prop != _prop)
+                {
+                    if (!asBool(PropertyFlags::Alias & prop.GetFlags()))
+                    {
+                        if (!strcmp(_prop->GetName(), prop.GetName()))
+                            return &properties[i];
+                    }
+                }
+            }
+        }
+        return nullptr;
     }
 
     //--------------------------------------------------------------------------------------

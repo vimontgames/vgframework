@@ -123,10 +123,14 @@ namespace vg::core
 
         virtual uint                        GetPropertyCount            () const = 0;
         virtual const IProperty *           GetPropertyByIndex          (uint _index) const = 0;
+        virtual const IProperty *           GetAliasedProperty          (const IProperty * _prop) const = 0;
         virtual IProperty *                 GetPropertyByName           (const char * _propertyName) const = 0;
+        virtual IProperty *                 GetLastPropertyByName       (const char * _propertyName) const = 0;
         virtual uint                        GetPropertyIndex            (const char * _propertyName) const = 0;
+        virtual uint                        GetLastPropertyIndex        (const char * _propertyName) const = 0;
         virtual IProperty *                 GetPreviousProperty         (const char * _propertyName) const = 0;
         virtual IProperty *                 GetNextProperty             (const char * _propertyName) const = 0;
+    
         virtual Func                        GetCreateFunc               () const = 0;
         virtual SingletonFunc               GetSingletonFunc            () const = 0;
         virtual ClassDescFlags              GetFlags                    () const = 0;

@@ -46,15 +46,15 @@ namespace vg::core
         virtual bool                        SerializeFromXML            (IObject * _object, XMLDoc & _xmlDoc, const string & _xmlFile) const = 0;
         virtual bool                        SerializeToXML              (IObject * _object, XMLDoc & _xmlDoc, XMLElem * _parent = nullptr) const = 0;
 
-        virtual void                        ReleaseAsync                (core::IObject * _object) = 0;
+        virtual void                        ReleaseAsync                (IObject * _object) = 0;
         virtual void                        FlushReleaseAsync           () = 0;
 
-        virtual bool                        SaveProperties              (core::IObject * _object, BufferType _bufferType) = 0; 
-        virtual bool                        RestoreProperties           (core::IObject * _object, BufferType _bufferType) = 0;
-        virtual bool                        CopyProperties              (const core::IObject * _srcObj, core::IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) = 0;
-        virtual bool                        CanCopyProperty             (const core::IProperty * _srcProp, const core::IProperty * _dstProp) const = 0;
-        virtual bool                        CopyProperty                (const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) = 0;
-        virtual IObject *                   Instanciate                 (const core::IObject * _object, IObject * _parent = nullptr, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) = 0;
+        virtual bool                        SaveProperties              (IObject * _object, BufferType _bufferType) = 0;
+        virtual bool                        RestoreProperties           (IObject * _object, BufferType _bufferType) = 0;
+        virtual bool                        CopyProperties              (const IObject * _srcObj, IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) = 0;
+        virtual bool                        CanCopyProperty             (const IClassDesc * _srcClassDesc, const IProperty * _srcProp, const IClassDesc * _dstClassDesc, const IProperty * _dstProp) const = 0;
+        virtual bool                        CopyProperty                (const IProperty * _srcProp, const IObject * _srcObj, const IProperty * _dstProp, IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) = 0;
+        virtual IObject *                   Instanciate                 (const IObject * _object, IObject * _parent = nullptr, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) = 0;
 
         virtual bool                        IsA                         (const char * _class, const char * _other) const = 0;
 

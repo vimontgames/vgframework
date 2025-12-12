@@ -737,8 +737,11 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::CanCopyProperty(const core::IProperty * _srcProp, const core::IProperty * _dstProp) const
+    bool Factory::CanCopyProperty(const IClassDesc * _srcClassDesc, const IProperty * _srcProp, const IClassDesc * _dstClassDesc, const IProperty * _dstProp) const
     {
+        if (asBool(PropertyFlags::Alias & _srcProp->GetFlags()))
+            _srcProp = _srcClassDesc->GetAliasedProperty(_srcProp);
+
         const PropertyType srcPropType = _srcProp->GetType();
         const PropertyType dstPropType = _dstProp->GetType();
 
@@ -757,6 +760,9 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Factory::CopyProperty(const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags)
     {
+        if (asBool(PropertyFlags::Alias & _srcProp->GetFlags()))
+            _srcProp = _srcObj->GetClassDesc()->GetAliasedProperty(_srcProp);
+
         const PropertyType srcPropType = _srcProp->GetType();
         const PropertyType dstPropType = _dstProp->GetType();
 
@@ -1614,6 +1620,10 @@ namespace vg::core
                                 {
                                     VG_WARNING("[Factory] Class \"%s\" has no property \"%s\" of type '%s' in file \"%s\"", className, name, typeName, _xmlFile.c_str());
                                 }
+                            }
+                            else
+                            {
+                                VG_ASSERT(!asBool(prop->GetFlags() & PropertyFlags::Alias));
                             }
                             
                             if (nullptr == prop || asBool((PropertyFlags::Transient | PropertyFlags::Alias) & prop->GetFlags()))
