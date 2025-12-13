@@ -124,36 +124,6 @@ namespace vg::editor
 
             drawLibraryDescriptionList("Fonts", "Name", "Version", fonts, (uint)countof(fonts));
 
-            LibraryDescription models[] =
-            {
-                { "3D Football",          "prabath-weerapana",  "https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball" },
-                { "Baseball Bat",         "sepandjahrominejad", "https://www.cgtrader.com/free-3d-models/military/melee/baseball-bat-5c0d0b8c-0ff9-40f8-b49d-779978a2801b" },
-                { "FootBall american",    "orsbone",            "https://www.cgtrader.com/free-3d-models/sports/equipment/football-91c641b9-d246-4d71-a31c-d687762dd94f" },
-                { "Katana samurai sword", "kizaru",             "https://www.cgtrader.com/free-3d-models/military/melee/katana-low-poly-59c307a4-5eaf-480d-b2a3-841d8d8c7240" },
-                { "Luigi",                "Anthony Yanez",      "https://www.turbosquid.com/3d-models/luigi-super-model-1308288" },
-                { "Traffic Cone",         "hinndia",            "https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c" },
-                { "Soccergoal",           "NorbertVarga",       "https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894" }
-            };
-
-            drawLibraryDescriptionList("Models", "Name", "Author", models, (uint)countof(models));
-
-            LibraryDescription environmentMaps[] =
-            {
-                { "Free HDR Map 779",          "hdri-skies.com",  "https://hdri-skies.com/free-hdris/hdr-map-779/" }
-            };
-
-            LibraryDescription sound[] =
-            {
-                { "FX - Swoosh - normal", "bolkmar",              "https://freesound.org/people/bolkmar/sounds/451127/" },
-                { "Large sword swing",    "Luis0413",             "https://freesound.org/people/Luis0413/sounds/737748/" },
-                { "Tally Dub",            "Brotheration Records", "https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/" },
-                { "Chainsaw",             "pblzr",                "https://freesound.org/people/pblzr/sounds/512875/" },
-                { "Retro Bonus Pickup",   "suntemple",            "https://freesound.org/people/suntemple/sounds/253172/" },
-                { "The broken mirror",    "urupin",               "https://freesound.org/people/urupin/sounds/414047/" }
-            };
-
-            drawLibraryDescriptionList("Sounds", "Name", "Author", sound, (uint)countof(sound));
-
             ImGui::PopFont();
             End();            
         }
