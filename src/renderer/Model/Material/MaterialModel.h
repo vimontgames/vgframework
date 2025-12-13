@@ -9,6 +9,9 @@
 struct RootConstants3D;
 struct GPUMaterialData;
 
+enum class SurfaceType : vg::core::u8;
+enum class AlphaSource : vg::core::u8;
+
 namespace vg::gfx
 {
     class CommandList;
@@ -48,15 +51,12 @@ namespace vg::renderer
 
         virtual void                    Setup                   (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3DConstants, core::uint _index) const = 0;
 
-        VG_INLINE SurfaceType           getSurfaceType          () const { return m_surfaceType; }
+        virtual SurfaceType             GetSurfaceType          () const = 0;
+
         VG_INLINE GPUMaterialDataIndex  getGPUMaterialDataIndex () const { return m_gpuMaterialDataIndex; }
 
     protected:
-
         GPUMaterialDataIndex            m_gpuMaterialDataIndex = (GPUMaterialDataIndex)-1;
-        SurfaceType                     m_surfaceType;
-        float                           m_depthFade = 0.1f;
-        gfx::CullMode                   m_cullMode;
         gfx::RootSignatureHandle        m_rootSignature;
         gfx::ShaderKey                  m_shaderKey[core::enumCount<ShaderPass>()];
     };

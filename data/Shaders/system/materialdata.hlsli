@@ -53,6 +53,8 @@ struct GPUMaterialData
         setTiling(float2(1.0, 1.0));
         setOffset(float2(0.0, 0.0));
         setEmissiveColor(float4(0,0,0,0));
+        setUVSource(UVSource::UV0);
+        setAlphaSource(AlphaSource::AlbedoAlpha);
     }   
     #endif 
 
@@ -73,6 +75,9 @@ struct GPUMaterialData
     
     void            setEmissiveTextureHandle(uint _value)           { textures.y = packUint16high(textures.y, _value); }
     uint            getEmissiveTextureHandle()                      { return unpackUint16high(textures.y); }
+    
+    void            setAlphaSource          (AlphaSource _value)    { textures.w = packUint(textures.w, (uint)_value, 0xF, 20); }    // Use bits 20..23 
+    AlphaSource     getAlphaSource          ()                      { return (AlphaSource)unpackUint(textures.w, 0xF, 20); }            
     
     void            setUVSource             (UVSource _value)       { textures.w = packUint(textures.w, (uint)_value, 0xF, 24); }    // Use bits 24..27 
     UVSource        getUVSource             ()                      { return (UVSource)unpackUint(textures.w, 0xF, 24); }            // As crazy as it seems, using 0x7 here instead of 0xF provokes lost device in Vulkan debug
@@ -212,7 +217,10 @@ struct GPUMaterialData
             albedo.rgb = pow(0.5, 0.45);
         #endif
 
-        albedo *= _vertexColor;
+        albedo.rgb *= _vertexColor.rgb;
+        
+        if (getAlphaSource() == AlphaSource::AlbedoAlpha)
+            albedo.a *= _vertexColor.a;
 
         #if _TOOLMODE
         if (DisplayMode::Instance_Color == _mode)
@@ -248,13 +256,30 @@ struct GPUMaterialData
     }
     
     //--------------------------------------------------------------------------------------
-    float4 getEmissive(float2 _uv, bool _nonUniform = false)
+    float4 getEmissive(float2 _uv, float4 _vertexColor, bool _nonUniform = false)
     {
         float4 emissive = sampleTexture2D(getEmissiveTextureHandle(), emissiveSampler, _uv, _nonUniform);
 
         emissive.rgb *= getEmissiveColor().rgb * getEmissiveIntensity();
+        
+        if (getAlphaSource() == AlphaSource::EmissiveAlpha)
+            emissive.a *= _vertexColor.a;
 
         return emissive;
+    }
+    
+    //--------------------------------------------------------------------------------------
+    float getAlpha(float _albedoAlpha, float _emissiveAlpha)
+    {
+        switch(getAlphaSource())
+        {
+            default:
+            case AlphaSource::AlbedoAlpha:
+                return _albedoAlpha;
+            
+            case AlphaSource::EmissiveAlpha:
+                return _emissiveAlpha;
+        };
     }
 
     #endif // !__cplusplus

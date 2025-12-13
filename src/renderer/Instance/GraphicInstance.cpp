@@ -101,7 +101,7 @@ namespace vg::renderer
             {
                 if (material)
                 {
-                    auto surf = material->getSurfaceType();
+                    auto surf = material->GetSurfaceType();
 
                     switch (surf)
                     {

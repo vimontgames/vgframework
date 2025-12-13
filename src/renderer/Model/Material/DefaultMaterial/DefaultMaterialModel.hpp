@@ -4,6 +4,8 @@
 #include "renderer/Model/Material/MaterialManager.h"
 #include "renderer/Options/RendererOptions.h"
 
+#include "shaders/system/rootConstants3D.hlsli"
+
 namespace vg::renderer
 {
     using namespace vg::core;
@@ -14,6 +16,16 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool DefaultMaterialModel::registerProperties(core::IClassDesc & _desc)
     {
+        // Alpha
+        registerPropertyEnum(DefaultMaterialModel, SurfaceType, m_surfaceType, "Surface Type");
+
+        registerPropertyEnum(DefaultMaterialModel, AlphaSource, m_alphaSource, "Alpha Source");
+        registerProperty(DefaultMaterialModel, m_depthFade, "Depth transparency");
+
+        // Culling
+        registerPropertyEnum(DefaultMaterialModel, CullMode, m_cullMode, "Cull");
+        
+        // UV
         registerPropertyEnumEx(DefaultMaterialModel, UVSource, m_UVSource, "UV Source", PropertyFlags::Transient);
 
         registerPropertyEx(DefaultMaterialModel, m_tiling, "Tiling", PropertyFlags::Transient);
@@ -22,15 +34,18 @@ namespace vg::renderer
         registerPropertyEx(DefaultMaterialModel, m_offset, "Offset", PropertyFlags::Transient);
         setPropertyRange(DefaultMaterialModel, m_offset, float2(-8, 8));
 
+        // Albedo
         registerPropertyEx(DefaultMaterialModel, m_enableAlbedo, "Enable Albedo", PropertyFlags::Transient);
         registerPropertyObjectEx(DefaultMaterialModel, m_albedoMap, "Albedo Map", PropertyFlags::Transient);
         registerPropertyEx(DefaultMaterialModel, m_albedoColor, "Albedo Color", PropertyFlags::Color);
 
+        // Normal
         registerPropertyEx(DefaultMaterialModel, m_enableNormal, "Enable Normal", PropertyFlags::Transient);
         registerPropertyObjectEx(DefaultMaterialModel, m_normalMap, "Normal Map", PropertyFlags::Transient);
         registerPropertyEx(DefaultMaterialModel, m_normalStrength, "Normal Strength", PropertyFlags::Transient);
         setPropertyRange(DefaultMaterialModel, m_normalStrength, float2(0.0f, 1.0f));
 
+        // PBR
         registerPropertyEx(DefaultMaterialModel, m_enablePbr, "Enable PBR", PropertyFlags::Transient);
         registerPropertyObjectEx(DefaultMaterialModel, m_pbrMap, "PBR Map", PropertyFlags::Transient);
         registerPropertyEx(DefaultMaterialModel, m_occlusion, "Occlusion", PropertyFlags::Transient);
@@ -40,6 +55,7 @@ namespace vg::renderer
         registerPropertyEx(DefaultMaterialModel, m_metalness, "Metalness", PropertyFlags::Transient);
         setPropertyRange(DefaultMaterialModel, m_metalness, float2(0.0f, 1.0f));
 
+        // Emissive
         registerPropertyEx(DefaultMaterialModel, m_enableEmissive, "Enable Emissive", PropertyFlags::Transient);
         registerPropertyObjectEx(DefaultMaterialModel, m_emissiveMap, "Emissive Map", PropertyFlags::Transient);
         registerPropertyEx(DefaultMaterialModel, m_emissiveColor, "Emissive Color", PropertyFlags::Transient);
@@ -50,7 +66,29 @@ namespace vg::renderer
 
     //--------------------------------------------------------------------------------------
     DefaultMaterialModel::DefaultMaterialModel(const core::string & _name, IObject * _parent) :
-        MaterialModel(_name, _parent)
+        MaterialModel(_name, _parent),
+        m_surfaceType(SurfaceType::Opaque),
+        m_cullMode(CullMode::Back),
+        m_alphaSource(AlphaSource::AlbedoAlpha),
+        m_depthFade(0.1f),
+        m_UVSource(UVSource::UV0),
+        m_tiling(core::float2(1, 1)),
+        m_offset(core::float2(0, 0)),
+        m_enableAlbedo(true),
+        m_albedoMap(nullptr),
+        m_albedoColor(core::float4(1, 1, 1, 1)),
+        m_enableNormal(true),
+        m_normalMap(nullptr),
+        m_normalStrength(1.0f),
+        m_enablePbr(true),
+        m_pbrMap(nullptr),
+        m_occlusion(1.0f),
+        m_roughness(1.0f),
+        m_metalness(1.0f),
+        m_enableEmissive(true),
+        m_emissiveMap(nullptr),
+        m_emissiveColor(core::float4(1, 1, 1, 1)),
+        m_emissiveIntensity(1.0f)
     {
         // Register slot for material GPU data
         m_gpuMaterialDataIndex = Renderer::get()->getMaterialManager()->allocMaterialDataGPUIndex(this);
@@ -67,11 +105,16 @@ namespace vg::renderer
     void DefaultMaterialModel::FillGPUMaterialData(GPUMaterialData * _data) const
     {
         // Common
-        _data->setUVSource(m_UVSource);
         _data->setSurfaceType(m_surfaceType);
+   
+        // Alpha
+        _data->setAlphaSource(m_alphaSource);
+        _data->setDepthFade(m_depthFade);
+
+        // UV
+        _data->setUVSource(m_UVSource);
         _data->setTiling(m_tiling);
         _data->setOffset(m_offset);
-        _data->setDepthFade(m_depthFade);
 
         // Albedo
         const bool enableAlbedo = (SurfaceType::Decal == m_surfaceType) | m_enableAlbedo;

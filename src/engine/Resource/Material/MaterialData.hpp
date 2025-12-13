@@ -10,44 +10,16 @@ using namespace vg::core;
 namespace vg::engine
 {
     //--------------------------------------------------------------------------------------
-    bool IsDepthFadePropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
-    {
-        const MaterialData * mat = VG_SAFE_STATIC_CAST(const MaterialData, _object);
-        return SurfaceType::AlphaBlend != mat->getSurfaceType();
-    }
-
-    //--------------------------------------------------------------------------------------
     bool MaterialData::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
-
-        setPropertyFlag(MaterialData, m_name, PropertyFlags::Hidden | PropertyFlags::Transient, true);
-
-        registerPropertyEnum(MaterialData, SurfaceType, m_surfaceType, "Surface");
-        setPropertyDescription(MaterialData, m_surfaceType, "Surface type determines how the material deal with alpha transparency");
-
-        //registerPropertyGroupBegin(MaterialData, "AlphaBlend");
-        //setPropertyHiddenCallback(MaterialData, AlphaBlend, IsDepthFadePropertyHidden);
-        {
-            registerProperty(MaterialData, m_depthFade, "Depth fade");
-            setPropertyDescription(MaterialData, m_depthFade, "Distance used to fade out transparent objects intersecting opaque");
-            setPropertyRange(MaterialData, m_depthFade, float2(0.001f, 10.0f));
-            setPropertyHiddenCallback(MaterialData, m_depthFade, IsDepthFadePropertyHidden);
-        }
-        //registerPropertyGroupEnd(MaterialData);
-
-        registerPropertyEnum(MaterialData, gfx::CullMode, m_cullMode, "Cull");
-        setPropertyDescription(MaterialData, m_cullMode, "Change culling to hide backfaces, frontfaces, or none");
         
         return true;
     }
 
     //--------------------------------------------------------------------------------------
     MaterialData::MaterialData(const core::string & _name, IObject * _parent) :
-        super(_name, _parent),
-        m_surfaceType(SurfaceType::Opaque),
-        m_depthFade(0.1f),
-        m_cullMode(gfx::CullMode::Back)
+        super(_name, _parent)
     {
         SetName(_parent->GetName());
     }

@@ -22,35 +22,46 @@ namespace vg::renderer
 
         void                    Setup               (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3D, core::uint _index) const final override;
 
+        SurfaceType             GetSurfaceType      () const final override { return m_surfaceType; }
+
     protected:
         void                    assignTexture       (gfx::Texture ** _texture, gfx::Texture * _value);
 
     private:
-        UVSource                m_UVSource          = UVSource::UV0;
-        core::float2            m_tiling            = core::float2(1,1);
-        core::float2            m_offset            = core::float2(0,0);
+        // Alpha
+        SurfaceType             m_surfaceType;
+        AlphaSource             m_alphaSource;
+        float                   m_depthFade;
+
+        // Culling
+        gfx::CullMode           m_cullMode;
+
+        // UV
+        UVSource                m_UVSource;
+        core::float2            m_tiling;
+        core::float2            m_offset;
 
         // Albedo
-        bool                    m_enableAlbedo      = true;
-        gfx::Texture *          m_albedoMap         = nullptr;
-        core::float4            m_albedoColor       = core::float4(1,1,1,1);
+        bool                    m_enableAlbedo;
+        gfx::Texture *          m_albedoMap;         
+        core::float4            m_albedoColor;
 
         // Normal
-        bool                    m_enableNormal      = true;
-        gfx::Texture *          m_normalMap         = nullptr;
-        float                   m_normalStrength    = 1.0f;
+        bool                    m_enableNormal;
+        gfx::Texture *          m_normalMap;        
+        float                   m_normalStrength;
 
         // PBR
-        bool                    m_enablePbr         = true;
-        gfx::Texture *          m_pbrMap            = nullptr;
-        float                   m_occlusion         = 1.0f;
-        float                   m_roughness         = 1.0f;
-        float                   m_metalness         = 1.0f;
+        bool                    m_enablePbr;
+        gfx::Texture *          m_pbrMap;            
+        float                   m_occlusion;
+        float                   m_roughness;
+        float                   m_metalness;
 
         // Emissive
-        bool                    m_enableEmissive    = true;
-        gfx::Texture *          m_emissiveMap       = nullptr;
-        core::float4            m_emissiveColor     = core::float4(1,1,1,1);
-        float                   m_emissiveIntensity = 1.0f;
+        bool                    m_enableEmissive;
+        gfx::Texture *          m_emissiveMap;       
+        core::float4            m_emissiveColor;
+        float                   m_emissiveIntensity;
     };
 }

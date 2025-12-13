@@ -139,7 +139,7 @@ namespace vg::renderer
                 {
                     if (const auto * mat = materials[i])
                     {
-                        if (SurfaceType::Opaque != mat->getSurfaceType())
+                        if (SurfaceType::Opaque != mat->GetSurfaceType())
                             key |= bit;
                     }                   
                 }
@@ -453,7 +453,7 @@ namespace vg::renderer
                     if (nullptr == material)
                         material = renderer->getDefaultMaterial();
 
-                    auto surfaceType = material->getSurfaceType();
+                    auto surfaceType = material->GetSurfaceType();
 
                     if (_renderContext.m_surfaceType != surfaceType && !_renderContext.m_wireframe && !_renderContext.m_outline)
                         continue;

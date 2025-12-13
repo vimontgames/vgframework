@@ -153,7 +153,9 @@ PS_Output PS_Forward(VS_Output _input)
     float4 albedo   = materialData.getAlbedo(uv0, _input.col, flags, mode);
     float3 normal   = materialData.getNormal(uv0, flags).xyz;
     float4 pbr      = materialData.getPBR(uv0);
-    float4 emissive = materialData.getEmissive(uv0);
+    float4 emissive = materialData.getEmissive(uv0, _input.col);
+    
+    float alpha     = materialData.getAlpha(albedo.a, emissive.a);
     
     // FlipBook blend
     if (materialData.getUVSource() == UVSource::FlipBook)
@@ -161,10 +163,19 @@ PS_Output PS_Forward(VS_Output _input)
         float2 uv0_blend = materialData.GetUV0(_input.uv.xy,_input.uv.zw, worldPos, frame+1.0f);
         float frameBlend = frac(frame);
         
-        albedo   = lerp(  albedo, materialData.getAlbedo(uv0, _input.col, flags, mode), frameBlend);
-        normal   = lerp(  normal, materialData.getNormal(uv0, flags).xyz, frameBlend);
-        pbr      = lerp(     pbr, materialData.getPBR(uv0), frameBlend);
-        emissive = lerp(emissive, materialData.getEmissive(uv0_blend), frameBlend);
+        float4 albedo2   = materialData.getAlbedo(uv0_blend, _input.col, flags, mode);
+        float3 normal2   = materialData.getNormal(uv0_blend, flags).xyz;
+        float4 pbr2      = materialData.getPBR(uv0_blend);
+        float4 emissive2 = materialData.getEmissive(uv0_blend, _input.col);
+        
+        float alpha2 = materialData.getAlpha(albedo2.a, emissive2.a);
+        
+        albedo   = lerp(  albedo, albedo2, frameBlend);
+        normal   = lerp(  normal, normal2, frameBlend);
+        pbr      = lerp(     pbr, pbr2, frameBlend);
+        emissive = lerp(emissive, emissive2, frameBlend);
+        alpha    = lerp(   alpha, alpha2, frameBlend);
+        
     }
 
     float3 worldNormal = getWorldNormal(normal, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
@@ -173,7 +184,7 @@ PS_Output PS_Forward(VS_Output _input)
     LightingResult lighting = computeLighting(viewConstants, camPos, worldPos, albedo.rgb, worldNormal.xyz, pbr.rgb, emissive.rgb);
 
     output.color0.rgb = applyLighting(albedo.rgb, lighting, mode);
-    output.color0.a = albedo.a; 
+    output.color0.a = alpha; 
 
     #if _DECAL
     clip(albedo.a-(1.0/255.0f));
@@ -303,11 +314,13 @@ PS_GBufferOutput PS_Deferred(VS_Output _input)
     float4 albedo = materialData.getAlbedo(uv0, _input.col, flags, mode);
     float4 normal = materialData.getNormal(uv0, flags);
     float4 pbr = materialData.getPBR(uv0);
-    float4 emissive = materialData.getEmissive(uv0);
+    float4 emissive = materialData.getEmissive(uv0, _input.col);
+    
+    float alpha = materialData.getAlpha(albedo.a, emissive.a);
     
     float3 worldNormal = getWorldNormal(normal.xyz, _input.tan, _input.bin, _input.nrm, rootConstants3D.getWorldMatrix());
     
-    output.Store(albedo.rgb, worldNormal.xyz, pbr.rgb, emissive.rgb, albedo.a);
+    output.Store(albedo.rgb, worldNormal.xyz, pbr.rgb, emissive.rgb, alpha);
 
     #if _DECAL
     clip(output.albedo.a-(1.0/255.0f));

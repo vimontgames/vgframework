@@ -1,8 +1,26 @@
 #include "DefaultMaterialData.h"
 
+#if !VG_ENABLE_INLINE
+#include "DefaultMaterialData.inl"
+#endif
+
 namespace vg::engine
 {
     VG_REGISTER_OBJECT_CLASS(DefaultMaterialData, "Default Material Data");
+    
+    //--------------------------------------------------------------------------------------
+    bool IsNonOpaquePropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    {
+        const DefaultMaterialData * mat = VG_SAFE_STATIC_CAST(const DefaultMaterialData, _object);
+        return SurfaceType::Opaque == mat->getSurfaceType();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool IsDepthFadePropertyHidden(const IObject * _object, const IProperty * _prop, core::uint _index)
+    {
+        const DefaultMaterialData * mat = VG_SAFE_STATIC_CAST(const DefaultMaterialData, _object);
+        return SurfaceType::AlphaBlend != mat->getSurfaceType();
+    }
 
     //--------------------------------------------------------------------------------------
     bool IsTilingAndOffsetHidden(const IObject * _object, const IProperty * _prop, uint _index)
@@ -30,7 +48,26 @@ namespace vg::engine
     {
         super::registerProperties(_desc);
 
-        // Common
+        // Alpha
+        setPropertyFlag(MaterialData, m_name, PropertyFlags::Hidden | PropertyFlags::Transient, true);
+
+        registerPropertyEnum(DefaultMaterialData, SurfaceType, m_surfaceType, "Surface");
+        setPropertyDescription(DefaultMaterialData, m_surfaceType, "Surface type determines how the material deal with alpha transparency");
+        
+        registerPropertyEnum(DefaultMaterialData, AlphaSource, m_alphaSource, "Alpha Source");
+        setPropertyDescription(DefaultMaterialData, m_alphaSource, "Value used for alpha transparency");
+        setPropertyHiddenCallback(DefaultMaterialData, m_alphaSource, IsNonOpaquePropertyHidden);
+
+        registerProperty(DefaultMaterialData, m_depthFade, "Depth fade");
+        setPropertyDescription(DefaultMaterialData, m_depthFade, "Distance used to fade out transparent objects intersecting opaque");
+        setPropertyRange(DefaultMaterialData, m_depthFade, float2(0.001f, 10.0f));
+        setPropertyHiddenCallback(DefaultMaterialData, m_depthFade, IsDepthFadePropertyHidden);
+
+        // Culling
+        registerPropertyEnum(DefaultMaterialData, gfx::CullMode, m_cullMode, "Cull");
+        setPropertyDescription(DefaultMaterialData, m_cullMode, "Change culling to hide backfaces, frontfaces, or none");
+
+        // UV
         registerPropertyEnum(DefaultMaterialData, UVSource, m_UVSource, "UV Source");
         setPropertyDescription(DefaultMaterialData, m_UVSource, "Select UV source to use in shader");
 
@@ -122,7 +159,25 @@ namespace vg::engine
 
     //--------------------------------------------------------------------------------------
     DefaultMaterialData::DefaultMaterialData(const core::string & _name, IObject * _parent) :
-        super(_name, _parent)
+        super(_name, _parent),
+        m_surfaceType(SurfaceType::Opaque),
+        m_cullMode(gfx::CullMode::Back), 
+        m_alphaSource(AlphaSource::AlbedoAlpha),
+        m_depthFade(0.1f),
+        m_UVSource(UVSource::UV0),
+        m_tiling(core::float2(1, 1)),
+        m_offset(core::float2(0, 0)),
+        m_enableAlbedo(true),
+        m_albedoColor(core::float4(1, 1, 1, 1)),
+        m_enableNormal(true), 
+        m_normalStrength(1.0f),             
+        m_enablePbr(true),
+        m_occlusion(1.0f),
+        m_roughness(1.0f),
+        m_metalness(1.0f),
+        m_enableEmissive(true),
+        m_emissiveColor(core::float4(1, 1, 1, 1)),
+        m_emissiveIntensity(1.0f)
     {
         m_albedoMap.SetParent(this);
         m_normalMap.SetParent(this);

@@ -18,10 +18,11 @@
                 <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="EnumU8" name="m_surfaceType" value="AlphaBlend"/>
+                <Property type="EnumU8" name="m_alphaSource" value="EmissiveAlpha"/>
                 <Property type="Float" name="m_depthFade" value="0.49995998"/>
                 <Property type="EnumU8" name="m_cullMode" value="None"/>
                 <Property type="EnumU8" name="m_UVSource" value="FlipBook"/>
-                <Property type="Float2" name="m_tiling" x="4" y="4"/>
+                <Property type="Float2" name="m_tiling" x="8" y="8"/>
                 <Property type="Float2" name="m_offset" x="0" y="0"/>
                 <Property type="Bool" name="m_enableAlbedo" value="true"/>
                 <Property type="Resource" name="m_albedoMap">
@@ -65,7 +66,7 @@
                         <Property type="Uint32" name="m_uid" value="397684984"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                        <Property type="String" name="m_resourcePath" value="data/Textures/Particle/AtlasChecker.psd"/>
+                        <Property type="String" name="m_resourcePath" value="data/Textures/Particle/AtlasFire_8x8.tga"/>
                     </Object>
                 </Property>
                 <Property type="Float4" name="m_emissiveColor" x="1" y="1" z="1" w="1"/>

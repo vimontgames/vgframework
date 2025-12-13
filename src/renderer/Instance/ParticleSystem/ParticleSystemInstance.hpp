@@ -422,7 +422,7 @@ namespace vg::renderer
                 if (nullptr == material)
                     material = renderer->getDefaultMaterial();
 
-                auto surfaceType = material->getSurfaceType();
+                auto surfaceType = material->GetSurfaceType();
 
                 if (renderContext.m_surfaceType == surfaceType || renderContext.m_wireframe || renderContext.m_outline)
                 {

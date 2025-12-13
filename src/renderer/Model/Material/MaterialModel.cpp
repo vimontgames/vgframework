@@ -15,9 +15,7 @@
 #include "renderer/Importer/SceneImporterData.h"
 #include "renderer/Renderer.h"
 
-#include "shaders/system/rootConstants3D.hlsli"
 #include "DefaultMaterial/DefaultMaterialModel.hpp"
-
 
 using namespace vg::core;
 using namespace vg::gfx;
@@ -29,18 +27,12 @@ namespace vg::renderer
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnum(MaterialModel, SurfaceType, m_surfaceType, "Surface Type");
-        registerProperty(MaterialModel, m_depthFade, "Depth transparency");
-        registerPropertyEnum(MaterialModel, CullMode, m_cullMode, "Cull");
-
         return true;
     }
 
     //--------------------------------------------------------------------------------------
     MaterialModel::MaterialModel(const core::string & _name, core::IObject * _parent) :
-        super(_name, _parent),
-        m_surfaceType(SurfaceType::Opaque),
-        m_cullMode(CullMode::Back)
+        super(_name, _parent)
     {
         auto * device = Device::get();
 

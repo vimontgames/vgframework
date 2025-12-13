@@ -224,7 +224,7 @@ namespace vg::renderer
                             SurfaceType surfaceType = SurfaceType::Opaque;
                             const MaterialModel * mat = m < materials.size() ? materials[m] : nullptr;
                             if (mat)
-                                surfaceType = mat->getSurfaceType();
+                                surfaceType = mat->GetSurfaceType();
 
                             const Batch & batch = batches[m];
                             VG_ASSERT(blas);
@@ -295,7 +295,7 @@ namespace vg::renderer
                     SurfaceType surfaceType = SurfaceType::Opaque;
                     const MaterialModel * mat = m < materials.size() ? materials[m] : nullptr;
                     if (mat)
-                        surfaceType = mat->getSurfaceType();
+                        surfaceType = mat->GetSurfaceType();
 
                     const Batch & batch = batches[m];
                     blas->addIndexedGeometry(ib, ibOffset, batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, (SurfaceType::Opaque == surfaceType) ? true : false);

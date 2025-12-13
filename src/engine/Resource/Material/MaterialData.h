@@ -6,6 +6,7 @@
 namespace vg::gfx
 {
     enum class SurfaceType : core::u8;
+    enum class AlphaSource : core::u8;
     enum class CullMode : core::u8;
 }
 
@@ -36,16 +37,12 @@ namespace vg::engine
         void                                OnResourceLoaded            (core::IResource * _resource) override;
         void                                OnResourceUnloaded          (core::IResource * _resource) override;
 
-        VG_INLINE SurfaceType               getSurfaceType              () const;
-
     protected:
         renderer::IMaterialModel *          getMaterialModel            () const;
         const core::IProperty *             findTextureResourceProperty (core::IResource * _resource) const;
 
     protected:
-        SurfaceType                         m_surfaceType;
-        float                               m_depthFade;
-        gfx::CullMode                       m_cullMode;
+
     };
 }
 
