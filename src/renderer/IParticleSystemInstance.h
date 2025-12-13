@@ -9,7 +9,8 @@ namespace vg::renderer
         bool                m_play                  = false;
         bool                m_spawn                 = false;
         float               m_spawnRate             = 1.0f;
-        float               m_lifeTime              = 5.0f;
+        bool                m_useLifeTime           = true;
+        float               m_lifeTime              = 3.0f;
         core::u16           m_maxParticleCount      = 1;
         core::float3        m_size                  = core::float3(0.1f, 0.1f, 0.1f);
         core::FloatCurve    m_colorAndOpacityCurve;
@@ -21,6 +22,7 @@ namespace vg::renderer
                 || m_spawn != _other.m_spawn 
                 || m_maxParticleCount != _other.m_maxParticleCount 
                 || m_spawnRate != _other.m_spawnRate 
+                || m_useLifeTime != _other.m_useLifeTime
                 || m_lifeTime != _other.m_lifeTime 
                 || any(m_size != _other.m_size) 
                 || m_colorAndOpacityCurve != _other.m_colorAndOpacityCurve

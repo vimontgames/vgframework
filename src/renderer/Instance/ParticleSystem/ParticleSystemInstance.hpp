@@ -230,13 +230,13 @@ namespace vg::renderer
                 particle.age += emitter.m_dt;
                 particle.frame = particle.age * emitter.m_params.m_framerate;
 
-                if (particle.age >= particle.lifetime)
+                if (emitter.m_params.m_useLifeTime && particle.age >= particle.lifetime)
                 {
                     particle.alive = false;
                     continue;
                 }
 
-                particle.velocity = float3(0, 0, 1);
+                particle.velocity = float3(0, 0, 0); // TODO
                 particle.position += particle.velocity * emitter.m_dt;
 
                 const ParticleEmitterParams & params = emitter.m_params;

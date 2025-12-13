@@ -38,17 +38,6 @@ namespace vg::engine
         return ((ParticleEmitterDesc *)_object)->Stop();
     }
 
-    template <size_t N, size_t M>
-    constexpr auto concat(const char(&a)[N], const char(&b)[M])
-    {
-        std::array<char, N + M - 1> out{}; // N+M-1 pour ne pas dupliquer le '\0'
-        for (size_t i = 0; i < N - 1; ++i)
-            out[i] = a[i];
-        for (size_t i = 0; i < M; ++i)
-            out[N - 1 + i] = b[i]; // copie y compris '\0'
-        return out;
-    }
-
     //--------------------------------------------------------------------------------------
     bool ParticleEmitterDesc::registerProperties(IClassDesc & _desc)
     {
@@ -72,9 +61,9 @@ namespace vg::engine
         setPropertyDescription(ParticleEmitterDesc, m_params.m_spawnRate, "Number of particles spawn per second");
         setPropertyRange(ParticleEmitterDesc, m_params.m_spawnRate, uint2(0.0f, 60.0f));
 
-        registerProperty(ParticleEmitterDesc, m_params.m_lifeTime, "Life time");
+        registerOptionalProperty(ParticleEmitterDesc, m_params.m_useLifeTime, m_params.m_lifeTime, "Life time");
         setPropertyDescription(ParticleEmitterDesc, m_params.m_lifeTime, "Life time of a particle");
-        setPropertyRange(ParticleEmitterDesc, m_params.m_lifeTime, uint2(0.0f, 60.0f));        
+        setPropertyRange(ParticleEmitterDesc, m_params.m_lifeTime, uint2(0.0f, 60.0f));      
 
         registerProperty(ParticleEmitterDesc, m_params.m_maxParticleCount, "Max Particles");
         setPropertyDescription(ParticleEmitterDesc, m_params.m_maxParticleCount, "Maximum amount of particles this emitter can spawn");
