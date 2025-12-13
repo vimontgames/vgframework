@@ -9,6 +9,7 @@
 #include "core/string/string.h"
 #include "core/IResource.h"
 #include "gfx/ITexture.h"
+#include "gfx/Device/Device.h"
 #include "gfx/Device/DeviceCaps.h"
 #include "renderer/Renderer.h"
 #include "renderer/RayTracing/RayTracingManager.h"
@@ -118,6 +119,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool IsRaytracingDisabled(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const gfx::DeviceCaps & caps = gfx::Device::get()->getDeviceCaps();
+        return caps.rayTracing.supported == false;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool RendererOptions::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
@@ -188,8 +196,11 @@ namespace vg::renderer
             {
                 registerProperty(RendererOptions, m_rayTracing, "Enable");
                 setPropertyDescription(RendererOptions, m_rayTracing, "Enable Raytracing");
+                setPropertyReadOnlyCallback(RendererOptions, m_rayTracing, IsRaytracingDisabled);
 
                 registerPropertyEnum(RendererOptions, TLASMode, m_rayTracingTLASMode, "TLAS");
+                setPropertyDescription(RendererOptions, m_rayTracingTLASMode, "Defines how the raytracing Top-Level Accelleration Structure is updated.");
+                setPropertyReadOnlyCallback(RendererOptions, m_rayTracingTLASMode, IsRaytracingDisabled);
             }
             registerPropertyGroupEnd(RendererOptions);
 
@@ -317,6 +328,8 @@ namespace vg::renderer
         }
     }
 
+    static bool g_showRaytracingNotSupportedWarningOnce = true;
+
     //--------------------------------------------------------------------------------------
     void RendererOptions::sync(const RendererOptions & _other)
     {
@@ -361,7 +374,21 @@ namespace vg::renderer
             m_shadowsResolution[i] = _other.m_shadowsResolution[i];
         }
 
-        if (_other.m_rayTracing != m_rayTracing)
+        // Enable raytracing only if supported
+        const gfx::DeviceCaps & caps = gfx::Device::get()->getDeviceCaps();
+        bool raytracing = _other.m_rayTracing;
+
+        // Display warning only once when changes        
+        if (raytracing && !caps.rayTracing.supported)
+        {
+            if (g_showRaytracingNotSupportedWarningOnce)
+            {
+                VG_ERROR("[Renderer] Raytracing is not supported");
+                g_showRaytracingNotSupportedWarningOnce = false;
+            }
+            raytracing = false;
+        }
+        if (raytracing != m_rayTracing)
         {
             if (_other.m_rayTracing)
             {
@@ -530,6 +557,10 @@ namespace vg::renderer
         else if (!strcmp(name, "m_useCustomQualityLevel"))
         {
             applyQualityLevel(&_prop);
+        }
+        else if (!strcmp(name, "m_rayTracing"))
+        {
+            g_showRaytracingNotSupportedWarningOnce = true;
         }
     }
 

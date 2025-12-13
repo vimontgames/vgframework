@@ -64,7 +64,7 @@ namespace vg::gfx
         // RayTracing
         struct RayTracingCaps
         {
-            bool            supported = false;
+            bool supported = false;
         };
         RayTracingCaps rayTracing;
 

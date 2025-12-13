@@ -113,7 +113,8 @@ namespace vg::core
             if (string::npos != first)
                 message = message.substr(first);
 
-            u64 crc = computeCRC64(message.c_str(), message.length());
+            // In case the exact same message is used with different category or warning level
+            const u64 crc = computeCRC64(category.c_str()) + computeCRC64(message.c_str()) + (u64)_level;
             size_t index = -1;
             for (uint i = 0; i < m_entries.size(); ++i)
             {
