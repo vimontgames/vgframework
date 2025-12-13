@@ -88,6 +88,16 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    string removeStartingIcon(const core::string & _str)
+    {
+        // Start at first alphabetical char
+        size_t i = 0;
+        while (i < _str.size() && !std::isalpha(static_cast<unsigned char>(_str[i])))
+            ++i;
+        return _str.substr(i);
+    }
+
+    //--------------------------------------------------------------------------------------
     string removeTrailingString(const core::string & _str, const core::string _suffix)
     {
         if (endsWith(_str, _suffix)) 

@@ -23,6 +23,9 @@ namespace vg::core
     // Remove last character if present
     string removeTrailingChar(const core::string & _str, const char _char);
 
+    // Remove icon and starting spaces
+    string removeStartingIcon(const core::string & _str);
+
     // Remove _suffix at the end of _str if is present
     string removeTrailingString(const core::string & _str, const core::string _suffix);
 

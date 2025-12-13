@@ -20,6 +20,7 @@ namespace vg::editor
         bool displayResourceList(IObject * _object, const core::string & _label, const core::string & _vectorPropName, const PropertyContext * _propContext)
         {
             string label = removeTrailingChar(_label, 's');
+                   label = removeStartingIcon(label);
 
             ImGuiStyle & style = ImGui::GetStyle();
             bool changed = false;
