@@ -90,6 +90,8 @@ namespace vg::editor
                         objectCount = propContext.m_originalProp->GetPropertyObjectVectorCount(propContext.m_originalObject);
 
                         int removeAt = -1;
+                        int moveUpAt = -1;
+                        int moveDownAt = -1;
 
                         for (uint i = 0; i < objectCount; ++i)
                         {
@@ -113,6 +115,20 @@ namespace vg::editor
                             {
                                 if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth - 1, _object, style::icon::Trashcan, fmt::sprintf("Remove element %u", i)))
                                     removeAt = i;
+
+                                ImGui::BeginDisabled(i == 0);
+                                {
+                                    if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth - 1, _object, style::icon::MoveUp, fmt::sprintf("Move up element %u", i), 1))
+                                        moveUpAt = i;
+                                }
+                                ImGui::EndDisabled();
+
+                                ImGui::BeginDisabled(i == objectCount-1);
+                                {
+                                    if (ImGui::CollapsingHeaderIconButton(collapsingHeaderPos, availableWidth - 1, _object, style::icon::MoveDown, fmt::sprintf("Move down element %u", i), 2))
+                                        moveDownAt = i;
+                                }
+                                ImGui::EndDisabled();
                             }
                             ImGui::EndDisabled();
 
@@ -123,11 +139,14 @@ namespace vg::editor
                             ImGui::PopID();
                         }
 
-                        if (removeAt >= 0)
-                        {
-                            list->RemoveAt(removeAt);
-                            changed = true;
-                        }
+                        if (-1 != moveUpAt)
+                            changed = list->MoveUp(moveUpAt);
+
+                        if (-1 != moveDownAt)
+                            changed = list->MoveDown(moveDownAt);
+
+                        if (-1 != removeAt)
+                            changed = list->Remove(removeAt);
                     }
                     else
                     {

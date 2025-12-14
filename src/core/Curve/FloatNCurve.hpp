@@ -1,4 +1,4 @@
-#include "FloatCurve.h"
+#include "FloatNCurve.h"
 #include "core/Math/Math.h"
 
 namespace vg::core
@@ -9,13 +9,13 @@ namespace vg::core
     FloatCurveDataContainer::FloatCurveDataContainer(const string & _name, IObject * _parent) :
         super(_name, _parent)
     {
-
+        RegisterUID();
     }
 
     //--------------------------------------------------------------------------------------
     FloatCurveDataContainer::~FloatCurveDataContainer()
     {
-
+        UnregisterUID();
     }
 
     //--------------------------------------------------------------------------------------
@@ -39,37 +39,77 @@ namespace vg::core
         return true;
     }
 
-    VG_REGISTER_OBJECT_CLASS(FloatCurve, "Float curve");
+    VG_REGISTER_OBJECT_CLASS(FloatNCurve, "Float curve");
 
     //--------------------------------------------------------------------------------------
-    FloatCurve::FloatCurve(const string & _name, IObject * _parent) :
+    FloatNCurve::FloatNCurve(const string & _name, IObject * _parent) :
         super(_name, _parent)
     {
         FloatCurveDataContainer & curve = m_data.emplace_back();
-        curve.RegisterUID();
 
         curve.m_curve.m_points.push_back({ 0.0f, 0.0f });
         curve.m_curve.m_points.push_back({ 1.0f, 1.0f });
     }
 
     //--------------------------------------------------------------------------------------
-    FloatCurve::~FloatCurve()
+    FloatNCurve::~FloatNCurve()
     {
 
     }
 
     //--------------------------------------------------------------------------------------
-    bool FloatCurve::registerProperties(IClassDesc & _desc)
+    bool FloatNCurve::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
-        registerPropertyObjectVector(FloatCurve, m_data, FloatCurveDataContainer, "Data");
+        registerPropertyObjectVector(FloatNCurve, m_data, FloatCurveDataContainer, "Data");
 
         return true;
     }
 
     //--------------------------------------------------------------------------------------
-    void FloatCurve::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
+    void FloatNCurve::SetCurveCount(core::uint _curveCount)
+    {
+        switch (_curveCount)
+        {
+            case 1:
+                m_type = CurveType::Float;
+            break;
+
+            case 2:
+                m_type = CurveType::Float2;
+            break;
+
+            case 3:
+                m_type = CurveType::Float3;
+            break;
+
+            case 4:
+                m_type = CurveType::Float4;
+            break;
+
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED((CurveType)_curveCount);
+            return;
+        }
+
+        if (m_data.size() != _curveCount)
+            m_data.resize(_curveCount);
+
+        for (uint i = 0; i < m_data.size(); ++i)
+        {
+            auto & curve = m_data[i];
+            curve.RegisterUID();
+            if (curve.m_curve.m_points.size() == 0)
+            {
+                curve.m_curve.m_points.push_back({ 0.0f, 0.0f });
+                curve.m_curve.m_points.push_back({ 1.0f, 1.0f });
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void FloatNCurve::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
         if (!strcmp(_prop.GetName(), "m_type"))
         {
@@ -78,28 +118,26 @@ namespace vg::core
             switch (curveType)
             {
                 case CurveType::Float:
-                    m_data.resize(1);
+                    SetCurveCount(1);
+                    break;
+
+                case CurveType::Float2:
+                    SetCurveCount(2);
+                    break;
+
+                case CurveType::Float3:
+                    SetCurveCount(3);
                     break;
 
                 case CurveType::Float4:
-                    m_data.resize(4);
+                    SetCurveCount(4);
                     break;
-            }
-
-            for (uint i = 0; i < m_data.size(); ++i)
-            {
-                auto & curve = m_data[i];
-                if (curve.m_curve.m_points.size() == 0)
-                {
-                    curve.m_curve.m_points.push_back({ 0.0f, 0.0f });
-                    curve.m_curve.m_points.push_back({ 1.0f, 1.0f });
-                }
-            }
+            }            
         }
     }
 
     //--------------------------------------------------------------------------------------
-    void FloatCurve::ResetBounds()
+    void FloatNCurve::ResetBounds()
     {
         m_displayMin.x = m_rangeX.x;
         m_displayMax.x = m_rangeX.y;
@@ -109,7 +147,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void FloatCurve::FitVerticalBounds()
+    void FloatNCurve::FitVerticalBounds()
     {
         ResetBounds();
 
@@ -145,7 +183,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool FloatCurve::IsVisible(uint _curveIndex) const
+    bool FloatNCurve::IsVisible(uint _curveIndex) const
     {
         if (_curveIndex < m_data.size())
             return m_data[_curveIndex].m_isVisible;
@@ -154,14 +192,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void FloatCurve::SetVisible(uint _curveIndex, bool _visible)
+    void FloatNCurve::SetVisible(uint _curveIndex, bool _visible)
     {
         if (_curveIndex < m_data.size())
             m_data[_curveIndex].m_isVisible = _visible;
     }
 
     //--------------------------------------------------------------------------------------
-    float FloatCurve::getValue(float _time, uint _curveIndex) const
+    float FloatNCurve::getCurveValue(float _time, uint _curveIndex) const
     {
         if (_curveIndex < m_data.size())
         {
@@ -170,6 +208,52 @@ namespace vg::core
         }
 
         return 0.0f;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float FloatNCurve::getFloatValue(float _time) const
+    {
+        VG_ASSERT(m_data.size() == 1);
+        return m_data[0].m_curve.getValue(_time, getInterpolationType());
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float2 FloatNCurve::getFloat2Value(float _time) const
+    {
+        VG_ASSERT(m_data.size() == 2);
+        const auto interpolation = getInterpolationType();
+
+        return float2(
+            m_data[0].m_curve.getValue(_time, interpolation),
+            m_data[1].m_curve.getValue(_time, interpolation)
+        );
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float3 FloatNCurve::getFloat3Value(float _time) const
+    {
+        VG_ASSERT(m_data.size() == 3);
+        const auto interpolation = getInterpolationType();
+
+        return float3(
+            m_data[0].m_curve.getValue(_time, interpolation),
+            m_data[1].m_curve.getValue(_time, interpolation),
+            m_data[2].m_curve.getValue(_time, interpolation)
+        );
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float4 FloatNCurve::getFloat4Value(float _time) const
+    {
+        VG_ASSERT(m_data.size() == 4);
+        const auto interpolation = getInterpolationType();
+
+        return float4(
+            m_data[0].m_curve.getValue(_time, interpolation),
+            m_data[1].m_curve.getValue(_time, interpolation),
+            m_data[2].m_curve.getValue(_time, interpolation),
+            m_data[3].m_curve.getValue(_time, interpolation)
+        );
     }
 
     //--------------------------------------------------------------------------------------

@@ -5,8 +5,15 @@
 namespace vg::core
 {
     vg_enum_class(vg::core, CurveType, u8,
-        Float = 0,
-        Float4
+        Float  = 1,
+        Float2 = 2,
+        Float3 = 3,
+        Float4 = 4
+    );
+
+    vg_enum_class(vg::core, CurveValueType, u8,
+        None = 0,
+        Color
     );
 
     vg_enum_class(vg::core, CurveInterpolationType, u8,
@@ -27,8 +34,13 @@ namespace vg::core
             virtual void            FitVerticalBounds   () = 0;
             virtual bool            IsVisible           (uint _curveIndex) const = 0;
             virtual void            SetVisible          (uint _curveIndex, bool _visible) = 0;
+            virtual void            SetCurveCount       (core::uint _curveCount) = 0;
+            virtual core::uint      GetCurveCount       () const = 0;
+            virtual bool            CanChangeCurveCount () const = 0;
+            virtual void            SetCurveValueType   (CurveValueType _valueType) { m_valueType = _valueType; }
+            virtual CurveValueType  GetCurveValueType   () const { return m_valueType;}
 
-            virtual void            OnLoad              () override;
+            virtual void            OnLoad              () override;    
 
             CurveType               getCurveValueType   () const { return m_type; }
             CurveInterpolationType  getInterpolationType() const { return m_interpolation; }
@@ -40,13 +52,15 @@ namespace vg::core
             core::float2 &          getDisplayMax       () { return m_displayMax; }
 
         protected:
-            CurveType               m_type = CurveType::Float;
-            CurveInterpolationType  m_interpolation = CurveInterpolationType::Linear;
-            core::float2            m_rangeX = core::float2(0, 1);
-            core::float2            m_rangeY = core::float2(0, 1);
+            CurveType               m_type              = CurveType::Float;
+            CurveValueType          m_valueType         = CurveValueType::None;
+            CurveInterpolationType  m_interpolation     = CurveInterpolationType::Linear;
+            core::float2            m_rangeX            = core::float2(0, 1);
+            core::float2            m_rangeY            = core::float2(0, 1);
+
 
             // display range
-            core::float2            m_displayMin = core::float2(0, 0);
-            core::float2            m_displayMax = core::float2(1, 1);
+            core::float2            m_displayMin        = core::float2(0, 0);
+            core::float2            m_displayMax        = core::float2(1, 1);
     };
 }

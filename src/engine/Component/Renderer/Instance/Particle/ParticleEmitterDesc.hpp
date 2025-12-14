@@ -1,11 +1,11 @@
 #include "ParticleEmitterDesc.h"
+#include "core/string/string.h"
+#include "core/IResourceManager.h"
 
 #include <array>
 
 using namespace vg::core;
-
-//#define registerPropertyAsEx(className, as, propertyName, displayName, flags)   _desc.RegisterProperty(#className, #propertyName, (as*)(&((className*)(nullptr))->propertyName), displayName, flags)
-//#define registerPropertyAs(className, as, propertyName, displayName)            registerPropertyAsEx(className, as, propertyName, displayName, vg::core::PropertyFlags::None)
+using namespace vg::renderer;
 
 namespace vg::engine
 {
@@ -39,10 +39,74 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    bool IsSize2DConstantHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const ParticleEmitterDesc * desc = VG_SAFE_STATIC_CAST(const ParticleEmitterDesc, _object);
+        return desc->getEmitterParams().m_sizeValueType != ParticleValueType::Constant || true; // TODO: particle meshes
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool IsSize3DConstantHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const ParticleEmitterDesc * desc = VG_SAFE_STATIC_CAST(const ParticleEmitterDesc, _object);
+        return desc->getEmitterParams().m_sizeValueType != ParticleValueType::Constant || false; // TODO: particle meshes
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool IsSizeCurveHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const ParticleEmitterDesc * desc = VG_SAFE_STATIC_CAST(const ParticleEmitterDesc, _object);
+        return desc->getEmitterParams().m_sizeValueType != ParticleValueType::Curve;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool IsVelocityConstantHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const ParticleEmitterDesc * desc = VG_SAFE_STATIC_CAST(const ParticleEmitterDesc, _object);
+        return desc->getEmitterParams().m_velocityValueType != ParticleValueType::Constant;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool IsVelocityCurveHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const ParticleEmitterDesc * desc = VG_SAFE_STATIC_CAST(const ParticleEmitterDesc, _object);
+        return desc->getEmitterParams().m_velocityValueType != ParticleValueType::Curve;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool IsConstantColorHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const ParticleEmitterDesc * desc = VG_SAFE_STATIC_CAST(const ParticleEmitterDesc, _object);
+        return desc->getEmitterParams().m_colorValueType != ParticleValueType::Constant;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool IsColorCurveHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const ParticleEmitterDesc * desc = VG_SAFE_STATIC_CAST(const ParticleEmitterDesc, _object);
+        return desc->getEmitterParams().m_colorValueType != ParticleValueType::Curve;
+    }    
+
+    //--------------------------------------------------------------------------------------
+    bool IsConstantOpacityHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const ParticleEmitterDesc * desc = VG_SAFE_STATIC_CAST(const ParticleEmitterDesc, _object);
+        return desc->getEmitterParams().m_opacityValueType != ParticleValueType::Constant;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool IsOpacityCurveHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const ParticleEmitterDesc * desc = VG_SAFE_STATIC_CAST(const ParticleEmitterDesc, _object);
+        return desc->getEmitterParams().m_opacityValueType != ParticleValueType::Curve;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ParticleEmitterDesc::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
 
+        // Controls
         registerPropertyCallbackEx(ParticleEmitterDesc, playParticleEmitter, editor::style::icon::Play, PropertyFlags::SingleLine);
         setPropertyDescription(ParticleEmitterDesc, playParticleEmitter, "Play emitter");
 
@@ -54,34 +118,96 @@ namespace vg::engine
 
         setPropertyFlag(ParticleEmitterDesc, m_name, PropertyFlags::Hidden, false); // TODO: show icons *BEFORE* name would look better
 
+        // State
         registerPropertyEx(ParticleEmitterDesc, m_params.m_play, "Play", PropertyFlags::Transient | PropertyFlags::Debug);
         registerPropertyEx(ParticleEmitterDesc, m_params.m_spawn, "Spawn", PropertyFlags::Transient | PropertyFlags::Debug);
 
-        registerProperty(ParticleEmitterDesc, m_params.m_spawnRate, "Spawn rate");
-        setPropertyDescription(ParticleEmitterDesc, m_params.m_spawnRate, "Number of particles spawn per second");
-        setPropertyRange(ParticleEmitterDesc, m_params.m_spawnRate, uint2(0.0f, 60.0f));
+        // Spawning
+        registerPropertyGroupBegin(ParticleEmitterDesc, "Spawn");
+        {
+            registerProperty(ParticleEmitterDesc, m_params.m_spawnRate, "Spawn rate");
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_spawnRate, "Number of particles spawn per second");
+            setPropertyRange(ParticleEmitterDesc, m_params.m_spawnRate, uint2(0.0f, 60.0f));
 
-        registerOptionalProperty(ParticleEmitterDesc, m_params.m_useLifeTime, m_params.m_lifeTime, "Life time");
-        setPropertyDescription(ParticleEmitterDesc, m_params.m_lifeTime, "Life time of a particle");
-        setPropertyRange(ParticleEmitterDesc, m_params.m_lifeTime, uint2(0.0f, 60.0f));      
+            registerProperty(ParticleEmitterDesc, m_params.m_lifeTime, "Life duration");
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_lifeTime, "Life time of a particle");
+            setPropertyRange(ParticleEmitterDesc, m_params.m_lifeTime, uint2(0.0f, 60.0f));    
 
-        registerProperty(ParticleEmitterDesc, m_params.m_maxParticleCount, "Max Particles");
-        setPropertyDescription(ParticleEmitterDesc, m_params.m_maxParticleCount, "Maximum amount of particles this emitter can spawn");
-        setPropertyRange(ParticleEmitterDesc, m_params.m_maxParticleCount, uint2(0, 1024));
+            registerProperty(ParticleEmitterDesc, m_params.m_neverDie, "Never die");
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_neverDie, "Particles won't be killed after life");            
 
-        // TODO: float3 for mesh particles but float2 for billboard particles?
-        registerProperty(ParticleEmitterDesc, m_params.m_size, "Size");
-        setPropertyDescription(ParticleEmitterDesc, m_params.m_size, "Particle size (2D)");
-        setPropertyRange(ParticleEmitterDesc, m_params.m_size, uint2(0.0f, 1.0f));
+            registerProperty(ParticleEmitterDesc, m_params.m_maxParticleCount, "Max Particles");
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_maxParticleCount, "Maximum amount of particles this emitter can spawn");
+            setPropertyRange(ParticleEmitterDesc, m_params.m_maxParticleCount, uint2(0, 1024));
+        }
+        registerPropertyGroupEnd(ParticleEmitterDesc);
 
-        //registerPropertyAsEx(ParticleEmitterDesc, float2, m_params.m_size, "Size", PropertyFlags::Transient);
-        //setPropertyDescription(ParticleEmitterDesc, m_params.m_size, "Particle size");
-        //setPropertyRange(ParticleEmitterDesc, m_params.m_size, uint2(0.0f, 1.0f));
+        // Size 
+        registerPropertyGroupBegin(ParticleEmitterDesc, "Size");
+        {
+            registerPropertyEnum(ParticleEmitterDesc, ParticleValueType, m_params.m_sizeValueType, "Type");
 
-        registerProperty(ParticleEmitterDesc, m_params.m_colorAndOpacityCurve, "Color & Alpha");
-        setPropertyDescription(ParticleEmitterDesc, m_params.m_colorAndOpacityCurve, "Color and alpha over lifetime");
+            registerProperty(ParticleEmitterDesc, m_params.m_constantSize, "Size");
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_constantSize, "Particle size (3D)");
+            setPropertyHiddenCallback(ParticleEmitterDesc, m_params.m_constantSize, IsSize2DConstantHidden)
 
-        registerPropertyGroupBegin(ParticleEmitterDesc, editor::style::label::FlipBook);
+            registerPropertyAlias(ParticleEmitterDesc, float2, m_params.m_constantSize, "Size");
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_constantSize, "Particle size (2D)");
+            setPropertyHiddenCallback(ParticleEmitterDesc, m_params.m_constantSize, IsSize3DConstantHidden)
+
+            registerPropertyEx(ParticleEmitterDesc, m_params.m_sizeOverLifeTime, "Size", PropertyFlags::Flatten);
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_sizeOverLifeTime, "Size over lifetime");
+            setPropertyHiddenCallback(ParticleEmitterDesc, m_params.m_sizeOverLifeTime, IsSizeCurveHidden)
+        }
+        registerPropertyGroupEnd(ParticleEmitterDesc);
+
+        // Velocity
+        registerPropertyGroupBegin(ParticleEmitterDesc, "Velocity");
+        {
+            registerPropertyEnum(ParticleEmitterDesc, ParticleValueType, m_params.m_velocityValueType, "Type");
+
+            registerProperty(ParticleEmitterDesc, m_params.m_constantVelocity, "Velocity");
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_constantVelocity, "Initial velocity");
+            setPropertyHiddenCallback(ParticleEmitterDesc, m_params.m_constantVelocity, IsVelocityConstantHidden)
+
+            registerPropertyEx(ParticleEmitterDesc, m_params.m_velocityOverLifeTime, "Opacity", PropertyFlags::Flatten);
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_velocityOverLifeTime, "Velocity over lifetime");
+            setPropertyHiddenCallback(ParticleEmitterDesc, m_params.m_velocityOverLifeTime, IsVelocityCurveHidden)
+        }
+        registerPropertyGroupEnd(ParticleEmitterDesc);
+
+        // Color
+        registerPropertyGroupBegin(ParticleEmitterDesc, "Color");
+        {
+            registerPropertyEnum(ParticleEmitterDesc, ParticleValueType, m_params.m_colorValueType, "Type");
+
+            registerPropertyEx(ParticleEmitterDesc, m_params.m_constantColor, "Color", PropertyFlags::Color);
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_constantColor, "Initial color");
+            setPropertyHiddenCallback(ParticleEmitterDesc, m_params.m_constantColor, IsConstantColorHidden)
+
+            registerPropertyEx(ParticleEmitterDesc, m_params.m_colorOverLifeTime, "Color", PropertyFlags::Flatten);
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_colorOverLifeTime, "Color over lifetime");
+            setPropertyHiddenCallback(ParticleEmitterDesc, m_params.m_colorOverLifeTime, IsColorCurveHidden)
+        }
+        registerPropertyGroupEnd(ParticleEmitterDesc);
+
+        // Opacity
+        registerPropertyGroupBegin(ParticleEmitterDesc, "Opacity");
+        {
+            registerPropertyEnum(ParticleEmitterDesc, ParticleValueType, m_params.m_opacityValueType, "Type");
+
+            registerProperty(ParticleEmitterDesc, m_params.m_constantOpacity, "Opacity");
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_constantOpacity, "Initial opacity");
+            setPropertyRange(ParticleEmitterDesc, m_params.m_constantOpacity, float2(0, 1));
+            setPropertyHiddenCallback(ParticleEmitterDesc, m_params.m_constantOpacity, IsConstantOpacityHidden)
+
+            registerPropertyEx(ParticleEmitterDesc, m_params.m_opacityOverLifeTime, "Opacity", PropertyFlags::Flatten);
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_opacityOverLifeTime, "Opacity over lifetime");
+            setPropertyHiddenCallback(ParticleEmitterDesc, m_params.m_opacityOverLifeTime, IsOpacityCurveHidden)
+        }
+        registerPropertyGroupEnd(ParticleEmitterDesc);
+
+        registerPropertyGroupBegin(ParticleEmitterDesc, "FlipBook");
         {
             registerProperty(ParticleEmitterDesc, m_params.m_framerate, "Framerate");
             setPropertyDescription(ParticleEmitterDesc, m_params.m_framerate, "Number of frames displayed per second");
@@ -89,7 +215,7 @@ namespace vg::engine
         }
         registerPropertyGroupEnd(ParticleEmitterDesc);
 
-        registerPropertyGroupBegin(ParticleEmitterDesc, editor::style::label::Material);
+        registerPropertyGroupBegin(ParticleEmitterDesc, "Material");
         {
             registerPropertyResource(ParticleEmitterDesc, m_materialResource, "Material");
         }
@@ -106,6 +232,43 @@ namespace vg::engine
     {
         m_materialResource.SetParent(this);
         m_materialResource.RegisterUID();
+
+        m_params.m_colorOverLifeTime.SetCurveValueType(CurveValueType::Color);
+    }
+
+    ////--------------------------------------------------------------------------------------
+    //ParticleEmitterDesc::ParticleEmitterDesc(const ParticleEmitterDesc & _other) :
+    //    super(_other)
+    //{
+    //    m_params = _other.m_params;
+    //    m_materialResource.setParent(this); // makes crash!
+    //
+    //    // swap client pointers in manager instead?
+    //
+    //    //string path = _other.m_materialResource.GetResourcePath();
+    //    ////Kernel::getResourceManager()->UnloadResource((IResource*)&_other.m_materialResource, path);
+    //    //
+    //    ////m_materialResource.SetParent(this);
+    //    ////auto objectUID = _other.GetUID();
+    //    ////auto matResUID = _other.m_materialResource.GetUID();
+    //    ////string path = _other.m_materialResource.GetResourcePath();
+    //    //((ParticleEmitterDesc &)_other).m_materialResource.SetResourcePath("");
+    //    ////((ParticleEmitterDesc &)_other).UnregisterUID();
+    //    ////((ParticleEmitterDesc &)_other.m_materialResource).UnregisterUID();
+    //    ////SetUID(objectUID);
+    //    ////m_materialResource.SetResourcePath(path);
+    //    ////m_materialResource.SetUID(matResUID);
+    //    //
+    //    //m_materialResource.SetParent(this);
+    //    //m_materialResource.SetObject(_other.m_materialResource.GetObject());
+    //    //_other.m_materialResource.GetObject()->AddRef();
+    //    ////m_materialResource.SetResourcePath(path); // copy path without reload and add client manually?
+    //}
+
+    //--------------------------------------------------------------------------------------
+    ParticleEmitterDesc::~ParticleEmitterDesc()
+    {
+     
     }
 
     //--------------------------------------------------------------------------------------

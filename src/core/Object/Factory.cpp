@@ -9,7 +9,7 @@
 #include "core/File/Buffer.h"
 #include "core/string/string.h"
 #include "core/Misc/BitMask/BitMask.h"
-#include "core/Curve/FloatCurve.h"
+#include "core/Curve/FloatNCurve.h"
 #include "core/IInstance.h"
 #include "core/IGameObject.h"
 #include "core/IComponent.h"

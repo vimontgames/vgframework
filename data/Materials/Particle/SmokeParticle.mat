@@ -1,12 +1,12 @@
 <Root>
     <Object class="MaterialResourceData">
-        <Property type="Uint32" name="m_uid" value="814760614"/>
+        <Property type="Uint32" name="m_uid" value="1863720227"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="Object" name="m_materialModelType">
             <Object class="MaterialModelType">
                 <Property type="String" name="m_name" value=""/>
-                <Property type="Uint32" name="m_uid" value="741768233"/>
+                <Property type="Uint32" name="m_uid" value="662335058"/>
                 <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="String" name="m_shader" value="Default"/>
@@ -14,13 +14,13 @@
         </Property>
         <Property type="ObjectPtr" name="m_data">
             <Object class="DefaultMaterialData">
-                <Property type="Uint32" name="m_uid" value="1974990359"/>
+                <Property type="Uint32" name="m_uid" value="1854405216"/>
                 <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="EnumU8" name="m_surfaceType" value="AlphaBlend"/>
-                <Property type="EnumU8" name="m_alphaSource" value="EmissiveAlpha"/>
-                <Property type="Float" name="m_depthFade" value="0.49995998"/>
-                <Property type="EnumU8" name="m_cullMode" value="None"/>
+                <Property type="EnumU8" name="m_alphaSource" value="AlbedoAlpha"/>
+                <Property type="Float" name="m_depthFade" value="0.1"/>
+                <Property type="EnumU8" name="m_cullMode" value="Back"/>
                 <Property type="EnumU8" name="m_UVSource" value="FlipBook"/>
                 <Property type="Float2" name="m_tiling" x="8" y="8"/>
                 <Property type="Float2" name="m_offset" x="0" y="0"/>
@@ -28,10 +28,10 @@
                 <Property type="Resource" name="m_albedoMap">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" value=""/>
-                        <Property type="Uint32" name="m_uid" value="4269063710"/>
+                        <Property type="Uint32" name="m_uid" value="661811387"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                        <Property type="String" name="m_resourcePath" value=""/>
+                        <Property type="String" name="m_resourcePath" value="data/Textures/Particle/AtlasSmoke_8x8.png"/>
                     </Object>
                 </Property>
                 <Property type="Float4" name="m_albedoColor" x="1" y="1" z="1" w="1"/>
@@ -39,7 +39,7 @@
                 <Property type="Resource" name="m_normalMap">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" value=""/>
-                        <Property type="Uint32" name="m_uid" value="3005532257"/>
+                        <Property type="Uint32" name="m_uid" value="291322775"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="String" name="m_resourcePath" value=""/>
@@ -50,7 +50,7 @@
                 <Property type="Resource" name="m_pbrMap">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" value=""/>
-                        <Property type="Uint32" name="m_uid" value="3998572928"/>
+                        <Property type="Uint32" name="m_uid" value="970812699"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="String" name="m_resourcePath" value=""/>
@@ -63,10 +63,10 @@
                 <Property type="Resource" name="m_emissiveMap">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" value=""/>
-                        <Property type="Uint32" name="m_uid" value="397684984"/>
+                        <Property type="Uint32" name="m_uid" value="3197684798"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                        <Property type="String" name="m_resourcePath" value="data/Textures/Particle/AtlasFire_8x8.tga"/>
+                        <Property type="String" name="m_resourcePath" value=""/>
                     </Object>
                 </Property>
                 <Property type="Float4" name="m_emissiveColor" x="1" y="1" z="1" w="1"/>

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/Component/Component.h"
-#include "core/Curve/FloatCurve.h"
+#include "core/Curve/FloatNCurve.h"
 
 namespace vg::engine
 {
@@ -76,6 +76,6 @@ namespace vg::engine
 
         EnumFlagsU16    m_enumFlagsU16 = EnumFlagsU16::One;
 
-        core::FloatCurve m_floatCurve;
+        core::FloatNCurve m_floatCurve;
     };
 }

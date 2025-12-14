@@ -93,6 +93,8 @@ namespace vg::editor
             inline constexpr char Mesh                 []= ICON_FA_CUBE;
             inline constexpr char Minimize             []= ICON_FA_MINIMIZE;
             inline constexpr char Minus                []= ICON_FA_SQUARE_MINUS;
+            inline constexpr char MoveUp               []= ICON_FA_CIRCLE_UP;
+            inline constexpr char MoveDown             []= ICON_FA_CIRCLE_DOWN;
             inline constexpr char New                  []= ICON_FA_FILE_MEDICAL;
             inline constexpr char Parent               []= ICON_FA_PERSON_BREASTFEEDING;
             inline constexpr char Override             []= ICON_FA_STAR;

@@ -207,6 +207,9 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    // TODO: Change getAvailableUploadSize to return not only largest block but also 
+    // find best (smaller) fit for incoming allocation.
+    //--------------------------------------------------------------------------------------
     uint_ptr UploadBuffer::alloc(size_t _size, size_t _alignment, RingAllocCategory _category)
     {
         const size_t totalSize = m_buffer->getBufDesc().getSize();

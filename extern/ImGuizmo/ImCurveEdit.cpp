@@ -159,15 +159,37 @@ namespace ImCurveEdit
       return ret;
    }
 
+   struct CurveEditState
+   {
+      bool selectingQuad = false;
+      ImVec2 quadSelection;
+      int overCurve = -1;
+      int movingCurve = -1;
+      bool scrollingV = false;
+      std::set<EditPoint> selection;
+      bool overSelectedPoint = false;
+   };
+
+   static std::unordered_map<ImGuiID, CurveEditState> s_curveStates;
+
+   static CurveEditState & GetCurveEditState(ImGuiID id)
+   {
+      auto [it, inserted] = s_curveStates.try_emplace(id);
+      return it->second;
+   }
+
    int Edit(Delegate& delegate, const ImVec2& size, unsigned int id, const ImRect* clippingRect, ImVector<EditPoint>* selectedPoints)
    {
-      static bool selectingQuad = false;
-      static ImVec2 quadSelection;
-      static int overCurve = -1;
-      static int movingCurve = -1;
-      static bool scrollingV = false;
-      static std::set<EditPoint> selection;
-      static bool overSelectedPoint = false;
+      ImGuiID imguiId = ImGui::GetID(id);
+      CurveEditState & curveEditState = GetCurveEditState(imguiId);
+
+      bool & selectingQuad = curveEditState.selectingQuad;
+      ImVec2 & quadSelection = curveEditState.quadSelection;
+      int & overCurve = curveEditState.overCurve;
+      int & movingCurve = curveEditState.movingCurve;
+      bool & scrollingV = curveEditState.scrollingV;
+      std::set<EditPoint> & selection = curveEditState.selection;
+      bool & overSelectedPoint = curveEditState.overSelectedPoint;
 
       const ImVec2 lowerBounds = delegate.GetLowerBounds();
       const ImVec2 upperBounds = delegate.GetUpperBounds();

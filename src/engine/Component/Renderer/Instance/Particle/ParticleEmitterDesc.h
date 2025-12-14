@@ -12,6 +12,8 @@ namespace vg::engine
         VG_CLASS_DECL(ParticleEmitterDesc, core::Object);
 
         ParticleEmitterDesc(const vg::core::string & _name = "", vg::core::IObject * _parent = nullptr);
+        //ParticleEmitterDesc(const ParticleEmitterDesc & _other);
+        ~ParticleEmitterDesc();
 
         void OnLoad() final override;
 
@@ -26,6 +28,8 @@ namespace vg::engine
         static bool playParticleEmitter(IObject * _object);
         static bool pauseParticleEmitter(IObject * _object);
         static bool stopParticleEmitter(IObject * _object);
+
+        
 
     private:
         renderer::ParticleEmitterParams     m_params;

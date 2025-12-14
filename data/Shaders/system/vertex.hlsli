@@ -164,6 +164,7 @@ struct Vertex
         uv[0] = float2(0, 0);
         uv[1] = float2(1, 1);
         color = 0xFFFFFFFF;
+        frame = 0;
     }
     
     #if _PARTICLE
@@ -344,7 +345,7 @@ struct Vertex
         uv[0] = Interpolate(verts[0].getUV(0), verts[1].getUV(0), verts[2].getUV(0), _bary);
         uv[1] = Interpolate(verts[0].getUV(1), verts[1].getUV(1), verts[2].getUV(1), _bary);
         color = packRGBA8(Interpolate(verts[0].getColor(), verts[1].getColor(), verts[2].getColor(), _bary));
-        frame = Interpolate(verts[0].getFrame(), verts[1].getFrame(), verts[2].getFrame(), _bary);
+        frame = Interpolate(verts[0].getFrame(), verts[1].getFrame(), verts[2].getFrame(), _bary);        
     }
     #endif
 

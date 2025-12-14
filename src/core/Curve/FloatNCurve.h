@@ -56,15 +56,15 @@ namespace vg::core
         bool m_isVisible = true;
     };
 
-    class FloatCurve final : public Curve
+    class FloatNCurve : public Curve
     {
     public:
-        VG_CLASS_DECL(FloatCurve, Curve);
+        VG_CLASS_DECL(FloatNCurve, Curve);
 
-        FloatCurve(const string & _name = "", IObject * _parent = nullptr);
-        ~FloatCurve();
+        FloatNCurve(const string & _name = "", IObject * _parent = nullptr);
+        ~FloatNCurve();
 
-        bool operator != (const FloatCurve & _other) const
+        bool operator != (const FloatNCurve & _other) const
         {
             if (m_data.size() != _other.m_data.size())
                 return true;
@@ -84,8 +84,16 @@ namespace vg::core
         void                    FitVerticalBounds   () final override;
         bool                    IsVisible           (uint _curveIndex) const final override;
         void                    SetVisible          (uint _curveIndex, bool _visible) final override;
+        void                    SetCurveCount       (core::uint _curveCount) final override;
 
-        float                   getValue            (float _time, uint _curveIndex = 0) const;
+        bool                    CanChangeCurveCount () const { return true; }
+        core::uint              GetCurveCount       () const final override { return (core::uint)m_data.size(); }
+
+        float                   getCurveValue       (float _time, uint _curveIndex) const;
+        float                   getFloatValue       (float _time) const;
+        core::float2            getFloat2Value      (float _time) const;
+        core::float3            getFloat3Value      (float _time) const;
+        core::float4            getFloat4Value      (float _time) const;
         const uint              getCurveCount       () const { return (uint)m_data.size(); }
         const FloatCurveData &  getCurveData        (uint _index) const { return m_data[_index].m_curve; }
         FloatCurveData &        getCurveData        (uint _index) { return m_data[_index].m_curve; }

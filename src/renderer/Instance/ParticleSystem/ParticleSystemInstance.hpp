@@ -154,6 +154,26 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    template <typename VAL, typename CUR> inline VAL getValue(ParticleValueType _valueType, VAL _constant, const CUR & _curve, const float _time)
+    {
+        VAL value;
+
+        switch (_valueType)
+        {
+            default:
+            case ParticleValueType::Constant:
+                value = _constant;
+                break;
+
+            case ParticleValueType::Curve:
+                value = _curve.getValue(_time);
+                break;
+        }
+
+        return value;
+    }
+
+    //--------------------------------------------------------------------------------------
     void ParticleSystemInstance::updateSimulation()
     {
         removeAtomicFlags(GraphicInstance::AtomicFlags::ParticleList);
@@ -171,10 +191,12 @@ namespace vg::renderer
                 emitter.m_reset = false;
             }
 
+            const ParticleEmitterParams & params = emitter.m_params;
+
             // 1. Spawn
-            if (emitter.m_params.m_spawn)
+            if (params.m_spawn)
             {
-                float spawnRate = emitter.m_params.m_spawnRate;
+                float spawnRate = params.m_spawnRate;
                 const uint numToSpawn = (uint)(spawnRate * emitter.m_timeSinceLastSpawn);
                 if (numToSpawn > 0)
                 {
@@ -194,7 +216,7 @@ namespace vg::renderer
                         }
                         if (-1 == index)
                         {
-                            if (emitter.m_particles.size() < emitter.m_params.m_maxParticleCount)
+                            if (emitter.m_particles.size() < params.m_maxParticleCount)
                             {
                                 emitter.m_particles.emplace_back();
                                 index = (uint)emitter.m_particles.size() - 1;
@@ -207,12 +229,12 @@ namespace vg::renderer
 
                         // New particle
                         Particle & particle = emitter.m_particles[index];
-                        particle.position = float3(0, 0, 0);
-                        particle.velocity = float3(0, 1, 0);
-                        particle.lifetime = emitter.m_params.m_lifeTime;
+                        particle.position = (float3)0.0f;
+                        particle.velocity = (float3)0.0f;
+                        particle.lifetime = params.m_lifeTime;
                         particle.age = 0.0f;
-                        particle.size = emitter.m_params.m_size;
-                        particle.color = float4(1, 1, 1, 1);
+                        particle.size = params.m_constantSize;
+                        particle.color = float4(params.m_constantColor.rgb, params.m_constantOpacity);
                         particle.alive = true;
                     }
                 }
@@ -227,43 +249,29 @@ namespace vg::renderer
                 if (!particle.alive)
                     continue;
 
-                particle.age += emitter.m_dt;
-                particle.frame = particle.age * emitter.m_params.m_framerate;
+                const ParticleEmitterParams & params = emitter.m_params;
 
-                if (emitter.m_params.m_useLifeTime && particle.age >= particle.lifetime)
+                particle.age += emitter.m_dt;
+                particle.frame = particle.age * params.m_framerate;
+
+                if (!params.m_neverDie && particle.age >= particle.lifetime)
                 {
                     particle.alive = false;
                     continue;
                 }
 
-                particle.velocity = float3(0, 0, 0); // TODO
+                const float curveTime = fmod(particle.age, params.m_lifeTime);
+
+                particle.size = getValue(params.m_sizeValueType, params.m_constantSize, params.m_sizeOverLifeTime, curveTime);
+                particle.velocity = getValue(params.m_velocityValueType, params.m_constantVelocity, params.m_velocityOverLifeTime, curveTime);
+                particle.color.rgb = getValue(params.m_colorValueType, params.m_constantColor, params.m_colorOverLifeTime, curveTime);
+                particle.color.a = getValue(params.m_opacityValueType, params.m_constantOpacity, params.m_opacityOverLifeTime, curveTime);
+
+                // Update velocity and position
+                particle.velocity = params.m_constantVelocity;
                 particle.position += particle.velocity * emitter.m_dt;
-
-                const ParticleEmitterParams & params = emitter.m_params;
-                const FloatCurve & opacityCurve = params.m_colorAndOpacityCurve;
-
-                if (opacityCurve.getCurveCount() == 1)
-                {
-                    const float t = particle.age;
-
-                    float4 color = float4(1, 1, 1, 1);
-                    color.a = opacityCurve.getValue(t, 0);
-
-                    particle.color = color;
-                }
-                else if (opacityCurve.getCurveCount() == 4)
-                {
-                    const float t = particle.age;
-
-                    float4 color = float4(1, 1, 1, 1);
-                    color.r = opacityCurve.getValue(t, 0);
-                    color.g = opacityCurve.getValue(t, 1);
-                    color.b = opacityCurve.getValue(t, 2);
-                    color.a = opacityCurve.getValue(t, 3);
-
-                    particle.color = color;
-                }
-
+               
+                // Update bounding box
                 const float radius = max(particle.size.x, max(particle.size.y, particle.size.z)) * 0.5f;
 
                 aabb.grow(particle.position - radius);
