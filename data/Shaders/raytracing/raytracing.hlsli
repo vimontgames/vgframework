@@ -40,12 +40,14 @@ Vertex getRaytracingInterpolatedVertex(GPUInstanceData instanceData, GPUBatchDat
     }
     
     Vertex vert;
+    vert.Clear();
 
     ByteAddressBuffer vb = getNonUniformBuffer(instanceData.getVertexBufferHandle());
     uint vbOffset = instanceData.getVertexBufferOffset();
     VertexFormat vertexFormat = instanceData.getVertexFormat();
 
-    #if !_PARTICLE // need to figure out the solution for particles
+    // This should be based on vertex format to work with raytracing (but still using _PARTICLE to optimize the test during rasterization)
+    #if !_PARTICLE 
     Vertex verts[3];
     verts[0].Load(vb, vertexFormat, index[0], vbOffset);
     verts[1].Load(vb, vertexFormat, index[1], vbOffset);
@@ -84,7 +86,7 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     GPUBatchData batchData = instanceData.loadGPUBatchData(instanceDataOffset, geometryIndex);
     GPUMaterialData materialData = batchData.loadGPUMaterialData();
     float4 materialColor = materialData.getAlbedoColor();
-             
+                 
     // Use barycentrics to get interpolated attribute values
     Vertex vert = getRaytracingInterpolatedVertex(instanceData, batchData, primitiveIndex, triangleBarycentrics);
 
@@ -188,7 +190,7 @@ bool IsRaytracingDebugDisplayMode(DisplayMode mode)
 // Raytraced shadow calculation (0.0f = completely shadowed, 1.0f = no shadow)
 //--------------------------------------------------------------------------------------
 float3 getRaytracedShadow(RaytracingAccelerationStructure _tlas, float3 _worldPos, float3 _worldNormal, float _bias, float3 _lightDir, float _lightFar)
-{
+{    
     float3 shadow = (float3)1;	
     			
     #if 1
