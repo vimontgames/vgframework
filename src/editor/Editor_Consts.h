@@ -137,10 +137,20 @@ namespace vg::editor
 
         namespace label
         {
-            inline constexpr char FlipBook             [] = ICON_FA_FILM " FlipBook";
-            inline constexpr char Material             [] = ICON_FA_PAINTBRUSH " Material";
+            namespace particle
+            {
+                inline constexpr char Emitters         [] = ICON_FA_BOLT " Emitters";
+
+                inline constexpr char Life             [] = ICON_FA_HEART_PULSE " Life";
+                inline constexpr char Size             [] = ICON_FA_MAXIMIZE " Size";
+                inline constexpr char Color            [] = ICON_FA_DROPLET " Color"; // ICON_FA_PALETTE " Color";
+                inline constexpr char Opacity          [] = ICON_FA_CIRCLE_HALF_STROKE " Opacity";
+                inline constexpr char Speed            [] = ICON_FA_GAUGE_SIMPLE_HIGH " Speed";
+                inline constexpr char FlipBook         [] = ICON_FA_FILM " FlipBook";
+                inline constexpr char Material         [] = ICON_FA_PAINTBRUSH " Material";
+            }
+
             inline constexpr char Materials            [] = ICON_FA_PAINTBRUSH " Materials"; 
-            inline constexpr char Emitters             [] = ICON_FA_BOLT " Emitters";
         }
     }
 }

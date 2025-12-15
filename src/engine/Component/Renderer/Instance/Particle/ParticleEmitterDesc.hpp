@@ -123,7 +123,7 @@ namespace vg::engine
         registerPropertyEx(ParticleEmitterDesc, m_params.m_spawn, "Spawn", PropertyFlags::Transient | PropertyFlags::Debug);
 
         // Spawning
-        registerPropertyGroupBegin(ParticleEmitterDesc, "Spawn");
+        registerPropertyGroupBegin(ParticleEmitterDesc, editor::style::label::particle::Life);
         {
             registerProperty(ParticleEmitterDesc, m_params.m_spawnRate, "Spawn rate");
             setPropertyDescription(ParticleEmitterDesc, m_params.m_spawnRate, "Number of particles spawn per second");
@@ -143,7 +143,7 @@ namespace vg::engine
         registerPropertyGroupEnd(ParticleEmitterDesc);
 
         // Size 
-        registerPropertyGroupBegin(ParticleEmitterDesc, "Size");
+        registerPropertyGroupBegin(ParticleEmitterDesc, editor::style::label::particle::Size);
         {
             registerPropertyEnum(ParticleEmitterDesc, ParticleValueType, m_params.m_sizeValueType, "Type");
 
@@ -162,7 +162,7 @@ namespace vg::engine
         registerPropertyGroupEnd(ParticleEmitterDesc);
 
         // Velocity
-        registerPropertyGroupBegin(ParticleEmitterDesc, "Velocity");
+        registerPropertyGroupBegin(ParticleEmitterDesc, editor::style::label::particle::Speed);
         {
             registerPropertyEnum(ParticleEmitterDesc, ParticleValueType, m_params.m_velocityValueType, "Type");
 
@@ -177,7 +177,7 @@ namespace vg::engine
         registerPropertyGroupEnd(ParticleEmitterDesc);
 
         // Color
-        registerPropertyGroupBegin(ParticleEmitterDesc, "Color");
+        registerPropertyGroupBegin(ParticleEmitterDesc, editor::style::label::particle::Color);
         {
             registerPropertyEnum(ParticleEmitterDesc, ParticleValueType, m_params.m_colorValueType, "Type");
 
@@ -192,7 +192,7 @@ namespace vg::engine
         registerPropertyGroupEnd(ParticleEmitterDesc);
 
         // Opacity
-        registerPropertyGroupBegin(ParticleEmitterDesc, "Opacity");
+        registerPropertyGroupBegin(ParticleEmitterDesc, editor::style::label::particle::Opacity);
         {
             registerPropertyEnum(ParticleEmitterDesc, ParticleValueType, m_params.m_opacityValueType, "Type");
 
@@ -207,7 +207,7 @@ namespace vg::engine
         }
         registerPropertyGroupEnd(ParticleEmitterDesc);
 
-        registerPropertyGroupBegin(ParticleEmitterDesc, "FlipBook");
+        registerPropertyGroupBegin(ParticleEmitterDesc, editor::style::label::particle::FlipBook);
         {
             registerProperty(ParticleEmitterDesc, m_params.m_framerate, "Framerate");
             setPropertyDescription(ParticleEmitterDesc, m_params.m_framerate, "Number of frames displayed per second");
@@ -215,7 +215,7 @@ namespace vg::engine
         }
         registerPropertyGroupEnd(ParticleEmitterDesc);
 
-        registerPropertyGroupBegin(ParticleEmitterDesc, "Material");
+        registerPropertyGroupBegin(ParticleEmitterDesc, editor::style::label::particle::Material);
         {
             registerPropertyResource(ParticleEmitterDesc, m_materialResource, "Material");
         }

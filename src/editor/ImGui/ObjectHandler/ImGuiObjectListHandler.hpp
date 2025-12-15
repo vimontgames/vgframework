@@ -133,8 +133,10 @@ namespace vg::editor
                             ImGui::EndDisabled();
 
                             if (open)
+                            {
                                 changed |= ImGuiWindow::displayObject(object);
-                                //changed |= ImGuiWindow::displayResource(resource, _object, prop, i, propContext);
+                                ImGui::Spacing();
+                            }
 
                             ImGui::PopID();
                         }
@@ -154,7 +156,6 @@ namespace vg::editor
                     }
                 }
 
-                ImGui::Spacing();
                 ImGui::Unindent();
             }
 
