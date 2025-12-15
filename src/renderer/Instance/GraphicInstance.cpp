@@ -94,38 +94,35 @@ namespace vg::renderer
     {
         SurfaceTypeFlags flags = (SurfaceTypeFlags)0x0;
 
+        auto * defaultMaterial = Renderer::get()->getDefaultMaterial();
+
         const auto & materials = getMaterials();
         if (materials.size() > 0)
         {
             for (auto * material : materials)
             {
-                if (material)
+                if (!material)
+                    material = defaultMaterial;
+
+                auto surf = material->GetSurfaceType();
+
+                switch (surf)
                 {
-                    auto surf = material->GetSurfaceType();
+                    case SurfaceType::Opaque:
+                        flags |= SurfaceTypeFlags::Opaque;
+                        break;
 
-                    switch (surf)
-                    {
-                        case SurfaceType::Opaque:
-                            flags |= SurfaceTypeFlags::Opaque;
-                            break;
+                    case SurfaceType::AlphaTest:
+                        flags |= SurfaceTypeFlags::AlphaTest;
+                        break;
 
-                        case SurfaceType::AlphaTest:
-                            flags |= SurfaceTypeFlags::AlphaTest;
-                            break;
+                    case SurfaceType::AlphaBlend:
+                        flags |= SurfaceTypeFlags::AlphaBlend;
+                        break;
 
-                        case SurfaceType::AlphaBlend:
-                            flags |= SurfaceTypeFlags::AlphaBlend;
-                            break;
-
-                        case SurfaceType::Decal:
-                            flags |= SurfaceTypeFlags::Decal;
-                            break;
-                    }
-                }
-                else
-                {
-                    flags |= SurfaceTypeFlags::Opaque;
-                    break;
+                    case SurfaceType::Decal:
+                        flags |= SurfaceTypeFlags::Decal;
+                        break;
                 }
             }
         }
