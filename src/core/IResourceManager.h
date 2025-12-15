@@ -61,5 +61,8 @@ namespace vg::core
 
         // Force reimport specific resource
         virtual void Reimport(IResource * _res, bool _async = true) = 0;
+
+        // Swap two client pointers
+        virtual void SwapResources(IResource * _resA, IResource * _resB) = 0;
     };
 }

@@ -49,6 +49,22 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Curve::Swap(IObject * _other)
+    {
+        super::Swap(_other);
+
+        Curve * other = VG_SAFE_STATIC_CAST(Curve, _other);
+
+        swap(m_type, other->m_type);
+        swap(m_valueType, other->m_valueType);
+        swap(m_interpolation, other->m_interpolation);
+        swap(m_rangeX, other->m_rangeX);
+        swap(m_rangeY, other->m_rangeY);
+        swap(m_displayMin, other->m_displayMin);
+        swap(m_displayMax, other->m_displayMax);
+    }
+
+    //--------------------------------------------------------------------------------------
     void Curve::OnLoad()
     {
         ResetBounds();

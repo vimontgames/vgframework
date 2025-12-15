@@ -86,6 +86,8 @@ namespace vg::core
         void                    SetVisible          (uint _curveIndex, bool _visible) final override;
         void                    SetCurveCount       (core::uint _curveCount) final override;
 
+        void                    Swap                (IObject * _other) override;
+
         bool                    CanChangeCurveCount () const { return true; }
         core::uint              GetCurveCount       () const final override { return (core::uint)m_data.size(); }
 

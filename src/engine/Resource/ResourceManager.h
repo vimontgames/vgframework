@@ -54,11 +54,13 @@ namespace vg::engine
         void                        LoadResourceAsync           (core::IResource * _resource, const core::string & _oldPath, const core::string & _path) final override;
         void                        UnloadResource              (core::IResource * _resource, const core::string & _path) final override ;
 
+        void                        SwapResources               (core::IResource * _resA, core::IResource * _resB) final override;
+
         void                        updateMainThread            ();
         void                        flushPendingLoading         ();
 
         bool                        isLoadingThreadRunning      () const { return m_isLoadingThreadRunning; }
-        void                        flushUpdateResource();
+        void                        flushUpdateResource         ();
 
     protected:
         void                        registerThread              ();

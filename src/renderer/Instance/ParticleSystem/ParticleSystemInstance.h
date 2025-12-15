@@ -49,6 +49,9 @@ namespace vg::renderer
 
         void                        UpdateTime                  (float _dt) final override;
         void                        UpdateEmitterTime           (core::uint _index, float _dt) final override;
+
+        bool                        OnEmittersSwap              (core::uint _indexA, core::uint _indexB) final override;
+        bool                        OnEmittersRemoved           (core::uint _index) final override;
       
         core::uint                  GetGPUInstanceDataSize      () const final override;
         core::uint                  FillGPUInstanceData         (const core::u8 * VG_RESTRICT _data) const final override;
@@ -68,7 +71,7 @@ namespace vg::renderer
             core::u16               m_aliveParticles = 0;
             bool                    m_reset = false;
         };
-        core::vector<EmitterData> m_emitters;
+        core::vector<EmitterData>   m_emitters;
         core::AABB m_aabb;
     };
 }

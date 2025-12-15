@@ -49,22 +49,22 @@ namespace vg::core
         //--------------------------------------------------------------------------------------
         bool MoveUp(size_t _index)
         {
-            //if (_index > 0 && _index < m_objects.size())
-            //{
-            //    swap(m_objects[_index], m_objects[_index - 1]);
-            //    return true;
-            //}
+            if (_index > 0 && _index < m_objects.size())
+            {
+                m_objects[_index].Swap(&m_objects[_index - 1]);
+                return true;
+            }
             return false;
         }
 
         //--------------------------------------------------------------------------------------
         bool MoveDown(size_t _index)
         {
-            //if (_index + 1 < m_objects.size())
-            //{
-            //    swap(m_objects[_index], m_objects[_index + 1]);
-            //    return true;
-            //}
+            if (_index + 1 < m_objects.size())
+            {
+                m_objects[_index].Swap(&m_objects[_index + 1]);
+                return true;
+            }
             return false;
         }
 
@@ -113,7 +113,7 @@ namespace vg::core
             super::OnDisable();
         }
 
-    //protected:
+    protected:
         core::vector<T> m_objects;
     };
 

@@ -154,6 +154,30 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    bool ParticleSystemInstance::OnEmittersSwap(core::uint _indexA, core::uint _indexB)
+    {
+        VG_ASSERT(_indexA < m_emitters.size() && _indexB < m_emitters.size());
+        if (_indexA < m_emitters.size() && _indexB < m_emitters.size())
+        {
+            swap(m_emitters[_indexA], m_emitters[_indexB]);
+            return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleSystemInstance::OnEmittersRemoved(core::uint _index)
+    {
+        VG_ASSERT(_index < m_emitters.size());
+        if (_index < m_emitters.size())
+        {
+            m_emitters.erase(m_emitters.begin() + _index);
+            return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     template <typename VAL, typename CUR> inline VAL getValue(ParticleValueType _valueType, VAL _constant, const CUR & _curve, const float _time)
     {
         VAL value;
@@ -201,7 +225,7 @@ namespace vg::renderer
                 if (numToSpawn > 0)
                 {
                     emitter.m_timeSinceLastSpawn -= numToSpawn / spawnRate;
-                    for (uint i = 0; i < numToSpawn; ++i)
+                    for (uint s = 0; s < numToSpawn; ++s)
                     {
                         // Find dead particle
                         uint index = -1;
@@ -268,7 +292,6 @@ namespace vg::renderer
                 particle.color.a = getValue(params.m_opacityValueType, params.m_constantOpacity, params.m_opacityOverLifeTime, curveTime);
 
                 // Update velocity and position
-                particle.velocity = params.m_constantVelocity;
                 particle.position += particle.velocity * emitter.m_dt;
                
                 // Update bounding box
@@ -376,7 +399,6 @@ namespace vg::renderer
                 u32 color = packRGBA8(particle.color); 
                
                 quad.setPos(particle.position);
-                quad.setFrame(0);
                 quad.setSize(particle.size.xy * 0.5f);
                 quad.setColor(color);  
                 quad.setFrame(particle.frame);

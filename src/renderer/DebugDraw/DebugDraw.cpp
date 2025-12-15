@@ -168,7 +168,7 @@ namespace vg::renderer
         {
             Lookup::key_type key(_first, _second);
             if (key.first > key.second)
-                std::swap(key.first, key.second);
+                swap(key.first, key.second);
             
             auto inserted = _lookup.insert({ key, (u16)_vertices.size() });
             if (inserted.second)

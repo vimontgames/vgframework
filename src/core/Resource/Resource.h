@@ -19,6 +19,8 @@ namespace vg::core
 
         Resource &                  operator =              (const Resource & _from);
 
+        void                        Swap                    (IObject * _other) override;
+
         bool                        CreateFile              (const string & _path, IObject * _data) override;
         bool                        SaveFile                (const string & _path) const override;
 

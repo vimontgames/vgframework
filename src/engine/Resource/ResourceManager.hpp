@@ -372,6 +372,50 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void ResourceManager::SwapResources(IResource * _resA, IResource * _resB)
+    {
+        flushPendingLoading();
+        flushUpdateResource();
+
+        // Path pointers
+        {
+            lock_guard lock(m_addResourceToLoadRecursiveMutex);
+
+            // patch resource A
+            {
+                auto it = m_resourceInfosMap.find(_resA->GetResourcePath());
+                if (m_resourceInfosMap.end() != it)
+                {
+                    ResourceInfo & loaded = *it->second;
+
+                    auto it = std::find(loaded.m_clients.begin(), loaded.m_clients.end(), _resA);
+                    if (it != loaded.m_clients.end())
+                    {
+                        VG_DEBUGPRINT("[Resource] Resource A 0x%016llx was a client of Resource \"%s\"\n", _resA, loaded.GetResourcePath().c_str());
+                        *it = _resB;
+                    }
+                }
+            }
+
+            // Patch resource B
+            {
+                auto it = m_resourceInfosMap.find(_resB->GetResourcePath());
+                if (m_resourceInfosMap.end() != it)
+                {
+                    ResourceInfo & loaded = *it->second;
+
+                    auto it = std::find(loaded.m_clients.begin(), loaded.m_clients.end(), _resB);
+                    if (it != loaded.m_clients.end())
+                    {
+                        VG_DEBUGPRINT("[Resource] Resource B 0x%016llx was a client of Resource \"%s\"\n", _resB, loaded.GetResourcePath().c_str());
+                        *it = _resA;
+                    }
+                }
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     void ResourceManager::LoadResourceAsync(IResource * _resource, const core::string & _oldPath, const string & _newPath)
     {
         VG_ASSERT(_resource->GetParent() != nullptr); 

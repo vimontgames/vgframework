@@ -41,6 +41,8 @@ namespace vg::core
 										    IObject		            () = default;
 		virtual							    ~IObject	            () = default;
 
+        virtual void                        Swap                    (IObject * _other) = 0;
+
         virtual bool                        RegisterUID             () = 0;
         virtual bool                        UnregisterUID           () = 0;
         virtual bool                        HasValidUID             () const = 0;

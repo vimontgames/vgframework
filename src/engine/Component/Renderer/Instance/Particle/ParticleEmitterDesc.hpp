@@ -236,45 +236,63 @@ namespace vg::engine
         m_params.m_colorOverLifeTime.SetCurveValueType(CurveValueType::Color);
     }
 
-    ////--------------------------------------------------------------------------------------
-    //ParticleEmitterDesc::ParticleEmitterDesc(const ParticleEmitterDesc & _other) :
-    //    super(_other)
-    //{
-    //    m_params = _other.m_params;
-    //    m_materialResource.setParent(this); // makes crash!
-    //
-    //    // swap client pointers in manager instead?
-    //
-    //    //string path = _other.m_materialResource.GetResourcePath();
-    //    ////Kernel::getResourceManager()->UnloadResource((IResource*)&_other.m_materialResource, path);
-    //    //
-    //    ////m_materialResource.SetParent(this);
-    //    ////auto objectUID = _other.GetUID();
-    //    ////auto matResUID = _other.m_materialResource.GetUID();
-    //    ////string path = _other.m_materialResource.GetResourcePath();
-    //    //((ParticleEmitterDesc &)_other).m_materialResource.SetResourcePath("");
-    //    ////((ParticleEmitterDesc &)_other).UnregisterUID();
-    //    ////((ParticleEmitterDesc &)_other.m_materialResource).UnregisterUID();
-    //    ////SetUID(objectUID);
-    //    ////m_materialResource.SetResourcePath(path);
-    //    ////m_materialResource.SetUID(matResUID);
-    //    //
-    //    //m_materialResource.SetParent(this);
-    //    //m_materialResource.SetObject(_other.m_materialResource.GetObject());
-    //    //_other.m_materialResource.GetObject()->AddRef();
-    //    ////m_materialResource.SetResourcePath(path); // copy path without reload and add client manually?
-    //}
-
     //--------------------------------------------------------------------------------------
     ParticleEmitterDesc::~ParticleEmitterDesc()
     {
-     
+        // We can't get index when removing element from vector
+        //if (ParticleComponent * particleComp = ((ParticleComponent *)getParent()->GetParent()))
+        //{
+        //    uint index = particleComp->getEmitterIndex(this);
+        //    particleComp->onEmitterRemoved(index);
+        //}
+
+        // So reset the particle system instead :(
+        if (ParticleComponent * particleComp = ((ParticleComponent *)getParent()->GetParent()))
+            particleComp->Reset();
     }
+
+    //--------------------------------------------------------------------------------------
+    void ParticleEmitterDesc::Swap(IObject * _other)
+    {
+        super::Swap(_other);
+
+        ParticleEmitterDesc * other = VG_SAFE_STATIC_CAST(ParticleEmitterDesc, _other);
+        m_params.Swap(other->m_params);
+
+        m_materialResource.Swap(&other->m_materialResource);
+
+        // Solution 1: Reset both emitters
+        // Reset();
+        // other->Reset();
+
+        // Solution 2: Reorder
+        if (ParticleComponent * particleComp = ((ParticleComponent *)getParent()->GetParent()))
+        {
+            uint indexA = particleComp->getEmitterIndex(this);
+            uint indexB = particleComp->getEmitterIndex(other);
+            particleComp->onEmittersSwap(indexA, indexB);
+        }
+    }  
 
     //--------------------------------------------------------------------------------------
     void ParticleEmitterDesc::OnLoad()
     {
         RegisterUID();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleEmitterDesc::Reset()
+    {
+        ParticleComponent * particleComp = ((ParticleComponent *)getParent()->GetParent());
+        auto index = particleComp->getEmitterIndex(this);
+        if (-1 != index)
+        {
+            particleComp->ResetEmitter(index);
+
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------

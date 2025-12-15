@@ -82,6 +82,8 @@ namespace vg::core
     }
 
     template <typename T> using dictionary = core::unordered_map<core::string, T, core::hash<core::string> >;
+
+    using std::swap;
 }
 
 #include "core/Container/Vector.h"

@@ -12,11 +12,13 @@ namespace vg::engine
         VG_CLASS_DECL(ParticleEmitterDesc, core::Object);
 
         ParticleEmitterDesc(const vg::core::string & _name = "", vg::core::IObject * _parent = nullptr);
-        //ParticleEmitterDesc(const ParticleEmitterDesc & _other);
         ~ParticleEmitterDesc();
+
+        void Swap(IObject * _other) final override;
 
         void OnLoad() final override;
 
+        bool Reset();
         bool Play();
         bool Pause();
         bool Stop();

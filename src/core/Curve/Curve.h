@@ -40,6 +40,8 @@ namespace vg::core
             virtual void            SetCurveValueType   (CurveValueType _valueType) { m_valueType = _valueType; }
             virtual CurveValueType  GetCurveValueType   () const { return m_valueType;}
 
+            void                    Swap                (IObject * _other) override;
+
             virtual void            OnLoad              () override;    
 
             CurveType               getCurveValueType   () const { return m_type; }

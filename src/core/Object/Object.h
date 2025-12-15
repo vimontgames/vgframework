@@ -48,6 +48,8 @@ namespace vg::core
 										Object					();
 										~Object					();
 
+        void                            Swap                    (IObject * _other) override;
+
 		Object &						operator =				(const Object & _from);
 
 		bool							RegisterUID				() override;

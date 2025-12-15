@@ -64,10 +64,12 @@ namespace vg::renderer
                 // Size
                 || m_sizeValueType != _other.m_sizeValueType
                 || any(m_constantSize != _other.m_constantSize)
-                //
+                || m_sizeOverLifeTime != _other.m_sizeOverLifeTime
+                
                 // Velocity
                 || m_velocityValueType != _other.m_velocityValueType
                 || any(m_constantVelocity != _other.m_constantVelocity)
+                || m_velocityOverLifeTime != _other.m_velocityOverLifeTime
                 
                 // Color
                 || m_colorValueType != _other.m_colorValueType
@@ -82,6 +84,45 @@ namespace vg::renderer
                 // FlipBook
                 || m_framerate != _other.m_framerate;
         }
+
+        // Manual swap is needed because of curves so that they keep the same after swap
+        void Swap(ParticleEmitterParams & _other)
+        {
+            // State
+            core::swap(m_play, _other.m_play);
+            core::swap(m_spawn, _other.m_spawn);
+
+            // Spawning
+            core::swap(m_maxParticleCount, _other.m_maxParticleCount);
+            core::swap(m_spawnRate, _other.m_spawnRate);
+ 
+            // Life
+            core::swap(m_lifeTime, _other.m_lifeTime);
+            core::swap(m_neverDie, _other.m_neverDie);
+     
+            // Size
+            core::swap(m_sizeValueType, _other.m_sizeValueType);
+            core::swap(m_constantSize, _other.m_constantSize);
+            m_sizeOverLifeTime.Swap(&_other.m_sizeOverLifeTime);
+
+            // Velocity
+            core::swap(m_velocityValueType, _other.m_velocityValueType);
+            core::swap(m_constantVelocity, _other.m_constantVelocity);
+            m_velocityOverLifeTime.Swap(&_other.m_velocityOverLifeTime);
+
+            // Color
+            core::swap(m_colorValueType, _other.m_colorValueType);
+            core::swap(m_constantColor, _other.m_constantColor);
+            m_colorOverLifeTime.Swap(&_other.m_colorOverLifeTime);
+
+            // Opacity
+            core::swap(m_opacityValueType, _other.m_opacityValueType);
+            core::swap(m_constantOpacity, _other.m_constantOpacity);
+            m_opacityOverLifeTime.Swap(&_other.m_opacityOverLifeTime);
+
+            // FlipBook
+            core::swap(m_framerate, _other.m_framerate);
+        }
     };
 
     class IParticleSystemInstance : public GraphicInstance
@@ -95,5 +136,8 @@ namespace vg::renderer
 
         virtual void UpdateTime         (float _dt) = 0;
         virtual void UpdateEmitterTime  (core::uint _index, float _dt) = 0;
+
+        virtual bool OnEmittersSwap     (core::uint _indexA, core::uint _indexB) = 0;
+        virtual bool OnEmittersRemoved  (core::uint _index) = 0;
     };
 }

@@ -243,6 +243,28 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    bool ParticleComponent::onEmittersSwap(core::uint _indexA, core::uint _indexB)
+    {
+        VG_DEBUGPRINT("[Particle] Swap render data for emitters %u and %u", _indexA, _indexB);
+
+        if (nullptr != m_particleSystemInstance)
+            return m_particleSystemInstance->OnEmittersSwap(_indexA, _indexB);
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleComponent::onEmitterRemoved(core::uint _index)
+    {
+        VG_DEBUGPRINT("[Particle] Remove emitters at index %u", _index);
+
+        if (nullptr != m_particleSystemInstance)
+            return m_particleSystemInstance->OnEmittersRemoved(_index);
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     const core::string ParticleComponent::GetSubObjectName(core::uint _subObjectIndex) const
     {
         //if (nullptr != m_particleSystemInstance)

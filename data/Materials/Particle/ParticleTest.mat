@@ -34,7 +34,7 @@
                         <Property type="String" name="m_resourcePath" value=""/>
                     </Object>
                 </Property>
-                <Property type="Float4" name="m_albedoColor" x="1" y="1" z="1" w="1"/>
+                <Property type="Float4" name="m_albedoColor" x="0" y="0" z="0" w="1"/>
                 <Property type="Bool" name="m_enableNormal" value="true"/>
                 <Property type="Resource" name="m_normalMap">
                     <Object class="TextureResource">

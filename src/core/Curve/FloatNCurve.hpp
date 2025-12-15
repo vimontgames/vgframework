@@ -58,6 +58,14 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void FloatNCurve::Swap(IObject * _other)
+    {
+        super::Swap(_other);
+        FloatNCurve & other = *VG_SAFE_STATIC_CAST(FloatNCurve, _other);
+        swap(m_data, other.m_data);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool FloatNCurve::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);

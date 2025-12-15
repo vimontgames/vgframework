@@ -48,6 +48,9 @@ namespace vg::engine
 
         VG_INLINE renderer::IParticleSystemInstance *   getParticleSystemInstance   () const;
 
+        bool                                            onEmittersSwap              (core::uint _indexA, core::uint _indexB);
+        bool                                            onEmitterRemoved            (core::uint _index);
+
         static bool                                     playAllParticleEmitters     (IObject * _object);
         static bool                                     pauseAllParticleEmitters    (IObject * _object);
         static bool                                     stopAllParticleEmitters     (IObject * _object);

@@ -113,7 +113,7 @@ namespace vg::core
     IProperty * ClassDesc::GetPreviousProperty(const char * _propertyName) const
     {
         uint index = GetPropertyIndex(_propertyName);
-        if (index > 0)
+        if (-1 != index && index > 0)
             return  (IProperty *)&properties[index-1];
         
         VG_ASSERT("[Factory] Previous Property of \"%s\" not found in class '%s'", _propertyName, GetClassName());

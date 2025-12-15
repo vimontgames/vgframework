@@ -54,6 +54,21 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Resource::Swap(IObject * _other)
+    {
+        super::Swap(_other);
+
+        Resource * other = VG_SAFE_STATIC_CAST(Resource, _other);
+
+        // Notify resource managers that we swapped client pointers
+        Kernel::getResourceManager()->SwapResources(this, (IResource*)other);
+
+        swap(m_resourcePath, other->m_resourcePath);
+        swap(m_object, other->m_object);
+        swap(m_userData, other->m_userData);
+    }
+
+    //--------------------------------------------------------------------------------------
     Resource::~Resource()
     {
         Kernel::getResourceManager()->UnloadResource(this, GetResourcePath());

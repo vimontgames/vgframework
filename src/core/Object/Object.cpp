@@ -67,6 +67,48 @@ namespace vg::core
         return *this;
     }
 
+    //--------------------------------------------------------------------------------------
+    template<typename T>  void atomic_swap(std::atomic<T> & a, std::atomic<T> & b)
+    {
+        T old_a = a.exchange(b.load(std::memory_order_acquire));
+        b.store(old_a, std::memory_order_release);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Object::Swap(IObject * _other)
+    {
+        Object * other = VG_SAFE_STATIC_CAST(Object,_other);
+        atomic_swap(m_refCount, other->m_refCount);
+
+        // Swap UIDs
+        {
+            auto uid = m_uid;
+            auto originalUid = m_originalUID;
+
+            auto otherUid = other->m_uid;
+            auto otherOriginalUid = other->m_originalUID;
+
+            UnregisterUID();
+            _other->UnregisterUID();
+
+            SetUID(otherUid);
+            SetOriginalUID(otherOriginalUid);
+
+            _other->SetUID(uid);
+            _other->SetOriginalUID(originalUid);
+        }
+
+        swap(m_parent, other->m_parent);
+
+        #ifndef VG_FINAL
+        swap(m_parentNameDbg, other->m_parentNameDbg);
+        #endif
+
+        swap(m_name, other->m_name);
+        swap(m_file, other->m_file);
+        swap(m_classDesc, other->m_classDesc);
+    }
+
 	//--------------------------------------------------------------------------------------
 	Object::Object() :
         m_refCount(1)
@@ -512,7 +554,15 @@ namespace vg::core
                     return (IGameObject*)obj;
             }
 
-            obj = obj->GetParent();
+            if (auto * parent = obj->GetParent())
+            {
+                VG_ASSERT(parent != this, "Object \"%s\" cannot have himself at its own parent!", obj->GetName().c_str());
+                obj = parent;
+            }
+            else
+            {
+                break;
+            }
         }
         return nullptr; 
     }
