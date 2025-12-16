@@ -33,6 +33,10 @@ namespace vg::renderer
         AlphaSource             m_alphaSource;
         float                   m_depthFade;
 
+        // Instance & vertex colors/alpha
+        InstanceColorMask       m_instanceColorMask;
+        VertexColorMask         m_vertexColorMask;
+
         // Culling
         gfx::CullMode           m_cullMode;
 

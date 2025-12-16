@@ -37,7 +37,7 @@
                                 <Property type="EnumU8" name="m_breakableType" value="LootBox"/>
                                 <Property type="Int32" name="m_giveLifes" value="0"/>
                                 <Property type="Float" name="m_giveHP" value="0"/>
-                                <Property type="Int32" name="m_giveScore" value="0"/>
+                                <Property type="Int32" name="m_giveScore" value="2000"/>
                                 <Property type="ObjectHandle" name="m_default" value="782765786"/>
                                 <Property type="Bool" name="m_useRotation" value="false"/>
                                 <Property type="Float3" name="m_rotation" x="0" y="0" z="1"/>
@@ -211,7 +211,7 @@
                                 <Property type="String" name="m_name" value="Mirror_Parts"/>
                                 <Property type="Uint32" name="m_uid" value="4237141489"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -1005,7 +1005,7 @@
                                         <Property type="Uint32" name="m_uid" value="1734149854"/>
                                         <Property type="Uint32" name="m_originalUID" value="4135077700"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0.051914498" Ty="0.081220999" Tz="1.21012" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -1098,7 +1098,7 @@
                                         <Property type="Uint32" name="m_uid" value="2151800961"/>
                                         <Property type="Uint32" name="m_originalUID" value="1734149854"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.0222103" Ty="0.081220999" Tz="1.31996" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -1191,7 +1191,7 @@
                                         <Property type="Uint32" name="m_uid" value="766315107"/>
                                         <Property type="Uint32" name="m_originalUID" value="2151800961"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.10680801" Ty="0.081220999" Tz="1.3110501" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -1284,7 +1284,7 @@
                                         <Property type="Uint32" name="m_uid" value="3129871680"/>
                                         <Property type="Uint32" name="m_originalUID" value="2318713945"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.16929203" Ty="0.081220999" Tz="1.25753" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -1470,7 +1470,7 @@
                                         <Property type="Uint32" name="m_uid" value="2166255994"/>
                                         <Property type="Uint32" name="m_originalUID" value="552867888"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.011820376" Ty="0.081220999" Tz="1.227" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -1563,7 +1563,7 @@
                                         <Property type="Uint32" name="m_uid" value="3547960396"/>
                                         <Property type="Uint32" name="m_originalUID" value="2071080679"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.056501806" Ty="0.081220999" Tz="1.22146" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -1656,7 +1656,7 @@
                                         <Property type="Uint32" name="m_uid" value="1721399328"/>
                                         <Property type="Uint32" name="m_originalUID" value="2294106472"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.088905104" Ty="0.081220999" Tz="1.19317" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -1749,7 +1749,7 @@
                                         <Property type="Uint32" name="m_uid" value="728849177"/>
                                         <Property type="Uint32" name="m_originalUID" value="3788432368"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.074787796" Ty="0.081220999" Tz="1.09088" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -1842,7 +1842,7 @@
                                         <Property type="Uint32" name="m_uid" value="1568717975"/>
                                         <Property type="Uint32" name="m_originalUID" value="4135077700"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0.015575707" Ty="0.081220999" Tz="1.14513" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -1935,7 +1935,7 @@
                                         <Property type="Uint32" name="m_uid" value="3602285294"/>
                                         <Property type="Uint32" name="m_originalUID" value="1734149854"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.0021268725" Ty="0.081220999" Tz="1.15116" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -2028,7 +2028,7 @@
                                         <Property type="Uint32" name="m_uid" value="371121067"/>
                                         <Property type="Uint32" name="m_originalUID" value="2151800961"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.0179407" Ty="0.081220999" Tz="1.1522" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -2121,7 +2121,7 @@
                                         <Property type="Uint32" name="m_uid" value="383523192"/>
                                         <Property type="Uint32" name="m_originalUID" value="766315107"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.02489078" Ty="0.081220999" Tz="1.14352" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -2214,7 +2214,7 @@
                                         <Property type="Uint32" name="m_uid" value="3709646259"/>
                                         <Property type="Uint32" name="m_originalUID" value="2318713945"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.19313395" Ty="0.081221104" Tz="1.06161" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -2400,7 +2400,7 @@
                                         <Property type="Uint32" name="m_uid" value="713243493"/>
                                         <Property type="Uint32" name="m_originalUID" value="552867888"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.024389207" Ty="0.081220999" Tz="1.10656" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -2493,7 +2493,7 @@
                                         <Property type="Uint32" name="m_uid" value="437611122"/>
                                         <Property type="Uint32" name="m_originalUID" value="2294106472"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.010137677" Ty="0.089675203" Tz="1.1002899" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -2679,7 +2679,7 @@
                                         <Property type="Uint32" name="m_uid" value="2131691626"/>
                                         <Property type="Uint32" name="m_originalUID" value="4135077700"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.036297798" Ty="0.081221104" Tz="1.024" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -2772,7 +2772,7 @@
                                         <Property type="Uint32" name="m_uid" value="3656900923"/>
                                         <Property type="Uint32" name="m_originalUID" value="1734149854"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.052410603" Ty="0.081221104" Tz="1.04261" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -2865,7 +2865,7 @@
                                         <Property type="Uint32" name="m_uid" value="3887913503"/>
                                         <Property type="Uint32" name="m_originalUID" value="2151800961"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.085498273" Ty="0.081221104" Tz="1.06161" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -2958,7 +2958,7 @@
                                         <Property type="Uint32" name="m_uid" value="559103734"/>
                                         <Property type="Uint32" name="m_originalUID" value="766315107"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.063331008" Ty="0.081221104" Tz="0.92337799" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -3144,7 +3144,7 @@
                                         <Property type="Uint32" name="m_uid" value="2189632344"/>
                                         <Property type="Uint32" name="m_originalUID" value="3034601541"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.15908501" Ty="0.081221104" Tz="1.00388" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -3888,7 +3888,7 @@
                                         <Property type="Uint32" name="m_uid" value="832137796"/>
                                         <Property type="Uint32" name="m_originalUID" value="1698999107"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-0.018178605" Ty="0.081220999" Tz="1.09858" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
@@ -3981,7 +3981,7 @@
                                         <Property type="Uint32" name="m_uid" value="1663242201"/>
                                         <Property type="Uint32" name="m_originalUID" value="2008491114"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value=""/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0.017922603" Ty="0.081220999" Tz="1.1015199" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>

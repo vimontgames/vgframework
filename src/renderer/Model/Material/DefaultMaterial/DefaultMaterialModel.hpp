@@ -22,6 +22,10 @@ namespace vg::renderer
         registerPropertyEnum(DefaultMaterialModel, AlphaSource, m_alphaSource, "Alpha Source");
         registerProperty(DefaultMaterialModel, m_depthFade, "Depth transparency");
 
+        // Instance & vertex colors/alpha
+        registerPropertyEnumBitfield(DefaultMaterialModel, InstanceColorMask, m_instanceColorMask, "Instance Color");
+        registerPropertyEnumBitfield(DefaultMaterialModel, VertexColorMask, m_vertexColorMask, "Vertex Color");
+
         // Culling
         registerPropertyEnum(DefaultMaterialModel, CullMode, m_cullMode, "Cull");
         
@@ -69,8 +73,10 @@ namespace vg::renderer
         MaterialModel(_name, _parent),
         m_surfaceType(SurfaceType::Opaque),
         m_cullMode(CullMode::Back),
-        m_alphaSource(AlphaSource::AlbedoAlpha),
+        m_alphaSource(AlphaSource::Albedo),
         m_depthFade(0.1f),
+        m_instanceColorMask(InstanceColorMask::Albedo),
+        m_vertexColorMask(VertexColorMask::Albedo),
         m_UVSource(UVSource::UV0),
         m_tiling(core::float2(1, 1)),
         m_offset(core::float2(0, 0)),
@@ -110,6 +116,10 @@ namespace vg::renderer
         // Alpha
         _data->setAlphaSource(m_alphaSource);
         _data->setDepthFade(m_depthFade);
+
+        // Instance & vertex colors/alpha
+        _data->setInstanceColorMask(m_instanceColorMask);
+        _data->setVertexColorMask(m_vertexColorMask);
 
         // UV
         _data->setUVSource(m_UVSource);

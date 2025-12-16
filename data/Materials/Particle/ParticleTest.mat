@@ -18,8 +18,10 @@
                 <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="EnumU8" name="m_surfaceType" value="AlphaBlend"/>
-                <Property type="EnumU8" name="m_alphaSource" value="EmissiveAlpha"/>
+                <Property type="EnumU8" name="m_alphaSource" value="Emissive"/>
                 <Property type="Float" name="m_depthFade" value="0.49995998"/>
+                <Property type="EnumFlagsU8" name="m_instanceColorMask" value=""/>
+                <Property type="EnumFlagsU8" name="m_vertexColorMask" value="Emissive"/>
                 <Property type="EnumU8" name="m_cullMode" value="None"/>
                 <Property type="EnumU8" name="m_UVSource" value="FlipBook"/>
                 <Property type="Float2" name="m_tiling" x="8" y="8"/>

@@ -1,6 +1,12 @@
-#pragma once
+#ifndef _TYPES_HLSLI_
+#define _TYPES_HLSLI_
 
 #ifdef __cplusplus
+
+//--------------------------------------------------------------------------------------
+// C++
+//
+//--------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------
 // On the C++ side the "HLSL-like" types belong to the "vg::core" namespace, which is 
@@ -21,7 +27,22 @@ using namespace vg::core;
 #define _DX12
 #endif
 
+using u8  = vg::core::u8;
+using u16 = vg::core::u16;
+using u32 = vg::core::u32;
+
+inline bool IsToolMode()
+{
+    VG_ASSERT(false, "This function should only be called from shader code");
+    return false;
+}
+
 #else
+
+//--------------------------------------------------------------------------------------
+// HLSL
+//
+//--------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------
 // Ignore the "inline" keyword on HLSL-side but we still want the functions to be inline 
@@ -44,17 +65,38 @@ using namespace vg::core;
 #define _SHADER_COMPILER 1
 #endif
 
-#endif
+//--------------------------------------------------------------------------------------
+// Helper macro to use instead of #ifdef
+//--------------------------------------------------------------------------------------
+inline bool IsToolMode()
+{
+    #if _TOOLMODE
+    return true;
+    #else
+    return false;
+    #endif
+}
+
+//--------------------------------------------------------------------------------------
+// Use with (enum) class
+//--------------------------------------------------------------------------------------
+template<typename E> bool HasAnyFlag(E _value, E _flags)
+{
+    return 0 != ((uint)_value & (uint)_flags);
+}
+
+template<typename E> bool HasAllFlags(E _value, E _flags)
+{
+    return ((uint)_flags) != ((uint)_value & (uint)_flags);
+}
 
 //--------------------------------------------------------------------------------------
 // HLSL does only accept int/uint enum class types but we might want smaller types in engine
 //--------------------------------------------------------------------------------------
-#if __cplusplus
-using u8  = vg::core::u8;
-using u16 = vg::core::u16;
-using u32 = vg::core::u32;
-#else
 using u8  = uint;
 using u16 = uint;
 using u32 = uint;
+
 #endif
+
+#endif // _TYPES_HLSLI_

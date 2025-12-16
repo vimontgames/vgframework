@@ -18,8 +18,9 @@ vg_enum_class_global(SurfaceTypeFlags, u8,
 );
 
 vg_enum_class_global(AlphaSource, u8,
-    AlbedoAlpha = 0,
-    EmissiveAlpha
+    None = 0,
+    Albedo,
+    Emissive
 );
 
 vg_enum_class_global(UVSource, u8,
@@ -29,6 +30,16 @@ vg_enum_class_global(UVSource, u8,
     PlanarY,
     PlanarZ,
     FlipBook
+);
+
+vg_enum_class_global(InstanceColorMask, u8,
+    Albedo   = 0x01,
+    Emissive = 0x02
+);
+
+vg_enum_class_global(VertexColorMask, u8,
+    Albedo   = 0x01,
+    Emissive = 0x02
 );
 
 #endif

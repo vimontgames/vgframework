@@ -66,7 +66,7 @@ VS_Output VS_Forward(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags, mode);
+    output.col = materialData.getVertexColorOut(vert.getColor(), flags, mode);
     
     float4x4 world = rootConstants3D.getWorldMatrix();  
     float3 modelPos = vert.getPos();
@@ -150,7 +150,7 @@ PS_Output PS_Forward(VS_Output _input)
     float2 uv0 = materialData.GetUV0(_input.uv.xy,_input.uv.zw, worldPos, frame);
     float2 uv1 = _input.uv.zw;   
     
-    float4 albedo   = materialData.getAlbedo(uv0, _input.col, flags, mode);
+    float4 albedo   = materialData.getAlbedo(uv0, instanceData.getInstanceColor(flags), _input.col, flags, mode);
     float3 normal   = materialData.getNormal(uv0, flags).xyz;
     float4 pbr      = materialData.getPBR(uv0);
     float4 emissive = materialData.getEmissive(uv0, _input.col);
@@ -163,7 +163,7 @@ PS_Output PS_Forward(VS_Output _input)
         float2 uv0_blend = materialData.GetUV0(_input.uv.xy,_input.uv.zw, worldPos, frame+1.0f);
         float frameBlend = frac(frame);
         
-        float4 albedo2   = materialData.getAlbedo(uv0_blend, _input.col, flags, mode);
+        float4 albedo2   = materialData.getAlbedo(uv0_blend, instanceData.getInstanceColor(flags), _input.col, flags, mode);
         float3 normal2   = materialData.getNormal(uv0_blend, flags).xyz;
         float4 pbr2      = materialData.getPBR(uv0_blend);
         float4 emissive2 = materialData.getEmissive(uv0_blend, _input.col);
@@ -265,7 +265,7 @@ VS_Output VS_Deferred(uint _vertexID : VertexID)
     output.tan = vert.getTan();
     output.bin = vert.getBin();
     output.uv = float4(vert.getUV(0), vert.getUV(1));
-    output.col = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), flags, mode);
+    output.col = materialData.getVertexColorOut(vert.getColor(), flags, mode);
     
     float3 modelPos = vert.getPos();
     float3 worldPos = mul(float4(modelPos.xyz, 1.0f), rootConstants3D.getWorldMatrix()).xyz;
@@ -311,7 +311,7 @@ PS_GBufferOutput PS_Deferred(VS_Output _input)
     float2 uv0 = materialData.GetUV0(_input.uv.xy,_input.uv.zw, worldPos);
     float2 uv1 = _input.uv.zw;
 
-    float4 albedo = materialData.getAlbedo(uv0, _input.col, flags, mode);
+    float4 albedo = materialData.getAlbedo(uv0, instanceData.getInstanceColor(flags), _input.col, flags, mode);
     float4 normal = materialData.getNormal(uv0, flags);
     float4 pbr = materialData.getPBR(uv0);
     float4 emissive = materialData.getEmissive(uv0, _input.col);
@@ -371,7 +371,47 @@ PS_GBufferOutput PS_Deferred(VS_Output _input)
     #endif
 }
 
+#if 0
+#if! _ZONLY
 //--------------------------------------------------------------------------------------
+VS_Output VS_Outline(uint _vertexID : VertexID)
+{
+    VS_Output output = VS_Forward(_vertexID);
+    output.col = 1;
+    //viewPos.z += WIREFRAME_DEPTHBIAS;
+    return output;
+}
+
+PS_Output_Outline PS_Outline(VS_Output _input)
+{
+    PS_Output ps_out = PS_Forward(_input);
+    
+    if (ps_out.color0.a <= 0)
+        clip(-1);
+    //clip(ps_out.color0.a - 1.0/255.0);
+    
+    PS_Output_Outline output = (PS_Output_Outline)0;
+    
+    ViewConstants viewConstants;
+    viewConstants.Load(getBuffer(RESERVEDSLOT_BUFSRV_VIEWCONSTANTS));
+    
+    uint2 screenSize = viewConstants.getScreenSize();
+    float3 screenPos = _input.pos.xyz / float3(screenSize.xy, 1);
+    
+    output.id = rootConstants3D.getPickingID();
+    
+    float4x4 invProj = viewConstants.getProjInv();
+    float4 vpos = mul(_input.pos, invProj);
+    
+    if (!linearDepthTest(screenPos.xy, vpos))
+        output.id |= (uint)OutlineMaskFlags::DepthFail;
+    
+    return output;
+}
+#endif
+
+#else
+
 VS_Output_Outline VS_Outline(uint _vertexID : VertexID)
 {
     VS_Output_Outline output;
@@ -412,3 +452,4 @@ PS_Output_Outline PS_Outline(VS_Output_Outline _input)
 
     return output;
 }
+#endif

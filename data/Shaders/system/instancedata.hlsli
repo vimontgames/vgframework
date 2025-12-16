@@ -50,7 +50,7 @@ struct GPUInstanceData
     VertexFormat getVertexFormat        ()                                                  { return (VertexFormat)unpackG8(m_header[0]); }
 
     void setInstanceColor               (float4 _color)                                     { m_header[1] = packRGBA8(_color); }
-    float4 getInstanceColor             ()                                                  { return unpackRGBA8(m_header[1]); }
+    float4 getInstanceColor             (DisplayFlags _flags)                               { return (IsToolMode() && 0 == (DisplayFlags::InstanceColor & _flags)) ? (float4)1.0f : unpackRGBA8(m_header[1]); }
 
     void setIndexBuffer                 (uint _ib, uint _indexSize = 2, uint _offset = 0)   { m_header[2] = packUint16low(m_header[2], _indexSize == 4 ? (_ib | 0x8000) : _ib); }
     uint getIndexBufferHandle           ()                                                  { return unpackUint16low(m_header[2]) & ~0x8000; }

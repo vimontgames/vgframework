@@ -80,12 +80,12 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     // Get instance data from raytracing instance ID
     uint instanceDataOffset = instanceID * GPU_INSTANCE_DATA_ALIGNMENT;
     GPUInstanceData instanceData = getBuffer(RESERVEDSLOT_BUFSRV_INSTANCEDATA).Load < GPUInstanceData > (instanceDataOffset);
-    float4 instanceColor = instanceData.getInstanceColor();
+    float4 instanceColor = instanceData.getInstanceColor(_flags);
               
     // Get batch data from raytracing geometry index and load material
     GPUBatchData batchData = instanceData.loadGPUBatchData(instanceDataOffset, geometryIndex);
     GPUMaterialData materialData = batchData.loadGPUMaterialData();
-    float4 materialColor = materialData.getAlbedoColor();
+    float4 materialColor = materialData.getAlbedoColor(_flags);
                  
     // Use barycentrics to get interpolated attribute values
     Vertex vert = getRaytracingInterpolatedVertex(instanceData, batchData, primitiveIndex, triangleBarycentrics);
@@ -93,13 +93,13 @@ template <typename QUERY> MaterialSample getRaytracingMaterial(uint instanceID, 
     float3 worldPosition = worldRayOrigin + (rayT-rayTMin) * worldRayDirection;
     float2 uv0 = materialData.GetUV0(vert.uv[0], vert.uv[1], worldPosition);
                     
-    float4 vertexColor = materialData.getVertexColorOut(vert.getColor(), instanceData.getInstanceColor(), _flags, _mode);
+    float4 vertexColor = materialData.getVertexColorOut(vert.getColor(), _flags, _mode);
     
     mat.matID = geometryIndex;
     mat.surfaceType = materialData.getSurfaceType();
     mat.uv0 = uv0;
     
-    mat.albedo = materialData.getAlbedo(uv0, vertexColor, _flags, _mode, true);   
+    mat.albedo = materialData.getAlbedo(uv0, instanceData.getInstanceColor(_flags), vertexColor, _flags, _mode, true);   
 
     #ifdef _TOOLMODE
     switch (_mode)

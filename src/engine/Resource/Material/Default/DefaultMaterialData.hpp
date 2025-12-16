@@ -54,7 +54,7 @@ namespace vg::engine
         registerPropertyEnum(DefaultMaterialData, SurfaceType, m_surfaceType, "Surface");
         setPropertyDescription(DefaultMaterialData, m_surfaceType, "Surface type determines how the material deal with alpha transparency");
         
-        registerPropertyEnum(DefaultMaterialData, AlphaSource, m_alphaSource, "Alpha Source");
+        registerPropertyEnum(DefaultMaterialData, AlphaSource, m_alphaSource, "Alpha");
         setPropertyDescription(DefaultMaterialData, m_alphaSource, "Value used for alpha transparency");
         setPropertyHiddenCallback(DefaultMaterialData, m_alphaSource, IsNonOpaquePropertyHidden);
 
@@ -62,6 +62,13 @@ namespace vg::engine
         setPropertyDescription(DefaultMaterialData, m_depthFade, "Distance used to fade out transparent objects intersecting opaque");
         setPropertyRange(DefaultMaterialData, m_depthFade, float2(0.001f, 10.0f));
         setPropertyHiddenCallback(DefaultMaterialData, m_depthFade, IsDepthFadePropertyHidden);
+
+        // Instance & vertex colors/alpha
+        registerPropertyEnumBitfield(DefaultMaterialData, InstanceColorMask, m_instanceColorMask, "Instance Color");
+        setPropertyDescription(DefaultMaterialData, m_instanceColorMask, "Instance color usage");
+
+        registerPropertyEnumBitfield(DefaultMaterialData, VertexColorMask, m_vertexColorMask, "Vertex Color");
+        setPropertyDescription(DefaultMaterialData, m_vertexColorMask, "Vertex color usage");
 
         // Culling
         registerPropertyEnum(DefaultMaterialData, gfx::CullMode, m_cullMode, "Cull");
@@ -162,8 +169,10 @@ namespace vg::engine
         super(_name, _parent),
         m_surfaceType(SurfaceType::Opaque),
         m_cullMode(gfx::CullMode::Back), 
-        m_alphaSource(AlphaSource::AlbedoAlpha),
+        m_alphaSource(AlphaSource::Albedo),
         m_depthFade(0.1f),
+        m_instanceColorMask(InstanceColorMask::Albedo),
+        m_vertexColorMask(VertexColorMask::Albedo),
         m_UVSource(UVSource::UV0),
         m_tiling(core::float2(1, 1)),
         m_offset(core::float2(0, 0)),

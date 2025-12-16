@@ -1,29 +1,9 @@
 ﻿<img src="doc/img/version.png" alt="VGF boy" title="VGF boy" align="right" height="74" />
 
 # VGFramework 0.51
-Yet another work-in-progress game and graphic engine project.
+VGFramework is a pet game engine for fun, modern graphics APIs, and fast iteration.
 
 ![Demo](doc/img/breakable.gif)
-
-# Key features
-
-## Engine
-- Supports multiple operating systems, processor architectures, compilers, and graphics APIs.
-- Architected around DLLs communicating through pure abstract interfaces.
-- Hot reload and asynchronous resource streaming.
-- Jolt for physics.
-- SoLoud for audio.
-- Starting the editor takes a few seconds, as well as entering play mode.
-
-## Renderer
-- Framegraph-based multithreaded rendering using render jobs.
-- Fully bindless (the same materials can be used for Forward/Deferred/Raytracing).
-- Shaders use DXC for both DX12 and Vulkan.
-
-## Editor
-- ImGui-docking editor that supports editing multiple scenes and prefabs.
-- Property system providing automatic serialization, editing, and undo/redo.
-- Prefabs, nested prefabs, and prefab property overrides.
 
 # Table of contents
 [Build status](#Build-Status)\
@@ -299,9 +279,6 @@ The following assets are provided under permissive licenses. Please follow the p
 | [Traffic Light](         https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-light-3d-model-333af7df-30a4-47bf-9d12-77cf37249c86 ) | Dastan-Persia 
 | [Renault Clio Williams]( https://sketchfab.com/3d-models/renault-clio-williams-1dad7e4438c74f3b8bac1ab72acd78ed                                       ) | Mona x Supercars 
 
-
-
-Renault Clio Williams by Mona x Supercars is licensed under Creative Commons Attribution
 
 ### Textures
 

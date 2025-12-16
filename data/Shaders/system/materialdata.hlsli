@@ -1,9 +1,11 @@
 #pragma once
 
+#include "system/types.hlsli"
 #include "system/packing.hlsli"
 #include "system/table.hlsli"
 #include "system/packing.hlsli"
 #include "system/material_consts.hlsli"
+#include "system/debug.hlsli"
 
 #if 1
 #define albedoSampler anisotropicRepeat 
@@ -54,70 +56,76 @@ struct GPUMaterialData
         setOffset(float2(0.0, 0.0));
         setEmissiveColor(float4(0,0,0,0));
         setUVSource(UVSource::UV0);
-        setAlphaSource(AlphaSource::AlbedoAlpha);
+        setAlphaSource(AlphaSource::Albedo);
     }   
     #endif 
 
-    uint4  textures;        // .x = normal<<16 | albedo, .y = emissive<<16 | pbr, .z = unused, .w = { SurfaceType(31..28) |  UVSource (27..24) | unused (23..0) }
+    uint4  textures;        // .x = normal<<16 | albedo, .y = emissive<<16 | pbr, .z = unused, .w = { SurfaceType(31..28) |  UVSource (27..24) | AlphaSource (23..20) | InstanceColorMask (19..16} | VertexColorMask (15..12) }
     float4 albedoColor;     // TODO: pack as RGBE?
     float4 multipliers;
     float4 tilingOffset;
     float4 misc;            // .x = depth fade (used only with alphablend) | .y = emissive color (RGBA32) | .z = emissive intensity | w = unused 
 
-    void            setAlbedoTextureHandle  (uint _value)           { textures.x = packUint16low(textures.x, _value); }
-    uint            getAlbedoTextureHandle  ()                      { return unpackUint16low(textures.x); }
+    void                setAlbedoTextureHandle      (uint _value)               { textures.x = packUint16low(textures.x, _value); }
+    uint                getAlbedoTextureHandle      ()                          { return unpackUint16low(textures.x); }
 
-    void            setNormalTextureHandle  (uint _value)           { textures.x = packUint16high(textures.x, _value); }
-    uint            getNormalTextureHandle  ()                      { return unpackUint16high(textures.x); }
+    void                setNormalTextureHandle      (uint _value)               { textures.x = packUint16high(textures.x, _value); }
+    uint                getNormalTextureHandle      ()                          { return unpackUint16high(textures.x); }
 
-    void            setPBRTextureHandle     (uint _value)           { textures.y = packUint16low(textures.y, _value); }
-    uint            getPBRTextureHandle     ()                      { return unpackUint16low(textures.y); }
+    void                setPBRTextureHandle         (uint _value)               { textures.y = packUint16low(textures.y, _value); }
+    uint                getPBRTextureHandle         ()                          { return unpackUint16low(textures.y); }
     
-    void            setEmissiveTextureHandle(uint _value)           { textures.y = packUint16high(textures.y, _value); }
-    uint            getEmissiveTextureHandle()                      { return unpackUint16high(textures.y); }
+    void                setEmissiveTextureHandle    (uint _value)               { textures.y = packUint16high(textures.y, _value); }
+    uint                getEmissiveTextureHandle    ()                          { return unpackUint16high(textures.y); }
     
-    void            setAlphaSource          (AlphaSource _value)    { textures.w = packUint(textures.w, (uint)_value, 0xF, 20); }    // Use bits 20..23 
-    AlphaSource     getAlphaSource          ()                      { return (AlphaSource)unpackUint(textures.w, 0xF, 20); }            
+    void                setVertexColorMask          (VertexColorMask _value)    { textures.w = packUint(textures.w, (uint)_value, 0xF, 12); }    // Use bits 12..15 
+    VertexColorMask     getVertexColorMask          ()                          { return (VertexColorMask)unpackUint(textures.w, 0xF, 12); }       
     
-    void            setUVSource             (UVSource _value)       { textures.w = packUint(textures.w, (uint)_value, 0xF, 24); }    // Use bits 24..27 
-    UVSource        getUVSource             ()                      { return (UVSource)unpackUint(textures.w, 0xF, 24); }            // As crazy as it seems, using 0x7 here instead of 0xF provokes lost device in Vulkan debug
+    void                setInstanceColorMask        (InstanceColorMask _value)  { textures.w = packUint(textures.w, (uint)_value, 0xF, 16); }    // Use bits 16..19 
+    InstanceColorMask   getInstanceColorMask        ()                          { return (InstanceColorMask)unpackUint(textures.w, 0xF, 16); }       
     
-    void            setSurfaceType          (SurfaceType _value)    { textures.w = packUint(textures.w, (uint)_value, 0xF, 28); }    // Use bits 28..31
-    SurfaceType     getSurfaceType          ()                      { return (SurfaceType)unpackUint(textures.w, 0xF, 28); }
+    void                setAlphaSource              (AlphaSource _value)        { textures.w = packUint(textures.w, (uint)_value, 0xF, 20); }    // Use bits 20..23 
+    AlphaSource         getAlphaSource              ()                          { return (AlphaSource)unpackUint(textures.w, 0xF, 20); }            
+    
+    void                setUVSource                 (UVSource _value)           { textures.w = packUint(textures.w, (uint)_value, 0xF, 24); }    // Use bits 24..27 
+    UVSource            getUVSource                 ()                          { return (UVSource)unpackUint(textures.w, 0xF, 24); }            // As crazy as it seems, using 0x7 here instead of 0xF provokes lost device in Vulkan debug
+    
+    void                setSurfaceType              (SurfaceType _value)        { textures.w = packUint(textures.w, (uint)_value, 0xF, 28); }    // Use bits 28..31
+    SurfaceType         getSurfaceType              ()                          { return (SurfaceType)unpackUint(textures.w, 0xF, 28); }
 
-    void            setAlbedoColor          (float4 _value)         { albedoColor = _value; }
-    float4          getAlbedoColor          ()                      { return albedoColor; }
+    void                setAlbedoColor              (float4 _value)             { albedoColor = _value; }
+    float4              getAlbedoColor              (DisplayFlags _flags)       { return (IsToolMode() &&  0 == (DisplayFlags::MaterialColor & _flags)) ? (float4)1.0f : albedoColor; }
     
-    void            setNormalStrength       (float _value)          { multipliers.w = _value; }
-    float           getNormalStrength       ()                      { return multipliers.w; }
+    void                setNormalStrength           (float _value)              { multipliers.w = _value; }
+    float               getNormalStrength           ()                          { return multipliers.w; }
     
-    void            setOcclusion            (float _value)          { multipliers.x = _value; }
-    float           getOcclusion            ()                      { return multipliers.x; }
+    void                setOcclusion                (float _value)              { multipliers.x = _value; }
+    float               getOcclusion                ()                          { return multipliers.x; }
     
-    void            setRoughness            (float _value)          { multipliers.y = _value; }
-    float           getRoughness            ()                      { return multipliers.y; }
+    void                setRoughness                (float _value)              { multipliers.y = _value; }
+    float               getRoughness                ()                          { return multipliers.y; }
     
-    void            setMetalness            (float _value)          { multipliers.z = _value; }
-    float           getMetalness            ()                      { return multipliers.z; }
+    void                setMetalness                (float _value)              { multipliers.z = _value; }
+    float               getMetalness                ()                          { return multipliers.z; }
 
-    void            setTiling               (float2 _value)         { tilingOffset.xy = _value; }
-    float2          getTiling               ()                      { return tilingOffset.xy; }
+    void                setTiling                   (float2 _value)             { tilingOffset.xy = _value; }
+    float2              getTiling                   ()                          { return tilingOffset.xy; }
 
-    void            setOffset               (float2 _value)         { tilingOffset.zw = _value; }
-    float2          getOffset               ()                      { return tilingOffset.zw; }
+    void                setOffset                   (float2 _value)             { tilingOffset.zw = _value; }
+    float2              getOffset                   ()                          { return tilingOffset.zw; }
 
-    void            setDepthFade            (float _value)          { misc.x = 1.0f / _value; }
-    float           getInvDepthFade         ()                      { return misc.x; }
+    void                setDepthFade                (float _value)              { misc.x = 1.0f / _value; }
+    float               getInvDepthFade             ()                          { return misc.x; }
     
-    void            setEmissiveColor        (float4 _value)         { misc.y = asfloat(packRGBA8(_value)); }
-    float4          getEmissiveColor        ()                      { return unpackRGBA8(asuint((float)misc.y)); }
+    void                setEmissiveColor            (float4 _value)             { misc.y = asfloat(packRGBA8(_value)); }
+    float4              getEmissiveColor            ()                          { return unpackRGBA8(asuint((float)misc.y)); }
     
-    void            setEmissiveIntensity    (float _value)          { misc.z = _value; }
-    float           getEmissiveIntensity    ()                      { return misc.z; }
+    void                setEmissiveIntensity        (float _value)              { misc.z = _value; }
+    float               getEmissiveIntensity        ()                          { return misc.z; }
 
     #ifndef __cplusplus
     //--------------------------------------------------------------------------------------
-    float4 getVertexColorOut(float4 _vertexColor, float4 _instanceColor, DisplayFlags _flags, DisplayMode _mode)
+    float4 getVertexColorOut(float4 _vertexColor, DisplayFlags _flags, DisplayMode _mode)
     {
         float4 color = 1;
 
@@ -128,28 +136,6 @@ struct GPUMaterialData
             color.rgb *= _vertexColor.rgb;
         }
         color.a *= _vertexColor.a;
-
-        float4 _materialColor = getAlbedoColor();
-        #if _TOOLMODE
-        if (0 != (DisplayFlags::MaterialColor & _flags)) 
-        #endif
-        {
-            color.rgb *= _materialColor.rgb;
-        }
-        color.a *= _materialColor.a;
-
-        #if _TOOLMODE
-        if (0 != (DisplayFlags::InstanceColor & _flags)) 
-        #endif
-        {
-            color.rgb *= _instanceColor.rgb;
-        }
-        color.a *= _instanceColor.a;
-
-        #if _TOOLMODE
-        if (DisplayMode::Instance_Color == _mode)
-            color.rgba = _instanceColor.rgba;
-        #endif
 
         return color;
     }
@@ -208,23 +194,28 @@ struct GPUMaterialData
     // If the texture may have different value in different threads from a wave, 
     // then '_nonUniform' shall be 'true' to avoid rendering artifacts in AMD cards.
     //--------------------------------------------------------------------------------------
-    float4 getAlbedo(float2 _uv, float4 _vertexColor, DisplayFlags _flags, DisplayMode _mode, bool _nonUniform = false)
+    float4 getAlbedo(float2 _uv, float4 _instanceColor, float4 _vertexColor, DisplayFlags _flags, DisplayMode _mode, bool _nonUniform = false)
     {                 
         float4 albedo = sampleTexture2D(getAlbedoTextureHandle(), albedoSampler, _uv, _nonUniform);
-
+        float4 materialColor = getAlbedoColor(_flags);
+        
         #if _TOOLMODE
         if (0 == (DisplayFlags::AlbedoMap & _flags))
             albedo.rgb = pow(0.5, 0.45);
         #endif
+              
+        if (HasAnyFlag(getInstanceColorMask(), InstanceColorMask::Albedo))
+            albedo.rgba *= _instanceColor;        
+ 
+        // Material color = albedo color, always applied on albedo
+        albedo.rgba *= materialColor.rgba;
 
-        albedo.rgb *= _vertexColor.rgb;
+        if (HasAnyFlag(getVertexColorMask(), VertexColorMask::Albedo))
+            albedo.rgba *= _vertexColor.rgba;
         
-        if (getAlphaSource() == AlphaSource::AlbedoAlpha)
-            albedo.a *= _vertexColor.a;
-
         #if _TOOLMODE
         if (DisplayMode::Instance_Color == _mode)
-            albedo = _vertexColor;
+            albedo = _instanceColor;
         #endif
     
         return albedo;
@@ -262,8 +253,8 @@ struct GPUMaterialData
 
         emissive.rgb *= getEmissiveColor().rgb * getEmissiveIntensity();
         
-        if (getAlphaSource() == AlphaSource::EmissiveAlpha)
-            emissive.a *= _vertexColor.a;
+        if (HasAnyFlag(getInstanceColorMask(), InstanceColorMask::Albedo))
+            emissive.rgba *= _vertexColor.rgba;
 
         return emissive;
     }
@@ -274,10 +265,13 @@ struct GPUMaterialData
         switch(getAlphaSource())
         {
             default:
-            case AlphaSource::AlbedoAlpha:
+            case AlphaSource::None:
+                return 1.0f;
+            
+            case AlphaSource::Albedo:
                 return _albedoAlpha;
             
-            case AlphaSource::EmissiveAlpha:
+            case AlphaSource::Emissive:
                 return _emissiveAlpha;
         };
     }
