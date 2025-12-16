@@ -47,7 +47,29 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        bool RemoveAt(core::size_t _index) override
+        bool MoveUp(size_t _index)
+        {
+            if (_index > 0 && _index < m_resources.size())
+            {
+                m_resources[_index].Swap(&m_resources[_index - 1]);
+                return true;
+            }
+            return false;
+        }
+
+        //--------------------------------------------------------------------------------------
+        bool MoveDown(size_t _index)
+        {
+            if (_index + 1 < m_resources.size())
+            {
+                m_resources[_index].Swap(&m_resources[_index + 1]);
+                return true;
+            }
+            return false;
+        }
+
+        //--------------------------------------------------------------------------------------
+        bool Remove(core::size_t _index) override
         {
             if (_index < m_resources.size())
             {

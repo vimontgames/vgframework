@@ -11,7 +11,9 @@ namespace vg::core
 
         virtual bool    Add         (const string & _name) = 0;
         virtual bool    Pop         () = 0;
-        virtual bool    RemoveAt    (size_t _index) = 0;
+        virtual bool    MoveUp      (size_t _index) = 0;
+        virtual bool    MoveDown    (size_t _index) = 0;
+        virtual bool    Remove      (size_t _index) = 0;
         virtual size_t  Size        () const = 0;
     };
 }
