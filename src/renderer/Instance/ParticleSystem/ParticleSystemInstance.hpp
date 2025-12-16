@@ -291,6 +291,9 @@ namespace vg::renderer
                 particle.color.rgb = getValue(params.m_colorValueType, params.m_constantColor, params.m_colorOverLifeTime, curveTime);
                 particle.color.a = getValue(params.m_opacityValueType, params.m_constantOpacity, params.m_opacityOverLifeTime, curveTime);
 
+                if (params.m_cullZeroAlpha && particle.color.a <= 0.0f)
+                    continue;
+
                 // Update velocity and position
                 particle.position += particle.velocity * emitter.m_dt;
                
@@ -381,6 +384,7 @@ namespace vg::renderer
         for (uint i = 0; i < m_emitters.size(); ++i)
         {
             const auto & emitter = m_emitters[i];
+            const auto & params = emitter.m_params;
             const auto & particles = emitter.m_particles;
 
             // TODO: Format is 28 bytes, so in order to get multiples of 128 bytes for faster memcpy we should process by 32 (16*32=896=7*128) 
@@ -390,6 +394,9 @@ namespace vg::renderer
                 const auto & particle = particles[p];
 
                 if (!particle.alive)
+                    continue;
+
+                if (params.m_cullZeroAlpha && particle.color.a <= 0.0f)
                     continue;
 
                 // For now just create a quad per particle

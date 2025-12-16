@@ -40,6 +40,7 @@ namespace vg::renderer
         core::Float3Curve   m_colorOverLifeTime;
 
         // Opacity
+        bool                m_cullZeroAlpha         = true;
         ParticleValueType   m_opacityValueType      = ParticleValueType::Constant;
         float               m_constantOpacity       = 1.0f;
         core::Float1Curve   m_opacityOverLifeTime;
@@ -77,6 +78,7 @@ namespace vg::renderer
                 || m_colorOverLifeTime != _other.m_colorOverLifeTime
                 
                 // Opacity
+                || m_cullZeroAlpha != _other.m_cullZeroAlpha
                 || m_opacityValueType != _other.m_opacityValueType
                 || m_constantOpacity != _other.m_constantOpacity
                 || m_opacityOverLifeTime != _other.m_opacityOverLifeTime
@@ -116,6 +118,7 @@ namespace vg::renderer
             m_colorOverLifeTime.Swap(&_other.m_colorOverLifeTime);
 
             // Opacity
+            core::swap(m_cullZeroAlpha, _other.m_cullZeroAlpha);
             core::swap(m_opacityValueType, _other.m_opacityValueType);
             core::swap(m_constantOpacity, _other.m_constantOpacity);
             m_opacityOverLifeTime.Swap(&_other.m_opacityOverLifeTime);

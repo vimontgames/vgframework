@@ -31,8 +31,6 @@ namespace vg::engine
         static bool pauseParticleEmitter(IObject * _object);
         static bool stopParticleEmitter(IObject * _object);
 
-        
-
     private:
         renderer::ParticleEmitterParams     m_params;
         MaterialResource                    m_materialResource;

@@ -194,6 +194,9 @@ namespace vg::engine
         // Opacity
         registerPropertyGroupBegin(ParticleEmitterDesc, editor::style::label::particle::Opacity);
         {
+            registerProperty(ParticleEmitterDesc, m_params.m_cullZeroAlpha, "Cull zero alpha");
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_cullZeroAlpha, "Do not render particles with an alpha of zero");
+
             registerPropertyEnum(ParticleEmitterDesc, ParticleValueType, m_params.m_opacityValueType, "Type");
 
             registerProperty(ParticleEmitterDesc, m_params.m_constantOpacity, "Opacity");

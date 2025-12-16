@@ -44,6 +44,7 @@ namespace vg::engine
         vector<string> ext;
                        ext.push_back(".hdr");
                        ext.push_back(".jpg");
+                       ext.push_back(".jpeg");
                        ext.push_back(".png");
                        ext.push_back(".psd");
                        ext.push_back(".tga");                       
