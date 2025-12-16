@@ -1,0 +1,357 @@
+<Root>
+    <Object class="PrefabScene">
+        <Property type="String" name="m_name" value="Clio"/>
+        <Property type="Uint32" name="m_uid" value="3022633137"/>
+        <Property type="Uint32" name="m_originalUID" value="0"/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+        <Property type="ObjectPtr" name="m_root">
+            <Object class="GameObject">
+                <Property type="String" name="m_name" value="Root"/>
+                <Property type="Uint32" name="m_uid" value="3966743892"/>
+                <Property type="Uint32" name="m_originalUID" value="0"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                <Property type="ObjectPtrVector" name="m_components"/>
+                <Property type="ObjectPtrVector" name="m_children">
+                    <Object class="GameObject">
+                        <Property type="String" name="m_name" value="Clio"/>
+                        <Property type="Uint32" name="m_uid" value="180195614"/>
+                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                        <Property type="ObjectPtrVector" name="m_components">
+                            <Object class="MeshComponent">
+                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                <Property type="Uint32" name="m_uid" value="2479175455"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Resource" name="m_meshResource">
+                                    <Object class="MeshResource">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3480706416"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="String" name="m_resourcePath" value="data/Meshes/Cars/Clio/clio.fbx"/>
+                                    </Object>
+                                </Property>
+                                <Property type="Object" name="m_meshMaterials">
+                                    <Object class="MaterialResourceList">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2180944233"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="ResourceVector" name="m_resources">
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Carosserie"/>
+                                                <Property type="Uint32" name="m_uid" value="3331045942"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioCarroserie.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Dashboard"/>
+                                                <Property type="Uint32" name="m_uid" value="928728858"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioDashboard.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Lights"/>
+                                                <Property type="Uint32" name="m_uid" value="4283016639"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioLights.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="ForwardLights"/>
+                                                <Property type="Uint32" name="m_uid" value="3627813170"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioLightsForward.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Bassines"/>
+                                                <Property type="Uint32" name="m_uid" value="246761086"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioBlackPlastic.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Logo"/>
+                                                <Property type="Uint32" name="m_uid" value="2241035590"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioLogo.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Plastic"/>
+                                                <Property type="Uint32" name="m_uid" value="2253628343"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioBlackPlastic.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Windows"/>
+                                                <Property type="Uint32" name="m_uid" value="499431689"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioWindows.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Under"/>
+                                                <Property type="Uint32" name="m_uid" value="1774084083"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioUnder.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Under2"/>
+                                                <Property type="Uint32" name="m_uid" value="2788374387"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioUnder2.mat"/>
+                                            </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Interior"/>
+                                                <Property type="Uint32" name="m_uid" value="367705403"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioInterior.mat"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                                <Property type="BitMask" name="m_batchMask" BitCount="11" Value="0x00000000000007FF"/>
+                            </Object>
+                        </Property>
+                        <Property type="ObjectPtrVector" name="m_children">
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Wheel"/>
+                                <Property type="Uint32" name="m_uid" value="81703785"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="1.175" Ty="0.75" Tz="0.25" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2836708855"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="794608449"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/Cars/Clio/clio_wheel.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1002130455"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Tire"/>
+                                                        <Property type="Uint32" name="m_uid" value="382591563"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioTire.mat"/>
+                                                    </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Jante"/>
+                                                        <Property type="Uint32" name="m_uid" value="2229750850"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioJante.mat"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="2" Value="0x0000000000000003"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Wheel_01"/>
+                                <Property type="Uint32" name="m_uid" value="335609367"/>
+                                <Property type="Uint32" name="m_originalUID" value="81703785"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-0.99999988" Iy="-0.00034511485" Iz="0" Iw="0" Jx="0.00034511485" Jy="-0.99999988" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="1.175" Ty="-0.75" Tz="0.25" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3452900087"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2836708855"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1565581873"/>
+                                                <Property type="Uint32" name="m_originalUID" value="794608449"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/Cars/Clio/clio_wheel.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2491012361"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1002130455"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Tire"/>
+                                                        <Property type="Uint32" name="m_uid" value="2753482677"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="382591563"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioTire.mat"/>
+                                                    </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Jante"/>
+                                                        <Property type="Uint32" name="m_uid" value="4065402384"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="2229750850"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioJante.mat"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="2" Value="0x0000000000000003"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Wheel_02"/>
+                                <Property type="Uint32" name="m_uid" value="1534622751"/>
+                                <Property type="Uint32" name="m_originalUID" value="335609367"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-0.99999988" Iy="-0.00034511485" Iz="0" Iw="0" Jx="0.00034511485" Jy="-0.99999988" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-1.25" Ty="-0.75" Tz="0.25" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="617104742"/>
+                                        <Property type="Uint32" name="m_originalUID" value="3452900087"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3885879792"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1565581873"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/Cars/Clio/clio_wheel.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3091841682"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2491012361"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Tire"/>
+                                                        <Property type="Uint32" name="m_uid" value="1064522603"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="2753482677"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioTire.mat"/>
+                                                    </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Jante"/>
+                                                        <Property type="Uint32" name="m_uid" value="3618416601"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="4065402384"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioJante.mat"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="2" Value="0x0000000000000003"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Wheel_03"/>
+                                <Property type="Uint32" name="m_uid" value="1290695824"/>
+                                <Property type="Uint32" name="m_originalUID" value="1534622751"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="0.99999976" Iy="0.00034499168" Iz="0" Iw="0" Jx="-0.00034499168" Jy="0.99999976" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-1.25" Ty="0.75" Tz="0.25" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="821078364"/>
+                                        <Property type="Uint32" name="m_originalUID" value="617104742"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3717751798"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3885879792"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/Cars/Clio/clio_wheel.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1534946367"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3091841682"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Tire"/>
+                                                        <Property type="Uint32" name="m_uid" value="1090496514"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="1064522603"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioTire.mat"/>
+                                                    </Object>
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Jante"/>
+                                                        <Property type="Uint32" name="m_uid" value="3714518485"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="3618416601"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/Car/Clio/ClioJante.mat"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="2" Value="0x0000000000000003"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                        </Property>
+                    </Object>
+                </Property>
+            </Object>
+        </Property>
+    </Object>
+</Root>
