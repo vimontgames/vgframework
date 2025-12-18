@@ -225,7 +225,9 @@ The external libraries are included with the sources for convenience. Follow the
 ✨ Optick viewer can be tricky to build but you can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0 or build them more easily from https://github.com/vimontgames/optick. 
 
 
-# License
+
+# Licence
+
 
 ## Code
 
@@ -277,7 +279,6 @@ The following assets are provided under permissive licenses. Please follow the p
 | [Traffic Cone](          https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c           ) | hinndia             
 | [Soccergoal](            https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894                                                             ) | NorbertVarga        
 | [Traffic Light](         https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-light-3d-model-333af7df-30a4-47bf-9d12-77cf37249c86 ) | Dastan-Persia 
-| [Renault Clio Williams]( https://sketchfab.com/3d-models/renault-clio-williams-1dad7e4438c74f3b8bac1ab72acd78ed                                       ) | Mona x Supercars 
 
 
 ### Textures
