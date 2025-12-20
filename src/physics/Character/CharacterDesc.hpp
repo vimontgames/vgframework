@@ -14,9 +14,6 @@ namespace vg::physics
         registerProperty(CharacterDesc, m_friction, "Friction");
         setPropertyRange(CharacterDesc, m_friction, float2(0, 1));
 
-        //registerProperty(CharacterDesc, m_restitution, "Restitution");
-        //setPropertyRange(CharacterDesc, m_restitution, float2(0, 1));
-
         registerProperty(CharacterDesc, m_maxSlopeAngle, "MaxSlope");
         setPropertyRange(CharacterDesc, m_maxSlopeAngle, float2(0, 90));
 
@@ -25,12 +22,11 @@ namespace vg::physics
 
     //--------------------------------------------------------------------------------------
     VG_REGISTER_OBJECT_CLASS(RigidCharacterDesc, "RigidCharacter Settings");
+
     //--------------------------------------------------------------------------------------
     bool RigidCharacterDesc::registerProperties(IClassDesc & _desc)
     {
-        super::registerProperties(_desc);
-
-        
+        super::registerProperties(_desc);        
 
         return true;
     }

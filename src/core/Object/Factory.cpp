@@ -1065,20 +1065,23 @@ namespace vg::core
         {
             uint srcVecCount = _srcProp->GetPropertyObjectVectorCount(_srcObj);
 
-            const char * elemClassName = _srcProp->GetPropertyObjectVectorElement(_srcObj, 0)->GetClassName();
-            const IClassDesc * elemClassDesc = GetClassDescriptor(elemClassName);
-            VG_ASSERT(elemClassDesc);
-            if (elemClassDesc)
+            if (srcVecCount > 0)
             {
-                elemClassDesc->ResizeVector(_dstObj, (uint)_srcProp->GetOffset(), (uint)srcVecCount);
-
-                for (uint i = 0; i < srcVecCount; ++i)
+                const char * elemClassName = _srcProp->GetPropertyObjectVectorElement(_srcObj, 0)->GetClassName();
+                const IClassDesc * elemClassDesc = GetClassDescriptor(elemClassName);
+                VG_ASSERT(elemClassDesc);
+                if (elemClassDesc)
                 {
-                    const IObject * srcElem = _srcProp->GetPropertyObjectVectorElement(_srcObj, i);
-                    IObject * dstElem = _dstProp->GetPropertyObjectVectorElement(_dstObj, i);
-                    CopyProperties(srcElem, dstElem);
+                    elemClassDesc->ResizeVector(_dstObj, (uint)_srcProp->GetOffset(), (uint)srcVecCount);
 
-                    dstElem->SetParent(_dstObj);
+                    for (uint i = 0; i < srcVecCount; ++i)
+                    {
+                        const IObject * srcElem = _srcProp->GetPropertyObjectVectorElement(_srcObj, i);
+                        IObject * dstElem = _dstProp->GetPropertyObjectVectorElement(_dstObj, i);
+                        CopyProperties(srcElem, dstElem);
+
+                        dstElem->SetParent(_dstObj);
+                    }
                 }
             }
         }

@@ -604,6 +604,13 @@ namespace vg::engine
                     default:
                         break;
 
+                    case PropertyType::Object:
+                    {
+                        if (IObject *obj = prop->GetPropertyObject(_object))
+                                patchPrefabGameObjectUIDs(_root, obj);
+                    }
+                    break;
+
                     case PropertyType::ObjectHandle:
                     {
                         if (ObjectHandle * handle = prop->GetPropertyObjectHandle(_object))
@@ -626,11 +633,41 @@ namespace vg::engine
                     }
                     break;
 
+                    case PropertyType::ObjectPtr:
+                    {
+                        if (IObject ** obj = prop->GetPropertyObjectPtr(_object))
+                        {
+                            if (*obj)
+                                patchPrefabGameObjectUIDs(_root, *obj);
+                        }
+                    }
+                    break;
+
                     case PropertyType::ObjectPtrVector:
                     {
                         if (auto * objVec = prop->GetPropertyObjectPtrVector(_object))
                         {
-                            for (auto * obj : *objVec)
+                            if (objVec)
+                            {
+                                for (auto * obj : *objVec)
+                                    patchPrefabGameObjectUIDs(_root, obj);
+                            }
+                        }
+                    }
+                    break;
+
+                    case PropertyType::ObjectPtrDictionary:
+                    {
+                        VG_ASSERT_ENUM_NOT_IMPLEMENTED(prop->GetType());
+                    }
+                    break;
+
+                    case PropertyType::ObjectVector:
+                    {
+                        auto count = prop->GetPropertyObjectVectorCount(_object);
+                        for (uint j = 0; j <count; ++j)
+                        {
+                            if (IObject * obj = prop->GetPropertyObjectVectorElement(_object, j))
                                 patchPrefabGameObjectUIDs(_root, obj);
                         }
                     }

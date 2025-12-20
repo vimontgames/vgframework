@@ -35,6 +35,7 @@ namespace vg::physics
         core::float4x4          GetMatrix       () const = 0;
         GroundState             GetGroundState  () const = 0;
 
+    protected:
         const PhysicsWorld *    getPhysicsWorld () const { return m_physicsWorld;}
 
     private:
@@ -43,7 +44,7 @@ namespace vg::physics
         const CharacterDesc *   m_characterDesc = nullptr;
     };
 
-    class RigidCharacter : public Character
+    class RigidCharacter final : public Character
     {
     public:
         VG_CLASS_DECL(RigidCharacter, Character);
@@ -66,6 +67,7 @@ namespace vg::physics
         core::float4x4          GetMatrix       () const final override;
         GroundState             GetGroundState  () const final override;
 
+    private:
         void                    resetCharacter  (const core::float4x4 & _world);
 
     private:

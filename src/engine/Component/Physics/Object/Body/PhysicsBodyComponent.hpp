@@ -131,7 +131,10 @@ namespace vg::engine
         if (!m_body)
             createBody();
 
-        if (m_body)
+        // If a vehicule component is present, don't start immediatly
+        IComponent * contraintComp = nullptr; // GetGameObject()->GetComponentByType("VehicleComponent");
+
+        if (m_body && !contraintComp)
             m_body->Activate(GetGameObject()->GetGlobalMatrix());
 
         if (m_bodyDesc)

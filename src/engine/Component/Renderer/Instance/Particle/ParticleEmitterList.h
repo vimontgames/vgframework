@@ -8,9 +8,6 @@ namespace vg::engine
     class ParticleEmitterList : public core::ObjectList<ParticleEmitterDesc>
     {
     public:
-        VG_CLASS_DECL(ParticleEmitterList, ObjectList<ParticleEmitterDesc>);
-
-        ParticleEmitterList(const core::string & _name, core::IObject * _parent);
-        ~ParticleEmitterList();
+        VG_CLASS_DECL_PASSTHROUGH(ParticleEmitterList, ObjectList<ParticleEmitterDesc>);
     };
 }

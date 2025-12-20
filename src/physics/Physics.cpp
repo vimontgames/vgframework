@@ -8,6 +8,7 @@
 #include "Shape/MeshShape.h"
 #include "Body/Body.h"
 #include "Character/Character.h"
+#include "physics/Constraint/Vehicle/VehicleConstraint.h"
 #include "Options/PhysicsOptions.h"
 #include "World/PhysicsWorld.h"
 #include "core/Math/Math.h"
@@ -165,21 +166,6 @@ namespace vg::physics
 	{
         // Unregisters all types with the factory and cleans up the default material
         UnregisterTypes();
-
-        // Destroy test objects
-        {
-            //BodyInterface & body_interface = m_physicsSystem->GetBodyInterface();
-
-            // Remove the sphere from the physics system. Note that the sphere itself keeps all of its state and can be re-added at any time.
-            //body_interface.RemoveBody(sphere_id);
-            //
-            //// Destroy the sphere. After this the sphere ID is no longer valid.
-            //body_interface.DestroyBody(sphere_id);
-
-            // Remove and destroy the floor
-            //body_interface.RemoveBody(floor->GetID());
-            //body_interface.DestroyBody(floor->GetID());
-        }
 
         // Destroy the Jolt factory
         delete Factory::sInstance;
@@ -359,9 +345,9 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    void Physics::RemoveBody(core::IPhysicsWorld * _physicsWorld, IBody * _body)
+    IVehicleConstraint * Physics::CreateVehicleConstraint(IBody * _body, IVehicleConstraintDesc * _vehicleConstraintDesc, const core::string & _name, core::IObject * _parent)
     {
-        
+        return new VehicleConstraint((Body*)_body, (VehicleConstraintDesc*) _vehicleConstraintDesc, _name, _parent);;
     }
 
     //--------------------------------------------------------------------------------------

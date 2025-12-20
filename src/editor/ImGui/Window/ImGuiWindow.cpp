@@ -963,9 +963,9 @@ namespace vg::editor
         if (asBool(PropertyFlags::Transient & flags))
         {
             if (asBool(PropertyFlags::ReadOnly & flags))
-                _color = imGuiAdapter->GetTransientReadOnlyPropertyColor();
+                _color = ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled); // imGuiAdapter->GetTransientReadOnlyPropertyColor();
             else
-                _color = imGuiAdapter->GetTransientPropertyColor();
+                _color = imGuiAdapter->GetTextColor(); // imGuiAdapter->GetTransientPropertyColor();
 
             _fontStyle = renderer::FontStyle::Italic;
         }
@@ -1315,7 +1315,7 @@ namespace vg::editor
         getPropertyColorStyle(propContext, propColor, propFontStyle);
 
         ImGui::PushStyleColor(ImGuiCol_Text, propColor);
-        //ImGui::PushStyle(propFontStyle);
+        ImGui::PushStyle(propFontStyle);
 
         //ImGui::BeginDisabled(readOnly);
         {
@@ -2191,7 +2191,7 @@ namespace vg::editor
             }
         }
         ImGui::PopStyleColor();
-        //ImGui::PopStyle();
+        ImGui::PopStyle();
 
         if (optionalChanged)
         {

@@ -1382,7 +1382,7 @@ namespace vg::renderer
 
             case DebugDrawFillMode::Wireframe:
             {
-                RasterizerState rs(FillMode::Wireframe, CullMode::Back);
+                RasterizerState rs(FillMode::Wireframe, CullMode::None);
                 _cmdList->setRasterizerState(rs);
             }
             break;

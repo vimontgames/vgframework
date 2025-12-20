@@ -47,7 +47,9 @@ namespace vg::engine
 
         core::vector<PhysicsShapeComponent *>   getShapes           () const;
         core::u32                               getShapesColor      () const;
+
         const physics::IBodyDesc *              getBodyDesc         () const { return m_bodyDesc; }
+        physics::IBody *                        getBody             () const { return m_body; }
 
     private:
         bool                                    updateFlagsFromGameObject();

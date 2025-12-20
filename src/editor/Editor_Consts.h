@@ -131,12 +131,19 @@ namespace vg::editor
             inline constexpr char Translate            []= ICON_FA_UP_DOWN_LEFT_RIGHT;
             inline constexpr char Unchecked            []= ICON_FA_SQUARE;
             inline constexpr char Undo                 []= ICON_FA_ROTATE_LEFT;
+            inline constexpr char VehicleController    []= ICON_FA_CAR;
             inline constexpr char Warning              []= ICON_FA_TRIANGLE_EXCLAMATION;
+            inline constexpr char Wheel                []= ICON_FA_CIRCLE;
             inline constexpr char World                []= ICON_FA_GLOBE;
         }
 
         namespace label
         {
+            namespace physics
+            {
+                inline constexpr char Wheels           [] = ICON_FA_CIRCLE " Wheels";
+            }
+
             namespace particle
             {
                 inline constexpr char Emitters         [] = ICON_FA_BOLT " Emitters";

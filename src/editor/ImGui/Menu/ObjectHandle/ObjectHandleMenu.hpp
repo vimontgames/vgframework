@@ -92,7 +92,7 @@ namespace vg::editor
 
                     if (isGameObject)
                     {
-                        gameObjectCount++;
+                        VG_ASSERT(_gameobject);
 
                         if (go->GetName().empty())
                             continue;
@@ -110,6 +110,8 @@ namespace vg::editor
 
                         if (_gameobject->GetWorld() != go->GetWorld())
                             continue;
+
+                        gameObjectCount++;
 
                         if (!m_filter.PassFilter(go->GetName().c_str()))
                             continue;
