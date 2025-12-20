@@ -60,7 +60,7 @@
                 </Property>
                 <Property type="Float" name="m_occlusion" value="1"/>
                 <Property type="Float" name="m_roughness" value="1"/>
-                <Property type="Float" name="m_metalness" value="1"/>
+                <Property type="Float" name="m_metalness" value="0"/>
                 <Property type="Bool" name="m_enableEmissive" value="true"/>
                 <Property type="Resource" name="m_emissiveMap">
                     <Object class="TextureResource">

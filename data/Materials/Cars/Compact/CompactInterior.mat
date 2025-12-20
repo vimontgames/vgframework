@@ -47,7 +47,7 @@
                         <Property type="String" name="m_resourcePath" value=""/>
                     </Object>
                 </Property>
-                <Property type="Float" name="m_normalStrength" value="1"/>
+                <Property type="Float" name="m_normalStrength" value="0"/>
                 <Property type="Bool" name="m_enablePbr" value="true"/>
                 <Property type="Resource" name="m_pbrMap">
                     <Object class="TextureResource">
@@ -55,7 +55,7 @@
                         <Property type="Uint32" name="m_uid" value="1351616831"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                        <Property type="String" name="m_resourcePath" value=""/>
+                        <Property type="String" name="m_resourcePath" value="data/Textures/Cars/Compact/gltf_embedded_20_pbr.png"/>
                     </Object>
                 </Property>
                 <Property type="Float" name="m_occlusion" value="1"/>
