@@ -41,7 +41,7 @@
                                         <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
                                         <Property type="Uint32" name="m_uid" value="2660636696"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="EnumU8" name="m_category" value="Default"/>
                                         <Property type="Bool" name="m_useCollisionMask" value="false"/>
@@ -68,7 +68,7 @@
                                         <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
                                         <Property type="Uint32" name="m_uid" value="2165901176"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="EnumU8" name="m_shapeType" value="Box"/>
                                         <Property type="ObjectPtr" name="m_shapeDesc">
@@ -83,11 +83,24 @@
                                             </Object>
                                         </Property>
                                     </Object>
+                                    <Object class="SnapComponent">
+                                        <Property type="String" name="m_name" value="New SnapComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3365139271"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Bool" name="m_snapTranslation" value="true"/>
+                                        <Property type="Float3" name="m_translation" x="3" y="3" z="3"/>
+                                        <Property type="Bool" name="m_snapRotation" value="false"/>
+                                        <Property type="Float" name="m_rotation" value="45"/>
+                                        <Property type="Bool" name="m_snapScale" value="false"/>
+                                        <Property type="Float" name="m_scale" value="1"/>
+                                    </Object>
                                     <Object class="MeshComponent">
                                         <Property type="String" name="m_name" value="New MeshComponent"/>
                                         <Property type="Uint32" name="m_uid" value="3490046185"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Resource" name="m_meshResource">
                                             <Object class="MeshResource">

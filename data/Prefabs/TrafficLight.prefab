@@ -48,7 +48,7 @@
                                         <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
                                         <Property type="Bool" name="m_overrideMass" value="true"/>
                                         <Property type="Float" name="m_mass" value="5000"/>
-                                        <Property type="Float" name="m_friction" value="0.5"/>
+                                        <Property type="Float" name="m_friction" value="0.94999999"/>
                                         <Property type="Float" name="m_restitution" value="0"/>
                                     </Object>
                                 </Property>
