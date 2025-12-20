@@ -8,8 +8,8 @@
         <Property type="EnumFlagsU32" name="m_showMotionTypesMask" value="Static|Kinematic|Dynamic"/>
         <Property type="Bool" name="m_showRigidBodies" value="false"/>
         <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" value="Sphere|Box|Capsule|Cylinder|Mesh"/>
-        <Property type="Bool" name="m_showContraints" value="false"/>
-        <Property type="EnumFlagsU32" name="m_showContraintsMask" value="Vehicle"/>
+        <Property type="Bool" name="m_showConstraints" value="false"/>
+        <Property type="EnumFlagsU32" name="m_showConstraintsMask" value="Vehicle"/>
         <Property type="Bool" name="m_mergeStaticBodies" value="true"/>
         <Property type="Float3" name="m_gravity" x="0" y="0" z="-9.8100004"/>
         <Property type="String" name="m_physicsCategories">
