@@ -1,5 +1,7 @@
 #include "Precomp.h"
 #include "PlayerBehaviour.h"
+#include "physics/IPhysics.h"
+#include "physics/IPhysicsOptions.h"
 
 #if !VG_ENABLE_INLINE
 #include "PlayerBehaviour.inl"
@@ -199,7 +201,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     // Update physics body with player flag
                     if (auto * physicsBody = playerGO->GetComponentT<ICharacterControllerComponent>())
                     {
-                        auto player1Cat = Game::get()->Engine().GetOptions()->GetPhysicsCategory("Player 1");
+                        auto player1Cat = Game::get()->Engine().GetPhysics()->GetOptions()->GetPhysicsCategory("Player 1");
                         physicsBody->SetCategory((vg::physics::Category)((uint)player1Cat + m_viewIndex));
                     }
                 }

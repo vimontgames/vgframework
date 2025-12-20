@@ -47,7 +47,7 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        bool MoveUp(size_t _index)
+        bool MoveUp(size_t _index) override
         {
             if (_index > 0 && _index < m_objects.size())
             {
@@ -58,7 +58,7 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        bool MoveDown(size_t _index)
+        bool MoveDown(size_t _index) override
         {
             if (_index + 1 < m_objects.size())
             {
@@ -98,7 +98,7 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        void OnEnable()
+        void OnEnable() override
         {
             super::OnEnable();
             for (auto i = 0; i < m_objects.size(); ++i)
@@ -106,7 +106,7 @@ namespace vg::core
         }
 
         //--------------------------------------------------------------------------------------
-        void OnDisable()
+        void OnDisable() override
         {
             for (auto i = 0; i < m_objects.size(); ++i)
                 m_objects[i].OnDisable();

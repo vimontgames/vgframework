@@ -4,6 +4,20 @@
         <Property type="Uint32" name="m_uid" value="3237757050"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+        <Property type="Bool" name="m_showMotionTypes" value="true"/>
+        <Property type="EnumFlagsU32" name="m_showMotionTypesMask" value="Static|Kinematic|Dynamic"/>
+        <Property type="Bool" name="m_showRigidBodies" value="false"/>
+        <Property type="EnumFlagsU32" name="m_showRigidBodiesMask" value="Sphere|Box|Capsule|Cylinder|Mesh"/>
+        <Property type="Bool" name="m_showContraints" value="false"/>
+        <Property type="EnumFlagsU32" name="m_showContraintsMask" value="Vehicle"/>
+        <Property type="Bool" name="m_mergeStaticBodies" value="true"/>
         <Property type="Float3" name="m_gravity" x="0" y="0" z="-9.8100004"/>
+        <Property type="String" name="m_physicsCategories">
+            <Value name="Category_0" value="Default"/>
+            <Value name="Category_1" value="Player 1"/>
+            <Value name="Category_2" value="Player 2"/>
+            <Value name="Category_3" value="Player 3"/>
+            <Value name="Category_4" value="Player 4"/>
+        </Property>
     </Object>
 </Root>

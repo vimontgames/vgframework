@@ -1,5 +1,5 @@
 #include "physics/Precomp.h"
-#include "physics.h"
+#include "Physics.h"
 #include "JobSystem/JobSystemAdapter.h"
 #include "Shape/SphereShape.h"
 #include "Shape/BoxShape.h"

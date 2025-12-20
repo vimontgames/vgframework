@@ -37,23 +37,16 @@ namespace vg::engine
         void                        OnPropertyChanged                   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
         core::Tag                   GetGameObjectTag                    (const core::string & _name) const final override;
-        physics::Category           GetPhysicsCategory                  (const core::string & _name) const final override;
 
         void                        SetCpuMemoryInfo                    (const core::CPUMemoryInfo & _cpuMem) final override;
         const core::CPUMemoryInfo & GetCpuMemoryInfo                    () const final override;
         void                        SetGpuMemoryInfo                    (const core::GPUMemoryInfo & _gpuMem) final override;
         const core::GPUMemoryInfo & GetGpuMemoryInfo                    () const final override;
 
-        core::vector<core::string>  getPhysicsCategoryNames             () const;
-
         VG_INLINE core::size_t      getStreamingUploadBufferSizeInMB    () const { return m_streamingUploadBufferSizeInMB;}
 
         VG_INLINE bool              useAnimationJobs                    () const { return core::asBool(core::operator & (AnimationOptionFlags::AnimationJobs, m_animationOptionFlags)); }
         VG_INLINE bool              isShowSkeleton                      () const { return core::asBool(core::operator & (AnimationOptionFlags::ShowSkeletons, m_animationOptionFlags)); }
-
-        VG_INLINE bool              isAnyBodyVisible                    () const { return 0 != m_showRigidBodies; }
-        VG_INLINE bool              isBodyVisible                       (physics::ShapeType _shape) const { return m_showRigidBodies && ((1 << (core::u32)_shape) & (core::u32)m_showRigidBodiesMask); }
-        VG_INLINE bool              mergeStaticBodies                   () const { return m_mergeStaticBodies; }
 
         VG_INLINE bool              useResourceLoadingPriority          () const { return core::asBool(core::operator & (LoadingOptionFlags::ResourcePriority, m_loadingOptionFlags)); }
 
@@ -65,12 +58,6 @@ namespace vg::engine
         core::string                m_gamePath;
         core::string                m_startWorld;
         vg::core::string            m_gameObjectTags[core::enumCount<core::Tag>()];
-
-        // Physics
-        bool                        m_mergeStaticBodies = false;
-        bool                        m_showRigidBodies = false;
-        physics::ShapeTypeFlags     m_showRigidBodiesMask = (physics::ShapeTypeFlags)-1;
-        vg::core::string            m_physicsCategories[core::enumCount<physics::Category>()];
 
         // Time
         bool                        m_useTimeScale = false;

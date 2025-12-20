@@ -1,5 +1,5 @@
 #pragma once
-#include "physics/Physics_Consts.h"
+#include "Physics/Physics_Consts.h"
 
 namespace vg::physics
 {

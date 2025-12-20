@@ -8,6 +8,7 @@
 #include "physics/World/PhysicsWorld.h"
 #include "physics/Body/BodyDesc.h"
 #include "renderer/IDebugDraw.h"
+#include "physics/Options/PhysicsOptions.h"
 
 #pragma push_macro("new")
 #undef new
@@ -33,13 +34,11 @@ namespace vg::physics
     }
 
     static float sMaxSteeringAngle = degreesToRadians(30.0f);
-    static int	 sCollisionMode = 2;
     static bool	 sAntiRollbar = true;
     static bool	 sLimitedSlipDifferentials = true;
     static float sMaxEngineTorque = 500.0f;
     static float sClutchStrength = 10.0f;
     static float sFrontCasterAngle = 0.0f;
-    static float sFrontKingPinAngle = 0.0f;
     static float sFrontCamber = 0.0f;
     static float sFrontToe = 0.0f;
     static float sFrontSuspensionForwardAngle = 0.0f;
@@ -51,7 +50,6 @@ namespace vg::physics
     static float sRearSuspensionForwardAngle = 0.0f;
     static float sRearSuspensionSidewaysAngle = 0.0f;
     static float sRearCasterAngle = 0.0f;
-    static float sRearKingPinAngle = 0.0f;
     static float sRearCamber = 0.0f;
     static float sRearToe = 0.0f;
     static float sRearSuspensionMinLength = 0.35f;
@@ -69,6 +67,9 @@ namespace vg::physics
         #undef new
         m_joltVehicleCollisionTester = new JPH::VehicleCollisionTesterRay(getJoltObjectLayer(_body->getBodyDesc()->GetLayer()), JPH::Vec3(0,0,1));
         #pragma pop_macro("new")
+
+        // Cache body world
+        m_world = _body->GetParentGameObject()->GetWorld();
 
         // Cache physics world
         m_joltPhysicsSystem = _body->m_physicsWorld->getPhysicsSystem();
@@ -321,7 +322,7 @@ namespace vg::physics
         {
             auto wheelDescs = m_vehicleConstraintDesc->getWheelDescList().getObjects();
 
-            for (uint i = 0; i < m_vehicleConstraintDesc->getWheelDescList().getObjects().size(); ++i)
+            for (uint i = 0; i < wheelDescs.size(); ++i)
             {
                 const JPH::Wheel * wheel = m_joltVehicleConstraint->GetWheel(i);
                 const JPH::WheelSettings * wheelSettings = wheel->GetSettings();
@@ -329,13 +330,34 @@ namespace vg::physics
                 const float radius = wheelSettings->mRadius;
                 const float width = wheelSettings->mWidth;
 
-                float4x4 wheelMat = GetWheelMatrix(i);
+                if (PhysicsOptions::get()->IsConstraintVisible(ConstraintType::Vehicle))
+                {
+                    // debug shapes
+                    float4x4 wheelMatDebug = fromJoltMatrix(m_joltVehicleConstraint->GetWheelWorldTransform(i, JPH::Vec3::sAxisZ(), JPH::Vec3::sAxisY()));
+                    debugDraw->AddWireframeCylinder(m_world, radius, width, 0xFF0000FF, wheelMatDebug);
 
-                // debug shapes
-                //float4x4 wheelMatDebug = (float4x4 &)m_joltVehicleConstraint->GetWheelWorldTransform(i, JPH::Vec3::sAxisZ(), JPH::Vec3::sAxisY()); // The cylinder we draw is aligned with Y so we specify that as rotational axis
-                //debugDraw->AddWireframeSphere(m_world, 0.05f, 0xF00FF00, wheelMatDebug);
-                //debugDraw->AddSolidCylinder(m_world, radius, width, 0xFF7F7F7F, wheelMatDebug);
-                //debugDraw->AddWireframeCylinder(m_world, radius, width, 0xFFFFFFFF, wheelMatDebug);
+                    // Draw axles
+                    const VehicleWheelDesc & wheelDesc = wheelDescs[i];
+                    if (wheelDesc.m_side == VehicleWheelSide::Left)
+                    {
+
+                        float3 leftWheelPos = wheelMatDebug[3].xyz;
+
+                        for (uint j = 0; j < wheelDescs.size(); ++j)
+                        {
+                            if (i != j)
+                            {
+                                const VehicleWheelDesc & wheelDescComp = wheelDescs[j];
+                                if (wheelDesc.m_axle == wheelDescComp.m_axle && wheelDescComp.m_side == VehicleWheelSide::Right)
+                                {
+                                    float3 rightWheelPos = fromJoltVec3(m_joltVehicleConstraint->GetWheelWorldTransform(j, JPH::Vec3::sAxisZ(), JPH::Vec3::sAxisY()).GetTranslation());
+                                    debugDraw->AddLine(m_world, leftWheelPos, rightWheelPos, 0xFF0000FF);
+                                    break;
+                                }
+                            }
+                        }                       
+                    }                    
+                }
 
                 // transform the wheel visual
                 VehicleWheelDesc & wheelDesc = wheelDescs[i];
@@ -354,7 +376,7 @@ namespace vg::physics
     {
         if (m_joltVehicleConstraint)
         {
-            float4x4 wheelMat = (float4x4 &)m_joltVehicleConstraint->GetWheelWorldTransform(_index, -JPH::Vec3::sAxisY(), JPH::Vec3::sAxisZ()); // The cylinder we draw is aligned with Y so we specify that as rotational axis
+            float4x4 wheelMat = fromJoltMatrix(m_joltVehicleConstraint->GetWheelWorldTransform(_index, -JPH::Vec3::sAxisY(), JPH::Vec3::sAxisZ())); // The cylinder we draw is aligned with Y so we specify that as rotational axis
 
             if (_index & 1)
             {

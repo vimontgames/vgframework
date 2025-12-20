@@ -207,7 +207,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void CharacterControllerComponent::FixedUpdate(const Context & _context)
     {
-        if (EngineOptions::get()->isBodyVisible(m_shape->GetShapeType()))
+        if (Engine::get()->GetPhysics()->GetOptions()->IsBodyVisible(m_shape->GetShapeType(), physics::MotionType::Kinematic))
         {
             if (m_shape)
                 m_shape->Draw(_context.m_world, _context.m_gameObject->getGlobalMatrix());

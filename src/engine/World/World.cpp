@@ -7,6 +7,7 @@
 #include "engine/Component/Physics/Object/MergeStaticColliders/MergeStaticCollidersComponent.h"
 #include "engine/Component/Physics/Shape/PhysicsShapeComponent.h"
 #include "physics/IPhysics.h"
+#include "physics/IPhysicsOptions.h"
 #include "physics/IBody.h"
 #include "physics/IShape.h"
 #include "core/IInput.h"
@@ -272,7 +273,7 @@ namespace vg::engine
         if (auto * physicsWorld = GetPhysicsWorld())
         {
             // Merge physics colliders
-            if (EngineOptions::get()->mergeStaticBodies())
+            if (Engine::get()->GetPhysics()->GetOptions()->IsMergeStaticBodiesEnabled())
                 mergeStaticBodies();
 
             physicsWorld->OnPlay();

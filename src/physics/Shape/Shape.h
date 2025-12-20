@@ -21,7 +21,7 @@ namespace vg::physics
 
         ShapeType               GetShapeType        () const override = 0;
         const core::IResource * GetResource         () const override { return nullptr; }
-        void                    InitializeFromAABB  (const core::AABB & _aabb) { VG_ASSERT_NOT_IMPLEMENTED(); };
+        void                    InitializeFromAABB  (const core::AABB & _aabb) override { VG_ASSERT_NOT_IMPLEMENTED(); };
 
         core::float3            getTranslation      () const;
         core::quaternion        getRotation         () const;

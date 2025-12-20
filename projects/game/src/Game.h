@@ -2,7 +2,7 @@
 
 #include "application/IGame.h"
 #include "core/Singleton/Singleton.h"
-#include "game_consts.h"
+#include "Game_consts.h"
 
 namespace vg::core
 {

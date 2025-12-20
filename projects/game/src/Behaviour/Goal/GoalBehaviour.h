@@ -11,7 +11,7 @@ public:
 
     void                OnEnable() final override;
     void                Update(const Context & _context) override;
-    void                OnTriggerEnter(vg::core::IGameObject * _other);
+    void                OnTriggerEnter(vg::core::IGameObject * _other) override;
 
 private:
     CharacterType       m_team = CharacterType::Neutral;

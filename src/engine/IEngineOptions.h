@@ -28,7 +28,6 @@ namespace vg::engine
         virtual bool                        TryGetMaxDT         (float & _maxDT) const = 0;
 
         virtual core::Tag                   GetGameObjectTag    (const core::string & _name) const = 0;
-        virtual physics::Category           GetPhysicsCategory  (const core::string & _name) const = 0;
 
         virtual void                        SetCpuMemoryInfo    (const core::CPUMemoryInfo & _cpuMem) = 0;
         virtual const core::CPUMemoryInfo & GetCpuMemoryInfo    () const = 0;

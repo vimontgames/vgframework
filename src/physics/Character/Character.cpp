@@ -1,5 +1,5 @@
 #include "physics/Precomp.h"
-#include "character.h"
+#include "Character.h"
 #include "physics/Shape/Shape.h"
 #include "core/Math/Math.h"
 #include "physics/Shape/CapsuleShape.h"

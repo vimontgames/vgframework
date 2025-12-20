@@ -1,7 +1,7 @@
 #pragma once
 
 #include "renderer/Precomp.h"
-#include "renderer.h"
+#include "Renderer.h"
 
 #include "core/Kernel.h"
 #include "core/Timer/Timer.h"
@@ -10,7 +10,7 @@
 #include "core/Scheduler/Scheduler.h"
 #include "core/string/string.h"
 
-#include "gfx/device/device.h"
+#include "gfx/Device/Device.h"
 #include "gfx/Shader/ShaderManager.h"
 #include "gfx/FrameGraph/FrameGraph.h"
 #include "gfx/Profiler/Profiler.h"

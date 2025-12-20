@@ -102,19 +102,6 @@ namespace vg::engine
         }
         registerPropertyGroupEnd(EngineOptions);
 
-        registerPropertyGroupBegin(EngineOptions, "Physics");
-        {
-            registerOptionalPropertyEnumBitfield(EngineOptions, m_showRigidBodies, physics::ShapeTypeFlags, m_showRigidBodiesMask, "Bodies")
-            setPropertyDescription(EngineOptions, m_showRigidBodiesMask, "Show physics bodies of type");
-
-            registerProperty(EngineOptions, m_mergeStaticBodies, "Merge static");
-            setPropertyDescription(EngineOptions, m_mergeStaticBodies, "Merge static bodies at init");
-
-            registerPropertyEnumArray(EngineOptions, string, physics::Category, m_physicsCategories, "Category");
-            setPropertyDescription(EngineOptions, m_physicsCategories, "Use physics Categories to filter collisions")
-        }
-        registerPropertyGroupEnd(EngineOptions);
-
         registerPropertyGroupBegin(EngineOptions, "Project");
         {
             registerPropertyEx(EngineOptions, m_gamePath, "Game Path", PropertyFlags::IsFolder);
@@ -157,9 +144,6 @@ namespace vg::engine
 
         if (auto * gameObjectTagsProp = GetClassDesc()->GetPropertyByName(VG_STRINGIFY(m_gameObjectTags)))
             updateDynamicEnum(*gameObjectTagsProp);
-
-        if (auto * physicsCategoriesProp = GetClassDesc()->GetPropertyByName(VG_STRINGIFY(m_physicsCategories)))
-            updateDynamicEnum(*physicsCategoriesProp);
     }
 
     //--------------------------------------------------------------------------------------
@@ -191,26 +175,8 @@ namespace vg::engine
                             prop->SetEnumName(i, m_gameObjectTags[i]);
                     }
                 }
-                else if (!strcmp(_prop.GetName(), VG_STRINGIFY(m_physicsCategories)))
-                {
-                    if ((PropertyType::EnumU8 == prop->GetType() && !strcmp(VG_STRINGIFY(Category), prop->GetEnumTypeName()))
-                        || (PropertyType::EnumFlagsU64 == prop->GetType() && !strcmp(VG_STRINGIFY(CategoryFlag), prop->GetEnumTypeName())))
-                    {
-                        for (uint i = 0; i < countof(m_physicsCategories); ++i)
-                            prop->SetEnumName(i, m_physicsCategories[i]);
-                    }
-                }
             }
         }
-    }
-
-    //--------------------------------------------------------------------------------------
-    core::vector<core::string> EngineOptions::getPhysicsCategoryNames() const
-    {
-        vector<string> names(enumCount<physics::Category>());
-        for (uint i = 0; i < names.size(); ++i)
-            names[i] = m_physicsCategories[i];
-        return names;
     }
 
     //--------------------------------------------------------------------------------------
@@ -224,19 +190,6 @@ namespace vg::engine
 
         VG_WARNING("[Engine] Could not find core::Tag with name \"%s\"", _name.c_str());
         return (core::Tag)0;
-    }
-
-    //--------------------------------------------------------------------------------------
-    physics::Category EngineOptions::GetPhysicsCategory(const core::string & _name) const
-    {
-        for (uint i = 0; i < countof(m_physicsCategories); ++i)
-        {
-            if (_name == m_physicsCategories[i])
-                return (physics::Category)i;
-        }
-
-        VG_WARNING("[Engine] Could not find physics::Category with name \"%s\"", _name.c_str());
-        return (physics::Category)0;
     }
 
     //--------------------------------------------------------------------------------------

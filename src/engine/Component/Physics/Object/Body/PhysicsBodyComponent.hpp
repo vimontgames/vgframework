@@ -81,8 +81,8 @@ namespace vg::engine
             }            
         }
 
-        const auto * engineOptions = EngineOptions::get();
-        if (engineOptions->isAnyBodyVisible())
+        const auto * physicsOptions = Engine::get()->GetPhysics()->GetOptions();
+        if (physicsOptions->IsAnyBodyVisible())
         {
             const auto shapes = GetGameObject()->GetComponentsT<PhysicsShapeComponent>();
             if (shapes.size() > 0)
@@ -93,7 +93,7 @@ namespace vg::engine
                     if (shape && shape->isEnabled())
                     {
                         const auto * physicsShape = shape->getPhysicsShape();
-                        if (physicsShape && engineOptions->isBodyVisible(physicsShape->GetShapeType()))
+                        if (physicsShape && physicsOptions->IsBodyVisible(physicsShape->GetShapeType(), m_bodyDesc->GetMotionType()))
                             physicsShape->Draw(_context.m_world, _context.m_gameObject->getGlobalMatrix());
                     }
                 }
@@ -328,7 +328,7 @@ namespace vg::engine
             if (!m_bodyDesc->IsMassOverriden())
                 m_bodyDesc->SetMass(totalMass);
 
-            if (m_bodyDesc->GetMotionType() != physics::MotionType::Static || !EngineOptions::get()->mergeStaticBodies())
+            if (m_bodyDesc->GetMotionType() != physics::MotionType::Static || !Engine::get()->GetPhysics()->GetOptions()->IsMergeStaticBodiesEnabled())
                 m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, physicsShapes, GetGameObject()->GetGlobalMatrix(), GetGameObject()->GetName() + "_PhysicsBody", this);
         }
         else

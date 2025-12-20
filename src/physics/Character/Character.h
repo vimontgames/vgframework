@@ -29,11 +29,12 @@ namespace vg::physics
         Character(PhysicsWorld * _physicsWorld, const CharacterDesc * _characterDesc, Shape * _shape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent);
         ~Character();
 
-        void                    Activate        (const core::float4x4 & _world) = 0;
-        void                    Deactivate      (const core::float4x4 & _world) = 0;
+        void                    Activate        (const core::float4x4 & _world) override = 0;
+        void                    Deactivate      (const core::float4x4 & _world) override = 0;
 
-        core::float4x4          GetMatrix       () const = 0;
-        GroundState             GetGroundState  () const = 0;
+        core::float4x4          GetMatrix       () const override = 0;
+
+        GroundState             GetGroundState  () const override = 0;
 
     protected:
         const PhysicsWorld *    getPhysicsWorld () const { return m_physicsWorld;}

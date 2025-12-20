@@ -1,5 +1,5 @@
 #pragma once
-#include "game_consts.h"
+#include "Game_consts.h"
 #include "core/Object/ObjectHandle.h"
 #include "Behaviour/Entity/EntityBehaviour.h"
 

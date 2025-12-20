@@ -45,6 +45,12 @@ namespace vg::physics
         Dynamic     // Responds to forces as a normal physics object
     );
 
+    vg_enum_class(vg::physics, MotionTypeFlags, core::u32,
+        Static    = 1 << (core::u32)MotionType::Static,
+        Kinematic = 1 << (core::u32)MotionType::Kinematic,
+        Dynamic   = 1 << (core::u32)MotionType::Dynamic
+    );
+
     vg_enum_class(vg::physics, MotionQuality, core::u8,
         Discrete = 0,   // Update the body in discrete steps
         Continuous      // Update the body using linear casting
@@ -64,6 +70,14 @@ namespace vg::physics
         Capsule         = 1 << (core::u32)ShapeType::Capsule,
         Cylinder        = 1 << (core::u32)ShapeType::Cylinder,
         Mesh            = 1 << (core::u32)ShapeType::Mesh
+    );
+
+    vg_enum_class(vg::physics, ConstraintType, core::u8,
+        Vehicle = 0
+    );
+
+    vg_enum_class(vg::physics, ConstraintTypeFlags, core::u32,
+        Vehicle = 1 << (core::u32)ConstraintType::Vehicle
     );
 
     vg_enum_class(vg::physics, BodyType, core::u8,
