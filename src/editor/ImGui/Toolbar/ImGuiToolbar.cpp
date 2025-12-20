@@ -53,7 +53,7 @@ namespace vg::editor
         const auto name = GetName();
 
         // 3. Begin into the window
-        ImGui::Begin(name.c_str(), &m_isVisible, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);        
+        ImGui::Begin(name.c_str(), &m_isVisible, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
         // 4. Overwrite node size
         ImGuiDockNode * node = ImGui::GetWindowDockNode();
