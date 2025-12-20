@@ -79,7 +79,11 @@ inline bool IsToolMode()
 
 //--------------------------------------------------------------------------------------
 // Use with (enum) class
+// Due to a bug with DXC only with Vuklan, can't use the template version here
 //--------------------------------------------------------------------------------------
+
+#if 0
+
 template<typename E> bool HasAnyFlag(E _value, E _flags)
 {
     return 0 != ((uint)_value & (uint)_flags);
@@ -89,6 +93,14 @@ template<typename E> bool HasAllFlags(E _value, E _flags)
 {
     return ((uint)_flags) != ((uint)_value & (uint)_flags);
 }
+
+#else
+
+#define HasAnyFlag(_value, _flags) (0 != ((uint)_value & (uint)_flags))
+
+#define HasAllFlags(_value, _flags)  ((uint)_flags) != ((uint)_value & (uint)_flags)
+
+#endif
 
 //--------------------------------------------------------------------------------------
 // HLSL does only accept int/uint enum class types but we might want smaller types in engine
