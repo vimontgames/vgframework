@@ -11,54 +11,61 @@ namespace vg::core
         using super = IInstance;
 
     public:
-                                    Instance            (const string & _name, IObject * _parent);
-                                    ~Instance           ();
+                                        Instance                (const string & _name, IObject * _parent);
+                                        ~Instance               ();
 
-        static bool                 registerProperties  (IClassDesc & _desc);
+        static bool                     registerProperties      (IClassDesc & _desc);
 
-        void                        SetPropertyValue    (const IProperty & _prop, void * _previousValue, void * _newValue) override;
+        void                            SetPropertyValue        (const IProperty & _prop, void * _previousValue, void * _newValue) override;
 
-        void                        SetLocalMatrix      (const float4x4 & _local) final override;
-        const float4x4 &            GetLocalMatrix      () const final override;
+        void                            SetLocalMatrix          (const float4x4 & _local) override;
+        const float4x4 &                GetLocalMatrix          () const final override;
 
-        void                        SetGlobalMatrix     (const float4x4 & _global) final override;
-        const float4x4              GetGlobalMatrix     () const final override;
+        void                            SetGlobalMatrix         (const float4x4 & _global) override;
+        const float4x4                  GetGlobalMatrix         () const final override;
 
-        void                        SetColor            (const float4 & _color) final override;
-        const float4 &              GetColor            () const final override;
+        void                            SetColor                (const float4 & _color) final override;
+        const float4 &                  GetColor                () const final override;
 
-        void                        SetModel            (Lod _lod, IModel * _model) override;
-        IModel *                    GetModel            (Lod _lod) const override;
+        void                            SetModel                (Lod _lod, IModel * _model) override;
+        IModel *                        GetModel                (Lod _lod) const override;
 
-        InstanceFlags               GetInstanceFlags    () const final override;
-        void                        SetInstanceFlags    (InstanceFlags _flags, bool _enabled) override;
+        InstanceFlags                   GetInstanceFlags        () const final override;
+        void                            SetInstanceFlags        (InstanceFlags _flags, bool _enabled) override;
+
+        InstanceRuntimeFlags            GetInstanceRuntimeFlags () const override;
+        void                            SetInstanceRuntimeFlags (InstanceRuntimeFlags _flags, bool _enabled) override;
         
-        void                        Enable              (bool _enable) override;
+        void                            Enable                  (bool _enable) override;
 
     public:
-        VG_INLINE void              setLocalMatrix      (const float4x4 & _local);
-        VG_INLINE const float4x4 &  getLocalMatrix      () const;
+        VG_INLINE void                  setLocalMatrix          (const float4x4 & _local);
+        VG_INLINE const float4x4 &      getLocalMatrix          () const;
 
-        VG_INLINE void              setGlobalMatrix     (const float4x4 & _global);
-        VG_INLINE const float4x4    getGlobalMatrix     () const;
+        VG_INLINE void                  setGlobalMatrix         (const float4x4 & _global);
+        VG_INLINE const float4x4        getGlobalMatrix         () const;
 
-        VG_INLINE void              setColor            (const float4 & _color);
-        VG_INLINE const float4 &    getColor            () const;
+        VG_INLINE void                  setColor                (const float4 & _color);
+        VG_INLINE const float4 &        getColor                () const;
 
-        void                        setModel            (Lod _lod, Model * _model);
-        VG_INLINE Model *           getModel            (Lod _lod) const;
+        void                            setModel                (Lod _lod, Model * _model);
+        VG_INLINE Model *               getModel                (Lod _lod) const;
 
-        VG_INLINE InstanceFlags     getInstanceFlags    () const;
-        VG_INLINE void              setInstanceFlags    (InstanceFlags _flags, bool _enabled);
+        VG_INLINE InstanceFlags         getInstanceFlags        () const;
+        VG_INLINE void                  setInstanceFlags        (InstanceFlags _flags, bool _enabled);
 
-        VG_INLINE bool              isEnabled           () const;
-        VG_INLINE bool              isStatic            () const;
+        VG_INLINE InstanceRuntimeFlags  getInstanceRuntimeFlags () const;
+        VG_INLINE void                  setInstanceRuntimeFlags (InstanceRuntimeFlags _flags, bool _enabled);
+
+        VG_INLINE bool                  isEnabled               () const;
+        VG_INLINE bool                  isStatic                () const;
       
     private:
-        InstanceFlags               m_flags;   
-        float4                      m_color = core::float4(1.0f, 1.0f, 1.0f, 1.0f);
-        float4x4                    m_local = float4x4::identity();
-        vector<Model *>             m_models;
+        InstanceFlags                   m_flags;   
+        InstanceRuntimeFlags             m_runtimeFlags;
+        float4                          m_color = core::float4(1.0f, 1.0f, 1.0f, 1.0f);
+        float4x4                        m_local = float4x4::identity();
+        vector<Model *>                 m_models;
     };
 }
 

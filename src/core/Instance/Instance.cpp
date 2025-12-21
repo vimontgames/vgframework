@@ -4,6 +4,7 @@
 #include "core//Model/Model.h"
 #include "core/Object/EnumHelper.h"
 #include "core/Kernel.h"
+#include "core/IProfiler.h"
 
 #if !VG_ENABLE_INLINE
 #include "Instance.inl"
@@ -14,7 +15,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     Instance::Instance(const string & _name, IObject * _parent) :
         IInstance(_name, _parent),
-        m_flags(InstanceFlags::Enabled)
+        m_flags(InstanceFlags::Enabled),
+        m_runtimeFlags((InstanceRuntimeFlags)0x0)
     {
         setObjectRuntimeFlags(ObjectRuntimeFlags::Instance, true);
     }
@@ -33,6 +35,9 @@ namespace vg::core
 
         registerPropertyEnumBitfield(Instance, InstanceFlags, m_flags, "Flags");
         setPropertyDescription(Instance, m_flags, "Instance flags");
+
+        registerPropertyEnumBitfieldEx(Instance, InstanceRuntimeFlags, m_runtimeFlags, "Runtime flags", PropertyFlags::Debug | PropertyFlags::Transient);
+        setPropertyDescription(Instance, m_runtimeFlags, "Instance flags that are only runtime");
 
         registerPropertyEx(Instance, m_color, "Color", PropertyFlags::Color);
         setPropertyDescription(Instance, m_color, "Instance color");
@@ -82,6 +87,18 @@ namespace vg::core
     InstanceFlags Instance::GetInstanceFlags() const
     {
         return getInstanceFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    InstanceRuntimeFlags Instance::GetInstanceRuntimeFlags() const
+    {
+        return getInstanceRuntimeFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Instance::SetInstanceRuntimeFlags(InstanceRuntimeFlags _flags, bool _enabled)
+    {
+        setInstanceRuntimeFlags(_flags, _enabled);
     }
 
     //--------------------------------------------------------------------------------------

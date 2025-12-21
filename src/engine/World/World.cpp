@@ -369,7 +369,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool destroyTemporaryGameObjectsRecur(IGameObject * _object)
     {
-        if (asBool(InstanceFlags::Temporary & _object->GetInstanceFlags()))
+        if (asBool(InstanceRuntimeFlags::Temporary & _object->GetInstanceRuntimeFlags()))
         {
             IGameObject * parent = VG_SAFE_STATIC_CAST(IGameObject, _object->getParent());
             parent->RemoveChild(_object);

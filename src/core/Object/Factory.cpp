@@ -1757,12 +1757,12 @@ namespace vg::core
 
                                     if (compatible)
                                     {
-                                        VG_WARNING("[Factory] Property \"%s\" from class \"%s\" in file \"%s\" has been converted from type \"%s\" to \"%s\"", name, className, _xmlFile.c_str(), typeName, asString(prop->GetType()).c_str());
+                                        VG_INFO("[Factory] Property \"%s\" from class \"%s\" in file \"%s\" has been converted from type \"%s\" to \"%s\"", name, className, _xmlFile.c_str(), typeName, asString(prop->GetType()).c_str());
                                         type = prop->GetType();
                                     }
                                     else
                                     {
-                                        VG_ERROR("[Factory] Type \"%s\" of Property \"%s\" from class \"%s\" in file \"%s\" does not match type \"%s\" declared in ClassDesc", typeName, name, className, _xmlFile.c_str(), asString(prop->GetType()).c_str());
+                                        VG_WARNING("[Factory] Type \"%s\" of Property \"%s\" from class \"%s\" in file \"%s\" does not match type \"%s\" declared in ClassDesc", typeName, name, className, _xmlFile.c_str(), asString(prop->GetType()).c_str());
                                     }
                                 }
 

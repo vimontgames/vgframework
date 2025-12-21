@@ -80,4 +80,19 @@ namespace vg::core
     {
         return m_flags;
     }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE void Instance::setInstanceRuntimeFlags(InstanceRuntimeFlags _flags, bool _enabled)
+    {
+        if (_enabled)
+            m_runtimeFlags |= _flags;
+        else
+            m_runtimeFlags &= ~_flags;
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE InstanceRuntimeFlags Instance::getInstanceRuntimeFlags() const
+    {
+        return m_runtimeFlags;
+    }
 }

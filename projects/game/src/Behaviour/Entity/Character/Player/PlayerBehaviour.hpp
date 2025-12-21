@@ -340,7 +340,8 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                                 if (nullptr != projectileModelGO)
                                 {
                                     IGameObject * newProjectileGO = (IGameObject *)projectileModelGO->Instanciate();
-                                    newProjectileGO->SetInstanceFlags(InstanceFlags::Enabled | InstanceFlags::Temporary, true);
+                                    newProjectileGO->SetInstanceFlags(InstanceFlags::Enabled, true);
+                                    newProjectileGO->SetInstanceRuntimeFlags(InstanceRuntimeFlags::Temporary, true);
                                     projectileModelGO->GetScene()->GetRoot()->AddChild(newProjectileGO);
                                     GameObject * weaponGO = weapon->getGameObject();
                                     float4x4 projectileMatrix = weaponGO->getGlobalMatrix();
