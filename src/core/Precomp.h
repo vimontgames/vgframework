@@ -59,6 +59,19 @@
 #define VG_OFFSETOF(class, member) (offsetof(class, member))
 #endif
 
+#if VG_CLANG
+
+#define DO_PRAGMA(X) _Pragma(#X)
+#define VG_OPTIMIZE_OFF DO_PRAGMA(clang optimize off)
+#define VG_OPTIMIZE_ON  DO_PRAGMA(clang optimize on)
+
+#elif VG_MSVC
+
+#define VG_OPTIMIZE_OFF __pragma(optimize("", off))
+#define VG_OPTIMIZE_ON  __pragma(optimize("", on))
+
+#endif
+
 //--------------------------------------------------------------------------------------
 // Debug macros
 //--------------------------------------------------------------------------------------

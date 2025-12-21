@@ -16,8 +16,6 @@
 #include "Jolt/Core/StringTools.cpp"
 #include "Jolt/Core/TickCounter.cpp"
 
-#pragma optimize("", off)
-
 #ifdef JPH_EXTERNAL_PROFILE
 namespace JPH
 {
