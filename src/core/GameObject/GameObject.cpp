@@ -67,10 +67,12 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::OnLoad()
     {
+        //VG_DEBUGPRINT("[GameObject] Load \"%s\"\n", GetName().c_str());
         super::OnLoad();
         RegisterUID();
         recomputeUpdateFlags();
         sortComponents();
+        OnLocalMatrixChanged(true); // recompute parent matrix
     }
 
     //--------------------------------------------------------------------------------------
@@ -779,6 +781,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
+        super::OnPropertyChanged(_object, _prop, _notifyParent);
+
         // Notify components that a GameObject property changed, but we don't want infinite loop when the property will update its parent
         for (uint i = 0; i < m_components.size(); ++i)
         {
@@ -917,6 +921,20 @@ namespace vg::core
         {
             IBehaviour * behaviour = behaviours[i];
             behaviour->OnTriggerExit(_other);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::OnLocalMatrixChanged(bool _recomputeParents, bool _recomputeChildren)
+    {
+        super::OnLocalMatrixChanged(_recomputeParents, _recomputeChildren);
+
+        if (_recomputeChildren)
+        {
+            VG_PROFILE_CPU("RecomputeChildrenLocalMatrix");
+
+            for (uint i = 0; i < m_children.size(); ++i)
+                m_children[i]->OnLocalMatrixChanged(false, true);
         }
     }
 }

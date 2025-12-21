@@ -8,18 +8,19 @@ namespace vg::core
 
     class Instance : public IInstance
     {
-        using super = IInstance;
-
     public:
+        VG_CLASS_DECL(Instance, IInstance);
+
                                         Instance                (const string & _name, IObject * _parent);
                                         ~Instance               ();
 
-        static bool                     registerProperties      (IClassDesc & _desc);
-
         void                            SetPropertyValue        (const IProperty & _prop, void * _previousValue, void * _newValue) override;
+        void                            OnPropertyChanged       (IObject * _object, const IProperty & _prop, bool _notifyParent) override;
 
         void                            SetLocalMatrix          (const float4x4 & _local) override;
         const float4x4 &                GetLocalMatrix          () const final override;
+
+        void                            OnLocalMatrixChanged    (bool _recomputeParents = false, bool _recomputeChildren = false) override;
 
         void                            SetGlobalMatrix         (const float4x4 & _global) override;
         const float4x4                  GetGlobalMatrix         () const final override;
@@ -62,9 +63,10 @@ namespace vg::core
       
     private:
         InstanceFlags                   m_flags;   
-        InstanceRuntimeFlags             m_runtimeFlags;
+        InstanceRuntimeFlags            m_runtimeFlags;
         float4                          m_color = core::float4(1.0f, 1.0f, 1.0f, 1.0f);
         float4x4                        m_local = float4x4::identity();
+        float4x4                        m_global = float4x4::identity();
         vector<Model *>                 m_models;
     };
 }

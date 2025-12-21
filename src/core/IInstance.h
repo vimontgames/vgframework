@@ -38,6 +38,8 @@ namespace vg::core
         virtual void                    SetGlobalMatrix         (const float4x4 & _global) = 0;
         virtual const float4x4          GetGlobalMatrix         () const = 0;
 
+        virtual void                    OnLocalMatrixChanged    (bool _recomputeParents = false, bool _recomputeChildren = false) = 0;
+
         virtual void                    SetColor                (const float4 & _color) = 0;
         virtual const float4 &          GetColor                () const = 0;
 

@@ -29,7 +29,7 @@ namespace vg::core
         registerPropertyEx(Object, m_originalUID, "UID (Source)", PropertyFlags::Debug | PropertyFlags::Hexadecimal | PropertyFlags::ReadOnly);
         setPropertyDescription(Object, m_originalUID, "Source object's unique ID");
 
-        registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectFlags, "Serialized flags", PropertyFlags::Debug);
+        registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectFlags, "Flags", PropertyFlags::Debug);
         setPropertyDescription(Object, m_objectFlags, "Object flags that are serialized");
 
         registerPropertyEnumBitfieldEx(Object, ObjectRuntimeFlags, m_objectRuntimeFlags, "Runtime flags", PropertyFlags::Debug | PropertyFlags::Transient);

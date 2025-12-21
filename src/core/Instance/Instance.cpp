@@ -5,6 +5,7 @@
 #include "core/Object/EnumHelper.h"
 #include "core/Kernel.h"
 #include "core/IProfiler.h"
+#include "core/Object/AutoRegisterClass.h"  
 
 #if !VG_ENABLE_INLINE
 #include "Instance.inl"
@@ -12,6 +13,10 @@
 
 namespace vg::core
 {
+    VG_REGISTER_ABSTRACT_CLASS_EX(Instance, "Instance", ClassDescFlags::Instance | ClassDescFlags::UID);
+
+    //static core::IProperty * g_localMatrixProp = nullptr;
+
     //--------------------------------------------------------------------------------------
     Instance::Instance(const string & _name, IObject * _parent) :
         IInstance(_name, _parent),
@@ -19,6 +24,13 @@ namespace vg::core
         m_runtimeFlags((InstanceRuntimeFlags)0x0)
     {
         setObjectRuntimeFlags(ObjectRuntimeFlags::Instance, true);
+
+        //if (nullptr == g_localMatrixProp)
+        //{
+        //    const auto * factory = Kernel::getFactory();
+        //    auto * classDesc = factory->GetClassDescriptor(GetClassName());
+        //    g_localMatrixProp = classDesc->GetPropertyByName("m_local");
+        //}
     }
 
     //--------------------------------------------------------------------------------------
@@ -34,7 +46,7 @@ namespace vg::core
         super::registerProperties(_desc);
 
         registerPropertyEnumBitfield(Instance, InstanceFlags, m_flags, "Flags");
-        setPropertyDescription(Instance, m_flags, "Instance flags");
+        setPropertyDescription(Instance, m_flags, "Instance flags that are serialized");
 
         registerPropertyEnumBitfieldEx(Instance, InstanceRuntimeFlags, m_runtimeFlags, "Runtime flags", PropertyFlags::Debug | PropertyFlags::Transient);
         setPropertyDescription(Instance, m_runtimeFlags, "Instance flags that are only runtime");
@@ -44,6 +56,17 @@ namespace vg::core
 
         registerPropertyEx(Instance, m_local, "Transform", PropertyFlags::Flatten);
         setPropertyDescription(Instance, m_local, "Local transform");
+
+        // TODO
+        //registerPropertyGroupBegin(Instance, "Transform")
+        //{
+        //    registerPropertyEx(Instance, m_local, "Local", PropertyFlags::Flatten);
+        //    setPropertyDescription(Instance, m_local, "Local transform");
+        //
+        //    registerPropertyEx(Instance, m_global, "Global", PropertyFlags::Flatten | PropertyFlags::Debug);
+        //    setPropertyDescription(Instance, m_global, "Global transform");
+        //}
+        //registerPropertyGroupEnd(Instance);
 
         return true;
     }
@@ -58,6 +81,32 @@ namespace vg::core
     const float4x4 & Instance::GetLocalMatrix() const
     {
         return getLocalMatrix();
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Recompute global matrix when local matrix changes, assuming parent matrix is up-to-date
+    //--------------------------------------------------------------------------------------
+    void Instance::OnLocalMatrixChanged(bool _recomputeParents, bool _recomputeChildren)
+    {
+        VG_PROFILE_CPU("RecomputeLocalMatrix");
+
+        const Object * parent = (Object*)getParent();
+        if (parent && asBool(ObjectRuntimeFlags::Instance & parent->getObjectRuntimeFlags()))
+        {
+            Instance * parentInstance = (Instance*) parent;
+
+            if (_recomputeParents)
+            {
+                VG_PROFILE_CPU("RecomputeParentLocalMatrix");
+                parentInstance->OnLocalMatrixChanged(_recomputeParents, false);
+            }
+
+            m_global = mul(m_local, parentInstance->getGlobalMatrix());
+        }
+        else
+        {
+            m_global = m_local;
+        }            
     }
 
     //--------------------------------------------------------------------------------------
@@ -118,6 +167,13 @@ namespace vg::core
         }
 
         super::SetPropertyValue(_prop, _previousValue, _newValue);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Instance::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
+    {
+        if (!strcmp(_prop.GetName(), "m_local"))
+            OnLocalMatrixChanged(false, true); // recompute children matrix
     }
 
     //--------------------------------------------------------------------------------------

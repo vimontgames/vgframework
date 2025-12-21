@@ -15,7 +15,12 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     VG_INLINE void Instance::setLocalMatrix(const float4x4 & _local)
     {
-        m_local = _local;
+        if (any(m_local != _local))
+        {
+            m_local = _local;
+
+            OnLocalMatrixChanged(false, true);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -27,21 +32,29 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     VG_INLINE void Instance::setGlobalMatrix(const float4x4 & _global)
     {
-        const Object * parent = (Object*)getParent();
-        if (parent && asBool(ObjectRuntimeFlags::Instance & parent->getObjectRuntimeFlags()))
-            m_local = mul(_global, inverse(((Instance *)parent)->getGlobalMatrix()));
-        else
-            m_local = _global;
+        if (any(_global != m_global))
+        {
+            m_global = _global;
+
+            const Object * parent = (Object *)getParent();
+            if (parent && asBool(ObjectRuntimeFlags::Instance & parent->getObjectRuntimeFlags()))
+            {
+                Instance * parentInstance = (Instance *)parent;
+                m_local = mul(_global, inverse(parentInstance->getGlobalMatrix()));
+            }
+            else
+            {
+                m_local = m_global;
+            }
+
+            OnLocalMatrixChanged(false, true);
+        }
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE const float4x4 Instance::getGlobalMatrix() const
     {
-        float4x4 global = m_local;
-        const Object * parent = (Object *)getParent();
-        if (parent && asBool(ObjectRuntimeFlags::Instance & parent->getObjectRuntimeFlags()))
-            global = mul(global, ((Instance*)parent)->getGlobalMatrix());
-        return global;
+        return m_global;
     }
 
     //--------------------------------------------------------------------------------------

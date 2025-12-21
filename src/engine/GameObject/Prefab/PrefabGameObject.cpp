@@ -535,15 +535,21 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     IObject * PrefabGameObject::Instanciate() const
     {
+        IObject * object = nullptr;
+
         if (Engine::get()->IsPlaying())
         {
-            return super::Instanciate();
+            object = super::Instanciate();
         }
         else
         {
             auto * factory = Kernel::getFactory();
-            return factory->Instanciate(this, nullptr, CopyPropertyFlags::NoChildren);
+            object = factory->Instanciate(this, nullptr, CopyPropertyFlags::NoChildren);
         }
+
+        VG_SAFE_STATIC_CAST(Instance, object)->OnLocalMatrixChanged(false, true);
+
+        return object;
     }
 
     //--------------------------------------------------------------------------------------
@@ -580,6 +586,9 @@ namespace vg::engine
                     // Force Prefab snap
                     if (SnapComponent * snapComp = instance->GetComponentInChildrenT<SnapComponent>())
                         snapComp->snap();
+
+                    // Recompute children
+                    instance->OnLocalMatrixChanged(false, true);
 
                     VG_SAFE_RELEASE(instance);
                 }
