@@ -3,6 +3,7 @@
 #pragma push_macro("new")
 #undef new
 
+#include "Jolt/Core/Profiler.h"
 #include "Jolt/Renderer/DebugRenderer.cpp"
 #include "Jolt/Renderer/DebugRendererPlayback.cpp"
 #include "Jolt/Renderer/DebugRendererRecorder.cpp"

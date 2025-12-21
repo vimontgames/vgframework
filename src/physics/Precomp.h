@@ -6,8 +6,7 @@
 
 #if !defined(VG_FINAL)
 #define JPH_PROFILE_ENABLED
-#define JPH_DEBUG_RENDERER
-#define JPH_FLOATING_POINT_EXCEPTIONS_ENABLED
+//#define JPH_EXTERNAL_PROFILE
 #endif
 
 #if defined(_M_X64)
