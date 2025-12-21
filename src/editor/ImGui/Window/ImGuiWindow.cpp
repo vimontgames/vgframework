@@ -1297,7 +1297,7 @@ namespace vg::editor
         {
             if (!propContext.m_canPrefabOverride)
             {
-                if (!asBool(PropertyFlags::Transient & flags))
+                if (!asBool(PropertyFlags::Transient & flags) && type != PropertyType::LayoutElement)
                     propContext.m_readOnly = true;
             }
         }
@@ -2925,7 +2925,7 @@ namespace vg::editor
 
             //if (useTRS)
             {
-                const bool defaultTransform = !strcmp(displayName, "Transform");
+                const bool defaultTransform = !strcmp(displayName, "Local");
 
                 const string TLabel = flatten && !defaultTransform ? fmt::sprintf("%s.T", displayName) : "Translation";
                 const string RLabel = flatten && !defaultTransform ? fmt::sprintf("%s.R", displayName) : "Rotation";

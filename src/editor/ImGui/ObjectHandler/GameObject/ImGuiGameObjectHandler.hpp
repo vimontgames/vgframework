@@ -98,7 +98,7 @@ namespace vg::editor
                         }
                 
                         if (visible)
-                            changed |= ImGuiWindow::displayProperty(go, prop);
+                            changed |= ImGuiWindow::displayProperty(go, prop, _objectContext); 
                     }
                 }
                 ImGui::Unindent();

@@ -24,13 +24,6 @@ namespace vg::core
         m_runtimeFlags((InstanceRuntimeFlags)0x0)
     {
         setObjectRuntimeFlags(ObjectRuntimeFlags::Instance, true);
-
-        //if (nullptr == g_localMatrixProp)
-        //{
-        //    const auto * factory = Kernel::getFactory();
-        //    auto * classDesc = factory->GetClassDescriptor(GetClassName());
-        //    g_localMatrixProp = classDesc->GetPropertyByName("m_local");
-        //}
     }
 
     //--------------------------------------------------------------------------------------
@@ -54,19 +47,11 @@ namespace vg::core
         registerPropertyEx(Instance, m_color, "Color", PropertyFlags::Color);
         setPropertyDescription(Instance, m_color, "Instance color");
 
-        registerPropertyEx(Instance, m_local, "Transform", PropertyFlags::Flatten);
+        registerPropertyEx(Instance, m_local, "Local", PropertyFlags::Flatten);
         setPropertyDescription(Instance, m_local, "Local transform");
 
-        // TODO
-        //registerPropertyGroupBegin(Instance, "Transform")
-        //{
-        //    registerPropertyEx(Instance, m_local, "Local", PropertyFlags::Flatten);
-        //    setPropertyDescription(Instance, m_local, "Local transform");
-        //
-        //    registerPropertyEx(Instance, m_global, "Global", PropertyFlags::Flatten | PropertyFlags::Debug);
-        //    setPropertyDescription(Instance, m_global, "Global transform");
-        //}
-        //registerPropertyGroupEnd(Instance);
+        registerPropertyEx(Instance, m_global, "Global", PropertyFlags::Flatten | PropertyFlags::Debug | PropertyFlags::Transient);
+        setPropertyDescription(Instance, m_global, "Global transform");
 
         return true;
     }

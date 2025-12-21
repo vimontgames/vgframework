@@ -139,6 +139,8 @@ namespace vg::editor
 
         namespace label
         {
+            inline constexpr char Transform            [] = ICON_FA_SITEMAP " Transform";
+
             namespace physics
             {
                 inline constexpr char Wheels           [] = ICON_FA_CIRCLE " Wheels";
