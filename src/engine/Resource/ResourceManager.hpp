@@ -309,9 +309,16 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::updateLoadingThread()
     {
-        VG_ASSERT(Kernel::getScheduler()->IsLoadingThread());
-        
+        // Is there any resource to load?
         IResource * res = nullptr;
+        if (m_resourcesToLoad.size() > 0)
+        {
+            lock_guard lock(m_addResourceToLoadRecursiveMutex);
+            res = m_resourcesToLoad.size() > 0 ? m_resourcesToLoad[0] : nullptr;
+        }
+
+        if (nullptr == res)
+            return;
 
         // Is device ready for streaming? (e.g. not during init)
         auto * renderer = Engine::get()->GetRenderer();
@@ -321,14 +328,7 @@ namespace vg::engine
             VG_INFO("[Resource] Device is not yet ready for streaming");
             Sleep(1);
             return;
-        }
-
-        // Is there any resource to load?
-        if (m_resourcesToLoad.size() > 0)
-        {
-            lock_guard lock(m_addResourceToLoadRecursiveMutex);
-            res = m_resourcesToLoad.size() > 0 ? m_resourcesToLoad[0] : nullptr;
-        }
+        }       
 
         // Load resource without blocking mutex
         if (nullptr != res)
