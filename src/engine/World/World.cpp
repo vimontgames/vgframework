@@ -423,6 +423,9 @@ namespace vg::engine
                     root->OnDisable();
                     root->OnStop();
                 }
+
+                // Force refresh global matrices after restore or call OnPropertyChanged from RestoreProperties?
+                //root->OnLocalMatrixChanged(true);
             }
         }
 

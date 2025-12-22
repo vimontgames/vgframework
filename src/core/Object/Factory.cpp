@@ -1546,6 +1546,8 @@ namespace vg::core
             }
             break;
         }
+
+        _object->OnPropertyChanged(_object, *_prop, true);
     }
 
     //--------------------------------------------------------------------------------------
