@@ -1,4 +1,10 @@
 //--------------------------------------------------------------------------------------
+VG_INLINE CharacterType CharacterBehaviour::getCharacterType() const
+{
+    return m_characterType;
+}
+
+//--------------------------------------------------------------------------------------
 VG_INLINE bool CharacterBehaviour::isActive() const
 {
     return m_isActive; 

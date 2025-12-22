@@ -16,6 +16,7 @@ namespace vg::physics
         Right = 1
      ); 
 
+    //--------------------------------------------------------------------------------------
     class VehicleWheelDesc : public core::Object
     {
     public:
@@ -29,12 +30,14 @@ namespace vg::physics
         float m_width = 0.1f;
     };
 
+    //--------------------------------------------------------------------------------------
     class VehicleWheelDescList : public core::ObjectList<VehicleWheelDesc>
     {
     public:
         VG_CLASS_DECL_PASSTHROUGH(VehicleWheelDescList, ObjectList<VehicleWheelDesc>);
     };
 
+    //--------------------------------------------------------------------------------------
     class VehicleConstraintDesc : public IVehicleConstraintDesc
     {
     public:

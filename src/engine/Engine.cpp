@@ -1084,6 +1084,9 @@ namespace vg::engine
         // Detect input devices (This is not strictly needed on platforms that can detect joystick being plug/unplug)
         Kernel::getInput()->DetectDevices();
 
+        if (nullptr != m_game)
+            m_game->OnPlay();
+
         if (auto * mainWorld = GetMainWorld())
             mainWorld->OnPlay();
     }
@@ -1110,6 +1113,9 @@ namespace vg::engine
         VG_INFO("[Engine] Stop");
         m_isPlaying = false;
         m_isPaused = false;
+
+        if (nullptr != m_game)
+            m_game->OnStop();
 
         if (auto * mainWorld = GetMainWorld())
             mainWorld->OnStop();

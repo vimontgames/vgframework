@@ -28,6 +28,9 @@ namespace vg::engine
         void                        OnPlay              () final override;
         void                        OnStop              () final override;
 
+        void                        OnEnable            () final override;
+        void                        OnDisable           () final override;
+
         void                        OnPropertyChanged   (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
         bool                        TryGetAABB          (core::AABB & _aabb) const final override;
 

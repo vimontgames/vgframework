@@ -6,8 +6,48 @@ using namespace vg::core;
 
 namespace vg::engine
 {
+    VG_REGISTER_OBJECT_CLASS(VehicleSlot, "Vehicle Slot");
+    VG_REGISTER_OBJECT_CLASS(VehicleSlotList, "Vehicle Slot List");
     VG_REGISTER_COMPONENT_CLASS(VehicleComponent, "Vehicle", "Physics", "Physics vehicle controller.", editor::style::icon::VehicleController, 1);
 
+    //--------------------------------------------------------------------------------------
+    // VehicleSlot
+    //--------------------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------------------
+    void * ResizeVehicleSlotVector(IObject * _parent, uint _offset, uint _count)
+    {
+        auto vec = (core::vector<VehicleSlot> *)(uint_ptr(_parent) + _offset);
+        vec->clear();
+        vec->resize(_count);
+        return vec->data();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool VehicleSlot::registerProperties(IClassDesc & _desc)
+    {
+        super::registerProperties(_desc);
+
+        setPropertyFlag(VehicleSlot, m_name, PropertyFlags::Hidden, false);
+        registerResizeVectorFunc(VehicleSlot, ResizeVehicleSlotVector);
+
+        registerPropertyEnum(VehicleSlot, VehicleSlotType, m_slotType, "Type");
+        registerPropertyEx(VehicleSlot, m_owner, "Owner", PropertyFlags::Transient);
+
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // VehicleSlotList
+    //--------------------------------------------------------------------------------------
+    bool VehicleSlotList::registerProperties(IClassDesc & _desc)
+    {
+        super::registerProperties(_desc);
+        return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // VehicleComponent
     //--------------------------------------------------------------------------------------
     bool VehicleComponent::registerProperties(core::IClassDesc & _desc)
     {
@@ -28,6 +68,8 @@ namespace vg::engine
         registerPropertyEx(VehicleComponent, m_driveState.m_handBrake, "Handbrake", PropertyFlags::Transient);
         setPropertyDescription(VehicleComponent, m_driveState.m_handBrake, "Value between 0 and 1 indicating how strong the hand brake is pulled");
         setPropertyRange(VehicleComponent, m_driveState.m_handBrake, float2(0, +1));
+
+        registerPropertyObject(VehicleComponent, m_slots, "Slots");
 
         registerPropertyGroupBegin(VehicleComponent, "Contraints");
         {
@@ -170,5 +212,54 @@ namespace vg::engine
     {
         if (m_vehicleConstraint)
             m_vehicleConstraint->Update(m_driveState);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool VehicleComponent::EnterVehicle(core::IGameObject * _owner, VehicleSlotType & _slotType)
+    {
+        auto & slots = m_slots.getObjects();
+        for (uint i = 0; i < slots.size(); ++i)
+        {
+            VehicleSlot & slot = slots[i];
+            //if (slot.m_)
+
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float VehicleComponent::GetForwardVelocity() const
+    {
+        if (IPhysicsBodyComponent * bodyComp = GetGameObject()->GetComponentT<IPhysicsBodyComponent>())
+        {
+            float3 speed = bodyComp->GetVelocity();
+            float forwardSpeed = dot(speed, GetGameObject()->GetGlobalMatrix()[0].xyz);
+            return forwardSpeed;
+        }
+
+        return 0.0f;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void VehicleComponent::Accelerate(float _forward)
+    {
+        _forward = clamp(_forward, -1.0f, 1.0f);
+        m_driveState.m_forward = _forward;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void VehicleComponent::Brake(float _brake)
+    {
+        _brake = clamp(_brake, 0.0f, 1.0f);
+        m_driveState.m_brake = _brake;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void VehicleComponent::Steer(float _leftRight)
+    {
+        _leftRight = clamp(_leftRight, -1.0f, 1.0f);
+        m_driveState.m_right = _leftRight;
     }
 }

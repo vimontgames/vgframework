@@ -16,6 +16,9 @@ public:
     void                                FixedUpdate         (const Context & _context) override;
     void                                Update              (const Context & _context) override;
 
+    bool                                enterVehicle        (vg::core::IGameObject * _vehicleGameobject);
+    bool                                exitVehicle         ();
+
     VG_INLINE const vg::core::float4 &  getCustomColor      () const;
     VG_INLINE const vg::core::u8        getViewportIndex    () const;
 

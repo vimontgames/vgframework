@@ -27,5 +27,8 @@ namespace vg
 
         virtual bool    Init        (engine::IEngine & _engine, core::Singletons & _singletons) = 0;
         virtual bool    Deinit      () = 0;
+
+        virtual void    OnPlay      () = 0;
+        virtual void    OnStop      () = 0;
     };
 }

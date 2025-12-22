@@ -373,7 +373,6 @@ namespace vg::renderer
     uint MeshInstance::GetBatchCount() const
     {
         const MeshModel * model = VG_SAFE_STATIC_CAST(MeshModel, getModel(Lod::Lod0));
-        VG_ASSERT(model);
 
         if (nullptr != model)
         {

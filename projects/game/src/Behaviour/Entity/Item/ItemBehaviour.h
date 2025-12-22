@@ -26,6 +26,7 @@ public:
 
     VG_INLINE float                         getDamage           () const;
     VG_INLINE float                         getPush             () const;
+    VG_INLINE ItemType                      getItemType         () const;
 
 private:
     float                                   m_damage = 10.0f;

@@ -48,13 +48,11 @@ bool ItemBehaviour::registerProperties(IClassDesc & _desc)
 void ItemBehaviour::OnPlay()
 {
     super::OnPlay();
-    Game::get()->addItem(m_itemType, this);
 }
 
 //--------------------------------------------------------------------------------------
 void ItemBehaviour::OnStop()
 {
-    Game::get()->removeItem(m_itemType, this);
     m_owner.clear();
     super::OnStop();
 }

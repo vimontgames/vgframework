@@ -930,6 +930,10 @@ namespace vg::editor
                             delta = core::float4x4::identity();
                             ImGuizmo::Manipulate(viewMatrix, projMatrix, imGuizmoOperation, imGuizmoSpace, (float *)&matrix, (float *)&delta, snap);
                             auto duplicateGameObjects = selection->DuplicateGameObjects(selectedObjectsWithoutParents);
+
+                            for (auto & dup : duplicateGameObjects)
+                                dup->OnLocalMatrixChanged(false, true);
+
                             selection->SetSelectedObjects((core::vector<IObject*>&)duplicateGameObjects);
                             skip = true;
                         }

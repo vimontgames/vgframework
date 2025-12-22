@@ -1,11 +1,32 @@
 #pragma once
 
 #include "engine/IVehicleComponent.h"
+#include "core/Object/ObjectHandle.h"
+#include "core/Object/ObjectList.h"
 #include "physics/Physics_Consts.h"
 #include "physics/IVehicleConstraint.h"
 
 namespace vg::engine
 {
+    //--------------------------------------------------------------------------------------
+    class VehicleSlot : public core::Object
+    {
+    public:
+        VG_CLASS_DECL_PASSTHROUGH(VehicleSlot, core::Object);
+
+    public:
+        VehicleSlotType m_slotType = VehicleSlotType::Passenger;
+        core::ObjectHandle m_owner;
+    };
+
+    //--------------------------------------------------------------------------------------
+    class VehicleSlotList : public core::ObjectList<VehicleSlot>
+    {
+    public:
+        VG_CLASS_DECL_PASSTHROUGH(VehicleSlotList, ObjectList<VehicleSlot>);
+    };
+
+    //--------------------------------------------------------------------------------------
     class VehicleComponent final : public IVehicleComponent
     {
     public:
@@ -23,6 +44,14 @@ namespace vg::engine
         void                FixedUpdate                 (const Context & _context) final override;
         void                Update                      (const Context & _context) final override;
 
+        bool                EnterVehicle                (core::IGameObject * _owner, VehicleSlotType & _slotType) final override;
+
+        float               GetForwardVelocity          () const final override;
+
+        void                Accelerate                  (float _forward) final override;
+        void                Brake                       (float _brake) final override;
+        void                Steer                       (float _leftRight) final override;
+
     private:
         physics::IPhysics * getPhysics                  ();
 
@@ -33,5 +62,6 @@ namespace vg::engine
         physics::DriveState               m_driveState;
         physics::IVehicleConstraintDesc * m_vehicleConstraintDesc = nullptr;
         physics::IVehicleConstraint *     m_vehicleConstraint = nullptr;
+        VehicleSlotList                   m_slots;
     };
 }

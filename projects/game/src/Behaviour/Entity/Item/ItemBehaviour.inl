@@ -9,3 +9,9 @@ VG_INLINE float ItemBehaviour::getPush() const
 {
     return m_push;
 }
+
+//--------------------------------------------------------------------------------------
+VG_INLINE ItemType ItemBehaviour::getItemType() const
+{
+    return m_itemType;
+}

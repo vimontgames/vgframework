@@ -150,6 +150,20 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void CharacterControllerComponent::OnPlay()
     {
+        super::OnPlay();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CharacterControllerComponent::OnStop()
+    {
+        super::OnStop();        
+    }
+
+    //--------------------------------------------------------------------------------------
+    void CharacterControllerComponent::OnEnable()
+    {
+        super::OnEnable();
+
         if (!m_character)
             createCharacter();
 
@@ -161,14 +175,12 @@ namespace vg::engine
 
         if (m_characterDesc)
             m_characterDesc->OnEnable();
-
-        super::OnPlay();
     }
 
     //--------------------------------------------------------------------------------------
-    void CharacterControllerComponent::OnStop()
+    void CharacterControllerComponent::OnDisable()
     {
-        super::OnStop();
+        super::OnDisable();
 
         VG_SAFE_RELEASE(m_character);
 

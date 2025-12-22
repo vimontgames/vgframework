@@ -2,6 +2,7 @@
 #include "PlayerBehaviour.h"
 #include "physics/IPhysics.h"
 #include "physics/IPhysicsOptions.h"
+#include "engine/IVehicleComponent.h"
 
 #if !VG_ENABLE_INLINE
 #include "PlayerBehaviour.inl"
@@ -91,6 +92,61 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
         IInput & input = Game::Input();
         IGameObject * playerGO = GetGameObject();
+
+        if (IGameObject * vehicleGO = (IGameObject*)m_vehicle.getObject())
+        {
+            // Player is inside vehicle (TODO: check if driver)
+            if (IVehicleComponent * vehicle = vehicleGO->GetComponentT<IVehicleComponent>())
+            {
+                if (m_controllerType == InputType::Joypad && m_controllerIndex < input.GetJoyCount())
+                {
+                    auto joyID = m_controllerIndex;
+
+                    float backward = input.GetJoyLeftTrigger(joyID);
+                    float forward = input.GetJoyRightTrigger(joyID);
+
+                    float forwardSpeed = vehicle->GetForwardVelocity();
+                    VG_INFO("[Player] ForwardSpeed = %.2f", forwardSpeed);
+
+                    if (forward > 0.1f)
+                    {
+                        if (forwardSpeed > 0.0)
+                        {
+                            vehicle->Accelerate(forward);
+                            vehicle->Brake(0.0f);
+                        }
+                        else
+                        {
+                            vehicle->Brake(1.0f);
+                        }
+                    }
+                    else if (backward > 0.1f)
+                    {
+                        if (forwardSpeed < 0)
+                        {
+                            vehicle->Accelerate(-backward);
+                            vehicle->Brake(0.0f);
+                        }
+                        else
+                        {
+                            vehicle->Brake(1.0f);
+                        }
+                    }
+                    else
+                    {
+                        vehicle->Accelerate(0.0f);
+                    }
+
+                    float2 dir = input.GetJoyLeftStickDir(joyID);
+                    if ((float)(abs(dir.x)) > 0.1f)
+                        vehicle->Steer(dir.x);
+
+                    GetGameObject()->SetGlobalMatrix(vehicleGO->GetGlobalMatrix());
+                }
+            }
+        }
+
+
         IAnimationComponent * animationComponent = playerGO->GetComponentT<IAnimationComponent>();
        
         switch (m_moveState)
@@ -250,6 +306,36 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
                 if (input.IsJoyButtonJustPressed(joyID, JoyButton::X))
                 {
+                    // Enter closed vehicle if any
+                    if (!m_vehicle.getObject())
+                    {
+                        float closestVehicleDist = 3.0f;
+
+                        auto & vehicles = Game::get()->getVehicles();
+                        IGameObject * closestVehicle = nullptr;
+
+                        for (uint i = 0; i < vehicles.size(); ++i)
+                        {
+                            auto * vehicle = vehicles[i];
+                            IGameObject * vehicleGO = vehicle->GetGameObject();
+
+                            const float3 delta = vehicleGO->GetGlobalMatrix()[3].xyz - playerPos;
+                            const float dist = length(delta);
+
+                            if (dist < closestVehicleDist)
+                            {
+                                closestVehicleDist = dist;
+                                closestVehicle = vehicle->GetGameObject();
+                            }
+                        }
+
+                        if (closestVehicle)
+                        {
+                            VG_INFO("[Player] Found vehicle \"%s\" close to player", closestVehicle->GetFullName().c_str());
+                            enterVehicle(closestVehicle);
+                        }
+                    }
+
                     // Pick closest weapon
                     if (nullptr == m_rightHandItem)
                     {
@@ -485,4 +571,26 @@ void PlayerBehaviour::Update(const Context & _context)
             }
         }
     }
+}
+
+//--------------------------------------------------------------------------------------
+bool PlayerBehaviour::enterVehicle(vg::core::IGameObject * _vehicleGameobject)
+{
+    IVehicleComponent * vehicleComp = _vehicleGameobject->GetComponentT<IVehicleComponent>();
+    VG_ASSERT(vehicleComp);
+    VehicleSlotType slotType;
+    if (vehicleComp->EnterVehicle(this->GetGameObject(), slotType))
+    {
+        m_vehicle.set(_vehicleGameobject);
+        show(false);
+        return true;
+    }
+
+    return false;
+}
+
+//--------------------------------------------------------------------------------------
+bool PlayerBehaviour::exitVehicle()
+{
+    return false;
 }

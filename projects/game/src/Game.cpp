@@ -2,6 +2,7 @@
 #include "Game.h"
 #include "core/Kernel.h"
 #include "core/Object/AutoRegisterClass.h"
+#include "core/IBaseScene.h"
 #include "engine/IEngine.h"
 #include "Behaviour/Entity/Character/Player/PlayerBehaviour.h"
 #include "Behaviour/Entity/Item/ItemBehaviour.h"
@@ -83,6 +84,58 @@ bool Game::Deinit()
 }
 
 //--------------------------------------------------------------------------------------
+void Game::OnPlay()
+{
+    IWorld * world = s_engine->GetMainWorld();
+    auto sceneCount = world->GetSceneCount(BaseSceneType::Scene);
+    for (uint i = 0; i < sceneCount; ++i)
+    {
+        const IBaseScene * scene = world->GetScene(i, BaseSceneType::Scene);
+        const IGameObject * root = scene->GetRoot();
+
+        // cache characters
+        auto allCharacters = (vg::core::vector<CharacterBehaviour *>&)root->GetComponentsByType("CharacterBehaviour", false, true); // search children too
+        for (uint j = 0; j < allCharacters.size(); ++j)
+        {
+            CharacterBehaviour * character = allCharacters[j];
+            m_characters[asInteger(character->getCharacterType())].push_back(character);
+        }
+
+        // cache items
+        auto allItems = (vg::core::vector<ItemBehaviour *>&)root->GetComponentsByType("ItemBehaviour", false, true); // search children too 
+        for (uint j = 0; j < allItems.size(); ++j)
+        {
+            ItemBehaviour * item = allItems[j];
+            m_items[asInteger(item->getItemType())].push_back(item);
+        }
+
+        // cache vehicle list
+        m_vehicles = (vg::core::vector<vg::engine::IVehicleComponent *>&)root->GetComponentsByType("VehicleComponent", false, true); // search children too
+        
+    }
+
+    for (uint i = 0; i < enumCount<CharacterType>(); ++i)
+        VG_INFO("[Game] %u CharacterBehaviour(s) of type \"%s\" found", m_characters[i].size(), asString((CharacterType)i).c_str());
+
+    for (uint i = 0; i < enumCount<ItemType>(); ++i)
+        VG_INFO("[Game] %u ItemBehaviour(s) of type \"%s\" found", m_items[i].size(), asString((ItemType)i).c_str());
+
+    VG_INFO("[Game] %u VehicleComponent(s) found", m_vehicles.size());
+}
+
+//--------------------------------------------------------------------------------------
+void Game::OnStop()
+{
+    for (uint i = 0; i < enumCount<CharacterType>(); ++i)
+        m_characters[i].clear();
+
+    for (uint i = 0; i < enumCount<ItemType>(); ++i)
+        m_items[i].clear();
+
+    m_vehicles.clear();
+}
+
+//--------------------------------------------------------------------------------------
 void Game::Update(float _dt)
 {
     
@@ -101,23 +154,6 @@ vg::core::IInput & Game::Input()
     auto * input = Kernel::getInput();
     VG_ASSERT(input);
     return *input;
-}
-
-//--------------------------------------------------------------------------------------
-void Game::addCharacter(CharacterType _type, CharacterBehaviour * _character)
-{
-    auto & characters = m_characters[vg::core::asInteger(_type)];
-    VG_ASSERT(!vector_helper::exists(characters, _character));
-    characters.push_back(_character);
-    //VG_INFO("[Game] Add %s Character \"%s\"", asString(_type).c_str(), _character->GetName().c_str());
-}
-
-//--------------------------------------------------------------------------------------
-void Game::removeCharacter(CharacterType _type, CharacterBehaviour * _character)
-{
-    auto & characters = m_characters[vg::core::asInteger(_type)];
-    if (!vector_helper::remove(characters, _character))
-        VG_WARNING("[Game] Cannot unregister Character \"%s\" from GameObject \"%s\" of type %s.", _character->GetName().c_str(), _character->GetGameObject()->GetName().c_str(), asString(_type).c_str());
 }
 
 //--------------------------------------------------------------------------------------
@@ -147,23 +183,6 @@ const vg::core::vector<EnemyBehaviour *> & Game::getEnemies() const
 }
 
 //--------------------------------------------------------------------------------------
-void Game::addItem(ItemType _type, ItemBehaviour * _item)
-{
-    auto & items = m_items[vg::core::asInteger(_type)];
-    VG_ASSERT(!vector_helper::exists(items, _item));
-    items.push_back(_item);
-    //VG_INFO("[Game] Add %s Item \"%s\"", asString(_type).c_str(), _item->GetName().c_str());
-}
-
-//--------------------------------------------------------------------------------------
-void Game::removeItem(ItemType _type, ItemBehaviour * _item)
-{
-    auto & items = m_items[vg::core::asInteger(_type)];
-    if (!vector_helper::remove(items, _item))
-        VG_WARNING("[Game] Cannot unregister Item \"%s\" from GameObject \"%s\" of type %s.", _item->GetName().c_str(), _item->GetGameObject()->GetName().c_str(), asString(_type).c_str());
-}
-
-//--------------------------------------------------------------------------------------
 const vg::core::vector<BallBehaviour *> & Game::getBalls() const
 {
     return reinterpret_cast<const vg::core::vector<BallBehaviour *> &>(m_items[vg::core::asInteger(ItemType::Ball)]);
@@ -173,4 +192,10 @@ const vg::core::vector<BallBehaviour *> & Game::getBalls() const
 const vg::core::vector<WeaponBehaviour *> & Game::getWeapons() const
 {
     return reinterpret_cast<const vg::core::vector<WeaponBehaviour *> &>(m_items[vg::core::asInteger(ItemType::Weapon)]);
+}
+
+//--------------------------------------------------------------------------------------
+const vg::core::vector<vg::engine::IVehicleComponent *> & Game::getVehicles() const
+{
+    return m_vehicles;
 }

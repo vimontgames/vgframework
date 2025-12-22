@@ -58,18 +58,20 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
     registerProperty(CharacterBehaviour, m_jumpSpeed, "Jump (small)");
     registerProperty(CharacterBehaviour, m_runJumpSpeed, "Jump (big)");
 
-    registerPropertyGroupBegin(CharacterBehaviour, "Character debug");
+    registerPropertyGroupBegin(CharacterBehaviour, "Character state");
     {
-        registerPropertyEx(CharacterBehaviour, m_isActive, "Active", vg::core::PropertyFlags::Transient);
-        registerPropertyEx(CharacterBehaviour, m_score, "Score", vg::core::PropertyFlags::Transient);
-        registerPropertyEnumEx(CharacterBehaviour, MoveState, m_moveState, "Move", vg::core::PropertyFlags::Transient);
-        registerPropertyEnumEx(CharacterBehaviour, FightState, m_fightState, "Fight", vg::core::PropertyFlags::Transient);
-        registerPropertyEnumEx(CharacterBehaviour, SoundState, m_soundState, "Sound", vg::core::PropertyFlags::Transient);
-        registerPropertyEx(CharacterBehaviour, m_speedCurrent, "Speed", vg::core::PropertyFlags::Transient);
-        registerPropertyEx(CharacterBehaviour, m_velocityNorm, "Velocity", vg::core::PropertyFlags::Transient);
-        registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rotation", vg::core::PropertyFlags::Transient);
+        registerPropertyEx(CharacterBehaviour, m_isActive, "Active", PropertyFlags::Transient);
+        registerPropertyEx(CharacterBehaviour, m_score, "Score", PropertyFlags::Transient);
+        registerPropertyEnumEx(CharacterBehaviour, MoveState, m_moveState, "Move", PropertyFlags::Transient);
+        registerPropertyEnumEx(CharacterBehaviour, FightState, m_fightState, "Fight", PropertyFlags::Transient);
+        registerPropertyEnumEx(CharacterBehaviour, SoundState, m_soundState, "Sound", PropertyFlags::Transient);
+        registerPropertyEx(CharacterBehaviour, m_speedCurrent, "Speed", PropertyFlags::Transient);
+        registerPropertyEx(CharacterBehaviour, m_velocityNorm, "Velocity", PropertyFlags::Transient);
+        registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rotation", PropertyFlags::Transient);
+
+        registerPropertyEx(CharacterBehaviour, m_vehicle, "Vehicle", PropertyFlags::Transient);
     }
-    registerPropertyGroupEnd(CharacterBehaviour);
+    registerPropertyGroupEnd(CharacterBehaviour); 
 
     return true;
 }
@@ -84,6 +86,10 @@ void CharacterBehaviour::show(bool visible)
     // Enable physics body
     if (auto * body = GetGameObject()->GetComponentByType("PhysicsBodyComponent"))
         body->Enable(visible);
+
+    // Enable physics body
+    if (auto * chara = GetGameObject()->GetComponentByType("CharacterControllerComponent"))
+        chara->Enable(visible);
 }
 
 //--------------------------------------------------------------------------------------
@@ -164,14 +170,12 @@ void CharacterBehaviour::OnDisable()
 void CharacterBehaviour::OnPlay()
 {
     super::OnPlay();
-    Game::get()->addCharacter(m_characterType, this);
     m_startPos = GetGameObject()->getGlobalMatrix()[3].xyz;
 }
 
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::OnStop()
 {
-    Game::get()->removeCharacter(m_characterType, this);
     super::OnStop();
 
     m_isActive = false;
@@ -182,6 +186,8 @@ void CharacterBehaviour::OnStop()
     m_speedCurrent = 0;
     m_velocityNorm = 0;
     m_currentRotation = 0;
+
+    m_vehicle.clear();
 }
 
 //--------------------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 #pragma once
 #include "Game_consts.h"
 #include "Behaviour/Entity/EntityBehaviour.h"
+#include "core/Object/ObjectHandle.h"
 
 class ItemBehaviour;
 class HealthBarBehaviour;
@@ -37,6 +38,7 @@ public:
     VG_INLINE MoveState     getMoveState    () const;
     VG_INLINE FightState    getFightState   () const;
     VG_INLINE float         getHealth       () const;
+    VG_INLINE CharacterType getCharacterType() const;
 
     void                    show            (bool visible);
 
@@ -88,6 +90,8 @@ protected:
     vg::core::float3        m_startPos = (vg::core::float3)0.0f; 
 
     HealthBarBehaviour *    m_healthBar = nullptr;
+
+    vg::core::ObjectHandle  m_vehicle;
 };
 
 #if VG_ENABLE_INLINE
