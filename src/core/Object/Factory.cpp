@@ -1547,7 +1547,7 @@ namespace vg::core
             break;
         }
 
-        _object->OnPropertyChanged(_object, *_prop, true);
+        //_object->OnPropertyChanged(_object, *_prop, true); // Issue with skinning to investigate ...
     }
 
     //--------------------------------------------------------------------------------------

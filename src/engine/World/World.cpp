@@ -425,7 +425,7 @@ namespace vg::engine
                 }
 
                 // Force refresh global matrices after restore or call OnPropertyChanged from RestoreProperties?
-                //root->OnLocalMatrixChanged(true);
+                ((GameObject*)root)->OnLocalMatrixChanged(false, true);
             }
         }
 
