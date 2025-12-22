@@ -45,6 +45,7 @@ namespace vg::engine
         void                Update                      (const Context & _context) final override;
 
         bool                EnterVehicle                (core::IGameObject * _owner, VehicleSlotType & _slotType) final override;
+        bool                ExitVehicle                 (core::IGameObject * _owner) final override;
 
         float               GetForwardVelocity          () const final override;
 

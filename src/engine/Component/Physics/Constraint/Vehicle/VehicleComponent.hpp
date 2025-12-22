@@ -1,6 +1,7 @@
 #include "VehicleComponent.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IDebugDraw.h"
+#include "engine/ISoundComponent.h"
 
 using namespace vg::core;
 
@@ -221,9 +222,44 @@ namespace vg::engine
         for (uint i = 0; i < slots.size(); ++i)
         {
             VehicleSlot & slot = slots[i];
-            //if (slot.m_)
+            if (slot.m_owner.getObject() == nullptr)
+            {
+                slot.m_owner.set(_owner);
 
-            return true;
+                if (ISoundComponent * sound = GetGameObject()->GetComponentT<ISoundComponent>())
+                {
+                    auto soundIndex = sound->GetSoundIndex("Enter");
+                    if (-1 != soundIndex)
+                        sound->Play(soundIndex);
+                }
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool VehicleComponent::ExitVehicle(core::IGameObject * _owner)
+    {
+        auto & slots = m_slots.getObjects();
+        for (uint i = 0; i < slots.size(); ++i)
+        {
+            VehicleSlot & slot = slots[i];
+            if (slot.m_owner.getObject() == _owner)
+            {
+                slot.m_owner.clear();
+
+                if (ISoundComponent * sound = GetGameObject()->GetComponentT<ISoundComponent>())
+                {
+                    auto soundIndex = sound->GetSoundIndex("Enter");
+                    if (-1 != soundIndex)
+                        sound->Play(soundIndex);
+                }
+
+                return true;
+            }
         }
 
         return false;

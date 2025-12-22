@@ -102,11 +102,17 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 {
                     auto joyID = m_controllerIndex;
 
+                    if (input.IsJoyButtonJustPressed(joyID, JoyButton::X))
+                    {
+                        if (exitVehicle())
+                            return;
+                    }
+
                     float backward = input.GetJoyLeftTrigger(joyID);
                     float forward = input.GetJoyRightTrigger(joyID);
 
                     float forwardSpeed = vehicle->GetForwardVelocity();
-                    VG_INFO("[Player] ForwardSpeed = %.2f", forwardSpeed);
+                    //VG_INFO("[Player] ForwardSpeed = %.2f", forwardSpeed);
 
                     if (forward > 0.1f)
                     {
@@ -592,5 +598,19 @@ bool PlayerBehaviour::enterVehicle(vg::core::IGameObject * _vehicleGameobject)
 //--------------------------------------------------------------------------------------
 bool PlayerBehaviour::exitVehicle()
 {
+    IGameObject * vehicleGO = VG_SAFE_STATIC_CAST(IGameObject, m_vehicle.getObject());
+    IVehicleComponent * vehicleComp = vehicleGO->GetComponentT<IVehicleComponent>();
+    VG_ASSERT(vehicleComp);
+
+    if (vehicleComp->ExitVehicle(this->GetGameObject()))
+    {
+        m_vehicle.clear();
+        float4x4 exitMat = vehicleGO->GetGlobalMatrix();
+        exitMat[3].z += 1; // TODO: save enter pos relative to car and check if enough space to exit car?
+        GetGameObject()->SetGlobalMatrix(exitMat);
+        show(true);
+        return true;
+    }
+
     return false;
 }

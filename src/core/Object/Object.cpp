@@ -478,7 +478,7 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void  Object::SetClassDesc(const IClassDesc * _classDesc)
+    void Object::SetClassDesc(const IClassDesc * _classDesc)
     {
         VG_ASSERT(nullptr == m_classDesc);
         m_classDesc = _classDesc;

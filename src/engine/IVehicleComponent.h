@@ -15,6 +15,7 @@ namespace vg::engine
         VG_CLASS_DECL_ABSTRACT(IVehicleComponent, PhysicsConstraintComponent);
 
         virtual bool EnterVehicle(core::IGameObject * _owner, VehicleSlotType & _slotType) = 0;
+        virtual bool ExitVehicle(core::IGameObject * _owner) = 0;
 
         virtual float GetForwardVelocity() const = 0;
 
