@@ -17,6 +17,9 @@ namespace vg::core
         void                        OnPlay                  () override;
         void                        OnStop                  () override;
 
+        void                        OnEnable                () override;
+        void                        OnDisable               () override;
+
         void                        FixedUpdate             (const Context & _context) override;
         void                        Update                  (const Context & _context) override;
         void                        LateUpdate              (const Context & _context) override;

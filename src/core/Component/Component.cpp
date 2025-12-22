@@ -6,6 +6,7 @@
 #include "core/IClassDesc.h"
 #include "core/Kernel.h"
 #include "core/Object/EnumHelper.h"
+#include "core/GameObject/GameObject.h"
 
 #if !VG_ENABLE_INLINE
 #include "Component.inl"
@@ -38,6 +39,20 @@ namespace vg::core
     void Component::OnStop()
     {
 
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Component::OnEnable()
+    {
+        if (GameObject * go = (GameObject *)GetGameObject())
+            go->recomputeUpdateFlags();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Component::OnDisable()
+    {
+        if (GameObject * go = (GameObject *)GetGameObject())
+            go->recomputeUpdateFlags();
     }
 
     //--------------------------------------------------------------------------------------

@@ -268,6 +268,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void PhysicsBodyComponent::OnEnable()
     {
+        super::OnEnable();
+
         if (!m_body)
             createBody();
     }
@@ -275,6 +277,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void PhysicsBodyComponent::OnDisable()
     {
+        super::OnDisable();
+
         VG_SAFE_RELEASE(m_body);
     }
 

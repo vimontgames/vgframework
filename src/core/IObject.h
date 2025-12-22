@@ -20,7 +20,8 @@ namespace vg::core
     vg_enum_class(vg::core, ObjectRuntimeFlags, u16,
         NotSerialized   = 0x0001,   // Object is not saved when its parent is serialized (e.g., for objects instantiated at runtime)
         DirtySave       = 0x0002,   // Object has been modified and needs to be saved again or changes will be lost                 
-        Unloaded        = 0x0004,   // Object is being unloaded                                                                     
+        Unloaded        = 0x0004,   // Object is being unloaded  
+        Temporary       = 0x0008,   // Object is temporary and will be deleted on stop
         Selected        = 0x0010,   // Object is selected                                                                           
         Prefab          = 0x0100,   // Object (e.g., World or GameObject) is a prefab                                               
         Instance        = 0x0200    // Object (e.g., World or GameObject) is an Instance                                               

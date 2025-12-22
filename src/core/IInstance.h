@@ -20,7 +20,7 @@ namespace vg::core
     );
 
     vg_enum_class(vg::core, InstanceRuntimeFlags, u16,
-        Temporary   = 0x0001   // Object is temporary and should be deleted when engine stops (e.g. projectile)
+        _Unused     = 0x0000   
     );
 
     class IInstance : public Object

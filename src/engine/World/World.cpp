@@ -302,6 +302,8 @@ namespace vg::engine
 
                     if (nullptr == mergeStaticCollidersComponent)
                         mergeStaticCollidersComponent = root->AddComponentT<MergeStaticCollidersComponent>("MergeStaticColliders");
+
+                    mergeStaticCollidersComponent->SetObjectRuntimeFlags(ObjectRuntimeFlags::Temporary, true);
         
                     IFactory * factory = Kernel::getFactory();
                     physics::IBodyDesc * bodyDesc = (physics::IBodyDesc *)factory->CreateObject("PhysicsBodyDesc", "", this);
@@ -315,7 +317,7 @@ namespace vg::engine
                     {
                         PhysicsBodyComponent * bodyComponent = bodies[j];
 
-                        if (bodyComponent->getBodyDesc()->GetMotionType() != physics::MotionType::Static)
+                        if (!bodyComponent->isEnabled() || bodyComponent->getBodyDesc()->GetMotionType() != physics::MotionType::Static)
                             continue;
 
                         auto componentShapes = bodyComponent->getShapes();
@@ -337,6 +339,8 @@ namespace vg::engine
                         }
 
                         totalMergedCount += componentShapes.size();
+
+                        bodyComponent->Enable(false);
                     }
 
                     bodyDesc->SetMass(mass);
@@ -367,9 +371,23 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool destroyTemporaryGameObjectsRecur(IGameObject * _object)
+    bool destroyTemporaryObjectsRecur(IGameObject * _object)
     {
-        if (asBool(InstanceRuntimeFlags::Temporary & _object->GetInstanceRuntimeFlags()))
+        auto & components = _object->GetComponents();
+        if (components.size() > 0)
+        {
+            for (int i = (int)components.size() - 1; i >= 0; --i)
+            {
+                auto * component = components[i];
+                if (asBool(ObjectRuntimeFlags::Temporary & component->GetObjectRuntimeFlags()))
+                {
+                    _object->RemoveComponent(component);
+                    VG_SAFE_RELEASE(component);
+                }
+            }
+        }
+
+        if (asBool(ObjectRuntimeFlags::Temporary & _object->GetObjectRuntimeFlags()))
         {
             IGameObject * parent = VG_SAFE_STATIC_CAST(IGameObject, _object->getParent());
             parent->RemoveChild(_object);
@@ -380,7 +398,7 @@ namespace vg::engine
             auto & children = _object->GetChildren();
             for (uint i = 0; i < children.size(); ++i)
             {
-                if (destroyTemporaryGameObjectsRecur((IGameObject *)children[i]))
+                if (destroyTemporaryObjectsRecur((IGameObject *)children[i]))
                     --i;
             }
         }
@@ -420,7 +438,7 @@ namespace vg::engine
             {
                 IGameObject * root = VG_SAFE_STATIC_CAST(IGameObject, scene->GetRoot());
                 if (nullptr != root)
-                    destroyTemporaryGameObjectsRecur(root);
+                    destroyTemporaryObjectsRecur(root);
             }
         }
     }

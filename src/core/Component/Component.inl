@@ -24,7 +24,10 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     VG_INLINE UpdateFlags Component::getUpdateFlags() const
     {
-        return m_update;
+        if (isEnabled())
+            return m_update;
+        else
+            return (UpdateFlags)0x0;
     }
 
     //--------------------------------------------------------------------------------------

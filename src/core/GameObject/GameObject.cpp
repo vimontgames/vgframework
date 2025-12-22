@@ -30,6 +30,8 @@ namespace vg::core
         registerPropertyEnumBitfield(GameObject, Tag, m_tags, "Tags");
         setPropertyDescription(GameObject, m_tags, "GameObjects can use Tags to categorize object (e.g., Player, Ennemy ...)")
 
+        registerPropertyEnumBitfieldEx(GameObject, UpdateFlags, m_update, "Update", PropertyFlags::Transient /* | PropertyFlags::Debug*/);
+
         registerPropertyObjectPtrVector(GameObject, m_components, "Components");
         registerPropertyObjectPtrVectorEx(GameObject, m_children, "Children", PropertyFlags::Hidden);
 
@@ -190,9 +192,11 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     UpdateFlags GameObject::GetUpdateFlags() const
     {
-        return getUpdateFlags();
+        if (isEnabled())
+            return getUpdateFlags();
+        else
+            return (UpdateFlags)0x0;
     }
-
 
     //--------------------------------------------------------------------------------------
     void GameObject::EnableTags(Tag _tags, bool _enabled)
@@ -829,8 +833,10 @@ namespace vg::core
         }
 
         for (uint i = 0; i < m_components.size(); ++i)
+        {
+            Component * component = m_components[i];
             update |= m_components[i]->getUpdateFlags();
-        
+        }
         m_update = update;
 
         GameObject * parent = dynamic_cast<GameObject *>(GetParent());

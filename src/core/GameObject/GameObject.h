@@ -121,7 +121,7 @@ namespace vg::core
 
     private:
         UpdateFlags                                     m_update = (UpdateFlags)0x0;
-        Tag                                   m_tags = (Tag)0x0;
+        Tag                                             m_tags = (Tag)0x0;
         vector<Component *>                             m_components;
         vector<GameObject *>                            m_children;
         vector<renderer::IGraphicInstance*>             m_graphicInstances;
