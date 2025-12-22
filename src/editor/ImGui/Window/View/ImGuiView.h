@@ -80,5 +80,10 @@ namespace vg::editor
             core::uint2                         m_pan2DPosStart;
         };
         EditorCamera            m_editorCam;
+
+        core::uint              m_selectedObjectCount      = 0;
+        core::float3            m_maxTranslationSnap       = core::float3(0,0,0);
+        float                   m_maxRotationSnapInDegrees = 0;
+        float                   m_maxScaleSnap             = 0;
     };
 }

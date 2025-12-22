@@ -28,12 +28,14 @@ namespace vg::core
     );
 
     using UID = core::u32;
+    using ClassCRC = core::u64;
 
 	class IObject
 	{
 	public:
         static const char *                 getStaticClassName      () { return "IObject"; }
         virtual const char *                GetClassName            () const = 0;
+        virtual ClassCRC                    GetClassCRC             () const = 0;
 
         virtual void                        SetClassDesc            (const IClassDesc * _classDesc) = 0;
         virtual const IClassDesc *          GetClassDesc            () const = 0;

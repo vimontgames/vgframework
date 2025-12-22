@@ -5,6 +5,8 @@
 
 namespace vg::core
 {
+    using ClassCRC = core::u64;
+
     struct ClassDesc final : public IClassDesc
     {
         ClassDesc();
@@ -73,7 +75,9 @@ namespace vg::core
         void *                              ResizeVector                (core::IObject * _parent, core::uint _offset, core::uint _count) const final override;
 
         const char *                        GetClassName                () const final override;
+        ClassCRC                            GetClassCRC                 () const final override;
         const char *                        GetParentClassName          () const final override;
+        ClassCRC                            GetParentClassCRC           () const final override;
         const char *                        GetClassDisplayName         () const final override;
         const char *                        GetCategory                 () const final override;
         const char *                        GetDescription              () const final override;
@@ -104,6 +108,8 @@ namespace vg::core
 
         bool                                pushProperty                (const Property & _prop);
 
+        ClassCRC                            crc                         = (ClassCRC)-1;
+        ClassCRC                            parentCRC                   = (ClassCRC)-1;
         const char *                        name                        = nullptr;
         const char *                        parentClassName             = nullptr;
         const char *                        displayName                 = nullptr;

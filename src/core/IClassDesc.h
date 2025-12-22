@@ -30,6 +30,7 @@ namespace vg::core
     };
 
     using Priority = core::i16;
+    using ClassCRC = core::u64;
 
     class IClassDesc
     {
@@ -108,7 +109,9 @@ namespace vg::core
         virtual void *                      ResizeVector                (core::IObject * _parent, core::uint _offset, core::uint _count) const = 0;
 
         virtual const char *                GetClassName                () const = 0;
+        virtual ClassCRC                    GetClassCRC                 () const = 0;
         virtual const char *                GetParentClassName          () const = 0;
+        virtual ClassCRC                    GetParentClassCRC           () const = 0;
         virtual const char *                GetClassDisplayName         () const = 0;    
         virtual const char *                GetCategory                 () const = 0;
         virtual const char *                GetDescription              () const = 0;

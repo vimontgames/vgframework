@@ -1965,7 +1965,7 @@ namespace vg::editor
                             vector<IClassDesc*> compatibleElemDescs;
                             for (auto & elemDesc : elemClassDescs)
                             {
-                                if (factory->IsA(elemDesc->GetClassName(), interfaceName))
+                                if (factory->IsA(elemDesc->GetClassCRC(), computeCRC64(interfaceName))) // ?
                                     compatibleElemDescs.push_back(elemDesc);
                             }
 

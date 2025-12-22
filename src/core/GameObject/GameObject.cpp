@@ -516,35 +516,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool IsA(IObject * _object, const char * _className)
-    {
-        const char * objectClassName = _object->GetClassName();
-        if (!strcmp(objectClassName, _className))
-            return true;
-
-        const auto * classDesc = Kernel::getFactory()->GetClassDescriptor(objectClassName);
-        if (nullptr != classDesc)
-        {
-            const char * parentClassName = nullptr;
-            do
-            {
-                parentClassName = classDesc->GetParentClassName();
-
-                if (!strcmp(parentClassName, _className))
-                    return true;
-
-                classDesc = Kernel::getFactory()->GetClassDescriptor(parentClassName, false);
-            } while (nullptr != classDesc);
-        }
-
-        return false;
-    }
-
-    //--------------------------------------------------------------------------------------
     vector<IComponent *> GameObject::GetComponentsByType(const char * _className, bool _searchInParent, bool _searchInChildren) const
     {
         if (_searchInParent)
             VG_ASSERT_NOT_IMPLEMENTED();
+
+        const auto * factory = Kernel::getFactory();
+        const ClassCRC classCRC = computeCRC64(_className);
 
         vector<IComponent *> found;
 
@@ -554,7 +532,7 @@ namespace vg::core
             auto * component = components[i];
             if (nullptr != component)
             {
-                if (IsA(component, _className))
+                if (factory->IsA(component->GetClassCRC(), classCRC))
                     found.push_back(component);                
             }
         }
@@ -564,7 +542,7 @@ namespace vg::core
             auto & children = getChildren();
             for (auto i = 0; i < children.size(); ++i)
             {
-                // TODO: do this more efficiently using a separate method that takes R/W vector ref as paremeters
+                // TODO: do this more efficiently using a separate method that takes R/W vector ref as parameters
                 auto others = children[i]->GetComponentsByType(_className, _searchInParent, _searchInChildren);
 
                 if (others.size() > 0)
@@ -578,6 +556,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IComponent * GameObject::GetComponentByType(const char * _className, bool _searchInParent, bool _searchInChildren) const
     {
+        const ClassCRC classCRC = computeCRC64(_className);
+
         auto * factory = Kernel::getFactory();
         const auto & components = getComponents();
         for (uint i = 0; i < components.size(); ++i)
@@ -586,26 +566,30 @@ namespace vg::core
             if (nullptr != component)
             {
                 const char * componentClassName = component->GetClassName();
-                if (!strcmp(componentClassName, _className))
+                const ClassCRC componentClassCRC = component->GetClassCRC();
+
+                if (classCRC == componentClassCRC)
                 {
                     return component;
                 }
                 else 
                 {
-                    const auto * classDesc = factory->GetClassDescriptor(componentClassName, false);
+                    const auto * classDesc = factory->GetClassDescriptorFromCRC(componentClassCRC, false);
                     if (nullptr != classDesc)
                     {
                         const char * interfaceName = classDesc->GetParentClassName();
-                        while (nullptr != interfaceName)
+                        ClassCRC parentClassCRC = classDesc->GetParentClassCRC();
+
+                        while (0 != parentClassCRC)
                         {
-                            if (!strcmp(interfaceName, _className))
+                            if (parentClassCRC == classCRC)
                                 return component;
 
-                            classDesc = factory->GetClassDescriptor(interfaceName, false);
+                            classDesc = factory->GetClassDescriptorFromCRC(parentClassCRC, false);
                             if (classDesc)
-                                interfaceName = classDesc->GetParentClassName();
+                                parentClassCRC = classDesc->GetParentClassCRC();
                             else
-                                interfaceName = nullptr;
+                                parentClassCRC = 0;
                         }
                     }
                 }

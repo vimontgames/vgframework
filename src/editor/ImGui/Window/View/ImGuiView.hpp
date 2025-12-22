@@ -720,9 +720,14 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     void findMaximumSnap(const vector<IObject *> & _objects, float3 & _translationSnap, float & _rotationSnapInDegrees, float & _scaleSnap)
     {
+        VG_PROFILE_CPU("findMaximumSnap");
+
+        #if 1
+
+        // Recursive version
         for (uint i = 0; i < _objects.size(); ++i)
         {
-            const IGameObject * go = dynamic_cast<const IGameObject*>(_objects[i]);
+            const IGameObject * go = (IGameObject*)_objects[i];
 
             if (const auto * snap = go->GetComponentT<engine::ISnapComponent>())
             {
@@ -739,18 +744,47 @@ namespace vg::editor
                     _scaleSnap = max(_scaleSnap, scale);
             }
 
-            const auto children = (const vector<IObject *> &)go->GetChildren();
+            const auto & children = (const vector<IObject *> &)go->GetChildren();
             findMaximumSnap(children, _translationSnap, _rotationSnapInDegrees, _scaleSnap);
         }
+
+        #else
+
+        // Non-recursive version (slower?)
+        for (uint i = 0; i < _objects.size(); ++i)
+        {
+            const IGameObject * go = (IGameObject *)_objects[i];
+
+            auto snapComponents = go->GetComponentsInChildrenT<engine::ISnapComponent>();
+
+            for (const auto & snap : snapComponents)
+            {
+                float3 trans;
+                if (snap->TryGetSnapTranslate(trans))
+                    _translationSnap = max(_translationSnap, trans);
+
+                float rot;
+                if (snap->TryGetSnapRotate(rot))
+                    _rotationSnapInDegrees = max(_rotationSnapInDegrees, rot);
+
+                float scale;
+                if (snap->TryGetSnapScale(scale))
+                    _scaleSnap = max(_scaleSnap, scale);
+            }
+        }
+
+        #endif
     }
 
     //--------------------------------------------------------------------------------------
-    // Returns 'true' if any gizmo is manipulated (and thus we shoudn't update picking selection
+    // Returns 'true' if any gizmo is manipulated (and thus we shoudn't update picking selection)
     //--------------------------------------------------------------------------------------
     bool ImGuiView::drawGizmo(const renderer::IView * _view)
     {
+        VG_PROFILE_CPU("drawGizmo");
+
         ISelection * selection = Editor::get()->getSelection();
-        const auto selectedObjectsNoFilter = selection->GetSelectedObjects();
+        const auto & selectedObjectsNoFilter = selection->GetSelectedObjects();
 
         // filter selected objects by world to keep only those belonging to current view
         core::vector<core::IObject *> selectedObjects;
@@ -774,7 +808,29 @@ namespace vg::editor
             float rotationSnapInDegrees = gizmoOptions.m_rotationSnapInDegrees;
             float scaleSnap = gizmoOptions.m_scaleSnap;
 
-            findMaximumSnap(selectedObjects, translationSnap, rotationSnapInDegrees, scaleSnap);
+            if (selectedObjects.size() != m_selectedObjectCount)
+            {
+                if (gizmoOptions.m_snapTranslate || gizmoOptions.m_snapRotate || gizmoOptions.m_snapScale)
+                {
+                    // 'findMaximumSnap' is a very slow operation in debug so only do it when selection changes
+                    m_maxTranslationSnap = float3(0, 0, 0);
+                    m_maxRotationSnapInDegrees = 0.0f;
+                    m_maxScaleSnap = 0.0f;
+                    
+                    findMaximumSnap(selectedObjects, m_maxTranslationSnap, m_maxRotationSnapInDegrees, m_maxScaleSnap);
+
+                    m_selectedObjectCount = (uint)selectedObjects.size();
+                }
+            }
+
+            if (gizmoOptions.m_snapTranslate)
+                translationSnap = max(translationSnap, m_maxTranslationSnap);
+
+            if (gizmoOptions.m_snapRotate)
+                rotationSnapInDegrees = max(rotationSnapInDegrees, m_maxRotationSnapInDegrees);
+
+            if (gizmoOptions.m_snapScale)
+                scaleSnap = max(scaleSnap, m_maxScaleSnap);
 
             ImGuizmo::OPERATION imGuizmoOperation;
             switch (gizmoOptions.m_type)

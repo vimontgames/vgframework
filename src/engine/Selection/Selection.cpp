@@ -52,11 +52,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool Selection::IsSelectedObject(const core::IObject * _object) const
     {
-        bool selected = false;
-        if (const core::Instance * instance = dynamic_cast<const core::Instance *>(_object))
-            selected = asBool(core::ObjectRuntimeFlags::Selected & instance->getObjectRuntimeFlags());
-
-        return selected;
+        return asBool(core::ObjectRuntimeFlags::Selected & ((Object*)_object)->getObjectRuntimeFlags());
     }
 
     //--------------------------------------------------------------------------------------

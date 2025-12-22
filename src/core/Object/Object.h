@@ -1,16 +1,24 @@
 #pragma once
 
 #include "core/IObject.h"
+#include "core/Math/CRC.h"
 
-#define VG_CLASS_SUPER_CLASSNAME(name, parent)		using super = parent;																\
-													static const char * getStaticClassName  () { return #name; }						\
-													const char * GetClassName() const override { return name::getStaticClassName(); }	
+namespace vg::core
+{
+    using ClassCRC = vg::core::u64;
+}
+
+#define VG_CLASS_SUPER_CLASSNAME(name, parent)		using super = parent;																                    \
+													static const char * getStaticClassName      () { return #name; }						                \
+													const char * GetClassName                   () const override { return name::getStaticClassName(); }	\
+                                                    static vg::core::ClassCRC getStaticClassCRC () { return crc64(#name); }                                 \
+                                                    vg::core::ClassCRC GetClassCRC              () const override { return name::getStaticClassCRC(); }
 
 // Common class functions with default implementation for registerClass/registerProperty
 #define VG_CLASS_PROPERTIES_IMPL(name, parent)		static bool registerProperties(vg::core::IClassDesc & _desc) { super::registerProperties(_desc); return true; }	
 
 // Common class functions declaration only
-#define VG_CLASS_PROPERTIES_DECL(name, parent)		static bool registerProperties(vg::core::IClassDesc & _desc);						\
+#define VG_CLASS_PROPERTIES_DECL(name, parent)		static bool registerProperties(vg::core::IClassDesc & _desc);   \
 													static bool registerClass(vg::core::IFactory & _factory);
 
 // Default ctor

@@ -17,6 +17,7 @@ namespace vg::core
     class IComponent;
 
     using UID = core::u32;
+    using ClassCRC = core::u64;
 
     vg_enum_class(vg::core, BufferType, u8,
         InitValue = 0,
@@ -35,6 +36,7 @@ namespace vg::core
         virtual IClassDesc *                RegisterObjectClass         (const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::Func _createFunc) = 0;
         virtual IClassDesc *                RegisterSingletonClass      (const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::SingletonFunc _createFunc) = 0;
         virtual const IClassDesc *          GetClassDescriptor          (const char * _className, bool _mustExist = true) const = 0;
+        virtual const IClassDesc *          GetClassDescriptorFromCRC   (ClassCRC _classCRC, bool _mustExist = true) const = 0;
         virtual const vector<IClassDesc *>  GetClassDescriptors         (ClassDescFlags _required = (ClassDescFlags)-1, ClassDescFlags _excluded = (ClassDescFlags)0) const = 0;
         virtual bool                        IsRegisteredClass           (const char * _className) const = 0;
         virtual IObject *                   GetSingleton                (const char * _className) const = 0;
@@ -56,7 +58,7 @@ namespace vg::core
         virtual bool                        CopyProperty                (const IProperty * _srcProp, const IObject * _srcObj, const IProperty * _dstProp, IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) = 0;
         virtual IObject *                   Instanciate                 (const IObject * _object, IObject * _parent = nullptr, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) = 0;
 
-        virtual bool                        IsA                         (const char * _class, const char * _other) const = 0;
+        virtual bool                        IsA                         (ClassCRC _CRC, ClassCRC _targetCRC) const = 0;
 
         using UIDObjectHash = core::unordered_map<UID, IObject *>;
 

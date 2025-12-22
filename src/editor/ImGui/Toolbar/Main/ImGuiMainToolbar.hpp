@@ -65,17 +65,17 @@ namespace vg::editor
                 {
                     case GizmoType::Translate:
                         snap = (bool *)&gizmoOptions.m_snapTranslate;
-                        tooltip = "Snap Align Translate (A)";
+                        tooltip = "Snap Align (A)";
                         break;
 
                     case GizmoType::Rotate:
                         snap = (bool *)&gizmoOptions.m_snapRotate;
-                        tooltip = "Snap Align Rotate (A)";
+                        tooltip = "Snap Align (A)";
                         break;
 
                     case GizmoType::Scale:
                         snap = (bool *)&gizmoOptions.m_snapScale;
-                        tooltip = "Snap Align Scale (A)";
+                        tooltip = "Snap Align (A)";
                         break;
                 }
 

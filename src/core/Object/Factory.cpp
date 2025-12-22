@@ -22,7 +22,7 @@ using namespace tinyxml2;
 
 namespace vg::core
 {
-    static const uint classDescMaxCount = 1024;
+    static const uint classDescMaxCount = 256;
 
     //--------------------------------------------------------------------------------------
     Factory::Factory()
@@ -46,6 +46,7 @@ namespace vg::core
 
         // Resizing m_classes would change class descriptor addresses
         m_classes.reserve(classDescMaxCount);
+        m_classCRCToIndex.reserve(classDescMaxCount);
     }
 
     //--------------------------------------------------------------------------------------
@@ -77,20 +78,43 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IClassDesc * Factory::RegisterObjectClass(const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::Func _createFunc)
     {
-        // Classes declared in shared static libs could be declared more than once at static init
+        if (_parentClassName == _className)
+        {
+            VG_WARNING("[Factor] Class \"%s\" has a parent class with the same name.", _className, _parentClassName);
+            _parentClassName = nullptr;
+        }
+
+        const ClassCRC classCRC = computeCRC64(_className);
+        const ClassCRC parentClassCRC = _parentClassName ? computeCRC64(_parentClassName) : 0;
+
+        // Ensure no hash collision (same CRC but different name)
         for (uint i = 0; i < m_classes.size(); ++i)
         {
             ClassDesc & desc = m_classes[i];
             if (!strcmp(desc.GetClassName(), _className))
             {
-                VG_INFO("[Factory] Class \"%s\" is already registered", _className);
-                return nullptr; 
+                VG_INFO("[Factory] Class \"%s\" has the same CRC than class \"%s\"", _className, desc.name);
+                return nullptr;
             }
-        }   
+        }
+
+        // Classes declared in shared static libs could be declared more than once at static init
+        auto it = m_classCRCToIndex.find(classCRC);
+        if (it != m_classCRCToIndex.end())
+        {
+            VG_INFO("[Factory] Class \"%s\" is already registered", _className);
+            return nullptr;
+        }
 
         VG_ASSERT(m_classes.size() < classDescMaxCount);
+        if (parentClassCRC != Object::getStaticClassCRC())
+            VG_INFO("[Factory] Register class \"%s\" (0x%016llX) with parent \"%s\" (0x%016llX)", _className, classCRC, _parentClassName, parentClassCRC);
+        else
+            VG_INFO("[Factory] Register class \"%s\" (0x%016llX)", _className, classCRC);
 
         ClassDesc classDesc;
+        classDesc.crc = classCRC;
+        classDesc.parentCRC = parentClassCRC;
         classDesc.name = _className;
         classDesc.parentClassName = _parentClassName;
         classDesc.displayName = _classDisplayName ? _classDisplayName : _className;
@@ -100,33 +124,67 @@ namespace vg::core
 
         m_classes.push_back(classDesc);
 
+        // Save ClassDesc index to map
+        const uint classDescIndex = (uint)(m_classes.size() - 1);
+        m_classCRCToIndex[classCRC] = classDescIndex;
+
         return &m_classes.back();
     }
 
     //--------------------------------------------------------------------------------------
     IClassDesc * Factory::RegisterSingletonClass(const char * _parentClassName, const char * _className, const char * _classDisplayName, ClassDescFlags _flags, u32 sizeOf, IClassDesc::SingletonFunc _singletonFunc)
     {
-        // Classes declared in shared static libs could be declared more than once at static init
+        if (_parentClassName == _className)
+        {
+            VG_WARNING("[Factor] Singleton class \"%s\" has a parent class with the same name.", _className, _parentClassName);
+            _parentClassName = nullptr;
+        }
+
+        const ClassCRC classCRC = computeCRC64(_className);
+        const ClassCRC parentClassCRC = _parentClassName ? computeCRC64(_parentClassName) : 0;
+
+        VG_ASSERT(classCRC != parentClassCRC, "[Factor] Class \"%s\" and its parent class \"%s\" cannot have the same CRC", _className, _parentClassName);
+
+        // Ensure no hash collision (same CRC but different name)
         for (uint i = 0; i < m_classes.size(); ++i)
         {
             ClassDesc & desc = m_classes[i];
             if (!strcmp(desc.GetClassName(), _className))
             {
-                VG_INFO("[Factory] Singleton Class \"%s\" is already registered", _className);
+                VG_INFO("[Factory] Singleton class \"%s\" has the same CRC than class \"%s\"", _className, desc.name);
                 return nullptr;
             }
         }
 
-        VG_INFO("[Factory] Register singleton class \"%s\"", _className);
+        // Classes declared in shared static libs could be declared more than once at static init
+        auto it = m_classCRCToIndex.find(classCRC);
+        if (it != m_classCRCToIndex.end())
+        {
+            VG_INFO("[Factory] Singleton Class \"%s\" is already registered", _className);
+            return nullptr;
+        }
+
+        VG_ASSERT(m_classes.size() < classDescMaxCount);
+        if (parentClassCRC != Object::getStaticClassCRC())
+            VG_INFO("[Factory] Register Singleton class \"%s\" (0x%016llX) with parent \"%s\" (0x%016llX)", _className, classCRC, _parentClassName, parentClassCRC);
+        else
+            VG_INFO("[Factory] Register Singleton class \"%s\" (0x%016llX)", _className, classCRC);
 
         ClassDesc classDesc;
+        classDesc.crc = classCRC;
+        classDesc.parentCRC = parentClassCRC;
         classDesc.name = _className;
+        classDesc.parentClassName = _parentClassName;
         classDesc.displayName = _classDisplayName ? _classDisplayName : _className;
         classDesc.flags = _flags;
         classDesc.sizeOf = sizeOf;
         classDesc.createSingletonFunc = _singletonFunc;
 
         m_classes.push_back(classDesc);
+ 
+        // Save ClassDesc index to map
+        const uint classDescIndex = (uint)(m_classes.size() - 1);
+        m_classCRCToIndex[classCRC] = classDescIndex;
 
         return &m_classes.back();
     }
@@ -534,18 +592,24 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool Factory::IsA(const char * _class, const char * _other) const
+    bool Factory::IsA(ClassCRC _CRC, ClassCRC _targetCRC) const
     {
-        if (!strcmp(_class, _other))
+        if (_CRC == _targetCRC)
             return true;
 
-        if (const ClassDesc * classDesc = (const ClassDesc*)GetClassDescriptor(_class, false))
+        const auto * classDesc = GetClassDescriptorFromCRC(_CRC);
+        if (nullptr != classDesc)
         {
-            if (classDesc->parentClassName && strcmp(_class, classDesc->parentClassName))
+            ClassCRC parentCRC;
+            do
             {
-                if (IsA(classDesc->parentClassName, _other))
+                parentCRC = classDesc->GetParentClassCRC();
+
+                if (parentCRC == _targetCRC)
                     return true;
-            }
+
+                classDesc = GetClassDescriptorFromCRC(parentCRC, false);
+            } while (nullptr != classDesc);
         }
 
         return false;
@@ -1513,14 +1577,26 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     const IClassDesc * Factory::GetClassDescriptor(const char * _className, bool _mustExist) const
     {
-        for (uint i = 0; i < m_classes.size(); ++i)
+        const ClassCRC classCRC = computeCRC64(_className);
+        if (const IClassDesc * classDesc = GetClassDescriptorFromCRC(classCRC, _mustExist))
+            return classDesc;
+        
+        VG_ASSERT(!_mustExist, "Class \"%s\" has no class descriptor", _className);
+        return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const IClassDesc * Factory::GetClassDescriptorFromCRC(ClassCRC _classCRC, bool _mustExist) const
+    {
+        const auto it = m_classCRCToIndex.find(_classCRC);
+        if (it != m_classCRCToIndex.end())
         {
-            const auto & classDesc = m_classes[i];
-            if (!strcmp(classDesc.name, _className))
-                return &classDesc;
+            const uint index = (*it).second;
+            const ClassDesc & classDesc = m_classes[index];
+            return &classDesc;
         }
 
-        VG_ASSERT(!_mustExist, "class \"%s\" has no class descriptor", _className);
+        VG_ASSERT(!_mustExist, "No class descriptor found for CRC = 0x%016llX", _classCRC);
         return nullptr;
     }
 
