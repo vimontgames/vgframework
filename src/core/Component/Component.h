@@ -26,7 +26,9 @@ namespace vg::core
 
         const IGameObject *         GetGameObject           () const final override;
         IGameObject *               GetGameObject           () final override;
+        bool                        UpdateFlagsFromGameObject() override { return false; }
 
+        void                        OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
         void                        SetPropertyValue        (const IProperty & _prop, void * _previousValue, void * _newValue) override;
 
         void                        Enable                  (bool _enable) final override;

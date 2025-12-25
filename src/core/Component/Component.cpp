@@ -158,4 +158,19 @@ namespace vg::core
 
         super::SetPropertyValue(_prop, _previousValue, _newValue);
     }
+
+    //--------------------------------------------------------------------------------------
+    void Component::OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent)
+    {
+        if (!strcmp(_prop.GetName(), "m_flags"))
+        {
+            auto * go = dynamic_cast<IGameObject *>(_object);
+            if (go)
+            {
+                VG_ASSERT(go == GetGameObject());
+                if (UpdateFlagsFromGameObject())
+                    VG_INFO("[Component] Updated component because GameObject flags changed");
+            }
+        }
+    }
 }

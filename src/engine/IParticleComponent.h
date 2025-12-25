@@ -1,13 +1,13 @@
 #pragma once
 
-#include "core/Component/Component.h"
+#include "engine/Component/Renderer/Instance/GraphicInstanceComponent.h"
 
 namespace vg::engine
 {
-    class IParticleComponent : public core::Component
+    class IParticleComponent : public GraphicInstanceComponent
     {
     public:
-        VG_CLASS_DECL_ABSTRACT(IParticleComponent, core::Component);
+        VG_CLASS_DECL_ABSTRACT(IParticleComponent, GraphicInstanceComponent);
 
         virtual bool    Play            () = 0;
         virtual bool    Pause           () = 0;

@@ -43,8 +43,8 @@ namespace vg::physics
     static float sFrontToe = 0.0f;
     static float sFrontSuspensionForwardAngle = 0.0f;
     static float sFrontSuspensionSidewaysAngle = 0.0f;
-    static float sFrontSuspensionMinLength = 0.35f;
-    static float sFrontSuspensionMaxLength = 0.5f;
+    static float sFrontSuspensionMinLength = 0.3f;
+    static float sFrontSuspensionMaxLength = 0.6f;
     static float sFrontSuspensionFrequency = 1.5f;
     static float sFrontSuspensionDamping = 0.5f;
     static float sRearSuspensionForwardAngle = 0.0f;
@@ -52,8 +52,8 @@ namespace vg::physics
     static float sRearCasterAngle = 0.0f;
     static float sRearCamber = 0.0f;
     static float sRearToe = 0.0f;
-    static float sRearSuspensionMinLength = 0.35f;
-    static float sRearSuspensionMaxLength = 0.5f;
+    static float sRearSuspensionMinLength = 0.3f;
+    static float sRearSuspensionMaxLength = 0.6f;
     static float sRearSuspensionFrequency = 1.5f;
     static float sRearSuspensionDamping = 0.5f;
 

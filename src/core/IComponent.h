@@ -27,6 +27,7 @@ namespace vg::core
 
         virtual const IGameObject * GetGameObject           () const = 0;
         virtual IGameObject *       GetGameObject           () = 0;
+        virtual bool                UpdateFlagsFromGameObject() = 0;
 
         virtual void                Enable                  (bool _enable) = 0;
 

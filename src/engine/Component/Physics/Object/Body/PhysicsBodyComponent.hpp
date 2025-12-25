@@ -39,7 +39,7 @@ namespace vg::engine
                 createBodyDesc();
 
             if (getGameObject())
-                updateFlagsFromGameObject();
+                UpdateFlagsFromGameObject();
 
             if (m_body == nullptr)
                 createBody();
@@ -215,16 +215,6 @@ namespace vg::engine
         {
             createBody();
         }
-        else if (!strcmp(_prop.GetName(), "m_flags"))
-        {
-            auto * go = dynamic_cast<IGameObject *>(_object);
-            if (go)
-            {
-                VG_ASSERT(go == GetGameObject());
-                if (updateFlagsFromGameObject())
-                    VG_INFO("[PhysicsBody] Updated flags because GameObject flags changed");
-            }
-        }
         else if (_object == m_bodyDesc)
         {
             createBody();
@@ -236,9 +226,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool PhysicsBodyComponent::createBodyDesc()
     {
-        if (nullptr == m_bodyDesc /* || m_bodyType != m_bodyDesc->GetBodyType()*/)
+        if (nullptr == m_bodyDesc)
         {
-            UID originalUID = 0;
+             UID originalUID = 0;
             if (m_bodyDesc)
                 originalUID = m_bodyDesc->GetOriginalUID(false);
 
@@ -285,9 +275,18 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool PhysicsBodyComponent::createBody()
     {
-        IWorld * world = GetGameObject()->GetWorld();
+        
+        IGameObject * go = GetGameObject();
+        
+        // body desc and gameobject's instance flags should match
+        if (m_bodyDesc->GetMotionType() == physics::MotionType::Static && !asBool(InstanceFlags::Static & go->GetInstanceFlags()))
+            VG_WARNING("[Physics] Physics component from gameobject \"%s\" uses 'MotionType::Static' but gameobject is not Static", go->GetName().c_str());
+        else if (m_bodyDesc->GetMotionType() == physics::MotionType::Dynamic && asBool(InstanceFlags::Static & go->GetInstanceFlags()))
+            VG_WARNING("[Physics] Physics component from gameobject \"%s\" uses 'MotionType::Dynamic' but gameobject is Static", go->GetName().c_str());
 
-        const auto shapes = GetGameObject()->GetComponentsT<PhysicsShapeComponent>();
+        IWorld * world = go->GetWorld();
+
+        const auto shapes = go->GetComponentsT<PhysicsShapeComponent>();
         vector<physics::ShapeInfo> physicsShapes;
 
         updateShapesColor();
@@ -323,7 +322,7 @@ namespace vg::engine
 
         if (totalMass <= 0.0f)
         {
-            VG_WARNING("[Physics] Body from GameObject \"%s\" cannot have a total mass of %f. Defaulting mass to 1.0f.", GetGameObject()->GetName().c_str(), totalMass);
+            VG_WARNING("[Physics] Body from GameObject \"%s\" cannot have a total mass of %f. Defaulting mass to 1.0f.", go->GetName().c_str(), totalMass);
             m_bodyDesc->SetMass(1.0f);
         }
 
@@ -333,7 +332,7 @@ namespace vg::engine
                 m_bodyDesc->SetMass(totalMass);
 
             if (m_bodyDesc->GetMotionType() != physics::MotionType::Static || !Engine::get()->GetPhysics()->GetOptions()->IsMergeStaticBodiesEnabled())
-                m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, physicsShapes, GetGameObject()->GetGlobalMatrix(), GetGameObject()->GetName() + "_PhysicsBody", this);
+                m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, physicsShapes, go->GetGlobalMatrix(), go->GetName() + "_PhysicsBody", this);
         }
         else
         {
@@ -348,8 +347,10 @@ namespace vg::engine
     // Updates the layer and motion flags according to Static/Dynamic GameObject
     // It will recreate the physics body if needed.
     //--------------------------------------------------------------------------------------
-    bool PhysicsBodyComponent::updateFlagsFromGameObject()
+    bool PhysicsBodyComponent::UpdateFlagsFromGameObject()
     {
+        super::UpdateFlagsFromGameObject();
+
         IGameObject * go = GetGameObject();
         VG_ASSERT(go);
         bool updated = false;

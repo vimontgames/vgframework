@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Component/Component.h"
+#include "engine/IMeshComponent.h"
 #include "engine/Resource/Mesh/MeshResource.h"
 #include "engine/Component/Renderer/MaterialResourceList.h"
 #include "core/Misc/BitMask/BitMask.h"
@@ -15,10 +15,10 @@ namespace vg::engine
     class AnimationJob;
     class DrawSkeletonJob;
 
-    class MeshComponent : public core::Component
+    class MeshComponent : public IMeshComponent
     {
     public:
-        VG_CLASS_DECL(MeshComponent, core::Component);
+        VG_CLASS_DECL(MeshComponent, IMeshComponent);
 
                                             MeshComponent       (const core::string & _name, IObject * _parent);
                                             ~MeshComponent      ();
@@ -34,6 +34,8 @@ namespace vg::engine
         void                                OnResourceUnloaded  (core::IResource * _resource) override;
 
         bool                                TryGetAABB          (core::AABB & _aabb) const final override;
+
+        renderer::IGraphicInstance *        GetGraphicInstance  () final override;
 
         bool                                isSkeletonVisible   () const;
 

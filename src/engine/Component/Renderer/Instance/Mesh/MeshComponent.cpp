@@ -42,11 +42,13 @@ namespace vg::engine
 
     //--------------------------------------------------------------------------------------
     MeshComponent::MeshComponent(const core::string & _name, IObject * _parent) :
-        core::Component(_name, _parent),
+        super(_name, _parent),
         m_meshResource(_name, this),
         m_meshMaterials(_name, this)
     {
         m_meshInstance = (IMeshInstance *)CreateFactoryObject(MeshInstance, _name, this);
+
+        UpdateFlagsFromGameObject();
     }
 
     //--------------------------------------------------------------------------------------
@@ -287,5 +289,11 @@ namespace vg::engine
         }
 
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    renderer::IGraphicInstance * MeshComponent::GetGraphicInstance()
+    { 
+        return m_meshInstance; 
     }
 }

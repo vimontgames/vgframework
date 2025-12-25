@@ -52,7 +52,7 @@ namespace vg::engine
         physics::IBody *                        getBody             () const { return m_body; }
 
     private:
-        bool                                    updateFlagsFromGameObject();
+        bool                                    UpdateFlagsFromGameObject() final override;
 
         bool                                    createBodyDesc();
         bool                                    createBody();
