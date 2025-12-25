@@ -47,6 +47,12 @@ struct GPUMaterialData
         setPBRTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_PBR);
         setEmissiveTextureHandle(RESERVEDSLOT_TEXSRV_DEFAULT_EMISSIVE);
         
+        setInstanceColorMask(InstanceColorMask::Albedo);
+        setVertexColorMask(VertexColorMask::Albedo);
+        setAlphaSource(AlphaSource::Albedo);
+        setUVSource(UVSource::UV0);
+        setSurfaceType(SurfaceType::Opaque);   
+    
         setAlbedoColor(float4(1,1,1,1));
         setNormalStrength(1.0);
         setOcclusion(1.0);
@@ -55,8 +61,6 @@ struct GPUMaterialData
         setTiling(float2(1.0, 1.0));
         setOffset(float2(0.0, 0.0));
         setEmissiveColor(float4(0,0,0,0));
-        setUVSource(UVSource::UV0);
-        setAlphaSource(AlphaSource::Albedo);
     }   
     #endif 
 
@@ -77,13 +81,13 @@ struct GPUMaterialData
     
     void                setEmissiveTextureHandle    (uint _value)               { textures.y = packUint16high(textures.y, _value); }
     uint                getEmissiveTextureHandle    ()                          { return unpackUint16high(textures.y); }
-    
-    void                setVertexColorMask          (VertexColorMask _value)    { textures.w = packUint(textures.w, (uint)_value, 0xF, 12); }    // Use bits 12..15 
-    VertexColorMask     getVertexColorMask          ()                          { return (VertexColorMask)unpackUint(textures.w, 0xF, 12); }       
-    
+          
     void                setInstanceColorMask        (InstanceColorMask _value)  { textures.w = packUint(textures.w, (uint)_value, 0xF, 16); }    // Use bits 16..19 
     InstanceColorMask   getInstanceColorMask        ()                          { return (InstanceColorMask)unpackUint(textures.w, 0xF, 16); }       
     
+    void                setVertexColorMask          (VertexColorMask _value)    { textures.w = packUint(textures.w, (uint)_value, 0xF, 12); }    // Use bits 12..15 
+    VertexColorMask     getVertexColorMask          ()                          { return (VertexColorMask)unpackUint(textures.w, 0xF, 12); }       
+  
     void                setAlphaSource              (AlphaSource _value)        { textures.w = packUint(textures.w, (uint)_value, 0xF, 20); }    // Use bits 20..23 
     AlphaSource         getAlphaSource              ()                          { return (AlphaSource)unpackUint(textures.w, 0xF, 20); }            
     

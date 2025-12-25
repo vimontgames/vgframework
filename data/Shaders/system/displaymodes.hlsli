@@ -11,6 +11,7 @@
 vg_enum_class_global(DisplayMode, u32,
 	None = 0,
 
+    Instance_Static,
     Instance_Color,
 
     Material_Albedo,         

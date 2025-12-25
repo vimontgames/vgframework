@@ -51,7 +51,7 @@ float3 getSurfaceTypeColor(SurfaceType _surfaceType)
     return float3(0, 0, 0);
 }
 
-float4 forwardDebugDisplay(float4 _color, DisplayMode _mode, uint _matID, float3 _tan, float3 _bin, float3 _nrm, float4 _col, float2 _uv0, float2 _uv1, float2 _screenPos, float3 _worldPos, float3 _albedo, float3 _normal, float3 _worldNormal, float3 _pbr)
+float4 forwardDebugDisplay(float4 _color, GPUInstanceData _instanceData, DisplayMode _mode, uint _matID, float3 _tan, float3 _bin, float3 _nrm, float4 _col, float2 _uv0, float2 _uv1, float2 _screenPos, float3 _worldPos, float3 _albedo, float3 _normal, float3 _worldNormal, float3 _pbr)
 {
     switch (_mode)
     {
@@ -80,6 +80,35 @@ float4 forwardDebugDisplay(float4 _color, DisplayMode _mode, uint _matID, float3
         case DisplayMode::Geometry_UV1:
             return SRGBAToLinear(float4(frac(_uv1.xy), any(saturate(_uv0) != _uv0) ? 1 : 0, 1));
         
+        case DisplayMode::Instance_Static:
+        {
+            GPUInstanceFlags flags = _instanceData.getGPUInstanceFlags();
+            //GPUInstanceFlags instanceType = (GPUInstanceFlags) ((uint) flags & GPUInstanceFlags_TypeMask);
+            //
+            //switch (instanceType)
+            //{
+            //    default:
+            //        _color.rgb = float3(1, 1, 1);
+            //        break;
+            //    
+            //    case GPUInstanceFlags::Mesh:
+            //        _color.rgb = float3(0, 1, 0);
+            //        break;
+            //    
+            //    case GPUInstanceFlags::Particle:
+            //        _color.rgb = float3(1, 0, 0);
+            //        break;
+            //}
+            
+            if (HasAnyFlag(flags, GPUInstanceFlags::Static))
+                _color.rgb = lerp(_color.rgb, float3(0, 1, 0), 0.5f);
+            else
+                _color.rgb = lerp(_color.rgb, float3(1, 0, 0), 0.5f);
+
+            return _color;
+        };
+        
+        // TODO: use GPUInstanceData/GPUMaterialData directly here instead?
         case DisplayMode::Instance_Color:
         case DisplayMode::Material_Albedo:
             return float4(_albedo.rgb, 1);

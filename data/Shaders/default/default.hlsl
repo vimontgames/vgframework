@@ -207,7 +207,7 @@ PS_Output PS_Forward(VS_Output _input)
     #endif
     
     #if _TOOLMODE && !_ZONLY
-    output.color0 = forwardDebugDisplay(output.color0, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
+    output.color0 = forwardDebugDisplay(output.color0, instanceData, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
         output.color0 = float4(0,1,0,1);
     #endif // _TOOLMODE
@@ -328,7 +328,7 @@ PS_GBufferOutput PS_Deferred(VS_Output _input)
 
     #if _TOOLMODE && !_ZONLY
     // If any 'Forward' debug display mode is enabled then its result is stored into the 'Albedo' buffer
-    output.albedo = forwardDebugDisplay(output.albedo, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
+    output.albedo = forwardDebugDisplay(output.albedo, instanceData, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
     #endif // _TOOLMODE && !_ZONLY
 
     #if _ALPHATEST

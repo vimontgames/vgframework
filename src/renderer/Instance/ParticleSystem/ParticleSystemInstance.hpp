@@ -342,9 +342,14 @@ namespace vg::renderer
         const uint vbOffset = getInstanceVertexBufferOffset();
 
         GPUInstanceData * VG_RESTRICT instanceData = (GPUInstanceData * VG_RESTRICT)(_data + dataOffset);
-            
+        
+        GPUInstanceFlags instanceFlags = GPUInstanceFlags::Particle;
+        if (asBool(InstanceFlags::Static & getInstanceFlags()))
+            instanceFlags |= GPUInstanceFlags::Static;
+
         instanceData->setMaterialCount(batchCount);
         instanceData->setVertexFormat(VertexFormat::ParticleQuad);
+        instanceData->setGPUInstanceFlags(instanceFlags);
         instanceData->setInstanceColor(getColor());
         instanceData->setIndexBuffer(ibHandle, indexSize, ibOffset); // use not index buffer for particles or use default particle index buffer? ({0,1,2}, {1,2,3} ...)
         instanceData->setVertexBuffer(vbHandle, vbOffset);

@@ -67,6 +67,7 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
         case DisplayMode::Environment_SpecularReflectionCubemap: 
             break;
 
+        default:
         case DisplayMode::Instance_Color:
         case DisplayMode::Forward_SurfaceType:
         case DisplayMode::Geometry_MaterialID:
@@ -86,10 +87,7 @@ float3 shadeSample(GBufferSample _gbuffer, DepthStencilSample _depthStencil, flo
         case DisplayMode::Forward_ScreenPos:
             color = _gbuffer.albedo.rgb;
             break;
-            
-        default:
-            break;
-            
+                        
         case DisplayMode::Deferred_Albedo:
             color = _gbuffer.albedo.rgb;
             break;
