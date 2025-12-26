@@ -77,9 +77,34 @@ namespace vg::engine
         }
         else
         {
-            VG_WARNING("[Sound] Could not play stop at index %u in GameObject \"%s\"", _index, GetGameObject()->GetName().c_str());
+            VG_WARNING("[Sound] Could not stop sound at index %u in GameObject \"%s\"", _index, GetGameObject()->GetName().c_str());
             return false;
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool SoundComponent::SetVolume(core::uint _index, float _volume)
+    {
+        auto & resources = m_sounds.getResources();
+        if (_index < resources.size())
+        {
+            return resources[_index].setVolume(_volume);
+        }
+        else
+        {
+            VG_WARNING("[Sound] Could not set volume for sound at index %u in GameObject \"%s\"", _index, GetGameObject()->GetName().c_str());
+            return false;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool SoundComponent::IsPlaying(core::uint _index) const
+    {
+        auto & resources = m_sounds.getResources();
+        if (_index < resources.size())
+            return resources[_index].isPlaying();
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------

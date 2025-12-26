@@ -27,8 +27,9 @@ namespace vg::engine
 
         audio::PlaySoundHandle              play                ();
         bool                                stop                ();
-        bool                                setVolume           (const audio::PlaySoundHandle & _handle, float _volume);
-        bool                                setLooping          (const audio::PlaySoundHandle & _handle, bool _looping);
+        bool                                setVolume           (float _volume);
+        bool                                setLooping          (bool _looping);
+        bool                                isPlaying           () const;
 
     private:
         static bool                         playSound           (IObject * _object);

@@ -177,4 +177,16 @@ namespace vg::audio
 
         return false;
     }
+
+    //--------------------------------------------------------------------------------------
+    bool Audio::IsPlaying(const PlaySoundHandle & _handle)
+    {
+        if (0 != _handle)
+        {
+            if (m_soloud.isValidVoiceHandle((SoLoud::handle)_handle))
+                return true;
+        }
+
+        return false;
+    }
 }

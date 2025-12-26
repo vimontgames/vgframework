@@ -18,6 +18,8 @@ namespace vg::engine
 
         virtual audio::PlaySoundHandle  Play            (core::uint _index) = 0;
         virtual bool                    Stop            (core::uint _index) = 0;
+        virtual bool                    SetVolume       (core::uint _index, float _volume) = 0;
+        virtual bool                    IsPlaying       (core::uint _index) const = 0;
 
         virtual ISoundResource *        GetSound        (core::uint _index) const = 0;
         virtual core::uint              GetSoundIndex   (const core::string & _name) const = 0;

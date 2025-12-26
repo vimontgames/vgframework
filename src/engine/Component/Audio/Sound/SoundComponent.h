@@ -18,6 +18,8 @@ namespace vg::engine
 
         audio::PlaySoundHandle  Play            (core::uint _index) final override;
         bool                    Stop            (core::uint _index) final override;
+        bool                    SetVolume       (core::uint _index, float _volume) final override;
+        bool                    IsPlaying       (core::uint _index) const final override;
 
         ISoundResource *        GetSound        (core::uint _index) const final override;
         core::uint              GetSoundIndex   (const core::string & _name) const final override;

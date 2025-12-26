@@ -111,7 +111,7 @@ namespace vg::engine
         if (!strcmp(name, "m_soundSettings.m_volume"))
         {
             if (m_playSoundHandle)
-                setVolume(m_playSoundHandle, *_prop.GetPropertyFloat(_object));
+                setVolume(*_prop.GetPropertyFloat(_object));
         }
         else if(!strcmp(name, "m_soundSettings.m_flags"))
         {
@@ -119,9 +119,9 @@ namespace vg::engine
             {
                 audio::SoundFlags flags = *_prop.GetPropertyEnum<audio::SoundFlags>(_object);
                 if (asBool(audio::SoundFlags::Loop & flags))
-                    setLooping(m_playSoundHandle, true);
+                    setLooping(true);
                 else
-                    setLooping(m_playSoundHandle, false);
+                    setLooping(false);
             }
         }
     }
@@ -172,11 +172,11 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool SoundResource::setVolume(const audio::PlaySoundHandle & _handle, float _volume)
+    bool SoundResource::setVolume(float _volume)
     {
-        if (_handle)
+        if (m_playSoundHandle)
         {
-            if (Engine::get()->GetAudio()->SetVolume(_handle, _volume))
+            if (Engine::get()->GetAudio()->SetVolume(m_playSoundHandle, _volume))
                 return true;
         }
 
@@ -184,14 +184,25 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool SoundResource::setLooping(const audio::PlaySoundHandle & _handle, bool _looping) 
+    bool SoundResource::setLooping(bool _looping) 
     {
-        if (_handle)
+        if (m_playSoundHandle)
         {
-            if (Engine::get()->GetAudio()->SetLooping(_handle, _looping))
+            if (Engine::get()->GetAudio()->SetLooping(m_playSoundHandle, _looping))
                 return true;
         }
 
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool SoundResource::isPlaying() const
+    {
+        if (m_playSoundHandle)
+        {
+            if (Engine::get()->GetAudio()->IsPlaying(m_playSoundHandle))
+                return true;
+        }
         return false;
     }
 }

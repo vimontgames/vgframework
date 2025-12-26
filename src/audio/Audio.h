@@ -29,6 +29,7 @@ namespace vg::audio
         bool                                Stop                        (const PlaySoundHandle & _handle) final override;
         bool                                SetVolume                   (const PlaySoundHandle & _handle, float _volume) final override;
         bool                                SetLooping                  (const PlaySoundHandle & _handle, bool _looping) final override;
+        bool                                IsPlaying                   (const PlaySoundHandle & _handle) final override;
 
         VG_INLINE SoLoud::Soloud &          getSLEngine                 ();
         
