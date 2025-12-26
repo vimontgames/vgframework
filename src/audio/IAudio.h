@@ -26,5 +26,6 @@ namespace vg::audio
         virtual bool            Stop        (const PlaySoundHandle & _handle) = 0;
         virtual bool            SetVolume   (const PlaySoundHandle & _handle, float _volume) = 0;
         virtual bool            SetLooping  (const PlaySoundHandle & _handle, bool _looping) = 0;
+        virtual bool            IsPlaying   (const PlaySoundHandle & _handle) = 0;
 	};
 }
