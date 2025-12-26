@@ -70,6 +70,13 @@ namespace vg::engine
         setPropertyDescription(VehicleComponent, m_driveState.m_handBrake, "Value between 0 and 1 indicating how strong the hand brake is pulled");
         setPropertyRange(VehicleComponent, m_driveState.m_handBrake, float2(0, +1));
 
+        registerPropertyGroupBegin(VehicleComponent, "Velocity");
+        {
+            registerPropertyEx(VehicleComponent, m_forwardVelocity, "Forward", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+            registerPropertyEx(VehicleComponent, m_lateralVelocity, "Lateral", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+        }
+        registerPropertyGroupEnd(VehicleComponent);
+
         registerPropertyObject(VehicleComponent, m_slots, "Slots");
 
         registerPropertyGroupBegin(VehicleComponent, "Contraints");
@@ -198,6 +205,11 @@ namespace vg::engine
     {
         super::OnStop();
 
+        m_driveState.m_forward = 0.0f;
+        m_driveState.m_right = 0.0f;
+        m_driveState.m_brake = 0.0f;
+        m_driveState.m_handBrake = 0.0f;
+
         VG_SAFE_RELEASE(m_vehicleConstraint);
     }
 
@@ -212,7 +224,39 @@ namespace vg::engine
     void VehicleComponent::Update(const Context & _context)
     {
         if (m_vehicleConstraint)
+        {
             m_vehicleConstraint->Update(m_driveState);
+
+            m_forwardVelocity = GetForwardVelocity();
+            m_lateralVelocity = GetLateralVelocity();
+
+            if (ISoundComponent * sound = GetGameObject()->GetComponentT<ISoundComponent>())
+            {
+                // Engine
+                {
+                    float engineVolume = 0.5f + 0.5f * saturate(m_forwardVelocity / 4.0f);
+
+                    auto soundIndex = sound->GetSoundIndex("Engine");
+                    if (-1 != soundIndex)
+                        sound->SetVolume(soundIndex, engineVolume);
+                }
+
+                // Drift
+                {
+                    float lateralSpeedAbs = abs(m_lateralVelocity);
+
+                    if (lateralSpeedAbs > 2.0f)
+                    {
+                        auto soundIndex = sound->GetSoundIndex("Brake");
+                        if (-1 != soundIndex)
+                        {
+                            if (!sound->IsPlaying(soundIndex))
+                                sound->Play(soundIndex);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -231,6 +275,13 @@ namespace vg::engine
                     auto soundIndex = sound->GetSoundIndex("Enter");
                     if (-1 != soundIndex)
                         sound->Play(soundIndex);
+
+                    //engine
+                    {
+                        auto soundIndex = sound->GetSoundIndex("Engine");
+                        if (-1 != soundIndex)
+                            sound->Play(soundIndex);
+                    }
                 }
 
                 return true;
@@ -256,6 +307,13 @@ namespace vg::engine
                     auto soundIndex = sound->GetSoundIndex("Enter");
                     if (-1 != soundIndex)
                         sound->Play(soundIndex);
+
+                    //engine
+                    {
+                        auto soundIndex = sound->GetSoundIndex("Engine");
+                        if (-1 != soundIndex)
+                            sound->Stop(soundIndex);
+                    }
                 }
 
                 return true;
@@ -279,6 +337,19 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    float VehicleComponent::GetLateralVelocity() const
+    {
+        if (IPhysicsBodyComponent * bodyComp = GetGameObject()->GetComponentT<IPhysicsBodyComponent>())
+        {
+            float3 speed = bodyComp->GetVelocity();
+            float lateralSpeed = dot(speed, GetGameObject()->GetGlobalMatrix()[1].xyz);
+            return lateralSpeed;
+        }
+
+        return 0.0f;
+    }
+
+    //--------------------------------------------------------------------------------------
     void VehicleComponent::Accelerate(float _forward)
     {
         _forward = clamp(_forward, -1.0f, 1.0f);
@@ -289,7 +360,21 @@ namespace vg::engine
     void VehicleComponent::Brake(float _brake)
     {
         _brake = clamp(_brake, 0.0f, 1.0f);
-        m_driveState.m_brake = _brake;
+
+        if (m_driveState.m_brake == 0.0f && _brake != 0.0f)
+        {
+            if (GetForwardVelocity() > 1.0f)
+            {
+                if (ISoundComponent * sound = GetGameObject()->GetComponentT<ISoundComponent>())
+                {
+                    auto soundIndex = sound->GetSoundIndex("Brake");
+                    if (-1 != soundIndex)
+                        sound->Play(soundIndex);
+                }
+            }
+        }
+
+        m_driveState.m_brake = _brake;    
     }
 
     //--------------------------------------------------------------------------------------

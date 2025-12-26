@@ -152,6 +152,26 @@
                                                 <Property type="Float" name="m_soundSettings.m_volume" value="1"/>
                                                 <Property type="Float" name="m_soundSettings.m_delay" value="0"/>
                                             </Object>
+                                            <Object class="SoundResource">
+                                                <Property type="String" name="m_name" value="Brake"/>
+                                                <Property type="Uint32" name="m_uid" value="2088817632"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Sounds/Cars/Compact/217542__medartimus__car-breaking-skid-01.wav"/>
+                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" value=""/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" value="0.25"/>
+                                                <Property type="Float" name="m_soundSettings.m_delay" value="0"/>
+                                            </Object>
+                                            <Object class="SoundResource">
+                                                <Property type="String" name="m_name" value="Engine"/>
+                                                <Property type="Uint32" name="m_uid" value="2841526018"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Sounds/Cars/Compact/278186__debsound__rally-car-idle-loop-17.wav"/>
+                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" value="Loop"/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" value="1"/>
+                                                <Property type="Float" name="m_soundSettings.m_delay" value="0"/>
+                                            </Object>
                                         </Property>
                                     </Object>
                                 </Property>

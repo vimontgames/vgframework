@@ -18,6 +18,7 @@ namespace vg::engine
         virtual bool ExitVehicle(core::IGameObject * _owner) = 0;
 
         virtual float GetForwardVelocity() const = 0;
+        virtual float GetLateralVelocity() const = 0;
 
         virtual void Accelerate(float _forward) = 0;
         virtual void Brake(float _brake) = 0;

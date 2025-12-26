@@ -48,6 +48,7 @@ namespace vg::engine
         bool                ExitVehicle                 (core::IGameObject * _owner) final override;
 
         float               GetForwardVelocity          () const final override;
+        float               GetLateralVelocity          () const final override;
 
         void                Accelerate                  (float _forward) final override;
         void                Brake                       (float _brake) final override;
@@ -61,6 +62,8 @@ namespace vg::engine
 
     private:
         physics::DriveState               m_driveState;
+        float                             m_forwardVelocity = 0.0f;
+        float                             m_lateralVelocity = 0.0f;
         physics::IVehicleConstraintDesc * m_vehicleConstraintDesc = nullptr;
         physics::IVehicleConstraint *     m_vehicleConstraint = nullptr;
         VehicleSlotList                   m_slots;

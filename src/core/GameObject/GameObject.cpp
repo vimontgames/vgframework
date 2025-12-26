@@ -881,7 +881,7 @@ namespace vg::core
             {
                 if (!asBool(InstanceFlags::Static & getInstanceFlags()))
                 {
-                    VG_WARNING("[GameObject] 'InstanceFlags::Static' has been set on GameObject \"%s\" because all its children are static", GetName().c_str());
+                    VG_WARNING("[GameObject] 'InstanceFlags::Static' has been set on GameObject \"%s\" because all its children are static", GetFullName().c_str());
                     setInstanceFlags(InstanceFlags::Static, true);
                 }
             }
@@ -889,7 +889,7 @@ namespace vg::core
             {
                 if (asBool(InstanceFlags::Static & getInstanceFlags()))
                 {
-                    VG_WARNING("[GameObject] 'InstanceFlags::Static' has been removed from GameObject \"%s\" because at least of of its children is not static", GetName().c_str());
+                    VG_WARNING("[GameObject] 'InstanceFlags::Static' has been removed from GameObject \"%s\" because at least of of its children is not static", GetFullName().c_str());
                     setInstanceFlags(InstanceFlags::Static, false);
                 }
             }

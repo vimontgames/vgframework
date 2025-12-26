@@ -102,7 +102,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 {
                     auto joyID = m_controllerIndex;
 
-                    if (input.IsJoyButtonJustPressed(joyID, JoyButton::X))
+                    if (input.IsJoyButtonJustPressed(joyID, JoyButton::Y))
                     {
                         if (exitVehicle())
                             return;
@@ -116,7 +116,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
                     if (forward > 0.1f)
                     {
-                        if (forwardSpeed > 0.0)
+                        if (forwardSpeed > -0.1)
                         {
                             vehicle->Accelerate(forward);
                             vehicle->Brake(0.0f);
