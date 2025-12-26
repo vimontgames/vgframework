@@ -84,6 +84,9 @@ namespace vg::engine
             getGameObject()->addGraphicInstance(m_particleSystemInstance);
             m_particleSystemInstance->SetName(getGameObject()->GetName().c_str());
             m_registered = true;
+
+            // Initial refresh
+            RefreshGraphicInstance();
         }
     }
 
@@ -192,14 +195,29 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void ParticleComponent::Update(const Context & _context)
+    void ParticleComponent::RefreshGraphicInstance()
     {
         if (nullptr != m_particleSystemInstance)
         {
-            m_particleSystemInstance->setGlobalMatrix(_context.m_gameObject->getGlobalMatrix());
-            m_particleSystemInstance->setColor(_context.m_gameObject->getColor());
-            m_particleSystemInstance->setObjectFlags(ObjectFlags::NoCulling, asBool(ComponentFlags::NoCulling & getComponentFlags()));
+            const IGameObject * go = GetGameObject();
 
+            m_particleSystemInstance->setGlobalMatrix(go->getGlobalMatrix());
+            m_particleSystemInstance->setColor(go->getColor());
+
+            // This should be done here, and not every frame
+            m_particleSystemInstance->setObjectFlags(ObjectFlags::NoCulling, asBool(ComponentFlags::NoCulling & getComponentFlags()));
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ParticleComponent::Update(const Context & _context)
+    {
+        // 'Static' instance do not need refresh every frame, but a 'Static' particle system does not make much sense
+        RefreshGraphicInstance();
+
+        // Update time
+        if (nullptr != m_particleSystemInstance)
+        {
             auto * engine = Engine::get();
             const float dt = engine->IsPlaying() ? _context.m_dt : engine->getTime().m_realDeltaTime;
             m_particleSystemInstance->UpdateTime(dt);

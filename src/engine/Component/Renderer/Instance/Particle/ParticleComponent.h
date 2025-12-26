@@ -34,7 +34,8 @@ namespace vg::engine
         
         bool                                            TryGetAABB                  (core::AABB & _aabb) const final override;
 
-        renderer::IGraphicInstance *                    GetGraphicInstance          () { return m_particleSystemInstance; }
+        renderer::IGraphicInstance *                    GetGraphicInstance          () final override { return m_particleSystemInstance; }
+        void                                            RefreshGraphicInstance      () final override;
 
         bool                                            Play                        () final override;
         bool                                            Pause                       () final override;

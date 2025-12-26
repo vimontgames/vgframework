@@ -26,4 +26,11 @@ namespace vg::engine
 
         return false;
     }
+
+    //--------------------------------------------------------------------------------------
+    void GraphicInstanceComponent::OnPropertyChanged(core::IObject * _object, const core::IProperty & _prop, bool _notifyParent)
+    {
+        super::OnPropertyChanged(_object, _prop, _notifyParent);
+        RefreshGraphicInstance();
+    }
 }

@@ -340,6 +340,11 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::FixedUpdate(const Context & _context)
     {
+        // Static object do not need update every frame 
+        const InstanceFlags instanceFlags = getInstanceFlags();
+        if (asBool(InstanceFlags::Static & instanceFlags))
+            return;
+
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
             VG_PROFILE_CPU(GetName().c_str());
@@ -370,7 +375,12 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::Update(const Context & _context)
     {
-        if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
+        // Static object do not need update every frame 
+        const InstanceFlags instanceFlags = getInstanceFlags();
+        if (asBool(InstanceFlags::Static & instanceFlags))
+            return;
+
+        if (asBool(InstanceFlags::Enabled & instanceFlags))
         {
             VG_PROFILE_CPU(GetName().c_str());
             VG_ASSERT(asBool(UpdateFlags::Update & getUpdateFlags()), "[FixedUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::Update).c_str());
@@ -400,6 +410,11 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::LateUpdate(const Context & _context)
     {
+        // Static object do not need update every frame 
+        const InstanceFlags instanceFlags = getInstanceFlags();
+        if (asBool(InstanceFlags::Static & instanceFlags))
+            return;
+
         if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
         {
             VG_PROFILE_CPU(GetName().c_str());
@@ -771,13 +786,20 @@ namespace vg::core
     {
         super::OnPropertyChanged(_object, _prop, _notifyParent);
 
-        // Notify components that a GameObject property changed, but we don't want infinite loop when the property will update its parent
+        // Recompute hierarchy update flags when Instance flags change
+        if (!strcmp(_prop.GetName(), "m_flags"))
+            recomputeUpdateFlags();
+
+        // Notify components and children that a GameObject property changed, but we don't want infinite loop when the property will update its parent
         for (uint i = 0; i < m_components.size(); ++i)
         {
             Component * component = m_components[i];
             if (nullptr != component)
                 component->OnPropertyChanged(_object, _prop, false);
         }
+
+        for (uint i = 0; i < m_children.size(); ++i)
+            m_children[i]->OnPropertyChanged(_object, _prop, false);
     }
 
     //--------------------------------------------------------------------------------------
@@ -806,26 +828,94 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::recomputeUpdateFlags()
+    void GameObject::recomputeChildrenUpdateFlags(vector<GameObject *> & _leaves)
     {
-        UpdateFlags update = (UpdateFlags)0x0;
+        UpdateFlags flags = (UpdateFlags)0x0;
+
+        // Compute self update flags
+        for (uint i = 0; i < m_components.size(); ++i)
+        {
+            Component * component = m_components[i];
+            flags |= m_components[i]->getUpdateFlags();
+        }
+
+        m_update = flags;
+
+        // Also recompute them for all children, or add to 'leaves' list
+        if (m_children.size() > 0)
+        {
+            for (uint i = 0; i < m_children.size(); ++i)
+            {
+                if (auto * child = m_children[i])
+                    child->recomputeChildrenUpdateFlags(_leaves);
+            }
+        }
+        else
+        {
+            _leaves.push_back(this);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    // To compute GameObject's update flags, 'OR' the flags from all its descendants
+    // A GameObject is also considered 'Static' if it has children and all its children are 'Static'.
+    //--------------------------------------------------------------------------------------
+    void GameObject::recomputeFlagsFromChildren()
+    {
+        bool allChildrenAreStatic = true;
 
         for (uint i = 0; i < m_children.size(); ++i)
         {
             if (auto * child = m_children[i])
-                update |= child->getUpdateFlags();
+            {
+                m_update |= child->getUpdateFlags();
+
+                if (!asBool(InstanceFlags::Static & child->getInstanceFlags()))
+                    allChildrenAreStatic = false;
+            }
         }
 
-        for (uint i = 0; i < m_components.size(); ++i)
+        if (m_children.size() > 0)
         {
-            Component * component = m_components[i];
-            update |= m_components[i]->getUpdateFlags();
+            if (allChildrenAreStatic)
+            {
+                if (!asBool(InstanceFlags::Static & getInstanceFlags()))
+                {
+                    VG_WARNING("[GameObject] 'InstanceFlags::Static' has been set on GameObject \"%s\" because all its children are static", GetName().c_str());
+                    setInstanceFlags(InstanceFlags::Static, true);
+                }
+            }
+            else
+            {
+                if (asBool(InstanceFlags::Static & getInstanceFlags()))
+                {
+                    VG_WARNING("[GameObject] 'InstanceFlags::Static' has been removed from GameObject \"%s\" because at least of of its children is not static", GetName().c_str());
+                    setInstanceFlags(InstanceFlags::Static, false);
+                }
+            }
         }
-        m_update = update;
 
-        GameObject * parent = dynamic_cast<GameObject *>(GetParent());
-        if (parent)
-            parent->recomputeUpdateFlags();
+        GameObject * parentGO = dynamic_cast<GameObject *>(GetParent());
+        if (parentGO)
+            parentGO->recomputeFlagsFromChildren();
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Recompute children update flags and propagate to direct parent in two passes
+    //--------------------------------------------------------------------------------------
+    void GameObject::recomputeUpdateFlags()
+    {
+        vector<GameObject *> leaves;
+
+        // 1. Refresh update flags from the GameObject components, and do the same for all its children (also adding leaves to list for parent propagation)
+        recomputeChildrenUpdateFlags(leaves);
+
+        // Propagate from leaves to parents (Parent will 'OR' the flags from all their children)
+        for (uint i = 0; i < leaves.size(); ++i)
+        {
+            GameObject * go = leaves[i];
+            go->recomputeFlagsFromChildren();
+        }
     }
 
     //--------------------------------------------------------------------------------------

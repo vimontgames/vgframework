@@ -69,14 +69,25 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void MeshComponent::Update(const Context & _context)
+    void MeshComponent::RefreshGraphicInstance()
     {
         if (nullptr != m_meshInstance)
         {
-            m_meshInstance->setGlobalMatrix(_context.m_gameObject->getGlobalMatrix());
-            m_meshInstance->setColor(_context.m_gameObject->getColor());
+            const IGameObject * go = GetGameObject();
+
+            m_meshInstance->setGlobalMatrix(go->getGlobalMatrix());
+            m_meshInstance->setColor(go->getColor());
+
+            // This should *NOT* be done every frame but only when the property changes
             m_meshInstance->setObjectFlags(ObjectFlags::NoCulling, asBool(ComponentFlags::NoCulling & getComponentFlags()));
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MeshComponent::Update(const Context & _context)
+    {
+        // Only dynamic instance need refresh every frame
+        RefreshGraphicInstance();
 
         if (m_meshInstance->IsSkinned())
         {
@@ -226,6 +237,9 @@ namespace vg::engine
             // In case Animations were loaded before Mesh we need to rebind them
             if (auto * animComponent = GetGameObject()->GetComponentT<AnimationComponent>())
                 animComponent->bindAnimations();
+
+            // Initial refresh graphic instance matrix and color
+            RefreshGraphicInstance();
 
         }
         else if (auto matRes = dynamic_cast<MaterialResource *>(_resource))

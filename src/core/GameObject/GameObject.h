@@ -120,6 +120,10 @@ namespace vg::core
         VG_INLINE bool                                  isRoot                      () const;
 
     private:
+        void                                            recomputeChildrenUpdateFlags(core::vector<GameObject *> & _leaves);
+        void                                            recomputeFlagsFromChildren  ();
+
+    private:
         UpdateFlags                                     m_update = (UpdateFlags)0x0;
         Tag                                             m_tags = (Tag)0x0;
         vector<Component *>                             m_components;

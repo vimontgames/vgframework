@@ -960,6 +960,7 @@ namespace vg::editor
                             }
 
                             go->SetGlobalMatrix(mat);
+                            go->OnPropertyChanged(go, *go->GetClassDesc()->GetPropertyByName("m_local"), false);
                         }
 
                         selectionMatrix = matrix;

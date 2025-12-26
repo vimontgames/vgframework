@@ -17,8 +17,16 @@ namespace vg::engine
         VG_CLASS_DECL_ABSTRACT(GraphicInstanceComponent, core::Component);
 
     protected:
+        // Get the renderer graphic instance the component is using for render (e.g. MeshInstance, ParticleSystemInstance ...)
         virtual renderer::IGraphicInstance *    GetGraphicInstance          () = 0;
 
+        // Refresh the renderer's graphic instance using GameObject and Component settings
+        virtual void                            RefreshGraphicInstance      () = 0;
+
+        // When GameObject's flags change, propagate flags to renderer graphic instance (e.g. 'Static')
         bool                                    UpdateFlagsFromGameObject   () override;
+
+        // For refresh when any property changes
+        void                                    OnPropertyChanged           (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
     };
 }
