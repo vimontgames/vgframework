@@ -28,16 +28,21 @@ namespace vg::physics
         Body(PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, const core::vector<ShapeInfo> & _shapes, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent);
         ~Body();
 
-        void                    Activate                (const core::float4x4 & _world) final override;
-        void                    Deactivate              (const core::float4x4 & _world) final override;
+        void                    Activate            (const core::float4x4 & _world) final override;
+        void                    Deactivate          (const core::float4x4 & _world) final override;
 
-        core::float4x4          GetMatrix               () const final override;
-        void                    SetMatrix               (core::float4x4 _world)  final override;
+        core::float4x4          GetMatrix           () const final override;
+        void                    SetMatrix           (core::float4x4 _world)  final override;
 
-        void                    AddImpulse              (const core::float3 & _impulse) final override;
-        core::float3            GetVelocity             () const final override;
+        void                    AddImpulse          (const core::float3 & _impulse) final override;
 
-        const PhysicsBodyDesc * getBodyDesc             () const { return m_bodyDesc;}
+        void                    SetLinearVelocity   (const core::float3 & _velocity) final override;
+        core::float3            GetLinearVelocity   () const final override;
+
+        void                    SetAngularVelocity   (const core::float3 & _velocity) final override;
+        core::float3            GetAngularVelocity   () const final override;
+
+        const PhysicsBodyDesc * getBodyDesc         () const { return m_bodyDesc;}
 
     //private:
         void                    createBodyFromJoltShape (PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, JPH::Shape * _joltShape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent);

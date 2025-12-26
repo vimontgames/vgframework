@@ -60,7 +60,7 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     VehicleConstraint::VehicleConstraint(Body * _body, const VehicleConstraintDesc * _vehicleConstraintDesc, const core::string & _name, core::IObject * _parent) :
         super(_name, _parent),
-        m_vehicleConstraintDesc(_vehicleConstraintDesc),
+        m_vehicleConstraintDesc((VehicleConstraintDesc*)_vehicleConstraintDesc),
         m_vehicleBody(_body)
     {
         #pragma push_macro("new")
@@ -286,8 +286,45 @@ namespace vg::physics
     VehicleConstraint::~VehicleConstraint()
     {
         m_joltPhysicsSystem->RemoveStepListener(m_joltVehicleConstraint);
-        m_joltPhysicsSystem->RemoveConstraint(m_joltVehicleConstraint);
+        m_joltPhysicsSystem->RemoveConstraint(m_joltVehicleConstraint); 
     }  
+
+    //--------------------------------------------------------------------------------------
+    void VehicleConstraint::Reset()
+    {
+        if (m_vehicleConstraintDesc)
+        {
+            vector<VehicleWheelDesc> & wheelDescs = m_vehicleConstraintDesc->getWheelDescList().getObjects();
+            
+            for (uint i = 0; i < wheelDescs.size(); ++i)
+            {
+                JPH::Wheel * wheel = m_joltVehicleConstraint->GetWheel(i);
+            
+                wheel->SetAngularVelocity(0.0f);
+                wheel->SetSteerAngle(0.0f);
+                wheel->SetRotationAngle(0.0f);
+            }
+
+            if (m_joltVehicleConstraint)
+            {
+                JPH::WheeledVehicleController * vehicleController = (JPH::WheeledVehicleController *)m_joltVehicleConstraint->GetController();
+                
+                vehicleController->SetDriverInput(0.0f, 0.0f, 0.0f, 0.0f);
+
+                // Reset engine RPM
+                vehicleController->GetEngine().SetCurrentRPM(0.0f);
+
+                // Reset transmission (gear and clutch)
+                vehicleController->GetTransmission().Set(0, 0.0f);
+
+                // Reset differentials
+                //for (JPH::Differentials & diff : vehicleController->GetDifferentials())
+                //    diff.Reset();
+
+                m_joltVehicleConstraint->ResetWarmStart();                
+            }
+        }
+    }
 
     //--------------------------------------------------------------------------------------
     void VehicleConstraint::FixedUpdate(DriveState _driveState)
@@ -322,7 +359,7 @@ namespace vg::physics
 
         if (m_joltVehicleConstraint)
         {
-            auto wheelDescs = m_vehicleConstraintDesc->getWheelDescList().getObjects();
+            vector<VehicleWheelDesc> & wheelDescs = m_vehicleConstraintDesc->getWheelDescList().getObjects();
 
             for (uint i = 0; i < wheelDescs.size(); ++i)
             {
@@ -342,7 +379,6 @@ namespace vg::physics
                     const VehicleWheelDesc & wheelDesc = wheelDescs[i];
                     if (wheelDesc.m_side == VehicleWheelSide::Left)
                     {
-
                         float3 leftWheelPos = wheelMatDebug[3].xyz;
 
                         for (uint j = 0; j < wheelDescs.size(); ++j)

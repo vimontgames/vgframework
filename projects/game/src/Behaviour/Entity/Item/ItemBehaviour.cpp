@@ -99,7 +99,7 @@ void ItemBehaviour::OnCollisionEnter(vg::core::IGameObject * _other)
         // check projectile speed
         if (auto * physicsBodyComponent = GetGameObject()->GetComponentInChildrenT<IPhysicsBodyComponent>())
         {
-            const float3 & velocity = physicsBodyComponent->GetVelocity();
+            const float3 & velocity = physicsBodyComponent->GetLinearVelocity();
             const float velocityNorm = length(velocity);
             //VG_DEBUGPRINT("[ItemBehaviour] Velocity = %f, %f, %f (%f)\n", (float)velocity.x, (float)velocity.y, (float)velocity.z, velocityNorm);
 

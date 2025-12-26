@@ -47,6 +47,7 @@ namespace vg::physics
         ~VehicleConstraintDesc();
 
         const VehicleWheelDescList & getWheelDescList() const { return m_wheelDescList; }
+        VehicleWheelDescList & getWheelDescList() { return m_wheelDescList; }
 
         void OnLoad() final override;
 

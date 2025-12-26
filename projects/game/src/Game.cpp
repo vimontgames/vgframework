@@ -1,9 +1,11 @@
 #include "Precomp.h"
 #include "Game.h"
 #include "core/Kernel.h"
+#include "core/IProfiler.h"
 #include "core/Object/AutoRegisterClass.h"
 #include "core/IBaseScene.h"
 #include "engine/IEngine.h"
+#include "engine/IVehicleComponent.h"
 #include "Behaviour/Entity/Character/Player/PlayerBehaviour.h"
 #include "Behaviour/Entity/Item/ItemBehaviour.h"
 
@@ -136,9 +138,31 @@ void Game::OnStop()
 }
 
 //--------------------------------------------------------------------------------------
-void Game::Update(float _dt)
+void Game::FixedUpdate(float _dt)
 {
-    
+    VG_PROFILE_CPU("Game");
+
+    for (auto & vehicle : m_vehicles)
+    {
+        IGameObject * go = vehicle->GetGameObject();
+
+        auto world = go->getGlobalMatrix();
+
+        if (world[3].z < -32.0f)
+        {
+            const uint count = vehicle->GetPassengerSlotCount();
+            for (uint i = 0; i < count; ++i)
+            {
+                if (IGameObject * passenger = vehicle->GetPassenger(i))
+                {
+                    if (PlayerBehaviour * player = passenger->GetComponentT<PlayerBehaviour>())
+                        player->exitVehicle();
+                }
+            }
+
+            vehicle->Respawn();
+        }
+    }
 }
 
 //--------------------------------------------------------------------------------------

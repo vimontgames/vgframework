@@ -4,7 +4,7 @@
         <Property type="Uint32" name="m_uid" value="1488493778"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-        <Property type="EnumFlagsU32" name="m_animationOptionFlags" value="AnimationJobs|ShowSkeletons"/>
+        <Property type="EnumFlagsU32" name="m_animationOptionFlags" value="AnimationJobs"/>
         <Property type="EnumFlagsU32" name="m_loadingOptionFlags" value="ResourcePriority"/>
         <Property type="Uint64" name="m_streamingUploadBufferSizeInMB" value="256"/>
         <Property type="String" name="m_gamePath" value="projects/game"/>

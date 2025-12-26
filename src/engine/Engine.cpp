@@ -896,6 +896,10 @@ namespace vg::engine
         // FixedUpdate all GameObjects and components
         {
             VG_PROFILE_CPU("FixedUpdate");
+
+            if (m_game)
+                m_game->FixedUpdate(scaledDeltaTime);
+
             for (IWorld * world : GetWorlds())
             {
                 const World::Context worldUpdateContext(playing, paused, getWorldDeltaTime(world));
@@ -911,16 +915,17 @@ namespace vg::engine
             }
         }
 
-        // This will use all available threads for physics
-        if (m_physics)
-            m_physics->Update(scaledDeltaTime);
-
-        if (m_game)
-            m_game->Update(scaledDeltaTime);
-
         // Update
         {
             VG_PROFILE_CPU("Update");
+
+            // This will use all available threads for physics
+            if (m_physics)
+                m_physics->Update(scaledDeltaTime);
+
+            if (m_game)
+                m_game->Update(scaledDeltaTime);
+
             for (IWorld * world : GetWorlds())
             {
                 const World::Context worldUpdateContext(playing, paused, getWorldDeltaTime(world));
@@ -950,6 +955,10 @@ namespace vg::engine
         // LateUpdate all GameObjects and components
         {
             VG_PROFILE_CPU("LateUpdate");
+
+            if (m_game)
+                m_game->LateUpdate(scaledDeltaTime);
+
             for (IWorld * world : GetWorlds())
             {
                 const World::Context worldUpdateContext(playing, paused, getWorldDeltaTime(world));

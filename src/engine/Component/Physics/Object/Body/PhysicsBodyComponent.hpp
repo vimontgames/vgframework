@@ -1,6 +1,7 @@
 #include "PhysicsBodyComponent.h"
 #include "engine/Component/Physics/Shape/PhysicsShapeComponent.h"
 #include "engine/EngineOptions.h"
+#include "engine/IVehicleComponent.h"
 #include "core/IGameObject.h"
 #include "core/IWorld.h"
 #include "core/Misc/AABB/AABB.h"
@@ -24,7 +25,12 @@ namespace vg::engine
 
         registerPropertyObjectPtrEx(PhysicsBodyComponent, m_bodyDesc, "Body", PropertyFlags::Flatten);
 
-        registerPropertyEx(PhysicsBodyComponent, m_velocity, "Velocity", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+        registerPropertyGroupBegin(PhysicsBodyComponent, "Velocity");
+        {
+            registerPropertyEx(PhysicsBodyComponent, m_linearVelocity, "Linear", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+            registerPropertyEx(PhysicsBodyComponent, m_angularVelocity, "Angular", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+        }
+        registerPropertyGroupEnd(PhysicsBodyComponent);
 
         return true;
     }
@@ -105,15 +111,43 @@ namespace vg::engine
         }
 
         if (m_body)
-            m_velocity = m_body->GetVelocity();
+        {
+            m_linearVelocity = m_body->GetLinearVelocity();
+            m_angularVelocity = m_body->GetAngularVelocity();
+        }
         else
-            m_velocity = (core::float3)0.0f;
+        {
+            m_linearVelocity = (core::float3)0.0f;
+            m_angularVelocity = (core::float3)0.0f;
+        }
     }
 
     //--------------------------------------------------------------------------------------
-    const core::float3 & PhysicsBodyComponent::GetVelocity() const
+    void PhysicsBodyComponent::SetLinearVelocity(const core::float3 & _velocity)
     {
-        return m_velocity;
+        if (m_body)
+            m_body->SetLinearVelocity(_velocity);
+        m_linearVelocity = _velocity;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PhysicsBodyComponent::SetAngularVelocity(const core::float3 & _velocity)
+    {
+        if (m_body)
+            m_body->SetAngularVelocity(_velocity);
+        m_angularVelocity = _velocity;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::float3 & PhysicsBodyComponent::GetAngularVelocity() const
+    {
+        return m_angularVelocity;
+    }
+
+    //--------------------------------------------------------------------------------------
+    const core::float3 & PhysicsBodyComponent::GetLinearVelocity() const
+    {
+        return m_linearVelocity;
     }
 
     //--------------------------------------------------------------------------------------
@@ -268,6 +302,10 @@ namespace vg::engine
     void PhysicsBodyComponent::OnDisable()
     {
         super::OnDisable();
+
+        // Also disable vehicle component that depends on this body
+        //if (IVehicleComponent * vehicleComp = GetGameObject()->GetComponentT<IVehicleComponent>())
+        //    vehicleComp->Enable(false);
 
         VG_SAFE_RELEASE(m_body);
     }

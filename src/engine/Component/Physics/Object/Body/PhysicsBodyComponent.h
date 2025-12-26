@@ -40,7 +40,11 @@ namespace vg::engine
         void                                    SetMotionType       (physics::MotionType _motionType) final override;
         physics::MotionType                     GetMotionType       () const final override;
 
-        const core::float3 &                    GetVelocity         () const final override;
+        void                                    SetLinearVelocity   (const core::float3 & _velocity) final override;
+        const core::float3 &                    GetLinearVelocity   () const final override;
+
+        void                                    SetAngularVelocity  (const core::float3 & _velocity) final override;
+        const core::float3 &                    GetAngularVelocity  () const final override;
         
         void                                    onShapeUpdated      ();
         void                                    updateShapesColor   ();
@@ -62,6 +66,7 @@ namespace vg::engine
     private:
         physics::IBodyDesc *                    m_bodyDesc  = nullptr;
         physics::IBody *                        m_body      = nullptr;
-        core::float3                            m_velocity  = (core::float3)0.0f;
+        core::float3                            m_linearVelocity  = (core::float3)0.0f;
+        core::float3                            m_angularVelocity = (core::float3)0.0f;
     };
 }

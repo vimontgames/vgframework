@@ -160,8 +160,26 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    core::float3 Body::GetVelocity() const
+    void Body::SetLinearVelocity(const core::float3 & _velocity)
+    {
+        m_physicsWorld->getBodyInterface().SetLinearVelocity(m_bodyID, getJoltVec3(_velocity));
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float3 Body::GetLinearVelocity() const
     {
         return fromJoltVec3(m_physicsWorld->getBodyInterface().GetLinearVelocity(m_bodyID));
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Body::SetAngularVelocity(const core::float3 & _velocity)
+    {
+        m_physicsWorld->getBodyInterface().SetAngularVelocity(m_bodyID, getJoltVec3(_velocity));
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float3 Body::GetAngularVelocity() const
+    {
+        return fromJoltVec3(m_physicsWorld->getBodyInterface().GetAngularVelocity(m_bodyID));
     }
 }

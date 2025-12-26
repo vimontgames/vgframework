@@ -70,12 +70,7 @@ namespace vg::engine
         setPropertyDescription(VehicleComponent, m_driveState.m_handBrake, "Value between 0 and 1 indicating how strong the hand brake is pulled");
         setPropertyRange(VehicleComponent, m_driveState.m_handBrake, float2(0, +1));
 
-        registerPropertyGroupBegin(VehicleComponent, "Velocity");
-        {
-            registerPropertyEx(VehicleComponent, m_forwardVelocity, "Forward", PropertyFlags::Transient | PropertyFlags::ReadOnly);
-            registerPropertyEx(VehicleComponent, m_lateralVelocity, "Lateral", PropertyFlags::Transient | PropertyFlags::ReadOnly);
-        }
-        registerPropertyGroupEnd(VehicleComponent);
+        registerPropertyEx(VehicleComponent, m_localVelocity, "Local velocity", PropertyFlags::Transient | PropertyFlags::ReadOnly);
 
         registerPropertyObject(VehicleComponent, m_slots, "Slots");
 
@@ -194,6 +189,9 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void VehicleComponent::OnPlay()
     {
+        m_startPos = GetGameObject()->GetGlobalMatrix();
+        m_startPos[3].z += 1;
+
         if (!m_vehicleConstraint)
             createVehicleConstraint();
 
@@ -205,19 +203,25 @@ namespace vg::engine
     {
         super::OnStop();
 
+        resetDriveState();
+
+        VG_SAFE_RELEASE(m_vehicleConstraint);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void VehicleComponent::resetDriveState()
+    {
         m_driveState.m_forward = 0.0f;
         m_driveState.m_right = 0.0f;
         m_driveState.m_brake = 0.0f;
         m_driveState.m_handBrake = 0.0f;
-
-        VG_SAFE_RELEASE(m_vehicleConstraint);
     }
 
     //--------------------------------------------------------------------------------------
     void VehicleComponent::FixedUpdate(const Context & _context)
     {
         if (m_vehicleConstraint)
-            m_vehicleConstraint->FixedUpdate(m_driveState);
+            m_vehicleConstraint->FixedUpdate(m_driveState);// SetDriverInput
     }
 
     //--------------------------------------------------------------------------------------
@@ -227,14 +231,21 @@ namespace vg::engine
         {
             m_vehicleConstraint->Update(m_driveState);
 
-            m_forwardVelocity = GetForwardVelocity();
-            m_lateralVelocity = GetLateralVelocity();
+            // Update local velocity
+            if (IPhysicsBodyComponent * bodyComp = GetGameObject()->GetComponentT<IPhysicsBodyComponent>())
+            {
+                const float3 velocity = bodyComp->GetLinearVelocity();
+
+                m_localVelocity.x = dot(velocity, GetGameObject()->GetGlobalMatrix()[0].xyz);
+                m_localVelocity.y = dot(velocity, GetGameObject()->GetGlobalMatrix()[1].xyz);
+                m_localVelocity.z = dot(velocity, GetGameObject()->GetGlobalMatrix()[2].xyz);
+            }
 
             if (ISoundComponent * sound = GetGameObject()->GetComponentT<ISoundComponent>())
             {
                 // Engine
                 {
-                    float engineVolume = 0.5f + 0.5f * saturate(m_forwardVelocity / 4.0f);
+                    float engineVolume = 0.5f + 0.5f * saturate(m_localVelocity.x / 4.0f);
 
                     auto soundIndex = sound->GetSoundIndex("Engine");
                     if (-1 != soundIndex)
@@ -243,9 +254,9 @@ namespace vg::engine
 
                 // Drift
                 {
-                    float lateralSpeedAbs = abs(m_lateralVelocity);
+                    float lateralSpeedAbs = abs(m_localVelocity.y);
 
-                    if (lateralSpeedAbs > 2.0f)
+                    if (lateralSpeedAbs > 2.0f && m_localVelocity.z >= 0.0f)
                     {
                         auto soundIndex = sound->GetSoundIndex("Brake");
                         if (-1 != soundIndex)
@@ -324,29 +335,49 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    float VehicleComponent::GetForwardVelocity() const
+    void VehicleComponent::Respawn()
     {
-        if (IPhysicsBodyComponent * bodyComp = GetGameObject()->GetComponentT<IPhysicsBodyComponent>())
+        if (m_vehicleConstraint)
         {
-            float3 speed = bodyComp->GetVelocity();
-            float forwardSpeed = dot(speed, GetGameObject()->GetGlobalMatrix()[0].xyz);
-            return forwardSpeed;
-        }
+            PhysicsBodyComponent * bodyComp = (PhysicsBodyComponent *)GetGameObject()->GetComponentByType("PhysicsBodyComponent");
 
-        return 0.0f;
+            // reset body
+            bodyComp->SetLinearVelocity(float3(0, 0, 0));
+            bodyComp->SetAngularVelocity(float3(0, 0, 0));
+
+            // reset vehicle
+            m_vehicleConstraint->Reset();
+
+            // teleport back to spawn position
+            bodyComp->SetMatrix(m_startPos);
+
+            // reset controls
+            resetDriveState();
+        }
     }
 
     //--------------------------------------------------------------------------------------
-    float VehicleComponent::GetLateralVelocity() const
+    uint VehicleComponent::GetPassengerSlotCount() const
     {
-        if (IPhysicsBodyComponent * bodyComp = GetGameObject()->GetComponentT<IPhysicsBodyComponent>())
-        {
-            float3 speed = bodyComp->GetVelocity();
-            float lateralSpeed = dot(speed, GetGameObject()->GetGlobalMatrix()[1].xyz);
-            return lateralSpeed;
-        }
+        return (uint)m_slots.Size();
+    }
 
-        return 0.0f;
+    //--------------------------------------------------------------------------------------
+    core::IGameObject * VehicleComponent::GetPassenger(core::uint _index) const
+    {
+        return VG_SAFE_STATIC_CAST(IGameObject, m_slots.getObjects()[_index].m_owner.getObject());
+    }
+
+    //--------------------------------------------------------------------------------------
+    VehicleSlotType VehicleComponent::GetPassengerSlotType(core::uint _index) const
+    {
+        return m_slots.getObjects()[_index].m_slotType;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float3 VehicleComponent::GetLocalVelocity() const
+    {
+        return m_localVelocity;
     }
 
     //--------------------------------------------------------------------------------------
@@ -363,7 +394,7 @@ namespace vg::engine
 
         if (m_driveState.m_brake == 0.0f && _brake != 0.0f)
         {
-            if (GetForwardVelocity() > 1.0f)
+            if (GetLocalVelocity().x > 1.0f)
             {
                 if (ISoundComponent * sound = GetGameObject()->GetComponentT<ISoundComponent>())
                 {

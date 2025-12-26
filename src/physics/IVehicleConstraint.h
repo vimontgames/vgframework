@@ -25,9 +25,10 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_ABSTRACT(IVehicleConstraint, core::Object)
 
-        virtual void FixedUpdate(DriveState _driveState) = 0;
-        virtual void Update(DriveState _driveState) = 0;
-
-        virtual core::float4x4 GetWheelMatrix(core::uint _index) const = 0;
+        virtual void            FixedUpdate     (DriveState _driveState) = 0;
+        virtual void            Update          (DriveState _driveState) = 0;
+        
+        virtual core::float4x4  GetWheelMatrix  (core::uint _index) const = 0;
+        virtual void            Reset           () = 0;
     };
 }

@@ -47,8 +47,13 @@ namespace vg::engine
         bool                EnterVehicle                (core::IGameObject * _owner, VehicleSlotType & _slotType) final override;
         bool                ExitVehicle                 (core::IGameObject * _owner) final override;
 
-        float               GetForwardVelocity          () const final override;
-        float               GetLateralVelocity          () const final override;
+        void                Respawn                     () final override;
+
+        core::uint          GetPassengerSlotCount       () const final override;
+        core::IGameObject * GetPassenger                (core::uint _index) const final override;
+        VehicleSlotType     GetPassengerSlotType        (core::uint _index) const final override;
+
+        core::float3        GetLocalVelocity            () const final override;
 
         void                Accelerate                  (float _forward) final override;
         void                Brake                       (float _brake) final override;
@@ -59,13 +64,14 @@ namespace vg::engine
 
         bool                createVehicleConstraintDesc ();
         bool                createVehicleConstraint     ();
+        void                resetDriveState             ();
 
     private:
         physics::DriveState               m_driveState;
-        float                             m_forwardVelocity = 0.0f;
-        float                             m_lateralVelocity = 0.0f;
+        core::float3                      m_localVelocity = (core::float3)0.0f;
         physics::IVehicleConstraintDesc * m_vehicleConstraintDesc = nullptr;
         physics::IVehicleConstraint *     m_vehicleConstraint = nullptr;
         VehicleSlotList                   m_slots;
+        core::float4x4                    m_startPos = core::float4x4::identity();
     };
 }

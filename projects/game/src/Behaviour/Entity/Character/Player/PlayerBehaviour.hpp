@@ -111,12 +111,11 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     float backward = input.GetJoyLeftTrigger(joyID);
                     float forward = input.GetJoyRightTrigger(joyID);
 
-                    float forwardSpeed = vehicle->GetForwardVelocity();
-                    //VG_INFO("[Player] ForwardSpeed = %.2f", forwardSpeed);
+                    const float forwardSpeed = vehicle->GetLocalVelocity().x;
 
                     if (forward > 0.1f)
                     {
-                        if (forwardSpeed > -0.1)
+                        if (forwardSpeed > -0.1f)
                         {
                             vehicle->Accelerate(forward);
                             vehicle->Brake(0.0f);
@@ -153,7 +152,6 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 }
             }
         }
-
 
         IAnimationComponent * animationComponent = playerGO->GetComponentT<IAnimationComponent>();
        
