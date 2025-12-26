@@ -146,6 +146,8 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     float2 dir = input.GetJoyLeftStickDir(joyID);
                     if ((float)(abs(dir.x)) > 0.1f)
                         vehicle->Steer(dir.x);
+                    else
+                        vehicle->Steer(0.0f);
 
                     GetGameObject()->SetGlobalMatrix(vehicleGO->GetGlobalMatrix());
                 }

@@ -33,10 +33,10 @@ namespace vg::physics
         return true;
     }
 
-    static float sMaxSteeringAngle = degreesToRadians(30.0f);
+    static float sMaxSteeringAngle = degreesToRadians(45.0f);
     static bool	 sAntiRollbar = true;
     static bool	 sLimitedSlipDifferentials = true;
-    static float sMaxEngineTorque = 500.0f;
+    static float sMaxEngineTorque = 750.0f;
     static float sClutchStrength = 10.0f;
     static float sFrontCasterAngle = 0.0f;
     static float sFrontCamber = 0.0f;
@@ -154,6 +154,7 @@ namespace vg::physics
                         jphWheel->mSuspensionSpring.mFrequency = sFrontSuspensionFrequency;
                         jphWheel->mSuspensionSpring.mDamping = sFrontSuspensionDamping;
                         jphWheel->mMaxSteerAngle = sMaxSteeringAngle;
+                        jphWheel->mMaxBrakeTorque = 3000.0f;
                         jphWheel->mMaxHandBrakeTorque = 0.0f; 
                     }
                     break;
@@ -169,6 +170,7 @@ namespace vg::physics
                         jphWheel->mSuspensionSpring.mFrequency = sRearSuspensionFrequency;
                         jphWheel->mSuspensionSpring.mDamping = sRearSuspensionDamping;
                         jphWheel->mMaxSteerAngle = 0.0f;
+                        jphWheel->mMaxBrakeTorque = 3000.0f;
                         jphWheel->mMaxHandBrakeTorque = 1; 
                     }
                     break;
