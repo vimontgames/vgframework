@@ -290,7 +290,7 @@ namespace vg::physics
             // To get controller
             JPH::WheeledVehicleController * vehicleController = (JPH::WheeledVehicleController *)m_joltVehicleConstraint->GetController();
 
-            // Propably does not need to change every frame ...
+            // Probably does not need to change every frame ...
             switch (m_vehicleConstraintDesc->GetVehicleType())
             {
                 default:
