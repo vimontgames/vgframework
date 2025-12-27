@@ -31,6 +31,9 @@ namespace vg::physics
         void            FixedUpdate     (DriveState _driveState) final override;
         void            Update          (DriveState _driveState) final override;
 
+        float           GetEngineRPM    () const final override;
+        core::uint      GetCurrentGear  () const final override;
+
         core::float4x4  GetWheelMatrix  (core::uint _index) const final override;
         void            Reset           () final override;
 

@@ -69,7 +69,12 @@ namespace vg::engine
     private:
         physics::DriveState               m_driveState;
         core::float3                      m_localVelocity = (core::float3)0.0f;
+        float                             m_speedInKmPerHour = 0.0f;
+        float                             m_engineRPM = 0.0f;
+        int                               m_currentGear = 0;
+
         physics::IVehicleConstraintDesc * m_vehicleConstraintDesc = nullptr;
+        physics::VehicleType              m_vehicleType = physics::VehicleType::FourWheels;
         physics::IVehicleConstraint *     m_vehicleConstraint = nullptr;
         VehicleSlotList                   m_slots;
         core::float4x4                    m_startPos = core::float4x4::identity();

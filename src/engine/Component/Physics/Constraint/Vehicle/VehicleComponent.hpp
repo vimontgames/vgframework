@@ -70,12 +70,21 @@ namespace vg::engine
         setPropertyDescription(VehicleComponent, m_driveState.m_handBrake, "Value between 0 and 1 indicating how strong the hand brake is pulled");
         setPropertyRange(VehicleComponent, m_driveState.m_handBrake, float2(0, +1));
 
-        registerPropertyEx(VehicleComponent, m_localVelocity, "Local velocity", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+        registerPropertyEx(VehicleComponent, m_speedInKmPerHour, "Velocity", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+        setPropertyDescription(VehicleComponent, m_speedInKmPerHour, "Current speed in km/h");
+
+        registerPropertyEx(VehicleComponent, m_localVelocity, "Local Velocity", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+
+        registerPropertyEx(VehicleComponent, m_engineRPM, "RPM", PropertyFlags::Transient | PropertyFlags::ReadOnly);
+        setPropertyDescription(VehicleComponent, m_engineRPM, "Current engine Rotation Per Minute");
+
+        registerPropertyEx(VehicleComponent, m_currentGear, "Gear", PropertyFlags::Transient | PropertyFlags::ReadOnly);
 
         registerPropertyObject(VehicleComponent, m_slots, "Slots");
 
         registerPropertyGroupBegin(VehicleComponent, "Contraints");
         {
+            registerPropertyEnum(VehicleComponent, physics::VehicleType, m_vehicleType, "Type");
             registerPropertyObjectPtrEx(VehicleComponent, m_vehicleConstraintDesc, "Constraints", PropertyFlags::Flatten);
         }
         registerPropertyGroupEnd(VehicleComponent);
@@ -136,7 +145,16 @@ namespace vg::engine
         {
             IFactory * factory = Kernel::getFactory();
 
-            m_vehicleConstraintDesc = (physics::IVehicleConstraintDesc *)factory->CreateObject("VehicleConstraintDesc", "", this);
+            switch (m_vehicleType)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_vehicleType);
+                    break;
+
+                case physics::VehicleType::FourWheels:
+                    m_vehicleConstraintDesc = (physics::IVehicleConstraintDesc *)factory->CreateObject("FourWheelsVehicleConstraintDesc", "", this);
+                    break;
+            }
 
             if (m_vehicleConstraintDesc)
             {
@@ -230,18 +248,26 @@ namespace vg::engine
         if (m_vehicleConstraint)
         {
             m_vehicleConstraint->Update(m_driveState);
+            IGameObject * go = GetGameObject();
 
             // Update local velocity
-            if (IPhysicsBodyComponent * bodyComp = GetGameObject()->GetComponentT<IPhysicsBodyComponent>())
+            if (IPhysicsBodyComponent * bodyComp = go->GetComponentT<IPhysicsBodyComponent>())
             {
                 const float3 velocity = bodyComp->GetLinearVelocity();
 
-                m_localVelocity.x = dot(velocity, GetGameObject()->GetGlobalMatrix()[0].xyz);
-                m_localVelocity.y = dot(velocity, GetGameObject()->GetGlobalMatrix()[1].xyz);
-                m_localVelocity.z = dot(velocity, GetGameObject()->GetGlobalMatrix()[2].xyz);
+                const float4x4 mat = go->GetGlobalMatrix();
+
+                m_localVelocity.x = dot(velocity, mat[0].xyz);
+                m_localVelocity.y = dot(velocity, mat[1].xyz);
+                m_localVelocity.z = dot(velocity, mat[2].xyz);
+
+                m_speedInKmPerHour = length(velocity) * 60.0f * 60.0f / 1000.0f; // m/s to km/h
+
+                m_engineRPM = m_vehicleConstraint->GetEngineRPM();
+                m_currentGear = m_vehicleConstraint->GetCurrentGear();
             }
 
-            if (ISoundComponent * sound = GetGameObject()->GetComponentT<ISoundComponent>())
+            if (ISoundComponent * sound = go->GetComponentT<ISoundComponent>())
             {
                 // Engine
                 {

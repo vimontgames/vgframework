@@ -17,7 +17,7 @@
                                                                                                         return false;                                                                                                                   \
                                                                                                     }
 
-#define VG_REGISTER_ABSTRACT_CLASS(className, displayName)                                          VG_REGISTER_ABSTRACT_CLASS_EX(className, displayName, vg::core::ClassDescFlags::None)
+#define VG_REGISTER_ABSTRACT_CLASS(className, displayName)                                          VG_REGISTER_ABSTRACT_CLASS_EX(className, displayName, vg::core::ClassDescFlags::Abstract)
 
 #define VG_REGISTER_OBJECT_CLASS_EX(className, displayName, flags)                                  vg::core::AutoRegisterObjectClassHelper<className> autoRegister##className(#className, className::registerClass);                   \
                                                                                                     bool className::registerClass(vg::core::IFactory & _factory)                                                                        \

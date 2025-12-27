@@ -220,7 +220,12 @@ namespace vg::core
 
         if (desc)
         {
-            VG_ASSERT(!asBool(ClassDescFlags::Singleton & desc->GetFlags()));
+            VG_ASSERT(!asBool(ClassDescFlags::Singleton & desc->GetFlags()), "[Factory] Cannot instanciate singleton class \"%s\"", _className);
+            VG_ASSERT(!asBool(ClassDescFlags::Abstract & desc->GetFlags()), "[Factory] Cannot instanciate abstract class \"%s\"", _className);
+
+            if (asBool((ClassDescFlags::Singleton | ClassDescFlags::Abstract) & desc->GetFlags()))
+                return nullptr;
+
             IObject * obj = desc->GetCreateFunc()(_name, _parent);
 
             const auto index = desc->GetNextIndex();

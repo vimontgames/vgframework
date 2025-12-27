@@ -26,6 +26,7 @@ namespace vg::core
         SceneNode       = 0x0000000000000080,
         Plugin          = 0x0000000000000100,
         UID             = 0x0000000000000200,
+        Abstract        = 0x0000000000000400,
         Hidden          = 0x0000000000004000
     };
 

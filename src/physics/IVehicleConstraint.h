@@ -27,6 +27,9 @@ namespace vg::physics
 
         virtual void            FixedUpdate     (DriveState _driveState) = 0;
         virtual void            Update          (DriveState _driveState) = 0;
+
+        virtual float           GetEngineRPM    () const = 0;
+        virtual core::uint      GetCurrentGear  () const = 0;
         
         virtual core::float4x4  GetWheelMatrix  (core::uint _index) const = 0;
         virtual void            Reset           () = 0;

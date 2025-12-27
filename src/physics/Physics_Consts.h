@@ -108,4 +108,8 @@ namespace vg::physics
 
     vg_generic_enum_value_64(vg::physics, Category);
     vg_generic_enum_bitfield_64(vg::physics, CategoryFlag);
+
+    vg_enum_class(vg::physics, VehicleType, core::u8,
+        FourWheels = 0
+    );
 }
