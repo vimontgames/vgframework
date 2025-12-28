@@ -23,7 +23,9 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void PhysicsJob::Run()
     {
-        VG_PROFILE_CPU(m_jphJob->GetName());
+        VG_PROFILE_CPU(GetName().c_str());
+
+        m_jphJob->Execute();
 
         // Destroy job after use
         this->Release();
