@@ -32,6 +32,6 @@ namespace vg::engine
         void                                OnResourceLoaded        (core::IResource * _resource) final override;
         void                                OnResourceUnloaded      (core::IResource * _resource) final override;
 
-        renderer::IMeshModel *              getMeshModel            () const { return (renderer::IMeshModel*)m_object; } 
+        renderer::IMeshModel *              getMeshModel            () const { return (renderer::IMeshModel*)m_shared; } 
     };
 }

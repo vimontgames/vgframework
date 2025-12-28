@@ -3,13 +3,13 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     VG_INLINE const renderer::IAnimation * AnimationResource::getAnimation() const
     {
-        return (renderer::IAnimation *)m_object; 
+        return (renderer::IAnimation *)m_shared; 
     }
 
     //--------------------------------------------------------------------------------------
     VG_INLINE renderer::IAnimation * AnimationResource::getAnimation()
     {
-        return (renderer::IAnimation *)m_object; 
+        return (renderer::IAnimation *)m_shared; 
     }
 
     //--------------------------------------------------------------------------------------

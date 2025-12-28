@@ -27,6 +27,7 @@ namespace vg::core
         void                        Setup                   (IObject * _owner, const string & _path, UserData _userData = 0x0) final override;
 
         bool                        SetObject               (core::IObject * _object) final override;
+        bool                        Instanciate             () override;
         IObject *                   GetObject               () const final override;
     
         void                        SetUserData             (UserData _userData) final override;
@@ -38,6 +39,7 @@ namespace vg::core
 
         const vector<string>        GetExtensions           () const override;;
         void                        OnResourcePathChanged   (const string & _oldPath, const string & _newPath) override;
+        void                        OnPropertyChanged       (IObject * _object, const IProperty & _prop, bool _notifyParent) override;
 
         bool                        Cook                    (const core::string & _file) const override;
 
@@ -52,13 +54,17 @@ namespace vg::core
 
         bool                        CanCreateFile           () const override { return false; }
         bool                        CanSaveFile             () const override { return false; }
+        bool                        CanInstanciate          () const override { return false; }
+        bool                        IsInstanciated          () const { return m_instance != nullptr;}
 
         IResourceMeta *             CreateResourceMeta      (const core::string & _path) const override;
         bool                        CanOverrideProperties   () const override;
 
 	protected:
         string                      m_resourcePath;
-        IObject *                   m_object = nullptr;
+        bool                        m_instanciate = false;
+        IObject *                   m_shared = nullptr;
+        IObject *                   m_instance = nullptr;
         UserData                    m_userData = 0x0;
     };
 }

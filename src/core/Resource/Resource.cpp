@@ -12,6 +12,13 @@ namespace vg::core
     VG_REGISTER_OBJECT_CLASS(Resource, "Resource");
 
     //--------------------------------------------------------------------------------------
+    bool IsInstanciateHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const Resource * res = VG_SAFE_STATIC_CAST(const Resource, _object);
+        return !res->CanInstanciate();
+    }
+
+    //--------------------------------------------------------------------------------------
     bool Resource::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
@@ -19,8 +26,15 @@ namespace vg::core
         registerPropertyEx(Resource, m_resourcePath, "Path", PropertyFlags::Hidden);
         setPropertyDescription(Resource, m_resourcePath, "Resource file relative path");
 
+        // The "Instanciate" flag is not saved by default, but it's up to derived resource 
+        // that support it ('CanInstanciate' returns 'true' ) to make it serializable using 
+        // e.g. "setPropertyFlag(MaterialResource, m_instanciate, PropertyFlags::Transient, false);"
+        registerPropertyEx(Resource, m_instanciate, "Instance", PropertyFlags::Transient);
+        setPropertyDescription(Resource, m_instanciate, "A new instance of the resource will be created so as not to modify the original.")
+        setPropertyHiddenCallback(Resource, m_instanciate, IsInstanciateHidden);
+
         // This is used for the inspector to display resource preview, but not serialized
-        registerPropertyObjectPtrEx(Resource, m_object, "Object", PropertyFlags::Transient);
+        registerPropertyObjectPtrEx(Resource, m_shared, "Object", PropertyFlags::Transient);
 
         return true;
     }
@@ -38,7 +52,7 @@ namespace vg::core
         SetName(_other.GetName());
 
         m_resourcePath = _other.m_resourcePath;
-        m_object = _other.m_object;
+        m_shared = _other.m_shared;
         m_userData = _other.m_userData;
     }
 
@@ -64,7 +78,7 @@ namespace vg::core
         Kernel::getResourceManager()->SwapResources(this, (IResource*)other);
 
         swap(m_resourcePath, other->m_resourcePath);
-        swap(m_object, other->m_object);
+        swap(m_shared, other->m_shared);
         swap(m_userData, other->m_userData);
     }
 
@@ -72,7 +86,8 @@ namespace vg::core
     Resource::~Resource()
     {
         Kernel::getResourceManager()->UnloadResource(this, GetResourcePath());
-		VG_SAFE_RELEASE(m_object);
+		VG_SAFE_RELEASE(m_shared);
+        VG_SAFE_RELEASE(m_instance);
     }
 
     //--------------------------------------------------------------------------------------
@@ -101,12 +116,53 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Resource::SetObject(core::IObject * _object)
     {
-        if (m_object != _object)
+        if (m_shared != _object)
         {
-            VG_SAFE_RELEASE(m_object);
+            VG_SAFE_RELEASE(m_shared);
             VG_SAFE_INCREASE_REFCOUNT(_object);
-            m_object = _object;
+            m_shared = _object;
 
+            if (m_instanciate)
+                Instanciate();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Resource::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
+    {
+        if (!strcmp("m_instanciate", _prop.GetName()))
+        {
+            if (m_instanciate)
+            {
+                if (m_instance == nullptr)
+                    Instanciate();
+            }
+            else
+            {
+                VG_SAFE_RELEASE(m_instance);
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Resource::Instanciate()
+    {
+        if (m_shared)
+        {
+            VG_SAFE_RELEASE(m_instance);
+
+            IFactory * factory = Kernel::getFactory();
+
+            m_instance = factory->CreateObject(m_shared->GetClassDesc()->GetClassName(), m_shared->GetName() + " (Instance)", m_shared);
+            VG_ASSERT(nullptr != m_instance);
+            if (nullptr == m_instance)
+                return false;
+           
+            factory->CopyProperties(m_shared, m_instance);
             return true;
         }
 
@@ -116,7 +172,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IObject * Resource::GetObject() const
     {
-        return m_object;
+        return m_instance ? m_instance : m_shared;
     }
 
     //--------------------------------------------------------------------------------------

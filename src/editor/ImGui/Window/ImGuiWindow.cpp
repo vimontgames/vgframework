@@ -2326,6 +2326,13 @@ namespace vg::editor
         ImGui::PushID(_resource);
         ImGui::PushID(_prop);
 
+        ImVec4 propColor;
+        renderer::FontStyle propFontStyle;
+        getPropertyColorStyle(_propContext, propColor, propFontStyle);
+
+        ImGui::PushStyleColor(ImGuiCol_Text, propColor);
+        ImGui::PushStyle(propFontStyle);
+
         ObjectContext objectContext;
 
         bool changed = false;
@@ -2340,7 +2347,7 @@ namespace vg::editor
                 for (uint i = 0; i < classDesc->GetPropertyCount(); ++i)
                 {
                     const IProperty * prop = classDesc->GetPropertyByIndex(i);
-                    if (!strcmp(prop->GetName(), "m_object"))
+                    if (!strcmp(prop->GetName(), "m_object") || !strcmp(prop->GetName(), "m_shared") || !strcmp(prop->GetName(), "m_instance"))
                         continue;
 
                     changed |= ImGuiWindow::displayProperty(_resource, prop);
@@ -2662,6 +2669,9 @@ namespace vg::editor
             ImGui::Spacing();
 
         ImGui::PopItemWidth();
+
+        ImGui::PopStyleColor();
+        ImGui::PopStyle();
 
         ImGui::PopID(); // _resource;
         ImGui::PopID(); // _prop;

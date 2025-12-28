@@ -20,6 +20,7 @@ namespace vg::editor
                 ImGuiWindow::displayObject(object);
             }
         }
+        ImGui::Dummy(ImVec2(0,0));
         ImGui::End();
         ImGui::PopID();
     }

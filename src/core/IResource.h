@@ -35,7 +35,9 @@ namespace vg::core
         virtual void                    Setup                   (IObject * _owner, const string & _path, UserData _userData = 0x0) = 0;
 
         virtual bool                    SetObject               (core::IObject * _object) = 0;
+        virtual bool                    Instanciate             () = 0;
         virtual IObject *               GetObject               () const = 0;
+
 
         virtual void                    SetUserData             (UserData _userData) = 0;
         virtual UserData                GetUserData             () const = 0;
@@ -58,6 +60,8 @@ namespace vg::core
 
         virtual bool                    CanCreateFile           () const = 0;
         virtual bool                    CanSaveFile             () const = 0;
+        virtual bool                    CanInstanciate          () const = 0;
+        virtual bool                    IsInstanciated          () const = 0;
 
         virtual IResourceMeta *         CreateResourceMeta      (const core::string & _path) const = 0;
     };

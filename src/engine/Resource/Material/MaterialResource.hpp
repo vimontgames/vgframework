@@ -27,6 +27,8 @@ namespace vg::engine
         setPropertyFlag(MaterialResource, m_name, PropertyFlags::Hidden, false);
         registerResizeVectorFunc(MaterialResource, ResizeMaterialResourceVector);
 
+        setPropertyFlag(MaterialResource, m_instanciate, PropertyFlags::Transient, false);
+
         return true;
     }
 
@@ -41,6 +43,26 @@ namespace vg::engine
     MaterialResource::~MaterialResource()
     {
         UnregisterUID();
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool MaterialResource::Instanciate()
+    {
+        if (super::Instanciate())
+        {
+            IFactory * factory = Kernel::getFactory();
+
+            ((MaterialResourceData *)m_instance)->SetParent(this);
+            ((MaterialResourceData *)m_instance)->m_data = new DefaultMaterialData("Default", m_instance);
+            ((MaterialResourceData *)m_instance)->m_data->RegisterUID();
+            ((MaterialResourceData *)m_instance)->CreateRendererMaterial();
+
+            factory->CopyProperties(m_shared, m_instance);
+
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------

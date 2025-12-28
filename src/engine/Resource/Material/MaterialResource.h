@@ -11,7 +11,7 @@ namespace vg::renderer
 
 namespace vg::engine
 {
-    class MaterialResource : public core::Resource
+    class MaterialResource final : public core::Resource
     {
     public:
         VG_CLASS_DECL(MaterialResource, core::Resource);
@@ -27,7 +27,10 @@ namespace vg::engine
         bool                                CreateFile      (const core::string & _path, core::IObject * _data) final override;
         bool                                SaveFile        (const core::string & _path) const override;
 
-        bool                                CanCreateFile   () const final override { return true; };
-        bool                                CanSaveFile     () const final override { return true; };
+        bool                                CanCreateFile   () const final override { return !IsInstanciated(); };
+        bool                                CanSaveFile     () const final override { return !IsInstanciated(); };
+        bool                                CanInstanciate  () const final override { return true; };
+
+        bool                                Instanciate     () final override;
     };
 }

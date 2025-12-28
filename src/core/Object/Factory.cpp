@@ -829,8 +829,13 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool Factory::CopyProperty(const core::IProperty * _srcProp, const core::IObject * _srcObj, const core::IProperty * _dstProp, core::IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags)
     {
+        // Is alias is modified, then modify the original aliased prop
         if (asBool(PropertyFlags::Alias & _srcProp->GetFlags()))
             _srcProp = _srcObj->GetClassDesc()->GetAliasedProperty(_srcProp);
+
+        // Is dest is alias, do nothing
+        if (asBool(PropertyFlags::Alias & _dstProp->GetFlags()))
+            return false;
 
         const PropertyType srcPropType = _srcProp->GetType();
         const PropertyType dstPropType = _dstProp->GetType();
@@ -1163,7 +1168,16 @@ namespace vg::core
             return false;
         }
 
-        _dstObj->OnPropertyChanged(_dstObj, *_dstProp);
+        switch (srcPropType)
+        {
+            case PropertyType::LayoutElement:
+            case PropertyType::Callback:
+                break;
+
+            default:
+            _dstObj->OnPropertyChanged(_dstObj, *_dstProp);
+            break;
+        }        
 
         return true;
     }
