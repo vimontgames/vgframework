@@ -431,7 +431,12 @@ namespace vg::renderer
         RenderContext renderContext = _renderContext;
         renderContext.m_particle = true;
 
-        const float4x4 world = getGlobalMatrix();
+        float4x4 world = getGlobalMatrix();
+
+        // When drawing billboard particle, keep only the translation part
+        world[0] = float4(1, 0, 0, (1));
+        world[1] = float4(0, 1, 0, (1));
+        world[2] = float4(0, 0, 1, (1));
 
         RootConstants3D root3D;
         root3D.setWorldMatrix(transpose(world));
