@@ -37,12 +37,10 @@ namespace vg::engine
         void                                OnResourceLoaded            (core::IResource * _resource) override;
         void                                OnResourceUnloaded          (core::IResource * _resource) override;
 
-    protected:
         renderer::IMaterialModel *          getMaterialModel            () const;
-        const core::IProperty *             findTextureResourceProperty (core::IResource * _resource) const;
 
     protected:
-
+        const core::IProperty *             findTextureResourceProperty (core::IResource * _resource) const;
     };
 }
 

@@ -310,4 +310,26 @@ namespace vg::engine
     { 
         return m_meshInstance; 
     }
+
+    //--------------------------------------------------------------------------------------
+    MaterialIndex MeshComponent::GetMaterialIndex(const core::string & _materialName) const
+    {
+        const auto & matResources = m_meshMaterials.getResources();
+        for (uint i = 0; i < matResources.size(); ++i)
+        {
+            const auto & res = matResources[i];
+            if (res.GetName() == _materialName)
+                return i;
+        }
+        return core::uint(-1);
+    }
+    //--------------------------------------------------------------------------------------
+    IMaterialResource * MeshComponent::GetMaterialResource(MaterialIndex _materialIndex) const 
+    {
+        const auto & matResources = m_meshMaterials.getResources();
+        if (_materialIndex < matResources.size())
+            return (IMaterialResource*)&matResources[_materialIndex];
+
+        return nullptr;
+    }
 }

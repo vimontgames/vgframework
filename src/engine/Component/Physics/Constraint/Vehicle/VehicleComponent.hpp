@@ -2,6 +2,7 @@
 #include "renderer/IRenderer.h"
 #include "renderer/IDebugDraw.h"
 #include "engine/ISoundComponent.h"
+#include "engine/Component/Renderer/Instance/Mesh/MeshComponent.h"
 
 using namespace vg::core;
 
@@ -210,6 +211,8 @@ namespace vg::engine
         m_startPos = GetGameObject()->GetGlobalMatrix();
         m_startPos[3].z += 1;
 
+        resetDriveState();
+
         if (!m_vehicleConstraint)
             createVehicleConstraint();
 
@@ -219,6 +222,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void VehicleComponent::OnStop()
     {
+        Brake(0.0f);
+
         super::OnStop();
 
         resetDriveState();
@@ -233,6 +238,8 @@ namespace vg::engine
         m_driveState.m_right = 0.0f;
         m_driveState.m_brake = 0.0f;
         m_driveState.m_handBrake = 0.0f;
+
+        Brake(0.0f);
     }
 
     //--------------------------------------------------------------------------------------
@@ -428,6 +435,19 @@ namespace vg::engine
                     if (-1 != soundIndex)
                         sound->Play(soundIndex);
                 }
+            }
+        }
+
+        if (MeshComponent * meshComponent = GetGameObject()->GetComponentT<MeshComponent>())
+        {
+            // TODO: Create IMaterialResource interface, make sure returned material is instanciated, and add methods that manipulate material resource and set values to renderer material
+            const auto matIndex = meshComponent->GetMaterialIndex("Lights");
+            if (-1 != matIndex)
+            {
+                IMaterialResource * mat = meshComponent->GetMaterialResource(matIndex);
+                const auto propIndex = mat->GetPropertyIndex("m_emissiveIntensity");
+                if (-1 != propIndex)
+                    mat->SetProperty(propIndex, _brake);
             }
         }
 

@@ -140,6 +140,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     else
                     {
                         vehicle->Accelerate(0.0f);
+                        vehicle->Brake(0.0f);
                     }
 
                     float2 dir = input.GetJoyLeftStickDir(joyID);

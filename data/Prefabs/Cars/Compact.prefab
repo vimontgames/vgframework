@@ -227,18 +227,31 @@
                                         <Property type="Uint32" name="m_uid" value="1656513048"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="Bool" name="m_fourWheelDrive" value="false"/>
-                                        <Property type="Float" name="m_maxPitchRollAngleInDegrees" value="180"/>
+                                        <Property type="Float" name="m_maxEngineTorque" value="500"/>
+                                        <Property type="Float" name="m_minRPM" value="1000"/>
+                                        <Property type="Float" name="m_maxRPM" value="6000"/>
+                                        <Property type="Float" name="m_clutchStrength" value="10"/>
                                         <Property type="Object" name="m_front">
                                             <Object class="VehicleAxleDesc">
                                                 <Property type="String" name="m_name" value=""/>
                                                 <Property type="Uint32" name="m_uid" value="2853335957"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="Float" name="m_radius" value="0.34999999"/>
-                                                <Property type="Float" name="m_width" value="0.2"/>
                                                 <Property type="ObjectHandle" name="m_leftWheel" value="81703785"/>
                                                 <Property type="ObjectHandle" name="m_rightWheel" value="335609367"/>
+                                                <Property type="Float" name="m_radius" value="0.34999999"/>
+                                                <Property type="Float" name="m_width" value="0.2"/>
+                                                <Property type="Float" name="m_maxSteerAngleInDegrees" value="35"/>
+                                                <Property type="Float" name="m_inertia" value="0.89999998"/>
+                                                <Property type="Float" name="m_angularDamping" value="0.2"/>
+                                                <Property type="Float" name="m_suspensionMinLength" value="0.30000001"/>
+                                                <Property type="Float" name="m_suspensionMaxLength" value="0.60000002"/>
+                                                <Property type="Float" name="m_suspensionForwardAngleInDegree" value="0"/>
+                                                <Property type="Float" name="m_suspensionSidewaysAngleInDegree" value="0"/>
+                                                <Property type="Float" name="m_suspensionFrequency" value="1.5"/>
+                                                <Property type="Float" name="m_suspensionDamping" value="0.5"/>
+                                                <Property type="Float" name="m_maxBrakeTorque" value="2000"/>
+                                                <Property type="Float" name="m_maxHandBrakeTorque" value="0"/>
                                             </Object>
                                         </Property>
                                         <Property type="Object" name="m_rear">
@@ -247,12 +260,25 @@
                                                 <Property type="Uint32" name="m_uid" value="892460903"/>
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="Float" name="m_radius" value="0.34999999"/>
-                                                <Property type="Float" name="m_width" value="0.2"/>
                                                 <Property type="ObjectHandle" name="m_leftWheel" value="1290695824"/>
                                                 <Property type="ObjectHandle" name="m_rightWheel" value="1534622751"/>
+                                                <Property type="Float" name="m_radius" value="0.34999999"/>
+                                                <Property type="Float" name="m_width" value="0.2"/>
+                                                <Property type="Float" name="m_maxSteerAngleInDegrees" value="0"/>
+                                                <Property type="Float" name="m_inertia" value="0.89999998"/>
+                                                <Property type="Float" name="m_angularDamping" value="0.2"/>
+                                                <Property type="Float" name="m_suspensionMinLength" value="0.30000001"/>
+                                                <Property type="Float" name="m_suspensionMaxLength" value="0.60000002"/>
+                                                <Property type="Float" name="m_suspensionForwardAngleInDegree" value="0"/>
+                                                <Property type="Float" name="m_suspensionSidewaysAngleInDegree" value="0"/>
+                                                <Property type="Float" name="m_suspensionFrequency" value="1.5"/>
+                                                <Property type="Float" name="m_suspensionDamping" value="0.5"/>
+                                                <Property type="Float" name="m_maxBrakeTorque" value="2000"/>
+                                                <Property type="Float" name="m_maxHandBrakeTorque" value="4000"/>
                                             </Object>
                                         </Property>
+                                        <Property type="Bool" name="m_fourWheelDrive" value="false"/>
+                                        <Property type="Float" name="m_maxPitchRollAngleInDegrees" value="180"/>
                                     </Object>
                                 </Property>
                             </Object>
@@ -260,7 +286,7 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2479175455"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
@@ -284,6 +310,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactCarroserie.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="false"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Dashboard"/>
@@ -291,6 +318,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactDashboard.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="false"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Lights"/>
@@ -298,6 +326,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactLights.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="true"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="ForwardLights"/>
@@ -305,6 +334,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactLightsForward.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="false"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Bassines"/>
@@ -312,6 +342,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactBlackPlastic.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="false"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Logo"/>
@@ -319,6 +350,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactLogo.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="false"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Plastic"/>
@@ -326,6 +358,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactBlackPlastic.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="false"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Windows"/>
@@ -333,6 +366,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactWindows.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="false"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Under"/>
@@ -340,6 +374,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactUnder.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="false"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Under2"/>
@@ -347,6 +382,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactUnder2.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="false"/>
                                             </Object>
                                             <Object class="MaterialResource">
                                                 <Property type="String" name="m_name" value="Interior"/>
@@ -354,6 +390,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactInterior.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="false"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -400,6 +437,7 @@
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactTire.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
                                                     </Object>
                                                     <Object class="MaterialResource">
                                                         <Property type="String" name="m_name" value="Jante"/>
@@ -407,6 +445,7 @@
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactJante.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
                                                     </Object>
                                                 </Property>
                                             </Object>
@@ -454,6 +493,7 @@
                                                         <Property type="Uint32" name="m_originalUID" value="382591563"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactTire.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
                                                     </Object>
                                                     <Object class="MaterialResource">
                                                         <Property type="String" name="m_name" value="Jante"/>
@@ -461,6 +501,7 @@
                                                         <Property type="Uint32" name="m_originalUID" value="2229750850"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactJante.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
                                                     </Object>
                                                 </Property>
                                             </Object>
@@ -508,6 +549,7 @@
                                                         <Property type="Uint32" name="m_originalUID" value="1064522603"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactTire.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
                                                     </Object>
                                                     <Object class="MaterialResource">
                                                         <Property type="String" name="m_name" value="Jante"/>
@@ -515,6 +557,7 @@
                                                         <Property type="Uint32" name="m_originalUID" value="3618416601"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactJante.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
                                                     </Object>
                                                 </Property>
                                             </Object>
@@ -562,6 +605,7 @@
                                                         <Property type="Uint32" name="m_originalUID" value="2753482677"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactTire.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
                                                     </Object>
                                                     <Object class="MaterialResource">
                                                         <Property type="String" name="m_name" value="Jante"/>
@@ -569,6 +613,7 @@
                                                         <Property type="Uint32" name="m_originalUID" value="4065402384"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Compact/CompactJante.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
                                                     </Object>
                                                 </Property>
                                             </Object>

@@ -318,14 +318,20 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DefaultMaterialModel::SetFloat(const core::string & _name, float _value)
     {
-        if (_name == "NormalStrength")
-            m_normalStrength = _value;
-        else if (_name == "Occlusion")
-            m_occlusion = _value;
-        else if (_name == "Roughness")
-            m_roughness = _value;
-        else if (_name == "Metalness")
-            m_metalness = _value;
+        //if (_name == "NormalStrength")
+        //    m_normalStrength = _value;
+        //else if (_name == "Occlusion")
+        //    m_occlusion = _value;
+        //else if (_name == "Roughness")
+        //    m_roughness = _value;
+        //else if (_name == "Metalness")
+        //    m_metalness = _value;
+
+        if (IProperty * prop = GetClassDesc()->GetPropertyByName(_name.c_str()))
+        {
+            float * dst = prop->GetPropertyFloat(this);
+            *dst = _value;
+        }
     }
 
     //--------------------------------------------------------------------------------------

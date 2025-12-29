@@ -27,6 +27,8 @@ namespace vg::engine
 
         void                        OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
+        MaterialData *              getMaterialData         () const { return m_data; }
+
         MaterialModelType           m_materialModelType;
         MaterialData *              m_data = nullptr;
         renderer::IMaterialModel *  m_materialModel = nullptr;

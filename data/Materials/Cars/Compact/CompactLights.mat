@@ -68,11 +68,11 @@
                         <Property type="Uint32" name="m_uid" value="2484003251"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                        <Property type="String" name="m_resourcePath" value=""/>
+                        <Property type="String" name="m_resourcePath" value="data/Textures/Cars/Compact/gltf_embedded_13_emissive.png"/>
                     </Object>
                 </Property>
-                <Property type="Float4" name="m_emissiveColor" x="1" y="1" z="1" w="1"/>
-                <Property type="Float" name="m_emissiveIntensity" value="1"/>
+                <Property type="Float4" name="m_emissiveColor" x="1" y="0" z="0" w="1"/>
+                <Property type="Float" name="m_emissiveIntensity" value="0"/>
             </Object>
         </Property>
     </Object>

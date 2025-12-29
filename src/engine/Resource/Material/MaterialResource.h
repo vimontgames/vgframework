@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Resource/Resource.h"
+#include "engine/IMaterialResource.h"
 #include "engine/Resource/Texture/TextureResource.h"
 #include "renderer/Model/Material/Material_Consts.h"
 
@@ -11,10 +11,12 @@ namespace vg::renderer
 
 namespace vg::engine
 {
-    class MaterialResource final : public core::Resource
+    class MaterialData;
+
+    class MaterialResource final : public IMaterialResource
     {
     public:
-        VG_CLASS_DECL(MaterialResource, core::Resource);
+        VG_CLASS_DECL(MaterialResource, IMaterialResource);
 
         MaterialResource                    (const core::string & _name = "", IObject * _parent = nullptr);
         ~MaterialResource                   ();
@@ -32,5 +34,11 @@ namespace vg::engine
         bool                                CanInstanciate  () const final override { return true; };
 
         bool                                Instanciate     () final override;
+
+        MatPropIndex                        GetPropertyIndex(const core::string & _propertyName) const final override;
+        void                                SetProperty     (MatPropIndex _propertyIndex, float _value) final override;
+
+    private:
+        MaterialData *                      getMaterialData () const;
     };
 }

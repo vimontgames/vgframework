@@ -34,7 +34,7 @@ namespace vg::engine
 
     //--------------------------------------------------------------------------------------
     MaterialResource::MaterialResource(const core::string & _name, IObject * _parent) :
-        Resource(_name, _parent)
+        super(_name, _parent)
     {
 
     }
@@ -52,12 +52,15 @@ namespace vg::engine
         {
             IFactory * factory = Kernel::getFactory();
 
-            ((MaterialResourceData *)m_instance)->SetParent(this);
-            ((MaterialResourceData *)m_instance)->m_data = new DefaultMaterialData("Default", m_instance);
-            ((MaterialResourceData *)m_instance)->m_data->RegisterUID();
-            ((MaterialResourceData *)m_instance)->CreateRendererMaterial();
+            // TODO: when different material types are supported, this should check the actual MaterialData type to create the right one
+            MaterialResourceData *& materialResourceData = ((MaterialResourceData *&)m_instance);
 
-            factory->CopyProperties(m_shared, m_instance);
+            materialResourceData->SetParent(this);
+            materialResourceData->m_data = new DefaultMaterialData("Default (Instance)", materialResourceData);
+            materialResourceData->m_data->RegisterUID();
+            materialResourceData->CreateRendererMaterial();
+
+            factory->CopyProperties(m_shared, materialResourceData);
 
             return true;
         }
@@ -132,5 +135,43 @@ namespace vg::engine
             return factory->SaveToXML(object, _path);
         }
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    MaterialData * MaterialResource::getMaterialData() const
+    {
+        MaterialResourceData * matResData = VG_SAFE_STATIC_CAST(MaterialResourceData, GetObject());
+        if (matResData)
+            return matResData->getMaterialData();
+        else
+            return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    MatPropIndex MaterialResource::GetPropertyIndex(const core::string & _propertyName) const
+    {
+        MaterialData * matData = getMaterialData();
+
+        if (matData)
+            return matData->GetClassDesc()->GetPropertyIndex(_propertyName.c_str());
+        else
+            return -1;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void MaterialResource::SetProperty(MatPropIndex _propertyIndex, float _value)
+    {
+        MaterialData * matData = getMaterialData();
+
+        if (const IProperty * prop = matData->GetClassDesc()->GetPropertyByIndex(_propertyIndex))
+        {
+            // set property
+            float * value = prop->GetPropertyFloat(matData);
+            *value = _value;
+
+            // copy to renderer
+            if (renderer::IMaterialModel * matModel = matData->getMaterialModel())
+                matModel->SetFloat(prop->GetName(), _value); // TODO: use index/handle instead of string!
+        }
     }
 }
