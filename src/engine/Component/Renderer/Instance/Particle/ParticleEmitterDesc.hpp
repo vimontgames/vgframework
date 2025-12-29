@@ -215,6 +215,9 @@ namespace vg::engine
             registerProperty(ParticleEmitterDesc, m_params.m_framerate, "Framerate");
             setPropertyDescription(ParticleEmitterDesc, m_params.m_framerate, "Number of frames displayed per second");
             setPropertyRange(ParticleEmitterDesc, m_params.m_framerate, uint2(1.0f, 60.0f));
+
+            registerProperty(ParticleEmitterDesc, m_params.m_randomStartFrame, "Random Start");
+            setPropertyDescription(ParticleEmitterDesc, m_params.m_randomStartFrame, "Randomize the first frame");
         }
         registerPropertyGroupEnd(ParticleEmitterDesc);
 

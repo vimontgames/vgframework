@@ -1,5 +1,6 @@
 #include "ParticleSystemInstance.h"
 #include "renderer/Particle/ParticleManager.h"
+#include "core/Misc/Random/Random.h"
 
 #if !VG_ENABLE_INLINE
 #include "ParticleSystemInstance.inl"
@@ -45,6 +46,18 @@ namespace vg::renderer
         {
             return false;
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ParticleSystemInstance::SetWorldSpace(bool _isWorldSpace)
+    {
+        if (m_worldSpace != _isWorldSpace)
+        {
+            m_worldSpace = _isWorldSpace;
+            return true;
+        }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -205,6 +218,10 @@ namespace vg::renderer
         AABB aabb;
         aabb.reset();
 
+        const float4x4 world = GetGlobalMatrix();
+        float3 pos = world[3].xyz;
+        float3 delta = m_worldSpace ? (m_previousPos - pos) : float3(0,0,0);
+
         for (uint i = 0; i < m_emitters.size(); ++i)
         {
             auto & emitter = m_emitters[i];
@@ -257,6 +274,7 @@ namespace vg::renderer
                         particle.velocity = (float3)0.0f;
                         particle.lifetime = params.m_lifeTime;
                         particle.age = 0.0f;
+                        particle.frame = params.m_randomStartFrame ? Random::getRandomInRange(0.0f,1.0f) * params.m_framerate : 0.0f;
                         particle.size = params.m_constantSize;
                         particle.color = float4(params.m_constantColor.rgb, params.m_constantOpacity);
                         particle.alive = true;
@@ -276,7 +294,7 @@ namespace vg::renderer
                 const ParticleEmitterParams & params = emitter.m_params;
 
                 particle.age += emitter.m_dt;
-                particle.frame = particle.age * params.m_framerate;
+                particle.frame += emitter.m_dt * params.m_framerate;
 
                 if (!params.m_neverDie && particle.age >= particle.lifetime)
                 {
@@ -295,7 +313,10 @@ namespace vg::renderer
                     continue;
 
                 // Update velocity and position
-                particle.position += particle.velocity * emitter.m_dt;
+                float3 v = particle.velocity.x * world[0].xyz + particle.velocity.y * world[1].xyz + particle.velocity.z * world[2].xyz;
+
+                particle.position += v * emitter.m_dt;
+                particle.position += delta;
                
                 // Update bounding box
                 const float radius = max(particle.size.x, max(particle.size.y, particle.size.z)) * 0.5f;
@@ -309,6 +330,8 @@ namespace vg::renderer
             emitter.m_aliveParticles = aliveParticles;
         }
         m_aabb = aabb;
+
+        m_previousPos = pos;
     }
 
     //--------------------------------------------------------------------------------------

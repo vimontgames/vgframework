@@ -43,6 +43,8 @@ namespace vg::renderer
         bool                        Cull                        (const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult) final override;
         void                        Draw                        (const RenderContext & _renderContext, gfx::CommandList * _cmdList) const final override;
 
+        bool                        SetWorldSpace               (bool _isWorldSpace) final override;
+
         bool                        SetEmitterCount             (core::uint _count) final override;
         bool                        SetEmitterParams            (core::uint _index, const ParticleEmitterParams & _emitterParams) final override;
         void                        ResetEmitter                (core::uint _index) final override;
@@ -72,7 +74,9 @@ namespace vg::renderer
             bool                    m_reset = false;
         };
         core::vector<EmitterData>   m_emitters;
-        core::AABB m_aabb;
+        core::AABB                  m_aabb;
+        bool                        m_worldSpace = false;
+        core::float3                m_previousPos = core::float3(0.0f, 0.0f, 0.0f);
     };
 }
 

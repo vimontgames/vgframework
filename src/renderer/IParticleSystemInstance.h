@@ -47,36 +47,37 @@ namespace vg::renderer
 
         // FlipBook
         float               m_framerate             = 1.0f;
+        bool                m_randomStartFrame      = false;
 
         bool operator != (const ParticleEmitterParams & _other) const
         {
                 // State
-            return m_play != _other.m_play 
-                || m_spawn != _other.m_spawn 
+            return m_play != _other.m_play
+                || m_spawn != _other.m_spawn
 
                 // Spawning
-                || m_maxParticleCount != _other.m_maxParticleCount 
-                || m_spawnRate != _other.m_spawnRate 
+                || m_maxParticleCount != _other.m_maxParticleCount
+                || m_spawnRate != _other.m_spawnRate
 
                 // Life
-                || m_lifeTime != _other.m_lifeTime 
+                || m_lifeTime != _other.m_lifeTime
                 || m_neverDie != _other.m_neverDie
 
                 // Size
                 || m_sizeValueType != _other.m_sizeValueType
                 || any(m_constantSize != _other.m_constantSize)
                 || m_sizeOverLifeTime != _other.m_sizeOverLifeTime
-                
+
                 // Velocity
                 || m_velocityValueType != _other.m_velocityValueType
                 || any(m_constantVelocity != _other.m_constantVelocity)
                 || m_velocityOverLifeTime != _other.m_velocityOverLifeTime
-                
+
                 // Color
                 || m_colorValueType != _other.m_colorValueType
                 || any(m_constantColor != _other.m_constantColor)
                 || m_colorOverLifeTime != _other.m_colorOverLifeTime
-                
+
                 // Opacity
                 || m_cullZeroAlpha != _other.m_cullZeroAlpha
                 || m_opacityValueType != _other.m_opacityValueType
@@ -84,7 +85,8 @@ namespace vg::renderer
                 || m_opacityOverLifeTime != _other.m_opacityOverLifeTime
 
                 // FlipBook
-                || m_framerate != _other.m_framerate;
+                || m_framerate != _other.m_framerate
+                || m_randomStartFrame != _other.m_randomStartFrame;
         }
 
         // Manual swap is needed because of curves so that they keep the same after swap
@@ -125,6 +127,7 @@ namespace vg::renderer
 
             // FlipBook
             core::swap(m_framerate, _other.m_framerate);
+            core::swap(m_randomStartFrame, _other.m_randomStartFrame);
         }
     };
 
@@ -133,9 +136,11 @@ namespace vg::renderer
     public:
         VG_CLASS_DECL_ABSTRACT(IParticleSystemInstance, GraphicInstance);
 
+        virtual bool SetWorldSpace      (bool _isWorldSpace) = 0;
+
         virtual bool SetEmitterCount    (core::uint _count) = 0;
         virtual bool SetEmitterParams   (core::uint _index, const ParticleEmitterParams & _emitterParams) = 0;
-        virtual void ResetEmitter(core::uint _index) = 0;
+        virtual void ResetEmitter       (core::uint _index) = 0;
 
         virtual void UpdateTime         (float _dt) = 0;
         virtual void UpdateEmitterTime  (core::uint _index, float _dt) = 0;

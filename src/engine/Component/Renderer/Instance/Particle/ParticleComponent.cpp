@@ -57,6 +57,9 @@ namespace vg::engine
         registerProperty(ParticleComponent, m_playOnStart, "Play On Start");
         setPropertyDescription(ParticleComponent, m_playOnStart, "Play particle system when game starts");
 
+        registerProperty(ParticleComponent, m_worldSpace, "World Space");
+        setPropertyDescription(ParticleComponent, m_worldSpace, "Simulate particle in world space");
+
         registerPropertyObject(ParticleComponent, m_particleEmitters, editor::style::label::particle::Emitters);
 
         registerPropertyObjectPtrEx(ParticleComponent, m_particleSystemInstance, "ParticleSystemInstance", PropertyFlags::Transient | PropertyFlags::Flatten);
@@ -83,6 +86,7 @@ namespace vg::engine
 
             getGameObject()->addGraphicInstance(m_particleSystemInstance);
             m_particleSystemInstance->SetName(getGameObject()->GetName().c_str());
+            m_particleSystemInstance->SetWorldSpace(m_worldSpace);
             m_registered = true;
 
             // Initial refresh
@@ -294,7 +298,11 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ParticleComponent::OnPropertyChanged(IObject * _object, const IProperty & _prop, bool _notifyParent)
     {
-        if (!strcmp(_prop.GetName(), "m_particleEmitters"))
+        if (!strcmp(_prop.GetName(), "m_worldSpace"))
+        {
+            m_particleSystemInstance->SetWorldSpace(m_worldSpace);
+        }
+        else if (!strcmp(_prop.GetName(), "m_particleEmitters"))
         {
             const auto & emitters = m_particleEmitters.getObjects();
             m_particleSystemInstance->SetEmitterCount((uint)emitters.size());

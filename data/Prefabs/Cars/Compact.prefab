@@ -640,6 +640,7 @@
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                         <Property type="Bool" name="m_playOnStart" value="true"/>
+                                        <Property type="Bool" name="m_worldSpace" value="true"/>
                                         <Property type="Object" name="m_particleEmitters">
                                             <Object class="ParticleEmitterList">
                                                 <Property type="String" name="m_name" value="New ParticleComponent"/>
@@ -652,10 +653,10 @@
                                                         <Property type="Uint32" name="m_uid" value="1818420707"/>
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="Float" name="m_params.m_spawnRate" value="1"/>
-                                                        <Property type="Float" name="m_params.m_lifeTime" value="5"/>
+                                                        <Property type="Float" name="m_params.m_spawnRate" value="8"/>
+                                                        <Property type="Float" name="m_params.m_lifeTime" value="2"/>
                                                         <Property type="Bool" name="m_params.m_neverDie" value="false"/>
-                                                        <Property type="Uint16" name="m_params.m_maxParticleCount" value="10"/>
+                                                        <Property type="Uint16" name="m_params.m_maxParticleCount" value="1000"/>
                                                         <Property type="EnumU8" name="m_params.m_sizeValueType" value="Curve"/>
                                                         <Property type="Float3" name="m_params.m_constantSize" x="0.25" y="0.25" z="0"/>
                                                         <Property type="Object" name="m_params.m_sizeOverLifeTime">
@@ -666,17 +667,18 @@
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="EnumU8" name="m_type" value="Float3"/>
                                                                 <Property type="EnumU8" name="m_interpolation" value="Linear"/>
-                                                                <Property type="Float2" name="m_rangeX" x="0" y="5"/>
-                                                                <Property type="Float2" name="m_rangeY" x="0" y="5"/>
+                                                                <Property type="Float2" name="m_rangeX" x="0" y="2"/>
+                                                                <Property type="Float2" name="m_rangeY" x="0" y="2"/>
                                                                 <Property type="ObjectVector" name="m_data">
                                                                     <Object class="FloatCurveDataContainer">
                                                                         <Property type="String" name="m_name" value=""/>
                                                                         <Property type="Uint32" name="m_uid" value="3059735467"/>
                                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                        <Property type="FloatCurveData" name="m_curve" count="2">
-                                                                            <Point t="0" value="0.17948718"/>
-                                                                            <Point t="5" value="2.9871795"/>
+                                                                        <Property type="FloatCurveData" name="m_curve" count="3">
+                                                                            <Point t="0" value="0"/>
+                                                                            <Point t="0.39316243" value="1.6495727"/>
+                                                                            <Point t="2" value="2"/>
                                                                         </Property>
                                                                         <Property type="Bool" name="m_isVisible" value="true"/>
                                                                     </Object>
@@ -685,9 +687,10 @@
                                                                         <Property type="Uint32" name="m_uid" value="1369475431"/>
                                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                        <Property type="FloatCurveData" name="m_curve" count="2">
-                                                                            <Point t="0" value="0.18376069"/>
-                                                                            <Point t="5" value="2.9017093"/>
+                                                                        <Property type="FloatCurveData" name="m_curve" count="3">
+                                                                            <Point t="0" value="0"/>
+                                                                            <Point t="0.46153852" value="1.6581197"/>
+                                                                            <Point t="2" value="2"/>
                                                                         </Property>
                                                                         <Property type="Bool" name="m_isVisible" value="true"/>
                                                                     </Object>
@@ -698,7 +701,7 @@
                                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                         <Property type="FloatCurveData" name="m_curve" count="2">
                                                                             <Point t="0" value="0"/>
-                                                                            <Point t="5" value="1"/>
+                                                                            <Point t="2" value="1"/>
                                                                         </Property>
                                                                         <Property type="Bool" name="m_isVisible" value="false"/>
                                                                     </Object>
@@ -706,7 +709,7 @@
                                                             </Object>
                                                         </Property>
                                                         <Property type="EnumU8" name="m_params.m_velocityValueType" value="Constant"/>
-                                                        <Property type="Float3" name="m_params.m_constantVelocity" x="0" y="0" z="0.1"/>
+                                                        <Property type="Float3" name="m_params.m_constantVelocity" x="-0.15000001" y="0" z="0.25"/>
                                                         <Property type="Object" name="m_params.m_velocityOverLifeTime">
                                                             <Object class="Float3Curve">
                                                                 <Property type="String" name="m_name" value=""/>
@@ -814,7 +817,7 @@
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="EnumU8" name="m_type" value="Float"/>
                                                                 <Property type="EnumU8" name="m_interpolation" value="Linear"/>
-                                                                <Property type="Float2" name="m_rangeX" x="0" y="5"/>
+                                                                <Property type="Float2" name="m_rangeX" x="0" y="2"/>
                                                                 <Property type="Float2" name="m_rangeY" x="0" y="1"/>
                                                                 <Property type="ObjectVector" name="m_data">
                                                                     <Object class="FloatCurveDataContainer">
@@ -824,15 +827,16 @@
                                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                         <Property type="FloatCurveData" name="m_curve" count="3">
                                                                             <Point t="0" value="0"/>
-                                                                            <Point t="2.5" value="0.5"/>
-                                                                            <Point t="5" value="0"/>
+                                                                            <Point t="0.55128205" value="0.19230762"/>
+                                                                            <Point t="2" value="0"/>
                                                                         </Property>
                                                                         <Property type="Bool" name="m_isVisible" value="true"/>
                                                                     </Object>
                                                                 </Property>
                                                             </Object>
                                                         </Property>
-                                                        <Property type="Float" name="m_params.m_framerate" value="60"/>
+                                                        <Property type="Float" name="m_params.m_framerate" value="30"/>
+                                                        <Property type="Bool" name="m_params.m_randomStartFrame" value="true"/>
                                                         <Property type="Resource" name="m_materialResource">
                                                             <Object class="MaterialResource">
                                                                 <Property type="String" name="m_name" value="Car Smoke"/>
