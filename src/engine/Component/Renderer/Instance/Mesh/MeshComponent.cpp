@@ -228,10 +228,9 @@ namespace vg::engine
                     id = picking->CreatePickingID(this);
                     m_meshInstance->SetPickingID(id);
                 }
-                
-                getGameObject()->addGraphicInstance(m_meshInstance);
-                m_meshInstance->SetName(getGameObject()->GetName().c_str());
-                m_registered = true;
+
+                registerGraphicInstance();
+                m_meshInstance->SetName(getGameObject()->GetName().c_str());;
             }
 
             // In case Animations were loaded before Mesh we need to rebind them

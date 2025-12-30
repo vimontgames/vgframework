@@ -85,12 +85,8 @@ namespace vg::physics
     RigidCharacter::~RigidCharacter()
     {
         if (m_character)
-        {
-            // If we close prefab view then we could be trying to delete a body from a physics world that has been deleted!
-
             getPhysicsWorld()->getBodyInterface().RemoveBody(m_character->GetBodyID());
-            //getBodyInterface().DestroyBody(m_character->GetBodyID()); // Body will be destroyed by m_character ~ctor
-        }
+
         VG_SAFE_RELEASE(m_character);
     }
 

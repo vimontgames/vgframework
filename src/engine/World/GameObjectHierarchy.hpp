@@ -3,6 +3,7 @@
 #include "core/Object/AutoRegisterClass.h"
 #include "core/Kernel.h"
 #include "engine/Resource/World/WorldResourceData.h"
+#include "renderer/IGraphicScene.h"
 
 using namespace vg::core;
 
@@ -14,13 +15,20 @@ namespace vg::engine
     GameObjectHierarchy::GameObjectHierarchy(const string & _name, IObject * _parent) :
         IBaseScene()
     {
-
+        m_sceneRenderData = Engine::get()->GetRenderer()->CreateSceneRenderData(_name, this);
     }
 
     //--------------------------------------------------------------------------------------
     GameObjectHierarchy::~GameObjectHierarchy()
     {
+        VG_SAFE_RELEASE(m_sceneRenderData);
         VG_SAFE_RELEASE(m_root);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IBaseSceneRenderData * GameObjectHierarchy::GetSceneRenderData() const
+    {
+        return m_sceneRenderData;
     }
 
     //--------------------------------------------------------------------------------------

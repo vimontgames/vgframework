@@ -38,6 +38,8 @@ namespace vg::engine
             createLightDesc();
         if (nullptr == m_light)
             createLight();
+
+        UpdateFlagsFromGameObject();
     }
 
     //--------------------------------------------------------------------------------------
@@ -94,10 +96,7 @@ namespace vg::engine
         IFactory * factory = Kernel::getFactory();
 
         if (m_registered)
-        {
-            getGameObject()->removeGraphicInstance(m_light);
-            m_registered = false;
-        }
+            unregisterGraphicInstance();
 
         VG_SAFE_RELEASE_ASYNC(m_light);
 
@@ -115,6 +114,8 @@ namespace vg::engine
 
         if (m_light)
         {
+            m_light->SetName(GetGameObject()->GetName());
+
             auto * picking = Engine::get()->GetRenderer()->GetPicking();
             PickingID id = m_light->GetPickingID();
             if (!id)
@@ -123,8 +124,8 @@ namespace vg::engine
                 m_light->SetPickingID(id);
             }
 
-            getGameObject()->addGraphicInstance(m_light);
-            m_registered = true;
+            registerGraphicInstance();
+
             return true;
         }
 
@@ -138,13 +139,31 @@ namespace vg::engine
 
         if (m_light)
             m_light->SetInstanceFlags(InstanceFlags::Enabled, asBool(ComponentFlags::Enabled & GetComponentFlags()));
+        
+        getGameObject()->recomputeUpdateFlags();
+        UpdateFlagsFromGameObject();
+
+        if (getGameObject()->isEnabledInHierarchy() && isEnabled())
+            OnEnable();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void LightComponent::OnEnable()
+    {
+        super::OnEnable();
+    }
+
+    //--------------------------------------------------------------------------------------
+    void LightComponent::OnDisable()
+    {
+        super::OnDisable();
     }
 
     //--------------------------------------------------------------------------------------
     void LightComponent::Update(const Context & _context)
     {
         if (m_light)
-            m_light->setGlobalMatrix(_context.m_gameObject->getGlobalMatrix());
+            RefreshGraphicInstance();
     }
 
     //--------------------------------------------------------------------------------------
@@ -182,5 +201,17 @@ namespace vg::engine
         }
 
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    renderer::IGraphicInstance * LightComponent::GetGraphicInstance()
+    {
+        return m_light;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void LightComponent::RefreshGraphicInstance()
+    {
+        m_light->setGlobalMatrix(GetGameObject()->getGlobalMatrix());
     }
 }

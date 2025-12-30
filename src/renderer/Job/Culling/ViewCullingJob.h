@@ -71,10 +71,10 @@ namespace vg::renderer
             return m_lightsLists[core::asInteger(_type)];
         }
 
-        GraphicInstanceList             m_instancesLists[core::enumCount<GraphicInstanceListType>()];
-        LightInstanceList               m_lightsLists[core::enumCount<LightType>()];
-        core::vector<View *>            m_additionalViews;
         core::vector<CameraInstance *>  m_cameras;
+        LightInstanceList               m_lightsLists[core::enumCount<LightType>()];
+        GraphicInstanceList             m_instancesLists[core::enumCount<GraphicInstanceListType>()];
+        core::vector<View *>            m_additionalViews;
     };
 
     struct SharedViewCullingJobOutput

@@ -15,12 +15,12 @@ namespace vg::core
     );
 
     vg_enum_class(vg::core, InstanceFlags, u16,
-        Enabled     = 0x0001,   // Instance is enabled and its enabled components are active
-        Static      = 0x0002    // Instance doesn't move or change
+        Enabled             = 0x0001,   // Instance is enabled and its enabled components are active if their parent is enabled
+        Static              = 0x0002    // Instance doesn't move or change
     );
 
     vg_enum_class(vg::core, InstanceRuntimeFlags, u16,
-        _Unused     = 0x0000   
+        Active             = 0x0001   // Instance is actually enabled: it's enabled and all its parents are enabled
     );
 
     class IInstance : public Object

@@ -9,6 +9,7 @@
 #include "core/Misc/AABB/AABB.h"
 #include "core/Object/AutoRegisterClass.h"  
 
+#include "renderer/IGraphicScene.h"
 #include "renderer/IGraphicInstance.h"
 
 #if !VG_ENABLE_INLINE
@@ -48,6 +49,8 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     GameObject::~GameObject()
     {
+        //OnDisable();
+
         // Remove GameObject from selection when deleted
         ISelection * selection = Kernel::getSelection(false);
         if (nullptr != selection && selection->IsSelectedObject(this))
@@ -56,10 +59,6 @@ namespace vg::core
         for (uint i = 0; i < m_children.size(); ++i)
             VG_SAFE_RELEASE(m_children[i]);
         m_children.clear();
-
-        for (uint i = 0; i < m_graphicInstances.size(); ++i)
-            VG_SAFE_RELEASE(m_graphicInstances[i]);
-        m_graphicInstances.clear();
 
         for (uint i = 0; i < m_components.size(); ++i)
             VG_SAFE_RELEASE(m_components[i]);
@@ -110,7 +109,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::OnPlay()
     {
-        if (isEnabled())
+        if (isEnabledInHierarchy())
         {
             super::OnPlay();
 
@@ -129,7 +128,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::OnStop()
     {
-        if (isEnabled())
+        if (isEnabledInHierarchy())
         {
             for (uint i = 0; i < m_components.size(); ++i)
             {
@@ -148,7 +147,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::OnEnable()
     {
-        if (isEnabled())
+        if (isEnabledInHierarchy())
         {
             super::OnEnable();
 
@@ -171,7 +170,11 @@ namespace vg::core
             m_children[i]->OnDisable();
 
         for (uint i = 0; i < m_components.size(); ++i)
-            m_components[i]->OnDisable();
+        {
+            auto * component = m_components[i];
+            //if (component->isEnabled())
+                m_components[i]->OnDisable();
+        }
 
         super::OnDisable();
     }
@@ -192,7 +195,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     UpdateFlags GameObject::GetUpdateFlags() const
     {
-        if (isEnabled())
+        if (isEnabledInHierarchy())
             return getUpdateFlags();
         else
             return (UpdateFlags)0x0;
@@ -716,16 +719,19 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     bool GameObject::IsEnabledInHierarchy() const
     {
-        const Instance * instance = this;
-
-        while (instance)
-        {
-            if (!asBool(instance->GetInstanceFlags()))
-                return false;
-            instance = dynamic_cast<Instance *>(instance->GetParent());
-        }
-
-        return true;      
+        //const Instance * instance = this;
+        //
+        //while (instance)
+        //{
+        //    if (!asBool(instance->GetInstanceFlags()))
+        //        return false;
+        //    instance = dynamic_cast<Instance *>(instance->GetParent());
+        //}
+        //
+        //return true;    
+        // 
+        
+        return isEnabledInHierarchy();
     }
 
     //--------------------------------------------------------------------------------------
@@ -803,28 +809,96 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::addGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
+    bool GameObject::addGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
     {
-        VG_ASSERT(m_graphicInstances.end() == std::find(m_graphicInstances.begin(), m_graphicInstances.end(), _graphicInstance));
-        _graphicInstance->AddRef();
-        m_graphicInstances.push_back(_graphicInstance);
+        if (auto * scene = GetScene())
+        {
+            if (auto * sceneRenderData = scene->GetSceneRenderData())
+            {
+                VG_ASSERT(VG_SAFE_STATIC_CAST(renderer::IGraphicScene, sceneRenderData));
+                if (((renderer::IGraphicScene *)sceneRenderData)->RegisterGraphicInstance(_graphicInstance))
+                    return true;
+            }
+        }
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
-    void GameObject::removeGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
+    bool GameObject::removeGraphicInstance(renderer::IGraphicInstance * _graphicInstance)
     {
         if (nullptr != _graphicInstance)
         {
-            _graphicInstance->setParent(nullptr);
-            if (vector_helper::remove(m_graphicInstances, _graphicInstance))
-                VG_SAFE_RELEASE(_graphicInstance);
+            if (auto * scene = GetScene())
+            {
+                if (auto * sceneRenderData = scene->GetSceneRenderData())
+                {
+                    VG_ASSERT(VG_SAFE_STATIC_CAST(renderer::IGraphicScene, sceneRenderData));
+                    if (((renderer::IGraphicScene *)sceneRenderData)->UnregisterGraphicInstance(_graphicInstance))
+                        return true;
+                }
+            }
         }
+
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
     const vector<renderer::IGraphicInstance*> & GameObject::getGraphicInstances() const
     {
         return m_graphicInstances;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void GameObject::recomputeEnabledInHierarchy()
+    {
+        bool parentIsEnabled = true;
+        IGameObject * parent = dynamic_cast<IGameObject *>(GetParent());
+        while (parent)
+        {
+            if (!parent->isLocalEnabled())
+            {
+                parentIsEnabled = false;
+                break;
+            }
+
+            parent = dynamic_cast<IGameObject *>(parent->GetParent());
+        }
+
+        const bool enabled = parentIsEnabled && isLocalEnabled();
+
+        if (enabled)
+        {
+            if (!asBool(InstanceRuntimeFlags::Active & GetInstanceRuntimeFlags()))
+            {
+                SetInstanceRuntimeFlags(InstanceRuntimeFlags::Active, true);
+
+                for (uint i = 0; i < m_components.size(); ++i)
+                {
+                    Component * component = m_components[i];
+                    if (component->isEnabled())
+                        component->OnEnable();
+                }
+            }
+        }
+        else
+        {
+            if (asBool(InstanceRuntimeFlags::Active & GetInstanceRuntimeFlags()))
+            {
+                SetInstanceRuntimeFlags(InstanceRuntimeFlags::Active, false);
+
+                for (uint i = 0; i < m_components.size(); ++i)
+                {
+                    Component * component = m_components[i];
+                    component->OnDisable();
+                }
+            }
+        }
+
+        for (uint i = 0; i < m_children.size(); ++i)
+        {
+            if (auto * child = m_children[i])
+                child->recomputeEnabledInHierarchy();
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -836,7 +910,7 @@ namespace vg::core
         for (uint i = 0; i < m_components.size(); ++i)
         {
             Component * component = m_components[i];
-            flags |= m_components[i]->getUpdateFlags();
+            flags |= component->getUpdateFlags();
         }
 
         m_update = flags;
@@ -905,6 +979,9 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::recomputeUpdateFlags()
     {
+        // If GameObject is enabled then all its children could be enabled
+        recomputeEnabledInHierarchy();
+
         vector<GameObject *> leaves;
 
         // 1. Refresh update flags from the GameObject components, and do the same for all its children (also adding leaves to list for parent propagation)

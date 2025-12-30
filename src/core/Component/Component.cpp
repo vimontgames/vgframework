@@ -113,13 +113,10 @@ namespace vg::core
     {
         setComponentFlags(_flags, _enabled);
 
-        if (asBool(ComponentFlags::Enabled & _flags))
-        {
-            if (_enabled)
-                OnEnable();
-            else
-                OnDisable();  
-        }
+        if (GetGameObject()->isEnabledInHierarchy() && isEnabled())
+            OnEnable();
+        else
+            OnDisable();
     }
 
     //--------------------------------------------------------------------------------------
@@ -167,9 +164,11 @@ namespace vg::core
             auto * go = dynamic_cast<IGameObject *>(_object);
             if (go)
             {
-                VG_ASSERT(go == GetGameObject());
-                if (UpdateFlagsFromGameObject())
-                    VG_INFO("[Component] Updated component because GameObject flags changed");
+                if (go == GetGameObject())
+                {
+                    if (UpdateFlagsFromGameObject())
+                        VG_INFO("[Component] Updated component because GameObject flags changed");
+                }
             }
         }
     }

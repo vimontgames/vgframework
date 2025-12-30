@@ -263,7 +263,8 @@ namespace vg::engine
                 {
                     factory->SaveProperties(root, BufferType::InitValue);
 
-                    root->OnEnable();
+                    root->OnEnable(); // TODO: should not be needed
+
                     root->OnPlay();                    
                 }
             }
@@ -420,8 +421,14 @@ namespace vg::engine
                 {
                     factory->RestoreProperties(root, BufferType::InitValue);
 
+                    #if 1
+                    // Should not be needed but issues with physics components if no Disable/Enable on engine stop
                     root->OnDisable();
                     root->OnStop();
+                    root->OnEnable();
+                    #else
+                    root->OnStop();
+                    #endif
                 }
 
                 // Force refresh global matrices after restore or call OnPropertyChanged from RestoreProperties?

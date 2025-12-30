@@ -52,6 +52,7 @@
 #include "renderer/Particle/ParticleManager.h"
 #include "renderer/Camera/CameraLens.h"
 #include "renderer/Job/Culling/WorldCullingJob.h"
+#include "renderer/Scene/SceneRenderData.h"
 
 #if !VG_ENABLE_INLINE
 #include "Renderer.inl"
@@ -1552,5 +1553,11 @@ namespace vg::renderer
     core::u64 Renderer::getFrameCounter() const
     {
         return m_device.getFrameCounter();
+    }
+
+    //--------------------------------------------------------------------------------------
+    IGraphicScene * Renderer::CreateSceneRenderData(const core::string & _name, core::IObject * _parent)
+    {
+        return new SceneRenderData(_name, _parent);
     }
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/Component/Component.h"
+#include "engine/Component/Renderer/Instance/GraphicInstanceComponent.h"
 
 namespace vg::renderer
 {
@@ -11,28 +11,33 @@ namespace vg::renderer
 
 namespace vg::engine
 {
-    class LightComponent : public core::Component
+    class LightComponent final : public GraphicInstanceComponent
     {
     public:
-        VG_CLASS_DECL(LightComponent, core::Component);
+        VG_CLASS_DECL(LightComponent, GraphicInstanceComponent);
+
         LightComponent(const core::string & _name, core::IObject * _parent);
         ~LightComponent();
 
-        void                        OnLoad                  () override;
-        void                        Update                  (const Context & _context) override;
-        void                        OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
-        void                        EnableComponentFlags    (core::ComponentFlags _flags, bool _enabled = true) final override;
-        bool                        TryGetAABB              (core::AABB & _aabb) const final override;
+        void                            OnLoad                  () final override;
+        void                            OnEnable                () final override;
+        void                            OnDisable               () final override;
+        void                            Update                  (const Context & _context) final override;
+        void                            OnPropertyChanged       (core::IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
+        void                            EnableComponentFlags    (core::ComponentFlags _flags, bool _enabled = true) final override;
+        bool                            TryGetAABB              (core::AABB & _aabb) const final override;
+
+        renderer::IGraphicInstance *    GetGraphicInstance      () final override;
+        void                            RefreshGraphicInstance  () final override;
 
     protected:
-        bool                        createLightDesc         ();
-        bool                        createLight             ();
+        bool                            createLightDesc         ();
+        bool                            createLight             ();
 
     private:
-        renderer::LightType         m_lightType;
-        renderer::ILightDesc *      m_lightDesc     = nullptr;
-        renderer::ILightInstance *  m_light         = nullptr;
-        bool                        m_registered    = false;
+        renderer::LightType             m_lightType;
+        renderer::ILightDesc *          m_lightDesc     = nullptr;
+        renderer::ILightInstance *      m_light         = nullptr;
     };
 }
 

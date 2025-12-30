@@ -74,8 +74,12 @@ namespace vg::engine
         auto * go = getGameObject();
         m_cameraInstance->SetName(go->GetName().c_str());
         m_cameraInstance->SetPickingID(m_pickingID);
-        go->addGraphicInstance(m_cameraInstance);
-        
+
+        //if (!m_registered)
+        {
+            go->addGraphicInstance(m_cameraInstance);   // Make ICameraComponent a child of GraphicInstanceComponent?
+            //m_registered = true;
+        }
     }
 
     //--------------------------------------------------------------------------------------

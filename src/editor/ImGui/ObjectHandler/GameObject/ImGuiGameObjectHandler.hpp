@@ -79,8 +79,11 @@ namespace vg::editor
             //else if (isPrefabInstanced)
             //    ImGui::PopStyleColor(1);
 
-            if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s \"%s\"", isGameobjectEnabled? "Disable" : "Enable", goTypeName, go->GetName().c_str())))
+            if (ImGui::CollapsingHeaderCheckbox(collapsingHeaderPos, isGameobjectEnabled, go, style::icon::Checked, style::icon::Unchecked, fmt::sprintf("%s %s \"%s\"", isGameobjectEnabled ? "Disable" : "Enable", goTypeName, go->GetName().c_str())))
+            {
                 go->SetInstanceFlags(InstanceFlags::Enabled, !isGameobjectEnabled);
+                go->OnPropertyChanged(go, *go->GetClassDesc()->GetPropertyByName("m_flags"), false); 
+            }
 
             if (open)
             {

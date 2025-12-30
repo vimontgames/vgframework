@@ -66,6 +66,19 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    template <typename T> void cullInstanceList(const ViewCullingOptions _cullingOptions, const T & _instanceList, CullingResult & _result)
+    {
+        const auto instanceCount = _instanceList.size();
+        for (uint i = 0; i < instanceCount; ++i)
+        {
+            GraphicInstance * instance = (GraphicInstance *)_instanceList[i];
+
+            if (instance->isEnabledInHierarchy())
+                instance->Cull(_cullingOptions, &_result);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     void ViewCullingJob::Run()
     {
         m_result.m_output->clear();
@@ -92,14 +105,66 @@ namespace vg::renderer
         
         if (nullptr != world)
         {
-            const uint count = world->GetSceneCount(BaseSceneType::Scene);
-            for (uint i = 0; i < count; ++i)
+            static bool useSceneRenderData = true;
+
+            if (useSceneRenderData)
             {
-                const auto * scene = world->GetScene(i, BaseSceneType::Scene);
-                const auto * root = (GameObject *)scene->GetRoot();
-                VG_ASSERT("[Culling] Scene has no root node");
-                if (root)
-                    cullViewGameObjectRecur(cullingOptions, root);
+                for (uint iSceneType = 0; iSceneType < enumCount<BaseSceneType>(); iSceneType++)
+                {
+                    BaseSceneType sceneType = (BaseSceneType)iSceneType;
+                    if (sceneType != BaseSceneType::Scene)
+                        continue;
+
+                    const uint sceneCount = world->GetSceneCount(sceneType);
+                    for (uint jScene = 0; jScene < sceneCount; ++jScene)
+                    {
+                        const IBaseScene * scene = world->GetScene(jScene, sceneType);
+                        SceneRenderData * sceneRenderData = (SceneRenderData *)scene->GetSceneRenderData();
+                        VG_ASSERT(sceneRenderData);
+
+                        // Cull cameras
+                        {
+                            VG_PROFILE_CPU("Cameras");
+                            cullInstanceList(cullingOptions, sceneRenderData->m_cameraInstances, m_result);
+                        }
+
+                        // Cull Lights
+                        {
+                            VG_PROFILE_CPU("Lights");
+                            cullInstanceList(cullingOptions, sceneRenderData->m_lightInstances, m_result);
+                        }
+
+                        // Cull Particles
+                        {
+                            VG_PROFILE_CPU("Particles");
+                            cullInstanceList(cullingOptions, sceneRenderData->m_particleSystemInstances, m_result);
+                        }
+
+                        // Cull Skinned Meshes
+                        {
+                            VG_PROFILE_CPU("Skinned");
+                            cullInstanceList(cullingOptions, sceneRenderData->m_skinnedMeshInstances, m_result);
+                        }
+
+                        // Cull Static Meshes
+                        {
+                            VG_PROFILE_CPU("Meshes");
+                            cullInstanceList(cullingOptions, sceneRenderData->m_staticMeshInstances, m_result);
+                        }                 
+                    }
+                }
+            }
+            else
+            {
+                const uint count = world->GetSceneCount(BaseSceneType::Scene);
+                for (uint i = 0; i < count; ++i)
+                {
+                    const auto * scene = world->GetScene(i, BaseSceneType::Scene);
+                    const auto * root = (GameObject *)scene->GetRoot();
+                    VG_ASSERT("[Culling] Scene has no root node");
+                    if (root)
+                        cullViewGameObjectRecur(cullingOptions, root);
+                }
             }
 
             const float4x4 & viewMatrix = cullingOptions.m_view->GetViewInvMatrix();

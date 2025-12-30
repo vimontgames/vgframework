@@ -41,6 +41,7 @@ namespace vg::renderer
     class IViewport;
     class IView;
     class ICameraLens;
+    class IGraphicScene;
         
     struct RendererCreationParams;
     struct CreateViewParams;
@@ -79,6 +80,8 @@ namespace vg::renderer
         virtual gfx::ViewportIndex                  GetFreeViewportIndex    (gfx::ViewportTarget _target) = 0;
         virtual IViewport *                         GetViewport             (gfx::ViewportID _viewportID) = 0;
         virtual const core::vector<IViewport*>&     GetViewports            (gfx::ViewportTarget _target) const = 0;
+
+        virtual IGraphicScene *                     CreateSceneRenderData   (const core::string & _name, core::IObject * _parent) = 0;
 
         // TODO: remove or move to IViewport (?)
         virtual IView *                             CreateView              (CreateViewParams _params, const core::string & _name, ViewFlags _flags = (ViewFlags)0) = 0;

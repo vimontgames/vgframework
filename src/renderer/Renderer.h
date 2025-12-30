@@ -77,6 +77,8 @@ namespace vg::renderer
         IViewport *                             GetViewport                     (gfx::ViewportID _viewportID) final override;
         const core::vector<IViewport *> &       GetViewports                    (gfx::ViewportTarget _target) const final override;
 
+        IGraphicScene *                         CreateSceneRenderData           (const core::string & _name, core::IObject * _parent) final override;
+
         // TODO: remove
         IView *                                 CreateView                      (CreateViewParams _params, const core::string & _name, ViewFlags _flags = (ViewFlags)0) final override;
         gfx::ViewID                             AddView                         (IView * _view) final override;

@@ -58,7 +58,12 @@ namespace vg::core
         VG_INLINE InstanceRuntimeFlags  getInstanceRuntimeFlags () const;
         VG_INLINE void                  setInstanceRuntimeFlags (InstanceRuntimeFlags _flags, bool _enabled);
 
-        VG_INLINE bool                  isEnabled               () const;
+        // Instance is enabled but it does not mean its parent are enabled
+        VG_INLINE bool                  isLocalEnabled          () const;
+
+        // Not only the instance is enable, but all its parents are enabled
+        VG_INLINE bool                  isEnabledInHierarchy    () const;
+
         VG_INLINE bool                  isStatic                () const;
       
     private:

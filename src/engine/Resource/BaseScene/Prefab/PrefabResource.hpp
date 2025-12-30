@@ -53,7 +53,7 @@ namespace vg::engine
     LoadStatus PrefabResource::Load(const string & _path, IObject *& _object)
     {
         IFactory* factory = Kernel::getFactory();
-        PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->CreateObject("PrefabScene"));
+        PrefabScene * prefabScene = VG_SAFE_STATIC_CAST(PrefabScene, factory->CreateObject("PrefabScene", io::getFileNameWithoutExt(_path)));
         if (nullptr != prefabScene)
         {
             prefabScene->SetParent(nullptr/* this*/);

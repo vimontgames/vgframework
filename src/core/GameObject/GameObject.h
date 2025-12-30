@@ -2,6 +2,11 @@
 
 #include "core/IGameObject.h"
 
+namespace vg::renderer
+{
+    class IGraphicInstance; // Should be part of vg::core?
+}
+
 namespace vg::core
 {
     class Component;
@@ -108,8 +113,8 @@ namespace vg::core
         void                                            addComponent                (Component * _component, uint _index = -1);
         const vector<Component*> &                      getComponents               () const;
 
-        void                                            addGraphicInstance          (renderer::IGraphicInstance * _graphicInstance);
-        void                                            removeGraphicInstance       (renderer::IGraphicInstance * _graphicInstance);
+        bool                                            addGraphicInstance          (renderer::IGraphicInstance * _graphicInstance);
+        bool                                            removeGraphicInstance       (renderer::IGraphicInstance * _graphicInstance);
         const vector<renderer::IGraphicInstance*> &     getGraphicInstances         () const;
         void                                            recomputeUpdateFlags        ();
         void                                            sortComponents              (); 
@@ -120,6 +125,7 @@ namespace vg::core
         VG_INLINE bool                                  isRoot                      () const;
 
     private:
+        void                                            recomputeEnabledInHierarchy ();
         void                                            recomputeChildrenUpdateFlags(core::vector<GameObject *> & _leaves);
         void                                            recomputeFlagsFromChildren  ();
 
@@ -128,7 +134,7 @@ namespace vg::core
         Tag                                             m_tags = (Tag)0x0;
         vector<Component *>                             m_components;
         vector<GameObject *>                            m_children;
-        vector<renderer::IGraphicInstance*>             m_graphicInstances;
+        vector<renderer::IGraphicInstance *>            m_graphicInstances;
     };
 }
 

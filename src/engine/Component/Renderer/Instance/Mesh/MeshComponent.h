@@ -54,7 +54,6 @@ namespace vg::engine
         MeshResource                        m_meshResource;
         MaterialResourceList                m_meshMaterials;
         core::BitMask                       m_batchMask;
-        bool                                m_registered            = false;
     };
 }
 

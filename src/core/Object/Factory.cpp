@@ -2255,7 +2255,7 @@ namespace vg::core
                                                             const auto* classDescRef = GetClassDescriptor(classNameRef);
                                                             if (nullptr != classDescRef)
                                                             {
-                                                                pObjectRef = CreateObject(classNameRef, "", _object);
+                                                                pObjectRef = CreateObject(classNameRef, _object->GetName().c_str(), _object);
                                                                 if (SerializeFromXML(pObjectRef, xmlObjectRef, _xmlFile))
                                                                 {
                                                                     vector->push_back(pObjectRef);

@@ -3,11 +3,6 @@
 #include "core/Instance/Instance.h"
 #include "core/Object/Update.h"
 
-namespace vg::renderer
-{
-    class IGraphicInstance; // Should be part of vg::core?
-}
-
 namespace vg::core
 {
     class IComponent;

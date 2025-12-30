@@ -60,7 +60,6 @@ namespace vg::engine
 
     private:
         renderer::IParticleSystemInstance *             m_particleSystemInstance = nullptr;
-        bool                                            m_registered = false;
         bool                                            m_playOnStart = false;    
         bool                                            m_worldSpace = false;
         ParticleEmitterList                             m_particleEmitters;

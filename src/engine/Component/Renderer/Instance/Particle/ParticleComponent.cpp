@@ -84,12 +84,12 @@ namespace vg::engine
                 m_particleSystemInstance->SetPickingID(id);
             }
 
-            getGameObject()->addGraphicInstance(m_particleSystemInstance);
+            registerGraphicInstance();
             m_particleSystemInstance->SetName(getGameObject()->GetName().c_str());
             m_particleSystemInstance->SetWorldSpace(m_worldSpace);
-            m_registered = true;
 
             // Initial refresh
+            UpdateFlagsFromGameObject();
             RefreshGraphicInstance();
         }
     }

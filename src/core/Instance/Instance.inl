@@ -1,9 +1,15 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
-    VG_INLINE bool Instance::isEnabled() const
+    VG_INLINE bool Instance::isLocalEnabled() const
     {
         return asBool(InstanceFlags::Enabled & getInstanceFlags());
+    }
+
+    //--------------------------------------------------------------------------------------
+    VG_INLINE bool Instance::isEnabledInHierarchy() const
+    {
+        return asBool(InstanceRuntimeFlags::Active & getInstanceRuntimeFlags());
     }
 
     //--------------------------------------------------------------------------------------
