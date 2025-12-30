@@ -229,9 +229,11 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    // If target object has the same original UID than the original UID referenced in the 
+    // prefab, then it's our new target.
+    //--------------------------------------------------------------------------------------
     const IObject * findByOriginalUID(const Object * _object, UID _originalUID)
     {
-        // If target object has the same original UID than the original UID referenced in the prefab then it's our new target
         if (_object->GetOriginalUID(false) == _originalUID)
             return _object;
 
@@ -255,7 +257,7 @@ namespace vg::core
                                 if (obj != _object)
                                 {
                                     if (auto * found = findByOriginalUID((Object *)obj, _originalUID))
-                                        return obj;
+                                        return found; 
                                 }
                             }
                         }
