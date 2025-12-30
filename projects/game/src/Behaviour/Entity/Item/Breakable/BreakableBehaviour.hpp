@@ -181,21 +181,24 @@ bool BreakableBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
                 {
                     destroyedGameObject->SetLocalMatrix(defaultGameObject->GetLocalMatrix());
                     destroyedGameObject->Enable(true);
-                    auto & children = destroyedGameObject->GetChildren();
-                    for (uint i = 0; i < children.size(); ++i)
+
+                    if (m_useImpulse)
                     {
-                        IGameObject * part = children[i];
-                        part->Enable(true);
-
-                        if (m_useImpulse)
+                        auto & children = destroyedGameObject->GetChildren();
+                        for (uint i = 0; i < children.size(); ++i)
                         {
-                            if (IPhysicsBodyComponent * physicsBodyComp = part->GetComponentT<IPhysicsBodyComponent>())
-                            {
-                                float rx = Random::getRandomInRange(-m_impulse.x, +m_impulse.x);
-                                float ry = Random::getRandomInRange(-m_impulse.y, +m_impulse.y);
-                                float rz = m_impulse.z;
+                            IGameObject * part = children[i];
 
-                                physicsBodyComp->AddImpulse(float3(rx, ry, rz));
+                            if (part->isEnabledInHierarchy())
+                            {
+                                if (IPhysicsBodyComponent * physicsBodyComp = part->GetComponentT<IPhysicsBodyComponent>())
+                                {
+                                    float rx = Random::getRandomInRange(-m_impulse.x, +m_impulse.x);
+                                    float ry = Random::getRandomInRange(-m_impulse.y, +m_impulse.y);
+                                    float rz = m_impulse.z;
+
+                                    physicsBodyComp->AddImpulse(float3(rx, ry, rz));
+                                }
                             }
                         }
                     }

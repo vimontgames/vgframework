@@ -189,7 +189,9 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::SetInstanceFlags(InstanceFlags _flags, bool _enabled)
     {
+        recomputeEnabledInHierarchy();
         super::SetInstanceFlags(_flags, _enabled);
+        recomputeUpdateFlags();
     }
 
     //--------------------------------------------------------------------------------------
@@ -877,6 +879,7 @@ namespace vg::core
                     Component * component = m_components[i];
                     if (component->isEnabled())
                         component->OnEnable();
+                    component->UpdateFlagsFromGameObject();
                 }
             }
         }
@@ -890,6 +893,7 @@ namespace vg::core
                 {
                     Component * component = m_components[i];
                     component->OnDisable();
+                    component->UpdateFlagsFromGameObject();
                 }
             }
         }
