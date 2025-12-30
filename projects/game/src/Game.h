@@ -31,7 +31,7 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
          ~Game       ();
 
         bool                                                        RegisterClasses     () final override;
-        bool                                                        UnregisterClasses   ();
+        bool                                                        UnregisterClasses   () final override;
 
         bool                                                        Init                (vg::engine::IEngine & _engine, vg::core::Singletons & _singletons) final override;
         bool                                                        Deinit              () final;

@@ -10,6 +10,7 @@
 #include "Behaviour/Entity/Item/ItemBehaviour.h"
 
 using namespace vg::core;
+using namespace vg::engine;
 
 // Static member init
 vg::engine::IEngine * Game::s_engine = nullptr;
@@ -96,24 +97,30 @@ void Game::OnPlay()
         const IGameObject * root = scene->GetRoot();
 
         // cache characters
-        auto allCharacters = (vg::core::vector<CharacterBehaviour *>&)root->GetComponentsByType("CharacterBehaviour", false, true); // search children too
+        auto allCharacters = root->GetComponentsByType("CharacterBehaviour", false, true); // search children too
         for (uint j = 0; j < allCharacters.size(); ++j)
         {
-            CharacterBehaviour * character = allCharacters[j];
+            CharacterBehaviour * character = (CharacterBehaviour * )allCharacters[j];
             m_characters[asInteger(character->getCharacterType())].push_back(character);
         }
 
         // cache items
-        auto allItems = (vg::core::vector<ItemBehaviour *>&)root->GetComponentsByType("ItemBehaviour", false, true); // search children too 
+        auto allItems = root->GetComponentsByType("ItemBehaviour", false, true); // search children too 
         for (uint j = 0; j < allItems.size(); ++j)
         {
-            ItemBehaviour * item = allItems[j];
+            ItemBehaviour * item = (ItemBehaviour*)allItems[j];
             m_items[asInteger(item->getItemType())].push_back(item);
         }
 
         // cache vehicle list
-        m_vehicles = (vg::core::vector<vg::engine::IVehicleComponent *>&)root->GetComponentsByType("VehicleComponent", false, true); // search children too
-        
+        auto vehicles = root->GetComponentsByType("VehicleComponent", false, true); // search children too
+
+        m_vehicles.reserve(vehicles.size());
+        for (uint j = 0; j < vehicles.size(); ++j)
+        {
+            IVehicleComponent * vehicle = (IVehicleComponent*)vehicles[j];
+            m_vehicles.push_back(vehicle);
+        }
     }
 
     for (uint i = 0; i < enumCount<CharacterType>(); ++i)
