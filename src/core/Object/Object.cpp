@@ -17,22 +17,30 @@
 namespace vg::core
 {
     //--------------------------------------------------------------------------------------
+    bool IsOriginalUIDHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const Object * object = VG_SAFE_STATIC_CAST(const Object, _object);
+        return 0x0 == object->GetOriginalUID(false);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool Object::registerProperties(IClassDesc & _desc)
     {
         registerPropertyEx(Object, m_name, "Name", PropertyFlags::Hidden);
         setPropertyDescription(Object, m_name, "User-friendly name");
 
-        registerPropertyEx(Object, m_uid, "UID", PropertyFlags::Debug | PropertyFlags::Hexadecimal | PropertyFlags::ReadOnly);
-        setPropertyDescription(Object, m_uid, "Unique ID");
+        registerPropertyEx(Object, m_uid, "Object UID", PropertyFlags::UID | PropertyFlags::Hexadecimal | PropertyFlags::ReadOnly);
+        setPropertyDescription(Object, m_uid, "Object unique ID");
 
         // TODO: display only if != 0?
-        registerPropertyEx(Object, m_originalUID, "UID (Source)", PropertyFlags::Debug | PropertyFlags::Hexadecimal | PropertyFlags::ReadOnly);
+        registerPropertyEx(Object, m_originalUID, "Source UID", PropertyFlags::UID | PropertyFlags::Hexadecimal | PropertyFlags::ReadOnly);
         setPropertyDescription(Object, m_originalUID, "Source object's unique ID");
+        setPropertyHiddenCallback(Object, m_originalUID, IsOriginalUIDHidden);
 
-        registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectFlags, "Flags", PropertyFlags::Debug);
+        registerPropertyEnumBitfieldEx(Object, ObjectFlags, m_objectFlags, "Object Flags", PropertyFlags::Debug);
         setPropertyDescription(Object, m_objectFlags, "Object flags that are serialized");
 
-        registerPropertyEnumBitfieldEx(Object, ObjectRuntimeFlags, m_objectRuntimeFlags, "Runtime flags", PropertyFlags::Debug | PropertyFlags::Transient);
+        registerPropertyEnumBitfieldEx(Object, ObjectRuntimeFlags, m_objectRuntimeFlags, "Runtime flags", PropertyFlags::Runtime | PropertyFlags::Transient);
         setPropertyDescription(Object, m_objectRuntimeFlags, "Object flags that are only runtime");
 
         return true;

@@ -62,16 +62,24 @@ namespace vg::engine
         if (IGraphicInstance * instance = GetGraphicInstance())
         {
             GameObject * go = getGameObject();
+
             go->recomputeUpdateFlags();
 
-            const auto flags = go->getInstanceFlags();
+            const auto objectFlags = go->GetObjectFlags();
+            instance->SetObjectFlags(objectFlags, true);
+            instance->SetObjectFlags(~objectFlags, false);
+            
+            const auto objectRuntimeFlags = go->GetObjectRuntimeFlags();
+            instance->SetObjectRuntimeFlags(objectRuntimeFlags, true);
+            instance->SetObjectRuntimeFlags(~objectRuntimeFlags, false);
 
-            instance->SetInstanceFlags(flags, true);
-            instance->SetInstanceFlags(~flags, false);
+            const auto instanceFlags = go->getInstanceFlags();
+            instance->SetInstanceFlags(instanceFlags, true);
+            instance->SetInstanceFlags(~instanceFlags, false);
 
-            const auto runtimeFlags = go->getInstanceRuntimeFlags();
-            instance->SetInstanceRuntimeFlags(runtimeFlags, true);
-            instance->SetInstanceRuntimeFlags(~runtimeFlags, false);
+            const auto instanceRuntimeFlags = go->getInstanceRuntimeFlags();
+            instance->SetInstanceRuntimeFlags(instanceRuntimeFlags, true);
+            instance->SetInstanceRuntimeFlags(~instanceRuntimeFlags, false);
 
             return true;
         }

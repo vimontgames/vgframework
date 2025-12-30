@@ -106,6 +106,10 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void PhysicsShapeComponent::OnPropertyChanged(IObject * _object, const core::IProperty & _prop, bool _notifyParent)
     {
+        // Do not update when position changes
+        if (!strcmp("m_local", _prop.GetName()))
+            return;
+
         if (!strcmp(_prop.GetName(), "m_shapeType") || strstr(_prop.GetClassName(), "ShapeDesc"))
         {
             createShapeDesc();

@@ -938,10 +938,19 @@ namespace vg::editor
     {
         const auto flags = _prop->GetFlags();
         const bool hidden = _prop->IsHidden(_object);
-        const bool debug = asBool(PropertyFlags::Debug & flags);
-        const bool showDebug = EditorOptions::get()->IsDebugPropertyVisible();
 
-        return !hidden && (!debug || showDebug);
+        bool visible = !hidden;
+
+        if (asBool(PropertyFlags::Debug & flags) && !EditorOptions::get()->IsDebugPropertyVisible())
+            visible = false;
+
+        if (asBool(PropertyFlags::Runtime & flags) && !EditorOptions::get()->IsRuntimeFlagsPropertyVisible())
+            visible = false;
+
+        if (asBool(PropertyFlags::UID & flags) && !EditorOptions::get()->IsUIDPropertyVisible())
+            visible = false;
+
+        return visible;
     }
 
     //--------------------------------------------------------------------------------------
@@ -1039,7 +1048,7 @@ namespace vg::editor
                     ImGui::Text("%s", _propContext.m_originalProp->GetDisplayName());
                 }
                 imGuiAdapter->PopFontStyle();
-                ImGui::Text("(%s)%s::%s", asString(_propContext.m_originalProp->GetType()).c_str(), _propContext.m_originalProp->GetClassName(), _propContext.m_originalProp->GetName());
+                ImGui::Text("(%s)%s::%s", asString(_propContext.m_originalProp->GetType()).c_str(), _propContext.m_originalObject->GetClassName(), _propContext.m_originalProp->GetName());
                 ImGui::Separator();
 
                 if (_description && '\0' != _description[0])

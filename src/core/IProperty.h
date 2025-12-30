@@ -81,7 +81,7 @@ namespace vg::core
         HasRange            = 0x0000000000000010,   // Property has [min..max] range
         SingleLine          = 0x0000000000000020,   // This property and the following ones will be displayed on the same line to save space
         Radio               = 0x0000000000000040,   // Part of a radio button group
-        Debug               = 0x0000000000000080,   // A debug property that is hidden by default
+        Debug               = 0x0000000000000080,   // A misc debug property that is hidden by default
         Bitfield            = 0x0000000000000100,   // Value displayed as hex, enum as flags
         Resource            = 0x0000000000000200,   // Property is a Resource
         Transient           = 0x0000000000000400,   // Property is not saved nor loaded
@@ -93,7 +93,9 @@ namespace vg::core
         Hexadecimal         = 0x0000000000010000,   // Display value using hexadecimal
         EulerAngle          = 0x0000000000020000,   // Edited value is Euler angle
         AlphabeticalOrder   = 0x0000000000040000,   // Sort multiple values in alphabetical order (e.g., enums)
-        Alias               = 0x0000000000080000    // Property can alias another property of the same class. Other property must be the same type and same size or larger (e.g. can be a float2 aliasing a float3 but not the other way around)
+        Alias               = 0x0000000000080000,   // Property can alias another property of the same class. Other property must be the same type and same size or larger (e.g. can be a float2 aliasing a float3 but not the other way around)
+        Runtime             = 0x0000000000100000,   // Property is a tuntime flag that is usually hidden   
+        UID                 = 0x0000000000200000    // Property is an UID that is usually hidden 
     );
 
     vg_enum_class(vg::core, PropertyLayoutElement, u8,

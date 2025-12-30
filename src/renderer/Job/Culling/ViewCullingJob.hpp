@@ -38,33 +38,7 @@ namespace vg::renderer
         m_result.m_output = _output;
         m_result.m_sharedOutput = _sharedOutput;
     }
-
-    //--------------------------------------------------------------------------------------
-    void ViewCullingJob::cullViewGameObjectRecur(const ViewCullingOptions & _cullingOptions, const core::GameObject * _gameobject)
-    {
-        // Visible? Then add it to the list
-        if (asBool(InstanceFlags::Enabled & _gameobject->getInstanceFlags()))
-        {
-            auto & instances = _gameobject->getGraphicInstances();
-            const auto instanceCount = instances.size();
-            for (uint i = 0; i < instanceCount; ++i)
-            {
-                GraphicInstance * instance = (GraphicInstance*)instances[i];
-
-                if (asBool(InstanceFlags::Enabled & instance->getInstanceFlags()))
-                    instance->Cull(_cullingOptions, &m_result);
-            }
-
-            const auto & children = _gameobject->GetChildren();
-            const auto childCount = children.size();
-            for (uint i = 0; i < childCount; ++i)
-            {
-                const GameObject * child = VG_SAFE_STATIC_CAST(GameObject, children[i]);
-                cullViewGameObjectRecur(_cullingOptions, child);
-            }
-        }
-    }
-
+    
     //--------------------------------------------------------------------------------------
     template <typename T> void cullInstanceList(const ViewCullingOptions _cullingOptions, const T & _instanceList, CullingResult & _result)
     {
@@ -105,110 +79,98 @@ namespace vg::renderer
         
         if (nullptr != world)
         {
-            static bool useSceneRenderData = true;
-
-            if (useSceneRenderData)
+            for (uint iSceneType = 0; iSceneType < enumCount<BaseSceneType>(); iSceneType++)
             {
-                for (uint iSceneType = 0; iSceneType < enumCount<BaseSceneType>(); iSceneType++)
+                BaseSceneType sceneType = (BaseSceneType)iSceneType;
+                if (sceneType != BaseSceneType::Scene)
+                    continue;
+
+                const uint sceneCount = world->GetSceneCount(sceneType);
+                for (uint jScene = 0; jScene < sceneCount; ++jScene)
                 {
-                    BaseSceneType sceneType = (BaseSceneType)iSceneType;
-                    if (sceneType != BaseSceneType::Scene)
-                        continue;
+                    const IBaseScene * scene = world->GetScene(jScene, sceneType);
+                    SceneRenderData * sceneRenderData = (SceneRenderData *)scene->GetSceneRenderData();
+                    VG_ASSERT(sceneRenderData);
 
-                    const uint sceneCount = world->GetSceneCount(sceneType);
-                    for (uint jScene = 0; jScene < sceneCount; ++jScene)
+                    // Cull cameras
                     {
-                        const IBaseScene * scene = world->GetScene(jScene, sceneType);
-                        SceneRenderData * sceneRenderData = (SceneRenderData *)scene->GetSceneRenderData();
-                        VG_ASSERT(sceneRenderData);
-
-                        // Cull cameras
-                        {
-                            VG_PROFILE_CPU("Cameras");
-                            cullInstanceList(cullingOptions, sceneRenderData->m_cameraInstances, m_result);
-                        }
-
-                        // Cull Lights
-                        {
-                            VG_PROFILE_CPU("Lights");
-                            cullInstanceList(cullingOptions, sceneRenderData->m_lightInstances, m_result);
-                        }
-
-                        // Cull Particles
-                        {
-                            VG_PROFILE_CPU("Particles");
-                            cullInstanceList(cullingOptions, sceneRenderData->m_particleSystemInstances, m_result);
-                        }
-
-                        // Cull Skinned Meshes
-                        {
-                            VG_PROFILE_CPU("Skinned");
-                            cullInstanceList(cullingOptions, sceneRenderData->m_skinnedMeshInstances, m_result);
-                        }
-
-                        // Cull Static Meshes
-                        {
-                            VG_PROFILE_CPU("Meshes");
-                            cullInstanceList(cullingOptions, sceneRenderData->m_staticMeshInstances, m_result);
-                        }                 
+                        VG_PROFILE_CPU("Cameras");
+                        cullInstanceList(cullingOptions, sceneRenderData->m_cameraInstances, m_result);
                     }
-                }
-            }
-            else
-            {
-                const uint count = world->GetSceneCount(BaseSceneType::Scene);
-                for (uint i = 0; i < count; ++i)
-                {
-                    const auto * scene = world->GetScene(i, BaseSceneType::Scene);
-                    const auto * root = (GameObject *)scene->GetRoot();
-                    VG_ASSERT("[Culling] Scene has no root node");
-                    if (root)
-                        cullViewGameObjectRecur(cullingOptions, root);
-                }
-            }
 
-            const float4x4 & viewMatrix = cullingOptions.m_view->GetViewInvMatrix();
-
-            for (uint i = 0; i < core::enumCount<GraphicInstanceListType>(); ++i)
-            {
-                const auto listType = (GraphicInstanceListType)i;
-                auto & list = m_result.m_output->m_instancesLists[i].m_instances;
-
-                if (list.size() > 1)
-                {
-                    switch (listType)
+                    // Cull Lights
                     {
-                        default:
-                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(listType);
-                            break;
+                        VG_PROFILE_CPU("Lights");
+                        cullInstanceList(cullingOptions, sceneRenderData->m_lightInstances, m_result);
+                    }
 
-                        case GraphicInstanceListType::All:
-                        case GraphicInstanceListType::Opaque:
-                        case GraphicInstanceListType::AlphaTest:
-                        case GraphicInstanceListType::Decal:
-                        case GraphicInstanceListType::Particle:
-                            break;
+                    // Cull Particles
+                    {
+                        VG_PROFILE_CPU("Particles");
+                        cullInstanceList(cullingOptions, sceneRenderData->m_particleSystemInstances, m_result);
+                    }
 
-                        case GraphicInstanceListType::Transparent:
+                    // Cull Skinned Meshes
+                    {
+                        VG_PROFILE_CPU("Skinned");
+                        cullInstanceList(cullingOptions, sceneRenderData->m_skinnedMeshInstances, m_result);
+                    }
+
+                    // Cull Static Meshes
+                    {
+                        VG_PROFILE_CPU("Meshes");
+                        cullInstanceList(cullingOptions, sceneRenderData->m_staticMeshInstances, m_result);
+                    }                 
+                }
+            }
+
+            // Sort list that need it
+            {
+                VG_PROFILE_CPU("Sort");
+
+                const float4x4 & viewMatrix = cullingOptions.m_view->GetViewInvMatrix();
+
+                for (uint i = 0; i < core::enumCount<GraphicInstanceListType>(); ++i)
+                {
+                    const auto listType = (GraphicInstanceListType)i;
+                    auto & list = m_result.m_output->m_instancesLists[i].m_instances;
+
+                    if (list.size() > 1)
+                    {
+                        switch (listType)
                         {
-                            VG_PROFILE_CPU("Back-to-front");
+                            default:
+                                VG_ASSERT_ENUM_NOT_IMPLEMENTED(listType);
+                                break;
 
-                            sort(list.begin(), list.end(), [=](GraphicInstance * const a, GraphicInstance * const b)
+                            case GraphicInstanceListType::All:
+                            case GraphicInstanceListType::Opaque:
+                            case GraphicInstanceListType::AlphaTest:
+                            case GraphicInstanceListType::Decal:
+                            case GraphicInstanceListType::Particle:
+                                break;
+
+                            case GraphicInstanceListType::Transparent:
                             {
-                                const float4x4 & matA = a->GetGlobalMatrix();
-                                const float4 & viewPosA = mul(viewMatrix, matA[3]);
-                            
-                                const float4x4 & matB = b->GetGlobalMatrix();
-                                const float4 & viewPosB = mul(viewMatrix, matB[3]);
-                                
-                                return (bool)(viewPosA.z < viewPosB.z);
-                            }
-                            );
-                        }
-                        break;
+                                VG_PROFILE_CPU("Back-to-front");
 
-                        case GraphicInstanceListType::Outline:
+                                sort(list.begin(), list.end(), [=](GraphicInstance * const a, GraphicInstance * const b)
+                                    {
+                                        const float4x4 & matA = a->GetGlobalMatrix();
+                                        const float4 & viewPosA = mul(viewMatrix, matA[3]);
+
+                                        const float4x4 & matB = b->GetGlobalMatrix();
+                                        const float4 & viewPosB = mul(viewMatrix, matB[3]);
+
+                                        return (bool)(viewPosA.z < viewPosB.z);
+                                    }
+                                );
+                            }
                             break;
+
+                            case GraphicInstanceListType::Outline:
+                                break;
+                        }
                     }
                 }
             }

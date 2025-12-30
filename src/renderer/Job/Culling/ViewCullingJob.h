@@ -145,9 +145,6 @@ namespace vg::renderer
         ViewCullingJob(const core::string & _name, core::IObject * _parent, ViewCullingJobOutput * const _output, SharedViewCullingJobOutput * const _sharedOutput);
         void Run() override;
 
-    protected:
-        void cullViewGameObjectRecur(const ViewCullingOptions & _cullingOptions, const core::GameObject * _gameobject);
-
     private:
         VG_INLINE void add(GraphicInstanceListType _type, const IGraphicInstance * _instance);
 

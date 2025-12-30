@@ -95,9 +95,6 @@ namespace vg::renderer
         WorldCullingJob(const core::string & _name, core::IObject * _parent, const core::IWorld * _world, SharedWorldCullingJobOutput * const _sharedOutput);
         void Run() override;
 
-    protected:
-        void cullWorldGameObjectRecur(const core::GameObject * _gameobject);
-
     private:
         const core::IWorld *            m_world         = nullptr;
         WorldCullingJobOutput *         m_output        = nullptr;

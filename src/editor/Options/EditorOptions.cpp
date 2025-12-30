@@ -77,7 +77,19 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     bool EditorOptions::IsDebugPropertyVisible() const
     {
-        return core::asBool(EditorDebugFlags::Properties & m_debugFlags);
+        return core::asBool(EditorDebugFlags::DebugProperties & m_debugFlags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool EditorOptions::IsRuntimeFlagsPropertyVisible() const
+    {
+        return core::asBool(EditorDebugFlags::RuntimeFlags & m_debugFlags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool EditorOptions::IsUIDPropertyVisible() const
+    {
+        return core::asBool(EditorDebugFlags::UID & m_debugFlags);
     }
 
     //--------------------------------------------------------------------------------------

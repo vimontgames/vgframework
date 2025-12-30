@@ -5,6 +5,7 @@
 #include "core/Math/Math.h"
 #include "core/string/string.h"
 #include "core/Instance/Instance.h"
+#include "core/Component/Component.h"
 
 using namespace vg::core;
 
@@ -152,12 +153,15 @@ namespace vg::engine
         {
             go->setObjectRuntimeFlags(ObjectRuntimeFlags::Selected, _selected);
 
-            auto graphicInstances = go->getGraphicInstances();
-            for (uint i = 0; i < graphicInstances.size(); ++i)
-            {
-                auto instance = graphicInstances[i];
-                instance->setObjectRuntimeFlags(ObjectRuntimeFlags::Selected, _selected);
-            }
+            for (auto & comp : go->getComponents())
+                comp->UpdateFlagsFromGameObject();
+
+            //auto graphicInstances = go->getGraphicInstances();
+            //for (uint i = 0; i < graphicInstances.size(); ++i)
+            //{
+            //    auto instance = graphicInstances[i];
+            //    instance->setObjectRuntimeFlags(ObjectRuntimeFlags::Selected, _selected);
+            //}
         }
     }
 

@@ -120,6 +120,10 @@ namespace vg::engine
         if (asBool(PropertyFlags::Transient & _prop.GetFlags()))
             return;
 
+        // Do not update when position changes
+        if (!strcmp("m_local", _prop.GetName()))
+            return;
+
         if (_object == this)
         {
             createVehicleConstraintDesc();

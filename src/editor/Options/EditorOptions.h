@@ -23,10 +23,12 @@ namespace vg::editor
     );
 
     vg_enum_class(vg::editor, EditorDebugFlags, core::u64,
-        Culling     = 0x00000001,
-        Inspector   = 0x00000002,
-        Picking     = 0x00000004,
-        Properties  = 0x00000008
+        Culling             = 0x00000001,
+        Inspector           = 0x00000002,
+        Picking             = 0x00000004,
+        DebugProperties     = 0x00000008,
+        RuntimeFlags        = 0x00000010,
+        UID                 = 0x00000020
     );
 
     struct GizmoOptions
@@ -52,31 +54,33 @@ namespace vg::editor
         EditorOptions(const core::string & _name, core::IObject * _parent = nullptr);
         ~EditorOptions();
 
-        bool                            Load                    (bool _async) final override;
+        bool                            Load                            (bool _async) final override;
 
-        renderer::ICameraSettings *     GetCameraSettings       () const final override { return m_cameraSettings; }
+        renderer::ICameraSettings *     GetCameraSettings               () const final override { return m_cameraSettings; }
 
-        void                            SetPropertyValue        (const core::IProperty & _prop, void * _previousValue, void * _newValue) final override;
+        void                            SetPropertyValue                (const core::IProperty & _prop, void * _previousValue, void * _newValue) final override;
 
-        bool                            setGizmoType            (GizmoType _gizmoType);
-        void                            setNextGizmo            ();
-        void                            setPreviousGizmo        ();
+        bool                            setGizmoType                    (GizmoType _gizmoType);
+        void                            setNextGizmo                    ();
+        void                            setPreviousGizmo                ();
 
-        bool                            setSnap                 (bool _enable);
-        bool                            getSnap                 () const;
+        bool                            setSnap                         (bool _enable);
+        bool                            getSnap                         () const;
 
 
-        const GizmoOptions &            getGizmoOptions         () const { return m_gizmo; }
-        GizmoOptions &                  getGizmoOptions         () { return m_gizmo; }
+        const GizmoOptions &            getGizmoOptions                 () const { return m_gizmo; }
+        GizmoOptions &                  getGizmoOptions                 () { return m_gizmo; }
 
         
-        bool                            IsDebugCulling          () const;
-        bool                            IsDebugInspector        () const;
-        bool                            IsDebugPicking          () const;
-        bool                            IsDebugPropertyVisible  () const;
+        bool                            IsDebugCulling                  () const;
+        bool                            IsDebugInspector                () const;
+        bool                            IsDebugPicking                  () const;
+        bool                            IsDebugPropertyVisible          () const;
+        bool                            IsRuntimeFlagsPropertyVisible   () const;
+        bool                            IsUIDPropertyVisible            () const;
 
-        const ImGuiConsoleOptions &     getConsoleOptions       () const { return m_consoleOptions; }
-        ImGuiConsoleOptions &           getConsoleOptions       () { return m_consoleOptions; }
+        const ImGuiConsoleOptions &     getConsoleOptions               () const { return m_consoleOptions; }
+        ImGuiConsoleOptions &           getConsoleOptions               () { return m_consoleOptions; }
 
     private:
         renderer::Theme                 m_theme = renderer::Theme::ImGui_Dark;

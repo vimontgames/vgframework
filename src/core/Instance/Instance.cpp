@@ -38,10 +38,10 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        registerPropertyEnumBitfield(Instance, InstanceFlags, m_flags, "Flags");
+        registerPropertyEnumBitfield(Instance, InstanceFlags, m_flags, "Instance Flags");
         setPropertyDescription(Instance, m_flags, "Instance flags that are serialized");
 
-        registerPropertyEnumBitfieldEx(Instance, InstanceRuntimeFlags, m_runtimeFlags, "Runtime flags", PropertyFlags::Debug | PropertyFlags::Transient);
+        registerPropertyEnumBitfieldEx(Instance, InstanceRuntimeFlags, m_runtimeFlags, "Runtime flags", PropertyFlags::Runtime | PropertyFlags::Transient);
         setPropertyDescription(Instance, m_runtimeFlags, "Instance flags that are only runtime");
 
         registerPropertyEx(Instance, m_color, "Color", PropertyFlags::Color);

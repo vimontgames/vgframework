@@ -845,12 +845,6 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    const vector<renderer::IGraphicInstance*> & GameObject::getGraphicInstances() const
-    {
-        return m_graphicInstances;
-    }
-
-    //--------------------------------------------------------------------------------------
     void GameObject::recomputeEnabledInHierarchy()
     {
         bool parentIsEnabled = true;

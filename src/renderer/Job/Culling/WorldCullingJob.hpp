@@ -79,75 +79,7 @@ namespace vg::renderer
         m_world = _world;
         m_sharedOutput = _sharedOutput;
     }
-
-    //--------------------------------------------------------------------------------------
-    void WorldCullingJob::cullWorldGameObjectRecur(const core::GameObject * _gameobject)
-    {
-        // Visible? Then add it to the list
-        if (asBool(InstanceFlags::Enabled & _gameobject->getInstanceFlags()))
-        {
-            auto & instances = _gameobject->getGraphicInstances();
-            const auto instanceCount = instances.size();
-            for (uint i = 0; i < instanceCount; ++i)
-            {
-                GraphicInstance * instance = (GraphicInstance *)instances[i];
-        
-                if (asBool(InstanceFlags::Enabled & instance->getInstanceFlags()))
-                {
-                    switch (instance->GetGraphicIntanceType())
-                    {
-                        default:
-                            VG_ASSERT_ENUM_NOT_IMPLEMENTED(instance->GetGraphicIntanceType());
-                            break;
-
-                        case GraphicInstanceType::Mesh:
-                        {
-                            MeshInstance * meshInstance = (MeshInstance *)instance;
-                            if (meshInstance->isSkinned())
-                            {
-                                m_output->m_skinnedMeshInstances.push_back(meshInstance);
-                                m_sharedOutput->m_allSkinnedMeshInstances.push_back_atomic(meshInstance);
-                            }
-                            else
-                                m_output->m_staticMeshInstances.push_back(meshInstance);
-                        }
-                        break;
-
-                        case GraphicInstanceType::ParticleSystem:
-                        {
-                            m_output->m_particleSystemInstances.push_back((ParticleSystemInstance *)instance);
-                            m_sharedOutput->m_allParticleSystemInstances.push_back_atomic((ParticleSystemInstance *)instance);
-                        }
-                        break;
-
-                        case GraphicInstanceType::Camera:
-                        {
-                            m_output->m_cameraInstances.push_back((CameraInstance *)instance);
-                        }
-                        break;
-
-                        case GraphicInstanceType::Light:
-                        {
-                            m_output->m_lightInstances.push_back((LightInstance *)instance);
-                        }
-                        break;
-
-                    }
-
-                    m_sharedOutput->m_allGraphicInstances.push_back_atomic(instance);
-                }
-            }
-        
-            const auto & children = _gameobject->GetChildren();
-            const auto childCount = children.size();
-            for (uint i = 0; i < childCount; ++i)
-            {
-                const GameObject * child = VG_SAFE_STATIC_CAST(GameObject, children[i]);
-                cullWorldGameObjectRecur(child);
-            }
-        }
-    }
-
+    
     //--------------------------------------------------------------------------------------
     void WorldCullingJob::Run()
     {
@@ -158,109 +90,92 @@ namespace vg::renderer
 
         if (nullptr != m_output)
         {
-            static bool useSceneRenderData = true;
-
-            if (useSceneRenderData)
+            for (uint iSceneType = 0; iSceneType < enumCount<BaseSceneType>(); iSceneType++)
             {
-                for (uint iSceneType = 0; iSceneType < enumCount<BaseSceneType>(); iSceneType++)
+                BaseSceneType sceneType = (BaseSceneType)iSceneType;
+                if (sceneType != BaseSceneType::Scene)
+                    continue;
+
+                const uint sceneCount = m_world->GetSceneCount(sceneType);
+                for (uint jScene = 0; jScene < sceneCount; ++jScene)
                 {
-                    BaseSceneType sceneType = (BaseSceneType)iSceneType;
-                    if (sceneType != BaseSceneType::Scene)
-                        continue;
+                    const IBaseScene * scene = m_world->GetScene(jScene, sceneType);
+                    SceneRenderData * sceneRenderData = (SceneRenderData*) scene->GetSceneRenderData();
+                    VG_ASSERT(sceneRenderData);
 
-                    const uint sceneCount = m_world->GetSceneCount(sceneType);
-                    for (uint jScene = 0; jScene < sceneCount; ++jScene)
+                    // Cameras
                     {
-                        const IBaseScene * scene = m_world->GetScene(jScene, sceneType);
-                        SceneRenderData * sceneRenderData = (SceneRenderData*) scene->GetSceneRenderData();
-                        VG_ASSERT(sceneRenderData);
-
-                        // Cameras
+                        VG_PROFILE_CPU("Cameras");
+                        m_output->m_cameraInstances.reserve(m_output->m_cameraInstances.size() + sceneRenderData->m_cameraInstances.size());
+                        for (auto * instance : sceneRenderData->m_cameraInstances)
                         {
-                            VG_PROFILE_CPU("Cameras");
-                            m_output->m_cameraInstances.reserve(m_output->m_cameraInstances.size() + sceneRenderData->m_cameraInstances.size());
-                            for (auto * instance : sceneRenderData->m_cameraInstances)
+                            if (instance->isEnabledInHierarchy()) 
                             {
-                                if (instance->isEnabledInHierarchy()) 
-                                {
-                                    m_output->m_cameraInstances.push_back(instance);
-                                    m_sharedOutput->m_allGraphicInstances.push_back_atomic((GraphicInstance *)instance);
-                                }
-                            }
-                        }
-
-                        // Lights
-                        {
-                            VG_PROFILE_CPU("Lights");
-                            m_output->m_lightInstances.reserve(m_output->m_lightInstances.size() + sceneRenderData->m_lightInstances.size());
-                            for (auto * instance : sceneRenderData->m_lightInstances)
-                            {
-                                if (instance->isEnabledInHierarchy()) 
-                                {
-                                    m_output->m_lightInstances.push_back(instance);
-                                    m_sharedOutput->m_allGraphicInstances.push_back_atomic((GraphicInstance *)instance);
-                                }
-                            }
-                        }
-
-                        // Particles
-                        {
-                            VG_PROFILE_CPU("Particles");
-                            m_output->m_particleSystemInstances.reserve(m_output->m_particleSystemInstances.size() + sceneRenderData->m_particleSystemInstances.size());
-                            for (auto * instance : sceneRenderData->m_particleSystemInstances)
-                            {
-                                if (instance->isEnabledInHierarchy()) 
-                                {
-                                    m_output->m_particleSystemInstances.push_back(instance);
-                                    m_sharedOutput->m_allParticleSystemInstances.push_back_atomic(instance);
-                                    m_sharedOutput->m_allGraphicInstances.push_back_atomic((GraphicInstance *)instance);
-                                }
-                            }
-                        }
-
-                        // Skinned Meshes
-                        {
-                            VG_PROFILE_CPU("Skinned");
-                            m_output->m_skinnedMeshInstances.reserve(m_output->m_skinnedMeshInstances.size() + sceneRenderData->m_skinnedMeshInstances.size());
-                            for (auto * instance : sceneRenderData->m_skinnedMeshInstances)
-                            {
-                                if (instance->isEnabledInHierarchy()) 
-                                {
-                                    m_output->m_skinnedMeshInstances.push_back(instance);
-                                    m_sharedOutput->m_allSkinnedMeshInstances.push_back_atomic(instance);
-                                    m_sharedOutput->m_allGraphicInstances.push_back_atomic((GraphicInstance *)instance);
-                                }
-                            }
-                        }
-
-                        // Static Meshes
-                        {
-                            VG_PROFILE_CPU("Meshes");
-                            m_output->m_staticMeshInstances.reserve(m_output->m_staticMeshInstances.size() + sceneRenderData->m_staticMeshInstances.size());
-                            for (auto * instance : sceneRenderData->m_staticMeshInstances)
-                            {
-                                if (instance->isEnabledInHierarchy()) 
-                                {
-                                    m_output->m_staticMeshInstances.push_back(instance);
-                                    m_sharedOutput->m_allGraphicInstances.push_back_atomic((GraphicInstance *)instance);
-                                }
+                                m_output->m_cameraInstances.push_back(instance);
+                                m_sharedOutput->m_allGraphicInstances.push_back_atomic((GraphicInstance *)instance);
                             }
                         }
                     }
-                }                
-            }
-            else
-            {
-                const uint count = m_output->m_world->GetSceneCount(BaseSceneType::Scene);
-                for (uint i = 0; i < count; ++i)
-                {
-                    const auto * scene = m_output->m_world->GetScene(i, BaseSceneType::Scene);
-                    const auto * root = (GameObject *)scene->GetRoot();
-                    VG_ASSERT("[Culling] Scene has no root node");
-                    if (root)
-                        cullWorldGameObjectRecur(root);
+
+                    // Lights
+                    {
+                        VG_PROFILE_CPU("Lights");
+                        m_output->m_lightInstances.reserve(m_output->m_lightInstances.size() + sceneRenderData->m_lightInstances.size());
+                        for (auto * instance : sceneRenderData->m_lightInstances)
+                        {
+                            if (instance->isEnabledInHierarchy()) 
+                            {
+                                m_output->m_lightInstances.push_back(instance);
+                                m_sharedOutput->m_allGraphicInstances.push_back_atomic((GraphicInstance *)instance);
+                            }
+                        }
+                    }
+
+                    // Particles
+                    {
+                        VG_PROFILE_CPU("Particles");
+                        m_output->m_particleSystemInstances.reserve(m_output->m_particleSystemInstances.size() + sceneRenderData->m_particleSystemInstances.size());
+                        for (auto * instance : sceneRenderData->m_particleSystemInstances)
+                        {
+                            if (instance->isEnabledInHierarchy()) 
+                            {
+                                m_output->m_particleSystemInstances.push_back(instance);
+                                m_sharedOutput->m_allParticleSystemInstances.push_back_atomic(instance);
+                                m_sharedOutput->m_allGraphicInstances.push_back_atomic((GraphicInstance *)instance);
+                            }
+                        }
+                    }
+
+                    // Skinned Meshes
+                    {
+                        VG_PROFILE_CPU("Skinned");
+                        m_output->m_skinnedMeshInstances.reserve(m_output->m_skinnedMeshInstances.size() + sceneRenderData->m_skinnedMeshInstances.size());
+                        for (auto * instance : sceneRenderData->m_skinnedMeshInstances)
+                        {
+                            if (instance->isEnabledInHierarchy()) 
+                            {
+                                m_output->m_skinnedMeshInstances.push_back(instance);
+                                m_sharedOutput->m_allSkinnedMeshInstances.push_back_atomic(instance);
+                                m_sharedOutput->m_allGraphicInstances.push_back_atomic((GraphicInstance *)instance);
+                            }
+                        }
+                    }
+
+                    // Static Meshes
+                    {
+                        VG_PROFILE_CPU("Meshes");
+                        m_output->m_staticMeshInstances.reserve(m_output->m_staticMeshInstances.size() + sceneRenderData->m_staticMeshInstances.size());
+                        for (auto * instance : sceneRenderData->m_staticMeshInstances)
+                        {
+                            if (instance->isEnabledInHierarchy()) 
+                            {
+                                m_output->m_staticMeshInstances.push_back(instance);
+                                m_sharedOutput->m_allGraphicInstances.push_back_atomic((GraphicInstance *)instance);
+                            }
+                        }
+                    }
                 }
-            }
+            }                
         }
     }
 }
