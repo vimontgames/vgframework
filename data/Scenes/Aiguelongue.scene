@@ -16560,7 +16560,7 @@
                                 <Property type="String" name="m_name" value="Cars"/>
                                 <Property type="Uint32" name="m_uid" value="4185305066"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -16604,6 +16604,22 @@
                                                     </Object>
                                                 </Property>
                                             </Object>
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="PhysicsBodyDesc #604"/>
+                                                <Property type="Uint32" name="m_uid" value="2925632902"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyFloat">
+                                                        <Property type="String" name="m_name" value="m_mass"/>
+                                                        <Property type="Uint32" name="m_uid" value="2275795129"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="Float" name="m_value" value="1000"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
                                         </Property>
                                     </Object>
                                     <Object class="PrefabGameObject">
@@ -16643,6 +16659,22 @@
                                                     </Object>
                                                 </Property>
                                             </Object>
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="FourWheelsVehicleConstraintDesc #4"/>
+                                                <Property type="Uint32" name="m_uid" value="1656513048"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyFloat">
+                                                        <Property type="String" name="m_name" value="m_maxEngineTorque"/>
+                                                        <Property type="Uint32" name="m_uid" value="701776071"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="Float" name="m_value" value="300"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
                                         </Property>
                                     </Object>
                                     <Object class="PrefabGameObject">
@@ -16679,6 +16711,38 @@
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
                                                         <Property type="Float4" name="m_value" x="0.015686275" y="0.015686275" z="0.015686275" w="1"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="PhysicsBodyDesc #604"/>
+                                                <Property type="Uint32" name="m_uid" value="2925632902"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyFloat">
+                                                        <Property type="String" name="m_name" value="m_mass"/>
+                                                        <Property type="Uint32" name="m_uid" value="1248618362"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="Float" name="m_value" value="1400"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                            <Object class="DynamicPropertyList">
+                                                <Property type="String" name="m_name" value="FourWheelsVehicleConstraintDesc #4"/>
+                                                <Property type="Uint32" name="m_uid" value="1656513048"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_properties">
+                                                    <Object class="DynamicPropertyFloat">
+                                                        <Property type="String" name="m_name" value="m_maxEngineTorque"/>
+                                                        <Property type="Uint32" name="m_uid" value="1613484722"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Bool" name="m_enable" value="true"/>
+                                                        <Property type="Float" name="m_value" value="700"/>
                                                     </Object>
                                                 </Property>
                                             </Object>

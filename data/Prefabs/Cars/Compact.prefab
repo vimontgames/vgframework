@@ -30,7 +30,7 @@
                                 <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2416209307"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_category" value="Default"/>
                                 <Property type="Bool" name="m_useCollisionMask" value="false"/>
@@ -45,11 +45,11 @@
                                         <Property type="Bool" name="m_softBody" value="false"/>
                                         <Property type="EnumU16" name="m_layer" value="Moving"/>
                                         <Property type="EnumU8" name="m_motion" value="Dynamic"/>
-                                        <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
+                                        <Property type="EnumU8" name="m_motionQuality" value="Continuous"/>
                                         <Property type="Bool" name="m_overrideMass" value="true"/>
-                                        <Property type="Float" name="m_mass" value="1000"/>
-                                        <Property type="Float" name="m_friction" value="0.5"/>
-                                        <Property type="Float" name="m_restitution" value="0"/>
+                                        <Property type="Float" name="m_mass" value="1200"/>
+                                        <Property type="Float" name="m_friction" value="0.75"/>
+                                        <Property type="Float" name="m_restitution" value="0.1"/>
                                     </Object>
                                 </Property>
                             </Object>
@@ -241,7 +241,7 @@
                                                 <Property type="ObjectHandle" name="m_rightWheel" value="335609367"/>
                                                 <Property type="Float" name="m_radius" value="0.34999999"/>
                                                 <Property type="Float" name="m_width" value="0.2"/>
-                                                <Property type="Float" name="m_maxSteerAngleInDegrees" value="35"/>
+                                                <Property type="Float" name="m_maxSteerAngleInDegrees" value="30"/>
                                                 <Property type="Float" name="m_inertia" value="0.89999998"/>
                                                 <Property type="Float" name="m_angularDamping" value="0.2"/>
                                                 <Property type="Float" name="m_suspensionMinLength" value="0.30000001"/>
@@ -250,7 +250,7 @@
                                                 <Property type="Float" name="m_suspensionSidewaysAngleInDegree" value="0"/>
                                                 <Property type="Float" name="m_suspensionFrequency" value="1.5"/>
                                                 <Property type="Float" name="m_suspensionDamping" value="0.5"/>
-                                                <Property type="Float" name="m_maxBrakeTorque" value="2000"/>
+                                                <Property type="Float" name="m_maxBrakeTorque" value="3000"/>
                                                 <Property type="Float" name="m_maxHandBrakeTorque" value="0"/>
                                             </Object>
                                         </Property>
@@ -273,8 +273,8 @@
                                                 <Property type="Float" name="m_suspensionSidewaysAngleInDegree" value="0"/>
                                                 <Property type="Float" name="m_suspensionFrequency" value="1.5"/>
                                                 <Property type="Float" name="m_suspensionDamping" value="0.5"/>
-                                                <Property type="Float" name="m_maxBrakeTorque" value="2000"/>
-                                                <Property type="Float" name="m_maxHandBrakeTorque" value="4000"/>
+                                                <Property type="Float" name="m_maxBrakeTorque" value="3000"/>
+                                                <Property type="Float" name="m_maxHandBrakeTorque" value="6000"/>
                                             </Object>
                                         </Property>
                                         <Property type="Bool" name="m_fourWheelDrive" value="false"/>
