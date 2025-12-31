@@ -14,13 +14,14 @@ namespace vg::engine
     public:
         VG_CLASS_DECL_ABSTRACT(IVehicleComponent, PhysicsConstraintComponent);
 
-        virtual bool                EnterVehicle            (core::IGameObject * _owner, VehicleSlotType & _slotType) = 0;
+        virtual bool                EnterVehicle            (core::IGameObject * _owner, core::uint & _slotIndex) = 0;
         virtual bool                ExitVehicle             (core::IGameObject * _owner) = 0;
 
         virtual void                Respawn                 () = 0;
 
         virtual core::uint          GetPassengerSlotCount   () const = 0;
-        virtual core::IGameObject * GetPassenger            (core::uint _index) const = 0;
+        virtual core::IGameObject * GetPassengerSlotOwner   (core::uint _index) const = 0;
+        virtual core::IGameObject * GetPassengerSlotLocation(core::uint _index) const = 0;
         virtual VehicleSlotType     GetPassengerSlotType    (core::uint _index) const = 0;
 
         virtual core::float3        GetLocalVelocity        () const = 0;

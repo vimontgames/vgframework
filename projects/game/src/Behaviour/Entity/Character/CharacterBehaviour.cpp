@@ -70,26 +70,30 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
         registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rotation", PropertyFlags::Transient);
 
         registerPropertyEx(CharacterBehaviour, m_vehicle, "Vehicle", PropertyFlags::Transient);
+        registerPropertyEx(CharacterBehaviour, m_vehicleSlot, "Seat", PropertyFlags::Transient);
     }
     registerPropertyGroupEnd(CharacterBehaviour); 
 
     return true;
 }
-
 //--------------------------------------------------------------------------------------
-void CharacterBehaviour::show(bool visible)
+void CharacterBehaviour::enableVisual(bool _enable)
 {
     // Enable visual
     if (auto * mesh = GetGameObject()->GetComponentByType("MeshComponent"))
-        mesh->Enable(visible);
+        mesh->Enable(_enable);
+}
 
+//--------------------------------------------------------------------------------------
+void CharacterBehaviour::enablePhysics(bool _enable)
+{
     // Enable physics body
     if (auto * body = GetGameObject()->GetComponentByType("PhysicsBodyComponent"))
-        body->Enable(visible);
+        body->Enable(_enable);
 
-    // Enable physics body
+    // Enable character controller
     if (auto * chara = GetGameObject()->GetComponentByType("CharacterControllerComponent"))
-        chara->Enable(visible);
+        chara->Enable(_enable);
 }
 
 //--------------------------------------------------------------------------------------
@@ -188,6 +192,7 @@ void CharacterBehaviour::OnStop()
     m_currentRotation = 0;
 
     m_vehicle.clear();
+    m_vehicleSlot = -1;
 }
 
 //--------------------------------------------------------------------------------------

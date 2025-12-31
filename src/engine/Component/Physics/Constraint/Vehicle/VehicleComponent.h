@@ -16,6 +16,7 @@ namespace vg::engine
 
     public:
         VehicleSlotType m_slotType = VehicleSlotType::Passenger;
+        core::ObjectHandle m_location;
         core::ObjectHandle m_owner;
     };
 
@@ -44,13 +45,14 @@ namespace vg::engine
         void                FixedUpdate                 (const Context & _context) final override;
         void                Update                      (const Context & _context) final override;
 
-        bool                EnterVehicle                (core::IGameObject * _owner, VehicleSlotType & _slotType) final override;
+        bool                EnterVehicle                (core::IGameObject * _owner, core::uint & _slotIndex) final override;
         bool                ExitVehicle                 (core::IGameObject * _owner) final override;
 
         void                Respawn                     () final override;
 
         core::uint          GetPassengerSlotCount       () const final override;
-        core::IGameObject * GetPassenger                (core::uint _index) const final override;
+        core::IGameObject * GetPassengerSlotOwner       (core::uint _index) const final override;
+        core::IGameObject * GetPassengerSlotLocation    (core::uint _index) const final override;
         VehicleSlotType     GetPassengerSlotType        (core::uint _index) const final override;
 
         core::float3        GetLocalVelocity            () const final override;

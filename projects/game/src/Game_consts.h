@@ -14,7 +14,8 @@ vg_enum_class_global(MoveState, vg::core::u8,
     Run,
     Jump,
     Hurt,
-    Die
+    Die,
+    Drive
 );
 
 vg_enum_class_global(FightState, vg::core::u8,

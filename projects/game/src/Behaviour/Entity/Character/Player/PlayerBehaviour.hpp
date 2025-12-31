@@ -68,7 +68,8 @@ void PlayerBehaviour::OnPlay()
     m_currentRotation = -atan2(global[1].x, global[0].x) * 180.0f / PI;
 
     // Hide character
-    show(false);
+    enableVisual(false);
+    enablePhysics(false);
 
     // Hide UI until the player is active
     if (auto * uiGO = m_UI.get<IGameObject>())
@@ -80,7 +81,9 @@ void PlayerBehaviour::OnStop()
 {
     m_rightHandItem = nullptr;
     super::OnStop();
-    show(true);
+   
+    enableVisual(true);
+    enablePhysics(true);
 }
 
 //--------------------------------------------------------------------------------------
@@ -149,7 +152,20 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     else
                         vehicle->Steer(0.0f);
 
-                    GetGameObject()->SetGlobalMatrix(vehicleGO->GetGlobalMatrix());
+                    auto * go = GetGameObject();
+                    if (auto * slot = vehicle->GetPassengerSlotLocation(m_vehicleSlot))
+                    {
+                        float4x4 mat = slot->GetGlobalMatrix();
+
+                        // Ignore scale
+                        mat[0].xyz = normalize(mat[0].xyz);
+                        mat[1].xyz = normalize(mat[1].xyz);
+                        mat[2].xyz = normalize(mat[2].xyz);
+
+                        go->SetGlobalMatrix(mat);
+                    }
+                    else
+                        go->SetGlobalMatrix(vehicleGO->GetGlobalMatrix());
                 }
             }
         }
@@ -195,7 +211,14 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
             case MoveState::Jump:
                 playMoveAnim(MoveState::Jump, true);
                 break;
+
+            case MoveState::Drive:
+                playMoveAnim(MoveState::Drive, true);
+                break;
         }
+
+        if (IGameObject * vehicleGO = (IGameObject *)m_vehicle.getObject())
+            return;
 
         if (auto * animationComponent = _context.m_gameObject->GetComponentT<IAnimationComponent>())
         {
@@ -252,7 +275,8 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     
                     if (auto * uiGO = m_UI.get<IGameObject>())
                     {
-                        show(true);
+                        enableVisual(true);
+                        enablePhysics(true);
 
                         uiGO->SetInstanceFlags(InstanceFlags::Enabled, true);
                         if (auto * uiCanvasComponent = uiGO->GetComponentInChildrenT<IUICanvasComponent>())
@@ -585,11 +609,24 @@ bool PlayerBehaviour::enterVehicle(vg::core::IGameObject * _vehicleGameobject)
 {
     IVehicleComponent * vehicleComp = _vehicleGameobject->GetComponentT<IVehicleComponent>();
     VG_ASSERT(vehicleComp);
-    VehicleSlotType slotType;
-    if (vehicleComp->EnterVehicle(this->GetGameObject(), slotType))
+    uint slotIndex;
+    if (vehicleComp->EnterVehicle(this->GetGameObject(), slotIndex))
     {
         m_vehicle.set(_vehicleGameobject);
-        show(false);
+        m_vehicleSlot = slotIndex;
+
+        m_moveState = MoveState::Drive;
+
+        if (auto * slot = vehicleComp->GetPassengerSlotLocation(m_vehicleSlot))
+        {
+            enablePhysics(false);
+        }
+        else
+        {
+            enableVisual(false);
+            enablePhysics(false);
+        }
+
         return true;
     }
 
@@ -599,18 +636,22 @@ bool PlayerBehaviour::enterVehicle(vg::core::IGameObject * _vehicleGameobject)
 //--------------------------------------------------------------------------------------
 bool PlayerBehaviour::exitVehicle()
 {
-    IGameObject * vehicleGO = VG_SAFE_STATIC_CAST(IGameObject, m_vehicle.getObject());
-    IVehicleComponent * vehicleComp = vehicleGO->GetComponentT<IVehicleComponent>();
-    VG_ASSERT(vehicleComp);
-
-    if (vehicleComp->ExitVehicle(this->GetGameObject()))
+    if (IGameObject * vehicleGO = VG_SAFE_STATIC_CAST(IGameObject, m_vehicle.getObject()))
     {
-        m_vehicle.clear();
-        float4x4 exitMat = vehicleGO->GetGlobalMatrix();
-        exitMat[3].z += 1; // TODO: save enter pos relative to car and check if enough space to exit car?
-        GetGameObject()->SetGlobalMatrix(exitMat);
-        show(true);
-        return true;
+        IVehicleComponent * vehicleComp = vehicleGO->GetComponentT<IVehicleComponent>();
+        VG_ASSERT(vehicleComp);
+
+        if (vehicleComp->ExitVehicle(this->GetGameObject()))
+        {
+            m_vehicle.clear();
+            float4x4 exitMat = vehicleGO->GetGlobalMatrix();
+            exitMat[3].z += 1; // TODO: save enter pos relative to car and check if enough space to exit car?
+            GetGameObject()->SetGlobalMatrix(exitMat);
+            enablePhysics(true);
+            m_moveState = MoveState::Idle;
+
+            return true;
+        }
     }
 
     return false;

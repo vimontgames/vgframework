@@ -40,7 +40,8 @@ public:
     VG_INLINE float         getHealth       () const;
     VG_INLINE CharacterType getCharacterType() const;
 
-    void                    show            (bool visible);
+    void                    enableVisual    (bool _enable);
+    void                    enablePhysics   (bool _enable);
 
 protected:
     void                    initAnimations  ();
@@ -92,6 +93,7 @@ protected:
     HealthBarBehaviour *    m_healthBar = nullptr;
 
     vg::core::ObjectHandle  m_vehicle;
+    vg::core::uint          m_vehicleSlot = -1;
 };
 
 #if VG_ENABLE_INLINE

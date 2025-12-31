@@ -157,10 +157,11 @@ void Game::FixedUpdate(float _dt)
 
         if (world[3].z < -32.0f)
         {
+            // Kick all passengers
             const uint count = vehicle->GetPassengerSlotCount();
             for (uint i = 0; i < count; ++i)
             {
-                if (IGameObject * passenger = vehicle->GetPassenger(i))
+                if (IGameObject * passenger = vehicle->GetPassengerSlotOwner(i))
                 {
                     if (PlayerBehaviour * player = passenger->GetComponentT<PlayerBehaviour>())
                         player->exitVehicle();

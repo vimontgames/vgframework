@@ -219,18 +219,21 @@ namespace vg::engine
             m_batchMask.setNames(meshModel->GetBatchNames());
             m_meshInstance->SetBatchMask(m_batchMask);
 
-            if (false == m_registered)
+            if (GetGameObject()->isEnabledInHierarchy() && isEnabled())
             {
-                auto * picking = Engine::get()->GetRenderer()->GetPicking();
-                PickingID id = m_meshInstance->GetPickingID();
-                if (!id)
+                if (false == m_registered)
                 {
-                    id = picking->CreatePickingID(this);
-                    m_meshInstance->SetPickingID(id);
-                }
+                    auto * picking = Engine::get()->GetRenderer()->GetPicking();
+                    PickingID id = m_meshInstance->GetPickingID();
+                    if (!id)
+                    {
+                        id = picking->CreatePickingID(this);
+                        m_meshInstance->SetPickingID(id);
+                    }
 
-                registerGraphicInstance();
-                m_meshInstance->SetName(getGameObject()->GetName().c_str());;
+                    registerGraphicInstance();
+                    m_meshInstance->SetName(getGameObject()->GetName().c_str());;
+                }
             }
 
             // In case Animations were loaded before Mesh we need to rebind them

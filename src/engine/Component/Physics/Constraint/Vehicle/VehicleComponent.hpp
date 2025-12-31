@@ -34,7 +34,12 @@ namespace vg::engine
         registerResizeVectorFunc(VehicleSlot, ResizeVehicleSlotVector);
 
         registerPropertyEnum(VehicleSlot, VehicleSlotType, m_slotType, "Type");
+
+        registerProperty(VehicleSlot, m_location, "Location");
+        setPropertyDescription(VehicleSlot, m_location, "Dummy GameObject for seat location in vehicle");
+
         registerPropertyEx(VehicleSlot, m_owner, "Owner", PropertyFlags::Transient);
+        setPropertyDescription(VehicleSlot, m_owner, "Current owner of the seat");
 
         return true;
     }
@@ -308,7 +313,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool VehicleComponent::EnterVehicle(core::IGameObject * _owner, VehicleSlotType & _slotType)
+    bool VehicleComponent::EnterVehicle(core::IGameObject * _owner, core::uint & _slotIndex)
     {
         auto & slots = m_slots.getObjects();
         for (uint i = 0; i < slots.size(); ++i)
@@ -317,6 +322,7 @@ namespace vg::engine
             if (slot.m_owner.getObject() == nullptr)
             {
                 slot.m_owner.set(_owner);
+                _slotIndex = i;
 
                 if (ISoundComponent * sound = GetGameObject()->GetComponentT<ISoundComponent>())
                 {
@@ -400,9 +406,23 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IGameObject * VehicleComponent::GetPassenger(core::uint _index) const
+    core::IGameObject * VehicleComponent::GetPassengerSlotOwner(core::uint _index) const
     {
-        return VG_SAFE_STATIC_CAST(IGameObject, m_slots.getObjects()[_index].m_owner.getObject());
+        const auto & slots = m_slots.getObjects();
+        if (_index < slots.size())
+            return VG_SAFE_STATIC_CAST(IGameObject, slots[_index].m_owner.getObject());
+        else
+            return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IGameObject * VehicleComponent::GetPassengerSlotLocation(core::uint _index) const
+    {
+        const auto & slots = m_slots.getObjects();
+        if (_index < slots.size())
+            return VG_SAFE_STATIC_CAST(IGameObject, slots[_index].m_location.getObject());
+        else
+            return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
