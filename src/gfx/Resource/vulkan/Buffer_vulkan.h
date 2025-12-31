@@ -11,7 +11,7 @@ namespace vg::gfx::vulkan
         Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot);
         ~Buffer();
 
-        static core::size_t getRequiredUploadSize(const BufferDesc & _bufferDesc);
+        static bool getRequiredUploadSizeAndAlignment(const BufferDesc & _bufferDesc, core::size_t & _size, core::size_t & _alignment);
 
     private:
         VkBufferView    m_vkBufferView = VK_NULL_HANDLE;

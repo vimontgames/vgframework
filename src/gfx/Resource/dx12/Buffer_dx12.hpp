@@ -1,7 +1,7 @@
 namespace vg::gfx::dx12
 {
     //--------------------------------------------------------------------------------------
-    core::size_t Buffer::getRequiredUploadSize(const BufferDesc & _bufferDesc)
+    bool Buffer::getRequiredUploadSizeAndAlignment(const BufferDesc & _bufferDesc, core::size_t & _size, core::size_t & _alignment)
     {
         auto * device = gfx::Device::get();
         auto * d3d12device = device->getd3d12Device();
@@ -43,10 +43,13 @@ namespace vg::gfx::dx12
         const UINT64 size = _bufferDesc.getSize(); // allocInfo.SizeInBytes;
         const UINT64 alignment = allocInfo.Alignment ? allocInfo.Alignment : 1ULL;
 
-        auto * uploadBuffer = device->getStreamingUploadBuffer();
-        size_t alignedSize = uploadBuffer->getAlignedSize(size, alignment /*D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT*/);
+        //auto * uploadBuffer = device->getStreamingUploadBuffer();
+        //size_t alignedSize = uploadBuffer->getAlignedSize(size, alignment /*D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT*/);
 
-        return alignedSize;
+        _size = size;
+        _alignment = alignment;
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------

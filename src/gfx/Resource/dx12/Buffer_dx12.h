@@ -13,6 +13,6 @@ namespace vg::gfx::dx12
 
         static D3D12_RESOURCE_DESC      getd3d12ResourceDesc(const BufferDesc & _bufDesc);
         static D3D12MA::ALLOCATION_DESC getd3d12AllocationDesc(const BufferDesc & _bufDesc);
-        static core::size_t getRequiredUploadSize(const BufferDesc & _bufferDesc);
+        static bool getRequiredUploadSizeAndAlignment(const BufferDesc & _bufferDesc, core::size_t & _size, core::size_t & _alignment);
     };
 }

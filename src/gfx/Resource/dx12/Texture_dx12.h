@@ -42,7 +42,7 @@ namespace vg::gfx::dx12
         void                                            setSubResourceData                  (core::uint _index, core::size_t _offset);
         const SubResourceData &                         getSubResourceData                  (core::uint _index) const;
 
-        static core::size_t                             getRequiredUploadSize               (const TextureDesc & _texDesc);
+        static bool                                     getRequiredUploadSizeAndAlignment   (const TextureDesc & _texDesc, core::size_t & _size, core::size_t & _alignment);
 
 	private:
         static const inline D3D12_CPU_DESCRIPTOR_HANDLE s_d3d12invalidSRVHandle = { (core::uint)-1 };

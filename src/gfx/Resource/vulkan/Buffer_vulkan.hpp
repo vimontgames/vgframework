@@ -1,7 +1,7 @@
 namespace vg::gfx::vulkan
 {
     //--------------------------------------------------------------------------------------
-    core::size_t Buffer::getRequiredUploadSize(const BufferDesc & _bufferDesc)
+    bool Buffer::getRequiredUploadSizeAndAlignment(const BufferDesc & _bufferDesc, core::size_t & _size, core::size_t & _alignment)
     {
         auto * device = gfx::Device::get();
         auto & vkDevice = device->getVulkanDevice();
@@ -53,10 +53,13 @@ namespace vg::gfx::vulkan
         // Destroy temporary buffer immediately
         vkDestroyBuffer(vkDevice, tmpBuffer, nullptr);
 
-        auto * uploadBuffer = device->getStreamingUploadBuffer();
-        size_t alignedSize = uploadBuffer->getAlignedSize(mem_reqs.size, mem_reqs.alignment);
+        //auto * uploadBuffer = device->getStreamingUploadBuffer();
+        //size_t alignedSize = uploadBuffer->getAlignedSize(mem_reqs.size, mem_reqs.alignment);
 
-        return alignedSize;
+        _size = mem_reqs.size;
+        _alignment = mem_reqs.alignment;
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------

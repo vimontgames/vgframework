@@ -268,7 +268,7 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    core::size_t Texture::getRequiredUploadSize(const TextureDesc & _texDesc)
+    bool Texture::getRequiredUploadSizeAndAlignment(const TextureDesc & _texDesc, size_t & _size, size_t & _alignment)
     {
         auto * device = gfx::Device::get();
 
@@ -286,10 +286,13 @@ namespace vg::gfx::dx12
 
         device->getd3d12Device()->GetCopyableFootprints(&resourceDesc, 0, subResourceCount, 0, footprints.data(), rows.data(), rowSize.data(), &totalBytes);
 
-        auto * uploadBuffer = device->getStreamingUploadBuffer();
-        totalBytes = uploadBuffer->getAlignedSize(totalBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
+        //auto * uploadBuffer = device->getStreamingUploadBuffer();
+        //totalBytes = uploadBuffer->getAlignedSize(totalBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
 
-        return totalBytes;
+        _size = totalBytes;
+        _alignment = D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT;
+
+        return true;
     }
 
 	//--------------------------------------------------------------------------------------

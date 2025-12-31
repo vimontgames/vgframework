@@ -564,20 +564,23 @@ namespace vg::gfx
         VG_ASSERT(Kernel::getScheduler()->IsLoadingThread());
 
         UploadBuffer * streamingBuffer = getStreamingUploadBuffer();
-        const size_t requiredUploadSize = Texture::getRequiredUploadSize(_texDesc);
-        const size_t availableUploadSize = streamingBuffer->getAvailableUploadSize();
-        //VG_DEBUGPRINT("[Device] Required upload size for texture \"%s\" is %u bytes (%u MB)\n", _name.c_str(), requiredUploadSize, requiredUploadSize / (1024 * 1024));
 
-        if (requiredUploadSize > availableUploadSize)
+        size_t size, alignment;
+        Texture::getRequiredUploadSizeAndAlignment(_texDesc, size, alignment);
+
+        if (streamingBuffer->isAvailable(size, alignment))
         {
-            VG_WARNING("[Resource] Texture \"%s\" required %u MB for upload but only %u/%u MB were available at the moment.", _name.c_str(), requiredUploadSize / (1024 * 1024), availableUploadSize / (1024 * 1024), streamingBuffer->getTotalSize() / (1024 * 1024));
-            return LoadStatus::CannotUploadData;
-        }
-                        
-        streamingBuffer->setNextAllocSize(requiredUploadSize);
-        _texture = createTexture(_texDesc, _name, _initData);
+            auto requiredUploadSize = streamingBuffer->getAlignedSize(size, alignment);
+            streamingBuffer->setNextAllocSize(requiredUploadSize);
+            _texture = createTexture(_texDesc, _name, _initData);
 
-        return LoadStatus::Success;
+            return LoadStatus::Success;
+        }
+        else
+        {
+            VG_WARNING("[Resource] Cannot upload Texture \"%s\" because a size of %u bytes with alignment of %u is necessary but not available", _name.c_str(), size, alignment);
+            return LoadStatus::CannotUploadData;
+        }        
     }
 
     //--------------------------------------------------------------------------------------
@@ -616,20 +619,23 @@ namespace vg::gfx
         VG_ASSERT(Kernel::getScheduler()->IsLoadingThread());
 
         UploadBuffer * streamingBuffer = getStreamingUploadBuffer();
-        const size_t requiredUploadSize = Buffer::getRequiredUploadSize(_bufDesc);
-        const size_t availableUploadSize = getStreamingUploadBuffer()->getAvailableUploadSize();
-        //VG_DEBUGPRINT("[Device] Required upload size for buffer \"%s\" is %u bytes (%u MB)\n", _name.c_str(), requiredUploadSize, requiredUploadSize / (1024 * 1024));
-        
-        if (requiredUploadSize > availableUploadSize)
+
+        size_t size, alignment;
+        Buffer::getRequiredUploadSizeAndAlignment(_bufDesc, size, alignment);
+
+        if (streamingBuffer->isAvailable(size, alignment))
         {
-            VG_WARNING("[Resource] Buffer \"%s\" required %u MB for upload but only %u / %u MB were available at the moment.", _name.c_str(), requiredUploadSize / (1024 * 1024), availableUploadSize / (1024 * 1024), streamingBuffer->getTotalSize() / (1024 * 1024));
+            auto requiredUploadSize = streamingBuffer->getAlignedSize(size, alignment);
+            getStreamingUploadBuffer()->setNextAllocSize(requiredUploadSize);
+            _buffer = createBuffer(_bufDesc, _name, _initData);
+
+            return LoadStatus::Success;
+        }
+        else
+        {
+            VG_WARNING("[Resource] Cannot upload Buffer \"%s\" because a size of %u bytes with alignment of %u is necessary but not available", _name.c_str(), size, alignment);
             return LoadStatus::CannotUploadData;
         }
-
-        getStreamingUploadBuffer()->setNextAllocSize(requiredUploadSize);
-        _buffer = createBuffer(_bufDesc, _name, _initData);
-
-        return LoadStatus::Success;
     }
 
     //--------------------------------------------------------------------------------------

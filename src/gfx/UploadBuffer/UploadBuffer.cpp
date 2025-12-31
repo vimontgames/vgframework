@@ -207,10 +207,42 @@ namespace vg::gfx
     }
 
     //--------------------------------------------------------------------------------------
+    bool UploadBuffer::isAvailable(core::size_t _size, core::size_t _alignment)
+    {
+        return tryAllocate(_size, _alignment, nullptr);
+    }
+
+    //--------------------------------------------------------------------------------------
     // TODO: Change getAvailableUploadSize to return not only largest block but also 
     // find best (smaller) fit for incoming allocation.
     //--------------------------------------------------------------------------------------
     uint_ptr UploadBuffer::alloc(size_t _size, size_t _alignment, RingAllocCategory _category)
+    {
+        const size_t totalSize = m_buffer->getBufDesc().getSize();
+        const uint_ptr baseAddress = (uint_ptr)getBaseAddress();
+
+        Alloc alloc;
+        if (tryAllocate(_size, _alignment, &alloc))
+        {
+            // Check
+             // Try to fit aligned alloc at current buffer offset + alignmentOffset
+            uint_ptr alignmentOffset = alignUp(baseAddress + m_currentOffset, _alignment) - (baseAddress + m_currentOffset);
+            size_t alignedSize = _size + alignmentOffset;
+            if (m_nextAllocSize != (core::size_t)-1)
+                VG_ASSERT(alignedSize == m_nextAllocSize, "[Upload] The requested upload size of %u kb (%u MB) does not match previously predicted size of %u kb (%u MB)", alignedSize, alignedSize / (1024 * 1024), m_nextAllocSize, m_nextAllocSize / (1024 * 1024));
+
+            m_ranges.push_back(alloc);
+            m_currentOffset = alloc.end;
+            VG_ASSERT_IS_ALIGNED(baseAddress + alloc.begin, _alignment);
+            return alloc.begin;
+        }
+
+        VG_ASSERT(false, "[Upload] Cannot allocate %u MB in upload buffer #%u", _size >> 20, m_index);
+        return -1;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool UploadBuffer::tryAllocate(core::size_t _size, core::size_t _alignment, Alloc * _alloc)
     {
         const size_t totalSize = m_buffer->getBufDesc().getSize();
         const uint_ptr baseAddress = (uint_ptr)getBaseAddress();
@@ -225,48 +257,42 @@ namespace vg::gfx
         uint_ptr alignmentOffset = alignUp(baseAddress + m_currentOffset, _alignment) - (baseAddress + m_currentOffset);
         size_t alignedSize = _size + alignmentOffset;
 
-        if (m_nextAllocSize != (core::size_t)-1)
-            VG_ASSERT(alignedSize == m_nextAllocSize, "[Upload] The requested upload size of %u kb (%u MB) does not match previously predicted size of %u kb (%u MB)", alignedSize, alignedSize / (1024 * 1024), m_nextAllocSize, m_nextAllocSize / (1024 * 1024));
-
         VG_ASSERT(alignedSize <= totalSize, "[Upload] Requested %u bytes (%u MB) but total size of %s is %u bytes (%u MB)", alignedSize, alignedSize / (1024 * 1024), GetName().c_str(), totalSize, totalSize / (1024 * 1024));
         if (alignedSize > totalSize)
-            return -1;
+            return false;
 
         Alloc bestRange;
         core::u64 available = getAvailableUploadSize(bestRange);
-        VG_ASSERT(alignedSize <= available, "[Upload] Requested %u bytes (%u MB) but only %u bytes (%u/%u MB) are available in %s", alignedSize, alignedSize/(1024*1024), available, available/(1024*1024), totalSize/(1024*1024), GetName().c_str());
+        VG_ASSERT(!_alloc || alignedSize <= available, "[Upload] Requested %u bytes (%u MB) but only %u bytes (%u/%u MB) are available in %s", alignedSize, alignedSize / (1024 * 1024), available, available / (1024 * 1024), totalSize / (1024 * 1024), GetName().c_str());
         if (alignedSize > available)
-            return -1;
+            return false;
 
         if ((m_currentOffset + alignedSize) < totalSize)
         {
             uint_ptr offset = m_currentOffset + alignmentOffset;
 
-            const Alloc alloc = { m_currentOffset, m_currentOffset + alignedSize };
+            const Alloc alloc = { offset, offset + _size };
 
-            #if VG_ENABLE_ASSERT
             const auto previousFrameRangeOverlapIndex = isOverlaping(alloc, m_previousRanges);
             if (-1 != previousFrameRangeOverlapIndex)
             {
-                VG_ASSERT(-1 == previousFrameRangeOverlapIndex, "[Upload] Could not allocated %u KB in upload buffer #%u (%u MB) because the buffer is too small for current and previous frames. Requested allocation in range [%u..%u] overlaps with previous frame allocation range [%u...%u]", (alloc.end - alloc.begin) / 1024, m_index, m_buffer->getBufDesc().getSize() / (1024*1024), alloc.begin, alloc.end, m_previousRanges[previousFrameRangeOverlapIndex].begin, m_previousRanges[previousFrameRangeOverlapIndex].end);
+                VG_ASSERT(!_alloc || -1 == previousFrameRangeOverlapIndex, "[Upload] Could not allocated %u KB in upload buffer #%u (%u MB) because the buffer is too small for current and previous frames. Requested allocation in range [%u..%u] overlaps with previous frame allocation range [%u...%u]", (alloc.end - alloc.begin) / 1024, m_index, m_buffer->getBufDesc().getSize() / (1024*1024), alloc.begin, alloc.end, m_previousRanges[previousFrameRangeOverlapIndex].begin, m_previousRanges[previousFrameRangeOverlapIndex].end);
                 if (-1 != previousFrameRangeOverlapIndex)
-                    return -1;
+                    return false;
             }
             else
             {
                 const auto currentFrameRangeOverlapIndex = isOverlaping(alloc, m_ranges);
-                VG_ASSERT(-1 == currentFrameRangeOverlapIndex, "[Upload] Could not allocated %u KB in upload buffer #%u (%u MB) because the buffer is too small for current frame. Requested allocation in range [%u..%u] overlaps with previous frame allocation range [%u...%u]", (alloc.end - alloc.begin) / 1024, m_index, m_buffer->getBufDesc().getSize() >> 10, alloc.begin, alloc.end, m_ranges[currentFrameRangeOverlapIndex].begin, m_ranges[currentFrameRangeOverlapIndex].end);
+                VG_ASSERT(!_alloc || -1 == currentFrameRangeOverlapIndex, "[Upload] Could not allocated %u KB in upload buffer #%u (%u MB) because the buffer is too small for current frame. Requested allocation in range [%u..%u] overlaps with previous frame allocation range [%u...%u]", (alloc.end - alloc.begin) / 1024, m_index, m_buffer->getBufDesc().getSize() >> 10, alloc.begin, alloc.end, m_ranges[currentFrameRangeOverlapIndex].begin, m_ranges[currentFrameRangeOverlapIndex].end);
                 if (-1 != currentFrameRangeOverlapIndex)
-                    return -1;
+                    return false;
             }
-            #endif
 
-            m_ranges.push_back(Alloc(alloc.begin, alloc.end));
+            if (nullptr != _alloc)
+                *_alloc = alloc;
 
-            m_currentOffset += alignedSize;
-            
-            VG_ASSERT_IS_ALIGNED(baseAddress + offset, _alignment);
-            return offset;
+            VG_ASSERT_IS_ALIGNED(baseAddress + alloc.begin, _alignment);
+            return true;
         }
         else 
         {
@@ -277,37 +303,35 @@ namespace vg::gfx
             if (alignedSize < totalSize)
             {
                 uint_ptr offset = alignmentOffset;
+                VG_ASSERT(alignmentOffset == 0);
 
-                const Alloc alloc = { 0, alignedSize };
+                const Alloc alloc = { offset, offset+_size };
 
-                #if VG_ENABLE_ASSERT
                 const auto previousFrameRangeOverlapIndex = isOverlaping(alloc, m_previousRanges);
                 if (-1 != previousFrameRangeOverlapIndex)
                 {
-                    VG_ASSERT(-1 == previousFrameRangeOverlapIndex, "[Upload] Could not allocated %u KB in upload buffer #%u (%u MB) because the buffer is too small for current and previous frames. Requested allocation in range [%u..%u] overlaps with previous frame allocation range [%u...%u]", (alloc.end - alloc.begin) / 1024, m_index, m_buffer->getBufDesc().getSize() / (1024 * 1024), alloc.begin, alloc.end, m_previousRanges[previousFrameRangeOverlapIndex].begin, m_previousRanges[previousFrameRangeOverlapIndex].end);
+                    VG_ASSERT(!_alloc || -1 == previousFrameRangeOverlapIndex, "[Upload] Could not allocated %u KB in upload buffer #%u (%u MB) because the buffer is too small for current and previous frames. Requested allocation in range [%u..%u] overlaps with previous frame allocation range [%u...%u]", (alloc.end - alloc.begin) / 1024, m_index, m_buffer->getBufDesc().getSize() / (1024 * 1024), alloc.begin, alloc.end, m_previousRanges[previousFrameRangeOverlapIndex].begin, m_previousRanges[previousFrameRangeOverlapIndex].end);
                     if (-1 != previousFrameRangeOverlapIndex)
-                        return -1;
+                        return false;
                 }
                 else
                 {
                     const auto currentFrameRangeOverlapIndex = isOverlaping(alloc, m_ranges);
-                    VG_ASSERT(-1 == currentFrameRangeOverlapIndex, "[Upload] Could not allocated %u KB in upload buffer #%u (%u MB) because the buffer is too small for current frame. Requested allocation in range [%u..%u] overlaps with previous frame allocation range [%u...%u]", (alloc.end - alloc.begin) / 1024, m_index, m_buffer->getBufDesc().getSize() >> 10, alloc.begin, alloc.end, m_ranges[currentFrameRangeOverlapIndex].begin, m_ranges[currentFrameRangeOverlapIndex].end);
+                    VG_ASSERT(!_alloc || -1 == currentFrameRangeOverlapIndex, "[Upload] Could not allocated %u KB in upload buffer #%u (%u MB) because the buffer is too small for current frame. Requested allocation in range [%u..%u] overlaps with previous frame allocation range [%u...%u]", (alloc.end - alloc.begin) / 1024, m_index, m_buffer->getBufDesc().getSize() >> 10, alloc.begin, alloc.end, m_ranges[currentFrameRangeOverlapIndex].begin, m_ranges[currentFrameRangeOverlapIndex].end);
                     if (-1 != currentFrameRangeOverlapIndex)
-                        return -1;
+                        return false;
                 }
-                #endif
 
-                m_ranges.push_back(Alloc(alloc.begin, alloc.end));
+                if (nullptr != _alloc)
+                    *_alloc = alloc;
 
-                m_currentOffset = alignedSize;
-
-                VG_ASSERT_IS_ALIGNED(baseAddress + offset, _alignment);
-                return offset;
+                VG_ASSERT_IS_ALIGNED(baseAddress + alloc.begin, _alignment);
+                return true;
             }
         }
 
-        VG_ASSERT(false, "[Upload] Cannot allocate %u MB because size of upload buffer #%u is %u MB", _size >> 20, m_index, totalSize>>20);
-        return -1;
+        VG_ASSERT(!_alloc, "[Upload] Cannot allocate %u MB in upload buffer #%u", _size >> 20, m_index);
+        return false;
     }
 
     //--------------------------------------------------------------------------------------

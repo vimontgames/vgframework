@@ -70,6 +70,8 @@ namespace vg::gfx
 
         VG_INLINE Buffer *      getBuffer               () const;
 
+        bool                    isAvailable             (core::size_t _size, core::size_t _alignment);
+
     private:
         VG_INLINE core::u8 *    getBaseAddress          () const;
 
@@ -78,6 +80,7 @@ namespace vg::gfx
         void                    upload                  (Buffer * _dst, core::uint_ptr _from, size_t _size);
         core::u8 *              map                     (core::size_t _size, core::size_t _aligment, RingAllocCategory _category);
         core::uint_ptr          alloc                   (core::size_t _size, core::size_t _alignment, RingAllocCategory _category);
+        bool                    tryAllocate             (core::size_t _size, core::size_t _alignment, Alloc * _alloc);
         core::uint              isOverlaping            (const Alloc & _alloc, const core::vector<Alloc> & _ranges) const;
         void                    lock                    ();
         void                    unlock                  ();

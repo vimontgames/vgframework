@@ -147,7 +147,7 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    core::size_t Texture::getRequiredUploadSize(const TextureDesc & _texDesc)
+    bool Texture::getRequiredUploadSizeAndAlignment(const TextureDesc & _texDesc, core::size_t & _size, core::size_t & _alignment)
     {
         auto * device = gfx::Device::get();
         auto vkDevice = device->getVulkanDevice();
@@ -209,10 +209,13 @@ namespace vg::gfx::vulkan
         // Destroy temporary image
         vkDestroyImage(vkDevice, tmpImage, nullptr);
 
-        auto * uploadBuffer = device->getStreamingUploadBuffer();
-        size_t totalBytes = uploadBuffer->getAlignedSize(mem_reqs.size, mem_reqs.alignment);
+        //auto * uploadBuffer = device->getStreamingUploadBuffer();
+        //size_t totalBytes = uploadBuffer->getAlignedSize(mem_reqs.size, mem_reqs.alignment);
 
-        return totalBytes;
+        _size = mem_reqs.size;
+        _alignment = mem_reqs.alignment;
+
+        return true;
     }
 
 	//--------------------------------------------------------------------------------------

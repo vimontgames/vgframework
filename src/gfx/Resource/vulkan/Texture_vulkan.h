@@ -17,7 +17,7 @@ namespace vg::gfx::vulkan
         static PixelFormat			getPixelFormat          (VkFormat _vkFormat);
         static VkImageType			getVulkanImageType		(TextureType _texType);
         static VkImageViewType		getVulkanImageViewType	(TextureType _texType);
-        static core::size_t         getRequiredUploadSize   (const TextureDesc & _texDesc);
+        static bool                 getRequiredUploadSizeAndAlignment(const TextureDesc & _texDesc, core::size_t & _size, core::size_t & _alignment);
 
 	private:
 		VkImageView					m_vkImageView;		// This is the default image view with all slices/mipmaps (used for ShaderResourceView)
