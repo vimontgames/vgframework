@@ -1115,6 +1115,8 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void DebugDraw::endFrame()
     {
+        VG_PROFILE_CPU("DebugDraw::endFrame");
+
         Renderer * renderer = Renderer::get();
 
         auto & worlds = getEngine()->GetWorlds();

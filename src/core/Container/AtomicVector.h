@@ -1,5 +1,10 @@
 #pragma once
 
+#ifdef VG_DEBUG
+// Clearing vector contents can be slow with large vectors, and is not strictly necessary, so do it only for debug builds
+#define VG_ATOMIC_VECTOR_DEBUG_CLEAR_PATTERN 0xAA 
+#endif
+
 namespace vg::core
 {
     template <typename T> class atomicvector
@@ -18,7 +23,10 @@ namespace vg::core
         {
             if (0 != m_counter.exchange(0))
             {
-                memset(m_data.data(), 0x0, m_data.size() * sizeof(T));
+                #if VG_ATOMIC_VECTOR_DEBUG_CLEAR_PATTERN
+                VG_PROFILE_CPU("atomicvector::clear");
+                memset(m_data.data(), VG_ATOMIC_VECTOR_DEBUG_CLEAR_PATTERN, m_data.size() * sizeof(T));
+                #endif
             }
         }
 
