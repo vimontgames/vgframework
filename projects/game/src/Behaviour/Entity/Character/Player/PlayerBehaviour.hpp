@@ -116,7 +116,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
                     const float forwardSpeed = vehicle->GetLocalVelocity().x;
 
-                    if (forward > 0.1f)
+                    if (forward > 0.2f)
                     {
                         if (forwardSpeed > -0.1f)
                         {
@@ -128,7 +128,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                             vehicle->Brake(1.0f);
                         }
                     }
-                    else if (backward > 0.1f)
+                    else if (backward > 0.2f)
                     {
                         if (forwardSpeed < 0)
                         {
@@ -147,7 +147,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     }
 
                     float2 dir = input.GetJoyLeftStickDir(joyID);
-                    if ((float)(abs(dir.x)) > 0.1f)
+                    if ((float)(abs(dir.x)) > 0.2f)
                         vehicle->Steer(dir.x);
                     else
                         vehicle->Steer(0.0f);
