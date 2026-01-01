@@ -48,21 +48,25 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    // Compute AABB using the "abs dot" trick
+    //--------------------------------------------------------------------------------------
     AABB AABB::transform(const AABB & _other, const core::float4x4 & _world)
     {
         AABB aabb;
 
-        float4 p000 = mul(float4(_other.m_min.xyz, 1.0f), _world);
-        float4 p001 = mul(float4(_other.m_min.xy, _other.m_max.z, 1.0f), _world);
-        float4 p010 = mul(float4(_other.m_min.x, _other.m_max.y, _other.m_min.z, 1.0f), _world);
-        float4 p011 = mul(float4(_other.m_min.x, _other.m_max.yz, 1.0f), _world);
-        float4 p100 = mul(float4(_other.m_max.x, _other.m_min.yz, 1.0f), _world);
-        float4 p101 = mul(float4(_other.m_max.x, _other.m_min.y, _other.m_max.z, 1.0f), _world);
-        float4 p110 = mul(float4(_other.m_max.xy, _other.m_min.z, 1.0f), _world);
-        float4 p111 = mul(float4(_other.m_max.xyz, 1.0f), _world);
+        float3 c = (_other.m_min + _other.m_max) * 0.5f;
+        float3 e = (_other.m_max - _other.m_min) * 0.5f;
 
-        aabb.m_min = min(min(min(p000, p001), min(p010, p011)), min(min(p100, p101), min(p110, p111))).xyz;
-        aabb.m_max = max(max(max(p000, p001), max(p010, p011)), max(max(p100, p101), max(p110, p111))).xyz;
+        float4 center = mul(float4(c, 1.0f), _world);
+
+        float3 I = _world[0].xyz;
+        float3 J = _world[1].xyz;
+        float3 K = _world[2].xyz;
+
+        float3 newExtents = abs(I) * e.x + abs(J) * e.y + abs(K) * e.z;
+        
+        aabb.m_min = center.xyz - newExtents;
+        aabb.m_max = center.xyz + newExtents;
 
         return aabb;
     }
