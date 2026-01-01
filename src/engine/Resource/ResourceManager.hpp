@@ -80,6 +80,12 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    const core::dictionary<core::IResourceInfo *> & ResourceManager::GetAllResourceInfos() const
+    {
+        return (core::dictionary<core::IResourceInfo *> &)m_resourceInfosMap;
+    }
+
+    //--------------------------------------------------------------------------------------
     core::IResourceMeta * ResourceManager::GetOrCreateResourceMeta(const IResource * _resource) const
     {
         auto rm = ResourceManager::get();

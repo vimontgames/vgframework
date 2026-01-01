@@ -44,8 +44,11 @@ namespace vg::core
         // Get number of registered resources
         virtual uint GetResourceCount() const = 0;
 
-        // Get infos about a loaded (or requested resource)
+        // Get infos about a loaded (or requested resource) by index (slow)
         virtual const IResourceInfo & GetResourceInfo(uint _index) const = 0;
+
+        // Returns a read-only dictionary of resources 
+        virtual const core::dictionary<IResourceInfo *> & GetAllResourceInfos() const = 0;
 
         // Get or create ResourceMeta and update Timestamps
         virtual IResourceMeta * GetOrCreateResourceMeta(const IResource * _resource) const = 0;

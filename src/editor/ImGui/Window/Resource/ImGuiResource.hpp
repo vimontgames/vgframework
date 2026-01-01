@@ -41,6 +41,7 @@ namespace vg::editor
             // Sort Resources by resource type
             unordered_map<string, vector<const IResourceInfo *>> resourcesByType;
 
+            #if 1
             for (uint i = 0; i < resCount; ++i)
             {
                 const IResourceInfo & resInfo = rm->GetResourceInfo(i);
@@ -56,6 +57,24 @@ namespace vg::editor
                 vector<const IResourceInfo *> & resList = it->second;
                 resList.push_back(&resInfo);
             }
+            #else
+            const auto & resources = rm->GetAllResourceInfos();
+            for (auto & resInfoPair : resources)
+            {
+                const IResourceInfo * resInfo = resInfoPair.second;
+                const string resType = resInfo->GetResourceType();
+
+                auto it = resourcesByType.find(resType);
+                if (resourcesByType.end() == it)
+                {
+                    vector<const IResourceInfo *> resList;
+                    it = resourcesByType.insert(std::pair<string, vector<const IResourceInfo *>>(resType, resList)).first;
+                }
+
+                vector<const IResourceInfo *> & resList = it->second;
+                resList.push_back(resInfo);
+            }
+            #endif
 
             ImGui::BeginChild(ImGui::getObjectLabel("ChildWindow", this).c_str());
             {

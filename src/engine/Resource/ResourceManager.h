@@ -43,6 +43,7 @@ namespace vg::engine
 
         core::uint                  GetResourceCount            () const final override;
         const core::IResourceInfo & GetResourceInfo             (core::uint _index) const final override;
+        const core::dictionary<core::IResourceInfo *> & GetAllResourceInfos() const final override;
 
         core::IResourceMeta *       GetOrCreateResourceMeta     (const core::IResource * _resource) const final override;
         core::IResourceMeta *       GetResourceMeta             (const core::string & _resourcePath) const final override;
