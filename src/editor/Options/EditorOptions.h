@@ -23,12 +23,16 @@ namespace vg::editor
     );
 
     vg_enum_class(vg::editor, EditorDebugFlags, core::u64,
-        Culling             = 0x00000001,
-        Inspector           = 0x00000002,
-        Picking             = 0x00000004,
-        DebugProperties     = 0x00000008,
-        RuntimeFlags        = 0x00000010,
-        UID                 = 0x00000020
+        Culling             = 0x0000000000000001,
+        Inspector           = 0x0000000000000002,
+        Picking             = 0x0000000000000004
+    );
+
+    vg_enum_class(vg::editor, PropertiesDisplayFlags, core::u64,
+        Matrix              = 0x0000000000000001,   // Display properties with the 'PropertyFlag::DebugMatrix' flag (e.g. cached global matrix)
+        Runtime             = 0x0000000000000002,   // Display properties with the 'PropertyFlag::DebugRuntime' flag (e.g. runtime flags)
+        UID                 = 0x0000000000000004,   // Display properties with the 'PropertyFlag::DebugUID' flag (e.g. object UIDs)
+        Misc                = 0x8000000000000000    // Display properties with the 'PropertyFlag::Debug' flag 
     );
 
     struct GizmoOptions
@@ -75,9 +79,11 @@ namespace vg::editor
         bool                            IsDebugCulling                  () const;
         bool                            IsDebugInspector                () const;
         bool                            IsDebugPicking                  () const;
-        bool                            IsDebugPropertyVisible          () const;
-        bool                            IsRuntimeFlagsPropertyVisible   () const;
-        bool                            IsUIDPropertyVisible            () const;
+
+        bool                            IsDebugMatrixPropertyVisible    () const;
+        bool                            IsDebugRuntimePropertyVisible   () const;
+        bool                            IsDebugUIDPropertyVisible       () const;
+        bool                            IsMiscDebugPropertyVisible      () const;
 
         const ImGuiConsoleOptions &     getConsoleOptions               () const { return m_consoleOptions; }
         ImGuiConsoleOptions &           getConsoleOptions               () { return m_consoleOptions; }
@@ -85,7 +91,8 @@ namespace vg::editor
     private:
         renderer::Theme                 m_theme = renderer::Theme::ImGui_Dark;
         GizmoOptions                    m_gizmo;
-        EditorDebugFlags                m_debugFlags = (EditorDebugFlags)0x0;
+        EditorDebugFlags                m_editorDebugFlags = (EditorDebugFlags)0x0;
+        PropertiesDisplayFlags          m_propertiesDisplayFlags = (PropertiesDisplayFlags)0x0;
         ImGuiConsoleOptions             m_consoleOptions;
         renderer::ICameraSettings *     m_cameraSettings = nullptr;          
     };

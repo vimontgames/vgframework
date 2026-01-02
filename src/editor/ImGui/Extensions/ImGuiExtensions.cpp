@@ -350,13 +350,13 @@ namespace ImGui
     //--------------------------------------------------------------------------------------
     string getObjectLabel(const string & _label, const void * _object)
     {
-        return fmt::sprintf("%s###%s%p", _label.c_str(), _label.c_str(), _object);
+        return fmt::sprintf("%s###%s%p", _label, _label, _object);
     }
 
     //--------------------------------------------------------------------------------------
     string getObjectLabel(const string & _label, const string & _subLabel, const void * _object)
     {
-        return fmt::sprintf("%s###%s_%p", _label.c_str(), _subLabel.c_str(), _object);
+        return fmt::sprintf("%s###%s_%p", _label, _subLabel, _object);
     }    
 
     //--------------------------------------------------------------------------------------

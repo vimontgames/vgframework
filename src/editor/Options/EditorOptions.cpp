@@ -48,8 +48,11 @@ namespace vg::editor
 
         registerPropertyGroupBegin(EditorOptions, "Debug");
         {
-            registerPropertyEnumBitfield(EditorOptions, EditorDebugFlags, m_debugFlags, "Flags");
-            setPropertyDescription(EditorOptions, m_debugFlags, "Enable some editor debug features");
+            registerPropertyEnumBitfield(EditorOptions, EditorDebugFlags, m_editorDebugFlags, "Editor");
+            setPropertyDescription(EditorOptions, m_editorDebugFlags, "Enable some editor debug features");
+
+            registerPropertyEnumBitfield(EditorOptions, PropertiesDisplayFlags, m_propertiesDisplayFlags, "Properties");
+            setPropertyDescription(EditorOptions, m_propertiesDisplayFlags, "Enable display of debug properties");
         }
         registerPropertyGroupEnd(EditorOptions);
 
@@ -59,37 +62,43 @@ namespace vg::editor
     //--------------------------------------------------------------------------------------
     bool EditorOptions::IsDebugCulling() const
     { 
-        return core::asBool(EditorDebugFlags::Culling & m_debugFlags); 
+        return core::asBool(EditorDebugFlags::Culling & m_editorDebugFlags);
     }
 
     //--------------------------------------------------------------------------------------
     bool EditorOptions::IsDebugInspector() const
     {
-        return core::asBool(EditorDebugFlags::Inspector & m_debugFlags);
+        return core::asBool(EditorDebugFlags::Inspector & m_editorDebugFlags);
     }
 
     //--------------------------------------------------------------------------------------
     bool EditorOptions::IsDebugPicking() const
     {
-        return core::asBool(EditorDebugFlags::Picking & m_debugFlags);
+        return core::asBool(EditorDebugFlags::Picking & m_editorDebugFlags);
     }
 
     //--------------------------------------------------------------------------------------
-    bool EditorOptions::IsDebugPropertyVisible() const
+    bool EditorOptions::IsDebugMatrixPropertyVisible() const
     {
-        return core::asBool(EditorDebugFlags::DebugProperties & m_debugFlags);
+        return core::asBool(PropertiesDisplayFlags::Matrix & m_propertiesDisplayFlags);
     }
 
     //--------------------------------------------------------------------------------------
-    bool EditorOptions::IsRuntimeFlagsPropertyVisible() const
+    bool EditorOptions::IsDebugRuntimePropertyVisible() const
     {
-        return core::asBool(EditorDebugFlags::RuntimeFlags & m_debugFlags);
+        return core::asBool(PropertiesDisplayFlags::Runtime & m_propertiesDisplayFlags);
     }
 
     //--------------------------------------------------------------------------------------
-    bool EditorOptions::IsUIDPropertyVisible() const
+    bool EditorOptions::IsDebugUIDPropertyVisible() const
     {
-        return core::asBool(EditorDebugFlags::UID & m_debugFlags);
+        return core::asBool(PropertiesDisplayFlags::UID & m_propertiesDisplayFlags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool EditorOptions::IsMiscDebugPropertyVisible() const
+    {
+        return core::asBool(PropertiesDisplayFlags::Misc & m_propertiesDisplayFlags);
     }
 
     //--------------------------------------------------------------------------------------

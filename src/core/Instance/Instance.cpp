@@ -41,7 +41,7 @@ namespace vg::core
         registerPropertyEnumBitfield(Instance, InstanceFlags, m_flags, "Instance Flags");
         setPropertyDescription(Instance, m_flags, "Instance flags that are serialized");
 
-        registerPropertyEnumBitfieldEx(Instance, InstanceRuntimeFlags, m_runtimeFlags, "Runtime flags", PropertyFlags::Runtime | PropertyFlags::Transient);
+        registerPropertyEnumBitfieldEx(Instance, InstanceRuntimeFlags, m_runtimeFlags, "Runtime flags", PropertyFlags::DebugRuntime | PropertyFlags::Transient);
         setPropertyDescription(Instance, m_runtimeFlags, "Instance flags that are only runtime");
 
         registerPropertyEx(Instance, m_color, "Color", PropertyFlags::Color);
@@ -50,7 +50,7 @@ namespace vg::core
         registerPropertyEx(Instance, m_local, "Local", PropertyFlags::Flatten);
         setPropertyDescription(Instance, m_local, "Local transform");
 
-        registerPropertyEx(Instance, m_global, "Global", PropertyFlags::Flatten | PropertyFlags::Debug | PropertyFlags::Transient);
+        registerPropertyEx(Instance, m_global, "Global", PropertyFlags::Flatten | PropertyFlags::DebugMatrix | PropertyFlags::Transient);
         setPropertyDescription(Instance, m_global, "Global transform");
 
         return true;

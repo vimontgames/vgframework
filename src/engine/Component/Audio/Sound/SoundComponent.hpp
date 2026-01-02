@@ -127,7 +127,7 @@ namespace vg::engine
             if (sound.GetName() == _name)
                 return i;
         }
-        VG_WARNING("[Sound] GameObject \"%s\" has no Sound \"%s\"", GetGameObject()->GetName().c_str(), _name.c_str());
+        VG_INFO("[Sound] GameObject \"%s\" has no Sound \"%s\"", GetGameObject()->GetName().c_str(), _name.c_str());
         return -1;
     }
 

@@ -31,7 +31,7 @@ namespace vg::core
         registerPropertyEnumBitfield(GameObject, Tag, m_tags, "Tags");
         setPropertyDescription(GameObject, m_tags, "GameObjects can use Tags to categorize object (e.g., Player, Ennemy ...)")
 
-        registerPropertyEnumBitfieldEx(GameObject, UpdateFlags, m_update, "Update", PropertyFlags::Transient /* | PropertyFlags::Debug*/);
+        registerPropertyEnumBitfieldEx(GameObject, UpdateFlags, m_update, "Update", PropertyFlags::Transient | PropertyFlags::DebugRuntime);
 
         registerPropertyObjectPtrVector(GameObject, m_components, "Components");
         registerPropertyObjectPtrVectorEx(GameObject, m_children, "Children", PropertyFlags::Hidden);

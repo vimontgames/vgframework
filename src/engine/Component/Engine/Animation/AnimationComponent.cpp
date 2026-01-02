@@ -240,7 +240,7 @@ namespace vg::engine
             if (anim.GetName() == _name)
                 return i;
         }
-        VG_WARNING("[Animation] GameObject \"%s\" has no Animation \"%s\"", GetGameObject()->GetName().c_str(), _name.c_str());
+        VG_INFO("[Animation] GameObject \"%s\" has no Animation \"%s\"", GetGameObject()->GetName().c_str(), _name.c_str());
         return -1;
     }
 
