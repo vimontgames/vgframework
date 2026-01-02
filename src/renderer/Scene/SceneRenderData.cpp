@@ -39,6 +39,16 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    core::uint SceneRenderData::getTotalGraphicInstanceCount() const
+    {
+        return (uint)(m_cameraInstances.size()
+                  + m_lightInstances.size()
+                  + m_particleSystemInstances.size()
+                  + m_skinnedMeshInstances.size()
+                  + m_staticMeshInstances.size());
+    }
+
+    //--------------------------------------------------------------------------------------
     bool SceneRenderData::RegisterGraphicInstance(IGraphicInstance * _graphicInstance)
     {
         GraphicInstance * instance = VG_SAFE_STATIC_CAST(GraphicInstance, _graphicInstance);

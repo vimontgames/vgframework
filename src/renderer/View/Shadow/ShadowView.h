@@ -16,7 +16,7 @@ namespace vg::renderer
     {
     public:
         VG_CLASS_SUPER_CLASSNAME(ShadowView, View)
-        ShadowView(const LightInstance * _light, core::IWorld * _world, core::uint2 _resolution);
+        ShadowView(const LightInstance * _light, core::IWorld * _world, core::uint2 _resolution, View * _parentView = nullptr);
         ~ShadowView();
 
         bool                            IsLit               () const { return false; }
@@ -31,5 +31,6 @@ namespace vg::renderer
     private:
         const LightInstance *           m_light         = nullptr;
         ShadowMapPass *                 m_shadowMapPass = nullptr;
+        View *                          m_parentView    = nullptr;
     };
 }

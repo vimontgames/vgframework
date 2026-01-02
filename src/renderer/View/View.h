@@ -146,7 +146,9 @@ namespace vg::renderer
         VG_INLINE core::float2              getViewportOffset                   () const;
         VG_INLINE core::float2              getViewportScale                    () const;
 
-        VG_INLINE ViewCullingJob *          getCullingJob                       () const;
+        core::vector<ViewCullingSplitJob *> getCullingSplitJobs                 ();
+        VG_INLINE ViewCullingFinalJob *     getCullingFinalJob                  () const;
+        bool                                startJobs                           ();
 
         VG_INLINE void                      setFlags                            (ViewFlags _flagsToSet, ViewFlags _flagsToRemove = (ViewFlags)0);
         VG_INLINE void                      setFlag                             (ViewFlags _flag, bool _value);
@@ -194,7 +196,13 @@ namespace vg::renderer
         float                               m_cameraFovY;
         core::float2                        m_viewportOffset                    = core::float2(0,0);
         core::float2                        m_viewportScale                     = core::float2(1,1);
-        ViewCullingJob *                    m_cullingJob                        = nullptr;
+
+        core::vector<ViewCullingSplitJob *> m_cullingSplitJobs;
+        core::vector<ViewCullingJobOutput>  m_cullingSplitJobsResults;
+
+        ViewCullingFinalJob *               m_cullingJob                        = nullptr;
+        ViewCullingJobOutput                m_cullingJobResult;
+
         ViewConstantsUpdatePass *           m_viewConstantsUpdatePass           = nullptr;
         core::uint2                         m_mouseOffset;
         PickingData                         m_rawPickingData;
@@ -203,7 +211,7 @@ namespace vg::renderer
         gfx::TLAS *                         m_tlas                              = nullptr;
         TLASMode                            m_tlasMode                          = (TLASMode)-1;
         Frustum                             m_frustum;
-        ViewCullingJobOutput                m_cullingJobResult;
+
         core::vector<ShadowView*>           m_shadowViews;
         UIRenderer *                        m_viewGUI                           = nullptr;
     };

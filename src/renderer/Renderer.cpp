@@ -890,7 +890,7 @@ namespace vg::renderer
         auto jobSync = GetJobSync(RendererJobType::ViewCulling);
 
         // Perform culling for each view (might want to split views later)
-        uint jobStartCounter = 0;
+        bool anyJobStarted = false;
 
         #if 1
         const SharedWorldCullingJobOutput * worldCulling = getSharedWorldCullingJobOutput();
@@ -901,30 +901,26 @@ namespace vg::renderer
             for (uint v = 0; v < views.size(); ++v)
             {
                 View * view = (View*)views[v];
-                auto * job = view->getCullingJob();
-                jobScheduler->Start(job, jobSync);
-                jobStartCounter++;
+                anyJobStarted |= view->startJobs();
             }
         }
         #else
-  
-        for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
-        {
-            const auto & views = m_views[j];
-            for (uint i = 0; i < views.size(); ++i)
-            {
-                View * view = views[i];
-                if (view && view->IsVisible())
-                {
-                    auto * job = view->getCullingJob();
-                    jobScheduler->Start(job, jobSync);
-                    jobStartCounter++;
-                }
-            }
-        }
+        //for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
+        //{
+        //    const auto & views = m_views[j];
+        //    for (uint i = 0; i < views.size(); ++i)
+        //    {
+        //        View * view = views[i];
+        //        if (view && view->IsVisible())
+        //        {
+        //            auto * job = view->getCullingFinalJob();
+        //            anyJobStarted |= view->startJobs();
+        //        }
+        //    }
+        //}
         #endif
 
-        if (jobStartCounter > 0)
+        if (anyJobStarted)
         {
             VG_PROFILE_CPU("Wait View Culling");
             WaitJobSync(RendererJobType::ViewCulling);

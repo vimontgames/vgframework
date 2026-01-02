@@ -105,6 +105,7 @@ namespace vg::renderer
         bool				    isWireframeEnabled                      () const { return m_wireframe; }
         bool				    isDebugUIEnabled                        () const { return m_debugUI; }
         bool 			        isParticlesEnabled                      () const { return m_particles; }
+        bool                    isSplitCullingJobsEnabled               () const { return m_splitCullingViewJobs; }
 
         bool                    isZPrepassEnabled                       () const { return core::asBool(RenderPassFlags::ZPrepass & m_renderPassFlags); }
         bool				    isOpaqueEnabled			                () const { return core::asBool(RenderPassFlags::Opaque & m_renderPassFlags); }
@@ -169,8 +170,9 @@ namespace vg::renderer
         float                   m_defaultSpecularReflectionIntensity    = 1.0f;
 
         bool                    m_aabb                                  = false;
-        bool				    m_wireframe                             = false;
+        bool				    m_wireframe                             = false;            
         bool                    m_debugUI                               = false;
+        bool                    m_splitCullingViewJobs                  = true;
         bool                    m_particles                             = true;
         bool                    m_postProcess                           = true;
   

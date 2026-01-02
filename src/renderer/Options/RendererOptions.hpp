@@ -246,6 +246,9 @@ namespace vg::renderer
             registerProperty(RendererOptions, m_debugUI, "UI Debug");
             setPropertyDescription(RendererOptions, m_debugUI, "Show UI debug");
 
+            registerProperty(RendererOptions, m_splitCullingViewJobs, "Split Culling");
+            setPropertyDescription(RendererOptions, m_splitCullingViewJobs, "Use several culling jobs per view");
+
             registerPropertyGroupBegin(RendererOptions, "Framegraph");
             {
                 registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
@@ -347,6 +350,7 @@ namespace vg::renderer
         m_aabb = _other.m_aabb;
         m_wireframe = _other.m_wireframe;
         m_debugUI = _other.m_debugUI;
+        m_splitCullingViewJobs = _other.m_splitCullingViewJobs;
         m_particles = _other.m_particles;
         m_postProcess = _other.m_postProcess;
         m_HDRmode = _other.m_HDRmode;

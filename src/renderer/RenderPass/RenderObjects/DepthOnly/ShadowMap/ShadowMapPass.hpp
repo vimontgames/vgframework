@@ -6,7 +6,7 @@ namespace vg::renderer
     ShadowMapPass::ShadowMapPass() :
         DepthOnlyPass("ShadowMapPass")
     {
-
+        VG_PROFILE_CPU("New ShadowMapPass");
     }
 
     //--------------------------------------------------------------------------------------

@@ -2,7 +2,9 @@
 #include "View.h"
 #include "core/GameObject/GameObject.h"
 #include "core/IInput.h"
+#include "core/IWorld.h"
 #include "core/Scheduler/Mutex.h"
+#include "core/Scheduler/Scheduler.h"
 #include "gfx/ITexture.h"
 #include "gfx/Resource/Buffer.h"
 #include "gfx/Raytracing/TLAS.h"
@@ -14,6 +16,7 @@
 #include "renderer/Renderer_consts.h"
 #include "renderer/Camera/CameraSettings.h"
 #include "renderer/Camera/CameraLens.h"
+#include "renderer/Scene/SceneRenderData.h"
 
 #if !VG_ENABLE_INLINE
 #include "View.inl"
@@ -46,7 +49,7 @@ namespace vg::renderer
             m_renderTarget = (Texture *)_params.dest;
         }
 
-        m_cullingJob = new ViewCullingJob("ViewCulling", this, &m_cullingJobResult, Renderer::get()->getSharedCullingJobOutput());
+        m_cullingJob = new ViewCullingFinalJob("ViewCulling", this);
 
         m_viewConstantsUpdatePass = new ViewConstantsUpdatePass();
 
@@ -63,6 +66,114 @@ namespace vg::renderer
         VG_SAFE_RELEASE(m_cullingJob);
         VG_SAFE_RELEASE(m_viewConstantsUpdatePass);
         VG_SAFE_RELEASE(m_tlas);
+
+        for (uint j = 0; j < m_cullingSplitJobs.size(); ++j)
+        {
+            VG_SAFE_RELEASE(m_cullingSplitJobs[j]);
+            m_cullingSplitJobsResults[j].clear();
+        }
+        m_cullingSplitJobs.clear();
+        m_cullingSplitJobsResults.clear();
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Return at least one job or need to handle the case of 0 job sync
+    //--------------------------------------------------------------------------------------
+    core::vector<ViewCullingSplitJob *> View::getCullingSplitJobs()
+    {
+        const uint jobCount = Kernel::getScheduler()->GetWorkerThreadCount();
+
+        if (m_cullingSplitJobs.size() != jobCount || m_cullingSplitJobsResults.size() != jobCount)
+        {
+            VG_PROFILE_CPU("Create jobs");
+
+            for (uint j = 0; j < m_cullingSplitJobs.size(); ++j)
+                VG_SAFE_RELEASE(m_cullingSplitJobs[j]);
+
+            m_cullingSplitJobs.clear();
+            m_cullingSplitJobsResults.clear();
+
+            m_cullingSplitJobs.reserve(jobCount);
+            m_cullingSplitJobsResults.reserve(jobCount);
+
+            for (uint j = 0; j < jobCount; ++j)
+            {
+                ViewCullingJobOutput output;
+                m_cullingSplitJobsResults.push_back(output);
+                m_cullingSplitJobs.push_back(new ViewCullingSplitJob(fmt::sprintf("ViewCullingSplitJob #%u", j), (View *)this, &m_cullingSplitJobsResults[j], Renderer::get()->getSharedCullingJobOutput(), j));
+            }
+        }
+
+        return m_cullingSplitJobs;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Return 'true' if any job actually spawned, because it means we'll have to wait for sync
+    //--------------------------------------------------------------------------------------
+    bool View::startJobs()
+    {
+        VG_PROFILE_CPU("Start jobs");
+
+        const auto renderer = Renderer::get();
+        const auto options = RendererOptions::get();
+
+        core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
+
+        if (RendererOptions::get()->isSplitCullingJobsEnabled())
+        {
+            JobSync cullingJobSync;
+
+            // N jobs for culling scene parts
+            const auto & cullingSplitJobs = getCullingSplitJobs();
+            const auto jobCount = cullingSplitJobs.size();
+
+            // Count registered visuals to split work evenly
+            uint count = 0;
+            const auto * world = getWorld();
+            for (uint iSceneType = 0; iSceneType < enumCount<BaseSceneType>(); iSceneType++)
+            {
+                BaseSceneType sceneType = (BaseSceneType)iSceneType;
+                if (sceneType != BaseSceneType::Scene)
+                    continue;
+
+                const uint sceneCount = world->GetSceneCount(sceneType);
+                for (uint jScene = 0; jScene < sceneCount; ++jScene)
+                {
+                    const IBaseScene * scene = world->GetScene(jScene, sceneType);
+                    SceneRenderData * sceneRenderData = (SceneRenderData *)scene->GetSceneRenderData();
+                    VG_ASSERT(sceneRenderData);
+
+                    count += sceneRenderData->getTotalGraphicInstanceCount();
+                }
+            }
+
+            const uint maxGraphicInstancesPerJob = (uint)((count + jobCount - 1) / jobCount);
+            uint offset = 0;
+            uint remaining = count;
+            for (uint i = 0; i < jobCount; ++i)
+            {
+                ViewCullingSplitJob * splitJob = cullingSplitJobs[i];
+                core::uint rangeCount = min(maxGraphicInstancesPerJob, remaining);
+                splitJob->setup(offset, rangeCount);
+                jobScheduler->Start(splitJob, &cullingJobSync);
+
+                offset += rangeCount;
+                remaining -= rangeCount;
+            }
+            VG_ASSERT(remaining == 0);
+
+            // The 'Final' job will only start after all split jobs are done 
+            m_cullingJob->setup(&m_cullingJobResult, Renderer::get()->getSharedCullingJobOutput(), &m_cullingSplitJobsResults);
+            jobScheduler->StartAfter(&cullingJobSync, getCullingFinalJob(), renderer->GetJobSync(RendererJobType::ViewCulling));
+        }
+        else
+        {
+            // Use a single job for each view's culling
+            m_cullingJob->setup(&m_cullingJobResult, Renderer::get()->getSharedCullingJobOutput());
+            jobScheduler->Start(getCullingFinalJob(), renderer->GetJobSync(RendererJobType::ViewCulling));
+        }
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------

@@ -81,14 +81,16 @@ namespace vg::renderer
 
             if (!view->isAdditionalView() && IsCastShadow())
             {
-                VG_PROFILE_CPU("AddShadow");
+                VG_PROFILE_CPU("Add Shadow");
 
                 // Create view and start culling immediately
                 Renderer * renderer = Renderer::get();
 
                 const Frustum & frustum = view->getCameraFrustum();
 
-                ShadowView * shadowView = new ShadowView(this, view->getWorld(), getShadowResolution());
+                // TODO: use some pooling to avoid recreating every frame
+                ShadowView * shadowView = new ShadowView(this, view->getWorld(), getShadowResolution(), view);
+
                 view->addShadowView(shadowView);
 
                 float4x4 lightWorld = getGlobalMatrix();
@@ -101,12 +103,14 @@ namespace vg::renderer
                     default:
                     case ShadowCameraMode::Fixed:
                     {
+                        VG_PROFILE_CPU("Fixed");
                         shadowView->SetupOrthographicCamera(lightWorld, m_shadowSize, m_shadowRange);
                     }
                     break;
 
                     case ShadowCameraMode::FollowCameraTranslation:
                     {
+                        VG_PROFILE_CPU("FollowCameraTranslation");
                         lightWorld[3].xyz += view->getViewInvMatrix()[3].xyz;
                         shadowView->SetupOrthographicCamera(lightWorld, m_shadowSize, m_shadowRange);
                     }
@@ -114,6 +118,8 @@ namespace vg::renderer
 
                     case ShadowCameraMode::FitCameraFrustum:
                     {
+                        VG_PROFILE_CPU("FitCameraFrustum");
+
                         // Find the bounding box in world-space
                         float3 frustumCenter = (float3)0.0f;
 
@@ -154,8 +160,7 @@ namespace vg::renderer
 
                 _cullingResult->m_output->add(shadowView);
 
-                core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
-                jobScheduler->Start(shadowView->getCullingJob(), renderer->GetJobSync(RendererJobType::ViewCulling));
+                shadowView->startJobs();                
             }
 
             return true;

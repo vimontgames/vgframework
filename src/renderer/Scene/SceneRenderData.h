@@ -19,6 +19,8 @@ namespace vg::renderer
         bool RegisterGraphicInstance(IGraphicInstance * _graphicInstance) final override;
         bool UnregisterGraphicInstance(IGraphicInstance * _graphicInstance) final override;
 
+        core::uint getTotalGraphicInstanceCount() const;
+
     //private:
         core::vector<CameraInstance *>          m_cameraInstances;
         core::vector<LightInstance *>           m_lightInstances;

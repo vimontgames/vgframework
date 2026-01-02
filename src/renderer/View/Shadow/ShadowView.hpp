@@ -9,13 +9,17 @@ using namespace vg::gfx;
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    ShadowView::ShadowView(const LightInstance * _light, core::IWorld * _world, core::uint2 _resolution) :
+    ShadowView::ShadowView(const LightInstance * _light, core::IWorld * _world, core::uint2 _resolution, View * _parentView) :
         View(CreateViewParams(ViewTarget::Shadow, _resolution, nullptr, _world)),
-        m_light(_light)
+        m_light(_light),
+        m_parentView(_parentView)
     {
+        VG_PROFILE_CPU("New ShadowView");
+
         setIsAdditionalView(true);
         setOrtho(true);
         SetName(fmt::sprintf("%s Shadow", _light->GetName()));
+        SetParent(_parentView);
         m_shadowMapPass = new ShadowMapPass();
     }
 

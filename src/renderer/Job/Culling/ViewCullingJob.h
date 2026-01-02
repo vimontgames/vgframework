@@ -74,7 +74,7 @@ namespace vg::renderer
         core::vector<CameraInstance *>  m_cameras;
         LightInstanceList               m_lightsLists[core::enumCount<LightType>()];
         GraphicInstanceList             m_instancesLists[core::enumCount<GraphicInstanceListType>()];
-        core::vector<View *>            m_additionalViews;
+        core::vector<View *>            m_additionalViews; 
     };
 
     struct SharedViewCullingJobOutput
@@ -137,18 +137,37 @@ namespace vg::renderer
         SharedViewCullingJobOutput *    m_sharedOutput  = nullptr;        
     };
 
-    class ViewCullingJob : public core::Job
+    class ViewCullingFinalJob : public core::Job
     {
     public:
         const char * GetClassName() const final { return "ViewCullingJob"; }
+        ViewCullingFinalJob(const core::string & _name, core::IObject * _parent);
 
-        ViewCullingJob(const core::string & _name, core::IObject * _parent, ViewCullingJobOutput * const _output, SharedViewCullingJobOutput * const _sharedOutput);
+        void setup(ViewCullingJobOutput * const _output, SharedViewCullingJobOutput * const _sharedOutput, const core::vector<ViewCullingJobOutput> * _splitResults = nullptr);
         void Run() override;
 
     private:
         VG_INLINE void add(GraphicInstanceListType _type, const IGraphicInstance * _instance);
 
     private:
+        const core::vector<ViewCullingJobOutput> * m_splitResults = nullptr;
+        CullingResult                               m_result;
+    };
+
+    class ViewCullingSplitJob : public core::Job
+    {
+    public:
+        const char * GetClassName() const final { return "ViewCullingSplitJob"; }
+        ViewCullingSplitJob(const core::string & _name, core::IObject * _parent, ViewCullingJobOutput * const _output, SharedViewCullingJobOutput * const _sharedOutput, core::uint _index);
+
+        void setup(core::uint _first, core::uint _count);
+        void Run() override;
+
+    private:
+        core::uint m_index;
+        core::uint m_first;
+        core::uint m_count;
+
         CullingResult m_result;
     };
 }
