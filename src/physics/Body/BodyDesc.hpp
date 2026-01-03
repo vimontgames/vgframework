@@ -29,6 +29,9 @@ namespace vg::physics
         registerOptionalProperty(PhysicsBodyDesc, m_overrideMass, m_mass, "Mass");
         setPropertyDescription(PhysicsBodyDesc, m_mass, "Represents the amount of matter in an object, influencing its resistance to acceleration and the force required to move it");
 
+        registerOptionalProperty(PhysicsBodyDesc, m_overrideCenterOfMassOffset, m_centerOfMassOffset, "COM Offset");
+        setPropertyDescription(PhysicsBodyDesc, m_overrideCenterOfMassOffset, "Center Of Mass offset");
+ 
         registerProperty(PhysicsBodyDesc, m_friction, "Friction");
         setPropertyRange(PhysicsBodyDesc, m_friction, float2(0, 1));
         setPropertyDescription(PhysicsBodyDesc, m_friction, "Determines the resistance to sliding motion between surfaces, affecting how easily objects can slide over each other");

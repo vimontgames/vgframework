@@ -82,10 +82,23 @@ namespace vg::physics
             bodySettings.mIsSensor = true;
             bodySettings.mGravityFactor = 0;
         }
-        else if (_bodyDesc->m_overrideMass)
+
+        bool overrideMass = _bodyDesc->m_overrideMass;
+        bool overrideCOM = _bodyDesc->m_overrideCenterOfMassOffset;
+
+        if (overrideMass || overrideCOM)
         {
+            JPH::MassProperties mp = _joltShape->GetMassProperties();
+
+            // COM offset
+            if (overrideCOM)
+                mp.Translate(getJoltVec3(_bodyDesc->GetCenterOfMassOffset()));
+
+            if (overrideMass)
+                mp.ScaleToMass(_bodyDesc->m_mass);
+
+            bodySettings.mMassPropertiesOverride = mp;
             bodySettings.mOverrideMassProperties = JPH::EOverrideMassProperties::CalculateInertia;
-            bodySettings.mMassPropertiesOverride.mMass = _bodyDesc->m_mass;
         }
 
         bodySettings.mMotionQuality = getJoltMotionQuality(_bodyDesc->m_motionQuality);

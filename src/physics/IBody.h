@@ -10,25 +10,29 @@ namespace vg::physics
     public:
         VG_CLASS_DECL_ABSTRACT(IBodyDesc, core::Object)
         
-        virtual void                SetTrigger          (bool _trigger) = 0;
-        virtual bool                IsTrigger           () const = 0;
+        virtual void                SetTrigger              (bool _trigger) = 0;
+        virtual bool                IsTrigger               () const = 0;
 
-        virtual bool                IsSoftBody          () const = 0;
+        virtual bool                IsSoftBody              () const = 0;
 
-        virtual BodyType            GetBodyType         () const = 0;
+        virtual BodyType            GetBodyType             () const = 0;
 
-        virtual ObjectLayer         GetLayer            () const = 0;
-        virtual void                SetLayer            (ObjectLayer _layer) = 0;
+        virtual ObjectLayer         GetLayer                () const = 0;
+        virtual void                SetLayer                (ObjectLayer _layer) = 0;
 
-        virtual MotionType          GetMotionType       () const = 0;
-        virtual void                SetMotionType       (MotionType _motion) = 0;
+        virtual MotionType          GetMotionType           () const = 0;
+        virtual void                SetMotionType           (MotionType _motion) = 0;
 
-        virtual MotionQuality       GetMotionQuality    () const = 0;
-        virtual void                SetMotionQuality    (MotionQuality _quality) = 0;
+        virtual MotionQuality       GetMotionQuality        () const = 0;
+        virtual void                SetMotionQuality        (MotionQuality _quality) = 0;
 
-        virtual bool                IsMassOverriden     () const = 0;
-        virtual float               GetMass             () const = 0;
-        virtual void                SetMass             (float _mass) = 0;
+        virtual bool                IsMassOverriden         () const = 0;
+        virtual float               GetMass                 () const = 0;
+        virtual void                SetMass                 (float _mass) = 0;
+
+        virtual bool                IsCenterOfMassOverriden () const = 0;
+        virtual core::float3        GetCenterOfMassOffset   () const = 0;
+        virtual void                SetCenterOfMassOffset   (const core::float3 & _centerOfMassOffset) = 0;
     };
 
     class IBody : public core::Object

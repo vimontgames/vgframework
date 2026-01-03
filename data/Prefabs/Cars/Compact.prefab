@@ -48,8 +48,10 @@
                                         <Property type="EnumU8" name="m_motionQuality" value="Continuous"/>
                                         <Property type="Bool" name="m_overrideMass" value="true"/>
                                         <Property type="Float" name="m_mass" value="1200"/>
-                                        <Property type="Float" name="m_friction" value="0.75"/>
-                                        <Property type="Float" name="m_restitution" value="0.1"/>
+                                        <Property type="Bool" name="m_overrideCenterOfMassOffset" value="true"/>
+                                        <Property type="Float3" name="m_centerOfMassOffset" x="0" y="0" z="-1"/>
+                                        <Property type="Float" name="m_friction" value="1"/>
+                                        <Property type="Float" name="m_restitution" value="0.25"/>
                                     </Object>
                                 </Property>
                             </Object>
@@ -257,7 +259,7 @@
                                                 <Property type="Float" name="m_width" value="0.2"/>
                                                 <Property type="Float" name="m_maxSteerAngleInDegrees" value="30"/>
                                                 <Property type="Float" name="m_inertia" value="0.89999998"/>
-                                                <Property type="Float" name="m_angularDamping" value="0.2"/>
+                                                <Property type="Float" name="m_angularDamping" value="0.40000001"/>
                                                 <Property type="Float" name="m_suspensionMinLength" value="0.30000001"/>
                                                 <Property type="Float" name="m_suspensionMaxLength" value="0.60000002"/>
                                                 <Property type="Float" name="m_suspensionForwardAngleInDegree" value="0"/>
@@ -280,7 +282,7 @@
                                                 <Property type="Float" name="m_width" value="0.2"/>
                                                 <Property type="Float" name="m_maxSteerAngleInDegrees" value="0"/>
                                                 <Property type="Float" name="m_inertia" value="0.89999998"/>
-                                                <Property type="Float" name="m_angularDamping" value="0.2"/>
+                                                <Property type="Float" name="m_angularDamping" value="0.40000001"/>
                                                 <Property type="Float" name="m_suspensionMinLength" value="0.30000001"/>
                                                 <Property type="Float" name="m_suspensionMaxLength" value="0.60000002"/>
                                                 <Property type="Float" name="m_suspensionForwardAngleInDegree" value="0"/>

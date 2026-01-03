@@ -313,7 +313,6 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool PhysicsBodyComponent::createBody()
     {
-        
         IGameObject * go = GetGameObject();
         
         // body desc and gameobject's instance flags should match
