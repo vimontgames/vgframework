@@ -11,6 +11,7 @@
 #include "Behaviour/Entity/Item/Weapon/WeaponBehaviour.h"
 #include "Behaviour/HealthBar/HealthBarBehaviour.h"
 #include "Game.h"
+#include "GameOptions.h"
 
 #if !VG_ENABLE_INLINE
 #include "CharacterBehaviour.inl"
@@ -237,7 +238,7 @@ void CharacterBehaviour::FixedUpdate(const Context & _context)
 void CharacterBehaviour::Update(const Context & _context)
 {
     auto world = _context.m_gameObject->getGlobalMatrix();
-    if (world[3].z < -32.0f)
+    if (world[3].z < GameOptions::get()->getMinimumHeight())
         OnDeath(_context);
 }
 
@@ -256,6 +257,12 @@ void CharacterBehaviour::OnDeath(const Context & _context)
             m_hp = 100;
             m_moveState = MoveState::Jump;
         }
+    }
+    else
+    {
+        // Game Over
+        enablePhysics(false);
+        enableVisual(false);
     }
 }
 

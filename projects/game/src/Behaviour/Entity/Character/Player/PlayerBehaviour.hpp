@@ -84,6 +84,9 @@ void PlayerBehaviour::OnStop()
    
     enableVisual(true);
     enablePhysics(true);
+
+    m_vehicle.clear();
+    m_vehicleSlot = -1;
 }
 
 //--------------------------------------------------------------------------------------
@@ -111,46 +114,71 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                             return;
                     }
 
-                    float backward = input.GetJoyLeftTrigger(joyID);
-                    float forward = input.GetJoyRightTrigger(joyID);
-
-                    const float forwardSpeed = vehicle->GetLocalVelocity().x;
-
-                    if (forward > 0.2f)
+                    if (vehicle->GetPassengerSlotType(m_vehicleSlot) == VehicleSlotType::Driver)
                     {
-                        if (forwardSpeed > -0.1f)
+
+                        if (input.IsJoyButtonJustPressed(joyID, JoyButton::B))
                         {
-                            vehicle->Accelerate(forward);
-                            vehicle->Brake(0.0f);
+                            if (ISoundComponent * sound = vehicleGO->GetComponentT<ISoundComponent>())
+                            {
+                                auto soundIndex = sound->GetSoundIndex("Horn");
+                                if (-1 != soundIndex)
+                                    sound->Play(soundIndex);
+                            }
+                        }
+
+                        float backward = input.GetJoyLeftTrigger(joyID);
+                        float forward = input.GetJoyRightTrigger(joyID);
+
+                        const float forwardSpeed = vehicle->GetLocalVelocity().x;
+
+                        if (forward > 0.2f)
+                        {
+                            if (forwardSpeed > -0.1f)
+                            {
+                                vehicle->Accelerate(forward);
+                                vehicle->Brake(0.0f);
+                            }
+                            else
+                            {
+                                vehicle->Brake(1.0f);
+                            }
+                        }
+                        else if (backward > 0.2f)
+                        {
+                            if (forwardSpeed < 0)
+                            {
+                                vehicle->Accelerate(-backward);
+                                vehicle->Brake(0.0f);
+                            }
+                            else
+                            {
+                                vehicle->Brake(1.0f);
+                            }
                         }
                         else
                         {
-                            vehicle->Brake(1.0f);
-                        }
-                    }
-                    else if (backward > 0.2f)
-                    {
-                        if (forwardSpeed < 0)
-                        {
-                            vehicle->Accelerate(-backward);
+                            vehicle->Accelerate(0.0f);
                             vehicle->Brake(0.0f);
+                        }
+
+                        if (input.IsJoyButtonPressed(joyID, JoyButton::A))
+                        {
+                            vehicle->Accelerate(0.0f);
+                            vehicle->Handbrake(1.0f);
+                            vehicle->Brake(1.0f);
                         }
                         else
                         {
-                            vehicle->Brake(1.0f);
+                            vehicle->Handbrake(0.0f);
                         }
-                    }
-                    else
-                    {
-                        vehicle->Accelerate(0.0f);
-                        vehicle->Brake(0.0f);
-                    }
 
-                    float2 dir = input.GetJoyLeftStickDir(joyID);
-                    if ((float)(abs(dir.x)) > 0.2f)
-                        vehicle->Steer(dir.x);
-                    else
-                        vehicle->Steer(0.0f);
+                        float2 dir = input.GetJoyLeftStickDir(joyID);
+                        if ((float)(abs(dir.x)) > 0.2f)
+                            vehicle->Steer(dir.x);
+                        else
+                            vehicle->Steer(0.0f);
+                    }
 
                     auto * go = GetGameObject();
                     if (auto * slot = vehicle->GetPassengerSlotLocation(m_vehicleSlot))
@@ -649,6 +677,28 @@ bool PlayerBehaviour::exitVehicle()
             GetGameObject()->SetGlobalMatrix(exitMat);
             enablePhysics(true);
             m_moveState = MoveState::Idle;
+
+            if (vehicleComp->GetPassengerSlotType(m_vehicleSlot) == VehicleSlotType::Driver)
+            {
+                // New driver?
+                const uint count = vehicleComp->GetPassengerSlotCount();
+                for (uint i = 0; i < count; ++i)
+                {
+                    if (IGameObject * passenger = vehicleComp->GetPassengerSlotOwner(i))
+                    {
+                        if (vehicleComp->GetPassengerSlotType(i) != VehicleSlotType::Driver)
+                        {
+                            if (PlayerBehaviour * newDriver = passenger->GetComponentT<PlayerBehaviour>())
+                            {
+                                newDriver->exitVehicle();
+                                newDriver->enterVehicle(vehicleGO);
+                            }
+                        }
+                    }
+                }
+            }
+
+            m_vehicleSlot = -1;
 
             return true;
         }

@@ -1,5 +1,6 @@
 #include "Precomp.h"
 #include "Game.h"
+#include "GameOptions.h"
 #include "core/Kernel.h"
 #include "core/IProfiler.h"
 #include "core/Object/AutoRegisterClass.h"
@@ -9,6 +10,7 @@
 #include "Behaviour/Entity/Character/Player/PlayerBehaviour.h"
 #include "Behaviour/Entity/Item/ItemBehaviour.h"
 
+using namespace vg;
 using namespace vg::core;
 using namespace vg::engine;
 
@@ -67,6 +69,12 @@ bool Game::UnregisterClasses()
 }
 
 //--------------------------------------------------------------------------------------
+IGameOptions * Game::GetOptions() const
+{
+    return GameOptions::get();
+}
+
+//--------------------------------------------------------------------------------------
 bool Game::Init(vg::engine::IEngine & _engine, Singletons & _singletons)
 {
     s_engine = &_engine;
@@ -75,12 +83,19 @@ bool Game::Init(vg::engine::IEngine & _engine, Singletons & _singletons)
 
     RegisterClasses();
 
+    // Load game options
+    GameOptions * gameOptions = new GameOptions("GameOptions", this);
+
     return true;
 }
 
 //--------------------------------------------------------------------------------------
 bool Game::Deinit()
 {
+    // Release game options
+    GameOptions * gameOptions = GameOptions::get();
+    VG_SAFE_DELETE(gameOptions);
+
     UnregisterClasses();
 
     return true;
@@ -155,7 +170,7 @@ void Game::FixedUpdate(float _dt)
 
         auto world = go->getGlobalMatrix();
 
-        if (world[3].z < -32.0f)
+        if (world[3].z < GameOptions::get()->getMinimumHeight())
         {
             // Kick all passengers
             const uint count = vehicle->GetPassengerSlotCount();

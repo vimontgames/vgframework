@@ -3,6 +3,7 @@
 #include "renderer/IDebugDraw.h"
 #include "engine/ISoundComponent.h"
 #include "engine/Component/Renderer/Instance/Mesh/MeshComponent.h"
+#include "engine/IParticleComponent.h"
 
 using namespace vg::core;
 
@@ -225,6 +226,13 @@ namespace vg::engine
         if (!m_vehicleConstraint)
             createVehicleConstraint();
 
+        auto & slots = m_slots.getObjects();
+        for (uint i = 0; i < slots.size(); ++i)
+        {
+            VehicleSlot & slot = slots[i];
+            slot.m_owner.clear();
+        }
+
         super::OnPlay();
     }
 
@@ -249,6 +257,11 @@ namespace vg::engine
         m_driveState.m_handBrake = 0.0f;
 
         Brake(0.0f);
+        Handbrake(0.0f);
+
+        // Force stop engine
+        m_engineOn = true;
+        StopEngine();
     }
 
     //--------------------------------------------------------------------------------------
@@ -330,12 +343,9 @@ namespace vg::engine
                     if (-1 != soundIndex)
                         sound->Play(soundIndex);
 
-                    //engine
-                    {
-                        auto soundIndex = sound->GetSoundIndex("Engine");
-                        if (-1 != soundIndex)
-                            sound->Play(soundIndex);
-                    }
+                    // Start engine when driver enters the car
+                    if (slot.m_slotType == VehicleSlotType::Driver)
+                        StartEngine();
                 }
 
                 return true;
@@ -361,17 +371,69 @@ namespace vg::engine
                     auto soundIndex = sound->GetSoundIndex("Enter");
                     if (-1 != soundIndex)
                         sound->Play(soundIndex);
-
-                    //engine
-                    {
-                        auto soundIndex = sound->GetSoundIndex("Engine");
-                        if (-1 != soundIndex)
-                            sound->Stop(soundIndex);
-                    }
                 }
+
+                // Stop engine when the driver exits the car
+                if (slot.m_slotType == VehicleSlotType::Driver)
+                    StopEngine();
 
                 return true;
             }
+        }
+
+        return false;
+    }
+
+
+    //--------------------------------------------------------------------------------------
+    bool VehicleComponent::StartEngine()
+    {
+        if (!m_engineOn)
+        {
+            // start engine sound
+            if (ISoundComponent * sound = GetGameObject()->GetComponentT<ISoundComponent>())
+            {
+                auto soundIndex = sound->GetSoundIndex("Engine");
+                if (-1 != soundIndex)
+                    sound->Play(soundIndex);
+            }
+
+            // start smoke VFX
+            if (IGameObject * smokeGO = GetGameObject()->GetChildGameObject("Smoke"))
+            {
+                if (IParticleComponent * smokePart = smokeGO->GetComponentT<IParticleComponent>())
+                    smokePart->Play();
+            }
+
+            m_engineOn = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool VehicleComponent::StopEngine()
+    {
+        if (m_engineOn)
+        {
+            // stop engine sound
+            if (ISoundComponent * sound = GetGameObject()->GetComponentT<ISoundComponent>())
+            {
+                auto soundIndex = sound->GetSoundIndex("Engine");
+                if (-1 != soundIndex)
+                    sound->Stop(soundIndex);
+            }
+
+            // stop smoke VFX
+            if (IGameObject * smokeGO = GetGameObject()->GetChildGameObject("Smoke"))
+            {
+                if (IParticleComponent * smokePart = smokeGO->GetComponentT<IParticleComponent>())
+                    smokePart->Stop();
+            }
+
+            m_engineOn = false;
+            return true;
         }
 
         return false;
@@ -483,5 +545,11 @@ namespace vg::engine
     {
         _leftRight = clamp(_leftRight, -1.0f, 1.0f);
         m_driveState.m_right = _leftRight;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void VehicleComponent::Handbrake(float _handbrake)
+    {
+        m_driveState.m_handBrake = _handbrake;
     }
 }

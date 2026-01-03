@@ -1,0 +1,8 @@
+<Root>
+    <Object class="AudioOptions">
+        <Property type="String" name="m_name" value="AudioOptions"/>
+        <Property type="Uint32" name="m_uid" value="0"/>
+        <Property type="Uint32" name="m_originalUID" value="0"/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+    </Object>
+</Root>

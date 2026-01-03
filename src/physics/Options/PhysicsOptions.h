@@ -23,9 +23,6 @@ namespace vg::physics
         Category                    GetPhysicsCategory          (const core::string & _name) const final override;
         core::vector<core::string>  GetPhysicsCategoryNames     () const final override;
 
-        static bool			        load                        (core::IObject * _object);
-        static bool			        save                        (core::IObject * _object);
-
     private:
         void                        applyGravity                (const core::float3 & _gravity);
         void                        updateDynamicEnum           (const core::IProperty & _prop);

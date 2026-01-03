@@ -27,6 +27,11 @@ namespace vg::audio
     class IAudioOptions;
 }
 
+namespace vg
+{
+    class IGameOptions;
+}
+
 namespace vg::engine
 {
     vg_enum_class(vg::engine, EngineJobType, core::u8,
@@ -119,6 +124,7 @@ namespace vg::engine
         renderer::IRendererOptions *            getRendererOptions  () const;
         physics::IPhysicsOptions *              getPhysicsOptions   () const;
         audio::IAudioOptions *                  getAudioOptions     () const;
+        vg::IGameOptions *                      getGameOptions      () const;
 
         VG_INLINE const Time &                  getTime             () const;
 

@@ -45,6 +45,9 @@ namespace vg::engine
         void                FixedUpdate                 (const Context & _context) final override;
         void                Update                      (const Context & _context) final override;
 
+        bool                StartEngine                 () final override;
+        bool                StopEngine                  () final override;
+
         bool                EnterVehicle                (core::IGameObject * _owner, core::uint & _slotIndex) final override;
         bool                ExitVehicle                 (core::IGameObject * _owner) final override;
 
@@ -60,6 +63,7 @@ namespace vg::engine
         void                Accelerate                  (float _forward) final override;
         void                Brake                       (float _brake) final override;
         void                Steer                       (float _leftRight) final override;
+        void                Handbrake                   (float _handbrake) final override;
 
     private:
         physics::IPhysics * getPhysics                  ();
@@ -69,16 +73,17 @@ namespace vg::engine
         void                resetDriveState             ();
 
     private:
-        physics::DriveState               m_driveState;
-        core::float3                      m_localVelocity = (core::float3)0.0f;
-        float                             m_speedInKmPerHour = 0.0f;
-        float                             m_engineRPM = 0.0f;
-        int                               m_currentGear = 0;
+        bool                                m_engineOn = false;
+        physics::DriveState                 m_driveState;
+        core::float3                        m_localVelocity = (core::float3)0.0f;
+        float                               m_speedInKmPerHour = 0.0f;
+        float                               m_engineRPM = 0.0f;
+        int                                 m_currentGear = 0;
 
-        physics::IVehicleConstraintDesc * m_vehicleConstraintDesc = nullptr;
-        physics::VehicleType              m_vehicleType = physics::VehicleType::FourWheels;
-        physics::IVehicleConstraint *     m_vehicleConstraint = nullptr;
-        VehicleSlotList                   m_slots;
-        core::float4x4                    m_startPos = core::float4x4::identity();
+        physics::IVehicleConstraintDesc *   m_vehicleConstraintDesc = nullptr;
+        physics::VehicleType                m_vehicleType = physics::VehicleType::FourWheels;
+        physics::IVehicleConstraint *       m_vehicleConstraint = nullptr;
+        VehicleSlotList                     m_slots;
+        core::float4x4                      m_startPos = core::float4x4::identity();
     };
 }

@@ -30,6 +30,8 @@
 #include "editor/ImGui/Window/Options/Engine/ImGuiEngineOptions.h"
 #include "editor/ImGui/Window/Options/Renderer/ImGuiRendererOptions.h"
 #include "editor/ImGui/Window/Options/Physics/ImGuiPhysicsOptions.h"
+#include "editor/ImGui/Window/Options/Audio/ImGuiAudioOptions.h"
+#include "editor/ImGui/Window/Options/Game/ImGuiGameOptions.h"
 #include "editor/ImGui/Window/About/ImGuiAbout.h"
 #include "editor/ImGui/Window/Shader/ImGuiShader.h"
 #include "editor/ImGui/Window/SceneList/World/ImGuiWorld.h"
@@ -168,6 +170,8 @@ namespace vg::editor
         m_imGuiWindows.push_back(new ImGuiInspector());
         m_imGuiWindows.push_back(new ImGuiEditorOptions());
         m_imGuiWindows.push_back(new ImGuiRendererOptions());
+        m_imGuiWindows.push_back(new ImGuiAudioOptions());
+        m_imGuiWindows.push_back(new ImGuiGameOptions());
         m_imGuiWindows.push_back(new ImGuiPhysicsOptions());
         m_imGuiWindows.push_back(new ImGuiEngineOptions());
         m_imGuiWindows.push_back(new ImGuiGameView(0));

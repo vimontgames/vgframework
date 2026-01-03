@@ -5,6 +5,8 @@
 #include "engine/ImGuiEngineOptions.hpp"
 #include "physics/ImGuiPhysicsOptions.hpp"
 #include "renderer/ImGuiRendererOptions.hpp"
+#include "audio/ImGuiAudioOptions.hpp"
+#include "game/ImGuiGameOptions.hpp"
 
 namespace vg::editor
 {

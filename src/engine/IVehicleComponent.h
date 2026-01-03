@@ -14,6 +14,8 @@ namespace vg::engine
     public:
         VG_CLASS_DECL_ABSTRACT(IVehicleComponent, PhysicsConstraintComponent);
 
+        virtual bool                StartEngine             () = 0;
+        virtual bool                StopEngine              () = 0;
         virtual bool                EnterVehicle            (core::IGameObject * _owner, core::uint & _slotIndex) = 0;
         virtual bool                ExitVehicle             (core::IGameObject * _owner) = 0;
 
@@ -29,5 +31,6 @@ namespace vg::engine
         virtual void                Accelerate              (float _forward) = 0;
         virtual void                Brake                   (float _brake) = 0;
         virtual void                Steer                   (float _leftRight) = 0;
+        virtual void                Handbrake               (float _handbrake) = 0;
     };
 }

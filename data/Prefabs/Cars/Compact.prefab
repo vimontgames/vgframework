@@ -133,7 +133,7 @@
                                 <Property type="String" name="m_name" value="New SoundComponent"/>
                                 <Property type="Uint32" name="m_uid" value="729544579"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Object" name="m_sounds">
                                     <Object class="SoundResourceList">
@@ -169,6 +169,16 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Sounds/Cars/Compact/278186__debsound__rally-car-idle-loop-17.wav"/>
                                                 <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" value="Loop"/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" value="1"/>
+                                                <Property type="Float" name="m_soundSettings.m_delay" value="0"/>
+                                            </Object>
+                                            <Object class="SoundResource">
+                                                <Property type="String" name="m_name" value="Horn"/>
+                                                <Property type="Uint32" name="m_uid" value="2605740563"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Sounds/Cars/Compact/435497__etcd_09__car-horn-honk.wav"/>
+                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" value=""/>
                                                 <Property type="Float" name="m_soundSettings.m_volume" value="1"/>
                                                 <Property type="Float" name="m_soundSettings.m_delay" value="0"/>
                                             </Object>
@@ -278,7 +288,7 @@
                                                 <Property type="Float" name="m_suspensionFrequency" value="1.5"/>
                                                 <Property type="Float" name="m_suspensionDamping" value="0.5"/>
                                                 <Property type="Float" name="m_maxBrakeTorque" value="3000"/>
-                                                <Property type="Float" name="m_maxHandBrakeTorque" value="6000"/>
+                                                <Property type="Float" name="m_maxHandBrakeTorque" value="15000"/>
                                             </Object>
                                         </Property>
                                         <Property type="Bool" name="m_fourWheelDrive" value="false"/>
@@ -643,7 +653,7 @@
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                         <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                        <Property type="Bool" name="m_playOnStart" value="true"/>
+                                        <Property type="Bool" name="m_playOnStart" value="false"/>
                                         <Property type="Bool" name="m_worldSpace" value="true"/>
                                         <Property type="Object" name="m_particleEmitters">
                                             <Object class="ParticleEmitterList">

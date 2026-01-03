@@ -30,6 +30,8 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
          Game        ();
          ~Game       ();
 
+        vg::IGameOptions *                                          GetOptions          () const final override;
+
         bool                                                        RegisterClasses     () final override;
         bool                                                        UnregisterClasses   () final override;
 

@@ -80,11 +80,12 @@ namespace vg::editor
             inline constexpr char Font                 []= ICON_FA_FONT;
             inline constexpr char FPS                  []= ICON_FA_STOPWATCH;
             inline constexpr char Folder               []= ICON_FA_FOLDER_OPEN;
+            inline constexpr char Game                 []= ICON_FA_GAMEPAD;
             inline constexpr char NewFolder            []= ICON_FA_FOLDER_PLUS;
             inline constexpr char GameView             []= ICON_FA_DISPLAY;
             inline constexpr char GameObject           []= ICON_FA_PERSON;
             inline constexpr char Info                 []= ICON_FA_CIRCLE_INFO;
-            inline constexpr char Input                []= ICON_FA_GAMEPAD;
+            inline constexpr char Input                []= ICON_FA_KEYBOARD;
             inline constexpr char Inspector            []= ICON_FA_MAGNIFYING_GLASS;
             inline constexpr char Image                []= ICON_FA_IMAGE;
             inline constexpr char Light                []= ICON_FA_LIGHTBULB;

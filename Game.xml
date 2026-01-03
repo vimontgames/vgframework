@@ -1,0 +1,9 @@
+<Root>
+    <Object class="GameOptions">
+        <Property type="String" name="m_name" value="GameOptions"/>
+        <Property type="Uint32" name="m_uid" value="0"/>
+        <Property type="Uint32" name="m_originalUID" value="0"/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+        <Property type="Float" name="m_minZ" value="-32"/>
+    </Object>
+</Root>

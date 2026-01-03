@@ -473,6 +473,12 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    IGameOptions * Engine::getGameOptions() const
+    {
+        return m_game->GetOptions();
+    }
+
+    //--------------------------------------------------------------------------------------
     void Engine::OnResourceLoaded(core::IResource * _resource)
     {
         if (_resource == m_worldResource)
