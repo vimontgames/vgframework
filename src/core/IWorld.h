@@ -27,6 +27,7 @@ namespace vg::core
     {
     public:
         virtual ~IPhysicsWorld() {}
+        virtual void DrawDebug() = 0;
     };
 
     class IWorld : public Object

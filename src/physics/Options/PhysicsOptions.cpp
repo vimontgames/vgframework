@@ -13,6 +13,9 @@ namespace vg::physics
     {
         super::registerProperties(_desc);
 
+        registerProperty(PhysicsOptions, m_debugRenderer, "Debug Renderer");
+        setPropertyDescription(PhysicsOptions, m_debugRenderer, "Enable physics engine debug renderer");
+
         registerOptionalPropertyEnumBitfield(PhysicsOptions, m_showMotionTypes, MotionTypeFlags, m_showMotionTypesMask, "Motion");
         setPropertyDescription(PhysicsOptions, m_showMotionTypesMask, "Show physics bodies using motion type");
 

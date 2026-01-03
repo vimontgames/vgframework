@@ -27,6 +27,7 @@ namespace vg::physics
 
         void                                OnPlay              () final override;
         void                                Update              (float _dt, JPH::TempAllocatorMalloc & _tempAllocator, JPH::JobSystem * _jobSystem);
+        void                                DrawDebug           () final override;
 
         VG_INLINE const vg::core::IWorld *  getWorld            () const;
         VG_INLINE JPH::PhysicsSystem *      getPhysicsSystem    () const;

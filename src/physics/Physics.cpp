@@ -9,6 +9,7 @@
 #include "Body/Body.h"
 #include "Character/Character.h"
 #include "physics/Constraint/Vehicle/VehicleConstraint.h"
+#include "physics/DebugRenderer/DebugRenderer.h"
 #include "Options/PhysicsOptions.h"
 #include "World/PhysicsWorld.h"
 #include "core/Math/Math.h"
@@ -159,11 +160,27 @@ namespace vg::physics
         #pragma pop_macro("new")  
 
         PhysicsOptions * physicsOptions = new PhysicsOptions("PhysicsOptions", this);
+
+        #ifdef JPH_DEBUG_RENDERER
+        #pragma push_macro("new")
+        #undef new
+        DebugRenderer * debugRenderer = new DebugRenderer();
+        #pragma pop_macro("new")  
+        JPH::DebugRenderer::sInstance = debugRenderer;
+        #endif
 	}
 
 	//--------------------------------------------------------------------------------------
 	void Physics::Deinit()
 	{
+        #ifdef JPH_DEBUG_RENDERER
+        #pragma push_macro("delete")
+        #undef delete
+        DebugRenderer * debugRenderer = DebugRenderer::get();
+        VG_SAFE_DELETE(debugRenderer);
+        #pragma pop_macro("delete")  
+        #endif
+
         // Unregisters all types with the factory and cleans up the default material
         UnregisterTypes();
 
@@ -203,6 +220,10 @@ namespace vg::physics
        
         for (auto * physicsWorld : m_physicsWorlds)
             physicsWorld->Update(_dt, m_tempAllocator, m_jobSystem);
+
+        for (auto * physicsWorld : m_physicsWorlds)
+            physicsWorld->DrawDebug();
+
 	}
 
     //--------------------------------------------------------------------------------------

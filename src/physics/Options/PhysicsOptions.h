@@ -23,11 +23,14 @@ namespace vg::physics
         Category                    GetPhysicsCategory          (const core::string & _name) const final override;
         core::vector<core::string>  GetPhysicsCategoryNames     () const final override;
 
+        bool                        isDebugRendererEnabled      () const { return m_debugRenderer; }
+
     private:
         void                        applyGravity                (const core::float3 & _gravity);
         void                        updateDynamicEnum           (const core::IProperty & _prop);
 
     private:
+        bool                        m_debugRenderer         = false;
 
         bool                        m_showMotionTypes       = true;
         MotionTypeFlags             m_showMotionTypesMask   = (MotionTypeFlags)-1;

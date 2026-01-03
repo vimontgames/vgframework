@@ -3,6 +3,7 @@
 #include "physics/Physics.h"
 #include "physics/Options/PhysicsOptions.h"
 #include "physics/Contact/ContactListener.h"
+#include "physics/DebugRenderer/DebugRenderer.h"
 #include "core/Timer/Timer.h"
 
 #if !VG_ENABLE_INLINE
@@ -72,5 +73,24 @@ namespace vg::physics
 
             m_contactListener->update();
         }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PhysicsWorld::DrawDebug()
+    {
+        #ifdef JPH_DEBUG_RENDERER
+        if (PhysicsOptions::get()->isDebugRendererEnabled())
+        {
+            auto * physicsSystem = getPhysicsSystem();
+
+            JPH::BodyManager::DrawSettings settings;
+            settings.mDrawShapeWireframe = true;
+
+            DebugRenderer::get()->SetWorld(getWorld());
+
+            physicsSystem->DrawBodies(settings, JPH::DebugRenderer::sInstance);
+            physicsSystem->DrawConstraints(JPH::DebugRenderer::sInstance);
+        }
+        #endif // JPH_DEBUG_RENDERER
     }
 }
