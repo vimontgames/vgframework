@@ -1,0 +1,1472 @@
+<Root>
+    <Object class="PrefabScene">
+        <Property type="String" name="m_name" value="Road_Turn_Outer"/>
+        <Property type="Uint32" name="m_uid" value="0"/>
+        <Property type="Uint32" name="m_originalUID" value="0"/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+        <Property type="ObjectPtr" name="m_root">
+            <Object class="GameObject">
+                <Property type="String" name="m_name" value="Root"/>
+                <Property type="Uint32" name="m_uid" value="0"/>
+                <Property type="Uint32" name="m_originalUID" value="0"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                <Property type="ObjectPtrVector" name="m_components"/>
+                <Property type="ObjectPtrVector" name="m_children">
+                    <Object class="GameObject">
+                        <Property type="String" name="m_name" value="Outer"/>
+                        <Property type="Uint32" name="m_uid" value="2051088090"/>
+                        <Property type="Uint32" name="m_originalUID" value="1959250969"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                        <Property type="ObjectPtrVector" name="m_components">
+                            <Object class="PhysicsBodyComponent">
+                                <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
+                                <Property type="Uint32" name="m_uid" value="3926552951"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="EnumU8" name="m_category" value="Default"/>
+                                <Property type="Bool" name="m_useCollisionMask" value="false"/>
+                                <Property type="EnumFlagsU64" name="m_collisionMask" value=""/>
+                                <Property type="ObjectPtr" name="m_bodyDesc">
+                                    <Object class="PhysicsBodyDesc">
+                                        <Property type="String" name="m_name" value="PhysicsBodyDesc #1048"/>
+                                        <Property type="Uint32" name="m_uid" value="2330280411"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="Bool" name="m_trigger" value="false"/>
+                                        <Property type="Bool" name="m_softBody" value="false"/>
+                                        <Property type="EnumU16" name="m_layer" value="NonMoving"/>
+                                        <Property type="EnumU8" name="m_motion" value="Static"/>
+                                        <Property type="EnumU8" name="m_motionQuality" value="Discrete"/>
+                                        <Property type="Bool" name="m_overrideMass" value="false"/>
+                                        <Property type="Float" name="m_mass" value="0"/>
+                                        <Property type="Bool" name="m_overrideCenterOfMassOffset" value="false"/>
+                                        <Property type="Float3" name="m_centerOfMassOffset" x="0" y="0" z="0"/>
+                                        <Property type="Float" name="m_friction" value="0.5"/>
+                                        <Property type="Float" name="m_restitution" value="0"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                            <Object class="PhysicsShapeComponent">
+                                <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
+                                <Property type="Uint32" name="m_uid" value="48855071"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="EnumU8" name="m_shapeType" value="Mesh"/>
+                                <Property type="ObjectPtr" name="m_shapeDesc">
+                                    <Object class="MeshShapeDesc">
+                                        <Property type="String" name="m_name" value="MeshShapeDesc #2"/>
+                                        <Property type="Uint32" name="m_uid" value="3330084903"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                        <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
+                                        <Property type="ResourcePtr" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="MeshResource #2"/>
+                                                <Property type="Uint32" name="m_uid" value="1642557599"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/Road/OuterSide_Walk.fbx"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                            </Object>
+                            <Object class="MeshComponent">
+                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                <Property type="Uint32" name="m_uid" value="2715001715"/>
+                                <Property type="Uint32" name="m_originalUID" value="1905075206"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Resource" name="m_meshResource">
+                                    <Object class="MeshResource">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="47028234"/>
+                                        <Property type="Uint32" name="m_originalUID" value="4290152213"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="String" name="m_resourcePath" value="data/Meshes/Road/OuterSide_Walk.fbx"/>
+                                    </Object>
+                                </Property>
+                                <Property type="Object" name="m_meshMaterials">
+                                    <Object class="MaterialResourceList">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3971598571"/>
+                                        <Property type="Uint32" name="m_originalUID" value="3306493515"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="ResourceVector" name="m_resources">
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Concrete"/>
+                                                <Property type="Uint32" name="m_uid" value="2082186307"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Floor/Concrete.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="false"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                                <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                            </Object>
+                        </Property>
+                        <Property type="ObjectPtrVector" name="m_children">
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_06"/>
+                                <Property type="Uint32" name="m_uid" value="1128842707"/>
+                                <Property type="Uint32" name="m_originalUID" value="3421789820"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-2.3278128e-09" Iy="-8.9376854e-08" Iz="-1.0000001" Iw="0" Jx="-0.99966872" Jy="0.026036231" Jz="0" Jw="0" Kx="0.026036208" Ky="0.99966872" Kz="-8.9408076e-08" Kw="0" Tx="-1.2385635" Ty="7.5121956" Tz="0.125" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2569893277"/>
+                                        <Property type="Uint32" name="m_originalUID" value="474969956"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2064730526"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2368752517"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="367321759"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1118686317"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="3254652005"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="90605562"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_07"/>
+                                <Property type="Uint32" name="m_uid" value="4150359420"/>
+                                <Property type="Uint32" name="m_originalUID" value="1128842707"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-9.137243e-09" Iy="-8.8938897e-08" Iz="-1.0000001" Iw="0" Jx="-0.99477041" Jy="0.10219906" Jz="0" Jw="0" Kx="0.10219912" Ky="0.99477053" Kz="-8.9407798e-08" Kw="0" Tx="-0.73074341" Ty="7.4905128" Tz="0.125" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="1453574319"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2569893277"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="525051734"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2064730526"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3727703826"/>
+                                                <Property type="Uint32" name="m_originalUID" value="367321759"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="266519075"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="3254652005"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_08"/>
+                                <Property type="Uint32" name="m_uid" value="2732450166"/>
+                                <Property type="Uint32" name="m_originalUID" value="4150359420"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-1.0056914e-08" Iy="-8.8839599e-08" Iz="-1.0000001" Iw="0" Jx="-0.99366552" Jy="0.11248617" Jz="0" Jw="0" Kx="0.11248624" Ky="0.99366564" Kz="-8.9408474e-08" Kw="0" Tx="-0.23042679" Ty="7.4481316" Tz="0.125" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="1252790630"/>
+                                        <Property type="Uint32" name="m_originalUID" value="1453574319"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="295561384"/>
+                                                <Property type="Uint32" name="m_originalUID" value="525051734"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2805600948"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3727703826"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="898986144"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="266519075"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_09"/>
+                                <Property type="Uint32" name="m_uid" value="743398026"/>
+                                <Property type="Uint32" name="m_originalUID" value="2732450166"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-1.7599769e-08" Iy="-8.7657646e-08" Iz="-1.0000001" Iw="0" Jx="-0.98045224" Jy="0.19685197" Jz="0" Jw="0" Kx="0.19685204" Ky="0.98045236" Kz="-8.9409255e-08" Kw="0" Tx="0.29569244" Ty="7.3596153" Tz="0.125" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="1678396095"/>
+                                        <Property type="Uint32" name="m_originalUID" value="1252790630"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3601501679"/>
+                                                <Property type="Uint32" name="m_originalUID" value="295561384"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1013295866"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2805600948"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="697989490"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="898986144"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_10"/>
+                                <Property type="Uint32" name="m_uid" value="3231512035"/>
+                                <Property type="Uint32" name="m_originalUID" value="743398026"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-2.5906585e-08" Iy="-8.5571408e-08" Iz="-1.0000001" Iw="0" Jx="-0.9571268" Jy="0.28976581" Jz="0" Jw="0" Kx="0.28976589" Ky="0.95712692" Kz="-8.9410349e-08" Kw="0" Tx="0.79919052" Ty="7.2361507" Tz="0.125" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="1515385852"/>
+                                        <Property type="Uint32" name="m_originalUID" value="1678396095"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="410904275"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3601501679"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="638737355"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1013295866"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="1852751781"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="697989490"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_11"/>
+                                <Property type="Uint32" name="m_uid" value="1086154066"/>
+                                <Property type="Uint32" name="m_originalUID" value="3231512035"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-3.021378e-08" Iy="-8.414721e-08" Iz="-1.0000001" Iw="0" Jx="-0.94120371" Jy="0.33794114" Jz="0" Jw="0" Kx="0.33794123" Ky="0.94120383" Kz="-8.9411152e-08" Kw="0" Tx="1.2888565" Ty="7.072197" Tz="0.1250001" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3391586899"/>
+                                        <Property type="Uint32" name="m_originalUID" value="1515385852"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1613713811"/>
+                                                <Property type="Uint32" name="m_originalUID" value="410904275"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="806515254"/>
+                                                <Property type="Uint32" name="m_originalUID" value="638737355"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="528804091"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="1852751781"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_12"/>
+                                <Property type="Uint32" name="m_uid" value="3321662845"/>
+                                <Property type="Uint32" name="m_originalUID" value="1086154066"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-3.4296196e-08" Iy="-8.2567531e-08" Iz="-1.0000001" Iw="0" Jx="-0.92354608" Jy="0.38360551" Jz="0" Jw="0" Kx="0.38360563" Ky="0.9235462" Kz="-8.9412467e-08" Kw="0" Tx="1.757" Ty="6.8814354" Tz="0.1250001" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="4191522876"/>
+                                        <Property type="Uint32" name="m_originalUID" value="3391586899"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3402268832"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1613713811"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1954939454"/>
+                                                <Property type="Uint32" name="m_originalUID" value="806515254"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="61783580"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="528804091"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_13"/>
+                                <Property type="Uint32" name="m_uid" value="1796954"/>
+                                <Property type="Uint32" name="m_originalUID" value="3321662845"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-4.0007418e-08" Iy="-7.9956806e-08" Iz="-1.0000001" Iw="0" Jx="-0.89436322" Jy="0.44748437" Jz="0" Jw="0" Kx="0.44748449" Ky="0.89436346" Kz="-8.9414741e-08" Kw="0" Tx="2.2008514" Ty="6.6552486" Tz="0.1250001" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="220559942"/>
+                                        <Property type="Uint32" name="m_originalUID" value="4191522876"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3509067517"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3402268832"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="4138483304"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1954939454"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="1524483270"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="61783580"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_14"/>
+                                <Property type="Uint32" name="m_uid" value="3197135773"/>
+                                <Property type="Uint32" name="m_originalUID" value="1796954"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-4.2782688e-08" Iy="-7.850673e-08" Iz="-1.0000001" Iw="0" Jx="-0.87814128" Jy="0.47853035" Jz="0" Jw="0" Kx="0.47853053" Ky="0.87814146" Kz="-8.9414421e-08" Kw="0" Tx="2.6335526" Ty="6.425766" Tz="0.1250001" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2351471237"/>
+                                        <Property type="Uint32" name="m_originalUID" value="220559942"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="633701596"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3509067517"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1228644497"/>
+                                                <Property type="Uint32" name="m_originalUID" value="4138483304"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="2779916965"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="1524483270"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_15"/>
+                                <Property type="Uint32" name="m_uid" value="4077253188"/>
+                                <Property type="Uint32" name="m_originalUID" value="3197135773"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-4.1894726e-08" Iy="-7.8984534e-08" Iz="-1.0000001" Iw="0" Jx="-0.88349771" Jy="0.46859106" Jz="0" Jw="0" Kx="0.46859118" Ky="0.88349789" Kz="-8.9415927e-08" Kw="0" Tx="3.0766335" Ty="6.1759796" Tz="0.1250001" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2560372156"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2351471237"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3807478099"/>
+                                                <Property type="Uint32" name="m_originalUID" value="633701596"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2102425627"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1228644497"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="217283495"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="2779916965"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_16"/>
+                                <Property type="Uint32" name="m_uid" value="63590929"/>
+                                <Property type="Uint32" name="m_originalUID" value="4077253188"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-4.6208406e-08" Iy="-7.654166e-08" Iz="-1.0000001" Iw="0" Jx="-0.85619277" Jy="0.51682854" Jz="0" Jw="0" Kx="0.51682866" Ky="0.85619289" Kz="-8.9418364e-08" Kw="0" Tx="3.5084267" Ty="5.9378452" Tz="0.1250001" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="1704370080"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2560372156"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3773888042"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3807478099"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3845328602"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2102425627"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="975198228"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="217283495"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_17"/>
+                                <Property type="Uint32" name="m_uid" value="958736028"/>
+                                <Property type="Uint32" name="m_originalUID" value="63590929"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-8.8796824e-08" Iy="-1.0446045e-08" Iz="-1.0000001" Iw="0" Jx="-0.11692593" Jy="0.99327666" Jz="0" Jw="0" Kx="0.99327677" Ky="0.11692584" Kz="-8.9424375e-08" Kw="0" Tx="7.4071579" Ty="-0.71821976" Tz="0.12500238" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="4074846086"/>
+                                        <Property type="Uint32" name="m_originalUID" value="1704370080"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2272489687"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3773888042"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2238824926"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3845328602"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="2654921485"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="975198228"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_18"/>
+                                <Property type="Uint32" name="m_uid" value="2415178957"/>
+                                <Property type="Uint32" name="m_originalUID" value="4077253188"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-8.807968e-08" Iy="-1.5352697e-08" Iz="-1.0000001" Iw="0" Jx="-0.17176053" Jy="0.98526067" Jz="0" Jw="0" Kx="0.98526084" Ky="0.17176056" Kz="-8.9421192e-08" Kw="0" Tx="7.3329544" Ty="-0.2040081" Tz="0.1250024" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="1974673384"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2560372156"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="4172210243"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3807478099"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2573356236"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2102425627"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="2295970291"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="217283495"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_19"/>
+                                <Property type="Uint32" name="m_uid" value="3591281115"/>
+                                <Property type="Uint32" name="m_originalUID" value="3197135773"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-8.7917293e-08" Iy="-1.6259827e-08" Iz="-1.0000001" Iw="0" Jx="-0.18192396" Jy="0.98342609" Jz="0" Jw="0" Kx="0.98342615" Ky="0.18192375" Kz="-8.9420915e-08" Kw="0" Tx="7.2503395" Ty="0.30818748" Tz="0.1250024" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="938754871"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2351471237"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1154405865"/>
+                                                <Property type="Uint32" name="m_originalUID" value="633701596"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="559710503"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1228644497"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="3051226760"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="2779916965"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_20"/>
+                                <Property type="Uint32" name="m_uid" value="898989221"/>
+                                <Property type="Uint32" name="m_originalUID" value="1796954"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-8.5630603e-08" Iy="-2.5715035e-08" Iz="-1.0000001" Iw="0" Jx="-0.28768909" Jy="0.95784193" Jz="0" Jw="0" Kx="0.95784205" Ky="0.28768927" Kz="-8.9421178e-08" Kw="0" Tx="7.1388969" Ty="0.8131752" Tz="0.1250024" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="4280228563"/>
+                                        <Property type="Uint32" name="m_originalUID" value="220559942"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="194687540"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3509067517"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3088684351"/>
+                                                <Property type="Uint32" name="m_originalUID" value="4138483304"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="511400714"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="1524483270"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_21"/>
+                                <Property type="Uint32" name="m_uid" value="3802021985"/>
+                                <Property type="Uint32" name="m_originalUID" value="3321662845"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-8.6249365e-08" Iy="-2.3552207e-08" Iz="-1.0000001" Iw="0" Jx="-0.26344866" Jy="0.96477902" Jz="0" Jw="0" Kx="0.96477902" Ky="0.26344848" Kz="-8.9418855e-08" Kw="0" Tx="6.998745" Ty="1.309351" Tz="0.12500241" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3733838151"/>
+                                        <Property type="Uint32" name="m_originalUID" value="4191522876"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="990337317"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3402268832"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1307968664"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1954939454"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="2242688395"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="61783580"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_22"/>
+                                <Property type="Uint32" name="m_uid" value="746322715"/>
+                                <Property type="Uint32" name="m_originalUID" value="1086154066"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-8.3303426e-08" Iy="-3.2468353e-08" Iz="-1.0000001" Iw="0" Jx="-0.36319038" Jy="0.93182045" Jz="0" Jw="0" Kx="0.93182075" Ky="0.36319041" Kz="-8.9419167e-08" Kw="0" Tx="6.8383751" Ty="1.7815647" Tz="0.12500168" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3866881994"/>
+                                        <Property type="Uint32" name="m_originalUID" value="3391586899"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1314497881"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1613713811"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="651880898"/>
+                                                <Property type="Uint32" name="m_originalUID" value="806515254"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="136369342"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="528804091"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_23"/>
+                                <Property type="Uint32" name="m_uid" value="821093643"/>
+                                <Property type="Uint32" name="m_originalUID" value="3231512035"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-8.1549771e-08" Iy="-3.6651485e-08" Iz="-1.0000001" Iw="0" Jx="-0.40998632" Jy="0.91218501" Jz="0" Jw="0" Kx="0.91218537" Ky="0.40998617" Kz="-8.9417242e-08" Kw="0" Tx="6.641552" Ty="2.2531433" Tz="0.12500237" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="4204592380"/>
+                                        <Property type="Uint32" name="m_originalUID" value="1515385852"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1740727991"/>
+                                                <Property type="Uint32" name="m_originalUID" value="410904275"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2117558168"/>
+                                                <Property type="Uint32" name="m_originalUID" value="638737355"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="1062850180"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="1852751781"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_24"/>
+                                <Property type="Uint32" name="m_uid" value="2087069611"/>
+                                <Property type="Uint32" name="m_originalUID" value="743398026"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-7.7667956e-08" Iy="-4.4287237e-08" Iz="-1.0000001" Iw="0" Jx="-0.49537078" Jy="0.86876798" Jz="0" Jw="0" Kx="0.86876792" Ky="0.49537089" Kz="-8.9416055e-08" Kw="0" Tx="6.4176292" Ty="2.6956482" Tz="0.12500238" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3765867648"/>
+                                        <Property type="Uint32" name="m_originalUID" value="1678396095"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3664852474"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3601501679"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2270004295"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1013295866"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="1269797719"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="697989490"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_25"/>
+                                <Property type="Uint32" name="m_uid" value="4011892529"/>
+                                <Property type="Uint32" name="m_originalUID" value="2732450166"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-7.360638e-08" Iy="-5.0753059e-08" Iz="-1.0000001" Iw="0" Jx="-0.56767225" Jy="0.82333392" Jz="0" Jw="0" Kx="0.8233338" Ky="0.56767201" Kz="-8.9415749e-08" Kw="0" Tx="6.1589241" Ty="3.1120815" Tz="0.12500243" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2815680135"/>
+                                        <Property type="Uint32" name="m_originalUID" value="1252790630"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2623047547"/>
+                                                <Property type="Uint32" name="m_originalUID" value="295561384"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2527407428"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2805600948"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="4158273085"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="898986144"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_26"/>
+                                <Property type="Uint32" name="m_uid" value="3979193426"/>
+                                <Property type="Uint32" name="m_originalUID" value="4150359420"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-7.3077437e-08" Iy="-5.1511666e-08" Iz="-1.0000001" Iw="0" Jx="-0.57615662" Jy="0.8174085" Jz="0" Jw="0" Kx="0.81740892" Ky="0.57615668" Kz="-8.9414691e-08" Kw="0" Tx="5.8782806" Ty="3.5234909" Tz="0.12500255" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2248765987"/>
+                                        <Property type="Uint32" name="m_originalUID" value="1453574319"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2932864270"/>
+                                                <Property type="Uint32" name="m_originalUID" value="525051734"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="541093906"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3727703826"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="1851513747"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="266519075"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_27"/>
+                                <Property type="Uint32" name="m_uid" value="1654387263"/>
+                                <Property type="Uint32" name="m_originalUID" value="1128842707"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-7.162437e-08" Iy="-5.3514324e-08" Iz="-1.0000001" Iw="0" Jx="-0.59855616" Jy="0.80115485" Jz="0" Jw="0" Kx="0.80115473" Ky="0.5985561" Kz="-8.9415607e-08" Kw="0" Tx="5.3288765" Ty="4.2913742" Tz="0.12500226" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="631204696"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2569893277"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3140226411"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2064730526"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2866958359"/>
+                                                <Property type="Uint32" name="m_originalUID" value="367321759"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="4050194031"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="3254652005"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_28"/>
+                                <Property type="Uint32" name="m_uid" value="3266908559"/>
+                                <Property type="Uint32" name="m_originalUID" value="958736028"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-8.8796824e-08" Iy="-1.0446045e-08" Iz="-1.0000001" Iw="0" Jx="-0.11692512" Jy="0.99327016" Jz="0" Jw="0" Kx="0.99327028" Ky="0.11692503" Kz="-8.9423601e-08" Kw="0" Tx="7.4697304" Ty="-1.2240791" Tz="0.12500235" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3075619326"/>
+                                        <Property type="Uint32" name="m_originalUID" value="4074846086"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2475412306"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2272489687"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2878016828"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2238824926"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="2909944616"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="2654921485"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_29"/>
+                                <Property type="Uint32" name="m_uid" value="3752349352"/>
+                                <Property type="Uint32" name="m_originalUID" value="1654387263"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-5.2361074e-08" Iy="-7.247197e-08" Iz="-1.0000001" Iw="0" Jx="-0.81061727" Jy="0.58568603" Jz="0" Jw="0" Kx="0.58568609" Ky="0.81061721" Kz="-8.9416325e-08" Kw="0" Tx="3.9203644" Ty="5.6438618" Tz="0.12500221" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="2698082391"/>
+                                        <Property type="Uint32" name="m_originalUID" value="631204696"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3241561371"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3140226411"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="919522289"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2866958359"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="2395345898"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="4050194031"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_30"/>
+                                <Property type="Uint32" name="m_uid" value="4204836971"/>
+                                <Property type="Uint32" name="m_originalUID" value="3979193426"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-5.6688158e-08" Iy="-6.9139588e-08" Iz="-1.0000001" Iw="0" Jx="-0.77334088" Jy="0.63409221" Jz="0" Jw="0" Kx="0.63409257" Ky="0.773341" Kz="-8.941597e-08" Kw="0" Tx="4.307148" Ty="5.3408794" Tz="0.12500222" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3730825922"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2248765987"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3181547503"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2932864270"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1091543606"/>
+                                                <Property type="Uint32" name="m_originalUID" value="541093906"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="4229915611"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="1851513747"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_31"/>
+                                <Property type="Uint32" name="m_uid" value="3403273526"/>
+                                <Property type="Uint32" name="m_originalUID" value="4011892529"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-5.8438314e-08" Iy="-6.7666711e-08" Iz="-1.0000001" Iw="0" Jx="-0.75687051" Jy="0.65367311" Jz="0" Jw="0" Kx="0.65367305" Ky="0.75687021" Kz="-8.9416652e-08" Kw="0" Tx="4.6811371" Ty="5.0178413" Tz="0.12500222" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="636112548"/>
+                                        <Property type="Uint32" name="m_originalUID" value="2815680135"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1445946536"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2623047547"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="391997282"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2527407428"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="2416320459"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="4158273085"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_32"/>
+                                <Property type="Uint32" name="m_uid" value="2343664921"/>
+                                <Property type="Uint32" name="m_originalUID" value="2087069611"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-6.8744541e-08" Iy="-5.7165625e-08" Iz="-1.0000001" Iw="0" Jx="-0.63942361" Jy="0.76896477" Jz="0" Jw="0" Kx="0.76896483" Ky="0.63942373" Kz="-8.9417853e-08" Kw="0" Tx="5.0212135" Ty="4.6622906" Tz="0.12500304" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="3383224607"/>
+                                        <Property type="Uint32" name="m_originalUID" value="3765867648"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="104164288"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3664852474"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3049090211"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2270004295"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="804184860"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="1269797719"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="SidewalkBlock_33"/>
+                                <Property type="Uint32" name="m_uid" value="1927255267"/>
+                                <Property type="Uint32" name="m_originalUID" value="1654387263"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="-7.162437e-08" Iy="-5.3514544e-08" Iz="-1.0000001" Iw="0" Jx="-0.59855616" Jy="0.80115855" Jz="0" Jw="0" Kx="0.80115843" Ky="0.5985561" Kz="-8.9416048e-08" Kw="0" Tx="5.6147919" Ty="3.8939743" Tz="0.12500232" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components">
+                                    <Object class="MeshComponent">
+                                        <Property type="String" name="m_name" value="New MeshComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="1121660651"/>
+                                        <Property type="Uint32" name="m_originalUID" value="631204696"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                        <Property type="Resource" name="m_meshResource">
+                                            <Object class="MeshResource">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="19759696"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3140226411"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Meshes/SidewalkLedge/SidewalkLedge.fbx"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="Object" name="m_meshMaterials">
+                                            <Object class="MaterialResourceList">
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="3504677887"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2866958359"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="ResourceVector" name="m_resources">
+                                                    <Object class="MaterialResource">
+                                                        <Property type="String" name="m_name" value="Sidewalk_edge"/>
+                                                        <Property type="Uint32" name="m_uid" value="2177527815"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="4050194031"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="String" name="m_resourcePath" value="data/Materials/SidewalkLedge/SidewalkLedge.mat"/>
+                                                        <Property type="Bool" name="m_instanciate" value="false"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="BitMask" name="m_batchMask" BitCount="1" Value="0x0000000000000001"/>
+                                    </Object>
+                                </Property>
+                                <Property type="ObjectPtrVector" name="m_children"/>
+                            </Object>
+                        </Property>
+                    </Object>
+                </Property>
+            </Object>
+        </Property>
+    </Object>
+</Root>
