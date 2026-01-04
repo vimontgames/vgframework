@@ -552,7 +552,7 @@
                         <Property type="String" name="m_name" value="Level"/>
                         <Property type="Uint32" name="m_uid" value="1093025436"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-1" Iy="-8.7422777e-08" Iz="0" Iw="0" Jx="8.7422777e-08" Jy="-1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999976" Kw="0" Tx="18" Ty="0" Tz="0" Tw="1"/>
@@ -1406,7 +1406,7 @@
                                 <Property type="String" name="m_name" value="Floor"/>
                                 <Property type="Uint32" name="m_uid" value="1697175564"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -3080,7 +3080,7 @@
                                         <Property type="String" name="m_name" value="Grass"/>
                                         <Property type="Uint32" name="m_uid" value="914119281"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -8737,50 +8737,6 @@
                                                                 <Property type="String" name="m_name" value="Asphalt_64"/>
                                                                 <Property type="Uint32" name="m_uid" value="609660999"/>
                                                                 <Property type="Uint32" name="m_originalUID" value="22289602"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Asphalt.prefab"/>
-                                                            </Object>
-                                                        </Property>
-                                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
-                                                    </Object>
-                                                    <Object class="PrefabGameObject">
-                                                        <Property type="String" name="m_name" value="Asphalt_65"/>
-                                                        <Property type="Uint32" name="m_uid" value="3975752688"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="3289382218"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
-                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                        <Property type="Float4x4" name="m_local" Ix="0.9999851" Iy="-7.4606987e-14" Iz="0" Iw="0" Jx="7.4606987e-14" Jy="0.9999851" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99998641" Kw="0" Tx="23.999962" Ty="51.000004" Tz="0" Tw="1"/>
-                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_components"/>
-                                                        <Property type="ObjectPtrVector" name="m_children"/>
-                                                        <Property type="Resource" name="m_prefabResource">
-                                                            <Object class="PrefabResource">
-                                                                <Property type="String" name="m_name" value="Asphalt_65"/>
-                                                                <Property type="Uint32" name="m_uid" value="2697705332"/>
-                                                                <Property type="Uint32" name="m_originalUID" value="108061281"/>
-                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Asphalt.prefab"/>
-                                                            </Object>
-                                                        </Property>
-                                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
-                                                    </Object>
-                                                    <Object class="PrefabGameObject">
-                                                        <Property type="String" name="m_name" value="Asphalt_66"/>
-                                                        <Property type="Uint32" name="m_uid" value="4146620421"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="2218785302"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
-                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                        <Property type="Float4x4" name="m_local" Ix="0.99998552" Iy="-1.1546319e-12" Iz="0" Iw="0" Jx="3.0979663e-12" Jy="0.99998462" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999487" Kw="0" Tx="20.999825" Ty="51.000004" Tz="0" Tw="1"/>
-                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                                        <Property type="ObjectPtrVector" name="m_components"/>
-                                                        <Property type="ObjectPtrVector" name="m_children"/>
-                                                        <Property type="Resource" name="m_prefabResource">
-                                                            <Object class="PrefabResource">
-                                                                <Property type="String" name="m_name" value="Asphalt_66"/>
-                                                                <Property type="Uint32" name="m_uid" value="2664745541"/>
-                                                                <Property type="Uint32" name="m_originalUID" value="2098566825"/>
                                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                                 <Property type="String" name="m_resourcePath" value="data/Prefabs/Asphalt.prefab"/>
                                                             </Object>
@@ -15954,6 +15910,28 @@
                                                         </Property>
                                                         <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
                                                     </Object>
+                                                    <Object class="PrefabGameObject">
+                                                        <Property type="String" name="m_name" value="Parking_28"/>
+                                                        <Property type="Uint32" name="m_uid" value="3131388934"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="2630706265"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="Float4x4" name="m_local" Ix="-4.3706962e-08" Iy="0.99998415" Iz="0" Iw="0" Jx="-0.99998498" Jy="-4.3707956e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.99999797" Kw="0" Tx="22.499977" Ty="51" Tz="0" Tw="1"/>
+                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_components"/>
+                                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                                        <Property type="Resource" name="m_prefabResource">
+                                                            <Object class="PrefabResource">
+                                                                <Property type="String" name="m_name" value="Parking_28"/>
+                                                                <Property type="Uint32" name="m_uid" value="2139652415"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="1759990213"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Floor/Parking_slot_3x6.prefab"/>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="ObjectPtrVector" name="m_dynamicProperties"/>
+                                                    </Object>
                                                     <Object class="GameObject">
                                                         <Property type="String" name="m_name" value="Parking Street 1"/>
                                                         <Property type="Uint32" name="m_uid" value="2258255418"/>
@@ -16203,10 +16181,10 @@
                                                 <Property type="String" name="m_name" value="Dec_DeadGrass_03"/>
                                                 <Property type="Uint32" name="m_uid" value="339602403"/>
                                                 <Property type="Uint32" name="m_originalUID" value="3394479816"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                                <Property type="Float4x4" name="m_local" Ix="1.1924868e-08" Iy="2.9999995" Iz="0" Iw="0" Jx="-2.9999995" Jy="1.1924868e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="2" Kw="0" Tx="0.60185051" Ty="-24.126911" Tz="0.069768809" Tw="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1.1924868e-08" Iy="2.9999995" Iz="0" Iw="0" Jx="-2.9999995" Jy="1.1924868e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="2" Kw="0" Tx="2.6018505" Ty="-27.126911" Tz="0.069768809" Tw="1"/>
                                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                                 <Property type="ObjectPtrVector" name="m_components"/>
                                                 <Property type="ObjectPtrVector" name="m_children"/>
@@ -16254,7 +16232,7 @@
                                 <Property type="String" name="m_name" value="Houses"/>
                                 <Property type="Uint32" name="m_uid" value="80605140"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -19032,7 +19010,7 @@
                         <Property type="String" name="m_name" value="Objects"/>
                         <Property type="Uint32" name="m_uid" value="1002808616"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -19882,7 +19860,7 @@
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-0.99999988" Iy="0.00059789419" Iz="0" Iw="0" Jx="-0.00059789419" Jy="-0.99999988" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="16.5" Ty="26.5" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.99999988" Iy="0.00059789419" Iz="0" Iw="0" Jx="-0.00059789419" Jy="-0.99999988" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="16.5" Ty="27" Tz="0.5" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                         <Property type="ObjectPtrVector" name="m_components"/>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -19998,10 +19976,10 @@
                                         <Property type="String" name="m_name" value="Orange Compact"/>
                                         <Property type="Uint32" name="m_uid" value="2051987133"/>
                                         <Property type="Uint32" name="m_originalUID" value="3823590145"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-0.99999988" Iy="0.00059789419" Iz="0" Iw="0" Jx="-0.00059789419" Jy="-0.99999988" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="22.5" Ty="26.5" Tz="0.5" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-0.99999988" Iy="0.00059789419" Iz="0" Iw="0" Jx="-0.00059789419" Jy="-0.99999988" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="22.5" Ty="27" Tz="0.5" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                         <Property type="ObjectPtrVector" name="m_components"/>
                                         <Property type="ObjectPtrVector" name="m_children"/>
