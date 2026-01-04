@@ -109,30 +109,56 @@ namespace vg::physics
         if (_triangles == nullptr || _triangleCount == 0)
             return batch;
 
+        IDebugDraw * debugDraw = Physics::get()->getDebugDraw();
+
+        DebugVertex * debugVertices = new DebugVertex[_triangleCount*3];
+
+        for (int i = 0; i < _triangleCount; ++i)
+        {
+            const JPH::DebugRenderer::Triangle & triangle = _triangles[i];
+
+            for (int v = 0; v < 3; ++v)
+            {
+                const JPH::DebugRenderer::Vertex & vert = triangle.mV[v];
+                DebugVertex & vtx = debugVertices[i * 3 + v];
+                vtx.position = fromJoltFloat3(vert.mPosition);
+                vtx.normal = fromJoltFloat3(vert.mNormal);
+                vtx.uv = fromJoltFloat2(vert.mUV);
+                vtx.color = vert.mColor.GetUInt32();
+            }
+        }
+
+        renderer::IDebugGeometry * debugGeometry = debugDraw->CreateGeometry(debugVertices, _triangleCount*3);
+        batch->setGeometry(debugGeometry);
+
+        delete[] debugVertices;
+
         return batch;
     }
 
     //--------------------------------------------------------------------------------------
-    JPH::DebugRenderer::Batch DebugRenderer::CreateTriangleBatch(const JPH::DebugRenderer::Vertex * _triangles, int _triangleCount, const JPH::uint32 * _indices, int _indexCount)
+    JPH::DebugRenderer::Batch DebugRenderer::CreateTriangleBatch(const JPH::DebugRenderer::Vertex * _vertices, int _vertexCount, const JPH::uint32 * _indices, int _indexCount)
     {
         DebugRendererBatch * batch = new DebugRendererBatch();
-        if (_triangles == nullptr || _triangleCount == 0)
+        if (_vertices == nullptr || _vertexCount == 0)
             return batch;
 
         IDebugDraw * debugDraw = Physics::get()->getDebugDraw();
 
-        DebugVertex * debugVertices = new DebugVertex[_triangleCount];
+        DebugVertex * debugVertices = new DebugVertex[_vertexCount];
 
-        for (int i = 0; i < _triangleCount; ++i)
+        for (int i = 0; i < _vertexCount; ++i)
         {
+            const JPH::DebugRenderer::Vertex & vert = _vertices[i];
             DebugVertex & v = debugVertices[i];
-            v.position = fromJoltFloat3(_triangles[i].mPosition);
-            v.normal = fromJoltFloat3(_triangles[i].mNormal);
-            v.uv = fromJoltFloat2(_triangles[i].mUV);
-            v.color = _triangles[i].mColor.GetUInt32();
+
+            v.position = fromJoltFloat3(vert.mPosition);
+            v.normal = fromJoltFloat3(vert.mNormal);
+            v.uv = fromJoltFloat2(vert.mUV);
+            v.color = vert.mColor.GetUInt32();
         }
 
-        renderer::IDebugGeometry * debugGeometry = debugDraw->CreateGeometry(debugVertices, _triangleCount, _indices, _indexCount);
+        renderer::IDebugGeometry * debugGeometry = debugDraw->CreateIndexedGeometry(debugVertices, _vertexCount, _indices, _indexCount);
         batch->setGeometry(debugGeometry);
 
         delete[] debugVertices;

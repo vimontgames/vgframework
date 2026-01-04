@@ -48,7 +48,12 @@ namespace vg::physics
             for (uint i = 0; i < _shapes.size(); ++i)
             {
                 auto * shape = (Shape *)_shapes[i].m_shape;
-                compoundShapeSettings.AddShape(getJoltVec3(_shapes[i].m_translation), getJoltQuaternion(_shapes[i].m_rotation), shape->getJoltShape());
+                VG_ASSERT(nullptr != shape);
+
+                auto * joltShape = shape->getJoltShape();
+                VG_ASSERT(nullptr != joltShape);
+                if (joltShape)
+                    compoundShapeSettings.AddShape(getJoltVec3(_shapes[i].m_translation), getJoltQuaternion(_shapes[i].m_rotation), shape->getJoltShape());
             }
 
             JPH::Ref<JPH::Shape> compoundShape = compoundShapeSettings.Create().Get();

@@ -75,7 +75,8 @@ namespace vg::renderer
         void                    AddSolidSquarePyramid       (const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) final override;
         void                    AddSolidGeometry            (const core::IWorld * _world, IDebugGeometry * _geometry, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) final override;
 
-        IDebugGeometry *        CreateGeometry         (const DebugVertex * _triangles, core::u32 _triangleCount, const core::u32 * _indices, core::u32 _indexCount) final override;
+        IDebugGeometry *        CreateIndexedGeometry       (const DebugVertex * _vertices, core::u32 _vertexCount, const core::u32 * _indices, core::u32 _indexCount) final override;
+        IDebugGeometry *        CreateGeometry              (const DebugVertex * _vertices, core::u32 _vertexCount) final override;
         
         void                    drawCube                    (gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) const;
         void                    drawSphere                  (gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, float _radius, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) const;
@@ -125,7 +126,7 @@ namespace vg::renderer
         void                    setupZPass                  (gfx::CommandList * _cmdList) const;
         void                    setupOutline                (gfx::CommandList * _cmdList) const;
 
-        bool                                    setupDebugModelInstances    (gfx::CommandList * _cmdList, const MeshGeometry * _geometry, DebugDrawFillMode _fillmode, DebugDrawRootConstants3D & _debugDraw3D, core::uint & _indexCount) const;
+        bool                                    setupDebugModelInstances    (gfx::CommandList * _cmdList, const MeshGeometry * _geometry, DebugDrawFillMode _fillmode, DebugDrawRootConstants3D & _debugDraw3D, core::uint & _vertexCount, core::uint & _indexCount) const;
 
         void                                    drawDebugModelInstance      (gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, const MeshGeometry * _geometry, const core::float4x4 & _matrix, core::u32 _color, float _taper, PickingID _pickingID) const;
         template <typename T, size_t N> void    drawDebugModelInstances     (gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<T>(&_instances)[N], DebugDrawFillMode _fillmode) const;

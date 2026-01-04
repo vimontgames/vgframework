@@ -57,7 +57,7 @@ namespace vg::physics
         void                        DrawText3D          (JPH::RVec3Arg _position, const JPH::string_view & _string, JPH::ColorArg _color, float _height) final override;
 
         JPH::DebugRenderer::Batch   CreateTriangleBatch (const JPH::DebugRenderer::Triangle * _triangles, int _triangleCount) final override;
-        JPH::DebugRenderer::Batch   CreateTriangleBatch (const JPH::DebugRenderer::Vertex * _triangles, int _triangleCount, const JPH::uint32 * _indices, int _indexCount) override;
+        JPH::DebugRenderer::Batch   CreateTriangleBatch (const JPH::DebugRenderer::Vertex * _vertices, int _vertexCount, const JPH::uint32 * _indices, int _indexCount) override;
 
         void                        DrawGeometry        (JPH::RMat44Arg _modelMatrix, const JPH::AABox & _worldSpaceBounds, float _LODScaleSq, JPH::ColorArg _modelColor, const JPH::DebugRenderer::GeometryRef & _geometry, JPH::DebugRenderer::ECullMode _cullMode, JPH::DebugRenderer::ECastShadow _castShadow, JPH::DebugRenderer::EDrawMode _drawMode) override;
 

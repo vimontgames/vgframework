@@ -1363,6 +1363,7 @@ namespace vg::renderer
                 for (auto & pair : worldData->m_debugGeometries)
                 {
                     DebugGeometry * model = pair.first;
+                    VG_ASSERT(model);
                      MeshGeometry * geo = model->m_meshGeometry;
                     drawDebugModelInstances(_cmdList, geo, pair.second.data, DebugDrawFillMode::Solid);
                 }
@@ -1407,7 +1408,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool DebugDraw::setupDebugModelInstances(gfx::CommandList * _cmdList, const MeshGeometry * _geometry, DebugDrawFillMode _fillmode, DebugDrawRootConstants3D & _debugDraw3D, core::uint & _indexCount) const
+    bool DebugDraw::setupDebugModelInstances(gfx::CommandList * _cmdList, const MeshGeometry * _geometry, DebugDrawFillMode _fillmode, DebugDrawRootConstants3D & _debugDraw3D, core::uint & _vertexCount, core::uint & _indexCount) const
     {
         VG_ASSERT(nullptr != _geometry);
         if (nullptr == _geometry)
@@ -1452,10 +1453,15 @@ namespace vg::renderer
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
         _cmdList->setIndexBuffer(_geometry->getIndexBuffer());
 
-        _indexCount = _geometry->getIndexBuffer()->getBufDesc().getElementCount();
+        if (auto * ib = _geometry->getIndexBuffer())
+            _indexCount = ib->getBufDesc().getElementCount();
+        else
+            _indexCount = 0;
 
         // Root constants
-        _debugDraw3D.setVertexBufferHandle(_geometry->getVertexBuffer()->getBufferHandle());
+        auto * vb = _geometry->getVertexBuffer();
+        _vertexCount = vb->getBufDesc().getElementCount();
+        _debugDraw3D.setVertexBufferHandle(vb->getBufferHandle());
         _debugDraw3D.setVertexFormat(_geometry->getVertexFormat());
 
         return true;
@@ -1465,9 +1471,9 @@ namespace vg::renderer
     template <typename T, size_t N> void DebugDraw::drawDebugModelInstances(gfx::CommandList * _cmdList, const MeshGeometry * _geometry, const core::vector<T> (& _instances)[N], DebugDrawFillMode _fillmode) const
     {
         DebugDrawRootConstants3D debugDraw3D;
-        uint indexCount;
+        uint vertexCount, indexCount;
 
-        if (setupDebugModelInstances(_cmdList, _geometry, _fillmode, debugDraw3D, indexCount))
+        if (setupDebugModelInstances(_cmdList, _geometry, _fillmode, debugDraw3D, vertexCount, indexCount))
         {
             auto & instances = _instances[asInteger(_fillmode)];
 
@@ -1485,7 +1491,11 @@ namespace vg::renderer
                     debugDraw3D.setColor(color);
                     debugDraw3D.setTaper(instance.getTaper());
                     _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
-                    _cmdList->drawIndexed(indexCount);
+
+                    if (indexCount)
+                        _cmdList->drawIndexed(indexCount);
+                    else
+                        _cmdList->draw(vertexCount);
                 }
             }
 
@@ -1503,7 +1513,11 @@ namespace vg::renderer
                     debugDraw3D.setColor(color);
                     debugDraw3D.setTaper(instance.getTaper());
                     _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
-                    _cmdList->drawIndexed(indexCount);
+                   
+                    if (indexCount)
+                        _cmdList->drawIndexed(indexCount);
+                    else
+                        _cmdList->draw(vertexCount);
                 }
             }
         }
@@ -1537,9 +1551,9 @@ namespace vg::renderer
     void DebugDraw::drawDebugModelInstance(gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, const MeshGeometry * _geometry, const float4x4 & _matrix, u32 _color, float _taper, PickingID _pickingID) const
     {
         DebugDrawRootConstants3D debugDraw3D;
-        uint indexCount;
+        uint vertexCount, indexCount;
 
-        if (setupDebugModelInstances(_cmdList, _geometry, _mode, debugDraw3D, indexCount))
+        if (setupDebugModelInstances(_cmdList, _geometry, _mode, debugDraw3D, vertexCount, indexCount))
         {
             debugDraw3D.setWorldMatrix(transpose(_matrix));
             debugDraw3D.setPickingID(_pickingID);
@@ -1552,7 +1566,11 @@ namespace vg::renderer
                 setupOutline(_cmdList);
 
                 _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
-                _cmdList->drawIndexed(indexCount);
+
+                if (indexCount)
+                    _cmdList->drawIndexed(indexCount);
+                else
+                    _cmdList->draw(vertexCount);
             }
             else
             {
@@ -1561,14 +1579,22 @@ namespace vg::renderer
                     setupZFail(_cmdList);
                     debugDraw3D.setColor(color * transparentColor);
                     _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
-                    _cmdList->drawIndexed(indexCount);
+
+                    if (indexCount)
+                        _cmdList->drawIndexed(indexCount);
+                    else
+                        _cmdList->draw(vertexCount);
                 }
                 else
                 {
                     setupZPass(_cmdList);
                     debugDraw3D.setColor(color * opaqueColor);
                     _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
-                    _cmdList->drawIndexed(indexCount);
+                    
+                    if (indexCount)
+                        _cmdList->drawIndexed(indexCount);
+                    else
+                        _cmdList->draw(vertexCount);
                 }
             }
         }
@@ -1616,14 +1642,49 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    IDebugGeometry * DebugDraw::CreateGeometry(const DebugVertex * _triangles, core::u32 _triangleCount, const core::u32 * _indices, core::u32 _indexCount)
+    IDebugGeometry * DebugDraw::CreateGeometry(const DebugVertex * _vertices, core::u32 _vertexCount)
     {
         Device * device = Device::get();
 
-        DebugDrawLitVertex * vertices = new DebugDrawLitVertex[_triangleCount];
-        for (uint i = 0; i < _triangleCount; ++i)
+        DebugDrawLitVertex * vertices = new DebugDrawLitVertex[_vertexCount];
+        for (uint i = 0; i < _vertexCount; ++i)
         {
-            const DebugVertex & src = _triangles[i];
+            const DebugVertex & src = _vertices[i];
+            DebugDrawLitVertex & dst = vertices[i];
+
+            dst.setPos(src.position);
+            dst.setNormal(src.normal);
+            dst.setColor(src.color);
+            //dst.setUV0(src.uv);
+        }
+
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawLitVertex), (uint)_vertexCount);
+        Buffer * vb = device->createBuffer(vbDesc, "DebugGeometryVB", vertices);
+
+        MeshGeometry * geo = new MeshGeometry("DebugGeometry", this);
+        geo->setVertexFormat(VertexFormat::DebugDrawLit);
+        geo->setVertexBuffer(vb);
+        geo->addBatch("DebugGeometryBatch", _vertexCount);
+
+        DebugGeometry * debugGeometry = new DebugGeometry();
+        debugGeometry->m_meshGeometry = geo;
+
+        VG_SAFE_RELEASE(vb);
+
+        delete[] vertices;
+
+        return debugGeometry;
+    }
+
+    //--------------------------------------------------------------------------------------
+    IDebugGeometry * DebugDraw::CreateIndexedGeometry(const DebugVertex * _vertices, core::u32 _vertexCount, const core::u32 * _indices, core::u32 _indexCount)
+    {
+        Device * device = Device::get();
+
+        DebugDrawLitVertex * vertices = new DebugDrawLitVertex[_vertexCount];
+        for (uint i = 0; i < _vertexCount; ++i)
+        {
+            const DebugVertex & src = _vertices[i];
             DebugDrawLitVertex & dst = vertices[i];
 
             dst.setPos(src.position);
@@ -1632,7 +1693,7 @@ namespace vg::renderer
             //dst.setUV0(src.uv);
         }
       
-        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawLitVertex), (uint)_triangleCount);
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawLitVertex), (uint)_vertexCount);
         Buffer * vb = device->createBuffer(vbDesc, "DebugGeometryVB", vertices);
 
         BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer | BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(u32), _indexCount);
