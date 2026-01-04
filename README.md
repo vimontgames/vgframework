@@ -273,16 +273,18 @@ The following models have been modified for engine-compatible materials and/or g
 
 | Name<img width=140/>                                                                                                                                    | Author<img width=200/> 
 | ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------  
-| [3D Football](           https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball                                                             ) | prabath-weerapana      
-| [Baseball Bat](          https://www.cgtrader.com/free-3d-models/military/melee/baseball-bat-5c0d0b8c-0ff9-40f8-b49d-779978a2801b                     ) | sepandjahrominejad     
-| [FootBall american](     https://www.cgtrader.com/free-3d-models/sports/equipment/football-91c641b9-d246-4d71-a31c-d687762dd94f                       ) | orsbone                
-| [Katana samurai sword](  https://www.cgtrader.com/free-3d-models/military/melee/katana-low-poly-59c307a4-5eaf-480d-b2a3-841d8d8c7240                  ) | kizaru                 
-| [Luigi](                 https://www.turbosquid.com/3d-models/luigi-super-model-1308288                                                               ) | Anthony Yanez          
-| [Traffic Cone](          https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c           ) | hinndia                
-| [Soccergoal](            https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894                                                             ) | NorbertVarga           
-| [Traffic Light](         https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-light-3d-model-333af7df-30a4-47bf-9d12-77cf37249c86 ) | Dastan-Persia          
-| [Clio Williams](         https://sketchfab.com/3d-models/renault-clio-williams-1dad7e4438c74f3b8bac1ab72acd78ed )                                       | Mona x Supercars       
-| [Modern outdoor bench](  https://www.cgtrader.com/free-3d-models/exterior/street-exterior/park-bench-modern-outdoor-bench-long-seat )                   | VVei    
+| [3D Football](                 https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball                                                             ) | prabath-weerapana      
+| [Baseball Bat](                https://www.cgtrader.com/free-3d-models/military/melee/baseball-bat-5c0d0b8c-0ff9-40f8-b49d-779978a2801b                     ) | sepandjahrominejad     
+| [FootBall american](           https://www.cgtrader.com/free-3d-models/sports/equipment/football-91c641b9-d246-4d71-a31c-d687762dd94f                       ) | orsbone                
+| [Katana samurai sword](        https://www.cgtrader.com/free-3d-models/military/melee/katana-low-poly-59c307a4-5eaf-480d-b2a3-841d8d8c7240                  ) | kizaru                 
+| [Luigi](                       https://www.turbosquid.com/3d-models/luigi-super-model-1308288                                                               ) | Anthony Yanez          
+| [Traffic Cone](                https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c           ) | hinndia                
+| [Soccergoal](                  https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894                                                             ) | NorbertVarga           
+| [Traffic Light](               https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-light-3d-model-333af7df-30a4-47bf-9d12-77cf37249c86 ) | Dastan-Persia          
+| [Clio Williams](               https://sketchfab.com/3d-models/renault-clio-williams-1dad7e4438c74f3b8bac1ab72acd78ed                                       ) | Mona x Supercars       
+| [Modern outdoor bench](        https://www.cgtrader.com/free-3d-models/exterior/street-exterior/park-bench-modern-outdoor-bench-long-seat                   ) | VVei    
+| [Generic passenger car pack](  https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5#download                         ) | Comrade1280    
+
 
 ### Textures
 
