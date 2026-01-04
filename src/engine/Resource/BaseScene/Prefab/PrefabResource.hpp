@@ -91,8 +91,9 @@ namespace vg::engine
             {
                 IGameObject * srcGO = VG_SAFE_STATIC_CAST(IGameObject, _data);
                 root->AddChild(srcGO);
+                VG_SAFE_RELEASE(srcGO);
             }
-
+            
             VG_SAFE_RELEASE(root);
 
             factory->SaveToXML(prefabScene, _path);

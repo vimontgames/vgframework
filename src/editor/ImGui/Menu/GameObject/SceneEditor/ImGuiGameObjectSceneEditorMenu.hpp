@@ -404,6 +404,8 @@ namespace vg::editor
                         root->SetName(prefabGO->GetName());
                         root->SetLocalMatrix(prefabGO->GetLocalMatrix());
                         prefabParent->AddChild(root);
+                        root->SetObjectRuntimeFlags(ObjectRuntimeFlags::NotSerialized, false);
+                        root->OnLocalMatrixChanged(true);
                         VG_SAFE_RELEASE(root);
                     }
                     prefabGO->RemoveAllChildren();
@@ -584,11 +586,11 @@ namespace vg::editor
                                     parent->AddChild(newPrefabObject, index);
 
                                     prefabRes->CreateFile(prefabPath, gameObject);
-                                    VG_SAFE_RELEASE(gameObject); 
+
+                                    newPrefabObject->OnLocalMatrixChanged(true);
 
                                     prefabRes->ClearResourcePath();
                                     prefabRes->SetResourcePath(prefabPath);
-                                    //engine->GetResourceManager()->Reimport(prefabRes);
 
                                     prefabPath[0] = '\0';
                                     status = Status::Removed;
