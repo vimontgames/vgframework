@@ -11,7 +11,7 @@ namespace px_sched
     struct Job 
     {
         vg::core::Job * m_job = nullptr;
-        void operator()() { m_job->Run(); }
+        void operator()() { m_job->RegisterAndRun(); }
     };
 } // px namespace
 
@@ -24,36 +24,6 @@ namespace px_sched
 
 namespace vg::core
 {
-    class RegisterWorkerThreadJob : public Job
-    {
-    public:
-        const char * GetClassName() const final { return "RegisterWorkerThreadJob"; }
-
-        RegisterWorkerThreadJob(const string & _name, IObject * _parent = nullptr) :
-            Job(_name, _parent)
-        {
-
-        }
-
-        void Run() override
-        {
-            // User name from scheduler to make sure they match
-            const auto & name = px_sched::Scheduler::current_thread_name(); 
-
-            // Extract worker index
-            std::string input(name);
-            size_t pos = input.find_last_of('-'); 
-            uint index = -1;
-            if (pos != string::npos)
-                index = stoi(input.substr(pos + 1));
-
-            auto * scheduler = ((Scheduler *)Kernel::getScheduler());
-            scheduler->RegisterCurrentThread(name, ThreadType::Worker, index, scheduler->GetWorkerThreadCount());
-        }
-
-    private:
-    };
-
     //--------------------------------------------------------------------------------------
     ThreadID Scheduler::GetCurrentThreadID() const
     {
@@ -72,10 +42,10 @@ namespace vg::core
         if (m_registeredThreads.end() != m_registeredThreads.find(threadId))
             return;  
 
-        //if (_count == 1)
-        //    VG_INFO("[Profiler] Register %s thread", asCString(_threadType));
-        //else
-        //    VG_INFO("[Profiler] Register %s thread %2u/%-2u", asCString(_threadType), _index, _count);
+        if (_count == 1)
+            VG_DEBUGPRINT("[Profiler] Register thread %s\n", asCString(_threadType));
+        else
+            VG_DEBUGPRINT("[Profiler] Register thread %s %2u/%-2u\n", asCString(_threadType), _index, _count);
 
         // Set thread name for debug
         SetThreadDescription(GetCurrentThread(), core::wstring_convert((string)_name).c_str());
@@ -145,17 +115,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    // This cannot safely be done at init even by running jobs, because we cannot be sure 
+    // that all the workers will be used and that no job is executed on the main thread etc... 
+    // So instead we lazily register worker threads once using TLS check in 'Job::RegisterAndRun'
+       //--------------------------------------------------------------------------------------
     void Scheduler::RegisterWorkerThreads()
     {
-        RegisterWorkerThreadJob registerThreadJob("RegisterWorkerThreads", nullptr);
-        px_sched::Sync s;
-        for (uint i = 0; i < m_threadCount; ++i)
-        {
-            px_sched::Job job{ &registerThreadJob };
-            m_schd->run(job, &s);
-        }
-        Sleep(100);
-        m_schd->waitFor(s);
+     
     }
 
     //--------------------------------------------------------------------------------------
