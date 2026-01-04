@@ -102,7 +102,7 @@ namespace vg::editor
                         if (isPrefabChild)
                             continue;
 
-                        if (_gameobject->GetScene()->GetSceneType() == BaseSceneType::Scene)
+                        if (_gameobject && _gameobject->GetScene()->GetSceneType() == BaseSceneType::Scene)
                         {
                             if (go->GetScene()->GetSceneType() == BaseSceneType::Prefab)
                                 continue;
