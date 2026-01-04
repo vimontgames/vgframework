@@ -440,7 +440,7 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void VehicleComponent::Respawn()
+    void VehicleComponent::Respawn(core::float3 _offset)
     {
         if (m_vehicleConstraint)
         {
@@ -453,8 +453,10 @@ namespace vg::engine
             // reset vehicle
             m_vehicleConstraint->Reset();
 
-            // teleport back to spawn position
-            bodyComp->SetMatrix(m_startPos);
+            // teleport back to spawn position + offset
+            float4x4 mat = m_startPos;
+            mat[3].xyz += _offset;
+            bodyComp->SetMatrix(mat);
 
             // reset controls
             resetDriveState();

@@ -92,6 +92,8 @@ void PlayerBehaviour::OnStop()
 //--------------------------------------------------------------------------------------
 void PlayerBehaviour::FixedUpdate(const Context & _context)
 {
+    super::FixedUpdate(_context);
+
     if (_context.m_playing && !_context.m_paused)
     {
         const float time = Game::get()->Engine().GetTime().m_enlapsedTimeSinceStartScaled;
@@ -215,7 +217,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 else if (time >= m_respawnTime)
                 {
                     m_respawnTime = 0.0f;
-                    OnDeath(_context);
+                    OnDeath();
                 }
 
             break;
@@ -662,7 +664,7 @@ bool PlayerBehaviour::enterVehicle(vg::core::IGameObject * _vehicleGameobject)
 }
 
 //--------------------------------------------------------------------------------------
-bool PlayerBehaviour::exitVehicle()
+bool PlayerBehaviour::exitVehicle(bool _teleport)
 {
     if (IGameObject * vehicleGO = VG_SAFE_STATIC_CAST(IGameObject, m_vehicle.getObject()))
     {
@@ -672,11 +674,16 @@ bool PlayerBehaviour::exitVehicle()
         if (vehicleComp->ExitVehicle(this->GetGameObject()))
         {
             m_vehicle.clear();
-            float4x4 exitMat = vehicleGO->GetGlobalMatrix();
-            exitMat[3].z += 1; // TODO: save enter pos relative to car and check if enough space to exit car?
-            GetGameObject()->SetGlobalMatrix(exitMat);
-            enablePhysics(true);
+
+            if (_teleport)
+            {
+                float4x4 exitMat = vehicleGO->GetGlobalMatrix();
+                exitMat[3].z += 1; // TODO: save enter pos relative to car and check if enough space to exit car?
+                GetGameObject()->SetGlobalMatrix(exitMat);
+            }
+
             m_moveState = MoveState::Idle;
+            enablePhysics(true);
 
             if (vehicleComp->GetPassengerSlotType(m_vehicleSlot) == VehicleSlotType::Driver)
             {

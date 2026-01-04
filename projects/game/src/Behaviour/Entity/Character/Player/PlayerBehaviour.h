@@ -17,7 +17,7 @@ public:
     void                                Update              (const Context & _context) override;
 
     bool                                enterVehicle        (vg::core::IGameObject * _vehicleGameobject);
-    bool                                exitVehicle         ();
+    bool                                exitVehicle         (bool _teleport = true);
 
     VG_INLINE const vg::core::float4 &  getCustomColor      () const;
     VG_INLINE const vg::core::u8        getViewportIndex    () const;
@@ -30,7 +30,7 @@ private:
     ItemBehaviour *                     m_rightHandItem     = nullptr;
     vg::core::u8                        m_viewIndex         = -1;
     float                               m_nextShootTime     = 0.0f;
-    float                               m_respawnTime       = 0.0f;
+    float                               m_respawnTime       = 0.0f;    
 };
 
 #if VG_ENABLE_INLINE

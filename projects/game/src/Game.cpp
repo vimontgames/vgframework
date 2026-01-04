@@ -170,20 +170,28 @@ void Game::FixedUpdate(float _dt)
 
         auto world = go->getGlobalMatrix();
 
-        if (world[3].z < GameOptions::get()->getMinimumHeight())
+        if (world[3].z < GameOptions::get()->getDeathHeight())
         {
-            // Kick all passengers
+            // Kill all passengers
             const uint count = vehicle->GetPassengerSlotCount();
             for (uint i = 0; i < count; ++i)
             {
                 if (IGameObject * passenger = vehicle->GetPassengerSlotOwner(i))
                 {
                     if (PlayerBehaviour * player = passenger->GetComponentT<PlayerBehaviour>())
-                        player->exitVehicle();
+                    {
+                        player->exitVehicle(false);
+
+                        if (!player->m_fallen)
+                        {
+                            player->OnDeath();
+                            player->m_fallen = true;
+                        }
+                    }
                 }
             }
 
-            vehicle->Respawn();
+            vehicle->Respawn(float3(0,0, GameOptions::get()->getRespawnHeight()));
         }
     }
 }

@@ -51,7 +51,7 @@ namespace vg::engine
         bool                EnterVehicle                (core::IGameObject * _owner, core::uint & _slotIndex) final override;
         bool                ExitVehicle                 (core::IGameObject * _owner) final override;
 
-        void                Respawn                     () final override;
+        void                Respawn                     (core::float3 _offset = (core::float3)0.0f) final override;
 
         core::uint          GetPassengerSlotCount       () const final override;
         core::IGameObject * GetPassengerSlotOwner       (core::uint _index) const final override;

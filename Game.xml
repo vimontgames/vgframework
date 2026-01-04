@@ -1,9 +1,10 @@
 <Root>
     <Object class="GameOptions">
         <Property type="String" name="m_name" value="GameOptions"/>
-        <Property type="Uint32" name="m_uid" value="0"/>
+        <Property type="Uint32" name="m_uid" value="3497100194"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-        <Property type="Float" name="m_minZ" value="-32"/>
+        <Property type="Float" name="m_deathHeight" value="-32"/>
+        <Property type="Float" name="m_respawnHeight" value="16"/>
     </Object>
 </Root>

@@ -19,7 +19,7 @@ namespace vg::engine
         virtual bool                EnterVehicle            (core::IGameObject * _owner, core::uint & _slotIndex) = 0;
         virtual bool                ExitVehicle             (core::IGameObject * _owner) = 0;
 
-        virtual void                Respawn                 () = 0;
+        virtual void                Respawn                 (core::float3 _offset = (core::float3)0.0f) = 0;
 
         virtual core::uint          GetPassengerSlotCount   () const = 0;
         virtual core::IGameObject * GetPassengerSlotOwner   (core::uint _index) const = 0;

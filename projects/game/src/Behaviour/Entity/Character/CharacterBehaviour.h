@@ -28,7 +28,7 @@ public:
     bool                    TakeHit         (CharacterBehaviour * _attacker, ItemBehaviour * _weapon = nullptr) override;
 
     // New CharacterBehaviour virtual funcs
-    virtual void            OnDeath         (const Context & _context);
+    virtual void            OnDeath         ();
 
     void                    addScore        (vg::core::i32 _points);
     void                    addLifes        (vg::core::i32 _lifes);
@@ -94,6 +94,9 @@ protected:
 
     vg::core::ObjectHandle  m_vehicle;
     vg::core::uint          m_vehicleSlot = -1;
+
+public:
+    bool                    m_fallen = false;
 };
 
 #if VG_ENABLE_INLINE

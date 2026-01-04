@@ -231,19 +231,31 @@ void CharacterBehaviour::playSound(SoundState _sound)
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::FixedUpdate(const Context & _context)
 {
-    super::FixedUpdate(_context);
+    auto world = _context.m_gameObject->getGlobalMatrix();
+    const float height = GameOptions::get()->getDeathHeight();
+    if (world[3].z < height)
+    {
+        if (!m_fallen)
+        {
+            OnDeath();
+            m_fallen = true;
+        }
+    }
+    else if (world[3].z > height + 10)
+    {
+        if (m_fallen)
+            m_fallen = false;
+    }
 }
 
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::Update(const Context & _context)
 {
-    auto world = _context.m_gameObject->getGlobalMatrix();
-    if (world[3].z < GameOptions::get()->getMinimumHeight())
-        OnDeath(_context);
+   
 }
 
 //--------------------------------------------------------------------------------------
-void CharacterBehaviour::OnDeath(const Context & _context)
+void CharacterBehaviour::OnDeath()
 {
     if (m_life > 0)
     {
@@ -251,19 +263,27 @@ void CharacterBehaviour::OnDeath(const Context & _context)
 
         if (m_life > 0)
         {
-            if (auto * charaController = _context.m_gameObject->GetComponentT<vg::engine::ICharacterControllerComponent>())
-                charaController->SetPosition(m_startPos + float3(0, 0, 16));
+            IGameObject * go = GetGameObject();
+            if (auto * charaController = go->GetComponentT<vg::engine::ICharacterControllerComponent>())
+            {
+                float3 pos = m_startPos + float3(0, 0, GameOptions::get()->getRespawnHeight());
+                charaController->SetPosition(pos);
+                float4x4 mat = go->GetGlobalMatrix();
+                mat[3].xyz = pos;
+                go->SetGlobalMatrix(mat);
+            }
 
             m_hp = 100;
             m_moveState = MoveState::Jump;
         }
+        else
+        {
+            // Game Over
+            enablePhysics(false);
+            enableVisual(false);
+        }
     }
-    else
-    {
-        // Game Over
-        enablePhysics(false);
-        enableVisual(false);
-    }
+    
 }
 
 //--------------------------------------------------------------------------------------
