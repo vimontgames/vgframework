@@ -1493,12 +1493,6 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool Renderer::IsReadyForStreaming() const
-    {
-        return m_device.isReadyForStreaming();
-    }
-
-    //--------------------------------------------------------------------------------------
     const gfx::DeviceCaps & Renderer::getDeviceCaps() const
     {
         return m_device.getDeviceCaps();

@@ -146,8 +146,6 @@ namespace vg::renderer
         virtual double                              GetGpuWaitTime          () const = 0;
 
         virtual bool                                GetGpuMemoryInfo        (core::GPUMemoryInfo & _gpuMem) const = 0;
-
-        virtual bool                                IsReadyForStreaming     () const = 0;
         virtual core::u64                           GetAvailableUploadSize  () const = 0;
         virtual core::u64                           GetTotalUploadSize      () const = 0;
     };

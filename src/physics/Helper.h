@@ -1,5 +1,7 @@
 #pragma once
 #include "Physics_Consts.h"
+#include "Jolt/Math/Float3.h"
+#include "Jolt/Math/Float2.h"
 
 namespace vg::physics
 {
@@ -67,5 +69,17 @@ namespace vg::physics
     inline core::float3 fromJoltVec3(const JPH::Vec3 & _vec)
     {
         return core::float3(_vec.GetX(), _vec.GetY(), _vec.GetZ());
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline core::float3 fromJoltFloat3(const JPH::Float3 & _vec)
+    {
+        return core::float3(_vec.x, _vec.y, _vec.z);
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline core::float2 fromJoltFloat2(const JPH::Float2 & _vec)
+    {
+        return core::float2(_vec.x, _vec.y);
     }
 }

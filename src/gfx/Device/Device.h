@@ -91,10 +91,13 @@ namespace vg::gfx
             FrameContext &									getCurrentFrameContext          ();
 
             void                                            createStreamingUploadBuffer     ();
+            void                                            createMainThreadUploadBuffer    ();
             void                                            updateCommandListsUploadBuffers ();
             void                                            destroyUploadBuffers            ();
             UploadBuffer *                                  getStreamingUploadBuffer        () const;
+            UploadBuffer *                                  getMainThreadUploadBuffer       () const;
             UploadBuffer *                                  getCommandListUploadBuffer      (core::uint _cmdListIndex) const;
+            UploadBuffer *                                  getCurrentUploadBuffer          () const;    
 
             void											createBackbuffer                (core::uint _backbufferIndex, void * _backbuffer);
             void											destroyBackbuffer               (core::uint _backbufferIndex);
@@ -220,7 +223,6 @@ namespace vg::gfx
 
         void                    waitGPUIdle                 ();
 
-        bool                    isReadyForStreaming         () const;
         core::u64               getAvailableUploadSize      () const;
         core::u64               getTotalUploadSize          () const;
 

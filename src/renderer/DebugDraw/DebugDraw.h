@@ -6,6 +6,7 @@
 #include "core/Container/AtomicVector.h"
 #include "gfx/RootSignature/RootSignature_consts.h"
 #include "gfx/Shader/ShaderKey.h"
+#include "renderer/Geometry/Mesh/MeshGeometry.h"
 
 struct DebugDrawRootConstants3D;
 
@@ -30,6 +31,15 @@ namespace vg::renderer
         Solid,
         Outline
     );
+
+    class DebugGeometry : public IDebugGeometry
+    {
+    public:
+        DebugGeometry();
+        ~DebugGeometry();
+
+        MeshGeometry * m_meshGeometry = nullptr;
+    };
 
     //--------------------------------------------------------------------------------------
     // Primitives to draw using 'AddLine', 'AddWireframe' are added to a common list but each
@@ -56,13 +66,17 @@ namespace vg::renderer
         void                    AddWireframeCapsule         (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) final override;
         void                    AddWireframeTaperedCapsule  (const core::IWorld * _world, float _topRadius, float _bottomRadius, float _height, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) final override;
         void                    AddWireframeSquarePyramid   (const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) final override;
+        void                    AddWireframeGeometry        (const core::IWorld * _world, IDebugGeometry * _geometry, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) final override;
 
         void                    AddSolidCube                (const core::IWorld * _world, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) final override;
         void                    AddSolidSphere              (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) final override;
         void                    AddSolidHemisphere          (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) final override;
         void                    AddSolidCylinder            (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) final override;
         void                    AddSolidSquarePyramid       (const core::IWorld * _world, float _base, float _height, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) final override;
+        void                    AddSolidGeometry            (const core::IWorld * _world, IDebugGeometry * _geometry, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) final override;
 
+        IDebugGeometry *        CreateGeometry         (const DebugVertex * _triangles, core::u32 _triangleCount, const core::u32 * _indices, core::u32 _indexCount) final override;
+        
         void                    drawCube                    (gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, const core::float3 & _minPos, const core::float3 & _maxPos, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) const;
         void                    drawSphere                  (gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, float _radius, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) const;
         void                    drawCylinder                (gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, float _radius, float _height, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) const;
@@ -100,6 +114,7 @@ namespace vg::renderer
         void                    addSphere                   (const core::IWorld * _world, float _radius, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID, DebugDrawFillMode _fillmode);
         void                    addHemisphere               (const core::IWorld * _world, const float _radius, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID, DebugDrawFillMode _fillmode);
         void                    addCylinder                 (const core::IWorld * _world, float _radius, float _height, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID, DebugDrawFillMode _fillmode);
+        void                    addGeometry                 (const core::IWorld * _world, IDebugGeometry * _geometry, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID, DebugDrawFillMode _fillmode);
 
         core::float4x4          getIcoSphereMatrix          (const core::float4x4 & _matrix, float _radius) const;
         core::float4x4          getCubeMatrix               (const core::float4x4 & _matrix, const core::float3 & _minPos, const core::float3 & _maxPos) const;
@@ -109,22 +124,6 @@ namespace vg::renderer
         void                    setupZFail                  (gfx::CommandList * _cmdList) const;
         void                    setupZPass                  (gfx::CommandList * _cmdList) const;
         void                    setupOutline                (gfx::CommandList * _cmdList) const;
-
-        struct DebugDrawInstanceData
-        {
-            core::float4x4  world;
-            PickingID       pickingID;
-            core::u32       color;
-
-            float getTaper() const { return 1.0f; }
-        };
-
-        struct DebugDrawInstanceDataCylinder : public DebugDrawInstanceData
-        {
-            float           taper;      // Top/Bottom ratio
-
-            float getTaper() const { return taper; }
-        };
 
         bool                                    setupDebugModelInstances    (gfx::CommandList * _cmdList, const MeshGeometry * _geometry, DebugDrawFillMode _fillmode, DebugDrawRootConstants3D & _debugDraw3D, core::uint & _indexCount) const;
 
@@ -154,23 +153,47 @@ namespace vg::renderer
             core::u32 endColor;
         };
 
+        struct DebugDrawInstanceData
+        {
+            core::float4x4  world;
+            PickingID       pickingID;
+            core::u32       color;
+
+            float getTaper() const { return 1.0f; }
+        };
+
+        struct DebugDrawInstanceDataCylinder : public DebugDrawInstanceData
+        {
+            float taper;      // Top/Bottom ratio
+
+            float getTaper() const { return taper; }
+        };
+
         using DebugDrawCubeData = DebugDrawInstanceData;
         using DebugDrawSquarePyramidData = DebugDrawInstanceData;
         using DebugDrawIcoSphereData = DebugDrawInstanceData;
         using DebugDrawHemiSphereData = DebugDrawInstanceData;
         using DebugDrawCylinderData = DebugDrawInstanceDataCylinder;
+        using DebugDrawInstanceDataDebugGeometry = DebugDrawInstanceData;
 
         struct WorldData : public core::IDebugDrawData
         {
             WorldData();
             ~WorldData();
 
-            core::atomicvector<DebugDrawLineData>       m_lines;
-            core::vector<DebugDrawIcoSphereData>        m_squarePyramid[core::enumCount<DebugDrawFillMode>()]; 
-            core::vector<DebugDrawSquarePyramidData>    m_cubes[core::enumCount<DebugDrawFillMode>()];
-            core::vector<DebugDrawIcoSphereData>        m_icoSpheres[core::enumCount<DebugDrawFillMode>()];
-            core::vector<DebugDrawHemiSphereData>       m_hemiSpheres[core::enumCount<DebugDrawFillMode>()];
-            core::vector<DebugDrawCylinderData>         m_cylinders[core::enumCount<DebugDrawFillMode>()];
+            core::atomicvector<DebugDrawLineData>               m_lines;
+            core::vector<DebugDrawIcoSphereData>                m_squarePyramid[core::enumCount<DebugDrawFillMode>()]; 
+            core::vector<DebugDrawSquarePyramidData>            m_cubes[core::enumCount<DebugDrawFillMode>()];
+            core::vector<DebugDrawIcoSphereData>                m_icoSpheres[core::enumCount<DebugDrawFillMode>()];
+            core::vector<DebugDrawHemiSphereData>               m_hemiSpheres[core::enumCount<DebugDrawFillMode>()];
+            core::vector<DebugDrawCylinderData>                 m_cylinders[core::enumCount<DebugDrawFillMode>()];
+
+            struct DebugGeometries
+            {
+                core::vector<DebugDrawInstanceDataDebugGeometry> data[core::enumCount<DebugDrawFillMode>()];
+            };
+
+            core::unordered_map<DebugGeometry*, DebugGeometries> m_debugGeometries;
         };
 
         struct DrawData

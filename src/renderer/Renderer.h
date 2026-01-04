@@ -147,7 +147,6 @@ namespace vg::renderer
 
         bool                                    GetGpuMemoryInfo                (core::GPUMemoryInfo & _gpuMem) const final override;
 
-        bool                                    IsReadyForStreaming             () const final override;
         core::u64                               GetAvailableUploadSize          () const final override;
         core::u64                               GetTotalUploadSize              () const final override;
 

@@ -1153,7 +1153,7 @@ namespace vg::gfx
                     // Render all nodes using several command list, but still on main thread (for debug purpose)
                     const uint nodesPerJob = ((uint)nodes.size() + maxRenderJobCount - 1) / maxRenderJobCount;
 
-                    uint cmdListIndex = 1; // Render command lists start at 1
+                    uint cmdListIndex = 2; // Worker command lists start at 2
                     uint nodeCount = 0;
                     for (uint i = 0; i < nodes.size(); ++i)
                     {
@@ -1169,7 +1169,7 @@ namespace vg::gfx
                         }
                     }
 
-                    device->setExecuteCommandListCount(gfx::CommandListType::Graphics, cmdListIndex + 1);
+                    device->setExecuteCommandListCount(gfx::CommandListType::Graphics, cmdListIndex + 2);
                 }
                 else
                 {
@@ -1187,7 +1187,7 @@ namespace vg::gfx
                         {
                             VG_PROFILE_CPU("Reset");
                             for (uint i = 0; i < m_renderJobs.size(); ++i)
-                                m_renderJobs[i]->reset(cmdLists[i+1]);
+                                m_renderJobs[i]->reset(cmdLists[i+2]); // first two command lists and corresponding upload buffers are used respectively by [0] Streaming [1] MainThread
                         }
 
                         // Assign nodes to render jobs, sequentially
@@ -1460,7 +1460,7 @@ namespace vg::gfx
                             }
                         }
 
-                        device->setExecuteCommandListCount(gfx::CommandListType::Graphics, jobCount + 1);
+                        device->setExecuteCommandListCount(gfx::CommandListType::Graphics, jobCount + 2);
                     }
 
                     // Kick jobs ...

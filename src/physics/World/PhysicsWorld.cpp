@@ -79,17 +79,38 @@ namespace vg::physics
     void PhysicsWorld::DrawDebug()
     {
         #ifdef JPH_DEBUG_RENDERER
-        if (PhysicsOptions::get()->isDebugRendererEnabled())
+        const auto * options = PhysicsOptions::get();
+        if (options->isDebugRendererEnabled())
         {
             auto * physicsSystem = getPhysicsSystem();
+            auto * debugRenderer = DebugRenderer::get();
+
+            // Lazy init
+            if (!debugRenderer->isInitialized())
+                debugRenderer->init();
 
             JPH::BodyManager::DrawSettings settings;
-            settings.mDrawShapeWireframe = true;
+            settings.mDrawShape = options->isDebugRendererShape();
+            settings.mDrawShapeWireframe = options->isDebugRendererShapeWireframe();
+            settings.mDrawVelocity = options->isDebugRendererVelocity();
 
-            DebugRenderer::get()->SetWorld(getWorld());
+            debugRenderer->setWorld(getWorld());
 
             physicsSystem->DrawBodies(settings, JPH::DebugRenderer::sInstance);
-            physicsSystem->DrawConstraints(JPH::DebugRenderer::sInstance);
+
+            if (options->isDebugRendererConstraints())
+            {
+                physicsSystem->DrawConstraints(JPH::DebugRenderer::sInstance);
+                physicsSystem->DrawConstraintLimits(JPH::DebugRenderer::sInstance);
+            }                
+        }
+        else
+        {
+            auto * debugRenderer = DebugRenderer::get();
+
+            // Lazy deinit
+            if (debugRenderer->isInitialized())
+                debugRenderer->deinit();
         }
         #endif // JPH_DEBUG_RENDERER
     }

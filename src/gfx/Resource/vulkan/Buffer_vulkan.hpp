@@ -53,9 +53,6 @@ namespace vg::gfx::vulkan
         // Destroy temporary buffer immediately
         vkDestroyBuffer(vkDevice, tmpBuffer, nullptr);
 
-        //auto * uploadBuffer = device->getStreamingUploadBuffer();
-        //size_t alignedSize = uploadBuffer->getAlignedSize(mem_reqs.size, mem_reqs.alignment);
-
         _size = mem_reqs.size;
         _alignment = mem_reqs.alignment;
 
@@ -185,9 +182,9 @@ namespace vg::gfx::vulkan
                 vkGetBufferMemoryRequirements(device->getVulkanDevice(), getResource().getVulkanBuffer(), &mem_reqs);
                 VG_ASSERT(_bufDesc.getSize() <= mem_reqs.size);
                 u64 uploadBufferSize = _bufDesc.getSize();
-                const auto * scheduler = Kernel::getScheduler();
-                VG_ASSERT(scheduler->IsMainThread() || scheduler->IsLoadingThread(), "Expected Main or Loading thread but current thread is \"%s\"", scheduler->GetCurrentThreadName().c_str());
-                auto * uploadBuffer = device->getStreamingUploadBuffer();
+               
+                auto * uploadBuffer = device->getCurrentUploadBuffer();
+
                 u8 * dst = uploadBuffer->map((gfx::Buffer *)this, uploadBufferSize, (uint)mem_reqs.alignment);
                 if (nullptr != dst)
                 {

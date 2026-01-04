@@ -166,6 +166,7 @@ namespace vg::physics
         #undef new
         DebugRenderer * debugRenderer = new DebugRenderer();
         #pragma pop_macro("new")  
+        //debugRenderer->init();
         JPH::DebugRenderer::sInstance = debugRenderer;
         #endif
 	}
@@ -177,6 +178,7 @@ namespace vg::physics
         #pragma push_macro("delete")
         #undef delete
         DebugRenderer * debugRenderer = DebugRenderer::get();
+        debugRenderer->deinit();
         VG_SAFE_DELETE(debugRenderer);
         #pragma pop_macro("delete")  
         #endif

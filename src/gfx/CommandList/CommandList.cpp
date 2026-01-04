@@ -42,7 +42,21 @@ namespace vg::gfx
 			SetName(name);
 
             auto * device = gfx::Device::get();
-             m_uploadBuffer = _index == 0? device->getStreamingUploadBuffer() : device->getCommandListUploadBuffer(_index);
+
+            switch (_index)
+            {
+                case 0:
+                    m_uploadBuffer = device->getStreamingUploadBuffer();
+                break;
+
+                case 1:
+                    m_uploadBuffer = device->getMainThreadUploadBuffer();
+                break;
+
+                default:
+                    m_uploadBuffer = device->getCommandListUploadBuffer(_index);
+                break;
+            }
 		}
 
 		//--------------------------------------------------------------------------------------

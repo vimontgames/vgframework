@@ -143,14 +143,9 @@ namespace vg::gfx::dx12
             D3D12_RESOURCE_ALLOCATION_INFO allocInfo = d3d12device->GetResourceAllocationInfo(0, 1, &resourceDesc);
 
             const size_t uploadBufferSize = _bufDesc.getSize(); // allocInfo.SizeInBytes;
-            const UINT64 alignment = allocInfo.Alignment ? allocInfo.Alignment : 1ULL;
-
-            const auto * scheduler = Kernel::getScheduler();
-            VG_ASSERT(scheduler->IsMainThread() || scheduler->IsLoadingThread(), "Expected Main or Loading thread but current thread is \"%s\"", scheduler->GetCurrentThreadName().c_str());
+            const UINT64 alignment = allocInfo.Alignment ? allocInfo.Alignment : 1ULL; 
             
-            //auto * uploadBuffer = device->getUploadBuffer(0);
-            // TODO: get from current thread instead?
-            auto * uploadBuffer = device->getStreamingUploadBuffer();
+            UploadBuffer * uploadBuffer = device->getCurrentUploadBuffer();
 
             core::u8 * dst = uploadBuffer->map((gfx::Buffer *)this, uploadBufferSize, alignment /*D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT*/);
             if (nullptr != dst)

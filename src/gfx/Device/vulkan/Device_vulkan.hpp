@@ -687,6 +687,7 @@ namespace vg::gfx::vulkan
 		createSwapchain();
 
 		createStreamingUploadBuffer();
+        createMainThreadUploadBuffer();
 
         for (uint i = 0; i < max_frame_latency; ++i)
             createFrameContext(i);

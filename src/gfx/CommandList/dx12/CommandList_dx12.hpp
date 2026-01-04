@@ -651,6 +651,8 @@ namespace vg::gfx::dx12
         const TextureDesc & texDesc = _dst->getTexDesc();
         const auto fmtSize = Texture::getPixelFormatSize(texDesc.format);
 
+        auto * uploadBuffer = device->getCommandListUploadBuffer(m_index);
+
         for (uint s = 0; s < texDesc.slices; ++s)
         {
             for (uint i = 0; i < texDesc.mipmaps; ++i)
@@ -674,7 +676,7 @@ namespace vg::gfx::dx12
                 D3D12_TEXTURE_COPY_LOCATION src = {};
                 src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
                 src.PlacedFootprint = placedTexture2D;
-                auto * uploadBuffer = device->getCommandListUploadBuffer(m_index);
+                
                 src.pResource = uploadBuffer->getBuffer()->getResource().getd3d12BufferResource();
 
                 m_d3d12graphicsCmdList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);

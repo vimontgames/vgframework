@@ -1143,6 +1143,15 @@ namespace vg::renderer
 
                 for (uint i = 0; i < countof(worldData->m_icoSpheres); ++i)
                     worldData->m_icoSpheres[i].clear();
+       
+                // Do not clear map to avoid realloc during game, just clear instance lists
+                for (auto & pair : worldData->m_debugGeometries)
+                {
+                    WorldData::DebugGeometries & lists = pair.second;
+
+                    for (uint i = 0; i < countof(lists.data); ++i)
+                        lists.data[i].clear();
+                }           
             }
         }
     }
@@ -1151,6 +1160,7 @@ namespace vg::renderer
     u64 DebugDraw::getDebugDrawCount(const View * _view) const
     {
         auto world = ((IView *)_view)->GetWorld();
+
         if (world)
         {
             const auto * worldData = getWorldData(world);
@@ -1166,8 +1176,17 @@ namespace vg::renderer
             for (uint i = 0; i < countof(worldData->m_icoSpheres); ++i)
                 count += worldData->m_icoSpheres[i].size();
 
+            for (auto & pair : worldData->m_debugGeometries)
+            {
+                const WorldData::DebugGeometries & lists = pair.second;
+
+                for (uint i = 0; i < countof(lists.data); ++i)
+                    count += lists.data[i].size();
+            }
+
             return count;
         }
+
         return 0;
     }
 
@@ -1338,6 +1357,16 @@ namespace vg::renderer
                 VG_PROFILE_GPU("Cylinders");
                 drawDebugModelInstances(_cmdList, m_cylinder, worldData->m_cylinders, DebugDrawFillMode::Solid);
             }
+            {
+                VG_PROFILE_CPU("DebugGeometry");
+                VG_PROFILE_GPU("DebugGeometry");
+                for (auto & pair : worldData->m_debugGeometries)
+                {
+                    DebugGeometry * model = pair.first;
+                     MeshGeometry * geo = model->m_meshGeometry;
+                    drawDebugModelInstances(_cmdList, geo, pair.second.data, DebugDrawFillMode::Solid);
+                }
+            }
         }
 
         // draw wireframe primitives
@@ -1363,6 +1392,16 @@ namespace vg::renderer
                 VG_PROFILE_CPU("Cylinders");
                 VG_PROFILE_GPU("Cylinders");
                 drawDebugModelInstances(_cmdList, m_cylinder, worldData->m_cylinders, DebugDrawFillMode::Wireframe);
+            }
+            {
+                VG_PROFILE_CPU("DebugGeometry");
+                VG_PROFILE_GPU("DebugGeometry");
+                for (auto & pair : worldData->m_debugGeometries)
+                {
+                    DebugGeometry * model = pair.first;
+                    MeshGeometry * geo = model->m_meshGeometry;
+                    drawDebugModelInstances(_cmdList, geo, pair.second.data, DebugDrawFillMode::Wireframe);
+                }
             }
         }
     }
@@ -1563,5 +1602,97 @@ namespace vg::renderer
 
         DepthStencilState dsOpaque(true, true, ComparisonFunc::LessEqual);
         _cmdList->setDepthStencilState(dsOpaque);
+    }
+
+    //--------------------------------------------------------------------------------------
+    DebugGeometry::DebugGeometry()
+    {
+
+    }
+    //--------------------------------------------------------------------------------------
+    DebugGeometry::~DebugGeometry()
+    {
+        VG_SAFE_RELEASE(m_meshGeometry);
+    }
+
+    //--------------------------------------------------------------------------------------
+    IDebugGeometry * DebugDraw::CreateGeometry(const DebugVertex * _triangles, core::u32 _triangleCount, const core::u32 * _indices, core::u32 _indexCount)
+    {
+        Device * device = Device::get();
+
+        DebugDrawLitVertex * vertices = new DebugDrawLitVertex[_triangleCount];
+        for (uint i = 0; i < _triangleCount; ++i)
+        {
+            const DebugVertex & src = _triangles[i];
+            DebugDrawLitVertex & dst = vertices[i];
+
+            dst.setPos(src.position);
+            dst.setNormal(src.normal);
+            dst.setColor(src.color);
+            //dst.setUV0(src.uv);
+        }
+      
+        BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawLitVertex), (uint)_triangleCount);
+        Buffer * vb = device->createBuffer(vbDesc, "DebugGeometryVB", vertices);
+
+        BufferDesc ibDesc(Usage::Default, BindFlags::IndexBuffer | BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(u32), _indexCount);
+        Buffer * ib = device->createBuffer(ibDesc, "DebugGeometryIB", _indices);
+
+        MeshGeometry * geo = new MeshGeometry("DebugGeometry", this);
+        geo->setVertexFormat(VertexFormat::DebugDrawLit);
+        geo->setIndexBuffer(ib);
+        geo->setVertexBuffer(vb);
+        geo->addBatch("DebugGeometryBatch", _indexCount);
+
+        DebugGeometry * debugGeometry = new DebugGeometry();
+        debugGeometry->m_meshGeometry = geo;
+
+        VG_SAFE_RELEASE(ib);
+        VG_SAFE_RELEASE(vb);
+
+        delete[] vertices;
+
+        return debugGeometry;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void  DebugDraw::addGeometry(const core::IWorld * _world, IDebugGeometry * _geometry, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID, DebugDrawFillMode _fillmode)
+    {
+        WorldData * worldData = getWorldData(_world);
+
+        auto * model = (DebugGeometry *)_geometry;
+        WorldData::DebugGeometries * lists = nullptr;
+
+        auto it = worldData->m_debugGeometries.find(model);
+        if (it == worldData->m_debugGeometries.end())
+        {
+            auto result = worldData->m_debugGeometries.insert({ (DebugGeometry *)_geometry, WorldData::DebugGeometries() });
+            lists = &result.first->second;
+        }
+        else
+        {
+            lists = &it->second;
+        }
+
+        core::vector<DebugDrawInstanceDataDebugGeometry> & list = lists->data[asInteger(_fillmode)];
+
+        DebugDrawInstanceDataDebugGeometry instance;
+        instance.world = _matrix;
+        instance.pickingID = _pickingID;
+        instance.color = _color;
+
+        list.push_back(instance);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddWireframeGeometry(const core::IWorld * _world, IDebugGeometry * _geometry, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
+    {
+        addGeometry( _world, _geometry, _color, _matrix, _pickingID, DebugDrawFillMode::Wireframe);
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::AddSolidGeometry(const core::IWorld * _world, IDebugGeometry * _geometry, core::u32 _color, const core::float4x4 & _matrix, PickingID _pickingID)
+    {
+        addGeometry(_world, _geometry, _color, _matrix, _pickingID, DebugDrawFillMode::Solid);
     }
 }

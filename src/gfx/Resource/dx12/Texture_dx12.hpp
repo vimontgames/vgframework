@@ -286,9 +286,6 @@ namespace vg::gfx::dx12
 
         device->getd3d12Device()->GetCopyableFootprints(&resourceDesc, 0, subResourceCount, 0, footprints.data(), rows.data(), rowSize.data(), &totalBytes);
 
-        //auto * uploadBuffer = device->getStreamingUploadBuffer();
-        //totalBytes = uploadBuffer->getAlignedSize(totalBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
-
         _size = totalBytes;
         _alignment = D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT;
 
@@ -569,15 +566,10 @@ namespace vg::gfx::dx12
                 // Save offset to subresource for upload
                 for (uint i = 0; i < subResourceCount; ++i)
                     setSubResourceData(i, footprint[i].Offset);
+                                
+                auto * uploadBuffer = device->getCurrentUploadBuffer();
 
                 // Copy to upload buffer line by line
-                const auto * scheduler = Kernel::getScheduler();
-                VG_ASSERT(scheduler->IsMainThread() || scheduler->IsLoadingThread(), "Expected Main or Loading thread but current thread is \"%s\"", scheduler->GetCurrentThreadName().c_str());
-
-                //auto * uploadBuffer = device->getUploadBuffer(0);
-                // TODO: get from current thread instead?
-                auto * uploadBuffer = device->getStreamingUploadBuffer();
-
                 core::u8 * dst = uploadBuffer->map((gfx::Texture *)this, d3d12TotalSizeInBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
                 if (nullptr != dst)
                 {

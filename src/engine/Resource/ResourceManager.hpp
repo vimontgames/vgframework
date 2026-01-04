@@ -326,16 +326,8 @@ namespace vg::engine
         if (nullptr == res)
             return;
 
-        // Is device ready for streaming? (e.g. not during init)
         auto * renderer = Engine::get()->GetRenderer();
-        if (!renderer->IsReadyForStreaming())
-        {
-            VG_PROFILE_CPU("Wait Streaming Ready");
-            VG_INFO("[Resource] Device is not yet ready for streaming");
-            Sleep(1);
-            return;
-        }       
-
+   
         // Load resource without blocking mutex
         if (nullptr != res)
         {

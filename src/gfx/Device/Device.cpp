@@ -155,33 +155,43 @@ namespace vg::gfx
         void Device::createStreamingUploadBuffer()
         {
             VG_ASSERT(m_uploadBuffers.size() == 0);
-            size_t streamingUploadBufferSize = ((gfx::Device*)this)->getStreamingUploadBufferSize();
+            size_t streamingUploadBufferSize = ((gfx::Device *)this)->getStreamingUploadBufferSize();
             m_uploadBuffers.push_back(new UploadBuffer("Streaming Upload Buffer", streamingUploadBufferSize, 0));
+        }       
+
+        //--------------------------------------------------------------------------------------
+        void Device::createMainThreadUploadBuffer()
+        {
+            VG_ASSERT(m_uploadBuffers.size() == 1);
+            size_t mainThreadUploadBufferSize = ((gfx::Device *)this)->getStreamingUploadBufferSize(); // dedicated setting
+            m_uploadBuffers.push_back(new UploadBuffer("MainThread Upload Buffer", mainThreadUploadBufferSize, 1));
         }
 
         //--------------------------------------------------------------------------------------
-        // One big upload buffer used for cmdlist #0 + 1 smaller upload buffer per other command list used for render
+        // One big upload buffer used for cmdlist #0 
+        // + 1 'main' upload buffer used to create resources on the main thread
+        // + 1 smaller upload buffer per other command list used for render
         //--------------------------------------------------------------------------------------
         void Device::updateCommandListsUploadBuffers()
         {
             if (m_renderJobsDirty)
             {
-                // destroy all existing buffers but the first one used by uploads
-                for (uint i = 1; i < (uint)m_uploadBuffers.size(); ++i)
+                // destroy all existing buffers but the 2 first ones used by uploads and main thread
+                for (uint i = 2; i < (uint)m_uploadBuffers.size(); ++i)
                     VG_SAFE_RELEASE_ASYNC(m_uploadBuffers[i]);
-                m_uploadBuffers.resize(1);                
+                m_uploadBuffers.resize(2);                
 
-                // recreate N+1 buffers
+                // recreate N buffers (2 to N+2)
                 VG_ASSERT(-1 != m_maxRenderJobCount);
-                const auto uploadBufferTargetCount = max((uint)2, m_maxRenderJobCount + 1);
+                const auto uploadBufferTargetCount = max((uint)2, m_maxRenderJobCount + 2);
                 m_uploadBuffers.reserve(uploadBufferTargetCount);
 
-                if (uploadBufferTargetCount > 1)
+                if (uploadBufferTargetCount > 2)
                 {
-                    const size_t uploadBufferSize = max(m_renderJobsWorkerMinBufferSize, m_renderJobsTotalBufferSize / (uploadBufferTargetCount-1));
+                    const size_t uploadBufferSize = max(m_renderJobsWorkerMinBufferSize, m_renderJobsTotalBufferSize / (uploadBufferTargetCount-2));
 
-                    for (uint i = (uint)1; i < uploadBufferTargetCount; ++i)
-                        m_uploadBuffers.push_back(new UploadBuffer(fmt::sprintf("Worker #%u Upload Buffer", i), uploadBufferSize, i));
+                    for (uint i = (uint)2; i < uploadBufferTargetCount; ++i)
+                        m_uploadBuffers.push_back(new UploadBuffer(fmt::sprintf("Worker #%u Upload Buffer", i-2), uploadBufferSize, i));
                 }
 
                 m_renderJobsDirty = false;
@@ -203,10 +213,59 @@ namespace vg::gfx
         }
 
         //--------------------------------------------------------------------------------------
+        UploadBuffer * Device::getMainThreadUploadBuffer() const
+        {
+            return m_uploadBuffers[1];
+        }
+
+        //--------------------------------------------------------------------------------------
         UploadBuffer * Device::getCommandListUploadBuffer(core::uint _cmdListIndex) const
         {
-            VG_ASSERT(_cmdListIndex < m_uploadBuffers.size());
+            const auto * scheduler = Kernel::getScheduler();
+            const auto currentThread = scheduler->GetCurrentThreadType();
+
+            switch (currentThread)
+            {
+                case ThreadType::Loading:
+                    VG_ASSERT(_cmdListIndex == 0);
+                    break;
+
+                case ThreadType::Main:
+                    //VG_ASSERT(_cmdListIndex == 1);
+                    break;
+
+                default:
+                    VG_ASSERT(_cmdListIndex >= 2);
+                    VG_ASSERT(_cmdListIndex < m_uploadBuffers.size());
+                    break;
+            }
+            
             return m_uploadBuffers[_cmdListIndex];
+        }
+
+        //--------------------------------------------------------------------------------------
+        UploadBuffer * Device::getCurrentUploadBuffer() const
+        {
+            const auto * scheduler = Kernel::getScheduler();
+            const auto currentThread = scheduler->GetCurrentThreadType();
+
+            UploadBuffer * uploadBuffer = nullptr;
+            
+            switch (currentThread)
+            {
+                case ThreadType::Loading:
+                    uploadBuffer = getStreamingUploadBuffer();
+                    break;
+
+                case ThreadType::Main:
+                    uploadBuffer = getMainThreadUploadBuffer();
+                    break;
+
+                default:
+                    VG_ASSERT(currentThread == ThreadType::Main || currentThread == ThreadType::Loading, "Expected Main or Loading thread but current thread is \"%s\"", scheduler->GetCurrentThreadName().c_str());
+            }
+
+            return uploadBuffer;
         }
 
 		//--------------------------------------------------------------------------------------
@@ -258,7 +317,7 @@ namespace vg::gfx
 
             // Alloc more command lists for render jobs if needed (Make sure we have as much CommandLists as worker threads)
             VG_ASSERT(-1 != m_maxRenderJobCount);
-            const auto cmdListTargetCount = max((uint)2, m_maxRenderJobCount + 1);
+            const auto cmdListTargetCount = max((uint)2, m_maxRenderJobCount + 2);
 
             for (uint i = (uint)cmdPools.size(); i < cmdListTargetCount; ++i)
             {
@@ -709,12 +768,6 @@ namespace vg::gfx
     core::u64 Device::getTotalUploadSize() const
     {
         return getStreamingUploadBuffer()->getTotalSize();
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool Device::isReadyForStreaming() const
-    {
-        return getStreamingUploadBuffer()->isReadyForStreaming();
     }
 
     //--------------------------------------------------------------------------------------

@@ -3,6 +3,7 @@
 #include "gfx/CommandList/CommandList.h"
 #include "gfx/Resource/Buffer.h"
 #include "gfx/Profiler/Profiler.h"
+#include "gfx/Device/Device.h"
 
 #if !VG_ENABLE_INLINE
 #include "UploadBuffer.inl"
@@ -91,16 +92,6 @@ namespace vg::gfx
                 return i;
         }
         return -1;
-    }
-
-    //--------------------------------------------------------------------------------------
-    bool UploadBuffer::isReadyForStreaming()
-    {
-        lock();
-        bool ready = m_firstFlushDone;
-        unlock();
-
-        return ready;
     }
 
     //--------------------------------------------------------------------------------------
@@ -249,7 +240,11 @@ namespace vg::gfx
 
         if (m_index == 0)
         {
-            if (m_firstFlushDone)
+            // The following check is not true when multithreaded rendering is disabled
+            Device * device = Device::get();
+            auto jobCount = device->getMaxRenderJobCount();
+            auto policy = device->getRenderJobsPolicy();
+            if (jobCount > 0 )
                 VG_ASSERT(Kernel::getScheduler()->IsLoadingThread()); // Upload buffer is used during init then only after for loading
         }
 
@@ -401,7 +396,8 @@ namespace vg::gfx
                 m_texturesToUpload.clear();
             }
 
-            m_firstFlushDone = true;
+            // Upload buffer are ready for streaming after first flush? no more necessary
+            //m_readyForStreaming = true;
         }
         unlock();
     }

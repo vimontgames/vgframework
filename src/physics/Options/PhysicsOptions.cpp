@@ -13,9 +13,6 @@ namespace vg::physics
     {
         super::registerProperties(_desc);
 
-        registerProperty(PhysicsOptions, m_debugRenderer, "Debug Renderer");
-        setPropertyDescription(PhysicsOptions, m_debugRenderer, "Enable physics engine debug renderer");
-
         registerOptionalPropertyEnumBitfield(PhysicsOptions, m_showMotionTypes, MotionTypeFlags, m_showMotionTypesMask, "Motion");
         setPropertyDescription(PhysicsOptions, m_showMotionTypesMask, "Show physics bodies using motion type");
 
@@ -34,6 +31,22 @@ namespace vg::physics
         registerPropertyEnumArray(PhysicsOptions, string, Category, m_physicsCategories, "Category");
         setPropertyDescription(PhysicsOptions, m_physicsCategories, "Use physics Categories to filter collisions")
 
+        registerPropertyOptionalGroupBegin(PhysicsOptions, m_debugRendererEnable, "Debug Renderer");
+        {
+            registerProperty(PhysicsOptions, m_debugRendererDrawShape, "Shapes");
+            setPropertyDescription(PhysicsOptions, m_debugRendererDrawShape, "Draw shapes");
+
+            registerProperty(PhysicsOptions, m_debugRendererDrawShapeWireframe, "Shapes Wireframe");
+            setPropertyDescription(PhysicsOptions, m_debugRendererDrawShapeWireframe, "Use wreframe to draw shapes");
+            
+            registerProperty(PhysicsOptions, m_debugRendererDrawVelocity, "Velocity");
+            setPropertyDescription(PhysicsOptions, m_debugRendererDrawVelocity, "Draw velocity vectors");
+
+            registerProperty(PhysicsOptions, m_debugRendererContraints, "Constraints");
+            setPropertyDescription(PhysicsOptions, m_debugRendererContraints, "Draw constraints");
+        }
+        registerPropertyOptionalGroupEnd(PhysicsOptions);
+        
         return true;
     }
 

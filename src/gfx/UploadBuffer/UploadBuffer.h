@@ -52,7 +52,6 @@ namespace vg::gfx
         UploadBuffer(const core::string & _name, core::size_t _size, core::uint _index);
         ~UploadBuffer();
 
-        bool                    isReadyForStreaming     ();
         core::u64               getAvailableUploadSize  ();
         core::u64               getAvailableUploadSize  (Alloc & _bestRange);
         void                    setNextAllocSize        (core::size_t _size);  
@@ -97,8 +96,6 @@ namespace vg::gfx
         // Mutex is only necessary for main upload command buffer, other can just check
         core::RecursiveMutex    m_mutex                 = core::RecursiveMutex("RecursiveMutex - UploadBuffer");
         core::AssertMutex       m_assertMutex           = core::AssertMutex("AssertMutex - UploadBuffer");
-
-        bool                    m_firstFlushDone        = false;
 
         struct ResourceUploadInfo
         {

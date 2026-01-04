@@ -193,6 +193,7 @@ namespace vg::gfx::dx12
         }
 
         createStreamingUploadBuffer();
+        createMainThreadUploadBuffer();
         updateCommandListsUploadBuffers();
 
 		// For now just create command pools to handle latency
