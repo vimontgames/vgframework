@@ -815,7 +815,7 @@ namespace vg::engine
 
                     if (nullptr == _dynProp || _dynProp->GetProperty() == overrideProp->GetProperty())
                     {
-                        if (IProperty * origProp = classDesc->GetPropertyByName(overrideProp->GetName().c_str()))
+                        if (IProperty * origProp = classDesc->GetPropertyByName(overrideProp->GetName().c_str(), false))
                         {
                             if (_dynProp == nullptr)
                                 overrideProp->BackupOriginalValue(obj, origProp);
@@ -827,6 +827,10 @@ namespace vg::engine
 
                             obj->OnPropertyChanged(obj, *origProp, true);
                             found = true;
+                        }
+                        else
+                        {
+                            VG_WARNING("[Prefab] Instance \"%s\" of \"%s\" is overriding a property \"%s\" that does not exist in Prefab", _gameObject->GetFullName().c_str(), _gameObject->GetParentPrefab()->GetShortName().c_str(), overrideProp->GetName().c_str());
                         }
                     }                    
                 }

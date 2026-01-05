@@ -93,12 +93,12 @@ namespace vg::core
         uint                                GetPropertyCount            () const final override;
         const IProperty *                   GetPropertyByIndex          (uint _index) const final override;
         const IProperty *                   GetAliasedProperty          (const IProperty * _prop) const final override;
-        IProperty *                         GetPropertyByName           (const char * _propertyName) const final override;
-        IProperty *                         GetLastPropertyByName       (const char * _propertyName) const final override;
-        uint                                GetPropertyIndex            (const char * _propertyName) const final override;
-        uint                                GetLastPropertyIndex        (const char * _propertyName) const final override;
-        IProperty *                         GetPreviousProperty         (const char * _propertyName) const final override;
-        IProperty *                         GetNextProperty             (const char * _propertyName) const final override;
+        IProperty *                         GetPropertyByName           (const char * _propertyName, bool _warning = true) const final override;
+        IProperty *                         GetLastPropertyByName       (const char * _propertyName, bool _warning = true) const final override;
+        uint                                GetPropertyIndex            (const char * _propertyName, bool _warning = true) const final override;
+        uint                                GetLastPropertyIndex        (const char * _propertyName, bool _warning = true) const final override;
+        IProperty *                         GetPreviousProperty         (const char * _propertyName, bool _warning = true) const final override;
+        IProperty *                         GetNextProperty             (const char * _propertyName, bool _warning = true) const final override;
 
         IClassDesc::Func                    GetCreateFunc               () const final override;
         IClassDesc::SingletonFunc           GetSingletonFunc            () const final override;

@@ -31,31 +31,35 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IProperty * ClassDesc::GetPropertyByName(const char * _propertyName) const
+    IProperty * ClassDesc::GetPropertyByName(const char * _propertyName, bool _warning) const
     {
-        uint index = GetPropertyIndex(_propertyName);
+        uint index = GetPropertyIndex(_propertyName, false);
         if (-1 != index)
             return (IProperty*)&properties[index];
         
-        VG_WARNING("[Factory] Property \"%s\" not found in class '%s'", _propertyName, GetClassName());
+        if (_warning)
+            VG_WARNING("[Factory] Property \"%s\" not found in class '%s'", _propertyName, GetClassName());
+
         return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
-    IProperty * ClassDesc::GetLastPropertyByName(const char * _propertyName) const
+    IProperty * ClassDesc::GetLastPropertyByName(const char * _propertyName, bool _warning) const
     {
         {
-            uint index = GetLastPropertyIndex(_propertyName);
+            uint index = GetLastPropertyIndex(_propertyName, false);
             if (-1 != index)
                 return (IProperty *)&properties[index];
 
-            VG_WARNING("[Factory] Property \"%s\" not found in class '%s'", _propertyName, GetClassName());
+            if (_warning)
+                VG_WARNING("[Factory] Property \"%s\" not found in class '%s'", _propertyName, GetClassName());
+
             return nullptr;
         }
     }
 
     //--------------------------------------------------------------------------------------
-    uint ClassDesc::GetPropertyIndex(const char * _propertyName) const
+    uint ClassDesc::GetPropertyIndex(const char * _propertyName, bool _warning) const
     {
         if (properties.size() > 0)
         {
@@ -66,6 +70,10 @@ namespace vg::core
                     return i;
             }
         }
+
+        if (_warning)
+            VG_WARNING("[Factory] Property \"%s\" not found in class '%s'", _propertyName, GetClassName());
+
         return -1;
     }
 
@@ -74,7 +82,7 @@ namespace vg::core
    // properties have the same name (alias) then the last one added is returned. 
    // Is that a hack? Yes. Can I live with it? Also yes.
    //--------------------------------------------------------------------------------------
-    uint ClassDesc::GetLastPropertyIndex(const char * _propertyName) const
+    uint ClassDesc::GetLastPropertyIndex(const char * _propertyName, bool _warning) const
     {
         if (properties.size() > 0)
         {
@@ -85,6 +93,10 @@ namespace vg::core
                     return i;
             }
         }
+
+        if (_warning)
+            VG_WARNING("[Factory] Property \"%s\" not found in class '%s'", _propertyName, GetClassName());
+
         return -1;
     }
 
@@ -110,24 +122,28 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IProperty * ClassDesc::GetPreviousProperty(const char * _propertyName) const
+    IProperty * ClassDesc::GetPreviousProperty(const char * _propertyName, bool _warning) const
     {
         uint index = GetPropertyIndex(_propertyName);
         if (-1 != index && index > 0)
             return  (IProperty *)&properties[index-1];
         
-        VG_ASSERT("[Factory] Previous Property of \"%s\" not found in class '%s'", _propertyName, GetClassName());
+        if (_warning)
+            VG_ASSERT("[Factory] Previous Property of \"%s\" not found in class '%s'", _propertyName, GetClassName());
+
         return nullptr;
     }
 
     //--------------------------------------------------------------------------------------
-    IProperty * ClassDesc::GetNextProperty(const char * _propertyName) const
+    IProperty * ClassDesc::GetNextProperty(const char * _propertyName, bool _warning) const
     {
         uint index = GetPropertyIndex(_propertyName);
         if (index < properties.size() - 1 )
             return  (IProperty *)&properties[index + 1];
 
-        VG_ASSERT("[Factory] Next Property of \"%s\" not found in class '%s'", _propertyName, GetClassName());
+        if (_warning)
+            VG_ASSERT("[Factory] Next Property of \"%s\" not found in class '%s'", _propertyName, GetClassName());
+
         return nullptr;
     }
 

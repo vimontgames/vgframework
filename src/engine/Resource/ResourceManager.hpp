@@ -595,10 +595,10 @@ namespace vg::engine
                     const string cookFile = io::getCookedPath(path);
 
                     if (io::setLastWriteTime(cookFile, io::getCurrentFileTime()))
-                        VG_WARNING("[Resource] File \"%s\" cooked in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
+                        VG_INFO("[Resource] File \"%s\" cooked in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startCook, Timer::getTick()));
                 }
             }
-;
+
             const auto startLoad = Timer::getTick();
 
             VG_ASSERT(_info.m_object == nullptr);
