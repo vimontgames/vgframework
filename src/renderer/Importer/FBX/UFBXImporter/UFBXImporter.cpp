@@ -45,7 +45,10 @@ namespace vg::renderer
         if (nullptr != scene)
         {
             if (scene->settings.unit_meters != 1.0f)
+            {
                 VG_WARNING("[FBX] The unit of the file \"%s\" is not meters (scale = %f)", _path.c_str(), scene->settings.unit_meters);
+                //opts.target_unit_meters = scene->settings.unit_meters;
+            }
 
             const auto meshCount = (uint)scene->meshes.count;
             for (uint i = 0; i < meshCount; ++i)
@@ -286,6 +289,11 @@ namespace vg::renderer
 
         uint vertexIndex = 0;
 
+        double scale = 1.0;
+
+        if (!_meshImportSettings->m_ignoreScale)
+            scale = _scale;
+
         for (size_t i = 0; i < _UFbxMesh->material_parts.count; i++)
         {
             const ufbx_mesh_part * ufbxMeshPart = &_UFbxMesh->material_parts.data[i];
@@ -319,7 +327,7 @@ namespace vg::renderer
 
                         MeshImporterVertex vertex;
 
-                        vertex.pos = pos * _scale;
+                        vertex.pos = pos * scale;
                         vertex.nrm = float4(nrm.x, nrm.y, nrm.z, 1.0f);
                         vertex.bin = float4(bin.x, bin.y, bin.z, 1.0f);
                         vertex.tan = float4(tan.x, tan.y, tan.z, 1.0f);
@@ -574,6 +582,6 @@ namespace vg::renderer
             _animNodeData.scale.clear();
         }
 
-        return true;
+        return true; 
     }
 }

@@ -14,6 +14,10 @@ namespace vg::engine
         super::registerProperties(_desc);
 
         registerProperty(MeshResourceMeta, m_importSettings.m_physicsCollisionData, "Collision data");
+        setPropertyDescription(MeshResourceMeta, m_importSettings.m_physicsCollisionData, "Generate a CPU version of the mesh that will be used to generate a collision mesh for physics");
+
+        registerProperty(MeshResourceMeta, m_importSettings.m_ignoreScale, "Ignore scale");
+        setPropertyDescription(MeshResourceMeta, m_importSettings.m_ignoreScale, "Ignore file units when importing the mesh");
 
         return true;
     }

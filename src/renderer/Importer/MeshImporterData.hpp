@@ -12,9 +12,29 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool findBodyPartFlagsFromNamingConvention(const core::string & _name, const vector<BonesNamingConvention> & _namingConvention, BodyPartFlags & _flags)
     {
+        string name = _name;
+
         for (uint i = 0; i < _namingConvention.size(); ++i)
         {
-            if (endsWith(_name, _namingConvention[i].name))
+            if (endsWith(name, _namingConvention[i].name))
+            {
+                _flags = _namingConvention[i].flags;
+                return true;
+            }
+        }
+
+        // Retry removing trailing "_end"
+        const std::string suffix = "_end";
+
+        // Check if string ends with "_end"
+        if (name.size() >= suffix.size() &&
+            name.compare(name.size() - suffix.size(), suffix.size(), suffix) == 0) {
+            name.erase(name.size() - suffix.size()); // remove the suffix
+        }
+
+        for (uint i = 0; i < _namingConvention.size(); ++i)
+        {
+            if (endsWith(name, _namingConvention[i].name))
             {
                 _flags = _namingConvention[i].flags;
                 return true;
