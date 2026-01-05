@@ -21065,59 +21065,6 @@
                         </Property>
                     </Object>
                     <Object class="GameObject">
-                        <Property type="String" name="m_name" value="Sound"/>
-                        <Property type="Uint32" name="m_uid" value="2116459250"/>
-                        <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
-                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                        <Property type="ObjectPtrVector" name="m_components"/>
-                        <Property type="ObjectPtrVector" name="m_children">
-                            <Object class="GameObject">
-                                <Property type="String" name="m_name" value="BGM"/>
-                                <Property type="Uint32" name="m_uid" value="1064878902"/>
-                                <Property type="Uint32" name="m_originalUID" value="2463671653"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
-                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
-                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
-                                <Property type="ObjectPtrVector" name="m_components">
-                                    <Object class="SoundComponent">
-                                        <Property type="String" name="m_name" value="New SoundComponent"/>
-                                        <Property type="Uint32" name="m_uid" value="1740773095"/>
-                                        <Property type="Uint32" name="m_originalUID" value="2213048044"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
-                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                        <Property type="Object" name="m_sounds">
-                                            <Object class="SoundResourceList">
-                                                <Property type="String" name="m_name" value=""/>
-                                                <Property type="Uint32" name="m_uid" value="2681241083"/>
-                                                <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="ResourceVector" name="m_resources">
-                                                    <Object class="SoundResource">
-                                                        <Property type="String" name="m_name" value=""/>
-                                                        <Property type="Uint32" name="m_uid" value="912318107"/>
-                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                        <Property type="String" name="m_resourcePath" value="data/Sounds/BGM/tally-dub-brotheration-records-2016-140287.mp3"/>
-                                                        <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" value=""/>
-                                                        <Property type="Float" name="m_soundSettings.m_volume" value="1"/>
-                                                        <Property type="Float" name="m_soundSettings.m_delay" value="0"/>
-                                                    </Object>
-                                                </Property>
-                                            </Object>
-                                        </Property>
-                                    </Object>
-                                </Property>
-                                <Property type="ObjectPtrVector" name="m_children"/>
-                            </Object>
-                        </Property>
-                    </Object>
-                    <Object class="GameObject">
                         <Property type="String" name="m_name" value="Debug"/>
                         <Property type="Uint32" name="m_uid" value="1949923508"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>

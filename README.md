@@ -197,30 +197,30 @@ Vulkan SDK is only required to build Vulkan version. **$(VULKAN_SDK)** should po
 
 The external libraries are included with the sources for convenience. Follow the link for details about the licence used.
 
-| Name <img width=256/>			                                                                                             | Version <img width=100/>   
-| -------------------------------------------------------------------------------------------------------------------------- | ------------- 
-| [D3D12 Memory Allocator](  https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator                           )    |               
-| [D3D12 HDR Sample](        https://github.com/microsoft/directx-graphics-samples/tree/master/Samples/Desktop/D3D12HDR )    |               
-| [Dear ImGui - Docking](    https://github.com/ocornut/imgui/commit/3912b3d9a9c1b3f17431aebafd86d2f40ee6e59c           )    | 1.92.5                          
-| [DirectX Shader Compiler]( https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.8.2505.1                )    | 1.8.2505.1    
-| [Dirent](                  https://github.com/tronkko/dirent                                                          )    | 1.23.2                                                                   
-| [fmt](                     https://github.com/fmtlib/fmt/releases/tag/10.1.1                                          )    | 10.1.1            
-| [FXAA](                    https://github.com/GameTechDev/CMAA2/blob/master/Projects/CMAA2/FXAA/Fxaa3_11.h            )    | 3.11           
-| [hlsl++](                  https://github.com/redorav/hlslpp/releases/tag/3.7                                         )    | 3.7                             
-| [IconFont CppHeaders](     https://github.com/juliettef/IconFontCppHeaders                                            )    |                                                                     
-| [ImGuiFileDialog](         https://github.com/aiekick/ImGuiFileDialog                                                 )    | 0.6.7          
-| [ImGuizmo](                https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83                              )    | 1.83                       
-| [JoltPhysics](             https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0                                  )    | 5.0.0                            
-| [meta_enum_lite](          https://github.com/vimontgames/meta_enum_lite                                              )    | 2.0 (Custom)                       
-| [optick](                  https://github.com/bombomby/optick                                                         ) ✨ | 1.3.1                                                  
-| [px_sched](                https://github.com/pplux/px                                                                )    | 
-| [Sharpmake](               https://github.com/vimontgames/Sharpmake                                                   )    | 0.75.0 (Custom)    
-| [SoLoud](                  https://github.com/jarikomppa/soloud                                                       )    | August 2024    
-| [stb](                     https://github.com/nothings/stb                                                            )    | 2.30                                                          
-| [tinyXML2](                https://github.com/leethomason/tinyxml2/releases/tag/10.0.0                                )    | 10.0.0                     
-| [UFBX](                    https://github.com/ufbx/ufbx                                                               )    | 0.14.3                                                      
-| [Vulkan Memory Allocator]( https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator                          )    | 3.0.1                   
-| [WinPixEventRuntime](      https://www.nuget.org/packages/WinPixEventRuntime                                          )    | 1.0.231030001                    
+| Name <img width=256/>			                                                                                             | Version <img width=100/> | License 
+| -------------------------------------------------------------------------------------------------------------------------- | ------------------------ | -------------
+| [D3D12 Memory Allocator](  https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator                           )    |                          | [MIT](https://github.com/GPUOpen-LibrariesAndSDKs/D3D12MemoryAllocator?tab=MIT-1-ov-file#readme)
+| [D3D12 HDR Sample](        https://github.com/microsoft/directx-graphics-samples/tree/master/Samples/Desktop/D3D12HDR )    |                          | [MIT](https://github.com/microsoft/DirectX-Graphics-Samples?tab=MIT-1-ov-file#readme)
+| [Dear ImGui - Docking](    https://github.com/ocornut/imgui/commit/3912b3d9a9c1b3f17431aebafd86d2f40ee6e59c           )    | 1.92.5                   | [MIT](https://github.com/ocornut/imgui?tab=MIT-1-ov-file#readme)      
+| [DirectX Shader Compiler]( https://github.com/microsoft/DirectXShaderCompiler/releases/tag/v1.8.2505.1                )    | 1.8.2505.1               | [LLVM](https://github.com/microsoft/DirectXShaderCompiler?tab=License-1-ov-file#readme)
+| [Dirent](                  https://github.com/tronkko/dirent                                                          )    | 1.23.2                   | [MIT](https://github.com/tronkko/dirent?tab=MIT-1-ov-file#readme)                                               
+| [fmt](                     https://github.com/fmtlib/fmt/releases/tag/10.1.1                                          )    | 10.1.1                   | [MIT](https://github.com/fmtlib/fmt?tab=MIT-1-ov-file#readme)
+| [FXAA](                    https://github.com/GameTechDev/CMAA2/blob/master/Projects/CMAA2/FXAA/Fxaa3_11.h            )    | 3.11                     | [Apache 2.0](https://github.com/GameTechDev/CMAA2?tab=Apache-2.0-1-ov-file#readme)
+| [hlsl++](                  https://github.com/redorav/hlslpp/releases/tag/3.7                                         )    | 3.7                      | [MIT](https://github.com/redorav/hlslpp?tab=MIT-1-ov-file#readme)      
+| [IconFont CppHeaders](     https://github.com/juliettef/IconFontCppHeaders                                            )    |                          | [Zlib](https://github.com/juliettef/IconFontCppHeaders?tab=Zlib-1-ov-file#readme)                                          
+| [ImGuiFileDialog](         https://github.com/aiekick/ImGuiFileDialog                                                 )    | 0.6.7                    | [MIT](https://github.com/aiekick/ImGuiFileDialog?tab=MIT-1-ov-file#readme)
+| [ImGuizmo](                https://github.com/CedricGuillemet/ImGuizmo/releases/tag/1.83                              )    | 1.83                     | [MIT](https://github.com/CedricGuillemet/ImGuizmo?tab=MIT-1-ov-file#readme) 
+| [JoltPhysics](             https://github.com/jrouwe/JoltPhysics/releases/tag/v5.0.0                                  )    | 5.0.0                    | [MIT](https://github.com/jrouwe/JoltPhysics?tab=MIT-1-ov-file#readme)       
+| [meta_enum_lite](          https://github.com/vimontgames/meta_enum_lite                                              )    | 2.0 (Custom)             | [MIT](https://github.com/vimontgames/meta_enum_lite?tab=License-1-ov-file)         
+| [optick](                  https://github.com/bombomby/optick                                                         ) ✨ | 1.3.1                    | [MIT](https://github.com/bombomby/optick?tab=License-1-ov-file)                             
+| [px_sched](                https://github.com/pplux/px                                                                )    |                          | [MIT](https://github.com/pplux/px?tab=MIT-1-ov-file#readme)
+| [Sharpmake](               https://github.com/vimontgames/Sharpmake                                                   )    | 0.75.0 (Custom)          | [Apache 2.0](https://github.com/vimontgames/Sharpmake?tab=License-1-ov-file)
+| [SoLoud](                  https://github.com/jarikomppa/soloud                                                       )    | August 2024              | [Zlib/libpng](https://github.com/jarikomppa/soloud?tab=License-1-ov-file#readme)
+| [stb](                     https://github.com/nothings/stb                                                            )    | 2.30                     | [MIT](https://github.com/nothings/stb?tab=License-1-ov-file#readme)                                    
+| [tinyXML2](                https://github.com/leethomason/tinyxml2/releases/tag/10.0.0                                )    | 10.0.0                   | [Zlib](https://github.com/leethomason/tinyxml2?tab=Zlib-1-ov-file#readme)
+| [UFBX](                    https://github.com/ufbx/ufbx                                                               )    | 0.14.3                   | [MIT/Public Domain](https://github.com/ufbx/ufbx?tab=License-1-ov-file#readme)                                   
+| [Vulkan Memory Allocator]( https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator                          )    | 3.0.1                    | [MIT](https://github.com/GPUOpen-LibrariesAndSDKs/VulkanMemoryAllocator?tab=MIT-1-ov-file#readme)
+| [WinPixEventRuntime](      https://www.nuget.org/packages/WinPixEventRuntime                                          )    | 1.0.231030001            | [MIT](https://www.nuget.org/packages/WinPixEventRuntime/1.0.240308001/License)       
 
 ✨ Optick viewer can be tricky to build but you can download the binaries for optick 1.3.1 from https://github.com/bombomby/optick/releases/tag/1.3.1.0 or build them more easily from https://github.com/vimontgames/optick. 
 
@@ -258,65 +258,61 @@ Please refer to the [ASSETS_LICENSE.md](ASSETS_LICENSE.md) for more details.
 
 The following assets are provided under permissive licenses. Please follow the provided links for details about those licenses:
 
+
+### Animations
+
+This project uses character animations generated via [Mixamo](https://www.mixamo.com/#/).
+
 ### Fonts
 
-| Name<img width=140/>                                                   | Version<img width=200/> 											
-| ---------------------------------------------------------------------- | -------------
-| [Font-Awesome]( https://github.com/FortAwesome/Font-Awesome/tree/6.x ) | 6.x   
-| [Rowdies](      https://github.com/magictype/rowdy                   ) |      
-| [RubikMonoOne]( https://fonts.google.com/specimen/Rubik+Mono+One     ) |      
-| [UbuntuMono](   https://fonts.google.com/specimen/Ubuntu+Mono        ) | 1.0  
+| Name<img width=140/>                                                   | Version<img width=200/> | License 															
+| ---------------------------------------------------------------------- | -------------           | ----------------------
+| [Font-Awesome]( https://github.com/FortAwesome/Font-Awesome/tree/6.x ) | 6.x                     | [Font Awesome Free License / CC BY 4.0 / SIL OFL 1.1](https://github.com/FortAwesome/Font-Awesome/blob/7.x/LICENSE.txt)    
+| [Rowdies](      https://github.com/magictype/rowdy                   ) |                         | [SIL OFL 1.1](https://github.com/magictype/rowdies?tab=OFL-1.1-1-ov-file)
+| [RubikMonoOne]( https://fonts.google.com/specimen/Rubik+Mono+One     ) |                         | [SIL OFL 1.1](https://fonts.google.com/specimen/Rubik+Mono+One/license)
+| [UbuntuMono](   https://fonts.google.com/specimen/Ubuntu+Mono        ) | 1.0                     | [Ubuntu Font Licence](https://fonts.google.com/specimen/Ubuntu+Mono/license)
 
 ### Models
 
 The following models have been modified for engine-compatible materials and/or geometry adjustments.
 
-| Name<img width=140/>                                                                                                                                    | Author<img width=200/> 
-| ------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------  
-| [3D Football](                 https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball                                                             ) | prabath-weerapana      
-| [Baseball Bat](                https://www.cgtrader.com/free-3d-models/military/melee/baseball-bat-5c0d0b8c-0ff9-40f8-b49d-779978a2801b                     ) | sepandjahrominejad     
-| [FootBall american](           https://www.cgtrader.com/free-3d-models/sports/equipment/football-91c641b9-d246-4d71-a31c-d687762dd94f                       ) | orsbone                
-| [Katana samurai sword](        https://www.cgtrader.com/free-3d-models/military/melee/katana-low-poly-59c307a4-5eaf-480d-b2a3-841d8d8c7240                  ) | kizaru                 
-| [Luigi](                       https://www.turbosquid.com/3d-models/luigi-super-model-1308288                                                               ) | Anthony Yanez          
-| [Traffic Cone](                https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c           ) | hinndia                
-| [Soccergoal](                  https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894                                                             ) | NorbertVarga           
-| [Traffic Light](               https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-light-3d-model-333af7df-30a4-47bf-9d12-77cf37249c86 ) | Dastan-Persia          
-| [Clio Williams](               https://sketchfab.com/3d-models/renault-clio-williams-1dad7e4438c74f3b8bac1ab72acd78ed                                       ) | Mona x Supercars       
-| [Modern outdoor bench](        https://www.cgtrader.com/free-3d-models/exterior/street-exterior/park-bench-modern-outdoor-bench-long-seat                   ) | VVei    
-| [Generic passenger car pack](  https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5#download                         ) | Comrade1280    
-
+| Name<img width=140/>                                                                                                                                          | Author<img width=200/>            | License 
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- | ----------------------  
+| [3D Football](                 https://www.cgtrader.com/free-3d-models/sports/game/3d-foot-ball                                                             ) | prabath-weerapana                 | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license) 
+| [Baseball Bat](                https://www.cgtrader.com/free-3d-models/military/melee/baseball-bat-5c0d0b8c-0ff9-40f8-b49d-779978a2801b                     ) | sepandjahrominejad                | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license) 
+| [FootBall American](           https://www.cgtrader.com/free-3d-models/sports/equipment/football-91c641b9-d246-4d71-a31c-d687762dd94f                       ) | orsbone                           | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license) 
+| [Katana Samurai Sword](        https://www.cgtrader.com/free-3d-models/military/melee/katana-low-poly-59c307a4-5eaf-480d-b2a3-841d8d8c7240                  ) | kizaru                            | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license) 
+| [Traffic Cone](                https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-cone-5849a434-2331-4a90-9b87-087ccc16cd0c           ) | hinndia                           | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license)
+| [Modern Outdoor Bench](        https://www.cgtrader.com/free-3d-models/exterior/street-exterior/park-bench-modern-outdoor-bench-long-seat                   ) | VVei                              | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license)
+| [Traffic Light](               https://www.cgtrader.com/free-3d-models/exterior/street-exterior/traffic-light-3d-model-333af7df-30a4-47bf-9d12-77cf37249c86 ) | Dastan-Persia                     | [Royalty Free Licence (no AI)](https://www.cgtrader.com/pages/terms-and-conditions#royalty-free-license)  
+| [Luigi](                       https://www.turbosquid.com/3d-models/luigi-super-model-1308288                                                               ) | Anthony Yanez                     | [TurboSquid 3D Model License](https://blog.turbosquid.com/turbosquid-3d-model-license/#3d-model-license) 
+| [Soccergoal](                  https://www.turbosquid.com/3d-models/soccergoal-3d-model-1840894                                                             ) | NorbertVarga                      | [TurboSquid 3D Model License](https://blog.turbosquid.com/turbosquid-3d-model-license/#3d-model-license) 
+| [Clio Williams](               https://sketchfab.com/3d-models/renault-clio-williams-1dad7e4438c74f3b8bac1ab72acd78ed                                       ) | Mona x Supercars                  | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
+| [Generic Passenger Car Pack](  https://sketchfab.com/3d-models/generic-passenger-car-pack-20f9af9b8a404d5cb022ac6fe87f21f5#download                         ) | Comrade1280                       | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
+| [GJ](                          https://github.com/vimontgames/vgframework/blob/master/data/Meshes/GJ/J_G_Combine.fbx                                        ) | [JOYxt](https://github.com/Joyxt) | [CC BY-NC 4.0 VGF](ASSETS_LICENSE.md)
+| [VGF_Boy](                     https://github.com/vimontgames/vgframework/blob/master/data/Meshes/VGF_Boy/VGF_Boy.fbx                                       ) | [JOYxt](https://github.com/Joyxt) | [CC BY-NC 4.0 VGF](ASSETS_LICENSE.md)
+| [GrosCovid](                   https://github.com/vimontgames/vgframework/blob/master/data/Meshes/GrosCovid/GrosCovid.fbx                                   ) | [JOYxt](https://github.com/Joyxt) | [CC BY-NC 4.0 VGF](ASSETS_LICENSE.md)
 
 ### Textures
 
-| Name<img width=140/>                                                                                      | Author<img width=200/> 	            											
-| --------------------------------------------------------------------------------------------------------- | ------------------- 
-| [Concrete020](    https://ambientcg.com/view?id=Concrete020           )                                   | [ambientcg.com](https://ambientcg.com)    
+| Name<img width=140/>                                                                                      | Author<img width=200/> 	              | License 											
+| --------------------------------------------------------------------------------------------------------- | --------------------------------------- | ----------------------
+| [Concrete020](    https://ambientcg.com/view?id=Concrete020           )                                   | [ambientcg.com](https://ambientcg.com)  | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)   
 
-### Environment maps
-
-| Name<img width=140/>                                                                                      | Author<img width=200/> 	            											
-| --------------------------------------------------------------------------------------------------------- | ------------------- 
-| [Free HDR Map 779](     https://hdri-skies.com/free-hdris/hdr-map-779/           )                        | [hdri-skies.com](hdri-skies.com)               
-
-
+           
 ### Sounds
 
-| Name<img width=140/>                                                                                      | Author<img width=200/> 	            											
-| --------------------------------------------------------------------------------------------------------- | ------------------- 
-| [FX - Swoosh - normal]( https://freesound.org/people/bolkmar/sounds/451127/                             ) | bolkmar               
-| [Large sword swing](    https://freesound.org/people/Luis0413/sounds/737748/                            ) | Luis0413              
-| [Tally Dub](            https://pixabay.com/fr/music/reggae-tally-dub-brotheration-records-2016-140287/ ) | Brotheration Records   
-| [Chainsaw](             https://freesound.org/people/pblzr/sounds/512875/                               ) | [pblzr](https://freesound.org/people/pblzr/)
-| [Retro Bonus Pickup](   https://freesound.org/people/suntemple/sounds/253172/                           ) | [suntemple](https://freesound.org/people/suntemple/)
-| [Broken mirror](        https://freesound.org/people/urupin/sounds/414047/                              ) | [urupin](https://freesound.org/people/urupin/)
-| [The broken mirror](    https://freesound.org/people/urupin/sounds/414047/                              ) | [urupin](https://freesound.org/people/urupin/)
-| [Car door](             https://freesound.org/people/RutgerMuller/sounds/50888/                         ) | [RutgerMuller](https://freesound.org/people/RutgerMuller/)
-| [Car Breaking Skid](    https://freesound.org/people/Medartimus/sounds/217542/                          ) | [Medartimus](https://freesound.org/people/Medartimus/)
-| [Rally Car Idle Loop](  https://freesound.org/people/Debsound/sounds/278186/                            ) | [DebSound](https://freesound.org/people/Debsound/)
-| [Car Horn Honk](        https://freesound.org/people/etcd_09/sounds/435497/                             ) | [etcd_09_](https://freesound.org/people/etcd_09/)
-
-
-
+| Name<img width=140/>                                                                                      | Author<img width=200/>                                     | License 				 	            											
+| --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ----------------------
+| [FX - Swoosh - normal]( https://freesound.org/people/bolkmar/sounds/451127/                             ) | [bolkmar](https://freesound.org/people/bolkmar/)           | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)  
+| [Chainsaw](             https://freesound.org/people/pblzr/sounds/512875/                               ) | [pblzr](https://freesound.org/people/pblzr/)               | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)  
+| [Retro Bonus Pickup](   https://freesound.org/people/suntemple/sounds/253172/                           ) | [suntemple](https://freesound.org/people/suntemple/)       | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) 
+| [Car door](             https://freesound.org/people/RutgerMuller/sounds/50888/                         ) | [RutgerMuller](https://freesound.org/people/RutgerMuller/) | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/)  
+| [Car Horn Honk](        https://freesound.org/people/etcd_09/sounds/435497/                             ) | [etcd_09_](https://freesound.org/people/etcd_09/)          | [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)
+| [Car Breaking Skid](    https://freesound.org/people/Medartimus/sounds/217542/                          ) | [Medartimus](https://freesound.org/people/Medartimus/)     | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+| [Large sword swing](    https://freesound.org/people/Squirrel_404/sounds/737748/                        ) | [Squirrel_404](https://freesound.org/people/Squirrel_404/) | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+| [Broken mirror](        https://freesound.org/people/urupin/sounds/414047/                              ) | [urupin](https://freesound.org/people/urupin/)             | [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
+| [Rally Car Idle Loop](  https://freesound.org/people/Debsound/sounds/278186/                            ) | [DebSound](https://freesound.org/people/Debsound/)         | [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
 
 # Misc
 
