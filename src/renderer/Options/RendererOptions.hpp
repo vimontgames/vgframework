@@ -232,7 +232,7 @@ namespace vg::renderer
         }
         registerPropertyGroupEnd(RendererOptions);
 
-        registerPropertyGroupBegin(RendererOptions, "Misc");
+        registerPropertyGroupBegin(RendererOptions, "Debug");
         {
             registerProperty(RendererOptions, m_aabb, "AABB");
             setPropertyDescription(RendererOptions, m_aabb, "Show Bounding Boxes");
@@ -243,28 +243,30 @@ namespace vg::renderer
             registerProperty(RendererOptions, m_wireframe, "Wireframe");
             setPropertyDescription(RendererOptions, m_wireframe, "Show wireframe");
 
-            registerProperty(RendererOptions, m_debugUI, "UI Debug");
+            registerProperty(RendererOptions, m_debugUI, "UI");
             setPropertyDescription(RendererOptions, m_debugUI, "Show UI debug");
 
-            registerProperty(RendererOptions, m_splitCullingViewJobs, "Split Culling");
-            setPropertyDescription(RendererOptions, m_splitCullingViewJobs, "Use several culling jobs per view");
+            registerProperty(RendererOptions, m_debugFrustum, "Frustum");
+            setPropertyDescription(RendererOptions, m_debugFrustum, "Show camera frustum");
 
-            registerPropertyGroupBegin(RendererOptions, "Framegraph");
+            registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Features");
+            registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
+        registerPropertyGroupBegin(RendererOptions, "Jobs");
+        {
+            registerPropertyGroupBegin(RendererOptions, "Culling");
             {
-                registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
+                registerProperty(RendererOptions, m_splitCullingViewJobs, "Split Culling");
+                setPropertyDescription(RendererOptions, m_splitCullingViewJobs, "Use several culling jobs per view");
             }
             registerPropertyGroupEnd(RendererOptions);
 
-            registerPropertyGroupBegin(RendererOptions, "Materials");
-            {
-                registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Features");
-            }
-            registerPropertyGroupEnd(RendererOptions);
-
-            registerPropertyGroupBegin(RendererOptions, "Render jobs");
+            registerPropertyGroupBegin(RendererOptions, "Render");
             {
                 registerProperty(RendererOptions, m_renderJobs, "Enable");
-                setPropertyDescription(RendererOptions, m_renderJobs, "Enable render jobs");           
+                setPropertyDescription(RendererOptions, m_renderJobs, "Enable render jobs");
 
                 registerProperty(RendererOptions, m_forceRenderJobsCount, "Force job count");
                 setPropertyDescription(RendererOptions, m_forceRenderJobsCount, "Override RenderJobs count");
@@ -350,6 +352,7 @@ namespace vg::renderer
         m_aabb = _other.m_aabb;
         m_wireframe = _other.m_wireframe;
         m_debugUI = _other.m_debugUI;
+        m_debugFrustum = _other.m_debugFrustum;
         m_splitCullingViewJobs = _other.m_splitCullingViewJobs;
         m_particles = _other.m_particles;
         m_postProcess = _other.m_postProcess;

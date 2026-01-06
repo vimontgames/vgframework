@@ -443,9 +443,11 @@ namespace vg::renderer
 
             if (m_cameraGO->GetWorld() == world)
             {
-                const u32 color = m_cameraGO ? packRGBA8(m_cameraGO->GetColor()) : 0x7F7F7F7F;
-                const PickingID pickingID = m_pickingID;
-                m_frustum.draw(world, color);
+                if (RendererOptions::get()->isDebugCameraFrustumEnabled())
+                {
+                    const u32 color = m_cameraGO ? packRGBA8(m_cameraGO->GetColor()) : 0x7F7F7F7F;
+                    m_frustum.draw(world, color);
+                }
             }
         }
     }
