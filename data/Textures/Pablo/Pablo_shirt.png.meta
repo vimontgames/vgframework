@@ -1,6 +1,6 @@
 <Root>
     <Object class="TextureResourceMeta">
-        <Property type="String" name="m_name" value="Pablo_Hat_tex.png.meta"/>
+        <Property type="String" name="m_name" value="Pablo_shirt.png.meta"/>
         <Property type="EnumU8" name="m_importSettings.m_importerType" value="Auto"/>
         <Property type="EnumU8" name="m_importSettings.m_importerFormat" value="Auto"/>
         <Property type="Bool" name="m_importSettings.m_sRGB" value="true"/>

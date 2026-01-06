@@ -33,10 +33,10 @@
                         <Property type="Uint32" name="m_uid" value="1000756320"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                        <Property type="String" name="m_resourcePath" value=""/>
+                        <Property type="String" name="m_resourcePath" value="data/Textures/Pablo/Pablo_Hat_tex.png"/>
                     </Object>
                 </Property>
-                <Property type="Float4" name="m_albedoColor" x="0.058577418" y="0.058577418" z="0.058577418" w="1"/>
+                <Property type="Float4" name="m_albedoColor" x="1" y="1" z="1" w="1"/>
                 <Property type="Bool" name="m_enableNormal" value="true"/>
                 <Property type="Resource" name="m_normalMap">
                     <Object class="TextureResource">
@@ -44,10 +44,10 @@
                         <Property type="Uint32" name="m_uid" value="3782350982"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                        <Property type="String" name="m_resourcePath" value=""/>
+                        <Property type="String" name="m_resourcePath" value="data/Textures/Pablo/Pablo_Hat_nm.png"/>
                     </Object>
                 </Property>
-                <Property type="Float" name="m_normalStrength" value="1"/>
+                <Property type="Float" name="m_normalStrength" value="0.25"/>
                 <Property type="Bool" name="m_enablePbr" value="true"/>
                 <Property type="Resource" name="m_pbrMap">
                     <Object class="TextureResource">
@@ -55,12 +55,12 @@
                         <Property type="Uint32" name="m_uid" value="838556778"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                        <Property type="String" name="m_resourcePath" value=""/>
+                        <Property type="String" name="m_resourcePath" value="data/Textures/Pablo/Pablo_Hat_tex_pbr.png"/>
                     </Object>
                 </Property>
                 <Property type="Float" name="m_occlusion" value="1"/>
                 <Property type="Float" name="m_roughness" value="1"/>
-                <Property type="Float" name="m_metalness" value="0"/>
+                <Property type="Float" name="m_metalness" value="1"/>
                 <Property type="Bool" name="m_enableEmissive" value="true"/>
                 <Property type="Resource" name="m_emissiveMap">
                     <Object class="TextureResource">
