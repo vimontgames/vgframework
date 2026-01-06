@@ -18,7 +18,10 @@
                 <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="EnumU8" name="m_surfaceType" value="Opaque"/>
+                <Property type="EnumU8" name="m_alphaSource" value="Albedo"/>
                 <Property type="Float" name="m_depthFade" value="0.1"/>
+                <Property type="EnumFlagsU8" name="m_instanceColorMask" value="Albedo"/>
+                <Property type="EnumFlagsU8" name="m_vertexColorMask" value="Albedo"/>
                 <Property type="EnumU8" name="m_cullMode" value="Back"/>
                 <Property type="EnumU8" name="m_UVSource" value="UV0"/>
                 <Property type="Float2" name="m_tiling" x="1" y="1"/>
@@ -56,7 +59,7 @@
                     </Object>
                 </Property>
                 <Property type="Float" name="m_occlusion" value="1"/>
-                <Property type="Float" name="m_roughness" value="0.25"/>
+                <Property type="Float" name="m_roughness" value="1"/>
                 <Property type="Float" name="m_metalness" value="0"/>
                 <Property type="Bool" name="m_enableEmissive" value="true"/>
                 <Property type="Resource" name="m_emissiveMap">

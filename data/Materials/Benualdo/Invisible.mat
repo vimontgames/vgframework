@@ -1,12 +1,12 @@
 <Root>
     <Object class="MaterialResourceData">
-        <Property type="Uint32" name="m_uid" value="2118693134"/>
+        <Property type="Uint32" name="m_uid" value="3647200646"/>
         <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="Object" name="m_materialModelType">
             <Object class="MaterialModelType">
                 <Property type="String" name="m_name" value=""/>
-                <Property type="Uint32" name="m_uid" value="1261134641"/>
+                <Property type="Uint32" name="m_uid" value="1027514189"/>
                 <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="String" name="m_shader" value="Default"/>
@@ -14,10 +14,10 @@
         </Property>
         <Property type="ObjectPtr" name="m_data">
             <Object class="DefaultMaterialData">
-                <Property type="Uint32" name="m_uid" value="1676505688"/>
+                <Property type="Uint32" name="m_uid" value="3756252284"/>
                 <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                <Property type="EnumU8" name="m_surfaceType" value="Opaque"/>
+                <Property type="EnumU8" name="m_surfaceType" value="AlphaBlend"/>
                 <Property type="EnumU8" name="m_alphaSource" value="Albedo"/>
                 <Property type="Float" name="m_depthFade" value="0.1"/>
                 <Property type="EnumFlagsU8" name="m_instanceColorMask" value="Albedo"/>
@@ -30,18 +30,18 @@
                 <Property type="Resource" name="m_albedoMap">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" value=""/>
-                        <Property type="Uint32" name="m_uid" value="1747701887"/>
+                        <Property type="Uint32" name="m_uid" value="1914551919"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="String" name="m_resourcePath" value=""/>
                     </Object>
                 </Property>
-                <Property type="Float4" name="m_albedoColor" x="0" y="0.29440591" z="0.56066942" w="1"/>
+                <Property type="Float4" name="m_albedoColor" x="0.72549021" y="0.72549021" z="0.72549021" w="0"/>
                 <Property type="Bool" name="m_enableNormal" value="true"/>
                 <Property type="Resource" name="m_normalMap">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" value=""/>
-                        <Property type="Uint32" name="m_uid" value="364199695"/>
+                        <Property type="Uint32" name="m_uid" value="1566451965"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="String" name="m_resourcePath" value=""/>
@@ -52,7 +52,7 @@
                 <Property type="Resource" name="m_pbrMap">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" value=""/>
-                        <Property type="Uint32" name="m_uid" value="1153488998"/>
+                        <Property type="Uint32" name="m_uid" value="3900682470"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="String" name="m_resourcePath" value=""/>
@@ -65,7 +65,7 @@
                 <Property type="Resource" name="m_emissiveMap">
                     <Object class="TextureResource">
                         <Property type="String" name="m_name" value=""/>
-                        <Property type="Uint32" name="m_uid" value="18390232"/>
+                        <Property type="Uint32" name="m_uid" value="852747917"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                         <Property type="String" name="m_resourcePath" value=""/>

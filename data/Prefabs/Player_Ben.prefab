@@ -1,0 +1,143 @@
+<Root>
+    <Object class="PrefabScene">
+        <Property type="String" name="m_name" value="Player_Ben"/>
+        <Property type="Uint32" name="m_uid" value="1233681061"/>
+        <Property type="Uint32" name="m_originalUID" value="0"/>
+        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+        <Property type="ObjectPtr" name="m_root">
+            <Object class="GameObject">
+                <Property type="String" name="m_name" value="Root"/>
+                <Property type="Uint32" name="m_uid" value="1432260134"/>
+                <Property type="Uint32" name="m_originalUID" value="0"/>
+                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                <Property type="ObjectPtrVector" name="m_components"/>
+                <Property type="ObjectPtrVector" name="m_children">
+                    <Object class="PrefabGameObject">
+                        <Property type="String" name="m_name" value="Player"/>
+                        <Property type="Uint32" name="m_uid" value="2344343931"/>
+                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                        <Property type="ObjectPtrVector" name="m_components"/>
+                        <Property type="ObjectPtrVector" name="m_children"/>
+                        <Property type="Resource" name="m_prefabResource">
+                            <Object class="PrefabResource">
+                                <Property type="String" name="m_name" value=""/>
+                                <Property type="Uint32" name="m_uid" value="9925002"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="String" name="m_resourcePath" value="data/Prefabs/Player.prefab"/>
+                            </Object>
+                        </Property>
+                        <Property type="ObjectPtrVector" name="m_dynamicProperties">
+                            <Object class="DynamicPropertyList">
+                                <Property type="String" name="m_name" value=""/>
+                                <Property type="Uint32" name="m_uid" value="3353961298"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_properties">
+                                    <Object class="DynamicPropertyResourceVector">
+                                        <Property type="String" name="m_name" value="m_resources"/>
+                                        <Property type="Uint32" name="m_uid" value="2934118763"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="Bool" name="m_enable" value="true"/>
+                                        <Property type="ObjectVector" name="m_values">
+                                            <Object class="ResourceOverrideData">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="String" name="m_value" value="data/Materials/Pablo/Skin.mat"/>
+                                            </Object>
+                                            <Object class="ResourceOverrideData">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="String" name="m_value" value="data/Materials/Pablo/Mouth.mat"/>
+                                            </Object>
+                                            <Object class="ResourceOverrideData">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="String" name="m_value" value="data/Materials/Pablo/Iris.mat"/>
+                                            </Object>
+                                            <Object class="ResourceOverrideData">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                <Property type="String" name="m_value" value="data/Materials/Benualdo/Shirt.mat"/>
+                                            </Object>
+                                            <Object class="ResourceOverrideData">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="String" name="m_value" value="data/Materials/Pablo/Glove.mat"/>
+                                            </Object>
+                                            <Object class="ResourceOverrideData">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="String" name="m_value" value="data/Materials/Pablo/Hair.mat"/>
+                                            </Object>
+                                            <Object class="ResourceOverrideData">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="String" name="m_value" value="data/Materials/Pablo/Shoe.mat"/>
+                                            </Object>
+                                            <Object class="ResourceOverrideData">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="String" name="m_value" value="data/Materials/Pablo/Cap1.mat"/>
+                                            </Object>
+                                            <Object class="ResourceOverrideData">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="String" name="m_value" value="data/Materials/Pablo/Cap2.mat"/>
+                                            </Object>
+                                            <Object class="ResourceOverrideData">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="0"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="false"/>
+                                                <Property type="String" name="m_value" value="data/Materials/Pablo/Trouser.mat"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                            </Object>
+                        </Property>
+                    </Object>
+                </Property>
+            </Object>
+        </Property>
+    </Object>
+</Root>
