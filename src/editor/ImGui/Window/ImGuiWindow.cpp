@@ -2496,8 +2496,8 @@ namespace vg::editor
         if (_propContext.m_readOnly)
             ImGui::BeginDisabled();
 
-        if (ImGui::Button(getObjectLabel((string)style::icon::File, _propContext.m_originalProp).c_str(), style::button::SizeSmall))
-            openExistingFile = true;   
+        // Button is used for menu
+        ImGui::Button(getObjectLabel((string)style::icon::File, _propContext.m_originalProp).c_str(), style::button::SizeSmall);
      
         auto * imGuiAdapter = getImGuiAdapter();
         ImGui::PushStyleColor(ImGuiCol_Text, imGuiAdapter->GetTextColor());
@@ -3133,6 +3133,9 @@ namespace vg::editor
 
         ImGui::PopItemWidth();
 
+        auto * imGuiAdapter = getImGuiAdapter();
+        ImGui::PushStyleColor(ImGuiCol_Text, imGuiAdapter->GetTextColor());
+        ImGui::PushStyle(renderer::FontStyle::Regular);
 
         ImGui::PushID(_prop);
         ImGui::SameLine();
@@ -3143,6 +3146,9 @@ namespace vg::editor
         ImGui::PopID();
 
         EditingState editingState = undoRedoBeforeEdit<UID>(edited, _propContext, _object, _prop, (UID *)&temp, (UID *)pObjHandle->getUIDPtr(), InteractionType::Single);
+
+        ImGui::PopStyleColor();
+        ImGui::PopStyle();
 
         drawPropertyLabel(_propContext, _prop);
 
