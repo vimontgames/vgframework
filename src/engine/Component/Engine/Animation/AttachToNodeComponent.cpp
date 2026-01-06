@@ -78,6 +78,12 @@ namespace vg::engine
                 if (m_nodeIndex != -1 && m_nodeIndex < (int)m_skeleton->GetNodeCount())
                 {
                     float4x4 mBone = transpose(m_skeleton->GetNodeWorldMatrix(m_nodeIndex));
+
+                    // Ignore scale
+                    mBone[0].xyz = normalize(mBone[0].xyz);
+                    mBone[1].xyz = normalize(mBone[1].xyz);
+                    mBone[2].xyz = normalize(mBone[2].xyz);
+
                     float4x4 mGlobal = mul(mBone, m_gameObject->GetGlobalMatrix());
 
                     //if (m_useTransform)
