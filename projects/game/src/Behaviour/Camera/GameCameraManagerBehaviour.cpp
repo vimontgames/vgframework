@@ -208,7 +208,7 @@ void GameCameraManagerBehaviour::updateGameViewports()
                         break;
 
                     case 3:                                                                         // □□
-                        cam2->SetViewportOffsetAndScale(float2(0.0f, 0.5f), float2(1.0f, 0.5f));    // ■■
+                        cam2->SetViewportOffsetAndScale(float2(0.0f, 0.5f), float2(0.5f, 0.5f));    // ■■
                         break;
 
                     case 4:                                                                         // □□

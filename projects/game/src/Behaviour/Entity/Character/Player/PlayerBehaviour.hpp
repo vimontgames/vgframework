@@ -302,12 +302,12 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 if (!m_isActive)
                 {
                     m_viewIndex = (u8)Game::get()->getActivePlayers().size();
+
+                    enableVisual(true);
+                    enablePhysics(true);
                     
                     if (auto * uiGO = m_UI.get<IGameObject>())
                     {
-                        enableVisual(true);
-                        enablePhysics(true);
-
                         uiGO->SetInstanceFlags(InstanceFlags::Enabled, true);
                         if (auto * uiCanvasComponent = uiGO->GetComponentInChildrenT<IUICanvasComponent>())
                             uiCanvasComponent->SetViewIndex(m_viewIndex);
