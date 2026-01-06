@@ -2497,10 +2497,11 @@ namespace vg::editor
             ImGui::BeginDisabled();
 
         if (ImGui::Button(getObjectLabel((string)style::icon::File, _propContext.m_originalProp).c_str(), style::button::SizeSmall))
-        {
-            //openExistingFile = true;
-        }
-        //ImGui::SetCursorPosX(x+24);
+            openExistingFile = true;   
+     
+        auto * imGuiAdapter = getImGuiAdapter();
+        ImGui::PushStyleColor(ImGuiCol_Text, imGuiAdapter->GetTextColor());
+        ImGui::PushStyle(renderer::FontStyle::Regular);
         
         if (ImGui::BeginPopupContextItem(getObjectLabel("PopContextMenu", _propContext.m_originalProp).c_str(), ImGuiPopupFlags_MouseButtonLeft))
         {
@@ -2672,6 +2673,9 @@ namespace vg::editor
             }
         }
         ImGui::Unindent();
+
+        ImGui::PopStyleColor();
+        ImGui::PopStyle();
 
         if (_resource->GetObject())
             ImGui::Spacing();
