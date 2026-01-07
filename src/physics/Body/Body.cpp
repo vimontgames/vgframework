@@ -97,7 +97,7 @@ namespace vg::physics
 
             // COM offset
             if (overrideCOM)
-                mp.Translate(getJoltVec3(_bodyDesc->GetCenterOfMassOffset()));
+                mp.Translate(getJoltVec3(_bodyDesc->getCenterOfMassOffset()));
 
             if (overrideMass)
                 mp.ScaleToMass(_bodyDesc->m_mass);

@@ -448,6 +448,36 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void GameObject::ToolUpdate(const Context & _context)
+    {
+        if (asBool(InstanceFlags::Enabled & getInstanceFlags()))
+        {
+            VG_PROFILE_CPU(GetName().c_str());
+            VG_ASSERT(asBool(UpdateFlags::ToolUpdate & getUpdateFlags()), "[ToolUpdate] GameObject \"%s\" does not have the '%s' flag", GetName().c_str(), asString(UpdateFlags::LateUpdate).c_str());
+
+            ComponentUpdateContext componentUpdateContext(_context, this);
+
+            for (uint i = 0; i < m_components.size(); ++i)
+            {
+                Component * component = m_components[i];
+                if (asBool(ComponentFlags::Enabled & component->getComponentFlags()) && asBool(UpdateFlags::ToolUpdate & component->getUpdateFlags()))
+                {
+                    VG_PROFILE_CPU(component->GetClassName());
+                    component->ToolUpdate(componentUpdateContext);
+                }
+            }
+
+            const auto & children = getChildren();
+            for (uint e = 0; e < children.size(); ++e)
+            {
+                auto * child = children[e];
+                if (asBool(InstanceFlags::Enabled & child->getInstanceFlags()) && asBool(UpdateFlags::ToolUpdate & child->getUpdateFlags()))
+                    child->ToolUpdate(componentUpdateContext);
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     void GameObject::AddComponent(IComponent * _component, core::uint _index)
     {
         addComponent((Component*)_component, _index);

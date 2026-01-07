@@ -11,6 +11,7 @@ namespace vg::physics
 namespace vg::engine
 {
     class Scene;
+    class IPhysicsBodyComponent;
 
     //--------------------------------------------------------------------------------------
     // A "World" is a container for a list of scenes
@@ -72,6 +73,8 @@ namespace vg::engine
         void                                SetSpecularReflectionIntensity  (float _value) final override;
         float                               GetSpecularReflectionIntensity  () const final override;
 
+        const core::vector<IPhysicsBodyComponent *> & GetMergedStaticBodyComponents() const { return m_staticBodyComponents; }
+
     protected:
         void                                mergeStaticBodies               ();
         void                                clearUI                         ();
@@ -81,7 +84,8 @@ namespace vg::engine
         core::vector<core::IBaseScene *>    m_scenes[core::enumCount<core::BaseSceneType>()];
         core::IDebugDrawData *              m_debugDrawData = nullptr;
         core::IPhysicsWorld *               m_physicsWorld = nullptr;
-        core::vector<physics::IBody *>      m_staticColliders;
+        core::vector<physics::IBody *>      m_staticBodies;
+        core::vector<IPhysicsBodyComponent *>m_staticBodyComponents;
 
         core::float4                        m_currentEnvironmentColor = (core::float4)0.0f;
         core::float4                        m_nextEnvironmentColor = (core::float4)0.0f;

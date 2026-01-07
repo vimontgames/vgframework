@@ -23,6 +23,7 @@ namespace vg::core
         void                        FixedUpdate             (const Context & _context) override;
         void                        Update                  (const Context & _context) override;
         void                        LateUpdate              (const Context & _context) override;
+        void                        ToolUpdate              (const Context & _context) override;
 
         const IGameObject *         GetGameObject           () const final override;
         IGameObject *               GetGameObject           () final override;

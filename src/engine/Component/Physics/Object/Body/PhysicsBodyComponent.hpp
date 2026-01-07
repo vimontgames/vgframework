@@ -50,6 +50,8 @@ namespace vg::engine
             if (m_body == nullptr)
                 createBody();
         }
+
+        EnableUpdateFlags(UpdateFlags::Update | UpdateFlags::ToolUpdate, true);
     }
 
     //--------------------------------------------------------------------------------------
@@ -87,6 +89,21 @@ namespace vg::engine
             }            
         }
 
+        if (m_body)
+        {
+            m_linearVelocity = m_body->GetLinearVelocity();
+            m_angularVelocity = m_body->GetAngularVelocity();
+        }
+        else
+        {
+            m_linearVelocity = (core::float3)0.0f;
+            m_angularVelocity = (core::float3)0.0f;
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void PhysicsBodyComponent::ToolUpdate(const Context & _context)
+    {
         const auto * physicsOptions = Engine::get()->GetPhysics()->GetOptions();
         if (physicsOptions->IsAnyBodyVisible())
         {
@@ -109,17 +126,14 @@ namespace vg::engine
                 VG_WARNING("[Physics] PhysicsBodyComponent in GameObject \"%s\" has no physics shape", _context.m_gameObject->GetName().c_str());
             }
         }
+    }
 
-        if (m_body)
-        {
-            m_linearVelocity = m_body->GetLinearVelocity();
-            m_angularVelocity = m_body->GetAngularVelocity();
-        }
-        else
-        {
-            m_linearVelocity = (core::float3)0.0f;
-            m_angularVelocity = (core::float3)0.0f;
-        }
+    //--------------------------------------------------------------------------------------
+    bool PhysicsBodyComponent::CanStaticMerge() const
+    {
+        if (m_bodyDesc)
+            return m_bodyDesc->CanStaticMerge();
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -444,9 +458,17 @@ namespace vg::engine
         else
         {
             if (m_bodyDesc->GetMotionType() == physics::MotionType::Dynamic)
+            {
                 return 0xFF0000FF;
+            }
             else
-                return 0xFF00FFFF; 
+            {
+                const auto & engine = Engine::get();
+                if (m_bodyDesc->CanStaticMerge() && engine->IsPlaying() && engine->getPhysicsOptions()->IsMergeStaticBodiesEnabled())
+                    return 0xFFFFFFFF;
+                else
+                    return 0xFF00FFFF;
+            }
         }
     }
 

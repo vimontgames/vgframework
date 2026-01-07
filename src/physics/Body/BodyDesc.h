@@ -29,15 +29,18 @@ namespace vg::physics
         float               GetMass                 () const final override { return m_mass; }
         void                SetMass                 (float _mass) final override { m_overrideMass = true; m_mass = _mass; }
 
-        bool                IsCenterOfMassOverriden () const { return m_overrideCenterOfMassOffset; }
-        core::float3        GetCenterOfMassOffset   () const { return m_centerOfMassOffset;}
-        void                SetCenterOfMassOffset   (const core::float3 & _centerOfMassOffset) { m_centerOfMassOffset = _centerOfMassOffset; }
+        bool                CanStaticMerge          () const final override;
+
+        bool                isCenterOfMassOverriden () const { return m_overrideCenterOfMassOffset; }
+        core::float3        getCenterOfMassOffset   () const { return m_centerOfMassOffset;}
+        void                setCenterOfMassOffset   (const core::float3 & _centerOfMassOffset) { m_centerOfMassOffset = _centerOfMassOffset; }
 
     public:
         bool                m_trigger                   = false;
         bool                m_softBody                  = false;
         ObjectLayer         m_layer                     = ObjectLayer::NonMoving;
         MotionType          m_motion                    = MotionType::Static;
+        bool                m_staticMerge               = true;
         MotionQuality       m_motionQuality             = MotionQuality::Discrete;
         bool                m_overrideMass              = false;
         float               m_mass                      = 0.0f;

@@ -61,6 +61,7 @@ namespace vg::core
         void                                            FixedUpdate                 (const Context & _context);
         void                                            Update                      (const Context & _context);
         void                                            LateUpdate                  (const Context & _context);
+        void                                            ToolUpdate                  (const Context & _context);
 
         const core::vector<IBehaviour*> /*&*/           getBehaviours               () const;
 

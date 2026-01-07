@@ -50,102 +50,106 @@ namespace vg::engine
 	public:
         using super = IEngine;
 
-										        Engine		        (const core::string & _name, core::IObject * _parent);
-										        ~Engine		        ();
+										        Engine		            (const core::string & _name, core::IObject * _parent);
+										        ~Engine		            ();
 
-        const Time &                            GetTime             () const final override;
+        const Time &                            GetTime                 () const final override;
 
-        const char *                            GetClassName        () const final { return "Engine"; }
-        bool                                    RegisterClasses     () override;
-        bool                                    UnregisterClasses   ();
-        static bool                             registerProperties  (core::IClassDesc & _desc);
+        const char *                            GetClassName            () const final { return "Engine"; }
+        bool                                    RegisterClasses         () override;
+        bool                                    UnregisterClasses       ();
+        static bool                             registerProperties      (core::IClassDesc & _desc);
         
-        void                                    OnPropertyChanged   (IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
+        void                                    OnPropertyChanged       (IObject * _object, const core::IProperty & _prop, bool _notifyParent) override;
 
-        static bool                             createProject       (core::IObject * _engine);
-        static bool                             LoadGame         (core::IObject * _engine);
-        static bool                             saveProject         (core::IObject * _engine);
+        static bool                             createProject           (core::IObject * _engine);
+        static bool                             LoadGame                (core::IObject * _engine);
+        static bool                             saveProject             (core::IObject * _engine);
 
         #ifdef _WIN32
-        LRESULT CALLBACK                        WndProc             (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) final;
+        LRESULT CALLBACK                        WndProc                 (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) final;
         #endif
 
-		void							        Init		        (EngineCreationParams & _params, core::Singletons & _singletons) final;
-		void							        Deinit		        () override;
+		void							        Init		            (EngineCreationParams & _params, core::Singletons & _singletons) final;
+		void							        Deinit		            () override;
 
-        bool                                    IsPlaying           () const final override;
-        bool                                    IsPaused            () const final override;
+        bool                                    IsPlaying               () const final override;
+        bool                                    IsPaused                () const final override;
 
-        void                                    Play                () final override;
-        void                                    Stop                () final override;
-        void                                    Pause               () final override;
-        void                                    Resume              () final override;
+        void                                    Play                    () final override;
+        void                                    Stop                    () final override;
+        void                                    Pause                   () final override;
+        void                                    Resume                  () final override;
 
-        void                                    StartInPlayMode     (bool _enable) final override;
+        void                                    StartInPlayMode         (bool _enable) final override;
 
-        void                                    Quit                () final override;
-        bool                                    IsQuitting          () const final override;
+        void                                    Quit                    () final override;
+        bool                                    IsQuitting              () const final override;
 
-        bool                                    LoadGame            (const core::string & _path) final;
-        bool                                    UnloadGame          () final;
-        IGame *                                 GetGame             () const final;
+        bool                                    LoadGame                (const core::string & _path) final;
+        bool                                    UnloadGame              () final;
+        IGame *                                 GetGame                 () const final;
 
-        core::IWorld *                          GetMainWorld        () const final override;
-        const core::vector<core::IWorld *> &    GetWorlds           () const final override;
+        core::IWorld *                          GetMainWorld            () const final override;
+        const core::vector<core::IWorld *> &    GetWorlds               () const final override;
 
-		void							        RunOneFrame	        () final override;
-        void                                    FlushLoading        () final override;
+		void							        RunOneFrame	            () final override;
+        void                                    FlushLoading            () final override;
 
-        core::uint2                             GetScreenSize       () const final;
+        core::uint2                             GetScreenSize           () const final;
 
-        editor::IEditor *                       GetEditor           () const final override;
+        editor::IEditor *                       GetEditor               () const final override;
 
-		renderer::IRenderer *	                GetRenderer	        () const final override;
-        physics::IPhysics *                     GetPhysics          () const final override;
-        audio::IAudio *                         GetAudio            () const final override;
-        core::IResourceManager *                GetResourceManager  () const final override;
-        core::ISelection *                      GetSelection        () const final override;
+		renderer::IRenderer *	                GetRenderer	            () const final override;
+        physics::IPhysics *                     GetPhysics              () const final override;
+        audio::IAudio *                         GetAudio                () const final override;
+        core::IResourceManager *                GetResourceManager      () const final override;
+        core::ISelection *                      GetSelection            () const final override;
 
-        bool                                    CreateWorld         (const core::string & _filename) final override;
-        bool                                    SaveWorld           () final override;
-        bool                                    SaveWorldAs         (const core::string & _filename) final override;
-        bool                                    LoadWorld           (const core::string & _filename) final override;
-        IWorldResource *                        GetWorldResource    () final override;
+        bool                                    CreateWorld             (const core::string & _filename) final override;
+        bool                                    SaveWorld               () final override;
+        bool                                    SaveWorldAs             (const core::string & _filename) final override;
+        bool                                    LoadWorld               (const core::string & _filename) final override;
+        IWorldResource *                        GetWorldResource        () final override;
 
-        bool                                    SaveScene           (core::IResource * _sceneRes) final override;
+        bool                                    SaveScene               (core::IResource * _sceneRes) final override;
 
-        IEngineOptions *                        GetOptions          () final override;
+        IEngineOptions *                        GetOptions              () final override;
 
-        void                                    OnResourceLoaded    (core::IResource * _resource) final override;
-        void                                    OnResourceUnloaded  (core::IResource * _resource) final override;
+        void                                    OnResourceLoaded        (core::IResource * _resource) final override;
+        void                                    OnResourceUnloaded      (core::IResource * _resource) final override;
 
-        core::JobSync *                         getJobSync          (EngineJobType _jobSync) { return &m_jobSync[core::asInteger(_jobSync)]; }
+        core::JobSync *                         getJobSync              (EngineJobType _jobSync) { return &m_jobSync[core::asInteger(_jobSync)]; }
 
-        renderer::IRendererOptions *            getRendererOptions  () const;
-        physics::IPhysicsOptions *              getPhysicsOptions   () const;
-        audio::IAudioOptions *                  getAudioOptions     () const;
-        vg::IGameOptions *                      getGameOptions      () const;
+        renderer::IRendererOptions *            getRendererOptions      () const;
+        physics::IPhysicsOptions *              getPhysicsOptions       () const;
+        audio::IAudioOptions *                  getAudioOptions         () const;
+        vg::IGameOptions *                      getGameOptions          () const;
 
-        VG_INLINE const Time &                  getTime             () const;
+        VG_INLINE const Time &                  getTime                 () const;
 
-        void                                    registerWorld       (World * _world);
-        void                                    unregisterWorld     (World * _world);
+        void                                    registerWorld           (World * _world);
+        void                                    unregisterWorld         (World * _world);
 
     protected:
-        void                                    updateDt            ();
-        void                                    toggleFullscreen    ();
+        void                                    updateDt                ();
+        void                                    toggleFullscreen        ();
 
-        VG_INLINE bool                          isPlaying           () const;
-        VG_INLINE bool                          isPaused            () const;
+        VG_INLINE bool                          isPlaying               () const;
+        VG_INLINE bool                          isPaused                () const;
 
-        void                                    play                ();
-        void                                    stop                ();
-        void                                    pause               ();
-        void                                    resume              ();
+        void                                    play                    ();
+        void                                    stop                    ();
+        void                                    pause                   ();
+        void                                    resume                  ();
 
-        void                                    updateMemoryBudgets ();
+        bool                                    anyToolmodeViewVisible  () const;
+        bool                                    anyToolmodeViewVisible  (const core::IWorld * _world) const;
 
-        static bool                             shouldCollide       (core::IObject * _obj1, core::IObject * _obj2);
+        void                                    updateMemoryBudgets     ();
+
+        static bool                             shouldCollide           (core::IObject * _obj1, core::IObject * _obj2);
+
 
 	private:
         bool                                    m_isPlaying         : 1;

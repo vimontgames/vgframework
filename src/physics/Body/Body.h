@@ -43,12 +43,14 @@ namespace vg::physics
         core::float3            GetAngularVelocity   () const final override;
 
         const PhysicsBodyDesc * getBodyDesc         () const { return m_bodyDesc;}
+        const PhysicsWorld *    getPhysicsWorld     () const { return m_physicsWorld; }
+        const JPH::BodyID &     getBodyID           () const { return m_bodyID; }
 
-    //private:
+    private:
         void                    createBodyFromJoltShape (PhysicsWorld * _physicsWorld, const PhysicsBodyDesc * _bodyDesc, JPH::Shape * _joltShape, const core::float4x4 & _matrix, const core::string & _name, core::IObject * _parent);
         void                    resetBody               (const core::float4x4 & _world);
 
-    //private:
+    private:
         const PhysicsWorld *    m_physicsWorld = nullptr;
         const PhysicsBodyDesc * m_bodyDesc = nullptr;
         JPH::BodyID             m_bodyID;

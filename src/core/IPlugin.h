@@ -21,6 +21,7 @@ namespace vg::core
         virtual void    FixedUpdate         (float _dt) {}
         virtual void    Update              (float _dt) {}
         virtual void    LateUpdate          (float _dt) {}
+        virtual void    ToolUpdate          (float _dt) {}
 
 		virtual void	CreateResources		() {};
 		virtual void	ReleaseResources	() {};

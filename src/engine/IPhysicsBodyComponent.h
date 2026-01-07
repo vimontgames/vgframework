@@ -24,5 +24,7 @@ namespace vg::engine
 
         virtual void                    SetAngularVelocity  (const core::float3 & _velocity) = 0;
         virtual const core::float3 &    GetAngularVelocity  () const = 0;
+
+        virtual bool                    CanStaticMerge      () const = 0;
     };
 }

@@ -74,6 +74,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Component::ToolUpdate(const Context & _context)
+    {
+
+    }
+
+    //--------------------------------------------------------------------------------------
     const IGameObject * Component::GetGameObject() const 
     { 
         return (const IGameObject*)getGameObject();

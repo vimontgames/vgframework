@@ -24,6 +24,7 @@ namespace vg::core
         virtual void                FixedUpdate             (const Context & _context) = 0;
         virtual void                Update                  (const Context & _context) = 0;
         virtual void                LateUpdate              (const Context & _context) = 0;
+        virtual void                ToolUpdate              (const Context & _context) = 0;
 
         virtual const IGameObject * GetGameObject           () const = 0;
         virtual IGameObject *       GetGameObject           () = 0;

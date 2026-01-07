@@ -42,6 +42,9 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
         void                                                        OnStop              () final override;
 
         void                                                        FixedUpdate         (float _dt) final override;
+        void                                                        Update              (float _dt) final override;
+        void                                                        LateUpdate          (float _dt) final override;
+        void                                                        ToolUpdate          (float _dt) final override;
 
         static vg::engine::IEngine &                                Engine              ();
         static vg::core::IInput &                                   Input               ();

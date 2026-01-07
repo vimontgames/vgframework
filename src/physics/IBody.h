@@ -30,9 +30,11 @@ namespace vg::physics
         virtual float               GetMass                 () const = 0;
         virtual void                SetMass                 (float _mass) = 0;
 
-        virtual bool                IsCenterOfMassOverriden () const = 0;
-        virtual core::float3        GetCenterOfMassOffset   () const = 0;
-        virtual void                SetCenterOfMassOffset   (const core::float3 & _centerOfMassOffset) = 0;
+        virtual bool                isCenterOfMassOverriden () const = 0;
+        virtual core::float3        getCenterOfMassOffset   () const = 0;
+        virtual void                setCenterOfMassOffset   (const core::float3 & _centerOfMassOffset) = 0;
+
+        virtual bool                CanStaticMerge          () const = 0;
     };
 
     class IBody : public core::Object

@@ -23,6 +23,8 @@ namespace vg::engine
         ~PhysicsBodyComponent();
 
         void                                    Update              (const Context & _context) final override;
+        void                                    ToolUpdate          (const Context & _context) final override;    
+
         void                                    OnEnable            () final override;
         void                                    OnDisable           () final override;
         void                                    OnLoad              () final override;
@@ -45,6 +47,8 @@ namespace vg::engine
 
         void                                    SetAngularVelocity  (const core::float3 & _velocity) final override;
         const core::float3 &                    GetAngularVelocity  () const final override;
+
+        bool                                    CanStaticMerge      () const final override;
         
         void                                    onShapeUpdated      ();
         void                                    updateShapesColor   ();

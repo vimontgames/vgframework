@@ -57,7 +57,7 @@ namespace vg::physics
         m_world = _body->GetParentGameObject()->GetWorld();
 
         // Cache physics world
-        m_joltPhysicsSystem = _body->m_physicsWorld->getPhysicsSystem();
+        m_joltPhysicsSystem = _body->getPhysicsWorld()->getPhysicsSystem();
 
         // hack 
         float4x4 bodyMat = _body->GetMatrix();
@@ -223,7 +223,7 @@ namespace vg::physics
         // Lock to get non-const Body* from BodyID
         auto & bodyLockInterface = m_joltPhysicsSystem->GetBodyLockInterface();
         {
-            JPH::BodyLockWrite lock(bodyLockInterface, _body->m_bodyID);
+            JPH::BodyLockWrite lock(bodyLockInterface, _body->getBodyID());
             VG_VERIFY(lock.Succeeded());
             {
                 JPH::Body & body = lock.GetBody();
@@ -284,8 +284,8 @@ namespace vg::physics
     {
         if (m_joltVehicleConstraint)
         {
-            JPH::BodyInterface & bodyInterface = m_vehicleBody->m_physicsWorld->getBodyInterface();
-            bodyInterface.ActivateBody(m_vehicleBody->m_bodyID);
+            JPH::BodyInterface & bodyInterface = m_vehicleBody->getPhysicsWorld()->getBodyInterface();
+            bodyInterface.ActivateBody(m_vehicleBody->getBodyID());
 
             // To get controller
             JPH::WheeledVehicleController * vehicleController = (JPH::WheeledVehicleController *)m_joltVehicleConstraint->GetController();

@@ -316,9 +316,9 @@ namespace vg::engine
 
                     for (uint j = 0; j < bodies.size(); ++j)
                     {
-                        PhysicsBodyComponent * bodyComponent = bodies[j];
+                        PhysicsBodyComponent * bodyComponent = bodies[j];                        
 
-                        if (!bodyComponent->isEnabled() || bodyComponent->getBodyDesc()->GetMotionType() != physics::MotionType::Static)
+                        if (!bodyComponent->isEnabled() || !bodyComponent->getBodyDesc()->CanStaticMerge())
                             continue;
 
                         auto componentShapes = bodyComponent->getShapes();
@@ -342,6 +342,8 @@ namespace vg::engine
                         totalMergedCount += componentShapes.size();
 
                         bodyComponent->Enable(false);
+                        VG_SAFE_INCREASE_REFCOUNT(bodyComponent);
+                        m_staticBodyComponents.push_back(bodyComponent);
                     }
 
                     bodyDesc->SetMass(mass);
@@ -349,7 +351,7 @@ namespace vg::engine
                     physics::IBody * body = Engine::get()->GetPhysics()->CreateBody(GetPhysicsWorld(), bodyDesc, allSceneShapes, root->GetGlobalMatrix(), "MergeStaticColliders", mergeStaticCollidersComponent);
                     body->Activate(root->GetGlobalMatrix());
 
-                    m_staticColliders.push_back(body);
+                    m_staticBodies.push_back(body);
 
                     VG_SAFE_RELEASE(bodyDesc);
                 }
@@ -436,9 +438,13 @@ namespace vg::engine
             }
         }
 
-        for (uint i = 0; i < m_staticColliders.size(); ++i)
-            VG_SAFE_RELEASE(m_staticColliders[i]);
-        m_staticColliders.clear();
+        for (uint i = 0; i < m_staticBodyComponents.size(); ++i)
+            VG_SAFE_RELEASE(m_staticBodyComponents[i]);
+        m_staticBodyComponents.clear();
+
+        for (uint i = 0; i < m_staticBodies.size(); ++i)
+            VG_SAFE_RELEASE(m_staticBodies[i]);
+        m_staticBodies.clear();
 
         // Destroy temporary GameObjects
         for (uint i = 0; i < GetSceneCount(BaseSceneType::Scene); ++i)

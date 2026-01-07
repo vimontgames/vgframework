@@ -980,6 +980,32 @@ namespace vg::engine
             }
         }
 
+        // Call 'EditorUpdate' only if at least one toolmode view is visible
+        if (anyToolmodeViewVisible())
+        {
+            VG_PROFILE_CPU("ToolUpdate");
+
+            if (m_game)
+                m_game->ToolUpdate(scaledDeltaTime);
+
+            for (IWorld * world : GetWorlds())
+            {
+                if (anyToolmodeViewVisible(world))
+                {
+                    const World::Context worldUpdateContext(playing, paused, getWorldDeltaTime(world));
+                    const GameObject::Context gameObjectUpdateContext(worldUpdateContext, world);
+
+                    for (uint i = 0; i < world->GetSceneCount(BaseSceneType::Scene); ++i)
+                    {
+                        const Scene * scene = (Scene *)world->GetScene(i, BaseSceneType::Scene);
+                        GameObject * root = scene->getRoot();
+                        if (root && asBool(UpdateFlags::ToolUpdate & root->getUpdateFlags()))
+                            root->ToolUpdate(gameObjectUpdateContext);
+                    }
+                }
+            }
+        }
+
         if (m_editor)
             m_editor->RunOneFrame();
 
@@ -999,6 +1025,62 @@ namespace vg::engine
 
         g_RunningOneFrame = false;
 	}
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::anyToolmodeViewVisible(const core::IWorld * _world) const
+    {
+        const auto & renderer = GetRenderer();
+        auto & editorViews = renderer->GetViews(gfx::ViewTarget::Editor);
+        for (auto & view : editorViews)
+        {
+            if (view->IsRender())
+            {
+                if (view->IsToolmode())
+                {
+                    if (view->GetWorld() == _world)
+                        return true;
+                }
+            }
+        }
+        auto & gameViews = renderer->GetViews(gfx::ViewTarget::Game);
+        for (auto & view : gameViews)
+        {
+            if (view->IsRender())
+            {
+                if (view->IsToolmode())
+                {
+                    if (view->GetWorld() == _world)
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Engine::anyToolmodeViewVisible() const
+    {
+        const auto & renderer = GetRenderer();
+        auto & editorViews = renderer->GetViews(gfx::ViewTarget::Editor);
+        for (auto & view : editorViews)
+        {
+            if (view->IsRender())
+            {
+                if (view->IsToolmode())
+                    return true;
+            }
+        }
+        auto & gameViews = renderer->GetViews(gfx::ViewTarget::Game);
+        for (auto & view : gameViews)
+        {
+            if (view->IsRender())
+            {
+                if (view->IsToolmode())
+                    return true;
+            }
+        }
+        return false;
+    }
 
     //--------------------------------------------------------------------------------------
     editor::IEditor * Engine::GetEditor() const

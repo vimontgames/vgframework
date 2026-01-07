@@ -7,6 +7,13 @@ namespace vg::physics
     VG_REGISTER_OBJECT_CLASS(PhysicsBodyDesc, "Body Settings");
 
     //--------------------------------------------------------------------------------------
+    bool isStaticMergeHidden(const IObject * _object, const IProperty * _prop, uint _index)
+    {
+        const PhysicsBodyDesc * desc = VG_SAFE_STATIC_CAST(const PhysicsBodyDesc, _object);
+        return desc->GetMotionType() != MotionType::Static;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool PhysicsBodyDesc::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
@@ -23,6 +30,10 @@ namespace vg::physics
         registerPropertyEnumEx(PhysicsBodyDesc, MotionType, m_motion, "Motion", PropertyFlags::None);
         setPropertyDescription(PhysicsBodyDesc, m_motion, "Determines how an object moves and interacts with forces\n\nStatic:\nFixed in place, does not move or respond to forces\nKinematic:\nMoves under its own control, not affected by forces\nDynamic:\nAffected by forces and collisions, interacts physically");
         
+        registerProperty(PhysicsBodyDesc, m_staticMerge, "Static Merge");
+        setPropertyDescription(PhysicsBodyDesc, m_staticMerge, "This body can be merged with other static bodies at engine init");
+        setPropertyHiddenCallback(PhysicsOptions, m_staticMerge, isStaticMergeHidden);
+
         registerPropertyEnumEx(PhysicsBodyDesc, MotionQuality, m_motionQuality, "Quality", PropertyFlags::None);
         setPropertyDescription(PhysicsBodyDesc, m_motionQuality, "Determines how accurately a physics engine calculates an object's motion and collision detection\nDiscrete:\nCollision checks occur only at specific time steps.\nContinuous:\nCollision checks are performed continuously along the object's movement path.");
 
@@ -41,5 +52,11 @@ namespace vg::physics
         setPropertyDescription(PhysicsBodyDesc, m_restitution, "Controls the bounciness of objects during collisions, ranging from 0 (no bounce) to 1 (full bounce)");
 
         return true;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool PhysicsBodyDesc::CanStaticMerge() const 
+    {
+        return GetMotionType() == physics::MotionType::Static && m_staticMerge; 
     }
 }
