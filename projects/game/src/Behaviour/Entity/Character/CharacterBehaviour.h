@@ -39,6 +39,7 @@ public:
     VG_INLINE FightState    getFightState   () const;
     VG_INLINE float         getHealth       () const;
     VG_INLINE CharacterType getCharacterType() const;
+    VG_INLINE float         getVelocity     () const;
 
     void                    enableVisual    (bool _enable);
     void                    enablePhysics   (bool _enable);
@@ -80,7 +81,7 @@ protected:
     SoundState              m_soundState = SoundState::None;
     vg::core::uint          m_sound[vg::core::enumCount<SoundState>()];
 
-    float                   m_speedCurrent = 0.0f;
+    float                   m_currentSpeed = 0.0f;
     vg::core::float2        m_velocitySmoothdamp = vg::core::float2(0, 0);
     float                   m_velocityNorm = 0;
 
@@ -94,9 +95,6 @@ protected:
 
     vg::core::ObjectHandle  m_vehicle;
     vg::core::uint          m_vehicleSlot = -1;
-
-public:
-    bool                    m_fallen = false;
 };
 
 #if VG_ENABLE_INLINE

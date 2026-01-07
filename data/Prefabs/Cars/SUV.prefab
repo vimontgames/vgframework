@@ -142,7 +142,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Sounds/Cars/SUV/637235__kyles__boat-ship-barge-chinese-throaty-distant-engine-noisy2.flac"/>
-                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" value=""/>
+                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" value="Loop"/>
                                                 <Property type="Float" name="m_soundSettings.m_volume" value="1"/>
                                                 <Property type="Float" name="m_soundSettings.m_delay" value="0"/>
                                             </Object>

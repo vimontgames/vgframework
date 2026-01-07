@@ -164,6 +164,8 @@ void Game::FixedUpdate(float _dt)
 {
     VG_PROFILE_CPU("Game");
 
+
+
     for (auto & vehicle : m_vehicles)
     {
         IGameObject * go = vehicle->GetGameObject();
@@ -181,17 +183,25 @@ void Game::FixedUpdate(float _dt)
                     if (PlayerBehaviour * player = passenger->GetComponentT<PlayerBehaviour>())
                     {
                         player->exitVehicle(false);
-
-                        if (!player->m_fallen)
-                        {
-                            player->OnDeath();
-                            player->m_fallen = true;
-                        }
                     }
                 }
             }
 
             vehicle->Respawn(float3(0,0, GameOptions::get()->getRespawnHeight()));
+        }
+    }
+
+    for (uint e = 0; e < enumCount<CharacterType>(); ++e)
+    {
+        const auto type = (CharacterType)e;
+        for (auto & character : getCharacters(type))
+        {
+            IGameObject * go = character->GetGameObject();
+
+            auto world = go->getGlobalMatrix();
+
+            if (world[3].z < GameOptions::get()->getDeathHeight())
+                character->OnDeath();
         }
     }
 }

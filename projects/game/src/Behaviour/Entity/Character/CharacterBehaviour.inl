@@ -27,3 +27,9 @@ VG_INLINE float CharacterBehaviour::getHealth() const
 {
     return m_hp;
 }
+
+//--------------------------------------------------------------------------------------
+float CharacterBehaviour::getVelocity() const
+{
+    return m_velocityNorm;
+}

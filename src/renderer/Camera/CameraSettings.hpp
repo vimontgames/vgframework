@@ -103,6 +103,16 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void CameraSettings::SetZoomLevel(float _zoom)
+    {
+        if (auto * camLens = VG_SAFE_STATIC_CAST(renderer::ICameraLens, m_lensRes->GetObject()))
+        {
+            float2 range = camLens->GetFocalLengthRange();
+            m_focalLength = lerp(range.x, range.y, _zoom);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
     const ICameraLens * CameraSettings::GetCameraLens() const
     {
         if (auto * camLens = VG_SAFE_STATIC_CAST(renderer::ICameraLens, m_lensRes->GetObject()))

@@ -205,4 +205,10 @@ namespace vg::engine
             Engine::get()->GetRenderer()->SetResized();
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    renderer::ICameraSettings * CameraComponent::GetCameraSettings() const
+    {
+        return m_cameraSettings;
+    }
 }

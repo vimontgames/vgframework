@@ -172,7 +172,7 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                     m_targetAcquired = false;
                 }
 
-                m_speedCurrent = m_walkSpeed; // TODO : smooth
+                m_currentSpeed = m_walkSpeed; // TODO : smooth
 
                 if (MoveState::Hurt != m_moveState && FightState::Hit != m_fightState)
                 {
@@ -181,14 +181,14 @@ void EnemyBehaviour::FixedUpdate(const Context & _context)
                         dir = normalize(m_targetPosSmooth - pos);
 
                         if (m_fightState != FightState::Hit)
-                            translation.xy = dir.xy * m_speedCurrent;
+                            translation.xy = dir.xy * m_currentSpeed;
 
                         m_targetRotation = radiansToDegrees(atan2((float)dir.x, (float)-dir.y));
                     }
 
                     if (any(abs(translation.xy) > 0.0f))
                     {
-                        if (m_speedCurrent >= (m_walkSpeed + m_runSpeed) * 0.5f)
+                        if (m_currentSpeed >= (m_walkSpeed + m_runSpeed) * 0.5f)
                             m_moveState = MoveState::Run;
                         else
                             m_moveState = MoveState::Walk;

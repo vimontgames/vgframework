@@ -66,7 +66,7 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
         registerPropertyEnumEx(CharacterBehaviour, MoveState, m_moveState, "Move", PropertyFlags::Transient);
         registerPropertyEnumEx(CharacterBehaviour, FightState, m_fightState, "Fight", PropertyFlags::Transient);
         registerPropertyEnumEx(CharacterBehaviour, SoundState, m_soundState, "Sound", PropertyFlags::Transient);
-        registerPropertyEx(CharacterBehaviour, m_speedCurrent, "Speed", PropertyFlags::Transient);
+        registerPropertyEx(CharacterBehaviour, m_currentSpeed, "Speed", PropertyFlags::Transient);
         registerPropertyEx(CharacterBehaviour, m_velocityNorm, "Velocity", PropertyFlags::Transient);
         registerPropertyEx(CharacterBehaviour, m_currentRotation, "Rotation", PropertyFlags::Transient);
 
@@ -188,7 +188,7 @@ void CharacterBehaviour::OnStop()
     m_moveState = MoveState::Idle;
     m_fightState = FightState::None;
     m_soundState = SoundState::None;
-    m_speedCurrent = 0;
+    m_currentSpeed = 0;
     m_velocityNorm = 0;
     m_currentRotation = 0;
 
@@ -231,21 +231,21 @@ void CharacterBehaviour::playSound(SoundState _sound)
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::FixedUpdate(const Context & _context)
 {
-    auto world = _context.m_gameObject->getGlobalMatrix();
-    const float height = GameOptions::get()->getDeathHeight();
-    if (world[3].z < height)
-    {
-        if (!m_fallen)
-        {
-            OnDeath();
-            m_fallen = true;
-        }
-    }
-    else if (world[3].z > height + 10)
-    {
-        if (m_fallen)
-            m_fallen = false;
-    }
+    //auto world = _context.m_gameObject->getGlobalMatrix();
+    //const float height = GameOptions::get()->getDeathHeight();
+    //if (world[3].z < height)
+    //{
+    //    if (!m_fallen)
+    //    {
+    //        OnDeath();
+    //        m_fallen = true;
+    //    }
+    //}
+    //else if (world[3].z > height + 10)
+    //{
+    //    if (m_fallen)
+    //        m_fallen = false;
+    //}
 }
 
 //--------------------------------------------------------------------------------------

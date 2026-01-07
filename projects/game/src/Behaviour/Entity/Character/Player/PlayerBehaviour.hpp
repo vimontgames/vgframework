@@ -116,6 +116,9 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                             return;
                     }
 
+                    // When player is in vehicle, player velocity is vehicle velocity
+                    m_velocityNorm = length(vehicle->GetLocalVelocity());
+
                     if (vehicle->GetPassengerSlotType(m_vehicleSlot) == VehicleSlotType::Driver)
                     {
 
@@ -290,13 +293,13 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
             bool running = runAmount > 0.0f;
 
-            m_speedCurrent = lerp(m_walkSpeed, m_runSpeed, runAmount);
+            m_currentSpeed = lerp(m_walkSpeed, m_runSpeed, runAmount);
 
             const float2 leftJoyDir = input.GetJoyLeftStickDir(joyID);
 
             if (any(abs(leftJoyDir).xy > joyDeadZone) && (m_moveState != MoveState::Hurt && m_moveState != MoveState::Die))
             {
-                translation.xy += leftJoyDir.xy * float2(1, -1) * m_speedCurrent;
+                translation.xy += leftJoyDir.xy * float2(1, -1) * m_currentSpeed;
                 m_currentRotation = radiansToDegrees(atan2((float)leftJoyDir.x, (float)leftJoyDir.y));
 
                 if (!m_isActive)
@@ -326,7 +329,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 
             if (any(abs(translation.xy) > 0.0f))
             {
-                if (m_speedCurrent >= (m_walkSpeed + m_runSpeed) * 0.5f)
+                if (m_currentSpeed >= (m_walkSpeed + m_runSpeed) * 0.5f)
                     m_moveState = MoveState::Run;
                 else
                     m_moveState = MoveState::Walk;
@@ -587,7 +590,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     if (jump)
                         updatedVelocity += float3(0, 0, running ? m_runJumpSpeed : m_jumpSpeed);
 
-                    m_velocityNorm = (updatedVelocity.x != 0 || updatedVelocity.y != 0) ? (float)length(updatedVelocity) / _context.m_dt : 0.0f;
+                    m_velocityNorm = (updatedVelocity.x != 0 || updatedVelocity.y != 0) ? (float)length(updatedVelocity) : 0.0f;
 
                     charaController->SetVelocity(updatedVelocity);
                     charaController->SetRotation(quaternion::rotation_z(degreesToRadians(m_currentRotation)));

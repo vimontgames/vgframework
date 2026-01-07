@@ -35,6 +35,33 @@
                                 <Property type="ObjectHandle" name="m_target" value="0"/>
                                 <Property type="Float3" name="m_offset" x="0" y="-17" z="14.5"/>
                                 <Property type="Float" name="m_delay" value="0.001"/>
+                                <Property type="Object" name="m_speedToZoomCurve">
+                                    <Object class="Float1Curve">
+                                        <Property type="String" name="m_name" value=""/>
+                                        <Property type="Uint32" name="m_uid" value="1221646015"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumU8" name="m_type" value="Float"/>
+                                        <Property type="EnumU8" name="m_interpolation" value="Linear"/>
+                                        <Property type="Float2" name="m_rangeX" x="0" y="10"/>
+                                        <Property type="Float2" name="m_rangeY" x="0" y="1"/>
+                                        <Property type="ObjectVector" name="m_data">
+                                            <Object class="FloatCurveDataContainer">
+                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="Uint32" name="m_uid" value="1522538492"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="FloatCurveData" name="m_curve" count="3">
+                                                    <Point t="0" value="0.5"/>
+                                                    <Point t="2.0000002" value="0.5"/>
+                                                    <Point t="10" value="0"/>
+                                                </Property>
+                                                <Property type="Bool" name="m_isVisible" value="true"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                </Property>
+                                <Property type="Float" name="m_zoomDelay" value="1"/>
                             </Object>
                             <Object class="CameraComponent">
                                 <Property type="String" name="m_name" value="CameraComponent #0"/>

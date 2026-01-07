@@ -39,6 +39,7 @@ namespace vg::engine
         void                                    Update                      (const Context & _context) final override;
 
         void                                    SetViewportOffsetAndScale   (core::float2 _offset, const core::float2 & _scale) final override;
+        renderer::ICameraSettings *             GetCameraSettings           () const final override;
 
         VG_INLINE void                          setViewportTarget           (gfx::ViewportTarget _target);
         VG_INLINE gfx::ViewportTarget           getViewportTarget           () const;

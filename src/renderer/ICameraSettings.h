@@ -10,10 +10,14 @@ namespace vg::renderer
         Vertical
     );
 
+    class ICameraLens;
+
     class ICameraSettings : public core::Object
     {
     public:
         VG_CLASS_DECL_ABSTRACT(ICameraSettings, core::Object);
+
+        virtual void                SetZoomLevel            (float _zoom) = 0;
 
         virtual const ICameraLens * GetCameraLens           () const = 0;
         virtual float               GetFocalLength          () const = 0;

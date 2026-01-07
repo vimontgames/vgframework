@@ -13,6 +13,8 @@ namespace vg::renderer
 
         void                OnLoad                  ();
 
+        void                SetZoomLevel            (float _zoom) final override;
+
         const ICameraLens * GetCameraLens           () const final override;
         float               GetFocalLength          () const final override;
         float               GetAperture             () const final override;
