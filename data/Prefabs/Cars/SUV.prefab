@@ -30,7 +30,7 @@
                                 <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
                                 <Property type="Uint32" name="m_uid" value="1538163"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_category" value="Default"/>
                                 <Property type="Bool" name="m_useCollisionMask" value="false"/>
@@ -59,7 +59,7 @@
                                 <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
                                 <Property type="Uint32" name="m_uid" value="1988691863"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_shapeType" value="Box"/>
                                 <Property type="ObjectPtr" name="m_shapeDesc">
@@ -78,7 +78,7 @@
                                 <Property type="String" name="m_name" value="New PhysicsShapeComponent"/>
                                 <Property type="Uint32" name="m_uid" value="1392806664"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_shapeType" value="Box"/>
                                 <Property type="ObjectPtr" name="m_shapeDesc">
@@ -90,6 +90,63 @@
                                         <Property type="Float3" name="m_offset" x="-0.65000004" y="0" z="1.6"/>
                                         <Property type="Float3" name="m_rotation" x="0" y="0" z="0"/>
                                         <Property type="Float3" name="m_size" x="3.8000002" y="1.9" z="0.60000002"/>
+                                    </Object>
+                                </Property>
+                            </Object>
+                            <Object class="SoundComponent">
+                                <Property type="String" name="m_name" value="New SoundComponent"/>
+                                <Property type="Uint32" name="m_uid" value="634290429"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Object" name="m_sounds">
+                                    <Object class="SoundResourceList">
+                                        <Property type="String" name="m_name" value="New SoundComponent"/>
+                                        <Property type="Uint32" name="m_uid" value="1775275573"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="ResourceVector" name="m_resources">
+                                            <Object class="SoundResource">
+                                                <Property type="String" name="m_name" value="Horn"/>
+                                                <Property type="Uint32" name="m_uid" value="1771031842"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Sounds/Cars/SUV/131930__mcpable__industrial-air-horn.wav"/>
+                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" value=""/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" value="1"/>
+                                                <Property type="Float" name="m_soundSettings.m_delay" value="0"/>
+                                            </Object>
+                                            <Object class="SoundResource">
+                                                <Property type="String" name="m_name" value="Enter"/>
+                                                <Property type="Uint32" name="m_uid" value="1177714236"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Sounds/Cars/Compact/50888__rutgermuller__car-door-porter-unlocking.wav"/>
+                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" value=""/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" value="1"/>
+                                                <Property type="Float" name="m_soundSettings.m_delay" value="0"/>
+                                            </Object>
+                                            <Object class="SoundResource">
+                                                <Property type="String" name="m_name" value="Brake"/>
+                                                <Property type="Uint32" name="m_uid" value="1322620857"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Sounds/Cars/Compact/217542__medartimus__car-breaking-skid-01.wav"/>
+                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" value=""/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" value="1"/>
+                                                <Property type="Float" name="m_soundSettings.m_delay" value="0"/>
+                                            </Object>
+                                            <Object class="SoundResource">
+                                                <Property type="String" name="m_name" value="Engine"/>
+                                                <Property type="Uint32" name="m_uid" value="611330040"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Sounds/Cars/SUV/637235__kyles__boat-ship-barge-chinese-throaty-distant-engine-noisy2.flac"/>
+                                                <Property type="EnumFlagsU32" name="m_soundSettings.m_flags" value=""/>
+                                                <Property type="Float" name="m_soundSettings.m_volume" value="1"/>
+                                                <Property type="Float" name="m_soundSettings.m_delay" value="0"/>
+                                            </Object>
+                                        </Property>
                                     </Object>
                                 </Property>
                             </Object>
@@ -148,7 +205,7 @@
                                 <Property type="String" name="m_name" value="New VehicleComponent"/>
                                 <Property type="Uint32" name="m_uid" value="134844267"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Object" name="m_slots">
                                     <Object class="VehicleSlotList">
