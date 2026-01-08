@@ -81,8 +81,17 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
 void CharacterBehaviour::enableVisual(bool _enable)
 {
     // Enable visual
-    if (auto * mesh = GetGameObject()->GetComponentByType("MeshComponent"))
-        mesh->Enable(_enable);
+    if (auto * go = GetGameObject())
+    {
+        if (auto * mesh = go->GetComponentByType("IMeshComponent"))
+            mesh->Enable(_enable);
+
+        if (auto * part = go->GetComponentByType("IParticleComponent"))
+            part->Enable(_enable);
+
+        if (auto * healthbar = go->GetChildGameObject("HealthBar"))
+            healthbar->Enable(_enable);
+    }
 }
 
 //--------------------------------------------------------------------------------------
@@ -231,21 +240,7 @@ void CharacterBehaviour::playSound(SoundState _sound)
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::FixedUpdate(const Context & _context)
 {
-    //auto world = _context.m_gameObject->getGlobalMatrix();
-    //const float height = GameOptions::get()->getDeathHeight();
-    //if (world[3].z < height)
-    //{
-    //    if (!m_fallen)
-    //    {
-    //        OnDeath();
-    //        m_fallen = true;
-    //    }
-    //}
-    //else if (world[3].z > height + 10)
-    //{
-    //    if (m_fallen)
-    //        m_fallen = false;
-    //}
+
 }
 
 //--------------------------------------------------------------------------------------
