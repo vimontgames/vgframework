@@ -40,7 +40,7 @@ namespace vg::renderer
         for (uint i = 0; i < countof(m_planes); ++i)
         {
             float normXYZ = rsqrt(dot(m_planes[i].xyz, m_planes[i].xyz));
-            m_planes[i] /= normXYZ;
+            m_planes[i] *= normXYZ;
         }
 
         const float4x4 invViewProj = inverse(_viewProj);
@@ -120,16 +120,19 @@ namespace vg::renderer
         FrustumTest result = FrustumTest::Inside;
         float3 center = _world[3].xyz;
 
+        const float maxScale = max(length(_world[0].xyz), max(length(_world[1].xyz), length(_world[2].xyz)));
+        const float worldRadius = _radius * maxScale;
+
         for (uint i = 0; i < countof(m_planes); ++i)
         {
-            float4 plane = m_planes[i];
+            const float4 & plane = m_planes[i];
 
-            float dist = dot(float4(center.xyz, 1.0f), plane);
+            float dist = dot(float4(center, 1.0f), plane);
 
-            if (dist < -_radius)
+            if (dist < -worldRadius)
                 return FrustumTest::Outside;
 
-            if (dist <= _radius)
+            if (fabsf(dist) < worldRadius)
                 result = FrustumTest::Intersect;
         }
 
