@@ -164,8 +164,6 @@ void Game::FixedUpdate(float _dt)
 {
     VG_PROFILE_CPU("Game");
 
-
-
     for (auto & vehicle : m_vehicles)
     {
         IGameObject * go = vehicle->GetGameObject();

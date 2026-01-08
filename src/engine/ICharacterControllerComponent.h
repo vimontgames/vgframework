@@ -16,5 +16,7 @@ namespace vg::engine
 
         virtual void                    SetPosition     (const core::float3 & _position) = 0;
         virtual void                    SetRotation     (const core::quaternion & _rotation) = 0;
+
+        virtual bool                    CanMoveTo       (const core::float3 & _position) = 0;
     };
 }

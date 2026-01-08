@@ -17,6 +17,7 @@ namespace vg::engine
     public:
         VehicleSlotType m_slotType = VehicleSlotType::Passenger;
         core::ObjectHandle m_location;
+        core::ObjectHandle m_exit;
         core::ObjectHandle m_owner;
     };
 
@@ -36,41 +37,42 @@ namespace vg::engine
         VehicleComponent(const core::string & _name, IObject * _parent);
         ~VehicleComponent();
 
-        void                OnPropertyChanged           (IObject * _object, const core::IProperty & _prop, bool _notifyParent);
+        void                OnPropertyChanged               (IObject * _object, const core::IProperty & _prop, bool _notifyParent);
 
-        void                OnLoad                      ();
-        void                OnPlay                      (); 
-        void                OnStop                      ();
+        void                OnLoad                          ();
+        void                OnPlay                          (); 
+        void                OnStop                          ();
 
-        void                FixedUpdate                 (const Context & _context) final override;
-        void                Update                      (const Context & _context) final override;
+        void                FixedUpdate                     (const Context & _context) final override;
+        void                Update                          (const Context & _context) final override;
 
-        bool                StartEngine                 () final override;
-        bool                StopEngine                  () final override;
+        bool                StartEngine                     () final override;
+        bool                StopEngine                      () final override;
 
-        bool                EnterVehicle                (core::IGameObject * _owner, core::uint & _slotIndex) final override;
-        bool                ExitVehicle                 (core::IGameObject * _owner) final override;
+        bool                EnterVehicle                    (core::IGameObject * _owner, core::uint & _slotIndex) final override;
+        bool                ExitVehicle                     (core::IGameObject * _owner) final override;
 
-        void                Respawn                     (core::float3 _offset = (core::float3)0.0f) final override;
+        void                Respawn                         (core::float3 _offset = (core::float3)0.0f) final override;
 
-        core::uint          GetPassengerSlotCount       () const final override;
-        core::IGameObject * GetPassengerSlotOwner       (core::uint _index) const final override;
-        core::IGameObject * GetPassengerSlotLocation    (core::uint _index) const final override;
-        VehicleSlotType     GetPassengerSlotType        (core::uint _index) const final override;
+        core::uint          GetPassengerSlotCount           () const final override;
+        core::IGameObject * GetPassengerSlotOwner           (core::uint _index) const final override;
+        core::IGameObject * GetPassengerSlotSeatLocation    (core::uint _index) const final override;;
+        core::IGameObject * GetPassengerSlotExitLocation    (core::uint _index) const final override;;
+        VehicleSlotType     GetPassengerSlotType            (core::uint _index) const final override;
 
-        core::float3        GetLocalVelocity            () const final override;
+        core::float3        GetLocalVelocity                () const final override;
 
-        void                Accelerate                  (float _forward) final override;
-        void                Brake                       (float _brake) final override;
-        void                Steer                       (float _leftRight) final override;
-        void                Handbrake                   (float _handbrake) final override;
+        void                Accelerate                      (float _forward) final override;
+        void                Brake                           (float _brake) final override;
+        void                Steer                           (float _leftRight) final override;
+        void                Handbrake                       (float _handbrake) final override;
 
     private:
-        physics::IPhysics * getPhysics                  ();
+        physics::IPhysics * getPhysics                      ();
 
-        bool                createVehicleConstraintDesc ();
-        bool                createVehicleConstraint     ();
-        void                resetDriveState             ();
+        bool                createVehicleConstraintDesc     ();
+        bool                createVehicleConstraint         ();
+        void                resetDriveState                 ();
 
     private:
         bool                                m_engineOn = false;

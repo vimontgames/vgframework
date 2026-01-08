@@ -240,7 +240,7 @@ namespace vg::renderer
             // 1. Spawn
             if (params.m_spawn)
             {
-                float spawnRate = params.m_spawnRate;
+                float spawnRate = max(0.0f, params.m_spawnRate);
                 const uint numToSpawn = (uint)(spawnRate * emitter.m_timeSinceLastSpawn);
                 if (numToSpawn > 0)
                 {

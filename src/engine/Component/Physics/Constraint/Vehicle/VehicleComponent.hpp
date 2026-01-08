@@ -37,7 +37,10 @@ namespace vg::engine
         registerPropertyEnum(VehicleSlot, VehicleSlotType, m_slotType, "Type");
 
         registerProperty(VehicleSlot, m_location, "Location");
-        setPropertyDescription(VehicleSlot, m_location, "Dummy GameObject for seat location in vehicle");
+        setPropertyDescription(VehicleSlot, m_location, "Seat location in vehicle");
+
+        registerProperty(VehicleSlot, m_exit, "Exit");
+        setPropertyDescription(VehicleSlot, m_exit, "Location when exiting vehicle");
 
         registerPropertyEx(VehicleSlot, m_owner, "Owner", PropertyFlags::Transient);
         setPropertyDescription(VehicleSlot, m_owner, "Current owner of the seat");
@@ -290,8 +293,7 @@ namespace vg::engine
                 m_localVelocity.y = dot(velocity, mat[1].xyz);
                 m_localVelocity.z = dot(velocity, mat[2].xyz);
 
-                float v = length(velocity);
-                m_speedInKmPerHour = v * 60.0f * 60.0f / 1000.0f; // m/s to km/h
+                m_speedInKmPerHour = length(velocity) * 60.0f * 60.0f / 1000.0f; // m/s to km/h
 
                 m_engineRPM = m_vehicleConstraint->GetEngineRPM();
                 m_currentGear = m_vehicleConstraint->GetCurrentGear();
@@ -299,7 +301,10 @@ namespace vg::engine
                 if (IGameObject * smokeGO = GetGameObject()->GetChildGameObject("Smoke"))
                 {
                     if (IParticleComponent * smokePart = smokeGO->GetComponentT<IParticleComponent>())
-                        smokePart->SetSpawnRate(0, 1 + v*4.0f);
+                    {
+                        const float forwardSpeed = GetLocalVelocity().x;
+                        smokePart->SetSpawnRate(0, max(1.0f, forwardSpeed) * 4.0f);
+                    }
                 }                    
             }
 
@@ -487,11 +492,21 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    core::IGameObject * VehicleComponent::GetPassengerSlotLocation(core::uint _index) const
+    core::IGameObject * VehicleComponent::GetPassengerSlotSeatLocation(core::uint _index) const
     {
         const auto & slots = m_slots.getObjects();
         if (_index < slots.size())
             return VG_SAFE_STATIC_CAST(IGameObject, slots[_index].m_location.getObject());
+        else
+            return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::IGameObject * VehicleComponent::GetPassengerSlotExitLocation(core::uint _index) const
+    {
+        const auto & slots = m_slots.getObjects();
+        if (_index < slots.size())
+            return VG_SAFE_STATIC_CAST(IGameObject, slots[_index].m_exit.getObject());
         else
             return nullptr;
     }

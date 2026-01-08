@@ -188,7 +188,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     }
 
                     auto * go = GetGameObject();
-                    if (auto * slot = vehicle->GetPassengerSlotLocation(m_vehicleSlot))
+                    if (auto * slot = vehicle->GetPassengerSlotSeatLocation(m_vehicleSlot))
                     {
                         float4x4 mat = slot->GetGlobalMatrix();
 
@@ -652,7 +652,7 @@ bool PlayerBehaviour::enterVehicle(vg::core::IGameObject * _vehicleGameobject)
 
         m_moveState = MoveState::Drive;
 
-        if (auto * slot = vehicleComp->GetPassengerSlotLocation(m_vehicleSlot))
+        if (auto * slot = vehicleComp->GetPassengerSlotSeatLocation(m_vehicleSlot))
         {
             enablePhysics(false);
         }
@@ -676,15 +676,36 @@ bool PlayerBehaviour::exitVehicle(bool _teleport)
         IVehicleComponent * vehicleComp = vehicleGO->GetComponentT<IVehicleComponent>();
         VG_ASSERT(vehicleComp);
 
-        if (vehicleComp->ExitVehicle(this->GetGameObject()))
+        if (1)
         {
-            m_vehicle.clear();
-
             if (_teleport)
             {
-                float4x4 exitMat = vehicleGO->GetGlobalMatrix();
-                exitMat[3].z += 1; // TODO: save enter pos relative to car and check if enough space to exit car?
-                GetGameObject()->SetGlobalMatrix(exitMat);
+                float4x4 exitMat;
+
+                if (auto * slot = vehicleComp->GetPassengerSlotExitLocation(m_vehicleSlot))
+                {
+                    exitMat = slot->GetGlobalMatrix();
+                }
+                else
+                {
+                    exitMat = vehicleGO->GetGlobalMatrix();
+                    exitMat[3].z += 1; // TODO: save enter pos relative to car and check if enough space to exit car?}
+                }
+
+                if (auto * charaController = GetGameObject()->GetComponentT<ICharacterControllerComponent>())
+                {
+                    if (charaController->CanMoveTo(exitMat[3].xyz))
+                    {
+                        VG_VERIFY(vehicleComp->ExitVehicle(this->GetGameObject()));
+                        GetGameObject()->SetGlobalMatrix(exitMat);
+                        m_vehicle.clear();
+                    }
+                    else
+                    {
+                        VG_WARNING("[Player] Player \"%s\" could not exit \"%s\"", GetGameObject()->GetName().c_str(), vehicleComp->GetGameObject()->GetName().c_str());
+                        return false;
+                    }
+                }                
             }
 
             m_moveState = MoveState::Idle;

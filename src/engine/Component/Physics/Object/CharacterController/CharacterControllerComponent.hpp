@@ -182,6 +182,7 @@ namespace vg::engine
     {
         super::OnDisable();
 
+        // Instead of detroying the character on 'Disable' we should make it asleep
         VG_SAFE_RELEASE(m_character);
 
         if (m_shapeDesc)
@@ -320,5 +321,15 @@ namespace vg::engine
         }
 
         return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool CharacterControllerComponent::CanMoveTo(const core::float3 & _position)
+    {
+        // TODO: do not destroy the character controller on deinit but instead change its layer?
+        //VG_ASSERT(m_character);
+        //if (m_character)
+        //    return m_character->CanMoveTo(_position);
+        return true;
     }
 }

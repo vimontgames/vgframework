@@ -191,4 +191,10 @@ namespace vg::physics
                 return GroundState::InAir;
         }
     }
+
+    //--------------------------------------------------------------------------------------
+    bool RigidCharacter::CanMoveTo(const core::float3 & _position)
+    {
+        return false;
+    }
 }
