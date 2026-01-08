@@ -40,6 +40,13 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    inline core::u32 getU32Color(core::float4 _color)
+    {
+        core::uint4 color = clamp((core::uint4)(_color * 255.5f), (core::uint4)0, (core::uint4)255);
+        return (color.a << 24) | (color.b << 16) | (color.g << 8) | color.r;
+    }
+
+    //--------------------------------------------------------------------------------------
     inline float4x4 clearRotation(const float4x4 & _matrix)
     {
         float3 scale;
