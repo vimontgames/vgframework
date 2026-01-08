@@ -40,6 +40,55 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    inline float4x4 clearRotation(const float4x4 & _matrix)
+    {
+        float3 scale;
+        scale.x = length(_matrix[0].xyz);
+        scale.y = length(_matrix[1].xyz);
+        scale.z = length(_matrix[2].xyz);
+
+        float4x4 matrix;
+        matrix[0] = float4(scale.x, 0, 0, 0);
+        matrix[1] = float4(0, scale.y, 0, 0);
+        matrix[2] = float4(0, 0, scale.z, 0);
+        matrix[3] = _matrix[3];
+        return matrix;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline float4x4 clearScale(const float4x4 & _matrix)
+    {
+        float4x4 matrix;
+        matrix[0] = float4(normalize(_matrix[0].xyz), 0);
+        matrix[1] = float4(normalize(_matrix[1].xyz), 0);
+        matrix[2] = float4(normalize(_matrix[2].xyz), 0);
+        matrix[3] = _matrix[3];
+        return matrix;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline float4x4 clearRotationAndScale(const float4x4 & _matrix)
+    {
+        float4x4 matrix;
+        matrix[0] = float4(1, 0, 0, 0);
+        matrix[1] = float4(0, 1, 0, 0);
+        matrix[2] = float4(0, 0, 1, 0);
+        matrix[3] = _matrix[3];
+        return matrix;
+    }
+
+    //--------------------------------------------------------------------------------------
+    inline float4x4 clearTranslation(const float4x4 & _matrix)
+    {
+        float4x4 matrix;
+        matrix[0] = _matrix[0];
+        matrix[1] = _matrix[1];
+        matrix[2] = _matrix[2];
+        matrix[3] = float4(0,0,0,1);
+        return matrix;
+    }
+
+    //--------------------------------------------------------------------------------------
     template <typename T> T inline sign(T _value)
     {
         return (_value > T(0)) ? T(+1) : ((_value < T(0)) ? T(-1) : T(0));
@@ -71,16 +120,6 @@ namespace vg::core
 
     //--------------------------------------------------------------------------------------
     VG_INLINE float4x4 TRSToFloat4x4(const float3 & _translation, const quaternion _rotation, const float3 _scale);
-
-    //--------------------------------------------------------------------------------------
-    inline float4x4 getMatrixWithoutScale(const float4x4 & _matrix)
-    {
-        float4x4 matrix = _matrix;
-        matrix[0].xyz = matrix[0].xyz / length(_matrix[0].xyz);
-        matrix[1].xyz = matrix[1].xyz / length(_matrix[1].xyz);
-        matrix[2].xyz = matrix[2].xyz / length(_matrix[2].xyz);
-        return matrix;
-    }
 
     //--------------------------------------------------------------------------------------
     float3x3 extractRotation(const float4x4 & _matrix);

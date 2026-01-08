@@ -124,6 +124,7 @@ namespace vg::engine
                 m_light->SetPickingID(id);
             }
 
+            UpdateFlagsFromGameObject();
             registerGraphicInstance();
 
             return true;

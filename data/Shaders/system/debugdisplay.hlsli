@@ -7,6 +7,28 @@
 //--------------------------------------------------------------------------------------
 // This file is only included in HLSL shader files. 
 //--------------------------------------------------------------------------------------
+float4 getWireframeColor(GPUInstanceType _gpuInstanceType, GPUInstanceFlags _gpuInstanceFlags)
+{   
+    float4 color;
+    bool isStatic = HasAnyFlag(_gpuInstanceFlags, GPUInstanceFlags::Static);
+    
+    switch (_gpuInstanceType)
+    {
+        case GPUInstanceType::Mesh:
+            color = isStatic ? float4(0.5f, 1.0f, 0.5f, 1) : float4(0, 1, 0, 1);
+            break;
+        
+        case GPUInstanceType::ParticleSystem:
+            color = float4(1, 0, 0, 1);
+            break;
+        
+        default:
+            color =  float4(1, 1, 1, 1);
+            break;
+    }
+            
+    return color;
+}
 
 float3 getMatIDColor(uint _matID)
 {       

@@ -131,6 +131,7 @@ namespace vg::renderer
     bool LightInstance::Cull(const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult)
     {
         _cullingResult->m_output->add(GetLightType(), this);
+        _cullingResult->m_output->add(GraphicInstanceListType::All, this);
 
         if (asBool(ObjectRuntimeFlags::Selected & getObjectRuntimeFlags()))
             _cullingResult->m_output->add(GraphicInstanceListType::Outline, this);

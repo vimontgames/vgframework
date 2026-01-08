@@ -931,8 +931,15 @@ namespace vg::editor
                             ImGuizmo::Manipulate(viewMatrix, projMatrix, imGuizmoOperation, imGuizmoSpace, (float *)&matrix, (float *)&delta, snap);
                             auto duplicateGameObjects = selection->DuplicateGameObjects(selectedObjectsWithoutParents);
 
-                            for (auto & dup : duplicateGameObjects)
+                            for (IGameObject * dup : duplicateGameObjects)
+                            {
                                 dup->OnLocalMatrixChanged(false, true);
+                                
+                                if (dup->IsEnabledInHierarchy())
+                                    dup->OnEnable();
+                                else
+                                    dup->OnDisable();
+                            }
 
                             selection->SetSelectedObjects((core::vector<IObject*>&)duplicateGameObjects);
                             skip = true;

@@ -234,23 +234,23 @@ namespace vg::renderer
 
         registerPropertyGroupBegin(RendererOptions, "Debug");
         {
-            registerProperty(RendererOptions, m_aabb, "AABB");
+            registerPropertyEnumBitfield(RendererOptions, AABBFlags, m_aabb, "AABB");
             setPropertyDescription(RendererOptions, m_aabb, "Show Bounding Boxes");
+
+            registerPropertyEnumBitfield(RendererOptions, WireframeFlags, m_wireframe, "Wireframe");
+            setPropertyDescription(RendererOptions, m_wireframe, "Show wireframe");
+
+            registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Features");
+            registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
 
             registerProperty(RendererOptions, m_particles, "Particles");
             setPropertyDescription(RendererOptions, m_particles, "Show particles");
-
-            registerProperty(RendererOptions, m_wireframe, "Wireframe");
-            setPropertyDescription(RendererOptions, m_wireframe, "Show wireframe");
 
             registerProperty(RendererOptions, m_debugUI, "UI");
             setPropertyDescription(RendererOptions, m_debugUI, "Show UI debug");
 
             registerProperty(RendererOptions, m_debugFrustum, "Frustum");
             setPropertyDescription(RendererOptions, m_debugFrustum, "Show camera frustum");
-
-            registerPropertyEnumBitfield(RendererOptions, DisplayFlags, m_displayFlags, "Features");
-            registerPropertyEnumBitfield(RendererOptions, RenderPassFlags, m_renderPassFlags, "Passes");
         }
         registerPropertyGroupEnd(RendererOptions);
 

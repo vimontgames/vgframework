@@ -8,11 +8,15 @@
 
 #define GPU_INSTANCE_DATA_ALIGNMENT 16
 
-vg_enum_class_global(GPUInstanceFlags, u8,
-    Mesh     = 0x00,
-    Particle = 0x01,
+vg_enum_class_global(GPUInstanceType, u8,
+    Mesh = 0,
+    ParticleSystem,
+    Light,
+    Camera
+);
 
-    Static   = 0x80
+vg_enum_class_global(GPUInstanceFlags, u8,
+    Static   = 0x01
 );
 
 #define GPUInstanceFlags_TypeMask 0x0F
@@ -57,10 +61,13 @@ struct GPUInstanceData
 
     void                setVertexFormat         (VertexFormat _vertexFormat)                        { m_header[0] = packG8(m_header[0], (uint)_vertexFormat); }
     VertexFormat        getVertexFormat         ()                                                  { return (VertexFormat)unpackG8(m_header[0]); }
+    
+    void                setGPUInstanceType      (GPUInstanceType _value)                            { m_header[0] = packB8(m_header[0], (uint)_value); } 
+    GPUInstanceType     getGPUInstanceType      ()                                                  { return (GPUInstanceType) unpackB8(m_header[0]); }
 
     void                setGPUInstanceFlags     (GPUInstanceFlags _value)                           { m_header[0] = packA8(m_header[0], (uint)_value); } 
     GPUInstanceFlags    getGPUInstanceFlags     ()                                                  { return (GPUInstanceFlags) unpackA8(m_header[0]); }
- 
+     
     void                setInstanceColor        (float4 _color)                                     { m_header[1] = packRGBA8(_color); }
     float4              getInstanceColor        (DisplayFlags _flags)                               { return (IsToolMode() && 0 == (DisplayFlags::InstanceColor & _flags)) ? (float4)1.0f : unpackRGBA8(m_header[1]); }
 

@@ -290,10 +290,17 @@ namespace vg::engine
                 m_localVelocity.y = dot(velocity, mat[1].xyz);
                 m_localVelocity.z = dot(velocity, mat[2].xyz);
 
-                m_speedInKmPerHour = length(velocity) * 60.0f * 60.0f / 1000.0f; // m/s to km/h
+                float v = length(velocity);
+                m_speedInKmPerHour = v * 60.0f * 60.0f / 1000.0f; // m/s to km/h
 
                 m_engineRPM = m_vehicleConstraint->GetEngineRPM();
                 m_currentGear = m_vehicleConstraint->GetCurrentGear();
+
+                if (IGameObject * smokeGO = GetGameObject()->GetChildGameObject("Smoke"))
+                {
+                    if (IParticleComponent * smokePart = smokeGO->GetComponentT<IParticleComponent>())
+                        smokePart->SetSpawnRate(0, 1 + v*4.0f);
+                }                    
             }
 
             if (ISoundComponent * sound = go->GetComponentT<ISoundComponent>())

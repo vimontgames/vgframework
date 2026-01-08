@@ -44,7 +44,7 @@ VS_Output VS_DebugDraw(uint _vertexID : VertexID)
     output.wpos = worldPos;
     output.pos = mul(viewPos, proj);
 
-    output.nrm = mul(float4(vert.getNrm(), 0.0f), getMatrixWithoutScale(world)).xyz;
+    output.nrm = mul(float4(vert.getNrm(), 0.0f), clearScale(world)).xyz;
 
     return output;
 }

@@ -108,7 +108,7 @@ float3 getWorldNormal(float3 _normal, float3 _vertexTangent, float3 _vertexBinor
     float3 N = normalize(_vertexNormal);
 
     float3 worldNormal = normalize(T * _normal.x + B * _normal.y + N * _normal.z);
-           worldNormal = mul(float4(worldNormal.xyz, 0.0f), getMatrixWithoutScale(_world)).xyz;
+           worldNormal = mul(float4(worldNormal.xyz, 0.0f), clearScale(_world)).xyz;
 
     return worldNormal;
 }
@@ -209,7 +209,9 @@ PS_Output PS_Forward(VS_Output _input)
     #if _TOOLMODE && !_ZONLY
     output.color0 = forwardDebugDisplay(output.color0, instanceData, mode, rootConstants3D.getMatID(), _input.tan.xyz, _input.bin.xyz, _input.nrm.xyz, _input.col, uv0, uv1, screenPos.xy, worldPos.xyz, albedo.rgb, normal.xyz, worldNormal.xyz, pbr.rgb);
     if (RootConstantsFlags::Wireframe & rootConstants3D.getFlags())
-        output.color0 = float4(0,1,0,1);
+    {
+        output.color0 = getWireframeColor(instanceData.getGPUInstanceType(), instanceData.getGPUInstanceFlags());
+    }
     #endif // _TOOLMODE
 
     #if _TOOLMODE && !_ZONLY

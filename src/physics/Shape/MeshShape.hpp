@@ -129,6 +129,6 @@ namespace vg::physics
     {
         auto drawCallback = Physics::get()->getDrawShapeCallback();
         if (nullptr != drawCallback)
-            drawCallback(this, _world, mul(m_transform, getMatrixWithoutScale(_matrix)));
+            drawCallback(this, _world, mul(m_transform, clearScale(_matrix)));
     }
 }

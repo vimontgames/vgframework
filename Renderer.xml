@@ -58,12 +58,14 @@
         <Property type="EnumU8" name="m_depthOfField[Quality::Medium]" value="Default"/>
         <Property type="EnumU8" name="m_depthOfField[Quality::High]" value="Default"/>
         <Property type="EnumU8" name="m_depthOfField[Quality::VeryHigh]" value="Default"/>
-        <Property type="Bool" name="m_aabb" value="false"/>
-        <Property type="Bool" name="m_particles" value="true"/>
-        <Property type="Bool" name="m_wireframe" value="false"/>
-        <Property type="Bool" name="m_debugUI" value="false"/>
-        <Property type="EnumFlagsU32" name="m_renderPassFlags" value="ZPrepass|Opaque|Transparency"/>
+        <Property type="EnumFlagsU16" name="m_aabb" value=""/>
+        <Property type="EnumFlagsU16" name="m_wireframe" value=""/>
         <Property type="EnumFlagsU32" name="m_displayFlags" value="AlbedoMap|NormalMap|VertexColor|MaterialColor|InstanceColor"/>
+        <Property type="EnumFlagsU32" name="m_renderPassFlags" value="ZPrepass|Opaque|Transparency"/>
+        <Property type="Bool" name="m_particles" value="true"/>
+        <Property type="Bool" name="m_debugUI" value="false"/>
+        <Property type="Bool" name="m_debugFrustum" value="false"/>
+        <Property type="Bool" name="m_splitCullingViewJobs" value="true"/>
         <Property type="Bool" name="m_renderJobs" value="true"/>
         <Property type="Bool" name="m_forceRenderJobsCount" value="false"/>
         <Property type="Uint16" name="m_renderJobsCount" value="2"/>

@@ -49,10 +49,10 @@ namespace vg::renderer
         const auto & cullingResult = view->getCullingJobResult();
         u64 cost = 2;
 
-        if (options->isWireframeEnabled())
+        if (options->isAnyWireframeEnabled())
             cost += getListCostEstimate(cullingResult, GraphicInstanceListType::Opaque);
 
-        if (options->isAABBEnabled())
+        if (options->isAnyAABBEnabled())
             cost += getListCostEstimate(cullingResult, GraphicInstanceListType::Opaque);
 
         DebugDraw * dbgDraw = DebugDraw::get();
@@ -121,7 +121,7 @@ namespace vg::renderer
             _cmdList->setBlendState(bs);
             _cmdList->setDepthStencilState(ds);
 
-            if (options->isWireframeEnabled())
+            if (options->isAnyWireframeEnabled())
             {
                 renderContext.m_wireframe = true;
                 DrawGraphicInstanceList(renderContext, _cmdList, GraphicInstanceListType::All);
@@ -132,16 +132,44 @@ namespace vg::renderer
 
             DrawCameraInstanceList(renderContext, _cmdList); 
 
-            if (options->isAABBEnabled())
+            if (options->isAnyAABBEnabled())
             {
                 const GraphicInstanceList & allInstances = view->getCullingJobResult().get(GraphicInstanceListType::All);
                 for (uint i = 0; i < allInstances.m_instances.size(); ++i)
                 {
                     auto * instance = (GraphicInstance*)allInstances.m_instances[i];
 
+                    const GraphicInstanceType type = instance->GetGraphicIntanceType();
+
                     AABB aabb;
                     if (instance->TryGetAABB(aabb))
-                        dbgDraw->drawAABB(_cmdList, aabb, instance->getGlobalMatrix());
+                    {
+                        switch (type)
+                        {
+                            default:
+                                VG_ASSERT_ENUM_NOT_IMPLEMENTED(type);
+                                break;
+
+                            case GraphicInstanceType::Mesh:
+                                if (options->isMeshAABBEnabled())
+                                    dbgDraw->drawAABB(_cmdList, aabb, instance->getGlobalMatrix(), float4(0, 1, 0, 1.0f), float4(0, 1, 0, 0.125f));
+                                break;
+
+                            case GraphicInstanceType::ParticleSystem:
+                                if (options->isParticleSystemAABBEnabled())
+                                {
+                                    // When drawing billboard particle, keep only the translation part
+                                    float4x4 world = clearRotation(instance->getGlobalMatrix());
+                                    dbgDraw->drawAABB(_cmdList, aabb, world, float4(1, 0, 0, 1.0f), float4(1, 0, 0, 0.125f));
+                                }
+                                break;
+
+                            case GraphicInstanceType::Light:
+                                if (options->isLightAABBEnabled())
+                                    dbgDraw->drawAABB(_cmdList, aabb, instance->getGlobalMatrix(), float4(1, 1, 0, 1.0f), float4(1, 1, 0, 0.125f));
+                                break;
+                        }
+                    }                        
                 }
             }
         }

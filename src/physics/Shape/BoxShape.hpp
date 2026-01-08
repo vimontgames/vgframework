@@ -74,7 +74,7 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void BoxShape::Draw(const core::IWorld * _world, const core::float4x4 & _matrix) const
     {
-        float4x4 matrix = mul(m_transform, getMatrixWithoutScale(_matrix));
+        float4x4 matrix = mul(m_transform, clearScale(_matrix));
         const float3 halfSize = m_size * 0.5f;
         getDebugDraw()->AddWireframeCube(_world, -halfSize, halfSize, m_color, matrix);
     }

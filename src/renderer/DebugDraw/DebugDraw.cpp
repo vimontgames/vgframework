@@ -754,7 +754,7 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::drawAABB(CommandList * _cmdList, const core::AABB & _aabb, const float4x4 & _world) const
+    void DebugDraw::drawAABB(CommandList * _cmdList, const core::AABB & _aabb, const float4x4 & _world, const float4 & _opaqueColor, const float4 & _transparentColor) const
     {
         RasterizerState rs(FillMode::Wireframe, CullMode::None);
         _cmdList->setRasterizerState(rs);
@@ -783,7 +783,7 @@ namespace vg::renderer
 
         // Draw Alpha
         {
-            debugDraw3D.color = float4(0, 1, 0, 0.125f);
+            debugDraw3D.color = _transparentColor; 
             _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
 
             // Blend (2)
@@ -801,7 +801,7 @@ namespace vg::renderer
 
         // Draw opaque
         {
-            debugDraw3D.color = float4(0, 1, 0, 1.0f);
+            debugDraw3D.color = _opaqueColor; 
             _cmdList->setGraphicRootConstants(0, (u32 *)&debugDraw3D, DebugDrawRootConstants3DCount);
 
             // Blend

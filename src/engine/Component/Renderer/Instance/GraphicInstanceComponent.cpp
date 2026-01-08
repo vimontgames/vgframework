@@ -23,12 +23,6 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     bool GraphicInstanceComponent::registerGraphicInstance()
     {
-        if (GetParent()->GetName() == "DriverSeat")
-        {
-            int i = 42;
-            i;
-        }
-
         if (!m_registered)
         {
             if (auto * instance = GetGraphicInstance())

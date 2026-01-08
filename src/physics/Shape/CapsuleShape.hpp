@@ -91,7 +91,7 @@ namespace vg::physics
     //--------------------------------------------------------------------------------------
     void CapsuleShape::Draw(const core::IWorld * _world, const core::float4x4 & _matrix) const
     {
-        float4x4 matrix = mul(m_transform, getMatrixWithoutScale(_matrix));
+        float4x4 matrix = mul(m_transform, clearScale(_matrix));
 
         if (m_bottomRadius != m_topRadius)
             getDebugDraw()->AddWireframeTaperedCapsule(_world, m_topRadius, m_bottomRadius, m_height, m_color, matrix);

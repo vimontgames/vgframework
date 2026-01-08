@@ -91,7 +91,7 @@ namespace vg::renderer
         void                    update                      (const View * _view, gfx::CommandList * _cmdList);
         void                    render                      (const View * _view, gfx::CommandList * _cmdList);
 
-        void                    drawAABB                    (gfx::CommandList * _cmdList, const core::AABB & _aabb, const core::float4x4 & _world) const;
+        void                    drawAABB                    (gfx::CommandList * _cmdList, const core::AABB & _aabb, const core::float4x4 & _world, const core::float4 & _opaqueColor, const core::float4 & _transparentColor) const;
         void                    drawGrid                    (gfx::CommandList * _cmdList) const; 
         void                    drawAxis                    (gfx::CommandList * _cmdList) const;
 

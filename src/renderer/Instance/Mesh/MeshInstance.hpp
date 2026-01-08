@@ -278,12 +278,13 @@ namespace vg::renderer
 
         GPUInstanceData * VG_RESTRICT instanceData = (GPUInstanceData * VG_RESTRICT)_data;
 
-        GPUInstanceFlags instanceFlags = GPUInstanceFlags::Mesh;
+        GPUInstanceFlags instanceFlags = (GPUInstanceFlags)0x0;
         if (asBool(InstanceFlags::Static & getInstanceFlags()))
             instanceFlags |= GPUInstanceFlags::Static;
 
         instanceData->setMaterialCount(materialCount);
         instanceData->setVertexFormat(vertexFormat);
+        instanceData->setGPUInstanceType(GPUInstanceType::Mesh);
         instanceData->setGPUInstanceFlags(instanceFlags);
         instanceData->setInstanceColor(getColor());
         instanceData->setIndexBuffer(ibHandle, indexSize, ibOffset);

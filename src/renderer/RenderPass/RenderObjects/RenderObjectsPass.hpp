@@ -39,6 +39,7 @@ namespace vg::renderer
         const auto * view = static_cast<const View *>(_renderContext.m_renderPass->getView());
         const auto & list = view->getCullingJobResult().get(_list).m_instances;
 
+        const RendererOptions * options = RendererOptions::get();
         RenderContext renderContext = _renderContext;
 
         switch (_list)
@@ -70,10 +71,37 @@ namespace vg::renderer
         {
             VG_PROFILE_GPU(asCString(_list)); 
 
-            for (uint i = 0; i < list.size(); ++i)
+            if (renderContext.m_wireframe)
             {
-                const GraphicInstance * instance = list[i];
-                instance->Draw(renderContext, _cmdList);
+                for (uint i = 0; i < list.size(); ++i)
+                {
+                    const GraphicInstance * instance = list[i];
+                    const GraphicInstanceType type = instance->GetGraphicIntanceType();
+                    switch (type)
+                    {
+                        case GraphicInstanceType::Mesh:
+                        {
+                            if (options->isMeshWireframeEnabled())
+                                instance->Draw(renderContext, _cmdList);
+                        }
+                        break;
+
+                        case GraphicInstanceType::ParticleSystem:
+                        {
+                            if (options->isParticleSystemWireframeEnabled())
+                                instance->Draw(renderContext, _cmdList);
+                        }
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                for (uint i = 0; i < list.size(); ++i)
+                {
+                    const GraphicInstance * instance = list[i];
+                    instance->Draw(renderContext, _cmdList);
+                }
             }
         }
     }  

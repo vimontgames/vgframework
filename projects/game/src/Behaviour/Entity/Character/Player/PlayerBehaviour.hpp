@@ -142,7 +142,8 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                             if (forwardSpeed > -0.1f)
                             {
                                 vehicle->Accelerate(forward);
-                                vehicle->Brake(0.0f);
+                                if (forwardSpeed > 0)
+                                    vehicle->Brake(0.0f);
                             }
                             else
                             {
@@ -151,10 +152,12 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                         }
                         else if (backward > 0.2f)
                         {
-                            if (forwardSpeed < 0)
+                            if (forwardSpeed < 0.1f)
                             {
                                 vehicle->Accelerate(-backward);
-                                vehicle->Brake(0.0f);
+
+                                if (forwardSpeed < 0)
+                                    vehicle->Brake(0.0f);
                             }
                             else
                             {
@@ -164,7 +167,6 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                         else
                         {
                             vehicle->Accelerate(0.0f);
-                            vehicle->Brake(0.0f);
                         }
 
                         if (input.IsJoyButtonPressed(joyID, JoyButton::A))

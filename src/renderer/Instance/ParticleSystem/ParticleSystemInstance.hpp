@@ -103,7 +103,10 @@ namespace vg::renderer
         core::AABB aabb;
         if (TryGetAABB(aabb))
         {
-            const bool visible = _cullingOptions.m_view->getCameraFrustum().intersects(aabb, getGlobalMatrix()) != FrustumTest::Outside || asBool(ObjectFlags::NoCulling & getObjectFlags());
+            // When drawing billboard particle, keep only the translation part
+            float4x4 world = clearRotation(getGlobalMatrix());
+
+            const bool visible = _cullingOptions.m_view->getCameraFrustum().intersects(aabb, world) != FrustumTest::Outside || asBool(ObjectFlags::NoCulling & getObjectFlags());
 
             if (visible)
             {
@@ -321,14 +324,19 @@ namespace vg::renderer
                 // Update bounding box
                 const float radius = max(particle.size.x, max(particle.size.y, particle.size.z)) * 0.5f;
 
+                float3 wpos = mul(float4(particle.position, 1.0f), world).xyz;
+
                 aabb.grow(particle.position - radius);
-                aabb.grow(particle.position + radius);
+                aabb.grow(particle.position + radius);               
 
                 aliveParticles++;
             }
 
             emitter.m_aliveParticles = aliveParticles;
         }
+
+        //aabb.m_min -= world[3].xyz;
+        //aabb.m_max -= world[3].xyz;
         m_aabb = aabb;
 
         m_previousPos = pos;
@@ -366,12 +374,13 @@ namespace vg::renderer
 
         GPUInstanceData * VG_RESTRICT instanceData = (GPUInstanceData * VG_RESTRICT)(_data + dataOffset);
         
-        GPUInstanceFlags instanceFlags = GPUInstanceFlags::Particle;
+        GPUInstanceFlags instanceFlags = (GPUInstanceFlags)0x0;
         if (asBool(InstanceFlags::Static & getInstanceFlags()))
             instanceFlags |= GPUInstanceFlags::Static;
 
         instanceData->setMaterialCount(batchCount);
         instanceData->setVertexFormat(VertexFormat::ParticleQuad);
+        instanceData->setGPUInstanceType(GPUInstanceType::ParticleSystem);
         instanceData->setGPUInstanceFlags(instanceFlags);
         instanceData->setInstanceColor(getColor());
         instanceData->setIndexBuffer(ibHandle, indexSize, ibOffset); // use not index buffer for particles or use default particle index buffer? ({0,1,2}, {1,2,3} ...)
@@ -454,12 +463,8 @@ namespace vg::renderer
         RenderContext renderContext = _renderContext;
         renderContext.m_particle = true;
 
-        float4x4 world = getGlobalMatrix();
-
         // When drawing billboard particle, keep only the translation part
-        world[0] = float4(1, 0, 0, (1));
-        world[1] = float4(0, 1, 0, (1));
-        world[2] = float4(0, 0, 1, (1));
+        float4x4 world = clearRotation(getGlobalMatrix());
 
         RootConstants3D root3D;
         root3D.setWorldMatrix(transpose(world));

@@ -7,7 +7,7 @@
 #define VG_CHECK_ALIGN(var, align)
 #endif
 
-static const float lightEps = 1.0f / 256.0f;
+static const float lightEps = 1.0f / 100.0f;
 static const float3 lightLuminance = float3(0.299f, 0.587f, 0.114f);
 
 //--------------------------------------------------------------------------------------

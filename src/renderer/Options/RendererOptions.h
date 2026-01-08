@@ -51,6 +51,17 @@ namespace vg::renderer
         PerWorld
     );
 
+     vg_enum_class(vg::renderer, AABBFlags, core::u16,
+        Mesh            = 0x0001,
+        ParticleSystem  = 0x0002,
+        Light           = 0x0004
+    );
+
+      vg_enum_class(vg::renderer, WireframeFlags, core::u16,
+        Mesh            = 0x0001,
+        ParticleSystem  = 0x0002
+    );
+
     class RendererOptions final : public IRendererOptions
     {
     public:
@@ -101,8 +112,15 @@ namespace vg::renderer
         DisplayMode             getDisplayMode                          () const { return m_debugDisplayMode; }
         DisplayFlags            getDisplayFlags                         () const { return m_displayFlags; }
 
-        bool				    isAABBEnabled                           () const { return m_aabb; }
-        bool				    isWireframeEnabled                      () const { return m_wireframe; }
+        bool				    isAnyAABBEnabled                        () const { return (AABBFlags)0x0 != m_aabb; }
+        bool				    isMeshAABBEnabled                       () const { return core::asBool(AABBFlags::Mesh & m_aabb); }
+        bool				    isParticleSystemAABBEnabled             () const { return core::asBool(AABBFlags::ParticleSystem & m_aabb); }
+        bool				    isLightAABBEnabled                      () const { return core::asBool(AABBFlags::Light & m_aabb); }
+
+        bool				    isAnyWireframeEnabled                   () const { return (WireframeFlags)0x0 != m_wireframe; }
+        bool				    isMeshWireframeEnabled                  () const { return core::asBool(WireframeFlags::Mesh & m_wireframe); }
+        bool				    isParticleSystemWireframeEnabled        () const { return core::asBool(WireframeFlags::ParticleSystem & m_wireframe); }
+
         bool				    isDebugUIEnabled                        () const { return m_debugUI; }
         bool 			        isParticlesEnabled                      () const { return m_particles; }
         bool                    isDebugCameraFrustumEnabled             () const { return m_debugFrustum; }
@@ -170,8 +188,8 @@ namespace vg::renderer
         float                   m_defaultIrradianceIntensity            = 1.0f;
         float                   m_defaultSpecularReflectionIntensity    = 1.0f;
 
-        bool                    m_aabb                                  = false;
-        bool				    m_wireframe                             = false;            
+        AABBFlags               m_aabb                                  = (AABBFlags)0x0;
+        WireframeFlags          m_wireframe                             = (WireframeFlags)0x0;
         bool                    m_debugUI                               = false;
         bool                    m_debugFrustum                          = false;
         bool                    m_splitCullingViewJobs                  = true;

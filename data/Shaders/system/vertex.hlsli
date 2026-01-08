@@ -19,12 +19,13 @@ vg_enum_class_global(VertexFormat, u8,
 //--------------------------------------------------------------------------------------
 // TODO: move to HLSL math header?
 //--------------------------------------------------------------------------------------
-inline float4x4 getMatrixWithoutScale(float4x4 _matrix)
+inline float4x4 clearScale(float4x4 _matrix)
 {
-    float4x4 matrix = _matrix;
-    matrix[0].xyz = matrix[0].xyz / length(_matrix[0].xyz);
-    matrix[1].xyz = matrix[1].xyz / length(_matrix[1].xyz);
-    matrix[2].xyz = matrix[2].xyz / length(_matrix[2].xyz);
+    float4x4 matrix;
+    matrix[0] = float4(normalize(_matrix[0].xyz), _matrix[0].w);
+    matrix[1] = float4(normalize(_matrix[1].xyz), _matrix[1].w);
+    matrix[2] = float4(normalize(_matrix[2].xyz), _matrix[2].w);
+    matrix[3] = _matrix[3];
     return matrix;
 }
 
