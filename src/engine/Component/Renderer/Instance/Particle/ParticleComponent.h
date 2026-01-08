@@ -42,6 +42,10 @@ namespace vg::engine
         bool                                            Stop                        () final override;
         bool                                            Reset                       () final override;
 
+        void                                            SetSpawnRate                (core::uint _index, float _spawnRate) final override;
+        float                                           GetSpawnRate                (core::uint _index) const final override;
+
+
         bool                                            UpdateEmitter               (core::uint _index) final override;
         bool                                            ResetEmitter                (core::uint _index) final override;
         

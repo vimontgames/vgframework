@@ -14,6 +14,9 @@ namespace vg::engine
         virtual bool    Stop            () = 0;
         virtual bool    Reset           () = 0;
 
+        virtual void    SetSpawnRate    (core::uint _index, float _spawnRate) = 0;
+        virtual float   GetSpawnRate    (core::uint _index) const = 0;
+
         virtual bool    UpdateEmitter   (core::uint _index) = 0;
         virtual bool    ResetEmitter    (core::uint _index) = 0;
     };

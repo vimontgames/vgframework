@@ -174,6 +174,33 @@ namespace vg::engine
         return true;
     }
 
+
+    //--------------------------------------------------------------------------------------
+    void ParticleComponent::SetSpawnRate(core::uint _index, float _spawnRate)
+    {
+        auto & emitters = m_particleEmitters.getObjects();
+        VG_ASSERT(_index < emitters.size(), "[Particle] Emitter %u not found in \"%s\"", GetGameObject()->GetName().c_str());
+
+        if (_index < emitters.size())
+        {
+            auto & params = emitters[_index].getEmitterParams();
+            params.m_spawnRate = _spawnRate;
+            m_particleSystemInstance->SetEmitterParams(_index, params);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    float ParticleComponent::GetSpawnRate(core::uint _index) const
+    {
+        auto & emitters = m_particleEmitters.getObjects();
+        VG_ASSERT(_index < emitters.size(), "[Particle] Emitter %u not found in \"%s\"", GetGameObject()->GetName().c_str());
+
+        if (_index < emitters.size())
+            return emitters[_index].getEmitterParams().m_spawnRate;
+        
+        return 0.0f;
+    }
+
     //--------------------------------------------------------------------------------------
     bool ParticleComponent::UpdateEmitter(core::uint _index)
     {
