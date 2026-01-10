@@ -712,6 +712,11 @@ bool PlayerBehaviour::exitVehicle(bool _teleport)
                     }
                 }                
             }
+            else
+            {
+                VG_VERIFY(vehicleComp->ExitVehicle(this->GetGameObject()));
+                m_vehicle.clear();
+            }
 
             m_moveState = MoveState::Idle;
             enablePhysics(true);
