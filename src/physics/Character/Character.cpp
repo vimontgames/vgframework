@@ -196,13 +196,41 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
+    class CustomBodyFilter : public JPH::BodyFilter
+    {
+    public:
+        CustomBodyFilter(const JPH::BodyLockInterfaceLocking & _bodyLockInterface) :
+            m_bodyLockInterface(_bodyLockInterface)
+        {
+
+        }
+
+        bool ShouldCollide(const JPH::BodyID & _bodyID) const override
+        {
+            JPH::BodyLockRead lock(m_bodyLockInterface, _bodyID);
+            if (lock.Succeeded())
+            {
+                const JPH::Body & body = lock.GetBody();
+                return !body.IsSensor();
+            }
+
+            return false;
+        }
+
+    private:
+        const JPH::BodyLockInterfaceLocking & m_bodyLockInterface;
+    };
+
+    //--------------------------------------------------------------------------------------
     bool RigidCharacter::CanTeleportTo(const core::float3 & _targetPos)
     {
         using namespace JPH;
 
+        JPH::PhysicsSystem * physicsSystem = getPhysicsWorld()->getPhysicsSystem();
+
         // Get the shape and scale of the character
         const auto * shape = m_character->GetShape();
-        const Vec3 shapeScale(1.0f, 1.0f, 1.0f);
+        const Vec3 shapeScale(1.0f, 1.0f, 0.5f);
 
         // Build a transform at the target position
         const Mat44 transform = Mat44::sTranslation(getJoltVec3(_targetPos));
@@ -214,18 +242,22 @@ namespace vg::physics
 
         ClosestHitCollisionCollector<CollideShapeCollector> collector;  
 
+        SpecifiedBroadPhaseLayerFilter broadphase_non_moving_filter(getJoltBroadPhaseLayer(physics::BPLayer::NonMoving));
+        SpecifiedObjectLayerFilter object_non_moving_filter(getJoltObjectLayer(physics::ObjectLayer::NonMoving));
+
+        CustomBodyFilter bodyFilter(physicsSystem->GetBodyLockInterface());
+
         // Check collision at target transform
-        getPhysicsWorld()->getPhysicsSystem()->GetNarrowPhaseQuery().CollideShape(
-            shape,
-            shapeScale,
-            transform,
-            settings,
-            RVec3::sZero(),
-            collector,
-            {},
-            {}, // BroadPhaseLayerFilter
-            {}, // ObjectLayerFilter
-            {}  // BodyFilter
+        physicsSystem->GetNarrowPhaseQuery().CollideShape(
+            shape,                          // inShape
+            shapeScale,                     // inShapeScale
+            transform,                      // inCenterOfMassTransform
+            settings,                       // inCollideShapeSettings
+            RVec3::sZero(),                 // inBaseOffset
+            collector,                      // ioCollector
+            {}, //broadphase_non_moving_filter,   // inBroadPhaseLayerFilter
+            {}, //object_non_moving_filter,       // inObjectLayerFilter
+            bodyFilter                      // inBodyFilter        
         );
 
         // If collector found anything, teleport is blocked
