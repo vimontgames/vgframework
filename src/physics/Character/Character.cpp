@@ -5,9 +5,13 @@
 #include "physics/Shape/CapsuleShape.h"
 #include "physics/Physics.h"
 #include "physics/World/PhysicsWorld.h"
+
+#pragma push_macro("new")
+#undef new
 #include "Jolt/Physics/Collision/ShapeCast.h"
 #include "Jolt/Physics/Collision/CollisionCollectorImpl.h"
 #include "Jolt/Physics/Collision/RayCast.h"
+#pragma pop_macro("new")
 
 #include "CharacterDesc.hpp"
 
