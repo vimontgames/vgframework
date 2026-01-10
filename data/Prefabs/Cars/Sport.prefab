@@ -333,10 +333,18 @@
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Sport/Glass.mat"/>
                                                 <Property type="Bool" name="m_instanciate" value="false"/>
                                             </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Lights"/>
+                                                <Property type="Uint32" name="m_uid" value="1946458111"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Cars/Sport/Optics.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="true"/>
+                                            </Object>
                                         </Property>
                                     </Object>
                                 </Property>
-                                <Property type="BitMask" name="m_batchMask" BitCount="3" Value="0x00000000000007FF"/>
+                                <Property type="BitMask" name="m_batchMask" BitCount="4" Value="0x00000000000007FF"/>
                             </Object>
                         </Property>
                         <Property type="ObjectPtrVector" name="m_children">

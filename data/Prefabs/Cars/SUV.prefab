@@ -98,7 +98,7 @@
                                 <Property type="String" name="m_name" value="New SoundComponent"/>
                                 <Property type="Uint32" name="m_uid" value="634290429"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Object" name="m_sounds">
                                     <Object class="SoundResourceList">
@@ -155,7 +155,7 @@
                                 <Property type="String" name="m_name" value="New MeshComponent"/>
                                 <Property type="Uint32" name="m_uid" value="740601882"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Resource" name="m_meshResource">
                                     <Object class="MeshResource">
@@ -197,16 +197,24 @@
                                                 <Property type="String" name="m_resourcePath" value="data/Materials/Cars/SUV/SUV_Glass.mat"/>
                                                 <Property type="Bool" name="m_instanciate" value="false"/>
                                             </Object>
+                                            <Object class="MaterialResource">
+                                                <Property type="String" name="m_name" value="Lights"/>
+                                                <Property type="Uint32" name="m_uid" value="3846779952"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="String" name="m_resourcePath" value="data/Materials/Cars/SUV/SUV_Optics.mat"/>
+                                                <Property type="Bool" name="m_instanciate" value="true"/>
+                                            </Object>
                                         </Property>
                                     </Object>
                                 </Property>
-                                <Property type="BitMask" name="m_batchMask" BitCount="3" Value="0x0000000000000007"/>
+                                <Property type="BitMask" name="m_batchMask" BitCount="4" Value="0x000000000000000F"/>
                             </Object>
                             <Object class="VehicleComponent">
                                 <Property type="String" name="m_name" value="New VehicleComponent"/>
                                 <Property type="Uint32" name="m_uid" value="134844267"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Object" name="m_slots">
                                     <Object class="VehicleSlotList">
@@ -222,6 +230,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumU8" name="m_slotType" value="Driver"/>
                                                 <Property type="ObjectHandle" name="m_location" value="2830978027"/>
+                                                <Property type="Float" name="m_scale" value="1"/>
                                                 <Property type="ObjectHandle" name="m_exit" value="638852780"/>
                                             </Object>
                                             <Object class="VehicleSlot">
@@ -231,6 +240,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumU8" name="m_slotType" value="Passenger"/>
                                                 <Property type="ObjectHandle" name="m_location" value="3314347206"/>
+                                                <Property type="Float" name="m_scale" value="1"/>
                                                 <Property type="ObjectHandle" name="m_exit" value="1702499998"/>
                                             </Object>
                                             <Object class="VehicleSlot">
@@ -240,6 +250,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumU8" name="m_slotType" value="Passenger"/>
                                                 <Property type="ObjectHandle" name="m_location" value="3430018044"/>
+                                                <Property type="Float" name="m_scale" value="1"/>
                                                 <Property type="ObjectHandle" name="m_exit" value="1104663694"/>
                                             </Object>
                                             <Object class="VehicleSlot">
@@ -249,6 +260,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumU8" name="m_slotType" value="Passenger"/>
                                                 <Property type="ObjectHandle" name="m_location" value="1302024338"/>
+                                                <Property type="Float" name="m_scale" value="1"/>
                                                 <Property type="ObjectHandle" name="m_exit" value="2221257942"/>
                                             </Object>
                                         </Property>

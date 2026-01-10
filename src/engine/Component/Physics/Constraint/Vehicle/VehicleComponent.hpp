@@ -527,7 +527,12 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     VehicleSlotType VehicleComponent::GetPassengerSlotType(core::uint _index) const
     {
-        return m_slots.getObjects()[_index].m_slotType;
+        VG_ASSERT(_index < m_slots.getObjects().size());
+
+        if (_index < m_slots.getObjects().size())
+            return m_slots.getObjects()[_index].m_slotType;
+
+        return (VehicleSlotType)-1;
     }
 
     //--------------------------------------------------------------------------------------
@@ -563,7 +568,6 @@ namespace vg::engine
 
         if (MeshComponent * meshComponent = GetGameObject()->GetComponentT<MeshComponent>())
         {
-            // TODO: Create IMaterialResource interface, make sure returned material is instanciated, and add methods that manipulate material resource and set values to renderer material
             const auto matIndex = meshComponent->GetMaterialIndex("Lights");
             if (-1 != matIndex)
             {
@@ -571,6 +575,10 @@ namespace vg::engine
                 const auto propIndex = mat->GetPropertyIndex("m_emissiveIntensity");
                 if (-1 != propIndex)
                     mat->SetProperty(propIndex, _brake);
+            }
+            else
+            {
+                VG_WARNING("[Vehicle] Vehicle \"%s\" has no \"%s\" material", GetGameObject()->GetName().c_str(), "Lights");
             }
         }
 
