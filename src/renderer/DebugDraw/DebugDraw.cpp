@@ -695,8 +695,8 @@ namespace vg::renderer
 
         const uint gridSize = 64;
 
-        int begin = -(int)gridSize / 2;
-        int end = (int)gridSize / 2;
+        int begin = (-(int)gridSize / 2);
+        int end = ((int)gridSize / 2);
 
         vector<DebugDrawUnlitVertex> vertices;
         vertices.reserve((end - begin + 1) << 2);

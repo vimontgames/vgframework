@@ -3,6 +3,7 @@
 #include "editor/Editor_Consts.h"
 #include "renderer/IDebugDraw.h"
 #include "engine/Engine.h"
+#include "engine/EngineOptions.h"
 #include "renderer/IRenderer.h"
 #include "core/IGameObject.h"
 #include "corE/Math/Math.h"
@@ -17,6 +18,8 @@ namespace vg::engine
     bool DummyComponent::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
+
+        registerPropertyEnum(DummyComponent, DummyType, m_dummyType, "Type");
 
         return true;
     }
@@ -38,8 +41,24 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void DummyComponent::ToolUpdate(const Context & _context)
     {
-        renderer::IDebugDraw * debugDraw = Engine::get()->GetRenderer()->GetDebugDraw();
+        if (EngineOptions::get()->isDummyTypeVisible(_context.m_world, m_dummyType))
+        {
+            renderer::IDebugDraw * debugDraw = Engine::get()->GetRenderer()->GetDebugDraw();
 
-        debugDraw->AddWireframeCube(_context.m_world, float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f), getU32Color(_context.m_gameObject->getColor()), _context.m_gameObject->GetGlobalMatrix());
+            switch (m_dummyType)
+            {
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(m_dummyType);
+                    break;
+
+                case DummyType::Box:
+                    debugDraw->AddWireframeCube(_context.m_world, float3(-0.5f, -0.5f, -0.5f), float3(0.5f, 0.5f, 0.5f), getU32Color(_context.m_gameObject->getColor()), _context.m_gameObject->GetGlobalMatrix());
+                    break;
+
+                case DummyType::Sphere:
+                    debugDraw->AddWireframeSphere(_context.m_world, 0.5f, getU32Color(_context.m_gameObject->getColor()), _context.m_gameObject->GetGlobalMatrix());
+                    break;
+            }
+        }
     }
 }

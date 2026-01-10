@@ -4,6 +4,7 @@
 #include "core/Memory/MemoryInfo.h"
 #include "engine/IEngineOptions.h"
 #include "physics/Physics_Consts.h"
+#include "engine/Component/Renderer/Dummy/DummyComponent.h"
 
 namespace vg::physics
 {
@@ -43,6 +44,8 @@ namespace vg::engine
         void                        SetGpuMemoryInfo                    (const core::GPUMemoryInfo & _gpuMem) final override;
         const core::GPUMemoryInfo & GetGpuMemoryInfo                    () const final override;
 
+        bool                        isDummyTypeVisible                  (const core::IWorld * _world, DummyType _type) const;
+
         VG_INLINE core::size_t      getStreamingUploadBufferSizeInMB    () const { return m_streamingUploadBufferSizeInMB;}
 
         VG_INLINE bool              useAnimationJobs                    () const { return core::asBool(core::operator & (AnimationOptionFlags::AnimationJobs, m_animationOptionFlags)); }
@@ -77,5 +80,10 @@ namespace vg::engine
         // Memory
         core::CPUMemoryInfo         m_cpuMemory;
         core::GPUMemoryInfo         m_gpuMemory;
+
+        // Debug display
+        bool                        m_drawDummies = true;
+        DummyType                   m_dummyTypeFlags;
+        bool                        m_drawDummiesInPrefabsOnly = true;
     };
 }

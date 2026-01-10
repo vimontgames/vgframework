@@ -2,6 +2,7 @@
 #include "EngineOptions.h"
 #include "physics/Physics_Consts.h"
 #include "core/Object/Property.h"
+#include "core/IWorld.h"
 
 using namespace vg::core;
 
@@ -132,12 +133,20 @@ namespace vg::engine
         }
         registerPropertyGroupEnd(EngineOptions);
 
+        registerPropertyOptionalGroupBegin(EngineOptions, m_drawDummies, "Dummy");
+        {
+            registerPropertyEnumBitfield(EngineOptions, DummyType, m_dummyTypeFlags, "Type");
+            registerProperty(EngineOptions, m_drawDummiesInPrefabsOnly, "Prefabs only");
+        }
+        registerPropertyOptionalGroupEnd(EngineOptions);
+
         return true;
     }
 
     //--------------------------------------------------------------------------------------
     EngineOptions::EngineOptions(const core::string & _name, core::IObject * _parent) :
-        super(_name, _parent)
+        super(_name, _parent),
+        m_dummyTypeFlags(DummyType::Box | DummyType::Sphere)
     {
         SetFile("Engine.xml");
         Load(false);
@@ -262,5 +271,21 @@ namespace vg::engine
     const core::GPUMemoryInfo & EngineOptions::GetGpuMemoryInfo() const
     {
         return m_gpuMemory;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool EngineOptions::isDummyTypeVisible(const core::IWorld * _world, DummyType _type) const
+    {
+        if (m_drawDummies)
+        {
+            if (m_drawDummiesInPrefabsOnly)
+            {
+                if (!_world->IsPrefabWorld())
+                    return false;
+            }
+
+            return asBool(m_dummyTypeFlags & _type);
+        }
+        return false;
     }
 }
