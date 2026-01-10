@@ -44,6 +44,7 @@ namespace vg::engine
 
         bool                                isSkeletonVisible       () const;
 
+        VG_INLINE const MeshResource &      getMeshResource         () const;
         VG_INLINE MeshResource &            getMeshResource         ();
         VG_INLINE renderer::IMeshInstance * getMeshInstance         () const;
 

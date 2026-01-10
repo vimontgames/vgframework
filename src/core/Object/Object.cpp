@@ -367,7 +367,11 @@ namespace vg::core
                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
                 break;
 
-        case PropertyType::Resource:
+            case PropertyType::BitMask:
+                *(BitMask *)_previousValue = *(BitMask *)_newValue;
+            break;
+
+            case PropertyType::Resource:
             ((Resource *)_previousValue)->SetResourcePath(((Resource *)_newValue)->GetResourcePath());
             break;
 

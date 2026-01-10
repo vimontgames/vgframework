@@ -117,12 +117,14 @@ namespace vg::core
         using PropertyRangeCallback      = core::float2(CALL_CONV *)(const IObject *, const IProperty *, core::uint _index);
         using IsPropertyHiddenCallback   = bool(CALL_CONV *)(const IObject *, const IProperty *, core::uint _index);
         using IsPropertyReadOnlyCallback = bool(CALL_CONV *)(const IObject *, const IProperty *, core::uint _index);
+        using PropertyNamesCallback      = core::vector<core::string> (CALL_CONV *)(const IObject *, const IProperty *, core::uint _index);
 
         virtual void                            SetInterface                    (const char * _interface) = 0;
         virtual void                            SetRange                        (float2 _range) = 0;
         virtual void                            SetPropertyRangeCallback        (PropertyRangeCallback _func) = 0;
         virtual void                            SetPropertyHiddenCallback       (IsPropertyHiddenCallback _func) = 0;
         virtual void                            SetPropertyReadOnlyCallback     (IsPropertyReadOnlyCallback _func) = 0;
+        virtual void                            SetPropertyNamesCallback        (PropertyNamesCallback _func) = 0;
         virtual void                            SetDefaultFolder                (const char * _path) = 0;
         virtual void                            SetFlags                        (PropertyFlags _flagsToSet, PropertyFlags _flagsToRemove = PropertyFlags::None) = 0;
         virtual void                            SetOffset                       (uint_ptr _offset) = 0;
@@ -145,6 +147,7 @@ namespace vg::core
         virtual float2                          GetRange                        (const IObject * _object, core::uint _index = 0) const = 0;
         virtual bool                            IsHidden                        (const IObject * _object, core::uint _index = 0) const = 0;
         virtual bool                            IsReadOnly                      (const IObject * _object, core::uint _index = 0) const = 0;
+        virtual core::vector<core::string>      GetPropertyNames                (const IObject * _object, core::uint _index = 0) const = 0;
         virtual const char *                    GetEnumTypeName                 () const = 0;
         virtual u32                             GetEnumCount                    () const = 0;
         virtual void                            SetEnumName                     (uint index, core::string _name) = 0;
@@ -293,6 +296,7 @@ namespace vg::core
 #define setPropertyRangeCallback(className, propertyName, func)                                             { if (auto * prop = _desc.GetLastPropertyByName(#propertyName)) { prop->SetPropertyRangeCallback(func);                                                                   } else { VG_WARNING("[Factory] Could not set \"Range\" callback for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 #define setPropertyHiddenCallback(className, propertyName, func)                                            { if (auto * prop = _desc.GetLastPropertyByName(#propertyName)) { prop->SetPropertyHiddenCallback(func);                                                                  } else { VG_WARNING("[Factory] Could not set \"Hidden\" callback for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 #define setPropertyReadOnlyCallback(className, propertyName, func)                                          { if (auto * prop = _desc.GetLastPropertyByName(#propertyName)) { prop->SetPropertyReadOnlyCallback(func);                                                                } else { VG_WARNING("[Factory] Could not set \"ReadOnly\" callback for property \"%s\" in class \"%s\"", #propertyName, #className); } }
+#define setPropertyNamesCallback(className, propertyName, func)                                             { if (auto * prop = _desc.GetLastPropertyByName(#propertyName)) { prop->SetPropertyNamesCallback(func);                                                                   } else { VG_WARNING("[Factory] Could not set \"Names\" callback for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 #define setPropertyDefaultFolder(className, propertyName, defaultFolder)									{ if (auto * prop = _desc.GetLastPropertyByName(#propertyName)) { prop->SetDefaultFolder(defaultFolder);                                                                  } else { VG_WARNING("[Factory] Could not set \"Default Folder\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 #define setPropertyDescription(className, propertyName, description)                                        { if (auto * prop = _desc.GetLastPropertyByName(#propertyName)) { prop->SetDescription(description);                                                                      } else { VG_WARNING("[Factory] Could not set \"Description\" for property \"%s\" in class \"%s\"", #propertyName, #className); } }
 

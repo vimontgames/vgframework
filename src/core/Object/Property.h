@@ -29,6 +29,7 @@ namespace vg::core
         void                            SetPropertyRangeCallback        (PropertyRangeCallback _func) final override;
         void                            SetPropertyHiddenCallback       (IsPropertyHiddenCallback _func) final override;
         void                            SetPropertyReadOnlyCallback     (IsPropertyReadOnlyCallback _func) final override;
+        void                            SetPropertyNamesCallback        (PropertyNamesCallback _func) final override;
         void                            SetDefaultFolder                (const char * _path) final override;
         void                            SetFlags                        (PropertyFlags _flagsToSet, PropertyFlags _flagsToRemove = PropertyFlags::None) final override;
         void                            SetOffset                       (uint_ptr _offset) final override;
@@ -51,6 +52,7 @@ namespace vg::core
         float2                          GetRange                        (const IObject * _object, core::uint _index = 0) const final override;
         bool                            IsHidden                        (const IObject * _object, core::uint _index = 0) const final override;
         bool                            IsReadOnly                      (const IObject * _object, core::uint _index = 0) const final override;
+        core::vector<core::string>      GetPropertyNames                (const IObject * _object, core::uint _index = 0) const final override;
         const char *                    GetEnumTypeName                 () const final override;
         u32                             GetEnumCount                    () const final override;
         void                            SetEnumName                     (uint index, core::string _name) final override;
@@ -127,6 +129,7 @@ namespace vg::core
         PropertyRangeCallback           rangeCallback       = nullptr;
         IsPropertyHiddenCallback        isHiddenCallback    = nullptr;
         IsPropertyReadOnlyCallback      isReadOnlyCallback  = nullptr;
+        PropertyNamesCallback           namesCallback       = nullptr;
         vector<EnumDesc>                enums;
 
         // Do not forget to update Property(const Property & _other) when you add a member variable here!

@@ -779,19 +779,23 @@ namespace vg::engine
                     auto it = resourceInfoMap.find(res->GetResourcePath());
                     auto & info = it->second;
 
-                    // Set Shared Resource Object and Notify owner
-                    res->SetObject(info->m_object);
-                    if (!res->HasValidUID())
-                        res->RegisterUID();
-                    res->LoadSubResources();
-                    IObject * resOwner = res->GetParent();
-                    VG_ASSERT(nullptr != resOwner);
-                    if (nullptr != resOwner)
-                        resOwner->OnResourceLoaded(res);
+                    VG_ASSERT(nullptr != info);
+                    if (nullptr != info)
+                    {
+                        // Set Shared Resource Object and Notify owner
+                        res->SetObject(info->m_object);
+                        if (!res->HasValidUID())
+                            res->RegisterUID();
+                        res->LoadSubResources();
+                        IObject * resOwner = res->GetParent();
+                        VG_ASSERT(nullptr != resOwner);
+                        if (nullptr != resOwner)
+                            resOwner->OnResourceLoaded(res);
 
-                    #if USE_CLIENT_LIMIT_PER_FRAME
-                    currentClientCount++;
-                    #endif
+                        #if USE_CLIENT_LIMIT_PER_FRAME
+                        currentClientCount++;
+                        #endif
+                    }
                 }
             }
 

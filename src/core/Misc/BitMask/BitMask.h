@@ -13,11 +13,11 @@ namespace vg::core
         BitMask(core::uint _bitCount = 0, bool _default = false);
 
         bool setBitCount(core::uint _count, bool _default = false);
-        bool setNames(core::vector<core::string> && _names);
+        //bool setNames(const core::vector<core::string> & _names);
         bool setBitValue(core::uint _index, bool _value);
 
         VG_INLINE core::uint getBitCount() const;
-        VG_INLINE const core::vector<core::string> & getNames() const;
+        //VG_INLINE const core::vector<core::string> & getNames() const;
         VG_INLINE bool getBitValue(core::uint _index) const;
 
         core::string toString(bool _leadingZeroes = false) const;
@@ -25,6 +25,8 @@ namespace vg::core
 
         bool toBuffer(io::Buffer & _buffer);
         bool fromBuffer(io::Buffer & _buffer);
+
+        bool operator == (const BitMask & _other) const;
         
     private:
         VG_INLINE core::uint getNumBitsPerItem() const;
@@ -32,7 +34,7 @@ namespace vg::core
     private:
         core::uint m_bitCount = 0;
         core::vector<T> m_bits;
-        core::vector<core::string> m_names;
+        //core::vector<core::string> m_names;
     };
 }
 

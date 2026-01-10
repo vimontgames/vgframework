@@ -38,12 +38,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    bool BitMask::setNames(core::vector<core::string> && _names)
-    {
-        VG_ASSERT(_names.size() == m_bitCount);
-        m_names = _names;
-        return true; // Return 'false' if unchanged?
-    }
+    //bool BitMask::setNames(const core::vector<core::string> & _names)
+    //{
+    //    VG_ASSERT(_names.size() == m_bitCount);
+    //    m_names = _names;
+    //    return true; // Return 'false' if unchanged?
+    //}
 
     //--------------------------------------------------------------------------------------
     bool BitMask::setBitValue(core::uint _index, bool _value)
@@ -171,5 +171,21 @@ namespace vg::core
         }
 
         return result;
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool BitMask::operator == (const BitMask & _other) const
+    {
+        if (m_bitCount != _other.m_bitCount)
+            return false;
+
+        const auto itemCount = (m_bitCount + getNumBitsPerItem() - 1) / getNumBitsPerItem();
+        for (uint i = 0; i < itemCount; ++i)
+        {
+            if (m_bits[i] != _other.m_bits[i])
+                return false;
+        }
+
+        return true;
     }
 }

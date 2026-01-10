@@ -238,6 +238,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void Property::SetPropertyNamesCallback(PropertyNamesCallback _func)
+    {
+        namesCallback = _func;
+    }
+
+    //--------------------------------------------------------------------------------------
     void Property::SetDefaultFolder(const char * _path)
     {
         defaultFolder = _path;
@@ -388,6 +394,15 @@ namespace vg::core
             return isReadOnlyCallback(_object, this, _index);
 
         return asBool(PropertyFlags::ReadOnly & flags);
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::vector<core::string> Property::GetPropertyNames(const IObject * _object, core::uint _index) const
+    {
+        core::vector<core::string> names;
+        if (auto callback = namesCallback)
+            names = namesCallback(_object, this, _index);
+        return names;
     }
 
     //--------------------------------------------------------------------------------------

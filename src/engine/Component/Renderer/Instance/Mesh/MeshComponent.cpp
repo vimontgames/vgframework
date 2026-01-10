@@ -28,6 +28,21 @@ namespace vg::engine
     VG_REGISTER_COMPONENT_CLASS(MeshComponent, "Mesh", "Renderer", "Mesh model for 3D rendering", editor::style::icon::Mesh, 1)
 
     //--------------------------------------------------------------------------------------
+    core::vector<core::string> getBatchNames(const IObject * _object, const IProperty * _prop, core::uint _index)
+    {
+        core::vector<core::string> names;
+
+        if (const MeshComponent * meshComp = VG_SAFE_STATIC_CAST(const MeshComponent, _object))
+        {
+            const MeshResource & res = meshComp->getMeshResource();
+            if (const IMeshModel * meshModel = res.getMeshModel())
+                return meshModel->GetBatchNames();
+        }
+
+        return names;
+    }
+
+    //--------------------------------------------------------------------------------------
     bool MeshComponent::registerProperties(IClassDesc & _desc)
     {
         super::registerProperties(_desc);
@@ -36,6 +51,7 @@ namespace vg::engine
         registerPropertyObjectPtrEx(MeshComponent, m_meshInstance, "MeshInstance", PropertyFlags::Transient | PropertyFlags::Flatten);
         registerPropertyObjectEx(MeshComponent, m_meshMaterials, editor::style::label::Materials, PropertyFlags::Flatten);
         registerProperty(MeshComponent, m_batchMask, "Batch Mask");
+        setPropertyNamesCallback(MeshComponent, m_batchMask, getBatchNames);
         
         return true;
     }
@@ -216,7 +232,7 @@ namespace vg::engine
             IMeshModel * meshModel = m_meshResource.getMeshModel();
             m_meshInstance->SetModel(Lod::Lod0, meshModel);
             m_batchMask.setBitCount(meshModel->GetBatchCount(), true);
-            m_batchMask.setNames(meshModel->GetBatchNames());
+            //m_batchMask.setNames(meshModel->GetBatchNames());
             m_meshInstance->SetBatchMask(m_batchMask);
 
             if (GetGameObject()->isEnabledInHierarchy() && isEnabled())

@@ -403,6 +403,10 @@ namespace vg::engine
                     VG_ASSERT_ENUM_NOT_IMPLEMENTED(_prop->GetType());
                     return nullptr;
 
+                case PropertyType::BitMask:
+                    newDynProp = new DynamicPropertyBitMask(_prop->GetName());
+                    break;
+
                 case PropertyType::ObjectHandle:
                     newDynProp = new DynamicPropertyObjectHandle(_prop->GetName());
                     break;

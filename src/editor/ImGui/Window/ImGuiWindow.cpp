@@ -207,6 +207,7 @@ namespace vg::editor
     template <> struct TypeToDynamicPropertyTypeEnum<string> { using type = core::DynamicPropertyString; };
     template <> struct TypeToDynamicPropertyTypeEnum<ObjectHandle> { using type = core::DynamicPropertyU32; };
     template <> struct TypeToDynamicPropertyTypeEnum<Resource> { using type = core::DynamicPropertyResource; };
+    template <> struct TypeToDynamicPropertyTypeEnum<BitMask> { using type = core::DynamicPropertyBitMask; };
 
     template <typename T> bool equals(T a, T b)                 {  return a == b; }
 
@@ -271,11 +272,7 @@ namespace vg::editor
                         _propContext.m_optionalPropOverride->Enable(true);
 
                     _object = (IObject *)_propContext.m_propOverride;
-                    //_prop = _propContext.m_propOverride->GetProperty();
-                    //_out = (T*)((uint_ptr)_object + _prop->GetOffset());
                     _propContext.m_isPrefabOverride = true;
-
-                    //return true;
                 } 
                 else
                 {
@@ -3177,11 +3174,15 @@ namespace vg::editor
         if (ImGui::BeginCombo(enumLabel.c_str(), preview.c_str(), ImGuiComboFlags_HeightLarge))
         {
             const auto bitCount = pBitMask->getBitCount();
-            const auto names = pBitMask->getNames();
+            const auto names = _prop->GetPropertyNames(_propContext.m_originalObject); // Always use the original object to get names because override use another object type than original
+
+            BitMask editVal = *pBitMask;
+
+            bool edited = false;
 
             for (uint i = 0; i < bitCount; ++i)
             {
-                bool value = pBitMask->getBitValue(i);
+                bool value = editVal.getBitValue(i);
                 string bitName;
 
                 if (i < names.size())
@@ -3201,14 +3202,27 @@ namespace vg::editor
                     if (!_propContext.m_readOnly)
                     {
                         if (value)
-                            pBitMask->setBitValue(i, true);
+                            editVal.setBitValue(i, true);
                         else
-                            pBitMask->setBitValue(i, false);
+                            editVal.setBitValue(i, false);
+
+                        edited = true;
                     }
                     changed = true;
                 }
             }
             ImGui::EndCombo();
+
+            if (edited)
+            {
+                auto editingState = undoRedoBeforeEdit<BitMask>(edited, _propContext, _object, _prop, &editVal, pBitMask, InteractionType::Single);
+
+                if (storeProperty<BitMask>(pBitMask, editVal, _object, _prop, _propContext, editingState))
+                {
+                    *pBitMask = editVal;
+                    changed = true;
+                }
+            }
         }
 
         if (_propContext.m_readOnly)
