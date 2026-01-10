@@ -16128,7 +16128,7 @@
                                 <Property type="String" name="m_name" value="Houses"/>
                                 <Property type="Uint32" name="m_uid" value="80605140"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled|Static"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
@@ -20407,7 +20407,7 @@
                                 <Property type="String" name="m_name" value="Sport Yellow"/>
                                 <Property type="Uint32" name="m_uid" value="339664842"/>
                                 <Property type="Uint32" name="m_originalUID" value="2095435835"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="9.3375363e-08" Iy="-0.99999994" Iz="-0.00034528971" Iw="0" Jx="1" Jy="-2.5833941e-08" Jz="0" Jw="0" Kx="-2.1647059e-12" Ky="-0.00034528971" Kz="0.99999988" Kw="0" Tx="-17.799999" Ty="-11.2" Tz="0.30000001" Tw="1"/>
@@ -20674,7 +20674,7 @@
                                 <Property type="String" name="m_name" value="Benualdo"/>
                                 <Property type="Uint32" name="m_uid" value="3145165694"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="-1.1920929e-07" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-1.1920929e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-10.00004" Ty="-5.0000229" Tz="0.5" Tw="1"/>
@@ -20790,7 +20790,7 @@
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
-                                                        <Property type="String" name="m_value" value="data/Materials/Benualdo/Invisible.mat"/>
+                                                        <Property type="String" name="m_value" value=""/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
@@ -20798,7 +20798,7 @@
                                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                         <Property type="Bool" name="m_enable" value="true"/>
-                                                        <Property type="String" name="m_value" value="data/Materials/Benualdo/Invisible.mat"/>
+                                                        <Property type="String" name="m_value" value=""/>
                                                     </Object>
                                                     <Object class="ResourceOverrideData">
                                                         <Property type="String" name="m_name" value=""/>
@@ -20809,6 +20809,22 @@
                                                         <Property type="String" name="m_value" value="data/Materials/Benualdo/Trouser.mat"/>
                                                     </Object>
                                                 </Property>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="DynamicPropertyList">
+                                        <Property type="String" name="m_name" value="MeshComponent #25"/>
+                                        <Property type="Uint32" name="m_uid" value="63634391"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_properties">
+                                            <Object class="DynamicPropertyBitMask">
+                                                <Property type="String" name="m_name" value="m_batchMask"/>
+                                                <Property type="Uint32" name="m_uid" value="1228456686"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="Bool" name="m_enable" value="true"/>
+                                                <Property type="BitMask" name="m_value" BitCount="11" Value="0x000000000000067F"/>
                                             </Object>
                                         </Property>
                                     </Object>
