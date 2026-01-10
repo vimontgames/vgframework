@@ -57,10 +57,7 @@ struct PS_Output
 PS_Output PS_DebugDraw(VS_Output _input)
 {
     PS_Output output;
-    
-    output.color0 = float4(1,1,1,0);
-    return output;
- 
+     
     if (debugDrawRootConstants3D.getVertexFormat() == VertexFormat::DebugDrawLit)
     {
         output.color0 = float4( (saturate(dot(_input.nrm, normalize(float3(1,2,3))).xxx * 0.25) + 0.75) * _input.col.rgb, _input.col.a); 
