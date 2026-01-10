@@ -24,6 +24,7 @@ namespace vg::engine
         virtual core::uint          GetPassengerSlotCount           () const = 0;
         virtual core::IGameObject * GetPassengerSlotOwner           (core::uint _index) const = 0;
         virtual core::IGameObject * GetPassengerSlotSeatLocation    (core::uint _index) const = 0;
+        virtual float               GetPassengerSlotSeatScale       (core::uint _index) const = 0;
         virtual core::IGameObject * GetPassengerSlotExitLocation    (core::uint _index) const = 0;
         virtual VehicleSlotType     GetPassengerSlotType            (core::uint _index) const = 0;
 

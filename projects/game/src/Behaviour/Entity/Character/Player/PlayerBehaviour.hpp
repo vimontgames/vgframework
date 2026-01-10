@@ -192,10 +192,12 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                     {
                         float4x4 mat = slot->GetGlobalMatrix();
 
-                        // Ignore scale
-                        mat[0].xyz = normalize(mat[0].xyz);
-                        mat[1].xyz = normalize(mat[1].xyz);
-                        mat[2].xyz = normalize(mat[2].xyz);
+                        // Ignore matrix scale and use seat scale instead
+                        const float seatScale = vehicle->GetPassengerSlotSeatScale(m_vehicleSlot);
+
+                        mat[0].xyz = seatScale * normalize(mat[0].xyz);
+                        mat[1].xyz = seatScale * normalize(mat[1].xyz);
+                        mat[2].xyz = seatScale * normalize(mat[2].xyz);
 
                         go->SetGlobalMatrix(mat);
                     }

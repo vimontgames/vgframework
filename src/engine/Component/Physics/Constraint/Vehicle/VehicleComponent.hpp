@@ -36,8 +36,11 @@ namespace vg::engine
 
         registerPropertyEnum(VehicleSlot, VehicleSlotType, m_slotType, "Type");
 
-        registerProperty(VehicleSlot, m_location, "Location");
+        registerProperty(VehicleSlot, m_location, "Seat");
         setPropertyDescription(VehicleSlot, m_location, "Seat location in vehicle");
+
+        registerProperty(VehicleSlot, m_scale, "Scale");
+        setPropertyDescription(VehicleSlot, m_scale, "Seat scale for small vehicles");
 
         registerProperty(VehicleSlot, m_exit, "Exit");
         setPropertyDescription(VehicleSlot, m_exit, "Location when exiting vehicle");
@@ -499,6 +502,16 @@ namespace vg::engine
             return VG_SAFE_STATIC_CAST(IGameObject, slots[_index].m_location.getObject());
         else
             return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    float VehicleComponent::GetPassengerSlotSeatScale(core::uint _index) const
+    {
+        const auto & slots = m_slots.getObjects();
+        if (_index < slots.size())
+            return slots[_index].m_scale;
+        else
+            return 1.0f;
     }
 
     //--------------------------------------------------------------------------------------
