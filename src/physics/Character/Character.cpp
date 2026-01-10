@@ -5,6 +5,9 @@
 #include "physics/Shape/CapsuleShape.h"
 #include "physics/Physics.h"
 #include "physics/World/PhysicsWorld.h"
+#include "Jolt/Physics/Collision/ShapeCast.h"
+#include "Jolt/Physics/Collision/CollisionCollectorImpl.h"
+#include "Jolt/Physics/Collision/RayCast.h"
 
 #include "CharacterDesc.hpp"
 
@@ -193,8 +196,39 @@ namespace vg::physics
     }
 
     //--------------------------------------------------------------------------------------
-    bool RigidCharacter::CanMoveTo(const core::float3 & _position)
+    bool RigidCharacter::CanTeleportTo(const core::float3 & _targetPos)
     {
-        return false;
+        using namespace JPH;
+
+        // Get the shape and scale of the character
+        const auto * shape = m_character->GetShape();
+        const Vec3 shapeScale(1.0f, 1.0f, 1.0f);
+
+        // Build a transform at the target position
+        const Mat44 transform = Mat44::sTranslation(getJoltVec3(_targetPos));
+
+        CollideShapeSettings settings;
+        settings.mActiveEdgeMode = EActiveEdgeMode::CollideWithAll;
+        settings.mBackFaceMode = EBackFaceMode::CollideWithBackFaces;
+        settings.mCollectFacesMode = ECollectFacesMode::NoFaces;
+
+        ClosestHitCollisionCollector<CollideShapeCollector> collector;  
+
+        // Check collision at target transform
+        getPhysicsWorld()->getPhysicsSystem()->GetNarrowPhaseQuery().CollideShape(
+            shape,
+            shapeScale,
+            transform,
+            settings,
+            RVec3::sZero(),
+            collector,
+            {},
+            {}, // BroadPhaseLayerFilter
+            {}, // ObjectLayerFilter
+            {}  // BodyFilter
+        );
+
+        // If collector found anything, teleport is blocked
+        return !collector.HadHit();
     }
 }

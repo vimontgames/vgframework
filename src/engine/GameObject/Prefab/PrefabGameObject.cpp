@@ -337,16 +337,12 @@ namespace vg::engine
             break;
 
             case PropertyType::ObjectHandle:
+            case PropertyType::Resource:
+            case PropertyType::BitMask:
             {
                 return true;
             }
             break;       
-
-            case PropertyType::Resource:
-            {
-                return true;
-            }
-            break;
         }
     }
 

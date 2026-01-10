@@ -67,7 +67,7 @@ namespace vg::physics
 
         core::float4x4          GetMatrix       () const final override;
         GroundState             GetGroundState  () const final override;
-        bool                    CanMoveTo       (const core::float3 & _position) final override;
+        bool                    CanTeleportTo   (const core::float3 & _position) final override;
 
     private:
         void                    resetCharacter  (const core::float4x4 & _world);

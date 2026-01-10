@@ -324,12 +324,11 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    bool CharacterControllerComponent::CanMoveTo(const core::float3 & _position)
+    bool CharacterControllerComponent::CanTeleportTo(const core::float3 & _position)
     {
-        // TODO: do not destroy the character controller on deinit but instead change its layer?
-        //VG_ASSERT(m_character);
-        //if (m_character)
-        //    return m_character->CanMoveTo(_position);
+        VG_ASSERT(m_character, "[Physics] 'CanTeleportTo' requires a valid character controller shape");
+        if (m_character)
+            return m_character->CanTeleportTo(_position);
         return true;
     }
 }

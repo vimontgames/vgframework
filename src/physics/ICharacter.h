@@ -36,6 +36,6 @@ namespace vg::physics
         virtual core::float4x4  GetMatrix       () const = 0;
 
         virtual GroundState     GetGroundState  () const = 0;
-        virtual bool            CanMoveTo       (const core::float3 & _position) = 0;
+        virtual bool            CanTeleportTo       (const core::float3 & _position) = 0;
     };
 }

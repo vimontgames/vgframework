@@ -694,7 +694,11 @@ bool PlayerBehaviour::exitVehicle(bool _teleport)
 
                 if (auto * charaController = GetGameObject()->GetComponentT<ICharacterControllerComponent>())
                 {
-                    if (charaController->CanMoveTo(exitMat[3].xyz))
+                    // enable physics but disable if cannot exit
+                    enablePhysics(true);
+
+                    // Test if shape can fit in target position using physics
+                    if (charaController->CanTeleportTo(exitMat[3].xyz))
                     {
                         VG_VERIFY(vehicleComp->ExitVehicle(this->GetGameObject()));
                         GetGameObject()->SetGlobalMatrix(exitMat);
@@ -703,6 +707,7 @@ bool PlayerBehaviour::exitVehicle(bool _teleport)
                     else
                     {
                         VG_WARNING("[Player] Player \"%s\" could not exit \"%s\"", GetGameObject()->GetName().c_str(), vehicleComp->GetGameObject()->GetName().c_str());
+                        enablePhysics(false);
                         return false;
                     }
                 }                

@@ -816,7 +816,7 @@
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="0" z="0" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-2.9802322e-08" Iy="0.25000003" Iz="0" Iw="0" Jx="-0.25000003" Jy="-2.9802322e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.25" Kw="0" Tx="-0.050000012" Ty="1.45" Tz="0.64999998" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-2.9802322e-08" Iy="0.25000003" Iz="0" Iw="0" Jx="-0.25000003" Jy="-2.9802322e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.25" Kw="0" Tx="0.099999994" Ty="1.45" Tz="0.64999998" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="DummyComponent">
@@ -856,7 +856,7 @@
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="0.16736412" y="1" z="0" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-2.9802322e-08" Iy="0.25000006" Iz="0" Iw="0" Jx="-0.25000006" Jy="-2.9802322e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.25" Kw="0" Tx="-0.050000004" Ty="-1.45" Tz="0.64999998" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-2.9802322e-08" Iy="0.25000006" Iz="0" Iw="0" Jx="-0.25000006" Jy="-2.9802322e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.25" Kw="0" Tx="0.1" Ty="-1.45" Tz="0.64999998" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="DummyComponent">
@@ -896,7 +896,7 @@
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="0" y="0.033472776" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-2.9802322e-08" Iy="0.25000006" Iz="0" Iw="0" Jx="-0.25000006" Jy="-2.9802322e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.25" Kw="0" Tx="-1.05" Ty="1.45" Tz="0.64999998" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-2.9802322e-08" Iy="0.25000006" Iz="0" Iw="0" Jx="-0.25000006" Jy="-2.9802322e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.25" Kw="0" Tx="-0.89999998" Ty="1.45" Tz="0.64999998" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="DummyComponent">
@@ -936,7 +936,7 @@
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                        <Property type="Float4x4" name="m_local" Ix="-2.9802322e-08" Iy="0.25000006" Iz="0" Iw="0" Jx="-0.25000006" Jy="-2.9802322e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.25" Kw="0" Tx="-1.05" Ty="-1.45" Tz="0.64999998" Tw="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="-2.9802322e-08" Iy="0.25000006" Iz="0" Iw="0" Jx="-0.25000006" Jy="-2.9802322e-08" Jz="0" Jw="0" Kx="0" Ky="0" Kz="0.25" Kw="0" Tx="-0.89999998" Ty="-1.45" Tz="0.64999998" Tw="1"/>
                                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                         <Property type="ObjectPtrVector" name="m_components">
                                             <Object class="DummyComponent">
