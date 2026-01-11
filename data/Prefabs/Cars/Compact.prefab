@@ -30,7 +30,7 @@
                                 <Property type="String" name="m_name" value="New PhysicsBodyComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2416209307"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="EnumU8" name="m_category" value="Default"/>
                                 <Property type="Bool" name="m_useCollisionMask" value="false"/>
@@ -136,7 +136,7 @@
                                 <Property type="String" name="m_name" value="New SoundComponent"/>
                                 <Property type="Uint32" name="m_uid" value="729544579"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Object" name="m_sounds">
                                     <Object class="SoundResourceList">
@@ -189,11 +189,21 @@
                                     </Object>
                                 </Property>
                             </Object>
+                            <Object class="VehicleBehaviour">
+                                <Property type="String" name="m_name" value="New VehicleBehaviour"/>
+                                <Property type="Uint32" name="m_uid" value="4257282051"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                <Property type="Float" name="m_damage" value="5"/>
+                                <Property type="Float" name="m_push" value="1"/>
+                                <Property type="Float" name="m_velocityThreshold" value="2"/>
+                            </Object>
                             <Object class="VehicleComponent">
                                 <Property type="String" name="m_name" value="New VehicleComponent"/>
                                 <Property type="Uint32" name="m_uid" value="2480422006"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Object" name="m_slots">
                                     <Object class="VehicleSlotList">
@@ -209,6 +219,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumU8" name="m_slotType" value="Driver"/>
                                                 <Property type="ObjectHandle" name="m_location" value="1577911803"/>
+                                                <Property type="Float" name="m_scale" value="1"/>
                                                 <Property type="ObjectHandle" name="m_exit" value="629428408"/>
                                             </Object>
                                             <Object class="VehicleSlot">
@@ -218,6 +229,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumU8" name="m_slotType" value="Passenger"/>
                                                 <Property type="ObjectHandle" name="m_location" value="750463009"/>
+                                                <Property type="Float" name="m_scale" value="1"/>
                                                 <Property type="ObjectHandle" name="m_exit" value="2694618029"/>
                                             </Object>
                                             <Object class="VehicleSlot">
@@ -227,6 +239,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumU8" name="m_slotType" value="Passenger"/>
                                                 <Property type="ObjectHandle" name="m_location" value="1011170025"/>
+                                                <Property type="Float" name="m_scale" value="1"/>
                                                 <Property type="ObjectHandle" name="m_exit" value="2186555557"/>
                                             </Object>
                                             <Object class="VehicleSlot">
@@ -236,6 +249,7 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="EnumU8" name="m_slotType" value="Passenger"/>
                                                 <Property type="ObjectHandle" name="m_location" value="3716534961"/>
+                                                <Property type="Float" name="m_scale" value="1"/>
                                                 <Property type="ObjectHandle" name="m_exit" value="1562437142"/>
                                             </Object>
                                         </Property>
@@ -905,6 +919,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU32" name="m_dummyType" value="Box"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -925,6 +940,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="874343811"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU32" name="m_dummyType" value="Box"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -945,6 +961,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU32" name="m_dummyType" value="Box"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -965,6 +982,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="519037848"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU32" name="m_dummyType" value="Box"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -985,6 +1003,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU32" name="m_dummyType" value="Box"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -1005,6 +1024,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="1218485209"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU32" name="m_dummyType" value="Box"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -1025,6 +1045,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU32" name="m_dummyType" value="Box"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>
@@ -1045,6 +1066,7 @@
                                                 <Property type="Uint32" name="m_originalUID" value="2844076817"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU32" name="m_dummyType" value="Box"/>
                                             </Object>
                                         </Property>
                                         <Property type="ObjectPtrVector" name="m_children"/>

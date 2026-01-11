@@ -58,4 +58,10 @@ namespace vg::core
     {
         setUID(0x0);
     }
+
+    //--------------------------------------------------------------------------------------
+    bool ObjectHandle::empty() const
+    {
+        return 0x0 == m_uid;
+    }
 }

@@ -779,7 +779,7 @@ namespace vg::engine
                     auto it = resourceInfoMap.find(res->GetResourcePath());
                     auto & info = it->second;
 
-                    VG_ASSERT(nullptr != info);
+                    VG_ASSERT(nullptr != info || res->GetResourcePath().empty());
                     if (nullptr != info)
                     {
                         // Set Shared Resource Object and Notify owner

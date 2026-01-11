@@ -117,9 +117,9 @@ bool BreakableBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
             hitDir = normalize(thisGameObject->GetGlobalMatrix()[3].xyz - attackerGO->GetGlobalMatrix()[3].xyz);
 
             if (_weapon)
-                VG_INFO("[Entity] \"%s\" was hit by \"%s\" with \"%s\"", thisGameObject->GetName().c_str(), attackerGO->GetName().c_str(), _weapon->GetGameObject()->GetName().c_str());
+                VG_INFO("[Breakable] \"%s\" was hit by \"%s\" with \"%s\"", thisGameObject->GetName().c_str(), attackerGO->GetName().c_str(), _weapon->GetGameObject()->GetName().c_str());
             else
-                VG_INFO("[Entity] \"%s\" was hit by \"%s\"", thisGameObject->GetName().c_str(), attackerGO->GetName().c_str());
+                VG_INFO("[Breakable] \"%s\" was hit by \"%s\"", thisGameObject->GetName().c_str(), attackerGO->GetName().c_str());
 
             m_breakableState = BreakableState::Destroyed;
 
@@ -135,22 +135,6 @@ bool BreakableBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
                     _attacker->addScore(m_giveScore);
             }
 
-            //if (m_useDestroyAnim)
-            //{
-            //    if (auto * animComp = thisGameObject->GetComponentT<IAnimationComponent>())
-            //    {
-            //        uint animIndex = animComp->GetAnimationIndex(m_destroyAnimName);
-            //        if (-1 != animIndex)
-            //            animComp->PlayAnimation(animIndex, false);
-            //        else
-            //            VG_WARNING("[Chest] Missing 'Destroyed' animation \"%s\"", m_destroyAnimName.c_str());
-            //    }
-            //    else
-            //    {
-            //        VG_WARNING("[Chest] Missing IAnimationComponent");
-            //    }
-            //}
-
             if (m_useDestroySound)
             {
                 if (auto * soundComponent = GetGameObject()->GetComponentT<ISoundComponent>())
@@ -159,17 +143,13 @@ bool BreakableBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
                     if (-1 != soundIndex)
                         soundComponent->Play(soundIndex);
                     else
-                        VG_WARNING("[Chest] Missing 'Destroyed' sound \"%s\"", m_destroySound.c_str());
+                        VG_WARNING("[Breakable] Missing 'Destroyed' sound \"%s\"", m_destroySound.c_str());
                 }
                 else
                 {
-                    VG_WARNING("[Chest] Missing ISoundComponent");
+                    VG_WARNING("[Breakable] Missing ISoundComponent");
                 }
             }
-
-            //// Disable physics
-            //if (auto * physicsBodyComp = thisGameObject->GetComponentT<IPhysicsBodyComponent>())
-            //    physicsBodyComp->Enable(false);
 
             // Disable original object
             if (IGameObject * defaultGameObject = m_default.get<vg::core::IGameObject>())
@@ -209,10 +189,10 @@ bool BreakableBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
         }
         else
         {
-            auto * weaponGO = _weapon->GetGameObject();
+            const auto * weaponGO = _weapon->GetGameObject();
             hitDir = normalize(thisGameObject->GetGlobalMatrix()[3].xyz - weaponGO->GetGlobalMatrix()[3].xyz);
 
-            VG_INFO("[Entity] \"%s\" was hit by \"%s\"", thisGameObject->GetName().c_str(), weaponGO->GetName().c_str());
+            VG_INFO("[Breakable] \"%s\" was hit by \"%s\"", thisGameObject->GetName().c_str(), weaponGO->GetName().c_str());
         }        
     }
 

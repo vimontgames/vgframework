@@ -8,6 +8,7 @@
 #include "Ball/BallBehaviour.hpp"
 #include "Weapon/WeaponBehaviour.hpp"
 #include "Breakable/BreakableBehaviour.hpp"
+#include "Vehicle/VehicleBehaviour.hpp"
 
 VG_REGISTER_COMPONENT_CLASS(ItemBehaviour, "Item", "Game", "Basic game item", vg::editor::style::icon::Script, 0);
 
@@ -107,4 +108,16 @@ void ItemBehaviour::OnCollisionEnter(vg::core::IGameObject * _other)
                 enemy->TakeHit(GetOwnerCharacter(), this);
         }        
     }
+}
+
+//--------------------------------------------------------------------------------------
+float ItemBehaviour::GetDamage() const
+{
+    return m_damage;
+}
+
+//--------------------------------------------------------------------------------------
+float ItemBehaviour::GetPush() const
+{
+    return m_push;
 }

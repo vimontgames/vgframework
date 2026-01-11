@@ -17,7 +17,8 @@ namespace vg::core
 
         void        set         (core::IObject * _object);
         IObject *   getObject   () const;  
-        void        clear();
+        void        clear       ();
+        bool        empty       () const;
 
         template <typename T> T * get() const
         {

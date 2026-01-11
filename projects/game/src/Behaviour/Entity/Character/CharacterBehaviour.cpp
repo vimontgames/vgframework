@@ -316,7 +316,7 @@ bool CharacterBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
             hitDir = normalize(go->GetGlobalMatrix()[3].xyz - attackerGO->GetGlobalMatrix()[3].xyz);
 
             if (_weapon)
-                VG_INFO("[Character] \"%s\" was hit by \"%s\" with weapon \"%s\"", go->GetName().c_str(), attackerGO->GetName().c_str(), _weapon->GetGameObject()->GetName().c_str());
+                VG_INFO("[Character] \"%s\" was hit by \"%s\" with \"%s\"", go->GetName().c_str(), attackerGO->GetName().c_str(), _weapon->GetGameObject()->GetName().c_str());
             else
                 VG_INFO("[Character] \"%s\" was hit by \"%s\"", go->GetName().c_str(), attackerGO->GetName().c_str());
         }
@@ -328,15 +328,18 @@ bool CharacterBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
             VG_INFO("[Character] \"%s\" was hit by \"%s\"", go->GetName().c_str(), weaponGO->GetName().c_str());
         }
 
-        float damage = _weapon ? _weapon->getDamage() : 1.0f;
+        float damage = _weapon ? _weapon->GetDamage() : 1.0f;
         m_hp = max(0.0f, m_hp - damage);
 
         if (damage > 0.0f)
         {
+            if (_attacker)
+                _attacker->addScore(round(damage));
+
             if (auto * healthBar = GetGameObject()->GetComponentInChildrenT<HealthBarBehaviour>())
                 healthBar->setHP(m_hp);
 
-            float push = _weapon ? _weapon->getPush() : 0.0f;
+            float push = _weapon ? _weapon->GetPush() : 0.0f;
 
             if (m_hp > 0)
             {

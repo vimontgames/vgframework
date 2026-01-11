@@ -255,24 +255,17 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     IGameObject * GameObject::GetParentPrefab() const
     {
-        //if (auto * parentScene = dynamic_cast<core::IBaseScene *>(getParent()))
-        //{
-        //    if (parentScene->GetSceneType() == BaseSceneType::Prefab)
-        //        return parentScene->GetRoot();
-        //}
-
         IGameObject * parent = dynamic_cast<IGameObject *>(GetParent());
         while (nullptr != parent)
         {
             if (parent->IsPrefab())
-                return parent;
+            {
+                if (auto * nestedPrefabParent = parent->GetParentPrefab())
+                    return nestedPrefabParent;
+                else
+                    return parent;
+            }
 
-            //if (auto * parentScene = dynamic_cast<core::IBaseScene *>(parent->getParent()))
-            //{
-            //    if (parentScene->GetSceneType() == BaseSceneType::Prefab)
-            //        return parentScene->GetRoot();
-            //}
-            
             if (auto * parentGO = dynamic_cast<IGameObject *>(parent->GetParent()))
                 parent = parentGO;
             else
@@ -1034,78 +1027,105 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void GameObject::OnCollisionEnter(IGameObject * _other)
     {
-        //VG_INFO("[Physics] OnCollisionEnter \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
-
-        const auto & behaviours = getBehaviours();
-        for (uint i = 0; i < behaviours.size(); ++i)
+        if (IsEnabledInHierarchy())
         {
-            IBehaviour * behaviour = behaviours[i];
-            behaviour->OnCollisionEnter(_other);
+            //VG_INFO("[Physics] OnCollisionEnter \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+
+            const auto & behaviours = getBehaviours();
+            for (uint i = 0; i < behaviours.size(); ++i)
+            {
+                IBehaviour * behaviour = behaviours[i];
+                if (behaviour->isEnabled())
+                    behaviour->OnCollisionEnter(_other);
+            }
         }
     }
 
     //--------------------------------------------------------------------------------------
     void GameObject::OnCollisionStay(IGameObject * _other)
     {
-        //VG_INFO("[Physics] OnCollisionStay \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
-
-        const auto & behaviours = getBehaviours();
-        for (uint i = 0; i < behaviours.size(); ++i)
+        if (IsEnabledInHierarchy())
         {
-            IBehaviour * behaviour = behaviours[i];
-            behaviour->OnCollisionStay(_other);
+            //VG_INFO("[Physics] OnCollisionStay \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+
+            const auto & behaviours = getBehaviours();
+            for (uint i = 0; i < behaviours.size(); ++i)
+            {
+                IBehaviour * behaviour = behaviours[i];
+                if (behaviour->isEnabled())
+                    behaviour->OnCollisionStay(_other);
+            }
         }
     }
 
     //--------------------------------------------------------------------------------------
     void GameObject::OnCollisionExit(IGameObject * _other)
     {
-        //VG_INFO("[Physics] OnCollisionExit \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
-
-        const auto & behaviours = getBehaviours();
-        for (uint i = 0; i < behaviours.size(); ++i)
+        if (IsEnabledInHierarchy())
         {
-            IBehaviour * behaviour = behaviours[i];
-            behaviour->OnCollisionExit(_other);
+            //VG_INFO("[Physics] OnCollisionExit \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+
+            const auto & behaviours = getBehaviours();
+            for (uint i = 0; i < behaviours.size(); ++i)
+            {
+                IBehaviour * behaviour = behaviours[i];
+                if (behaviour->isEnabled())
+                    behaviour->OnCollisionExit(_other);
+            }
         }
     }
 
     //--------------------------------------------------------------------------------------
     void GameObject::OnTriggerEnter(IGameObject * _other)
     {
-        //VG_INFO("[Physics] OnTriggerEnter \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
-
-        const auto & behaviours = getBehaviours();
-        for (uint i = 0; i < behaviours.size(); ++i)
+        if (IsEnabledInHierarchy())
         {
-            IBehaviour * behaviour = behaviours[i];
-            behaviour->OnTriggerEnter(_other);
+            //VG_INFO("[Physics] OnTriggerEnter \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+
+            const auto & behaviours = getBehaviours();
+            for (uint i = 0; i < behaviours.size(); ++i)
+            {
+                IBehaviour * behaviour = behaviours[i];
+                if (behaviour->isEnabled())
+                    behaviour->OnTriggerEnter(_other);
+            }
         }
     }
 
     //--------------------------------------------------------------------------------------
     void GameObject::OnTriggerStay(IGameObject * _other)
     {
-        //VG_INFO("[Physics] OnTriggerStay \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
-
-        const auto & behaviours = getBehaviours();
-        for (uint i = 0; i < behaviours.size(); ++i)
+        if (IsEnabledInHierarchy())
         {
-            IBehaviour * behaviour = behaviours[i];
-            behaviour->OnTriggerStay(_other);
+            if (IsEnabledInHierarchy())
+            {
+                //VG_INFO("[Physics] OnTriggerStay \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+
+                const auto & behaviours = getBehaviours();
+                for (uint i = 0; i < behaviours.size(); ++i)
+                {
+                    IBehaviour * behaviour = behaviours[i];
+                    if (behaviour->isEnabled())
+                        behaviour->OnTriggerStay(_other);
+                }
+            }
         }
     }
 
     //--------------------------------------------------------------------------------------
     void GameObject::OnTriggerExit(IGameObject * _other)
     {
-        //VG_INFO("[Physics] OnTriggerExit \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
-
-        const auto & behaviours = getBehaviours();
-        for (uint i = 0; i < behaviours.size(); ++i)
+        if (IsEnabledInHierarchy())
         {
-            IBehaviour * behaviour = behaviours[i];
-            behaviour->OnTriggerExit(_other);
+            //VG_INFO("[Physics] OnTriggerExit \"%s\" vs. \"%s\"", getName().c_str(), _other->getName().c_str());
+
+            const auto & behaviours = getBehaviours();
+            for (uint i = 0; i < behaviours.size(); ++i)
+            {
+                IBehaviour * behaviour = behaviours[i];
+                if (behaviour->isEnabled())
+                    behaviour->OnTriggerExit(_other);
+            }
         }
     }
 

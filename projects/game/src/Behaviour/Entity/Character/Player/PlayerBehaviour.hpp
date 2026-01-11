@@ -3,6 +3,7 @@
 #include "physics/IPhysics.h"
 #include "physics/IPhysicsOptions.h"
 #include "engine/IVehicleComponent.h"
+#include "Behaviour/Entity/Item/Vehicle/VehicleBehaviour.h"
 
 #if !VG_ENABLE_INLINE
 #include "PlayerBehaviour.inl"
@@ -664,6 +665,13 @@ bool PlayerBehaviour::enterVehicle(vg::core::IGameObject * _vehicleGameobject)
             enablePhysics(false);
         }
 
+        // set car owner if no owner
+        if (VehicleBehaviour * vehicleBehaviour = _vehicleGameobject->GetComponentT<VehicleBehaviour>())
+        {
+            if (vehicleBehaviour->GetOwner().empty())
+                vehicleBehaviour->SetOwner(GetGameObject());
+        }
+
         return true;
     }
 
@@ -722,6 +730,17 @@ bool PlayerBehaviour::exitVehicle(bool _teleport)
 
             m_moveState = MoveState::Idle;
             enablePhysics(true);
+
+            // no more owner
+            if (VehicleBehaviour * vehicleBehaviour = vehicleGO->GetComponentT<VehicleBehaviour>())
+            {
+                if (!vehicleBehaviour->GetOwner().empty())
+                {
+                    IGameObject * playerGO = GetGameObject();
+                    if (vehicleBehaviour->GetOwner().getObject() == playerGO)
+                        vehicleBehaviour->SetOwner(nullptr);
+                }
+            }
 
             if (vehicleComp->GetPassengerSlotType(m_vehicleSlot) == VehicleSlotType::Driver)
             {

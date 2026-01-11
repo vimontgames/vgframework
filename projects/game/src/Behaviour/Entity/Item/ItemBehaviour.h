@@ -23,9 +23,9 @@ public:
     virtual bool                            CanPick             () const;
 
     virtual CharacterBehaviour *            GetOwnerCharacter   () const;
+    virtual float                           GetDamage           () const;
+    virtual float                           GetPush             () const;
 
-    VG_INLINE float                         getDamage           () const;
-    VG_INLINE float                         getPush             () const;
     VG_INLINE ItemType                      getItemType         () const;
 
 private:

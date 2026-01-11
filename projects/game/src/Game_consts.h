@@ -8,6 +8,10 @@ vg_enum_class_global(CharacterType , vg::core::u8,
     Enemy
 );
 
+vg_enum_class_global(VehicleType, vg::core::u8,
+    Default = 0
+);
+
 vg_enum_class_global(MoveState, vg::core::u8,
     Idle = 0,
     Walk,
@@ -37,7 +41,8 @@ vg_enum_class_global(ItemType, vg::core::u8,
     Ball,
     Weapon,
     Projectile,
-    Chest
+    Chest,
+    Vehicle
 );
 
 vg_enum_class_global(BallType, vg::core::u8,
