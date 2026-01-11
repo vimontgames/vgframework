@@ -3,6 +3,7 @@
 #include "application/IGame.h"
 #include "core/Singleton/Singleton.h"
 #include "Game_consts.h"
+#include "core/Timer/Timer.h"
 
 namespace vg::core
 {
@@ -22,6 +23,14 @@ class EnemyBehaviour;
 class ItemBehaviour;
 class BallBehaviour;
 class WeaponBehaviour;
+
+struct PlayerInputInfo
+{
+    bool enabled = false;
+    vg::core::uint joyIndex;
+    vg::core::uint avatarIndex;
+    vg::core::Ticks lastInputTicks = 0;
+};
 
 class Game : public vg::IGame, public vg::core::Singleton<Game>
 {
@@ -64,9 +73,15 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
         const vg::core::vector<vg::engine::IVehicleComponent *> &   getVehicles         () const;
 
     private:
+        vg::core::IGameObject *                                     findMainMenu        () const;
+        void                                                        initMainMenu        ();
+
+    private:
         static vg::engine::IEngine *                                s_engine;
 
         vg::core::vector<CharacterBehaviour *>                      m_characters[vg::core::enumCount<CharacterType>()];
         vg::core::vector<ItemBehaviour *>                           m_items[vg::core::enumCount<ItemType>()];
         vg::core::vector<vg::engine::IVehicleComponent*>            m_vehicles;
+        GameState                                                   m_gameState = GameState::MainMenu;
+        vg::core::vector<PlayerInputInfo>                           m_playerInputs;
 };

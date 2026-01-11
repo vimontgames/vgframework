@@ -157,8 +157,8 @@
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
-                                <Property type="Float" name="m_damage" value="7.5"/>
-                                <Property type="Float" name="m_push" value="1.2"/>
+                                <Property type="Float" name="m_damage" value="10"/>
+                                <Property type="Float" name="m_push" value="1"/>
                                 <Property type="Float" name="m_velocityThreshold" value="2"/>
                             </Object>
                             <Object class="MeshComponent">
@@ -597,7 +597,7 @@
                                                         <Property type="Float" name="m_params.m_spawnRate" value="8"/>
                                                         <Property type="Float" name="m_params.m_lifeTime" value="1.5"/>
                                                         <Property type="Bool" name="m_params.m_neverDie" value="false"/>
-                                                        <Property type="Uint16" name="m_params.m_maxParticleCount" value="1000"/>
+                                                        <Property type="Uint16" name="m_params.m_maxParticleCount" value="128"/>
                                                         <Property type="EnumU8" name="m_params.m_sizeValueType" value="Curve"/>
                                                         <Property type="Float3" name="m_params.m_constantSize" x="0.25" y="0.25" z="0"/>
                                                         <Property type="Object" name="m_params.m_sizeOverLifeTime">

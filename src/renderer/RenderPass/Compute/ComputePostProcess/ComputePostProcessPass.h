@@ -17,6 +17,7 @@ namespace vg::renderer
 
     private:
         bool isDepthOfFieldEnabled(const IView * _view) const;
+        core::float4 getFadeColor(const IView * _view) const;
 
     private:
         gfx::RootSignatureHandle    m_computePostProcessRootSignature;

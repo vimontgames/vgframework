@@ -25,6 +25,7 @@ namespace vg::renderer
 
         bool                IsDepthOfFieldEnabled   () const final override;
         bool                IsMotionBlurEnabled     () const final override;
+        core::float4        GetFadeColor            () const final override;
 
     private:
         float               m_near          = 0.1f;
@@ -36,5 +37,7 @@ namespace vg::renderer
         float               m_aperture      = 4.0f;
         bool                m_depthOfField  = false;
         bool                m_motionBlur    = false;
+        bool                m_fade          = false;
+        core::float4        m_fadeColor     = core::float4(0,0,0,1);
     };
 }

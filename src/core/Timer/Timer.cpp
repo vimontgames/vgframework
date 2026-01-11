@@ -37,7 +37,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     double Timer::getEnlapsedTime(Ticks _start, Ticks _end)
     {
-        VG_ASSERT(s_oneOverFrequency != 0.0);
+        VG_ASSERT(s_oneOverFrequency != 0.0, "Timer has not been initialized");
         return double(_end - _start) * s_oneOverFrequency;
     }
 }

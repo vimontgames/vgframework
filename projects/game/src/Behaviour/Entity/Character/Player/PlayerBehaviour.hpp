@@ -78,6 +78,38 @@ void PlayerBehaviour::OnPlay()
 }
 
 //--------------------------------------------------------------------------------------
+void PlayerBehaviour::activate(vg::core::JoyID _input)
+{
+    VG_ASSERT(!m_isActive);
+
+    if (!m_isActive)
+    {
+        m_viewIndex = (u8)Game::get()->getActivePlayers().size();
+
+        m_controllerIndex = _input;
+    
+        enableVisual(true);
+        enablePhysics(true);
+        
+        if (auto * uiGO = m_UI.get<IGameObject>())
+        {
+            uiGO->SetInstanceFlags(InstanceFlags::Enabled, true);
+            if (auto * uiCanvasComponent = uiGO->GetComponentInChildrenT<IUICanvasComponent>())
+                uiCanvasComponent->SetViewIndex(m_viewIndex);
+        }
+    
+        m_isActive = true;
+    
+        // Update physics body with player flag
+        if (auto * physicsBody = GetGameObject()->GetComponentT<ICharacterControllerComponent>())
+        {
+            auto player1Cat = Game::get()->Engine().GetPhysics()->GetOptions()->GetPhysicsCategory("Player 1");
+            physicsBody->SetCategory((vg::physics::Category)((uint)player1Cat + m_viewIndex));
+        }
+    }
+}
+
+//--------------------------------------------------------------------------------------
 void PlayerBehaviour::OnStop()
 {
     m_rightHandItem = nullptr;
@@ -307,29 +339,29 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                 translation.xy += leftJoyDir.xy * float2(1, -1) * m_currentSpeed;
                 m_currentRotation = radiansToDegrees(atan2((float)leftJoyDir.x, (float)leftJoyDir.y));
 
-                if (!m_isActive)
-                {
-                    m_viewIndex = (u8)Game::get()->getActivePlayers().size();
-
-                    enableVisual(true);
-                    enablePhysics(true);
-                    
-                    if (auto * uiGO = m_UI.get<IGameObject>())
-                    {
-                        uiGO->SetInstanceFlags(InstanceFlags::Enabled, true);
-                        if (auto * uiCanvasComponent = uiGO->GetComponentInChildrenT<IUICanvasComponent>())
-                            uiCanvasComponent->SetViewIndex(m_viewIndex);
-                    }
-
-                    m_isActive = true;
-
-                    // Update physics body with player flag
-                    if (auto * physicsBody = playerGO->GetComponentT<ICharacterControllerComponent>())
-                    {
-                        auto player1Cat = Game::get()->Engine().GetPhysics()->GetOptions()->GetPhysicsCategory("Player 1");
-                        physicsBody->SetCategory((vg::physics::Category)((uint)player1Cat + m_viewIndex));
-                    }
-                }
+                //if (!m_isActive)
+                //{
+                //    m_viewIndex = (u8)Game::get()->getActivePlayers().size();
+                //
+                //    enableVisual(true);
+                //    enablePhysics(true);
+                //    
+                //    if (auto * uiGO = m_UI.get<IGameObject>())
+                //    {
+                //        uiGO->SetInstanceFlags(InstanceFlags::Enabled, true);
+                //        if (auto * uiCanvasComponent = uiGO->GetComponentInChildrenT<IUICanvasComponent>())
+                //            uiCanvasComponent->SetViewIndex(m_viewIndex);
+                //    }
+                //
+                //    m_isActive = true;
+                //
+                //    // Update physics body with player flag
+                //    if (auto * physicsBody = playerGO->GetComponentT<ICharacterControllerComponent>())
+                //    {
+                //        auto player1Cat = Game::get()->Engine().GetPhysics()->GetOptions()->GetPhysicsCategory("Player 1");
+                //        physicsBody->SetCategory((vg::physics::Category)((uint)player1Cat + m_viewIndex));
+                //    }
+                //}
             }
 
             if (any(abs(translation.xy) > 0.0f))

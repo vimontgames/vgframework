@@ -240,7 +240,7 @@ void CharacterBehaviour::playSound(SoundState _sound)
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::FixedUpdate(const Context & _context)
 {
-
+ 
 }
 
 //--------------------------------------------------------------------------------------

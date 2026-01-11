@@ -33,7 +33,7 @@ namespace vg::engine
         void                                SetSize         (const core::uint2 _size) override;
 
         core::float4                        GetColor        () const final override;
-        void                                SetColor        (const core::float4 & _color) final override;
+        void                                SetColor        (const core::float4 & _color) override; // must not be 'final override' so as not be stripped when used e.g. in game DLL
 
         VG_INLINE core::uint2               getSize         () const;
         VG_INLINE void                      setSize         (core::uint2 _size);

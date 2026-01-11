@@ -44,6 +44,7 @@ namespace vg::engine
             bool                        IsInputEnabled      (core::InputType _inputType) const override;
 
             bool                        Update              () { return true; };
+            const JoystickData &        getJoystickData     (core::JoyID _joyID) const;
 
         protected:
             const core::WinHandle &     m_appHandle;

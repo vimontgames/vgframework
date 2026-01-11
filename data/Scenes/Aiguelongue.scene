@@ -20,7 +20,7 @@
                         <Property type="String" name="m_name" value="Cameras"/>
                         <Property type="Uint32" name="m_uid" value="114612410"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="24" Ty="0" Tz="0" Tw="1"/>
@@ -195,13 +195,708 @@
                         <Property type="String" name="m_name" value="UI"/>
                         <Property type="Uint32" name="m_uid" value="1177627180"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
                         <Property type="EnumFlagsU64" name="m_tags" value=""/>
                         <Property type="ObjectPtrVector" name="m_components"/>
                         <Property type="ObjectPtrVector" name="m_children">
+                            <Object class="GameObject">
+                                <Property type="String" name="m_name" value="Main Menu"/>
+                                <Property type="Uint32" name="m_uid" value="1630015003"/>
+                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                <Property type="ObjectPtrVector" name="m_components"/>
+                                <Property type="ObjectPtrVector" name="m_children">
+                                    <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Camera"/>
+                                        <Property type="Uint32" name="m_uid" value="1165719512"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="0" Jz="1.0000001" Jw="0" Kx="0" Ky="-1.0000001" Kz="0" Kw="0" Tx="21" Ty="4.5" Tz="1.5" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components">
+                                            <Object class="CameraComponent">
+                                                <Property type="String" name="m_name" value="New CameraComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2449554397"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU8" name="m_target" value="Game"/>
+                                                <Property type="Uint8" name="m_viewportIndex" value="0"/>
+                                                <Property type="Uint8" name="m_viewIndex" value="0"/>
+                                                <Property type="Float2" name="m_viewportOffset" x="0" y="0"/>
+                                                <Property type="Float2" name="m_viewportScale" x="1" y="1"/>
+                                                <Property type="ObjectPtr" name="m_cameraSettings">
+                                                    <Object class="CameraSettings">
+                                                        <Property type="String" name="m_name" value="CameraSettings #8"/>
+                                                        <Property type="Uint32" name="m_uid" value="2391258638"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="Float" name="m_near" value="0.1"/>
+                                                        <Property type="Float" name="m_far" value="1000"/>
+                                                        <Property type="ResourcePtr" name="m_lensRes">
+                                                            <Object class="LensResource">
+                                                                <Property type="String" name="m_name" value="LensResource #8"/>
+                                                                <Property type="Uint32" name="m_uid" value="3023348031"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                <Property type="String" name="m_resourcePath" value="data/Lens/CanonRF24-70mmf2.8.lens"/>
+                                                                <Property type="ObjectPtr" name="m_cameraLens"/>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="Float" name="m_focalLength" value="24"/>
+                                                        <Property type="Float" name="m_focusDistance" value="3.2977996"/>
+                                                        <Property type="Float" name="m_aperture" value="2.8"/>
+                                                        <Property type="EnumU8" name="m_gateFitMode" value="Vertical"/>
+                                                        <Property type="Bool" name="m_depthOfField" value="true"/>
+                                                        <Property type="Bool" name="m_motionBlur" value="false"/>
+                                                        <Property type="Bool" name="m_fade" value="true"/>
+                                                        <Property type="Float4" name="m_fadeColor" x="0" y="0" z="0" w="0.98039216"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                    </Object>
+                                    <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Options"/>
+                                        <Property type="Uint32" name="m_uid" value="1371082156"/>
+                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="-150" Tz="0" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components">
+                                            <Object class="UICanvasComponent">
+                                                <Property type="String" name="m_name" value="New UICanvasComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="1681900730"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU8" name="m_horizontal" value="Center"/>
+                                                <Property type="EnumU8" name="m_vertical" value="Bottom"/>
+                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="AutoResize|ResolutionScalingY"/>
+                                                <Property type="Uint2" name="m_size" x="512" y="256"/>
+                                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                <Property type="Bool" name="m_useOffset" value="false"/>
+                                                <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                <Property type="Bool" name="m_useColor" value="false"/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="EnumU8" name="m_canvas.m_viewportTarget" value="Game"/>
+                                                <Property type="Uint8" name="m_canvas.m_viewportIndex" value="0"/>
+                                                <Property type="Bool" name="m_canvas.m_useViewMask" value="false"/>
+                                                <Property type="EnumFlagsU32" name="m_canvas.m_viewMask" value="View_0|View_1|View_2|View_3|View_4|View_5|View_6|View_7|View_8|View_9|View_10|View_11|View_12|View_13|View_14|View_15"/>
+                                                <Property type="Uint2" name="m_canvas.m_resolution" x="1280" y="720"/>
+                                                <Property type="EnumU8" name="m_canvas.m_canvasType" value="CanvasType_2D"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_children">
+                                            <Object class="GameObject">
+                                                <Property type="String" name="m_name" value="Logo"/>
+                                                <Property type="Uint32" name="m_uid" value="2942462589"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_components">
+                                                    <Object class="UITextComponent">
+                                                        <Property type="String" name="m_name" value="New UITextComponent"/>
+                                                        <Property type="Uint32" name="m_uid" value="2272249799"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                        <Property type="EnumU8" name="m_horizontal" value="Center"/>
+                                                        <Property type="EnumU8" name="m_vertical" value="Center"/>
+                                                        <Property type="EnumFlagsU32" name="m_UIFlags" value="AutoResize|KeepAspectRatio|ResolutionScalingX|ResolutionScalingY"/>
+                                                        <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useCenter" value="false"/>
+                                                        <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                        <Property type="Bool" name="m_useOffset" value="true"/>
+                                                        <Property type="Float3" name="m_offset" x="0" y="-350" z="0"/>
+                                                        <Property type="Bool" name="m_useColor" value="false"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="EnumU8" name="m_font" value="RubikMonoOne"/>
+                                                        <Property type="EnumU8" name="m_style" value="Regular"/>
+                                                        <Property type="Uint16" name="m_fontSize" value="80"/>
+                                                        <Property type="String" name="m_text" value="Super VGF 3D"/>
+                                                    </Object>
+                                                </Property>
+                                                <Property type="ObjectPtrVector" name="m_children"/>
+                                            </Object>
+                                            <Object class="GameObject">
+                                                <Property type="String" name="m_name" value="Options Title"/>
+                                                <Property type="Uint32" name="m_uid" value="4144577011"/>
+                                                <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_flags" value=""/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_components">
+                                                    <Object class="UITextComponent">
+                                                        <Property type="String" name="m_name" value="New UITextComponent"/>
+                                                        <Property type="Uint32" name="m_uid" value="290249729"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                        <Property type="EnumU8" name="m_horizontal" value="Center"/>
+                                                        <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                        <Property type="EnumFlagsU32" name="m_UIFlags" value="AutoResize|ResolutionScalingY"/>
+                                                        <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useCenter" value="false"/>
+                                                        <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                        <Property type="Bool" name="m_useOffset" value="false"/>
+                                                        <Property type="Float3" name="m_offset" x="0" y="0" z="0"/>
+                                                        <Property type="Bool" name="m_useColor" value="false"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="EnumU8" name="m_font" value="RubikMonoOne"/>
+                                                        <Property type="EnumU8" name="m_style" value="Regular"/>
+                                                        <Property type="Uint16" name="m_fontSize" value="32"/>
+                                                        <Property type="String" name="m_text" value="Options"/>
+                                                    </Object>
+                                                </Property>
+                                                <Property type="ObjectPtrVector" name="m_children"/>
+                                            </Object>
+                                            <Object class="GameObject">
+                                                <Property type="String" name="m_name" value="Select Player 1"/>
+                                                <Property type="Uint32" name="m_uid" value="1255165015"/>
+                                                <Property type="Uint32" name="m_originalUID" value="2626619370"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_components">
+                                                    <Object class="UITextComponent">
+                                                        <Property type="String" name="m_name" value="New UITextComponent"/>
+                                                        <Property type="Uint32" name="m_uid" value="2841865421"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="0"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                        <Property type="EnumU8" name="m_horizontal" value="Left"/>
+                                                        <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                        <Property type="EnumFlagsU32" name="m_UIFlags" value="AutoResize|ResolutionScalingX|ResolutionScalingY"/>
+                                                        <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useCenter" value="false"/>
+                                                        <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                        <Property type="Bool" name="m_useOffset" value="true"/>
+                                                        <Property type="Float3" name="m_offset" x="0" y="50" z="0"/>
+                                                        <Property type="Bool" name="m_useColor" value="false"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="EnumU8" name="m_font" value="RubikMonoOne"/>
+                                                        <Property type="EnumU8" name="m_style" value="Regular"/>
+                                                        <Property type="Uint16" name="m_fontSize" value="28"/>
+                                                        <Property type="String" name="m_text" value="Joypad 1"/>
+                                                    </Object>
+                                                </Property>
+                                                <Property type="ObjectPtrVector" name="m_children">
+                                                    <Object class="GameObject">
+                                                        <Property type="String" name="m_name" value="Pablo"/>
+                                                        <Property type="Uint32" name="m_uid" value="2592275928"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="635048553"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_components">
+                                                            <Object class="UIImageComponent">
+                                                                <Property type="String" name="m_name" value="New UIImageComponent"/>
+                                                                <Property type="Uint32" name="m_uid" value="2926651311"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="3549469223"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                                <Property type="EnumU8" name="m_horizontal" value="Right"/>
+                                                                <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="KeepAspectRatio|ResolutionScalingX|ResolutionScalingY"/>
+                                                                <Property type="Uint2" name="m_size" x="28" y="28"/>
+                                                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                                <Property type="Bool" name="m_useOffset" value="true"/>
+                                                                <Property type="Float3" name="m_offset" x="0" y="50" z="0"/>
+                                                                <Property type="Bool" name="m_useColor" value="false"/>
+                                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                                <Property type="Resource" name="m_image">
+                                                                    <Object class="TextureResource">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="1007404129"/>
+                                                                        <Property type="Uint32" name="m_originalUID" value="384749719"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="String" name="m_resourcePath" value="data/Textures/Pablo/Pablo_Logo.png"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                                    </Object>
+                                                    <Object class="GameObject">
+                                                        <Property type="String" name="m_name" value="Romeo"/>
+                                                        <Property type="Uint32" name="m_uid" value="1796417092"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="2530208753"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_components">
+                                                            <Object class="UIImageComponent">
+                                                                <Property type="String" name="m_name" value="New UIImageComponent"/>
+                                                                <Property type="Uint32" name="m_uid" value="4157567650"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="3163624155"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                                <Property type="EnumU8" name="m_horizontal" value="Right"/>
+                                                                <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="KeepAspectRatio|ResolutionScalingX|ResolutionScalingY"/>
+                                                                <Property type="Uint2" name="m_size" x="28" y="28"/>
+                                                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                                <Property type="Bool" name="m_useOffset" value="true"/>
+                                                                <Property type="Float3" name="m_offset" x="0" y="50" z="0"/>
+                                                                <Property type="Bool" name="m_useColor" value="false"/>
+                                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                                <Property type="Resource" name="m_image">
+                                                                    <Object class="TextureResource">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="182742781"/>
+                                                                        <Property type="Uint32" name="m_originalUID" value="3208721081"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="String" name="m_resourcePath" value="data/Textures/Romeo/Romeo_Logo.png"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                                    </Object>
+                                                    <Object class="GameObject">
+                                                        <Property type="String" name="m_name" value="Benualdo"/>
+                                                        <Property type="Uint32" name="m_uid" value="818123645"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="1371346796"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_components">
+                                                            <Object class="UIImageComponent">
+                                                                <Property type="String" name="m_name" value="New UIImageComponent"/>
+                                                                <Property type="Uint32" name="m_uid" value="4271310613"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="1285630604"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                                <Property type="EnumU8" name="m_horizontal" value="Right"/>
+                                                                <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="KeepAspectRatio|ResolutionScalingX|ResolutionScalingY"/>
+                                                                <Property type="Uint2" name="m_size" x="28" y="28"/>
+                                                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                                <Property type="Bool" name="m_useOffset" value="true"/>
+                                                                <Property type="Float3" name="m_offset" x="0" y="50" z="0"/>
+                                                                <Property type="Bool" name="m_useColor" value="false"/>
+                                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                                <Property type="Resource" name="m_image">
+                                                                    <Object class="TextureResource">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="2135858263"/>
+                                                                        <Property type="Uint32" name="m_originalUID" value="1104877037"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="String" name="m_resourcePath" value="data/Textures/Benualdo/Benualdo_Logo.png"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                            <Object class="GameObject">
+                                                <Property type="String" name="m_name" value="Select Player 2"/>
+                                                <Property type="Uint32" name="m_uid" value="1348050099"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1255165015"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_components">
+                                                    <Object class="UITextComponent">
+                                                        <Property type="String" name="m_name" value="New UITextComponent"/>
+                                                        <Property type="Uint32" name="m_uid" value="4004336677"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="2841865421"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                        <Property type="EnumU8" name="m_horizontal" value="Left"/>
+                                                        <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                        <Property type="EnumFlagsU32" name="m_UIFlags" value="AutoResize|ResolutionScalingY"/>
+                                                        <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useCenter" value="false"/>
+                                                        <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                        <Property type="Bool" name="m_useOffset" value="true"/>
+                                                        <Property type="Float3" name="m_offset" x="0" y="100" z="0"/>
+                                                        <Property type="Bool" name="m_useColor" value="false"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="EnumU8" name="m_font" value="RubikMonoOne"/>
+                                                        <Property type="EnumU8" name="m_style" value="Regular"/>
+                                                        <Property type="Uint16" name="m_fontSize" value="28"/>
+                                                        <Property type="String" name="m_text" value="Joypad 2"/>
+                                                    </Object>
+                                                </Property>
+                                                <Property type="ObjectPtrVector" name="m_children">
+                                                    <Object class="GameObject">
+                                                        <Property type="String" name="m_name" value="Pablo"/>
+                                                        <Property type="Uint32" name="m_uid" value="1243717145"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="2592275928"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_components">
+                                                            <Object class="UIImageComponent">
+                                                                <Property type="String" name="m_name" value="New UIImageComponent"/>
+                                                                <Property type="Uint32" name="m_uid" value="1477396406"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="2926651311"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                                <Property type="EnumU8" name="m_horizontal" value="Right"/>
+                                                                <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="KeepAspectRatio|ResolutionScalingX|ResolutionScalingY"/>
+                                                                <Property type="Uint2" name="m_size" x="28" y="28"/>
+                                                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                                <Property type="Bool" name="m_useOffset" value="true"/>
+                                                                <Property type="Float3" name="m_offset" x="0" y="100" z="0"/>
+                                                                <Property type="Bool" name="m_useColor" value="false"/>
+                                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                                <Property type="Resource" name="m_image">
+                                                                    <Object class="TextureResource">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="3516145871"/>
+                                                                        <Property type="Uint32" name="m_originalUID" value="1007404129"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="String" name="m_resourcePath" value="data/Textures/Pablo/Pablo_Logo.png"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                                    </Object>
+                                                    <Object class="GameObject">
+                                                        <Property type="String" name="m_name" value="Romeo"/>
+                                                        <Property type="Uint32" name="m_uid" value="2968447107"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="1796417092"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_components">
+                                                            <Object class="UIImageComponent">
+                                                                <Property type="String" name="m_name" value="New UIImageComponent"/>
+                                                                <Property type="Uint32" name="m_uid" value="3001215856"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="4157567650"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                                <Property type="EnumU8" name="m_horizontal" value="Right"/>
+                                                                <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="KeepAspectRatio|ResolutionScalingX|ResolutionScalingY"/>
+                                                                <Property type="Uint2" name="m_size" x="28" y="28"/>
+                                                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                                <Property type="Bool" name="m_useOffset" value="true"/>
+                                                                <Property type="Float3" name="m_offset" x="0" y="100" z="0"/>
+                                                                <Property type="Bool" name="m_useColor" value="false"/>
+                                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                                <Property type="Resource" name="m_image">
+                                                                    <Object class="TextureResource">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="1744815224"/>
+                                                                        <Property type="Uint32" name="m_originalUID" value="182742781"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="String" name="m_resourcePath" value="data/Textures/Romeo/Romeo_Logo.png"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                                    </Object>
+                                                    <Object class="GameObject">
+                                                        <Property type="String" name="m_name" value="Benualdo"/>
+                                                        <Property type="Uint32" name="m_uid" value="3681544249"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="818123645"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_components">
+                                                            <Object class="UIImageComponent">
+                                                                <Property type="String" name="m_name" value="New UIImageComponent"/>
+                                                                <Property type="Uint32" name="m_uid" value="1714412261"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="4271310613"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                                <Property type="EnumU8" name="m_horizontal" value="Right"/>
+                                                                <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="KeepAspectRatio|ResolutionScalingX|ResolutionScalingY"/>
+                                                                <Property type="Uint2" name="m_size" x="28" y="28"/>
+                                                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                                <Property type="Bool" name="m_useOffset" value="true"/>
+                                                                <Property type="Float3" name="m_offset" x="0" y="100" z="0"/>
+                                                                <Property type="Bool" name="m_useColor" value="false"/>
+                                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                                <Property type="Resource" name="m_image">
+                                                                    <Object class="TextureResource">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="3715596308"/>
+                                                                        <Property type="Uint32" name="m_originalUID" value="2135858263"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="String" name="m_resourcePath" value="data/Textures/Benualdo/Benualdo_Logo.png"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                            <Object class="GameObject">
+                                                <Property type="String" name="m_name" value="Select Player 3"/>
+                                                <Property type="Uint32" name="m_uid" value="495976874"/>
+                                                <Property type="Uint32" name="m_originalUID" value="1348050099"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_components">
+                                                    <Object class="UITextComponent">
+                                                        <Property type="String" name="m_name" value="New UITextComponent"/>
+                                                        <Property type="Uint32" name="m_uid" value="3672579438"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="4004336677"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                        <Property type="EnumU8" name="m_horizontal" value="Left"/>
+                                                        <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                        <Property type="EnumFlagsU32" name="m_UIFlags" value="AutoResize|ResolutionScalingX|ResolutionScalingY"/>
+                                                        <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useCenter" value="false"/>
+                                                        <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                        <Property type="Bool" name="m_useOffset" value="true"/>
+                                                        <Property type="Float3" name="m_offset" x="0" y="150" z="0"/>
+                                                        <Property type="Bool" name="m_useColor" value="false"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="EnumU8" name="m_font" value="RubikMonoOne"/>
+                                                        <Property type="EnumU8" name="m_style" value="Regular"/>
+                                                        <Property type="Uint16" name="m_fontSize" value="28"/>
+                                                        <Property type="String" name="m_text" value="Joypad 3"/>
+                                                    </Object>
+                                                </Property>
+                                                <Property type="ObjectPtrVector" name="m_children">
+                                                    <Object class="GameObject">
+                                                        <Property type="String" name="m_name" value="Pablo"/>
+                                                        <Property type="Uint32" name="m_uid" value="2325110192"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="1243717145"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_components">
+                                                            <Object class="UIImageComponent">
+                                                                <Property type="String" name="m_name" value="New UIImageComponent"/>
+                                                                <Property type="Uint32" name="m_uid" value="3845769343"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="1477396406"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                                <Property type="EnumU8" name="m_horizontal" value="Right"/>
+                                                                <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="KeepAspectRatio|ResolutionScalingX|ResolutionScalingY"/>
+                                                                <Property type="Uint2" name="m_size" x="28" y="28"/>
+                                                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                                <Property type="Bool" name="m_useOffset" value="true"/>
+                                                                <Property type="Float3" name="m_offset" x="0" y="150" z="0"/>
+                                                                <Property type="Bool" name="m_useColor" value="false"/>
+                                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                                <Property type="Resource" name="m_image">
+                                                                    <Object class="TextureResource">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="3272480749"/>
+                                                                        <Property type="Uint32" name="m_originalUID" value="3516145871"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="String" name="m_resourcePath" value="data/Textures/Pablo/Pablo_Logo.png"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                                    </Object>
+                                                    <Object class="GameObject">
+                                                        <Property type="String" name="m_name" value="Romeo"/>
+                                                        <Property type="Uint32" name="m_uid" value="4018058307"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="2968447107"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_components">
+                                                            <Object class="UIImageComponent">
+                                                                <Property type="String" name="m_name" value="New UIImageComponent"/>
+                                                                <Property type="Uint32" name="m_uid" value="295364011"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="3001215856"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                                <Property type="EnumU8" name="m_horizontal" value="Right"/>
+                                                                <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="KeepAspectRatio|ResolutionScalingX|ResolutionScalingY"/>
+                                                                <Property type="Uint2" name="m_size" x="28" y="28"/>
+                                                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                                <Property type="Bool" name="m_useOffset" value="true"/>
+                                                                <Property type="Float3" name="m_offset" x="0" y="150" z="0"/>
+                                                                <Property type="Bool" name="m_useColor" value="false"/>
+                                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                                <Property type="Resource" name="m_image">
+                                                                    <Object class="TextureResource">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="3942280116"/>
+                                                                        <Property type="Uint32" name="m_originalUID" value="1744815224"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="String" name="m_resourcePath" value="data/Textures/Romeo/Romeo_Logo.png"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                                    </Object>
+                                                    <Object class="GameObject">
+                                                        <Property type="String" name="m_name" value="Benualdo"/>
+                                                        <Property type="Uint32" name="m_uid" value="2264979144"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="3681544249"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                        <Property type="ObjectPtrVector" name="m_components">
+                                                            <Object class="UIImageComponent">
+                                                                <Property type="String" name="m_name" value="New UIImageComponent"/>
+                                                                <Property type="Uint32" name="m_uid" value="2205893090"/>
+                                                                <Property type="Uint32" name="m_originalUID" value="1714412261"/>
+                                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                                <Property type="EnumU8" name="m_horizontal" value="Right"/>
+                                                                <Property type="EnumU8" name="m_vertical" value="Top"/>
+                                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="KeepAspectRatio|ResolutionScalingX|ResolutionScalingY"/>
+                                                                <Property type="Uint2" name="m_size" x="28" y="28"/>
+                                                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                                <Property type="Bool" name="m_useOffset" value="true"/>
+                                                                <Property type="Float3" name="m_offset" x="0" y="150" z="0"/>
+                                                                <Property type="Bool" name="m_useColor" value="false"/>
+                                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                                <Property type="Resource" name="m_image">
+                                                                    <Object class="TextureResource">
+                                                                        <Property type="String" name="m_name" value=""/>
+                                                                        <Property type="Uint32" name="m_uid" value="1762075875"/>
+                                                                        <Property type="Uint32" name="m_originalUID" value="3715596308"/>
+                                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                                                        <Property type="String" name="m_resourcePath" value="data/Textures/Benualdo/Benualdo_Logo.png"/>
+                                                                    </Object>
+                                                                </Property>
+                                                            </Object>
+                                                        </Property>
+                                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                                    </Object>
+                                                </Property>
+                                            </Object>
+                                            <Object class="GameObject">
+                                                <Property type="String" name="m_name" value="Press Start"/>
+                                                <Property type="Uint32" name="m_uid" value="772015258"/>
+                                                <Property type="Uint32" name="m_originalUID" value="4144577011"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                                <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                                <Property type="ObjectPtrVector" name="m_components">
+                                                    <Object class="UITextComponent">
+                                                        <Property type="String" name="m_name" value="New UITextComponent"/>
+                                                        <Property type="Uint32" name="m_uid" value="1664001170"/>
+                                                        <Property type="Uint32" name="m_originalUID" value="290249729"/>
+                                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                        <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                        <Property type="EnumU8" name="m_horizontal" value="Center"/>
+                                                        <Property type="EnumU8" name="m_vertical" value="Center"/>
+                                                        <Property type="EnumFlagsU32" name="m_UIFlags" value="AutoResize|ResolutionScalingX|ResolutionScalingY"/>
+                                                        <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                        <Property type="Bool" name="m_useCenter" value="false"/>
+                                                        <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                        <Property type="Bool" name="m_useOffset" value="true"/>
+                                                        <Property type="Float3" name="m_offset" x="0" y="128" z="0"/>
+                                                        <Property type="Bool" name="m_useColor" value="false"/>
+                                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                        <Property type="EnumU8" name="m_font" value="RubikMonoOne"/>
+                                                        <Property type="EnumU8" name="m_style" value="Regular"/>
+                                                        <Property type="Uint16" name="m_fontSize" value="48"/>
+                                                        <Property type="String" name="m_text" value="Press Start"/>
+                                                    </Object>
+                                                </Property>
+                                                <Property type="ObjectPtrVector" name="m_children"/>
+                                            </Object>
+                                        </Property>
+                                    </Object>
+                                    <Object class="GameObject">
+                                        <Property type="String" name="m_name" value="Copyright"/>
+                                        <Property type="Uint32" name="m_uid" value="105235397"/>
+                                        <Property type="Uint32" name="m_originalUID" value="4144577011"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
+                                        <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                        <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="0" Ty="0" Tz="0" Tw="1"/>
+                                        <Property type="EnumFlagsU64" name="m_tags" value=""/>
+                                        <Property type="ObjectPtrVector" name="m_components">
+                                            <Object class="UITextComponent">
+                                                <Property type="String" name="m_name" value="New UITextComponent"/>
+                                                <Property type="Uint32" name="m_uid" value="2652176819"/>
+                                                <Property type="Uint32" name="m_originalUID" value="290249729"/>
+                                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                                <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
+                                                <Property type="EnumU8" name="m_horizontal" value="Center"/>
+                                                <Property type="EnumU8" name="m_vertical" value="Bottom"/>
+                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="AutoResize|ResolutionScalingY"/>
+                                                <Property type="Uint2" name="m_size" x="16" y="16"/>
+                                                <Property type="Bool" name="m_useCenter" value="false"/>
+                                                <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
+                                                <Property type="Bool" name="m_useOffset" value="true"/>
+                                                <Property type="Float3" name="m_offset" x="0" y="-16" z="0"/>
+                                                <Property type="Bool" name="m_useColor" value="true"/>
+                                                <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
+                                                <Property type="EnumU8" name="m_font" value="RubikMonoOne"/>
+                                                <Property type="EnumU8" name="m_style" value="Regular"/>
+                                                <Property type="Uint16" name="m_fontSize" value="16"/>
+                                                <Property type="String" name="m_text" value="VimontGames 2026"/>
+                                            </Object>
+                                        </Property>
+                                        <Property type="ObjectPtrVector" name="m_children"/>
+                                    </Object>
+                                </Property>
+                            </Object>
                             <Object class="PrefabGameObject">
                                 <Property type="String" name="m_name" value="EngineStats"/>
                                 <Property type="Uint32" name="m_uid" value="3850269514"/>
@@ -937,9 +1632,9 @@
                                         <Property type="ObjectPtrVector" name="m_children"/>
                                         <Property type="Resource" name="m_prefabResource">
                                             <Object class="PrefabResource">
-                                                <Property type="String" name="m_name" value=""/>
+                                                <Property type="String" name="m_name" value="New MeshComponent"/>
                                                 <Property type="Uint32" name="m_uid" value="998144280"/>
-                                                <Property type="Uint32" name="m_originalUID" value="3813273894"/>
+                                                <Property type="Uint32" name="m_originalUID" value="3933547072"/>
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="String" name="m_resourcePath" value="data/Prefabs/Billboard.prefab"/>
                                             </Object>
@@ -20014,7 +20709,7 @@
                                         <Property type="String" name="m_name" value="Lime Compact"/>
                                         <Property type="Uint32" name="m_uid" value="2080433658"/>
                                         <Property type="Uint32" name="m_originalUID" value="675889991"/>
-                                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                         <Property type="Float4x4" name="m_local" Ix="-0.00059807301" Iy="-1" Iz="0" Iw="0" Jx="1" Jy="-0.00059807301" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-24" Ty="-11" Tz="0.5" Tw="1"/>
@@ -20446,7 +21141,7 @@
                                 <Property type="String" name="m_name" value="Sport Purple"/>
                                 <Property type="Uint32" name="m_uid" value="339664842"/>
                                 <Property type="Uint32" name="m_originalUID" value="2095435835"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                                 <Property type="Float4x4" name="m_local" Ix="9.3375363e-08" Iy="-0.99999994" Iz="-0.00034528971" Iw="0" Jx="1" Jy="-2.5833941e-08" Jz="0" Jw="0" Kx="-2.1647059e-12" Ky="-0.00034528971" Kz="0.99999988" Kw="0" Tx="-17.799999" Ty="-11.2" Tz="0.30000001" Tw="1"/>
@@ -20574,7 +21269,7 @@
                         <Property type="String" name="m_name" value="Players"/>
                         <Property type="Uint32" name="m_uid" value="2277101686"/>
                         <Property type="Uint32" name="m_originalUID" value="0"/>
-                        <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                        <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                         <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                         <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
                         <Property type="Float4x4" name="m_local" Ix="-1.1920929e-07" Iy="1.0000001" Iz="0" Iw="0" Jx="-1.0000001" Jy="-1.1920929e-07" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="18" Ty="1" Tz="0" Tw="1"/>
@@ -20615,14 +21310,6 @@
                                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                                 <Property type="Bool" name="m_enable" value="true"/>
                                                 <Property type="ObjectHandle" name="m_value" value="1287416559"/>
-                                            </Object>
-                                            <Object class="DynamicPropertyObjectHandle">
-                                                <Property type="String" name="m_name" value="m_UI"/>
-                                                <Property type="Uint32" name="m_uid" value="4286444077"/>
-                                                <Property type="Uint32" name="m_originalUID" value="0"/>
-                                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                                <Property type="Bool" name="m_enable" value="true"/>
-                                                <Property type="ObjectHandle" name="m_value" value="2851015787"/>
                                             </Object>
                                         </Property>
                                     </Object>
@@ -21292,7 +21979,7 @@
                                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                                 <Property type="EnumFlagsU16" name="m_flags" value="Enabled"/>
                                 <Property type="Float4" name="m_color" x="1" y="1" z="1" w="1"/>
-                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-5" Ty="8.5" Tz="0.5" Tw="1"/>
+                                <Property type="Float4x4" name="m_local" Ix="1" Iy="0" Iz="0" Iw="0" Jx="0" Jy="1" Jz="0" Jw="0" Kx="0" Ky="0" Kz="1" Kw="0" Tx="-4.5" Ty="8.5" Tz="0.5" Tw="1"/>
                                 <Property type="EnumFlagsU64" name="m_tags" value=""/>
                                 <Property type="ObjectPtrVector" name="m_components"/>
                                 <Property type="ObjectPtrVector" name="m_children"/>

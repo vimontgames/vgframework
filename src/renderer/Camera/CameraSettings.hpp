@@ -75,6 +75,8 @@ namespace vg::renderer
         {
             registerProperty(CameraSettings, m_depthOfField, "Depth-of-field");
             registerPropertyEx(CameraSettings, m_motionBlur, "Motion blur", PropertyFlags::ReadOnly);
+
+            registerOptionalPropertyEx(CameraSettings, m_fade, m_fadeColor, "Fade", PropertyFlags::Color);
         }
         registerPropertyGroupEnd(CameraComponent);
 
@@ -167,6 +169,15 @@ namespace vg::renderer
     bool CameraSettings::IsMotionBlurEnabled() const
     {
         return m_motionBlur;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::float4 CameraSettings::GetFadeColor() const
+    {
+        if (m_fade)
+            return m_fadeColor;
+        else
+            return float4(0,0,0, 0);
     }
 }
 

@@ -539,6 +539,9 @@ void CS_PostProcessMain(int2 dispatchThreadID : SV_DispatchThreadID)
         }
 
         #endif // _TOOLMODE
+        
+        float4 fadeColor = postProcessConstants.getFadeColor();
+        color.rgb = lerp(color.rgb, fadeColor.rgb, fadeColor.a);
 
         getRWTexture2D(postProcessConstants.getRWBufferOut())[coords] = color;
     }

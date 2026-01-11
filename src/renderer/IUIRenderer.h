@@ -15,21 +15,23 @@ namespace vg::renderer
     enum class FontStyle : core::u8;
     using PickingID = core::uint;
 
-    vg_enum_class(vg::renderer,  HorizontalAligment , core::u8,
+    vg_enum_class(vg::renderer,  HorizontalAligment, core::u8,
         Left,
         Center,
         Right
     );
 
-    vg_enum_class(vg::renderer, VerticalAligment , core::u8,
+    vg_enum_class(vg::renderer, VerticalAligment, core::u8,
         Top,
         Center,
         Bottom
     );
 
-    vg_enum_class(vg::renderer, UIItemFlags , core::u32,
-        AutoResize      = 0x00000001,
-        KeepAspectRatio = 0x00000002
+    vg_enum_class(vg::renderer, UIItemFlags, core::u32,
+        AutoResize          = 0x00000001,   // Resize element to fit contents
+        KeepAspectRatio     = 0x00000002,   // Preserve element aspect ratio
+        ResolutionScalingX  = 0x00000004,   // Scale element according to horizontal screen resolution
+        ResolutionScalingY  = 0x00000008    // Scale element according to vertical screen resolution
     );    
 
     vg_enum_class(vg::renderer, CanvasType, core::u8,

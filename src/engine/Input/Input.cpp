@@ -41,6 +41,13 @@ namespace vg::engine
         {
             return 0 != (m_inputTypes & (1 << (uint)_inputType));
         }
+
+        //--------------------------------------------------------------------------------------
+        const JoystickData & Input::getJoystickData(core::JoyID _joyID) const
+        {
+            VG_ASSERT(_joyID < m_joystickData.size(), "Joystick %u is not plugged", _joyID);
+            return m_joystickData[_joyID];
+        }
     }
 
     //--------------------------------------------------------------------------------------

@@ -102,7 +102,12 @@ namespace vg::renderer
 
         auto * imGuiAdapter = Renderer::get()->GetImGuiAdapter();
         const RendererOptions * options = RendererOptions::get();
+
+        #ifdef VG_FINAL
+        const bool debugUI = false;
+        #else
         const bool debugUI = options->isDebugUIEnabled();
+        #endif
 
         const uint2 size = getSize();
         const float2 scale = getScale();
@@ -173,6 +178,8 @@ namespace vg::renderer
             UICanvas canvas;
             float4 worldPos = (float4)0.0f;
 
+            float2 resolutionScaling = float2(1, 1);
+
             if (elem.m_canvas)
             {
                 canvas = *elem.m_canvas;
@@ -185,6 +192,8 @@ namespace vg::renderer
                     worldPos.xy *= viewSizeInPixels.xy; 
                     //VG_INFO("[UI] worldPos = (%.2f, %.2f)", (float)worldPos.x, (float)worldPos.y);
                 }
+
+                
             }
             else
             {
@@ -194,12 +203,19 @@ namespace vg::renderer
                 canvas.m_alignY = VerticalAligment::Center;
             }
 
+            if (elem.m_canvas && asBool(UIItemFlags::ResolutionScalingX & elem.m_item.m_flags))
+                resolutionScaling.x = screenSizeInPixels.x / (float)elem.m_canvas->m_resolution.x;
+
+            if (elem.m_canvas && asBool(UIItemFlags::ResolutionScalingY & elem.m_item.m_flags))
+                resolutionScaling.y = screenSizeInPixels.y / (float)elem.m_canvas->m_resolution.y;
+
             // Compute Canvas Rect
             float2 canvasSizeInPixel = (float2)canvas.m_size;
-            if (asBool(canvas.m_flags & UIItemFlags::AutoResize))
-            {
-                canvasSizeInPixel = (float2)canvas.m_size * viewSizeInPixels / (float2)canvas.m_resolution;
-            }                
+            if (asBool(canvas.m_flags & UIItemFlags::ResolutionScalingX))
+                canvasSizeInPixel.x = (float)canvas.m_size.x * viewSizeInPixels.x / (float)canvas.m_resolution.x;
+
+            if (asBool(canvas.m_flags & UIItemFlags::ResolutionScalingY))
+                canvasSizeInPixel.y = (float)canvas.m_size.y * viewSizeInPixels.y / (float)canvas.m_resolution.y;
 
             float2 winOffset = ImVec2ToFloat2(GImGui->CurrentWindow->Pos) + windowOffset;
             float2 canvasOffset = (float2)0.0f;
@@ -264,13 +280,16 @@ namespace vg::renderer
                 continue;
             }
 
-            float2 elemSize = elem.m_item.m_size;
-            float2 elemPos = canvasOffset + elem.m_item.m_offset.xy;
+            float2 elemSize = elem.m_item.m_size * resolutionScaling.xy;
+            float2 elemPos = canvasOffset + elem.m_item.m_offset.xy * resolutionScaling.xy;
+
+            float fontSize = elem.m_fontSize;
+            fontSize *= resolutionScaling.y;
 
             switch (elem.m_type)
             {
                 case UIElementType::Text:
-                    imGuiAdapter->PushFont(elem.m_font, elem.m_fontStyle, elem.m_fontSize);
+                    imGuiAdapter->PushFont(elem.m_font, elem.m_fontStyle, (renderer::FontSize)round(fontSize));
                     break;
             }
 
@@ -285,6 +304,29 @@ namespace vg::renderer
 
                     case UIElementType::Text:
                         elemSize = ImVec2ToFloat2(ImGui::CalcTextSize(elem.m_text.c_str()));
+                        break;
+                }
+            }
+
+            if (asBool(UIItemFlags::KeepAspectRatio & elem.m_item.m_flags))
+            {
+                switch (elem.m_type)
+                {
+                    case UIElementType::Image:
+                        if (elem.m_texture)
+                        {
+                            const float originalRatio = (float)elem.m_texture->GetWidth() / (float)elem.m_texture->GetHeight();
+                            const float currentRatio = elemSize.x / elemSize.y;
+                            
+                            if (currentRatio < originalRatio)
+                            {
+                                elemSize.x *= originalRatio / currentRatio;
+                            }
+                            else if (currentRatio > originalRatio)
+                            {
+                                elemSize.y *= currentRatio / originalRatio;
+                            }
+                        }
                         break;
                 }
             }

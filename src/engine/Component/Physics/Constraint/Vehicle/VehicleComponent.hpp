@@ -303,7 +303,7 @@ namespace vg::engine
 
                 if (IGameObject * smokeGO = GetGameObject()->GetChildGameObject("Smoke"))
                 {
-                    if (IParticleComponent * smokePart = smokeGO->GetComponentT<IParticleComponent>())
+                    for (IParticleComponent * smokePart : smokeGO->GetComponentsInChildrenT<IParticleComponent>())
                     {
                         const float forwardSpeed = GetLocalVelocity().x;
                         smokePart->SetSpawnRate(0, max(1.0f, forwardSpeed) * 4.0f);
@@ -416,7 +416,7 @@ namespace vg::engine
             // start smoke VFX
             if (IGameObject * smokeGO = GetGameObject()->GetChildGameObject("Smoke"))
             {
-                if (IParticleComponent * smokePart = smokeGO->GetComponentT<IParticleComponent>())
+                for (IParticleComponent * smokePart : smokeGO->GetComponentsInChildrenT<IParticleComponent>())
                     smokePart->Play();
             }
 
@@ -443,7 +443,7 @@ namespace vg::engine
             // stop smoke VFX
             if (IGameObject * smokeGO = GetGameObject()->GetChildGameObject("Smoke"))
             {
-                if (IParticleComponent * smokePart = smokeGO->GetComponentT<IParticleComponent>())
+                for (IParticleComponent * smokePart : smokeGO->GetComponentsInChildrenT<IParticleComponent>())
                     smokePart->Stop();
             }
 

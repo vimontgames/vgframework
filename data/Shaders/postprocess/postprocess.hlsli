@@ -52,11 +52,15 @@ struct PostProcessConstants
     void setOutlineMask         (uint _outline) { m_outline_unused = packUint16low(m_outline_unused, _outline); }
     uint getOutlineMask         ()              { return unpackUint16low(m_outline_unused); }
     
+    void setFadeColor           (float4 _color) { m_fadeColor = packRGBA8(_color); }
+    float4 getFadeColor         ()              { return unpackRGBA8(m_fadeColor); }
+    
     uint m_screensize;
     uint m_src_dst;
     uint m_depth_stencil;
     uint m_depth_temp;
     uint m_outline_unused;
+    uint m_fadeColor;
 };
 
 #define PostProcessConstantsCount sizeof(PostProcessConstants)/sizeof(u32)

@@ -48,6 +48,16 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    core::float4 ComputePostProcessPass::getFadeColor(const IView * _view) const
+    {
+        const auto * camSettings = _view->GetCameraSettings();
+        if (nullptr != camSettings)
+            return camSettings->GetFadeColor();
+        
+        return float4(0, 0, 0, 0);
+    }
+
+    //--------------------------------------------------------------------------------------
     void ComputePostProcessPass::Setup(const RenderPassContext & _renderPassContext)
     {
         const auto * options = RendererOptions::get();
@@ -289,6 +299,8 @@ namespace vg::renderer
 
             auto dest = getRWTexture(_renderPassContext.getFrameGraphID("PostProcessUAV"))->getRWTextureHandle();
 
+            auto fadeColor = getFadeColor(view);
+
             PostProcessConstants postProcess;
             postProcess.setScreenSize(size.xy);
             postProcess.setSource(color);
@@ -296,6 +308,7 @@ namespace vg::renderer
             postProcess.setDepth(depth);
             postProcess.setStencil(stencil);
             postProcess.setLinearDepth(linearDepth);
+            postProcess.setFadeColor(fadeColor);
 
             if (view->IsOutlinePassNeeded())
             {

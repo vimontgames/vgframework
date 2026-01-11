@@ -644,31 +644,31 @@ namespace vg::engine::win32
     //--------------------------------------------------------------------------------------
     core::float2 Input::GetJoyLeftStickDir(core::JoyID _id) const
     {
-        return m_joystickData[_id].m_leftStickDir;
+        return getJoystickData(_id).m_leftStickDir;
     }
 
     //--------------------------------------------------------------------------------------
     core::float2 Input::GetJoyRightStickDir(core::JoyID _id) const
     {
-        return m_joystickData[_id].m_rightStickDir;
+        return getJoystickData(_id).m_rightStickDir;
     }
 
     //--------------------------------------------------------------------------------------
     float Input::GetJoyLeftTrigger(core::JoyID _id) const
     {
-        return m_joystickData[_id].m_leftTrigger;
+        return getJoystickData(_id).m_leftTrigger;
     }
 
     //--------------------------------------------------------------------------------------
     float Input::GetJoyRightTrigger(core::JoyID _id) const
     {
-        return m_joystickData[_id].m_rightTrigger;
+        return getJoystickData(_id).m_rightTrigger;
     }
 
     //--------------------------------------------------------------------------------------
     bool Input::IsJoyButtonPressed(core::JoyID _id, JoyButton _button) const
     {
-        return m_joystickData[_id].m_pressed[core::asInteger(_button)];
+        return getJoystickData(_id).m_pressed[core::asInteger(_button)];
     }
 
     //--------------------------------------------------------------------------------------
@@ -686,7 +686,7 @@ namespace vg::engine::win32
     //--------------------------------------------------------------------------------------
     bool Input::wasJoyButtonPressed(core::JoyID _id, JoyButton _button) const
     {
-        return m_joystickData[_id].m_wasPressed[core::asInteger(_button)];
+        return getJoystickData(_id).m_wasPressed[core::asInteger(_button)];
     }
 #pragma endregion Joy
 }

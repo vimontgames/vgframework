@@ -2,6 +2,12 @@
 
 #include "core/Types/Types.h"
 
+vg_enum_class_global(GameState, vg::core::u8,
+    MainMenu = 0,
+    Playing,
+    Paused
+);
+
 vg_enum_class_global(CharacterType , vg::core::u8,
     Neutral = 0,
     Player,

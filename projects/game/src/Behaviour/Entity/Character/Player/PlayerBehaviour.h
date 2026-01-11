@@ -10,6 +10,8 @@ public:
     PlayerBehaviour                     (const vg::core::string & _name, vg::core::IObject * _parent);
     ~PlayerBehaviour                    ();
 
+    void                                activate            (vg::core::JoyID _input);
+
     void                                OnPlay              () final override;
     void                                OnStop              () final override;
 

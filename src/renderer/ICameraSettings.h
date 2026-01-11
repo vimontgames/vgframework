@@ -29,5 +29,6 @@ namespace vg::renderer
 
         virtual bool                IsDepthOfFieldEnabled   () const = 0;
         virtual bool                IsMotionBlurEnabled     () const = 0;
+        virtual core::float4        GetFadeColor            () const = 0;
     };
 }

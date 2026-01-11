@@ -21,5 +21,5 @@ private:
 };
 
 #if VG_ENABLE_INLINE
-#include "CharacterBehaviour.inl"
+#include "VehicleBehaviour.inl"
 #endif
