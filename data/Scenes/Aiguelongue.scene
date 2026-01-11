@@ -284,7 +284,7 @@
                                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                                 <Property type="EnumU8" name="m_horizontal" value="Center"/>
                                                 <Property type="EnumU8" name="m_vertical" value="Bottom"/>
-                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="AutoResize|ResolutionScalingY"/>
+                                                <Property type="EnumFlagsU32" name="m_UIFlags" value="AutoResize|ResolutionScalingX|ResolutionScalingY"/>
                                                 <Property type="Uint2" name="m_size" x="512" y="256"/>
                                                 <Property type="Bool" name="m_useCenter" value="false"/>
                                                 <Property type="Float2" name="m_center" x="0.5" y="0.5"/>
