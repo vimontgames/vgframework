@@ -25,7 +25,8 @@ namespace vg::core
     );
 
     vg_enum_class(vg::core, CopyPropertyFlags, u32,
-        NoChildren = 0x00000001
+        NoChildren  = 0x00000001,
+        Prefab      = 0x00000002
     );
 
     class IFactory

@@ -46,6 +46,12 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    void GraphicInstance::OnLoad()
+    {
+        RegisterUID();
+    }
+
+    //--------------------------------------------------------------------------------------
     void GraphicInstance::ClearPickingID()
     {
         m_pickingID = (PickingID)0;

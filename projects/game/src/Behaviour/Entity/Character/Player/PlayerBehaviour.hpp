@@ -526,7 +526,7 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
                                 GameObject * projectileModelGO = weapon->getProjectile().get<GameObject>();
                                 if (nullptr != projectileModelGO)
                                 {
-                                    IGameObject * newProjectileGO = (IGameObject *)projectileModelGO->Instanciate();
+                                    IGameObject * newProjectileGO = (IGameObject *)projectileModelGO->Instanciate(InstanciateFlags::Prefab | InstanciateFlags::Temporary);
                                     newProjectileGO->SetInstanceFlags(InstanceFlags::Enabled, true);
                                     newProjectileGO->SetObjectRuntimeFlags(ObjectRuntimeFlags::Temporary, true);
                                     projectileModelGO->GetScene()->GetRoot()->AddChild(newProjectileGO);

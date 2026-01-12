@@ -239,7 +239,13 @@ namespace vg::engine
         m_materialResource.SetParent(this);
         m_materialResource.RegisterUID();
 
+        m_params.m_sizeOverLifeTime.SetName("SizeOverLifeTime");
+        m_params.m_velocityOverLifeTime.SetName("VelocityOverLifeTime");
+
         m_params.m_colorOverLifeTime.SetCurveValueType(CurveValueType::Color);
+        m_params.m_colorOverLifeTime.SetName("ColorOverLifeTime");
+
+        m_params.m_opacityOverLifeTime.SetName("OpacityOverLifeTime");
     }
 
     //--------------------------------------------------------------------------------------

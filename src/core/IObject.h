@@ -27,6 +27,13 @@ namespace vg::core
         Instance        = 0x0200    // Object (e.g., World or GameObject) is an Instance                                               
     );
 
+    // InstanciateType
+    vg_enum_class(vg::core, InstanciateFlags, u16,
+        Prefab          = 0x0001,   // Instanciating a Prefab, keeping track of the original object UIDs              
+        Temporary       = 0x0002,   // Instanciating at runtime an object that will be deleted when engine stops
+        NotSerialized   = 0x0004    // Instanciating an object that exists even when engine is stopped, but is not saved
+    );
+
     using UID = core::u32;
     using ClassCRC = core::u64;
 
@@ -65,7 +72,7 @@ namespace vg::core
 
         virtual const IObject *             FindByOriginalUID       (UID _originalUID) const = 0;
 
-        virtual IObject *                   Instanciate             () const = 0;
+        virtual IObject *                   Instanciate             (InstanciateFlags _flags) const = 0;
 
         virtual void                        OnLoad                  () = 0;
         virtual void                        OnSave                  () = 0;

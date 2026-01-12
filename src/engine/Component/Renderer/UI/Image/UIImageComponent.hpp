@@ -31,6 +31,13 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
+    void UIImageComponent::OnLoad()
+    {
+        super::OnLoad();
+        m_image.RegisterUID();
+    }
+
+    //--------------------------------------------------------------------------------------
     void UIImageComponent::OnResourceLoaded(IResource * _resource)
     {
         if (_resource == &m_image)

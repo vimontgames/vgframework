@@ -113,7 +113,7 @@ void GameCameraManagerBehaviour::updateGameViewports()
         {
             cameras[i] = camGO;
             auto * playerGO = player->GetGameObject();
-            camGO->SetName("Player Camera " + playerGO->GetName());
+            camGO->SetName("Player Camera " + playerGO->GetParent()->GetParent()->GetName());
             if (auto * gameCamBehaviour = camGO->GetComponentInChildrenT<GameCameraBehaviour>())
                 gameCamBehaviour->setTarget(playerGO);
         }

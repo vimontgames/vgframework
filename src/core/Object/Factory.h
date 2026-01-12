@@ -36,9 +36,9 @@ namespace vg::core
 
         bool                                        SaveProperties                  (IObject * _object, BufferType _bufferType) final override;
         bool                                        RestoreProperties               (IObject * _object, BufferType _bufferType) final override;
-        bool                                        CopyProperties                  (const IObject * _srcObj, IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) final override;
+        bool                                        CopyProperties                  (const IObject * _srcObj, IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags /*= (CopyPropertyFlags)0x0*/) final override;
         bool                                        CanCopyProperty                 (const IClassDesc * _srcClassDesc, const IProperty * _srcProp, const IClassDesc * _dstClassDesc, const IProperty * _dstProp) const final override;
-        bool                                        CopyProperty                    (const IProperty * _srcProp, const IObject * _srcObj, const IProperty * _dstProp, IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) final override;
+        bool                                        CopyProperty                    (const IProperty * _srcProp, const IObject * _srcObj, const IProperty * _dstProp, IObject * _dstObj, CopyPropertyFlags _copyPropertyFlags /*= (CopyPropertyFlags)0x0*/) final override;
         IObject *                                   Instanciate                     (const IObject * _object, IObject * _parent, CopyPropertyFlags _copyPropertyFlags = (CopyPropertyFlags)0x0) final override;
 
         bool                                        IsA                             (ClassCRC _CRC, ClassCRC _targetCRC) const final override;

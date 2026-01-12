@@ -14,9 +14,13 @@ namespace vg::core
         ~DynamicPropertyList();
 
         void OnLoad() final override;
+        void OnSave() final override;
         bool RegisterUID() final override;
         bool CanCopyUID() const final override { return true; }
         const IDynamicProperty * GetProperty(const IProperty * _prop) const override;
+
+        core::UID getRefUID() const;
+        bool fixOriginalUID();
 
         core::vector<DynamicProperty*>  m_properties;
     };

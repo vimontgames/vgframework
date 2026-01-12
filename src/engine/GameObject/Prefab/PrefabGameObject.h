@@ -29,7 +29,7 @@ namespace vg::engine
         bool                                                IsPrefab                    () const override;
         core::IResource *                                   GetPrefabResource           () const override;
 
-        IObject *                                           Instanciate                 () const;
+        IObject *                                           Instanciate                 (core::InstanciateFlags _flags) const final override;
 
         void                                                OnResourceLoaded            (core::IResource * _resource) override;
         void                                                OnResourceUnloaded          (core::IResource * _resource) override;

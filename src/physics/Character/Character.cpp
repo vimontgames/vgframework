@@ -234,7 +234,7 @@ namespace vg::physics
 
         // Get the shape and scale of the character
         const auto * shape = m_character->GetShape();
-        const Vec3 shapeScale(1.0f, 1.0f, 0.5f);
+        const Vec3 shapeScale(1.0f, 1.0f, 1.0f);
 
         // Build a transform at the target position
         const Mat44 transform = Mat44::sTranslation(getJoltVec3(_targetPos));

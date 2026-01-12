@@ -33,7 +33,7 @@ namespace vg::core
         setPropertyDescription(Object, m_uid, "Object unique ID");
 
         // TODO: display only if != 0?
-        registerPropertyEx(Object, m_originalUID, "Source UID", PropertyFlags::DebugUID | PropertyFlags::Hexadecimal | PropertyFlags::ReadOnly);
+        registerPropertyEx(Object, m_originalUID, "Source UID", PropertyFlags::DebugUID | PropertyFlags::Hexadecimal | PropertyFlags::Transient /*| PropertyFlags::ReadOnly*/);
         setPropertyDescription(Object, m_originalUID, "Source object's unique ID");
         setPropertyHiddenCallback(Object, m_originalUID, IsOriginalUIDHidden);
 
@@ -290,9 +290,21 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
-    IObject * Object::Instanciate() const
+    IObject * Object::Instanciate(InstanciateFlags _flags) const
     {
-        return Kernel::getFactory()->Instanciate(this);
+        CopyPropertyFlags flags = (CopyPropertyFlags)0x0;
+
+        if (asBool(InstanciateFlags::Prefab & _flags))
+            flags |= CopyPropertyFlags::Prefab;
+
+        if (IObject * object = Kernel::getFactory()->Instanciate(this, nullptr, flags))
+        {
+            // TODO: handle other flags here
+
+            return object;
+        }
+
+        return nullptr;
     }
 
     //--------------------------------------------------------------------------------------

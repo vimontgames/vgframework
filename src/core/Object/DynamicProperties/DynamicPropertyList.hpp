@@ -9,9 +9,11 @@ namespace vg::core
     {
         super::registerProperties(_desc);
 
-        //registerPropertyObjectPtrVectorEx(DynamicPropertyList, m_properties, "Properties", PropertyFlags::Flatten); // "Flatten" is not implemented for ObjectPtrVector
         registerPropertyObjectPtrVector(DynamicPropertyList, m_properties, "Properties");
-        setPropertyFlag(DynamicPropertyList, m_uid, PropertyFlags::Hidden | PropertyFlags::Debug, false);
+        //setPropertyFlag(DynamicPropertyList, m_uid, PropertyFlags::Hidden | PropertyFlags::Debug, false);
+        //setPropertyFlag(DynamicPropertyList, m_originalUID, PropertyFlags::Hidden | PropertyFlags::Debug, false);
+
+        setPropertyFlag(DynamicPropertyList, m_originalUID, PropertyFlags::Transient, false);
 
         return true;
     }
@@ -34,8 +36,31 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     void DynamicPropertyList::OnLoad()
     {
+        fixOriginalUID();
+
         for (uint i = 0; i < m_properties.size(); ++i)
             m_properties[i]->SetParent(this);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool DynamicPropertyList::fixOriginalUID()
+    {
+        if (!GetOriginalUID(false))
+        {
+            SetOriginalUID(GetUID());
+            SetUID(0x0);
+            super::RegisterUID();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DynamicPropertyList::OnSave()
+    {
+        fixOriginalUID();
     }
 
     //--------------------------------------------------------------------------------------
@@ -58,5 +83,19 @@ namespace vg::core
         }
 
         return nullptr;
+    }
+
+    //--------------------------------------------------------------------------------------
+    core::UID DynamicPropertyList::getRefUID() const
+    {
+        if (GetOriginalUID(false))
+        {
+            return GetOriginalUID();
+        }
+        else
+        {
+            VG_WARNING("[Prefab] Dynamic property list of \"%s\" uses UID instead of original UID", GetParent()->GetFullName().c_str());
+            return GetUID();
+        }
     }
 }

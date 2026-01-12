@@ -12,6 +12,8 @@ namespace vg::engine
         UIImageComponent(const core::string & _name, core::IObject * _parent);
         ~UIImageComponent();
 
+        void    OnLoad              () override;
+
         void    OnResourceLoaded    (IResource * _resource) final override;
         void    OnResourceUnloaded  (IResource * _resource) final override;
 

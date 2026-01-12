@@ -330,6 +330,10 @@ namespace vg::engine
             IGameObject * parentGameObject = dynamic_cast<IGameObject *>(go->GetParent());
             if (nullptr != parentGameObject)
             {
+                //InstanciateFlags flags = (InstanciateFlags)0x0;
+                //if (go->IsPrefab())
+                //    flags |= InstanciateFlags::Prefab;
+
                 IGameObject * newGO = (IGameObject *)go->Instanciate();
                 if (nullptr == newGO)
                 {

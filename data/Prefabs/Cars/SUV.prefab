@@ -224,7 +224,7 @@
                                 <Property type="String" name="m_name" value="New VehicleComponent"/>
                                 <Property type="Uint32" name="m_uid" value="134844267"/>
                                 <Property type="Uint32" name="m_originalUID" value="0"/>
-                                <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
+                                <Property type="EnumFlagsU16" name="m_objectFlags" value="Opened"/>
                                 <Property type="EnumFlagsU32" name="m_flags" value="Enabled"/>
                                 <Property type="Object" name="m_slots">
                                     <Object class="VehicleSlotList">
@@ -283,10 +283,10 @@
                                         <Property type="Uint32" name="m_uid" value="3407972309"/>
                                         <Property type="Uint32" name="m_originalUID" value="0"/>
                                         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
-                                        <Property type="Float" name="m_maxEngineTorque" value="3000"/>
+                                        <Property type="Float" name="m_maxEngineTorque" value="4000"/>
                                         <Property type="Float" name="m_minRPM" value="1000"/>
-                                        <Property type="Float" name="m_maxRPM" value="10000"/>
-                                        <Property type="Float" name="m_clutchStrength" value="10"/>
+                                        <Property type="Float" name="m_maxRPM" value="8000"/>
+                                        <Property type="Float" name="m_clutchStrength" value="13.5"/>
                                         <Property type="Object" name="m_front">
                                             <Object class="VehicleAxleDesc">
                                                 <Property type="String" name="m_name" value=""/>

@@ -79,7 +79,7 @@ namespace vg::core
 
 		const IObject *					FindByOriginalUID		(UID _originalUID) const final override;
 
-		IObject *						Instanciate				() const override;
+		IObject *						Instanciate				(InstanciateFlags _flags = (InstanciateFlags)0x0) const override;
 
 		void							OnLoad					() override;
 		void							OnSave					() override;

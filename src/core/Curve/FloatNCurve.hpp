@@ -76,6 +76,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    void FloatNCurve::OnLoad()
+    {
+        RegisterUID();
+    }
+
+    //--------------------------------------------------------------------------------------
     void FloatNCurve::SetCurveCount(core::uint _curveCount)
     {
         switch (_curveCount)

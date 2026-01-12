@@ -103,7 +103,8 @@ namespace vg::engine
             for (uint i = 0; i < m_dynamicProperties.size(); ++i)
             {
                 auto * propList = m_dynamicProperties[i];
-                if (propList->GetUID() == uid)
+                const UID propListUID = propList->getRefUID();
+                if (propListUID == uid)
                     return propList;
             }
         }
@@ -123,8 +124,8 @@ namespace vg::engine
 
         // TODO : dedicated ctor?
         newPropList = new DynamicPropertyList(_object->GetName(), nullptr);
-        newPropList->SetUID(_object->GetOriginalUID());
-        newPropList->SetOriginalUID(0x0);
+        newPropList->super::RegisterUID();
+        newPropList->SetOriginalUID(_object->GetOriginalUID());
         newPropList->SetName(_object->GetName());
         
         return newPropList;
@@ -533,18 +534,20 @@ namespace vg::engine
     // In case of Prefab during edition, we copy we simply create a new PrefabGameObject and copy Prefab path.
     // At runtime, a full copy is made so that the object can be used immediately
     //--------------------------------------------------------------------------------------
-    IObject * PrefabGameObject::Instanciate() const
+    IObject * PrefabGameObject::Instanciate(InstanciateFlags _flags) const
     {
         IObject * object = nullptr;
 
         if (Engine::get()->IsPlaying())
         {
-            object = super::Instanciate();
+            object = super::Instanciate(InstanciateFlags::Prefab | InstanciateFlags::Temporary);
         }
         else
         {
             auto * factory = Kernel::getFactory();
             object = factory->Instanciate(this, nullptr, CopyPropertyFlags::NoChildren);
+
+            //object = super::Instanciate(InstanciateFlags::Prefab);
         }
 
         VG_SAFE_STATIC_CAST(Instance, object)->OnLocalMatrixChanged(false, true);
@@ -570,9 +573,12 @@ namespace vg::engine
                 auto & prefabChildren = GetChildren();
                 if (prefabChildren.size() == 0)
                 {
-                    IGameObject * instance = VG_SAFE_STATIC_CAST(IGameObject, prefabRoot->Instanciate());
+                    IGameObject * instance = VG_SAFE_STATIC_CAST(IGameObject, prefabRoot->Instanciate(InstanciateFlags::Prefab | InstanciateFlags::NotSerialized));
                     instance->SetObjectRuntimeFlags(ObjectRuntimeFlags::NotSerialized, true);
                     instance->SetParent(this);
+
+                    if (GetName() == "TrafficLight")
+                        VG_DEBUGPRINT("traffic");
 
                     // If an object in a Prefab references another object from the same Prefab using UID, 
                     // then it must be "patched" so that it becomes an UID in the instanced Prefab too.
@@ -721,6 +727,7 @@ namespace vg::engine
                             case PropertyType::ResourcePtr:
                             case PropertyType::ResourcePtrVector:
                                 VG_ASSERT_ENUM_NOT_IMPLEMENTED(propType);
+                                return nullptr;
                             break;
 
                             case PropertyType::Object:
@@ -803,11 +810,14 @@ namespace vg::engine
 
             //VG_INFO("[Prefab] Override %u properties for GameObject \"%s\" in Prefab \"%s\"", propList->m_properties.size(), _gameObject->getName().c_str(), getName().c_str());
             
-            if (auto * obj = find(_gameObject, propList->GetUID()))
+            // Use original UID if available
+            const UID propListUID = propList->getRefUID();
+
+            if (auto * obj = find(_gameObject, propListUID))
             {
                 auto * classDesc = obj->GetClassDesc();
 
-                //VG_INFO("[Prefab] Could find GUID 0x%08X in GameObject \"%s\"", propList->GetUID(), _gameObject->getName().c_str());
+                //VG_INFO("[Prefab] Could find GUID 0x%08X in GameObject \"%s\"", propListUID, _gameObject->getName().c_str());
 
                 for (uint i = 0; i < propList->m_properties.size(); ++i)
                 {
@@ -837,7 +847,7 @@ namespace vg::engine
             }
             else
             {
-                VG_WARNING("[Prefab] Could not find GUID 0x%08X in Prefab \"%s\" instance %s", propList->GetUID(), m_prefabResource.GetResourcePath().c_str(), _gameObject->GetFullName().c_str());
+                VG_WARNING("[Prefab] Could not find GUID 0x%08X in Prefab \"%s\" instance %s", propListUID, m_prefabResource.GetResourcePath().c_str(), _gameObject->GetFullName().c_str());
             }
         }
 
@@ -903,6 +913,8 @@ namespace vg::engine
     {
         super::OnLoad();
         setObjectRuntimeFlags(ObjectRuntimeFlags::Prefab, true);
+        RegisterUID();
+        m_prefabResource.RegisterUID();
     }
 
     //--------------------------------------------------------------------------------------

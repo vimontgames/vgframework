@@ -984,7 +984,7 @@ namespace vg::core
             {
                 if (asBool(InstanceFlags::Static & getInstanceFlags()))
                 {
-                    VG_WARNING("[GameObject] 'InstanceFlags::Static' has been removed from GameObject \"%s\" because at least of of its children is not static", GetFullName().c_str());
+                    VG_WARNING("[GameObject] 'InstanceFlags::Static' has been removed from GameObject \"%s\" because at least one of its children is not static", GetFullName().c_str());
                     setInstanceFlags(InstanceFlags::Static, false);
                 }
             }

@@ -29,6 +29,8 @@ namespace vg::engine
         UIComponent(const core::string & _name, core::IObject * _parent);
         ~UIComponent();
 
+        void                                OnLoad          () override;
+
         core::uint2                         GetSize         () const override;
         void                                SetSize         (const core::uint2 _size) override;
 

@@ -860,24 +860,75 @@ namespace vg::core
 
         if (!strcmp(_srcProp->GetName(), "m_uid"))
         {
+            // Original UID is only used when instanciating Prefabs or when copying DynamicPropertyList (because in this case OriginalUID is the ID of the target object)
+            // rem 'CanCopyUID' only returns true for DynamicPropertyList (TODO: find a better name)
+            //if (_srcObj->CanCopyUID())
+            //{
+            //    // New UID for property list
+            //    _dstObj->RegisterUID();
+            //
+            //    // But keep track of the original target
+            //    if (_srcObj->GetOriginalUID(false)) // equivalent to HasValidOriginalUID
+            //        _dstObj->SetOriginalUID(_srcObj->GetOriginalUID(false));
+            //
+            //    return true;
+            //}
+            //else if (asBool(CopyPropertyFlags::Prefab))
+            //{
+            //    // Keep track of the original target
+            //    if (_srcObj->GetOriginalUID(false)) // equivalent to HasValidOriginalUID
+            //        _dstObj->SetOriginalUID(_srcObj->GetOriginalUID(false));
+            //}
+            //else
+            //{
+            //    // New UID
+            //    _dstObj->RegisterUID();
+            //}
+
             // In case of DynamicPropertyList the UID must be copied (TODO: use explicit member for different usage?)
             const bool canCopyUID = _srcObj->CanCopyUID();
 
             if (_srcObj->HasValidUID())
             {
-                if (!canCopyUID)
+                if (canCopyUID)
                 {
-                    //if (_srcObj->GetOriginalUID(false)) // equivalent to HasValidOriginalUID
-                    //    _dstObj->SetOriginalUID(_srcObj->GetOriginalUID());
-                    //else
+                    _dstObj->SetUID(_srcObj->GetUID(false));
+                    _dstObj->SetOriginalUID(_srcObj->GetOriginalUID(false));
+                }
+                else
+                {
+                    if (asBool(CopyPropertyFlags::Prefab & _copyPropertyFlags))
                         _dstObj->SetOriginalUID(_srcObj->GetUID());
-
                     _dstObj->RegisterUID();
                 }
             }
 
             if (!canCopyUID)
                 return true;
+
+            //// In case of DynamicPropertyList the UID must be copied (TODO: use explicit member for different usage?)
+            //const bool canCopyUID = _srcObj->CanCopyUID();
+            //
+            //if (_srcObj->HasValidUID())
+            //{
+            //    if (canCopyUID)
+            //    {
+            //        _dstObj->SetUID(_srcObj->GetUID(false));
+            //        _dstObj->SetOriginalUID(_srcObj->GetOriginalUID(false));
+            //    }
+            //    else
+            //    {
+            //        //if (_srcObj->GetOriginalUID(false)) // equivalent to HasValidOriginalUID
+            //        //    _dstObj->SetOriginalUID(_srcObj->GetOriginalUID());
+            //        //else
+            //            _dstObj->SetOriginalUID(_srcObj->GetUID());
+            //
+            //        _dstObj->RegisterUID();
+            //    }
+            //}
+            //
+            //if (!canCopyUID)
+            //    return true;
         }
         else if(!strcmp(_srcProp->GetName(), "m_originalUID"))
         {
@@ -1018,7 +1069,7 @@ namespace vg::core
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             IObject * srcObj = _srcProp->GetPropertyObject(_srcObj);
             IObject * dstObj = _dstProp->GetPropertyObject(_dstObj);
-            CopyProperties(srcObj, dstObj);
+            CopyProperties(srcObj, dstObj, _copyPropertyFlags);
         }
         break;
 
@@ -1027,7 +1078,7 @@ namespace vg::core
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             IObject ** srcObj = _srcProp->GetPropertyObjectPtr(_srcObj);
             IObject ** dstObj = _dstProp->GetPropertyObjectPtr(_dstObj);
-            CopyProperties(*srcObj, *dstObj);
+            CopyProperties(*srcObj, *dstObj, _copyPropertyFlags);
         }
         break;
 
@@ -1045,7 +1096,7 @@ namespace vg::core
             {
                 IObject * srcChild = (*srcVec)[i];
                 IObject * newChild = CreateObject(srcChild->GetClassName(), srcChild->GetName(), _dstObj);
-                CopyProperties((IObject *)srcChild, newChild);
+                CopyProperties((IObject *)srcChild, newChild, _copyPropertyFlags);
                 newChild->SetParent(_dstObj);
                 dstVec->push_back(newChild);
             }
@@ -1057,7 +1108,7 @@ namespace vg::core
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             IResource * srcRes = _srcProp->GetPropertyResource(_srcObj);
             IResource * dstRes = _dstProp->GetPropertyResource(_dstObj);
-            CopyProperties(srcRes, dstRes);
+            CopyProperties(srcRes, dstRes, _copyPropertyFlags);
 
             dstRes->SetParent(_dstObj);
             dstRes->OnResourcePathChanged("", dstRes->GetResourcePath());
@@ -1069,7 +1120,7 @@ namespace vg::core
             VG_ASSERT(!srcIsEnumArray, "EnumArray CopyProperties serialization not implemented for type '%s'", asString(srcPropType).c_str());
             IResource ** srcRes = _srcProp->GetPropertyResourcePtr(_srcObj);
             IResource ** dstRes = _dstProp->GetPropertyResourcePtr(_dstObj);
-            CopyProperties(*srcRes, *dstRes);
+            CopyProperties(*srcRes, *dstRes, _copyPropertyFlags);
 
             (*dstRes)->SetParent(_dstObj);
             (*dstRes)->OnResourcePathChanged("", (*dstRes)->GetResourcePath());
@@ -1094,7 +1145,7 @@ namespace vg::core
                     {
                         IResource * srcRes = _srcProp->GetPropertyResourceVectorElement(_srcObj, i);
                         IResource * dstRes = _dstProp->GetPropertyResourceVectorElement(_dstObj, i);
-                        CopyProperties(srcRes, dstRes);
+                        CopyProperties(srcRes, dstRes, _copyPropertyFlags);
 
                         dstRes->SetParent(_dstObj);
                         dstRes->OnResourcePathChanged("", dstRes->GetResourcePath());
@@ -1152,7 +1203,7 @@ namespace vg::core
                     {
                         const IObject * srcElem = _srcProp->GetPropertyObjectVectorElement(_srcObj, i);
                         IObject * dstElem = _dstProp->GetPropertyObjectVectorElement(_dstObj, i);
-                        CopyProperties(srcElem, dstElem);
+                        CopyProperties(srcElem, dstElem, _copyPropertyFlags);
 
                         dstElem->SetParent(_dstObj);
                     }

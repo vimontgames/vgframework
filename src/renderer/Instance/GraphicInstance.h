@@ -45,6 +45,8 @@ namespace vg::renderer
         GraphicInstance(const core::string & _name, core::IObject * _parent);
         ~GraphicInstance();
 
+        void                                            OnLoad                          () override;
+
         // IGraphicInstance default implementations
         GraphicInstanceType                             GetGraphicIntanceType           () const override = 0;
         bool                                            IsSkinned                       () const override { return false; }

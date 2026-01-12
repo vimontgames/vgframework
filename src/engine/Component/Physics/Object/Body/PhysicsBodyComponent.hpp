@@ -382,7 +382,7 @@ namespace vg::engine
             if (!m_bodyDesc->IsMassOverriden())
                 m_bodyDesc->SetMass(totalMass);
 
-            if (m_bodyDesc->GetMotionType() != physics::MotionType::Static || !Engine::get()->GetPhysics()->GetOptions()->IsMergeStaticBodiesEnabled())
+            if (m_bodyDesc->GetMotionType() != physics::MotionType::Static || !Engine::get()->GetPhysics()->GetOptions()->IsMergeStaticBodiesEnabled() || !m_bodyDesc->CanStaticMerge())
                 m_body = getPhysics()->CreateBody(world->GetPhysicsWorld(), m_bodyDesc, physicsShapes, go->GetGlobalMatrix(), go->GetName() + "_PhysicsBody", this);
         }
         else
