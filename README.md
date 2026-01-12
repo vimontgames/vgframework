@@ -1,6 +1,6 @@
 ﻿<img src="doc/img/version.png" alt="VGF boy" title="VGF boy" align="right" height="74" />
 
-# VGFramework 0.53
+# VGFramework 0.54
 VGFramework is a pet game engine for fun, modern graphics APIs, and fast iteration.
 
 ![Demo](doc/img/breakable.gif)
@@ -143,7 +143,8 @@ Set your working directory to **$(SolutionDir)** so that the program can find da
 | `breakOnWarnings`       | bool | Break on graphics API warnings (*`debugDevice` required*)
 | `debugDevice`	          | bool | Enable the graphics API debug layer (*default for `Debug` builds*)
 | `editor`                | bool | Enable editor (*default for `Debug` and `Release` builds*)
-| `fullscreen`	          | bool | Start application with game view maximized (*default for `Final` builds*)	
+| `fullscreen`	          | bool | Start application in borderless fullscreen mode instead of windowed	
+| `maximize`	          | bool | Start application with game view maximized (*default for `Final` builds*)	
 | `play`		          | bool | Start application with play mode running	(*default for `Final` builds*)
 | `profileStart`          | int  | Profile the 1st N frames
                       
@@ -163,7 +164,7 @@ Set your working directory to **$(SolutionDir)** so that the program can find da
 | `F2`                | Rename selected Object
 | `F6`                | Hot reload shaders
 | `F7`                | Hot reload resources				
-| `F5`                | Enter Play mode
+| `F5`                | Start/Stop Play mode
 | `Shift-F5`          | Restart Play mode
 | `PAUSE`             | Pause/resume Play mode
 | `F11`               | Maximize Game view (fullscreen)

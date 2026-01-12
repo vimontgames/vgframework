@@ -128,19 +128,33 @@ bool processSystemMessage()
 }
 
 //--------------------------------------------------------------------------------------
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, core::uint _width, core::uint _height)
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, core::uint _width, core::uint _height, bool _fullscreen)
 {
 	hInst = hInstance;
 
 	int x = CW_USEDEFAULT;
 	int y = CW_USEDEFAULT;
 
-	int flags = WS_OVERLAPPEDWINDOW;
+	int flags = _fullscreen ? WS_POPUP : WS_OVERLAPPEDWINDOW;
 
 	RECT rc = { 0, 0, (LONG)_width, (LONG)_height };
 	AdjustWindowRect(&rc, flags, FALSE);
 
 	g_hWnd = CreateWindow(L"Game", L"VG Framework", flags, x, y, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
+
+    // If fullscreen, cover the primary monitor
+    if (_fullscreen)
+    {
+        HMONITOR monitor = MonitorFromPoint({ 0, 0 }, MONITOR_DEFAULTTOPRIMARY);
+        MONITORINFO mi = {};
+        mi.cbSize = sizeof(mi);
+        GetMonitorInfo(monitor, &mi);
+
+        x = mi.rcMonitor.left;
+        y = mi.rcMonitor.top;
+        rc.right = mi.rcMonitor.right - mi.rcMonitor.left;
+        rc.bottom = mi.rcMonitor.bottom - mi.rcMonitor.top;
+    }
 
 	if (!g_hWnd)
 		return FALSE;
@@ -152,12 +166,12 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, core::uint _width, core::ui
 }
 
 //--------------------------------------------------------------------------------------
-bool CreateGameWindow(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow, core::uint _width, core::uint _height)
+bool CreateGameWindow(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow, core::uint _width, core::uint _height, bool _fullscreen)
 {
 	if (!MyRegisterClass(hInstance))
 		return false;
 
-	if (!InitInstance(hInstance, nCmdShow, _width, _height))
+	if (!InitInstance(hInstance, nCmdShow, _width, _height, _fullscreen))
 		return false;
 
 	return true;
@@ -184,7 +198,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	core::uint width = 1920, height = 1080;
 
-	if (!CreateGameWindow(hInstance, lpCmdLine, nCmdShow, width, height))
+    core::CmdLine cmdLine(lpCmdLine);
+
+    #if VG_FINAL
+    bool fullscreen = true;
+    #else
+    bool fullscreen = false;
+    #endif
+    cmdLine.getBool("fullscreen", fullscreen);
+
+	if (!CreateGameWindow(hInstance, lpCmdLine, nCmdShow, width, height, fullscreen))
 		return 1;
 
 	ShowWindow(g_hWnd, SW_MAXIMIZE);
@@ -192,8 +215,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	GetClientRect(g_hWnd, &clientRect);
 	width = clientRect.right - clientRect.left;
 	height = clientRect.bottom - clientRect.top;
-
-	core::CmdLine cmdLine(lpCmdLine);
 
     g_engine = core::Plugin::create<engine::IEngine>("engine");
 	if (nullptr == g_engine)
@@ -252,6 +273,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		title += " device";
 
 	SetWindowTextA(g_hWnd, title.c_str());
+    
 
 	// 'Debug' and 'Release' targets default with Editor enabled, but 'Final' doesn't.
 	// Override command-line with "editor=false" for Debug/Release standalone version or use "editor=true" for a FINAL editor version
@@ -283,9 +305,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     g_engine->StartInPlayMode(play);
 
     // Start maximized? In Editor mode the default is not to maximize game view but in standalone we default to maximize game view
-	bool fullscreen = !editor;
-    cmdLine.getBool("fullscreen", fullscreen),
-	g_engine->GetRenderer()->SetFullscreen(fullscreen);
+	bool maximize = !editor;
+    cmdLine.getBool("gamemode", maximize),
+	g_engine->GetRenderer()->SetFullscreen(maximize); // "Fullscreen" = Maximize game views
 
 	// Command-line override or world name from config
 	core::string world;

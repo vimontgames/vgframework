@@ -190,7 +190,7 @@ namespace vg::engine
             break;
         }
 
-        return 0;
+        return DefWindowProc(hWnd, message, wParam, lParam);;
     }
     #endif
 
