@@ -42,26 +42,27 @@ namespace vg::core
     class IProfiler
     {
     public:
-        virtual void Init                   () = 0;
-        virtual void Deinit                 () = 0;
-        virtual void Start                  () = 0;
-        virtual void Stop                   () = 0;
-        virtual bool IsCaptureInProgress    () const = 0;
+        virtual void Init                       () = 0;
+        virtual void Deinit                     () = 0;
+        virtual void Start                      () = 0;
+        virtual void Stop                       () = 0;
+        virtual bool IsCaptureInProgress        () const = 0;
 
-        virtual void StartCpuEvent          (const char * _name) = 0;
-        virtual void StopCpuEvent           () = 0;
+        virtual void StartCpuEvent              (const char * _name) = 0;
+        virtual void StopCpuEvent               () = 0;
 
-        virtual void AddCpuEventLabel       (const char * _name, float _data) = 0;
-        virtual void AddCpuEventLabel       (const char * _name, core::i32 _data) = 0;
-        virtual void AddCpuEventLabel       (const char * _name, core::u32 _data) = 0;
-        virtual void AddCpuEventLabel       (const char * _name, core::u64 _data) = 0;
-        virtual void AddCpuEventLabel       (const char * _name, const core::float3 & _data) = 0;
-        virtual void AddCpuEventLabel       (const char * _name, const core::string & _data) = 0;
+        virtual void AddCpuEventLabel           (const char * _name, float _data) = 0;
+        virtual void AddCpuEventLabel           (const char * _name, core::i32 _data) = 0;
+        virtual void AddCpuEventLabel           (const char * _name, core::u32 _data) = 0;
+        virtual void AddCpuEventLabel           (const char * _name, core::u64 _data) = 0;
+        virtual void AddCpuEventLabel           (const char * _name, const core::float3 & _data) = 0;
+        virtual void AddCpuEventLabel           (const char * _name, const core::string & _data) = 0;
 
-        virtual void StartGpuEvent          (const char * _name) = 0;
-        virtual void StopGpuEvent           () = 0;
+        virtual void StartGpuEvent              (const char * _name) = 0;
+        virtual void StopGpuEvent               () = 0;
 
-        virtual void RegisterProfilerThread (const char * _name) = 0;
+        virtual void RegisterProfilerThread     (const char * _name) = 0;
+        virtual void UnregisterProfilerThread   () = 0;
 
         virtual ~IProfiler() {}
     };

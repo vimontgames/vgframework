@@ -36,28 +36,29 @@ namespace vg::gfx
     class Profiler final : public core::IProfiler
     {
     public:
-        void                                    Init                    () final override;
-        void                                    Deinit                  () final override;
-        void                                    Start                   () final override;
-        void                                    Stop                    () final override;
-        bool                                    IsCaptureInProgress     () const final override;
+        void                                    Init                        () final override;
+        void                                    Deinit                      () final override;
+        void                                    Start                       () final override;
+        void                                    Stop                        () final override;
+        bool                                    IsCaptureInProgress         () const final override;
 
-        void                                    StartCpuEvent           (const char * _name) final override;
-        void                                    StopCpuEvent            () final override;
+        void                                    StartCpuEvent               (const char * _name) final override;
+        void                                    StopCpuEvent                () final override;
         
-        void                                    AddCpuEventLabel        (const char * _name, float _data) final override;
-        void                                    AddCpuEventLabel        (const char * _name, core::i32 _data) final override;
-        void                                    AddCpuEventLabel        (const char * _name, core::u32 _data) final override;
-        void                                    AddCpuEventLabel        (const char * _name, core::u64 _data) final override;
-        void                                    AddCpuEventLabel        (const char * _name, const core::float3 & _data) final override;
-        void                                    AddCpuEventLabel        (const char * _name, const core::string & _data) final override;
+        void                                    AddCpuEventLabel            (const char * _name, float _data) final override;
+        void                                    AddCpuEventLabel            (const char * _name, core::i32 _data) final override;
+        void                                    AddCpuEventLabel            (const char * _name, core::u32 _data) final override;
+        void                                    AddCpuEventLabel            (const char * _name, core::u64 _data) final override;
+        void                                    AddCpuEventLabel            (const char * _name, const core::float3 & _data) final override;
+        void                                    AddCpuEventLabel            (const char * _name, const core::string & _data) final override;
 
-        void                                    StartGpuEvent           (const char * _name) final override;
-        void                                    StopGpuEvent            () final override;
-        void                                    RegisterProfilerThread  (const char * _name) final override;
+        void                                    StartGpuEvent               (const char * _name) final override;
+        void                                    StopGpuEvent                () final override;
+        void                                    RegisterProfilerThread      (const char * _name) final override;
+        void                                    UnregisterProfilerThread    () final override;
 
-        static void                             setCommandList          (CommandList * _cmdList) { s_contextTLS.cmdList = _cmdList; }
-        static CommandList *                    getCommandList          () { auto * cmdList = s_contextTLS.cmdList; VG_ASSERT(cmdList); return cmdList; }
+        static void                             setCommandList              (CommandList * _cmdList) { s_contextTLS.cmdList = _cmdList; }
+        static CommandList *                    getCommandList              () { auto * cmdList = s_contextTLS.cmdList; VG_ASSERT(cmdList); return cmdList; }
 
     private:
         static VG_THREAD_LOCAL ProfilerContext  s_contextTLS;

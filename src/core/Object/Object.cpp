@@ -171,7 +171,7 @@ namespace vg::core
     //--------------------------------------------------------------------------------------
     UID Object::GetUID(bool _mustBeValid) const
     {
-        VG_ASSERT(!_mustBeValid || (UID)0 != m_uid, "Object \"%s\" has no UID", GetName().c_str());
+        VG_ASSERT(!_mustBeValid || (UID)0 != m_uid, "%s \"%s\" has no UID", GetClassName(), GetName().c_str());
         return m_uid;
     }
 

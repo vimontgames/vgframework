@@ -28,6 +28,7 @@ namespace vg::core
 
         bool                        SetObject               (core::IObject * _object) final override;
         bool                        Instanciate             () override;
+        IObject *                   GetSharedObject         () const final override;
         IObject *                   GetObject               () const final override;
     
         void                        SetUserData             (UserData _userData) final override;

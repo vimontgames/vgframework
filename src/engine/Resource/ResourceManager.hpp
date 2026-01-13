@@ -9,6 +9,8 @@
 
 using namespace vg::core;
 
+VG_OPTIMIZE_OFF
+
 namespace vg::engine
 {
     VG_REGISTER_OBJECT_CLASS(ResourceManager, "Resource Manager");
@@ -34,7 +36,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     ResourceManager::~ResourceManager()
     {
-        flushPendingLoading();
+        stopLoadingThread();
 
         for (auto & pair : m_resourceMeta)
             VG_SAFE_RELEASE(pair.second);
@@ -187,7 +189,7 @@ namespace vg::engine
             if (CookStatus::UP_TO_DATE != needsCook(*info))
             {
                 // Setting resource path to null will remove clients so we need to copy
-                vector<core::IResource *> clients = info->m_clients;
+                const vector<core::IResource *> & clients = info->getClients();
                 for (auto client : clients)
                     VG_SAFE_INCREASE_REFCOUNT(client);
 
@@ -197,7 +199,7 @@ namespace vg::engine
 
                 // Rebind all clients to update the resource
                 for (uint i = 0; i < clients.size(); ++i)
-                    clients[i]->SetResourcePath(info->m_path);
+                    clients[i]->SetResourcePath(info->getPath());
 
                 for (auto client : clients)
                     VG_SAFE_RELEASE(client);
@@ -238,19 +240,24 @@ namespace vg::engine
 
         for (auto info : allResourceInfos)
         {
-            const string & path = info->m_path;
+            const string & path = info->getPath();
             if (!path.empty() && path == _res->GetResourcePath())
             {
-                VG_INFO("[Resource] Reimport \"%s\" (%u clients)", path.c_str(), info->m_clients.size());
+                // The COPY here is intentional because otherwise 'ClearResourcePath' will remove the client from the list
+                // An alternative would be to replace the 'ClearResourcePath'/'SetResourcePath' sequence with a proper 'Reimport' method?
+                vector<core::IResource *> clients = info->getClients();
 
-                // Setting resource path to null will remove clients so we need to copy
-                vector<core::IResource *> clients = info->m_clients;
+                VG_INFO("[Resource] Reimport \"%s\" (%u clients)", path.c_str(), clients.size());
+
+                // Setting resource path to null will remove clients so we need to also temporarily increase refcoutn                
                 for (auto client : clients)
                     VG_SAFE_INCREASE_REFCOUNT(client);
 
                 // Remove all clients
                 for (uint i = 0; i < clients.size(); ++i)
                     clients[i]->ClearResourcePath();
+
+                VG_ASSERT(io::exists(path));
 
                 // Rebind all clients to update the resource
                 for (uint i = 0; i < clients.size(); ++i)
@@ -261,7 +268,7 @@ namespace vg::engine
                 if (m_resourceInfosMap.end() != it)
                 {
                     ResourceInfo * info = it->second;
-                    info->m_forceReimport = true;
+                    info->setForceReimport(true);
                 }
 
                 for (auto client : clients)
@@ -274,10 +281,24 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void ResourceManager::flushPendingLoading()
+    void ResourceManager::stopLoadingThread()
     {
         if (true == m_isLoadingThreadRunning.exchange(false))
+        {
+            // TODO: unregister thread from loading thread itself
+
             m_loadingThread.join();
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceManager::restartLoadingThread()
+    {
+        if (false == m_isLoadingThreadRunning.exchange(true))
+        {
+            m_loadingThread = std::thread(loading, this);
+            m_isLoadingThreadRegistered = false; // Will force new thread to register
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -315,6 +336,8 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::updateLoadingThread()
     {
+        VG_PROFILE_CPU("LoadingThread");
+
         // Is there any resource to load?
         IResource * res = nullptr;
         if (m_resourcesToLoad.size() > 0)
@@ -337,7 +360,7 @@ namespace vg::engine
             auto it = m_resourceInfosMap.find(resPath);
             VG_ASSERT(m_resourceInfosMap.end() != it);
             auto & info = it->second;
-            VG_ASSERT(info->m_object == nullptr);
+            VG_ASSERT(info->getObject() == nullptr);
 
             // TODO: lock outside this call? Once device is ready mutex should not be necessary because only loading thread shall access this buffer
             const auto available = renderer->GetAvailableUploadSize();
@@ -372,7 +395,7 @@ namespace vg::engine
     //--------------------------------------------------------------------------------------
     void ResourceManager::SwapResources(IResource * _resA, IResource * _resB)
     {
-        flushPendingLoading();
+        stopLoadingThread();
         flushUpdateResource();
 
         // Path pointers
@@ -385,13 +408,7 @@ namespace vg::engine
                 if (m_resourceInfosMap.end() != it)
                 {
                     ResourceInfo & loaded = *it->second;
-
-                    auto it = std::find(loaded.m_clients.begin(), loaded.m_clients.end(), _resA);
-                    if (it != loaded.m_clients.end())
-                    {
-                        VG_DEBUGPRINT("[Resource] Resource A 0x%016llx was a client of Resource \"%s\"\n", _resA, loaded.GetResourcePath().c_str());
-                        *it = _resB;
-                    }
+                    VG_VERIFY(loaded.replaceClient(_resA, _resB));
                 }
             }
 
@@ -401,16 +418,12 @@ namespace vg::engine
                 if (m_resourceInfosMap.end() != it)
                 {
                     ResourceInfo & loaded = *it->second;
-
-                    auto it = std::find(loaded.m_clients.begin(), loaded.m_clients.end(), _resB);
-                    if (it != loaded.m_clients.end())
-                    {
-                        VG_DEBUGPRINT("[Resource] Resource B 0x%016llx was a client of Resource \"%s\"\n", _resB, loaded.GetResourcePath().c_str());
-                        *it = _resA;
-                    }
+                    VG_VERIFY(loaded.replaceClient(_resB, _resA));
                 }
             }
         }
+
+        restartLoadingThread();
     }
 
     //--------------------------------------------------------------------------------------
@@ -438,9 +451,9 @@ namespace vg::engine
             if (loaded.GetResourceType() == _resource->GetClassName())
             {
                 // Add to client list
-                loaded.m_clients.push_back(_resource);
+                loaded.addClient(_resource);
 
-                if (loaded.m_object != nullptr)
+                if (loaded.getObject() != nullptr)
                 {
                     // already loaded? Add to resource to update BUT is several clients requested the resource at the same frame it could be not ready yet and dropped :(
                     VG_ASSERT(uint_ptr(_resource) != 0xcdcdcdcdcdcdcdcd);
@@ -456,11 +469,8 @@ namespace vg::engine
         else if (io::exists(_newPath))
         {
             // Create entry in ResourceMap
-            string name = io::getFileName(_resource->GetResourcePath());
-            ResourceInfo * info = new ResourceInfo(name);
-            info->m_clients.push_back(_resource);
-            info->m_path = _newPath;
-            info->m_object = nullptr;
+            ResourceInfo * info = new ResourceInfo(_resource->GetResourcePath());
+            info->addClient(_resource);
 
             m_resourceInfosMap.insert(make_pair(_newPath, info));
 
@@ -495,12 +505,14 @@ namespace vg::engine
         if (m_resourceInfosMap.end() != it)
         {
             ResourceInfo * info = it->second;
-            VG_VERIFY(vector_helper::remove(info->m_clients, (IResource*)_resource));
+            VG_VERIFY(info->removeClient(_resource));
 
+            const vector<IResource *> & clients = info->getClients();
+            
             // Resource has no more owners, delete it
-            if (info->m_clients.size() == 0)
+            if (clients.size() == 0)
             {
-                VG_SAFE_RELEASE(info->m_object);
+                VG_SAFE_RELEASE(info->getObjectRef());
                 m_resourceInfosMap.erase(it);
                 VG_SAFE_RELEASE(info);
                 _resource->Unload(_path);
@@ -554,8 +566,8 @@ namespace vg::engine
         VG_ASSERT(Kernel::getScheduler()->IsLoadingThread());
 
         // get shared resource info
-        auto & clients = _info.m_clients;
-        const string & path = _info.m_path;
+        const vector<IResource *> & clients = _info.getClients();
+        const string & path = _info.getPath();
 
         VG_PROFILE_CPU(path.c_str());
 
@@ -564,12 +576,12 @@ namespace vg::engine
 
         if (CookStatus::UP_TO_DATE == needCook)
         {
-            if (_info.m_forceReimport)
+            if (_info.needReimport())
                 needCook = CookStatus::FORCE_REIMPORT;
         }
 
         // Reimport is forced only once
-        _info.m_forceReimport = false;
+        _info.setForceReimport(false);
 
         // HACK: use 1st client
         auto * cooker = clients[0];
@@ -601,13 +613,13 @@ namespace vg::engine
 
             const auto startLoad = Timer::getTick();
 
-            VG_ASSERT(_info.m_object == nullptr);
+            VG_ASSERT(_info.getObject() == nullptr);
             string path = cooker->GetResourcePath();
 
             VG_ASSERT(!path.empty());
 
             // Cooked file may seem up to date but if cooked file format version actually changed we can only know by tring to read the file
-            status = cooker->Load(path, _info.m_object);
+            status = cooker->Load(path, _info.getObjectRef());
 
             switch (status)
             {
@@ -617,7 +629,7 @@ namespace vg::engine
 
                 case LoadStatus::Success:
                 {
-                    VG_ASSERT(_info.m_object);
+                    VG_ASSERT(_info.getObject());
                     VG_INFO("[Resource] File \"%s\" loaded in %.2f ms", path.c_str(), Timer::getEnlapsedTime(startLoad, Timer::getTick()));
                     done = true;
                 }
@@ -627,14 +639,14 @@ namespace vg::engine
                 case LoadStatus::CannotOpenFile:
                 case LoadStatus::CannotUploadData:
                 {
-                    VG_ASSERT(nullptr == _info.m_object);
+                    VG_ASSERT(nullptr == _info.getObject());
                     done = true; // exit
                 }
                 break;
 
                 case LoadStatus::Deprecated:
                 {
-                    VG_ASSERT(nullptr == _info.m_object);
+                    VG_ASSERT(nullptr == _info.getObject());
                     if (CookStatus::UP_TO_DATE == needCook)
                     {
                         needCook = CookStatus::COOK_VERSION_DEPRECATED; // This should be handled by  case ResourceLoadingStatus::Deprecated:
@@ -776,26 +788,64 @@ namespace vg::engine
                 VG_ASSERT(nullptr != res, "nullptr resource found in loaded resources list at index %u/%u", i, m_resourcesLoaded.size());
                 if (nullptr != res)
                 {
-                    auto it = resourceInfoMap.find(res->GetResourcePath());
-                    auto & info = it->second;
+                    #if 0
 
-                    VG_ASSERT(nullptr != info || res->GetResourcePath().empty());
-                    if (nullptr != info)
+                    const string & path = res->GetResourcePath();
+                    IObject * object = nullptr;
+                    if (!path.empty())
                     {
-                        // Set Shared Resource Object and Notify owner
-                        res->SetObject(info->m_object);
-                        if (!res->HasValidUID())
-                            res->RegisterUID();
-                        res->LoadSubResources();
-                        IObject * resOwner = res->GetParent();
-                        VG_ASSERT(nullptr != resOwner);
-                        if (nullptr != resOwner)
-                            resOwner->OnResourceLoaded(res);
+                        auto it = resourceInfoMap.find(path);
+                        VG_ASSERT(it != resourceInfoMap.end(), "[Loading] Could not find \"%s\" in resourceInfo map", path.c_str());
+                        const auto & info = it->second;
+                        VG_ASSERT(info);
+                        if (nullptr != info)
+                        {
+                            object = info->getObject();
 
-                        #if USE_CLIENT_LIMIT_PER_FRAME
-                        currentClientCount++;
-                        #endif
+                            if (!res->HasValidUID())
+                                res->RegisterUID();
+                            res->LoadSubResources();
+                            IObject * resOwner = res->GetParent();
+                            VG_ASSERT(nullptr != resOwner);
+                            if (nullptr != resOwner)
+                                resOwner->OnResourceLoaded(res);
+
+                            #if USE_CLIENT_LIMIT_PER_FRAME
+                            currentClientCount++;
+                            #endif
+                        }
+                    }                    
+
+                    #else
+
+                    const string path = res->GetResourcePath();
+                    auto it = resourceInfoMap.find(path);
+                    VG_ASSERT(it != resourceInfoMap.end(), "[Loading] Could not find \"%s\"", path.c_str(), res->GetResourcePath().c_str());
+                    if (it != resourceInfoMap.end())
+                    {
+                        auto & info = it->second;
+                    
+                        VG_ASSERT(nullptr != info || res->GetResourcePath().empty());
+                        if (nullptr != info)
+                        {
+                            VG_ASSERT(info);
+                            // Set Shared Resource Object and Notify owner
+                            res->SetObject(info->getObject());
+                            if (!res->HasValidUID())
+                                res->RegisterUID();
+                            res->LoadSubResources();
+                            IObject * resOwner = res->GetParent();
+                            VG_ASSERT(nullptr != resOwner);
+                            if (nullptr != resOwner)
+                                resOwner->OnResourceLoaded(res);
+                    
+                            #if USE_CLIENT_LIMIT_PER_FRAME
+                            currentClientCount++;
+                            #endif
+                        }
                     }
+
+                    #endif
                 }
             }
 
@@ -809,7 +859,7 @@ namespace vg::engine
             for (auto pair : resourceInfoMap)
             {
                 ResourceInfo * info = pair.second;
-                auto & clients = info->m_clients;
+                const vector<IResource *> & clients = info->getClients();
                 for (uint i = 0; i < clients.size(); ++i)
                 {
                     #if USE_CLIENT_LIMIT_PER_FRAME
@@ -818,18 +868,17 @@ namespace vg::engine
                     #endif
 
                     auto & res = clients[i];
-                    if (res->GetObject() == nullptr)
+                    auto * object = info->getObject();
+                    if (res->GetSharedObject() != object)
                     {
-                        if (nullptr != info->m_object)
-                        {
-                            res->SetObject(info->m_object);
-                            res->LoadSubResources();
-                            res->GetParent()->OnResourceLoaded(res);
+                        VG_ASSERT(res->GetSharedObject() == nullptr);
+                        res->SetObject(object);
+                        res->LoadSubResources();
+                        res->GetParent()->OnResourceLoaded(res);
 
-                            #if USE_CLIENT_LIMIT_PER_FRAME
-                            currentClientCount++;
-                            #endif
-                        }
+                        #if USE_CLIENT_LIMIT_PER_FRAME
+                        currentClientCount++;
+                        #endif
                     }
                 }
             }

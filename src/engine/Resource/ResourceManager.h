@@ -58,7 +58,8 @@ namespace vg::engine
         void                        SwapResources               (core::IResource * _resA, core::IResource * _resB) final override;
 
         void                        updateMainThread            ();
-        void                        flushPendingLoading         ();
+        void                        stopLoadingThread           ();
+        void                        restartLoadingThread        ();
 
         bool                        isLoadingThreadRunning      () const { return m_isLoadingThreadRunning; }
         void                        flushUpdateResource         ();

@@ -1,24 +1,15 @@
 #include "ResourceInfo.h"
 
+#if !VG_ENABLE_INLINE
+#include "ResourceInfo.inl"
+#endif
+
 namespace vg::engine
 {
-    //VG_REGISTER_OBJECT_CLASS(ResourceInfo, "Shared Resource");
-
     //--------------------------------------------------------------------------------------
-    //bool ResourceInfo::registerProperties(vg::core::IClassDesc & _desc)
-    //{
-    //    super::registerProperties(_desc);
-    //
-    //    //registerPropertyEx(SharedResource, m_path, "Path", PropertyFlags::ReadOnly);
-    //    registerPropertyObjectPtrVectorEx(ResourceInfo, m_clients, "Clients", PropertyFlags::ReadOnly);
-    //    //registerPropertyObjectPtrEx(SharedResource, m_object, "Shared Object", PropertyFlags::ReadOnly | PropertyFlags::Resource);
-    //
-    //    return true;
-    //}
-
-    //--------------------------------------------------------------------------------------
-    ResourceInfo::ResourceInfo(const string & _name, IObject * _parent) :
-        super(_name, _parent)
+    ResourceInfo::ResourceInfo(const string & _path) :
+        super(io::getFileName(_path)),
+        m_path(_path)
     {
 
     }
@@ -46,5 +37,32 @@ namespace vg::engine
     const core::IResource * ResourceInfo::GetClient(core::uint _index) const
     {
         return m_clients[_index];
+    }
+
+    //--------------------------------------------------------------------------------------
+    void ResourceInfo::addClient(core::IResource * _client)
+    {
+        VG_ASSERT(nullptr != _client);
+        VG_ASSERT(!m_path.empty());
+        m_clients.push_back(_client);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ResourceInfo::removeClient(core::IResource * _clientToRemove)
+    {
+        return vector_helper::remove(m_clients, _clientToRemove);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool ResourceInfo::replaceClient(core::IResource * _clientToReplace, core::IResource * _newClient)
+    {
+        auto it = std::find(m_clients.begin(), m_clients.end(), _clientToReplace);
+        if (it != m_clients.end())
+        {
+            VG_DEBUGPRINT("[Resource] Resource A 0x%016llx was a client of Resource \"%s\"\n", _clientToReplace, m_path.c_str());
+            *it = _newClient;
+            return true;
+        }
+        return false;
     }
 }

@@ -201,6 +201,12 @@ namespace vg::gfx
     {
         Optick::RegisterThread(_name);
     }
+
+    //--------------------------------------------------------------------------------------
+    void  Profiler::UnregisterProfilerThread()
+    {
+        Optick::UnRegisterThread(false);
+    }
 }
 
 #endif // VG_ENABLE_OPTICK

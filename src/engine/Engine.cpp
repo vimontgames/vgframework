@@ -488,6 +488,7 @@ namespace vg::engine
             VG_ASSERT(dynamic_cast<WorldResource*>(_resource));
             WorldResource * worldRes = (WorldResource *)_resource;
             auto world = worldRes->GetWorld();
+            VG_ASSERT(world);
             world->SetName(io::getFileNameWithoutExt(worldRes->GetResourcePath()));
 
             auto & editorViews = m_renderer->GetViews(gfx::ViewTarget::Editor);
@@ -618,7 +619,7 @@ namespace vg::engine
 	void Engine::Deinit()
 	{
         m_renderer->WaitGPUIdle();
-        m_resourceManager->flushPendingLoading();
+        m_resourceManager->stopLoadingThread();
 
         UnloadGame();
 

@@ -637,7 +637,7 @@ namespace vg::gfx
         }
         else
         {
-            VG_WARNING("[Resource] Cannot upload Texture \"%s\" because a size of %u bytes with alignment of %u is necessary but not available", _name.c_str(), size, alignment);
+            VG_WARNING("[Resource] Could not upload Texture \"%s\" this frame because a size of %u bytes with alignment of %u in upload buffer was necessary", _name.c_str(), size, alignment);
             return LoadStatus::CannotUploadData;
         }        
     }
@@ -692,7 +692,7 @@ namespace vg::gfx
         }
         else
         {
-            VG_WARNING("[Resource] Cannot upload Buffer \"%s\" because a size of %u bytes with alignment of %u is necessary but not available", _name.c_str(), size, alignment);
+            VG_WARNING("[Resource] Could not upload Buffer \"%s\" this frame because a size of %u bytes with alignment of %u in upload buffer was necessary", _name.c_str(), size, alignment);
             return LoadStatus::CannotUploadData;
         }
     }

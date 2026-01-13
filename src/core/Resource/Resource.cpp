@@ -176,6 +176,12 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    IObject * Resource::GetSharedObject() const
+    {
+        return m_shared;
+    }
+
+    //--------------------------------------------------------------------------------------
     void Resource::SetUserData(UserData _userData)
     {
         m_userData = _userData;

@@ -36,8 +36,8 @@ namespace vg::core
 
         virtual bool                    SetObject               (core::IObject * _object) = 0;
         virtual bool                    Instanciate             () = 0;
+        virtual IObject *               GetSharedObject         () const = 0;
         virtual IObject *               GetObject               () const = 0;
-
 
         virtual void                    SetUserData             (UserData _userData) = 0;
         virtual UserData                GetUserData             () const = 0;
