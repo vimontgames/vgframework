@@ -47,6 +47,8 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
         bool                                                        Init                (vg::engine::IEngine & _engine, vg::core::Singletons & _singletons) final override;
         bool                                                        Deinit              () final;
 
+        void                                                        StartInPlayMode     (bool _ready) final override;
+
         void                                                        OnPlay              () final override;
         void                                                        OnStop              () final override;
 
@@ -57,6 +59,9 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
 
         static vg::engine::IEngine &                                Engine              ();
         static vg::core::IInput &                                   Input               ();
+
+        // Game state
+        void                                                        setGameState        (GameState _gameState);
 
         // Characters
         const vg::core::vector<CharacterBehaviour *> &              getCharacters       (CharacterType _type) const { return m_characters[vg::core::asInteger(_type)];}
@@ -75,6 +80,7 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
     private:
         vg::core::IGameObject *                                     findMainMenu        () const;
         void                                                        initMainMenu        ();
+        const vg::core::string &                                    getPlayerName       (vg::core::uint _index) const;
 
     private:
         static vg::engine::IEngine *                                s_engine;
@@ -82,6 +88,6 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
         vg::core::vector<CharacterBehaviour *>                      m_characters[vg::core::enumCount<CharacterType>()];
         vg::core::vector<ItemBehaviour *>                           m_items[vg::core::enumCount<ItemType>()];
         vg::core::vector<vg::engine::IVehicleComponent*>            m_vehicles;
-        GameState                                                   m_gameState = GameState::MainMenu;
+        GameState                                                   m_gameState = GameState::Invalid;
         vg::core::vector<PlayerInputInfo>                           m_playerInputs;
 };

@@ -25,14 +25,16 @@ namespace vg
 
         }
 
-        virtual                 ~IGame      () = default;
+        virtual                 ~IGame              () = default;
 
-        virtual IGameOptions *  GetOptions  () const = 0;
+        virtual IGameOptions *  GetOptions          () const = 0;
 
-        virtual bool            Init        (engine::IEngine & _engine, core::Singletons & _singletons) = 0;
-        virtual bool            Deinit      () = 0;
+        virtual bool            Init                (engine::IEngine & _engine, core::Singletons & _singletons) = 0;
+        virtual bool            Deinit              () = 0;
 
-        virtual void            OnPlay      () = 0;
-        virtual void            OnStop      () = 0;
+        virtual void            StartInPlayMode     (bool _ready) = 0;
+
+        virtual void            OnPlay              () = 0;
+        virtual void            OnStop              () = 0;
     };
 }

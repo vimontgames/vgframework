@@ -686,6 +686,12 @@ namespace vg::engine
     void Engine::StartInPlayMode(bool _enable)
     {
         m_startInPlayMode = _enable;
+
+        if (m_startInPlayMode)
+        {
+            if (m_game)
+                m_game->StartInPlayMode(false);
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -1019,6 +1025,8 @@ namespace vg::engine
             auto * rm = GetResourceManager();
             if (!rm->HasAnyLoadingInProgress())
             {
+                if (m_game)
+                    m_game->StartInPlayMode(true);
                 Play();
                 m_startInPlayMode = false;
             }

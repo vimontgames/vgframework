@@ -8,8 +8,11 @@
 #include "engine/IEngine.h"
 #include "engine/IVehicleComponent.h"
 #include "Behaviour/Entity/Character/Player/PlayerBehaviour.h"
+#include "Behaviour/Entity/Character/Enemy/EnemyBehaviour.h"
 #include "Behaviour/Entity/Item/ItemBehaviour.h"
 #include "Behaviour/HealthBar/HealthBarBehaviour.h"
+#include "renderer/IRenderer.h"
+#include "renderer/IRendererOptions.h"
 
 using namespace vg;
 using namespace vg::core;
@@ -17,6 +20,9 @@ using namespace vg::engine;
 
 // Static member init
 vg::engine::IEngine * Game::s_engine = nullptr;
+
+// Max inputs supported in menus
+static const uint maxControllerCount = 3;
 
 //--------------------------------------------------------------------------------------
 Game * CreateNew()
@@ -105,8 +111,22 @@ bool Game::Deinit()
 }
 
 //--------------------------------------------------------------------------------------
+void Game::StartInPlayMode(bool _ready)
+{
+    // When starting in standalone mode, hide 3D UI until the game is loaded
+    auto * options = s_engine->GetRenderer()->GetOptions();
+
+    if (!_ready)
+        options->EnableUI3D(false);
+    //else
+    //    options->EnableUI3D(true);
+}
+
+//--------------------------------------------------------------------------------------
 void Game::OnPlay()
 {
+    setGameState(GameState::MainMenu);
+
     IWorld * world = s_engine->GetMainWorld();
     auto sceneCount = world->GetSceneCount(BaseSceneType::Scene);
     for (uint i = 0; i < sceneCount; ++i)
@@ -162,8 +182,6 @@ void Game::OnStop()
         m_items[i].clear();
 
     m_vehicles.clear();
-
-    m_gameState = GameState::MainMenu;
 }
 
 //--------------------------------------------------------------------------------------
@@ -229,21 +247,16 @@ IGameObject * Game::findMainMenu() const
 }
 
 //--------------------------------------------------------------------------------------
-static const char * g_avatars[] =
-{
-    "Pablo",
-    "Romeo",
-    "Benualdo"
-};
-
-//--------------------------------------------------------------------------------------
 void Game::initMainMenu()
 {
     if (IGameObject * mainMenu = findMainMenu())
     {
+        // Find avatars available
+        IObject * root = mainMenu->GetScene()->GetRoot();
+
         // Assign avatar to joystick by default
-        const uint avatarCount = (uint)countof(g_avatars);
-        const uint maxPlayerCount = avatarCount;
+        const uint avatarCount = (uint)m_characters[asInteger(CharacterType::Player)].size();
+        const uint maxPlayerCount = min(avatarCount, maxControllerCount);
 
         m_playerInputs.clear();
         m_playerInputs.reserve(maxPlayerCount);
@@ -281,8 +294,8 @@ void Game::Update(float _dt)
         {
             case GameState::MainMenu:
             {
-                const uint avatarCount = (uint)countof(g_avatars);
-                const uint maxPlayerCount = avatarCount;
+                const uint avatarCount = (uint)m_characters[asInteger(CharacterType::Player)].size();
+                const uint maxPlayerCount = min(avatarCount, maxControllerCount);
 
                 // find main menu
                 if (mainMenu)
@@ -405,7 +418,7 @@ void Game::Update(float _dt)
                                 if (info.enabled)
                                 {
                                     uiText->SetColor(float4(1, 1, 1, 1));
-                                    uiText->SetText(fmt::sprintf("J%u: %s", i, g_avatars[m_playerInputs[i].avatarIndex]));
+                                    uiText->SetText(fmt::sprintf("J%u: %s", i, getPlayerName(m_playerInputs[i].avatarIndex)));
                                 }
                                 else
                                 {
@@ -423,9 +436,15 @@ void Game::Update(float _dt)
                                 if (IUIImageComponent * uiImage = avatar->GetComponentT<IUIImageComponent>())
                                 {
                                     if (info.avatarIndex == a && info.enabled)
+                                    {
+                                        avatar->Enable(true);
                                         uiImage->SetColor(float4(1, 1, 1, 1));
+                                    }
                                     else
+                                    {
+                                        avatar->Enable(false);
                                         uiImage->SetColor(float4(1, 1, 1, 0.0f));
+                                    }
                                 }
                             }
                         }
@@ -433,6 +452,8 @@ void Game::Update(float _dt)
 
                     if (IGameObject * pressStart = mainMenu->GetScene()->GetRoot()->GetChildGameObject("Press Start"))
                     {
+                        pressStart->Enable(true);
+
                         if (IUITextComponent * uiText = pressStart->GetComponentT<IUITextComponent>())
                         {
                             uint enabledPlayerCount = 0;
@@ -464,7 +485,7 @@ void Game::Update(float _dt)
                             if (input.IsJoyButtonPressed(i, JoyButton::Start))
                             {
                                 // Assign controllers and start play
-                                m_gameState = GameState::Playing;
+                                setGameState(GameState::Playing);
                                 mainMenu->Enable(false);
                                 start = true;
                             }
@@ -480,7 +501,7 @@ void Game::Update(float _dt)
                             auto & info = m_playerInputs[i];
                             if (info.enabled)
                             {
-                                IGameObject * player = players->GetChildGameObject(g_avatars[info.avatarIndex]);
+                                IGameObject * player = players->GetChildGameObject(getPlayerName(info.avatarIndex));
                                 PlayerBehaviour * playerBehaviour = player->GetComponentInChildrenT<PlayerBehaviour>();
                                 playerBehaviour->activate(info.joyIndex);
                             }
@@ -499,9 +520,50 @@ void Game::Update(float _dt)
             }
             break;
 
+            case GameState::Playing:
+            {
+                IInput & input = Game::Input();
+
+                for (uint i = 0; i < m_playerInputs.size(); ++i)
+                {
+                    PlayerInputInfo & info = m_playerInputs[i];
+
+                    if (i < input.GetJoyCount())
+                    {
+                        if (input.IsJoyButtonJustPressed(i, JoyButton::Select))
+                        {
+                            s_engine->Stop();
+                            s_engine->Play();
+                            return;
+                        }
+                    }
+                }
+            }
+
             default:
                 break;
         }
+    }
+}
+
+//--------------------------------------------------------------------------------------
+void Game::setGameState(GameState _gameState)
+{
+    auto * options = s_engine->GetRenderer()->GetOptions();
+
+    if (_gameState != m_gameState)
+    {
+        for (auto & enemy : getEnemies())
+            enemy->OnGameStateChanged(_gameState, m_gameState);
+
+        switch (_gameState)
+        {
+            case GameState::Playing:
+                options->EnableUI3D(true);
+                break;
+        }
+
+        m_gameState = _gameState;
     }
 }
 
@@ -539,6 +601,14 @@ const vg::core::vector<PlayerBehaviour *> & Game::getPlayers() const
 }
 
 //--------------------------------------------------------------------------------------
+const vg::core::string & Game::getPlayerName(vg::core::uint _index) const
+{
+    const auto & players = getPlayers();
+    VG_ASSERT(_index < players.size());
+    return players[_index]->GetGameObject()->GetParentPrefab()->GetName();
+}
+
+//--------------------------------------------------------------------------------------
 const vg::core::vector<PlayerBehaviour *> Game::getActivePlayers() const
 {
     const auto players = m_characters[vg::core::asInteger(CharacterType::Player)];
@@ -555,7 +625,7 @@ const vg::core::vector<PlayerBehaviour *> Game::getActivePlayers() const
 //--------------------------------------------------------------------------------------
 const vg::core::vector<EnemyBehaviour *> & Game::getEnemies() const 
 { 
-    return reinterpret_cast<const vg::core::vector<EnemyBehaviour *> &>(m_characters[vg::core::asInteger(CharacterType::Player)]);
+    return reinterpret_cast<const vg::core::vector<EnemyBehaviour *> &>(m_characters[vg::core::asInteger(CharacterType::Enemy)]);
 }
 
 //--------------------------------------------------------------------------------------

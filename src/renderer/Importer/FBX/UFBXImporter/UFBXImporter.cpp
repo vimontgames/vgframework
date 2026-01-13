@@ -352,7 +352,7 @@ namespace vg::renderer
                         vertexBuffer.push_back(vertex);
                         indexBuffer.push_back(vertexIndex);
 
-                        aabb.grow((core::float3)vertex.pos);
+                        aabb.grow(pos * _scale);
 
                         vertexIndex++;
                     }

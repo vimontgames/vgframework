@@ -98,10 +98,27 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void UIRenderer::render(RenderUIType _renderUIType)
     {
+        const RendererOptions * options = RendererOptions::get();
+        switch (_renderUIType)
+        {
+            default:
+                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_renderUIType);
+                break;
+
+            case RenderUIType::RenderUIType_2D:
+                if (!options->IsUI2DEnabled())
+                    return;
+                break;
+
+            case RenderUIType::RenderUIType_3D:
+                if (!options->IsUI3DEnabled())
+                    return;
+                break;
+        }
+
         VG_PROFILE_CPU(_renderUIType == RenderUIType::RenderUIType_2D ? "RenderUI2D" : "RenderUI3D");
 
         auto * imGuiAdapter = Renderer::get()->GetImGuiAdapter();
-        const RendererOptions * options = RendererOptions::get();
 
         #ifdef VG_FINAL
         const bool debugUI = false;

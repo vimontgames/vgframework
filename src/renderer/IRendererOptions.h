@@ -44,5 +44,11 @@ namespace vg::renderer
 
         virtual gfx::VSync              GetVSync                                () const = 0;
         virtual bool                    SetVSync                                (gfx::VSync _vsync) = 0;
+
+        virtual void                    EnableUI2D                              (bool _enable) = 0;
+        virtual bool                    IsUI2DEnabled                           () const = 0;
+
+        virtual void                    EnableUI3D                              (bool _enable) = 0;
+        virtual bool                    IsUI3DEnabled                           () const = 0;
     };
 }

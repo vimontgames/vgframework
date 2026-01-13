@@ -101,6 +101,12 @@ namespace vg::renderer
         gfx::VSync              GetVSync                                () const final override;
         bool                    SetVSync                                (gfx::VSync _vsync) final override;
 
+       void                     EnableUI2D                              (bool _enable) final override;
+       bool                     IsUI2DEnabled                           () const final override;
+
+       void                     EnableUI3D                              (bool _enable) final override;
+       bool                     IsUI3DEnabled                           () const final override;
+
         void                    OnPropertyChanged                       (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
         // Non-virtual functions for internal renderer use should return the 'renderer' value
@@ -190,11 +196,15 @@ namespace vg::renderer
 
         AABBFlags               m_aabb                                  = (AABBFlags)0x0;
         WireframeFlags          m_wireframe                             = (WireframeFlags)0x0;
-        bool                    m_debugUI                               = false;
         bool                    m_debugFrustum                          = false;
         bool                    m_splitCullingViewJobs                  = true;
         bool                    m_particles                             = true;
         bool                    m_postProcess                           = true;
+
+        // UI
+        bool                    m_debugUI                               = false;
+        bool                    m_enableUI2D                            = true;
+        bool                    m_enableUI3D                            = true;
   
         gfx::HDR                m_HDRmode                               = gfx::HDR::None;
         gfx::MSAA               m_msaa[core::enumCount<Quality>()];

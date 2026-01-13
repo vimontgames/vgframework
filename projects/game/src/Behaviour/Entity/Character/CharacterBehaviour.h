@@ -15,46 +15,48 @@ public:
     ~CharacterBehaviour();
 
     // Component overrides
-    void                    OnEnable        () override;
-    void                    OnDisable       () override;
+    void                    OnEnable            () override;
+    void                    OnDisable           () override;
 
-    void                    OnPlay          () override;
-    void                    OnStop          () override;
+    void                    OnPlay              () override;
+    void                    OnStop              () override;
 
-    void                    FixedUpdate     (const Context & _context) override;
-    void                    Update          (const Context & _context) override;
+    void                    FixedUpdate         (const Context & _context) override;
+    void                    Update              (const Context & _context) override;
 
     // EntityBehaviour overrides
-    bool                    TakeHit         (CharacterBehaviour * _attacker, ItemBehaviour * _weapon = nullptr) override;
+    void                    OnGameStateChanged  (GameState _newState, GameState _previousState) override;
+    bool                    TakeHit             (CharacterBehaviour * _attacker, ItemBehaviour * _weapon = nullptr) override;
+
 
     // New CharacterBehaviour virtual funcs
-    virtual void            OnDeath         ();
+    virtual void            OnDeath             ();
 
-    void                    addScore        (vg::core::i32 _points);
-    void                    addLifes        (vg::core::i32 _lifes);
-    void                    addHP           (float _hp);   
+    void                    addScore            (vg::core::i32 _points);
+    void                    addLifes            (vg::core::i32 _lifes);
+    void                    addHP               (float _hp);   
 
-    VG_INLINE bool          isActive        () const;
-    VG_INLINE MoveState     getMoveState    () const;
-    VG_INLINE FightState    getFightState   () const;
-    VG_INLINE float         getHealth       () const;
-    VG_INLINE CharacterType getCharacterType() const;
-    VG_INLINE float         getVelocity     () const;
+    VG_INLINE bool          isActive            () const;
+    VG_INLINE MoveState     getMoveState        () const;
+    VG_INLINE FightState    getFightState       () const;
+    VG_INLINE float         getHealth           () const;
+    VG_INLINE CharacterType getCharacterType    () const;
+    VG_INLINE float         getVelocity         () const;
 
-    void                    enableVisual    (bool _enable);
-    void                    enablePhysics   (bool _enable);
+    void                    enableVisual        (bool _enable);
+    void                    enablePhysics       (bool _enable);
 
 protected:
-    void                    initAnimations  ();
-    void                    initSounds      ();
-    void                    initHealthBar   ();
+    void                    initAnimations      ();
+    void                    initSounds          ();
+    void                    initHealthBar       ();
 
-    void                    playMoveAnim    (MoveState _state, bool _loop = false);
+    void                    playMoveAnim        (MoveState _state, bool _loop = false);
 
-    void                    playFightAnim   (FightState _state, bool _loop = false);
-    void                    stopFightAnim   (FightState _state);
+    void                    playFightAnim       (FightState _state, bool _loop = false);
+    void                    stopFightAnim       (FightState _state);
 
-    void                    playSound       (SoundState _sound);
+    void                    playSound           (SoundState _sound);
 
 protected:
     inline static const vg::core::i32   s_maxLife = 5;

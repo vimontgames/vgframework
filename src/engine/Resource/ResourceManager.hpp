@@ -189,7 +189,8 @@ namespace vg::engine
             if (CookStatus::UP_TO_DATE != needsCook(*info))
             {
                 // Setting resource path to null will remove clients so we need to copy
-                const vector<core::IResource *> & clients = info->getClients();
+                // COPY here is intentinal (cf. ResourceManager::reimport)
+                vector<core::IResource *> clients = info->getClients();
                 for (auto client : clients)
                     VG_SAFE_INCREASE_REFCOUNT(client);
 

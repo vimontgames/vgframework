@@ -12,8 +12,6 @@ public:
     EntityBehaviour(const vg::core::string & _name, vg::core::IObject * _parent);
     ~EntityBehaviour();
 
-    virtual bool TakeHit(CharacterBehaviour * _attacker, ItemBehaviour * _weapon) { return false; };
-
-private:
-
+    virtual bool TakeHit(CharacterBehaviour * _attacker, ItemBehaviour * _weapon) { return false; }
+    virtual void OnGameStateChanged(GameState _newState, GameState _previousState) { }
 };

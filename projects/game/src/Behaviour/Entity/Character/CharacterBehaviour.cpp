@@ -77,6 +77,24 @@ bool CharacterBehaviour::registerProperties(IClassDesc& _desc)
 
     return true;
 }
+
+//--------------------------------------------------------------------------------------
+void CharacterBehaviour::OnGameStateChanged(GameState _newState, GameState _previousState)
+{
+    //switch (_newState)
+    //{
+    //    case GameState::MainMenu:
+    //        if (auto * healthbar = GetGameObject()->GetChildGameObject("HealthBar"))
+    //            healthbar->Enable(false);
+    //        break;
+    //
+    //    case GameState::Playing:
+    //        if (auto * healthbar = GetGameObject()->GetChildGameObject("HealthBar"))
+    //            healthbar->Enable(true);
+    //        break;
+    //}
+}
+
 //--------------------------------------------------------------------------------------
 void CharacterBehaviour::enableVisual(bool _enable)
 {
