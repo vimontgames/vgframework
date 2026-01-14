@@ -55,7 +55,8 @@ namespace vg::renderer
                 for (uint i = 0; i < m_materials.size(); ++i)
                 {
                     const auto * material = m_materials[i];
-                    VG_ASSERT(material);
+
+                    // It can happes only during hot reload
                     if (nullptr == material)
                         material = errorMaterial;
                         
