@@ -217,9 +217,13 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     bool View::isToolmode() const
     {
+        #ifdef VG_FINAL
+        return false;
+        #else
         const auto options = RendererOptions::get();
         const auto target = getViewID().target;
         return  ViewTarget::Editor == target || (ViewTarget::Game == target && options->isToolModeEnabled());
+        #endif
     }
 
     //--------------------------------------------------------------------------------------
