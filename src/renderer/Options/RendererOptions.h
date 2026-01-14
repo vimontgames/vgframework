@@ -109,8 +109,14 @@ namespace vg::renderer
 
         void                    OnPropertyChanged                       (IObject * _object, const core::IProperty & _prop, bool _notifyParent) final override;
 
-        // Non-virtual functions for internal renderer use should return the 'renderer' value
+        // Non-virtual functions for internal renderer use 
         bool				    isToolModeEnabled                       () const { return m_toolMode; }
+
+        core::uint2             getGridSize                             () const { return m_gridSize; }
+        float                   getGridScale                            () const { return m_gridScale; }
+        const core::float4 &    getGridColor                            () const { return m_gridColor;}
+        core::uint              getGridSubdivCount                      () const { return m_gridSubdivCount; }
+        const core::float4 &    getGridSubdivColor                      () const { return m_gridSubdivColor; }
 
         LightingMode            getLightingMode                         () const { return m_lightingMode; }
         PBRFlags                getPBRFlags                             () const { return m_pbrFlags; }
@@ -205,6 +211,13 @@ namespace vg::renderer
         bool                    m_debugUI                               = false;
         bool                    m_enableUI2D                            = true;
         bool                    m_enableUI3D                            = true;
+
+        // Grid
+        core::uint2             m_gridSize                              = float2(64,64);
+        float                   m_gridScale                             = 2.0f;
+        core::float4            m_gridColor                             = core::float4(0.015f, 0.015f, 0.015f, 0.5f);
+        core::uint              m_gridSubdivCount                       = 2;
+        core::float4            m_gridSubdivColor                       = core::float4(0.015f, 0.015f, 0.015f, 0.15f);
   
         gfx::HDR                m_HDRmode                               = gfx::HDR::None;
         gfx::MSAA               m_msaa[core::enumCount<Quality>()];

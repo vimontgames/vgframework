@@ -105,10 +105,11 @@ namespace vg::renderer
         const auto & materials = getMaterials();
         const auto & batchMask = getBatchMask();
 
-        bool useBatchMask = batchMask.getBitCount() > 0;
-
+        const bool useBatchMask = batchMask.getBitCount() >= materials.size();
+        
         // batchmask size can be greater if materials are not yet loaded, but should not be smaller
-        VG_ASSERT(batchMask.getBitCount() >= materials.size(), "[Graphics] BatchMask size %u of %s \"%s\" does not match material count %u", batchMask.getBitCount(), asString(GetGraphicIntanceType()).c_str(), GetName().c_str(), materials.size());
+        //if (batchMask.getBitCount() < materials.size())
+        //    VG_WARNING_ONCE("[GraphicInstance] Material count of %s \"%s\" (%u) is greater than batch mask bit count (%u)", asString(GetGraphicIntanceType()).c_str(), GetName().c_str(), materials.size(), batchMask.getBitCount());
 
         if (materials.size() > 0)
         {

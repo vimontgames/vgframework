@@ -10,6 +10,7 @@
 #include "gfx/BindlessTable/BindlessTable.h"
 #include "gfx/Resource/Buffer.h"
 #include "gfx/PipelineState/Graphic/RasterizerState.h"
+#include "renderer/Options/RendererOptions.h"
 
 #include "Shaders/debugdraw/debugdraw.hlsli" 
 
@@ -50,12 +51,12 @@ namespace vg::renderer
         m_debugDrawShaderKey = ShaderKey("debugdraw/debugdraw.hlsl", "DebugDraw");
         m_debugDrawOutlineShaderKey = ShaderKey("debugdraw/debugdraw.hlsl", "DebugDrawOutline");
 
+        //createGrid(0);
+        createAxis();
         createBoxPrimitive();
         createCubePrimitive();
         createSquarePyramidPrimitive();
         createIcoSpherePrimitive();
-        createGrid();
-        createAxis();
         createCylinderPrimitive();
     }
 
@@ -689,39 +690,82 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void DebugDraw::createGrid()
+    // Create grid, returns 'true' if succeeded
+    //--------------------------------------------------------------------------------------
+    bool DebugDraw::createGrid(core::uint2 _gridSize, float _scale, const core::float4 & _color, uint _subDiv, const core::float4 & _subdivColor)
     {
-        auto * device = Device::get();        
+        auto * device = Device::get(); 
 
-        const uint gridSize = 64;
+        VG_SAFE_RELEASE_ASYNC(m_gridVB);
 
-        int begin = (-(int)gridSize / 2);
-        int end = ((int)gridSize / 2);
+        const uint2 gridSize = _gridSize;
+        const u32 gridColor = packRGBA8(_color);
+        const u32 subDivColor = packRGBA8(_subdivColor);
+
+        float scale = 3.0f;
+
+        float2 offset;
+        offset.x = (gridSize.x & 1) ? -0.5f : 0.0f;
+        offset.y = (gridSize.y & 1) ? -0.5f : 0.0f;
+
+        int2 begin = -((int2)gridSize / 2);
+        int2 end = ((int2)(gridSize+1) / 2);
 
         vector<DebugDrawUnlitVertex> vertices;
-        vertices.reserve((end - begin + 1) << 2);
+        vertices.reserve( ((end.x - begin.x + 1) + max(0, (int)_subDiv-1))  * ((end.y - begin.y + 1) + max(0, (int)_subDiv-1)));
 
-        for (int i = begin; i <= end; ++i)
+        for (int i = begin.x; i <= end.x; ++i)
         {
-            auto & v0 = vertices.emplace_back();
-            v0.setPos({ (float)i, (float)begin, 0.0f });
-            v0.setColor(0xFF0D0D0D);
+            for (uint j = 1; j < _subDiv; ++j)
+            {
+                const float subDivOffset = (float)j / (float)_subDiv;
 
+                auto & v0 = vertices.emplace_back();
+                v0.setPos(float3((float)i + offset.x + subDivOffset, (float)begin.y + offset.y, 0.0f) * scale);
+                v0.setColor(subDivColor);
+
+                auto & v1 = vertices.emplace_back();
+                v1.setPos(float3((float)i + offset.x + subDivOffset, (float)end.y + offset.y, 0.0f) * scale);
+                v1.setColor(subDivColor);
+            }
+
+            auto & v0 = vertices.emplace_back();
+            v0.setPos(float3((float)i + offset.x, (float)begin.y + offset.y, 0.0f) * scale);
+            v0.setColor(gridColor);
+            
             auto & v1 = vertices.emplace_back();
-            v1.setPos({ (float)i, (float)end, 0.0f });
-            v1.setColor(0xFF0D0D0D);
+            v1.setPos(float3((float)i + offset.x, (float)end.y + offset.y, 0.0f) * scale);
+            v1.setColor(gridColor);
+        }
+
+        for (int i = begin.y; i <= end.y; ++i)
+        {
+            for (uint j = 1; j < _subDiv; ++j)
+            {
+                const float subDivOffset = (float)j / (float)_subDiv;
+
+                auto & h0 = vertices.emplace_back();
+                h0.setPos(float3((float)begin.x + offset.x, (float)i + offset.y + subDivOffset, 0.0f) * scale);
+                h0.setColor(subDivColor);
+
+                auto & h1 = vertices.emplace_back();
+                h1.setPos(float3((float)end.x + offset.x, (float)i + offset.y + subDivOffset, 0.0f) * scale);
+                h1.setColor(subDivColor);
+            }
 
             auto & h0 = vertices.emplace_back();
-            h0.setPos({ (float)begin,(float)i, 0.0f });
-            h0.setColor(0xFF0D0D0D);
+            h0.setPos(float3((float)begin.x + offset.x,(float)i + offset.y, 0.0f) * scale);
+            h0.setColor(gridColor);
 
             auto & h1 = vertices.emplace_back();
-            h1.setPos({ (float)end,(float)i, 0.0f });
-            h1.setColor(0xFF0D0D0D);
+            h1.setPos(float3((float)end.x + offset.x, (float)i + offset.y, 0.0f) * scale);
+            h1.setColor(gridColor);           
         }
 
         BufferDesc vbDesc(Usage::Default, BindFlags::ShaderResource, CPUAccessFlags::None, BufferFlags::None, sizeof(DebugDrawUnlitVertex), (u32)vertices.size());
-        m_gridVB = device->createBuffer(vbDesc, "GridVB", vertices.data());
+        m_gridVB = device->createBuffer(vbDesc, "GridVB", vertices.data(), ReservedSlot::None);
+
+        return true;
     }
 
     //--------------------------------------------------------------------------------------
@@ -823,7 +867,7 @@ namespace vg::renderer
     {
         RasterizerState rs(FillMode::Wireframe, CullMode::None);
         DepthStencilState ds(true, false, ComparisonFunc::LessEqual);
-        BlendState bs(BlendFactor::One, BlendFactor::Zero, BlendOp::Add);
+        BlendState bs(BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add);
 
         VG_ASSERT(nullptr != m_gridVB);
         const BufferDesc & gridDesc = m_gridVB->getBufDesc();
@@ -1110,6 +1154,31 @@ namespace vg::renderer
     {
         const auto * factory = Kernel::getFactory();
         return (const vg::engine::IEngine *)factory->GetSingleton("Engine");
+    }
+
+    //--------------------------------------------------------------------------------------
+    void DebugDraw::beginFrame()
+    {
+        VG_PROFILE_CPU("DebugDraw::beginFrame");
+
+        if (const auto * options = RendererOptions::get())
+        {
+            const auto size = options->getGridSize();
+            const auto scale = options->getGridScale();
+            const auto color = options->getGridColor();
+            const auto subdiv = options->getGridSubdivCount();
+            const auto subdivColor = options->getGridSubdivColor();
+
+            if (any(size != m_currentGridSize) || m_currentGridScale != scale || any(m_currentGridColor != color) || m_currentGridSubdiv != subdiv || any(m_currentGridSubdivColor != subdivColor))
+            {
+                createGrid(size,scale, color, subdiv, subdivColor);
+                m_currentGridSize = size;
+                m_currentGridScale = scale;
+                m_currentGridColor = color;
+                m_currentGridSubdiv = subdiv;
+                m_currentGridSubdivColor = subdivColor;
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------

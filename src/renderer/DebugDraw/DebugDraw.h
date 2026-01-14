@@ -83,6 +83,7 @@ namespace vg::renderer
         void                    drawCylinder                (gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, float _radius, float _height, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) const;
         void                    drawSquarePyramid           (gfx::CommandList * _cmdList, DebugDrawFillMode _mode, bool _zTest, float _base, float _height, core::u32 _color, const core::float4x4 & _matrix = core::float4x4::identity(), PickingID _pickingID = 0) const;
 
+        void                    beginFrame                  ();
         void                    endFrame                    ();
         void                    reset                       ();
 
@@ -99,7 +100,7 @@ namespace vg::renderer
         void                    createBoxPrimitive          ();
         void                    createCubePrimitive         ();
         void                    createSquarePyramidPrimitive();
-        void                    createGrid                  ();
+        bool                    createGrid                  (core::uint2 _gridSize, float _scale, const core::float4 & _color, uint _subDiv, const core::float4 & _subdivColor);
         void                    createAxis                  ();
         void                    createIcoSpherePrimitive    (); 
         void                    createCylinderPrimitive     ();
@@ -144,6 +145,12 @@ namespace vg::renderer
         MeshGeometry *                  m_icoSphere = nullptr;
         MeshGeometry *                  m_hemiSphere = nullptr;
         MeshGeometry *                  m_cylinder = nullptr;
+
+        core::uint2                     m_currentGridSize = (core::uint2)-1;
+        float                           m_currentGridScale = -1.0f;
+        core::float4                    m_currentGridColor = core::float4(0, 0, 0, -1);
+        core::u32                       m_currentGridSubdiv = (core::u32)-1;
+        core::float4                    m_currentGridSubdivColor = core::float4(0, 0, 0, -1);
 
         struct DebugDrawLineData
         {

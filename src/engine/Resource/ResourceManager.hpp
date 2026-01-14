@@ -789,44 +789,14 @@ namespace vg::engine
                 VG_ASSERT(nullptr != res, "nullptr resource found in loaded resources list at index %u/%u", i, m_resourcesLoaded.size());
                 if (nullptr != res)
                 {
-                    #if 0
-
                     const string & path = res->GetResourcePath();
-                    IObject * object = nullptr;
-                    if (!path.empty())
-                    {
-                        auto it = resourceInfoMap.find(path);
-                        VG_ASSERT(it != resourceInfoMap.end(), "[Loading] Could not find \"%s\" in resourceInfo map", path.c_str());
-                        const auto & info = it->second;
-                        VG_ASSERT(info);
-                        if (nullptr != info)
-                        {
-                            object = info->getObject();
-
-                            if (!res->HasValidUID())
-                                res->RegisterUID();
-                            res->LoadSubResources();
-                            IObject * resOwner = res->GetParent();
-                            VG_ASSERT(nullptr != resOwner);
-                            if (nullptr != resOwner)
-                                resOwner->OnResourceLoaded(res);
-
-                            #if USE_CLIENT_LIMIT_PER_FRAME
-                            currentClientCount++;
-                            #endif
-                        }
-                    }                    
-
-                    #else
-
-                    const string path = res->GetResourcePath();
                     auto it = resourceInfoMap.find(path);
-                    VG_ASSERT(it != resourceInfoMap.end(), "[Loading] Could not find \"%s\"", path.c_str(), res->GetResourcePath().c_str());
+
                     if (it != resourceInfoMap.end())
                     {
                         auto & info = it->second;
                     
-                        VG_ASSERT(nullptr != info || res->GetResourcePath().empty());
+                        VG_ASSERT(nullptr != info);
                         if (nullptr != info)
                         {
                             VG_ASSERT(info);
@@ -845,8 +815,10 @@ namespace vg::engine
                             #endif
                         }
                     }
-
-                    #endif
+                    else
+                    {
+                        VG_WARNING("[Loading] Could not find resource info for resource \"%s\" (\"%s\")", res->GetName().c_str(), path.c_str());
+                    }
                 }
             }
 

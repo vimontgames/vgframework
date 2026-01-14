@@ -2,7 +2,6 @@
     <Object class="RendererOptions">
         <Property type="String" name="m_name" value="Renderer Options"/>
         <Property type="Uint32" name="m_uid" value="4100248654"/>
-        <Property type="Uint32" name="m_originalUID" value="0"/>
         <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
         <Property type="Bool" name="m_toolMode" value="false"/>
         <Property type="EnumU32" name="m_debugDisplayMode" value="None"/>
@@ -22,7 +21,6 @@
             <Object class="TextureResource">
                 <Property type="String" name="m_name" value="TextureResource #0"/>
                 <Property type="Uint32" name="m_uid" value="2526968992"/>
-                <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="String" name="m_resourcePath" value="data/Textures/EnvMaps/Default.psd"/>
             </Object>
@@ -34,7 +32,6 @@
             <Object class="TextureResource">
                 <Property type="String" name="m_name" value="TextureResource #1"/>
                 <Property type="Uint32" name="m_uid" value="388369360"/>
-                <Property type="Uint32" name="m_originalUID" value="0"/>
                 <Property type="EnumFlagsU16" name="m_objectFlags" value=""/>
                 <Property type="String" name="m_resourcePath" value="data/Engine/BRDF/CookTorrance.png"/>
             </Object>
@@ -58,13 +55,6 @@
         <Property type="EnumU8" name="m_depthOfField[Quality::Medium]" value="Default"/>
         <Property type="EnumU8" name="m_depthOfField[Quality::High]" value="Default"/>
         <Property type="EnumU8" name="m_depthOfField[Quality::VeryHigh]" value="Default"/>
-        <Property type="EnumFlagsU16" name="m_aabb" value=""/>
-        <Property type="EnumFlagsU16" name="m_wireframe" value=""/>
-        <Property type="EnumFlagsU32" name="m_displayFlags" value="AlbedoMap|NormalMap|VertexColor|MaterialColor|InstanceColor"/>
-        <Property type="EnumFlagsU32" name="m_renderPassFlags" value="ZPrepass|Opaque|Transparency"/>
-        <Property type="Bool" name="m_particles" value="true"/>
-        <Property type="Bool" name="m_debugUI" value="false"/>
-        <Property type="Bool" name="m_debugFrustum" value="false"/>
         <Property type="Bool" name="m_splitCullingViewJobs" value="true"/>
         <Property type="Bool" name="m_renderJobs" value="true"/>
         <Property type="Bool" name="m_forceRenderJobsCount" value="false"/>
@@ -72,5 +62,19 @@
         <Property type="EnumU8" name="m_renderJobsPolicy" value="RecursiveSplit"/>
         <Property type="Uint32" name="m_renderJobsTotalBufferSizeInMB" value="64"/>
         <Property type="Uint32" name="m_renderJobsWorkerMinBufferSizeInMB" value="4"/>
+        <Property type="Bool" name="m_debugUI" value="false"/>
+        <Property type="Bool" name="m_enableUI2D" value="true"/>
+        <Property type="Bool" name="m_enableUI3D" value="true"/>
+        <Property type="Uint2" name="m_gridSize" x="51" y="51"/>
+        <Property type="Float" name="m_gridScale" value="2"/>
+        <Property type="Float4" name="m_gridColor" x="0.015686275" y="0.015686275" z="0.015686275" w="0.50196081"/>
+        <Property type="Uint32" name="m_gridSubdivCount" value="3"/>
+        <Property type="Float4" name="m_gridSubdivColor" x="0.015686275" y="0.015686275" z="0.015686275" w="0.1254902"/>
+        <Property type="EnumFlagsU16" name="m_aabb" value=""/>
+        <Property type="EnumFlagsU16" name="m_wireframe" value=""/>
+        <Property type="EnumFlagsU32" name="m_displayFlags" value="AlbedoMap|NormalMap|VertexColor|MaterialColor|InstanceColor"/>
+        <Property type="EnumFlagsU32" name="m_renderPassFlags" value="ZPrepass|Opaque|Transparency"/>
+        <Property type="Bool" name="m_particles" value="true"/>
+        <Property type="Bool" name="m_debugFrustum" value="false"/>
     </Object>
 </Root>

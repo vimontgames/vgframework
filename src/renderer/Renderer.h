@@ -180,8 +180,11 @@ namespace vg::renderer
         void                                    initDefaultMaterials            ();
         void                                    deinitDefaultMaterials          ();
 
-        void                                    cullWorlds                      ();
-        void                                    cullViews                       ();
+        bool                                    cullWorlds                      ();
+        void                                    waitCullWorlds                  ();
+
+        bool                                    cullViews                       ();
+        void                                    waitCullViews                   ();
 
         void                                    releaseSpecularBRDF             ();
 

@@ -637,6 +637,11 @@ namespace vg::renderer
             // List all worlds and their visible views, and instances (but no frustum culling)
             //--------------------------------------------------------------------------------------
             cullWorlds();
+            {
+                // Can only insert tasks that do not depend on world culling here
+                DebugDraw::get()->beginFrame();
+            }
+            waitCullWorlds();
 
             // Update world IBL cubemaps if needed (must happen after cullWorlds)
             updateIBLCubemaps();
@@ -645,9 +650,13 @@ namespace vg::renderer
             m_particleManager->updateSimulation();
 
             //--------------------------------------------------------------------------------------
-            // Cull all views and wait (TODO: split in several jobs per view)
+            // Cull all views and wait (TODO: split in several jobs per view?)
             //--------------------------------------------------------------------------------------
             cullViews();
+            {
+                // Can only insert tasks that do not depend on view culling here
+            }
+            waitCullViews();
 
             // Framegraph
             {
@@ -821,8 +830,14 @@ namespace vg::renderer
     static volatile int counter = 0;
 
     //--------------------------------------------------------------------------------------
-    void Renderer::cullWorlds()
+    // Start world culling jobs:
+    // Returns 'true' if any job actually started
+    // Call waitCullWorld to wait for the jobs to complete
+    //--------------------------------------------------------------------------------------
+    bool Renderer::cullWorlds()
     {
+        VG_PROFILE_CPU("cullWorlds");
+
         VG_ASSERT(m_sharedWorldCullingJobOutput);
         m_sharedWorldCullingJobOutput->clear();
 
@@ -869,25 +884,28 @@ namespace vg::renderer
         core::Scheduler * jobScheduler = (core::Scheduler *)Kernel::getScheduler();
         auto jobSync = GetJobSync(RendererJobType::WorldCulling);
 
-        uint jobStartCounter = 0;
+        bool anyJobStarted = false;
         for (uint w = 0; w < visibleWorlds.size(); ++w)
         {
             WorldCullingJobOutput & visibleWorld = visibleWorlds[w];
 
             auto * job = visibleWorld.getCullingJob();
             jobScheduler->Start(job, jobSync);
-            jobStartCounter++;
+            anyJobStarted = true;
         }
 
-        if (jobStartCounter > 0)
-        {
-            VG_PROFILE_CPU("Wait World Culling");
-            WaitJobSync(RendererJobType::WorldCulling);
-        }
+        return anyJobStarted;
     }
 
     //--------------------------------------------------------------------------------------
-    void Renderer::cullViews()
+    void Renderer::waitCullWorlds()
+    {
+        VG_PROFILE_CPU("waitCullWorlds");
+        WaitJobSync(RendererJobType::WorldCulling);
+    }
+
+    //--------------------------------------------------------------------------------------
+    bool Renderer::cullViews()
     {
         VG_ASSERT(m_sharedViewCullingJobOutput);
         m_sharedViewCullingJobOutput->clear();
@@ -898,7 +916,6 @@ namespace vg::renderer
         // Perform culling for each view (might want to split views later)
         bool anyJobStarted = false;
 
-        #if 1
         const SharedWorldCullingJobOutput * worldCulling = getSharedWorldCullingJobOutput();
 
         for (uint w = 0; w < worldCulling->m_allVisibleWorlds.size(); ++w)
@@ -910,27 +927,15 @@ namespace vg::renderer
                 anyJobStarted |= view->startJobs();
             }
         }
-        #else
-        //for (uint j = 0; j < core::enumCount<gfx::ViewTarget>(); ++j)
-        //{
-        //    const auto & views = m_views[j];
-        //    for (uint i = 0; i < views.size(); ++i)
-        //    {
-        //        View * view = views[i];
-        //        if (view && view->IsVisible())
-        //        {
-        //            auto * job = view->getCullingFinalJob();
-        //            anyJobStarted |= view->startJobs();
-        //        }
-        //    }
-        //}
-        #endif
 
-        if (anyJobStarted)
-        {
-            VG_PROFILE_CPU("Wait View Culling");
-            WaitJobSync(RendererJobType::ViewCulling);
-        }
+        return anyJobStarted;
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::waitCullViews()
+    {
+        VG_PROFILE_CPU("waitCullViews");
+        WaitJobSync(RendererJobType::ViewCulling);
     }
 
 	//--------------------------------------------------------------------------------------

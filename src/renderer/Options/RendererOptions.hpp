@@ -284,6 +284,25 @@ namespace vg::renderer
         }
         registerPropertyGroupEnd(RendererOptions);
 
+        registerPropertyGroupBegin(RendererOptions, "Grid");
+        {
+            registerProperty(RendererOptions, m_gridSize, "Size");
+            setPropertyDescription(RendererOptions, m_gridSize, "Grid size");
+
+            registerProperty(RendererOptions, m_gridScale, "Scale");
+            setPropertyDescription(RendererOptions, m_gridScale, "Grid scale");
+
+            registerPropertyEx(RendererOptions, m_gridColor, "Color", PropertyFlags::Color);
+            setPropertyDescription(RendererOptions, m_gridColor, "Grid color");
+
+            registerProperty(RendererOptions, m_gridSubdivCount, "Subdiv");
+            setPropertyDescription(RendererOptions, m_gridSubdivCount, "Subdivision count");
+
+            registerPropertyEx(RendererOptions, m_gridSubdivColor, "Subdiv Color", PropertyFlags::Color);
+            setPropertyDescription(RendererOptions, m_gridSubdivColor, "Subdivision color");
+        }
+        registerPropertyGroupEnd(RendererOptions);
+
         registerPropertyGroupBegin(RendererOptions, "Misc");
         {
             registerPropertyEnumBitfield(RendererOptions, AABBFlags, m_aabb, "AABB");
@@ -299,7 +318,7 @@ namespace vg::renderer
             setPropertyDescription(RendererOptions, m_particles, "Show particles");
 
             registerProperty(RendererOptions, m_debugFrustum, "Frustum");
-            setPropertyDescription(RendererOptions, m_debugFrustum, "Show camera frustum");
+            setPropertyDescription(RendererOptions, m_debugFrustum, "Show camera frustum");            
         }
         registerPropertyGroupEnd(RendererOptions);
 
@@ -368,6 +387,11 @@ namespace vg::renderer
         m_debugUI = _other.m_debugUI;
         m_enableUI2D = _other.m_enableUI2D;
         m_enableUI3D = _other.m_enableUI3D;
+        m_gridSize = _other.m_gridSize;
+        m_gridScale = _other.m_gridScale;
+        m_gridColor = _other.m_gridColor;
+        m_gridSubdivCount = _other.m_gridSubdivCount;
+        m_gridSubdivColor = _other.m_gridSubdivColor;
         m_HDRmode = _other.m_HDRmode;
         m_aaPostProcess = _other.m_aaPostProcess;
         m_VSync = _other.m_VSync;
