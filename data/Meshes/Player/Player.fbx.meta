@@ -3,5 +3,6 @@
         <Property type="String" name="m_name" value="Player.fbx.meta"/>
         <Property type="Bool" name="m_importSettings.m_physicsCollisionData" value="false"/>
         <Property type="Bool" name="m_importSettings.m_ignoreScale" value="true"/>
+        <Property type="Bool" name="m_importSettings.m_rotateYUpAABB" value="true"/>
     </Object>
 </Root>

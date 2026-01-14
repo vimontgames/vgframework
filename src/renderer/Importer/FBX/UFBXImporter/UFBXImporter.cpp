@@ -68,6 +68,8 @@ namespace vg::renderer
                     _data.anims.push_back(animImporterData);
             }
 
+            // TODO: When mesh is skinned, recompute the AABB from the T-Pose
+
             ufbx_free_scene(scene);
 
             return true;
@@ -138,7 +140,7 @@ namespace vg::renderer
 
     //--------------------------------------------------------------------------------------
     core::quaternion UFBXQuatToQuat(ufbx_quat q)
-    { 
+    {
         return core::quaternion((float)q.x, (float)q.y, (float)q.z, (float)q.w);
     }
 
@@ -151,7 +153,7 @@ namespace vg::renderer
         if (_UFbxMesh->instances.count > 0)
             name = _UFbxMesh->instances.data[0]->name.data;
 
-        VG_DEBUGPRINT("[UFBXImporter] Importing FBX Mesh \"%s\" ...", name.c_str());
+        VG_INFO("[UFBXImporter] Importing FBX Mesh \"%s\" ...", name.c_str());
         _data.name = name;
 
         uint maxMaterialCount = 0, maxTriangleCount = 0, totalTriangleCount = 0;;
@@ -448,6 +450,12 @@ namespace vg::renderer
         _data.batches = std::move(batches);
         _data.materials = std::move(materials);
 
+        if (_meshImportSettings->m_rotateYUpAABB)
+        {
+            aabb.m_min = aabb.m_min.xzy;
+            aabb.m_max = aabb.m_max.xzy;
+        }
+
         // Ensure AABB has a finite volume
         const float3 m = aabb.m_min;
         const float3 M = aabb.m_max;
@@ -489,7 +497,7 @@ namespace vg::renderer
 
         }
 
-        VG_DEBUGPRINT(" %.2f ms\n", Timer::getEnlapsedTime(start, Timer::getTick()));
+        VG_INFO("Mesh imported in %.2f ms\n", Timer::getEnlapsedTime(start, Timer::getTick()));
         return true;
     }
 

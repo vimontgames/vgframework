@@ -6,5 +6,6 @@ namespace vg::gfx
     {
         bool    m_physicsCollisionData = false;
         bool    m_ignoreScale = false;
+        bool    m_rotateYUpAABB = false;
     };
 }
