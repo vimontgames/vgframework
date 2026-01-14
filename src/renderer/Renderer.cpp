@@ -142,6 +142,12 @@ namespace vg::renderer
 
         // Profiler instance has to be created by the graphic engine so as to profile the GPU too
         Kernel::setProfiler(new Profiler());
+
+        for (uint i = 0; i < countof(m_defaultMaterials); ++i)
+            m_defaultMaterials[i] = nullptr;
+
+        for (uint i = 0; i < countof(m_defaultTextures); ++i)
+            m_defaultTextures[i] = nullptr;        
 	}
 
 	//--------------------------------------------------------------------------------------
@@ -1272,9 +1278,7 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void Renderer::initDefaultTextures()
     {
-        m_defaultTextures.resize(enumCount<MaterialTextureType>());
-
-        for (uint t = 0; t < m_defaultTextures.size(); ++t)
+        for (uint t = 0; t < countof(m_defaultTextures); ++t)
         {
             const auto type = (MaterialTextureType)t;
             u32 data;
@@ -1315,24 +1319,51 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     void Renderer::deinitDefaultTextures()
     {
-        for (uint t = 0; t < m_defaultTextures.size(); ++t)
+        for (uint t = 0; t < countof(m_defaultTextures); ++t)
             VG_SAFE_RELEASE(m_defaultTextures[t]);
-
-        m_defaultTextures.clear();
     }
 
     //--------------------------------------------------------------------------------------
     void Renderer::initDefaultMaterials()
     {
-        VG_ASSERT(nullptr == m_defaultMaterial);
-        m_defaultMaterial = new DefaultMaterialModel("Default Material", this);
-        VG_ASSERT(m_defaultMaterial->getGPUMaterialDataIndex() == 0);
+        // Default opaque (e.g. meshes without material
+        MaterialModel *& defaultOpaqueMaterial = m_defaultMaterials[asInteger(DefaultMaterialType::Opaque)];
+        VG_ASSERT(nullptr == defaultOpaqueMaterial);
+        defaultOpaqueMaterial = new DefaultMaterialModel("Default Opaque", this);
+        defaultOpaqueMaterial->SetSurfaceType(SurfaceType::Opaque);
+        defaultOpaqueMaterial->SetColor("AlbedoColor", float4(0.5f, 0.5f, 0.5f, 1.0f));
+        VG_ASSERT(defaultOpaqueMaterial->getGPUMaterialDataIndex() == asInteger(DefaultMaterialType::Opaque));
+
+        // Default transparent (e.g. particles without material)
+        MaterialModel *& defaultTransparentMaterial = m_defaultMaterials[asInteger(DefaultMaterialType::Transparent)];
+        VG_ASSERT(nullptr == defaultTransparentMaterial);
+        defaultTransparentMaterial = new DefaultMaterialModel("Default Transparent", this);
+        defaultTransparentMaterial->SetSurfaceType(SurfaceType::AlphaBlend);
+        defaultTransparentMaterial->SetColor("AlbedoColor", float4(0.5f, 0.5f, 0.5f, 0.5f));
+        VG_ASSERT(defaultTransparentMaterial->getGPUMaterialDataIndex() == asInteger(DefaultMaterialType::Transparent));
+
+        // Default transparent (e.g. used for hidden batchs during raytracing)
+        MaterialModel *& defaultInvisibleMaterial = m_defaultMaterials[asInteger(DefaultMaterialType::Invisible)];
+        VG_ASSERT(nullptr == defaultInvisibleMaterial);
+        defaultInvisibleMaterial = new DefaultMaterialModel("Default Invisible", this);
+        defaultInvisibleMaterial->SetSurfaceType(SurfaceType::AlphaBlend);
+        defaultInvisibleMaterial->SetColor("AlbedoColor", float4(0.0f, 0.0f, 0.0f, 0.0f));
+        VG_ASSERT(defaultInvisibleMaterial->getGPUMaterialDataIndex() == asInteger(DefaultMaterialType::Invisible));
+
+        // Error material
+        MaterialModel *& errorMaterial = m_defaultMaterials[asInteger(DefaultMaterialType::Error)];
+        VG_ASSERT(nullptr == errorMaterial);
+        errorMaterial = new DefaultMaterialModel("Default Error", this);
+        errorMaterial->SetSurfaceType(SurfaceType::Opaque);
+        errorMaterial->SetColor("AlbedoColor", float4(1.0f, 0.0f, 1.0f, 1.0f));
+        VG_ASSERT(errorMaterial->getGPUMaterialDataIndex() == asInteger(DefaultMaterialType::Error));
     }
 
     //--------------------------------------------------------------------------------------
     void Renderer::deinitDefaultMaterials()
     {
-        VG_SAFE_RELEASE(m_defaultMaterial);
+        for (uint i = 0; i < countof(m_defaultMaterials); ++i)
+            VG_SAFE_RELEASE(m_defaultMaterials[i]);
     }
 
     //--------------------------------------------------------------------------------------

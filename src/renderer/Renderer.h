@@ -3,6 +3,7 @@
 #include "renderer/IRenderer.h"
 #include "core/Singleton/Singleton.h"
 #include "core/IScheduler.h"
+#include "renderer/Model/Material/Material_Consts.h"
 
 enum class GBuffer : vg::core::u8;
 
@@ -122,7 +123,8 @@ namespace vg::renderer
         void                                    ReleaseAsync                    (core::IObject * _object) final override;
 
         VG_INLINE gfx::Texture *                getDefaultTexture               (MaterialTextureType _type) const;
-        VG_INLINE MaterialModel *               getDefaultMaterial              () const;
+        VG_INLINE MaterialModel *               getDefaultMaterial              (DefaultMaterialType _type) const;
+        VG_INLINE MaterialModel *               getInvisibleMaterial            () const;
         DebugDraw *                             getDebugDraw                    () const;
         
         #ifdef _WIN32
@@ -206,8 +208,10 @@ namespace vg::renderer
         ImGuiPass *                             m_imguiPass                     = nullptr; 
         HDROutputPass *                         m_hdrOutputPass                 = nullptr;
         IPicking *                              m_picking                       = nullptr;
-        core::vector<gfx::Texture *>            m_defaultTextures;
-        MaterialModel *                         m_defaultMaterial               = nullptr;
+ 
+        MaterialModel *                         m_defaultMaterials[core::enumCount<DefaultMaterialType>()];
+        gfx::Texture *                          m_defaultTextures[core::enumCount<MaterialTextureType>()];
+
         bool                                    m_fullscreen                    = false;
         SharedWorldCullingJobOutput *           m_sharedWorldCullingJobOutput   = nullptr;
         SharedViewCullingJobOutput *            m_sharedViewCullingJobOutput    = nullptr;

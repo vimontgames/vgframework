@@ -3,15 +3,17 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     VG_INLINE gfx::Texture * Renderer::getDefaultTexture(MaterialTextureType _type) const
     {
+        VG_ASSERT(asInteger(_type) < countof(m_defaultTextures));
         return m_defaultTextures[core::asInteger(_type)];
     }
 
     //--------------------------------------------------------------------------------------
-    VG_INLINE MaterialModel * Renderer::getDefaultMaterial() const
+    VG_INLINE MaterialModel * Renderer::getDefaultMaterial(DefaultMaterialType _type) const
     {
-        return m_defaultMaterial;
+        VG_ASSERT(asInteger(_type) < countof(m_defaultMaterials));
+        return m_defaultMaterials[asInteger(_type)];
     }
-
+  
     //--------------------------------------------------------------------------------------
     VG_INLINE ImGuiAdapter * Renderer::getImGuiAdapter() const
     {

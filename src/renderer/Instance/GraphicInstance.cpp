@@ -100,35 +100,51 @@ namespace vg::renderer
     {
         SurfaceTypeFlags flags = (SurfaceTypeFlags)0x0;
 
-        auto * defaultMaterial = Renderer::get()->getDefaultMaterial();
+        auto * defaultMaterial = Renderer::get()->getDefaultMaterial(DefaultMaterialType::Opaque);
 
         const auto & materials = getMaterials();
+        const auto & batchMask = getBatchMask();
+
+        bool useBatchMask = batchMask.getBitCount() > 0;
+
+        // batchmask size can be greater if materials are not yet loaded, but should not be smaller
+        VG_ASSERT(batchMask.getBitCount() >= materials.size(), "[Graphics] BatchMask size %u of %s \"%s\" does not match material count %u", batchMask.getBitCount(), asString(GetGraphicIntanceType()).c_str(), GetName().c_str(), materials.size());
+
         if (materials.size() > 0)
         {
-            for (auto * material : materials)
+            for (uint i = 0; i < materials.size(); ++i)
             {
+                auto * material = materials[i];
+
                 if (!material)
                     material = defaultMaterial;
 
-                auto surf = material->GetSurfaceType();
-
-                switch (surf)
+                if (useBatchMask && batchMask.getBitValue(i))
                 {
-                    case SurfaceType::Opaque:
-                        flags |= SurfaceTypeFlags::Opaque;
-                        break;
+                    auto surf = material->GetSurfaceType();
 
-                    case SurfaceType::AlphaTest:
-                        flags |= SurfaceTypeFlags::AlphaTest;
-                        break;
+                    switch (surf)
+                    {
+                        case SurfaceType::Opaque:
+                            flags |= SurfaceTypeFlags::Opaque;
+                            break;
 
-                    case SurfaceType::AlphaBlend:
-                        flags |= SurfaceTypeFlags::AlphaBlend;
-                        break;
+                        case SurfaceType::AlphaTest:
+                            flags |= SurfaceTypeFlags::AlphaTest;
+                            break;
 
-                    case SurfaceType::Decal:
-                        flags |= SurfaceTypeFlags::Decal;
-                        break;
+                        case SurfaceType::AlphaBlend:
+                            flags |= SurfaceTypeFlags::AlphaBlend;
+                            break;
+
+                        case SurfaceType::Decal:
+                            flags |= SurfaceTypeFlags::Decal;
+                            break;
+                    }
+                }
+                else
+                {
+                    flags |= SurfaceTypeFlags::AlphaBlend;
                 }
             }
         }

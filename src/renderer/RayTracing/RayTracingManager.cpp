@@ -152,17 +152,7 @@ namespace vg::renderer
         else
             return Renderer::get()->getSharedWorldCullingJobOutput()->m_allSkinnedMeshInstances;
     }
-
-    //--------------------------------------------------------------------------------------
-    //core::span<MeshInstance *> RayTracingManager::getStaticMeshInstances() const
-    //{
-    //    const auto & options = RendererOptions::get();
-    //    if (options->getRayTracingTLASMode() == TLASMode::PerView)
-    //        return Renderer::get()->getSharedCullingJobOutput()->m_staticMeshes;
-    //    else
-    //        return Renderer::get()->getSharedWorldCullingJobOutput()->m_allStaticMeshInstances;
-    //}
-
+  
     //--------------------------------------------------------------------------------------
     // Prepare BLAS to create and update
     //--------------------------------------------------------------------------------------
@@ -218,13 +208,22 @@ namespace vg::renderer
 
                         const auto batches = meshGeo->batches();
                         const auto & materials = instance->getMaterials();
+                        const auto & batchMask = instance->getBatchMask();
 
                         for (uint m = 0; m < batches.size(); ++m)
                         {
                             SurfaceType surfaceType = SurfaceType::Opaque;
-                            const MaterialModel * mat = m < materials.size() ? materials[m] : nullptr;
-                            if (mat)
-                                surfaceType = mat->GetSurfaceType();
+
+                            if (batchMask.getBitValue(m))
+                            {
+                                const MaterialModel * mat = m < materials.size() ? materials[m] : nullptr;
+                                if (mat)
+                                    surfaceType = mat->GetSurfaceType();
+                            }
+                            else
+                            {
+                                surfaceType = SurfaceType::AlphaBlend;
+                            }
 
                             const Batch & batch = batches[m];
                             VG_ASSERT(blas);
@@ -289,13 +288,22 @@ namespace vg::renderer
 
                 const auto batches = meshGeo->batches();
                 const auto & materials = skin->getMaterials();
+                const auto & batchMask = skin->getBatchMask();
 
                 for (uint m = 0; m < batches.size(); ++m)
                 {
                     SurfaceType surfaceType = SurfaceType::Opaque;
-                    const MaterialModel * mat = m < materials.size() ? materials[m] : nullptr;
-                    if (mat)
-                        surfaceType = mat->GetSurfaceType();
+
+                    if (batchMask.getBitValue(m))
+                    {
+                        const MaterialModel * mat = m < materials.size() ? materials[m] : nullptr;
+                        if (mat)
+                            surfaceType = mat->GetSurfaceType();
+                    }
+                    else
+                    {
+                        surfaceType = SurfaceType::AlphaBlend;
+                    }
 
                     const Batch & batch = batches[m];
                     blas->addIndexedGeometry(ib, ibOffset, batch.offset, batch.count, skinVB, skinVBOffset, modelVB->getBufDesc().getElementCount(), vertexStride, (SurfaceType::Opaque == surfaceType) ? true : false);

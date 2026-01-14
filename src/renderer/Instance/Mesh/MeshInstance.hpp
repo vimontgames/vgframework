@@ -132,16 +132,26 @@ namespace vg::renderer
             const auto & batches = meshModel->getGeometry()->batches();
             VG_ASSERT(batches.size() <= 64);
 
+            const auto & batchMask = getBatchMask();
+
             uint bit = 1;
             for (uint i = 0; i < batches.size(); ++i)
             {
-                if (i < materials.size())
+                if (batchMask.getBitValue(i))
                 {
-                    if (const auto * mat = materials[i])
+                    if (i < materials.size())
                     {
-                        if (SurfaceType::Opaque != mat->GetSurfaceType())
-                            key |= bit;
-                    }                   
+                        if (const auto * mat = materials[i])
+                        {
+                            if (SurfaceType::Opaque != mat->GetSurfaceType())
+                                key |= bit;
+                        }
+                    }
+                }
+                else
+                {
+                    // If material is hidden then consider is as "hideable"
+                    key |= bit;
                 }
 
                 bit <<= 1;
@@ -291,10 +301,15 @@ namespace vg::renderer
         instanceData->setVertexBuffer(vbHandle, vbOffset);
 
         const auto * renderer = Renderer::get();
-        const auto * defaultMaterial = renderer->getDefaultMaterial();
+        const auto * defaultMaterial = renderer->getDefaultMaterial(DefaultMaterialType::Opaque);
         VG_ASSERT(defaultMaterial);
         const auto defaultMaterialIndex = defaultMaterial->getGPUMaterialDataIndex();
-        VG_ASSERT(defaultMaterialIndex == 0);
+
+        const auto * invisibleMaterial = renderer->getDefaultMaterial(DefaultMaterialType::Invisible);
+        VG_ASSERT(invisibleMaterial);
+        const auto invisibleMaterialIndex = invisibleMaterial->getGPUMaterialDataIndex();
+
+        const auto & batchMask = getBatchMask();
 
         for (uint b = 0; b < batchCount; ++b)
         {
@@ -302,7 +317,11 @@ namespace vg::renderer
 
             const MaterialModel * mat = (b < materialCount) ? materials[b] : nullptr;
             GPUMaterialDataIndex matIndex = (nullptr != mat) ? mat->getGPUMaterialDataIndex() : defaultMaterialIndex;
-            batchData->setMaterialIndex(matIndex);
+
+            if (batchMask.getBitValue(b))
+                batchData->setMaterialIndex(matIndex);
+            else 
+                batchData->setMaterialIndex(invisibleMaterialIndex);
                 
             uint batchOffset = (nullptr != geo && b < geo->batches().size()) ? geo->batches()[b].offset : 0;
             batchData->setStartIndex(batchOffset);
@@ -456,7 +475,7 @@ namespace vg::renderer
                     // Setup material 
                     const MaterialModel * material = getMaterial(i);
                     if (nullptr == material)
-                        material = renderer->getDefaultMaterial();
+                        material = renderer->getDefaultMaterial(DefaultMaterialType::Opaque);
 
                     auto surfaceType = material->GetSurfaceType();
 

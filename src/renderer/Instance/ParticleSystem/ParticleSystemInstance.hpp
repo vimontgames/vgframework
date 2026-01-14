@@ -358,10 +358,9 @@ namespace vg::renderer
         const uint gpuInstanceDataSize = alignUp((uint)(sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData)), (uint)GPU_INSTANCE_DATA_ALIGNMENT);
 
         const auto * renderer = Renderer::get();
-        const auto * defaultMaterial = renderer->getDefaultMaterial();
+        const auto * defaultMaterial = renderer->getDefaultMaterial(DefaultMaterialType::Transparent);
         VG_ASSERT(defaultMaterial);
         const auto defaultMaterialIndex = defaultMaterial->getGPUMaterialDataIndex();
-        VG_ASSERT(defaultMaterialIndex == 0);
 
         uint dataOffset = 0;
 
@@ -495,7 +494,7 @@ namespace vg::renderer
             {
                 const MaterialModel * material = getMaterial(i);
                 if (nullptr == material)
-                    material = renderer->getDefaultMaterial();
+                    material = renderer->getDefaultMaterial(DefaultMaterialType::Transparent);
 
                 auto surfaceType = material->GetSurfaceType();
 

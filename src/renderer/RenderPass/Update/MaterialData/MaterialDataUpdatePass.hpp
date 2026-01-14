@@ -37,8 +37,8 @@ namespace vg::renderer
         VG_ASSERT(nullptr != cullingJobOutput);
         const auto & instances = cullingJobOutput->m_instances;
 
-        const auto * defaultMaterial = renderer->getDefaultMaterial();
-        VG_ASSERT(defaultMaterial);
+        const auto * errorMaterial = renderer->getDefaultMaterial(DefaultMaterialType::Error);
+        VG_ASSERT(errorMaterial);
         size_t mapSize = m_materials.size() * sizeof(GPUMaterialData);      
         
         if (mapSize > 0)
@@ -55,8 +55,9 @@ namespace vg::renderer
                 for (uint i = 0; i < m_materials.size(); ++i)
                 {
                     const auto * material = m_materials[i];
+                    VG_ASSERT(material);
                     if (nullptr == material)
-                        material = defaultMaterial;
+                        material = errorMaterial;
                         
                     material->FillGPUMaterialData(buffer);
                     memcpy((GPUMaterialData *)(data + offset), buffer, sizeof(GPUMaterialData));
