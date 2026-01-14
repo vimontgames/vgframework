@@ -6,6 +6,8 @@
 
 namespace vg::gfx
 {
+    class CommandList;
+
 	namespace base
 	{
 		class Texture : public ITexture
@@ -72,7 +74,7 @@ namespace vg::gfx
 	public:
 		VG_CLASS_DECL_PASSTHROUGH(Texture, VG_GFXAPI::Texture);
 
-		Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
+		Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None, CommandList * _cmdList = nullptr);
 		~Texture();
 
         static Texture * createFromImporterData(const TextureImporterData & _data);

@@ -219,7 +219,7 @@ namespace vg::gfx::vulkan
     }
 
 	//--------------------------------------------------------------------------------------
-	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
+	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot, gfx::CommandList * _cmdList) :
 		base::Texture(_texDesc, _name, _initData)
 	{
 		auto * device = gfx::Device::get();
@@ -371,7 +371,11 @@ namespace vg::gfx::vulkan
 
                 u64 uploadBufferSize = mem_reqs.size;
                 
-                auto * uploadBuffer = device->getCurrentUploadBuffer();
+                UploadBuffer * uploadBuffer;
+                if (_cmdList)
+                    uploadBuffer = _cmdList->getUploadBuffer();
+                else
+                    uploadBuffer = device->getCurrentUploadBuffer();
 
                 u8 * dst = uploadBuffer->map((gfx::Texture *)this, uploadBufferSize, (uint)mem_reqs.alignment);
                 if (nullptr != dst)
@@ -394,6 +398,9 @@ namespace vg::gfx::vulkan
                     }
                 }
                 uploadBuffer->unmap((gfx::Texture*)this, dst, uploadBufferSize);
+
+                if (_cmdList)
+                    uploadBuffer->flush(_cmdList);
             }
 
             if (asBool(BindFlags::UnorderedAccess & _texDesc.resource.m_bindFlags))

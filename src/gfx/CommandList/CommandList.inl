@@ -3,6 +3,15 @@
 
 namespace vg::gfx
 {
+    namespace base
+    {
+        //--------------------------------------------------------------------------------------
+        VG_INLINE UploadBuffer * CommandList::getUploadBuffer() const 
+        {
+            return m_uploadBuffer; 
+        }
+    }
+
     //--------------------------------------------------------------------------------------
     VG_INLINE void CommandList::enablePerSampleShading(bool _perSampleShading)
     {

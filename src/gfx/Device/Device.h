@@ -159,8 +159,7 @@ namespace vg::gfx
             core::size_t                                    m_renderJobsTotalBufferSize = 64 * 1024 * 1024;
             core::size_t                                    m_renderJobsWorkerMinBufferSize = 4 * 1024 * 1024;
             core::size_t                                    m_streamingUploadBufferSize = 128 * 1024 * 1024;
-            bool                                            m_renderJobsDirty = true;
-            bool                                            m_streamingUploadBufferDirty = true;        
+            bool                                            m_renderJobsDirty = true;    
 		};
 	}
 }
@@ -192,8 +191,8 @@ namespace vg::gfx
 		void		            beginFrame		            ();
 		void		            endFrame		            ();
 
-		Texture *	            createTexture	            (const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
-        Buffer *                createBuffer                (const BufferDesc & _bufDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
+		Texture *	            createTexture	            (const TextureDesc & _texDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None, CommandList * _cmdList = nullptr);
+        Buffer *                createBuffer                (const BufferDesc & _bufDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None, CommandList * _cmdList = nullptr);
 
         core::LoadStatus	    createResourceTexture	    (const TextureDesc & _texDesc, const core::string & _name, const void * _initData, Texture *& _texture);
         core::LoadStatus        createResourceBuffer        (const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, Buffer *& _buffer);

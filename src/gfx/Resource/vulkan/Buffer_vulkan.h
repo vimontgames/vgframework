@@ -8,7 +8,7 @@ namespace vg::gfx::vulkan
     public:
         VG_CLASS_DECL_PASSTHROUGH(Buffer, base::Buffer);
 
-        Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot);
+        Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot, gfx::CommandList * _cmdList);
         ~Buffer();
 
         static bool getRequiredUploadSizeAndAlignment(const BufferDesc & _bufferDesc, core::size_t & _size, core::size_t & _alignment);

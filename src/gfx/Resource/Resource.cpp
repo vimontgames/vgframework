@@ -2,6 +2,7 @@
 #include "core/string/string.h"
 #include "core/IScheduler.h"
 #include "gfx/Device/Device.h"
+#include "gfx/CommandList/CommandList.h"
 #include "gfx/Memory/MemoryAllocator.h"
 #include "Resource.h"
 #include "Buffer.h"

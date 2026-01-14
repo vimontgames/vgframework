@@ -60,7 +60,7 @@ namespace vg::gfx::vulkan
     }
 
     //--------------------------------------------------------------------------------------
-    Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
+    Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot, gfx::CommandList * _cmdList) :
         base::Buffer(_bufDesc, _name, _initData)
     {
         auto * device = gfx::Device::get();
@@ -183,7 +183,12 @@ namespace vg::gfx::vulkan
                 VG_ASSERT(_bufDesc.getSize() <= mem_reqs.size);
                 u64 uploadBufferSize = _bufDesc.getSize();
                
-                auto * uploadBuffer = device->getCurrentUploadBuffer();
+                UploadBuffer * uploadBuffer;
+                
+                if (_cmdList)
+                    uploadBuffer = _cmdList->getUploadBuffer();
+                else
+                    uploadBuffer = device->getCurrentUploadBuffer();
 
                 u8 * dst = uploadBuffer->map((gfx::Buffer *)this, uploadBufferSize, (uint)mem_reqs.alignment);
                 if (nullptr != dst)
@@ -192,6 +197,9 @@ namespace vg::gfx::vulkan
                     memcpy(dst, _initData, uploadBufferSize);
                 }
                 uploadBuffer->unmap((gfx::Buffer*)this, dst, uploadBufferSize);
+
+                if (_cmdList)
+                    uploadBuffer->flush(_cmdList);
             }
         }
 

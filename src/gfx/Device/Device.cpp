@@ -596,25 +596,14 @@ namespace vg::gfx
 
         for (uint i = 0; i < cmdLists.size(); ++i)
             m_uploadBuffers[i]->flush(cmdLists[i], true);
-
-        if (m_streamingUploadBufferDirty)
-        {
-            // resize upload buffer can only happen if no loading
-            //UploadBuffer *& streamingUploadBuffer = m_uploadBuffers[0];
-            //if (m_streamingUploadBufferSize != streamingUploadBuffer->getTotalSize())
-            //{
-            //    VG_SAFE_RELEASE(streamingUploadBuffer);
-            //    streamingUploadBuffer = new UploadBuffer("Streaming Upload Buffer", m_streamingUploadBufferSize, 0);
-            //}
-        }
     }
 
 	//--------------------------------------------------------------------------------------
-	Texture * Device::createTexture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot)
+	Texture * Device::createTexture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot, CommandList * _cmdList)
 	{
         VG_ASSERT(_texDesc.width > 0 && _texDesc.height > 0);
         VG_PROFILE_CPU("createTexture");
-		return new Texture(_texDesc, _name, _initData, _reservedSlot);
+		return new Texture(_texDesc, _name, _initData, _reservedSlot, _cmdList);
 	}
 
     //--------------------------------------------------------------------------------------
@@ -666,10 +655,10 @@ namespace vg::gfx
     //}
 
     //--------------------------------------------------------------------------------------
-    Buffer * Device::createBuffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot)
+    Buffer * Device::createBuffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot, CommandList * _cmdList)
     {
         VG_PROFILE_CPU("createBuffer");
-        return new Buffer(_bufDesc, _name, _initData, _reservedSlot);
+        return new Buffer(_bufDesc, _name, _initData, _reservedSlot, _cmdList);
     }
 
     //--------------------------------------------------------------------------------------

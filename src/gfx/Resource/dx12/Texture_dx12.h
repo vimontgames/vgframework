@@ -33,7 +33,7 @@ namespace vg::gfx::dx12
 
         static PixelFormat                              getPixelFormat                      (DXGI_FORMAT _d3d12Format);
        
-											            Texture				                (const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot);
+											            Texture				                (const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot, gfx::CommandList * _cmdList);
 											            ~Texture			                ();
 
 		const D3D12_CPU_DESCRIPTOR_HANDLE &             getd3d12RTVHandle	                () const;

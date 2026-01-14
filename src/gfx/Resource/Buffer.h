@@ -7,6 +7,8 @@
 
 namespace vg::gfx
 {
+    class CommandList;
+
     namespace base
     {
         class Buffer : public IBuffer
@@ -49,7 +51,7 @@ namespace vg::gfx
     public:
         const char * GetClassName() const final { return "Buffer"; }
 
-        Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None);
+        Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData = nullptr, ReservedSlot _reservedSlot = ReservedSlot::None, CommandList * _cmdList = nullptr);
         ~Buffer();
     };
 }

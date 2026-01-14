@@ -53,7 +53,7 @@ namespace vg::gfx::dx12
     }
 
     //--------------------------------------------------------------------------------------
-    Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
+    Buffer::Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot, gfx::CommandList * _cmdList) :
         base::Buffer(_bufDesc, _name, _initData)
     {
         auto * device = gfx::Device::get();
@@ -143,15 +143,23 @@ namespace vg::gfx::dx12
             D3D12_RESOURCE_ALLOCATION_INFO allocInfo = d3d12device->GetResourceAllocationInfo(0, 1, &resourceDesc);
 
             const size_t uploadBufferSize = _bufDesc.getSize(); // allocInfo.SizeInBytes;
-            const UINT64 alignment = allocInfo.Alignment ? allocInfo.Alignment : 1ULL; 
-            
-            UploadBuffer * uploadBuffer = device->getCurrentUploadBuffer();
+            const UINT64 alignment = allocInfo.Alignment ? allocInfo.Alignment : 1ULL;
+
+            UploadBuffer * uploadBuffer;
+
+            if (_cmdList)
+                uploadBuffer = _cmdList->getUploadBuffer();
+            else
+                uploadBuffer = device->getCurrentUploadBuffer();
 
             core::u8 * dst = uploadBuffer->map((gfx::Buffer *)this, uploadBufferSize, alignment /*D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT*/);
             if (nullptr != dst)
                 memcpy(dst, _initData, _bufDesc.getSize());
 
             uploadBuffer->unmap((gfx::Buffer*)this, dst, uploadBufferSize);
+
+            if (_cmdList)
+                uploadBuffer->flush(_cmdList);
         }
     }
 

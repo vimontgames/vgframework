@@ -8,7 +8,7 @@ namespace vg::gfx::dx12
     public:
         VG_CLASS_DECL_PASSTHROUGH(Buffer, base::Buffer);        
 
-        Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot);
+        Buffer(const BufferDesc & _bufDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot, gfx::CommandList * _cmdList = nullptr);
         ~Buffer(); 
 
         static D3D12_RESOURCE_DESC      getd3d12ResourceDesc(const BufferDesc & _bufDesc);

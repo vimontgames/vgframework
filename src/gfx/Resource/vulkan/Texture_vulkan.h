@@ -8,7 +8,7 @@ namespace vg::gfx::vulkan
 	public:
 		VG_CLASS_DECL_PASSTHROUGH(Texture, base::Texture);
 
-		Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot);
+		Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot, gfx::CommandList * _cmdList);
 		~Texture();
 
         VkImageView					getVulkanImageView		() const { return m_vkImageView; }

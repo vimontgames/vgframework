@@ -293,7 +293,7 @@ namespace vg::gfx::dx12
     }
 
 	//--------------------------------------------------------------------------------------
-	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot) :
+	Texture::Texture(const TextureDesc & _texDesc, const core::string & _name, const void * _initData, ReservedSlot _reservedSlot, gfx::CommandList * _cmdList) :
 		base::Texture(_texDesc, _name, _initData)
 	{
 		auto * device = gfx::Device::get();
@@ -567,7 +567,12 @@ namespace vg::gfx::dx12
                 for (uint i = 0; i < subResourceCount; ++i)
                     setSubResourceData(i, footprint[i].Offset);
                                 
-                auto * uploadBuffer = device->getCurrentUploadBuffer();
+                UploadBuffer * uploadBuffer;
+                
+                if (_cmdList)
+                    uploadBuffer = _cmdList->getUploadBuffer();
+                else
+                    uploadBuffer = device->getCurrentUploadBuffer();
 
                 // Copy to upload buffer line by line
                 core::u8 * dst = uploadBuffer->map((gfx::Texture *)this, d3d12TotalSizeInBytes, D3D12_TEXTURE_DATA_PLACEMENT_ALIGNMENT);
@@ -580,6 +585,9 @@ namespace vg::gfx::dx12
                     }
                 }
                 uploadBuffer->unmap((gfx::Texture *)this, dst, d3d12TotalSizeInBytes);
+
+                if (_cmdList)
+                    uploadBuffer->flush(_cmdList);
             }
         }
 	}

@@ -62,6 +62,8 @@ namespace vg::gfx
 
             void                        setCurrentRenderPassType    (RenderPassType _renderPassType);
 
+            VG_INLINE UploadBuffer *    getUploadBuffer             () const;
+
 		protected:
 			CommandListType			    m_type;
 			core::u8				    m_frame;
