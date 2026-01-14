@@ -62,6 +62,7 @@ class Game : public vg::IGame, public vg::core::Singleton<Game>
 
         // Game state
         void                                                        setGameState        (GameState _gameState);
+        GameState                                                   getGameState        () { return m_gameState; }
 
         // Characters
         const vg::core::vector<CharacterBehaviour *> &              getCharacters       (CharacterType _type) const { return m_characters[vg::core::asInteger(_type)];}

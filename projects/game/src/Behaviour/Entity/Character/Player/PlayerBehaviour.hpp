@@ -127,6 +127,9 @@ void PlayerBehaviour::FixedUpdate(const Context & _context)
 {
     super::FixedUpdate(_context);
 
+    if (Game::get()->getGameState() != GameState::Playing)
+        return;
+
     if (_context.m_playing && !_context.m_paused)
     {
         const float time = Game::get()->Engine().GetTime().m_enlapsedTimeSinceStartScaled;
