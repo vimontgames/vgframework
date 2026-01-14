@@ -114,10 +114,21 @@ namespace vg::renderer
             {
                 MeshInstance * meshInstance = (MeshInstance *)instance;
 
+                // During destruction, a skinned mesh instance can sometimes return that it is not skinned because we test presence of instance skeleton
                 if (meshInstance->isSkinned())
+                {
                     removed = vector_helper::remove(m_skinnedMeshInstances, meshInstance);
+
+                    if (!removed)
+                        removed = vector_helper::remove(m_staticMeshInstances, meshInstance);
+                }
                 else
+                {
                     removed = vector_helper::remove(m_staticMeshInstances, meshInstance);
+
+                    if (!removed)
+                        removed = vector_helper::remove(m_skinnedMeshInstances, meshInstance);
+                }
             }
             break;
 
