@@ -716,17 +716,20 @@ namespace vg::renderer
 
         for (int i = begin.x; i <= end.x; ++i)
         {
-            for (uint j = 1; j < _subDiv; ++j)
+            if (i != end.x)
             {
-                const float subDivOffset = (float)j / (float)_subDiv;
+                for (uint j = 1; j < _subDiv; ++j)
+                {
+                    const float subDivOffset = (float)j / (float)_subDiv;
 
-                auto & v0 = vertices.emplace_back();
-                v0.setPos(float3((float)i + offset.x + subDivOffset, (float)begin.y + offset.y, 0.0f) * scale);
-                v0.setColor(subDivColor);
+                    auto & v0 = vertices.emplace_back();
+                    v0.setPos(float3((float)i + offset.x + subDivOffset, (float)begin.y + offset.y, 0.0f) * scale);
+                    v0.setColor(subDivColor);
 
-                auto & v1 = vertices.emplace_back();
-                v1.setPos(float3((float)i + offset.x + subDivOffset, (float)end.y + offset.y, 0.0f) * scale);
-                v1.setColor(subDivColor);
+                    auto & v1 = vertices.emplace_back();
+                    v1.setPos(float3((float)i + offset.x + subDivOffset, (float)end.y + offset.y, 0.0f) * scale);
+                    v1.setColor(subDivColor);
+                }
             }
 
             auto & v0 = vertices.emplace_back();
@@ -740,17 +743,20 @@ namespace vg::renderer
 
         for (int i = begin.y; i <= end.y; ++i)
         {
-            for (uint j = 1; j < _subDiv; ++j)
+            if (i != end.y)
             {
-                const float subDivOffset = (float)j / (float)_subDiv;
+                for (uint j = 1; j < _subDiv; ++j)
+                {
+                    const float subDivOffset = (float)j / (float)_subDiv;
 
-                auto & h0 = vertices.emplace_back();
-                h0.setPos(float3((float)begin.x + offset.x, (float)i + offset.y + subDivOffset, 0.0f) * scale);
-                h0.setColor(subDivColor);
+                    auto & h0 = vertices.emplace_back();
+                    h0.setPos(float3((float)begin.x + offset.x, (float)i + offset.y + subDivOffset, 0.0f) * scale);
+                    h0.setColor(subDivColor);
 
-                auto & h1 = vertices.emplace_back();
-                h1.setPos(float3((float)end.x + offset.x, (float)i + offset.y + subDivOffset, 0.0f) * scale);
-                h1.setColor(subDivColor);
+                    auto & h1 = vertices.emplace_back();
+                    h1.setPos(float3((float)end.x + offset.x, (float)i + offset.y + subDivOffset, 0.0f) * scale);
+                    h1.setColor(subDivColor);
+                }
             }
 
             auto & h0 = vertices.emplace_back();
