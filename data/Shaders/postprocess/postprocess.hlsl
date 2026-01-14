@@ -252,7 +252,11 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
     bool hitOpaque = false;
     float hitOpaqueDist = farDist;
     
+    bool drawOpaque = true;
+    bool drawAlpha = true;
+    
     // 1. Opaque + alphatest
+    if (drawOpaque)
     {                    
         RayQuery<RAY_FLAG_NONE> query;
 
@@ -305,6 +309,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
     }
     
     // 2. Alphablend
+    if (drawAlpha)
     {
         RayQuery<RAY_FLAG_NONE> query;
 
@@ -314,7 +319,7 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
         ray.TMin = nearDist;
         ray.TMax = hitOpaqueDist;
         
-        query.TraceRayInline(getTLAS(viewConstants.getTLASHandle()), RAY_FLAG_CULL_FRONT_FACING_TRIANGLES, 0xff, ray);
+        query.TraceRayInline(getTLAS(viewConstants.getTLASHandle()), RAY_FLAG_NONE /*RAY_FLAG_CULL_FRONT_FACING_TRIANGLES*/, 0xff, ray);
         
         while (query.Proceed())
         {
@@ -341,21 +346,21 @@ float4 DebugRayTracing(float4 color, float2 uv, uint2 screenSize, ViewConstants 
             }
         }
             
-        switch (query.CommittedStatus())
-        {
-            case COMMITTED_TRIANGLE_HIT:
-		    {       
-                MaterialSample mat = getRaytracingCommittedMaterial(query, flags, mode);
-                 //mat.albedo;
-            }
-            break;
-        
-            case COMMITTED_NOTHING:
-		    {
-
-            }
-            break;
-        }
+        //switch (query.CommittedStatus())
+        //{
+        //    case COMMITTED_TRIANGLE_HIT:
+		//    {       
+        //        MaterialSample mat = getRaytracingCommittedMaterial(query, flags, mode);
+        //         //mat.albedo;
+        //    }
+        //    break;
+        //
+        //    case COMMITTED_NOTHING:
+		//    {
+        //
+        //    }
+        //    break;
+        //}
     }
     
     return color;
