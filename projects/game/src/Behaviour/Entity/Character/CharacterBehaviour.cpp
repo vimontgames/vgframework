@@ -352,7 +352,7 @@ bool CharacterBehaviour::TakeHit(CharacterBehaviour * _attacker, ItemBehaviour *
         if (damage > 0.0f)
         {
             if (_attacker)
-                _attacker->addScore(round(damage));
+                _attacker->addScore((i32)round(damage));
 
             if (auto * healthBar = GetGameObject()->GetComponentInChildrenT<HealthBarBehaviour>())
                 healthBar->setHP(m_hp);

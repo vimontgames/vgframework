@@ -13,6 +13,7 @@
 #include "Behaviour/HealthBar/HealthBarBehaviour.h"
 #include "renderer/IRenderer.h"
 #include "renderer/IRendererOptions.h"
+#include "version.h"
 
 using namespace vg;
 using namespace vg::core;
@@ -321,7 +322,7 @@ void Game::Update(float _dt)
                                     VG_ASSERT(avatarCount < 32);
                                     u32 availableAvatarMask = (1<< avatarCount)-1;
 
-                                    for (uint a = 0; a < avatarCount; ++a)
+                                    for (uint a = 0; a < m_playerInputs.size(); ++a)
                                     {
                                         if (m_playerInputs[a].enabled)
                                             availableAvatarMask &= ~(1UL << m_playerInputs[a].avatarIndex);
@@ -475,7 +476,21 @@ void Game::Update(float _dt)
                             }
                         }
                     }
-                    
+
+                    if (IGameObject * version = mainMenu->GetScene()->GetRoot()->GetChildGameObject("Version"))
+                    {
+                        if (IUITextComponent * uiText = version->GetComponentT<IUITextComponent>())
+                        {
+                            core::string version = fmt::sprintf("%u.%u.%u", VG_FRAMEWORK_VERSION_MAJOR, VG_FRAMEWORK_VERSION_MINOR, VG_FRAMEWORK_VERSION_PATCH);
+
+                            #ifdef GIT_REVISION
+                            version += fmt::sprintf(" (commit %s)", GIT_REVISION);
+                            #endif
+
+                            uiText->SetText(fmt::sprintf("VGFramework %s", version.c_str()));
+                        }
+                    }
+
                     bool start = false;
 
                     for (uint i = 0; i < m_playerInputs.size(); ++i)
