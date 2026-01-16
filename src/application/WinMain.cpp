@@ -24,6 +24,56 @@ using namespace vg;
 engine::IEngine * g_engine = nullptr;
 renderer::IRenderer * g_renderer = nullptr;
 
+WINDOWPLACEMENT g_windowedPlacement = {};
+
+
+
+//--------------------------------------------------------------------------------------
+void SetBorderlessFullscreen()
+{
+    // Save windowed placement
+    GetWindowPlacement(g_hWnd, &g_windowedPlacement);
+
+    // Remove borders
+    SetWindowLongPtr(g_hWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
+    SetWindowLongPtr(g_hWnd, GWL_EXSTYLE, 0);
+
+    // Find monitor
+    HMONITOR monitor = MonitorFromWindow(g_hWnd, MONITOR_DEFAULTTONEAREST);
+    MONITORINFO mi = { sizeof(mi) };
+    GetMonitorInfo(monitor, &mi);
+
+    // Resize to monitor
+    SetWindowPos(
+        g_hWnd,
+        HWND_TOP,
+        mi.rcMonitor.left,
+        mi.rcMonitor.top,
+        mi.rcMonitor.right - mi.rcMonitor.left,
+        mi.rcMonitor.bottom - mi.rcMonitor.top,
+        SWP_FRAMECHANGED | SWP_NOOWNERZORDER
+    );
+
+    RECT win;
+    GetClientRect(g_hWnd, &win);
+
+    const auto width = win.right - win.left;
+    const auto height = win.bottom - win.top;
+    g_renderer->Resize(width, height);
+    g_renderer->SetFullscreenMode(gfx::FullscreenMode::Borderless);
+}
+
+//--------------------------------------------------------------------------------------
+void SetWindowed()
+{
+    SetWindowLongPtr(g_hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW);
+
+    SetWindowPlacement(g_hWnd, &g_windowedPlacement);
+    SetWindowPos(g_hWnd, nullptr, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+
+    g_renderer->SetFullscreenMode(gfx::FullscreenMode::Windowed);
+}
+
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -32,47 +82,57 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	int wmId, wmEvent;
 
-	switch (message)
-	{
-		case WM_SIZE:
-		{
-			RECT win;
-			GetClientRect(g_hWnd, &win);
-		}
-		break;
+    switch (message)
+    {
+        case WM_SYSCHAR:
+            break;
 
-		case WM_COMMAND:
-			wmId = LOWORD(wParam);
-			wmEvent = HIWORD(wParam);
-			return DefWindowProc(hWnd, message, wParam, lParam);
+        case WM_COMMAND:
+        {
+            wmId = LOWORD(wParam);
+            wmEvent = HIWORD(wParam);
+            return DefWindowProc(hWnd, message, wParam, lParam);
+        }
 
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			break;
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            break;
 
-		case WM_SYSKEYDOWN:
-			switch (LOWORD(wParam))
-			{
-				case VK_RETURN:
-				{
-					RECT win;
-					GetClientRect(g_hWnd, &win);
-				}
-				break;
-			}
-			break;
+        case WM_KEYDOWN:
+        {   
+            switch (LOWORD(wParam))
+            {
+                // Ctrl-Shift-Q
+                case 'Q':
+                {
+                    if ((GetKeyState(VK_CONTROL) & 0x8000) && (GetKeyState(VK_SHIFT) & 0x8000))
+                        SendMessage(g_hWnd, WM_DESTROY, 0, 0);
+                }
+                break;
+            }
+        }
+        break;
 
-		case WM_KEYDOWN:
-			switch (LOWORD(wParam))
-			{
-				// Ctrl-Shift-Q
-				case 'Q':
-				{
-					if ((GetKeyState(VK_CONTROL) & 0x8000) && (GetKeyState(VK_SHIFT) & 0x8000))
-						SendMessage(g_hWnd, WM_DESTROY, 0, 0);
-				}
-				break;
-			}
+        case WM_SYSKEYDOWN:
+        {
+            switch (LOWORD(wParam))
+            {
+                case VK_RETURN:
+                {
+                    if (g_renderer)
+                    {
+                        if (g_renderer->GetFullscreenMode() == gfx::FullscreenMode::Windowed)
+                            SetBorderlessFullscreen();
+                        else
+                            SetWindowed();
+
+                        return 0;
+                    }
+                }
+                break;
+            }
+        }
+        break;
 
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
@@ -128,33 +188,19 @@ bool processSystemMessage()
 }
 
 //--------------------------------------------------------------------------------------
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, core::uint _width, core::uint _height, bool _fullscreen)
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, core::uint _width, core::uint _height)
 {
 	hInst = hInstance;
 
 	int x = CW_USEDEFAULT;
 	int y = CW_USEDEFAULT;
 
-	int flags = _fullscreen ? WS_POPUP : WS_OVERLAPPEDWINDOW;
+    int flags = WS_OVERLAPPEDWINDOW;
 
 	RECT rc = { 0, 0, (LONG)_width, (LONG)_height };
 	AdjustWindowRect(&rc, flags, FALSE);
 
 	g_hWnd = CreateWindow(L"Game", L"VG Framework", flags, x, y, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance, NULL);
-
-    // If fullscreen, cover the primary monitor
-    if (_fullscreen)
-    {
-        HMONITOR monitor = MonitorFromPoint({ 0, 0 }, MONITOR_DEFAULTTOPRIMARY);
-        MONITORINFO mi = {};
-        mi.cbSize = sizeof(mi);
-        GetMonitorInfo(monitor, &mi);
-
-        x = mi.rcMonitor.left;
-        y = mi.rcMonitor.top;
-        rc.right = mi.rcMonitor.right - mi.rcMonitor.left;
-        rc.bottom = mi.rcMonitor.bottom - mi.rcMonitor.top;
-    }
 
 	if (!g_hWnd)
 		return FALSE;
@@ -166,13 +212,16 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow, core::uint _width, core::ui
 }
 
 //--------------------------------------------------------------------------------------
-bool CreateGameWindow(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow, core::uint _width, core::uint _height, bool _fullscreen)
+bool CreateGameWindow(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow, core::uint _width, core::uint _height)
 {
 	if (!MyRegisterClass(hInstance))
 		return false;
 
-	if (!InitInstance(hInstance, nCmdShow, _width, _height, _fullscreen))
+    if (!InitInstance(hInstance, nCmdShow, _width, _height))
 		return false;
+
+    g_windowedPlacement.length = sizeof(WINDOWPLACEMENT);
+    GetWindowPlacement(g_hWnd, &g_windowedPlacement);
 
 	return true;
 }
@@ -200,14 +249,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
     core::CmdLine cmdLine(lpCmdLine);
 
-    #if VG_FINAL
-    bool fullscreen = true;
-    #else
-    bool fullscreen = false;
-    #endif
-    cmdLine.getBool("fullscreen", fullscreen);
-
-	if (!CreateGameWindow(hInstance, lpCmdLine, nCmdShow, width, height, fullscreen))
+	if (!CreateGameWindow(hInstance, lpCmdLine, nCmdShow, width, height))
 		return 1;
 
 	ShowWindow(g_hWnd, SW_MAXIMIZE);
@@ -296,6 +338,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     g_engine->Init(engineParams, singletons);
 	g_renderer = g_engine->GetRenderer();
 
+    #if VG_FINAL
+    bool fullscreen = true;
+    #else
+    bool fullscreen = false;
+    #endif
+    cmdLine.getBool("fullscreen", fullscreen);
+
+    if (fullscreen)
+        SetBorderlessFullscreen();
+
     Application * app = new Application(*g_engine);
 	auto * profiler = g_renderer->GetProfiler();
 
@@ -307,7 +359,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     // Start maximized? In Editor mode the default is not to maximize game view but in standalone we default to maximize game view
 	bool maximize = !editor;
     cmdLine.getBool("gamemode", maximize),
-	g_engine->GetRenderer()->SetFullscreen(maximize); // "Fullscreen" = Maximize game views
+	g_engine->GetRenderer()->SetGameMode(maximize); // Maximize game views
 
 	// Command-line override or world name from config
 	core::string world;

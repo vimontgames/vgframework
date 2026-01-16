@@ -111,8 +111,8 @@ namespace vg::engine
                             if (engine->IsPlaying())
                                 engine->Stop();
 
-                            if (m_renderer && m_renderer->IsFullscreen())
-                                m_renderer->SetFullscreen(false);
+                            if (m_renderer && m_renderer->IsGameMode())
+                                m_renderer->SetGameMode(false);
                         }
                     }
                     break;;
@@ -167,7 +167,7 @@ namespace vg::engine
                     break;
 
                     case VK_F11:
-                        toggleFullscreen();
+                        toggleGameMode();
                         break;
                 }
             }
@@ -780,10 +780,10 @@ namespace vg::engine
     }
 
     //--------------------------------------------------------------------------------------
-    void Engine::toggleFullscreen()
+    void Engine::toggleGameMode()
     {
         if (m_renderer)
-            m_renderer->SetFullscreen(!m_renderer->IsFullscreen());
+            m_renderer->SetGameMode(!m_renderer->IsGameMode());
     }
 
     static bool g_RunningOneFrame = false;

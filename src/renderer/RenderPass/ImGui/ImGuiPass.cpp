@@ -60,7 +60,7 @@ namespace vg::renderer
         {
             gfx::ViewTarget target = (gfx::ViewTarget)j;
 
-            if (renderer->IsFullscreen())
+            if (renderer->IsGameMode())
                 continue;
 
             const auto & views = renderer->GetViews(target);

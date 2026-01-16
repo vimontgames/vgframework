@@ -464,18 +464,30 @@ namespace vg::gfx
         {
             switch (_mode)
             {
-            default:
-                VG_ASSERT_ENUM_NOT_IMPLEMENTED(_mode);
+                default:
+                    VG_ASSERT_ENUM_NOT_IMPLEMENTED(_mode);
 
-            case HDR::None:
-                return ColorSpace::Rec709;
+                case HDR::None:
+                    return ColorSpace::Rec709;
 
-            case HDR::HDR10:
-                return ColorSpace::ST2084;
+                case HDR::HDR10:
+                    return ColorSpace::ST2084;
 
-            case HDR::HDR16:
-                return ColorSpace::Rec2020;
+                case HDR::HDR16:
+                    return ColorSpace::Rec2020;
             }
+        }
+
+        //--------------------------------------------------------------------------------------
+        void Device::setFullscreenMode(FullscreenMode _fullscreenMode)
+        {
+            m_fullscreenMode = _fullscreenMode;
+        }
+
+        //--------------------------------------------------------------------------------------
+        FullscreenMode Device::getFullscreenMode() const
+        {
+            return m_fullscreenMode;
         }
 	}
 

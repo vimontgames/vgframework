@@ -45,7 +45,7 @@ namespace vg::renderer
         else
             readRenderTarget(_renderPassContext.getFrameGraphID("Color"));        
 
-        if (!view->GetRenderTarget() || renderer->IsFullscreen())
+        if (!view->GetRenderTarget() || renderer->IsGameMode())
         {
             if (HDR::None != renderer->GetHDR())
                 writeRenderTarget(0, "HDROutput");

@@ -143,8 +143,8 @@ Set your working directory to **$(SolutionDir)** so that the program can find da
 | `breakOnWarnings`       | bool | Break on graphics API warnings (*`debugDevice` required*)
 | `debugDevice`	          | bool | Enable the graphics API debug layer (*default for `Debug` builds*)
 | `editor`                | bool | Enable editor (*default for `Debug` and `Release` builds*)
-| `fullscreen`	          | bool | Start application in borderless fullscreen mode instead of windowed	
-| `maximize`	          | bool | Start application with game view maximized (*default for `Final` builds*)	
+| `fullscreen`	          | bool | Start application in fullscreen mode instead of windowed	(*default for `Final` builds*)	
+| `gamemode`	          | bool | Start application with game view maximized (*default for `Final` builds*)	
 | `play`		          | bool | Start application with play mode running	(*default for `Final` builds*)
 | `profileStart`          | int  | Profile the 1st N frames
                       
@@ -167,7 +167,7 @@ Set your working directory to **$(SolutionDir)** so that the program can find da
 | `F5`                | Start/Stop Play mode
 | `Shift-F5`          | Restart Play mode
 | `PAUSE`             | Pause/resume Play mode
-| `F11`               | Maximize Game view (fullscreen)
+| `F11`               | Maximize Game view
 | `ESCAPE`            | Exit Play mode and go back to Editor mode
 | `DELETE`            | Delete selected objects
 | `Ctrl+Mouse Wheel`  | Toggle Translation/Rotation/Scale gizmo
@@ -176,6 +176,7 @@ Set your working directory to **$(SolutionDir)** so that the program can find da
 | `Ctrl+S`            | Save
 | `Ctrl+U`            | Save Prefab & Update
 | `Ctrl+Shift-Q`      | Quit application
+| `Alt+Enter`         | Toggle fullscreen
 
 
 ## SDKs

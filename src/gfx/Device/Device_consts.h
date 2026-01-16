@@ -50,6 +50,12 @@ namespace vg::gfx
         Rec2020
     );
 
+    vg_enum_class(vg::gfx, FullscreenMode, core::u8,
+        Windowed = 0,
+        Borderless,
+        Exclusive
+    );
+
     struct DeviceParams
     {
         core::WinHandle			window = core::invalidWindowHandle;

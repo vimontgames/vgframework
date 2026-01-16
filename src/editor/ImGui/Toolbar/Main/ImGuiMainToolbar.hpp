@@ -134,9 +134,9 @@ namespace vg::editor
                 nextItem();
 
                 renderer::IRenderer * renderer = engine->GetRenderer();
-                const bool fullscreen = renderer->IsFullscreen();
-                if (ImGui::TooltipButton(style::icon::Maximize, true, true, "Fullscreen (F11)", style::button::SizeSmall))
-                    renderer->SetFullscreen(!fullscreen);
+                const bool gameMode = renderer->IsGameMode();
+                if (ImGui::TooltipButton(style::icon::Maximize, true, true, "Game mode (F11)", style::button::SizeSmall))
+                    renderer->SetGameMode(!gameMode);
                 nextItem();
             }
             break;

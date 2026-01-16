@@ -4,7 +4,7 @@
 namespace vg::renderer
 {
     //--------------------------------------------------------------------------------------
-    // This pass copies the final image to its editor viewport or backbuffer in fullscreen mode
+    // This pass copies the final image to its editor viewport or backbuffer in game mode
     //--------------------------------------------------------------------------------------
     class FinalBlitPass : public Render2DPass
     {

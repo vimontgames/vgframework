@@ -131,7 +131,7 @@ namespace vg::renderer
         
         gfx::ViewID viewID = cullingOptions.m_view->getViewID();
 
-        if (Renderer::get()->IsFullscreen() && viewID.target == gfx::ViewTarget::Editor)
+        if (Renderer::get()->IsGameMode() && viewID.target == gfx::ViewTarget::Editor)
             return;
 
         if (viewID.target == gfx::ViewTarget::Game || viewID.target == gfx::ViewTarget::Editor)

@@ -114,6 +114,9 @@ namespace vg::gfx
 
             const gfx::DeviceCaps &                         getDeviceCaps                   () const { return m_caps; }
 
+            void                                            setFullscreenMode               (FullscreenMode _fullscreenMode);
+            FullscreenMode                                  getFullscreenMode               () const;
+
             PixelFormat                                     getHDRBackbufferFormat          (HDR _mode) const;
             ColorSpace                                      getHDRColorSpace                (HDR _mode) const;
 
@@ -135,12 +138,13 @@ namespace vg::gfx
             core::vector<UploadBuffer *>                    m_uploadBuffers = {};
             BufferContext                                   m_bufferContext[max_backbuffer_count];
 			core::u64										m_frameCounter = 0;
-            gfx::PixelFormat                                m_backbufferFormat;
+            PixelFormat                                     m_backbufferFormat;
             MemoryAllocator *                               m_memoryAllocator = nullptr;
 			DeviceParams 									m_deviceParams;
             ShaderManager *                                 m_shaderManager = nullptr;
             RootSignatureTable                              m_rootSignaturesTable;
-            gfx::BindlessTable *                            m_bindlessTable = nullptr;
+            BindlessTable *                                 m_bindlessTable = nullptr;
+            FullscreenMode                                  m_fullscreenMode = FullscreenMode::Windowed;
             VSync                                           m_VSync = VSync::VSync_1;
             HDR                                             m_HDRModeRequested = HDR::None;
             HDR                                             m_HDRMode = m_HDRModeRequested;

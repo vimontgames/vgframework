@@ -133,7 +133,7 @@ namespace vg::engine
 
     protected:
         void                                    updateDt                ();
-        void                                    toggleFullscreen        ();
+        void                                    toggleGameMode          ();
 
         VG_INLINE bool                          isPlaying               () const;
         VG_INLINE bool                          isPaused                () const;

@@ -131,8 +131,11 @@ namespace vg::renderer
         LRESULT CALLBACK                        WndProc                         (HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
         #endif     
 
-        void                                    SetFullscreen                   (bool _fullscreen) final override;
-        bool                                    IsFullscreen                    () const final override;
+        void                                    SetFullscreenMode               (gfx::FullscreenMode _fullscreenMode) final override;
+        gfx::FullscreenMode                     GetFullscreenMode               () const final override;
+
+        void                                    SetGameMode                     (bool _gameMode) final override;
+        bool                                    IsGameMode                      () const final override;
         bool                                    IsEditor                        () const final override;
 
         ILightInstance *                        CreateLightInstance             (const ILightDesc * _lightDesc) final override;
@@ -215,7 +218,7 @@ namespace vg::renderer
         MaterialModel *                         m_defaultMaterials[core::enumCount<DefaultMaterialType>()];
         gfx::Texture *                          m_defaultTextures[core::enumCount<MaterialTextureType>()];
 
-        bool                                    m_fullscreen                    = false;
+        bool                                    m_gameMode                      = false;
         SharedWorldCullingJobOutput *           m_sharedWorldCullingJobOutput   = nullptr;
         SharedViewCullingJobOutput *            m_sharedViewCullingJobOutput    = nullptr;
 

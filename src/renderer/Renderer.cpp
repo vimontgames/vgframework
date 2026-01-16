@@ -422,7 +422,7 @@ namespace vg::renderer
         m_device.updateHDR();
         m_device.resize(_width, _height);
 
-        if (IsFullscreen())
+        if (IsGameMode())
         {
             auto & viewports = m_viewports[(int)ViewportTarget::Game];
             for (uint i = 0; i < viewports.size(); ++i)
@@ -744,7 +744,7 @@ namespace vg::renderer
                 {
                     auto target = gfx::ViewportTarget(j);
 
-                    if (m_fullscreen)
+                    if (m_gameMode)
                     {
                         if (gfx::ViewportTarget::Editor == target)
                             continue;
@@ -848,7 +848,7 @@ namespace vg::renderer
         {
             auto target = gfx::ViewTarget(j);
 
-            if (m_fullscreen)
+            if (m_gameMode)
             {
                 if (gfx::ViewTarget::Editor == target)
                     continue;
@@ -1372,18 +1372,18 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    void Renderer::SetFullscreen(bool _fullscreen)
+    void Renderer::SetGameMode(bool _gameMode)
     {
         // Always maximize game view in standalone
         if (!m_editor)
-            _fullscreen = true;
+            _gameMode = true;
 
-        if (_fullscreen != m_fullscreen)
+        if (_gameMode != m_gameMode)
         {
-            m_fullscreen = _fullscreen;
-            VG_INFO("[Renderer] Set Fullscreen to '%s'", _fullscreen ? "true" : "false");
+            m_gameMode = _gameMode;
+            VG_INFO("[Renderer] Set GameMode to '%s'", _gameMode ? "true" : "false");
 
-            if (_fullscreen)
+            if (_gameMode)
             {
                 // Resize viewports to fit backbuffer
                 auto & viewports = m_viewports[(int)ViewportTarget::Game];
@@ -1417,12 +1417,39 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
-    bool Renderer::IsFullscreen() const
+    bool Renderer::IsGameMode() const
     {
         if (m_editor)
-            return m_fullscreen;
+            return m_gameMode;
         else
             return true;    // Game view is always maximized in standalone            
+    }
+
+    //--------------------------------------------------------------------------------------
+    void Renderer::SetFullscreenMode(gfx::FullscreenMode _fullscreenMode)
+    {
+        // Cannot rely on 'Preset' parameter for vsync when using borderless fullscreen on Windows
+        // Solutions exist, but for now the temp workaround is to disable vsync in fullscreen mode ...
+
+        static VSync previousVSyncMode = VSync::None;
+
+        if (_fullscreenMode == FullscreenMode::Borderless && m_device.getFullscreenMode() != FullscreenMode::Borderless)
+        {
+            previousVSyncMode = m_device.getVSync();
+            m_device.setVSync(VSync::None);
+        }
+        else if (_fullscreenMode != FullscreenMode::Borderless && m_device.getFullscreenMode() == FullscreenMode::Borderless)
+        {
+            m_device.setVSync(previousVSyncMode);
+        }
+
+        m_device.setFullscreenMode(_fullscreenMode);
+    }
+
+    //--------------------------------------------------------------------------------------
+    FullscreenMode Renderer::GetFullscreenMode() const
+    {
+        return m_device.getFullscreenMode();
     }
 
     //--------------------------------------------------------------------------------------

@@ -129,8 +129,12 @@ namespace vg::renderer
 
         virtual void                                ReleaseAsync            (core::IObject * _object) = 0;
 
-        virtual void                                SetFullscreen           (bool _fullscreen) = 0;
-        virtual bool                                IsFullscreen            () const = 0;
+        virtual void                                SetFullscreenMode       (gfx::FullscreenMode _fullscreenMode) = 0;
+        virtual gfx::FullscreenMode                 GetFullscreenMode       () const = 0;
+
+        virtual void                                SetGameMode             (bool _gameMode) = 0;
+        virtual bool                                IsGameMode              () const = 0;
+
         virtual bool                                IsEditor                () const = 0;
 
         virtual ILightInstance *                    CreateLightInstance     (const ILightDesc * _lightDesc) = 0;

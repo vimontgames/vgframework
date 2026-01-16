@@ -346,11 +346,11 @@ namespace vg::editor
         ImGui::SetNextWindowViewport(viewport->ID);
 
         const auto * renderer = getRenderer();
-        const bool fullscreen = renderer->IsFullscreen();
+        const bool gameMode = renderer->IsGameMode();
 
         ImGuiWindowFlags windowFlags = 0x0;
         
-        if (!fullscreen)
+        if (!gameMode)
             windowFlags |= ImGuiWindowFlags_MenuBar;
 
         windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
@@ -359,7 +359,7 @@ namespace vg::editor
 
         ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 
-        if (fullscreen)
+        if (gameMode)
         {
             dockspaceFlags |= ImGuiDockNodeFlags_NoDockingOverCentralNode;
             windowFlags |= ImGuiWindowFlags_NoScrollbar;
@@ -383,7 +383,7 @@ namespace vg::editor
             ImGui::PopStyleVar(3);
 
             // Render game UI to backbuffer inside dockspace
-            if (fullscreen)
+            if (gameMode)
             {
                 auto viewports = renderer->GetViewports(gfx::ViewportTarget::Game);
                 for (auto & viewport : viewports)
@@ -632,7 +632,7 @@ namespace vg::editor
                 worldRes->ClearResourcePath();
         }
 
-        if (!fullscreen)
+        if (!gameMode)
         {
             for (uint i = 0; i < m_imGuiWindows.size(); ++i)
             {

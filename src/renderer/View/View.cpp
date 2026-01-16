@@ -619,7 +619,7 @@ namespace vg::renderer
         int2 offset = (int2)((float2)GetRenderTargetSize() * GetViewportOffset());  
 
         const auto renderer = Renderer::get();
-        if (renderer->IsFullscreen())
+        if (renderer->IsGameMode())
             return ((int2)mousePos)- offset;
         else
             return (int2((int)mousePos.x - (int)m_mouseOffset.x, (int)mousePos.y - (int)m_mouseOffset.y))- offset;
