@@ -832,6 +832,49 @@ namespace vg::engine
             for (auto pair : resourceInfoMap)
             {
                 ResourceInfo * info = pair.second;
+
+                #if USE_CLIENTS_TO_UPDATE_LIST
+
+                // Only update resources from the 'ClientsToUpdate' list
+
+                vector<IResource *> & clientsToUpdate = info->getClientsToUpdate();
+                if (clientsToUpdate.size() > 0)
+                {
+                    // Reverse order so as to be able to remove clients in loop
+                    for (int i = (int)clientsToUpdate.size()-1; i >=0 ; --i)
+                    {
+                        #if USE_CLIENT_LIMIT_PER_FRAME
+                        if (Timer::getEnlapsedTime(startStreamingUpdateTime, Timer::getTick()) > maxStreamingUpdateTimePerFrame)
+                            continue;
+                        #endif
+
+                        auto & res = clientsToUpdate[i];
+                        auto * object = info->getObject();
+
+                        if (nullptr != object)
+                        {
+                            if (res->GetSharedObject() != object)
+                            {
+                                VG_ASSERT(res->GetSharedObject() == nullptr);
+                                res->SetObject(object);
+                                res->LoadSubResources();
+                                res->GetParent()->OnResourceLoaded(res);
+
+                                #if USE_CLIENT_LIMIT_PER_FRAME
+                                currentClientCount++;
+                                #endif
+                            }
+
+                            // Only remove client from list if it was actually udpated
+                            clientsToUpdate.erase(clientsToUpdate.begin() + i);
+                        }
+                    }
+                }
+
+                #else
+
+                // Legacy: Parse all clients to check if they need update
+
                 const vector<IResource *> & clients = info->getClients();
                 for (uint i = 0; i < clients.size(); ++i)
                 {
@@ -853,7 +896,9 @@ namespace vg::engine
                         currentClientCount++;
                         #endif
                     }
-                }
+                }  
+
+                #endif
             }
         }
     }

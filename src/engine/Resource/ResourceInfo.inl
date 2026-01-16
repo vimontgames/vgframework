@@ -30,6 +30,14 @@ namespace vg::engine
         return m_clients;
     }
 
+    #if USE_CLIENTS_TO_UPDATE_LIST
+    //--------------------------------------------------------------------------------------
+    VG_INLINE core::vector<core::IResource *> & ResourceInfo::getClientsToUpdate()
+    {
+        return m_clientsToUpdate;
+    }
+    #endif
+
     //--------------------------------------------------------------------------------------
     VG_INLINE void ResourceInfo::setForceReimport(bool _forceReimport)
     {

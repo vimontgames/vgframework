@@ -45,17 +45,30 @@ namespace vg::engine
         VG_ASSERT(nullptr != _client);
         VG_ASSERT(!m_path.empty());
         m_clients.push_back(_client);
+
+        #if USE_CLIENTS_TO_UPDATE_LIST
+        m_clientsToUpdate.push_back(_client);
+        #endif
     }
 
     //--------------------------------------------------------------------------------------
     bool ResourceInfo::removeClient(core::IResource * _clientToRemove)
     {
+        #if USE_CLIENTS_TO_UPDATE_LIST
+        vector_helper::remove(m_clientsToUpdate, _clientToRemove);
+        #endif
         return vector_helper::remove(m_clients, _clientToRemove);
     }
 
     //--------------------------------------------------------------------------------------
     bool ResourceInfo::replaceClient(core::IResource * _clientToReplace, core::IResource * _newClient)
     {
+        #if USE_CLIENTS_TO_UPDATE_LIST
+        auto it2 = std::find(m_clientsToUpdate.begin(), m_clientsToUpdate.end(), _clientToReplace);
+        if (it2 != m_clientsToUpdate.end())
+            *it2 = _newClient;
+        #endif
+
         auto it = std::find(m_clients.begin(), m_clients.end(), _clientToReplace);
         if (it != m_clients.end())
         {
@@ -63,6 +76,7 @@ namespace vg::engine
             *it = _newClient;
             return true;
         }
+
         return false;
     }
 }
