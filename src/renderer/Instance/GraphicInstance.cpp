@@ -96,11 +96,17 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    // Return an 'OR' of the materials surface types:
+    // - If a material is missing it returns the flag for the default material for graphic instance type
+    // - If a batch is masked it returns 'Transparent', whatever the material (default or not)
+    //--------------------------------------------------------------------------------------
     SurfaceTypeFlags GraphicInstance::computeSurfaceTypeFlags() const
     {
         SurfaceTypeFlags flags = (SurfaceTypeFlags)0x0;
 
-        auto * defaultMaterial = Renderer::get()->getDefaultMaterial(DefaultMaterialType::Opaque);
+        // TODO: each graphic instance type should implement "GetDefaultMaterial(Type)" so that mesh can use default opaque, particles use default transparent etc..) 
+        const auto * defaultMaterial = GetDefaultMaterial(); 
+        const auto * hiddenMaterial = Renderer::get()->getDefaultMaterial(DefaultMaterialType::Hidden);
 
         const auto & materials = getMaterials();
         const auto & batchMask = getBatchMask();
@@ -115,43 +121,20 @@ namespace vg::renderer
         {
             for (uint i = 0; i < materials.size(); ++i)
             {
-                auto * material = materials[i];
+                const auto * material = materials[i];
 
                 if (!material)
                     material = defaultMaterial;
 
-                if (useBatchMask && batchMask.getBitValue(i))
-                {
-                    auto surf = material->GetSurfaceType();
+                if (useBatchMask && !batchMask.getBitValue(i))
+                    material = hiddenMaterial;
 
-                    switch (surf)
-                    {
-                        case SurfaceType::Opaque:
-                            flags |= SurfaceTypeFlags::Opaque;
-                            break;
-
-                        case SurfaceType::AlphaTest:
-                            flags |= SurfaceTypeFlags::AlphaTest;
-                            break;
-
-                        case SurfaceType::AlphaBlend:
-                            flags |= SurfaceTypeFlags::AlphaBlend;
-                            break;
-
-                        case SurfaceType::Decal:
-                            flags |= SurfaceTypeFlags::Decal;
-                            break;
-                    }
-                }
-                else
-                {
-                    flags |= SurfaceTypeFlags::AlphaBlend;
-                }
+                flags |= material->GetSurfaceTypeFlags();
             }
         }
         else
         {
-            flags |= SurfaceTypeFlags::Opaque;
+            flags = defaultMaterial->GetSurfaceTypeFlags();
         }
 
         return flags;
@@ -162,6 +145,7 @@ namespace vg::renderer
     {
         
     }
+
 
     //--------------------------------------------------------------------------------------
     bool GraphicInstance::setMaterialCount(core::uint _count)

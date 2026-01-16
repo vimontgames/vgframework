@@ -56,7 +56,8 @@ namespace vg::renderer
                 {
                     const auto * material = m_materials[i];
 
-                    // It can happes only during hot reload
+                    // It can happen only during hot reloading of material, but should not be actually used
+                    // in rendering, so we might just skip updating this part of the buffer.
                     if (nullptr == material)
                         material = errorMaterial;
                         

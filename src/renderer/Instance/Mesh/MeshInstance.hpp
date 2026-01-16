@@ -119,12 +119,23 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    const MaterialModel * MeshInstance::GetDefaultMaterial() const
+    {
+        const auto * renderer = Renderer::get();
+        return renderer->getDefaultMaterial(DefaultMaterialType::Opaque);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // Returns a 64 bits bitfield where each '1' stands for a non-opaque batch.
+    //--------------------------------------------------------------------------------------
     gfx::BLASVariantKey MeshInstance::computeBLASVariantKey() const
     {
         const auto & materials = getMaterials();
         VG_ASSERT(materials.size() <= 64);
         
         gfx::BLASVariantKey key = 0;
+
+        const MaterialModel * defaultMat = GetDefaultMaterial();
 
         MeshModel * meshModel = (MeshModel*)getModel(Lod::Lod0);
         if (meshModel)
@@ -139,14 +150,13 @@ namespace vg::renderer
             {
                 if (batchMask.getBitValue(i))
                 {
-                    if (i < materials.size())
-                    {
-                        if (const auto * mat = materials[i])
-                        {
-                            if (SurfaceType::Opaque != mat->GetSurfaceType())
-                                key |= bit;
-                        }
-                    }
+                    const MaterialModel * mat = i < materials.size() ? materials[i] : nullptr;
+
+                    if (nullptr == mat)
+                        mat = defaultMat;
+
+                    if (SurfaceType::Opaque != mat->GetSurfaceType())
+                        key |= bit;
                 }
                 else
                 {
@@ -179,8 +189,8 @@ namespace vg::renderer
     {
         if (RendererOptions::get()->isRayTracingEnabled())
         {
-            // When added during loading, mesh could not be loaded yet hence there's no way to know if it's skinned and it would be too early to compute static BLAS anyway
-            if (hasAnyModel() > 0)
+            // When added during loading, mesh could not be loaded yet so there's no way to know if it's skinned and it would be too early to compute static BLAS anyway
+            if (hasAnyModel())
             {
                 if (isSkinned())
                 {
@@ -309,9 +319,9 @@ namespace vg::renderer
         VG_ASSERT(defaultMaterial);
         const auto defaultMaterialIndex = defaultMaterial->getGPUMaterialDataIndex();
 
-        const auto * invisibleMaterial = renderer->getDefaultMaterial(DefaultMaterialType::Invisible);
-        VG_ASSERT(invisibleMaterial);
-        const auto invisibleMaterialIndex = invisibleMaterial->getGPUMaterialDataIndex();
+        const auto * hiddenMaterial = renderer->getDefaultMaterial(DefaultMaterialType::Hidden);
+        VG_ASSERT(hiddenMaterial);
+        const auto hiddenMaterialIndex = hiddenMaterial->getGPUMaterialDataIndex();
 
         const auto & batchMask = getBatchMask();
 
@@ -325,7 +335,7 @@ namespace vg::renderer
             if (batchMask.getBitValue(b))
                 batchData->setMaterialIndex(matIndex);
             else 
-                batchData->setMaterialIndex(invisibleMaterialIndex);
+                batchData->setMaterialIndex(hiddenMaterialIndex);
                 
             uint batchOffset = (nullptr != geo && b < geo->batches().size()) ? geo->batches()[b].offset : 0;
             batchData->setStartIndex(batchOffset);
@@ -479,7 +489,7 @@ namespace vg::renderer
                     // Setup material 
                     const MaterialModel * material = getMaterial(i);
                     if (nullptr == material)
-                        material = renderer->getDefaultMaterial(DefaultMaterialType::Opaque);
+                        material = GetDefaultMaterial();
 
                     auto surfaceType = material->GetSurfaceType();
 

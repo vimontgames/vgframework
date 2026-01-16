@@ -28,6 +28,9 @@ namespace vg::renderer
     //--------------------------------------------------------------------------------------
     VG_INLINE bool MeshInstance::isSkinned() const
     {
-        return nullptr != getInstanceSkeleton();
+        if (nullptr != getInstanceSkeleton())
+            return true;
+        else
+            return false;
     }
 }

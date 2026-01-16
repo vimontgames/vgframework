@@ -62,6 +62,7 @@ namespace vg::renderer
         // New virtual functions added to GraphicInstance
         virtual bool                                    Cull                            (const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult) = 0;
         virtual void                                    OnMaterialChanged               ();
+        virtual const MaterialModel *                   GetDefaultMaterial              () const { return nullptr; }
         virtual bool                                    UpdateTLAS                      (gfx::CommandList * _cmdList, gfx::TLAS * _tlas) { return false; }
 
         // Size returned by 'GetGPUInstanceDataSize' and written by 'FillGPUInstance    Data' must match

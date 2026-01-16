@@ -172,7 +172,7 @@ namespace vg::renderer
                 auto * blas = instance->getInstanceBLAS();
                 MeshModel * meshModel = (MeshModel *)instance->getMeshModel(Lod::Lod0);
                 //VG_ASSERT(nullptr != meshModel); // Can happen during hot reload
-                if (nullptr == meshModel)
+                if (nullptr == meshModel || instance->IsSkinned())
                     continue;
 
                 // Create BLAS collection if it does not exist yet or it's key changed
@@ -274,6 +274,7 @@ namespace vg::renderer
                 blas->clear();
 
                 const MeshModel * meshModel = skin->getMeshModel(Lod::Lod0);
+                VG_ASSERT(meshModel);
 
                 const MeshGeometry * meshGeo = meshModel->getGeometry();
                 gfx::Buffer * ib = meshGeo->getIndexBuffer();

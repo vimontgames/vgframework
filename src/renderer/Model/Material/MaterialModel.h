@@ -52,6 +52,7 @@ namespace vg::renderer
         virtual void                    Setup                   (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3DConstants, core::uint _index) const = 0;
 
         virtual SurfaceType             GetSurfaceType          () const = 0;
+        virtual SurfaceTypeFlags        GetSurfaceTypeFlags     () const = 0;
 
         VG_INLINE GPUMaterialDataIndex  getGPUMaterialDataIndex () const { return m_gpuMaterialDataIndex; }
 

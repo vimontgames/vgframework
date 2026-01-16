@@ -38,6 +38,7 @@ namespace vg::renderer
                                     ~ParticleSystemInstance     ();
 
         GraphicInstanceType         GetGraphicIntanceType       () const final override { return GraphicInstanceType::ParticleSystem; }
+        const MaterialModel *       GetDefaultMaterial          () const final override;
 
         bool                        TryGetAABB                  (core::AABB & _aabb) const final override;
         bool                        Cull                        (const ViewCullingOptions & _cullingOptions, CullingResult * _cullingResult) final override;

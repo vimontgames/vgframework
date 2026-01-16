@@ -11,7 +11,7 @@ namespace vg::renderer
     vg_enum_class(vg::renderer, DefaultMaterialType, core::u8,
         Opaque = 0,
         Transparent,
-        Invisible,
+        Hidden,
         Error
     );
 

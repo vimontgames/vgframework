@@ -23,6 +23,7 @@ namespace vg::renderer
         void                    Setup               (const RenderContext & _renderContext, gfx::CommandList * _cmdList, RootConstants3D * _root3D, core::uint _index) const final override;
 
         SurfaceType             GetSurfaceType      () const final override { return m_surfaceType; }
+        SurfaceTypeFlags        GetSurfaceTypeFlags () const final override { return (SurfaceTypeFlags)(1 << (core::uint)m_surfaceType); }
 
     protected:
         void                    assignTexture       (gfx::Texture ** _texture, gfx::Texture * _value);

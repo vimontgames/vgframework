@@ -1348,12 +1348,12 @@ namespace vg::renderer
         VG_ASSERT(defaultTransparentMaterial->getGPUMaterialDataIndex() == asInteger(DefaultMaterialType::Transparent));
 
         // Default transparent (e.g. used for hidden batchs during raytracing)
-        MaterialModel *& defaultInvisibleMaterial = m_defaultMaterials[asInteger(DefaultMaterialType::Invisible)];
-        VG_ASSERT(nullptr == defaultInvisibleMaterial);
-        defaultInvisibleMaterial = new DefaultMaterialModel("Default Invisible", this);
-        defaultInvisibleMaterial->SetSurfaceType(SurfaceType::AlphaBlend);
-        defaultInvisibleMaterial->SetColor("AlbedoColor", float4(0.0f, 0.0f, 0.0f, 0.0f));
-        VG_ASSERT(defaultInvisibleMaterial->getGPUMaterialDataIndex() == asInteger(DefaultMaterialType::Invisible));
+        MaterialModel *& defaultHiddenMaterial = m_defaultMaterials[asInteger(DefaultMaterialType::Hidden)];
+        VG_ASSERT(nullptr == defaultHiddenMaterial);
+        defaultHiddenMaterial = new DefaultMaterialModel("Default Hidden", this);
+        defaultHiddenMaterial->SetSurfaceType(SurfaceType::AlphaBlend);
+        defaultHiddenMaterial->SetColor("AlbedoColor", float4(0.0f, 0.0f, 0.0f, 0.0f));
+        VG_ASSERT(defaultHiddenMaterial->getGPUMaterialDataIndex() == asInteger(DefaultMaterialType::Hidden));
 
         // Error material
         MaterialModel *& errorMaterial = m_defaultMaterials[asInteger(DefaultMaterialType::Error)];

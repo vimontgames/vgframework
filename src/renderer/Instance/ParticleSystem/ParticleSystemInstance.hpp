@@ -35,6 +35,13 @@ namespace vg::renderer
     }
 
     //--------------------------------------------------------------------------------------
+    const MaterialModel * ParticleSystemInstance::GetDefaultMaterial() const
+    {
+        const auto * renderer = Renderer::get();
+        return renderer->getDefaultMaterial(DefaultMaterialType::Transparent);
+    }
+
+    //--------------------------------------------------------------------------------------
     bool ParticleSystemInstance::TryGetAABB(core::AABB & _aabb) const
     {
         if (m_aabb.isFinite())
@@ -358,7 +365,7 @@ namespace vg::renderer
         const uint gpuInstanceDataSize = alignUp((uint)(sizeof(GPUInstanceData) + batchCount * sizeof(GPUBatchData)), (uint)GPU_INSTANCE_DATA_ALIGNMENT);
 
         const auto * renderer = Renderer::get();
-        const auto * defaultMaterial = renderer->getDefaultMaterial(DefaultMaterialType::Transparent);
+        const auto * defaultMaterial = GetDefaultMaterial();
         VG_ASSERT(defaultMaterial);
         const auto defaultMaterialIndex = defaultMaterial->getGPUMaterialDataIndex();
 
@@ -485,6 +492,8 @@ namespace vg::renderer
         _cmdList->setPrimitiveTopology(PrimitiveTopology::TriangleList);
         const BitMask & batchMask = getBatchMask();
 
+        const auto * defaultMaterial = GetDefaultMaterial();
+
         const auto & emitters = m_emitters;
         for (uint i = 0; i < emitters.size(); ++i)
         {
@@ -494,7 +503,7 @@ namespace vg::renderer
             {
                 const MaterialModel * material = getMaterial(i);
                 if (nullptr == material)
-                    material = renderer->getDefaultMaterial(DefaultMaterialType::Transparent);
+                    material = defaultMaterial;
 
                 auto surfaceType = material->GetSurfaceType();
 

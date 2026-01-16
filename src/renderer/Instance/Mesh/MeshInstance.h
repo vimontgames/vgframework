@@ -53,6 +53,7 @@ namespace vg::renderer
         ~MeshInstance();
 
         GraphicInstanceType             GetGraphicIntanceType       () const final override { return GraphicInstanceType::Mesh;}
+        const MaterialModel *           GetDefaultMaterial          () const final override;
 
         void                            SetModel                    (core::Lod _lod, core::IModel * _model) final override;
 
