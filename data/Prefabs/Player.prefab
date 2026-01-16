@@ -56,6 +56,7 @@
                                         <Property type="Float" name="m_mass" value="75"/>
                                         <Property type="Float" name="m_friction" value="0.5"/>
                                         <Property type="Float" name="m_maxSlopeAngle" value="45"/>
+                                        <Property type="Float" name="m_maxSeparationDistance" value="0.050000001"/>
                                     </Object>
                                 </Property>
                                 <Property type="ObjectPtr" name="m_shapeDesc">
@@ -70,12 +71,6 @@
                                         <Property type="Float" name="m_bottomRadius" value="0.375"/>
                                         <Property type="Float" name="m_height" value="1.275"/>
                                     </Object>
-                                </Property>
-                                <Property type="Uint8" name="m_delayState">
-                                    <Value name="Grounded" value="0"/>
-                                    <Value name="Blocked" value="0"/>
-                                    <Value name="Touching" value="0"/>
-                                    <Value name="InAir" value="8"/>
                                 </Property>
                             </Object>
                             <Object class="AnimationComponent">
