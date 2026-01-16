@@ -51,6 +51,7 @@ namespace vg::core
 
         void                            setModel                (Lod _lod, Model * _model);
         VG_INLINE Model *               getModel                (Lod _lod) const;
+        VG_INLINE bool                  hasAnyModel             () const;
 
         VG_INLINE InstanceFlags         getInstanceFlags        () const;
         VG_INLINE void                  setInstanceFlags        (InstanceFlags _flags, bool _enabled);

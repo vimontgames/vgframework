@@ -179,33 +179,37 @@ namespace vg::renderer
     {
         if (RendererOptions::get()->isRayTracingEnabled())
         {
-            if (isSkinned())
+            // When added during loading, mesh could not be loaded yet hence there's no way to know if it's skinned and it would be too early to compute static BLAS anyway
+            if (hasAnyModel() > 0)
             {
-                // Always update skinned meshes
-                RayTracingManager::get()->updateMeshInstance(this);
-            }
-            else
-            {
-                // Update static meshes only if needed
-                auto * blas = getInstanceBLAS();
-
-                bool update = false;
-
-                if (nullptr == blas)
+                if (isSkinned())
                 {
-                    update = true;
+                    // Always update skinned meshes
+                    RayTracingManager::get()->updateMeshInstance(this);
                 }
                 else
                 {
-                    auto key = computeBLASVariantKey();
-                    if (blas->getKey() != key)
-                        update = true;
-                }
+                    // Update static meshes only if needed
+                    auto * blas = getInstanceBLAS();
 
-                if (update)
-                {
-                    RayTracingManager::get()->updateMeshInstance(this);
-                    return true;
+                    bool update = false;
+
+                    if (nullptr == blas)
+                    {
+                        update = true;
+                    }
+                    else
+                    {
+                        auto key = computeBLASVariantKey();
+                        if (blas->getKey() != key)
+                            update = true;
+                    }
+
+                    if (update)
+                    {
+                        RayTracingManager::get()->updateMeshInstance(this);
+                        return true;
+                    }
                 }
             }
         }

@@ -86,6 +86,17 @@ namespace vg::core
     }
 
     //--------------------------------------------------------------------------------------
+    VG_INLINE bool Instance::hasAnyModel() const
+    {
+        for (uint i = 0; i < m_models.size(); ++i)
+        {
+            if (nullptr != m_models[i])
+                return true;
+        }
+        return false;
+    }
+
+    //--------------------------------------------------------------------------------------
     VG_INLINE void Instance::setInstanceFlags(InstanceFlags _flags, bool _enabled)
     {
         if (_enabled)
