@@ -15,9 +15,10 @@ namespace vg::physics
         void SetMaxSlopeAngle(float _maxSlopeAngle) final override  { m_maxSlopeAngle = _maxSlopeAngle;}
 
     public:
-        float           m_mass          = 75.0f;
-        float           m_maxSlopeAngle = 45.0f;
-        float           m_friction      = 0.5f;
+        float           m_mass                  = 75.0f;
+        float           m_maxSlopeAngle         = 45.0f;
+        float           m_maxSeparationDistance = 0.05f;
+        float           m_friction              = 0.5f;
     };
 
     class RigidCharacterDesc final : public CharacterDesc

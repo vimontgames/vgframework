@@ -21,11 +21,7 @@ namespace vg::engine
         registerPropertyEnumEx(CharacterControllerComponent, physics::CharacterType, m_characterType, "Type", PropertyFlags::ReadOnly);
         registerPropertyObjectPtrEx(CharacterControllerComponent, m_characterDesc, "Character", PropertyFlags::Flatten);
         registerPropertyObjectPtrEx(CharacterControllerComponent, m_shapeDesc, "Shape", PropertyFlags::Flatten);
-        registerPropertyEnumArrayEx(CharacterControllerComponent, u8, physics::GroundState, m_delayState, "GroundState Delay", PropertyFlags::Flatten);
-
-        registerPropertyGroupBegin(CharacterControllerComponent, "Debug");
         registerPropertyEnumEx(CharacterControllerComponent, physics::GroundState, m_groundState, "State", PropertyFlags::Transient);
-        registerPropertyGroupEnd(CharacterControllerComponent);
 
         return true;
     }
@@ -34,12 +30,6 @@ namespace vg::engine
     CharacterControllerComponent::CharacterControllerComponent(const core::string & _name, IObject * _parent) :
         super(_name, _parent)
     {
-        for (uint i = 0; i < core::enumCount<physics::GroundState>(); ++i)
-        {
-            m_delayState[i] = 0;
-            m_delayStateCounter[i] = -1;
-        }
-
         if (m_shapeDesc == nullptr)
             createShapeDesc();
 
@@ -244,39 +234,10 @@ namespace vg::engine
             {
                 m_character->Update();
 
-                auto newGroundState = m_character->GetGroundState();
-
-                if (m_groundState != newGroundState)
-                {
-                    const auto index = asInteger(newGroundState);
-                    const auto delay = m_delayState[index];
-                    if (0 != delay)
-                    {
-                        auto & counter = m_delayStateCounter[index];
-
-                        if (0xFF == counter)
-                        {
-                            counter = 0;
-                        }
-                        else
-                        {
-                            counter = min(++counter, delay);
-                        }
-
-                        if (counter >= delay)
-                        {
-                            m_groundState = newGroundState;
-                            counter = -1;
-                        }
-                    }
-                    else
-                    {
-                        m_groundState = newGroundState;
-                    }
-                }
-
                 float4x4 matrix = m_character->GetMatrix();
                 _context.m_gameObject->setGlobalMatrix(matrix);
+
+                m_groundState = m_character->GetGroundState();
             }
         }  
     } 

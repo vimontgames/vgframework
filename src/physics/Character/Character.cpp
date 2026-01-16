@@ -173,7 +173,7 @@ namespace vg::physics
     void RigidCharacter::Update()
     {
         if (m_character)
-            m_character->PostSimulation(0.00f);
+            m_character->PostSimulation(getCharacterDesc()->m_maxSeparationDistance); 
     }
 
     //--------------------------------------------------------------------------------------

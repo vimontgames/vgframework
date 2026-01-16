@@ -38,6 +38,7 @@ namespace vg::physics
 
     protected:
         const PhysicsWorld *    getPhysicsWorld () const { return m_physicsWorld;}
+        const CharacterDesc *   getCharacterDesc() const { return m_characterDesc; }
 
     private:
         const PhysicsWorld *    m_physicsWorld = nullptr;

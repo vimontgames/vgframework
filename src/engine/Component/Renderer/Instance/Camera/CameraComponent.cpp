@@ -176,7 +176,7 @@ namespace vg::engine
         auto * view = renderer->GetView(getViewID());
         if (nullptr != view)
         {
-            if (renderer->IsFullscreen())
+            if (renderer->IsGameMode())
             {
                 view->SetRenderTarget(nullptr);
                 view->SetRenderTargetSize(viewport->GetRenderTargetSize());
