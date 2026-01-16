@@ -3,7 +3,7 @@
 # VGFramework 0.54
 VGFramework is a pet game engine for fun, modern graphics APIs, and fast iteration.
 
-![Demo](doc/img/breakable.gif)
+![Demo](doc/img/0.54.6.gif)
 
 # Table of contents
 [Build status](#Build-Status)\
